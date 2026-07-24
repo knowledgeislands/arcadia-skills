@@ -28,7 +28,7 @@ The current `audit.ts` / `conform.ts` pair is therefore the initial executable b
 | `ki-tokenomics` | Inspect standing context | Reconcile token-budget guidance | Documentation/configuration consumer. |
 | `ki-authoring` | Inspect authored Markdown/TOML | Own config files; normalise Markdown | Split owned-file preparation from late Markdown normalisation. |
 | `ki-engineering` | Inspect toolchain | Format and reconcile toolchain | Toolchain formatting follows source writers. |
-| `ki-agents` | Inspect agent definitions | Scaffold/conform agent files | Agent files precede authoring normalisation. |
+| `ki-subagents` | Inspect agent definitions | Scaffold/conform agent files | Agent files precede authoring normalisation. |
 | `ki-decision-records` | Inspect decisions/index | Conform decision records/index | Decision writers precede authoring normalisation. |
 | `ki-feature-definitions` | Inspect feature definitions/index | Conform feature documents/index | Feature writers precede authoring normalisation. |
 | `ki-handoffs` | Inspect handoff artifacts | Conform handoff artifacts | Handoff writers precede authoring normalisation. |

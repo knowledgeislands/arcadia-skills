@@ -83,7 +83,7 @@ check(
 )
 const staleGuidance = [
   join(HARNESS, 'AGENTS.md'),
-  ...['agents', 'evals', 'skills', join('docs', 'guides')].flatMap((dir) => liveGuidanceFiles(join(HARNESS, dir)))
+  ...['subagents', 'evals', 'skills', join('docs', 'guides')].flatMap((dir) => liveGuidanceFiles(join(HARNESS, dir)))
 ]
   .flatMap((file) =>
     readFileSync(file, 'utf8')

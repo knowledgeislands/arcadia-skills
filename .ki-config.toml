@@ -23,7 +23,7 @@ supported_runtimes = ["claude-code", "codex"]
 # This repo fully conforms, so it declares no check overrides. To diverge, add a
 # [ki-engineering.checks] table with one boolean per check (true = enforce).
 
-# This repo IS a Knowledge Islands agentic harness (the five-part skills/ agents/ mcp/ evals/ hooks/
+# This repo IS a Knowledge Islands agentic harness (the five-part skills/ subagents/ mcp/ evals/ hooks/
 # layout), so it declares governance by the ki-harness standard. Presence of this
 # table is the compliance marker.
 [ki-harness]
@@ -33,9 +33,9 @@ supported_runtimes = ["claude-code", "codex"]
 # files themselves.)
 [ki-skills]
 
-# This repo ships agents under agents/governance/, so it declares governance by the
-# ki-agents standard (opt-in). Presence of this table is the compliance marker.
-[ki-agents]
+# This repo ships agents under subagents/governance/, so it declares governance by the
+# ki-subagents standard (opt-in). Presence of this table is the compliance marker.
+[ki-subagents]
 
 # This repo ships the ki-decision-records skill, so it declares governance by its own standard.
 [ki-decision-records]

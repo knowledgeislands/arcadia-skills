@@ -347,7 +347,7 @@ const COVERAGE: { skill: string; table: string; artifact: string; detect: (s: Si
   },
   {
     skill: 'agents',
-    table: 'ki-agents',
+    table: 'ki-subagents',
     artifact: 'agents/**/*.md',
     detect: (s) => [...s.tree].some((p) => /^agents\/.+\.md$/.test(p) && !/(^|\/)README\.md$/i.test(p))
   }

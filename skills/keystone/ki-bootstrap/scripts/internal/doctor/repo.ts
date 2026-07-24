@@ -36,7 +36,7 @@ function safeSourceLink(target: string, path: string, value: string): boolean {
   if (!value || isAbsolute(value)) return false
   try {
     const resolved = realpathSync(resolve(dirname(path), value))
-    return [join(target, 'skills'), join(target, 'agents')].some(
+    return [join(target, 'skills'), join(target, 'subagents')].some(
       (root) => kind(root) === 'directory' && contained(realpathSync(root), resolved)
     )
   } catch {

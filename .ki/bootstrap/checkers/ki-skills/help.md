@@ -15,4 +15,4 @@ Audit, review, extract, and write Agent Skills against current best practice.
 - `REFRESH` — re-anchor best practice
 - `REVIEW` — assess an existing skill's evolution opportunities
 
-**See also:** `ki-agents` (subagent defs), `ki-mcp` (server code), `ki-authoring` (Markdown/TOML style), `ki-harness` (bundle layout).
+**See also:** `ki-subagents` (subagent defs), `ki-mcp` (server code), `ki-authoring` (Markdown/TOML style), `ki-harness` (bundle layout).

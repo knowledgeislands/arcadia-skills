@@ -1,8 +1,8 @@
-# ki-agents
+# ki-subagents
 
 Audit, review, and write Claude Code subagent definitions against current best practice.
 
-**Invoke:** `ki-agents audit <agent-or-dir> | conform <agent> | help | educate <description> | refresh`
+**Invoke:** `ki-subagents audit <agent-or-dir> | conform <agent> | help | educate <description> | refresh`
 
 **Modes:**
 

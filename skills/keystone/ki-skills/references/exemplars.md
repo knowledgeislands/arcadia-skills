@@ -15,10 +15,10 @@ Curated illustrations of well-formed `SKILL.md` files. Use these when writing a 
 | [Agent Skills best practices][bp]    | Description writing, progressive disclosure, scripts, authoring rubric   | 2026-06-21    |
 | [Claude Code — skills docs][cc]      | CC-only frontmatter fields including `argument-hint`, `allowed-tools`    | 2026-06-21    |
 | [Skill Authoring Patterns][patterns] | Terminology discipline, feedback loops, gotchas sections                 | 2026-06-21    |
-| `ki-agents` SKILL.md †               | Reference implementation: full frontmatter + skill-specific EDUCATE mode | 2026-06-21    |
+| `ki-subagents` SKILL.md †            | Reference implementation: full frontmatter + skill-specific EDUCATE mode | 2026-06-21    |
 | `ki-repo` SKILL.md ‡                 | Reference implementation: argument-hint, standard-skill mode structure   | 2026-06-21    |
 
-† Located at `skills/general-governance/ki-agents/SKILL.md` in the harness.
+† Located at `skills/general-governance/ki-subagents/SKILL.md` in the harness.
 
 ‡ Located at `skills/keystone/ki-repo/SKILL.md` in the harness.
 
@@ -31,11 +31,11 @@ Curated illustrations of well-formed `SKILL.md` files. Use these when writing a 
 
 ### Runtime binding: well-formed frontmatter block
 
-The frontmatter of `ki-agents` shows the governance-skill contract plus the most important Claude Code extensions. `name` is all-lowercase with hyphens, matches the directory name exactly, and carries no generic words like `helper` or `utils`. `ki-depends-on: []` makes an intentionally standalone skill explicit. `description` is written in the third person ("Audit, review, and write…" — never "Can audit…"), names concrete trigger phrases, and ends with off-ramp declarations so the skill does not silently absorb adjacent work. `argument-hint` lists the discrete modes a user can pass at the `/` prompt.
+The frontmatter of `ki-subagents` shows the governance-skill contract plus the most important Claude Code extensions. `name` is all-lowercase with hyphens, matches the directory name exactly, and carries no generic words like `helper` or `utils`. `ki-depends-on: []` makes an intentionally standalone skill explicit. `description` is written in the third person ("Audit, review, and write…" — never "Can audit…"), names concrete trigger phrases, and ends with off-ramp declarations so the skill does not silently absorb adjacent work. `argument-hint` lists the discrete modes a user can pass at the `/` prompt.
 
 ```yaml
 ---
-name: ki-agents
+name: ki-subagents
 ki-depends-on: []
 description: >
   Audit, review, and write Claude Code subagent definitions against current best practice. Use when creating a new agent (subagent), reviewing or critiquing an agent's definition, checking an agent before it ships, asking "is this agent any good / well-scoped", or refreshing the agents rubric. Carries a checkable rubric — mechanical checks a bundled linter runs, judgment checks applied by reading — covering the name and description (the delegation signal), the system-prompt shape (role/lane, grounding, when-invoked, own-vs-defer), least-privilege tools and model choice, and cross-agent lane collisions. Triggers: "audit this agent", "review my subagent", "write a new agent", "is this agent definition good", "scaffold an agent", "refresh the agents rubric", "check the agents". Judges a subagent definition (frontmatter + system prompt) — for authoring a SKILL.md use the `ki-skills` skill instead; for harness-level layout (five-part bundle, `.ki-config.toml` compliance) use `ki-harness`.
@@ -56,7 +56,7 @@ HELP explains this skill's purpose, invocation, modes, and off-ramps without tak
 
 Review an agent (or every agent in a directory) against the rubric and report.
 
-1. **Run the linter.** From the repository root, run `bun run ki:agents:audit`. It reports mechanical findings with `FAIL`, `WARN`, `FIXED`, `INFO`, `NOT_APPLICABLE`, and `PASS`, and exits non-zero on any FAIL. Capture its output verbatim — do not re-derive what it found.
+1. **Run the linter.** From the repository root, run `bun run ki:subagents:audit`. It reports mechanical findings with `FAIL`, `WARN`, `FIXED`, `INFO`, `NOT_APPLICABLE`, and `PASS`, and exits non-zero on any FAIL. Capture its output verbatim — do not re-derive what it found.
 2. **Read the agent definition** and apply the **judgment** ([J]-tagged) criteria from [the rubric](references/rubric.md) — the linter owns the [M] ones.
 3. **Report** findings by location → criterion → fix; lead with FAIL findings.
 ```
@@ -73,7 +73,7 @@ Create a well-formed agent definition from a plain-English description of the ag
 1. **Gather inputs.** If the description is missing a lane boundary (what it defers), ask for it — the own-vs-defer line is the most important judgment call and cannot be inferred from a role alone.
 2. **Read [the standard](references/standards.md)** before writing — do not generate frontmatter from memory.
 3. **Draft the frontmatter** (`name`, `description`, optional `model` / `tools`) then the system prompt (role declaration, grounding statement, own-vs-defer boundary, operating notes).
-4. **Run the linter** from the repository root: `bun run ki:agents:audit`. Fix any FAIL findings before delivering.
+4. **Run the linter** from the repository root: `bun run ki:subagents:audit`. Fix any FAIL findings before delivering.
 5. Return the complete `.md` file content, annotated with the reasoning for any non-obvious choices.
 ```
 

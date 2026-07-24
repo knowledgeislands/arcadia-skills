@@ -31,7 +31,7 @@ const SELF = fileURLToPath(import.meta.url)
 // .../skills/environment/ki-binding/scripts/build-plugin.ts → up to the harness root
 const HARNESS_ROOT = resolve(dirname(SELF), '..', '..', '..', '..')
 const SKILLS_DIR = join(HARNESS_ROOT, 'skills')
-const AGENTS_DIR = join(HARNESS_ROOT, 'agents', 'governance')
+const AGENTS_DIR = join(HARNESS_ROOT, 'subagents', 'governance')
 
 // ── Args ──
 const argv = process.argv.slice(2)
@@ -109,7 +109,7 @@ writeFileSync(join(pluginRoot, '.claude-plugin', 'plugin.json'), `${JSON.stringi
 // ── Copy skills verbatim (whole dir incl. references/ and scripts/) ──
 for (const { name, path } of skillDirs) cpSync(path, join(pluginRoot, 'skills', name), { recursive: true })
 
-// ── Copy governance agents (flatten agents/governance/*.md → agents/*.md) ──
+// ── Copy governance agents (flatten subagents/governance/*.md → agents/*.md) ──
 for (const f of agentFiles) cpSync(join(AGENTS_DIR, f), join(pluginRoot, 'agents', f))
 
 // ── Report ──

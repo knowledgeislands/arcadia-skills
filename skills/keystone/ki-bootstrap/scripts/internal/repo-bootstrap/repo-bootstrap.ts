@@ -409,7 +409,7 @@ function validateExistingSourceLinks(target: string, metaDir: string, owned: Own
   } catch (error) {
     throw new Error(`cannot prove ${VENDOR_DIR} source links: ${(error as Error).message}`)
   }
-  const sourceRoots = [join(target, 'skills'), join(target, 'agents')]
+  const sourceRoots = [join(target, 'skills'), join(target, 'subagents')]
     .filter((path) => {
       const entry = lstatOrNull(path)
       return entry?.isDirectory() && !entry.isSymbolicLink()
@@ -917,11 +917,11 @@ function vendorBootstrapPayload(
   ensureCandidateDirectory(generationRoot, BOOTSTRAP_DIR, journal)
   if (harness) {
     relativeSourceLink(targetRoot, generationRoot, join(BOOTSTRAP_DIR, 'skills'), harness.skillsRoot, journal, manifestLinks)
-    if (set.includes('ki-agents')) {
-      const agents = join(harness.root, 'agents')
+    if (set.includes('ki-subagents')) {
+      const agents = join(harness.root, 'subagents')
       const stat = lstatOrNull(agents)
       if (!stat?.isDirectory() || stat.isSymbolicLink()) throw new Error(`source harness agents must be a regular directory: ${agents}`)
-      relativeSourceLink(targetRoot, generationRoot, join(BOOTSTRAP_DIR, 'agents'), agents, journal, manifestLinks)
+      relativeSourceLink(targetRoot, generationRoot, join(BOOTSTRAP_DIR, 'subagents'), agents, journal, manifestLinks)
     }
     if (showActions)
       console.log(
@@ -972,17 +972,17 @@ function vendorBootstrapPayload(
     )
   }
 
-  if (set.includes('ki-agents')) {
-    ensureCandidateDirectory(generationRoot, join(BOOTSTRAP_DIR, 'agents'), journal)
-    const agentsSource = join(SKILLS_ROOT, '..', 'agents', 'governance')
+  if (set.includes('ki-subagents')) {
+    ensureCandidateDirectory(generationRoot, join(BOOTSTRAP_DIR, 'subagents'), journal)
+    const agentsSource = join(SKILLS_ROOT, '..', 'subagents', 'governance')
     manifestCopiedFiles(
       manifestFiles,
       journal,
       copyRegularTree(
         generationRoot,
         agentsSource,
-        join(generationRoot, BOOTSTRAP_DIR, 'agents', 'governance'),
-        join(BOOTSTRAP_DIR, 'agents', 'governance'),
+        join(generationRoot, BOOTSTRAP_DIR, 'subagents', 'governance'),
+        join(BOOTSTRAP_DIR, 'subagents', 'governance'),
         journal
       )
     )

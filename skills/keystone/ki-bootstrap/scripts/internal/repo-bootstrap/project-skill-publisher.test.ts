@@ -39,7 +39,7 @@ function declaredTables(tables: string[]): string[] {
 
 function fixture(runtimes = ['claude-code']): string {
   const root = realpathSync(mkdtempSync(join(tmpdir(), 'ki-project-links-')))
-  const tables = declaredTables(['ki-repo', 'ki-kb', 'ki-agents'])
+  const tables = declaredTables(['ki-repo', 'ki-kb', 'ki-subagents'])
   writeFileSync(
     join(root, '.ki-config.toml'),
     `${tables
@@ -58,7 +58,7 @@ function sourceHarnessFixture(): { root: string; repo: string } {
     'ki-authoring',
     'ki-harness',
     'ki-skills',
-    'ki-agents',
+    'ki-subagents',
     'ki-decision-records',
     'ki-repo-roadmap',
     'ki-local',

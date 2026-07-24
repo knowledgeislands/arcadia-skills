@@ -12,4 +12,4 @@ Audit, conform, and scaffold Knowledge Islands agentic harnesses — repos that 
 - `HELP` — explain this skill and stop; the default when no mode is given (then routes, if interactive)
 - `REFRESH` — re-anchor the standard
 
-**See also:** Use when creating a new harness, checking an existing harness's five-part layout (`skills/`, `agents/`, `mcp/`, `evals/`, `hooks/`), verifying its CLAUDE.md covers required orientation sections, checking its package.json script families, or auditing its `.ki-config.toml` harness table.
+**See also:** Use when creating a new harness, checking an existing harness's five-part layout (`skills/`, `subagents/`, `mcp/`, `evals/`, `hooks/`), verifying its CLAUDE.md covers required orientation sections, checking its package.json script families, or auditing its `.ki-config.toml` harness table.

@@ -14,7 +14,7 @@ import { PROMPT } from './prompt.ts'
 const context = (value: AgentsRubricContext): AgentsRubricContext => value
 
 export const KI_AGENTS_RUBRIC: RubricDefinition<AgentsRubricContext> = {
-  name: 'ki-agents',
+  name: 'ki-subagents',
   concern: 'Claude Code subagent definitions',
   families: [
     defineRubricFamily({

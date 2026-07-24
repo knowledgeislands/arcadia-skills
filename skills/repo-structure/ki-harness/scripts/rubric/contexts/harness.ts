@@ -2,7 +2,7 @@ import { existsSync, mkdirSync, readdirSync, readFileSync, statSync, writeFileSy
 import { join } from 'node:path'
 import type { ConformOutcome, RubricOutcomes } from '../../vendored/ki-skills/rubric.ts'
 
-export const HARNESS_PARTS = ['skills', 'agents', 'mcp', 'evals', 'hooks'] as const
+export const HARNESS_PARTS = ['skills', 'subagents', 'mcp', 'evals', 'hooks'] as const
 export type HarnessPart = (typeof HARNESS_PARTS)[number]
 
 export const REQUIRED_HARNESS_SCRIPTS = [

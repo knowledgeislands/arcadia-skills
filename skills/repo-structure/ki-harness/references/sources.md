@@ -6,10 +6,10 @@ The tracked sources behind the harness standard. Provenance only: the record of 
 
 ## Authoritative
 
-| Tag  | Source                                    | Governs                                                  | Last reviewed |
-| ---- | ----------------------------------------- | -------------------------------------------------------- | ------------- |
-| [AS] | [Agent Skills specification][as-spec]     | The individual `SKILL.md` format the harness serves †    | 2026-07-04    |
-| [CC] | [Claude Code subagent docs][cc-subagents] | The subagent definition format the `agents/` part serves | 2026-07-04    |
+| Tag  | Source                                    | Governs                                                     | Last reviewed |
+| ---- | ----------------------------------------- | ----------------------------------------------------------- | ------------- |
+| [AS] | [Agent Skills specification][as-spec]     | The individual `SKILL.md` format the harness serves †       | 2026-07-04    |
+| [CC] | [Claude Code subagent docs][cc-subagents] | The subagent definition format the `subagents/` part serves | 2026-07-04    |
 
 † Including the directory-name = `name:` constraint and the `references/`, `scripts/`, `assets/` layout.
 
@@ -33,12 +33,12 @@ _REFRESH last run **2026-07-04** (previous: 2026-06-21)._
 **Confirmed:**
 
 - [AS] re-fetched live: the Agent Skills specification still defines **no** bundle / harness / container / multi-skill-grouping concept — the five-part structure, the `ki:skills:copy:project` delivery convention, and co-location intent remain entirely a KI architectural convention. The spec now explicitly requires the `name` field to **match the parent directory name** (reinforcing SKILLS-1), and documents additional optional frontmatter fields (`license`, `compatibility`, `metadata`, `allowed-tools`) plus a tightened `name` rule (1–64 chars, no consecutive hyphens). None of this touches the harness standard, which delegates every `SKILL.md` field requirement to `ki-skills`; the new fields are tracked there, not here.
-- [CC] re-fetched live: the subagent definition format (frontmatter `name` / `description` / `tools` / `model` + system-prompt body, project- and user-level install locations) is unchanged. No change to the `agents/` part of the harness contract.
+- [CC] re-fetched live: the subagent definition format (frontmatter `name` / `description` / `tools` / `model` + system-prompt body, project- and user-level install locations) is unchanged. No change to the `subagents/` part of the harness contract.
 - [KR] / [KS] / [KE] re-verified against the repo: `.ki-config.toml` carries `[ki-repo]`, `[ki-engineering]`, `[ki-harness]`, `[ki-skills]`; the `ki-skills` enforcement framework's severity ladder and checker contract are still cited correctly by the rubric. The mechanical checker (`ki:harness:audit`) passes 43/43.
 
 **Drift resolved this pass:**
 
-- [AH] the previous note recorded **thirteen** skills with the eval suite covering twelve of thirteen. The harness now holds **18** skills under `skills/` (`ki-website`, `ki-kb-activities`, `ki-agents`, `ki-authoring`, `ki-bootstrap`, `ki-website-cloudflare`, `ki-decision-records`, `ki-engineering`, `ki-handoffs`, `ki-harness`, `ki-kb`, `ki-kb-live-artifacts`, `ki-mcp`, `ki-repo-roadmap`, `ki-repo`, `ki-skills`, `ki-kb-streams`, `ki-tokenomics`). The `agents/` shelf is populated (governance agents); `mcp/` and `evals/` remain valid shelves. The `standards.md` body is deliberately **count-agnostic** and needs no edit for this growth — the container it describes still matches current reality.
+- [AH] the previous note recorded **thirteen** skills with the eval suite covering twelve of thirteen. The harness now holds **18** skills under `skills/` (`ki-website`, `ki-kb-activities`, `ki-subagents`, `ki-authoring`, `ki-bootstrap`, `ki-website-cloudflare`, `ki-decision-records`, `ki-engineering`, `ki-handoffs`, `ki-harness`, `ki-kb`, `ki-kb-live-artifacts`, `ki-mcp`, `ki-repo-roadmap`, `ki-repo`, `ki-skills`, `ki-kb-streams`, `ki-tokenomics`). The `subagents/` shelf is populated (governance agents); `mcp/` and `evals/` remain valid shelves. The `standards.md` body is deliberately **count-agnostic** and needs no edit for this growth — the container it describes still matches current reality.
 
 **Open watch-items:**
 

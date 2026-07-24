@@ -104,8 +104,8 @@ const readAgent = (file: string): AgentDefinition => {
 }
 
 const agentsRoot = (path: string): string => {
-  if (basename(path) === 'agents') return path
-  const candidate = join(path, 'agents')
+  if (basename(path) === 'subagents') return path
+  const candidate = join(path, 'subagents')
   return existsSync(candidate) && statSync(candidate).isDirectory() ? candidate : path
 }
 

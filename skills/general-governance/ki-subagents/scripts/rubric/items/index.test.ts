@@ -3,7 +3,7 @@ import { KI_AGENTS_RUBRIC } from './index.ts'
 
 const items = KI_AGENTS_RUBRIC.families.flatMap((family) => family.items)
 
-test('the structured catalogue preserves the complete ki-agents rule surface', () => {
+test('the structured catalogue preserves the complete ki-subagents rule surface', () => {
   expect(items.map((item) => item.code)).toEqual([
     'LAY-1',
     'LAY-2',

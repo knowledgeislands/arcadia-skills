@@ -1,5 +1,5 @@
 #!/usr/bin/env bun
-/** The single governed entrypoint for ki-agents. */
+/** The single governed entrypoint for ki-subagents. */
 
 import { resolve } from 'node:path'
 import { createAgentsContext } from './rubric/contexts/agents.ts'
@@ -30,7 +30,7 @@ export const options = (mode: 'audit' | 'conform', arguments_: readonly string[]
   if (unknown) throw new Error(`unknown option: ${unknown}`)
   const roots = arguments_.filter((argument) => !argument.startsWith('-'))
   if (mode === 'conform' && roots.length > 1) throw new Error('conform accepts at most one target')
-  const selected = mode === 'audit' ? (roots.length > 0 ? roots : ['.']) : [roots[0] ?? 'agents']
+  const selected = mode === 'audit' ? (roots.length > 0 ? roots : ['.']) : [roots[0] ?? 'subagents']
   return { target: resolve(selected[0] as string), roots: selected, dryRun: mode === 'conform' && arguments_.includes('--dry-run') }
 }
 
@@ -42,7 +42,7 @@ export const main = (argv: readonly string[] = process.argv.slice(2)): void =>
       conformUsage: 'Usage: bun scripts/govern.ts conform [agent-or-directory] [--dry-run] [options]\n',
       checker,
       options,
-      educate: (arguments_) => runSkillEducator({ skill: 'ki-agents', source: resolve(import.meta.dirname, '..'), argv: arguments_ })
+      educate: (arguments_) => runSkillEducator({ skill: 'ki-subagents', source: resolve(import.meta.dirname, '..'), argv: arguments_ })
     },
     argv
   )

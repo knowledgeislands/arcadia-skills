@@ -36,7 +36,7 @@ audit_staged_governance() {
 
 if matches_staged '^docs/decisions/'; then bun run ki:decision-records:audit || exit 1; fi
 if matches_staged '^skills/'; then bun run ki:skills:audit || exit 1; fi
-if matches_staged '^agents/'; then bun run ki:agents:audit || exit 1; fi
+if matches_staged '^subagents/'; then bun run ki:subagents:audit || exit 1; fi
 
 engineering_scope=0
 bootstrap_scope=0

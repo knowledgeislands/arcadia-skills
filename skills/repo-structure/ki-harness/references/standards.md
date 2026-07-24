@@ -23,13 +23,13 @@ The rubric ([`rubric.md`](rubric.md)) is the line-by-line checkable form of this
 
 An **agentic harness** is a single versioned git repository that co-locates the five parts an agent is equipped with:
 
-| Directory | What it holds                                            | Install path                                                |
-| --------- | -------------------------------------------------------- | ----------------------------------------------------------- |
-| `skills/` | [Agent Skills][as-spec] — one directory per skill        | Copied into a repo's selected runtime skill directory †     |
-| `agents/` | Claude Code subagent definitions — one `.md` per agent   | Symlinked or copied by the Claude Code agent runner         |
-| `mcp/`    | Workspace MCP server packages ‡                          | Referenced by `.claude/settings.json` / `mcp_settings.json` |
-| `evals/`  | Behavioural eval scenarios — advisory signal, not a gate | Run on demand, not in CI                                    |
-| `hooks/`  | Claude Code hook scripts — advisory, no governing skill  | Wired into a repo's `.claude/settings.json`                 |
+| Directory    | What it holds                                            | Install path                                                |
+| ------------ | -------------------------------------------------------- | ----------------------------------------------------------- |
+| `skills/`    | [Agent Skills][as-spec] — one directory per skill        | Copied into a repo's selected runtime skill directory †     |
+| `subagents/` | Claude Code subagent definitions — one `.md` per agent   | Symlinked or copied by the Claude Code agent runner         |
+| `mcp/`       | Workspace MCP server packages ‡                          | Referenced by `.claude/settings.json` / `mcp_settings.json` |
+| `evals/`     | Behavioural eval scenarios — advisory signal, not a gate | Run on demand, not in CI                                    |
+| `hooks/`     | Claude Code hook scripts — advisory, no governing skill  | Wired into a repo's `.claude/settings.json`                 |
 
 † Via repository bootstrap or `bun run ki:skills:copy:project` (`ki-bootstrap`).
 
@@ -37,7 +37,7 @@ An **agentic harness** is a single versioned git repository that co-locates the 
 
 The value of co-location: the five parts are versioned together, reviewed together, and installed together — rather than scattered across the bases and projects that consume them. A change to a skill and the agent that invokes it ships as one PR, not two.
 
-A harness does **not** have to host every part actively. Empty shelves (`agents/`, `mcp/`, `evals/`, `hooks/` populated only by a `README.md`) are a valid, encouraged starting state — the directory structure commits to the five-part intent even before all parts are built. A shelf is not a gap.
+A harness does **not** have to host every part actively. Empty shelves (`subagents/`, `mcp/`, `evals/`, `hooks/` populated only by a `README.md`) are a valid, encouraged starting state — the directory structure commits to the five-part intent even before all parts are built. A shelf is not a gap.
 
 ---
 
@@ -45,7 +45,7 @@ A harness does **not** have to host every part actively. Empty shelves (`agents/
 
 A **harness capability** is a typed published member of a compatible harness. Skills, agents, MCP servers, hooks, and evals are capability kinds; a future kind must be registered rather than treated as an untyped directory payload.
 
-The common term establishes a harness inventory and installation boundary without replacing each kind's own standard. `ki-skills` governs skills, `ki-agents` governs agents, and the relevant sibling owns every other kind's content and runtime integration. A harness must make each populated shelf and its capabilities discoverable through its shelf documentation.
+The common term establishes a harness inventory and installation boundary without replacing each kind's own standard. `ki-skills` governs skills, `ki-subagents` governs agents, and the relevant sibling owns every other kind's content and runtime integration. A harness must make each populated shelf and its capabilities discoverable through its shelf documentation.
 
 An installed harness is a verified regular-file source. Native capability activation is a separate, managed runtime projection: `vendor` writes a regular-file copy and `symlink` writes a contained managed link to that installed source. Neither mode permits a repository-vendored `.ki/bin` executor or an arbitrary checkout to become an operation source. The native CLI surface remains planned until `tools-ki` releases it.
 
@@ -59,7 +59,7 @@ Every harness MUST have these five directories at the repo root, each containing
 
 ```text
 skills/       README.md  (+ one directory per skill)
-agents/       README.md  (+ one .md per agent, or empty shelf)
+subagents/       README.md  (+ one .md per agent, or empty shelf)
 mcp/          README.md  (+ server packages, or shelf pointing to mcp-* repos)
 evals/        README.md  (+ scenario files, or rough advisory shelf)
 hooks/        README.md  (+ hook scripts wired via .claude/settings.json, or empty shelf)
@@ -171,7 +171,7 @@ This standard governs the container. The parts inside it each have a governing s
 | What                                        | Who governs it                      |
 | ------------------------------------------- | ----------------------------------- |
 | `skills/*/SKILL.md` prose                   | `ki-skills`                         |
-| `agents/*.md` definitions                   | `ki-agents`                         |
+| `subagents/*.md` definitions                | `ki-subagents`                      |
 | `mcp/*/src/` server code                    | `ki-mcp`                            |
 | `evals/` test harness                       | No dedicated skill today — advisory |
 | `hooks/` scripts + settings wiring          | No dedicated skill today — advisory |

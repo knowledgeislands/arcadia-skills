@@ -43,7 +43,7 @@ function fixture(): string {
 function harnessFixture(): string {
   const root = realpathSync(mkdtempSync(join(tmpdir(), 'ki-bootstrap-source-harness-')))
   cpSync(join(harnessSource, 'skills'), join(root, 'skills'), { recursive: true })
-  cpSync(join(harnessSource, 'agents'), join(root, 'agents'), { recursive: true })
+  cpSync(join(harnessSource, 'subagents'), join(root, 'subagents'), { recursive: true })
   writeFileSync(join(root, '.ki-config.toml'), readFileSync(join(harnessSource, '.ki-config.toml'), 'utf8'))
   return root
 }

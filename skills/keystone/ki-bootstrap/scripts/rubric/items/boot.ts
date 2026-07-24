@@ -94,7 +94,7 @@ export const BOOT_6: RubricItem<BootstrapRubricContext> = {
   code: 'BOOT-6',
   title: 'governance agent directories mirror the declared agent set',
   description:
-    "Each supported runtime's governance agent directory mirrors the available governance agents when the repository declares `[ki-agents]`, and is empty otherwise, with no missing, extra, or dangling managed links.",
+    "Each supported runtime's governance agent directory mirrors the available governance agents when the repository declares `[ki-subagents]`, and is empty otherwise, with no missing, extra, or dangling managed links.",
   sources: ['[KH]'],
   mechanical: {
     level: 'WARN',

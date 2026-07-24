@@ -26,7 +26,7 @@ The shared **engineering toolchain** every TS/Bun repo builds on — aggregate/s
 
 ### `ki-harness`
 
-Audits, conforms, and scaffolds a **harness repository** — the container that bundles the other parts: the five-part `skills/` / `agents/` / `mcp/` / `evals/` / `hooks/` layout, the root `CLAUDE.md` / `ROADMAP.md` / `package.json` script families / `.ki-config.toml` table, and the delivery conventions that make its components available. Governs the **container, not the contents**: the bridge into the sibling skills rather than a replacement — it **composes** their checkers (`ki-skills`, `ki-agents`, `ki-repo-roadmap`, `ki-mcp`, `ki-engineering`, `ki-repo`) and adds only the bundle-structure delta. Empty shelves are valid — a shelf is not a gap.
+Audits, conforms, and scaffolds a **harness repository** — the container that bundles the other parts: the five-part `skills/` / `agents/` / `mcp/` / `evals/` / `hooks/` layout, the root `CLAUDE.md` / `ROADMAP.md` / `package.json` script families / `.ki-config.toml` table, and the delivery conventions that make its components available. Governs the **container, not the contents**: the bridge into the sibling skills rather than a replacement — it **composes** their checkers (`ki-skills`, `ki-subagents`, `ki-repo-roadmap`, `ki-mcp`, `ki-engineering`, `ki-repo`) and adds only the bundle-structure delta. Empty shelves are valid — a shelf is not a gap.
 
 ### `ki-kb`
 
@@ -66,7 +66,7 @@ Codifies, audits, and conforms the **chezmoi dotfiles-management standard** — 
 
 Audits, writes, and conforms Agent Skills against a checkable rubric — mechanical checks plus judgment ones applied by reading, and a tracked source list it revisits. `REVIEW` examines an existing skill's architecture and automation opportunities beyond the rubric; `EXTRACT` examines an explicitly named repository and only explicitly selected history inputs for candidate skills, scripts, references, agents, or hooks. Both modes produce evidence-backed proposals, reconcile them with the canonical roadmap, and stop for confirmation rather than silently creating durable work. It also owns the shared enforcement framework and checker contract used by governance skills.
 
-### `ki-agents`
+### `ki-subagents`
 
 Audits, writes, and conforms **Claude Code subagent definitions** against a checkable rubric — mechanical checks (frontmatter, `name` uniqueness across the set, link resolution) plus the judgment ones applied by reading (the `description` as delegation signal, the system-prompt role/lane, own-vs-defer, least-privilege tools). The **agents twin of `ki-skills`**: that one governs a `SKILL.md`, this one a subagent definition. Governs the agents that land under `agents/`.
 

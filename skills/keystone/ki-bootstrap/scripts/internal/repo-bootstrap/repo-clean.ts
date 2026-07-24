@@ -65,7 +65,7 @@ function sourceHarnessLink(target: string, path: string, value: string): boolean
   try {
     const resolved = realpathSync(resolve(dirname(path), value))
     const root = realpathSync(target)
-    return [join(root, 'skills'), join(root, 'agents')].some((sourceRoot) => {
+    return [join(root, 'skills'), join(root, 'subagents')].some((sourceRoot) => {
       try {
         return contained(realpathSync(sourceRoot), resolved)
       } catch {

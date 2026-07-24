@@ -152,7 +152,7 @@ const valid = fixture(`
 [ki-bootstrap]
 [ki-harness]
 [ki-skills]
-[ki-agents]
+[ki-subagents]
 [ki-decision-records]
 [ki-repo-roadmap]
 [ki-repo]
@@ -500,7 +500,7 @@ try {
 const selfBootstrappingHarness = realpathSync(mkdtempSync(join(tmpdir(), 'ki-bootstrap-self-source-')))
 try {
   cpSync(SKILLS_ROOT, join(selfBootstrappingHarness, 'skills'), { recursive: true, dereference: true })
-  cpSync(join(dirname(SKILLS_ROOT), 'agents'), join(selfBootstrappingHarness, 'agents'), { recursive: true, dereference: true })
+  cpSync(join(dirname(SKILLS_ROOT), 'subagents'), join(selfBootstrappingHarness, 'subagents'), { recursive: true, dereference: true })
   writeFileSync(join(selfBootstrappingHarness, '.ki-config.toml'), readFileSync(join(dirname(SKILLS_ROOT), '.ki-config.toml')))
   const selfBootstrap = join(
     selfBootstrappingHarness,

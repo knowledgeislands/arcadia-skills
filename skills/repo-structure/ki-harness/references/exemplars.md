@@ -5,7 +5,7 @@
 - [Collections](#collections)
 - [Selected patterns](#selected-patterns)
 
-Curated patterns from the KI agentic harness that show what a well-structured five-part bundle looks like. Use these as reference when standing up a new harness, auditing an existing one, or checking that a shelf is correctly declared. The `ki-agentic-harness` is the canonical reference implementation; it demonstrates every structural requirement: five directories each with a `README.md`, the required `package.json` script families, and a `.ki-config.toml` that opts into all four governing skills. Its `skills/`, `agents/`, `evals/`, and `hooks/` shelves are populated while `mcp/` demonstrates a valid empty shelf. Populated contents are examples, not a requirement: any shelf may start empty when its `README.md` declares that state. For the full source list and last-review dates, see [sources.md](sources.md).
+Curated patterns from the KI agentic harness that show what a well-structured five-part bundle looks like. Use these as reference when standing up a new harness, auditing an existing one, or checking that a shelf is correctly declared. The `ki-agentic-harness` is the canonical reference implementation; it demonstrates every structural requirement: five directories each with a `README.md`, the required `package.json` script families, and a `.ki-config.toml` that opts into all four governing skills. Its `skills/`, `subagents/`, `evals/`, and `hooks/` shelves are populated while `mcp/` demonstrates a valid empty shelf. Populated contents are examples, not a requirement: any shelf may start empty when its `README.md` declares that state. For the full source list and last-review dates, see [sources.md](sources.md).
 
 ## Collections
 
@@ -13,7 +13,7 @@ Curated patterns from the KI agentic harness that show what a well-structured fi
 | -------------------------- | -------------------------------------- | --------------------------------------------------------------------- |
 | ki-agentic-harness         | [canonical harness repo][harness-repo] | The KI canonical reference; four populated parts and an empty MCP     |
 | Agent Skills specification | [Agent Skills spec][as-spec]           | The `SKILL.md` format and `references/`, `scripts/`, `assets/` layout |
-| Claude Code subagent docs  | [CC subagent docs][cc-subagents]       | The subagent definition format the `agents/` part serves              |
+| Claude Code subagent docs  | [CC subagent docs][cc-subagents]       | The subagent definition format the `subagents/` part serves           |
 
 ## Selected patterns
 
@@ -33,7 +33,7 @@ skills/
     references/
     scripts/
   …
-agents/
+subagents/
   README.md
   governance/
     ki-skills-lead.md
@@ -58,7 +58,7 @@ Every part's `README.md` declares its current state and routes contributors to t
 
 Claude Code subagent definitions — one `.md` file per agent.
 
-Each file is a subagent definition: YAML frontmatter (`name`, `description`, `tools`, `model`) followed by the system-prompt body. See the [Claude Code subagent docs](https://code.claude.com/docs/en/sub-agents) and the `ki-agents` skill for KI conventions (grounding, own-vs-defer, KB wikilinks).
+Each file is a subagent definition: YAML frontmatter (`name`, `description`, `tools`, `model`) followed by the system-prompt body. See the [Claude Code subagent docs](https://code.claude.com/docs/en/sub-agents) and the `ki-subagents` skill for KI conventions (grounding, own-vs-defer, KB wikilinks).
 
 _No agent definitions yet — this is an empty shelf. Add a `.md` per agent when the first agent is ready._
 ```

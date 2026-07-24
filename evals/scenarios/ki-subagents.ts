@@ -1,5 +1,5 @@
 /**
- * Eval scenarios for the `ki-agents` skill — the subagent rubric.
+ * Eval scenarios for the `ki-subagents` skill — the subagent rubric.
  * `agents` is a SHAPE skill (it judges a definition's form, not a body of facts),
  * so these target house-ARBITRARY conventions it owns that a skill-less baseline
  * can't derive — and, where possible, ones that CONTRADICT generic best practice
@@ -13,7 +13,7 @@ export const scenarios: Scenario[] = [
     // LINK-2: the sharpest house-contrarian rule — wikilinks are FORBIDDEN in a
     // SKILL.md but ALLOWED in an agent, because a grounded agent cites KB notes.
     // A baseline applies the generic "use markdown links" rule and gets it wrong.
-    skill: 'ki-agents',
+    skill: 'ki-subagents',
     id: 'agents-wikilinks',
     prompt:
       'In a Knowledge Islands subagent definition (.md agent file), may I use Obsidian [[wikilinks]] to reference KB notes, or must I use relative markdown links the way a SKILL.md does?',
@@ -28,7 +28,7 @@ export const scenarios: Scenario[] = [
   {
     // PROMPT-2/3/5: the house system-prompt shape. Generic advice ("describe the
     // role") scores nothing here; the lift is the three HOUSE requirements.
-    skill: 'ki-agents',
+    skill: 'ki-subagents',
     id: 'agents-prompt-shape',
     prompt:
       "Beyond a generic role description, what does the Knowledge Islands house standard require a subagent's system prompt to contain?",
@@ -44,7 +44,7 @@ export const scenarios: Scenario[] = [
     // FM-1/FM-2: house frontmatter defaults. Contrarian hook — OMITTING `tools`
     // inherits ALL tools (the wrong default), and a pin must be an alias, not a
     // rot-prone full model id; a baseline tends to miss both.
-    skill: 'ki-agents',
+    skill: 'ki-subagents',
     id: 'agents-model-tools',
     prompt: 'When defining a Knowledge Islands subagent, how should the `model` and `tools` frontmatter fields be set by default, and why?',
     assertions: [

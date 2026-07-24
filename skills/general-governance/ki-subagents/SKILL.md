@@ -1,5 +1,5 @@
 ---
-name: ki-agents
+name: ki-subagents
 ki-depends-on: []
 ki-runtime-binding: true
 ki-shared-dependencies: [ki-skills:rubric, ki-skills:checker, ki-skills:reporter, ki-bootstrap:educator, ki-skills:govern]

@@ -49,8 +49,6 @@
   },
   "scripts": {
     "clean": "rm -rf node_modules",
-    "ki:agents:audit": "bun .ki/bin/aggregate.ts audit --skill ki-agents",
-    "ki:agents:conform": "bun .ki/bin/aggregate.ts conform --skill ki-agents",
     "ki:audit": "bun .ki/bin/aggregate.ts audit",
     "ki:authoring:audit": "bun .ki/bin/aggregate.ts audit --skill ki-authoring",
     "ki:authoring:conform": "bun .ki/bin/aggregate.ts conform --skill ki-authoring",
@@ -84,6 +82,8 @@
     "ki:skills:help": "bun .ki/bin/skill-help.ts",
     "ki:skills:link:global": "bun skills/repo-structure/ki-harness/scripts/link-global-skills.ts",
     "ki:skills:refresh-status": "bun skills/keystone/ki-skills/scripts/govern.ts audit skills --refresh-status",
+    "ki:subagents:audit": "bun .ki/bin/aggregate.ts audit --skill ki-subagents",
+    "ki:subagents:conform": "bun .ki/bin/aggregate.ts conform --skill ki-subagents",
     "ki:tokenomics:audit": "bun .ki/bin/aggregate.ts audit --skill ki-tokenomics",
     "ki:tokenomics:conform": "bun .ki/bin/aggregate.ts conform --skill ki-tokenomics",
     "prepare": "husky",

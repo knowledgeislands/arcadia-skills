@@ -46,7 +46,7 @@ import {
 } from './resolve.ts'
 import { gitignoresPath, runtimeAgentsDir, runtimeSkillsDir, supportedRuntimes } from './runtime-paths.ts'
 
-export type ProjectLinkScope = 'skills' | 'agents' | 'all'
+export type ProjectLinkScope = 'skills' | 'subagents' | 'all'
 export type ProjectSkillPublication = 'copy' | 'development-link'
 export type ProjectLinkCheckLevel = 'FAIL' | 'WARN' | 'PASS'
 export type ProjectLinkCheck = {
@@ -79,7 +79,7 @@ type LinkPlan = {
 const SELF = realpathFor(fileURLToPath(import.meta.url))
 const SCRIPTS = dirname(SELF)
 const HARNESS_ROOT = resolve(SCRIPTS, '..', '..', '..', '..', '..', '..')
-const AGENTS_ROOT = join(HARNESS_ROOT, 'agents', 'governance')
+const AGENTS_ROOT = join(HARNESS_ROOT, 'subagents', 'governance')
 const BOOTSTRAP = 'ki-bootstrap'
 const LOCAL_GOVERNANCE_SKILL = 'ki-self'
 const LOCAL_GOVERNANCE_SOURCE = join('.ki', 'self', 'skill')
@@ -387,7 +387,7 @@ function discoverAgents(): string[] {
 }
 
 function hasAgentsTable(config: string): boolean {
-  return /^\[ki-agents\][ \t]*$/m.test(config)
+  return /^\[ki-subagents\][ \t]*$/m.test(config)
 }
 
 function managedAgentLink(name: string, link: Entry, desired: Set<string>, path: string): boolean {
@@ -558,7 +558,7 @@ function buildPlan(target: string, scope: ProjectLinkScope, skillPublication: Pr
     }
   }
 
-  if (scope === 'agents' || scope === 'all') {
+  if (scope === 'subagents' || scope === 'all') {
     const wanted = hasAgentsTable(config) ? discoverAgents() : []
     const desired = new Set(wanted)
     for (const runtime of runtimes) {
@@ -603,7 +603,7 @@ function buildPlan(target: string, scope: ProjectLinkScope, skillPublication: Pr
   if (scope === 'skills' || scope === 'all') {
     for (const runtime of runtimes) ignored.add(runtimeSkillsDir(runtime))
   }
-  if (scope === 'agents' || scope === 'all') {
+  if (scope === 'subagents' || scope === 'all') {
     if (hasAgentsTable(config) && discoverAgents().length) {
       for (const runtime of runtimes) {
         try {
@@ -837,7 +837,7 @@ export function inspectProjectLinks(
       })
     }
   }
-  if (scope === 'agents' || scope === 'all') {
+  if (scope === 'subagents' || scope === 'all') {
     const wanted = new Set(hasAgentsTable(config) ? discoverAgents() : [])
     for (const runtime of runtimes) {
       let subdir: string
@@ -883,7 +883,7 @@ function printCheck(target: string, scope: ProjectLinkScope, skillPublication?: 
     const colour = check.level === 'FAIL' ? RED : check.level === 'WARN' ? YELLOW : DIM
     console.log(`  ${colour}${check.level}${RESET}  [${check.code}] ${check.message}`)
   }
-  if (scope === 'agents' || scope === 'all') {
+  if (scope === 'subagents' || scope === 'all') {
     const config = regularText(join(target, '.ki-config.toml'), '.ki-config.toml').content
     for (const runtime of supportedRuntimes(config)) {
       try {

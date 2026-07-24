@@ -2,4 +2,4 @@
 import { resolve } from 'node:path'
 import { runSkillEducator } from './educator.ts'
 
-runSkillEducator({ skill: "ki-agents", source: resolve(import.meta.dirname, 'skill') })
+runSkillEducator({ skill: "ki-subagents", source: resolve(import.meta.dirname, 'skill') })
