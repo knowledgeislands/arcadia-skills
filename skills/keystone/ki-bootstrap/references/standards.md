@@ -1,6 +1,6 @@
 # The bootstrap standard — compatible harnesses and native repository operations
 
-This standard implements the architecture in [ADR-KI-HARNESS-012](../../../../docs/decisions/ADR-KI-HARNESS-012-compatible-harness-publication-and-native-operation-boundary.md).
+This standard implements the architecture in [ADR-KI-HARNESS-012](../../../../docs/decisions/ADR-KI-HARNESS-012-compatible-harness-publication-and-governed-rubric-boundary.md).
 
 It replaces the former repository-vendored executor model.
 

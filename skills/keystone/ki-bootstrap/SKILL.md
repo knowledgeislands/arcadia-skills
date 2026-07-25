@@ -13,7 +13,7 @@ argument-hint: 'help | audit [path] | conform [path] | educate [target] | migrat
 
 `ki-bootstrap` governs the transition to installed compatible harnesses and native repository operations.
 
-Its normative contract is [ADR-KI-HARNESS-012](../../../docs/decisions/ADR-KI-HARNESS-012-compatible-harness-publication-and-native-operation-boundary.md) and [the bootstrap standard](references/standards.md).
+Its normative contract is [ADR-KI-HARNESS-012](../../../docs/decisions/ADR-KI-HARNESS-012-compatible-harness-publication-and-governed-rubric-boundary.md) and [the bootstrap standard](references/standards.md).
 
 ## Current delivery status
 

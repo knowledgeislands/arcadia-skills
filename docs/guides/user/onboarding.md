@@ -2,7 +2,7 @@
 
 Knowledge Islands is moving from repository-vendored runners to verified installed compatible harnesses and native `ki` operations.
 
-The target contract is [ADR-KI-HARNESS-012](../../decisions/ADR-KI-HARNESS-012-compatible-harness-publication-and-native-operation-boundary.md).
+The target contract is [ADR-KI-HARNESS-012](../../decisions/ADR-KI-HARNESS-012-compatible-harness-publication-and-governed-rubric-boundary.md).
 
 The native skill-installation, activation, repository-maintenance, and migration commands are not yet released by `tools-ki`.
 

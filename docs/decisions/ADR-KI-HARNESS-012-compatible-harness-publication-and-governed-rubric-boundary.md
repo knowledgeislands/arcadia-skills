@@ -1,6 +1,6 @@
 ---
 id: ADR-KI-HARNESS-012
-title: 'Compatible harness publication and native-operation boundary'
+title: 'Compatible harness publication and governed-rubric boundary'
 date: 2026-07-24
 status: current
 type: Architecture Decision Record
@@ -13,7 +13,7 @@ decision_depends_on:
   - ADR-KI-HARNESS-011
 ---
 
-# ADR-KI-HARNESS-012: Compatible harness publication and native-operation boundary
+# ADR-KI-HARNESS-012: Compatible harness publication and governed-rubric boundary
 
 ## Context
 
@@ -25,9 +25,9 @@ Knowledge Islands needs compatible harnesses to publish typed capabilities while
 
 Knowledge Islands adopts the **compatible harness** as the published unit. The current compatible payload is a verified archive containing regular `skills/`, `subagents/`, and `hooks/` directories. The host derives a harness identity from its installed `<owner>/<repository>` path and discovers skills from their `SKILL.md` frontmatter. The base `knowledgeislands/ki-agentic-harness` is the baseline compatible harness. A checkout, cache, runtime projection, or repository `.ki/` directory is never an implicit harness or operation source.
 
-A skill is addressed as `<harness-id>:<skill-name>`. Other capability kinds reserve `<harness-id>:<kind>/<name>` when the host supports them. A skill's source directory and frontmatter remain authoritative; its native operations are only the contained modules registered at the supported native-operation paths. No unlisted or escaping file becomes executable.
+A skill is addressed as `<harness-id>:<skill-name>`. Other capability kinds reserve `<harness-id>:<kind>/<name>` when the host supports them. A skill's source directory and frontmatter remain authoritative. For governed skills, the harness contributes only the skill-specific rubric definition, evidence/context builders, and declared safe repairs; no unlisted or escaping file becomes executable.
 
-The harness defines this payload and capability semantics only. `tools-ki` owns acquisition evidence, installation layout, capability activation, repository resolution, public commands, native-operation execution, reporting, migration, release delivery, and support diagnostics. The host selects, validates, orders, and runs contained registered operations. Missing, incompatible, undeclared, or untrusted capabilities fail before a write.
+The harness defines this payload and capability semantics only. `tools-ki` owns acquisition evidence, installation layout, capability activation, repository resolution, public commands, governed-rubric execution, reporting, migration, release delivery, and support diagnostics. The host selects, validates, orders, and runs compatible rubric definitions through one generic runtime. Missing, incompatible, undeclared, or untrusted capabilities fail before a write.
 
 Repository vendoring ends. Existing `.ki` runner and manifest state is a migration input only: it is never an execution fallback and is never removed without complete ownership proof. Current activation uses managed links from the verified installed payload; a copied projection or a version-selection model is future work, not part of this contract.
 
@@ -35,9 +35,9 @@ Repository vendoring ends. Existing `.ki` runner and manifest state is a migrati
 
 Repositories remain declarative through `.ki-config.toml`, but a clean clone requires the verified compatible harnesses that provide its declared capabilities before mechanical governance can run. CI must establish those harnesses explicitly and fail with recovery guidance when acquisition or integrity verification fails.
 
-Skills retain ownership of their standards and mechanical operations, but their implementations migrate from standalone vendored scripts to contained registered native modules. The former bootstrap aggregate, generated `.ki/bin` wrappers, repository manifest, and package-script aliases to them are retired without a compatibility path. Existing user and repository ownership protections remain part of activation and migration rather than reasons to retain the executor.
+Skills retain ownership of their standards, rubrics, evidence, and declared mechanical repairs, while `tools-ki` owns the generic checker, reporter, mode, ordering, and transaction runtime. The former bootstrap aggregate, generated `.ki/bin` wrappers, repository manifest, and package-script aliases to them are retired without a compatibility path. Existing user and repository ownership protections remain part of activation and migration rather than reasons to retain the executor.
 
-The direct-payload capability and operation boundary is in the [compatible harness contract](references/compatible-harness-contract.md). `tools-ki` records its host-specific installation, command, repository, and delivery decisions separately.
+The direct-payload capability and governed-rubric boundary is in the [compatible harness contract](references/compatible-harness-contract.md). `tools-ki` records its host-specific installation, command, repository, and delivery decisions separately.
 
 ## References
 

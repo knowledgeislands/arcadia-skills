@@ -13,15 +13,15 @@ Knowledge Islands is replacing repository-vendored runners with native `ki` oper
 
 `ki` must always include the base `knowledgeislands/ki-agentic-harness` and support additional compatible harnesses, such as an organisation harness, from an XDG-managed user registry.
 
-The harness owns compatible capability semantics; `tools-ki` owns the CLI platform and public grammar; KI Specifications owns portable contracts; and the Website owns public user-guide prose.
+The harness owns compatible capability semantics and skill-specific rubrics; `tools-ki` owns the CLI platform, public grammar, and generic governed-rubric runtime; KI Specifications owns portable contracts; and the Website owns public user-guide prose.
 
 ## Current state
 
-The released `tools-ki` surface installs direct compatible payloads under a user KI data directory, derives harness identity from the owner/repository path, discovers and resolves registered native repository operations without vendored runners, and activates skills through `ki skill user` and `ki skill repo`.
+The released `tools-ki` surface installs direct compatible payloads under a user KI data directory, derives harness identity from the owner/repository path, provides the initial `ki repo audit` and `ki repo conform` host commands without vendored runners, and activates skills through `ki skill user` and `ki skill repo`.
 
-The host is ready, but this harness has not yet published native operation modules for its declared governance skills. Its source repository still depends on its tracked `.ki/` aggregate, bootstrap payload, manifest, and package-script aliases for CI, pre-commit, and local governance. That legacy state cannot be removed until compatible native audit and conform modules replace each of those roles.
+The host is ready, but `tools-ki` has not yet absorbed the generic governed-rubric runtime currently shared through this harness's `govern.ts` and `checker.ts`. This source repository still depends on its tracked `.ki/` aggregate, bootstrap payload, manifest, and package-script aliases for CI, pre-commit, and local governance. That legacy state cannot be removed until the tools-owned runtime executes the harness's rubrics and safe repairs directly.
 
-[ADR-KI-HARNESS-012](../../../decisions/ADR-KI-HARNESS-012-compatible-harness-publication-and-native-operation-boundary.md) defines the direct compatible-payload boundary. `tools-ki` owns the host implementation and its current command grammar. KI Specifications work is deliberately deferred until the implementation contract has settled.
+[ADR-KI-HARNESS-012](../../../decisions/ADR-KI-HARNESS-012-compatible-harness-publication-and-governed-rubric-boundary.md) defines the direct compatible-payload and governed-rubric boundary. `tools-ki` owns the host implementation and its current command grammar. KI Specifications work is deliberately deferred until the implementation contract has settled.
 
 The shared ecosystem GDR now establishes the five-repository ownership model. Its byte-identical mirrors and every local decision-record collection now conform to the current decision-record standard.
 
@@ -29,7 +29,7 @@ The shared ecosystem GDR now establishes the five-repository ownership model. It
 
 - Defined qualified capability identity: `<harness-id>:<skill-name>` for skills and the reserved `<harness-id>:<kind>/<name>` extension shape for other kinds.
 - Established direct owner/repository installation paths with immutable archive evidence and no user-selectable version model; legacy `latest/` and lock layouts migrate only as recognised old state.
-- Reassigned CLI installation, command grammar, repository resolution, activation, native-operation hosting, migration, reporting, and delivery ownership to `tools-ki`.
+- Reassigned CLI installation, command grammar, repository resolution, activation, governed-rubric hosting, migration, reporting, and delivery ownership to `tools-ki`.
 - Deferred KI Specifications work until the implementation contract is stable enough to standardise.
 - Added `shared_record: true` for deliberate verbatim governance-record mirrors. The decision-record checker includes a mirror in an existing local prefix-and-scope sequence, while excluding an otherwise foreign mirror from serial continuity.
 - Conformed and audited the decision-record collections in Arcadia Principal, the harness, `tools-ki`, KI Specifications, and the Website with no FAIL or WARN findings.
@@ -39,13 +39,15 @@ The shared ecosystem GDR now establishes the five-repository ownership model. It
 1. ✓ Define qualified capability identity, including the settled `<harness-id>:<skill-name>` form for skills and an explicit extension point for other capability kinds.
 2. ✓ Adopt direct owner/repository installation paths with immutable archive evidence and no user-selectable version model; retain legacy `latest/` only as a recognised migration input.
 3. ✓ Consolidate the harness decision records around direct compatible payloads, capability semantics, and the harness publication boundary; keep CLI-host, release, and delivery ownership in `tools-ki`.
-4. Reconcile the `tools-ki` host decision with its delivered direct-payload layout, user configuration, command grammar, scoped activation, native operation hosting, migration, reporting, and status listing. Do not edit the active tools implementation as part of this harness tranche.
+4. Reconcile the `tools-ki` host decision with its delivered direct-payload layout, user configuration, command grammar, scoped activation, tools-owned governed-rubric runtime, migration, reporting, and status listing. Do not edit the active tools implementation as part of this harness tranche.
 5. Reconcile the planned maintenance vocabulary with the delivered command surface, retaining only forms that remain intentionally planned and their relationship to explicit `ki skill user` and `ki skill repo` activation.
 6. Defer KI Specifications decisions and portable-contract material until the implementation contract is stable enough to standardise.
 7. Align the harness guide, bootstrap standards, capability rubrics, and `ki(1)` with the settled boundary; preserve current-versus-planned command status and remove obsolete one-collection terminology.
 8. Retire the harness's repository-local `.ki/` executor only after `ki repo audit` and `ki repo conform` can replace its aggregate, CI, and pre-commit roles for this source harness.
    - [x] Inventory the source harness's live legacy surface: `.ki/bin`, `.ki/bootstrap`, `.ki/manifest.json`, package-script aliases, CI, pre-commit, and the `.ki/self` orientation.
-   - [ ] Expose every repository-scoped declared governance skill through its existing contained TypeScript `scripts/govern.ts` checker exports, with finding translation while retaining the checker's own safety transaction, dry-run, and post-conform verification. Do not add a parallel native-wrapper module convention or a weaker host transaction.
+   - [ ] Move the generic governed-rubric runtime out of the harness and into `tools-ki`: execution, finding rendering, dry-run, dependency order, and safe publication. The harness retains only skill-specific rubric definitions, context/evidence builders, and declared repair plans; do not retain a parallel wrapper or runner convention.
+   - [ ] Convert every repository-scoped declared governance skill to that definition contract, replacing direct-writing callbacks only after the tools-owned transaction preserves its existing fail-closed safety guarantees.
+   - [ ] Resolve the source harness's nested shared-module symlinks without weakening installed-payload validation: materialise regular, integrity-checked payload files or replace the links before an installed or local direct payload executes rubrics.
    - [ ] Prove `ki repo audit --repo .` and `ki repo conform --repo . --dry-run` against an installed current harness, then move package scripts, CI, and pre-commit to those commands.
    - [ ] Execute the explicit, fail-closed source-harness migration and remove only the legacy entries proven redundant; retain or relocate `.ki/self` deliberately rather than deleting it as collateral.
 

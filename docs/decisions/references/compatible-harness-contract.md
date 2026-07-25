@@ -1,6 +1,6 @@
 # Compatible harness contract
 
-Reference companion to [ADR-KI-HARNESS-012](../ADR-KI-HARNESS-012-compatible-harness-publication-and-native-operation-boundary.md).
+Reference companion to [ADR-KI-HARNESS-012](../ADR-KI-HARNESS-012-compatible-harness-publication-and-governed-rubric-boundary.md).
 
 This is a harness-publication contract, not a CLI decision. It defines the artefacts a compatible harness publishes; `tools-ki` defines how it registers, installs, selects, and executes them.
 
@@ -24,15 +24,15 @@ Other kinds reserve `<harness-id>:<kind>/<name>`, for example `example/operation
 
 An installed skill's source and frontmatter are authoritative. A file or module cannot become executable merely because it appears beneath the harness root.
 
-## Registered native operations
+## Governed rubric definitions
 
-A skill may register a native operation through a contained supported native-operation module.
+A governed skill publishes its contained rubric definition, evidence/context builders, and declared safe repairs. The definition is data and domain logic for the generic host runtime, not a self-contained runner or an alternative CLI.
 
-The host imports a registered operation in process only after it has validated the harness and inventory. It never shells out to a capability script, imports an unregistered module, or treats a repository-vendored runner as an alternative implementation.
+The host loads a recognised rubric definition in process only after it has validated the harness and inventory. It never shells out to a capability script, imports an unrecognised module, or treats a repository-vendored runner as an alternative implementation.
 
-The operation receives a host-owned immutable context containing the physical repository root when applicable, the selected capability identity, parsed declared configuration, the verified harness identity, and a capability-scoped write interface.
+The definition receives a host-owned immutable context containing the physical repository root when applicable, the selected capability identity, parsed declared configuration, and the verified harness identity.
 
-AUDIT is read-only. CONFORM receives a transaction interface that validates its complete intended write set before the first write, honours dry-run, and re-audits after commit. The host owns integrity, resolution, compatibility, transaction, and reporting infrastructure; a capability owns findings in its governed domain.
+AUDIT is read-only. CONFORM declares its intended safe repairs to a transaction interface that validates the complete write set before the first write, honours dry-run, and re-audits after commit. The host owns integrity, resolution, compatibility, generic rubric execution, transaction, and reporting infrastructure; a capability owns its governed rubric and domain findings.
 
 ## Activation and future versioning
 
