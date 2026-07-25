@@ -96,7 +96,7 @@ The shared orientation lives in AGENTS.md, imported above. The following topic f
 
 ### Five-part harness layout with coverage declarations
 
-When a repo carries a five-part agentic harness layout (`skills/`, `agents/`, `mcp/`, `evals/`, `hooks/`), its `.ki-config.toml` must declare all four relevant tables so `ki-repo`'s coverage cascade does not warn on detected-but-undeclared artifacts. The harness repo (`ki-agentic-harness`) is the canonical example — it opts into every applicable governance skill and documents why each table is present.
+When a repo carries a five-part agentic harness layout (`skills/`, `subagents/`, `mcp/`, `evals/`, `hooks/`), its `.ki-config.toml` must declare all four relevant tables so `ki-repo`'s coverage cascade does not warn on detected-but-undeclared artifacts. The harness repo (`ki-agentic-harness`) is the canonical example — it opts into every applicable governance skill and documents why each table is present.
 
 ```toml
 [ki-repo]

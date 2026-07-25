@@ -31,9 +31,9 @@ Abbreviations match the `(SOURCE)` tags in [the standard](standards.md) and [rub
 
 ## In-house
 
-| Tag   | Source                                                 | Governs                                   | Last reviewed |
-| ----- | ------------------------------------------------------ | ----------------------------------------- | ------------- |
-| HOUSE | The harness `agents/README.md` + the role-prompt shape | Layout and the role/lane prompt pattern ¶ | 2026-06-26    |
+| Tag   | Source                                                    | Governs                                   | Last reviewed |
+| ----- | --------------------------------------------------------- | ----------------------------------------- | ------------- |
+| HOUSE | The harness `subagents/README.md` + the role-prompt shape | Layout and the role/lane prompt pattern ¶ | 2026-06-26    |
 
 ¶ Grounding, lane disambiguation, and KB-note wikilinks.
 
@@ -46,7 +46,7 @@ Abbreviations match the `(SOURCE)` tags in [the standard](standards.md) and [rub
 - **A2A:** added 2026-07-17 as an interoperability watch source. It defines remote-agent discovery and task lifecycle/status exchange; it does not yet impose a requirement on local Claude Code subagent definition files.
 - **COM1 (awesome-claude-code-subagents):** not re-fetched — reviewed 2026-06-26, within monthly cadence. Now cited by PROC-1.
 - **COM2 (PubNub best practices):** not re-fetched — within cadence. Its `SubagentStop`-hook pattern is now cited by FM-7.
-- **HOUSE:** not re-read this pass — within cadence. The role/lane prompt shape and KB-wikilink divergence stand; the 5 governance agents in `agents/governance/` remain the reference set (linter green, 0 fail / 0 warn on 2026-07-04).
+- **HOUSE:** not re-read this pass — within cadence. The role/lane prompt shape and KB-wikilink divergence stand; the 5 governance agents in `subagents/governance/` remain the reference set (linter green, 0 fail / 0 warn on 2026-07-04).
 - **Closed since 2026-06-26 (was: Open action items):** FM criteria added for `skills` (FM-5), `memory` (FM-6), `hooks` (FM-7), `effort` (FM-8), `isolation` (FM-9), `background` (FM-10); `Agent(type)` coordinator allowlist (LANE-3) and spawn depth (LANE-4) added; standard §2 now addresses directory-per-agent and companion-file guidance; COM1/COM2 tags wired into PROC-1 and FM-7.
 - **Open watch-items:**
   - **Adjacent surfaces (agent-view / agent-teams).** CC now frames background agents and agent teams as siblings of subagents. Watch whether house practice starts authoring these and whether they warrant their own governance surface — out of scope for the subagent-definition rubric today.

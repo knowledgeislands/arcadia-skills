@@ -26,7 +26,7 @@ The shared **engineering toolchain** every TS/Bun repo builds on — aggregate/s
 
 ### `ki-harness`
 
-Audits, conforms, and scaffolds a **harness repository** — the container that bundles the other parts: the five-part `skills/` / `agents/` / `mcp/` / `evals/` / `hooks/` layout, the root `CLAUDE.md` / `ROADMAP.md` / `package.json` script families / `.ki-config.toml` table, and the delivery conventions that make its components available. Governs the **container, not the contents**: the bridge into the sibling skills rather than a replacement — it **composes** their checkers (`ki-skills`, `ki-subagents`, `ki-repo-roadmap`, `ki-mcp`, `ki-engineering`, `ki-repo`) and adds only the bundle-structure delta. Empty shelves are valid — a shelf is not a gap.
+Audits, conforms, and scaffolds a **harness repository** — the container that bundles the other parts: the five-part `skills/` / `subagents/` / `mcp/` / `evals/` / `hooks/` layout, the root `CLAUDE.md` / `ROADMAP.md` / `package.json` script families / `.ki-config.toml` table, and the delivery conventions that make its components available. Governs the **container, not the contents**: the bridge into the sibling skills rather than a replacement — it **composes** their checkers (`ki-skills`, `ki-subagents`, `ki-repo-roadmap`, `ki-mcp`, `ki-engineering`, `ki-repo`) and adds only the bundle-structure delta. Empty shelves are valid — a shelf is not a gap.
 
 ### `ki-kb`
 
@@ -42,7 +42,7 @@ Audits, conforms, and scaffolds workspace MCP servers against the "workspace MCP
 
 ### `ki-plugins`
 
-Audits, conforms, and scaffolds a Knowledge Islands **plugin-marketplace** repo — the generated Claude plugin marketplace that projects the harness's skills and agents onto the Cowork surface (`knowledgeislands/ki-plugins`, `ADR-KI-HARNESS-002`). The fifth repo-structure skill; it governs the on-disk projection (the `marketplace.json` / `plugin.json` manifests, the verbatim `skills/` copy and flattened `agents/`, the MCP-deferred rule, the generated-not-hand-edited invariant). Generation and cross-surface enablement stay with `ki-binding`.
+Audits, conforms, and scaffolds a Knowledge Islands **plugin-marketplace** repo — the generated Claude plugin marketplace that projects the harness's skills and agents onto the Cowork surface (`knowledgeislands/ki-plugins`, `ADR-KI-HARNESS-002`). The fifth repo-structure skill; it governs the on-disk projection (the `marketplace.json` / `plugin.json` manifests, the verbatim `skills/` copy and flattened `subagents/`, the MCP-deferred rule, the generated-not-hand-edited invariant). Generation and cross-surface enablement stay with `ki-binding`.
 
 ### `ki-specifications`
 
@@ -68,7 +68,7 @@ Audits, writes, and conforms Agent Skills against a checkable rubric — mechani
 
 ### `ki-subagents`
 
-Audits, writes, and conforms **Claude Code subagent definitions** against a checkable rubric — mechanical checks (frontmatter, `name` uniqueness across the set, link resolution) plus the judgment ones applied by reading (the `description` as delegation signal, the system-prompt role/lane, own-vs-defer, least-privilege tools). The **agents twin of `ki-skills`**: that one governs a `SKILL.md`, this one a subagent definition. Governs the agents that land under `agents/`.
+Audits, writes, and conforms **Claude Code subagent definitions** against a checkable rubric — mechanical checks (frontmatter, `name` uniqueness across the set, link resolution) plus the judgment ones applied by reading (the `description` as delegation signal, the system-prompt role/lane, own-vs-defer, least-privilege tools). The **agents twin of `ki-skills`**: that one governs a `SKILL.md`, this one a subagent definition. Governs the agents that land under `subagents/`.
 
 ### `ki-decision-records`
 

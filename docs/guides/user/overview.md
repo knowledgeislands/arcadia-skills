@@ -26,7 +26,7 @@ That matters because a harness does more than make agents faster. It gives peopl
 The bundle has five parts, each with a different job:
 
 - **Skills** (`skills/`) — reusable knowledge, working methods, and governance checks. This is the most built-out part and the reason the harness exists.
-- **Agents** (`agents/`) — focused specialist roles an agent can delegate to.
+- **Agents** (`subagents/`) — focused specialist roles an agent can delegate to.
 - **MCP servers** (`mcp/`) — the tool surface an agent uses to act on external systems. It is a scaffolded shelf here; KI's servers currently live in separate repositories.
 - **Evals** (`evals/`) — practical scenarios that check the skills change behaviour as intended.
 - **Hooks** (`hooks/`) — optional automation around a Claude Code session, such as Plan Mode lifecycle and stale Git-lock recovery.

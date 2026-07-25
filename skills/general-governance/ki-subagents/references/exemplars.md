@@ -59,7 +59,7 @@ hooks:
 
 ### Domain-grounded KB agent (KI house pattern)
 
-From the KI harness `agents/governance/ki-kb-curator.md`. Demonstrates: grounding section that lists specific KB notes to read before acting; own-vs-defer with reciprocal sibling references; confirm-before-write authoring convention.
+From the KI harness `subagents/governance/ki-kb-curator.md`. Demonstrates: grounding section that lists specific KB notes to read before acting; own-vs-defer with reciprocal sibling references; confirm-before-write authoring convention.
 
 ```markdown
 ---

@@ -27,7 +27,7 @@ Without a standard place for each kind of artefact, the parts would be laid out 
 Every Knowledge Islands agentic harness uses the same top-level layout — one directory per kind of artefact:
 
 - `skills/` — Agent Skills (`SKILL.md` directories)
-- `agents/` — subagent definitions
+- `subagents/` — subagent definitions
 - `mcp/` — MCP server source code
 - `evals/` — evaluation suites
 - `hooks/` — Claude Code hook scripts, wired into a repo through its `.claude/settings.json`
