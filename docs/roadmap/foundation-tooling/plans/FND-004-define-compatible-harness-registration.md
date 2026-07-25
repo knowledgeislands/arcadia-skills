@@ -45,7 +45,7 @@ The shared ecosystem GDR now establishes the five-repository ownership model. It
 7. Align the harness guide, bootstrap standards, capability rubrics, and `ki(1)` with the settled boundary; preserve current-versus-planned command status and remove obsolete one-collection terminology.
 8. Retire the harness's repository-local `.ki/` executor only after `ki repo audit` and `ki repo conform` can replace its aggregate, CI, and pre-commit roles for this source harness.
    - [x] Inventory the source harness's live legacy surface: `.ki/bin`, `.ki/bootstrap`, `.ki/manifest.json`, package-script aliases, CI, pre-commit, and the `.ki/self` orientation.
-   - [ ] Expose every repository-scoped declared governance skill through its existing contained TypeScript `scripts/govern.ts` checker exports, with a finding translation and transaction contract that preserves existing safety guarantees. Do not add a parallel native-wrapper module convention.
+   - [ ] Expose every repository-scoped declared governance skill through its existing contained TypeScript `scripts/govern.ts` checker exports, with finding translation while retaining the checker's own safety transaction, dry-run, and post-conform verification. Do not add a parallel native-wrapper module convention or a weaker host transaction.
    - [ ] Prove `ki repo audit --repo .` and `ki repo conform --repo . --dry-run` against an installed current harness, then move package scripts, CI, and pre-commit to those commands.
    - [ ] Execute the explicit, fail-closed source-harness migration and remove only the legacy entries proven redundant; retain or relocate `.ki/self` deliberately rather than deleting it as collateral.
 
