@@ -17,30 +17,37 @@ The harness owns compatible capability semantics; `tools-ki` owns the CLI platfo
 
 ## Current state
 
-The user guide records the released seed surface and the intended `ki list`, `ki harness list`, harness-qualified skill identity, XDG locations, and physical repository resolution.
+The released `tools-ki` surface installs direct compatible payloads under a user KI data directory, derives harness identity from the owner/repository path, discovers and resolves registered native repository operations without vendored runners, and activates skills through `ki skill user` and `ki skill repo`.
 
-[ADR-KI-HARNESS-012](../../../decisions/ADR-KI-HARNESS-012-compatible-harness-publication-and-native-operation-boundary.md) now defines compatible-harness publication, identity, operations, and projection semantics only. [ADR-KI-TOOLS-002](../../../../../tools-ki/docs/decisions/ADR-KI-TOOLS-002-compatible-harness-registry-and-native-operations.md) owns the XDG registry, command grammar, scope, and native host; [KIP-000003](../../../../../ki-specifications/proposals/KIP-000003-compatible-harnesses/README.md) is the Draft portable-contract proposal.
+The host is ready, but this harness has not yet published native operation modules for its declared governance skills. Its source repository still depends on its tracked `.ki/` aggregate, bootstrap payload, manifest, and package-script aliases for CI, pre-commit, and local governance. That legacy state cannot be removed until compatible native audit and conform modules replace each of those roles.
+
+[ADR-KI-HARNESS-012](../../../decisions/ADR-KI-HARNESS-012-compatible-harness-publication-and-native-operation-boundary.md) defines the direct compatible-payload boundary. `tools-ki` owns the host implementation and its current command grammar. KI Specifications work is deliberately deferred until the implementation contract has settled.
 
 The shared ecosystem GDR now establishes the five-repository ownership model. Its byte-identical mirrors and every local decision-record collection now conform to the current decision-record standard.
 
 ## Completed foundation
 
 - Defined qualified capability identity: `<harness-id>:<skill-name>` for skills and the reserved `<harness-id>:<kind>/<name>` extension shape for other kinds.
-- Established the initial `latest` model, an XDG-managed multi-harness registry, and managed `vendor` and `symlink` capability-projection modes without restoring retired `.ki/bin` execution.
-- Reassigned CLI registry, command grammar, repository resolution, activation, native-operation host, migration, reporting, and delivery ownership to `tools-ki`, with Homebrew and Cargo serving only as boundary-setting exemplars.
-- Opened KIP-000003 to turn the proven harness publication, inventory, identity, projection, operation, and repository-resolution boundary into a future portable specification.
+- Established direct owner/repository installation paths with immutable archive evidence and no user-selectable version model; legacy `latest/` and lock layouts migrate only as recognised old state.
+- Reassigned CLI installation, command grammar, repository resolution, activation, native-operation hosting, migration, reporting, and delivery ownership to `tools-ki`.
+- Deferred KI Specifications work until the implementation contract is stable enough to standardise.
 - Added `shared_record: true` for deliberate verbatim governance-record mirrors. The decision-record checker includes a mirror in an existing local prefix-and-scope sequence, while excluding an otherwise foreign mirror from serial continuity.
 - Conformed and audited the decision-record collections in Arcadia Principal, the harness, `tools-ki`, KI Specifications, and the Website with no FAIL or WARN findings.
 
 ## Steps
 
-1. Define qualified capability identity, including the settled `<harness-id>:<skill-name>` form for skills and an explicit extension point for other capability kinds.
-2. Keep the initial installation model at `latest`, with no user-selectable harness or capability versions. Design the XDG layout so a later model can retain `latest` and add sibling records for each version in use with explicit compatibility and integrity evidence.
-3. Rewrite the harness decisions so they define only compatible-harness artefacts, capability semantics, and the harness publication boundary; remove CLI-host, release, and delivery ownership from them.
-4. Establish the corresponding `tools-ki` decisions for XDG harness registration, command grammar, repository resolution, scoped activation, native operation hosting, migration, reporting, and status listing. Use Homebrew and Cargo as boundary-setting exemplars, without importing their package or supply-chain models.
-5. Define the planned maintenance vocabulary: `ki list` and `ki harness list` inventories; `ki missing` and `ki outdated` status reports; `ki install`, `ki reinstall`, and `ki uninstall` capability-management forms; `ki update` for the executable and installed harnesses; and CWD-resolved `ki upgrade` for available capability releases. Settle each form’s relationship to explicit `ki repo` and `ki user` activation before implementation.
-6. Establish or revise KI Specifications decisions and portable contract material for harness identity, capability inventory, qualified names, registry evidence, projection modes, and repository-resolution semantics.
-7. Align the harness guide, harness and bootstrap standards, capability rubrics, and the future `ki(1)` reference with the settled boundary; preserve current-versus-planned command status and remove obsolete one-collection terminology.
+1. ✓ Define qualified capability identity, including the settled `<harness-id>:<skill-name>` form for skills and an explicit extension point for other capability kinds.
+2. ✓ Adopt direct owner/repository installation paths with immutable archive evidence and no user-selectable version model; retain legacy `latest/` only as a recognised migration input.
+3. ✓ Consolidate the harness decision records around direct compatible payloads, capability semantics, and the harness publication boundary; keep CLI-host, release, and delivery ownership in `tools-ki`.
+4. Reconcile the `tools-ki` host decision with its delivered direct-payload layout, user configuration, command grammar, scoped activation, native operation hosting, migration, reporting, and status listing. Do not edit the active tools implementation as part of this harness tranche.
+5. Reconcile the planned maintenance vocabulary with the delivered command surface, retaining only forms that remain intentionally planned and their relationship to explicit `ki skill user` and `ki skill repo` activation.
+6. Defer KI Specifications decisions and portable-contract material until the implementation contract is stable enough to standardise.
+7. Align the harness guide, bootstrap standards, capability rubrics, and `ki(1)` with the settled boundary; preserve current-versus-planned command status and remove obsolete one-collection terminology.
+8. Retire the harness's repository-local `.ki/` executor only after `ki repo audit` and `ki repo conform` can replace its aggregate, CI, and pre-commit roles for this source harness.
+   - [x] Inventory the source harness's live legacy surface: `.ki/bin`, `.ki/bootstrap`, `.ki/manifest.json`, package-script aliases, CI, pre-commit, and the `.ki/self` orientation.
+   - [ ] Publish contained native audit and conform modules for every governance skill declared by this repository, with a finding translation and transaction contract that preserves existing safety guarantees.
+   - [ ] Prove `ki repo audit --repo .` and `ki repo conform --repo . --dry-run` against an installed current harness, then move package scripts, CI, and pre-commit to those commands.
+   - [ ] Execute the explicit, fail-closed source-harness migration and remove only the legacy entries proven redundant; retain or relocate `.ki/self` deliberately rather than deleting it as collateral.
 
 ## Files touched
 

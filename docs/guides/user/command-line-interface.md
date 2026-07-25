@@ -93,53 +93,49 @@ The following target commands do not yet appear in `ki help` or completion outpu
 
 ## Harness installation
 
-The planned `ki harness ...` group manages the verified, user-installed set of KI-compatible harnesses:
+The `ki harness` group manages the verified, user-installed set of KI-compatible harnesses:
 
 ```text
-*ki harness install <harness-id>
-*ki harness uninstall <harness-id>
-*ki harness list
-*ki harness info <harness-id>
+ki harness install <harness-id>
+ki harness uninstall <harness-id>
+ki harness list
+ki harness info <harness-id>
 ```
 
-A harness identifier is a stable, qualified name such as `knowledgeislands/ki-agentic-harness` or `hnr/hnr-harness`. `ki harness install` will resolve that name only through the reviewed immutable release evidence in `$XDG_CONFIG_HOME/ki/harnesses.toml`, verify the release, and atomically install it into the user's XDG data area. It never accepts a floating branch, arbitrary URL, local path, or nearby checkout as a substitute.
+A harness identifier is a stable, qualified name such as `knowledgeislands/ki-agentic-harness` or `hnr/hnr-harness`. `ki harness install` resolves it through configured immutable release evidence, verifies the archive, and installs its direct payload at `$KI_DATA_HOME/harnesses/<owner>/<repository>`. It never accepts a floating branch, arbitrary URL, local path, or nearby checkout as a substitute.
 
 `knowledgeislands/ki-agentic-harness` is the mandatory base harness. `ki` ensures it is installed, and refuses to uninstall it. Additional harnesses make their registered skills available for explicit activation; installing a harness does not activate every skill in it.
 
-`ki harness list` is the focused harness inventory: installed identity, source evidence, capability counts and kinds, and installation health. `ki harness info <harness-id>` presents the corresponding record for one harness.
-
-The initial model treats each installed harness as `latest`; there is no user-selectable harness or capability version yet. A later versioning model will retain `latest` and add sibling installed records for each version in use, with explicit resolution and compatibility evidence.
+`ki harness list` is the focused harness inventory: installed identity and capability counts. `ki harness info <harness-id>` presents the corresponding record for one harness. There is no user-selectable harness or capability version yet.
 
 ## Skill activation
 
-The planned skill commands make the activation scope explicit:
+The skill commands make the activation scope explicit:
 
 ```text
-*ki repo skill add <skill>
-*ki repo skill remove <skill>
-*ki user skill add <skill>
-*ki user skill remove <skill>
+ki skill repo add <skill>
+ki skill repo remove <skill>
+ki skill user add <skill>
+ki skill user remove <skill>
 ```
 
 A fully qualified skill name is `<harness-id>:<skill-name>`:
 
 ```text
-*ki repo skill add knowledgeislands/ki-agentic-harness:ki-repo-roadmap
-*ki user skill add hnr/hnr-harness:hnr-engineering
+ki skill repo add knowledgeislands/ki-agentic-harness:ki-repo-roadmap
+ki skill user add hnr/hnr-harness:hnr-engineering
 ```
 
 `<skill-name>` is the exact `name:` in the installed skill's `SKILL.md`. A bare skill name is accepted only when exactly one installed harness provides it; `ki` stores the resolved qualified name in repository configuration and refuses an ambiguous name.
 
-- `ki repo skill add` updates the selected repository's `.ki-config.toml` and creates only managed project-runtime discovery links.
-- `ki repo skill remove` removes that repository declaration and its owned project-runtime links; it does not uninstall the harness or remove user activation.
-- `ki user skill add` creates only managed discovery links in the selected user runtime.
-- `ki user skill remove` removes only those owned user-runtime links.
+- `ki skill repo add` updates the selected repository's `.ki-config.toml` and creates only managed project-runtime discovery links.
+- `ki skill repo remove` removes that repository declaration and its owned project-runtime links; it does not uninstall the harness or remove user activation.
+- `ki skill user add` creates only managed discovery links in the selected user runtime.
+- `ki skill user remove` removes only those owned user-runtime links.
 
 Every activation first requires a valid installed harness and a registered matching skill. It fails with recovery guidance instead of downloading or replacing a harness automatically.
 
-Capability activation will support two managed projection modes: `vendor`, a regular-file copy into the selected runtime discovery location, and `symlink`, a contained managed link to the verified installed harness. Neither mode permits the retired `.ki/bin` executor or an arbitrary checkout to become an operation source. The final command option spelling and default remain open.
-
-These commands are planned; [FND-004](../../roadmap/foundation-tooling/plans/FND-004-define-compatible-harness-registration.md) defines their native-operation boundary.
+Current activation uses managed links to verified installed harness sources. It does not permit the retired `.ki/bin` executor or an arbitrary checkout to become an operation source.
 
 ## Repository maintenance commands
 
@@ -176,7 +172,7 @@ The installer verifies the selected payload before an atomic replacement. It ins
 
 ## XDG locations
 
-`ki` uses the XDG Base Directory environment variables for user-owned data. It will use `$XDG_DATA_HOME/ki` for installed harnesses, `$XDG_CONFIG_HOME/ki/harnesses.toml` for reviewed harness release evidence, `$XDG_CACHE_HOME/ki` for disposable downloads, and `$XDG_STATE_HOME/ki` for mutable state. The standard defaults apply when a variable is unset: `~/.local/share`, `~/.config`, `~/.cache`, and `~/.local/state` respectively. It does not define a separate KI home variable.
+Each KI path uses the first non-empty value: `KI_DATA_HOME`, then `$XDG_DATA_HOME/ki`, then `~/.local/share/ki`; the same pattern applies to `KI_CONFIG_HOME`, `KI_CACHE_HOME`, and `KI_STATE_HOME`. The user configuration is `$KI_CONFIG_HOME/config.toml`; installed harnesses live beneath `$KI_DATA_HOME/harnesses/`.
 
 ## Help, diagnostics, and recovery
 

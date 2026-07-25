@@ -14,7 +14,7 @@ Scoped and ready to start — the immediate queue, picked up before anything in 
 
 ### Define compatible harness registration and native repository-maintenance boundaries
 
-Replace the vendored repository-runner model with an XDG-registered set of compatible harnesses. Define the harness identity and skill-resolution boundary, `ki`'s native operation host boundary, explicit repository and user activation, physical repository resolution, and migration without a hidden fallback to vendored scripts or a nearby checkout. Keep `tools-ki` responsible for the CLI platform and KI Specifications responsible for portable contracts.
+Replace the vendored repository-runner model with verified installed compatible payloads. Define the harness identity and skill-resolution boundary, `ki`'s native operation host boundary, explicit repository and user activation, physical repository resolution, and migration without a hidden fallback to vendored scripts or a nearby checkout. Keep `tools-ki` responsible for the CLI platform; portable Specifications work is deliberately deferred.
 
 **Plan:** [FND-004](plans/FND-004-define-compatible-harness-registration.md)
 
