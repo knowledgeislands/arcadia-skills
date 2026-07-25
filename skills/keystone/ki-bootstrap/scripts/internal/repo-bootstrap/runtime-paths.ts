@@ -59,7 +59,7 @@ export function runtimeSkillsDir(runtime: string): string {
 }
 
 // Where each runtime discovers project-local AGENTS. Claude Code uses Markdown+YAML
-// under `.claude/agents/`; Codex uses TOML under `~/.codex/agents/` with a different
+// under `.claude/agents/`; Codex documents TOML under `~/.codex/agents/` (unverified in codex-cli 0.145.0) with a different
 // field shape (name/description/developer_instructions) — a generator, not a symlink,
 // and not yet built (the open subagent-format item in SDR-KI-HARNESS-002). Codex is
 // therefore intentionally absent here: the explicit development agent linker surfaces a clear "unsupported
@@ -71,7 +71,7 @@ export function runtimeAgentsDir(runtime: string): string {
   const dir = map[runtime]
   if (!dir)
     throw new Error(
-      `supported runtime "${runtime}" has no project-local agents path yet — Codex subagents are TOML under ~/.codex/agents/ (a generator, not a symlink), pending the format spike (SDR-KI-HARNESS-002)`
+      `supported runtime "${runtime}" has no project-local agents path yet — Codex documents TOML subagents under ~/.codex/agents/ (absent in codex-cli 0.145.0; a generator, not a symlink), pending the format spike (SDR-KI-HARNESS-002)`
     )
   return dir
 }
