@@ -73,3 +73,7 @@ Review Cloudflare's [agent-setup prompt](https://developers.cloudflare.com/agent
 ### Define cross-repository skill vendor provenance _(candidate)_
 
 Define how one KI harness can declare and receive a shared module from another harness without relying on a nearby checkout or an ambient filesystem path. Assess an explicit `repository-id:skill:module` dependency identity, such as `ki-agentic-harness:ki-skills:reporter`, alongside repository identifiers, version or revision pinning, integrity, acquisition, missing-provider and conflict handling, and release packaging. Keep the rule that only a provider in the same physical harness checkout may be symlinked; an external provider must arrive through an explicit portable vendor or installation contract. Do not change the current local `skill:module` parser until that contract is designed and adopted.
+
+### Standardise Prettier and Biome line width across repositories _(candidate)_
+
+Every KI repository currently ships `.prettierrc.json` with `printWidth: 160` and `biome.json` with `lineWidth: 140`, split by file scope (Biome for TS/JS/JSON, Prettier for Markdown) rather than by a single chosen value. Decide whether the two tools should converge on one width, and if not, record why the split is intentional; update the shared scaffold/templates and every existing repository together rather than leaving the mismatch undocumented.
