@@ -43,6 +43,7 @@ Speculative or not yet scoped — items marked _(candidate)_ need a scoping pass
 - [Foundation Tooling: Inventory non-critical writers for bounded follow-up _(candidate)_](docs/roadmap/foundation-tooling/ROADMAP.md#inventory-non-critical-writers-for-bounded-follow-up-candidate)
 - [Foundation Tooling: Replace local tokenomics engine subprocesses _(candidate)_](docs/roadmap/foundation-tooling/ROADMAP.md#replace-local-tokenomics-engine-subprocesses-candidate)
 - [Foundation Tooling: Review the Cloudflare agent-setup prompt for the Cloudflare skill _(candidate)_](docs/roadmap/foundation-tooling/ROADMAP.md#review-the-cloudflare-agent-setup-prompt-for-the-cloudflare-skill-candidate)
+- [Foundation Tooling: Standardise Prettier and Biome line width across repositories _(candidate)_](docs/roadmap/foundation-tooling/ROADMAP.md#standardise-prettier-and-biome-line-width-across-repositories-candidate)
 - [Governance Consistency: Add engineering change value profiles to the verb map _(candidate)_](docs/roadmap/governance-consistency/ROADMAP.md#add-engineering-change-value-profiles-to-the-verb-map-candidate)
 - [Governance Consistency: Review interpretable context methodology and current agentic practice _(candidate)_](docs/roadmap/governance-consistency/ROADMAP.md#review-interpretable-context-methodology-and-current-agentic-practice-candidate)
 - [Governance Consistency: Review language-model evaluation frameworks _(candidate)_](docs/roadmap/governance-consistency/ROADMAP.md#review-language-model-evaluation-frameworks-candidate)
