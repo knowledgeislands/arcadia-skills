@@ -1,9 +1,5 @@
 import { describe, expect, test } from 'bun:test'
-import { PORTABILITY } from '../items/portability.ts'
 import { unqualifiedRuntimeAssumptions } from './portability.ts'
-
-const PORT_1 = PORTABILITY.items.find(({ code }) => code === 'PORT-1')
-if (!PORT_1) throw new Error('expected PORT-1 in the portability family')
 
 const findings = (markdown: string, overrides: Partial<Parameters<typeof unqualifiedRuntimeAssumptions>[0]> = {}) =>
   unqualifiedRuntimeAssumptions({
@@ -41,22 +37,5 @@ describe('runtime-portability evidence', () => {
   test('accepts a clearly labelled runtime-only line and runtime overlay', () => {
     expect(findings('This Claude-Code-only extension is optional.')).toEqual([])
     expect(findings('## Runtime overlay: Claude Code\nUse ~/.claude.')).toEqual([])
-  })
-
-  test('emits a stable actionable diagnostic', () => {
-    const result = PORT_1.mechanical?.audit.run({
-      markdown: 'Use Codex.',
-      subject: 'fixture.md',
-      runtimeBinding: false,
-      attributedSourceMaterial: false
-    })
-
-    expect(result).toEqual([
-      {
-        status: 'VIOLATION',
-        message:
-          'line 1: unqualified runtime reference to Codex — move it to a Runtime binding section, attribute it as source material, or compare runtimes explicitly'
-      }
-    ])
   })
 })

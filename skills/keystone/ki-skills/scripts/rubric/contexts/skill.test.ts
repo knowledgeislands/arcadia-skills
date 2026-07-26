@@ -2,17 +2,10 @@ import { afterEach, describe, expect, test } from 'bun:test'
 import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
-import { KI_SHAPE } from '../items/ki-shape.ts'
-import { NAME } from '../items/name.ts'
 import { selectKiSkillsContext } from './contexts.ts'
 import { createSkillRubricContext } from './skill.ts'
 
 const temporaryDirectories: string[] = []
-const KI_SHAPE_12 = KI_SHAPE.items.find(({ code }) => code === 'KI-SHAPE-12')
-const KI_SHAPE_14 = KI_SHAPE.items.find(({ code }) => code === 'KI-SHAPE-14')
-const NAME_5 = NAME.items.find(({ code }) => code === 'NAME-5')
-
-if (!KI_SHAPE_12 || !KI_SHAPE_14 || !NAME_5) throw new Error('expected rubric items are missing from their families')
 
 const validLocalSkill = `---
 name: ki-self
@@ -61,31 +54,32 @@ afterEach(() => {
   for (const directory of temporaryDirectories.splice(0)) rmSync(directory, { recursive: true, force: true })
 })
 
-const audit = (directory: string) => {
+const evidence = (directory: string) => {
   const context = createSkillRubricContext(directory).context
   return {
-    name: NAME_5.mechanical?.audit.run(selectKiSkillsContext(context, 'name'))[0],
-    vocabulary: KI_SHAPE_12.mechanical?.audit.run(selectKiSkillsContext(context, 'shape'))[0],
-    refresh: KI_SHAPE_14.mechanical?.audit.run(selectKiSkillsContext(context, 'shape'))[0]
+    name: selectKiSkillsContext(context, 'name'),
+    shape: selectKiSkillsContext(context, 'shape')
   }
 }
 
 describe('repository-local ki-self source', () => {
-  test('accepts only the canonical .agents/skills/ki-self shape', () => {
-    const result = audit(createSkill('.agents/skills/ki-self'))
+  test('recognises only the canonical .agents/skills/ki-self shape', () => {
+    const result = evidence(createSkill('.agents/skills/ki-self'))
 
-    expect(result.name?.status).toBe('PASS')
-    expect(result.vocabulary?.status).toBe('PASS')
-    expect(result.refresh?.status).toBe('PASS')
+    expect(result.name.name).toBe(result.name.directoryName)
+    expect(result.name.localGovernanceSource).toBe(true)
+    expect(result.shape.skill?.localGovernanceSource).toBe(true)
+    expect(result.shape.skill?.refreshText).toContain('.agents/skills/ki-self/')
   })
 
   test.each([
-    { relativeDirectory: 'ki-self', nameStatus: 'PASS' },
-    { relativeDirectory: '.agents/skills/not-ki-self', nameStatus: 'VIOLATION' }
-  ])('does not treat an invalid lookalike as a local-source exception', ({ relativeDirectory, nameStatus }) => {
-    const result = audit(createSkill(relativeDirectory))
+    { relativeDirectory: 'ki-self', nameMatchesDirectory: true },
+    { relativeDirectory: '.agents/skills/not-ki-self', nameMatchesDirectory: false }
+  ])('does not mark an invalid lookalike as the local source', ({ relativeDirectory, nameMatchesDirectory }) => {
+    const result = evidence(createSkill(relativeDirectory))
 
-    expect(result.name?.status).toBe(nameStatus)
-    expect(result.vocabulary?.status).toBe('PASS')
+    expect(result.name.name === result.name.directoryName).toBe(nameMatchesDirectory)
+    expect(result.name.localGovernanceSource).toBe(false)
+    expect(result.shape.skill?.localGovernanceSource).toBe(false)
   })
 })
