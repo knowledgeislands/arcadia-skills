@@ -12,7 +12,7 @@ argument-hint: 'audit <repo> | conform <repo> | expand <theme> | help | educate 
 
 This governance skill owns the forward-work model for **non-KB projects**. Small projects use one root roadmap; projects needing focused workstreams use canonical thematic roadmaps and colocated plans. Knowledge Bases use the `ki-kb-streams` skill instead: a stream is the thematic roadmap, its proposals are roadmap items, and proposal checklists are plans. `ki-next` is the separate process skill that applies this skill's user-confirmed transition rules to select the next work; this governance skill has no process-skill dependency.
 
-Read [the repository-roadmap standard](references/standards.md) before changing a roadmap profile or plan structure. Read [the audit rubric](references/rubric.md) for the mechanical and judgment criteria. Plan file details live in [the plan format](references/plan-format.md). Tracked methodology sources and the REFRESH cadence live in [the source list](references/sources.md).
+Read [the repository-roadmap standard](references/standards-repository-roadmaps.md) before changing a roadmap profile or plan structure. Read [the generated rubric](references/rubric.md) for the mechanical and judgment criteria. Plan file details live in [the plan-format standard](references/standards-plan-format.md). Tracked methodology sources and the REFRESH cadence live in [the source list](references/sources.md).
 
 ## Shared model
 
@@ -29,15 +29,15 @@ Carries the universal **AUDIT · CONFORM · EDUCATE · REFRESH** plus judgment-l
 
 ### Mode AUDIT
 
-Run [`scripts/govern.ts`](scripts/govern.ts) against the repository root. It detects the profile and applies the mechanical criteria in [the rubric](references/rubric.md): horizon structure and exact blurbs; theme and item identity; qualified plan linkage; frontmatter, placement, stable theme-coded ids, identifier references, and dependency integrity; and the exact generated root projection. It reports KB scope as NA, or FAIL when a KB carries repository-roadmap artifacts, and makes no changes.
+Run `ki repo audit --skill ki-repo-roadmap --repo <repo>`. The catalogue detects the profile and applies the mechanical criteria in [the generated rubric](references/rubric.md): horizon structure and exact blurbs; theme and item identity; qualified plan linkage; frontmatter, placement, stable theme-coded ids, identifier references, and dependency integrity; and the exact generated root projection. It reports KB scope as not applicable, or FAIL when a KB carries repository-roadmap artifacts, and makes no changes.
 
 Then apply the rubric's judgment criteria by reading: item quality, horizon placement and transition readiness, plan quality, honest in-progress state, whether simple still fits, and whether theme boundaries are coherent. Where `+/_HANDOFFS/` exists, identify material that needs a local adoption decision; where `-/_HANDOFFS/` exists, identify known receiving-repository progress that needs a local follow-up or closure decision. Report proposed roadmap action only: never infer remote acceptance, move working material, or edit either repository's roadmap. Iterate until mechanical findings are clean and judgment findings are resolved.
 
-After changing the scripts, run [`scripts/repo-roadmap.test.ts`](scripts/repo-roadmap.test.ts) for the focused profile, projection, locator, dependency, KB, and safe-write fixtures.
+After changing the catalogue or contexts, run their colocated Bun tests for the focused profile, projection, locator, dependency, KB, and safe-draft fixtures.
 
 ### Mode CONFORM
 
-Run [`scripts/govern.ts`](scripts/govern.ts) against the repository root. In either profile it inserts any missing canonical horizon blurb immediately beneath its heading, preserving all existing authored content. In a valid thematic profile it also rebuilds the derivable root projection. Delete the retired `docs/roadmap/README.md` explicitly during migration; CONFORM will not remove it because it is an unsafe unexpected file. Every write uses guarded atomic local-file replacement. It never invents themes, moves horizons, removes or rewrites authored prose, repairs ambiguous locators, or changes plan content. Use `--dry-run` to inspect the intended writes. Re-run AUDIT afterward.
+Run `ki repo conform --skill ki-repo-roadmap --repo <repo> --dry-run` to inspect the proposal. In either profile the ROAD-4 action inserts any missing canonical horizon blurb immediately beneath its heading, preserving all existing authored content. In a valid thematic profile PLAN-2 repairs derivable local plan references and PROJ-1 rebuilds the root projection. Ordered actions update one session-owned draft per file, and the session emits each final replacement once; the host validates and publishes the transaction. Delete the retired `docs/roadmap/README.md` or an empty theme explicitly after review because those removals are not replacement-safe conform actions. CONFORM never invents themes, moves horizons, removes or rewrites authored prose, repairs ambiguous locators, or changes plan content. Re-run AUDIT afterward.
 
 ### Mode EXPAND
 
@@ -53,13 +53,13 @@ There is no automatic collapse operation: merging themes back into one authored 
 
 ### Mode EDUCATE
 
-Run [`scripts/educate.ts`](scripts/educate.ts) against a non-KB repository. It creates the simple profile, including every canonical horizon blurb, only when `ROADMAP.md` and `docs/roadmap/` are both absent; it never overwrites an existing roadmap. In a KB it reports the `ki-kb-streams` off-ramp and writes nothing.
+Run `ki repo educate --skill ki-repo-roadmap --repo <repo>` to render the catalogue's concern and families. To establish a new non-KB repository, scaffold the simple profile only when `ROADMAP.md` and `docs/roadmap/` are both absent; use every canonical horizon and blurb. In a KB, use the `ki-kb-streams` skill and create no repository-roadmap artifact.
 
 ### Mode REFRESH
 
 **Precondition:** REFRESH writes only the canonical skill files in `ki-agentic-harness`. If invoked from a repo where the skill is vendored, stop and redirect to that harness; route recurring base-specific pressure through the `ki-kb` IMPROVE mode.
 
-On the cadence in [the source list](references/sources.md), compare actual repository-roadmap usage with [the standard](references/standards.md) and [rubric](references/rubric.md). Revisit the horizon model, simple-to-thematic threshold, locator stability, projection usefulness, and plan quality bar. Update the source review dates and explain normative changes in the commit.
+On the cadence in [the source list](references/sources.md), compare actual repository-roadmap usage with [the repository-roadmap standard](references/standards-repository-roadmaps.md), [the plan-format standard](references/standards-plan-format.md), and [the generated rubric](references/rubric.md). Revisit the horizon model, simple-to-thematic threshold, locator stability, projection usefulness, and plan quality bar. Update the source review dates and explain normative changes in the commit.
 
 ## Notes
 
@@ -68,4 +68,4 @@ On the cadence in [the source list](references/sources.md), compare actual repos
 - A plan answers “how”; a Decision Record answers “why”. Use `ki-decision-records` for the latter.
 - The `ki-plan` process skill operates plan instances. This skill owns their standard and repository-roadmap representation.
 - The `ki-next` process skill selects and promotes work through the readiness contract defined here. It gathers confirmation and invokes `ki-plan`; it does not alter this skill's ownership of horizons, profiles, or plan format.
-- Checker output uses the canonical checker reporter supplied by `ki-skills`; its locally vendored module keeps this checker standalone when installed.
+- The local `scripts/shared/rubric.ts` is the materialised compile-time contract from `ki-skills`; generic execution, findings, progress, transaction safety, rollback, and reporting belong to `ki`.

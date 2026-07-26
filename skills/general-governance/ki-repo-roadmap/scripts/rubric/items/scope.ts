@@ -1,9 +1,24 @@
-import { mechanical } from './common.ts'
+import type { RubricFamily, RubricItem } from '../../shared/rubric.ts'
+import { outcomesFor, type RoadmapAuditContext, type RoadmapRubricContext } from '../contexts/roadmap.ts'
 
-export const SCOPE_1 = mechanical(
-  'SCOPE-1',
-  'KB scope',
-  'KB repositories use `ki-kb-streams`; repository-roadmap artifacts in a KB fail, while a KB without them is not applicable.',
-  'FAIL'
-)
-export const SCOPE = [SCOPE_1] as const
+const SOURCE = 'standards-repository-roadmaps.md'
+
+const SCOPE_1: RubricItem<RoadmapAuditContext> = {
+  code: 'SCOPE-1',
+  title: 'KB scope',
+  description: 'KB repositories use `ki-kb-streams`; repository-roadmap artifacts in a KB fail, while a KB without them is not applicable.',
+  sources: [SOURCE],
+  mechanical: {
+    level: 'FAIL',
+    audit: { phase: 'INSPECT', run: (context) => outcomesFor(context, 'SCOPE-1', 'The repository is in scope.') }
+  }
+}
+
+export const SCOPE: RubricFamily<RoadmapRubricContext, RoadmapAuditContext> = {
+  code: 'SCOPE',
+  title: 'scope',
+  description: 'Repository-roadmap profile applicability.',
+  standard: SOURCE,
+  selectContext: (context) => context.scope,
+  items: [SCOPE_1]
+}

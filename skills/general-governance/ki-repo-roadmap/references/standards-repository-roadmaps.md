@@ -64,7 +64,7 @@ docs/roadmap/
 
 Theme names are unique lowercase kebab-case names. Every theme roadmap begins with one `code: <THEME>` YAML frontmatter field: an unquoted, uppercase semantic identifier that is stable and unique across the repository. A theme roadmap has one H1, all five horizons, and each item is a `###` heading beneath exactly one horizon. Item prose follows its heading until the next item or horizon. A locator is `<theme>/<item-slug>`; the slug is the normalised item heading. Locators must be unique.
 
-A theme directory exists only while its roadmap has at least one item. An empty scaffold-only theme roadmap is drift: CONFORM removes that theme directory, including an empty `plans/` directory. It does not remove a theme holding authored prose or any unexpected content; resolve that case deliberately instead of discarding it. The thematic profile may have zero remaining themes after pruning.
+A theme directory exists only while its roadmap has at least one item. An empty scaffold-only theme roadmap is drift. Remove it deliberately only after confirming that it holds no authored prose, plans, or unexpected content; replacement-only CONFORM actions do not delete directories. The thematic profile may have zero remaining themes after pruning.
 
 Root `ROADMAP.md` is generated in this profile. It links every canonical item under its horizon but repeats none of its prose. Plan state and dependencies are derived directly from plan frontmatter and canonical local plan references; there is no generated global plan index. `docs/roadmap/README.md` is a retired artifact and must be deleted during migration. Edit canonical theme roadmaps or plan files, then run CONFORM; never hand-edit the root projection.
 
@@ -72,11 +72,11 @@ Root `ROADMAP.md` is generated in this profile. It links every canonical item un
 
 EXPAND changes authorship, so it requires judgment. It moves complete items from the simple root into coherent themes, preserving their horizons and prose, then generates the projections. It must prove conservation: every original open item appears once after expansion, with none duplicated.
 
-CONFORM is narrower. It may insert a missing canonical horizon blurb and rebuild derivable projections and indexes, but it must never choose a theme, move an item, change a horizon, invent a locator, remove authored content, or rewrite existing prose.
+CONFORM is narrower. It may insert a missing canonical horizon blurb and rebuild derivable local plan references and projections, but it must never choose a theme, move an item, change a horizon, invent a locator, delete a theme, remove authored content, or rewrite existing prose.
 
 ## Plan discipline
 
-Plans are recoverable execution documents for multi-file or multi-step changes. They exist only for `Blocking` and `Next` items and use the [plan format](plan-format.md). Each theme's code prefixes a separate zero-padded serial sequence beginning at `001`, so a canonical plan identifier is `<THEME>-<NNN>`. Dependencies use those globally unique identifiers and are bidirectional, existent, and acyclic. No plan moves to `ready`, `in-progress`, or `acceptance` while a listed blocker is not `done`.
+Plans are recoverable execution documents for multi-file or multi-step changes. They exist only for `Blocking` and `Next` items and use the [plan-format standard](standards-plan-format.md). Each theme's code prefixes a separate zero-padded serial sequence beginning at `001`, so a canonical plan identifier is `<THEME>-<NNN>`. Dependencies use those globally unique identifiers and are bidirectional, existent, and acyclic. No plan moves to `ready`, `in-progress`, or `acceptance` while a listed blocker is not `done`.
 
 A ready plan has concrete Steps, a checkable Verify section, an honest Current state, and a minimal Files touched list. The lifecycle is `open` → `ready` → `in-progress` → `acceptance` → `done`: `open` awaits an explicit start decision, `ready` records that approved and unblocked decision, and the initial execution transition records the full immutable `HEAD` commit ID as the plan's `baseline-ref`. Acceptance records a compact review packet and waits for explicit user approval; it does not silently route a learning into another durable artifact. `done` retains a committed outcome record beside its still-visible canonical item. An explicit later prune, not the done transition, removes a selected completed batch and its canonical items.
 

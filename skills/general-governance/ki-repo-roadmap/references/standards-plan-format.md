@@ -1,4 +1,4 @@
-# Plan format
+# Plan format standard
 
 ## Contents
 
