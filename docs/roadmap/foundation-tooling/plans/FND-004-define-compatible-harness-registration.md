@@ -22,7 +22,7 @@ The compatible-harness identity, installation, activation, and governed-rubric h
 
 The repository-local `.ki/` executor, package-script aliases, publishers, wrapper runners, and legacy educate scripts have been removed. `ki-skills` establishes the intended family/session contract, and `ki-handoffs` is the first additional catalogue cut to that shape.
 
-Sixteen in-scope structured catalogues still use transitional catalogue or context adapters, and those are the remaining skill reviews after accepting `ki-skills`, `ki-authoring`, `ki-binding`, `ki-decision-records`, `ki-engineering`, `ki-handoffs`, `ki-kb-streams`, `ki-repo`, `ki-repo-roadmap`, and the guidance-only `ki-bootstrap`. The deferred `ki-specifications` catalogue remains outside this count.
+Fifteen in-scope structured catalogues still use transitional catalogue or context adapters, and those are the remaining skill reviews after accepting `ki-skills`, `ki-authoring`, `ki-binding`, `ki-decision-records`, `ki-engineering`, `ki-handoffs`, `ki-kb`, `ki-kb-streams`, `ki-repo`, `ki-repo-roadmap`, and the guidance-only `ki-bootstrap`. The deferred `ki-specifications` catalogue remains outside this count.
 
 CI still invokes the removed `ki:audit` package alias and describes `.ki/bootstrap`. The pre-commit hook uses the direct CLI but its staged snapshot needs a final dependency-completeness review. Maintainer guidance still contains obsolete vendoring and executor assumptions.
 
@@ -43,7 +43,7 @@ CI still invokes the removed `ki:audit` package alias and describes `.ki/bootstr
    - [ ] `ki-harness` — preserve harness-marker append safety while removing index-owned write planning; confirm its references describe the direct installed-harness boundary.
    - [ ] `ki-homebrew-tap` — preserve applicability and manual Homebrew checks, move marker mutation to an item-owned action, and justify its mode procedures and absent exemplars.
    - [ ] `ki-housekeeping` — preserve bounded user-home scope and memory-repair containment while removing its adapter; justify `memory-format.md`, mode procedures, and absent exemplars.
-   - [ ] `ki-kb` — split evidence context by responsibility and keep index or `MEMORY.md` creation as session-owned proposals; justify the KB reference, mode procedures, and templates.
+   - [x] `ki-kb` — accepted in `955ce63d`: evidence split by responsibility, safe index and `MEMORY.md` creation retained as session-owned proposals, item-owned zone actions, wiring-only catalogue, templates moved to assets, KB and frontmatter standards named explicitly, generated rubric in sync, and no top-level public scripts. Direct repository execution awaits the declared `ki-kb-activities` dependency's session migration.
    - [ ] `ki-kb-activities` — retain safe `Activities.md` creation outside catalogue wiring; decide whether its mode documents replace a missing normative standard.
    - [ ] `ki-kb-live-artifacts` — retain safe index and frontmatter drafts while leaving rendering and deletion manual; justify each mode procedure.
    - [x] `ki-kb-streams` — accepted in `b095552d`: lifecycle normalisation preserved on one coalesced session proposal, four complete families, wiring-only catalogue, legacy adapter removed, stream-structure and enactment-process standards named explicitly, AUDIT and CONFORM procedures split, generated rubric in sync, and no top-level public scripts.
