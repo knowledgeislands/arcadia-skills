@@ -1,7 +1,7 @@
 ---
 name: ki-binding-chezmoi
 ki-runtime-binding: true
-ki-shared-dependencies: [ki-skills:rubric, ki-skills:checker, ki-skills:reporter, ki-bootstrap:educator, ki-skills:govern]
+ki-shared-dependencies: [ki-skills:rubric]
 ki-depends-on: [ki-binding, ki-dotfiles-chezmoi]
 description: >
   Codify, audit, and conform the chezmoi render path for the KI MCP binding — rendering the canonical `mcp-servers.yaml` single source into the file-editable surfaces (Claude Code, Desktop, mcporter) through chezmoi: the `mcp-servers-json` template, `.chezmoidata` wiring, and `chezmoi apply`. A composition skill — its AUDIT runs `ki-dotfiles-chezmoi` then `ki-binding` in sequence, then adds its delta: the chezmoi repo carries the MCP data and render template, and an apply reproduces the surfaces `ki-binding` audits. Use when rendering the MCP source through chezmoi, wiring the render template, or checking an apply reproduces the audited surfaces. Triggers: "render the mcp source through chezmoi", "chezmoi apply the mcp config", "wire the mcp-servers-json template", "the rendered mcp surfaces are stale". Not the renderer-neutral surface audit (`ki-binding`) or the generic chezmoi repo standard (`ki-dotfiles-chezmoi`) — only the MCP render contract tying them (ADR-KI-HARNESS-SKILLS-004).

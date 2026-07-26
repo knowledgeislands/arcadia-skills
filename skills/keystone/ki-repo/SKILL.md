@@ -2,7 +2,7 @@
 name: ki-repo
 ki-runtime-binding: true
 ki-depends-on: [ki-authoring]
-ki-shared-dependencies: [ki-skills:rubric, ki-skills:checker, ki-skills:reporter, ki-bootstrap:educator, ki-skills:govern]
+ki-shared-dependencies: [ki-skills:rubric]
 owns: ['.gitignore']
 contributes: ['.ki-config.toml']
 description: >
