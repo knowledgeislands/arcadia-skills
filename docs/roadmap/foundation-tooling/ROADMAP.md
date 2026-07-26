@@ -50,10 +50,6 @@ Speculative or not yet scoped — items marked _(candidate)_ need a scoping pass
 
 Extend `ki-delegate`'s judgment guidance with an explicit dispatch decision: whether delegated work needs the originating conversation context, whether it needs frontier-level reasoning, and therefore whether to retain it in the main thread, dispatch it with a context fork, or dispatch a fresh lower-cost worker. Require the delegation brief to carry every durable constraint and decision needed by a fresh worker; context forks are a hygiene tool, not a substitute for an adequate brief. Map this policy to the runtime-specific delegation controls only after confirming their portable semantics.
 
-### Harden user harness installation and runtime skill publication
-
-After the first installer establishes the user-level contract, make runtime skill publication fail-safe, runtime-selected, and independently testable. Assess whether the installer’s local hook-installer subprocess can become an import-safe direct call without weakening user-space failure isolation. Preserve unrelated user files and refuse unsafe parents.
-
 ### Replace local tokenomics engine subprocesses _(candidate)_
 
 Extract a pure evidence and findings API from tokenomics’ local audit and conform engines so its checker can invoke them without launching Bun for adjacent source modules. Preserve the engine’s direct CLI behaviour, JSONL/reporting contracts, and external Git boundary; do not couple this migration to aggregate rendering.
@@ -69,10 +65,6 @@ After the rollout-critical filesystem work closes, inventory remaining report ge
 ### Review the Cloudflare agent-setup prompt for the Cloudflare skill _(candidate)_
 
 Review Cloudflare's [agent-setup prompt](https://developers.cloudflare.com/agent-setup/prompt.md) as a tracked source for the Cloudflare skill. Adopt only the parts that improve current, safe Cloudflare work in this harness; retain Knowledge Islands' ownership, conventions, and judgment rather than following the prompt wholesale.
-
-### Define cross-repository skill vendor provenance _(candidate)_
-
-Define how one KI harness can declare and receive a shared module from another harness without relying on a nearby checkout or an ambient filesystem path. Assess an explicit `repository-id:skill:module` dependency identity, such as `ki-agentic-harness:ki-skills:reporter`, alongside repository identifiers, version or revision pinning, integrity, acquisition, missing-provider and conflict handling, and release packaging. Keep the rule that only a provider in the same physical harness checkout may be symlinked; an external provider must arrive through an explicit portable vendor or installation contract. Do not change the current local `skill:module` parser until that contract is designed and adopted.
 
 ### Standardise Prettier and Biome line width across repositories _(candidate)_
 
