@@ -1,16 +1,19 @@
-import { existsSync, mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs'
-import { dirname, join, resolve } from 'node:path'
-import type { ConformOutcome, RubricOutcomes } from '../../shared/rubric.ts'
+import { existsSync, lstatSync, readdirSync, readFileSync } from 'node:fs'
+import { dirname, isAbsolute, join, relative, resolve } from 'node:path'
+import type { AuditOutcome, ConformProposal, RubricContextOptions, RubricOutcomes, RubricSession } from '../../shared/rubric.ts'
 
 export const ZONES = ['Calendar', 'Pillars', 'Resources', 'Streams', 'Admin'] as const
 export const STAGING = ['+', '-'] as const
 const CONFIG = '.ki-config.toml'
-const DEFAULT_CONFIG = `# ki-kb — opt-in marker: this table declares the base governed by the KB standard.
-[ki-kb]
-`
 const SNAKE_CASE = /^[a-z][a-z0-9_]*$/
 
-type KiKbConfig = { keys: Record<string, string>; zones: Record<string, string>; requiredFrontmatter: string[]; preflight: string[] }
+type KiKbConfig = {
+  keys: Record<string, string>
+  zones: Record<string, string>
+  templates: Record<string, string>
+  requiredFrontmatter: string[]
+  preflight: string[]
+}
 export type KbEvidenceFinding = {
   level: 'FAIL' | 'WARN' | 'INFO' | 'NOT_APPLICABLE' | 'PASS'
   code: string
@@ -18,8 +21,8 @@ export type KbEvidenceFinding = {
   subject?: string
 }
 
-const isDirectory = (path: string): boolean => existsSync(path) && statSync(path).isDirectory()
-const isFile = (path: string): boolean => existsSync(path) && statSync(path).isFile()
+const isDirectory = (path: string): boolean => existsSync(path) && !lstatSync(path).isSymbolicLink() && lstatSync(path).isDirectory()
+const isFile = (path: string): boolean => existsSync(path) && !lstatSync(path).isSymbolicLink() && lstatSync(path).isFile()
 const sample = (values: readonly string[], maximum = 10): string =>
   `${values.slice(0, maximum).join('; ')}${values.length > maximum ? `; …+${values.length - maximum} more` : ''}`
 
@@ -37,14 +40,23 @@ const parseConfig = (text: string): { value: KiKbConfig | null; malformed: boole
             )
           )
         : {}
+    const templates =
+      record.templates && typeof record.templates === 'object' && !Array.isArray(record.templates)
+        ? Object.fromEntries<string>(
+            Object.entries(record.templates as Record<string, unknown>).filter(
+              (entry): entry is [string, string] => typeof entry[1] === 'string'
+            )
+          )
+        : {}
     return {
       value: {
         keys: Object.fromEntries<string>(
           Object.entries(record)
-            .filter(([key]) => !['zones', 'required_frontmatter', 'preflight'].includes(key))
+            .filter(([key]) => !['zones', 'templates', 'required_frontmatter', 'preflight'].includes(key))
             .map(([key, value]) => [key, String(value)] as const)
         ),
         zones,
+        templates,
         requiredFrontmatter: Array.isArray(record.required_frontmatter)
           ? record.required_frontmatter.filter((value): value is string => typeof value === 'string')
           : [],
@@ -89,11 +101,54 @@ const frontmatter = (text: string): { keys: string[]; terminated: boolean; type:
   return { keys, terminated: false, type }
 }
 
+type KbCheck = RubricOutcomes<AuditOutcome>
+
+export type KbZoneContext = {
+  readonly requiredLayout: KbCheck
+  readonly zoneIndexes: KbCheck
+  readonly memoryIndex: KbCheck
+  readonly stagingAreas: KbCheck
+  readonly outboundPlacement: KbCheck
+  readonly scaffoldZoneIndexes?: () => void
+  readonly scaffoldMemoryIndex?: () => void
+}
+
+export type KbConfigContext = {
+  readonly knownKeys: KbCheck
+  readonly nonRedundantAliases: KbCheck
+  readonly canonicalAliasKeys: KbCheck
+  readonly boundary: KbCheck
+  readonly preflightPaths: KbCheck
+}
+
+export type KbAdminContext = {
+  readonly subdivisions: KbCheck
+  readonly charter: KbCheck
+  readonly conformance: KbCheck
+}
+
+export type KbRoutingContext = Record<never, never>
+
+export type KbNoteContext = {
+  readonly requiredFrontmatter: KbCheck
+  readonly frontmatterFences: KbCheck
+  readonly frontmatterKeys: KbCheck
+}
+
+export type KbMemoryContext = {
+  readonly anchor: KbCheck
+}
+
+export type KbLinkContext = Record<never, never>
+
 export type KbRubricContext = {
-  root: string
-  dryRun: boolean
-  auditFindings: readonly KbEvidenceFinding[]
-  conformRule: (code: string) => RubricOutcomes<ConformOutcome>
+  readonly zones: KbZoneContext
+  readonly config: KbConfigContext
+  readonly admin: KbAdminContext
+  readonly routing: KbRoutingContext
+  readonly notes: KbNoteContext
+  readonly memory: KbMemoryContext
+  readonly links: KbLinkContext
 }
 
 export const collectKbAuditEvidence = (target: string): readonly KbEvidenceFinding[] => {
@@ -255,77 +310,115 @@ export const collectKbAuditEvidence = (target: string): readonly KbEvidenceFindi
   return findings
 }
 
-const outcomes = (values: ConformOutcome[]): RubricOutcomes<ConformOutcome> => values as RubricOutcomes<ConformOutcome>
-export const createKbContext = (target: string, dryRun: boolean): KbRubricContext => {
-  const root = resolve(target)
-  return {
-    root,
-    dryRun,
-    auditFindings: collectKbAuditEvidence(root),
-    conformRule: (code) => {
-      if (!isDirectory(root)) return outcomes([{ status: 'VIOLATION', message: 'Target is not a directory.', subject: root }])
-      const configPath = join(root, CONFIG)
-      const parsed = isFile(configPath) ? parseConfig(readFileSync(configPath, 'utf8')) : { value: null, malformed: false }
-      const zoneOf = (zone: string): string => parsed.value?.zones[zone] ?? zone
-      if (code === 'CONFIG-4') {
-        if (parsed.value) return outcomes([{ status: 'PASS', message: '[ki-kb] table is already present.', subject: CONFIG }])
-        if (!dryRun)
-          writeFileSync(
-            configPath,
-            `${isFile(configPath) ? `${readFileSync(configPath, 'utf8').replace(/\n*$/, '\n')}\n` : ''}${DEFAULT_CONFIG}`
-          )
-        return outcomes([
-          { status: 'FIXED', message: `Keyless [ki-kb] table ${dryRun ? 'would be appended' : 'was appended'}.`, subject: CONFIG }
-        ])
-      }
-      if (code === 'ZONE-2') {
-        const values: ConformOutcome[] = []
-        for (const zone of ZONES) {
-          const folder = zoneOf(zone)
-          const directory = join(root, folder)
-          const index = join(directory, `${folder}.md`)
-          if (!isDirectory(directory))
-            values.push({
-              status: 'NOT_APPLICABLE',
-              message: 'Zone folder is absent; creating it needs a judgment call.',
-              subject: `${folder}/`
-            })
-          else if (isFile(index))
-            values.push({ status: 'PASS', message: 'Same-name zone index is already present.', subject: `${folder}/${folder}.md` })
-          else {
-            if (!dryRun) writeFileSync(index, `# ${folder}\n`)
-            values.push({
-              status: 'FIXED',
-              message: `Same-name zone index ${dryRun ? 'would be scaffolded' : 'was scaffolded'}.`,
-              subject: `${folder}/${folder}.md`
-            })
-          }
-        }
-        return outcomes(values)
-      }
-      if (code === 'ZONE-3') {
-        const admin = zoneOf('Admin')
-        const directory = join(root, admin)
-        const memory = join(directory, 'MEMORY.md')
-        if (!isDirectory(directory))
-          return outcomes([
-            { status: 'NOT_APPLICABLE', message: 'Admin zone is absent; creating it needs a judgment call.', subject: `${admin}/` }
-          ])
-        if (isFile(memory))
-          return outcomes([{ status: 'PASS', message: 'Root memory index is already present.', subject: `${admin}/MEMORY.md` }])
-        if (!dryRun) {
-          mkdirSync(dirname(memory), { recursive: true })
-          writeFileSync(memory, '# MEMORY\n\n## Active Pillars\n\n<!-- list active Pillars here -->\n')
-        }
-        return outcomes([
-          {
-            status: 'FIXED',
-            message: `Root memory index ${dryRun ? 'would be scaffolded' : 'was scaffolded'}.`,
-            subject: `${admin}/MEMORY.md`
-          }
-        ])
-      }
-      return outcomes([{ status: 'NOT_APPLICABLE', message: 'This criterion has no safe conform action.' }])
+const auditOutcome = (finding: KbEvidenceFinding): AuditOutcome => {
+  const evidence = { message: finding.message, ...(finding.subject ? { subject: finding.subject } : {}) }
+  if (finding.level === 'FAIL' || finding.level === 'WARN') return { status: 'VIOLATION', ...evidence }
+  if (finding.level === 'NOT_APPLICABLE') return { status: 'NOT_APPLICABLE', ...evidence }
+  if (finding.level === 'PASS') return { status: 'PASS', ...evidence }
+  return { status: 'INFO', ...evidence }
+}
+
+const outcomesFor = (findings: readonly KbEvidenceFinding[], code: string): RubricOutcomes<AuditOutcome> => {
+  const outcomes = findings.filter((finding) => finding.code === code).map(auditOutcome)
+  return outcomes.length > 0 ? outcomes : [{ status: 'NOT_APPLICABLE', message: `${code} did not apply to this target.` }]
+}
+
+type KbDraft = {
+  scaffoldZoneIndexes: () => void
+  scaffoldMemoryIndex: () => void
+  proposal: () => ConformProposal
+}
+
+const createKbDraft = (repository: string): KbDraft | undefined => {
+  const root = resolve(repository)
+  if (!isDirectory(root)) return undefined
+  const configPath = join(root, CONFIG)
+  const parsed = isFile(configPath) ? parseConfig(readFileSync(configPath, 'utf8')) : { value: null, malformed: false }
+  const zoneOf = (zone: string): string => parsed.value?.zones[zone] ?? zone
+  const creates = new Map<string, string>()
+  const contained = (path: string): string | undefined => {
+    const value = relative(root, path)
+    return value && !isAbsolute(value) && value !== '..' && !value.startsWith('../') ? value : undefined
+  }
+  const safeDirectory = (path: string): boolean => {
+    const output = relative(root, path)
+    if (!output) return isDirectory(root)
+    if (isAbsolute(output) || output === '..' || output.startsWith('../')) return false
+    let cursor = root
+    for (const segment of output.split(/[\\/]/)) {
+      cursor = join(cursor, segment)
+      if (!isDirectory(cursor)) return false
     }
+    return true
+  }
+  const stageCreate = (path: string, content: string): void => {
+    const output = contained(path)
+    if (!output || existsSync(path) || !safeDirectory(dirname(path))) return
+    creates.set(output, content)
+  }
+
+  return {
+    scaffoldZoneIndexes: () => {
+      for (const zone of ZONES) {
+        const folder = zoneOf(zone)
+        const directory = resolve(root, folder)
+        if (!contained(directory) || !safeDirectory(directory)) continue
+        stageCreate(join(directory, `${folder}.md`), `# ${folder}\n`)
+      }
+    },
+    scaffoldMemoryIndex: () => {
+      const admin = resolve(root, zoneOf('Admin'))
+      if (!contained(admin) || !safeDirectory(admin)) return
+      stageCreate(join(admin, 'MEMORY.md'), '# MEMORY\n\n## Active Pillars\n\n<!-- list active Pillars here -->\n')
+    },
+    proposal: () => ({
+      writes: [...creates].sort(([left], [right]) => left.localeCompare(right)).map(([path, content]) => ({ path, content, create: true }))
+    })
+  }
+}
+
+export const createKbSession = ({ mode, repository }: RubricContextOptions): RubricSession<KbRubricContext> => {
+  const findings = collectKbAuditEvidence(repository)
+  const check = (code: string): KbCheck => outcomesFor(findings, code)
+  const draft = mode === 'conform' ? createKbDraft(repository) : undefined
+  const context: KbRubricContext = {
+    zones: {
+      requiredLayout: check('ZONE-1'),
+      zoneIndexes: check('ZONE-2'),
+      memoryIndex: check('ZONE-3'),
+      stagingAreas: check('ZONE-4'),
+      outboundPlacement: check('ZONE-5'),
+      ...(draft
+        ? {
+            scaffoldZoneIndexes: draft.scaffoldZoneIndexes,
+            scaffoldMemoryIndex: draft.scaffoldMemoryIndex
+          }
+        : {})
+    },
+    config: {
+      knownKeys: check('CONFIG-1'),
+      nonRedundantAliases: check('CONFIG-2'),
+      canonicalAliasKeys: check('CONFIG-3'),
+      boundary: check('CONFIG-4'),
+      preflightPaths: check('CONFIG-5')
+    },
+    admin: {
+      subdivisions: check('ADMIN-1'),
+      charter: check('ADMIN-2'),
+      conformance: check('ADMIN-3')
+    },
+    routing: {},
+    notes: {
+      requiredFrontmatter: check('NOTE-1'),
+      frontmatterFences: check('NOTE-1a'),
+      frontmatterKeys: check('NOTE-1b')
+    },
+    memory: { anchor: check('MEM-2') },
+    links: {}
+  }
+
+  return {
+    subjects: [{ families: ['ZONE', 'CONFIG', 'ADMIN', 'ROUTE', 'NOTE', 'MEM', 'LINK'], context: () => context }],
+    proposal: () => draft?.proposal() ?? { writes: [] }
   }
 }

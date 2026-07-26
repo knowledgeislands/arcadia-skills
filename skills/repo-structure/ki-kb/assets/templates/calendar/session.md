@@ -1,9 +1,10 @@
 ---
+type: calendar/session
+created: <YYYY-MM-DDTHH:MM:SSZ>
+updated: <YYYY-MM-DDTHH:MM:SSZ>
+reviewed:
 tags:
-  - card/note
   - topic/<pillar>
-status: current
-date: <YYYY-MM-DD>
 author:
 ---
 

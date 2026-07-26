@@ -1,8 +1,10 @@
 ---
+type: pillars/note
+created: <YYYY-MM-DDTHH:MM:SSZ>
+updated: <YYYY-MM-DDTHH:MM:SSZ>
+reviewed:
 tags:
-  - card/note
   - topic/<pillar>
-status: current
 author:
 ---
 

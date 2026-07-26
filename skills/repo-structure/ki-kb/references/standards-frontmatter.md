@@ -1,4 +1,4 @@
-# KI-wide frontmatter standard
+# Knowledge Islands frontmatter standard
 
 **Refresh:** structure · annually
 
@@ -93,9 +93,14 @@ The `Streams` zone's internal structure is owned by `ki-kb-streams`; these are i
 | `streams/proposal` | A workstream proposal (the enactment unit)       | `ki-kb-streams` |
 | `streams/note`     | A working note within a stream                   | `ki-kb-streams` |
 
-### Pillars branch (`pillars/`) — stub
+### Pillars branch (`pillars/`)
 
-Defined as the Pillars zone is built out.
+Settled internal knowledge. Governed by `ki-kb`.
+
+| Type            | Path context                                | Defined by |
+| --------------- | ------------------------------------------- | ---------- |
+| `pillars/index` | Pillar and area index notes                 | `ki-kb`    |
+| `pillars/note`  | Settled canonical knowledge within a Pillar | `ki-kb`    |
 
 ## Dependent fields
 

@@ -1,10 +1,11 @@
-# Knowledge Islands KB Reference
+# Knowledge Islands knowledge-base standard
 
-Long-form detail for the [Knowledge Islands KB](../SKILL.md) skill. Loaded on demand (progressive disclosure) so the `SKILL.md` body stays lean.
+This normative standard defines the structure, linking, configuration, routing, and digest contract applied by the [Knowledge Islands KB](../SKILL.md) skill.
 
 ## Contents
 
 - [The Knowledge Islands model](#the-knowledge-islands-model)
+- [Linking within a base](#linking-within-a-base)
 - [Onboarding a base to this skill](#onboarding-a-base-to-this-skill)
 - [Zone aliases and the `[ki-kb]` config table](#zone-aliases-and-the-ki-kb-config-table)
 - [Session digest structure](#session-digest-structure)
@@ -35,6 +36,7 @@ Because the zone model is fixed, onboarding is small - resolve only the **projec
 4. **Writing standards** - language variant, citation format, structural norms (defaults: British English, cite source paths, concise prose).
 5. **Domain pre-flight** - any extra reads before drafting; declared as a `preflight` list in the base's `.ki-config.toml` `[ki-kb]` table, not in `CLAUDE.md`.
 6. **Zone names** - only if a folder diverges from its canonical name during a migration; declared in `.ki-config.toml`, not `CLAUDE.md` (see [Zone aliases](#zone-aliases-and-the-ki-kb-config-table)).
+7. **Template overrides** - optional zone-keyed paths under `[ki-kb.templates]`, relative to the base.
 
 A base that follows the structure and defines the notes store needs nothing more; the rest runs on defaults.
 
@@ -71,7 +73,7 @@ Destination `-/_DIGESTS/<UTC timestamp> <Short Topic>.md` (timestamp `YYYY-MM-DD
 
 A base never ships a `<base>-kb` extension skill. What it needs differently is **declared**, so the mode logic stays in one place and the base specifics stay auditable:
 
-- **Structured data** → the base's `.ki-config.toml` `[ki-kb]` table, read **validate-down** by this skill: the `[ki-kb.zones]` aliases, the `required_frontmatter` array, and the `preflight` array (note paths/globs to read before drafting — the base-specific pre-flight that scope declaration and domain context once justified an extension for).
+- **Structured data** → the base's `.ki-config.toml` `[ki-kb]` table, read **validate-down** by this skill: the `[ki-kb.zones]` aliases, `[ki-kb.templates]` overrides, the `required_frontmatter` array, and the `preflight` array (note paths/globs to read before drafting — the base-specific pre-flight that scope declaration and domain context once justified an extension for).
 - **Narrative bindings** (store alias, scope usage, writing standards) → the base's auto-loaded `CLAUDE.md`.
 
 Relationships to sibling skills are **composition**, never extension: this skill runs alongside `ki-kb-streams` (to which it delegates the `Streams` zone) and `ki-authoring` (over a base's markdown), each invoked in sequence, never importing the other. A genuinely base-specific _behaviour_ that no declaration can express is a signal to generalise it into this standard skill (a REFRESH candidate), not to fork a coupled one.

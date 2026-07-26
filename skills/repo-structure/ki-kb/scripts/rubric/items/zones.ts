@@ -1,23 +1,78 @@
-import { mechanical } from './common.ts'
+import type { RubricFamily, RubricItem } from '../../shared/rubric.ts'
+import type { KbRubricContext, KbZoneContext } from '../contexts/kb.ts'
 
-export const ZONE_1 = mechanical(
+const SOURCE = 'standards-knowledge-base.md'
+
+const mechanical = (
+  code: string,
+  title: string,
+  description: string,
+  level: 'FAIL' | 'WARN',
+  evidence: (context: KbZoneContext) => KbZoneContext['requiredLayout']
+): RubricItem<KbZoneContext> => ({
+  code,
+  title,
+  description,
+  sources: [SOURCE],
+  mechanical: {
+    level,
+    audit: { phase: 'INSPECT', run: evidence }
+  }
+})
+
+const ZONE_1 = mechanical(
   'ZONE-1',
   'required zone layout',
   'Calendar/, Pillars/, Resources/, Streams/, and Admin/ are present, resolving each through a declared zone alias.',
-  'FAIL'
+  'FAIL',
+  (context) => context.requiredLayout
 )
-export const ZONE_2 = mechanical('ZONE-2', 'same-name zone indexes', 'Each present zone has its same-name index note.', 'WARN', true)
-export const ZONE_3 = mechanical('ZONE-3', 'root memory index', 'The resolved Admin zone carries MEMORY.md.', 'FAIL', true)
-export const ZONE_4 = mechanical(
+
+const ZONE_2: RubricItem<KbZoneContext> = {
+  code: 'ZONE-2',
+  title: 'same-name zone indexes',
+  description: 'Each present zone has its same-name index note.',
+  sources: [SOURCE],
+  mechanical: {
+    level: 'WARN',
+    audit: { phase: 'INSPECT', run: (context) => context.zoneIndexes },
+    conform: { phase: 'DERIVED', run: (context) => context.scaffoldZoneIndexes?.() }
+  }
+}
+
+const ZONE_3: RubricItem<KbZoneContext> = {
+  code: 'ZONE-3',
+  title: 'root memory index',
+  description: 'The resolved Admin zone carries MEMORY.md.',
+  sources: [SOURCE],
+  mechanical: {
+    level: 'FAIL',
+    audit: { phase: 'INSPECT', run: (context) => context.memoryIndex },
+    conform: { phase: 'DERIVED', run: (context) => context.scaffoldMemoryIndex?.() }
+  }
+}
+
+const ZONE_4 = mechanical(
   'ZONE-4',
   'staging areas are not zones',
   '+/ and -/ are reported as staging only and are exempt from the zone-index rule.',
-  'WARN'
+  'WARN',
+  (context) => context.stagingAreas
 )
-export const ZONE_5 = mechanical(
+
+const ZONE_5 = mechanical(
   'ZONE-5',
   'produced outputs use outbound staging',
   'Notes with type session-digest or handoff reside under the resolved -/ staging area.',
-  'FAIL'
+  'FAIL',
+  (context) => context.outboundPlacement
 )
-export const ZONE = [ZONE_1, ZONE_2, ZONE_3, ZONE_4, ZONE_5] as const
+
+export const ZONE: RubricFamily<KbRubricContext, KbZoneContext> = {
+  code: 'ZONE',
+  title: 'zone layout',
+  description: 'Required zones, indexes, staging, and output placement.',
+  standard: SOURCE,
+  selectContext: (context) => context.zones,
+  items: [ZONE_1, ZONE_2, ZONE_3, ZONE_4, ZONE_5]
+}
