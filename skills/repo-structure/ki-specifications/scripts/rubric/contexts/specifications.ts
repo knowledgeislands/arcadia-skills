@@ -64,7 +64,7 @@ export const createSpecificationsContext = ({ target, dryRun }: { target: string
           {
             status: 'VIOLATION',
             level: 'FAIL',
-            message: '.ki-config.toml is malformed; repair it before conforming.',
+            message: '.ki-config.toml is malformed; conform it before conforming.',
             subject: '.ki-config.toml'
           }
         ]

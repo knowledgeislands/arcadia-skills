@@ -30,7 +30,7 @@ const hybrid: RubricItem<RootContext['document']> = {
     },
     conform: {
       phase: 'PRIMARY',
-      run: () => [{ status: 'FIXED', message: 'document was created' }]
+      run: () => [{ changed: true, message: 'document was created' }]
     }
   },
   judgment: { prompt: 'Does the document explain its subject usefully?' }
@@ -115,9 +115,9 @@ describe('structured rubric model', () => {
     expect(OUTCOME_STATUSES).toEqual(['PASS', 'VIOLATION', 'NOT_APPLICABLE', 'INFO', 'FIXED'])
   })
 
-  test('requires explicit audit outcomes and permits conform FIXED outcomes', () => {
+  test('keeps conform actions distinct from host-derived FIXED outcomes', () => {
     expect(hybrid.mechanical.audit.run({ present: true })).toHaveLength(1)
-    expect(hybrid.mechanical.conform?.run({ present: false })[0]?.status).toBe('FIXED')
+    expect(hybrid.mechanical.conform?.run({ present: false })[0]?.changed).toBe(true)
   })
 
   test('rejects duplicate family and item codes plus mismatched membership', () => {

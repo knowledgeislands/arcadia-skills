@@ -2,27 +2,27 @@ import { existsSync, readFileSync } from 'node:fs'
 import { join, resolve } from 'node:path'
 import { collectAuditEvidence, type EngineeringEvidenceFinding } from './audit-evidence.ts'
 
-export type EngineeringRepairWrite = {
+export type EngineeringConformWrite = {
   readonly path: string
   readonly content: string
   readonly create?: boolean
 }
 
-export type EngineeringRepairCommand = {
+export type EngineeringConformCommand = {
   readonly program: string
   readonly arguments: readonly string[]
 }
 
-export type EngineeringRepairProposal = {
-  readonly writes: readonly EngineeringRepairWrite[]
-  readonly commands?: readonly EngineeringRepairCommand[]
+export type EngineeringConformProposal = {
+  readonly writes: readonly EngineeringConformWrite[]
+  readonly commands?: readonly EngineeringConformCommand[]
 }
 
 export type EngineeringRubricContext = {
   readonly repository: string
   readonly documents: ReadonlyMap<string, string>
   readonly audit: (code: string) => readonly EngineeringEvidenceFinding[]
-  readonly repair: (code: string) => EngineeringRepairProposal
+  readonly conform: (code: string) => EngineeringConformProposal
 }
 
 const requiredDev = ['@biomejs/biome', 'knip', 'prettier', 'husky', 'lint-staged', 'markdownlint-cli2', 'syncpack', 'typescript']
@@ -120,7 +120,7 @@ const legacyRuntimeOnlyScript = (value: string): boolean =>
     value
   )
 
-const packageWrite = (context: EngineeringRubricContext): EngineeringRepairProposal => {
+const packageWrite = (context: EngineeringRubricContext): EngineeringConformProposal => {
   const source = context.documents.get('package.json')
   if (!source) return { writes: [] }
   let value: Record<string, unknown>
@@ -139,12 +139,7 @@ const packageWrite = (context: EngineeringRubricContext): EngineeringRepairPropo
   packageJson['lint-staged'] = lintStaged
   const scripts = { ...((packageJson.scripts as Record<string, string> | undefined) ?? {}) }
   for (const key of Object.keys(scripts)) {
-    if (
-      legacyAggregateScript(key) ||
-      legacyToolScript(key) ||
-      legacySkillModeScript(key) ||
-      legacyRuntimeOnlyScript(scripts[key] ?? '')
-    )
+    if (legacyAggregateScript(key) || legacyToolScript(key) || legacySkillModeScript(key) || legacyRuntimeOnlyScript(scripts[key] ?? ''))
       delete scripts[key]
   }
   scripts.clean = scripts.clean?.includes('node_modules') ? scripts.clean : 'rm -rf dist node_modules'
@@ -154,19 +149,19 @@ const packageWrite = (context: EngineeringRubricContext): EngineeringRepairPropo
   return content === source ? { writes: [] } : { writes: [{ path: 'package.json', content }] }
 }
 
-const scaffold = (context: EngineeringRubricContext, name: keyof typeof defaults): EngineeringRepairProposal =>
+const scaffold = (context: EngineeringRubricContext, name: keyof typeof defaults): EngineeringConformProposal =>
   context.documents.has(name) ? { writes: [] } : { writes: [{ path: name, content: defaults[name], create: true }] }
 
-const engineeringMarker = (context: EngineeringRubricContext): EngineeringRepairProposal => {
+const engineeringMarker = (context: EngineeringRubricContext): EngineeringConformProposal => {
   const source = context.documents.get('.ki-config.toml')
   if (source === undefined) return { writes: [{ path: '.ki-config.toml', content: '[ki-engineering]\n', create: true }] }
   if (/^\[ki-engineering\]/m.test(source)) return { writes: [] }
   return { writes: [{ path: '.ki-config.toml', content: `${source.replace(/\n*$/, '\n\n')}[ki-engineering]\n` }] }
 }
 
-const commands = (value: readonly EngineeringRepairCommand[]): EngineeringRepairProposal => ({ writes: [], commands: value })
+const commands = (value: readonly EngineeringConformCommand[]): EngineeringConformProposal => ({ writes: [], commands: value })
 
-const repair = (code: string, context: EngineeringRubricContext): EngineeringRepairProposal => {
+const conform = (code: string, context: EngineeringRubricContext): EngineeringConformProposal => {
   switch (code) {
     case 'PKG-1':
     case 'PKG-2':
@@ -221,7 +216,7 @@ export const createEngineeringContext = ({ repository }: { readonly repository: 
     repository: absoluteRepository,
     documents: readDocuments(absoluteRepository),
     audit: (code) => collectAuditEvidence(absoluteRepository, code),
-    repair: (code) => repair(code, context)
+    conform: (code) => conform(code, context)
   }
   return context
 }

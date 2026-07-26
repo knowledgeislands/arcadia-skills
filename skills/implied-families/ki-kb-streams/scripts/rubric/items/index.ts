@@ -40,8 +40,8 @@ const nativeItem = (item: RubricItem<StreamsContext>) => {
   const native = mechanical(item)
   // Normalising an existing proposal's controlled-vocabulary field is a
   // deterministic replacement. Folder moves, index synthesis, and gate prose
-  // remain explicit maintainer decisions rather than native repair proposals.
-  if (item.code === 'ENACT-2') return { ...native, repair: (context: NativeStreamsContext) => ({ writes: context.normalisationWrites }) }
+  // remain explicit maintainer decisions rather than native conform proposals.
+  if (item.code === 'ENACT-2') return { ...native, conform: (context: NativeStreamsContext) => ({ writes: context.normalisationWrites }) }
   return native
 }
 
@@ -49,20 +49,20 @@ type NativeRuntimeItem = {
   readonly kind: 'mechanical' | 'judgment'
   readonly phase?: 'PREPARE' | 'INSPECT' | 'PRIMARY' | 'DERIVED' | 'NORMALISE'
   readonly audit?: (...arguments_: never[]) => unknown
-  readonly repair?: (...arguments_: never[]) => unknown
+  readonly conform?: (...arguments_: never[]) => unknown
 }
 
 const directItem = <Context>(item: RubricItem<Context>, runtime: NativeRuntimeItem) => {
   if (!item.mechanical) return item
   if (runtime.kind !== 'mechanical' || !runtime.phase || !runtime.audit) throw new Error(`${item.code} has no native mechanical runtime`)
-  const { repair: legacyRepair, ...mechanical } = item.mechanical
-  void legacyRepair
+  const { conform: legacyConform, ...mechanical } = item.mechanical
+  void legacyConform
   return {
     ...item,
     mechanical: {
       ...mechanical,
       audit: { phase: runtime.phase, run: runtime.audit },
-      ...(runtime.repair ? { repair: { phase: 'NORMALISE', run: runtime.repair } } : {})
+      ...(runtime.conform ? { conform: { phase: 'NORMALISE', run: runtime.conform } } : {})
     }
   }
 }

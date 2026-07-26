@@ -79,12 +79,15 @@ const rubricFamilyModules = (
     }
   }
 
-  const collections = [...new Set([...indexSource.matchAll(/\bitems:\s*([A-Z][A-Z0-9_]*)\b/g)].map((match) => match[1] as string))]
+  const families = indexSource.match(/\bfamilies:\s*\[([\s\S]*?)]/m)?.[1] ?? ''
+  const collections = [...new Set([...families.matchAll(/\b([A-Z][A-Z0-9_]*)\b/g)].map((match) => match[1] as string))]
   const familyModules = collections.map((collection) => {
     const specifier = imports.get(collection)
     const modulePath = specifier ? resolve(dirname(indexPath), `${specifier.replace(/\.ts$/, '')}.ts`) : null
     const source = modulePath && existsSync(modulePath) ? readFileSync(modulePath, 'utf8') : null
-    const collectionMatch = source?.match(new RegExp(`export\\s+const\\s+${collection}\\s*=\\s*\\[([\\s\\S]*?)]`, 'm'))
+    const collectionMatch = source?.match(
+      new RegExp(`export\\s+const\\s+${collection}\\b[\\s\\S]*?=\\s*\\{[\\s\\S]*?\\bitems:\\s*\\[([\\s\\S]*?)]`, 'm')
+    )
     const members = collectionMatch
       ? [...new Set([...(collectionMatch[1] as string).matchAll(/\b([A-Z][A-Z0-9_]+)\b/g)].map((match) => match[1] as string))]
       : []

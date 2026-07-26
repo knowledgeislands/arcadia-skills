@@ -37,7 +37,7 @@ const judgment = (item: RubricItem<HomebrewTapContext>) => {
   return { kind: 'judgment' as const, code: item.code, title: item.title, prompt: definition.prompt }
 }
 
-const markerRepair = (context: NativeHomebrewTapContext) => {
+const markerConform = (context: NativeHomebrewTapContext) => {
   if (!context.targetExists || !context.formulaDirectory || context.config !== 'absent' || context.configContent === null)
     return { writes: [] }
   return {
@@ -69,7 +69,7 @@ const nativeTap7 = (item: RubricItem<HomebrewTapContext>) => ({
 
 const nativeItem = (item: RubricItem<HomebrewTapContext>) => {
   if (!item.mechanical) return judgment(item)
-  if (item.code === 'CONFIG-1') return { ...mechanical(item), repair: markerRepair }
+  if (item.code === 'CONFIG-1') return { ...mechanical(item), conform: markerConform }
   if (item.code === 'TAP-7') return nativeTap7(item)
   return mechanical(item)
 }
@@ -78,20 +78,20 @@ type NativeRuntimeItem = {
   readonly kind: 'mechanical' | 'judgment'
   readonly phase?: 'PREPARE' | 'INSPECT' | 'PRIMARY' | 'DERIVED' | 'NORMALISE'
   readonly audit?: (...arguments_: never[]) => unknown
-  readonly repair?: (...arguments_: never[]) => unknown
+  readonly conform?: (...arguments_: never[]) => unknown
 }
 
 const directItem = <Context>(item: RubricItem<Context>, runtime: NativeRuntimeItem) => {
   if (!item.mechanical) return item
   if (runtime.kind !== 'mechanical' || !runtime.phase || !runtime.audit) throw new Error(`${item.code} has no native mechanical runtime`)
-  const { repair: legacyRepair, ...mechanical } = item.mechanical
-  void legacyRepair
+  const { conform: legacyConform, ...mechanical } = item.mechanical
+  void legacyConform
   return {
     ...item,
     mechanical: {
       ...mechanical,
       audit: { phase: runtime.phase, run: runtime.audit },
-      ...(runtime.repair ? { repair: { phase: 'NORMALISE', run: runtime.repair } } : {})
+      ...(runtime.conform ? { conform: { phase: 'NORMALISE', run: runtime.conform } } : {})
     }
   }
 }

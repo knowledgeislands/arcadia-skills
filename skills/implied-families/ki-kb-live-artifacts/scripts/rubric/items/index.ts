@@ -34,7 +34,7 @@ const judgment = (item: RubricItem<LiveArtifactsContext>) => {
   return { kind: 'judgment' as const, code: item.code, title: item.title, prompt: definition.prompt }
 }
 
-const indexRepair = (context: NativeLiveArtifactsContext) => {
+const indexConform = (context: NativeLiveArtifactsContext) => {
   if (!context.artifactsDirectoryExists || context.sources.length === 0) return { writes: [] }
   const entry = (source: (typeof context.sources)[number]): string =>
     `- [${source.stem}](${source.relativePath.split('/').at(-1)}) — _(description — see manual TODO)_`
@@ -56,7 +56,7 @@ const indexRepair = (context: NativeLiveArtifactsContext) => {
   }
 }
 
-const rendersRepair = (context: NativeLiveArtifactsContext) => ({
+const rendersConform = (context: NativeLiveArtifactsContext) => ({
   writes: context.sources.flatMap((source) => {
     if (source.frontmatter?.renders) return []
     const match = source.text.match(/^---\n([\s\S]*?)\n---/)
@@ -67,8 +67,8 @@ const rendersRepair = (context: NativeLiveArtifactsContext) => ({
 
 const nativeItem = (item: RubricItem<LiveArtifactsContext>) => {
   const native = item.mechanical ? mechanical(item) : judgment(item)
-  if (item.code === 'LA-S-1' && native.kind === 'mechanical') return { ...native, repair: indexRepair }
-  if (item.code === 'LA-F-2' && native.kind === 'mechanical') return { ...native, repair: rendersRepair }
+  if (item.code === 'LA-S-1' && native.kind === 'mechanical') return { ...native, conform: indexConform }
+  if (item.code === 'LA-F-2' && native.kind === 'mechanical') return { ...native, conform: rendersConform }
   return native
 }
 
@@ -76,20 +76,20 @@ type NativeRuntimeItem = {
   readonly kind: 'mechanical' | 'judgment'
   readonly phase?: 'PREPARE' | 'INSPECT' | 'PRIMARY' | 'DERIVED' | 'NORMALISE'
   readonly audit?: (...arguments_: never[]) => unknown
-  readonly repair?: (...arguments_: never[]) => unknown
+  readonly conform?: (...arguments_: never[]) => unknown
 }
 
 const directItem = <Context>(item: RubricItem<Context>, runtime: NativeRuntimeItem) => {
   if (!item.mechanical) return item
   if (runtime.kind !== 'mechanical' || !runtime.phase || !runtime.audit) throw new Error(`${item.code} has no native mechanical runtime`)
-  const { repair: legacyRepair, ...mechanical } = item.mechanical
-  void legacyRepair
+  const { conform: legacyConform, ...mechanical } = item.mechanical
+  void legacyConform
   return {
     ...item,
     mechanical: {
       ...mechanical,
       audit: { phase: runtime.phase, run: runtime.audit },
-      ...(runtime.repair ? { repair: { phase: 'NORMALISE', run: runtime.repair } } : {})
+      ...(runtime.conform ? { conform: { phase: 'NORMALISE', run: runtime.conform } } : {})
     }
   }
 }

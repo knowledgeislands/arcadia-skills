@@ -37,14 +37,14 @@ const judgment = (item: RubricItem<ChezmoiContext>) => {
 const nativeItem = (item: RubricItem<ChezmoiContext>) => {
   if (!item.mechanical) return judgment(item)
   const native = mechanical(item)
-  // This static source-only ignore file is the one safe repair. Template
+  // This static source-only ignore file is the one safe conform. Template
   // design, source-name changes, lock-file removal, and every `chezmoi`
   // operation need repository-specific intent or an external tool, so remain
   // report-only for the host.
   if (item.code === 'CHEZMOI-1')
     return {
       ...native,
-      repair: (context: NativeChezmoiContext) => ({
+      conform: (context: NativeChezmoiContext) => ({
         writes: context.hasIgnore
           ? []
           : [
@@ -64,20 +64,20 @@ type NativeRuntimeItem = {
   readonly kind: 'mechanical' | 'judgment'
   readonly phase?: 'PREPARE' | 'INSPECT' | 'PRIMARY' | 'DERIVED' | 'NORMALISE'
   readonly audit?: (...arguments_: never[]) => unknown
-  readonly repair?: (...arguments_: never[]) => unknown
+  readonly conform?: (...arguments_: never[]) => unknown
 }
 
 const directItem = <Context>(item: RubricItem<Context>, runtime: NativeRuntimeItem) => {
   if (!item.mechanical) return item
   if (runtime.kind !== 'mechanical' || !runtime.phase || !runtime.audit) throw new Error(`${item.code} has no native mechanical runtime`)
-  const { repair: legacyRepair, ...mechanical } = item.mechanical
-  void legacyRepair
+  const { conform: legacyConform, ...mechanical } = item.mechanical
+  void legacyConform
   return {
     ...item,
     mechanical: {
       ...mechanical,
       audit: { phase: runtime.phase, run: runtime.audit },
-      ...(runtime.repair ? { repair: { phase: 'NORMALISE', run: runtime.repair } } : {})
+      ...(runtime.conform ? { conform: { phase: 'NORMALISE', run: runtime.conform } } : {})
     }
   }
 }

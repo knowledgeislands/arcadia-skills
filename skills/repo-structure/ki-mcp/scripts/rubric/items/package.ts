@@ -99,7 +99,7 @@ export const SCR_1 = {
   },
   judgment: {
     prompt:
-      'Verify generated typed-client files are committed and current; where generation fails, repair the server registration/build and rerun the explicit generation command.'
+      'Verify generated typed-client files are committed and current; where generation fails, conform the server registration/build and rerun the explicit generation command.'
   }
 } as const
 export const CI_1 = {

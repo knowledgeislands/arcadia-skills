@@ -34,7 +34,7 @@ const judgment = (item: RubricItem<WebsiteContext>) => {
   return { kind: 'judgment' as const, code: item.code, title: item.title, prompt: definition.prompt }
 }
 
-const distIgnoreRepair = (context: NativeWebsiteContext) => {
+const distIgnoreConform = (context: NativeWebsiteContext) => {
   if (!context.cfgName) return { writes: [] }
   const current = context.read('.gitignore')
   const correct = context.siteRoot ? /^\s*\/?site\/dist\/?\s*$/m.test(current) : /^\s*\/?dist\/?\s*$/m.test(current)
@@ -46,7 +46,7 @@ const distIgnoreRepair = (context: NativeWebsiteContext) => {
   return { writes: [{ path: '.gitignore', content, ...(!context.has('.gitignore') ? { create: true } : {}) }] }
 }
 
-const optInRepair = (context: NativeWebsiteContext) => {
+const optInConform = (context: NativeWebsiteContext) => {
   if (context.kiWebsiteTable) return { writes: [] }
   const current = context.read('.ki-config.toml')
   const content = current ? `${current.replace(/\n*$/, '\n')}\n${KI_DEFAULT}` : KI_DEFAULT
@@ -55,8 +55,8 @@ const optInRepair = (context: NativeWebsiteContext) => {
 
 const nativeItem = (item: RubricItem<WebsiteContext>) => {
   const native = item.mechanical ? mechanical(item) : judgment(item)
-  if (item.code === 'WEB-33' && native.kind === 'mechanical') return { ...native, repair: distIgnoreRepair }
-  if (item.code === 'WEB-41' && native.kind === 'mechanical') return { ...native, repair: optInRepair }
+  if (item.code === 'WEB-33' && native.kind === 'mechanical') return { ...native, conform: distIgnoreConform }
+  if (item.code === 'WEB-41' && native.kind === 'mechanical') return { ...native, conform: optInConform }
   return native
 }
 
@@ -64,20 +64,20 @@ type NativeRuntimeItem = {
   readonly kind: 'mechanical' | 'judgment'
   readonly phase?: 'PREPARE' | 'INSPECT' | 'PRIMARY' | 'DERIVED' | 'NORMALISE'
   readonly audit?: (...arguments_: never[]) => unknown
-  readonly repair?: (...arguments_: never[]) => unknown
+  readonly conform?: (...arguments_: never[]) => unknown
 }
 
 const directItem = <Context>(item: RubricItem<Context>, runtime: NativeRuntimeItem) => {
   if (!item.mechanical) return item
   if (runtime.kind !== 'mechanical' || !runtime.phase || !runtime.audit) throw new Error(`${item.code} has no native mechanical runtime`)
-  const { repair: legacyRepair, ...mechanical } = item.mechanical
-  void legacyRepair
+  const { conform: legacyConform, ...mechanical } = item.mechanical
+  void legacyConform
   return {
     ...item,
     mechanical: {
       ...mechanical,
       audit: { phase: runtime.phase, run: runtime.audit },
-      ...(runtime.repair ? { repair: { phase: 'NORMALISE', run: runtime.repair } } : {})
+      ...(runtime.conform ? { conform: { phase: 'NORMALISE', run: runtime.conform } } : {})
     }
   }
 }

@@ -133,7 +133,7 @@ export const createLiveArtifactsContext = ({
     },
     conformRenders: () => {
       if (!artifactsDirectoryExists)
-        return [{ status: 'NOT_APPLICABLE', message: `${DEFAULT_ARTIFACTS_DIR}/ is absent; there are no frontmatter blocks to repair.` }]
+        return [{ status: 'NOT_APPLICABLE', message: `${DEFAULT_ARTIFACTS_DIR}/ is absent; there are no frontmatter blocks to conform.` }]
       const outcomes: ConformOutcome[] = []
       for (const source of sources) {
         if (!source.frontmatter || source.frontmatter.renders) continue

@@ -74,7 +74,7 @@ export type StreamsContext = {
 }
 
 /**
- * Declare the one mechanical repair that does not need a content decision:
+ * Declare the one mechanical conform that does not need a content decision:
  * trim a recognised lifecycle token to its controlled-vocabulary value.
  * The native KI host owns validation and publication of these replacements.
  */

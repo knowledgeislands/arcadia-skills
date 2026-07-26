@@ -146,9 +146,9 @@ const appendUnindexedWrites = (context: NativeHousekeepingContext) =>
 const nativeItem = (item: RubricItem<HousekeepingRubricContext>) => {
   if (!item.mechanical) return judgment(item)
   const native = mechanical(item)
-  if (item.code === 'FM-2') return { ...native, repair: (context: NativeHousekeepingContext) => ({ writes: alignedNameWrites(context) }) }
+  if (item.code === 'FM-2') return { ...native, conform: (context: NativeHousekeepingContext) => ({ writes: alignedNameWrites(context) }) }
   if (item.code === 'IDX-3')
-    return { ...native, repair: (context: NativeHousekeepingContext) => ({ writes: appendUnindexedWrites(context) }) }
+    return { ...native, conform: (context: NativeHousekeepingContext) => ({ writes: appendUnindexedWrites(context) }) }
   return native
 }
 
@@ -156,20 +156,20 @@ type NativeRuntimeItem = {
   readonly kind: 'mechanical' | 'judgment'
   readonly phase?: 'PREPARE' | 'INSPECT' | 'PRIMARY' | 'DERIVED' | 'NORMALISE'
   readonly audit?: (...arguments_: never[]) => unknown
-  readonly repair?: (...arguments_: never[]) => unknown
+  readonly conform?: (...arguments_: never[]) => unknown
 }
 
 const directItem = <Context>(item: RubricItem<Context>, runtime: NativeRuntimeItem) => {
   if (!item.mechanical) return item
   if (runtime.kind !== 'mechanical' || !runtime.phase || !runtime.audit) throw new Error(`${item.code} has no native mechanical runtime`)
-  const { repair: legacyRepair, ...mechanical } = item.mechanical
-  void legacyRepair
+  const { conform: legacyConform, ...mechanical } = item.mechanical
+  void legacyConform
   return {
     ...item,
     mechanical: {
       ...mechanical,
       audit: { phase: runtime.phase, run: runtime.audit },
-      ...(runtime.repair ? { repair: { phase: 'NORMALISE', run: runtime.repair } } : {})
+      ...(runtime.conform ? { conform: { phase: 'NORMALISE', run: runtime.conform } } : {})
     }
   }
 }

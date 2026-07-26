@@ -36,7 +36,7 @@ const judgment = (item: RubricItem<BindingChezMoiContext>) => {
 
 const nativeItem = (item: RubricItem<BindingChezMoiContext>) => (item.mechanical ? mechanical(item) : judgment(item))
 
-// This contract only observes the chezmoi source repository.  A repair needs
+// This contract only observes the chezmoi source repository.  A conform needs
 // source-specific decisions and an external `chezmoi` render/apply operation,
 // neither of which the repository transaction may infer or run.  Violations
 // therefore remain reported until a caller supplies those decisions explicitly.
@@ -45,20 +45,20 @@ type NativeRuntimeItem = {
   readonly kind: 'mechanical' | 'judgment'
   readonly phase?: 'PREPARE' | 'INSPECT' | 'PRIMARY' | 'DERIVED' | 'NORMALISE'
   readonly audit?: (...arguments_: never[]) => unknown
-  readonly repair?: (...arguments_: never[]) => unknown
+  readonly conform?: (...arguments_: never[]) => unknown
 }
 
 const directItem = <Context>(item: RubricItem<Context>, runtime: NativeRuntimeItem) => {
   if (!item.mechanical) return item
   if (runtime.kind !== 'mechanical' || !runtime.phase || !runtime.audit) throw new Error(`${item.code} has no native mechanical runtime`)
-  const { repair: legacyRepair, ...mechanical } = item.mechanical
-  void legacyRepair
+  const { conform: legacyConform, ...mechanical } = item.mechanical
+  void legacyConform
   return {
     ...item,
     mechanical: {
       ...mechanical,
       audit: { phase: runtime.phase, run: runtime.audit },
-      ...(runtime.repair ? { repair: { phase: 'NORMALISE', run: runtime.repair } } : {})
+      ...(runtime.conform ? { conform: { phase: 'NORMALISE', run: runtime.conform } } : {})
     }
   }
 }

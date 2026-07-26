@@ -36,9 +36,9 @@ const judgment = (item: RubricItem<RoadmapContext>) => {
   return { kind: 'judgment' as const, code: item.code, title: item.title, prompt: definition.prompt }
 }
 
-const nativeRepair = (item: RubricItem<RoadmapContext>) => ({
+const nativeConform = (item: RubricItem<RoadmapContext>) => ({
   ...mechanical(item),
-  repair: (context: NativeRoadmapContext) => ({
+  conform: (context: NativeRoadmapContext) => ({
     writes: context.replacements
       .filter((replacement) => replacement.areas.includes(item.code as 'ROAD-4' | 'PLAN-2' | 'PROJ-1'))
       .map(({ path, content }) => ({ path, content }))
@@ -46,7 +46,7 @@ const nativeRepair = (item: RubricItem<RoadmapContext>) => ({
 })
 
 const nativeItem = (item: RubricItem<RoadmapContext>) => {
-  if (item.code === 'ROAD-4' || item.code === 'PLAN-2' || item.code === 'PROJ-1') return nativeRepair(item)
+  if (item.code === 'ROAD-4' || item.code === 'PLAN-2' || item.code === 'PROJ-1') return nativeConform(item)
   return item.mechanical ? mechanical(item) : judgment(item)
 }
 
@@ -54,20 +54,20 @@ type NativeRuntimeItem = {
   readonly kind: 'mechanical' | 'judgment'
   readonly phase?: 'PREPARE' | 'INSPECT' | 'PRIMARY' | 'DERIVED' | 'NORMALISE'
   readonly audit?: (...arguments_: never[]) => unknown
-  readonly repair?: (...arguments_: never[]) => unknown
+  readonly conform?: (...arguments_: never[]) => unknown
 }
 
 const directItem = <Context>(item: RubricItem<Context>, runtime: NativeRuntimeItem) => {
   if (!item.mechanical) return item
   if (runtime.kind !== 'mechanical' || !runtime.phase || !runtime.audit) throw new Error(`${item.code} has no native mechanical runtime`)
-  const { repair: legacyRepair, ...mechanical } = item.mechanical
-  void legacyRepair
+  const { conform: legacyConform, ...mechanical } = item.mechanical
+  void legacyConform
   return {
     ...item,
     mechanical: {
       ...mechanical,
       audit: { phase: runtime.phase, run: runtime.audit },
-      ...(runtime.repair ? { repair: { phase: 'NORMALISE', run: runtime.repair } } : {})
+      ...(runtime.conform ? { conform: { phase: 'NORMALISE', run: runtime.conform } } : {})
     }
   }
 }

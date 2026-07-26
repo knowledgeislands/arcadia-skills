@@ -1,6 +1,6 @@
 import type { RubricDefinition } from '../../shared/rubric.ts'
 import type { KiSkillsRubricContext } from '../contexts/contexts.ts'
-import { createKiSkillsExecutionDefinition } from '../contexts/execution.ts'
+import { bindExecution, createExecutionContext, executableCatalogue } from '../contexts/execution.ts'
 import { BODY } from './body.ts'
 import { COLLISION } from './collision.ts'
 import { DESC } from './description.ts'
@@ -43,4 +43,12 @@ const rubric: RubricDefinition<KiSkillsRubricContext> = {
   ]
 }
 
-export default createKiSkillsExecutionDefinition(rubric)
+const catalogue = executableCatalogue(rubric.families)
+
+export default {
+  contract: 1,
+  name: rubric.name,
+  concern: rubric.concern,
+  createContext: createExecutionContext,
+  families: catalogue.map((family) => bindExecution(family, catalogue))
+} as const

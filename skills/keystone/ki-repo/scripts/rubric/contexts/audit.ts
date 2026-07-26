@@ -810,7 +810,7 @@ function localCapabilityFindings(dir: string): Finding[] {
   if (missing.length)
     fail(
       'CAPABILITY-COMPLETE',
-      `declared governance root(s) lack complete local EDUCATE and governed checker payloads: ${missing.join(', ')} — remove process/global-only tables, or repair the governance skill and re-run ./.ki/bin/ki-educate`,
+      `declared governance root(s) lack complete local EDUCATE and governed checker payloads: ${missing.join(', ')} — remove process/global-only tables, or conform the governance skill and re-run ./.ki/bin/ki-educate`,
       KI_CONFIG
     )
   return f

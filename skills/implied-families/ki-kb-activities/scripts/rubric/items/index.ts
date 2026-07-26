@@ -37,7 +37,7 @@ const judgment = (item: RubricItem<ActivitiesContext>) => {
   return { kind: 'judgment' as const, code: item.code, title: item.title, prompt: definition.prompt }
 }
 
-const indexRepair = (context: NativeActivitiesContext) => {
+const indexConform = (context: NativeActivitiesContext) => {
   if (!context.activitiesAvailable || context.notes.length === 0) return { writes: [] }
   const missing = context.notes.filter((note) => !context.indexContent.includes(note.indexLink))
   if (missing.length === 0) return { writes: [] }
@@ -49,7 +49,7 @@ const indexRepair = (context: NativeActivitiesContext) => {
 }
 
 const nativeItem = (item: RubricItem<ActivitiesContext>) => {
-  if (item.code === 'ACT-S-1') return { ...mechanical(item), repair: indexRepair }
+  if (item.code === 'ACT-S-1') return { ...mechanical(item), conform: indexConform }
   return item.mechanical ? mechanical(item) : judgment(item)
 }
 
@@ -62,20 +62,20 @@ type NativeRuntimeItem = {
   readonly kind: 'mechanical' | 'judgment'
   readonly phase?: 'PREPARE' | 'INSPECT' | 'PRIMARY' | 'DERIVED' | 'NORMALISE'
   readonly audit?: (...arguments_: never[]) => unknown
-  readonly repair?: (...arguments_: never[]) => unknown
+  readonly conform?: (...arguments_: never[]) => unknown
 }
 
 const directItem = <Context>(item: RubricItem<Context>, runtime: NativeRuntimeItem) => {
   if (!item.mechanical) return item
   if (runtime.kind !== 'mechanical' || !runtime.phase || !runtime.audit) throw new Error(`${item.code} has no native mechanical runtime`)
-  const { repair: legacyRepair, ...mechanical } = item.mechanical
-  void legacyRepair
+  const { conform: legacyConform, ...mechanical } = item.mechanical
+  void legacyConform
   return {
     ...item,
     mechanical: {
       ...mechanical,
       audit: { phase: runtime.phase, run: runtime.audit },
-      ...(runtime.repair ? { repair: { phase: 'NORMALISE', run: runtime.repair } } : {})
+      ...(runtime.conform ? { conform: { phase: 'NORMALISE', run: runtime.conform } } : {})
     }
   }
 }

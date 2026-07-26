@@ -118,7 +118,7 @@ export const createHomebrewTapContext = ({ target, dryRun }: { target: string; d
         return [{ status: 'INFO', message: '.ki-config.toml is absent; ki-repo owns creating the shared file.', subject: CONFIG_FILE }]
       if (config === 'malformed')
         return [
-          { status: 'INFO', message: '.ki-config.toml is malformed; repair it by hand before adding the marker.', subject: CONFIG_FILE }
+          { status: 'INFO', message: '.ki-config.toml is malformed; conform it by hand before adding the marker.', subject: CONFIG_FILE }
         ]
       if (config === 'present')
         return [{ status: 'PASS', message: 'The keyless [ki-homebrew-tap] marker is already present.', subject: CONFIG_FILE }]

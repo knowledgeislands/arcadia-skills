@@ -1,7 +1,7 @@
 import type { AuditOutcome, RubricFamily, RubricItem, RubricOutcomes } from '../../shared/rubric.ts'
 import type { KiShapeRubricContext, KiSkillsRubricContext } from '../contexts/contexts.ts'
 
-const UNIVERSAL_VERBS = ['AUDIT', 'CONFORM', 'HELP', 'EDUCATE', 'REFRESH'] as const
+const UNIVERSAL_VERBS = ['AUDIT', 'CONFORM', 'EDUCATE', 'REFRESH', 'HELP'] as const
 
 export const KI_SHAPE_1: RubricItem<KiShapeRubricContext> = {
   code: 'KI-SHAPE-1',
@@ -184,6 +184,16 @@ export const KI_SHAPE_11: RubricItem<KiShapeRubricContext> = {
           ? [{ status: 'PASS', message: 'governance skills expose HELP' }]
           : [{ status: 'VIOLATION', message: '`argument-hint` does not expose the universal `help` mode (ADR-KI-HARNESS-SKILLS-001)' }]
       }
+    },
+    conform: {
+      phase: 'NORMALISE',
+      run: ({ skill, setArgumentHint }) => {
+        if (!skill?.governanceSkill || !skill.argumentHint || !setArgumentHint)
+          return [{ changed: false, message: 'HELP mode does not have a safe conform' }]
+        if (skill.hintVerbs.includes('HELP')) return [{ changed: false, message: 'governance skill already exposes HELP' }]
+        setArgumentHint(`${skill.argumentHint} | help`)
+        return [{ changed: true, message: 'added the universal help mode' }]
+      }
     }
   }
 }
@@ -209,7 +219,18 @@ export const KI_SHAPE_12: RubricItem<KiShapeRubricContext> = {
   sources: ['ADR-KI-HARNESS-SKILLS-001', 'ADR-KI-HARNESS-SKILLS-006', 'ADR-KI-HARNESS-007'],
   mechanical: {
     level: 'WARN',
-    audit: { phase: 'INSPECT', run: auditKiShape12 }
+    audit: { phase: 'INSPECT', run: auditKiShape12 },
+    conform: {
+      phase: 'PRIMARY',
+      run: ({ skill, setArgumentHint }) => {
+        if (!skill?.governanceSkill || !skill.argumentHint || !setArgumentHint)
+          return [{ changed: false, message: 'governance mode vocabulary does not have a safe conform' }]
+        const missing = UNIVERSAL_VERBS.filter((verb) => !skill.hintVerbs.includes(verb))
+        if (missing.length === 0) return [{ changed: false, message: 'governance mode vocabulary is already complete' }]
+        setArgumentHint(`${skill.argumentHint} | ${missing.map((verb) => verb.toLowerCase()).join(' | ')}`)
+        return [{ changed: true, message: `added missing universal mode(s): ${missing.map((verb) => verb.toLowerCase()).join(', ')}` }]
+      }
+    }
   }
 }
 

@@ -57,6 +57,7 @@ export type ScriptsRubricContext = {
 
 export type LayoutRubricContext = {
   markdown?: string
+  sourceMarkdown?: string
   subject?: string
   writeMarkdown?: (markdown: string) => void
   missingSkillRoot?: boolean

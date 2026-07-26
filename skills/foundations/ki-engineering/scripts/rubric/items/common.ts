@@ -1,4 +1,4 @@
-import type { EngineeringRubricContext, EngineeringRepairProposal } from '../contexts/engineering.ts'
+import type { EngineeringConformProposal, EngineeringRubricContext } from '../contexts/engineering.ts'
 
 export type EngineeringRubricCode = `${string}-${number}`
 export type EngineeringViolationLevel = 'FAIL' | 'WARN'
@@ -16,9 +16,9 @@ type EngineeringMechanicalAspect = {
     readonly phase: 'INSPECT'
     readonly run: (context: EngineeringRubricContext) => readonly EngineeringAuditOutcome[]
   }
-  readonly repair?: {
+  readonly conform?: {
     readonly phase: 'PRIMARY'
-    readonly run: (context: EngineeringRubricContext) => EngineeringRepairProposal
+    readonly run: (context: EngineeringRubricContext) => EngineeringConformProposal
   }
 }
 
@@ -94,16 +94,13 @@ export const mechanical = (
     level,
     ...(overrideLevels ? { overrideLevels } : {}),
     audit: { phase: 'INSPECT', run: (context) => audit(code, level, overrideLevels, context) },
-    ...(SAFE_REPAIRS.has(code) ? { repair: { phase: 'PRIMARY' as const, run: (context: EngineeringRubricContext) => context.repair(code) } } : {})
+    ...(SAFE_REPAIRS.has(code)
+      ? { conform: { phase: 'PRIMARY' as const, run: (context: EngineeringRubricContext) => context.conform(code) } }
+      : {})
   }
 })
 
-export const judgment = (
-  code: EngineeringRubricCode,
-  title: string,
-  description: string,
-  prompt: string
-): EngineeringRubricItem => ({
+export const judgment = (code: EngineeringRubricCode, title: string, description: string, prompt: string): EngineeringRubricItem => ({
   code,
   title,
   description,

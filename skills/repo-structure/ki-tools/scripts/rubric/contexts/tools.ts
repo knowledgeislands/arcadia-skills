@@ -110,7 +110,7 @@ export const createToolsContext = ({ target, dryRun }: { target: string; dryRun:
         return [{ status: 'INFO', message: 'configuration file is missing; ki-repo must create it first', subject: '.ki-config.toml' }]
       if (config === 'present') return [{ status: 'PASS', message: '[ki-tools] marker already present', subject: '.ki-config.toml' }]
       if (config === 'malformed')
-        return [{ status: 'INFO', message: 'configuration is malformed; repair it by hand', subject: '.ki-config.toml' }]
+        return [{ status: 'INFO', message: 'configuration is malformed; conform it by hand', subject: '.ki-config.toml' }]
       if (!dryRun) {
         const text = readFileSync(configPath, 'utf8')
         writeFileSync(configPath, `${text.replace(/\n*$/, '\n\n')}[ki-tools]\n`)

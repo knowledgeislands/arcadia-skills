@@ -47,9 +47,9 @@ The checker owns generic planning, execution, typed findings, response construct
 
 ## Execution planning
 
-Each mechanical rubric item declares an AUDIT execution and MAY declare a safe repair action.
+Each mechanical rubric item declares an AUDIT execution and MAY declare a safe conform action.
 
-An execution or repair action states its phase and callback.
+An execution or conform action states its phase and callback.
 
 The shared phase order is:
 
@@ -61,17 +61,17 @@ PREPARE → INSPECT → PRIMARY → DERIVED → NORMALISE
 
 The checker plans one progress unit for every selected mechanical rubric item.
 
-During CONFORM, an item with a repair action runs an immediate transaction: AUDIT, conditional repair, then AUDIT again.
+During CONFORM, an item with a conform action runs an immediate transaction: AUDIT, conditional conform, then AUDIT again.
 
-`VIOLATION` makes repair eligible by default.
+`VIOLATION` makes conform eligible by default.
 
-`INFO` is eligible only when that item explicitly declares `repairOn: ['INFO']`.
+`INFO` is eligible only when that item explicitly declares `conformOn: ['INFO']`.
 
 The final response contains only the terminal post-audit outcomes, never the preliminary audit or action outcome.
 
-The checker emits `FIXED` only when the repair observed a persistent change and the post-audit satisfies the repair eligibility condition.
+The checker emits `FIXED` only when the conform observed a persistent change and the post-audit satisfies the conform eligibility condition.
 
-An item without a repair action runs AUDIT read-only during CONFORM so it remains represented in the response.
+An item without a conform action runs AUDIT read-only during CONFORM so it remains represented in the response.
 
 It rejects an unknown phase.
 
@@ -79,13 +79,13 @@ The plan is deterministic: phase first, then stable family and item order.
 
 AUDIT executions are read-only.
 
-Repair actions receive only their explicit safe capabilities and return whether they observed a persistent change.
+Conform actions receive only their explicit safe capabilities and return whether they observed a persistent change.
 
 Every execution MUST return at least one outcome rather than using an empty result to imply PASS.
 
 The checker caches each subject's immutable AUDIT context for the run.
 
-For one CONFORM transaction it asks the relevant subject-context factory before the pre-audit, repair, and post-audit, preserving safe mutable state while observing fresh evidence after a write.
+For one CONFORM transaction it asks the relevant subject-context factory before the pre-audit, conform, and post-audit, preserving safe mutable state while observing fresh evidence after a write.
 
 If repository-wide orchestration later requires a static checker schedule or dependency metadata, that integration MUST define and justify its generated projection without turning it into a second authored execution plan.
 
@@ -106,7 +106,7 @@ A mechanical item declares `FAIL` or `WARN` as its default violation level.
 
 Its AUDIT callback returns `VIOLATION`, `PASS`, `NOT_APPLICABLE`, or `INFO`; the checker maps `VIOLATION` to the item's declared default unless that outcome selects an alternative the item explicitly permits through `overrideLevels`, and maps the others directly to the response level above.
 
-The checker alone derives `FIXED` from a verified repair transaction.
+The checker alone derives `FIXED` from a verified conform transaction.
 
 A judgment aspect has no checker execution.
 
@@ -154,11 +154,11 @@ A downstream reporter validates the self-contained response before filtering dis
 
 ## Conform safety
 
-Every CONFORM repair is gated by its own immediate AUDIT outcome before writing, including a `PREPARE` action that establishes prerequisites ahead of the shared `INSPECT` phase.
+Every CONFORM conform is gated by its own immediate AUDIT outcome before writing, including a `PREPARE` action that establishes prerequisites ahead of the shared `INSPECT` phase.
 
-A repair writes only when its target actually drifts and honours dry-run without persistence.
+A conform writes only when its target actually drifts and honours dry-run without persistence.
 
-A dry run and a no-op repair never produce `FIXED` because they cannot observe a persistent change.
+A dry run and a no-op conform never produce `FIXED` because they cannot observe a persistent change.
 
 A callback receives the smallest capability surface that permits its declared action.
 

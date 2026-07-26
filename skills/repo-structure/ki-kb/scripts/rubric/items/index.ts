@@ -58,7 +58,7 @@ const zoneFolder = (subject: string): string | undefined => {
   return undefined
 }
 
-const zoneIndexRepair = (context: NativeKbContext) => ({
+const zoneIndexConform = (context: NativeKbContext) => ({
   writes: violationSubjects(context, 'ZONE-2').flatMap((subject) => {
     const path = containedPath(context, subject)
     const folder = zoneFolder(subject)
@@ -66,7 +66,7 @@ const zoneIndexRepair = (context: NativeKbContext) => ({
   })
 })
 
-const memoryIndexRepair = (context: NativeKbContext) => ({
+const memoryIndexConform = (context: NativeKbContext) => ({
   writes: violationSubjects(context, 'ZONE-3').flatMap((subject) => {
     const path = containedPath(context, subject)
     return path ? [{ path, content: '# MEMORY\n\n## Active Pillars\n\n<!-- list active Pillars here -->\n', create: true }] : []
@@ -76,8 +76,8 @@ const memoryIndexRepair = (context: NativeKbContext) => ({
 const nativeItem = (item: RubricItem<KbRubricContext>) => {
   if (!item.mechanical) return judgment(item)
   const native = mechanical(item)
-  if (item.code === 'ZONE-2') return { ...native, repair: zoneIndexRepair }
-  if (item.code === 'ZONE-3') return { ...native, repair: memoryIndexRepair }
+  if (item.code === 'ZONE-2') return { ...native, conform: zoneIndexConform }
+  if (item.code === 'ZONE-3') return { ...native, conform: memoryIndexConform }
   return native
 }
 
@@ -85,20 +85,20 @@ type NativeRuntimeItem = {
   readonly kind: 'mechanical' | 'judgment'
   readonly phase?: 'PREPARE' | 'INSPECT' | 'PRIMARY' | 'DERIVED' | 'NORMALISE'
   readonly audit?: (...arguments_: never[]) => unknown
-  readonly repair?: (...arguments_: never[]) => unknown
+  readonly conform?: (...arguments_: never[]) => unknown
 }
 
 const directItem = <Context>(item: RubricItem<Context>, runtime: NativeRuntimeItem) => {
   if (!item.mechanical) return item
   if (runtime.kind !== 'mechanical' || !runtime.phase || !runtime.audit) throw new Error(`${item.code} has no native mechanical runtime`)
-  const { repair: legacyRepair, ...mechanical } = item.mechanical
-  void legacyRepair
+  const { conform: legacyConform, ...mechanical } = item.mechanical
+  void legacyConform
   return {
     ...item,
     mechanical: {
       ...mechanical,
       audit: { phase: runtime.phase, run: runtime.audit },
-      ...(runtime.repair ? { repair: { phase: 'NORMALISE', run: runtime.repair } } : {})
+      ...(runtime.conform ? { conform: { phase: 'NORMALISE', run: runtime.conform } } : {})
     }
   }
 }

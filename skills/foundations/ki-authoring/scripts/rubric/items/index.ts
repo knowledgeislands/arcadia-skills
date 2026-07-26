@@ -51,12 +51,12 @@ const judgment = (item: RubricItem<AuthoringRubricContext>) => {
 
 const nativeMarkdown = (item: RubricItem<AuthoringRubricContext>) => ({
   ...mechanical(item),
-  repair: () => ({ writes: [], commands: MARKDOWN_CONFORM_COMMANDS })
+  conform: () => ({ writes: [], commands: MARKDOWN_CONFORM_COMMANDS })
 })
 
 const nativeOwned = (item: RubricItem<AuthoringRubricContext>) => ({
   ...mechanical(item),
-  repair: (context: NativeAuthoringContext) => ({
+  conform: (context: NativeAuthoringContext) => ({
     writes: (Object.keys(canonical) as OwnedFile[]).flatMap((name) =>
       context.owned(name) === 'drifted'
         ? [{ path: relative(context.repository, join(context.repository, name)), content: canonical[name] }]
@@ -75,20 +75,20 @@ type NativeRuntimeItem = {
   readonly kind: 'mechanical' | 'judgment'
   readonly phase?: 'PREPARE' | 'INSPECT' | 'PRIMARY' | 'DERIVED' | 'NORMALISE'
   readonly audit?: (...arguments_: never[]) => unknown
-  readonly repair?: (...arguments_: never[]) => unknown
+  readonly conform?: (...arguments_: never[]) => unknown
 }
 
 const directItem = <Context>(item: RubricItem<Context>, runtime: NativeRuntimeItem) => {
   if (!item.mechanical) return item
   if (runtime.kind !== 'mechanical' || !runtime.phase || !runtime.audit) throw new Error(`${item.code} has no native mechanical runtime`)
-  const { repair: legacyRepair, ...mechanical } = item.mechanical
-  void legacyRepair
+  const { conform: legacyConform, ...mechanical } = item.mechanical
+  void legacyConform
   return {
     ...item,
     mechanical: {
       ...mechanical,
       audit: { phase: runtime.phase, run: runtime.audit },
-      ...(runtime.repair ? { repair: { phase: 'NORMALISE', run: runtime.repair } } : {})
+      ...(runtime.conform ? { conform: { phase: 'NORMALISE', run: runtime.conform } } : {})
     }
   }
 }

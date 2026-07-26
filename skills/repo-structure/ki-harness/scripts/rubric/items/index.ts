@@ -37,11 +37,11 @@ const judgment = (item: RubricItem<HarnessRubricContext>) => {
 // The host transaction presently replaces existing regular files only.  Directory and
 // missing-file scaffolding remain violations until that capability is deliberately added;
 // their legacy writers are not exposed through the native context.
-const unsupportedScaffoldRepair = () => ({ writes: [] })
+const unsupportedScaffoldConform = () => ({ writes: [] })
 
 const nativeConfig1 = (item: RubricItem<HarnessRubricContext>) => ({
   ...mechanical(item),
-  repair: (context: NativeHarnessContext) => ({
+  conform: (context: NativeHarnessContext) => ({
     writes:
       context.config === null || hasTomlTable(context.config, 'ki-harness')
         ? []
@@ -50,7 +50,7 @@ const nativeConfig1 = (item: RubricItem<HarnessRubricContext>) => ({
 })
 
 const nativeItem = (item: RubricItem<HarnessRubricContext>) => {
-  if (item.code === 'LAY-1' || item.code === 'LAY-2') return { ...mechanical(item), repair: unsupportedScaffoldRepair }
+  if (item.code === 'LAY-1' || item.code === 'LAY-2') return { ...mechanical(item), conform: unsupportedScaffoldConform }
   if (item.code === 'CONFIG-1') return nativeConfig1(item)
   return item.mechanical ? mechanical(item) : judgment(item)
 }
@@ -59,20 +59,20 @@ type NativeRuntimeItem = {
   readonly kind: 'mechanical' | 'judgment'
   readonly phase?: 'PREPARE' | 'INSPECT' | 'PRIMARY' | 'DERIVED' | 'NORMALISE'
   readonly audit?: (...arguments_: never[]) => unknown
-  readonly repair?: (...arguments_: never[]) => unknown
+  readonly conform?: (...arguments_: never[]) => unknown
 }
 
 const directItem = <Context>(item: RubricItem<Context>, runtime: NativeRuntimeItem) => {
   if (!item.mechanical) return item
   if (runtime.kind !== 'mechanical' || !runtime.phase || !runtime.audit) throw new Error(`${item.code} has no native mechanical runtime`)
-  const { repair: legacyRepair, ...mechanical } = item.mechanical
-  void legacyRepair
+  const { conform: legacyConform, ...mechanical } = item.mechanical
+  void legacyConform
   return {
     ...item,
     mechanical: {
       ...mechanical,
       audit: { phase: runtime.phase, run: runtime.audit },
-      ...(runtime.repair ? { repair: { phase: 'NORMALISE', run: runtime.repair } } : {})
+      ...(runtime.conform ? { conform: { phase: 'NORMALISE', run: runtime.conform } } : {})
     }
   }
 }

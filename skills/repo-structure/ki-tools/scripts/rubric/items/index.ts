@@ -40,19 +40,19 @@ const judgment = (item: RubricItem<ToolsContext>) => {
 // chmod only addresses the audited executable-bit gap. The host invokes the
 // pathless command from the repository root; missing tool content remains a
 // maintainer decision rather than a native scaffold.
-const executableRepair = (context: NativeToolsContext) => ({
+const executableConform = (context: NativeToolsContext) => ({
   writes: [],
   commands: context.bins.filter((bin) => !bin.executable).map((bin) => ({ program: 'chmod', arguments: ['+x', `bin/${bin.name}`] }))
 })
 
-const installRepair = (context: NativeToolsContext) => ({
+const installConform = (context: NativeToolsContext) => ({
   writes: [],
   commands: context.install === 'non-executable' ? [{ program: 'chmod', arguments: ['+x', 'install.sh'] }] : []
 })
 
 // ki-repo owns creation and malformed-TOML recovery. This proposal only extends
 // an existing, parseable configuration that has no ki-tools marker.
-const markerRepair = (context: NativeToolsContext) => ({
+const markerConform = (context: NativeToolsContext) => ({
   writes:
     context.config === 'absent' && context.configContent !== null
       ? [{ path: '.ki-config.toml', content: `${context.configContent.replace(/\n*$/, '\n')}\n[ki-tools]\n` }]
@@ -62,9 +62,9 @@ const markerRepair = (context: NativeToolsContext) => ({
 const nativeItem = (item: RubricItem<ToolsContext>) => {
   if (!item.mechanical) return judgment(item)
   const native = mechanical(item)
-  if (item.code === 'TOOL-EXEC') return { ...native, repair: executableRepair }
-  if (item.code === 'TOOL-INSTALL') return { ...native, repair: installRepair }
-  if (item.code === 'CONFIG-1') return { ...native, repair: markerRepair }
+  if (item.code === 'TOOL-EXEC') return { ...native, conform: executableConform }
+  if (item.code === 'TOOL-INSTALL') return { ...native, conform: installConform }
+  if (item.code === 'CONFIG-1') return { ...native, conform: markerConform }
   return native
 }
 
@@ -72,20 +72,20 @@ type NativeRuntimeItem = {
   readonly kind: 'mechanical' | 'judgment'
   readonly phase?: 'PREPARE' | 'INSPECT' | 'PRIMARY' | 'DERIVED' | 'NORMALISE'
   readonly audit?: (...arguments_: never[]) => unknown
-  readonly repair?: (...arguments_: never[]) => unknown
+  readonly conform?: (...arguments_: never[]) => unknown
 }
 
 const directItem = <Context>(item: RubricItem<Context>, runtime: NativeRuntimeItem) => {
   if (!item.mechanical) return item
   if (runtime.kind !== 'mechanical' || !runtime.phase || !runtime.audit) throw new Error(`${item.code} has no native mechanical runtime`)
-  const { repair: legacyRepair, ...mechanical } = item.mechanical
-  void legacyRepair
+  const { conform: legacyConform, ...mechanical } = item.mechanical
+  void legacyConform
   return {
     ...item,
     mechanical: {
       ...mechanical,
       audit: { phase: runtime.phase, run: runtime.audit },
-      ...(runtime.repair ? { repair: { phase: 'NORMALISE', run: runtime.repair } } : {})
+      ...(runtime.conform ? { conform: { phase: 'NORMALISE', run: runtime.conform } } : {})
     }
   }
 }

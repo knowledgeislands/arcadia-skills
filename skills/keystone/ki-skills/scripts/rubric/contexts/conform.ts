@@ -1,22 +1,26 @@
-import { readFileSync, writeFileSync } from 'node:fs'
-import { join } from 'node:path'
+import { readFileSync } from 'node:fs'
+import { join, relative } from 'node:path'
 import { frontmatterLine, parseFrontmatter, replaceFrontmatterScalar } from './frontmatter.ts'
 import type { SkillWritableCapabilities } from './skill.ts'
+
+export type ConformWrite = {
+  readonly path: string
+  readonly content: string
+}
 
 export type ConformDocumentState = {
   read: () => string
   write: (content: string) => void
-  persist: () => void
+  proposal: () => ConformWrite | undefined
 }
 
 export type SkillConformState = {
   capabilities: SkillWritableCapabilities
   document: ConformDocumentState
-  persist: () => void
 }
 
-/** Hold one mutable document in memory for both real and dry-run CONFORM. */
-export const createConformDocumentState = (file: string, dryRun: boolean): ConformDocumentState => {
+/** Hold one mutable document in memory and expose its host-owned write proposal. */
+export const createConformDocumentState = (file: string, repository: string): ConformDocumentState => {
   const original = readFileSync(file, 'utf8')
   let working = original
   return {
@@ -24,15 +28,13 @@ export const createConformDocumentState = (file: string, dryRun: boolean): Confo
     write: (content) => {
       working = content
     },
-    persist: () => {
-      if (!dryRun && working !== original) writeFileSync(file, working)
-    }
+    proposal: () => (working === original ? undefined : { path: relative(repository, file), content: working })
   }
 }
 
-/** Add frontmatter capabilities to the same state used for SKILL.md Markdown repairs. */
-export const createSkillConformState = (directory: string, dryRun: boolean): SkillConformState => {
-  const document = createConformDocumentState(join(directory, 'SKILL.md'), dryRun)
+/** Add item-owned frontmatter transformations to the shared SKILL.md draft. */
+export const createSkillConformState = (directory: string, repository: string): SkillConformState => {
+  const document = createConformDocumentState(join(directory, 'SKILL.md'), repository)
   const updateFrontmatter = (update: (block: string) => string): void => {
     const content = document.read()
     const block = parseFrontmatter(content).raw
@@ -52,7 +54,6 @@ export const createSkillConformState = (directory: string, dryRun: boolean): Ski
       setArgumentHint: (argumentHint) => {
         updateFrontmatter((block) => replaceFrontmatterScalar(block, 'argument-hint', argumentHint))
       }
-    },
-    persist: document.persist
+    }
   }
 }

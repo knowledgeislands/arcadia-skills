@@ -31,7 +31,7 @@ export type KiSkillsSubject = {
 
 export type KiSkillsSubjects = {
   subjects: readonly KiSkillsSubject[]
-  persist: () => void
+  proposal: () => { readonly writes: readonly { readonly path: string; readonly content: string }[] }
 }
 
 /** Applicable rubric families for each kind of evidence subject. */
@@ -51,19 +51,15 @@ export const KI_SKILLS_SUBJECT_FAMILIES = {
 
 const markdownSubject = ({
   file,
-  mode,
   reportTarget,
-  skillDirectory,
   document
 }: {
   file: string
-  mode: RubricMode
   reportTarget: string
-  skillDirectory: string
   document?: ConformDocumentState
 }): KiSkillsSubject => {
   const isSkill = basename(file) === 'SKILL.md'
-  const subject = mode === 'audit' ? relative(reportTarget, file) : relative(skillDirectory, file)
+  const subject = relative(reportTarget, file)
   return {
     scope: isSkill ? 'markdown' : 'reference',
     subject,
@@ -72,7 +68,8 @@ const markdownSubject = ({
       const text = stripCode(markdown)
       return createKiSkillsRubricContext({
         layout: {
-          markdown: mode === 'conform' ? markdown : text,
+          markdown: text,
+          sourceMarkdown: markdown,
           subject,
           ...(document ? { writeMarkdown: document.write } : {})
         },
@@ -101,19 +98,17 @@ export const createKiSkillsSubjects = ({
   roots,
   reportTarget,
   footprint = false,
-  refreshStatus = false,
-  dryRun = false
+  refreshStatus = false
 }: {
   mode: RubricMode
   roots: readonly string[]
   reportTarget: string
   footprint?: boolean
   refreshStatus?: boolean
-  dryRun?: boolean
 }): KiSkillsSubjects => {
   const skillDirectories = [...new Set((roots.length ? roots : ['.']).flatMap(discoverSkillDirs))].sort()
   const subjects: KiSkillsSubject[] = []
-  const persist: Array<() => void> = []
+  const documents: ConformDocumentState[] = []
 
   for (const root of roots) {
     const target = resolve(root)
@@ -134,19 +129,19 @@ export const createKiSkillsSubjects = ({
       const context = createKiSkillsRubricContext({ layout: { noSkillsFound: true } })
       subjects.push({ scope: 'target', context: () => context })
     }
-    return { subjects, persist: () => {} }
+    return { subjects, proposal: () => ({ writes: [] }) }
   }
 
   for (const skillDirectory of skillDirectories) {
-    const conform = mode === 'conform' ? createSkillConformState(skillDirectory, dryRun) : undefined
+    const conform = mode === 'conform' ? createSkillConformState(skillDirectory, reportTarget) : undefined
     const skill = createSkillRubricContext(skillDirectory, conform?.capabilities)
-    const skillSubject = mode === 'conform' ? relative(reportTarget, skillDirectory) || '.' : undefined
+    const skillSubject = relative(reportTarget, skillDirectory) || '.'
     subjects.push({
       scope: skill.validFrontmatter ? 'skill' : 'invalidSkill',
       context: skill.context,
-      ...(skillSubject ? { subject: skillSubject } : {})
+      subject: skillSubject
     })
-    if (conform) persist.push(conform.persist)
+    if (conform) documents.push(conform.document)
     if (!skill.validFrontmatter) continue
 
     const runtimeBinding = parseFrontmatter(readFileSync(join(skillDirectory, 'SKILL.md'), 'utf8')).values['ki-runtime-binding'] === true
@@ -156,10 +151,10 @@ export const createKiSkillsSubjects = ({
         mode === 'conform'
           ? file === join(skillDirectory, 'SKILL.md')
             ? conform?.document
-            : createConformDocumentState(file, dryRun)
+            : createConformDocumentState(file, reportTarget)
           : undefined
-      if (document && document !== conform?.document) persist.push(document.persist)
-      subjects.push(markdownSubject({ file, mode, reportTarget, skillDirectory, document }))
+      if (document && document !== conform?.document) documents.push(document)
+      subjects.push(markdownSubject({ file, reportTarget, document }))
       const subject = relative(reportTarget, file)
       subjects.push({
         scope: 'portability',
@@ -220,9 +215,13 @@ export const createKiSkillsSubjects = ({
 
   return {
     subjects,
-    persist: () =>
-      persist.forEach((write) => {
-        write()
-      })
+    proposal: () => ({
+      writes: documents
+        .flatMap((document) => {
+          const write = document.proposal()
+          return write ? [write] : []
+        })
+        .sort((left, right) => left.path.localeCompare(right.path))
+    })
   }
 }

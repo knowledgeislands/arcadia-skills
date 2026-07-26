@@ -145,7 +145,7 @@ export const createPluginsContextFactory = ({ target, dryRun = false }: { target
           fixed.push('version')
         }
       } catch {
-        // Missing harness metadata leaves the repair judgmental.
+        // Missing harness metadata leaves the conform judgmental.
       }
     }
     if (fixed.length) writeJson(pluginFile, plugin.value)

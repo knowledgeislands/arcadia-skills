@@ -66,7 +66,7 @@ const declaresRootTable = (content: string, table: string): boolean => {
   return false
 }
 
-const configurationRepair = (repository: string) => {
+const configurationConform = (repository: string) => {
   const path = '.ki-config.toml'
   const absolutePath = join(repository, path)
   const existing = existsSync(absolutePath) ? readFileSync(absolutePath, 'utf8') : ''
@@ -81,8 +81,8 @@ const configurationRepair = (repository: string) => {
   }
 }
 
-const filesOneRepair = (context: NativeRepoContext) => {
-  const config = configurationRepair(context.repository)
+const filesOneConform = (context: NativeRepoContext) => {
+  const config = configurationConform(context.repository)
   const gitignore = join(context.repository, '.gitignore')
   return {
     writes: [...config.writes, ...(existsSync(gitignore) ? [] : [{ path: '.gitignore', content: gitignoreDefault, create: true }])]
@@ -92,8 +92,8 @@ const filesOneRepair = (context: NativeRepoContext) => {
 const nativeItem = (item: RubricItem<RepoRubricContext>) => {
   if (!item.mechanical) return judgment(item)
   const native = mechanical(item)
-  if (item.code === 'FILES-1') return { ...native, repair: filesOneRepair }
-  if (item.code === 'FILES-3') return { ...native, repair: (context: NativeRepoContext) => configurationRepair(context.repository) }
+  if (item.code === 'FILES-1') return { ...native, conform: filesOneConform }
+  if (item.code === 'FILES-3') return { ...native, conform: (context: NativeRepoContext) => configurationConform(context.repository) }
   return native
 }
 
@@ -101,20 +101,20 @@ type NativeRuntimeItem = {
   readonly kind: 'mechanical' | 'judgment'
   readonly phase?: 'PREPARE' | 'INSPECT' | 'PRIMARY' | 'DERIVED' | 'NORMALISE'
   readonly audit?: (...arguments_: never[]) => unknown
-  readonly repair?: (...arguments_: never[]) => unknown
+  readonly conform?: (...arguments_: never[]) => unknown
 }
 
 const directItem = <Context>(item: RubricItem<Context>, runtime: NativeRuntimeItem) => {
   if (!item.mechanical) return item
   if (runtime.kind !== 'mechanical' || !runtime.phase || !runtime.audit) throw new Error(`${item.code} has no native mechanical runtime`)
-  const { repair: legacyRepair, ...mechanical } = item.mechanical
-  void legacyRepair
+  const { conform: legacyConform, ...mechanical } = item.mechanical
+  void legacyConform
   return {
     ...item,
     mechanical: {
       ...mechanical,
       audit: { phase: runtime.phase, run: runtime.audit },
-      ...(runtime.repair ? { repair: { phase: 'NORMALISE', run: runtime.repair } } : {})
+      ...(runtime.conform ? { conform: { phase: 'NORMALISE', run: runtime.conform } } : {})
     }
   }
 }

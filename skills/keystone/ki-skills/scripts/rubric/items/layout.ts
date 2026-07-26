@@ -2,6 +2,10 @@ import type { RubricFamily, RubricItem } from '../../shared/rubric.ts'
 import type { KiSkillsRubricContext, LayoutRubricContext } from '../contexts/contexts.ts'
 
 const hasBackslashLink = (markdown: string): boolean => /\[[^\]]*\]\([^)]*\\[^)]*\)/.test(markdown)
+const normaliseLinkSlashes = (markdown: string): string =>
+  markdown.replace(/\[([^\]]*)\]\(([^)]+)\)/g, (whole, text, target) =>
+    (target as string).includes('\\') ? `[${text}](${(target as string).replace(/\\/g, '/')})` : whole
+  )
 
 export const LAY_1: RubricItem<LayoutRubricContext> = {
   code: 'LAY-1',
@@ -79,6 +83,18 @@ export const LAY_4: RubricItem<LayoutRubricContext> = {
         return hasBackslashLink(markdown)
           ? [{ status: 'VIOLATION', message: 'a link target uses backslashes — use forward slashes' }]
           : [{ status: 'PASS', message: 'file references use forward slashes' }]
+      }
+    },
+    conform: {
+      phase: 'NORMALISE',
+      run: ({ sourceMarkdown, subject, writeMarkdown }) => {
+        if (sourceMarkdown === undefined || !writeMarkdown)
+          return [{ changed: false, message: 'Markdown is unavailable for conform', ...(subject ? { subject } : {}) }]
+        const normalised = normaliseLinkSlashes(sourceMarkdown)
+        if (normalised === sourceMarkdown)
+          return [{ changed: false, message: 'file references already use forward slashes', ...(subject ? { subject } : {}) }]
+        writeMarkdown(normalised)
+        return [{ changed: true, message: 'normalised link targets to forward slashes', ...(subject ? { subject } : {}) }]
       }
     }
   }
