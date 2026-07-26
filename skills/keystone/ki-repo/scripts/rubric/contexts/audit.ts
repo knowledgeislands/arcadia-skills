@@ -1,17 +1,14 @@
-/** Domain evidence collection for the ki-repo AUDIT rubric. */
 /**
- * Mechanical auditor for the Knowledge Islands repo standard.
+ * Read-only domain evidence collection for the Knowledge Islands repo rubric.
  *
- *   bun scripts/govern.ts audit [tree-path]   # default: cwd — enumerate repos from a tree
- *   bun scripts/govern.ts audit --org <org>   # enumerate every repo in a GitHub org
- *
- * Everything is checked **against GitHub** (no working checkout needed): file
- * presence via the git-tree API, settings via `gh repo view`, security/Actions via
- * `gh api`. The tree path / `--org` only decide *which* repos to look at — local-tree
+ * Committed files and live settings are checked **against GitHub**: file presence
+ * via the git-tree API, settings via `gh repo view`, security/Actions via `gh api`.
+ * Bounded local configuration evidence is read from an available checkout. The tree
+ * path / `--org` only decide *which* repos to look at — local-tree
  * mode reads each dir's `origin` and audits the github.com ones under their real
  * GitHub identity; `--org` lists the org (and so catches repos not cloned locally).
  *
- * The standard has three layers (see references/standards.md):
+ * The standard has three layers (see references/standards-repository.md):
  *   1. FILES   — README, LICENSE, .gitignore, and .ki-config.toml
  *                (the repo's declared config), all present on the default branch.
  *                .ki-config.toml is also the GATE of the coverage cascade: once a
@@ -35,21 +32,20 @@
  * omits takes the org default (CHECK_DEFAULTS), so a fully-conforming repo writes
  * no overrides; `branch-protection` defaults off, so `main` is open unless opted in.
  *
- * READ-ONLY: never mutates a repo. Bringing outliers into line is the skill's APPLY
- * mode. The one remaining judgment item the script can't make — does the description
+ * READ-ONLY: never mutates a repo. The one remaining judgment item the collector
+ * cannot make — does the description
  * actually match the repo's purpose — is left to the skill's AUDIT mode; that it is
  * SYNCED with package.json is now checked mechanically (description-sync).
  *
- * The canonical JSONL reporter is the only checker output transport. `gh` is
- * optional: unauthenticated and unavailable GitHub checks become canonical NOT_APPLICABLE
- * findings while offline local checks still run.
+ * `gh` is optional: unauthenticated and unavailable GitHub checks become
+ * NOT_APPLICABLE evidence while offline local checks still run. The host owns
+ * outcome validation, finding conversion, progress, and reporting.
  */
 import { execFileSync } from 'node:child_process'
-import { createHash } from 'node:crypto'
-import { existsSync, lstatSync, readdirSync, readFileSync, readlinkSync, realpathSync } from 'node:fs'
-import { dirname, isAbsolute, join, relative, resolve } from 'node:path'
+import { existsSync, readdirSync, readFileSync } from 'node:fs'
+import { join, resolve } from 'node:path'
 
-// ── the standard (keep in sync with references/standards.md) ──────
+// ── the standard (keep in sync with references/standards-repository.md) ──────
 const DEFAULT_BRANCH = 'main'
 // The declared license defaults to MIT when `[ki-repo] license` is unset. Decoupled
 // from visibility (a private repo may be MIT; a public repo may be proprietary).
@@ -58,7 +54,7 @@ const TOPICS = ['mcp', 'model-context-protocol', 'claude', 'typescript', 'bun']
 const REQUIRED_CHECK = 'build'
 const ALLOWED_ACTIONS = 'all'
 // Reference-doc pointer carried on every mechanical finding.
-const STD = 'references/standards.md'
+const STD = 'references/standards-repository.md'
 // Overridable checks and the org default for each — `true` = enforced by default.
 // A repo overrides any of these per-repo in [ki-repo.checks];
 // a check it omits takes the default here, so a fully-conforming repo writes none.
@@ -76,7 +72,6 @@ const CHECK_DEFAULTS: Record<string, boolean> = {
   structure: true //            declares at least one repo-structure table
 }
 const KI_CONFIG = '.ki-config.toml'
-const VENDOR_DIR = '.ki'
 
 // Required root files. Each entry is one or more acceptable paths (first found wins).
 const REQUIRED_FILES: [id: string, paths: string[]][] = [
@@ -89,7 +84,7 @@ const REQUIRED_FILES: [id: string, paths: string[]][] = [
 ]
 
 // `note` is informational (a per-repo override in effect), never a failure.
-// Unified severity ladder — shared by every KI checker (checker-contract).
+// Domain evidence levels; the rubric item maps these to typed host outcomes.
 type Level = 'FAIL' | 'WARN' | 'INFO' | 'NOT_APPLICABLE' | 'PASS'
 // Cited-finding shape: `area` is the rubric code (references/rubric.md), `ref` the
 // reference-doc pointer (defaults to the standard STD; the rare judgment finding overrides
@@ -97,7 +92,7 @@ type Level = 'FAIL' | 'WARN' | 'INFO' | 'NOT_APPLICABLE' | 'PASS'
 // ref?) puts the often-set `file` before the usually-defaulted `ref`, so most call sites
 // stay two-arg. Matches ki-authoring's Finding shape.
 type Finding = { level: Level; area: string; msg: string; ref?: string; file?: string }
-export type RepoEvidenceLevel = 'FAIL' | 'WARN' | 'FIXED' | 'INFO' | 'NOT_APPLICABLE' | 'PASS'
+export type RepoEvidenceLevel = Level
 export type RepoEvidenceFinding = { level: RepoEvidenceLevel; code: string; message: string; subject?: string }
 const mk = () => {
   const f: Finding[] = []
@@ -417,7 +412,7 @@ function declaredTables(text: string): Array<{ root: string; exact: boolean }> {
 }
 
 const declaresTable = (kiText: string, table: string): boolean => declaredTables(kiText).some(({ root }) => root === table)
-const declaresRootTable = (kiText: string, table: string): boolean =>
+export const declaresRootTable = (kiText: string, table: string): boolean =>
   declaredTables(kiText).some(({ root, exact }) => root === table && exact)
 
 function auditRepo(r: Repo, files: Set<string>, ki: KiConfig | null, kiText: string | null, signals: Signals): Finding[] {
@@ -432,33 +427,13 @@ function auditRepo(r: Repo, files: Set<string>, ki: KiConfig | null, kiText: str
   for (const [, paths] of REQUIRED_FILES) {
     if (!paths.some((p) => files.has(p))) fail('FILES-1', `no ${paths.join(' / ')}`, paths[0])
   }
-  // ── layer 1: baseline governance + self-check capability (gated on the ki-repo marker) ── FILES-3
-  // A confirmed ki-repo (carries .ki-config.toml) must (a) declare the baseline
-  // authoring standard explicitly — it is no longer an implicit universal (ADR-006) —
-  // and (b) carry a self-check runner so `./.ki/bin/ki-audit` works with zero skills
-  // installed (ADR-007). A marker-only repo with neither runner is a FAIL.
+  // ── layer 1: declared authoring baseline (gated on the ki-repo marker) ── FILES-3
+  // A confirmed ki-repo declares the baseline authoring standard explicitly.
+  // Native self-check resolution is a host precondition, not repository-local evidence.
   if (files.has(KI_CONFIG)) {
     if (!declaresRootTable(kiText ?? '', 'ki-authoring'))
       fail('FILES-3', `${KI_CONFIG} does not declare [ki-authoring] — the authoring standard is baseline (run --educate)`, KI_CONFIG)
-    const hasRunner = signals.tree.has('.ki/bin/aggregate.ts') || signals.tree.has('.ki/bin/ki-audit')
-    if (!hasRunner)
-      fail(
-        'FILES-3',
-        `${KI_CONFIG} present but no self-check runner (.ki/bin/aggregate.ts or .ki/bin/ki-audit) — re-bootstrap so the repo self-governs`,
-        KI_CONFIG
-      )
   }
-
-  // ── layer 1: .ki working area — derived audit/conform artifacts must be gitignored, not committed ── FILES-2
-  // The .ki/ namespace itself may hold tracked artifacts, but its derived subdirs (audits/, conform/)
-  // are regenerated each run; finding them in the committed tree means .gitignore is missing the entry.
-  const metaCommitted = [...files].filter((p) => p.startsWith('.ki/audits/') || p.startsWith('.ki/conform/'))
-  if (metaCommitted.length)
-    warn(
-      'FILES-2',
-      `${metaCommitted.length} derived .ki artifact(s) committed (e.g. ${metaCommitted[0]}) — add \`.ki/audits/\` and \`.ki/conform/\` to .gitignore`,
-      '.gitignore'
-    )
 
   // ── layer 2: core GitHub ── GH-1
   if (r.defaultBranchRef?.name !== DEFAULT_BRANCH)
@@ -526,7 +501,7 @@ function auditRepo(r: Repo, files: Set<string>, ki: KiConfig | null, kiText: str
       'GH-3',
       `GitHub description ≠ package.json description\n      github: ${JSON.stringify(r.description.trim())}\n      package.json: ${JSON.stringify(pkgDesc)}`
     )
-  // MERGE-1: squash-only + auto-delete-branch (one atomic gh call in conform.ts)
+  // MERGE-1: squash-only + auto-delete-branch.
   if (r.mergeCommitAllowed || r.rebaseMergeAllowed || !r.squashMergeAllowed)
     fail(
       'MERGE-1',
@@ -665,7 +640,7 @@ function auditRepo(r: Repo, files: Set<string>, ki: KiConfig | null, kiText: str
   } catch {
     warn('DEP-1', 'could not read allow_update_branch')
   }
-  // SEC-1: secret scanning + push protection (public) — one atomic conform.ts PATCH sets both.
+  // SEC-1: secret scanning + push protection (public).
   if (r.visibility === 'PUBLIC' && (enforced('secret-scanning') || enforced('push-protection'))) {
     try {
       const sa = (
@@ -687,132 +662,6 @@ function auditRepo(r: Repo, files: Set<string>, ki: KiConfig | null, kiText: str
   } catch {
     /* not always readable */
   }
-  return f
-}
-
-// ── vendor-integrity (ADR-KI-HARNESS-006) ─────────────────────────────────────
-// Offline, local-disk check independent of the GitHub-based checks above: a
-// bootstrapped repo's vendored `.ki/bootstrap/checkers/**` copies (+ the aggregate
-// runner) must match the sha256 recorded in `.ki/manifest.json` at vendor
-// time. A mismatch means tampered or partially re-vendored files (FAIL). A repo
-// that carries `.ki/` but no manifest predates the manifest contract
-// (migration WARN). Staleness against the remote harness ref is deliberately NOT
-// checked here — that would require network access; this check stays usable with
-// zero connectivity (ADR-KI-HARNESS-006's Consequences: "offline-safe").
-function localIntegrityFindings(dir: string): Finding[] {
-  const { f, fail, warn } = mk()
-  const metaDir = join(dir, VENDOR_DIR)
-  if (!existsSync(metaDir)) return f // no vendored surface — nothing to check
-  const manifestPath = join(metaDir, 'manifest.json')
-  if (!existsSync(manifestPath)) {
-    warn('VENDOR-1', '.ki/ present but no manifest.json — re-bootstrap (ki-educate) to migrate to the manifest-based drift contract')
-    return f
-  }
-  let manifest: { ref?: string; files?: Record<string, string> }
-  try {
-    manifest = JSON.parse(readFileSync(manifestPath, 'utf8'))
-  } catch {
-    fail('VENDOR-1', '.ki/manifest.json is not valid JSON')
-    return f
-  }
-  const missing: string[] = []
-  const mismatched: string[] = []
-  for (const [rel, expected] of Object.entries(manifest.files ?? {})) {
-    const abs = join(dir, rel)
-    if (!existsSync(abs)) {
-      missing.push(rel)
-      continue
-    }
-    const actual = createHash('sha256').update(readFileSync(abs)).digest('hex')
-    if (actual !== expected) mismatched.push(rel)
-  }
-  if (missing.length) fail('VENDOR-1', `manifest file(s) missing on disk: ${missing.join(', ')} — re-run ./.ki/bin/ki-educate to restore`)
-  if (mismatched.length)
-    fail(
-      'VENDOR-1',
-      `vendored file(s) do not match the manifest hash (tampered or partially re-vendored): ${mismatched.join(', ')} — re-run ./.ki/bin/ki-educate to restore`
-    )
-  return f
-}
-
-// CAPABILITY-COMPLETE: the shared config declares the target's governance roots;
-// this local-only check verifies that each declared root has the complete generated
-// contract that lets the repository govern itself without an installed harness.
-// It reads table *names* only (never another skill's keys), and treats the manifest
-// as the authoritative generated inventory. Hash integrity remains VENDOR-1's job.
-const capabilityPayloads = (skill: string): string[] => [
-  `${VENDOR_DIR}/bootstrap/checkers/${skill}/scripts/govern.ts`,
-  `${VENDOR_DIR}/bootstrap/educators/${skill}/educate.ts`
-]
-
-function isRegularNonLink(path: string): boolean {
-  try {
-    const stat = lstatSync(path)
-    return stat.isFile() && !stat.isSymbolicLink()
-  } catch {
-    return false
-  }
-}
-
-function isManifestSourceLink(root: string, path: string, expected: string | undefined): boolean {
-  if (!expected || isAbsolute(expected)) return false
-  try {
-    const entry = lstatSync(path)
-    if (!entry.isSymbolicLink() || readlinkSync(path) !== expected) return false
-    const source = realpathSync(join(root, 'skills'))
-    const resolved = realpathSync(resolve(dirname(path), expected))
-    const rel = relative(source, resolved)
-    return rel === '' || (rel !== '..' && !rel.startsWith('../') && !rel.startsWith('..\\'))
-  } catch {
-    return false
-  }
-}
-
-function localCapabilityFindings(dir: string): Finding[] {
-  const { f, fail } = mk()
-  const cfgPath = join(dir, KI_CONFIG)
-  if (!existsSync(cfgPath)) return f
-
-  const roots = [
-    ...new Set(
-      declaredTables(readFileSync(cfgPath, 'utf8'))
-        .map(({ root }) => root)
-        .filter((root) => root.startsWith('ki-'))
-    )
-  ].sort()
-  if (roots.length === 0) return f
-
-  const manifestPath = join(dir, VENDOR_DIR, 'manifest.json')
-  let files: Record<string, string> = {}
-  let links: Record<string, string> = {}
-  try {
-    const manifest = JSON.parse(readFileSync(manifestPath, 'utf8')) as { files?: Record<string, string>; links?: Record<string, string> }
-    files = manifest.files ?? {}
-    links = manifest.links ?? {}
-  } catch {
-    fail(
-      'CAPABILITY-COMPLETE',
-      `declared governance roots have no readable generated manifest — run ./.ki/bin/ki-educate to publish their local EDUCATE and governed checker payloads`,
-      KI_CONFIG
-    )
-    return f
-  }
-
-  const missing: string[] = []
-  for (const skill of roots) {
-    for (const rel of capabilityPayloads(skill)) {
-      const payload = join(dir, rel)
-      if (!files[rel] || !isRegularNonLink(payload)) {
-        if (!isManifestSourceLink(dir, payload, links[rel])) missing.push(rel)
-      }
-    }
-  }
-  if (missing.length)
-    fail(
-      'CAPABILITY-COMPLETE',
-      `declared governance root(s) lack complete local EDUCATE and governed checker payloads: ${missing.join(', ')} — remove process/global-only tables, or conform the governance skill and re-run ./.ki/bin/ki-educate`,
-      KI_CONFIG
-    )
   return f
 }
 
@@ -947,7 +796,7 @@ export const collectAuditFindings = (argv: readonly string[]): RepoAuditCollecti
   for (const t of targets) {
     // Offline, local-disk vendor-integrity check — independent of GitHub reachability,
     // so it still runs for a target with no github.com origin (or none at all).
-    const localFindings = t.dir ? [...localIntegrityFindings(t.dir), ...localConfigFindings(t.dir), ...localCapabilityFindings(t.dir)] : []
+    const localFindings = t.dir ? localConfigFindings(t.dir) : []
     if (!t.nameWithOwner) {
       all.push({ level: 'NOT_APPLICABLE', area: 'ACCESS-1', msg: t.note ?? 'GitHub checks skipped', ref: STD, file: t.label })
       for (const x of localFindings) all.push({ level: x.level, area: x.area, msg: x.msg, ref: x.ref, file: scoped(t.label, x) })
