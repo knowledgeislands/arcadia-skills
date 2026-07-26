@@ -1,26 +1,26 @@
-<!-- GENERATED FILE: edit scripts/rubric/items/, not this publication. -->
+<!-- GENERATED FILE: produced by `ki skill rubric`. Do not hand-edit; edit scripts/rubric/index.ts, then rerun `ki skill rubric <skill> --write`. -->
 
-# Generated rubric — website-cloudflare
+# Rubric — ki-website-cloudflare
 
-> **Generated publication.** The TypeScript rubric items under `scripts/rubric/items/` are canonical; this file is generated from the in-memory catalogue. Edit the item definitions, then rerun `scripts/rubric/publish.ts`.
+> **Generated publication.** The TypeScript rubric items under `scripts/rubric/index.ts` are canonical. Edit that definition, then rerun `ki skill rubric <skill> --write`.
+
+## Contents
+
+- [WCF — Cloudflare hosting](#wcf--cloudflare-hosting)
 
 ## WCF — Cloudflare hosting
 
-→ [standard](standards.md)
-
-Workers + Static Assets hosting standard.
-
-- **WCF-1 [M] — site Worker config** — A site Worker configuration with static assets exists. (standards.md)
-- **WCF-2 [M] — Workers deploy** — Deployment uses Workers + Static Assets, not Pages. (standards.md)
-- **WCF-3 [M] — single site Worker** — Exactly one site Worker carries an assets block. (standards.md)
-- **WCF-4 [M] — assets directory** — Assets point at the build dist directory. (standards.md)
-- **WCF-6 [M] — generated directories ignored** — dist and .wrangler are gitignored. (standards.md)
-- **WCF-8 [M] — Worker identity** — name and compatibility date are present. (standards.md)
-- **WCF-9 [M] — observability** — observability.enabled is true. (standards.md)
-- **WCF-10 [M] — custom-domain routes** — Routes use custom_domain where appropriate. (standards.md)
-- **WCF-13 [M] — deploy script** — A deploy script runs wrangler deploy. (standards.md)
-- **WCF-14 [M] — preview script** — A preview script runs wrangler dev. (standards.md)
-- **WCF-19 [M] — companion Worker boundary** — Companion Workers remain out of scope. (standards.md)
-- **WCF-20 [M] — hosting opt-in** — The Cloudflare opt-in table is present. (standards.md)
-- **WCF-21 [M] — opt-in validation** — The opt-in site root is valid. (standards.md)
-- **WCF-22 [M] — hosting delta** — This remains the hosting delta only. (standards.md)
+- **WCF-1 [FAIL · INSPECT] — site Worker config**
+- **WCF-2 [FAIL · INSPECT] — Workers deploy**
+- **WCF-3 [WARN · INSPECT] — single site Worker**
+- **WCF-4 [FAIL · INSPECT] — assets directory**
+- **WCF-6 [WARN · INSPECT] — generated directories ignored**
+- **WCF-8 [WARN · INSPECT] — Worker identity**
+- **WCF-9 [WARN · INSPECT] — observability**
+- **WCF-10 [WARN · INSPECT] — custom-domain routes**
+- **WCF-13 [WARN · INSPECT] — deploy script**
+- **WCF-14 [WARN · INSPECT] — preview script**
+- **WCF-19 [WARN · INSPECT] — companion Worker boundary**
+- **WCF-20 [WARN · INSPECT] — hosting opt-in**
+- **WCF-21 [WARN · INSPECT] — opt-in validation**
+- **WCF-22 [WARN · INSPECT] — hosting delta**

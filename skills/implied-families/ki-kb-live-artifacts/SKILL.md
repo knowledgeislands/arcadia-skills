@@ -86,4 +86,4 @@ Declare in the base's `.ki-config.toml` `[ki-kb-live-artifacts]` table:
 
 ## Audit rubric
 
-See [references/rubric.md](references/rubric.md) for the full rubric (mechanical + judgment).
+See [references/rubric.md](references/rubric.md) for the full rubric (mechanical + judgment), enforced mechanically by `ki repo audit --skill ki-kb-live-artifacts`. After changing [`scripts/rubric/index.ts`](scripts/rubric/index.ts), regenerate the published catalogue with `ki skill rubric ki-kb-live-artifacts --write`.
