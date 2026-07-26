@@ -1,4 +1,4 @@
-import type { AuditOutcome, RubricOutcomes } from '../../vendored/ki-skills/rubric.ts'
+import type { AuditOutcome, RubricOutcomes } from '../../../../../shared/rubric-contract.ts'
 import { type HousekeepingRubricContext, VALID_TYPES } from '../contexts/housekeeping.ts'
 
 const one = <Result>(outcome: Result): RubricOutcomes<Result> => [outcome]
@@ -45,8 +45,7 @@ const FRONTMATTER_ITEMS = [
                 }
               }) as unknown as RubricOutcomes<AuditOutcome>)
             : one({ status: 'NOT_APPLICABLE', message: 'No memory files to inspect.', subject: c.memoryDir })
-      },
-      conform: { phase: 'NORMALISE' as const, run: (c: HousekeepingRubricContext) => c.alignNames() }
+      }
     }
   },
   {

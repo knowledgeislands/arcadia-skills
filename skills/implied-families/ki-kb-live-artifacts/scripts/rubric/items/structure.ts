@@ -1,4 +1,4 @@
-import type { RubricItem } from '../../vendored/ki-skills/rubric.ts'
+import type { RubricItem } from '../../../../../shared/rubric-contract.ts'
 import type { LiveArtifactsContext } from '../contexts/live-artifacts.ts'
 
 const SOURCE = ['standards.md'] as const
@@ -25,8 +25,7 @@ export const LA_S_1: RubricItem<LiveArtifactsContext> = {
               }
             ]
       }
-    },
-    conform: { phase: 'PRIMARY', run: (context) => context.conformIndex() }
+    }
   }
 }
 
@@ -53,8 +52,7 @@ export const LA_S_2: RubricItem<LiveArtifactsContext> = {
           ? (missing as [(typeof missing)[number], ...(typeof missing)[number][]])
           : [{ status: 'PASS', message: 'Every artifact source has an HTML render.' }]
       }
-    },
-    conform: { phase: 'PRIMARY', run: () => [{ status: 'INFO', message: 'Rendering Markdown to HTML requires an authoring decision.' }] }
+    }
   }
 }
 
@@ -81,8 +79,7 @@ export const LA_S_3: RubricItem<LiveArtifactsContext> = {
           ? (orphans as [(typeof orphans)[number], ...(typeof orphans)[number][]])
           : [{ status: 'PASS', message: 'No orphaned HTML renders exist.' }]
       }
-    },
-    conform: { phase: 'PRIMARY', run: () => [{ status: 'INFO', message: 'Deleting or creating a render requires author confirmation.' }] }
+    }
   }
 }
 
@@ -115,8 +112,7 @@ export const LA_S_4: RubricItem<LiveArtifactsContext> = {
           ? (stale as [(typeof stale)[number], ...(typeof stale)[number][]])
           : [{ status: 'PASS', message: 'Every rendered pair is within the freshness threshold.' }]
       }
-    },
-    conform: { phase: 'DERIVED', run: () => [{ status: 'INFO', message: 'Regenerating a stale render requires an authoring decision.' }] }
+    }
   }
 }
 

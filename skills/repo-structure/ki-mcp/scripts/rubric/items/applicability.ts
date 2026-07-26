@@ -33,8 +33,7 @@ export const KI_CONFIG = {
           ? result('VIOLATION', `Unknown keys under [ki-mcp]: ${unknown.join(', ')} (validate-down).`, '.ki-config.toml')
           : result('PASS', '[ki-mcp] table is present.', '.ki-config.toml')
       }
-    },
-    conform: { phase: 'PRIMARY' as const, run: (context: McpRubricContext) => context.ensureMcpConfig() }
+    }
   }
 } as const
 export const APPLICABILITY = [KI_CONFIG] as const

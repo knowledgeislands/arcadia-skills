@@ -1,4 +1,4 @@
-import type { RubricItem } from '../../vendored/ki-skills/rubric.ts'
+import type { RubricItem } from '../../../../../shared/rubric-contract.ts'
 import type { RepoRubricContext } from '../contexts/contexts.ts'
 
 export const WORK_J1: RubricItem<RepoRubricContext> = {

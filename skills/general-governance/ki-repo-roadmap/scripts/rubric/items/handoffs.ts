@@ -1,4 +1,4 @@
-import type { RubricItem } from '../../vendored/ki-skills/rubric.ts'
+import type { RubricItem } from '../../../../../shared/rubric-contract.ts'
 import type { RoadmapContext } from '../contexts/roadmap.ts'
 
 export const HANDOFF_1: RubricItem<RoadmapContext> = {

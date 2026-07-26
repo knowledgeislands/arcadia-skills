@@ -1,83 +1,100 @@
-import { defineRubricFamily, type RubricDefinition } from '../../vendored/ki-skills/rubric.ts'
-import type { ChezmoiContext } from '../contexts/chezmoi.ts'
-import { BIN } from './bin.ts'
-import { CHEZMOI } from './chezmoi.ts'
-import { CONFIG } from './config.ts'
-import { ETIQ } from './etiquette.ts'
-import { GIT } from './git.ts'
-import { LAYER } from './layer.ts'
-import { PATTERN } from './pattern.ts'
-import { SYNC } from './sync.ts'
+import type { RubricItem } from '../../../../../shared/rubric-contract.ts'
+import { type ChezmoiContext, createChezmoiContextFactory } from '../contexts/chezmoi.ts'
+import { KI_DOTFILES_CHEZMOI_RUBRIC } from './catalogue.ts'
 
-export const KI_DOTFILES_CHEZMOI_RUBRIC: RubricDefinition<ChezmoiContext> = {
-  name: 'ki-dotfiles-chezmoi',
-  concern: 'dotfiles-chezmoi',
-  families: [
-    defineRubricFamily({
-      code: 'CHEZMOI',
-      title: 'chezmoi repository shape',
-      description: 'Required repository-shape files and template support.',
-      standard: 'standards.md',
-      selectContext: (context: ChezmoiContext) => context,
-      items: CHEZMOI
-    }),
-    defineRubricFamily({
-      code: 'BIN',
-      title: 'bin source naming',
-      description: 'Chezmoi source-attribute naming for direct bin files.',
-      standard: 'standards.md',
-      selectContext: (context: ChezmoiContext) => context,
-      items: BIN
-    }),
-    defineRubricFamily({
-      code: 'GIT',
-      title: 'Git hygiene',
-      description: 'Stray lock files that block Git operations.',
-      standard: 'standards.md',
-      selectContext: (context: ChezmoiContext) => context,
-      items: GIT
-    }),
-    defineRubricFamily({
-      code: 'PATTERN',
-      title: 'app-mutated configuration',
-      description: 'Judgment criteria for Pattern A, Pattern B, and Pattern C selection.',
-      standard: 'standards.md',
-      selectContext: (context: ChezmoiContext) => context,
-      items: PATTERN
-    }),
-    defineRubricFamily({
-      code: 'CONFIG',
-      title: 'configuration editing',
-      description: 'Judgment criteria for format-preserving Pattern A and Pattern C editors.',
-      standard: 'standards.md',
-      selectContext: (context: ChezmoiContext) => context,
-      items: CONFIG
-    }),
-    defineRubricFamily({
-      code: 'LAYER',
-      title: 'instruction layering',
-      description: 'Judgment criteria for repository, user, and memory guidance.',
-      standard: 'standards.md',
-      selectContext: (context: ChezmoiContext) => context,
-      items: LAYER
-    }),
-    defineRubricFamily({
-      code: 'ETIQ',
-      title: 'audit etiquette',
-      description: 'Judgment criteria for reporting before change.',
-      standard: 'standards.md',
-      selectContext: (context: ChezmoiContext) => context,
-      items: ETIQ
-    }),
-    defineRubricFamily({
-      code: 'SYNC',
-      title: 'standard synchronisation',
-      description: 'Judgment criteria for keeping the standard and implementation aligned.',
-      standard: 'standards.md',
-      selectContext: (context: ChezmoiContext) => context,
-      items: SYNC
-    })
-  ]
+type NativeChezmoiContext = ChezmoiContext & {
+  readonly repository: string
 }
 
-export const KI_DOTFILES_CHEZMOI_FAMILY_CODES = ['CHEZMOI', 'BIN', 'GIT', 'PATTERN', 'CONFIG', 'LAYER', 'ETIQ', 'SYNC'] as const
+type LegacyFamily = {
+  readonly code: string
+  readonly title: string
+  readonly items: readonly RubricItem<ChezmoiContext>[]
+}
+
+const catalogueDefinition = KI_DOTFILES_CHEZMOI_RUBRIC
+const catalogue = catalogueDefinition.families as unknown as readonly LegacyFamily[]
+
+const mechanical = (item: RubricItem<ChezmoiContext>) => {
+  const definition = item.mechanical
+  if (!definition) throw new Error(`${item.code} must be mechanical`)
+  return {
+    kind: 'mechanical' as const,
+    code: item.code,
+    title: item.title,
+    level: definition.level,
+    phase: definition.audit.phase,
+    audit: (context: NativeChezmoiContext) => definition.audit.run(context)
+  }
+}
+
+const judgment = (item: RubricItem<ChezmoiContext>) => {
+  const definition = item.judgment
+  if (!definition) throw new Error(`${item.code} must be a judgment item`)
+  return { kind: 'judgment' as const, code: item.code, title: item.title, prompt: definition.prompt }
+}
+
+const nativeItem = (item: RubricItem<ChezmoiContext>) => {
+  if (!item.mechanical) return judgment(item)
+  const native = mechanical(item)
+  // This static source-only ignore file is the one safe repair. Template
+  // design, source-name changes, lock-file removal, and every `chezmoi`
+  // operation need repository-specific intent or an external tool, so remain
+  // report-only for the host.
+  if (item.code === 'CHEZMOI-1')
+    return {
+      ...native,
+      repair: (context: NativeChezmoiContext) => ({
+        writes: context.hasIgnore
+          ? []
+          : [
+              {
+                path: '.chezmoiignore',
+                content:
+                  '# Files/directories chezmoi should never manage.\n# See references/standards.md (Repo layout & naming) in the ki-dotfiles-chezmoi skill.\n',
+                create: true
+              }
+            ]
+      })
+    }
+  return native
+}
+
+type NativeRuntimeItem = {
+  readonly kind: 'mechanical' | 'judgment'
+  readonly phase?: 'PREPARE' | 'INSPECT' | 'PRIMARY' | 'DERIVED' | 'NORMALISE'
+  readonly audit?: (...arguments_: never[]) => unknown
+  readonly repair?: (...arguments_: never[]) => unknown
+}
+
+const directItem = <Context>(item: RubricItem<Context>, runtime: NativeRuntimeItem) => {
+  if (!item.mechanical) return item
+  if (runtime.kind !== 'mechanical' || !runtime.phase || !runtime.audit) throw new Error(`${item.code} has no native mechanical runtime`)
+  const { repair: legacyRepair, ...mechanical } = item.mechanical
+  void legacyRepair
+  return {
+    ...item,
+    mechanical: {
+      ...mechanical,
+      audit: { phase: runtime.phase, run: runtime.audit },
+      ...(runtime.repair ? { repair: { phase: 'NORMALISE', run: runtime.repair } } : {})
+    }
+  }
+}
+
+export default {
+  contract: 1,
+  name: 'ki-dotfiles-chezmoi',
+  concern: catalogueDefinition.concern,
+  createContext: ({ repository }: { readonly repository: string }): NativeChezmoiContext => ({
+    repository,
+    ...createChezmoiContextFactory({ target: repository })()
+  }),
+  families: catalogue.map((family) => ({
+    ...family,
+    selectContext: (context: unknown) => context,
+    items: family.items.map((item) => directItem(item, nativeItem(item)))
+  }))
+} as const
+
+export * from './catalogue.ts'

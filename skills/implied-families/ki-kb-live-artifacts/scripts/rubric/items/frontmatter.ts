@@ -1,4 +1,4 @@
-import type { RubricItem } from '../../vendored/ki-skills/rubric.ts'
+import type { RubricItem } from '../../../../../shared/rubric-contract.ts'
 import type { LiveArtifactsContext } from '../contexts/live-artifacts.ts'
 
 const SOURCE = ['standards.md'] as const
@@ -35,8 +35,7 @@ export const LA_F_1: RubricItem<LiveArtifactsContext> = {
           ? (violations as [(typeof violations)[number], ...(typeof violations)[number][]])
           : [{ status: 'PASS', message: 'Every artifact source has a valid status.' }]
       }
-    },
-    conform: { phase: 'PRIMARY', run: () => [{ status: 'INFO', message: 'Selecting active or archived status requires author judgment.' }] }
+    }
   }
 }
 
@@ -63,8 +62,7 @@ export const LA_F_2: RubricItem<LiveArtifactsContext> = {
           ? (violations as [(typeof violations)[number], ...(typeof violations)[number][]])
           : [{ status: 'PASS', message: 'Every frontmatter block declares renders.' }]
       }
-    },
-    conform: { phase: 'PRIMARY', run: (context) => context.conformRenders() }
+    }
   }
 }
 

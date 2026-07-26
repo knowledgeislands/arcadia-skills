@@ -4,7 +4,7 @@ ADR: [ADR-KI-HARNESS-TOOLCHAIN-001](../../../../docs/decisions/ADR-KI-HARNESS-TO
 
 The shared **engineering toolchain** every Knowledge Islands TypeScript/Bun repo conforms to — the common layer the artifact-type skills (`ki-mcp`, and future ones) build on rather than restate. It is the build/test twin of `ki-authoring` (which owns _how we write_); this owns _how we build, lint, and test_.
 
-This file is the **normative, quotable** standard. The checkable items live in [the rubric](rubric.md); the mechanical checks are in [`../scripts/govern.ts`](../scripts/govern.ts); the model for turning this (or any) standard into an executable rubric is `ki-skills`' [rubric-authoring guide](../../../keystone/ki-skills/references/rubric-authoring.md).
+This file is the **normative, quotable** standard. The checkable items and their native mechanical execution live in [the canonical catalogue](../scripts/rubric/items/index.ts); [the rubric](rubric.md) is its readable generated publication. The model for turning this (or any) standard into an executable rubric is `ki-skills`' [rubric-authoring guide](../../../keystone/ki-skills/references/rubric-authoring.md).
 
 ## Contents
 
@@ -83,7 +83,11 @@ The manifest is the **engineering** standard's because engineering owns the clos
 
 ### CI workflow
 
-Where the repo has CI (`.github/workflows/ci.yml`), it is a single `build` job on `push` to `main` and `pull_request`, running the common gate **in order**: `jdx/mise-action` (installs the toolchain from `mise.toml`, pinning **no** version itself — no `bun-version:` / `node-version:`, which would bypass `mise.toml` and is drift) → `bun install --frozen-lockfile` → acquire and verify the active KI skill collection → **`ki repo audit .`** → **`bun run test`** when the repo ships self-tests. Native audit resolves registered operations from that verified collection; it does not bootstrap a checkout-local executor or invoke a vendored runner. Collection acquisition and native CI delivery are planned migration work under ADR-KI-HARNESS-012. A `ki:test:smoke` step that follows in an MCP repo is that artifact's **delta**, owned by `ki-mcp` — not part of this common shape.
+Where the repo has CI (`.github/workflows/ci.yml`), it is a single `build` job on `push` to `main` and `pull_request`, running the common gate **in order**: `jdx/mise-action` (installs the toolchain from `mise.toml`, pinning **no** version itself — no `bun-version:` / `node-version:`, which would bypass `mise.toml` and is drift) → `bun install --frozen-lockfile` → acquire and verify the active KI skill collection → **`ki repo audit`** → **`bun run test`** when the repo ships self-tests. Native audit resolves registered rubrics from that verified collection; it does not bootstrap a checkout-local executor or invoke a vendored runner. A `ki:test:smoke` step that follows in an MCP repo is that artifact's **delta**, owned by `ki-mcp` — not part of this common shape.
+
+### Clean-end-state cutovers
+
+A repository-footprint replacement prefers the correct clean end state over transitional operability. Before the cutover, tag or release the last known-good state. Replace the old contract directly, remove the superseded implementation in the same bounded change, run the complete verification appropriate to the repository, then tag or release the verified result. Do not retain compatibility shims, dual paths, legacy aliases, or fallback runners merely to preserve an intermediate state: Git history and the bounding tags are the recovery mechanism.
 
 ## 2. The governed script surface (core)
 
@@ -93,28 +97,28 @@ Every entry in `scripts` is **either** one of the six universal lifecycle idioms
 
 ### Native governance commands
 
-`ki:audit`, `ki:conform`, and derived skill-scoped package scripts are retired: a repository must not alias its governance commands to a local runner, vendored payload, or harness checkout. The planned native surface is direct and collection-backed:
+`ki:audit`, `ki:conform`, and derived skill-scoped package scripts are retired: a repository must not alias its governance commands to a local runner, vendored payload, or harness checkout. The native surface is direct and collection-backed:
 
 ```text
-ki repo audit .
-ki repo conform .
+ki repo audit
+ki repo conform
 ```
 
 - **`ki repo audit`** is the read-only gate; **`ki repo conform`** is the write pass. Both resolve the selected repo's declared skills to registered native operations from the verified active installed collection. Missing, incompatible, undeclared, or untrusted skills fail before an operation runs or writes.
-- Native operation registration and focused reporting replace derived package scripts; the public scoped-command grammar is intentionally not specified here. No `.ki/bin`, generated manifest, standalone `govern.ts`, or child-process fallback participates in the target execution path.
-- `clean` and `prepare` remain bare lifecycle idioms. A repo with tests exposes the complete suite through bare `test`; a compiled repo exposes bare `build`. The native command surface is planned migration work under ADR-KI-HARNESS-012 and is not implemented by the current package scripts.
+- Native rubric registration and focused reporting replace derived package scripts. No `.ki/bin`, generated manifest, standalone `govern.ts`, or child-process fallback participates in the execution path.
+- `clean` and `prepare` remain bare lifecycle idioms. A repo with tests exposes the complete suite through bare `test`; a compiled repo exposes bare `build`.
 - A repo MAY add governed, repo-specific scripts (`ki:eval`, `ki:skills:*`, `ki:server:auth:*`, `ki:site:dev:css`, …). The owning skill specifies their shape.
 
-### Code tools run inside the registered `ki-engineering` operation
+### Code tools run inside the registered `ki-engineering` rubric
 
-The code toolchain is implementation detail inside the planned registered native `ki-engineering` operation, not a public family of package scripts:
+The code toolchain is implementation detail inside the registered native `ki-engineering` rubric, not a public family of package scripts:
 
 - Audit runs Biome check, TypeScript checking, syncpack check, and knip directly. The authoring sibling runs Prettier and markdownlint for Markdown.
 - Conform performs the corresponding dependency refresh and safe fixes directly. Building and testing remain explicit bare lifecycle commands, run after conformance when needed.
 - For a flat repo, engineering invokes `tsc --noEmit` at the root. For a monorepo, it derives one `tsc --noEmit -p <workspace>/tsconfig.json` invocation for every declared workspace.
 - A root `knip.json` (§5) supplies entry points and intentional ignores; knip covers both dependency and dead-code hygiene.
 
-The former per-tool families and unified verify key are explicitly **retired** by ADR-KI-HARNESS-TOOLCHAIN-001. Any `ki:lint:*`, `ki:deps:*`, `ki:knip`, `ki:verify`, `ki:audit`, `ki:conform`, or derived scoped key is drift: those operations belong in registered native operations resolved by `ki repo audit`/`conform`. Registered-operation delivery is planned; this does not assert that the current checker implementation has already migrated.
+The former per-tool families and unified verify key are explicitly **retired** by ADR-KI-HARNESS-TOOLCHAIN-001. Any `ki:lint:*`, `ki:deps:*`, `ki:knip`, `ki:verify`, `ki:audit`, `ki:conform`, or derived scoped key is drift: those operations belong in native rubrics resolved by `ki repo audit`/`conform`.
 
 **Monorepo type-checking (shape-driven).** A monorepo (§0) — e.g. a website with `site/` (Bun-typed Eleventy) plus `ingress/` (a Cloudflare Worker on `@cloudflare/workers-types`) — has per-workspace `tsconfig.json`s whose `types`/`lib` are mutually incompatible, so one root `tsc --noEmit` cannot type-check them all. Such a repo declares its packages in the standard Bun `workspaces` array in `package.json`:
 
@@ -142,7 +146,7 @@ Install and dev use **Bun (≥ 1.3)**; the compiled `dist/` runs under **Node (�
 
 **`biome.json`** present and matching the shared config: git VCS + `useIgnoreFile`; formatter `indentStyle: space`, `indentWidth: 2`, `lineWidth: 140`; JS formatter `quoteStyle: single`, `semicolons: asNeeded`, `trailingCommas: none`; linter `preset: recommended` with `suspicious.noExplicitAny: off`; `assist.source.organizeImports: on`. The `$schema` pins the Biome version — bump it on the house Biome upgrade.
 
-**Generated and managed discovery surfaces stay out of every mechanical tool.** `src/generated/`, `.claude/skills/`, `.claude/agents/`, and `.agents/skills/` are copied or generated artifacts, not local source. Each must be excluded from Biome's `files.includes`, knip's `ignore`, and the Markdown gate's ignores. A parent exclusion such as `.claude/**` is valid for its generated children, but do not exclude the whole directory from Biome when it contains authored material such as `.claude/workflows/`. Existing `.ki/bootstrap/` state is legacy migration material, not a current generated surface; remove it only through the explicit fail-closed migration with complete ownership proof. The Markdown configuration remains owned by `ki-authoring`; this standard owns the cross-tool agreement. See [ADR-KI-HARNESS-TOOLCHAIN-005](../../../../docs/decisions/ADR-KI-HARNESS-TOOLCHAIN-005-generated-and-vendored-code-is-excluded-from-linting-and-knip.md).
+**Generated and managed discovery surfaces stay out of every mechanical tool.** `src/generated/`, `.claude/skills/`, `.claude/agents/`, and `.agents/skills/` are copied or generated artifacts, not local source. Each must be excluded from Biome's `files.includes`, knip's `ignore`, and the Markdown gate's ignores. A parent exclusion such as `.claude/**` is valid for its generated children, but do not exclude the whole directory from Biome when it contains authored material such as `.claude/workflows/`. The Markdown configuration remains owned by `ki-authoring`; this standard owns the cross-tool agreement. See [ADR-KI-HARNESS-TOOLCHAIN-005](../../../../docs/decisions/ADR-KI-HARNESS-TOOLCHAIN-005-generated-and-vendored-code-is-excluded-from-linting-and-knip.md).
 
 **`.prettierrc.json`** present and byte-identical across repos. Biome formats code; Prettier is used **only** for Markdown (inside `ki-authoring` audit/conform), so the config is small and the Markdown-shaping fields are the point:
 

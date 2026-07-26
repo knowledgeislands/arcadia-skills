@@ -1,4 +1,4 @@
-import type { AuditOutcome, ConformOutcome, RubricItem, RubricOutcomes } from '../../vendored/ki-skills/rubric.ts'
+import type { AuditOutcome, RubricItem, RubricOutcomes } from '../../../../../shared/rubric-contract.ts'
 import { type HandoffsRubricContext, hasDecisionsHeading, hasReadinessMarker, namesEscalate, namesLocked } from '../contexts/handoffs.ts'
 
 const VALID_TIERS = new Set(['haiku', 'sonnet', 'opus'])
@@ -104,14 +104,6 @@ export const HAND_3: RubricItem<HandoffsRubricContext> = {
             subject: artifact.subject
           }))
         )
-      }
-    },
-    conform: {
-      phase: 'NORMALISE',
-      run: (context: HandoffsRubricContext): RubricOutcomes<ConformOutcome> => {
-        if (!context.targetExists) return [{ status: 'NOT_APPLICABLE', message: 'Requested path is absent.', subject: context.target }]
-        if (context.artifacts.length === 0) return [{ status: 'NOT_APPLICABLE', message: 'No handoff-opted-in artifacts (handoff: true).' }]
-        return outcomes(context.artifacts.flatMap(context.addReadinessMarker))
       }
     }
   }

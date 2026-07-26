@@ -1,7 +1,7 @@
 import { existsSync, lstatSync, readdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { homedir } from 'node:os'
 import { basename, join, resolve } from 'node:path'
-import type { ConformOutcome, RubricOutcomes } from '../../vendored/ki-skills/rubric.ts'
+import type { ConformOutcome, RubricOutcomes } from '../../../../../shared/rubric-contract.ts'
 
 export const VALID_TYPES = new Set(['user', 'feedback', 'project', 'reference'])
 export const INDEX_FILE = 'MEMORY.md'

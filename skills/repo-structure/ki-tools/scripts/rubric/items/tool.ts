@@ -1,63 +1,44 @@
 import { judgment, mechanical, one } from './shared.ts'
-export const TOOL_BIN = mechanical(
-  'TOOL-BIN',
-  'Tool executable',
-  '`bin/` exists and holds at least one file.',
-  'FAIL',
-  (c) =>
-    one(
-      !c.targetExists
-        ? { status: 'VIOLATION', message: 'target is not a directory', subject: c.target }
-        : !c.binExists
-          ? { status: 'VIOLATION', message: 'tool executable directory is missing', subject: 'bin/' }
-          : !c.bins.length
-            ? { status: 'VIOLATION', message: 'no executable files found — add the tool executable', subject: 'bin/' }
-            : {
-                status: 'PASS',
-                message: `contains ${c.bins.length} executable candidate(s): ${c.bins.map((bin) => bin.name).join(', ')}`,
-                subject: 'bin/'
-              }
-    ),
-  (c) => c.conformBins()
+export const TOOL_BIN = mechanical('TOOL-BIN', 'Tool executable', '`bin/` exists and holds at least one file.', 'FAIL', (c) =>
+  one(
+    !c.targetExists
+      ? { status: 'VIOLATION', message: 'target is not a directory', subject: c.target }
+      : !c.binExists
+        ? { status: 'VIOLATION', message: 'tool executable directory is missing', subject: 'bin/' }
+        : !c.bins.length
+          ? { status: 'VIOLATION', message: 'no executable files found — add the tool executable', subject: 'bin/' }
+          : {
+              status: 'PASS',
+              message: `contains ${c.bins.length} executable candidate(s): ${c.bins.map((bin) => bin.name).join(', ')}`,
+              subject: 'bin/'
+            }
+  )
 )
-export const TOOL_EXEC = mechanical(
-  'TOOL-EXEC',
-  'Executable bit',
-  'Every `bin/<file>` carries the executable bit.',
-  'FAIL',
-  (c) => {
-    if (!c.bins.length) return one({ status: 'NOT_APPLICABLE', message: 'No bin files to inspect.' })
-    const bad = c.bins.filter((bin) => !bin.executable)
-    return bad.length
-      ? one({
-          status: 'VIOLATION',
-          message: `missing the executable bit (chmod +x): ${bad.map((bin) => bin.name).join(', ')}`,
-          subject: 'bin/'
-        })
-      : one({ status: 'PASS', message: 'every bin/ file is executable', subject: 'bin/' })
-  },
-  (c) => c.conformBins()
-)
+export const TOOL_EXEC = mechanical('TOOL-EXEC', 'Executable bit', 'Every `bin/<file>` carries the executable bit.', 'FAIL', (c) => {
+  if (!c.bins.length) return one({ status: 'NOT_APPLICABLE', message: 'No bin files to inspect.' })
+  const bad = c.bins.filter((bin) => !bin.executable)
+  return bad.length
+    ? one({
+        status: 'VIOLATION',
+        message: `missing the executable bit (chmod +x): ${bad.map((bin) => bin.name).join(', ')}`,
+        subject: 'bin/'
+      })
+    : one({ status: 'PASS', message: 'every bin/ file is executable', subject: 'bin/' })
+})
 export const TOOL_SCOPE = judgment('TOOL-SCOPE', 'One command', 'The repository contains genuinely one tool rather than distinct commands.')
 export const TOOL_XDG = judgment(
   'TOOL-XDG',
   'XDG storage',
   'The tool follows the XDG Base Directory specification for config, state, and cache.'
 )
-export const TOOL_INSTALL = mechanical(
-  'TOOL-INSTALL',
-  'Installer executable',
-  '`install.sh` is present and executable.',
-  'WARN',
-  (c) =>
-    one(
-      c.install === 'missing'
-        ? { status: 'VIOLATION', message: 'no install.sh at the repository root', subject: 'install.sh' }
-        : c.install === 'non-executable'
-          ? { status: 'VIOLATION', message: 'install.sh is present but lacks the executable bit', subject: 'install.sh' }
-          : { status: 'PASS', message: 'install.sh is present and executable', subject: 'install.sh' }
-    ),
-  (c) => c.conformInstall()
+export const TOOL_INSTALL = mechanical('TOOL-INSTALL', 'Installer executable', '`install.sh` is present and executable.', 'WARN', (c) =>
+  one(
+    c.install === 'missing'
+      ? { status: 'VIOLATION', message: 'no install.sh at the repository root', subject: 'install.sh' }
+      : c.install === 'non-executable'
+        ? { status: 'VIOLATION', message: 'install.sh is present but lacks the executable bit', subject: 'install.sh' }
+        : { status: 'PASS', message: 'install.sh is present and executable', subject: 'install.sh' }
+  )
 )
 export const TOOL_INSTALL_QUALITY = judgment(
   'TOOL-INSTALL-QUALITY',

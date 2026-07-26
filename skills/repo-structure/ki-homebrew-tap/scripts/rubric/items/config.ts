@@ -1,4 +1,4 @@
-import type { RubricItem } from '../../vendored/ki-skills/rubric.ts'
+import type { RubricItem } from '../../../../../shared/rubric-contract.ts'
 import type { HomebrewTapContext } from '../contexts/homebrew-tap.ts'
 
 const SOURCE = ['standards.md'] as const
@@ -31,8 +31,7 @@ export const CONFIG_1: RubricItem<HomebrewTapContext> = {
               }
         ]
       }
-    },
-    conform: { phase: 'PRIMARY', run: (context) => context.conformMarker() }
+    }
   }
 }
 

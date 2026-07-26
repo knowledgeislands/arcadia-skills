@@ -1,4 +1,4 @@
-import type { AuditOutcome, RubricItem, RubricOutcomes } from '../../vendored/ki-skills/rubric.ts'
+import type { AuditOutcome, RubricItem, RubricOutcomes } from '../../../../../shared/rubric-contract.ts'
 import type { WebsiteContext } from '../contexts/website.ts'
 
 export const inactive = (context: WebsiteContext): RubricOutcomes<AuditOutcome> | null =>

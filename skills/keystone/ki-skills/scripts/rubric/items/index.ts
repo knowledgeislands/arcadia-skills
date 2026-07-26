@@ -1,166 +1,236 @@
-import { defineRubricFamily, type RubricDefinition } from '../../shared/rubric.ts'
-import type { KiSkillsRubricContext } from '../contexts/contexts.ts'
-import { BODY } from './body.ts'
-import { COLLISION } from './collision.ts'
-import { DESC } from './description.ts'
-import { FRONTMATTER } from './frontmatter.ts'
-import { KI_CHECKER } from './ki-checker.ts'
-import { KI_INVOKE } from './ki-invoke.ts'
-import { KI_LINK } from './ki-link.ts'
-import { KI_SHAPE } from './ki-shape.ts'
-import { LAYOUT } from './layout.ts'
-import { LONGEVITY } from './longevity.ts'
-import { NAME } from './name.ts'
-import { OPTIONAL } from './optional.ts'
-import { PORTABILITY } from './portability.ts'
-import { PROCESS } from './process.ts'
-import { REFERENCES } from './references.ts'
-import { SCRIPTS } from './scripts.ts'
-import { SIZE } from './size.ts'
+import { readFileSync } from 'node:fs'
+import { join, relative } from 'node:path'
+import type { AuditOutcome as NativeAuditOutcome, RubricItem } from '../../shared/rubric.ts'
+import type { KiShapeRubricContext, KiSkillsRubricContext, LayoutRubricContext, NameRubricContext } from '../contexts/contexts.ts'
+import { frontmatterLine, parseFrontmatter, replaceFrontmatterScalar } from '../contexts/frontmatter.ts'
+import { discoverSkillDirs } from '../contexts/skill-files.ts'
+import { createKiSkillsSubjects, KI_SKILLS_SUBJECT_FAMILIES, type KiSkillsSubject } from '../contexts/subjects.ts'
+import { KI_SKILLS_RUBRIC } from './catalogue.ts'
 
-const RUBRIC_FAMILIES = [
-  defineRubricFamily({
-    code: 'LAY',
-    title: 'File existence & layout',
-    description: 'Portable skill layout and supporting-file structure.',
-    standard: 'standards.md#2-layout',
-    selectContext: (context: KiSkillsRubricContext) => context.layout,
-    items: LAYOUT
-  }),
-  defineRubricFamily({
-    code: 'FM',
-    title: 'Frontmatter document',
-    description: 'The YAML frontmatter document that identifies a skill.',
-    standard: 'standards.md#3-frontmatter-document',
-    selectContext: (context: KiSkillsRubricContext) => context.frontmatter,
-    items: FRONTMATTER
-  }),
-  defineRubricFamily({
-    code: 'NAME',
-    title: 'Frontmatter: name',
-    description: 'The portable skill name contract.',
-    standard: 'standards.md#4-frontmatter-name',
-    selectContext: (context: KiSkillsRubricContext) => context.name,
-    items: NAME
-  }),
-  defineRubricFamily({
-    code: 'DESC',
-    title: 'Frontmatter: description',
-    description: 'The portable skill description contract.',
-    standard: 'standards.md#5-frontmatter-description',
-    selectContext: (context: KiSkillsRubricContext) => context.description,
-    items: DESC
-  }),
-  defineRubricFamily({
-    code: 'OPT',
-    title: 'Frontmatter: optional fields',
-    description: 'Optional portable and runtime-specific frontmatter fields.',
-    standard: 'standards.md#6-frontmatter-optional-fields',
-    selectContext: (context: KiSkillsRubricContext) => context.optional,
-    items: OPTIONAL
-  }),
-  defineRubricFamily({
-    code: 'SIZE',
-    title: 'Body: size & conciseness',
-    description: 'The progressive-disclosure budget for a skill body.',
-    standard: 'standards.md#7-size--conciseness',
-    selectContext: (context: KiSkillsRubricContext) => context.size,
-    items: SIZE
-  }),
-  defineRubricFamily({
-    code: 'REF',
-    title: 'Progressive disclosure & references',
-    description: 'How a skill routes supporting detail into references.',
-    standard: 'standards.md#8-progressive-disclosure',
-    selectContext: (context: KiSkillsRubricContext) => context.references,
-    items: REFERENCES
-  }),
-  defineRubricFamily({
-    code: 'BODY',
-    title: 'Body content quality',
-    description: 'The quality and usability of the skill instructions.',
-    standard: 'standards.md#9-body-content-quality',
-    selectContext: (context: KiSkillsRubricContext) => context,
-    items: BODY
-  }),
-  defineRubricFamily({
-    code: 'SCRIPT',
-    title: 'Scripts & executable code',
-    description: 'The quality and autonomy of executable skill support.',
-    standard: 'standards.md#10-scripts',
-    selectContext: (context: KiSkillsRubricContext) => context.scripts,
-    items: SCRIPTS
-  }),
-  defineRubricFamily({
-    code: 'KI-CHECKER',
-    title: 'Knowledge Islands checker contract',
-    description: 'Knowledge Islands packaging and checker responsibilities.',
-    standard: 'checker-contract.md',
-    selectContext: (context: KiSkillsRubricContext) => context.checker,
-    items: KI_CHECKER
-  }),
-  defineRubricFamily({
-    code: 'KI-LINK',
-    title: 'Knowledge Islands linking & portability',
-    description: 'Knowledge Islands link and toolchain portability.',
-    standard: 'standards.md#13-knowledge-islands-linking--portability',
-    selectContext: (context: KiSkillsRubricContext) => context.link,
-    items: KI_LINK
-  }),
-  defineRubricFamily({
-    code: 'PORT',
-    title: 'Runtime portability',
-    description: 'Portable contracts make runtime-specific boundaries explicit.',
-    standard: 'standards.md#16-runtime-portability',
-    selectContext: (context: KiSkillsRubricContext) => context.portability,
-    items: PORTABILITY
-  }),
-  defineRubricFamily({
-    code: 'KI-SHAPE',
-    title: 'Knowledge Islands skill shape',
-    description: 'The common shape of a Knowledge Islands governance skill.',
-    standard: 'standards.md#14-knowledge-islands-skill-shape',
-    selectContext: (context: KiSkillsRubricContext) => context.shape,
-    items: KI_SHAPE
-  }),
-  defineRubricFamily({
-    code: 'KI-INVOKE',
-    title: 'Invocation protocol',
-    description: 'Safe invocation for a skill with named modes.',
-    standard: '../../../../docs/decisions/ADR-KI-HARNESS-SKILLS-001-audit-conform-educate-refresh-canonical-modes-help.md',
-    selectContext: (context: KiSkillsRubricContext) => context,
-    items: KI_INVOKE
-  }),
-  defineRubricFamily({
-    code: 'PROC',
-    title: 'Process / meta',
-    description: 'Evaluation and real-usage evidence for the skill.',
-    standard: 'standards.md#11-process--evaluation',
-    selectContext: (context: KiSkillsRubricContext) => context,
-    items: PROCESS
-  }),
-  defineRubricFamily({
-    code: 'COLL',
-    title: 'Cross-skill collision',
-    description: 'Selection boundaries across a set of skills.',
-    standard: 'standards.md#15-cross-skill-collision',
-    selectContext: (context: KiSkillsRubricContext) => context.collision,
-    items: COLLISION
-  }),
-  defineRubricFamily({
-    code: 'LONG',
-    title: 'Longevity',
-    description: 'Refresh paths and cadence for knowledge that changes over time.',
-    standard: 'standards.md#12-longevity',
-    selectContext: (context: KiSkillsRubricContext) => context.longevity,
-    items: LONGEVITY
-  })
-] as const
-
-export const KI_SKILLS_RUBRIC: RubricDefinition<KiSkillsRubricContext> = {
-  name: 'ki-skills',
-  concern: 'Agent Skills',
-  families: RUBRIC_FAMILIES
+type LegacyAuditOutcome = {
+  readonly status: 'PASS' | 'VIOLATION' | 'NOT_APPLICABLE' | 'INFO'
+  readonly message: string
+  readonly subject?: string
 }
 
-export const RUBRIC_ITEMS = KI_SKILLS_RUBRIC.families.flatMap((family) => family.items)
+type LegacyMechanicalItem = {
+  readonly code: string
+  readonly title: string
+  readonly mechanical: {
+    readonly level: 'FAIL' | 'WARN'
+    readonly audit: {
+      readonly phase: 'PREPARE' | 'INSPECT' | 'PRIMARY' | 'DERIVED' | 'NORMALISE'
+      readonly run: (context: unknown) => readonly LegacyAuditOutcome[]
+    }
+  }
+}
+
+type LegacyJudgmentItem = {
+  readonly code: string
+  readonly title: string
+  readonly judgment: { readonly prompt: string }
+}
+
+type LegacyFamily = {
+  readonly code: string
+  readonly title: string
+  readonly selectContext: (context: KiSkillsRubricContext) => unknown
+  readonly items: readonly (LegacyMechanicalItem | LegacyJudgmentItem)[]
+}
+
+type NativeSubject = KiSkillsSubject & { readonly directory?: string }
+
+type NativeSkillsContext = {
+  readonly repository: string
+  readonly subjects: readonly NativeSubject[]
+}
+
+const catalogueDefinition = KI_SKILLS_RUBRIC
+const catalogue = catalogueDefinition.families as unknown as readonly LegacyFamily[]
+const universalVerbs = ['AUDIT', 'CONFORM', 'HELP', 'EDUCATE', 'REFRESH'] as const
+
+const isMechanical = (item: LegacyMechanicalItem | LegacyJudgmentItem): item is LegacyMechanicalItem => 'mechanical' in item
+
+const subjectDirectory = (subject: KiSkillsSubject, directories: readonly string[], index: number) =>
+  subject.scope === 'skill' || subject.scope === 'invalidSkill' ? directories[index] : undefined
+
+const nativeSubjects = (repository: string): readonly NativeSubject[] => {
+  const legacy = createKiSkillsSubjects({ mode: 'audit', roots: [repository], reportTarget: repository })
+  const directories = discoverSkillDirs(repository).sort()
+  let directoryIndex = 0
+
+  return legacy.subjects.map((subject) => {
+    const directory = subjectDirectory(subject, directories, directoryIndex)
+    if (directory) directoryIndex++
+    return { ...subject, ...(directory ? { directory } : {}) }
+  })
+}
+
+const fallbackSubject = (context: NativeSkillsContext, subject: NativeSubject): string | undefined =>
+  subject.subject ??
+  ((subject.scope === 'skill' || subject.scope === 'invalidSkill') && subject.directory
+    ? relative(context.repository, subject.directory)
+    : undefined)
+
+const outcomesFor = (context: NativeSkillsContext, family: LegacyFamily, item: LegacyMechanicalItem): readonly NativeAuditOutcome[] =>
+  context.subjects.flatMap((subject) => {
+    if (!KI_SKILLS_SUBJECT_FAMILIES[subject.scope].some((code) => code === family.code)) return []
+    const fallback = fallbackSubject(context, subject)
+    return item.mechanical.audit.run(family.selectContext(subject.context())).map((outcome) => ({
+      ...outcome,
+      ...(outcome.subject || !fallback ? {} : { subject: fallback })
+    }))
+  })
+
+const layoutContext = (family: LegacyFamily, subject: NativeSubject): LayoutRubricContext =>
+  family.selectContext(subject.context()) as LayoutRubricContext
+
+const skillContext = <Context>(family: LegacyFamily, subject: NativeSubject): Context => family.selectContext(subject.context()) as Context
+
+const skillMarkdown = (context: NativeSkillsContext, subject: NativeSubject): { path: string; content: string } | undefined => {
+  if (!subject.directory) return undefined
+  const path = relative(context.repository, join(subject.directory, 'SKILL.md'))
+  return { path, content: readFileSync(join(subject.directory, 'SKILL.md'), 'utf8') }
+}
+
+const rewriteFrontmatter = (content: string, key: string, value: string): string | undefined => {
+  const frontmatter = parseFrontmatter(content)
+  if (frontmatter.raw === null) return undefined
+  const rewritten = replaceFrontmatterScalar(frontmatter.raw, key, value)
+  return rewritten === frontmatter.raw ? undefined : content.replace(frontmatter.raw, rewritten)
+}
+
+const missingVerbs = (shape: KiShapeRubricContext) =>
+  shape.skill ? universalVerbs.filter((verb) => !shape.skill?.hintVerbs.includes(verb)) : []
+
+/**
+ * Legacy CONFORM callbacks mutate a shared in-memory document. Native repairs
+ * propose complete immutable replacements, so compose every safe direct repair
+ * into one final replacement per document before handing it to the host.
+ */
+const coalescedWrites = (context: NativeSkillsContext) => {
+  const originals = new Map<string, string>()
+  const drafts = new Map<string, string>()
+  const draft = (path: string, source: string, transform: (content: string) => string): void => {
+    originals.set(path, originals.get(path) ?? source)
+    drafts.set(path, transform(drafts.get(path) ?? source))
+  }
+
+  const layoutFamily = catalogue.find((family) => family.code === 'LAY')
+  if (layoutFamily) {
+    for (const subject of context.subjects) {
+      if (!KI_SKILLS_SUBJECT_FAMILIES[subject.scope].some((code) => code === 'LAY') || !subject.subject) continue
+      const layout = layoutContext(layoutFamily, subject)
+      if (layout.markdown === undefined || !/\[[^\]]*\]\([^)]*\\[^)]*\)/.test(layout.markdown)) continue
+      draft(subject.subject, layout.markdown, (content) =>
+        content.replace(/\[([^\]]*)\]\(([^)]+)\)/g, (whole, text, target) =>
+          (target as string).includes('\\') ? `[${text}](${(target as string).replace(/\\/g, '/')})` : whole
+        )
+      )
+    }
+  }
+
+  const nameFamily = catalogue.find((family) => family.code === 'NAME')
+  const shapeFamily = catalogue.find((family) => family.code === 'KI-SHAPE')
+  for (const subject of context.subjects) {
+    if (subject.scope !== 'skill') continue
+    const document = skillMarkdown(context, subject)
+    if (!document) continue
+    if (nameFamily) {
+      const name = skillContext<NameRubricContext>(nameFamily, subject)
+      if (name.name && name.name !== name.directoryName) {
+        draft(document.path, document.content, (content) => {
+          const frontmatter = parseFrontmatter(content)
+          const line = frontmatter.raw ? frontmatterLine(frontmatter.raw, 'name') : null
+          return line ? content.replace(line, `name: ${name.directoryName}`) : content
+        })
+      }
+    }
+    if (shapeFamily) {
+      const shape = skillContext<KiShapeRubricContext>(shapeFamily, subject)
+      const missing = missingVerbs(shape)
+      const argumentHint = shape.skill?.argumentHint
+      if (shape.skill?.governanceSkill && argumentHint && missing.length > 0) {
+        draft(
+          document.path,
+          document.content,
+          (content) =>
+            rewriteFrontmatter(content, 'argument-hint', `${argumentHint} | ${missing.map((verb) => verb.toLowerCase()).join(' | ')}`) ??
+            content
+        )
+      }
+    }
+  }
+
+  return {
+    writes: [...drafts]
+      .filter(([path, content]) => originals.get(path) !== content)
+      .sort(([left], [right]) => left.localeCompare(right))
+      .map(([path, content]) => ({ path, content }))
+  }
+}
+
+const repairFor = (context: NativeSkillsContext, item: LegacyMechanicalItem) => {
+  if (['LAY-4', 'NAME-5', 'KI-SHAPE-11', 'KI-SHAPE-12'].includes(item.code)) return coalescedWrites(context)
+  return { writes: [] }
+}
+
+const nativeItem = (family: LegacyFamily, item: LegacyMechanicalItem | LegacyJudgmentItem) => {
+  if (!isMechanical(item)) return { kind: 'judgment' as const, code: item.code, title: item.title, prompt: item.judgment.prompt }
+  return {
+    kind: 'mechanical' as const,
+    code: item.code,
+    title: item.title,
+    level: item.mechanical.level,
+    phase: item.mechanical.audit.phase,
+    audit: (context: NativeSkillsContext) => outcomesFor(context, family, item),
+    repair: (context: NativeSkillsContext) => repairFor(context, item)
+  }
+}
+
+type NativeRuntimeItem = {
+  readonly kind: 'mechanical' | 'judgment'
+  readonly phase?: 'PREPARE' | 'INSPECT' | 'PRIMARY' | 'DERIVED' | 'NORMALISE'
+  readonly audit?: (...arguments_: never[]) => unknown
+  readonly repair?: (...arguments_: never[]) => unknown
+}
+
+const directItem = <Context>(item: RubricItem<Context>, runtime: NativeRuntimeItem) => {
+  if (!item.mechanical) return item
+  if (runtime.kind !== 'mechanical' || !runtime.phase || !runtime.audit) throw new Error(`${item.code} has no native mechanical runtime`)
+  const { repair: legacyRepair, ...mechanical } = item.mechanical
+  void legacyRepair
+  return {
+    ...item,
+    mechanical: {
+      ...mechanical,
+      audit: { phase: runtime.phase, run: runtime.audit },
+      ...(runtime.repair ? { repair: { phase: 'NORMALISE', run: runtime.repair } } : {})
+    }
+  }
+}
+
+export default {
+  contract: 1,
+  name: 'ki-skills',
+  concern: catalogueDefinition.concern,
+  createContext: ({ repository }: { readonly repository: string }): NativeSkillsContext => ({
+    repository,
+    subjects: nativeSubjects(repository)
+  }),
+  families: catalogueDefinition.families.map((family) => {
+    const runtimeFamily = catalogue.find((candidate) => candidate.code === family.code)
+    if (!runtimeFamily) throw new Error(`${family.code} has no native family runtime`)
+    return {
+      ...family,
+      selectContext: (context: unknown) => context,
+      items: family.items.map((item) => {
+        const runtimeItem = runtimeFamily.items.find((candidate) => candidate.code === item.code)
+        if (!runtimeItem) throw new Error(`${item.code} has no native item runtime`)
+        return directItem(item, nativeItem(runtimeFamily, runtimeItem))
+      })
+    }
+  })
+} as const
+
+export * from './catalogue.ts'

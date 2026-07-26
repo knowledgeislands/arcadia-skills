@@ -1,4 +1,4 @@
-import type { AuditOutcome, ConformOutcome, RubricMode, RubricOutcomes } from '../../vendored/ki-skills/rubric.ts'
+import type { AuditOutcome, ConformOutcome, RubricMode, RubricOutcomes } from '../../../../../shared/rubric-contract.ts'
 import { collectAuditFindings, type RepoEvidenceFinding } from './audit.ts'
 import { collectConformFindings } from './conform.ts'
 

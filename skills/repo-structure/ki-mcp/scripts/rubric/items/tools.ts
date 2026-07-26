@@ -1,6 +1,6 @@
 import { readdirSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
-import type { AuditOutcome } from '../../vendored/ki-skills/rubric.ts'
+import type { AuditOutcome } from '../../../../../shared/rubric-contract.ts'
 import type { McpRubricContext } from '../contexts/mcp.ts'
 import { outcomes } from './common.ts'
 

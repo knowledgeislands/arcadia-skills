@@ -1,4 +1,4 @@
-import type { AuditOutcome, ConformOutcome, RubricItem, RubricOutcomes } from '../../vendored/ki-skills/rubric.ts'
+import type { AuditOutcome, RubricItem } from '../../../../../shared/rubric-contract.ts'
 import type { DecisionRecordsContext } from '../contexts/decision-records.ts'
 import { outcomes } from './shared.ts'
 
@@ -49,35 +49,6 @@ export const INDEX_2: RubricItem<DecisionRecordsContext> = {
             ),
           'Every decision record has exactly one index entry.'
         )
-      }
-    },
-    conform: {
-      phase: 'DERIVED',
-      run: (context: DecisionRecordsContext) => {
-        if (!context.indexExists)
-          return [{ status: 'NOT_APPLICABLE', message: 'The index is absent.', subject: context.indexFile }] as const
-        const fixed = context.appendMissingIndexEntries().map(
-          (record): ConformOutcome => ({
-            status: 'FIXED',
-            message: context.dryRun ? 'Would append missing index entry.' : 'Appended missing index entry.',
-            subject: record.id
-          })
-        )
-        const duplicates = context.records
-          .filter((record) => (context.indexCounts.get(record.id) ?? 0) > 1)
-          .map(
-            (record): ConformOutcome => ({
-              status: 'VIOLATION',
-              message: `Expected exactly one index entry; found ${context.indexCounts.get(record.id) ?? 0}.`,
-              subject: record.id
-            })
-          )
-        const results = [...fixed, ...duplicates]
-        return (results.length > 0
-          ? results
-          : [
-              { status: 'PASS', message: 'Every decision record has exactly one index entry.' }
-            ]) as unknown as RubricOutcomes<ConformOutcome>
       }
     }
   }

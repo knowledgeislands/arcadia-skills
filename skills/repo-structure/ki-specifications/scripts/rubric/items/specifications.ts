@@ -1,4 +1,4 @@
-import type { AuditOutcome, RubricItem, RubricOutcomes } from '../../vendored/ki-skills/rubric.ts'
+import type { AuditOutcome, RubricItem, RubricOutcomes } from '../../../../../shared/rubric-contract.ts'
 import type { SpecificationsContext } from '../contexts/specifications.ts'
 
 const SOURCE = ['standards.md'] as const
@@ -34,8 +34,7 @@ export const SPEC_1: RubricItem<SpecificationsContext> = {
             : { status: 'VIOLATION', message: `The keyless marker contains unknown keys: ${keys.join(', ')}.`, subject: '.ki-config.toml' }
         ]
       }
-    },
-    conform: { phase: 'PRIMARY', run: (context) => context.conformMarker() }
+    }
   }
 }
 
@@ -59,10 +58,6 @@ export const SPEC_2: RubricItem<SpecificationsContext> = {
           )
         )
       }
-    },
-    conform: {
-      phase: 'PRIMARY',
-      run: () => [{ status: 'NOT_APPLICABLE', message: 'Directory creation requires real content and remains manual.' }]
     }
   }
 }
@@ -86,10 +81,6 @@ export const SPEC_3: RubricItem<SpecificationsContext> = {
           )
         )
       }
-    },
-    conform: {
-      phase: 'PRIMARY',
-      run: () => [{ status: 'NOT_APPLICABLE', message: 'Directory creation requires real content and remains manual.' }]
     }
   }
 }

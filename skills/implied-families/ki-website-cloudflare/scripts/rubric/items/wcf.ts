@@ -1,4 +1,4 @@
-import type { RubricItem } from '../../vendored/ki-skills/rubric.ts'
+import type { RubricItem } from '../../../../../shared/rubric-contract.ts'
 import type { WebsiteCloudflareContext } from '../contexts/website-cloudflare.ts'
 
 const mechanical = (

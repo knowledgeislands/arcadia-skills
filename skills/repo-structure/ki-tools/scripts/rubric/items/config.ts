@@ -19,7 +19,6 @@ export const CONFIG_1 = mechanical(
     return c.configKeys.length
       ? one({ status: 'VIOLATION', message: `unknown key under [ki-tools]: ${c.configKeys.join(', ')}`, subject: '.ki-config.toml' })
       : one({ status: 'PASS', message: '[ki-tools] table present', subject: '.ki-config.toml' })
-  },
-  (c) => c.conformConfig()
+  }
 )
 export const CONFIG = [CONFIG_1] as const

@@ -1,4 +1,4 @@
-import type { AuditOutcome, RubricItem, RubricOutcomes } from '../../vendored/ki-skills/rubric.ts'
+import type { AuditOutcome, RubricItem, RubricOutcomes } from '../../../../../shared/rubric-contract.ts'
 import { type BindingRubricContext, RECOGNISED } from '../contexts/binding.ts'
 
 export const BIND_1: RubricItem<BindingRubricContext> = {
@@ -160,8 +160,7 @@ export const BIND_4: RubricItem<BindingRubricContext> = {
             ]
           : [{ status: 'PASS', message: `The Cowork plugin is registered and enabled in all ${cowork.files.length} workspace(s).` }]
       }
-    },
-    conform: { phase: 'PRIMARY', run: ({ cowork }) => cowork.conform() }
+    }
   }
 }
 

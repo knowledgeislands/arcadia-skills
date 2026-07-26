@@ -100,25 +100,6 @@ export const NAME_5: RubricItem<NameRubricContext> = {
                     : 'name matches the parent directory name exactly'
                 }
               ]
-    },
-    conform: {
-      phase: 'PRIMARY',
-      run: ({ name, directoryName, localGovernanceSource, setName }) => {
-        if (!name) return [{ status: 'NOT_APPLICABLE', message: 'name is absent', subject: 'SKILL.md' }]
-        if (name === directoryName)
-          return [
-            {
-              status: 'PASS',
-              message: localGovernanceSource
-                ? 'name matches the canonical repository-local `.ki/self/skill/` source name'
-                : 'name matches the parent directory name exactly',
-              subject: 'SKILL.md'
-            }
-          ]
-        if (!setName) throw new Error('NAME-5 conform requires the setName capability')
-        setName(directoryName)
-        return [{ status: 'FIXED', message: `name '${name}' → '${directoryName}'`, subject: 'SKILL.md' }]
-      }
     }
   }
 }

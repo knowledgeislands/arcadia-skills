@@ -1,7 +1,7 @@
 import { execSync } from 'node:child_process'
 import { existsSync, readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs'
 import { join, resolve } from 'node:path'
-import type { ConformOutcome, RubricOutcomes } from '../../vendored/ki-skills/rubric.ts'
+import type { ConformOutcome, RubricOutcomes } from '../../../../../shared/rubric-contract.ts'
 
 export type McpRubricContext = {
   root: string

@@ -1,4 +1,4 @@
-import type { AuditOutcome, ConformOutcome, RubricOutcomes } from '../../vendored/ki-skills/rubric.ts'
+import type { AuditOutcome, RubricOutcomes } from '../../../../../shared/rubric-contract.ts'
 import type { AgentsRubricContext } from '../contexts/agents.ts'
 import { forAgents, outcomes } from './common.ts'
 
@@ -72,14 +72,6 @@ const LAYOUT_ITEMS = [
             ],
             'No agent definitions require filename alignment.'
           )
-      },
-      conform: {
-        phase: 'NORMALISE',
-        run: (context: AgentsRubricContext): RubricOutcomes<ConformOutcome> => {
-          if (context.agents.length === 0)
-            return [{ status: 'NOT_APPLICABLE', message: 'No agent definitions require filename alignment.' }]
-          return outcomes(context.agents.flatMap(context.alignName))
-        }
       }
     }
   }

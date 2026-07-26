@@ -1,4 +1,4 @@
-import type { AuditOutcome, RubricOutcomes } from '../../vendored/ki-skills/rubric.ts'
+import type { AuditOutcome, RubricOutcomes } from '../../../../../shared/rubric-contract.ts'
 import { type HousekeepingRubricContext, INDEX_FILE } from '../contexts/housekeeping.ts'
 
 const one = <Result>(outcome: Result): RubricOutcomes<Result> => [outcome]
@@ -24,15 +24,6 @@ const INDEX_ITEMS = [
                   message: c.index === null ? `${INDEX_FILE} not found in ${c.memoryDir}` : `${INDEX_FILE} exists`,
                   subject: INDEX_FILE
                 }
-          )
-      },
-      conform: {
-        phase: 'PREPARE' as const,
-        run: (c: HousekeepingRubricContext) =>
-          one(
-            c.index === null
-              ? { status: 'NOT_APPLICABLE', message: 'MEMORY.md is missing; author the index manually.', subject: INDEX_FILE }
-              : { status: 'PASS', message: 'MEMORY.md already exists.', subject: INDEX_FILE }
           )
       }
     }
@@ -84,8 +75,7 @@ const INDEX_ITEMS = [
               })) as unknown as RubricOutcomes<AuditOutcome>)
             : one({ status: 'PASS', message: 'Every memory file is indexed.', subject: INDEX_FILE })
         }
-      },
-      conform: { phase: 'PRIMARY' as const, run: (c: HousekeepingRubricContext) => c.appendUnindexed() }
+      }
     }
   },
   {

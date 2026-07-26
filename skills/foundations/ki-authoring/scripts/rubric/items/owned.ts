@@ -1,4 +1,4 @@
-import type { AuditOutcome, ConformOutcome, RubricItem, RubricOutcomes } from '../../vendored/ki-skills/rubric.ts'
+import type { AuditOutcome, RubricItem, RubricOutcomes } from '../../../../../shared/rubric-contract.ts'
 import type { AuthoringRubricContext, OwnedFile } from '../contexts/authoring.ts'
 
 const ownedAudit = (context: AuthoringRubricContext, name: OwnedFile): RubricOutcomes<AuditOutcome> => {
@@ -12,19 +12,6 @@ const ownedAudit = (context: AuthoringRubricContext, name: OwnedFile): RubricOut
         state === 'missing'
           ? `${name} is missing — run ki:authoring:conform to scaffold it from the house template`
           : `${name} has drifted from the house template — run ki:authoring:conform to correct it`,
-      subject: name
-    }
-  ]
-}
-
-const ownedConform = (context: AuthoringRubricContext, name: OwnedFile): RubricOutcomes<ConformOutcome> => {
-  if (!context.exists) return [{ status: 'NOT_APPLICABLE', message: 'target does not exist', subject: name }]
-  const result = context.syncOwned(name)
-  if (result === 'canonical') return [{ status: 'PASS', message: `${name} already canonical`, subject: name }]
-  return [
-    {
-      status: 'FIXED',
-      message: `${name} ${result === 'scaffolded' ? 'scaffolded from the house template (was missing)' : context.dryRun ? 'would be overwritten' : 'overwritten'}${context.dryRun ? ' (dry run)' : ''}`,
       subject: name
     }
   ]
@@ -44,14 +31,6 @@ export const OWN_1: RubricItem<AuthoringRubricContext> = {
         const files: OwnedFile[] = ['.prettierrc.json', '.editorconfig', '.markdownlint-cli2.jsonc']
         const outcomes = files.flatMap((name) => ownedAudit(context, name))
         return [outcomes[0] as AuditOutcome, ...outcomes.slice(1)]
-      }
-    },
-    conform: {
-      phase: 'PRIMARY',
-      run: (context) => {
-        const files: OwnedFile[] = ['.prettierrc.json', '.editorconfig', '.markdownlint-cli2.jsonc']
-        const outcomes = files.flatMap((name) => ownedConform(context, name))
-        return [outcomes[0] as ConformOutcome, ...outcomes.slice(1)]
       }
     }
   }

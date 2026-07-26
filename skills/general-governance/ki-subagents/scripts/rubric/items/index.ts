@@ -1,103 +1,99 @@
-import { defineRubricFamily, type RubricDefinition } from '../../vendored/ki-skills/rubric.ts'
-import type { AgentsRubricContext } from '../contexts/agents.ts'
-import { COLLISION } from './collision.ts'
-import { DESCRIPTION } from './description.ts'
-import { FRONTMATTER } from './frontmatter.ts'
-import { LANE } from './lane.ts'
-import { LAYOUT } from './layout.ts'
-import { LINK } from './link.ts'
-import { LONGEVITY } from './longevity.ts'
-import { NAME } from './name.ts'
-import { PROCESS } from './process.ts'
-import { PROMPT } from './prompt.ts'
+import { join, relative } from 'node:path'
+import type { RubricItem } from '../../../../../shared/rubric-contract.ts'
+import { type AgentDefinition, type AgentsRubricContext, createAgentsContext } from '../contexts/agents.ts'
+import { KI_AGENTS_RUBRIC } from './catalogue.ts'
 
-const context = (value: AgentsRubricContext): AgentsRubricContext => value
-
-export const KI_AGENTS_RUBRIC: RubricDefinition<AgentsRubricContext> = {
-  name: 'ki-subagents',
-  concern: 'Claude Code subagent definitions',
-  families: [
-    defineRubricFamily({
-      code: 'LAY',
-      title: 'File and frontmatter layout',
-      description: 'Agent definition layout and filename identity.',
-      standard: 'standards.md#2-layout',
-      selectContext: context,
-      items: LAYOUT
-    }),
-    defineRubricFamily({
-      code: 'NAME',
-      title: 'Frontmatter name',
-      description: 'Agent name syntax, uniqueness, and role quality.',
-      standard: 'standards.md#3-frontmatter-name',
-      selectContext: context,
-      items: NAME
-    }),
-    defineRubricFamily({
-      code: 'DESC',
-      title: 'Frontmatter description',
-      description: 'The agent delegation signal.',
-      standard: 'standards.md#4-frontmatter-description',
-      selectContext: context,
-      items: DESCRIPTION
-    }),
-    defineRubricFamily({
-      code: 'FM',
-      title: 'Frontmatter tools and model',
-      description: 'Optional frontmatter and runtime choices.',
-      standard: 'standards.md#5-frontmatter-optional-fields',
-      selectContext: context,
-      items: FRONTMATTER
-    }),
-    defineRubricFamily({
-      code: 'PROMPT',
-      title: 'System-prompt quality',
-      description: 'System-prompt presence, structure, and focus.',
-      standard: 'standards.md#6-system-prompt-size--focus',
-      selectContext: context,
-      items: PROMPT
-    }),
-    defineRubricFamily({
-      code: 'LANE',
-      title: 'Lane and delegation',
-      description: 'Agent ownership, boundaries, and orchestration.',
-      standard: 'standards.md#9-lane--delegation',
-      selectContext: context,
-      items: LANE
-    }),
-    defineRubricFamily({
-      code: 'LINK',
-      title: 'Linking',
-      description: 'Resolvable files and name-based composition.',
-      standard: 'standards.md#10-linking',
-      selectContext: context,
-      items: LINK
-    }),
-    defineRubricFamily({
-      code: 'PROC',
-      title: 'Process and evaluation',
-      description: 'Representative and cross-model evaluation.',
-      standard: 'standards.md#11-process--evaluation',
-      selectContext: context,
-      items: PROCESS
-    }),
-    defineRubricFamily({
-      code: 'LONG',
-      title: 'Longevity',
-      description: 'Runtime grounding and refresh discipline.',
-      standard: 'standards.md#12-longevity',
-      selectContext: context,
-      items: LONGEVITY
-    }),
-    defineRubricFamily({
-      code: 'COLL',
-      title: 'Cross-agent collision',
-      description: 'Trigger collisions and reciprocal off-ramps.',
-      standard: 'standards.md#13-cross-agent-collision',
-      selectContext: context,
-      items: COLLISION
-    })
-  ]
+type NativeAgentsContext = Omit<AgentsRubricContext, 'dryRun' | 'alignName'> & {
+  readonly repository: string
 }
 
-export const KI_AGENTS_FAMILY_CODES = KI_AGENTS_RUBRIC.families.map((family) => family.code)
+type LegacyFamily = {
+  readonly code: string
+  readonly title: string
+  readonly items: readonly RubricItem<AgentsRubricContext>[]
+}
+
+const catalogueDefinition = KI_AGENTS_RUBRIC
+const catalogue = catalogueDefinition.families as unknown as readonly LegacyFamily[]
+
+const mechanical = (item: RubricItem<AgentsRubricContext>) => {
+  const definition = item.mechanical
+  if (!definition) throw new Error(`${item.code} must be mechanical`)
+  return {
+    kind: 'mechanical' as const,
+    code: item.code,
+    title: item.title,
+    level: definition.level,
+    phase: definition.audit.phase,
+    audit: (context: NativeAgentsContext) => definition.audit.run(context as unknown as AgentsRubricContext)
+  }
+}
+
+const judgment = (item: RubricItem<AgentsRubricContext>) => {
+  const definition = item.judgment
+  if (!definition) throw new Error(`${item.code} must be a judgment item`)
+  return { kind: 'judgment' as const, code: item.code, title: item.title, prompt: definition.prompt }
+}
+
+const nameAlignment = (agent: AgentDefinition): string | undefined => {
+  if (!agent.name || agent.name === agent.stem) return undefined
+  const lines = agent.content.split(/\r?\n/)
+  const nameLine = lines.findIndex((line) => /^name:/.test(line))
+  if (nameLine === -1) return undefined
+  lines[nameLine] = `name: ${agent.stem}`
+  return lines.join('\n')
+}
+
+const nativeLay3 = (item: RubricItem<AgentsRubricContext>) => ({
+  ...mechanical(item),
+  repair: (context: NativeAgentsContext) => ({
+    writes: context.agents.flatMap((agent) => {
+      const content = nameAlignment(agent)
+      return content === undefined ? [] : [{ path: relative(context.repository, agent.file), content }]
+    })
+  })
+})
+
+const nativeItem = (item: RubricItem<AgentsRubricContext>) => {
+  if (item.code === 'LAY-3') return nativeLay3(item)
+  return item.mechanical ? mechanical(item) : judgment(item)
+}
+
+type NativeRuntimeItem = {
+  readonly kind: 'mechanical' | 'judgment'
+  readonly phase?: 'PREPARE' | 'INSPECT' | 'PRIMARY' | 'DERIVED' | 'NORMALISE'
+  readonly audit?: (...arguments_: never[]) => unknown
+  readonly repair?: (...arguments_: never[]) => unknown
+}
+
+const directItem = <Context>(item: RubricItem<Context>, runtime: NativeRuntimeItem) => {
+  if (!item.mechanical) return item
+  if (runtime.kind !== 'mechanical' || !runtime.phase || !runtime.audit) throw new Error(`${item.code} has no native mechanical runtime`)
+  const { repair: legacyRepair, ...mechanical } = item.mechanical
+  void legacyRepair
+  return {
+    ...item,
+    mechanical: {
+      ...mechanical,
+      audit: { phase: runtime.phase, run: runtime.audit },
+      ...(runtime.repair ? { repair: { phase: 'NORMALISE', run: runtime.repair } } : {})
+    }
+  }
+}
+
+export default {
+  contract: 1,
+  name: 'ki-subagents',
+  concern: catalogueDefinition.concern,
+  createContext: ({ repository }: { readonly repository: string }): NativeAgentsContext => {
+    const { dryRun: _dryRun, alignName: _alignName, ...evidence } = createAgentsContext([join(repository, 'subagents')], true)
+    return { repository, ...evidence }
+  },
+  families: catalogue.map((family) => ({
+    ...family,
+    selectContext: (context: unknown) => context,
+    items: family.items.map((item) => directItem(item, nativeItem(item)))
+  }))
+} as const
+
+export * from './catalogue.ts'

@@ -1,4 +1,4 @@
-import type { AuditOutcome, ConformOutcome } from '../../vendored/ki-skills/rubric.ts'
+import type { AuditOutcome } from '../../../../../shared/rubric-contract.ts'
 import type { HarnessRubricContext } from '../contexts/harness.ts'
 import { HARNESS_PARTS } from '../contexts/harness.ts'
 import { outcomes, result } from './common.ts'
@@ -23,10 +23,6 @@ const LAYOUT_ITEMS = [
             }))
           )
         }
-      },
-      conform: {
-        phase: 'PREPARE',
-        run: (context: HarnessRubricContext) => outcomes<ConformOutcome>(HARNESS_PARTS.flatMap(context.ensurePart))
       }
     }
   },
@@ -47,10 +43,6 @@ const LAYOUT_ITEMS = [
               subject: `${part}/README.md`
             }))
           )
-      },
-      conform: {
-        phase: 'DERIVED',
-        run: (context: HarnessRubricContext) => outcomes<ConformOutcome>(HARNESS_PARTS.flatMap(context.ensureShelfReadme))
       }
     }
   },

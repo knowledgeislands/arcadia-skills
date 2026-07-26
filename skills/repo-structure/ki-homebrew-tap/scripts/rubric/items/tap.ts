@@ -1,4 +1,4 @@
-import type { AuditOutcome, RubricItem, RubricOutcomes } from '../../vendored/ki-skills/rubric.ts'
+import type { AuditOutcome, RubricItem, RubricOutcomes } from '../../../../../shared/rubric-contract.ts'
 import type { HomebrewTapContext } from '../contexts/homebrew-tap.ts'
 
 const SOURCE = ['standards.md'] as const
@@ -20,19 +20,6 @@ export const TAP_1: RubricItem<HomebrewTapContext> = {
         if (context.formulae.length === 0)
           return [{ status: 'VIOLATION', message: 'Formula/ contains no Ruby formulae.', subject: 'Formula/' }]
         return [{ status: 'PASS', message: `${context.formulae.length} formulae found.`, subject: 'Formula/' }]
-      }
-    },
-    conform: {
-      phase: 'PRIMARY',
-      run: (context) => {
-        if (!context.targetExists) return [{ status: 'VIOLATION', level: 'FAIL', message: 'Conform target must be an existing directory.' }]
-        if (!context.formulaDirectory)
-          return [
-            { status: 'VIOLATION', level: 'FAIL', message: 'Formula/ is absent; no safe conform action is available.', subject: 'Formula/' }
-          ]
-        if (context.formulae.length === 0)
-          return [{ status: 'VIOLATION', level: 'FAIL', message: 'Formula/ contains no Ruby formulae.', subject: 'Formula/' }]
-        return [{ status: 'PASS', message: 'Formula/ contains Ruby formulae.', subject: 'Formula/' }]
       }
     }
   }
@@ -62,8 +49,7 @@ export const TAP_2: RubricItem<HomebrewTapContext> = {
           )
         )
       }
-    },
-    conform: { phase: 'PRIMARY', run: () => [{ status: 'INFO', message: 'Formula class declarations require author review.' }] }
+    }
   }
 }
 
@@ -99,8 +85,7 @@ export const TAP_3: RubricItem<HomebrewTapContext> = {
         )
         return outcomes.length > 0 ? many(outcomes) : [{ status: 'PASS', message: 'Every formula has the required fields.' }]
       }
-    },
-    conform: { phase: 'PRIMARY', run: () => [{ status: 'INFO', message: 'Formula fields require author review.' }] }
+    }
   }
 }
 
@@ -138,8 +123,7 @@ export const TAP_4: RubricItem<HomebrewTapContext> = {
         })
         return outcomes.length > 0 ? many(outcomes) : [{ status: 'PASS', message: 'Formula descriptions follow Homebrew style.' }]
       }
-    },
-    conform: { phase: 'PRIMARY', run: () => [{ status: 'INFO', message: 'Formula descriptions require author review.' }] }
+    }
   }
 }
 
@@ -163,8 +147,7 @@ export const TAP_5: RubricItem<HomebrewTapContext> = {
         })
         return outcomes.length > 0 ? many(outcomes) : [{ status: 'PASS', message: 'Formula source URLs are versioned.' }]
       }
-    },
-    conform: { phase: 'PRIMARY', run: () => [{ status: 'INFO', message: 'Source URLs and checksums require author review.' }] }
+    }
   }
 }
 
@@ -193,8 +176,7 @@ export const TAP_6: RubricItem<HomebrewTapContext> = {
           }))
         return outcomes.length > 0 ? many(outcomes) : [{ status: 'PASS', message: 'README.md lists every formula.' }]
       }
-    },
-    conform: { phase: 'PRIMARY', run: () => [{ status: 'INFO', message: 'Formula documentation rows require author review.' }] }
+    }
   }
 }
 
@@ -205,8 +187,7 @@ export const TAP_7: RubricItem<HomebrewTapContext> = {
   sources: SOURCE,
   mechanical: {
     level: 'WARN',
-    audit: { phase: 'DERIVED', run: (context) => context.brewOutcomes() },
-    conform: { phase: 'DERIVED', run: () => [{ status: 'INFO', message: 'Run Homebrew style and audit after any formula changes.' }] }
+    audit: { phase: 'DERIVED', run: (context) => context.brewOutcomes() }
   }
 }
 

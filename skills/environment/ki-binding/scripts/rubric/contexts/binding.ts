@@ -3,7 +3,7 @@ import { existsSync, readdirSync, readFileSync, realpathSync, writeFileSync } fr
 import { homedir } from 'node:os'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import type { ConformOutcome, RubricOutcomes } from '../../vendored/ki-skills/rubric.ts'
+import type { ConformOutcome, RubricOutcomes } from '../../../../../shared/rubric-contract.ts'
 
 declare const Bun: { YAML: { parse(input: string): unknown }; TOML: { parse(input: string): unknown } }
 

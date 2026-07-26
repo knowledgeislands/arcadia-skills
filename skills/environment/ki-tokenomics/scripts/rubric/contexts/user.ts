@@ -1,6 +1,6 @@
 import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs'
 import { dirname, isAbsolute, join, relative, resolve } from 'node:path'
-import type { AuditOutcome } from '../../vendored/ki-skills/rubric.ts'
+import type { AuditOutcome } from '../../../../../shared/rubric-contract.ts'
 
 type BudgetKey = 'claude_md' | 'skills_surface' | 'mcp_servers' | 'total'
 

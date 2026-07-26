@@ -1,5 +1,5 @@
-import type { AuditOutcome, ConformOutcome, RubricItem, RubricOutcomes } from '../../vendored/ki-skills/rubric.ts'
-import type { BootstrapPublication, BootstrapRubricContext } from '../contexts/bootstrap.ts'
+import type { AuditOutcome, RubricItem, RubricOutcomes } from '../../../../../shared/rubric-contract.ts'
+import type { BootstrapRubricContext } from '../contexts/bootstrap.ts'
 
 type BootstrapCode = `BOOT-${number}`
 
@@ -24,34 +24,6 @@ const projectAudit = (context: BootstrapRubricContext, code: BootstrapCode): Rub
   return first ? [first, ...rest] : [{ status: 'PASS', message: `${code} project-local payload contract is satisfied` }]
 }
 
-const projectConform = (
-  context: BootstrapRubricContext,
-  code: 'BOOT-1' | 'BOOT-3' | 'BOOT-6' | 'BOOT-8'
-): RubricOutcomes<ConformOutcome> => {
-  const publication: BootstrapPublication = context.publishProjectSkills()
-  const before = publication.before.filter((check) => check.code === code && check.level !== 'PASS')
-  const after = publication.after.filter((check) => check.code === code && check.level !== 'PASS')
-  if (publication.status !== 0) {
-    const message = publication.error ?? 'project skill publisher exited non-zero'
-    return [{ status: 'VIOLATION', ...(code === 'BOOT-1' ? { level: 'FAIL' as const } : {}), message }]
-  }
-  if (publication.dryRun && before.length > 0)
-    return [{ status: 'FIXED', message: `would reconcile ${before.length} ${code} finding${before.length === 1 ? '' : 's'} (dry run)` }]
-  if (after.length > 0) {
-    const outcomes = after.map((check) => ({
-      status: 'VIOLATION' as const,
-      level: check.level === 'FAIL' ? ('FAIL' as const) : ('WARN' as const),
-      message: check.message,
-      subject: check.subject
-    }))
-    const [first, ...rest] = outcomes
-    if (first) return [first, ...rest]
-  }
-  if (before.length > 0)
-    return [{ status: 'FIXED', message: `reconciled ${before.length} ${code} finding${before.length === 1 ? '' : 's'}` }]
-  return [{ status: 'PASS', message: `${code} project-local payload contract was already satisfied` }]
-}
-
 export const BOOT_1: RubricItem<BootstrapRubricContext> = {
   code: 'BOOT-1',
   title: 'runtime skill directories mirror declared coverage',
@@ -61,8 +33,7 @@ export const BOOT_1: RubricItem<BootstrapRubricContext> = {
   mechanical: {
     level: 'WARN',
     overrideLevels: ['FAIL'],
-    audit: { phase: 'INSPECT', run: (context) => projectAudit(context, 'BOOT-1') },
-    conform: { phase: 'PRIMARY', run: (context) => projectConform(context, 'BOOT-1') }
+    audit: { phase: 'INSPECT', run: (context) => projectAudit(context, 'BOOT-1') }
   }
 }
 
@@ -74,8 +45,7 @@ export const BOOT_3: RubricItem<BootstrapRubricContext> = {
   sources: ['[KR]', '[KH]'],
   mechanical: {
     level: 'WARN',
-    audit: { phase: 'INSPECT', run: (context) => projectAudit(context, 'BOOT-3') },
-    conform: { phase: 'PRIMARY', run: (context) => projectConform(context, 'BOOT-3') }
+    audit: { phase: 'INSPECT', run: (context) => projectAudit(context, 'BOOT-3') }
   }
 }
 
@@ -98,8 +68,7 @@ export const BOOT_6: RubricItem<BootstrapRubricContext> = {
   sources: ['[KH]'],
   mechanical: {
     level: 'WARN',
-    audit: { phase: 'INSPECT', run: (context) => projectAudit(context, 'BOOT-6') },
-    conform: { phase: 'PRIMARY', run: (context) => projectConform(context, 'BOOT-6') }
+    audit: { phase: 'INSPECT', run: (context) => projectAudit(context, 'BOOT-6') }
   }
 }
 
@@ -111,8 +80,7 @@ export const BOOT_8: RubricItem<BootstrapRubricContext> = {
   sources: ['[KH]'],
   mechanical: {
     level: 'WARN',
-    audit: { phase: 'INSPECT', run: (context) => projectAudit(context, 'BOOT-8') },
-    conform: { phase: 'PRIMARY', run: (context) => projectConform(context, 'BOOT-8') }
+    audit: { phase: 'INSPECT', run: (context) => projectAudit(context, 'BOOT-8') }
   }
 }
 

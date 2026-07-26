@@ -1,4 +1,4 @@
-import type { AuditOutcome, RubricItem } from '../../vendored/ki-skills/rubric.ts'
+import type { AuditOutcome, RubricItem } from '../../../../../shared/rubric-contract.ts'
 import type { DecisionRecordsContext } from '../contexts/decision-records.ts'
 import { outcomes } from './shared.ts'
 

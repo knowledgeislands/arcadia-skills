@@ -1,4 +1,4 @@
-import type { RubricItem } from '../../vendored/ki-skills/rubric.ts'
+import type { RubricItem } from '../../../../../shared/rubric-contract.ts'
 import type { RoadmapContext } from '../contexts/roadmap.ts'
 import { mechanical } from './common.ts'
 
@@ -16,8 +16,7 @@ export const THEME_3 = mechanical(
   'THEME-3',
   'non-empty themes',
   'A theme roadmap contains at least one item. CONFORM prunes only an otherwise scaffold-only empty theme, retaining indexes and repository READMEs.',
-  'FAIL',
-  true
+  'FAIL'
 )
 export const THEME_4: RubricItem<RoadmapContext> = {
   code: 'THEME-4',

@@ -1,23 +1,7 @@
-import type { AuditOutcome, ConformOutcome, RubricItem, RubricOutcomes } from '../../vendored/ki-skills/rubric.ts'
+import type { AuditOutcome, RubricItem, RubricOutcomes } from '../../../../../shared/rubric-contract.ts'
 import type { WebsiteContext } from '../contexts/website.ts'
 import { inactive, judgment, mechanical } from './shared.ts'
 
-const conformDist = (c: WebsiteContext): RubricOutcomes<ConformOutcome> => {
-  if (!c.available) return [{ status: 'VIOLATION', message: `target path is not a directory: ${c.target}` }]
-  const result = c.ensureDistIgnore()
-  return [
-    {
-      status: result === 'canonical' ? 'PASS' : result === 'fixed' ? 'FIXED' : 'NOT_APPLICABLE',
-      message:
-        result === 'canonical'
-          ? `${c.siteRoot ? 'site/dist/' : 'dist/'} already correctly gitignored`
-          : result === 'fixed'
-            ? `${c.dryRun ? 'would ensure' : 'ensured'} the correct dist ignore entry`
-            : 'no eleventy.config.* found — cannot derive the correct dist ignore; add it once the site layout exists',
-      subject: '.gitignore'
-    }
-  ]
-}
 const auditDist = (c: WebsiteContext): RubricOutcomes<AuditOutcome> => {
   const stop = inactive(c)
   if (stop) return stop
@@ -57,7 +41,7 @@ export const WEB_33: RubricItem<WebsiteContext> = {
     'FAIL',
     auditDist
   ),
-  mechanical: { level: 'FAIL', audit: { phase: 'INSPECT', run: auditDist }, conform: { phase: 'NORMALISE', run: conformDist } }
+  mechanical: { level: 'FAIL', audit: { phase: 'INSPECT', run: auditDist } }
 }
 export const WEB_34 = judgment(
   'WEB-34',

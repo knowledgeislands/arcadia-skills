@@ -1,74 +1,67 @@
-import { defineRubricFamily, type RubricDefinition } from '../../vendored/ki-skills/rubric.ts'
-import type { TokenomicsRubricContext } from '../contexts/tokenomics.ts'
-import { BUDG } from './budgets.ts'
-import { COMP } from './composition.ts'
-import { CFG } from './config.ts'
-import { MCP } from './mcp.ts'
-import { RUN } from './runtime.ts'
-import { SURF } from './surface.ts'
-import { TOOL } from './tooling.ts'
+import type { RubricItem } from '../../../../../shared/rubric-contract.ts'
+import { createTokenomicsUserContext, type TokenomicsUserContext } from '../contexts/user.ts'
+import { KI_TOKENOMICS_RUBRIC } from './catalogue.ts'
 
-/** Catalogue wiring only; each semantic family owns its rules and ordered collection. */
-export const KI_TOKENOMICS_RUBRIC: RubricDefinition<TokenomicsRubricContext> = {
-  name: 'ki-tokenomics',
-  concern: 'tokenomics',
-  families: [
-    defineRubricFamily({
-      code: 'COMP',
-      title: 'Composition and attribution',
-      description: 'Layer composition and attribution.',
-      standard: 'standards.md',
-      selectContext: (context: TokenomicsRubricContext) => context,
-      items: COMP as never
-    }),
-    defineRubricFamily({
-      code: 'SURF',
-      title: 'Standing-surface inventory',
-      description: 'Standing context inventory.',
-      standard: 'standards.md',
-      selectContext: (context: TokenomicsRubricContext) => context,
-      items: SURF as never
-    }),
-    defineRubricFamily({
-      code: 'MCP',
-      title: 'MCP tool surface',
-      description: 'MCP standing context.',
-      standard: 'standards.md',
-      selectContext: (context: TokenomicsRubricContext) => context,
-      items: MCP as never
-    }),
-    defineRubricFamily({
-      code: 'BUDG',
-      title: 'Budgets',
-      description: 'Budget evidence and review.',
-      standard: 'standards.md',
-      selectContext: (context: TokenomicsRubricContext) => context,
-      items: BUDG as never
-    }),
-    defineRubricFamily({
-      code: 'RUN',
-      title: 'Runtime levers',
-      description: 'Runtime token-cost levers.',
-      standard: 'standards.md',
-      selectContext: (context: TokenomicsRubricContext) => context,
-      items: RUN as never
-    }),
-    defineRubricFamily({
-      code: 'TOOL',
-      title: 'Compression tooling',
-      description: 'Context compression tooling.',
-      standard: 'standards.md',
-      selectContext: (context: TokenomicsRubricContext) => context,
-      items: TOOL as never
-    }),
-    defineRubricFamily({
-      code: 'CFG',
-      title: 'Configuration table',
-      description: 'Tokenomics configuration table.',
-      standard: 'standards.md',
-      selectContext: (context: TokenomicsRubricContext) => context,
-      items: CFG as never
-    })
-  ]
+type LegacyFamily = {
+  readonly code: string
+  readonly title: string
+  readonly items: readonly RubricItem<unknown>[]
 }
-export const KI_TOKENOMICS_FAMILY_CODES = ['COMP', 'SURF', 'MCP', 'BUDG', 'RUN', 'TOOL', 'CFG'] as const
+
+const catalogueDefinition = KI_TOKENOMICS_RUBRIC
+const catalogue = catalogueDefinition.families as unknown as readonly LegacyFamily[]
+
+const nativeItem = (item: RubricItem<unknown>) => {
+  if (!item.mechanical) {
+    if (!item.judgment) throw new Error(`${item.code} must declare a native rubric mode`)
+    return { kind: 'judgment' as const, code: item.code, title: item.title, prompt: item.judgment.prompt }
+  }
+  return {
+    kind: 'mechanical' as const,
+    code: item.code,
+    title: item.title,
+    level: item.mechanical.level,
+    phase: item.mechanical.audit.phase,
+    audit: (context: TokenomicsUserContext) =>
+      context.outcomes.get(item.code) ?? [
+        { status: 'NOT_APPLICABLE' as const, message: 'No user-home evidence applies to this criterion.' }
+      ]
+  }
+}
+
+type NativeRuntimeItem = {
+  readonly kind: 'mechanical' | 'judgment'
+  readonly phase?: 'PREPARE' | 'INSPECT' | 'PRIMARY' | 'DERIVED' | 'NORMALISE'
+  readonly audit?: (...arguments_: never[]) => unknown
+  readonly repair?: (...arguments_: never[]) => unknown
+}
+
+const directItem = <Context>(item: RubricItem<Context>, runtime: NativeRuntimeItem) => {
+  if (!item.mechanical) return item
+  if (runtime.kind !== 'mechanical' || !runtime.phase || !runtime.audit) throw new Error(`${item.code} has no native mechanical runtime`)
+  const { repair: legacyRepair, ...mechanical } = item.mechanical
+  void legacyRepair
+  return {
+    ...item,
+    mechanical: {
+      ...mechanical,
+      audit: { phase: runtime.phase, run: runtime.audit },
+      ...(runtime.repair ? { repair: { phase: 'NORMALISE', run: runtime.repair } } : {})
+    }
+  }
+}
+
+export default {
+  contract: 1,
+  name: 'ki-tokenomics',
+  concern: catalogueDefinition.concern,
+  scope: { kind: 'user-home', paths: ['.claude', '.claude.json'] },
+  createContext: ({ userHome }: { readonly userHome: string }) => createTokenomicsUserContext({ userHome }),
+  families: catalogue.map((family) => ({
+    ...family,
+    selectContext: (context: unknown) => context,
+    items: family.items.map((item) => directItem(item, nativeItem(item)))
+  }))
+} as const
+
+export * from './catalogue.ts'

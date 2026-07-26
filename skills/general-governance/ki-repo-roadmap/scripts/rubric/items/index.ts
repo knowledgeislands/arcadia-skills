@@ -1,103 +1,90 @@
-import { defineRubricFamily, type RubricDefinition } from '../../vendored/ki-skills/rubric.ts'
-import type { RoadmapContext } from '../contexts/roadmap.ts'
-import { EXPAND } from './expand.ts'
-import { HANDOFF } from './handoffs.ts'
-import { ITEM } from './item.ts'
-import { PLAN } from './plans.ts'
-import { PROFILE } from './profile.ts'
-import { PROJ } from './proj.ts'
-import { ROAD } from './roadmaps.ts'
-import { SAFE } from './safety.ts'
-import { SCOPE } from './scope.ts'
-import { THEME } from './themes.ts'
+import type { RubricItem } from '../../../../../shared/rubric-contract.ts'
+import { createRoadmapContextFactory, type RoadmapContext } from '../contexts/roadmap.ts'
+import { type RoadmapReplacement, roadmapReplacements } from '../contexts/roadmap-writes.ts'
+import { KI_REPO_ROADMAP_RUBRIC } from './catalogue.ts'
 
-const context = (value: RoadmapContext): RoadmapContext => value
-
-export const KI_REPO_ROADMAP_RUBRIC: RubricDefinition<RoadmapContext> = {
-  name: 'ki-repo-roadmap',
-  concern: 'repository roadmaps',
-  families: [
-    defineRubricFamily({
-      code: 'SCOPE',
-      title: 'scope',
-      description: 'Profile applicability.',
-      standard: 'standards.md',
-      selectContext: context,
-      items: SCOPE
-    }),
-    defineRubricFamily({
-      code: 'PROFILE',
-      title: 'profile',
-      description: 'Simple and thematic profile structure.',
-      standard: 'standards.md',
-      selectContext: context,
-      items: PROFILE
-    }),
-    defineRubricFamily({
-      code: 'ROAD',
-      title: 'roadmaps',
-      description: 'Horizon structure and placement.',
-      standard: 'standards.md',
-      selectContext: context,
-      items: ROAD
-    }),
-    defineRubricFamily({
-      code: 'THEME',
-      title: 'themes',
-      description: 'Thematic roadmap structure.',
-      standard: 'standards.md',
-      selectContext: context,
-      items: THEME
-    }),
-    defineRubricFamily({
-      code: 'ITEM',
-      title: 'items',
-      description: 'Thematic item identity.',
-      standard: 'standards.md',
-      selectContext: context,
-      items: ITEM
-    }),
-    defineRubricFamily({
-      code: 'PROJ',
-      title: 'portfolio projection',
-      description: 'Generated root portfolio.',
-      standard: 'standards.md',
-      selectContext: context,
-      items: PROJ
-    }),
-    defineRubricFamily({
-      code: 'PLAN',
-      title: 'plans',
-      description: 'Plan identity, linkage, and dependencies.',
-      standard: 'plan-format.md',
-      selectContext: context,
-      items: PLAN
-    }),
-    defineRubricFamily({
-      code: 'SAFE',
-      title: 'safe mechanics',
-      description: 'Safe write constraints.',
-      standard: 'standards.md',
-      selectContext: context,
-      items: SAFE
-    }),
-    defineRubricFamily({
-      code: 'EXPAND',
-      title: 'expansion',
-      description: 'Judgment-led profile migration.',
-      standard: 'standards.md',
-      selectContext: context,
-      items: EXPAND
-    }),
-    defineRubricFamily({
-      code: 'HANDOFF',
-      title: 'handoff review',
-      description: 'Judgment-led review of inbound adoption and outbound follow-up.',
-      standard: 'standards.md',
-      selectContext: context,
-      items: HANDOFF
-    })
-  ]
+type NativeRoadmapContext = Omit<RoadmapContext, 'conform'> & {
+  readonly repository: string
+  readonly replacements: readonly RoadmapReplacement[]
 }
 
-export const KI_REPO_ROADMAP_FAMILY_CODES = KI_REPO_ROADMAP_RUBRIC.families.map((family) => family.code)
+type LegacyFamily = {
+  readonly code: string
+  readonly title: string
+  readonly items: readonly RubricItem<RoadmapContext>[]
+}
+
+const catalogueDefinition = KI_REPO_ROADMAP_RUBRIC
+const catalogue = catalogueDefinition.families as unknown as readonly LegacyFamily[]
+
+const mechanical = (item: RubricItem<RoadmapContext>) => {
+  const definition = item.mechanical
+  if (!definition) throw new Error(`${item.code} must be mechanical`)
+  return {
+    kind: 'mechanical' as const,
+    code: item.code,
+    title: item.title,
+    level: definition.level,
+    phase: definition.audit.phase,
+    audit: (context: NativeRoadmapContext) => definition.audit.run(context as unknown as RoadmapContext)
+  }
+}
+
+const judgment = (item: RubricItem<RoadmapContext>) => {
+  const definition = item.judgment
+  if (!definition) throw new Error(`${item.code} must be a judgment item`)
+  return { kind: 'judgment' as const, code: item.code, title: item.title, prompt: definition.prompt }
+}
+
+const nativeRepair = (item: RubricItem<RoadmapContext>) => ({
+  ...mechanical(item),
+  repair: (context: NativeRoadmapContext) => ({
+    writes: context.replacements
+      .filter((replacement) => replacement.areas.includes(item.code as 'ROAD-4' | 'PLAN-2' | 'PROJ-1'))
+      .map(({ path, content }) => ({ path, content }))
+  })
+})
+
+const nativeItem = (item: RubricItem<RoadmapContext>) => {
+  if (item.code === 'ROAD-4' || item.code === 'PLAN-2' || item.code === 'PROJ-1') return nativeRepair(item)
+  return item.mechanical ? mechanical(item) : judgment(item)
+}
+
+type NativeRuntimeItem = {
+  readonly kind: 'mechanical' | 'judgment'
+  readonly phase?: 'PREPARE' | 'INSPECT' | 'PRIMARY' | 'DERIVED' | 'NORMALISE'
+  readonly audit?: (...arguments_: never[]) => unknown
+  readonly repair?: (...arguments_: never[]) => unknown
+}
+
+const directItem = <Context>(item: RubricItem<Context>, runtime: NativeRuntimeItem) => {
+  if (!item.mechanical) return item
+  if (runtime.kind !== 'mechanical' || !runtime.phase || !runtime.audit) throw new Error(`${item.code} has no native mechanical runtime`)
+  const { repair: legacyRepair, ...mechanical } = item.mechanical
+  void legacyRepair
+  return {
+    ...item,
+    mechanical: {
+      ...mechanical,
+      audit: { phase: runtime.phase, run: runtime.audit },
+      ...(runtime.repair ? { repair: { phase: 'NORMALISE', run: runtime.repair } } : {})
+    }
+  }
+}
+
+export default {
+  contract: 1,
+  name: 'ki-repo-roadmap',
+  concern: catalogueDefinition.concern,
+  createContext: ({ repository }: { readonly repository: string }): NativeRoadmapContext => {
+    const { conform: _conform, ...evidence } = createRoadmapContextFactory({ target: repository, dryRun: true })()
+    return { repository, ...evidence, replacements: roadmapReplacements(repository) }
+  },
+  families: catalogue.map((family) => ({
+    ...family,
+    selectContext: (context: unknown) => context,
+    items: family.items.map((item) => directItem(item, nativeItem(item)))
+  }))
+} as const
+
+export * from './catalogue.ts'

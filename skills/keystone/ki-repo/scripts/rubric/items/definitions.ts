@@ -1,11 +1,4 @@
-import type {
-  AuditOutcome,
-  ConformOutcome,
-  RubricDefinition,
-  RubricItem,
-  RubricOutcomes,
-  ViolationLevel
-} from '../../vendored/ki-skills/rubric.ts'
+import type { AuditOutcome, RubricDefinition, RubricItem, RubricOutcomes, ViolationLevel } from '../../../../../shared/rubric-contract.ts'
 import type { RepoRubricContext } from '../contexts/contexts.ts'
 
 const STANDARD = 'standards.md'
@@ -27,10 +20,6 @@ const mechanicalItem = (
     audit: {
       phase: 'INSPECT',
       run: (context) => context.outcomes(code) as RubricOutcomes<AuditOutcome>
-    },
-    conform: {
-      phase: 'PRIMARY',
-      run: (context) => context.outcomes(code) as RubricOutcomes<ConformOutcome>
     }
   }
 })

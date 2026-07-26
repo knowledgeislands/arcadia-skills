@@ -1,4 +1,4 @@
-import type { RubricItem } from '../../vendored/ki-skills/rubric.ts'
+import type { RubricItem } from '../../../../../shared/rubric-contract.ts'
 import type { PluginsContext } from '../contexts/plugins.ts'
 import { inactive, judgment, mechanical, result } from './shared.ts'
 
@@ -30,22 +30,7 @@ export const PLUG_2 = mechanical(
         'marketplace owner or plugin count is invalid',
         c.marketplaceFile
       )
-    }),
-  (c) => {
-    const state = c.conformMarketplaceOwner()
-    return [
-      {
-        status: state === 'fixed' ? 'FIXED' : state === 'canonical' ? 'PASS' : 'VIOLATION',
-        message:
-          state === 'fixed'
-            ? 'marketplace owner corrected'
-            : state === 'canonical'
-              ? 'marketplace owner is canonical'
-              : 'marketplace manifest is unavailable',
-        subject: c.marketplaceFile
-      }
-    ]
-  }
+    })
 )
 export const PLUG_3 = mechanical(
   'PLUG-3',
@@ -84,17 +69,7 @@ export const PLUG_4 = mechanical(
         `non-canonical JSON formatting: ${invalid.join(', ')}`,
         invalid[0]
       )
-    }),
-  (c) => {
-    const fixed = c.conformJsonFormatting()
-    return [
-      {
-        status: fixed.length ? 'FIXED' : 'PASS',
-        message: fixed.length ? `formatted ${fixed.join(', ')}` : 'plugin manifests use canonical JSON formatting',
-        subject: fixed[0]
-      }
-    ]
-  }
+    })
 )
 export const PLUG_5 = mechanical(
   'PLUG-5',
@@ -136,17 +111,7 @@ export const PLUG_7 = mechanical(
         'plugin version is invalid or description has drifted',
         c.pluginFile
       )
-    ),
-  (c) => {
-    const fixed = c.conformPluginAgreement()
-    return [
-      {
-        status: fixed.length ? 'FIXED' : 'PASS',
-        message: fixed.length ? `repaired plugin ${fixed.join(' and ')}` : 'plugin version and description agree',
-        subject: c.pluginFile || c.marketplaceFile
-      }
-    ]
-  }
+    )
 )
 export const PLUG_8 = mechanical('PLUG-8', 'projected skills', '`<plugin>/skills/*` each carries a `SKILL.md`.', 'FAIL', (c) =>
   active(c, () =>

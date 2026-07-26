@@ -1,4 +1,4 @@
-import type { AuditOutcome, RubricItem, RubricOutcomes } from '../../vendored/ki-skills/rubric.ts'
+import type { AuditOutcome, RubricItem, RubricOutcomes } from '../../../../../shared/rubric-contract.ts'
 import type { StreamsContext } from '../contexts/streams.ts'
 
 type Code = `${string}-${string}`
@@ -37,7 +37,7 @@ export const mechanical = (
   mechanical: {
     level,
     audit: { phase: 'INSPECT', run: (context) => audit(code, context) },
-    ...(conform ? { conform: { phase: 'PRIMARY' as const, run: (context: StreamsContext) => context.conformRule(code) } } : {})
+    ...(conform ? {} : {})
   }
 })
 export const judgment = (code: Code, title: string, description: string, prompt: string): RubricItem<StreamsContext> => ({

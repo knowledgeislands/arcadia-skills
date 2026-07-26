@@ -1,4 +1,4 @@
-import type { RubricItem } from '../../vendored/ki-skills/rubric.ts'
+import type { RubricItem } from '../../../../../shared/rubric-contract.ts'
 import type { SpecificationsContext } from '../contexts/specifications.ts'
 export const SYNC_1: RubricItem<SpecificationsContext> = {
   code: 'SYNC-1',

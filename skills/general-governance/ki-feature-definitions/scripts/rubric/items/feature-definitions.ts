@@ -1,4 +1,4 @@
-import type { AuditOutcome, ConformOutcome, RubricItem, RubricOutcomes } from '../../vendored/ki-skills/rubric.ts'
+import type { AuditOutcome, RubricItem, RubricOutcomes } from '../../../../../shared/rubric-contract.ts'
 import type { FeatureDefinitionsContext } from '../contexts/feature-definitions.ts'
 
 const SOURCE = ['feature-format.md'] as const
@@ -100,26 +100,6 @@ const auditId1 = (context: FeatureDefinitionsContext): RubricOutcomes<AuditOutco
     'Every level-3 heading outside Gaps has canonical requirement-ID form.'
   )
 
-const conformId1 = (context: FeatureDefinitionsContext): RubricOutcomes<ConformOutcome> => {
-  const fixed = context.normaliseHeadings()
-  const outcomes: ConformOutcome[] = [
-    ...fixed.map((issue) => ({
-      status: 'FIXED' as const,
-      message: `${context.dryRun ? 'Would normalise' : 'Normalised'} the requirement-heading separator to “ — ”.`,
-      subject: issue.file
-    })),
-    ...context.headingIssues
-      .filter((issue) => !issue.canonical)
-      .map((issue) => ({
-        status: 'VIOLATION' as const,
-        message: `Level-3 heading requires manual repair: “${issue.heading}”.`,
-        subject: issue.file
-      }))
-  ]
-  const first = outcomes[0]
-  return first ? [first, ...outcomes.slice(1)] : [{ status: 'PASS', message: 'Requirement headings are canonical.' }]
-}
-
 export const ID_1: RubricItem<FeatureDefinitionsContext> = {
   code: 'ID-1',
   title: 'requirement headings use canonical IDs',
@@ -128,8 +108,7 @@ export const ID_1: RubricItem<FeatureDefinitionsContext> = {
   sources: SOURCE,
   mechanical: {
     level: 'FAIL',
-    audit: { phase: 'INSPECT', run: auditId1 },
-    conform: { phase: 'NORMALISE', run: conformId1 }
+    audit: { phase: 'INSPECT', run: auditId1 }
   }
 }
 

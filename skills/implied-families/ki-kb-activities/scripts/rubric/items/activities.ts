@@ -1,4 +1,4 @@
-import type { AuditOutcome, RubricItem, RubricOutcomes } from '../../vendored/ki-skills/rubric.ts'
+import type { AuditOutcome, RubricItem, RubricOutcomes } from '../../../../../shared/rubric-contract.ts'
 import { type ActivitiesContext, type ActivityNote, KNOWN_REALIZATIONS, KNOWN_STATUSES } from '../contexts/activities.ts'
 
 const unavailable = (context: ActivitiesContext): RubricOutcomes<AuditOutcome> | null =>
@@ -55,8 +55,7 @@ export const ACT_S_1: RubricItem<ActivitiesContext> = {
               }
             ]
       }
-    },
-    conform: { phase: 'PRIMARY', run: (context) => context.ensureIndex() }
+    }
   },
   judgment: { prompt: 'Is the index current, well ordered, and informative rather than merely mechanically complete?' }
 }

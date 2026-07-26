@@ -79,7 +79,7 @@ Used by every `mcp-*` repo. The universal invariants (`strict`, `nodenext`, `noE
 
 ### Native governance commands and the conditional Vitest profile
 
-The target governance surface is direct native `ki repo audit .` / `ki repo conform .` commands after CI or the user has acquired the verified active skill collection. Repositories do not expose `ki:audit`, `ki:conform`, or derived scoped package-script aliases to local runners. Registered `ki-engineering` operations run Biome, TypeScript, syncpack, and knip internally, while `ki-authoring` owns the Markdown tool pass. This is planned migration work under ADR-KI-HARNESS-012, not a claim that the current package manifest or native runtime already delivers it. The critical trap is a non-`test` script calling `bun test`: it bypasses the governed package script and invokes Bun's own runner. Use `bun run test` outside the bare `test` entrypoint; that entrypoint may select a runner, whether `vitest run`, `bun test`, or another whole-suite command.
+The governance surface is direct native `ki repo audit` / `ki repo conform` commands after CI or the user has acquired the verified active skill collection. Repositories do not expose `ki:audit`, `ki:conform`, or derived scoped package-script aliases to local runners. The registered `ki-engineering` rubric runs Biome, TypeScript, syncpack, and knip internally, while `ki-authoring` owns the Markdown tool pass. The critical trap is a non-`test` script calling `bun test`: it bypasses the governed package script and invokes Bun's own runner. Use `bun run test` outside the bare `test` entrypoint; that entrypoint may select a runner, whether `vitest run`, `bun test`, or another whole-suite command.
 
 ```jsonc
 {

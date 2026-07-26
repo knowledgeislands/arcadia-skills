@@ -1,6 +1,6 @@
 import { existsSync, readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs'
 import { join, resolve } from 'node:path'
-import type { ConformOutcome, RubricOutcomes } from '../../vendored/ki-skills/rubric.ts'
+import type { ConformOutcome, RubricOutcomes } from '../../../../../shared/rubric-contract.ts'
 
 const ACTIVITIES_DIRECTORY = 'Admin/Operations/Activities'
 const ACTIVITIES_INDEX = 'Activities.md'

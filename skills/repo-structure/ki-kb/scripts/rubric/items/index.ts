@@ -1,74 +1,121 @@
-import { defineRubricFamily, type RubricDefinition } from '../../vendored/ki-skills/rubric.ts'
-import type { KbRubricContext } from '../contexts/kb.ts'
-import { ADMIN } from './admin.ts'
-import { CONFIG } from './config.ts'
-import { LINK } from './links.ts'
-import { MEM } from './memory.ts'
-import { NOTE } from './notes.ts'
-import { ROUTE } from './routing.ts'
-import { ZONE } from './zones.ts'
+import { isAbsolute, relative, resolve } from 'node:path'
+import type { RubricItem } from '../../../../../shared/rubric-contract.ts'
+import { createKbContext, type KbEvidenceFinding, type KbRubricContext } from '../contexts/kb.ts'
+import { KI_KB_RUBRIC } from './catalogue.ts'
 
-const context = (value: KbRubricContext): KbRubricContext => value
-export const KI_KB_RUBRIC: RubricDefinition<KbRubricContext> = {
-  name: 'ki-kb',
-  concern: 'Knowledge Islands knowledge bases',
-  families: [
-    defineRubricFamily({
-      code: 'ZONE',
-      title: 'zone layout',
-      description: 'Required zones, indexes, staging, and output placement.',
-      standard: 'standards.md',
-      selectContext: context,
-      items: ZONE
-    }),
-    defineRubricFamily({
-      code: 'CONFIG',
-      title: 'KB configuration',
-      description: 'The keyless marker and validate-down [ki-kb] configuration surface.',
-      standard: 'standards.md',
-      selectContext: context,
-      items: CONFIG
-    }),
-    defineRubricFamily({
-      code: 'ADMIN',
-      title: 'Admin zone',
-      description: 'Optional Admin subdivisions and governance baseline.',
-      standard: 'standards.md',
-      selectContext: context,
-      items: ADMIN
-    }),
-    defineRubricFamily({
-      code: 'ROUTE',
-      title: 'routing and placement',
-      description: 'Judgment review of the knowledge-base routing test.',
-      standard: 'standards.md',
-      selectContext: context,
-      items: ROUTE
-    }),
-    defineRubricFamily({
-      code: 'NOTE',
-      title: 'note conventions',
-      description: 'Frontmatter mechanics and note-authoring judgment.',
-      standard: 'standards.md',
-      selectContext: context,
-      items: NOTE
-    }),
-    defineRubricFamily({
-      code: 'MEM',
-      title: 'memory cascade',
-      description: 'Memory-index accuracy and its always-loaded anchor.',
-      standard: 'standards.md',
-      selectContext: context,
-      items: MEM
-    }),
-    defineRubricFamily({
-      code: 'LINK',
-      title: 'base linking',
-      description: 'Judgment review of Obsidian wikilink content.',
-      standard: 'standards.md',
-      selectContext: context,
-      items: LINK
-    })
-  ]
+type NativeKbContext = {
+  readonly repository: string
+  readonly root: string
+  readonly auditFindings: readonly KbEvidenceFinding[]
 }
-export const KI_KB_FAMILY_CODES = KI_KB_RUBRIC.families.map((family) => family.code)
+
+type LegacyFamily = {
+  readonly code: string
+  readonly title: string
+  readonly items: readonly RubricItem<KbRubricContext>[]
+}
+
+const catalogueDefinition = KI_KB_RUBRIC
+const catalogue = catalogueDefinition.families as unknown as readonly LegacyFamily[]
+
+const mechanical = (item: RubricItem<KbRubricContext>) => {
+  const definition = item.mechanical
+  if (!definition) throw new Error(`${item.code} must be mechanical`)
+  return {
+    kind: 'mechanical' as const,
+    code: item.code,
+    title: item.title,
+    level: definition.level,
+    phase: definition.audit.phase,
+    audit: (context: NativeKbContext) => definition.audit.run(context as unknown as KbRubricContext)
+  }
+}
+
+const judgment = (item: RubricItem<KbRubricContext>) => {
+  const definition = item.judgment
+  if (!definition) throw new Error(`${item.code} must be a judgment item`)
+  return { kind: 'judgment' as const, code: item.code, title: item.title, prompt: definition.prompt }
+}
+
+const violationSubjects = (context: NativeKbContext, code: string): readonly string[] =>
+  context.auditFindings.flatMap((finding) =>
+    finding.code === code && (finding.level === 'FAIL' || finding.level === 'WARN') && finding.subject ? [finding.subject] : []
+  )
+
+const containedPath = (context: NativeKbContext, subject: string): string | undefined => {
+  const path = relative(context.repository, resolve(context.root, subject))
+  return path && !isAbsolute(path) && path !== '..' && !path.startsWith('../') ? path : undefined
+}
+
+/** Recover `folder` from legacy evidence shaped as `folder/folder.md`, including nested aliases. */
+const zoneFolder = (subject: string): string | undefined => {
+  if (!subject.endsWith('.md')) return undefined
+  const repeated = subject.slice(0, -'.md'.length)
+  for (let index = repeated.indexOf('/'); index >= 0; index = repeated.indexOf('/', index + 1)) {
+    const folder = repeated.slice(0, index)
+    if (folder && repeated.slice(index + 1) === folder) return folder
+  }
+  return undefined
+}
+
+const zoneIndexRepair = (context: NativeKbContext) => ({
+  writes: violationSubjects(context, 'ZONE-2').flatMap((subject) => {
+    const path = containedPath(context, subject)
+    const folder = zoneFolder(subject)
+    return path && folder ? [{ path, content: `# ${folder}\n`, create: true }] : []
+  })
+})
+
+const memoryIndexRepair = (context: NativeKbContext) => ({
+  writes: violationSubjects(context, 'ZONE-3').flatMap((subject) => {
+    const path = containedPath(context, subject)
+    return path ? [{ path, content: '# MEMORY\n\n## Active Pillars\n\n<!-- list active Pillars here -->\n', create: true }] : []
+  })
+})
+
+const nativeItem = (item: RubricItem<KbRubricContext>) => {
+  if (!item.mechanical) return judgment(item)
+  const native = mechanical(item)
+  if (item.code === 'ZONE-2') return { ...native, repair: zoneIndexRepair }
+  if (item.code === 'ZONE-3') return { ...native, repair: memoryIndexRepair }
+  return native
+}
+
+type NativeRuntimeItem = {
+  readonly kind: 'mechanical' | 'judgment'
+  readonly phase?: 'PREPARE' | 'INSPECT' | 'PRIMARY' | 'DERIVED' | 'NORMALISE'
+  readonly audit?: (...arguments_: never[]) => unknown
+  readonly repair?: (...arguments_: never[]) => unknown
+}
+
+const directItem = <Context>(item: RubricItem<Context>, runtime: NativeRuntimeItem) => {
+  if (!item.mechanical) return item
+  if (runtime.kind !== 'mechanical' || !runtime.phase || !runtime.audit) throw new Error(`${item.code} has no native mechanical runtime`)
+  const { repair: legacyRepair, ...mechanical } = item.mechanical
+  void legacyRepair
+  return {
+    ...item,
+    mechanical: {
+      ...mechanical,
+      audit: { phase: runtime.phase, run: runtime.audit },
+      ...(runtime.repair ? { repair: { phase: 'NORMALISE', run: runtime.repair } } : {})
+    }
+  }
+}
+
+export default {
+  contract: 1,
+  name: 'ki-kb',
+  concern: catalogueDefinition.concern,
+  createContext: ({ repository }: { readonly repository: string }): NativeKbContext => {
+    const source = createKbContext(repository, true)
+    return { repository, root: source.root, auditFindings: source.auditFindings }
+  },
+  families: catalogue.map((family) => ({
+    ...family,
+    selectContext: (context: unknown) => context,
+    items: family.items.map((item) => directItem(item, nativeItem(item)))
+  }))
+} as const
+
+export * from './catalogue.ts'

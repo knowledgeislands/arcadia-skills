@@ -1,4 +1,4 @@
-import type { RubricItem } from '../../vendored/ki-skills/rubric.ts'
+import type { RubricItem } from '../../../../../shared/rubric-contract.ts'
 import type { RoadmapContext } from '../contexts/roadmap.ts'
 import { mechanical } from './common.ts'
 
@@ -11,8 +11,7 @@ export const PLAN_2 = mechanical(
   'PLAN-2',
   'plan roadmap linkage',
   '`roadmap:` is a qualified locator in the same theme and resolves to a Blocking or Next item; that item carries exactly one matching local plan reference.',
-  'FAIL',
-  true
+  'FAIL'
 )
 export const PLAN_3 = mechanical(
   'PLAN-3',

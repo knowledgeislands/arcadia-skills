@@ -3,12 +3,12 @@
  * Mechanical auditor for the COMMON engineering layer of a Knowledge Islands
  * TypeScript/Bun repo.
  *
- *   bun scripts/govern.ts audit <repo-path>  # or: node after a build
+ *   ki repo audit [--repo <repo-path>]
  *
  * Checks the shared toolchain the `ki-engineering` skill codifies —
  * package.json metadata, the mise.toml toolchain pin (node + bun, bun matched to
- * packageManager, CI via mise-action) + the aggregate ki:audit/ki:conform entrypoints, the
- * `bun test` trap, tsconfig.json + tool exclusions, and the capability conditionals
+ * packageManager, CI via mise-action + `ki repo audit`), the `bun test` trap,
+ * tsconfig.json + tool exclusions, and the capability conditionals
  * (tests, compiled build + the cli-chmod rule, env) that fire only when the repo opts in.
  * It is deliberately PERMISSIVE about additive repo-specific scripts, and it does
  * NOT judge anything artifact-specific (an MCP's coverage-excludes, bin, tool
@@ -17,22 +17,19 @@
  *
  * Each finding carries a minted rubric code (PKG-*, MISE-*, SCR-*, …), a
  * reference-doc pointer (`ref`), and — when file-scoped — the path it concerns
- * (`file`); all three ride into the canonical JSONL reporter so the aggregate
- * can render a cited finding.
+ * (`file`); the native host renders the resulting evidence.
  * The one-to-one code↔criterion map is references/rubric.md.
  *
- * Output is the canonical JSONL checker stream; exit code is non-zero iff any
- * mechanical FAIL is present. The local reporter is vendored from ki-skills,
- * so this checker remains standalone after bootstrap.
+ * The native rubric host owns execution, reporting, and exit status.
  */
 import { execSync } from 'node:child_process'
-import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs'
+import { existsSync, readFileSync, statSync } from 'node:fs'
 import { join } from 'node:path'
 
 // Unified severity ladder — shared by every KI checker (checker-contract).
 // area is the minted rubric code (references/rubric.md); ref is its
 // reference-doc pointer; file names the path a file-scoped finding concerns.
-// ref/file are optional and ride into the canonical reporter for the aggregate to render.
+// ref/file are optional and give the native host enough context to render a useful finding.
 export type EngineeringEvidenceFinding = {
   level: 'FAIL' | 'WARN' | 'INFO' | 'NOT_APPLICABLE' | 'PASS'
   code: string
@@ -230,17 +227,18 @@ export const collectAuditEvidence = (repo: string, onlyCode?: string): readonly 
     : add('PASS', 'MISE-3', 'no legacy pin files (.node-version / .nvmrc / .bun-version)', STD)
 
   // ── core (when the repo has CI): the common CI shape ──────────────────────────
-  // CI installs the toolchain from mise.toml and runs the aggregate read-only gate —
-  // `bun run ki:audit` — which fans out over every vendored per-skill audit in
-  // .ki/bootstrap (engineering's audit runs the code toolchain below; authoring's runs the
-  // Markdown gate). `bun run test` follows for the repo's self-tests. ki:verify is
-  // retired: ki:audit IS the gate now (ADR-KI-HARNESS-TOOLCHAIN-001).
+  // CI installs the toolchain from mise.toml and invokes the installed native CLI
+  // directly. `bun run test` follows for the repo's self-tests.
   if (has('.github', 'workflows', 'ci.yml')) {
     const ci = read('.github', 'workflows', 'ci.yml')
-    const commandIndex = (script: string): number => {
-      const escaped = script.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+    const commandIndex = (commandValue: string): number => {
+      const escaped = commandValue
+        .trim()
+        .split(/\s+/)
+        .map((part) => part.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'))
+        .join('[ \\t]+')
       const command = new RegExp(
-        `(?:^[ \\t]*(?:-[ \\t]*)?(?:run:[ \\t]*)?|&&[ \\t]*|\\|\\|[ \\t]*|;[ \\t]*)(["']?)bun[ \\t]+run[ \\t]+${escaped}[ \\t]*\\1(?=[ \\t]*(?:&&|\\|\\||;|#|\\r?$))`,
+        `(?:^[ \\t]*(?:-[ \\t]*)?(?:run:[ \\t]*)?|&&[ \\t]*|\\|\\|[ \\t]*|;[ \\t]*)(["']?)${escaped}[ \\t]*\\1(?=[ \\t]*(?:&&|\\|\\||;|#|\\r?$))`,
         'm'
       )
       return ci.search(command)
@@ -258,35 +256,23 @@ export const collectAuditEvidence = (repo: string, onlyCode?: string): readonly 
         STD,
         '.github/workflows/ci.yml'
       )
-    const auditIndex = commandIndex('ki:audit')
+    const auditIndex = commandIndex('ki repo audit')
     auditIndex >= 0
-      ? add('PASS', 'CI-2', 'ci.yml runs the aggregate gate "bun run ki:audit"', STD, '.github/workflows/ci.yml')
-      : add(
-          'FAIL',
-          'CI-2',
-          'ci.yml must run "bun run ki:audit" — the aggregate read-only gate (ki:verify is retired)',
-          STD,
-          '.github/workflows/ci.yml'
-        )
+      ? add('PASS', 'CI-2', 'ci.yml runs the native repository gate "ki repo audit"', STD, '.github/workflows/ci.yml')
+      : add('FAIL', 'CI-2', 'ci.yml must run "ki repo audit" directly', STD, '.github/workflows/ci.yml')
     if (scripts.test) {
-      const testIndex = commandIndex('test')
+      const testIndex = commandIndex('bun run test')
       if (testIndex < 0)
-        add(
-          'FAIL',
-          'CI-2',
-          'ci.yml must run the exact command "bun run test" after ki:audit when package.json exposes tests',
-          STD,
-          '.github/workflows/ci.yml'
-        )
+        add('FAIL', 'CI-2', 'ci.yml must run the exact command "bun run test" after native audit when package.json exposes tests', STD, '.github/workflows/ci.yml')
       else if (auditIndex >= 0 && auditIndex < testIndex)
-        add('PASS', 'CI-2', 'ci.yml runs the repository self-test suite "bun run test" after ki:audit', STD, '.github/workflows/ci.yml')
-      else add('FAIL', 'CI-2', 'ci.yml must run "bun run ki:audit" before "bun run test"', STD, '.github/workflows/ci.yml')
+        add('PASS', 'CI-2', 'ci.yml runs the repository self-test suite "bun run test" after native audit', STD, '.github/workflows/ci.yml')
+      else add('FAIL', 'CI-2', 'ci.yml must run "ki repo audit" before "bun run test"', STD, '.github/workflows/ci.yml')
     }
-    if (/\bki:verify\b/.test(ci))
+    if (/\bbun\s+run\s+ki:(?:audit|conform|educate|help|verify)\b/.test(ci))
       add(
-        'WARN',
+        'FAIL',
         'CI-2',
-        'ci.yml still references ki:verify — retired; run "bun run ki:audit && bun run test"',
+        'ci.yml routes governance through a retired package-script alias; invoke "ki repo audit" directly',
         STD,
         '.github/workflows/ci.yml'
       )
@@ -301,11 +287,9 @@ export const collectAuditEvidence = (repo: string, onlyCode?: string): readonly 
   const workspaces = Array.isArray(pkg.workspaces) ? (pkg.workspaces as string[]).filter((w) => typeof w === 'string') : []
 
   // ── core: the read-only toolchain, run directly (audit = lint WITHOUT fixing) ──
-  // ki:engineering:audit runs ALL the read-only checks itself — the tools live INSIDE this
-  // script, not behind individual ki:lint:* / ki:deps:* / ki:knip keys (those are retired,
-  // TOOLCHAIN-001). Biome check + the type-check + syncpack's format check + knip. The
-  // Markdown gate is ki-authoring's audit (prettier --check + markdownlint), run as a
-  // sibling in the aggregate — not repeated here.
+  // The native ki-engineering rubric runs all read-only tool checks itself. The tools
+  // are not hidden behind package scripts. The Markdown gate remains ki-authoring's
+  // responsibility and is composed by `ki repo audit`.
   runCheck('BIO-1', 'biome check', 'bunx @biomejs/biome check', STD)
   if (workspaces.length) {
     const noTsconfig = workspaces.filter((p) => !read(`${p}/tsconfig.json`))
@@ -318,58 +302,48 @@ export const collectAuditEvidence = (repo: string, onlyCode?: string): readonly 
   runCheck('SYNC-1', 'syncpack format (check)', 'bunx syncpack format --check', STD)
   runCheck('KNIP-2', 'knip', 'bunx knip --no-config-hints', STD)
 
-  // ── core: the aggregate entrypoints + retired-key drift ───────────────────────
-  // Every governed repo exposes the two aggregate entrypoints that fan out over the
-  // vendored per-skill modes in .ki: ki:audit (read-only gate) and ki:conform (write
-  // pass), plus ki:educate/ki:help. The per-tool ki:lint:*/ki:deps:*/ki:knip families,
-  // ki:verify, and any per-skill ki:<x>:lint are retired — flag them as drift.
-  for (const [key, label] of [
-    ['ki:audit', 'aggregate read-only gate'],
-    ['ki:conform', 'aggregate write pass']
-  ] as const)
-    scripts[key]
-      ? add('PASS', 'SCR-2', `${key} present (${label})`, STD, 'package.json')
-      : add('FAIL', 'SCR-2', `script "${key}" missing (${label})`, STD, 'package.json')
+  // ── core: native CLI ownership + retired-key drift ────────────────────────────
+  const aggregateAliases = ['ki:audit', 'ki:conform', 'ki:educate', 'ki:help'].filter((key) => key in scripts)
+  aggregateAliases.length
+    ? add(
+        'FAIL',
+        'SCR-2',
+        `repository maintenance must use the installed CLI directly; remove package-script alias(es): ${aggregateAliases.join(', ')}`,
+        STD,
+        'package.json'
+      )
+    : add('PASS', 'SCR-2', 'repository maintenance has no package-script aliases', STD, 'package.json')
   const retired = Object.keys(scripts).filter(
-    (k) => /^ki:(lint|deps):/.test(k) || k === 'ki:knip' || k === 'ki:verify' || /^ki:[a-z-]+:lint$/.test(k)
+    (key) =>
+      /^ki:(lint|deps):/.test(key) ||
+      key === 'ki:knip' ||
+      key === 'ki:verify' ||
+      /^ki:[a-z-]+:lint$/.test(key) ||
+      ['ki:audit', 'ki:conform', 'ki:educate', 'ki:help'].includes(key)
   )
   retired.length
     ? add(
         'FAIL',
         'SCR-3',
-        `retired script key(s): ${retired.join(', ')} — the ki:lint:* / ki:deps:* / ki:knip families, ki:verify, and ki:<skill>:lint are folded into ki:engineering:audit/conform, ki-authoring, and the aggregate ki:audit (TOOLCHAIN-001)`,
+        `retired script key(s): ${retired.join(', ')} — repository governance runs through the installed ki CLI`,
         STD,
         'package.json'
       )
-    : add('PASS', 'SCR-3', 'no retired ki:lint:* / ki:deps:* / ki:verify keys', STD, 'package.json')
+    : add('PASS', 'SCR-3', 'no retired aggregate or tool-level governance aliases', STD, 'package.json')
 
-  // ── core: per-skill audit/conform key coverage (derived + enforced) ───────────
-  // Every checker vendored into .ki/bootstrap/checkers/<skill>/ must be reachable by the DERIVED
-  // keys ki:<suffix>:audit / ki:<suffix>:conform (suffix = skill dir minus ki-). This is
-  // the mechanical half of "every vendored mode has a package.json entry". Reads .ki/bootstrap
-  // only (offline-safe); ki-bootstrap is never vendored so it is not required here.
-  if (isDir('.ki', 'bootstrap', 'checkers')) {
-    const metaCheckers = at('.ki', 'bootstrap', 'checkers')
-    for (const skill of readdirSync(metaCheckers).filter((d) => statSync(join(metaCheckers, d)).isDirectory())) {
-      const suffix = skill.replace(/^ki-/, '')
-      for (const mode of ['audit', 'conform'] as const) {
-        if (!existsSync(join(metaCheckers, skill, 'scripts', `${mode}.ts`))) continue
-        const key = `ki:${suffix}:${mode}`
-        const expected = `bun .ki/bin/aggregate.ts ${mode} --skill ${skill}`
-        scripts[key] === expected
-          ? add('PASS', 'SCR-4', `${key} renders vendored ${skill}/scripts/${mode}.ts through the aggregate reporter`, STD, 'package.json')
-          : add(
-              'FAIL',
-              'SCR-4',
-              scripts[key]
-                ? `${key} must use ${JSON.stringify(expected)} to render its vendored checker through the aggregate reporter`
-                : `missing script "${key}" for vendored .ki/bootstrap/checkers/${skill}/scripts/${mode}.ts`,
-              STD,
-              'package.json'
-            )
-      }
-    }
-  }
+  // ── core: per-skill wrapper aliases are retired ──────────────────────────────
+  const skillModeAliases = Object.keys(scripts).filter((key) => /^ki:[a-z-]+:(audit|conform|educate|help)$/.test(key))
+  const runtimeAliases = Object.entries(scripts)
+    .filter(([, value]) =>
+      /(?:^|[ /])\.ki\/(?:bin|bootstrap)(?:[ /]|$)|scripts\/(?:govern|educate)\.ts|scripts\/rubric\/index\.ts|scripts\/vendored\//.test(
+        value
+      )
+    )
+    .map(([key]) => key)
+  const legacyAliases = [...new Set([...skillModeAliases, ...runtimeAliases])]
+  legacyAliases.length
+    ? add('FAIL', 'SCR-4', `remove legacy governance wrapper script(s): ${legacyAliases.join(', ')}`, STD, 'package.json')
+    : add('PASS', 'SCR-4', 'no per-skill or path-based governance wrappers', STD, 'package.json')
   // clean (removes node_modules; may also remove dist) + prepare = husky
   scripts.clean?.includes('node_modules')
     ? add('PASS', 'SCR-5', `clean = ${JSON.stringify(scripts.clean)}`, STD, 'package.json')
@@ -405,7 +379,7 @@ export const collectAuditEvidence = (repo: string, onlyCode?: string): readonly 
       add(
         'INFO',
         'DEPS-1',
-        `${pkgRows.length} package${pkgRows.length === 1 ? '' : 's'} have updates available — run \`bun run ki:engineering:conform\`:\n  ${out}`,
+        `${pkgRows.length} package${pkgRows.length === 1 ? '' : 's'} have updates available — run \`ki repo conform\`:\n  ${out}`,
         STD
       )
     }
@@ -470,15 +444,15 @@ export const collectAuditEvidence = (repo: string, onlyCode?: string): readonly 
         : add('WARN', 'BIO-2', `biome.json: expected ${label}`, STD, 'biome.json')
   }
 
-  // ── core: knip.json (backs the knip check inside ki:engineering:audit) ────────────
-  // knip is run directly by ki:engineering:audit (dependency + dead-code hygiene);
+  // ── core: knip.json (backs the native ki-engineering check) ──────────────────
+  // knip is run directly by the native rubric (dependency + dead-code hygiene);
   // every repo carries a knip.json declaring its entry points (so the public surface
   // isn't misread as dead code) and any intentional ignores.
   has('knip.json') || has('knip.jsonc') || has('knip.ts')
-    ? add('PASS', 'KNIP-1', 'knip.json present (entry points + ignores for the knip check in ki:engineering:audit)', STD, 'knip.json')
-    : add('FAIL', 'KNIP-1', 'knip.json missing (config for knip — run by ki:engineering:audit/conform)', STD, 'knip.json')
+    ? add('PASS', 'KNIP-1', 'knip.json present (entry points + ignores for the native knip check)', STD, 'knip.json')
+    : add('FAIL', 'KNIP-1', 'knip.json missing (config for the native knip check)', STD, 'knip.json')
 
-  // ── core: generated and vendored surfaces ────────────────────────────────────
+  // ── core: generated and managed discovery surfaces ──────────────────────────
   // These are byte-for-byte artifacts owned elsewhere. Formatting or dead-code checks
   // must never rewrite or report them. `ki-authoring` owns the Markdown configuration,
   // but this common engineering rule verifies the three tool surfaces agree.
@@ -490,8 +464,6 @@ export const collectAuditEvidence = (repo: string, onlyCode?: string): readonly 
     markdown: string
   }
   const GENERATED_SURFACES: GeneratedSurface[] = [
-    { signal: ['.ki', 'bootstrap'], label: '.ki/bootstrap/', biome: '.ki/bootstrap', knip: '.ki/bootstrap', markdown: '.ki/bootstrap' },
-    { signal: ['.ki', 'bin'], label: '.ki/bin/', biome: '.ki/bin', knip: '.ki/bin', markdown: '.ki/bin' },
     { signal: ['src', 'generated'], label: 'src/generated/', biome: 'src/generated', knip: 'src/generated', markdown: 'src/generated' },
     {
       signal: ['.claude', 'skills'],
@@ -525,9 +497,18 @@ export const collectAuditEvidence = (repo: string, onlyCode?: string): readonly 
     return ancestors.some((candidate) => new RegExp(`["']${escapeRe(`${prefix}${candidate}`)}(?:/\\*\\*)?["']`).test(content))
   }
   const markdownlint = read('.markdownlint-cli2.jsonc')
+  const legacyExclusions = [
+    ['biome.json', biome],
+    ['knip.json', read('knip.json') || read('knip.jsonc') || read('knip.ts')],
+    ['.markdownlint-cli2.jsonc', markdownlint]
+  ].flatMap(([file, content]) =>
+    ['.ki/bootstrap', '.ki/bin'].flatMap((path) => (content.includes(path) ? [`${file} → ${path}`] : []))
+  )
   const activeGeneratedSurfaces = GENERATED_SURFACES.filter((surface) => isDir(...surface.signal))
-  if (!activeGeneratedSurfaces.length) {
-    add('NOT_APPLICABLE', 'GEN-1', 'no generated or vendored surfaces detected', STD)
+  if (legacyExclusions.length) {
+    add('FAIL', 'GEN-1', `remove legacy KI runtime exclusion(s): ${legacyExclusions.join('; ')}`, STD)
+  } else if (!activeGeneratedSurfaces.length) {
+    add('NOT_APPLICABLE', 'GEN-1', 'no generated or managed discovery surfaces detected', STD)
   } else {
     const missing: string[] = []
     for (const surface of activeGeneratedSurfaces) {
@@ -536,11 +517,11 @@ export const collectAuditEvidence = (repo: string, onlyCode?: string): readonly 
       if (!excludes(markdownlint, surface.markdown)) missing.push(`.markdownlint-cli2.jsonc → ${surface.label}`)
     }
     missing.length
-      ? add('FAIL', 'GEN-1', `generated/vendored surfaces need matching Biome, knip, and Markdown exclusions: ${missing.join('; ')}`, STD)
+      ? add('FAIL', 'GEN-1', `managed surfaces need matching Biome, knip, and Markdown exclusions: ${missing.join('; ')}`, STD)
       : add(
           'PASS',
           'GEN-1',
-          `generated/vendored surfaces excluded across Biome, knip, and Markdown: ${activeGeneratedSurfaces.map((s) => s.label).join(', ')}`,
+          `managed surfaces excluded across Biome, knip, and Markdown: ${activeGeneratedSurfaces.map((s) => s.label).join(', ')}`,
           STD
         )
   }
@@ -569,11 +550,10 @@ export const collectAuditEvidence = (repo: string, onlyCode?: string): readonly 
   const hasEnv = Boolean(envExample) || usesLoadEnv
 
   // ── core: capability tails + the bare test idiom (§2) ─────────────────────────
-  // ki:audit / ki:conform are asserted above (the aggregate gate + write pass). A repo
-  // with tests exposes the bare `test` idiom (the whole *.test.ts suite), run in CI after
-  // ki:audit. Compiled builds remain the separate bare `build` lifecycle command.
+  // A repo with tests exposes the bare `test` idiom (the whole *.test.ts suite), run in CI
+  // after `ki repo audit`. Compiled builds remain the separate bare `build` lifecycle command.
   if (hasTests && !scripts.test)
-    add('FAIL', 'SCR-7', 'repo has tests but no bare "test" script (the whole *.test.ts suite, run after ki:audit)', STD, 'package.json')
+    add('FAIL', 'SCR-7', 'repo has tests but no bare "test" script (the whole suite, run after native audit)', STD, 'package.json')
   else if (hasTests) add('PASS', 'SCR-7', 'bare "test" idiom present', STD, 'package.json')
 
   // ── capability: tests ─────────────────────────────────────────────────────────

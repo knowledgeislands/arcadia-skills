@@ -1,5 +1,5 @@
 import { execSync } from 'node:child_process'
-import type { AuditOutcome } from '../../vendored/ki-skills/rubric.ts'
+import type { AuditOutcome } from '../../../../../shared/rubric-contract.ts'
 import type { McpRubricContext } from '../contexts/mcp.ts'
 import { outcomes, result } from './common.ts'
 
@@ -43,8 +43,7 @@ export const PKG_1 = {
           )
         ])
       }
-    },
-    conform: { phase: 'PRIMARY' as const, run: (context: McpRubricContext) => context.ensurePackageShape() }
+    }
   }
 } as const
 export const SCR_1 = {
@@ -96,8 +95,7 @@ export const SCR_1 = {
         )
         return outcomes(checks)
       }
-    },
-    conform: { phase: 'DERIVED' as const, run: (context: McpRubricContext) => context.regenerateClient() }
+    }
   },
   judgment: {
     prompt:

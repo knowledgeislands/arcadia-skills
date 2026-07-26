@@ -1,4 +1,4 @@
-import type { AuditOutcome, ConformOutcome, RubricItem, RubricOutcomes } from '../../shared/rubric.ts'
+import type { AuditOutcome, RubricItem, RubricOutcomes } from '../../shared/rubric.ts'
 import type { KiShapeRubricContext } from '../contexts/contexts.ts'
 
 const UNIVERSAL_VERBS = ['AUDIT', 'CONFORM', 'HELP', 'EDUCATE', 'REFRESH'] as const
@@ -184,19 +184,6 @@ export const KI_SHAPE_11: RubricItem<KiShapeRubricContext> = {
           ? [{ status: 'PASS', message: 'governance skills expose HELP' }]
           : [{ status: 'VIOLATION', message: '`argument-hint` does not expose the universal `help` mode (ADR-KI-HARNESS-SKILLS-001)' }]
       }
-    },
-    conform: {
-      phase: 'PRIMARY',
-      run: ({ skill, setArgumentHint }) => {
-        if (!skill?.governanceSkill)
-          return [{ status: 'NOT_APPLICABLE', message: 'the target is not a governance skill', subject: 'SKILL.md' }]
-        if (skill.hintVerbs.includes('HELP')) return [{ status: 'PASS', message: 'governance skills expose HELP', subject: 'SKILL.md' }]
-        if (!skill.argumentHint)
-          return [{ status: 'NOT_APPLICABLE', message: '`argument-hint` is unavailable for safe automatic repair', subject: 'SKILL.md' }]
-        if (!setArgumentHint) throw new Error('KI-SHAPE-11 conform requires the setArgumentHint capability')
-        setArgumentHint(`${skill.argumentHint} | help`)
-        return [{ status: 'FIXED', message: 'appended `help` to argument-hint', subject: 'SKILL.md' }]
-      }
     }
   }
 }
@@ -222,29 +209,7 @@ export const KI_SHAPE_12: RubricItem<KiShapeRubricContext> = {
   sources: ['ADR-KI-HARNESS-SKILLS-001', 'ADR-KI-HARNESS-SKILLS-006', 'ADR-KI-HARNESS-007'],
   mechanical: {
     level: 'WARN',
-    audit: { phase: 'INSPECT', run: auditKiShape12 },
-    conform: {
-      phase: 'PRIMARY',
-      run: (context) => {
-        const { skill, setArgumentHint } = context
-        if (!skill?.governanceSkill)
-          return [{ status: 'NOT_APPLICABLE', message: 'the target is not a governance skill', subject: 'SKILL.md' }]
-        const missing = UNIVERSAL_VERBS.filter((verb) => !skill.hintVerbs.includes(verb))
-        if (missing.length === 0) return auditKiShape12(context)
-        if (!skill.argumentHint) return auditKiShape12(context)
-        if (!setArgumentHint) throw new Error('KI-SHAPE-12 conform requires the setArgumentHint capability')
-        setArgumentHint(`${skill.argumentHint} | ${missing.map((verb) => verb.toLowerCase()).join(' | ')}`)
-        const outcomes: ConformOutcome[] = [
-          {
-            status: 'FIXED',
-            message: `appended missing verb(s) to argument-hint: ${missing.map((verb) => verb.toLowerCase()).join(', ')}`,
-            subject: 'SKILL.md'
-          }
-        ]
-        const [first, ...rest] = outcomes
-        return [first as ConformOutcome, ...rest]
-      }
-    }
+    audit: { phase: 'INSPECT', run: auditKiShape12 }
   }
 }
 
@@ -361,8 +326,7 @@ export const KI_SHAPE_15: RubricItem<KiShapeRubricContext> = {
   sources: ['standards.md §14', 'ADR-KI-HARNESS-007'],
   mechanical: {
     level: 'FAIL',
-    audit: { phase: 'INSPECT', run: auditKiShape15 },
-    conform: { phase: 'PRIMARY', run: auditKiShape15 }
+    audit: { phase: 'INSPECT', run: auditKiShape15 }
   }
 }
 

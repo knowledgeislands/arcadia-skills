@@ -1,83 +1,101 @@
-import { defineRubricFamily, type RubricDefinition } from '../../vendored/ki-skills/rubric.ts'
-import type { HarnessRubricContext } from '../contexts/harness.ts'
-import { CAPABILITIES } from './capabilities.ts'
-import { CLAUDE } from './claude.ts'
-import { COLLISION } from './collision.ts'
-import { CONFIG } from './config.ts'
-import { LAYOUT } from './layout.ts'
-import { LONGEVITY } from './longevity.ts'
-import { PACKAGE } from './package.ts'
-import { SKILLS } from './skills.ts'
+import type { RubricItem } from '../../../../../shared/rubric-contract.ts'
+import { createHarnessContext, type HarnessRubricContext, hasTomlTable } from '../contexts/harness.ts'
+import { KI_HARNESS_RUBRIC } from './catalogue.ts'
 
-const context = (value: HarnessRubricContext): HarnessRubricContext => value
-export const KI_HARNESS_RUBRIC: RubricDefinition<HarnessRubricContext> = {
-  name: 'ki-harness',
-  concern: 'Knowledge Islands agentic harnesses',
-  families: [
-    defineRubricFamily({
-      code: 'CAP',
-      title: 'Capability publication',
-      description: 'Typed harness capability inventory and kind-specific boundaries.',
-      standard: 'standards.md#capability-publication',
-      selectContext: context,
-      items: CAPABILITIES
-    }),
-    defineRubricFamily({
-      code: 'LAY',
-      title: 'Directory layout and files',
-      description: 'The five-part harness container and required root files.',
-      standard: 'standards.md#layout',
-      selectContext: context,
-      items: LAYOUT
-    }),
-    defineRubricFamily({
-      code: 'CLAUDE',
-      title: 'Root orientation',
-      description: 'Coverage and freshness of the effective root orientation.',
-      standard: 'standards.md#claudemd',
-      selectContext: context,
-      items: CLAUDE
-    }),
-    defineRubricFamily({
-      code: 'PKG',
-      title: 'Package script families',
-      description: 'Harness-owned package scripts and their target integrity.',
-      standard: 'standards.md#packagejson',
-      selectContext: context,
-      items: PACKAGE
-    }),
-    defineRubricFamily({
-      code: 'CONFIG',
-      title: 'Harness configuration',
-      description: 'Knowledge Islands governance declarations.',
-      standard: 'standards.md#ki-configtoml',
-      selectContext: context,
-      items: CONFIG
-    }),
-    defineRubricFamily({
-      code: 'SKILLS',
-      title: 'Skill directory convention',
-      description: 'Direct skill-name integrity within the harness.',
-      standard: 'standards.md#skills-directory',
-      selectContext: context,
-      items: SKILLS
-    }),
-    defineRubricFamily({
-      code: 'LONG',
-      title: 'Longevity',
-      description: 'Refresh discipline for the harness standard.',
-      standard: 'standards.md',
-      selectContext: context,
-      items: LONGEVITY
-    }),
-    defineRubricFamily({
-      code: 'COLL',
-      title: 'Collision and boundary',
-      description: 'Composition and off-ramp clarity.',
-      standard: 'standards.md',
-      selectContext: context,
-      items: COLLISION
-    })
-  ]
+type NativeHarnessContext = Omit<HarnessRubricContext, 'dryRun' | 'ensurePart' | 'ensureShelfReadme' | 'ensureHarnessConfig'> & {
+  readonly repository: string
 }
-export const KI_HARNESS_FAMILY_CODES = KI_HARNESS_RUBRIC.families.map((family) => family.code)
+
+type LegacyFamily = {
+  readonly code: string
+  readonly title: string
+  readonly items: readonly RubricItem<HarnessRubricContext>[]
+}
+
+const catalogueDefinition = KI_HARNESS_RUBRIC
+const catalogue = catalogueDefinition.families as unknown as readonly LegacyFamily[]
+
+const mechanical = (item: RubricItem<HarnessRubricContext>) => {
+  const definition = item.mechanical
+  if (!definition) throw new Error(`${item.code} must be mechanical`)
+  return {
+    kind: 'mechanical' as const,
+    code: item.code,
+    title: item.title,
+    level: definition.level,
+    phase: definition.audit.phase,
+    audit: (context: NativeHarnessContext) => definition.audit.run(context as unknown as HarnessRubricContext)
+  }
+}
+
+const judgment = (item: RubricItem<HarnessRubricContext>) => {
+  const definition = item.judgment
+  if (!definition) throw new Error(`${item.code} must be a judgment item`)
+  return { kind: 'judgment' as const, code: item.code, title: item.title, prompt: definition.prompt }
+}
+
+// The host transaction presently replaces existing regular files only.  Directory and
+// missing-file scaffolding remain violations until that capability is deliberately added;
+// their legacy writers are not exposed through the native context.
+const unsupportedScaffoldRepair = () => ({ writes: [] })
+
+const nativeConfig1 = (item: RubricItem<HarnessRubricContext>) => ({
+  ...mechanical(item),
+  repair: (context: NativeHarnessContext) => ({
+    writes:
+      context.config === null || hasTomlTable(context.config, 'ki-harness')
+        ? []
+        : [{ path: '.ki-config.toml', content: `${context.config.replace(/\n*$/, '\n')}\n[ki-harness]\n` }]
+  })
+})
+
+const nativeItem = (item: RubricItem<HarnessRubricContext>) => {
+  if (item.code === 'LAY-1' || item.code === 'LAY-2') return { ...mechanical(item), repair: unsupportedScaffoldRepair }
+  if (item.code === 'CONFIG-1') return nativeConfig1(item)
+  return item.mechanical ? mechanical(item) : judgment(item)
+}
+
+type NativeRuntimeItem = {
+  readonly kind: 'mechanical' | 'judgment'
+  readonly phase?: 'PREPARE' | 'INSPECT' | 'PRIMARY' | 'DERIVED' | 'NORMALISE'
+  readonly audit?: (...arguments_: never[]) => unknown
+  readonly repair?: (...arguments_: never[]) => unknown
+}
+
+const directItem = <Context>(item: RubricItem<Context>, runtime: NativeRuntimeItem) => {
+  if (!item.mechanical) return item
+  if (runtime.kind !== 'mechanical' || !runtime.phase || !runtime.audit) throw new Error(`${item.code} has no native mechanical runtime`)
+  const { repair: legacyRepair, ...mechanical } = item.mechanical
+  void legacyRepair
+  return {
+    ...item,
+    mechanical: {
+      ...mechanical,
+      audit: { phase: runtime.phase, run: runtime.audit },
+      ...(runtime.repair ? { repair: { phase: 'NORMALISE', run: runtime.repair } } : {})
+    }
+  }
+}
+
+export default {
+  contract: 1,
+  name: 'ki-harness',
+  concern: catalogueDefinition.concern,
+  createContext: ({ repository }: { readonly repository: string }): NativeHarnessContext => {
+    const {
+      dryRun: _dryRun,
+      ensurePart: _ensurePart,
+      ensureShelfReadme: _ensureShelfReadme,
+      ensureHarnessConfig: _ensureHarnessConfig,
+      ...evidence
+    } = createHarnessContext(repository, true)
+    return { repository, ...evidence }
+  },
+  families: catalogue.map((family) => ({
+    ...family,
+    selectContext: (context: unknown) => context,
+    items: family.items.map((item) => directItem(item, nativeItem(item)))
+  }))
+} as const
+
+export * from './catalogue.ts'

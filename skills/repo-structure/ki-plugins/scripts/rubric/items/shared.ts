@@ -1,4 +1,4 @@
-import type { AuditOutcome, ConformOutcome, RubricItem, RubricOutcomes, ViolationLevel } from '../../vendored/ki-skills/rubric.ts'
+import type { AuditOutcome, RubricItem, RubricOutcomes, ViolationLevel } from '../../../../../shared/rubric-contract.ts'
 import type { PluginsContext } from '../contexts/plugins.ts'
 
 export const inactive = (context: PluginsContext): RubricOutcomes<AuditOutcome> | null =>
@@ -13,8 +13,7 @@ export const mechanical = (
   title: string,
   description: string,
   level: ViolationLevel,
-  audit: (context: PluginsContext) => RubricOutcomes<AuditOutcome>,
-  conform?: (context: PluginsContext) => RubricOutcomes<ConformOutcome>
+  audit: (context: PluginsContext) => RubricOutcomes<AuditOutcome>
 ): RubricItem<PluginsContext> => ({
   code,
   title,
@@ -22,8 +21,7 @@ export const mechanical = (
   sources: ['standards.md'],
   mechanical: {
     level,
-    audit: { phase: 'INSPECT', run: audit },
-    ...(conform ? { conform: { phase: 'PRIMARY', run: conform } } : {})
+    audit: { phase: 'INSPECT', run: audit }
   }
 })
 

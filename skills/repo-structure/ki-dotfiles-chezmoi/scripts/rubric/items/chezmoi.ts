@@ -1,4 +1,4 @@
-import type { RubricItem } from '../../vendored/ki-skills/rubric.ts'
+import type { RubricItem } from '../../../../../shared/rubric-contract.ts'
 import type { ChezmoiContext } from '../contexts/chezmoi.ts'
 
 export const CHEZMOI_1: RubricItem<ChezmoiContext> = {
@@ -22,8 +22,7 @@ export const CHEZMOI_1: RubricItem<ChezmoiContext> = {
                   subject: '.chezmoiignore'
                 }
               ]
-    },
-    conform: { phase: 'PRIMARY', run: (context) => [context.ensureIgnore()] }
+    }
   }
 }
 

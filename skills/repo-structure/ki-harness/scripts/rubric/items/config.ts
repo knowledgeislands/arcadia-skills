@@ -20,8 +20,7 @@ const CONFIG_ITEMS = [
                 'Must have a [ki-harness] table.',
                 '.ki-config.toml'
               )
-      },
-      conform: { phase: 'PRIMARY', run: (context: HarnessRubricContext) => context.ensureHarnessConfig() }
+      }
     }
   },
   {

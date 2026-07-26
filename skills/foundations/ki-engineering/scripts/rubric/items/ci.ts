@@ -9,7 +9,7 @@ export const CI_1 = mechanical(
 export const CI_2 = mechanical(
   'CI-2',
   'CI runs the canonical gates',
-  '`ci.yml` runs `bun run ki:audit`, then `bun run test` when tests exist, and does not reference retired `ki:verify`.',
+  '`ci.yml` runs `ki repo audit`, then `bun run test` when tests exist, and does not route governance through package scripts.',
   'FAIL',
   ['WARN']
 )

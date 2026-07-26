@@ -1,19 +1,101 @@
-import { defineRubricFamily, type RubricDefinition } from '../../vendored/ki-skills/rubric.ts'
-import type { WebsiteContext } from '../contexts/website.ts'
-import { WEB } from './web.ts'
+import type { RubricItem } from '../../../../../shared/rubric-contract.ts'
+import { createWebsiteContextFactory, KI_DEFAULT, type WebsiteContext } from '../contexts/website.ts'
+import { KI_WEBSITE_RUBRIC } from './catalogue.ts'
 
-export const KI_WEBSITE_RUBRIC: RubricDefinition<WebsiteContext> = {
-  name: 'ki-website',
-  concern: 'website',
-  families: [
-    defineRubricFamily({
-      code: 'WEB',
-      title: 'Eleventy website standard',
-      description: 'The static-site stack, workspace layout, generated output, and sustainable operating boundary.',
-      standard: 'standards.md',
-      selectContext: (context: WebsiteContext) => context,
-      items: WEB
-    })
-  ]
+type NativeWebsiteContext = Omit<WebsiteContext, 'dryRun' | 'ensureOptIn' | 'ensureDistIgnore'> & {
+  readonly repository: string
 }
-export const KI_WEBSITE_FAMILY_CODES = ['WEB'] as const
+
+type LegacyFamily = {
+  readonly code: string
+  readonly title: string
+  readonly items: readonly RubricItem<WebsiteContext>[]
+}
+
+const catalogueDefinition = KI_WEBSITE_RUBRIC
+const catalogue = catalogueDefinition.families as unknown as readonly LegacyFamily[]
+
+const mechanical = (item: RubricItem<WebsiteContext>) => {
+  const definition = item.mechanical
+  if (!definition) throw new Error(`${item.code} must be mechanical`)
+  return {
+    kind: 'mechanical' as const,
+    code: item.code,
+    title: item.title,
+    level: definition.level,
+    phase: definition.audit.phase,
+    audit: (context: NativeWebsiteContext) => definition.audit.run(context as unknown as WebsiteContext)
+  }
+}
+
+const judgment = (item: RubricItem<WebsiteContext>) => {
+  const definition = item.judgment
+  if (!definition) throw new Error(`${item.code} must be a judgment item`)
+  return { kind: 'judgment' as const, code: item.code, title: item.title, prompt: definition.prompt }
+}
+
+const distIgnoreRepair = (context: NativeWebsiteContext) => {
+  if (!context.cfgName) return { writes: [] }
+  const current = context.read('.gitignore')
+  const correct = context.siteRoot ? /^\s*\/?site\/dist\/?\s*$/m.test(current) : /^\s*\/?dist\/?\s*$/m.test(current)
+  if (correct) return { writes: [] }
+  const content =
+    context.siteRoot && /^\s*\/dist\/?\s*$/m.test(current)
+      ? current.replace(/^(\s*)\/dist(\/?)(\s*)$/m, '$1/site/dist$2$3')
+      : `${current ? current.replace(/\n*$/, '\n') : ''}${context.siteRoot ? 'site/dist' : 'dist'}\n`
+  return { writes: [{ path: '.gitignore', content, ...(!context.has('.gitignore') ? { create: true } : {}) }] }
+}
+
+const optInRepair = (context: NativeWebsiteContext) => {
+  if (context.kiWebsiteTable) return { writes: [] }
+  const current = context.read('.ki-config.toml')
+  const content = current ? `${current.replace(/\n*$/, '\n')}\n${KI_DEFAULT}` : KI_DEFAULT
+  return { writes: [{ path: '.ki-config.toml', content, ...(!context.has('.ki-config.toml') ? { create: true } : {}) }] }
+}
+
+const nativeItem = (item: RubricItem<WebsiteContext>) => {
+  const native = item.mechanical ? mechanical(item) : judgment(item)
+  if (item.code === 'WEB-33' && native.kind === 'mechanical') return { ...native, repair: distIgnoreRepair }
+  if (item.code === 'WEB-41' && native.kind === 'mechanical') return { ...native, repair: optInRepair }
+  return native
+}
+
+type NativeRuntimeItem = {
+  readonly kind: 'mechanical' | 'judgment'
+  readonly phase?: 'PREPARE' | 'INSPECT' | 'PRIMARY' | 'DERIVED' | 'NORMALISE'
+  readonly audit?: (...arguments_: never[]) => unknown
+  readonly repair?: (...arguments_: never[]) => unknown
+}
+
+const directItem = <Context>(item: RubricItem<Context>, runtime: NativeRuntimeItem) => {
+  if (!item.mechanical) return item
+  if (runtime.kind !== 'mechanical' || !runtime.phase || !runtime.audit) throw new Error(`${item.code} has no native mechanical runtime`)
+  const { repair: legacyRepair, ...mechanical } = item.mechanical
+  void legacyRepair
+  return {
+    ...item,
+    mechanical: {
+      ...mechanical,
+      audit: { phase: runtime.phase, run: runtime.audit },
+      ...(runtime.repair ? { repair: { phase: 'NORMALISE', run: runtime.repair } } : {})
+    }
+  }
+}
+
+export default {
+  contract: 1,
+  name: 'ki-website',
+  concern: catalogueDefinition.concern,
+  createContext: ({ repository }: { readonly repository: string }): NativeWebsiteContext => {
+    const source = createWebsiteContextFactory({ target: repository, dryRun: true })()
+    const { dryRun: _dryRun, ensureOptIn: _ensureOptIn, ensureDistIgnore: _ensureDistIgnore, ...evidence } = source
+    return { repository, ...evidence }
+  },
+  families: catalogue.map((family) => ({
+    ...family,
+    selectContext: (context: unknown) => context,
+    items: family.items.map((item) => directItem(item, nativeItem(item)))
+  }))
+} as const
+
+export * from './catalogue.ts'

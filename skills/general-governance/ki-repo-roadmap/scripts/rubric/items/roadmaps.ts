@@ -1,4 +1,4 @@
-import type { RubricItem } from '../../vendored/ki-skills/rubric.ts'
+import type { RubricItem } from '../../../../../shared/rubric-contract.ts'
 import type { RoadmapContext } from '../contexts/roadmap.ts'
 import { mechanical } from './common.ts'
 
@@ -25,8 +25,7 @@ export const ROAD_4 = mechanical(
   'ROAD-4',
   'canonical horizon blurbs',
   'Every horizon heading is followed immediately by its exact canonical blurb; CONFORM inserts a missing blurb without removing existing authored content.',
-  'FAIL',
-  true
+  'FAIL'
 )
 export const ROAD_5: RubricItem<RoadmapContext> = {
   code: 'ROAD-5',

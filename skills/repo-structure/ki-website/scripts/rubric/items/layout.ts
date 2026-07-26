@@ -1,19 +1,7 @@
-import type { AuditOutcome, ConformOutcome, RubricItem, RubricOutcomes } from '../../vendored/ki-skills/rubric.ts'
+import type { AuditOutcome, RubricItem, RubricOutcomes } from '../../../../../shared/rubric-contract.ts'
 import type { WebsiteContext } from '../contexts/website.ts'
 import { inactive, judgment, mechanical } from './shared.ts'
 
-const conformOptIn = (c: WebsiteContext): RubricOutcomes<ConformOutcome> => {
-  if (!c.available) return [{ status: 'VIOLATION', message: `target path is not a directory: ${c.target}` }]
-  return [
-    {
-      status: c.ensureOptIn() === 'canonical' ? 'PASS' : 'FIXED',
-      message: c.kiWebsiteTable
-        ? '[ki-website] table already present'
-        : `${c.dryRun ? 'would append' : 'appended'} the canonical [ki-website] opt-in table`,
-      subject: '.ki-config.toml'
-    }
-  ]
-}
 const auditSiteWorkspace = (c: WebsiteContext): RubricOutcomes<AuditOutcome> => {
   const stop = inactive(c)
   if (stop) return stop
@@ -138,8 +126,7 @@ export const WEB_41: RubricItem<WebsiteContext> = {
             subject: '.ki-config.toml'
           }
         ]
-    },
-    conform: { phase: 'PRIMARY', run: conformOptIn }
+    }
   }
 }
 export const WEB_42 = mechanical(

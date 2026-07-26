@@ -1,12 +1,12 @@
-import type { RubricItem } from '../../vendored/ki-skills/rubric.ts'
-import { auditOutcomes, conformOutcomes, type TokenomicsRubricContext } from '../contexts/tokenomics.ts'
+import type { RubricItem } from '../../../../../shared/rubric-contract.ts'
+import type { TokenomicsUserContext } from '../contexts/user.ts'
 
 export const mechanical = (
   code: string,
   title: string,
   description: string,
   level: 'FAIL' | 'WARN' = 'WARN'
-): RubricItem<TokenomicsRubricContext> => ({
+): RubricItem<TokenomicsUserContext> => ({
   code,
   title,
   description,
@@ -14,11 +14,14 @@ export const mechanical = (
   mechanical: {
     level,
     overrideLevels: level === 'FAIL' ? ['WARN'] : ['FAIL'],
-    audit: { phase: 'INSPECT', run: (context) => auditOutcomes(context, code) },
-    conform: { phase: 'NORMALISE', run: (context) => conformOutcomes(context, code) }
+    audit: {
+      phase: 'INSPECT',
+      run: (context) =>
+        context.outcomes.get(code) ?? [{ status: 'NOT_APPLICABLE', message: 'No user-home evidence applies to this criterion.' }]
+    }
   }
 })
-export const judgment = (code: string, title: string, description: string): RubricItem<TokenomicsRubricContext> => ({
+export const judgment = (code: string, title: string, description: string): RubricItem<TokenomicsUserContext> => ({
   code,
   title,
   description,

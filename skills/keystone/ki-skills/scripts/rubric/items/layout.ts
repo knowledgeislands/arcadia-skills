@@ -80,22 +80,6 @@ export const LAY_4: RubricItem<LayoutRubricContext> = {
           ? [{ status: 'VIOLATION', message: 'a link target uses backslashes — use forward slashes' }]
           : [{ status: 'PASS', message: 'file references use forward slashes' }]
       }
-    },
-    conform: {
-      phase: 'PREPARE',
-      run: ({ markdown, subject, writeMarkdown }) => {
-        if (markdown === undefined) return [{ status: 'NOT_APPLICABLE', message: 'Markdown is unavailable for link inspection', subject }]
-        if (!hasBackslashLink(markdown)) return [{ status: 'PASS', message: 'file references use forward slashes', subject }]
-        if (!writeMarkdown) throw new Error('LAY-4 conform requires the writeMarkdown capability')
-        let count = 0
-        const fixed = markdown.replace(/\[([^\]]*)\]\(([^)]+)\)/g, (whole, text, target) => {
-          if (!(target as string).includes('\\')) return whole
-          count++
-          return `[${text}](${(target as string).replace(/\\/g, '/')})`
-        })
-        writeMarkdown(fixed)
-        return [{ status: 'FIXED', message: `${count} backslash link target(s) → forward slashes`, subject }]
-      }
     }
   }
 }

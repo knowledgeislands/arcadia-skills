@@ -1,4 +1,4 @@
-import type { RubricItem } from '../../vendored/ki-skills/rubric.ts'
+import type { RubricItem } from '../../../../../shared/rubric-contract.ts'
 import type { WebsiteContext } from '../contexts/website.ts'
 import { inactive, mechanical } from './shared.ts'
 

@@ -1,4 +1,4 @@
-import type { AuditOutcome, ConformOutcome, RubricItem, RubricOutcomes } from '../../vendored/ki-skills/rubric.ts'
+import type { AuditOutcome, RubricItem, RubricOutcomes } from '../../../../../shared/rubric-contract.ts'
 import type { AuthoringRubricContext } from '../contexts/authoring.ts'
 
 const markdownAudit = (context: AuthoringRubricContext): RubricOutcomes<AuditOutcome> => {
@@ -15,27 +15,6 @@ const markdownAudit = (context: AuthoringRubricContext): RubricOutcomes<AuditOut
       ]
 }
 
-const markdownConform = (context: AuthoringRubricContext): RubricOutcomes<ConformOutcome> => {
-  if (!context.exists) return [{ status: 'VIOLATION', message: 'conform target does not exist', subject: context.target }]
-  const clean = context.markdownConform()
-  if (clean)
-    return [
-      {
-        status: 'PASS',
-        message: `Markdown ${context.dryRun ? 'already conforms' : 'conformed'} (Prettier + markdownlint-cli2)`,
-        subject: context.target
-      }
-    ]
-  return [
-    {
-      status: 'VIOLATION',
-      ...(context.dryRun ? { level: 'WARN' as const } : {}),
-      message: `Markdown ${context.dryRun ? 'has findings — run without --dry-run to fix' : 'conform pass reported issues'}`,
-      subject: context.target
-    }
-  ]
-}
-
 export const MD_MECH: RubricItem<AuthoringRubricContext> = {
   code: 'MD-mech',
   title: 'Markdown mechanical gate passes',
@@ -45,8 +24,7 @@ export const MD_MECH: RubricItem<AuthoringRubricContext> = {
   mechanical: {
     level: 'FAIL',
     overrideLevels: ['WARN'],
-    audit: { phase: 'INSPECT', run: markdownAudit },
-    conform: { phase: 'NORMALISE', run: markdownConform }
+    audit: { phase: 'INSPECT', run: markdownAudit }
   }
 }
 

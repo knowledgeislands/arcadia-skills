@@ -1,4 +1,4 @@
-import type { AuditOutcome, ConformOutcome } from '../../vendored/ki-skills/rubric.ts'
+import type { AuditOutcome, ConformOutcome } from '../../../../../shared/rubric-contract.ts'
 import { type Finding, inspectRoadmap } from './roadmap-evidence.ts'
 import { conformRoadmap } from './roadmap-writes.ts'
 
