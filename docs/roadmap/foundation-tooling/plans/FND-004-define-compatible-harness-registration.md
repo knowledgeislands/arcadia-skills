@@ -22,7 +22,7 @@ The compatible-harness identity, installation, activation, and governed-rubric h
 
 The repository-local `.ki/` executor, package-script aliases, publishers, wrapper runners, and legacy educate scripts have been removed. `ki-skills` establishes the intended family/session contract, and `ki-handoffs` is the first additional catalogue cut to that shape.
 
-Twenty-three in-scope structured catalogues still use transitional catalogue or context adapters. Twenty-four in-scope skills remain to review after accepting `ki-skills` and `ki-handoffs`: the 23 remaining structured catalogues other than the deferred `ki-specifications` catalogue, plus the guidance-only `ki-bootstrap`.
+Twenty-three in-scope structured catalogues still use transitional catalogue or context adapters, and those are the remaining skill reviews after accepting `ki-skills`, `ki-handoffs`, and the guidance-only `ki-bootstrap`. The deferred `ki-specifications` catalogue remains outside this count.
 
 CI still invokes the removed `ki:audit` package alias and describes `.ki/bootstrap`. The pre-commit hook uses the direct CLI but its staged snapshot needs a final dependency-completeness review. Maintainer guidance still contains obsolete vendoring and executor assumptions.
 
@@ -34,7 +34,7 @@ CI still invokes the removed `ki:audit` package alias and describes `.ki/bootstr
    - [ ] `ki-authoring` — move formatter, subprocess, and owned-file proposal policy out of the index; justify the split Markdown and TOML normative standards.
    - [ ] `ki-binding` — preserve mixed repository and user-home evidence honestly while removing the legacy adapter; rename its bare standard and decide whether the lack of exemplars is intentional.
    - [ ] `ki-binding-chezmoi` — retain external chezmoi choices as report-only policy; rename its bare standard and justify the core set and absent exemplars.
-   - [ ] `ki-bootstrap` — retain its guidance-only, no-catalogue boundary; decide whether `rubric.md` is still useful or is retired catalogue residue.
+   - [x] `ki-bootstrap` — accepted in `fdf12690`: guidance-only process boundary, native CLI standard and examples, stale BOOT rubric removed, closed four-reference set retained, and no catalogue or top-level public scripts.
    - [ ] `ki-decision-records` — separate its context builder and multi-file index draft from catalogue wiring; justify `dr-format.md` and each mode procedure.
    - [ ] `ki-dotfiles-chezmoi` — retain explicit-create semantics for `.chezmoiignore`; decide whether the lack of exemplars is intentional.
    - [ ] `ki-engineering` — replace `createContext` with `createSession`, remove remaining item exports, split context by evidence responsibility, and rename and confirm its core four references.
