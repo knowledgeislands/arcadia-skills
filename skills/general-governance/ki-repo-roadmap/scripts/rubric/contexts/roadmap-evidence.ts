@@ -40,9 +40,10 @@ const NEAR = new Set<Horizon>(['Blocking', 'Next'])
 const THEME_RE = /^[a-z0-9]+(?:-[a-z0-9]+)*$/
 const THEME_CODE_RE = /^[A-Z][A-Z0-9]{1,7}$/
 const PLAN_ID_RE = /^[A-Z][A-Z0-9]{1,7}-\d{3,}$/
+const COMMIT_ID_RE = /^(?:[0-9a-f]{40}|[0-9a-f]{64})$/
 const PLAN_RE = /^([A-Z][A-Z0-9]{1,7}-\d{3,})-([a-z0-9]+(?:-[a-z0-9]+)*)\.md$/
 const PLAN_LINE_RE = /^\*\*Plan:\*\* \[([A-Z][A-Z0-9]{1,7}-\d{3,})\]\((plans\/[A-Z][A-Z0-9]{1,7}-\d{3,}-[a-z0-9]+(?:-[a-z0-9]+)*\.md)\)$/
-const REQUIRED = ['id', 'title', 'status', 'roadmap', 'blocks', 'blocked-by']
+const REQUIRED = ['id', 'title', 'status', 'roadmap', 'blocks', 'blocked-by', 'baseline-ref']
 const OPTIONAL = ['handoff', 'tier', 'readiness']
 const VALID_STATUS = new Set(['open', 'ready', 'in-progress', 'acceptance', 'done'])
 const STANDARD_REF = 'references/standards.md'
@@ -426,7 +427,7 @@ function discoverThematic(): { themes: string[]; items: Item[]; plans: Plan[] } 
       for (const field of parsed.duplicateKeys) add('FAIL', 'PLAN-1', `duplicate frontmatter key '${field}'`, FORMAT_REF, display)
       if (parsed.unparsedLines.length)
         add('FAIL', 'PLAN-1', 'frontmatter must contain only flat key/value fields and comments', FORMAT_REF, display)
-      for (const field of ['id', 'title', 'status', 'roadmap']) {
+      for (const field of ['id', 'title', 'status', 'roadmap', 'baseline-ref']) {
         if (field in fm && !fm[field].trim()) add('FAIL', 'PLAN-1', `frontmatter field '${field}' must not be empty`, FORMAT_REF, display)
       }
       if (!/^id:\s*(['"])[A-Z][A-Z0-9]{1,7}-\d{3,}\1\s*$/m.test(parsed.raw))
@@ -437,6 +438,10 @@ function discoverThematic(): { themes: string[]; items: Item[]; plans: Plan[] } 
       if (fm.id && code && !fm.id.startsWith(`${code}-`))
         add('FAIL', 'PLAN-1', `id '${fm.id}' does not use theme code '${code}'`, FORMAT_REF, display)
       if (fm.status && !VALID_STATUS.has(fm.status)) add('FAIL', 'PLAN-1', `invalid status '${fm.status}'`, FORMAT_REF, display)
+      if (fm.status && ['open', 'ready'].includes(fm.status) && fm['baseline-ref'] !== '—')
+        add('FAIL', 'PLAN-1', `${fm.status} plan baseline-ref must be — until execution starts`, FORMAT_REF, display)
+      if (fm.status && ['in-progress', 'acceptance', 'done'].includes(fm.status) && !COMMIT_ID_RE.test(fm['baseline-ref'] ?? ''))
+        add('FAIL', 'PLAN-1', `${fm.status} plan baseline-ref must be a full lowercase commit object ID`, FORMAT_REF, display)
       if (match[2].length > 50) add('FAIL', 'PLAN-1', `filename slug is ${match[2].length} characters; maximum is 50`, FORMAT_REF, display)
       validatePlanBody(parsed.body, display, fm.status)
       const blocks = ids(fm.blocks)

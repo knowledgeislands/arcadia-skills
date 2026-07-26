@@ -5,7 +5,7 @@ import { mechanical } from './common.ts'
 export const PLAN_1 = mechanical(
   'PLAN-1',
   'plan placement and shape',
-  'Plans use the canonical thematic path, stable theme code and serial, required frontmatter, and matching filename and ID.'
+  'Plans use the canonical thematic path, stable theme code and serial, required frontmatter, matching filename and ID, and an immutable execution baseline commit.'
 )
 export const PLAN_2 = mechanical(
   'PLAN-2',

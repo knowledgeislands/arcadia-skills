@@ -27,12 +27,14 @@ status: open
 roadmap: hooks/promote-plan-mode-plans
 blocks: —
 blocked-by: —
+baseline-ref: —
 ---
 ```
 
 - `status` is `open`, `ready`, `in-progress`, `acceptance`, or `done`. `open` awaits explicit approval to start; `ready` is approved and unblocked; `acceptance` means planned work and verification are complete and the plan awaits the user's explicit acceptance; `done` is a retained completion record awaiting an explicit later prune. Explicitly named plans may transition from `open` to `ready` together under one approval, and from `ready` to `in-progress` together under one coordinated start; each batch is all-or-nothing and committed once.
 - `roadmap` is a qualified `<theme>/<item-slug>` locator for an item in `Blocking` or `Next`; its theme must match the plan directory.
 - `blocks` and `blocked-by` are comma-separated canonical `<THEME>-<NNN>` plan identifiers or `—`, and are reverse-consistent.
+- `baseline-ref` is `—` while a plan is `open` or `ready`. The initial `execute` transition replaces it with the full lowercase commit object ID at `HEAD` immediately before work starts. The immutable ID remains unchanged through `in-progress`, `acceptance`, and `done`, providing the recoverable comparison baseline without requiring a tag or release.
 - There is no `phase` field; the canonical roadmap horizon is authoritative.
 
 ## Local roadmap reference

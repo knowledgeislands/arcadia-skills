@@ -5,6 +5,7 @@ status: in-progress
 roadmap: foundation-tooling/define-compatible-harness-registration-and-native-repository-maintenance-boundaries
 blocks: —
 blocked-by: —
+baseline-ref: b4db5da1e0c5d8f6baf8039fcae81472b7a33884
 ---
 
 ## Context

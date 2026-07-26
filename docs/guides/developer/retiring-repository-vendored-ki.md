@@ -43,31 +43,29 @@ It does not replace the old bootstrap/scaffolding operation; decide each remaini
 
 ## Preserve a comparison baseline
 
-Before a substantial clean-end-state cutover, record the known-good commit so the before and after states remain directly comparable.
+The governed plan records the full known-good commit ID in `baseline-ref` when execution starts, so the before and after states remain directly comparable.
 
-Git history is normally sufficient; a release tag is useful when the comparison should be shared or revisited easily, not a requirement for every change.
+Resolve the immutable baseline directly:
 
 ```sh
 git rev-parse HEAD
-git tag -a pre-native-cli-cutover -m "Baseline before native CLI cutover"
-git push origin pre-native-cli-cutover # Only when the tag should be shared.
 ```
 
 Compare the baseline with the current branch locally:
 
 ```sh
-git diff --stat pre-native-cli-cutover..HEAD
-git diff pre-native-cli-cutover..HEAD
-git log --oneline pre-native-cli-cutover..HEAD
+git diff --stat <baseline-ref>..HEAD
+git diff <baseline-ref>..HEAD
+git log --oneline <baseline-ref>..HEAD
 ```
 
-After pushing the tag, GitHub provides the same visual comparison at:
+GitHub accepts the immutable commit ID in the same comparison URL:
 
 ```text
-https://github.com/<owner>/<repository>/compare/pre-native-cli-cutover...main
+https://github.com/<owner>/<repository>/compare/<baseline-ref>...main
 ```
 
-Use the recorded commit SHA in place of the tag when no tag was created.
+A tag or release may still provide a convenient shared name, but neither is part of the clean-end-state cutover requirement.
 
 ## Retire one repository
 
