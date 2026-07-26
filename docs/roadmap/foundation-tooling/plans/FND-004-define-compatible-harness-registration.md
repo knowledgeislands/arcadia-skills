@@ -22,9 +22,106 @@ The compatible-harness identity, installation, activation, and governed-rubric h
 
 The repository-local `.ki/` executor, package-script aliases, publishers, wrapper runners, and legacy educate scripts have been removed. `ki-skills` establishes the intended family/session contract, and `ki-handoffs` is the first additional catalogue cut to that shape.
 
-Nine in-scope structured catalogues still use transitional catalogue or context adapters, and those are the remaining skill reviews after accepting `ki-skills`, `ki-authoring`, `ki-binding`, `ki-binding-chezmoi`, `ki-decision-records`, `ki-dotfiles-chezmoi`, `ki-engineering`, `ki-feature-definitions`, `ki-handoffs`, `ki-housekeeping`, `ki-kb`, `ki-kb-activities`, `ki-kb-live-artifacts`, `ki-kb-streams`, `ki-repo`, `ki-repo-roadmap`, and the guidance-only `ki-bootstrap`. The deferred `ki-specifications` catalogue remains outside this count.
+Eight in-scope structured catalogues still use transitional catalogue or context adapters, and those are the remaining skill reviews after accepting `ki-skills`, `ki-authoring`, `ki-binding`, `ki-binding-chezmoi`, `ki-decision-records`, `ki-dotfiles-chezmoi`, `ki-engineering`, `ki-feature-definitions`, `ki-handoffs`, `ki-harness`, `ki-housekeeping`, `ki-kb`, `ki-kb-activities`, `ki-kb-live-artifacts`, `ki-kb-streams`, `ki-repo`, `ki-repo-roadmap`, and the guidance-only `ki-bootstrap`. The deferred `ki-specifications` catalogue remains outside this count.
 
 CI still invokes the removed `ki:audit` package alias and describes `.ki/bootstrap`. The pre-commit hook uses the direct CLI but its staged snapshot needs a final dependency-completeness review. Maintainer guidance still contains obsolete vendoring and executor assumptions.
+
+### Current skill tree
+
+The current physical tree mixes semantic domains, dependency roles, and historical importance. The arrows show the one capability rename proposed by this plan; `ki-repo-review` keeps its current name because dropping `repo` would make a deliberately repository-scoped review process ambiguous.
+
+```text
+skills/
+├── environment/
+│   ├── ki-binding
+│   ├── ki-housekeeping
+│   └── ki-tokenomics
+├── foundations/
+│   ├── ki-authoring
+│   └── ki-engineering
+├── general-governance/
+│   ├── ki-decision-records
+│   ├── ki-feature-definitions
+│   ├── ki-handoffs
+│   ├── ki-repo-roadmap → ki-roadmap
+│   └── ki-subagents
+├── implied-families/
+│   ├── ki-binding-chezmoi
+│   ├── ki-kb-activities
+│   ├── ki-kb-live-artifacts
+│   ├── ki-kb-streams
+│   └── ki-website-cloudflare
+├── keystone/
+│   ├── ki-bootstrap
+│   ├── ki-repo
+│   └── ki-skills
+├── process/
+│   ├── ki-delegate
+│   ├── ki-next
+│   ├── ki-plan
+│   ├── ki-recap
+│   └── ki-repo-review
+└── repo-structure/
+    ├── ki-dotfiles-chezmoi
+    ├── ki-harness
+    ├── ki-homebrew-tap
+    ├── ki-kb
+    ├── ki-mcp
+    ├── ki-plugins
+    ├── ki-specifications
+    ├── ki-tools
+    └── ki-website
+```
+
+### Target skill tree
+
+The target groups skills by the domain they govern. Importance and composition remain in frontmatter and the generated dependency graph rather than being encoded as `foundations` or `implied-families` directories. `ki-harness` and `ki-plugins` are domain-specific agentic-system standards, not universal keystones.
+
+```text
+skills/
+├── agentic-systems/
+│   ├── ki-harness
+│   ├── ki-mcp
+│   ├── ki-plugins
+│   └── ki-subagents
+├── environment/
+│   ├── ki-binding
+│   ├── ki-binding-chezmoi
+│   ├── ki-dotfiles-chezmoi
+│   ├── ki-housekeeping
+│   └── ki-tokenomics
+├── governance/
+│   ├── ki-authoring
+│   ├── ki-decision-records
+│   ├── ki-engineering
+│   ├── ki-feature-definitions
+│   ├── ki-handoffs
+│   ├── ki-roadmap
+│   └── ki-specifications
+├── keystone/
+│   ├── ki-bootstrap
+│   ├── ki-repo
+│   └── ki-skills
+├── knowledge-bases/
+│   ├── ki-kb
+│   ├── ki-kb-activities
+│   ├── ki-kb-live-artifacts
+│   └── ki-kb-streams
+├── process/
+│   ├── ki-delegate
+│   ├── ki-next
+│   ├── ki-plan
+│   ├── ki-recap
+│   └── ki-repo-review
+├── tooling/
+│   ├── ki-homebrew-tap
+│   └── ki-tools
+└── websites/
+    ├── ki-website
+    └── ki-website-cloudflare
+```
+
+The target placement of `ki-specifications` is recorded for completeness, but its move and all content changes remain deferred with the rest of that skill's excluded scope.
 
 ## Steps
 
@@ -40,7 +137,7 @@ CI still invokes the removed `ki:audit` package alias and describes `.ki/bootstr
    - [x] `ki-engineering` — accepted in `f8261a73` and independently post-verified after its concurrent-worktree hook bypass: focused family contexts, session-owned coalesced drafts and bounded commands, item-owned actions, wiring-only catalogue, `standards-engineering.md`, exact shared rubric contract, generated rubric in sync, and no top-level public scripts. Repository CI and legacy exclusion findings remain for integration steps 5–6.
    - [x] `ki-feature-definitions` — accepted in `473562e2`: ten complete families, heading normalisation owned by its identity item, shared file drafts coalesced by the session, wiring-only catalogue, legacy mapper and adapter removed, feature-definition standard named explicitly, AUDIT and CONFORM procedures split, generated rubric in sync, and no top-level public scripts.
    - [x] `ki-handoffs` — accepted in `3da3d73b`: one self-contained HAND family, wiring-only default catalogue, item-owned behaviour, session-owned readiness draft, renamed `standards-handoffs.md`, generated rubric in sync, and no top-level public scripts.
-   - [ ] `ki-harness` — preserve harness-marker append safety while removing index-owned write planning; confirm its references describe the direct installed-harness boundary.
+   - [x] `ki-harness` — accepted in `4d717fb2`: safe harness-marker append owned by its item and coalesced by the session, unsafe configuration and shelf links refused, physical installed capabilities discovered directly, seven complete families, wiring-only catalogue, compatible-harness standard named explicitly, generated rubric in sync, and the obsolete global-skill linker and package-alias family removed. Direct repository execution awaits the declared `ki-subagents` dependency's session migration.
    - [ ] `ki-homebrew-tap` — preserve applicability and manual Homebrew checks, move marker mutation to an item-owned action, and justify its mode procedures and absent exemplars.
    - [x] `ki-housekeeping` — accepted in `031154c0`: repository SELF evidence separated from bounded user-home memory subjects, contained memory repairs coalesced in one session, destructive cleanup retained as manual policy, five complete families, wiring-only catalogue, Claude-state and auto-memory standards named explicitly, AUDIT and CONFORM procedures split, generated rubric in sync, and no top-level public scripts.
    - [x] `ki-kb` — accepted in `955ce63d`: evidence split by responsibility, safe index and `MEMORY.md` creation retained as session-owned proposals, item-owned zone actions, wiring-only catalogue, templates moved to assets, KB and frontmatter standards named explicitly, generated rubric in sync, and no top-level public scripts. Direct repository execution awaits the declared `ki-kb-activities` dependency's session migration.
@@ -50,20 +147,22 @@ CI still invokes the removed `ki:audit` package alias and describes `.ki/bootstr
    - [ ] `ki-mcp` — retain bounded configuration edits and keep client generation outside conform; justify the surface-specific references and mode procedures.
    - [ ] `ki-plugins` — remain report-only for generated projections; remove the adapter and catalogue barrel, and decide whether absent exemplars are intentional.
    - [x] `ki-repo` — accepted in `0d865632`: focused repository contexts, item-owned explicit create and append actions, session-owned coalesced configuration drafts, wiring-only catalogue, GitHub confirmation boundaries preserved, repository and configuration standards named explicitly, generated rubric in sync, and no top-level public scripts.
-   - [x] `ki-repo-roadmap` — accepted in `686466bd`: focused evidence plus session-owned multi-file drafts, item-owned actions, wiring-only catalogue, legacy writer/schema removed, repository-roadmap and plan-format standards named explicitly, generated rubric in sync, and no top-level public scripts.
+   - [x] `ki-repo-roadmap` — accepted in `686466bd`: focused evidence plus session-owned multi-file drafts, item-owned actions, wiring-only catalogue, legacy writer/schema removed, repository-roadmap and plan-format standards named explicitly, generated rubric in sync, and no top-level public scripts. Rename to `ki-roadmap` during the taxonomy cut.
    - [ ] `ki-subagents` — preserve per-agent subjects and filename-alignment drafts while removing the family adapter; confirm its core four references.
    - [ ] `ki-tokenomics` — preserve bounded `.claude` user-home scope and report-only unsafe work; justify `headroom-operations.md` and each mode procedure.
    - [ ] `ki-tools` — retain bounded executable and configuration repairs as item or session behaviour; justify its mode procedures and absent exemplars.
    - [ ] `ki-website` — retain safe `.gitignore` and `.ki-config.toml` creation in the session proposal while leaving deployment manual; confirm its core four references.
    - [ ] `ki-website-cloudflare` — keep Cloudflare and Wrangler operations report-only, remove the thin adapter, and justify `setup-guide.md`.
 3. Review every top-level `skills/**/scripts/*.ts` file in the same skill pass. Retain only a necessary public skill command with a clear purpose, useful `--help`, explicit error handling, and focused tests; move private implementation to `scripts/internal/`, published or materialised compile-time dependencies to `scripts/shared/`, and governed rubric behaviour to `scripts/rubric/`. Remove wrappers, one-off validators, and helpers whose capability now belongs to `ki`. Tests may remain adjacent to the public command they cover.
-4. Prove native self-hosted parity: run the installed or explicit local canonical harness against this source repository and confirm that `ki repo educate`, `ki repo audit`, and `ki repo conform --dry-run` resolve every declared repository skill, including bounded user-home evidence.
-5. Finish the live-role cutover: replace the stale CI alias and `.ki/bootstrap` description, make the direct pre-commit staged snapshot dependency-complete, and remove obsolete vendoring, executor, bootstrap, and educate guidance. Retain only commands and fixtures whose roles sit outside governed-rubric execution.
-6. Run the complete source-harness verification through the native path and present FND-004 for acceptance.
+4. Apply the target taxonomy as one clean cut after the active per-skill edits land. Rename `ki-repo-roadmap` to `ki-roadmap`; keep `ki-repo-review`; merge Foundations and General Governance into `governance`; remove `implied-families`; and move the remaining skills into `agentic-systems`, `environment`, `knowledge-bases`, `tooling`, and `websites` as shown above. Update frontmatter dependencies, `.ki-config.toml`, generated graphs, documentation, fixtures, and every source or link reference in the same change. Do not move or edit `ki-specifications` during this plan.
+5. Prove native self-hosted parity: run the installed or explicit local canonical harness against this source repository and confirm that `ki repo educate`, `ki repo audit`, and `ki repo conform --dry-run` resolve every declared repository skill, including bounded user-home evidence.
+6. Finish the live-role cutover: replace the stale CI alias and `.ki/bootstrap` description, make the direct pre-commit staged snapshot dependency-complete, and remove obsolete vendoring, executor, bootstrap, and educate guidance. Retain only commands and fixtures whose roles sit outside governed-rubric execution.
+7. Run the complete source-harness verification through the native path and present FND-004 for acceptance.
 
 ## Files touched
 
 - The 26 in-scope skill roots under `skills/`
+- Skill path, dependency, configuration, graph, catalogue, and documentation references affected by the target taxonomy
 - `.github/workflows/ci.yml`, `.husky/pre-commit`, and affected maintainer guidance
 - This plan and its foundation-tooling roadmap item
 
@@ -71,9 +170,10 @@ CI still invokes the removed `ki:audit` package alias and describes `.ki/bootstr
 
 1. Every in-scope skill row records an accepted implementation shape, closed reference vocabulary, and justified top-level script set.
 2. Every in-scope structured catalogue follows the accepted `ki-skills` family/session contract and its generated `references/rubric.md` is in sync.
-3. The canonical installed or local harness passes educate, audit, and conform dry-run for every skill declared by this repository.
-4. CI and pre-commit use the direct `ki` surface without `.ki`, package aliases, compatibility runners, or incomplete staged dependency material.
-5. `bun run test`, the TypeScript and authoring gates, the roadmap audit, and the aggregate native repository audit pass.
+3. The in-scope physical tree matches the target taxonomy, `ki-roadmap` is the only roadmap-governance capability name, and no source path retains `implied-families`, `foundations`, `general-governance`, or `repo-structure`.
+4. The canonical installed or local harness passes educate, audit, and conform dry-run for every skill declared by this repository.
+5. CI and pre-commit use the direct `ki` surface without `.ki`, package aliases, compatibility runners, or incomplete staged dependency material.
+6. `bun run test`, the TypeScript and authoring gates, the roadmap audit, and the aggregate native repository audit pass.
 
 ## Dependencies / blocks
 
