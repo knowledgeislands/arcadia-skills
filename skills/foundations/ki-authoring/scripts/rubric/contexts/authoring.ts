@@ -74,6 +74,27 @@ const CHECK =
 const CONFORM =
   'bunx prettier --write "**/*.md" "!.ki/bootstrap/**" "!.ki/bin/**" "!src/generated/**" "!.claude/commands/**" "!.claude/skills/**" "!.claude/agents/**" "!.agents/skills/**" --ignore-path .gitignore && bunx markdownlint-cli2 --fix'
 
+export const MARKDOWN_CONFORM_COMMANDS = [
+  {
+    program: 'bunx',
+    arguments: [
+      'prettier',
+      '--write',
+      '**/*.md',
+      '!.ki/bootstrap/**',
+      '!.ki/bin/**',
+      '!src/generated/**',
+      '!.claude/commands/**',
+      '!.claude/skills/**',
+      '!.claude/agents/**',
+      '!.agents/skills/**',
+      '--ignore-path',
+      '.gitignore'
+    ]
+  },
+  { program: 'bunx', arguments: ['markdownlint-cli2', '--fix'] }
+] as const
+
 export type OwnedFile = '.prettierrc.json' | '.editorconfig' | '.markdownlint-cli2.jsonc'
 export type AuthoringRubricContext = {
   target: string

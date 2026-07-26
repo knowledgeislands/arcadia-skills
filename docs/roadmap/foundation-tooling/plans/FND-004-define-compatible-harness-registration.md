@@ -53,7 +53,9 @@ The shared ecosystem GDR now establishes the five-repository ownership model. It
      - [x] Prove that slice through `ki dev on`: native audit, byte-identical dry run, host-owned conform, and post-conform re-audit against a canonical development payload.
      - [x] Port `ki-feature-definitions`, retaining its read-only corpus evidence and declaring its heading-normalisation repair as a cached file-replacement plan; prove it through the canonical development payload.
      - [x] Port `ki-subagents`, scope its evidence to each repository's `subagents/` directory, and declare filename alignment as a host-owned replacement rather than a direct writer; prove audit, dry-run, conform, and re-audit through the canonical development payload.
-     - [ ] Add an explicit tools-owned subprocess capability for `ki-authoring` and `ki-engineering`; native definitions must declare the bounded operation, while `ki` owns execution, dry-run, reporting, and failure handling.
+     - [x] Add an explicit tools-owned subprocess capability; native definitions declare bounded pathless commands, while `ki` validates, reports, dry-runs, executes from the resolved repository without a shell, and re-audits.
+     - [x] Port `ki-authoring`: declare its Markdown formatter/linter repair through that host capability, retain owned-file drift as host file replacements, and prove audit, dry-run, conform, and re-audit through the canonical development payload.
+     - [ ] Port `ki-engineering` through the subprocess capability, separating its safe file replacements from the toolchain commands.
      - [ ] Port the remaining pure repository-local catalogues: `ki-decision-records`, `ki-harness`, and `ki-skills`.
      - [ ] Port the exceptional repository catalogues: `ki-repo-roadmap` as a multi-file repair plan and `ki-repo` only after its GitHub and hardened transaction effects have a native host design.
      - [ ] Resolve user-scope evidence and repair boundaries for the declared `ki-housekeeping` and `ki-tokenomics` catalogues without treating user-home state as ordinary repository files.
