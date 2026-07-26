@@ -22,7 +22,7 @@ The compatible-harness identity, installation, activation, and governed-rubric h
 
 The repository-local `.ki/` executor, package-script aliases, publishers, wrapper runners, and legacy educate scripts have been removed. `ki-skills` establishes the intended family/session contract, and `ki-handoffs` is the first additional catalogue cut to that shape.
 
-Seventeen in-scope structured catalogues still use transitional catalogue or context adapters, and those are the remaining skill reviews after accepting `ki-skills`, `ki-authoring`, `ki-binding`, `ki-decision-records`, `ki-engineering`, `ki-handoffs`, `ki-repo`, `ki-repo-roadmap`, and the guidance-only `ki-bootstrap`. The deferred `ki-specifications` catalogue remains outside this count.
+Sixteen in-scope structured catalogues still use transitional catalogue or context adapters, and those are the remaining skill reviews after accepting `ki-skills`, `ki-authoring`, `ki-binding`, `ki-decision-records`, `ki-engineering`, `ki-handoffs`, `ki-kb-streams`, `ki-repo`, `ki-repo-roadmap`, and the guidance-only `ki-bootstrap`. The deferred `ki-specifications` catalogue remains outside this count.
 
 CI still invokes the removed `ki:audit` package alias and describes `.ki/bootstrap`. The pre-commit hook uses the direct CLI but its staged snapshot needs a final dependency-completeness review. Maintainer guidance still contains obsolete vendoring and executor assumptions.
 
@@ -46,7 +46,7 @@ CI still invokes the removed `ki:audit` package alias and describes `.ki/bootstr
    - [ ] `ki-kb` — split evidence context by responsibility and keep index or `MEMORY.md` creation as session-owned proposals; justify the KB reference, mode procedures, and templates.
    - [ ] `ki-kb-activities` — retain safe `Activities.md` creation outside catalogue wiring; decide whether its mode documents replace a missing normative standard.
    - [ ] `ki-kb-live-artifacts` — retain safe index and frontmatter drafts while leaving rendering and deletion manual; justify each mode procedure.
-   - [ ] `ki-kb-streams` — preserve controlled-vocabulary normalisation on one shared proposal; reconcile the structure and process references and mode procedures with its missing normative standard.
+   - [x] `ki-kb-streams` — accepted in `b095552d`: lifecycle normalisation preserved on one coalesced session proposal, four complete families, wiring-only catalogue, legacy adapter removed, stream-structure and enactment-process standards named explicitly, AUDIT and CONFORM procedures split, generated rubric in sync, and no top-level public scripts.
    - [ ] `ki-mcp` — retain bounded configuration edits and keep client generation outside conform; justify the surface-specific references and mode procedures.
    - [ ] `ki-plugins` — remain report-only for generated projections; remove the adapter and catalogue barrel, and decide whether absent exemplars are intentional.
    - [x] `ki-repo` — accepted in `0d865632`: focused repository contexts, item-owned explicit create and append actions, session-owned coalesced configuration drafts, wiring-only catalogue, GitHub confirmation boundaries preserved, repository and configuration standards named explicitly, generated rubric in sync, and no top-level public scripts.
