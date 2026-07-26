@@ -57,7 +57,7 @@ EDUCATE scaffolds no standalone artifact — a handoff rides on an existing plan
 
 **Precondition:** REFRESH edits this skill's own canonical files, which exist only in `ki-agentic-harness`. Invoked from a repo where the skill is vendored, it stops here and names the harness as where to run it — or, for a pattern recurring across bases, routes it through `ki-kb`'s IMPROVE mode instead.
 
-Revisit the doctrine against practice: does the reasoning-layer split still match how work flows from the top tier to execution; does the quality bar need sharpening from real handoffs; is the composition boundary with `ki-tokenomics` still clean. Update this `SKILL.md`, [references/standards.md](references/standards.md), and the canonical TypeScript items under `scripts/rubric/items/`; regenerate [the published rubric](references/rubric.md) with `bun scripts/rubric/publish.ts`, record what changed in the commit, and refresh [references/sources.md](references/sources.md).
+Revisit the doctrine against practice: does the reasoning-layer split still match how work flows from the top tier to execution; does the quality bar need sharpening from real handoffs; is the composition boundary with `ki-tokenomics` still clean. Update this `SKILL.md`, [references/standards.md](references/standards.md), and the canonical TypeScript items under `scripts/rubric/items/`; regenerate [the published rubric](references/rubric.md) with `ki skill rubric ki-handoffs --write`, record what changed in the commit, and refresh [references/sources.md](references/sources.md).
 
 ## Composition
 

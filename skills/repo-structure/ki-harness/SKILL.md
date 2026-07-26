@@ -61,7 +61,7 @@ The harness standard is a KI architectural convention, not an external spec — 
 1. **Read [the source list](references/sources.md)** — tracked sources, each with a `last reviewed` date.
 2. **Re-fetch external sources** (Agent Skills specification, Claude Code subagent docs) and diff against [the standard](references/standards.md): new required SKILL.md fields, changed skill-install conventions, new subagent format requirements.
 3. **Check the reference implementation** — read [ki-agentic-harness](../../../README.md) and its `CLAUDE.md`; does the standard still match current practice? Promote uncodified patterns that work well; flag any drift between the standard and the reference.
-4. **Propose a diff** to [the standard](references/standards.md) and the canonical TypeScript items under `scripts/rubric/items/`. Confirm before writing, then regenerate [the published rubric](references/rubric.md) with `bun scripts/rubric/publish.ts`.
+4. **Propose a diff** to [the standard](references/standards.md) and the canonical TypeScript items under `scripts/rubric/items/`. Confirm before writing, then regenerate [the published rubric](references/rubric.md) with `ki skill rubric ki-harness --write`.
 5. **Update [the source list](references/sources.md)** — bump `last reviewed` dates and refresh the `## Last review` block (what's confirmed, open watch-items). The record of _what changed_ is the commit, not a changelog here.
 
 Run REFRESH on this skill's declared cadence (the `**Refresh:**` marker in [`references/sources.md`](references/sources.md) — `external-spec · monthly`). If it's invoked while still within that window, confirm before forcing (interactive) or skip (scheduled), per the enforcement framework's REFRESH gate.

@@ -82,7 +82,6 @@ scripts/
     contexts/
       contexts.ts              # public context contracts and composition
       <evidence>.ts            # shared parsing or evidence builders
-    publish.ts                 # deterministic rubric.md renderer and publisher
 assets/
   checker-response.schema.json # canonical JSONL record schema
 references/
@@ -483,7 +482,7 @@ The renderer uses family metadata and ordered item metadata to reproduce:
 
 The generated file carries a clear generated marker.
 
-A read-only parity check renders in memory and compares exact output with the tracked file; the skill-local `scripts/rubric/publish.ts` writes the publication.
+`ki skill rubric <skill>` verifies the tracked publication against the native catalogue; `ki skill rubric <skill> --write` writes it.
 
 Runtime code using the shared checker never parses the generated Markdown back into policy.
 
