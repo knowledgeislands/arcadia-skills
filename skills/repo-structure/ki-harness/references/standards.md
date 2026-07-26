@@ -96,7 +96,7 @@ The quality of the skill's prose, description richness, and adherence to the Age
 
 `ki-harness` owns whether source linking is eligible: only this harness's own physical repository root may use its canonical `skills/` tree as a link source. A nested harness, an external harness, or another repository is never a source, even where skill names match.
 
-When eligible, a source harness may link its runtime skill payloads and its declared `scripts/vendored/` shared-module payloads to the canonical skill tree under that same root. `ki-bootstrap` owns the physical resolution and guarded transaction. It must resolve only a named canonical descendant carrying `SKILL.md`.
+When eligible, a source harness may link its runtime skill payloads to the canonical skill tree under that same root. Declared shared modules remain regular local files in each skill's `scripts/shared/` directory. `ki-bootstrap` owns the physical resolution and guarded transaction for runtime links and must resolve only a named canonical descendant carrying `SKILL.md`.
 
 All ordinary runtime payloads and every `.ki/bootstrap/` payload remain dereferenced regular-file copies. Development links never cross checkouts, so a consumer remains usable after its bootstrap acquisition source disappears.
 
