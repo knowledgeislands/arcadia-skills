@@ -1,69 +1,111 @@
-<!-- GENERATED FILE: produced by `ki skill rubric`. Do not hand-edit; edit scripts/rubric/index.ts, then rerun `ki skill rubric <skill> --write`. -->
+<!-- GENERATED FILE: produced by `ki skill rubric`. Do not hand-edit; edit scripts/rubric/items/, then rerun `ki skill rubric <skill> --write`. -->
 
-# Rubric — ki-feature-definitions
+# Generated rubric — Feature Definitions
 
-> **Generated publication.** The TypeScript rubric items under `scripts/rubric/index.ts` are canonical. Edit that definition, then rerun `ki skill rubric <skill> --write`.
+> **Generated publication.** The TypeScript rubric items under `scripts/rubric/items/` are canonical. Edit those definitions, then rerun `ki skill rubric ki-feature-definitions --write`.
+
+Line-by-line criteria for auditing ki-feature-definitions. Classifications are derived from item aspects: **[M]** mechanical, **[J]** judgment, **[M + J]** hybrid, and **[M-heuristic + J]** hybrid with heuristic mechanical evidence. Sources are cited as declared by each canonical item.
 
 ## Contents
 
-- [INDEX — Feature index](#index--feature-index)
-- [AREA — Area registration](#area--area-registration)
-- [ID — Requirement identity](#id--requirement-identity)
-- [REQ — Normative requirement shape](#req--normative-requirement-shape)
-- [VERIFY — Verification hooks](#verify--verification-hooks)
-- [BEHAVIOUR — Behavioural altitude](#behaviour--behavioural-altitude)
-- [AS-BUILT — As-built truth](#as-built--as-built-truth)
-- [SPLIT — Requirement focus](#split--requirement-focus)
-- [DR-LINK — Decision traceability](#dr-link--decision-traceability)
-- [AREA-FIT — Area fit](#area-fit--area-fit)
+- [INDEX — feature index](#index--feature-index)
+- [AREA — area registration](#area--area-registration)
+- [ID — requirement identity](#id--requirement-identity)
+- [REQ — normative requirement shape](#req--normative-requirement-shape)
+- [VERIFY — verification hooks](#verify--verification-hooks)
+- [BEHAVIOUR — behavioural altitude](#behaviour--behavioural-altitude)
+- [AS-BUILT — as-built truth](#as-built--as-built-truth)
+- [SPLIT — requirement focus](#split--requirement-focus)
+- [DR-LINK — decision traceability](#dr-link--decision-traceability)
+- [AREA-FIT — area fit](#area-fit--area-fit)
 
-## INDEX — Feature index
+## INDEX — feature index
 
-- **INDEX-1 [FAIL · INSPECT] — docs/features/index.md exists**
-- **INDEX-2 [FAIL · INSPECT] — index.md contains a populated areas table**
+→ [standard](standards-feature-definitions.md)
 
-## AREA — Area registration
+The corpus has a populated registry that maps prefixes to area files.
 
-- **AREA-1 [WARN · INSPECT] — every file named in an areas table exists**
-- **AREA-2 [WARN · INSPECT] — every area file is registered**
+- **INDEX-1 [M] — docs/features/index.md exists** — `docs/features/index.md` exists. Missing is a FAIL — there is no registry to validate against. (standards-feature-definitions.md)
+- **INDEX-2 [M] — index.md contains a populated areas table** — `index.md` contains at least one areas table with `Prefix` and `File` columns and at least one row. (standards-feature-definitions.md)
 
-## ID — Requirement identity
+## AREA — area registration
 
-- **ID-1 [FAIL · INSPECT] — requirement headings use canonical IDs**
-- **ID-2 [FAIL · INSPECT] — requirement prefixes are registered to their file**
-- **ID-3 [WARN · INSPECT] — requirement IDs are unique across the corpus**
+→ [standard](standards-feature-definitions.md)
 
-## REQ — Normative requirement shape
+Area-table files and corpus files agree.
 
-- **REQ-1 [FAIL · INSPECT] — requirements carry an RFC-2119 keyword**
+- **AREA-1 [M] — every file named in an areas table exists** — Every file named in an areas table exists on disk. A missing file is a WARN because the table is ahead of the corpus. (standards-feature-definitions.md)
+- **AREA-2 [M] — every area file is registered** — Every Markdown file in `docs/features/`, except `index.md`, is registered under at least one prefix in an areas table. (standards-feature-definitions.md)
 
-## VERIFY — Verification hooks
+## ID — requirement identity
 
-- **VERIFY-1 [WARN · INSPECT] — requirements carry a Verify hook**
-- **VERIFY-2 [J] — Verify hooks are concrete and checkable**
-  > The `_Verify:_` hook is concrete and checkable — a built-output assertion, a named test, or a linked source symbol — not a restatement of the requirement.
+→ [standard](standards-feature-definitions.md)
 
-## BEHAVIOUR — Behavioural altitude
+Requirement headings, prefixes, and append-only IDs form a coherent registry.
 
-- **BEHAVIOUR-1 [J] — requirements describe behaviour**
-  > The statement describes behaviour, not rationale (that is a DR) or procedure (that is a guide). A requirement that explains why should move the reasoning to a Decision Record and cite it.
+- **ID-1 [M] — requirement headings use canonical IDs** — Every level-3 heading outside a `## Gaps …` section matches `### <PREFIX>-NNN — <title>`: uppercase prefix, at least a three-digit serial, and an em-dash separator. (standards-feature-definitions.md)
+- **ID-2 [M] — requirement prefixes are registered to their file** — Each requirement's prefix is registered in an areas table and assigned to its containing file. (standards-feature-definitions.md)
+- **ID-3 [M] — requirement IDs are unique across the corpus** — Requirement IDs are append-only, never reused, and unique across the corpus. (standards-feature-definitions.md)
 
-## AS-BUILT — As-built truth
+## REQ — normative requirement shape
 
-- **AS-BUILT-1 [J] — numbered requirements describe the system today**
-  > The numbered requirement is true of the system today. Aspirational or not-yet-built behaviour belongs in `## Gaps`, not in the numbered contract.
+→ [standard](standards-feature-definitions.md)
 
-## SPLIT — Requirement focus
+Active requirements state normative behaviour.
 
-- **SPLIT-1 [J] — unrelated behaviours use separate IDs**
-  > A heading that bundles several unrelated behaviours should split into separate IDs so each verifies independently.
+- **REQ-1 [M] — requirements carry an RFC-2119 keyword** — Each active requirement contains an uppercase RFC-2119 keyword so its statement is normative and testable. (standards-feature-definitions.md)
 
-## DR-LINK — Decision traceability
+## VERIFY — verification hooks
 
-- **DR-LINK-1 [J] — governed requirements cite their Decision Record**
-  > A requirement that follows from a recorded decision cites its DR. Absence is not a mechanical failure, but a governed behaviour with no link is a gap in the audit trail from why to what.
+→ [standard](standards-feature-definitions.md)
 
-## AREA-FIT — Area fit
+Active requirements carry a verification hook whose quality is reviewed.
 
-- **AREA-FIT-1 [J] — requirements fit their area file**
-  > Each requirement sits in the area file its prefix belongs to; a requirement that has drifted to the wrong area should move (and, if its behaviour changed area, take a new ID in the right prefix rather than moving the number).
+- **VERIFY-1 [M] — requirements carry a Verify hook** — Each active requirement has a `_Verify:_` line. (standards-feature-definitions.md)
+- **VERIFY-2 [J] — Verify hooks are concrete and checkable** — The `_Verify:_` hook names a concrete built-output assertion, test, or source symbol rather than restating the requirement. (standards-feature-definitions.md)
+  - _Review prompt:_ Assess whether each `_Verify:_` hook names a concrete built-output assertion, test, or source symbol rather than restating the requirement.
+
+## BEHAVIOUR — behavioural altitude
+
+→ [standard](standards-feature-definitions.md)
+
+Requirements specify behaviour rather than rationale or procedure.
+
+- **BEHAVIOUR-1 [J] — requirements describe behaviour** — A requirement describes behaviour rather than rationale or procedure. (standards-feature-definitions.md)
+  - _Review prompt:_ Assess whether each requirement describes behaviour rather than rationale or procedure; move reasoning to a Decision Record and operational instruction to a guide.
+
+## AS-BUILT — as-built truth
+
+→ [standard](standards-feature-definitions.md)
+
+The numbered contract describes current system behaviour.
+
+- **AS-BUILT-1 [J] — numbered requirements describe the system today** — Numbered requirements are true of the system today; aspirational behaviour belongs in `## Gaps`. (standards-feature-definitions.md)
+  - _Review prompt:_ Assess whether each numbered requirement is true of the system today and move aspirational or not-yet-built behaviour to `## Gaps`.
+
+## SPLIT — requirement focus
+
+→ [standard](standards-feature-definitions.md)
+
+Independently verifiable behaviours have independent IDs.
+
+- **SPLIT-1 [J] — unrelated behaviours use separate IDs** — Unrelated behaviours have separate IDs so each verifies independently. (standards-feature-definitions.md)
+  - _Review prompt:_ Assess whether a requirement bundles unrelated behaviours that should have separate IDs and verification hooks.
+
+## DR-LINK — decision traceability
+
+→ [standard](standards-feature-definitions.md)
+
+Governed behaviours preserve their link from why to what.
+
+- **DR-LINK-1 [J] — governed requirements cite their Decision Record** — A requirement that follows from a recorded decision cites that Decision Record. (standards-feature-definitions.md)
+  - _Review prompt:_ Assess whether requirements governed by a recorded decision cite it, preserving the audit trail from why to what.
+
+## AREA-FIT — area fit
+
+→ [standard](standards-feature-definitions.md)
+
+Requirements remain in the area their behaviour belongs to.
+
+- **AREA-FIT-1 [J] — requirements fit their area file** — Each requirement sits in the area file its behaviour belongs to. (standards-feature-definitions.md)
+  - _Review prompt:_ Assess whether each requirement sits in the area its behaviour belongs to; when behaviour changes area, allocate a new ID rather than moving the old number.

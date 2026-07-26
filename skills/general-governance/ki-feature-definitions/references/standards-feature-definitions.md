@@ -1,6 +1,6 @@
-# The Feature Definitions format
+# Feature Definitions standard
 
-The quotable standard behind [`../SKILL.md`](../SKILL.md). It defines how a Feature Definition corpus is laid out, how a single requirement is written, and the rules the checker ([`../scripts/govern.ts`](../scripts/govern.ts)) enforces. The line-by-line criteria are in [rubric.md](rubric.md); worked examples are in [exemplars.md](exemplars.md).
+This standard defines how a Feature Definitions corpus is laid out and how each requirement is written. The hosted structured rubric enforces its mechanical criteria; the generated [rubric](rubric.md) publishes every criterion, and the [exemplars](exemplars.md) illustrate representative outcomes.
 
 ## The three-doc split
 
