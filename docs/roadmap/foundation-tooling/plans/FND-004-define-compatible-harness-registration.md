@@ -22,7 +22,7 @@ The compatible-harness identity, installation, activation, and governed-rubric h
 
 The repository-local `.ki/` executor, package-script aliases, publishers, wrapper runners, and legacy educate scripts have been removed. `ki-skills` establishes the intended family/session contract, and `ki-handoffs` is the first additional catalogue cut to that shape.
 
-Twenty in-scope structured catalogues still use transitional catalogue or context adapters, and those are the remaining skill reviews after accepting `ki-skills`, `ki-authoring`, `ki-decision-records`, `ki-engineering`, `ki-handoffs`, and the guidance-only `ki-bootstrap`. The deferred `ki-specifications` catalogue remains outside this count.
+Nineteen in-scope structured catalogues still use transitional catalogue or context adapters, and those are the remaining skill reviews after accepting `ki-skills`, `ki-authoring`, `ki-decision-records`, `ki-engineering`, `ki-handoffs`, `ki-repo-roadmap`, and the guidance-only `ki-bootstrap`. The deferred `ki-specifications` catalogue remains outside this count.
 
 CI still invokes the removed `ki:audit` package alias and describes `.ki/bootstrap`. The pre-commit hook uses the direct CLI but its staged snapshot needs a final dependency-completeness review. Maintainer guidance still contains obsolete vendoring and executor assumptions.
 
@@ -50,7 +50,7 @@ CI still invokes the removed `ki:audit` package alias and describes `.ki/bootstr
    - [ ] `ki-mcp` — retain bounded configuration edits and keep client generation outside conform; justify the surface-specific references and mode procedures.
    - [ ] `ki-plugins` — remain report-only for generated projections; remove the adapter and catalogue barrel, and decide whether absent exemplars are intentional.
    - [ ] `ki-repo` — replace `definitions.ts` and the mixed context adapter; preserve explicit create or append actions and GitHub confirmation boundaries; justify `config-standards.md`.
-   - [ ] `ki-repo-roadmap` — move multi-file evidence and replacement aggregation behind focused session drafts without weakening transaction semantics; justify `plan-format.md`.
+   - [x] `ki-repo-roadmap` — accepted in `686466bd`: focused evidence plus session-owned multi-file drafts, item-owned actions, wiring-only catalogue, legacy writer/schema removed, repository-roadmap and plan-format standards named explicitly, generated rubric in sync, and no top-level public scripts.
    - [ ] `ki-subagents` — preserve per-agent subjects and filename-alignment drafts while removing the family adapter; confirm its core four references.
    - [ ] `ki-tokenomics` — preserve bounded `.claude` user-home scope and report-only unsafe work; justify `headroom-operations.md` and each mode procedure.
    - [ ] `ki-tools` — retain bounded executable and configuration repairs as item or session behaviour; justify its mode procedures and absent exemplars.
