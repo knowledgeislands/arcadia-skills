@@ -13,7 +13,7 @@ You are helping audit, conform, or scaffold a **`tools-*` repo** — a repo hold
 
 This skill rides on `ki-repo` (local files, GitHub settings) but **not** `ki-engineering` — a bash tool has no TypeScript/Bun toolchain to govern, so no `[ki-engineering]` is assumed (the same pattern `ki-kb` follows). If the tool grows a `package.json`, that changes: it then declares `[ki-engineering]` too and defers its lint/test there (see the capability rule below).
 
-The full, quotable standard lives in [standards.md](references/standards.md); the line-by-line pass/fail items live in [rubric.md](references/rubric.md). The mechanical checker is [`scripts/govern.ts`](scripts/govern.ts). Read those when you need detail; this file is the operating procedure.
+The full, quotable standard lives in [standards.md](references/standards.md); the line-by-line pass/fail items live in [rubric.md](references/rubric.md). `ki repo audit` and `ki repo conform` execute the mechanical rubric. Read those when you need detail; this file is the operating procedure.
 
 ## Container, not contents
 
@@ -48,7 +48,7 @@ Mirrors `ki-engineering`'s capability-conditional pattern: what the repo _is_ de
 
 ## The `[ki-tools]` marker
 
-A `tools-*` repo opts into this standard by declaring a **keyless** `[ki-tools]` table in its `.ki-config.toml` — a bare marker, exactly like `[ki-mcp]`. The table is validated **down** (this skill reads only its own table and warns on any unknown key inside it). Run `bun scripts/govern.ts --educate` to print the default block.
+A `tools-*` repo opts into this standard by declaring a **keyless** `[ki-tools]` table in its `.ki-config.toml` — a bare marker, exactly like `[ki-mcp]`. The table is validated **down** (this skill reads only its own table and warns on any unknown key inside it). `ki repo conform --skill ki-tools` adds the marker to an existing parseable configuration when it is the only safe repair.
 
 ## Operating modes
 

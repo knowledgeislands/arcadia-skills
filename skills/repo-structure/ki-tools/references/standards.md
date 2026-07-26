@@ -17,7 +17,7 @@ The full, quotable standard behind the `ki-tools` skill. A `tools-*` repo holds 
 
 This standard judges the **container** (the repo's shape) — it does **not** judge the **contents** (the quality of the tool's own code). A shell tool must be shellcheck-clean and carry a bats suite; this standard checks those are **wired into CI**, not what they report. Whether the tool's logic is correct, well-factored, or fast is the author's concern.
 
-Applicability is declaration or structure: `[ki-tools]` in `.ki-config.toml` or a root `bin/` directory activates the complete audit. With neither, the checker reports one `NA` and stops. A declared repository without `bin/` and an undeclared repository with `bin/` remain applicable; the former fails the executable-container requirement and the latter is audited for the missing declaration.
+Applicability is declaration or structure: `[ki-tools]` in `.ki-config.toml` or a root `bin/` directory activates the complete audit. With neither, `ki repo audit --skill ki-tools` reports one `NA` and stops. A declared repository without `bin/` and an undeclared repository with `bin/` remain applicable; the former fails the executable-container requirement and the latter is audited for the missing declaration.
 
 One tool per repo. A repo that would ship two distinct tools is two repos.
 
@@ -76,7 +76,7 @@ There is deliberately **no `ki-shell` skill**: shell is the reference language, 
 
 ## The `[ki-tools]` marker
 
-A `tools-*` repo opts in by declaring a **keyless** `[ki-tools]` table in its `.ki-config.toml` — a bare marker whose _presence_ is the whole contract, exactly like `[ki-mcp]`. It is validated **down**: the checker reads only this table and warns on any unknown key inside it (there are none today), never reading another skill's table. `bun scripts/govern.ts --educate` prints the default block.
+A `tools-*` repo opts in by declaring a **keyless** `[ki-tools]` table in its `.ki-config.toml` — a bare marker whose _presence_ is the whole contract, exactly like `[ki-mcp]`. It is validated **down**: the checker reads only this table and warns on any unknown key inside it (there are none today), never reading another skill's table. `ki repo conform --skill ki-tools` adds it to an existing parseable configuration when it is safe to do so.
 
 A language conditional is declared as its **own** table, not a key here: a TS/Bun tool carries both `[ki-tools]` and `[ki-engineering]`.
 
