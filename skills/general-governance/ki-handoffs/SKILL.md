@@ -9,7 +9,7 @@ argument-hint: 'audit [dir] | conform [dir] | help | educate <target> | refresh'
 
 # Knowledge Islands handoffs standard
 
-You are applying the **Knowledge Islands handoff doctrine** — how to split expensive reasoning from cheap execution so that work planned once at the top tier can be handed to a cheaper tier, a cold agent, or another person and executed without re-reasoning. This skill owns the _doctrine_. The normative spec — the opt-in marker contract, the quality bar in full, and the tier-assignment rules — lives in [references/standards.md](references/standards.md) as its single source of truth. The structured TypeScript items under `scripts/rubric/items/` are the canonical rubric; [the published rubric](references/rubric.md) is generated from them for human review. Neither restates the other.
+You are applying the **Knowledge Islands handoff doctrine** — how to split expensive reasoning from cheap execution so that work planned once at the top tier can be handed to a cheaper tier, a cold agent, or another person and executed without re-reasoning. This skill owns the _doctrine_. The normative spec — the opt-in marker contract, the quality bar in full, and the tier-assignment rules — lives in [the handoffs standard](references/standards-handoffs.md) as its single source of truth. The structured TypeScript items under `scripts/rubric/items/` are the canonical rubric; [the published rubric](references/rubric.md) is generated from them for human review. Neither restates the other.
 
 Handoffs are a **cross-tier instrument** that rides on an existing artifact — it owns no artifact of its own. In a non-KB repository the spec is a thematic plan file, governed by `ki-repo-roadmap`; in a Knowledge Base it is a stream proposal's `## Checklist`, governed by `ki-kb-streams`. This skill adds the **delegation-readiness delta** on top of whichever host artifact carries the work. Run where there is no such artifact, it points at `ki-repo-roadmap` / `ki-kb-streams` and stops.
 
@@ -19,7 +19,7 @@ Handoffs are a **cross-tier instrument** that rides on an existing artifact — 
 2. **The handoff-spec quality bar** — see [Handoff quality bar](#handoff-quality-bar). The delta over a plain plan: decisions-locked-vs-escalate, a per-unit recommended tier, and a recorded readiness test.
 3. **Tier assignment** — each unit of work names the **cheapest tier that its spec makes safe**, referred to by the house classes (haiku / sonnet / opus, cheapest to most capable). _Which_ tier costs what and how to select the ambient default is entirely `ki-tokenomics` (its standard §4 and §8, and `preferred_model_type`); this skill only requires that a tier be assigned and justified in one line, and never hard-codes model ids or prices.
 4. **The readiness test** — a spec is ready when a cold agent at the assigned tier can execute the first phase from the spec alone, with no reasoning that lives only in the planner's head. The test is recorded on the artifact, not left implicit.
-5. **The opt-in marker contract** — an artifact opts into handoff-governance with `handoff: true` frontmatter; it then must carry the markers the checker enforces (`tier`, a decisions-locked-vs-escalate section, a readiness marker). Opt-in keeps the doctrine off artifacts that do not want it. Full contract in [references/standards.md](references/standards.md).
+5. **The opt-in marker contract** — an artifact opts into handoff-governance with `handoff: true` frontmatter; it then must carry the markers the checker enforces (`tier`, a decisions-locked-vs-escalate section, a readiness marker). Opt-in keeps the doctrine off artifacts that do not want it. The full contract lives in [the handoffs standard](references/standards-handoffs.md).
 
 ## Handoff quality bar
 
@@ -57,7 +57,7 @@ EDUCATE scaffolds no standalone artifact — a handoff rides on an existing plan
 
 **Precondition:** REFRESH edits this skill's own canonical files, which exist only in `ki-agentic-harness`. Invoked from a repo where the skill is vendored, it stops here and names the harness as where to run it — or, for a pattern recurring across bases, routes it through `ki-kb`'s IMPROVE mode instead.
 
-Revisit the doctrine against practice: does the reasoning-layer split still match how work flows from the top tier to execution; does the quality bar need sharpening from real handoffs; is the composition boundary with `ki-tokenomics` still clean. Update this `SKILL.md`, [references/standards.md](references/standards.md), and the canonical TypeScript items under `scripts/rubric/items/`; regenerate [the published rubric](references/rubric.md) with `ki skill rubric ki-handoffs --write`, record what changed in the commit, and refresh [references/sources.md](references/sources.md).
+Revisit the doctrine against practice: does the reasoning-layer split still match how work flows from the top tier to execution; does the quality bar need sharpening from real handoffs; is the composition boundary with `ki-tokenomics` still clean. Update this `SKILL.md`, [the handoffs standard](references/standards-handoffs.md), and the canonical TypeScript items under `scripts/rubric/items/`; regenerate [the published rubric](references/rubric.md) with `ki skill rubric ki-handoffs --write`, record what changed in the commit, and refresh [the source record](references/sources.md).
 
 ## Composition
 

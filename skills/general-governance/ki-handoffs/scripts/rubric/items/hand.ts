@@ -17,7 +17,7 @@ const HAND_1: RubricItem<HandoffsRubricContext> = {
   title: 'Semantic tier marker',
   description:
     'an artifact with `handoff: true` carries a `tier` field whose value is one of `haiku` / `sonnet` / `opus` (the opt-in marker contract). Missing or out-of-set → FAIL.',
-  sources: ['standards.md#the-opt-in-marker-contract'],
+  sources: ['standards-handoffs.md#the-opt-in-marker-contract'],
   mechanical: {
     level: 'FAIL',
     audit: {
@@ -51,7 +51,7 @@ const HAND_2: RubricItem<HandoffsRubricContext> = {
   title: 'Decisions locked versus escalate',
   description:
     'an artifact with `handoff: true` has a body section whose heading matches `decisions`, and that section names both `locked` and `escalate` (the opt-in marker contract; the quality bar\'s "Decisions resolved"). Missing section or either label → FAIL.',
-  sources: ['standards.md#the-opt-in-marker-contract', 'standards.md#the-quality-bar'],
+  sources: ['standards-handoffs.md#the-opt-in-marker-contract', 'standards-handoffs.md#the-quality-bar'],
   mechanical: {
     level: 'FAIL',
     audit: {
@@ -87,7 +87,7 @@ const HAND_3: RubricItem<HandoffsRubricContext> = {
   title: 'Readiness marker',
   description:
     'an artifact with `handoff: true` carries a readiness marker: a `readiness:` frontmatter field, a `## Readiness` heading, or a `Readiness test` checkbox (the readiness test). Missing → WARN.',
-  sources: ['standards.md#the-opt-in-marker-contract', 'standards.md#the-readiness-test'],
+  sources: ['standards-handoffs.md#the-opt-in-marker-contract', 'standards-handoffs.md#the-readiness-test'],
   mechanical: {
     level: 'WARN',
     audit: {
@@ -125,7 +125,7 @@ const HAND_4: RubricItem<HandoffsRubricContext> = {
   title: 'Locked decisions are closed',
   description:
     'the locked decisions are genuinely closed: no residual reasoning, hedging, or open questions parked under "locked" (the reasoning-layer split; quality bar "Decisions resolved").',
-  sources: ['standards.md#the-reasoning-layer-split', 'standards.md#the-quality-bar'],
+  sources: ['standards-handoffs.md#the-reasoning-layer-split', 'standards-handoffs.md#the-quality-bar'],
   judgment: {
     prompt:
       'the locked decisions are genuinely closed: no residual reasoning, hedging, or open questions parked under "locked" (the reasoning-layer split; quality bar "Decisions resolved").'
@@ -136,7 +136,7 @@ const HAND_5: RubricItem<HandoffsRubricContext> = {
   code: 'HAND-5',
   title: 'Definition of done',
   description: 'each unit carries a definition-of-done that is a pass/fail acceptance test, not a goal (quality bar "Definition-of-done").',
-  sources: ['standards.md#the-quality-bar'],
+  sources: ['standards-handoffs.md#the-quality-bar'],
   judgment: {
     prompt: 'each unit carries a definition-of-done that is a pass/fail acceptance test, not a goal (quality bar "Definition-of-done").'
   }
@@ -147,7 +147,7 @@ const HAND_6: RubricItem<HandoffsRubricContext> = {
   title: 'Appropriate assigned tier',
   description:
     'the assigned `tier` is appropriate to how concrete the steps are: mechanical work at the cheap class, spec-driven drafting at the mid class, hard judgement at the top class; a unit that could only run at the planning tier signals under-decomposed reasoning (tier assignment).',
-  sources: ['standards.md#tier-assignment'],
+  sources: ['standards-handoffs.md#tier-assignment'],
   judgment: {
     prompt:
       'the assigned `tier` is appropriate to how concrete the steps are: mechanical work at the cheap class, spec-driven drafting at the mid class, hard judgement at the top class; a unit that could only run at the planning tier signals under-decomposed reasoning (tier assignment).'
@@ -159,7 +159,7 @@ const HAND_7: RubricItem<HandoffsRubricContext> = {
   title: 'Cold-agent readiness',
   description:
     'the readiness test would actually pass: a cold agent at the assigned tier could execute the first phase from the spec alone (the readiness test).',
-  sources: ['standards.md#the-readiness-test'],
+  sources: ['standards-handoffs.md#the-readiness-test'],
   judgment: {
     prompt:
       'the readiness test would actually pass: a cold agent at the assigned tier could execute the first phase from the spec alone (the readiness test).'
@@ -171,7 +171,7 @@ const HAND_8: RubricItem<HandoffsRubricContext> = {
   title: 'Tokenomics composition boundary',
   description:
     'cost and tier-selection reasoning are not restated here but deferred to `ki-tokenomics`; no model ids or prices are hard-coded on the artifact (composition boundary).',
-  sources: ['standards.md#tier-assignment'],
+  sources: ['standards-handoffs.md#tier-assignment'],
   judgment: {
     prompt:
       'cost and tier-selection reasoning are not restated here but deferred to `ki-tokenomics`; no model ids or prices are hard-coded on the artifact (composition boundary).'
@@ -182,7 +182,7 @@ export const HAND: RubricFamily<HandoffsRubricContext, HandoffsRubricContext> = 
   code: 'HAND',
   title: 'Handoff readiness',
   description: 'The opt-in marker contract and delegation-readiness doctrine.',
-  standard: 'standards.md#the-opt-in-marker-contract',
+  standard: 'standards-handoffs.md#the-opt-in-marker-contract',
   selectContext: (context: HandoffsRubricContext) => context,
   items: [HAND_1, HAND_2, HAND_3, HAND_4, HAND_5, HAND_6, HAND_7, HAND_8]
 }
