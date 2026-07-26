@@ -1,4 +1,4 @@
-# Headroom operational maintenance
+# The Headroom operational safety standard
 
 The reset contract below is verified against the installed Headroom 0.31.0 CLI and package source. Treat it as version-specific: snapshot the surface you intend to clear, reset only that surface, and re-check the CLI and implementation after an upgrade.
 

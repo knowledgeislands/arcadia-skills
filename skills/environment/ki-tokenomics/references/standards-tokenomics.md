@@ -1,6 +1,6 @@
 # The tokenomics standard — what a lean, well-composed context budget looks like
 
-The normative, quotable reference behind [the rubric](rubric.md) and [`../scripts/govern.ts`](../scripts/govern.ts). It governs the **tokenomics** of a Claude Code working environment: the cost of the context the model carries, paid on every turn, as produced by the **composition** of the user-wide and project-local configuration layers over any base in play. It deliberately holds **no** volatile reference numbers (model ids, prices, cache TTLs, context-window sizes) — those live in the `claude-api` skill and are resolved at runtime; this standard governs the _shape_ of the budget, not the figures of the day.
+The normative, quotable reference behind [the rubric](rubric.md). It governs the **tokenomics** of a Claude Code working environment: the cost of the context the model carries, paid on every turn, as produced by the **composition** of the user-wide and project-local configuration layers over any base in play. It deliberately holds **no** volatile reference numbers (model ids, prices, cache TTLs, context-window sizes) — those live in the `claude-api` skill and are resolved at runtime; this standard governs the _shape_ of the budget, not the figures of the day.
 
 ## Contents
 
@@ -117,7 +117,7 @@ When a project routes Claude Code through Headroom's loopback proxy, its effecti
 
 The registry is **extensible**: other compression / context projects are added as new entries with their own detection signals and optimal-setup notes, so "leverage best practices like Headroom and other projects" stays a list, not a hard-coded single tool.
 
-Headroom's observability stores are operationally independent. The CLI savings ledger, `headroom perf` log history, live `/stats` counters, and durable proxy/dashboard savings do not share a universal reset; use the version-pinned [Headroom operational maintenance procedure](headroom-operations.md) and snapshot the intended surface before clearing it.
+Headroom's observability stores are operationally independent. The CLI savings ledger, `headroom perf` log history, live `/stats` counters, and durable proxy/dashboard savings do not share a universal reset; use the version-pinned [Headroom operations standard](standards-headroom-operations.md) and snapshot the intended surface before clearing it.
 
 ## 6. Best practice — context as a finite resource
 

@@ -12,7 +12,7 @@ argument-hint: 'audit | conform | help | educate | refresh'
 
 You are helping hold a Claude Code working environment to one budget for its **tokenomics** — the cost of the context the model carries, paid not once but on **every turn**, and re-paid by every sub-agent. The premise of this skill is that this cost is rarely one file's fault: it is the **composition** of two configuration layers — the **user-wide** `~/.claude` and the **project-local** `.claude` / `CLAUDE.md` — over any **Knowledge Islands base** in play. You measure that composed surface, attribute it to its layers, hold it to a budget, and tune the runtime levers that multiply it.
 
-This is a **standard, base-agnostic Process skill**. `ki repo educate --skill ki-tokenomics` declares its bounded user-home evidence for a repository, then `ki repo audit --skill ki-tokenomics` resolves the durable user layer from `~/.claude`; repository-specific attribution remains a separate concern until its native context joins those two evidence sources. Its quotable standard is [the standard](references/standards.md); the line-by-line criteria (each tagged mechanical/judgment) are [the rubric](references/rubric.md). How it sits beside the ki-agentic-harness `README.md`, not repeated here.
+This is a **standard, base-agnostic Process skill**. `ki repo educate --skill ki-tokenomics` declares its bounded user-home evidence for a repository, then `ki repo audit --skill ki-tokenomics` resolves the durable user layer from physical files under `~/.claude` and `~/.claude.json`; repository-specific attribution remains explicitly unavailable until a native context joins those evidence sources. Its quotable standard is [the tokenomics standard](references/standards-tokenomics.md); the line-by-line criteria are [the rubric](references/rubric.md). [The exemplars](references/exemplars.md) remain a separate file because the composed config, proxy-attribution, compaction, and load-vs-defer patterns are clearer as concrete complete shapes than inline fragments.
 
 ## What it governs — two halves
 
@@ -32,13 +32,13 @@ This is a **standard, base-agnostic Process skill**. `ki repo educate --skill ki
 - **Sub-agent fan-out** — each sub-agent re-pays the standing surface; is the fan-out worth it? Whether a given unit of work is delegation-ready in the first place is `ki-handoffs`'s concern, not this skill's.
 - **Tool-result verbosity** — raw logs / JSON dumps re-read every turn; this is where context-**compression** tooling earns its place.
 
-The full catalogue, the budget table, and the rationale (curate context as a finite resource; keep tool sets minimal) are in [the standard](references/standards.md). The volatile reference numbers it leans on — model ids, prices, cache TTLs, context-window sizes — are **not** restated here; resolve them through the `claude-api` skill.
+The full catalogue, the budget table, and the rationale (curate context as a finite resource; keep tool sets minimal) are in [the tokenomics standard](references/standards-tokenomics.md). The volatile reference numbers it leans on — model ids, prices, cache TTLs, context-window sizes — are **not** restated here; resolve them through the `claude-api` skill.
 
 ## Context-compression tooling (Headroom)
 
 Tool-result bloat is the runtime cost a **context-compression layer** attacks. The house default treats one such layer as a **recommended** best practice and checks that, where configured, it is set up well. The seeded entry is **Headroom** (the chopratejas / extraheadroom compression proxy / MCP server): the checker detects it across both layers — an `mcpServers` `headroom` entry exposing `headroom_compress` / `headroom_retrieve` / `headroom_stats`, a `headroom proxy`, or `HEADROOM_*` env — and reports whether its reversible store and cache-aligned prefixes look sound. The registry is **extensible**: add other projects alongside it. Whether the layer is `required`, `recommended`, or `off` is declared per environment (below).
 
-Headroom's savings ledger, performance logs, live counters, and durable proxy history are separate operational surfaces with different reset mechanics. Use the version-pinned [operational maintenance procedure](references/headroom-operations.md); do not treat `headroom savings --reset` as a universal dashboard reset.
+Headroom's savings ledger, performance logs, live counters, and durable proxy history are separate operational surfaces with different reset mechanics. Use the version-pinned [Headroom operational safety standard](references/standards-headroom-operations.md); do not treat `headroom savings --reset` as a universal dashboard reset. Resets, truncation, moves, deletion, and proxy reconfiguration remain manual.
 
 ## The config table — overridable budgets
 
@@ -50,11 +50,11 @@ Every governance skill carries the universal four **AUDIT · CONFORM · EDUCATE 
 
 ### Mode AUDIT
 
-→ Read [references/mode-audit-conform.md](references/mode-audit-conform.md)
+→ Read [references/mode-audit.md](references/mode-audit.md)
 
 ### Mode CONFORM
 
-→ Read [references/mode-audit-conform.md](references/mode-audit-conform.md)
+→ Read [references/mode-conform.md](references/mode-conform.md)
 
 ### Mode EDUCATE
 
@@ -72,6 +72,7 @@ Every governance skill carries the universal four **AUDIT · CONFORM · EDUCATE 
 
 ## Notes
 
-- `ki repo educate --skill ki-tokenomics` declares the repository scope; `ki repo audit --skill ki-tokenomics` reads `~/.claude` as the user-wide layer **by design**. `ki skill user add ki-tokenomics` installs it globally only; it never creates a user-wide audit or conform surface. Project-local composition requires a native context that joins that repository to the user layer and is reported as not applicable rather than being guessed.
+- `ki repo educate --skill ki-tokenomics` declares the repository scope; `ki repo audit --skill ki-tokenomics` reads only physical files inside its bounded user-home scope **by design** and never follows a symlinked `.claude` root, skill directory, instruction file, import, settings file, or `.claude.json`. `ki skill user add ki-tokenomics` installs it globally only; it never creates a user-wide audit or conform surface. Project-local composition requires a native context that joins that repository to the user layer and is reported as not applicable rather than being guessed.
+- Native CONFORM is report-only. It publishes no writes or commands because the measured artifacts belong to other governance skills and changing them can remove agent capabilities; all operational Headroom cleanup is manual.
 - Token figures are a **chars/4 estimate for budgeting, not billing** — every figure is marked `~`. For exact accounting use the model's own token counting (the `claude-api` skill).
 - This skill measures and tunes cost; it does not own the artifacts that cause it. A finding routes to the owning skill's standard.
