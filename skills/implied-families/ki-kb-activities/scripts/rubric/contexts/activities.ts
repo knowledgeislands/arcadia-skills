@@ -1,38 +1,72 @@
-import { existsSync, readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs'
-import { join, resolve } from 'node:path'
-import type { ConformOutcome, RubricOutcomes } from '../../shared/rubric.ts'
+import { existsSync, lstatSync, readdirSync, readFileSync } from 'node:fs'
+import { isAbsolute, join, relative, resolve } from 'node:path'
+import type { ConformWrite, RubricContextOptions, RubricSession } from '../../shared/rubric.ts'
 
-const ACTIVITIES_DIRECTORY = 'Admin/Operations/Activities'
+const DEFAULT_ACTIVITIES_DIRECTORY = 'Admin/Operations/Activities'
 const ACTIVITIES_INDEX = 'Activities.md'
 
-export const KNOWN_REALIZATIONS = ['slash-command', 'scheduled-task', 'conversational', 'manual', 'workflow'] as const
-export const KNOWN_STATUSES = ['active', 'paused', 'retired'] as const
-
 export type ActivityNote = {
-  relative: string
-  indexLink: string
-  title: string
-  frontmatter: Record<string, string> | null
+  readonly relative: string
+  readonly indexLink: string
+  readonly title: string
+  readonly frontmatter: Readonly<Record<string, string>> | null
 }
 
 export type ActivitiesContext = {
-  target: string
-  available: boolean
-  harness?: string
-  dryRun: boolean
-  activitiesAvailable: boolean
-  indexExists: boolean
-  indexContent: string
-  notes: readonly ActivityNote[]
-  ensureIndex: () => RubricOutcomes<ConformOutcome>
-  hasHarnessSkill: (name: string) => boolean
+  readonly repository: {
+    readonly path: string
+    readonly available: boolean
+  }
+  readonly collection: {
+    readonly relative: string
+    readonly pathSafe: boolean
+    readonly available: boolean
+    readonly unsafeEntry: boolean
+  }
+  readonly index: {
+    readonly relative: string
+    readonly exists: boolean
+    readonly content: string
+    readonly unsafeEntry: boolean
+  }
+  readonly configuration: {
+    readonly keys: readonly string[]
+  }
+  readonly notes: readonly ActivityNote[]
+  readonly harness?: {
+    readonly path: string
+    readonly hasSkill: (name: string) => boolean
+  }
+  readonly ensureIndex?: () => void
 }
 
-const isDirectory = (path: string): boolean => existsSync(path) && statSync(path).isDirectory()
-const isFile = (path: string): boolean => existsSync(path) && statSync(path).isFile()
+export type ActivitiesRubricContext = {
+  readonly activities: ActivitiesContext
+}
 
-const parseFrontmatter = (text: string): Record<string, string> | null => {
-  if (!text.startsWith('---')) return null
+const isDirectory = (path: string): boolean => existsSync(path) && !lstatSync(path).isSymbolicLink() && lstatSync(path).isDirectory()
+
+const isFile = (path: string): boolean => existsSync(path) && !lstatSync(path).isSymbolicLink() && lstatSync(path).isFile()
+
+const containedPath = (root: string, path: string): string | undefined => {
+  const value = relative(root, path)
+  return value && !isAbsolute(value) && value !== '..' && !value.startsWith('../') ? value : undefined
+}
+
+const safeDirectory = (root: string, path: string): boolean => {
+  const output = relative(root, path)
+  if (!output) return isDirectory(root)
+  if (isAbsolute(output) || output === '..' || output.startsWith('../')) return false
+  let cursor = root
+  for (const segment of output.split(/[\\/]/)) {
+    cursor = join(cursor, segment)
+    if (!isDirectory(cursor)) return false
+  }
+  return true
+}
+
+const parseFrontmatter = (text: string): Readonly<Record<string, string>> | null => {
+  if (text.split(/\r?\n/, 1)[0]?.trim() !== '---') return null
   const end = text.indexOf('\n---', 3)
   if (end === -1) return null
   const fields: Record<string, string> = {}
@@ -40,7 +74,10 @@ const parseFrontmatter = (text: string): Record<string, string> | null => {
     const colon = line.indexOf(':')
     if (colon === -1) continue
     const key = line.slice(0, colon).trim()
-    const value = line.slice(colon + 1).trim()
+    const value = line
+      .slice(colon + 1)
+      .trim()
+      .replace(/^['"]|['"]$/g, '')
     if (key && value) fields[key] = value
   }
   return fields
@@ -51,7 +88,7 @@ const walkMarkdown = (directory: string, results: string[] = []): string[] => {
   for (const entry of readdirSync(directory, { withFileTypes: true })) {
     const path = join(directory, entry.name)
     if (entry.isDirectory()) walkMarkdown(path, results)
-    else if (entry.name.endsWith('.md')) results.push(path)
+    else if (entry.isFile() && entry.name.endsWith('.md')) results.push(path)
   }
   return results
 }
@@ -61,80 +98,105 @@ const titleFromNote = (text: string, link: string): string => {
   return body.match(/^#\s+(.+)$/m)?.[1]?.trim() ?? link.replace(/\.md$/, '')
 }
 
-const oneOrMore = <Outcome>(values: readonly Outcome[]): RubricOutcomes<Outcome> => {
-  if (values.length === 0) throw new Error('expected one or more rubric outcomes')
-  return [values[0], ...values.slice(1)]
+const configuredString = (configuration: Readonly<Record<string, unknown>>, key: string): string | undefined => {
+  const value = configuration[key]
+  return typeof value === 'string' && value.trim() ? value.trim() : undefined
 }
 
-export const createActivitiesContextFactory = ({
-  target,
-  harness,
-  dryRun = false
-}: {
-  target: string
-  harness?: string
-  dryRun?: boolean
-}): (() => ActivitiesContext) => {
-  const root = resolve(target)
-  const resolvedHarness = harness ? resolve(harness) : undefined
+const indexEntry = (note: ActivityNote): string => {
+  const target = /\s/.test(note.indexLink) ? `<${note.indexLink}>` : note.indexLink
+  return `- [${note.title}](${target})`
+}
 
-  return () => {
-    const available = isDirectory(root)
-    const activitiesPath = join(root, ACTIVITIES_DIRECTORY)
-    const activitiesAvailable = available && isDirectory(activitiesPath)
-    const indexPath = join(activitiesPath, ACTIVITIES_INDEX)
-    const indexExists = activitiesAvailable && isFile(indexPath)
-    const indexContent = indexExists ? readFileSync(indexPath, 'utf8') : ''
-    const notes = activitiesAvailable
-      ? walkMarkdown(activitiesPath)
-          .filter((path) => path !== indexPath)
-          .map((path) => {
-            const text = readFileSync(path, 'utf8')
-            const indexLink = path.slice(activitiesPath.length + 1)
-            return {
-              relative: path.slice(root.length + 1),
-              indexLink,
-              title: titleFromNote(text, indexLink),
-              frontmatter: parseFrontmatter(text)
-            }
-          })
-      : []
+export const createActivitiesSession = ({
+  mode,
+  repository,
+  configuration
+}: RubricContextOptions): RubricSession<ActivitiesRubricContext> => {
+  const root = resolve(repository)
+  const repositoryAvailable = isDirectory(root)
+  const activitiesDirectory = configuredString(configuration, 'activities_dir') ?? DEFAULT_ACTIVITIES_DIRECTORY
+  const activitiesPath = resolve(root, activitiesDirectory)
+  const activitiesRelative = containedPath(root, activitiesPath)
+  const pathSafe = Boolean(activitiesRelative)
+  const collectionEntryExists = existsSync(activitiesPath)
+  const activitiesAvailable = repositoryAvailable && pathSafe && safeDirectory(root, activitiesPath)
+  const unsafeCollectionEntry = collectionEntryExists && !activitiesAvailable
+  const indexPath = join(activitiesPath, ACTIVITIES_INDEX)
+  const indexRelative = activitiesRelative ? join(activitiesRelative, ACTIVITIES_INDEX) : join(activitiesDirectory, ACTIVITIES_INDEX)
+  const indexEntryExists = pathSafe && existsSync(indexPath)
+  const indexExists = activitiesAvailable && isFile(indexPath)
+  const unsafeIndexEntry = indexEntryExists && !indexExists
+  const indexContent = indexExists ? readFileSync(indexPath, 'utf8') : ''
+  const notes = activitiesAvailable
+    ? walkMarkdown(activitiesPath)
+        .filter((path) => path !== indexPath)
+        .map((path): ActivityNote => {
+          const text = readFileSync(path, 'utf8')
+          const link = relative(activitiesPath, path)
+          return {
+            relative: relative(root, path),
+            indexLink: link,
+            title: titleFromNote(text, link),
+            frontmatter: parseFrontmatter(text)
+          }
+        })
+    : []
+  const harnessPath = configuredString(configuration, 'harness')
+  const harness = harnessPath ? resolve(root, harnessPath) : undefined
+  const original = indexExists ? indexContent : undefined
+  let indexDraft = original
 
-    const ensureIndex = (): RubricOutcomes<ConformOutcome> => {
-      if (!available) return [{ status: 'VIOLATION', message: 'conform target is not an existing directory', subject: root }]
-      if (!activitiesAvailable)
-        return [{ status: 'NOT_APPLICABLE', message: 'no activities directory — nothing to conform', subject: `${ACTIVITIES_DIRECTORY}/` }]
-      if (notes.length === 0) return [{ status: 'PASS', message: 'no activity notes found — nothing to index', subject: ACTIVITIES_INDEX }]
-
-      const missing = notes.filter((note) => !indexContent.includes(note.indexLink))
-      if (missing.length === 0)
-        return [{ status: 'PASS', message: 'every activity note is listed in the index', subject: ACTIVITIES_INDEX }]
-
-      const contents =
-        `${indexContent || '# Activities\n\n'}`.replace(/\n*$/, '\n') +
-        missing.map((note) => `- [${note.title}](${note.indexLink})`).join('\n') +
-        '\n'
-      if (!dryRun) writeFileSync(indexPath, contents)
-      return oneOrMore(
-        missing.map((note) => ({
-          status: 'FIXED' as const,
-          message: `${dryRun ? 'would append' : 'appended'} index entry for '${note.title}'`,
-          subject: ACTIVITIES_INDEX
-        }))
-      )
-    }
-
-    return {
-      target: root,
-      available,
-      harness: resolvedHarness,
-      dryRun,
-      activitiesAvailable,
-      indexExists,
-      indexContent,
+  const context: ActivitiesRubricContext = {
+    activities: {
+      repository: { path: root, available: repositoryAvailable },
+      collection: {
+        relative: activitiesRelative ?? activitiesDirectory,
+        pathSafe,
+        available: activitiesAvailable,
+        unsafeEntry: unsafeCollectionEntry
+      },
+      index: {
+        relative: indexRelative,
+        exists: indexExists,
+        content: indexContent,
+        unsafeEntry: unsafeIndexEntry
+      },
+      configuration: { keys: Object.keys(configuration) },
       notes,
-      ensureIndex,
-      hasHarnessSkill: (name) => Boolean(resolvedHarness && isFile(join(resolvedHarness, 'skills', name, 'SKILL.md')))
+      ...(harness
+        ? {
+            harness: {
+              path: harness,
+              hasSkill: (name: string) => /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(name) && isFile(join(harness, 'skills', name, 'SKILL.md'))
+            }
+          }
+        : {}),
+      ...(mode === 'conform'
+        ? {
+            ensureIndex: () => {
+              if (!activitiesAvailable || unsafeIndexEntry || notes.length === 0) return
+              const content = indexDraft || '# Activities'
+              const missing = notes.filter((note) => !content.includes(note.indexLink))
+              if (missing.length === 0) return
+              const prefix = content.trimEnd()
+              indexDraft = `${prefix}${prefix === '# Activities' ? '\n\n' : '\n'}${missing.map(indexEntry).join('\n')}\n`
+            }
+          }
+        : {})
+    }
+  }
+
+  return {
+    subjects: [{ families: ['ACT'], context: () => context }],
+    proposal: () => {
+      if (indexDraft === undefined || indexDraft === original || !activitiesRelative) return { writes: [] }
+      const write: ConformWrite = {
+        path: indexRelative,
+        content: indexDraft,
+        ...(original === undefined ? { create: true } : {})
+      }
+      return { writes: [write] }
     }
   }
 }

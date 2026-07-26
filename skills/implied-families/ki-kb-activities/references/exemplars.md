@@ -26,7 +26,7 @@ Adopted because the KB grows rapidly and manual structure reviews are error-pron
 status: active
 realization: scheduled-task
 schedule_name: Morning Briefing
-schedule_env: cowork
+schedule_env: scheduler
 author: AI-assisted
 ---
 ```
@@ -36,7 +36,7 @@ author: AI-assisted
 
 Runs each working day at 06:00. Reads the calendar, active streams, and any outstanding items, then produces a briefing note in Calendar/.
 
-Verify registration in the selected scheduling runtime — see [[Admin/Governance/Charter|Charter]] for adoption position.
+Verify registration in the selected scheduling runtime. The base's Charter records the adoption position.
 ```
 
 ## Conversational activity

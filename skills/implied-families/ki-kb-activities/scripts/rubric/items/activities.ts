@@ -1,12 +1,24 @@
-import type { AuditOutcome, RubricItem, RubricOutcomes } from '../../shared/rubric.ts'
-import { type ActivitiesContext, type ActivityNote, KNOWN_REALIZATIONS, KNOWN_STATUSES } from '../contexts/activities.ts'
+import type { AuditOutcome, RubricFamily, RubricItem, RubricOutcomes } from '../../shared/rubric.ts'
+import type { ActivitiesContext, ActivitiesRubricContext, ActivityNote } from '../contexts/activities.ts'
+
+const SOURCE = 'standards-activities.md'
+const KNOWN_REALIZATIONS = ['slash-command', 'scheduled-task', 'conversational', 'manual', 'workflow'] as const
+const KNOWN_STATUSES = ['active', 'paused', 'retired'] as const
 
 const unavailable = (context: ActivitiesContext): RubricOutcomes<AuditOutcome> | null =>
-  !context.available
-    ? [{ status: 'VIOLATION', message: 'audit target is not an existing directory', subject: context.target }]
-    : !context.activitiesAvailable
-      ? [{ status: 'NOT_APPLICABLE', message: 'no activities directory — nothing to audit', subject: 'Admin/Operations/Activities/' }]
-      : null
+  !context.repository.available
+    ? [{ status: 'VIOLATION', message: 'audit target is not an existing directory', subject: context.repository.path }]
+    : !context.collection.pathSafe || context.collection.unsafeEntry
+      ? [{ status: 'NOT_APPLICABLE', message: 'activity collection location is unsafe; ACT-S-2 owns this finding' }]
+      : !context.collection.available
+        ? [
+            {
+              status: 'NOT_APPLICABLE',
+              message: 'no activities directory — nothing to audit',
+              subject: `${context.collection.relative}/`
+            }
+          ]
+        : null
 
 const notesWithFrontmatter = (context: ActivitiesContext): readonly ActivityNote[] =>
   context.notes.filter((note) => note.frontmatter !== null)
@@ -16,11 +28,11 @@ const oneOrMore = <Outcome>(values: readonly Outcome[]): RubricOutcomes<Outcome>
   return [values[0], ...values.slice(1)]
 }
 
-export const ACT_S_1: RubricItem<ActivitiesContext> = {
+const ACT_S_1: RubricItem<ActivitiesContext> = {
   code: 'ACT-S-1',
   title: 'activity index',
   description: '`Activities.md` exists when one or more activity notes exist and lists every note.',
-  sources: ['sources.md'],
+  sources: [SOURCE],
   mechanical: {
     level: 'WARN',
     audit: {
@@ -30,58 +42,126 @@ export const ACT_S_1: RubricItem<ActivitiesContext> = {
         if (stop) return stop
         if (context.notes.length === 0)
           return [{ status: 'NOT_APPLICABLE', message: 'no activity notes found — index check not applicable' }]
-        if (!context.indexContent)
+        if (context.index.unsafeEntry)
+          return [
+            {
+              status: 'VIOLATION',
+              message: 'index path is not a regular file and cannot be inspected safely',
+              subject: context.index.relative
+            }
+          ]
+        if (!context.index.content)
           return [
             {
               status: 'VIOLATION',
               message: 'index is absent — create an index listing all activities',
-              subject: 'Admin/Operations/Activities/Activities.md'
+              subject: context.index.relative
             }
           ]
-        const missing = context.notes.filter((note) => !context.indexContent.includes(note.indexLink))
+        const missing = context.notes.filter((note) => !context.index.content.includes(note.indexLink))
         return missing.length
           ? oneOrMore(
               missing.map((note) => ({
                 status: 'VIOLATION' as const,
                 message: `activity note is absent from the index: ${note.indexLink}`,
-                subject: 'Admin/Operations/Activities/Activities.md'
+                subject: context.index.relative
               }))
             )
           : [
               {
                 status: 'PASS',
                 message: `index lists all ${context.notes.length} activity note(s)`,
-                subject: 'Admin/Operations/Activities/Activities.md'
+                subject: context.index.relative
               }
             ]
+      }
+    },
+    conform: {
+      phase: 'DERIVED',
+      run: (context) => {
+        context.ensureIndex?.()
       }
     }
   },
   judgment: { prompt: 'Is the index current, well ordered, and informative rather than merely mechanically complete?' }
 }
 
-export const ACT_S_2: RubricItem<ActivitiesContext> = {
+const ACT_S_2: RubricItem<ActivitiesContext> = {
   code: 'ACT-S-2',
   title: 'activity collection location',
-  description: 'Activity notes are assessed only within `Admin/Operations/Activities/` in an existing base.',
-  sources: ['sources.md'],
+  description: 'The configured activity collection resolves safely beneath an existing base.',
+  sources: [SOURCE],
   mechanical: {
     level: 'FAIL',
     audit: {
       phase: 'PREPARE',
-      run: (context) =>
-        context.available
-          ? [{ status: 'PASS', message: 'base path is an existing directory', subject: context.target }]
-          : [{ status: 'VIOLATION', message: 'audit target is not an existing directory', subject: context.target }]
+      run: (context) => {
+        if (!context.repository.available)
+          return [
+            {
+              status: 'VIOLATION',
+              message: 'audit target is not an existing directory',
+              subject: context.repository.path
+            }
+          ]
+        if (!context.collection.pathSafe)
+          return [
+            {
+              status: 'VIOLATION',
+              message: 'activities_dir must resolve beneath the base',
+              subject: context.collection.relative
+            }
+          ]
+        if (context.collection.unsafeEntry)
+          return [
+            {
+              status: 'VIOLATION',
+              message: 'activity collection path is not a real directory',
+              subject: context.collection.relative
+            }
+          ]
+        return [
+          {
+            status: 'PASS',
+            message: 'activity collection location resolves safely beneath the base',
+            subject: context.collection.relative
+          }
+        ]
+      }
     }
   }
 }
 
-export const ACT_F_1: RubricItem<ActivitiesContext> = {
+const ACT_S_3: RubricItem<ActivitiesContext> = {
+  code: 'ACT-S-3',
+  title: 'known Activity configuration',
+  description: 'Only activities_dir and harness are recognized under [ki-kb-activities].',
+  sources: [SOURCE],
+  mechanical: {
+    level: 'WARN',
+    audit: {
+      phase: 'INSPECT',
+      run: (context) => {
+        const unknown = context.configuration.keys.filter((key) => !['activities_dir', 'harness'].includes(key))
+        return unknown.length
+          ? [
+              {
+                status: 'VIOLATION',
+                message: `unrecognized [ki-kb-activities] key(s): ${unknown.join(', ')}`,
+                subject: '.ki-config.toml'
+              }
+            ]
+          : [{ status: 'PASS', message: 'only recognized [ki-kb-activities] keys are present', subject: '.ki-config.toml' }]
+      }
+    }
+  }
+}
+
+const ACT_F_1: RubricItem<ActivitiesContext> = {
   code: 'ACT-F-1',
   title: 'activity status',
   description: 'Frontmatter-bearing activity notes declare `status` as `active`, `paused`, or `retired`.',
-  sources: ['sources.md'],
+  sources: [SOURCE],
   mechanical: {
     level: 'WARN',
     audit: {
@@ -113,11 +193,11 @@ export const ACT_F_1: RubricItem<ActivitiesContext> = {
   }
 }
 
-export const ACT_F_2: RubricItem<ActivitiesContext> = {
+const ACT_F_2: RubricItem<ActivitiesContext> = {
   code: 'ACT-F-2',
   title: 'activity realization',
   description: 'Frontmatter-bearing activity notes declare a `realization`.',
-  sources: ['sources.md'],
+  sources: [SOURCE],
   mechanical: {
     level: 'WARN',
     audit: {
@@ -140,11 +220,11 @@ export const ACT_F_2: RubricItem<ActivitiesContext> = {
   }
 }
 
-export const ACT_F_3: RubricItem<ActivitiesContext> = {
+const ACT_F_3: RubricItem<ActivitiesContext> = {
   code: 'ACT-F-3',
   title: 'recognized realization',
   description: 'Unknown realization values are surfaced for environment documentation without blocking extension.',
-  sources: ['sources.md'],
+  sources: [SOURCE],
   mechanical: {
     level: 'WARN',
     audit: {
@@ -169,11 +249,36 @@ export const ACT_F_3: RubricItem<ActivitiesContext> = {
   }
 }
 
-export const ACT_R_1: RubricItem<ActivitiesContext> = {
+const ACT_F_4: RubricItem<ActivitiesContext> = {
+  code: 'ACT-F-4',
+  title: 'activity author',
+  description: 'Frontmatter-bearing activity notes declare who authored or adopted the activity.',
+  sources: [SOURCE],
+  mechanical: {
+    level: 'WARN',
+    audit: {
+      phase: 'INSPECT',
+      run: (context) => {
+        const stop = unavailable(context)
+        if (stop) return stop
+        const outcomes = notesWithFrontmatter(context).map((note) =>
+          note.frontmatter?.author
+            ? { status: 'PASS' as const, message: `author '${note.frontmatter.author}' declared`, subject: note.relative }
+            : { status: 'VIOLATION' as const, message: "missing required field 'author'", subject: note.relative }
+        )
+        return outcomes.length
+          ? oneOrMore(outcomes)
+          : [{ status: 'NOT_APPLICABLE', message: 'no frontmatter-bearing activity notes found' }]
+      }
+    }
+  }
+}
+
+const ACT_R_1: RubricItem<ActivitiesContext> = {
   code: 'ACT-R-1',
   title: 'slash-command skill field',
   description: 'A `slash-command` activity declares its `skill` field.',
-  sources: ['sources.md'],
+  sources: [SOURCE],
   mechanical: {
     level: 'WARN',
     audit: {
@@ -199,11 +304,11 @@ export const ACT_R_1: RubricItem<ActivitiesContext> = {
   }
 }
 
-export const ACT_R_2: RubricItem<ActivitiesContext> = {
+const ACT_R_2: RubricItem<ActivitiesContext> = {
   code: 'ACT-R-2',
   title: 'slash-command skill resolution',
   description: 'A declared slash-command skill resolves when a harness path is supplied.',
-  sources: ['sources.md'],
+  sources: [SOURCE],
   mechanical: {
     level: 'WARN',
     audit: {
@@ -219,13 +324,13 @@ export const ACT_R_2: RubricItem<ActivitiesContext> = {
           return oneOrMore(
             notes.map((note) => ({
               status: 'INFO' as const,
-              message: `skill '${note.frontmatter?.skill}' declared but no harness path provided — pass --harness <path> to verify`,
+              message: `skill '${note.frontmatter?.skill}' declared but no harness path is configured under [ki-kb-activities]`,
               subject: note.relative
             }))
           )
         return oneOrMore(
           notes.map((note) =>
-            context.hasHarnessSkill(note.frontmatter?.skill ?? '')
+            context.harness?.hasSkill(note.frontmatter?.skill ?? '')
               ? { status: 'PASS' as const, message: `skill '${note.frontmatter?.skill}' exists in the harness`, subject: note.relative }
               : {
                   status: 'VIOLATION' as const,
@@ -239,11 +344,11 @@ export const ACT_R_2: RubricItem<ActivitiesContext> = {
   }
 }
 
-export const ACT_R_3: RubricItem<ActivitiesContext> = {
+const ACT_R_3: RubricItem<ActivitiesContext> = {
   code: 'ACT-R-3',
   title: 'scheduled-task name',
   description: 'A `scheduled-task` activity declares its `schedule_name`.',
-  sources: ['sources.md'],
+  sources: [SOURCE],
   mechanical: {
     level: 'WARN',
     audit: {
@@ -265,11 +370,11 @@ export const ACT_R_3: RubricItem<ActivitiesContext> = {
   }
 }
 
-export const ACT_R_4: RubricItem<ActivitiesContext> = {
+const ACT_R_4: RubricItem<ActivitiesContext> = {
   code: 'ACT-R-4',
   title: 'scheduled-task registration',
   description: 'Scheduled-task registrations are surfaced for verification in their external environment.',
-  sources: ['sources.md'],
+  sources: [SOURCE],
   mechanical: {
     level: 'WARN',
     audit: {
@@ -293,59 +398,68 @@ export const ACT_R_4: RubricItem<ActivitiesContext> = {
   }
 }
 
-export const ACT_J_1: RubricItem<ActivitiesContext> = {
+const ACT_J_1: RubricItem<ActivitiesContext> = {
   code: 'ACT-J-1',
   title: 'activity note clarity',
   description: 'Each activity note body explains what the activity does, when it runs, and why it was adopted.',
-  sources: ['sources.md'],
+  sources: [SOURCE],
   judgment: { prompt: 'Does each activity note clearly explain what it does, when it runs, and why it was adopted?' }
 }
 
-export const ACT_J_2: RubricItem<ActivitiesContext> = {
+const ACT_J_2: RubricItem<ActivitiesContext> = {
   code: 'ACT-J-2',
   title: 'activity index quality',
   description: 'The activity index is current, ordered, and useful to a reader.',
-  sources: ['sources.md'],
+  sources: [SOURCE],
   judgment: { prompt: 'Is the activity index current, ordered, and useful rather than just mechanically complete?' }
 }
 
-export const ACT_J_3: RubricItem<ActivitiesContext> = {
+const ACT_J_3: RubricItem<ActivitiesContext> = {
   code: 'ACT-J-3',
   title: 'retirement rationale',
   description: 'Retired activities document why they were retired rather than disappearing silently.',
-  sources: ['sources.md'],
+  sources: [SOURCE],
   judgment: { prompt: 'Do retired activities document a clear retirement rationale?' }
 }
 
-export const ACT_J_4: RubricItem<ActivitiesContext> = {
+const ACT_J_4: RubricItem<ActivitiesContext> = {
   code: 'ACT-J-4',
   title: 'slash-command documentation',
   description: 'Slash-command activities link to their skill documentation or trigger description.',
-  sources: ['sources.md'],
+  sources: [SOURCE],
   judgment: { prompt: 'Does every slash-command activity link to useful skill documentation or trigger guidance?' }
 }
 
-export const ACT_J_5: RubricItem<ActivitiesContext> = {
+const ACT_J_5: RubricItem<ActivitiesContext> = {
   code: 'ACT-J-5',
   title: 'scheduled-task narrative',
   description: 'Scheduled-task activities document cadence and expected outcome.',
-  sources: ['sources.md'],
+  sources: [SOURCE],
   judgment: { prompt: 'Does every scheduled-task note state its cadence and expected outcome?' }
 }
 
-export const ACT = [
-  ACT_S_1,
-  ACT_S_2,
-  ACT_F_1,
-  ACT_F_2,
-  ACT_F_3,
-  ACT_R_1,
-  ACT_R_2,
-  ACT_R_3,
-  ACT_R_4,
-  ACT_J_1,
-  ACT_J_2,
-  ACT_J_3,
-  ACT_J_4,
-  ACT_J_5
-] as const
+export const ACT: RubricFamily<ActivitiesRubricContext, ActivitiesContext> = {
+  code: 'ACT',
+  title: 'knowledge-base activities',
+  description: 'Activity note structure, frontmatter, realization-specific declarations, and safe index maintenance.',
+  standard: SOURCE,
+  selectContext: (context) => context.activities,
+  items: [
+    ACT_S_1,
+    ACT_S_2,
+    ACT_S_3,
+    ACT_F_1,
+    ACT_F_2,
+    ACT_F_3,
+    ACT_F_4,
+    ACT_R_1,
+    ACT_R_2,
+    ACT_R_3,
+    ACT_R_4,
+    ACT_J_1,
+    ACT_J_2,
+    ACT_J_3,
+    ACT_J_4,
+    ACT_J_5
+  ]
+}
