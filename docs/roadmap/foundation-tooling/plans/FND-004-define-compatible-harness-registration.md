@@ -22,7 +22,7 @@ The compatible-harness identity, installation, activation, and governed-rubric h
 
 The repository-local `.ki/` executor, package-script aliases, publishers, wrapper runners, and legacy educate scripts have been removed. `ki-skills` establishes the intended family/session contract, and `ki-handoffs` is the first additional catalogue cut to that shape.
 
-Twenty-three in-scope structured catalogues still use transitional catalogue or context adapters. Twenty-five in-scope skills remain to review after accepting `ki-skills`: the 24 remaining structured catalogues other than the deferred `ki-specifications` catalogue, plus the guidance-only `ki-bootstrap`.
+Twenty-three in-scope structured catalogues still use transitional catalogue or context adapters. Twenty-four in-scope skills remain to review after accepting `ki-skills` and `ki-handoffs`: the 23 remaining structured catalogues other than the deferred `ki-specifications` catalogue, plus the guidance-only `ki-bootstrap`.
 
 CI still invokes the removed `ki:audit` package alias and describes `.ki/bootstrap`. The pre-commit hook uses the direct CLI but its staged snapshot needs a final dependency-completeness review. Maintainer guidance still contains obsolete vendoring and executor assumptions.
 
@@ -39,7 +39,7 @@ CI still invokes the removed `ki:audit` package alias and describes `.ki/bootstr
    - [ ] `ki-dotfiles-chezmoi` — retain explicit-create semantics for `.chezmoiignore`; decide whether the lack of exemplars is intentional.
    - [ ] `ki-engineering` — replace `createContext` with `createSession`, remove remaining item exports, split context by evidence responsibility, and rename and confirm its core four references.
    - [ ] `ki-feature-definitions` — remove family mapping and index-owned heading-normalisation policy; justify `feature-format.md` and each mode procedure.
-   - [ ] `ki-handoffs` — retain its completed one-family `createSession` cut and session-owned readiness draft; rename and review the core four references.
+   - [x] `ki-handoffs` — accepted in `3da3d73b`: one self-contained HAND family, wiring-only default catalogue, item-owned behaviour, session-owned readiness draft, renamed `standards-handoffs.md`, generated rubric in sync, and no top-level public scripts.
    - [ ] `ki-harness` — preserve harness-marker append safety while removing index-owned write planning; confirm its references describe the direct installed-harness boundary.
    - [ ] `ki-homebrew-tap` — preserve applicability and manual Homebrew checks, move marker mutation to an item-owned action, and justify its mode procedures and absent exemplars.
    - [ ] `ki-housekeeping` — preserve bounded user-home scope and memory-repair containment while removing its adapter; justify `memory-format.md`, mode procedures, and absent exemplars.
