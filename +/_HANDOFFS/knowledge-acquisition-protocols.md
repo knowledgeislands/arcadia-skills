@@ -24,9 +24,9 @@ KAF preserves source records, assets, provenance, integrity evidence, and only n
 
 | Source | GOV-001 disposition | Proposed canonical owner |
 | --- | --- | --- |
-| `KAF-knowledge-islands-acquisition-framework.txt` | Adopt the acquisition boundary and ChatGPT-first direction; replace its concrete format and automation proposals through KEP v0 specification work. | KI Specifications and the receiving acquisition implementation. |
-| `KBEP-knowledge-base-extraction-protocol.txt` | Retain as the downstream extraction proposal; clarify that external retrieval belongs to KAF and that KBEP consumes KEPs. | KI Specifications and KBEP implementation owner. |
-| `KBIP-knowledge-base-ingress-protocol.txt` | Retain as the downstream ingress proposal; preserve its governance boundary and immutable upstream lineage requirement. | KI Specifications and Knowledge Base owner. |
+| `KAF-knowledge-islands-acquisition-framework.md` | Adopt the acquisition boundary and ChatGPT-first direction; replace its concrete format and automation proposals through KEP v0 specification work. | KI Specifications and the receiving acquisition implementation. |
+| `KBEP-knowledge-base-extraction-protocol.md` | Retain as the downstream extraction proposal; clarify that external retrieval belongs to KAF and that KBEP consumes KEPs. | KI Specifications and KBEP implementation owner. |
+| `KBIP-knowledge-base-ingress-protocol.md` | Retain as the downstream ingress proposal; preserve its governance boundary and immutable upstream lineage requirement. | KI Specifications and Knowledge Base owner. |
 
 ## Deferred decisions
 

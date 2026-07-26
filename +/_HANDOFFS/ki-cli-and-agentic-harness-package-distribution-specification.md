@@ -1,11 +1,6 @@
 # KI CLI and Agentic Harness Package Distribution Specification
 
-**Status:** Initial design specification
-**Proposed command:** `ki`
-**Project:** Knowledge Islands
-**Primary scope:** Command-line package installation, management, binding, discovery, and activation for agentic harness components
-**Configuration format:** TOML
-**Intended audience:** KI implementers, harness developers, package authors, tool integrators, and repository maintainers
+**Status:** Initial design specification **Proposed command:** `ki` **Project:** Knowledge Islands **Primary scope:** Command-line package installation, management, binding, discovery, and activation for agentic harness components **Configuration format:** TOML **Intended audience:** KI implementers, harness developers, package authors, tool integrators, and repository maintainers
 
 ---
 
@@ -15,26 +10,23 @@ The **KI CLI** is the command-line interface for the Knowledge Islands agentic e
 
 It provides a common mechanism for:
 
-* installing agentic components;
-* storing them in a KI-managed package store;
-* binding installed components into specific harnesses;
-* activating components at user, workspace, repository, or project scope;
-* discovering the components available in a working context;
-* resolving component dependencies;
-* maintaining reproducible agentic environments;
-* allowing multiple agentic harnesses to consume the same installed components;
-* avoiding unnecessary duplication or vendoring of runtime mechanics into every repository.
+- installing agentic components;
+- storing them in a KI-managed package store;
+- binding installed components into specific harnesses;
+- activating components at user, workspace, repository, or project scope;
+- discovering the components available in a working context;
+- resolving component dependencies;
+- maintaining reproducible agentic environments;
+- allowing multiple agentic harnesses to consume the same installed components;
+- avoiding unnecessary duplication or vendoring of runtime mechanics into every repository.
 
 The core design separates three concepts:
 
-1. **Install**
-   Acquire and maintain a component in the KI-controlled package store.
+1. **Install** Acquire and maintain a component in the KI-controlled package store.
 
-2. **Bind**
-   Expose an installed component to a particular harness, repository, user environment, or workspace.
+2. **Bind** Expose an installed component to a particular harness, repository, user environment, or workspace.
 
-3. **Use**
-   Allow the target harness or agent runtime to discover and execute the bound component.
+3. **Use** Allow the target harness or agent runtime to discover and execute the bound component.
 
 This distinction is foundational.
 
@@ -67,12 +59,12 @@ The name `ki` primarily refers to **Knowledge Islands**.
 
 It may also carry an intentional secondary association with concepts such as:
 
-* energy;
-* life force;
-* flow;
-* connection;
-* potential;
-* cultivated capability.
+- energy;
+- life force;
+- flow;
+- connection;
+- potential;
+- cultivated capability.
 
 This secondary meaning supports the wider Knowledge Islands philosophy without changing the technical definition.
 
@@ -80,11 +72,11 @@ This secondary meaning supports the wider Knowledge Islands philosophy without c
 
 Names such as `kih`, `ki-harness`, or `knowledge-islands` may be retained for:
 
-* package names;
-* repository names;
-* internal libraries;
-* environment variables;
-* long-form documentation.
+- package names;
+- repository names;
+- internal libraries;
+- environment variables;
+- long-form documentation.
 
 However, the canonical end-user command should remain:
 
@@ -110,11 +102,11 @@ A component should normally be downloaded once into the KI package store.
 
 It may then be bound into:
 
-* multiple repositories;
-* multiple harnesses;
-* user-level harness configuration;
-* project-level harness configuration;
-* temporary workspaces.
+- multiple repositories;
+- multiple harnesses;
+- user-level harness configuration;
+- project-level harness configuration;
+- temporary workspaces.
 
 ## 3.3 KI is the source of truth
 
@@ -122,10 +114,10 @@ The KI package store owns the installed package.
 
 Harness-specific directories should generally contain:
 
-* symbolic links;
-* generated references;
-* lightweight proxy manifests;
-* adapter-specific activation files.
+- symbolic links;
+- generated references;
+- lightweight proxy manifests;
+- adapter-specific activation files.
 
 They should not normally contain independent copied package trees.
 
@@ -172,14 +164,14 @@ Commands should support stable non-interactive execution, machine-readable outpu
 
 The CLI should support the wider Knowledge Islands approach:
 
-* knowledge packaged into bounded units;
-* explicit provenance;
-* traceable relationships;
-* portable capability;
-* composable islands;
-* clear source-of-truth boundaries;
-* cultivation rather than uncontrolled duplication;
-* interoperability through published specifications.
+- knowledge packaged into bounded units;
+- explicit provenance;
+- traceable relationships;
+- portable capability;
+- composable islands;
+- clear source-of-truth boundaries;
+- cultivation rather than uncontrolled duplication;
+- interoperability through published specifications.
 
 ---
 
@@ -191,17 +183,17 @@ A **package** is a versioned distributable unit managed by KI.
 
 A package contains one or more components and a manifest describing:
 
-* identity;
-* type;
-* version;
-* source;
-* entry points;
-* compatibility;
-* dependencies;
-* permissions;
-* files;
-* integrity information;
-* harness bindings.
+- identity;
+- type;
+- version;
+- source;
+- entry points;
+- compatibility;
+- dependencies;
+- permissions;
+- files;
+- integrity information;
+- harness bindings.
 
 ## 4.2 Component
 
@@ -236,13 +228,13 @@ Binding creates an association between an installed component and a target conte
 
 A binding answers:
 
-* what component is exposed;
-* where it is exposed;
-* to which harness;
-* at what scope;
-* under what alias;
-* with what configuration;
-* with what permissions.
+- what component is exposed;
+- where it is exposed;
+- to which harness;
+- at what scope;
+- under what alias;
+- with what configuration;
+- with what permissions.
 
 ## 4.5 Harness
 
@@ -250,14 +242,14 @@ A **harness** is an environment capable of discovering or executing agentic comp
 
 Examples may include:
 
-* Claude-based coding environments;
-* Codex-based environments;
-* Gemini-based environments;
-* custom HNR harnesses;
-* Knowledge Islands-native runtimes;
-* local orchestration systems;
-* editor integrations;
-* automation runners.
+- Claude-based coding environments;
+- Codex-based environments;
+- Gemini-based environments;
+- custom HNR harnesses;
+- Knowledge Islands-native runtimes;
+- local orchestration systems;
+- editor integrations;
+- automation runners.
 
 ## 4.6 Adapter
 
@@ -277,13 +269,13 @@ or:
 
 The adapter determines:
 
-* destination structure;
-* naming;
-* symlink support;
-* metadata generation;
-* compatibility checks;
-* refresh behaviour;
-* cleanup behaviour.
+- destination structure;
+- naming;
+- symlink support;
+- metadata generation;
+- compatibility checks;
+- refresh behaviour;
+- cleanup behaviour.
 
 ## 4.7 Scope
 
@@ -658,14 +650,14 @@ knowledge-island-publishing
 
 A defined agent persona or runtime composition containing:
 
-* role;
-* system instructions;
-* skills;
-* tools;
-* policies;
-* model requirements;
-* memory bindings;
-* runtime defaults.
+- role;
+- system instructions;
+- skills;
+- tools;
+- policies;
+- model requirements;
+- memory bindings;
+- runtime defaults.
 
 ## 8.3 Workflow
 
@@ -683,12 +675,12 @@ Rules controlling behaviour, safety, governance, permissions, or review.
 
 A callable capability such as:
 
-* command;
-* API adapter;
-* MCP server;
-* executable;
-* script;
-* library-backed action.
+- command;
+- API adapter;
+- MCP server;
+- executable;
+- script;
+- library-backed action.
 
 ## 8.7 Memory
 
@@ -899,12 +891,12 @@ ki init --non-interactive
 
 Possible behaviour:
 
-* detect repository root;
-* detect installed harnesses;
-* create configuration;
-* optionally create lock file;
-* optionally add generated paths to `.gitignore`;
-* never overwrite existing configuration without confirmation or `--force`.
+- detect repository root;
+- detect installed harnesses;
+- create configuration;
+- optionally create lock file;
+- optionally add generated paths to `.gitignore`;
+- never overwrite existing configuration without confirmation or `--force`.
 
 ---
 
@@ -1085,11 +1077,11 @@ ki skill unbind research --harness claude --scope repository
 
 This should:
 
-* remove symlinks or generated references;
-* remove binding metadata;
-* preserve the installed package;
-* preserve bindings in other contexts;
-* avoid deleting user-authored files.
+- remove symlinks or generated references;
+- remove binding metadata;
+- preserve the installed package;
+- preserve bindings in other contexts;
+- avoid deleting user-authored files.
 
 ---
 
@@ -1195,20 +1187,20 @@ ki doctor
 
 Checks may include:
 
-* invalid TOML;
-* missing package store;
-* inaccessible package paths;
-* broken symbolic links;
-* unsupported filesystem;
-* missing harness directories;
-* adapter version mismatch;
-* stale lock file;
-* package integrity failure;
-* dependency conflict;
-* unsafe permissions;
-* duplicated aliases;
-* unknown configuration fields;
-* unsupported component versions.
+- invalid TOML;
+- missing package store;
+- inaccessible package paths;
+- broken symbolic links;
+- unsupported filesystem;
+- missing harness directories;
+- adapter version mismatch;
+- stale lock file;
+- package integrity failure;
+- dependency conflict;
+- unsafe permissions;
+- duplicated aliases;
+- unknown configuration fields;
+- unsupported component versions.
 
 Scoped diagnosis:
 
@@ -1586,11 +1578,11 @@ The lock file should contain only resolved and reproducibility-relevant informat
 
 It should not contain:
 
-* access tokens;
-* secrets;
-* machine-specific absolute paths unless unavoidable;
-* user-private metadata;
-* runtime session state.
+- access tokens;
+- secrets;
+- machine-specific absolute paths unless unavoidable;
+- user-private metadata;
+- runtime session state.
 
 ---
 
@@ -1629,10 +1621,10 @@ Preferred where supported.
 
 Advantages:
 
-* no duplication;
-* changes immediately visible for editable packages;
-* clear source ownership;
-* simple removal.
+- no duplication;
+- changes immediately visible for editable packages;
+- clear source ownership;
+- simple removal.
 
 ### Reference
 
@@ -1709,17 +1701,17 @@ If a target already exists:
 
 A harness adapter should define:
 
-* harness identifier;
-* supported component types;
-* supported binding modes;
-* user-level target paths;
-* repository-level target paths;
-* discovery rules;
-* naming rules;
-* metadata transformations;
-* capability constraints;
-* lifecycle hooks;
-* health checks.
+- harness identifier;
+- supported component types;
+- supported binding modes;
+- user-level target paths;
+- repository-level target paths;
+- discovery rules;
+- naming rules;
+- metadata transformations;
+- capability constraints;
+- lifecycle hooks;
+- health checks.
 
 Example adapter manifest:
 
@@ -1778,15 +1770,15 @@ Example:
 
 Resolution should consider:
 
-* semantic version constraints;
-* lock-file state;
-* registry priority;
-* source identity;
-* platform compatibility;
-* harness compatibility;
-* optional dependencies;
-* feature flags;
-* trust policy.
+- semantic version constraints;
+- lock-file state;
+- registry priority;
+- source identity;
+- platform compatibility;
+- harness compatibility;
+- optional dependencies;
+- feature flags;
+- trust policy.
 
 ## 19.1 Conflict behaviour
 
@@ -1806,10 +1798,10 @@ The package store may hold multiple versions simultaneously.
 
 Whether multiple versions may be bound into one context should depend on:
 
-* package type;
-* harness capability;
-* aliasing;
-* adapter support.
+- package type;
+- harness capability;
+- aliasing;
+- adapter support.
 
 ## 19.3 Agent dependencies
 
@@ -1825,11 +1817,11 @@ skills = [
 
 When binding the agent, KI should:
 
-* verify required skills are installed;
-* install them if policy allows;
-* bind them if required by the harness;
-* avoid creating duplicate bindings;
-* record transitive activation.
+- verify required skills are installed;
+- install them if policy allows;
+- bind them if required by the harness;
+- avoid creating duplicate bindings;
+- record transitive activation.
 
 ---
 
@@ -1866,12 +1858,12 @@ was run.
 
 Packages may support:
 
-* source revision verification;
-* content hashes;
-* signed manifests;
-* registry attestations;
-* publisher identities;
-* transparency logs.
+- source revision verification;
+- content hashes;
+- signed manifests;
+- registry attestations;
+- publisher identities;
+- transparency logs.
 
 ## 20.4 Permissions
 
@@ -1942,12 +1934,12 @@ ki package install ./my-skill --editable
 
 Editable installation should:
 
-* preserve the local source path;
-* bind directly or indirectly to it;
-* detect manifest changes;
-* clearly display editable status;
-* not pretend the package is immutable;
-* be excluded from strict reproducible mode unless explicitly allowed.
+- preserve the local source path;
+- bind directly or indirectly to it;
+- detect manifest changes;
+- clearly display editable status;
+- not pretend the package is immutable;
+- be excluded from strict reproducible mode unless explicitly allowed.
 
 Example:
 
@@ -2168,11 +2160,11 @@ A transaction may include:
 
 If a later step fails, KI should:
 
-* roll back generated bindings;
-* preserve reusable downloaded cache;
-* avoid leaving partially active components;
-* record transaction details;
-* offer repair guidance.
+- roll back generated bindings;
+- preserve reusable downloaded cache;
+- avoid leaving partially active components;
+- record transaction details;
+- offer repair guidance.
 
 Example:
 
@@ -2192,14 +2184,14 @@ Drift occurs when actual local state differs from declared configuration or the 
 
 Examples:
 
-* missing package;
-* changed copied binding;
-* broken symlink;
-* manually edited generated file;
-* package version mismatch;
-* unmanaged harness content at a managed path;
-* stale lock entry;
-* removed source path for editable package.
+- missing package;
+- changed copied binding;
+- broken symlink;
+- manually edited generated file;
+- package version mismatch;
+- unmanaged harness content at a managed path;
+- stale lock entry;
+- removed source path for editable package.
 
 Commands:
 
@@ -2319,10 +2311,10 @@ ki skill run
 
 may delegate to:
 
-* a KI-native runtime;
-* a harness adapter;
-* an external agent runner;
-* a configured execution provider.
+- a KI-native runtime;
+- a harness adapter;
+- an external agent runner;
+- a configured execution provider.
 
 This separation allows the CLI to remain useful even where the actual harness is provided by another system.
 
@@ -2350,13 +2342,13 @@ These metaphors may inform documentation, but command names should remain techni
 
 The CLI should use the established Knowledge Islands specification process for:
 
-* package manifests;
-* component types;
-* binding behaviour;
-* adapter interfaces;
-* registry protocols;
-* trust metadata;
-* lock-file formats.
+- package manifests;
+- component types;
+- binding behaviour;
+- adapter interfaces;
+- registry protocols;
+- trust metadata;
+- lock-file formats.
 
 ---
 
@@ -2389,53 +2381,53 @@ The first implementation may place these in one repository while keeping the con
 
 The first usable version should support:
 
-* `ki init`;
-* `.ki-config.toml`;
-* `ki-package.toml`;
-* local path packages;
-* Git and GitHub package sources;
-* package installation;
-* package listing;
-* package inspection;
-* skill and agent component types;
-* repository and user scopes;
-* symbolic-link binding;
-* at least one harness adapter;
-* `ki sync`;
-* `.ki-lock.toml`;
-* `ki status`;
-* `ki doctor`;
-* JSON output;
-* stable exit codes.
+- `ki init`;
+- `.ki-config.toml`;
+- `ki-package.toml`;
+- local path packages;
+- Git and GitHub package sources;
+- package installation;
+- package listing;
+- package inspection;
+- skill and agent component types;
+- repository and user scopes;
+- symbolic-link binding;
+- at least one harness adapter;
+- `ki sync`;
+- `.ki-lock.toml`;
+- `ki status`;
+- `ki doctor`;
+- JSON output;
+- stable exit codes.
 
 ## 33.2 Version 0.2
 
 Add:
 
-* dependency resolution;
-* package updates;
-* multiple harness adapters;
-* profiles;
-* editable packages;
-* verification and hashes;
-* trust records;
-* generated binding mode;
-* binding repair;
-* shell completion.
+- dependency resolution;
+- package updates;
+- multiple harness adapters;
+- profiles;
+- editable packages;
+- verification and hashes;
+- trust records;
+- generated binding mode;
+- binding repair;
+- shell completion.
 
 ## 33.3 Version 0.3
 
 Add:
 
-* registry support;
-* signed packages;
-* publisher identities;
-* workflows;
-* policies;
-* tool packages;
-* remote package index;
-* organisation-level configuration;
-* richer runtime delegation.
+- registry support;
+- signed packages;
+- publisher identities;
+- workflows;
+- policies;
+- tool packages;
+- remote package index;
+- organisation-level configuration;
+- richer runtime delegation.
 
 ---
 
@@ -2489,26 +2481,26 @@ Possible internal abstractions:
 
 ```ts
 interface PackageSource {
-  resolve(reference: string): Promise<ResolvedSource>;
-  fetch(source: ResolvedSource): Promise<FetchedPackage>;
+  resolve(reference: string): Promise<ResolvedSource>
+  fetch(source: ResolvedSource): Promise<FetchedPackage>
 }
 
 interface PackageStore {
-  install(pkg: VerifiedPackage): Promise<InstalledPackage>;
-  find(id: PackageId): Promise<InstalledPackage[]>;
-  remove(id: PackageId, version?: string): Promise<void>;
+  install(pkg: VerifiedPackage): Promise<InstalledPackage>
+  find(id: PackageId): Promise<InstalledPackage[]>
+  remove(id: PackageId, version?: string): Promise<void>
 }
 
 interface HarnessAdapter {
-  detect(context: Context): Promise<HarnessDetection>;
-  planBinding(request: BindingRequest): Promise<BindingPlan>;
-  applyBinding(plan: BindingPlan): Promise<BindingResult>;
-  removeBinding(binding: BindingRecord): Promise<void>;
-  verifyBinding(binding: BindingRecord): Promise<VerificationResult>;
+  detect(context: Context): Promise<HarnessDetection>
+  planBinding(request: BindingRequest): Promise<BindingPlan>
+  applyBinding(plan: BindingPlan): Promise<BindingResult>
+  removeBinding(binding: BindingRecord): Promise<void>
+  verifyBinding(binding: BindingRecord): Promise<VerificationResult>
 }
 
 interface Resolver {
-  resolve(requirements: PackageRequirement[]): Promise<Resolution>;
+  resolve(requirements: PackageRequirement[]): Promise<Resolution>
 }
 ```
 
@@ -2518,15 +2510,15 @@ interface Resolver {
 
 The initial release should not attempt to:
 
-* define one universal agent execution engine;
-* replace every harness’s native runtime;
-* automatically grant package permissions;
-* execute arbitrary install scripts;
-* synchronise private memory to remote systems;
-* provide a complete public registry on day one;
-* translate every possible agent format;
-* hide package provenance;
-* vendor all package content independently into every repository.
+- define one universal agent execution engine;
+- replace every harness’s native runtime;
+- automatically grant package permissions;
+- execute arbitrary install scripts;
+- synchronise private memory to remote systems;
+- provide a complete public registry on day one;
+- translate every possible agent format;
+- hide package provenance;
+- vendor all package content independently into every repository.
 
 ---
 

@@ -281,11 +281,11 @@ Highlight items requiring human review.
 
 Each extracted item should carry a confidence level.
 
-| Level | Meaning |
-|---------|----------|
-| High | Explicitly stated and well supported |
+| Level  | Meaning                                    |
+| ------ | ------------------------------------------ |
+| High   | Explicitly stated and well supported       |
 | Medium | Strongly implied with minor interpretation |
-| Low | Inferred or speculative |
+| Low    | Inferred or speculative                    |
 
 ---
 
