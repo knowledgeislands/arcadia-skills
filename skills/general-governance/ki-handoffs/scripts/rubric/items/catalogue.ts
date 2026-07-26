@@ -1,4 +1,4 @@
-import { defineRubricFamily, type RubricDefinition } from '../../../../../shared/rubric-contract.ts'
+import { defineRubricFamily, type RubricDefinition } from '../../shared/rubric.ts'
 import type { HandoffsRubricContext } from '../contexts/handoffs.ts'
 import { HAND } from './hand.ts'
 

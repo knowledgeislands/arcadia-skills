@@ -1,4 +1,4 @@
-import { defineRubricFamily, type RubricDefinition } from '../../../../../shared/rubric-contract.ts'
+import { defineRubricFamily, type RubricDefinition } from '../../shared/rubric.ts'
 import type { HousekeepingRubricContext } from '../contexts/housekeeping.ts'
 import { DOC } from './doc.ts'
 import { FRONTMATTER } from './frontmatter.ts'

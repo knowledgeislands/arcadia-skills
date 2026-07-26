@@ -1,4 +1,4 @@
-import type { AuditOutcome, RubricOutcomes } from '../../../../../shared/rubric-contract.ts'
+import type { AuditOutcome, RubricOutcomes } from '../../shared/rubric.ts'
 import type { AgentsRubricContext } from '../contexts/agents.ts'
 import { forAgents, outcomes } from './common.ts'
 

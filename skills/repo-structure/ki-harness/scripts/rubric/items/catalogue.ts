@@ -1,4 +1,4 @@
-import { defineRubricFamily, type RubricDefinition } from '../../../../../shared/rubric-contract.ts'
+import { defineRubricFamily, type RubricDefinition } from '../../shared/rubric.ts'
 import type { HarnessRubricContext } from '../contexts/harness.ts'
 import { CAPABILITIES } from './capabilities.ts'
 import { CLAUDE } from './claude.ts'

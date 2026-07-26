@@ -1,6 +1,6 @@
 import { existsSync, readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs'
 import { join, relative, resolve } from 'node:path'
-import type { ConformOutcome, RubricOutcomes } from '../../../../../shared/rubric-contract.ts'
+import type { ConformOutcome, RubricOutcomes } from '../../shared/rubric.ts'
 
 const SKIP_DIRECTORIES = new Set(['node_modules', '.git', 'dist', '.ki', '.attic', '.claude'])
 

@@ -1,6 +1,6 @@
 import { readFileSync } from 'node:fs'
 import { join, relative } from 'node:path'
-import type { RubricItem } from '../../../../../shared/rubric-contract.ts'
+import type { RubricItem } from '../../shared/rubric.ts'
 import { createDecisionRecordsContextFactory, type DecisionRecordsContext } from '../contexts/decision-records.ts'
 import { KI_DECISION_RECORDS_RUBRIC } from './catalogue.ts'
 

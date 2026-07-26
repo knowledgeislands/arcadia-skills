@@ -1,4 +1,4 @@
-import { defineRubricFamily, type RubricDefinition } from '../../../../../shared/rubric-contract.ts'
+import { defineRubricFamily, type RubricDefinition } from '../../shared/rubric.ts'
 import type { WebsiteContext } from '../contexts/website.ts'
 import { WEB } from './web.ts'
 

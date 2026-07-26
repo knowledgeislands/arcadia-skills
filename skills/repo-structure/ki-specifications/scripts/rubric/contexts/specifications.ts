@@ -1,6 +1,6 @@
 import { existsSync, readFileSync, statSync, writeFileSync } from 'node:fs'
 import { join, resolve } from 'node:path'
-import type { ConformOutcome, RubricOutcomes } from '../../../../../shared/rubric-contract.ts'
+import type { ConformOutcome, RubricOutcomes } from '../../shared/rubric.ts'
 
 const SECTION = 'ki-specifications'
 const core = ['proposals', 'specifications', 'schemas'] as const

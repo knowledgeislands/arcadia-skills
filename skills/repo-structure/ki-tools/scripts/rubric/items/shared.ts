@@ -1,4 +1,4 @@
-import type { AuditOutcome, RubricItem, RubricOutcomes, ViolationLevel } from '../../../../../shared/rubric-contract.ts'
+import type { AuditOutcome, RubricItem, RubricOutcomes, ViolationLevel } from '../../shared/rubric.ts'
 import type { ToolsContext } from '../contexts/tools.ts'
 export const one = (outcome: AuditOutcome): RubricOutcomes<AuditOutcome> => [outcome]
 export const mechanical = (

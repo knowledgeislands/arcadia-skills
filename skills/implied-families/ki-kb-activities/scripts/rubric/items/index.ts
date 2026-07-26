@@ -1,5 +1,5 @@
 import { resolve } from 'node:path'
-import type { RubricItem } from '../../../../../shared/rubric-contract.ts'
+import type { RubricItem } from '../../shared/rubric.ts'
 import { type ActivitiesContext, createActivitiesContextFactory } from '../contexts/activities.ts'
 import { KI_KB_ACTIVITIES_RUBRIC } from './catalogue.ts'
 

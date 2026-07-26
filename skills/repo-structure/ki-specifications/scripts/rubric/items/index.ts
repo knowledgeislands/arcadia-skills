@@ -1,5 +1,5 @@
 import { readFileSync } from 'node:fs'
-import type { RubricItem } from '../../../../../shared/rubric-contract.ts'
+import type { RubricItem } from '../../shared/rubric.ts'
 import { createSpecificationsContext, type SpecificationsContext } from '../contexts/specifications.ts'
 import { KI_SPECIFICATIONS_RUBRIC } from './catalogue.ts'
 import { SPEC_1 } from './specifications.ts'

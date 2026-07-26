@@ -1,4 +1,4 @@
-import { defineRubricFamily, type RubricDefinition } from '../../../../../shared/rubric-contract.ts'
+import { defineRubricFamily, type RubricDefinition } from '../../shared/rubric.ts'
 import type { ToolsContext } from '../contexts/tools.ts'
 import { CONFIG } from './config.ts'
 import { LANG } from './language.ts'

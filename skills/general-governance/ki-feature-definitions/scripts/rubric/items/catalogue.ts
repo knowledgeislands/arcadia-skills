@@ -1,4 +1,4 @@
-import { defineRubricFamily, type RubricDefinition } from '../../../../../shared/rubric-contract.ts'
+import { defineRubricFamily, type RubricDefinition } from '../../shared/rubric.ts'
 import type { FeatureDefinitionsContext } from '../contexts/feature-definitions.ts'
 import { AREA } from './area.ts'
 import { AREA_FIT } from './area-fit.ts'

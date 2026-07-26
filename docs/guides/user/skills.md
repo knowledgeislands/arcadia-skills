@@ -44,8 +44,6 @@ The clusters group the skills by role. A second relationship runs across them: w
 
 ```text
 ki-bootstrap
-└─ ki-repo
-   └─ ki-authoring
 
 ki-harness
 ├─ ki-skills
@@ -91,6 +89,9 @@ ki-next
 ki-plan
 
 ki-recap
+
+ki-repo
+└─ ki-authoring
 
 ki-repo-review
 

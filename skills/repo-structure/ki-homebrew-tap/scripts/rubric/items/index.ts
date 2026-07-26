@@ -1,6 +1,6 @@
 import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
-import type { RubricItem } from '../../../../../shared/rubric-contract.ts'
+import type { RubricItem } from '../../shared/rubric.ts'
 import { createHomebrewTapContext, type HomebrewTapContext } from '../contexts/homebrew-tap.ts'
 import { KI_HOMEBREW_TAP_RUBRIC } from './catalogue.ts'
 

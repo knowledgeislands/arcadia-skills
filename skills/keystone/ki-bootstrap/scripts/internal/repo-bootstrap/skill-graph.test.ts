@@ -7,7 +7,6 @@ import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 const script = join(dirname(fileURLToPath(import.meta.url)), 'skill-graph.ts')
-const vendored = '.ki/bin/skill-graph.ts'
 const guide = 'docs/guides/user/skills.md'
 const source = readFileSync(guide, 'utf8')
 const start = '<!-- BEGIN GENERATED SKILL GRAPH -->'
@@ -23,8 +22,6 @@ function check(label: string, condition: boolean): void {
 }
 
 try {
-  check('canonical command → matches vendored command byte-for-byte', readFileSync(script).equals(readFileSync(vendored)))
-
   const clean = spawnSync('bun', [script, '--check', '--check-doc', guide], { encoding: 'utf8' })
   check('current guide → passes generated-tree comparison', clean.status === 0)
 

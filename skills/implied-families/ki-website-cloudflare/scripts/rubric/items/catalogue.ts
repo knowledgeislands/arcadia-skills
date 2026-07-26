@@ -1,4 +1,4 @@
-import { defineRubricFamily, type RubricDefinition } from '../../../../../shared/rubric-contract.ts'
+import { defineRubricFamily, type RubricDefinition } from '../../shared/rubric.ts'
 import type { WebsiteCloudflareContext } from '../contexts/website-cloudflare.ts'
 import { WCF } from './wcf.ts'
 export const KI_WEBSITE_CLOUDFLARE_RUBRIC: RubricDefinition<WebsiteCloudflareContext> = {

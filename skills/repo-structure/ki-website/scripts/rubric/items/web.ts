@@ -1,4 +1,4 @@
-import type { RubricItem } from '../../../../../shared/rubric-contract.ts'
+import type { RubricItem } from '../../shared/rubric.ts'
 import type { WebsiteContext } from '../contexts/website.ts'
 import { WEB_12, WEB_13, WEB_14, WEB_15, WEB_16, WEB_17 } from './config.ts'
 import { WEB_23, WEB_24, WEB_25 } from './content.ts'

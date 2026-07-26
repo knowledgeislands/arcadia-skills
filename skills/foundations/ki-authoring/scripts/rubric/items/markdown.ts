@@ -1,4 +1,4 @@
-import type { AuditOutcome, RubricItem, RubricOutcomes } from '../../../../../shared/rubric-contract.ts'
+import type { AuditOutcome, RubricItem, RubricOutcomes } from '../../shared/rubric.ts'
 import type { AuthoringRubricContext } from '../contexts/authoring.ts'
 
 const markdownAudit = (context: AuthoringRubricContext): RubricOutcomes<AuditOutcome> => {

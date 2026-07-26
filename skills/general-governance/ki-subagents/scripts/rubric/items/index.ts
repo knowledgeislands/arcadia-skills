@@ -1,5 +1,5 @@
 import { join, relative } from 'node:path'
-import type { RubricItem } from '../../../../../shared/rubric-contract.ts'
+import type { RubricItem } from '../../shared/rubric.ts'
 import { type AgentDefinition, type AgentsRubricContext, createAgentsContext } from '../contexts/agents.ts'
 import { KI_AGENTS_RUBRIC } from './catalogue.ts'
 

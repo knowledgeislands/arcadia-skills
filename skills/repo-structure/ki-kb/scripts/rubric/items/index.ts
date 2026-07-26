@@ -1,5 +1,5 @@
 import { isAbsolute, relative, resolve } from 'node:path'
-import type { RubricItem } from '../../../../../shared/rubric-contract.ts'
+import type { RubricItem } from '../../shared/rubric.ts'
 import { createKbContext, type KbEvidenceFinding, type KbRubricContext } from '../contexts/kb.ts'
 import { KI_KB_RUBRIC } from './catalogue.ts'
 

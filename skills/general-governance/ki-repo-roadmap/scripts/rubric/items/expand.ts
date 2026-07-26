@@ -1,4 +1,4 @@
-import type { RubricItem } from '../../../../../shared/rubric-contract.ts'
+import type { RubricItem } from '../../shared/rubric.ts'
 import type { RoadmapContext } from '../contexts/roadmap.ts'
 export const EXPAND_1: RubricItem<RoadmapContext> = {
   code: 'EXPAND-1',

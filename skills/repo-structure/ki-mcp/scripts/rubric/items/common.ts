@@ -1,4 +1,4 @@
-import type { AuditOutcome, RubricOutcomes } from '../../../../../shared/rubric-contract.ts'
+import type { AuditOutcome, RubricOutcomes } from '../../shared/rubric.ts'
 export const result = (status: AuditOutcome['status'], message: string, subject?: string): RubricOutcomes<AuditOutcome> => [
   { status, message, ...(subject ? { subject } : {}) } as AuditOutcome
 ]

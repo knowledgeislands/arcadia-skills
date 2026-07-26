@@ -1,4 +1,4 @@
-import type { RubricItem } from '../../../../../shared/rubric-contract.ts'
+import type { RubricItem } from '../../shared/rubric.ts'
 import { createMcpContext, type McpRubricContext } from '../contexts/mcp.ts'
 import { KI_MCP_RUBRIC } from './catalogue.ts'
 

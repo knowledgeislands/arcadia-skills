@@ -1,4 +1,4 @@
-import type { AuditOutcome } from '../../../../../shared/rubric-contract.ts'
+import type { AuditOutcome } from '../../shared/rubric.ts'
 import type { HarnessRubricContext } from '../contexts/harness.ts'
 import { HARNESS_PARTS } from '../contexts/harness.ts'
 import { outcomes, result } from './common.ts'

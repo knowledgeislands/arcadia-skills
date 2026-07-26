@@ -1,4 +1,4 @@
-import { defineRubricFamily, type RubricDefinition } from '../../../../../shared/rubric-contract.ts'
+import { defineRubricFamily, type RubricDefinition } from '../../shared/rubric.ts'
 import type { KbRubricContext } from '../contexts/kb.ts'
 import { ADMIN } from './admin.ts'
 import { CONFIG } from './config.ts'

@@ -1,4 +1,4 @@
-import type { RubricItem } from '../../../../../shared/rubric-contract.ts'
+import type { RubricItem } from '../../shared/rubric.ts'
 import { createStreamsContext, normalisationWrites, type StreamsContext } from '../contexts/streams.ts'
 import { KI_KB_STREAMS_RUBRIC } from './catalogue.ts'
 

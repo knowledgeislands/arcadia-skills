@@ -1,4 +1,4 @@
-import type { RubricItem } from '../../../../../shared/rubric-contract.ts'
+import type { RubricItem } from '../../shared/rubric.ts'
 import { createHarnessContext, type HarnessRubricContext, hasTomlTable } from '../contexts/harness.ts'
 import { KI_HARNESS_RUBRIC } from './catalogue.ts'
 

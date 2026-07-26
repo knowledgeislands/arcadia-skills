@@ -1,4 +1,4 @@
-/** Generic identity, execution, and catalogue model for native governance rubrics. */
+/** Generic identity, execution, and catalogue model for structured governance rubrics. */
 
 export const RUBRIC_MODES = ['audit', 'conform'] as const
 export type RubricMode = (typeof RUBRIC_MODES)[number]
@@ -29,36 +29,45 @@ export type RubricOutcome<Status extends OutcomeStatus> = Status extends 'VIOLAT
 
 export type AuditOutcome = RubricOutcome<AuditOutcomeStatus>
 export type ConformOutcome = RubricOutcome<OutcomeStatus>
+/** A rubric execution may emit one outcome per inspected subject, including none when there are no subjects. */
 export type RubricOutcomes<Result> = readonly Result[]
 
 export type RubricExecution<Context, Result> = {
   phase: RubricPhase
-  run: (context: Context) => Result
+  run: (context: Context) => RubricOutcomes<Result>
 }
 
-export type RepairWrite = {
-  path: string
-  content: string
-  create?: boolean
+/** A safe mutation requested only after this item's AUDIT outcome makes it eligible. */
+export type RubricRepairOutcome = {
+  /** True only when this invocation observed a persistent target change. */
+  changed: boolean
+  message: string
+  subject?: string
 }
 
-export type RepairCommand = {
-  program: string
-  arguments: readonly string[]
-}
-
-export type RepairProposal = {
-  writes: readonly RepairWrite[]
-  commands?: readonly RepairCommand[]
+export type RubricRepairExecution<Context> = {
+  phase: RubricPhase
+  run: (context: Context) => RubricOutcomes<RubricRepairOutcome>
 }
 
 export type MechanicalRubric<Context> = {
   level: ViolationLevel
   overrideLevels?: readonly ViolationLevel[]
   heuristic?: boolean
-  audit: RubricExecution<Context, RubricOutcomes<AuditOutcome>>
-  repair?: RubricExecution<Context, RepairProposal>
+  audit: RubricExecution<Context, AuditOutcome>
+  /**
+   * The canonical CONFORM action. The checker runs AUDIT, conditionally runs
+   * this action, then immediately runs AUDIT again before emitting a finding.
+   */
+  repair?: RubricRepairExecution<Context>
+  /** Additional neutral outcomes that this repair may safely address. */
   repairOn?: readonly Extract<AuditOutcomeStatus, 'INFO'>[]
+  /**
+   * Transitional direct-CONFORM callback for already-vendored catalogues.
+   * New items must declare `repair`; the rollout removes this once every
+   * consumer has moved to the audit-gated contract.
+   */
+  conform?: RubricExecution<Context, ConformOutcome>
 }
 
 export type JudgmentRubric = {
@@ -99,6 +108,7 @@ type CatalogueRubricFamily<RootContext> = {
   description: string
   standard: string
   selectContext: (root: RootContext) => unknown
+  /** `never` erases heterogeneous family contexts without making callbacks callable. */
   items: NonEmptyReadonlyArray<RubricItem<never>>
 }
 
@@ -122,6 +132,7 @@ export const rubricTypes = <Context>(item: RubricItem<Context>): readonly Rubric
   ...(item.judgment ? (['JUDGMENT'] as const) : [])
 ]
 
+/** Validate semantic catalogue invariants that TypeScript cannot express across entries. */
 export const validateRubricCatalogue = <RootContext>(definition: RubricDefinition<RootContext>): readonly RubricCatalogueIssue[] => {
   const issues: RubricCatalogueIssue[] = []
   const familyCodes = new Set<string>()

@@ -1,4 +1,4 @@
-import { defineRubricFamily, type RubricDefinition } from '../../../../../shared/rubric-contract.ts'
+import { defineRubricFamily, type RubricDefinition } from '../../shared/rubric.ts'
 import type { DecisionRecordsContext } from '../contexts/decision-records.ts'
 import { BODY } from './body.ts'
 import { FILENAME } from './filename.ts'

@@ -1,4 +1,4 @@
-import { defineRubricFamily, type RubricDefinition } from '../../../../../shared/rubric-contract.ts'
+import { defineRubricFamily, type RubricDefinition } from '../../shared/rubric.ts'
 import type { McpRubricContext } from '../contexts/mcp.ts'
 import { APPLICABILITY } from './applicability.ts'
 import { CFG, TEST, UTIL } from './config.ts'

@@ -1,4 +1,4 @@
-import { defineRubricFamily, type RubricDefinition } from '../../../../../shared/rubric-contract.ts'
+import { defineRubricFamily, type RubricDefinition } from '../../shared/rubric.ts'
 import type { TokenomicsUserContext } from '../contexts/user.ts'
 import { BUDG } from './budgets.ts'
 import { COMP } from './composition.ts'

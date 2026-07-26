@@ -1,4 +1,4 @@
-import { defineRubricFamily, type RubricDefinition } from '../../../../../shared/rubric-contract.ts'
+import { defineRubricFamily, type RubricDefinition } from '../../shared/rubric.ts'
 import type { BindingChezMoiContext } from '../contexts/binding-chezmoi.ts'
 import { BINDCHEZ } from './bindchez.ts'
 export const KI_BINDING_CHEZMOI_RUBRIC: RubricDefinition<BindingChezMoiContext> = {

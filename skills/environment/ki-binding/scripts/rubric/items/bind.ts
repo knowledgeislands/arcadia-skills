@@ -1,4 +1,4 @@
-import type { AuditOutcome, RubricItem, RubricOutcomes } from '../../../../../shared/rubric-contract.ts'
+import type { AuditOutcome, RubricItem, RubricOutcomes } from '../../shared/rubric.ts'
 import { type BindingRubricContext, RECOGNISED } from '../contexts/binding.ts'
 
 export const BIND_1: RubricItem<BindingRubricContext> = {

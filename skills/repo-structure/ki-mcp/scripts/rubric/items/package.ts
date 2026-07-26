@@ -1,5 +1,5 @@
 import { execSync } from 'node:child_process'
-import type { AuditOutcome } from '../../../../../shared/rubric-contract.ts'
+import type { AuditOutcome } from '../../shared/rubric.ts'
 import type { McpRubricContext } from '../contexts/mcp.ts'
 import { outcomes, result } from './common.ts'
 

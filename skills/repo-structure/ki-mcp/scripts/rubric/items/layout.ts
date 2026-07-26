@@ -1,4 +1,4 @@
-import type { AuditOutcome } from '../../../../../shared/rubric-contract.ts'
+import type { AuditOutcome } from '../../shared/rubric.ts'
 import type { McpRubricContext } from '../contexts/mcp.ts'
 import { outcomes } from './common.ts'
 

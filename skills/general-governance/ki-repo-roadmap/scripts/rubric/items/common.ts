@@ -1,4 +1,4 @@
-import type { AuditOutcome, RubricItem, RubricOutcomes } from '../../../../../shared/rubric-contract.ts'
+import type { AuditOutcome, RubricItem, RubricOutcomes } from '../../shared/rubric.ts'
 import { auditOutcome, type RoadmapContext } from '../contexts/roadmap.ts'
 
 export const outcomes = <T>(values: readonly T[], fallback: T): RubricOutcomes<T> => [values[0] ?? fallback, ...values.slice(1)]

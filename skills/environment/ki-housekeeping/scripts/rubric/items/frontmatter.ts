@@ -1,4 +1,4 @@
-import type { AuditOutcome, RubricOutcomes } from '../../../../../shared/rubric-contract.ts'
+import type { AuditOutcome, RubricOutcomes } from '../../shared/rubric.ts'
 import { type HousekeepingRubricContext, VALID_TYPES } from '../contexts/housekeeping.ts'
 
 const one = <Result>(outcome: Result): RubricOutcomes<Result> => [outcome]

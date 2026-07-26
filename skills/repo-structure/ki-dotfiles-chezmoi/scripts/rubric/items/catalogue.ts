@@ -1,4 +1,4 @@
-import { defineRubricFamily, type RubricDefinition } from '../../../../../shared/rubric-contract.ts'
+import { defineRubricFamily, type RubricDefinition } from '../../shared/rubric.ts'
 import type { ChezmoiContext } from '../contexts/chezmoi.ts'
 import { BIN } from './bin.ts'
 import { CHEZMOI } from './chezmoi.ts'

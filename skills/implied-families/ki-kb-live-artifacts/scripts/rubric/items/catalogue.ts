@@ -1,4 +1,4 @@
-import { defineRubricFamily, type RubricDefinition } from '../../../../../shared/rubric-contract.ts'
+import { defineRubricFamily, type RubricDefinition } from '../../shared/rubric.ts'
 import type { LiveArtifactsContext } from '../contexts/live-artifacts.ts'
 import { LA_FRONTMATTER } from './frontmatter.ts'
 import { LA_STRUCTURE } from './structure.ts'

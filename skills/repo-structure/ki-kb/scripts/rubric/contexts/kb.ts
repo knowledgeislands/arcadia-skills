@@ -1,6 +1,6 @@
 import { existsSync, mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs'
 import { dirname, join, resolve } from 'node:path'
-import type { ConformOutcome, RubricOutcomes } from '../../../../../shared/rubric-contract.ts'
+import type { ConformOutcome, RubricOutcomes } from '../../shared/rubric.ts'
 
 export const ZONES = ['Calendar', 'Pillars', 'Resources', 'Streams', 'Admin'] as const
 export const STAGING = ['+', '-'] as const

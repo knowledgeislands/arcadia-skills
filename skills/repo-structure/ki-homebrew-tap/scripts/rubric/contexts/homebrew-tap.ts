@@ -1,7 +1,7 @@
 import { spawnSync } from 'node:child_process'
 import { existsSync, readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs'
 import { join, resolve } from 'node:path'
-import type { AuditOutcome, ConformOutcome, RubricOutcomes } from '../../../../../shared/rubric-contract.ts'
+import type { AuditOutcome, ConformOutcome, RubricOutcomes } from '../../shared/rubric.ts'
 
 const FORMULA_DIR = 'Formula'
 const CONFIG_FILE = '.ki-config.toml'

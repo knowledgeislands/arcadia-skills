@@ -1,6 +1,6 @@
 import { chmodSync, existsSync, readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs'
 import { basename, join, resolve } from 'node:path'
-import type { ConformOutcome, RubricOutcomes } from '../../../../../shared/rubric-contract.ts'
+import type { ConformOutcome, RubricOutcomes } from '../../shared/rubric.ts'
 
 const isDir = (path: string): boolean => existsSync(path) && statSync(path).isDirectory()
 const isFile = (path: string): boolean => existsSync(path) && statSync(path).isFile()

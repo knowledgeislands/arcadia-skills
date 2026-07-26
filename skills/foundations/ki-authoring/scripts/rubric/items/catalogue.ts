@@ -1,4 +1,4 @@
-import { defineRubricFamily, type RubricDefinition } from '../../../../../shared/rubric-contract.ts'
+import { defineRubricFamily, type RubricDefinition } from '../../shared/rubric.ts'
 import type { AuthoringRubricContext } from '../contexts/authoring.ts'
 import { MARKDOWN } from './markdown.ts'
 import { OWNED } from './owned.ts'

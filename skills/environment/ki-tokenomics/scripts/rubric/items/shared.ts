@@ -1,4 +1,4 @@
-import type { RubricItem } from '../../../../../shared/rubric-contract.ts'
+import type { RubricItem } from '../../shared/rubric.ts'
 import type { TokenomicsUserContext } from '../contexts/user.ts'
 
 export const mechanical = (

@@ -1,4 +1,4 @@
-import type { RubricItem } from '../../../../../shared/rubric-contract.ts'
+import type { RubricItem } from '../../shared/rubric.ts'
 import { type BindingRubricContext, createBindingContext } from '../contexts/binding.ts'
 import { KI_BINDING_RUBRIC } from './catalogue.ts'
 

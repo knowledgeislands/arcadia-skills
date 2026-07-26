@@ -1,4 +1,4 @@
-import type { RubricItem } from '../../../../../shared/rubric-contract.ts'
+import type { RubricItem } from '../../shared/rubric.ts'
 import { createLiveArtifactsContext, type LiveArtifactsContext } from '../contexts/live-artifacts.ts'
 import { KI_KB_LIVE_ARTIFACTS_RUBRIC } from './catalogue.ts'
 

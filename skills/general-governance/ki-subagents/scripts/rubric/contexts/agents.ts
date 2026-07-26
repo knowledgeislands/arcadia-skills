@@ -1,6 +1,6 @@
 import { existsSync, readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs'
 import { basename, join, resolve } from 'node:path'
-import type { ConformOutcome, RubricOutcomes } from '../../../../../shared/rubric-contract.ts'
+import type { ConformOutcome, RubricOutcomes } from '../../shared/rubric.ts'
 
 export type AgentFrontmatter = {
   keys: ReadonlyMap<string, string>

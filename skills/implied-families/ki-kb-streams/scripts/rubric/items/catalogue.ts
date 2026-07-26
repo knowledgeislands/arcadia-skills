@@ -1,4 +1,4 @@
-import { defineRubricFamily, type RubricDefinition } from '../../../../../shared/rubric-contract.ts'
+import { defineRubricFamily, type RubricDefinition } from '../../shared/rubric.ts'
 import type { StreamsContext } from '../contexts/streams.ts'
 import { CONFIG } from './config.ts'
 import { ENACT } from './enactment.ts'

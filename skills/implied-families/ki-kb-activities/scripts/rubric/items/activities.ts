@@ -1,4 +1,4 @@
-import type { AuditOutcome, RubricItem, RubricOutcomes } from '../../../../../shared/rubric-contract.ts'
+import type { AuditOutcome, RubricItem, RubricOutcomes } from '../../shared/rubric.ts'
 import { type ActivitiesContext, type ActivityNote, KNOWN_REALIZATIONS, KNOWN_STATUSES } from '../contexts/activities.ts'
 
 const unavailable = (context: ActivitiesContext): RubricOutcomes<AuditOutcome> | null =>

@@ -1,4 +1,4 @@
-import type { RubricItem } from '../../../../../shared/rubric-contract.ts'
+import type { RubricItem } from '../../shared/rubric.ts'
 import { createTokenomicsUserContext, type TokenomicsUserContext } from '../contexts/user.ts'
 import { KI_TOKENOMICS_RUBRIC } from './catalogue.ts'
 

@@ -1,4 +1,4 @@
-import type { RubricItem } from '../../../../../shared/rubric-contract.ts'
+import type { RubricItem } from '../../shared/rubric.ts'
 import type { HomebrewTapContext } from '../contexts/homebrew-tap.ts'
 
 const SOURCE = ['standards.md'] as const

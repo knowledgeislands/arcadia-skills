@@ -1,4 +1,4 @@
-import { defineRubricFamily, type RubricDefinition } from '../../../../../shared/rubric-contract.ts'
+import { defineRubricFamily, type RubricDefinition } from '../../shared/rubric.ts'
 import type { RepoRubricContext } from '../contexts/contexts.ts'
 import { ACCESS } from './access.ts'
 import { ACT } from './actions.ts'

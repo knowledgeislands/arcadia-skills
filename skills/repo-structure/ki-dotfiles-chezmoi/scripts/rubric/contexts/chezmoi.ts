@@ -1,6 +1,6 @@
 import { existsSync, readdirSync, statSync, writeFileSync } from 'node:fs'
 import { join, resolve } from 'node:path'
-import type { ConformOutcome } from '../../../../../shared/rubric-contract.ts'
+import type { ConformOutcome } from '../../shared/rubric.ts'
 
 const SKIP_DIRS = new Set(['.git', 'node_modules', '.ki', '.claude'])
 const RECOGNIZED_PREFIXES = ['executable_', 'symlink_', 'private_', 'readonly_', 'dot_', 'create_', 'modify_'] as const

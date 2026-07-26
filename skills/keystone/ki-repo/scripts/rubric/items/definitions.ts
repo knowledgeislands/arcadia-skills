@@ -1,4 +1,4 @@
-import type { AuditOutcome, RubricDefinition, RubricItem, RubricOutcomes, ViolationLevel } from '../../../../../shared/rubric-contract.ts'
+import type { AuditOutcome, RubricDefinition, RubricItem, RubricOutcomes, ViolationLevel } from '../../shared/rubric.ts'
 import type { RepoRubricContext } from '../contexts/contexts.ts'
 
 const STANDARD = 'standards.md'

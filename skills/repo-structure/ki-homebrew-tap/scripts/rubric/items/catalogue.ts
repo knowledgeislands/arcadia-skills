@@ -1,4 +1,4 @@
-import { defineRubricFamily, type RubricDefinition } from '../../../../../shared/rubric-contract.ts'
+import { defineRubricFamily, type RubricDefinition } from '../../shared/rubric.ts'
 import type { HomebrewTapContext } from '../contexts/homebrew-tap.ts'
 import { CONFIG } from './config.ts'
 import { TAP } from './tap.ts'

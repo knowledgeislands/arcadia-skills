@@ -1,4 +1,4 @@
-import type { AuditOutcome, RubricOutcomes } from '../../../../../shared/rubric-contract.ts'
+import type { AuditOutcome, RubricOutcomes } from '../../shared/rubric.ts'
 import type { AgentDefinition, AgentsRubricContext } from '../contexts/agents.ts'
 
 export const outcomes = <Result>(values: Result[]): RubricOutcomes<Result> => {

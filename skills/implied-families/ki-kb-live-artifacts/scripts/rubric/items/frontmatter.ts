@@ -1,4 +1,4 @@
-import type { RubricItem } from '../../../../../shared/rubric-contract.ts'
+import type { RubricItem } from '../../shared/rubric.ts'
 import type { LiveArtifactsContext } from '../contexts/live-artifacts.ts'
 
 const SOURCE = ['standards.md'] as const

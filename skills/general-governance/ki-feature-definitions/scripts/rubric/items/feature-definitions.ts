@@ -1,4 +1,4 @@
-import type { AuditOutcome, RubricItem, RubricOutcomes } from '../../../../../shared/rubric-contract.ts'
+import type { AuditOutcome, RubricItem, RubricOutcomes } from '../../shared/rubric.ts'
 import type { FeatureDefinitionsContext } from '../contexts/feature-definitions.ts'
 
 const SOURCE = ['feature-format.md'] as const

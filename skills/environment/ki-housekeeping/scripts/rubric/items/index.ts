@@ -1,6 +1,6 @@
 import { existsSync, lstatSync, readdirSync } from 'node:fs'
 import { join, relative } from 'node:path'
-import type { RubricItem } from '../../../../../shared/rubric-contract.ts'
+import type { RubricItem } from '../../shared/rubric.ts'
 import { createHousekeepingContext, type HousekeepingRubricContext, INDEX_FILE } from '../contexts/housekeeping.ts'
 import { KI_HOUSEKEEPING_RUBRIC } from './catalogue.ts'
 

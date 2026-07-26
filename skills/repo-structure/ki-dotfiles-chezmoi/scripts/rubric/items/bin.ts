@@ -1,4 +1,4 @@
-import type { AuditOutcome, RubricItem } from '../../../../../shared/rubric-contract.ts'
+import type { AuditOutcome, RubricItem } from '../../shared/rubric.ts'
 import { type ChezmoiContext, hasRecognizedPrefix } from '../contexts/chezmoi.ts'
 
 export const BIN_1: RubricItem<ChezmoiContext> = {

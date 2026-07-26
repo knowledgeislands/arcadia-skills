@@ -1,4 +1,4 @@
-import type { AuditOutcome, RubricItem, RubricOutcomes, ViolationLevel } from '../../../../../shared/rubric-contract.ts'
+import type { AuditOutcome, RubricItem, RubricOutcomes, ViolationLevel } from '../../shared/rubric.ts'
 import type { PluginsContext } from '../contexts/plugins.ts'
 
 export const inactive = (context: PluginsContext): RubricOutcomes<AuditOutcome> | null =>

@@ -1,4 +1,4 @@
-import type { RubricItem } from '../../../../../shared/rubric-contract.ts'
+import type { RubricItem } from '../../shared/rubric.ts'
 import type { ChezmoiContext } from '../contexts/chezmoi.ts'
 
 export const ETIQ_J1: RubricItem<ChezmoiContext> = {

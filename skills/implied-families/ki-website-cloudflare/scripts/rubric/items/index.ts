@@ -1,4 +1,4 @@
-import type { RubricItem } from '../../../../../shared/rubric-contract.ts'
+import type { RubricItem } from '../../shared/rubric.ts'
 import { createWebsiteCloudflareContext, type WebsiteCloudflareContext } from '../contexts/website-cloudflare.ts'
 import { KI_WEBSITE_CLOUDFLARE_RUBRIC } from './catalogue.ts'
 

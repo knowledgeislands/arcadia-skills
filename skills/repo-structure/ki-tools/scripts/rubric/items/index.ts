@@ -1,6 +1,6 @@
 import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
-import type { RubricItem } from '../../../../../shared/rubric-contract.ts'
+import type { RubricItem } from '../../shared/rubric.ts'
 import { createToolsContext, type ToolsContext } from '../contexts/tools.ts'
 import { KI_TOOLS_RUBRIC } from './catalogue.ts'
 

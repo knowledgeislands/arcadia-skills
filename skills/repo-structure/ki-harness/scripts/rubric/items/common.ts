@@ -1,4 +1,4 @@
-import type { AuditOutcome, RubricOutcomes } from '../../../../../shared/rubric-contract.ts'
+import type { AuditOutcome, RubricOutcomes } from '../../shared/rubric.ts'
 export const outcomes = <Result>(values: Result[]): RubricOutcomes<Result> => {
   if (values.length === 0) throw new Error('rubric execution must return at least one outcome')
   return values as unknown as RubricOutcomes<Result>

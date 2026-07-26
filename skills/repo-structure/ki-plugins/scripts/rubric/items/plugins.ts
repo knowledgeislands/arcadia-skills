@@ -1,4 +1,4 @@
-import type { RubricItem } from '../../../../../shared/rubric-contract.ts'
+import type { RubricItem } from '../../shared/rubric.ts'
 import type { PluginsContext } from '../contexts/plugins.ts'
 import { inactive, judgment, mechanical, result } from './shared.ts'
 

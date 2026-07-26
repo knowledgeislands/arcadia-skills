@@ -1,4 +1,4 @@
-import type { RubricItem } from '../../../../../shared/rubric-contract.ts'
+import type { RubricItem } from '../../shared/rubric.ts'
 import { createRoadmapContextFactory, type RoadmapContext } from '../contexts/roadmap.ts'
 import { type RoadmapReplacement, roadmapReplacements } from '../contexts/roadmap-writes.ts'
 import { KI_REPO_ROADMAP_RUBRIC } from './catalogue.ts'

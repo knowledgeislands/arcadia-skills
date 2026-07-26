@@ -1,4 +1,4 @@
-import type { RubricItem } from '../../../../../shared/rubric-contract.ts'
+import type { RubricItem } from '../../shared/rubric.ts'
 import type { WebsiteContext } from '../contexts/website.ts'
 import { inactive, judgment, mechanical } from './shared.ts'
 export const WEB_18 = mechanical(

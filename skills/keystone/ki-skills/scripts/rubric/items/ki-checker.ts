@@ -15,9 +15,9 @@ export const KI_CHECKER_1: RubricItem<KiCheckerRubricContext> = {
 
 export const KI_CHECKER_2: RubricItem<KiCheckerRubricContext> = {
   code: 'KI-CHECKER-2',
-  title: 'skill script imports use the direct harness contract',
+  title: 'skill script imports remain inside its own payload',
   description:
-    "A skill's `scripts/**/*.ts` files may import their own script payload or the canonical harness contract at `skills/shared/rubric-contract.ts`; no other checkout-relative or cross-skill source import is allowed. `ki` loads the complete verified harness, so the shared contract is one owned module rather than a copied vendored payload.",
+    "A skill's `scripts/**/*.ts` files contain no static `from`, dynamic `import()`, or CommonJS `require()` relative import that resolves outside its own `scripts/` directory. A portable rubric dependency is copied into `scripts/shared/rubric.ts`, so every rubric item and context remains typecheckable inside the skill root.",
   sources: ['KI'],
   mechanical: {
     level: 'FAIL',
@@ -25,13 +25,13 @@ export const KI_CHECKER_2: RubricItem<KiCheckerRubricContext> = {
       phase: 'INSPECT',
       run: ({ imports }) => {
         const violations = imports
-          .filter((entry) => !entry.resolvesInsideScripts && !entry.resolvesCanonicalSharedContract)
+          .filter((entry) => !entry.resolvesInsideScripts)
           .map((entry) => ({
             status: 'VIOLATION' as const,
-            message: `\`scripts/${entry.entry}\` imports \`${entry.specifier}\`, which is neither its own script payload nor the canonical harness rubric contract`
+            message: `\`scripts/${entry.entry}\` imports \`${entry.specifier}\`, which resolves outside its own scripts directory`
           }))
         const [first, ...rest] = violations
-        return first ? [first, ...rest] : [{ status: 'PASS', message: 'skill script imports use the direct harness contract' }]
+        return first ? [first, ...rest] : [{ status: 'PASS', message: 'skill script imports remain inside its own payload' }]
       }
     }
   }
@@ -47,12 +47,7 @@ export const KI_CHECKER_3: RubricItem<KiCheckerRubricContext> = {
     level: 'FAIL',
     audit: {
       phase: 'INSPECT',
-      run: ({
-        rootSkill,
-        declaredSharedModules,
-        sharedDependencies,
-        rubricModuleExists
-      }) => {
+      run: ({ rootSkill, declaredSharedModules, sharedDependencies, rubricModuleExists }) => {
         if (!rootSkill) return [{ status: 'NOT_APPLICABLE', message: 'the audited skill is not the checker-contract root' }]
         const violations = []
         if (declaredSharedModules.length !== 1 || declaredSharedModules[0] !== 'rubric')
