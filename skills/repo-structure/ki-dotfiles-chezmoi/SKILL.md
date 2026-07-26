@@ -33,19 +33,19 @@ Like every governance skill it carries the universal **AUDIT · CONFORM · EDUCA
 
 ### Mode AUDIT — check a chezmoi repo against the standard
 
-1. **Run the mechanical checker** — `bun scripts/govern.ts <repo-path> --reporter=terminal`. It checks the four **[M]** criteria in [the rubric](references/rubric.md) (`.chezmoiignore` presence, `.chezmoidata`/`.chezmoitemplates` presence when `.tmpl` files exist, `bin/` executable-prefix conformance, git lock-file hygiene). The default output is canonical JSONL; the terminal reporter shows actionable mechanical results. The summary counts the unevaluated **[J]** criteria, which a reader must apply separately. Exit code is non-zero on any FAIL.
+1. **Run the mechanical checker** — `ki repo audit <repo-path> --skill ki-dotfiles-chezmoi`. It checks the four **[M]** criteria in [the rubric](references/rubric.md) (`.chezmoiignore` presence, `.chezmoidata`/`.chezmoitemplates` presence when `.tmpl` files exist, `bin/` executable-prefix conformance, git lock-file hygiene). The result also records the unevaluated **[J]** criteria, which a reader must apply separately. Exit code is non-zero on any FAIL.
 2. Apply the **judgment** (`[J]`) criteria named in [the rubric](references/rubric.md) — Pattern A/B correctness for a given app config, format-preserving editor selection and evidence for every surgical writer, CLAUDE.md Layer 1/2 placement quality, `.chezmoiignore` negation intent, and whether audit-reporting etiquette was actually followed.
 3. **Report** by location → criterion → fix; lead with FAIL findings, then judgment findings; present options, don't silently fix.
 
 ### Mode CONFORM — bring a repo into house shape
 
-1. `bun scripts/govern.ts <repo-path>` scaffolds `.chezmoiignore` if it's missing — the one criterion with no legitimate reason to be absent and no per-repo content to preserve.
+1. `ki repo conform <repo-path> --skill ki-dotfiles-chezmoi` scaffolds `.chezmoiignore` if it's missing — the one criterion with no legitimate reason to be absent and no per-repo content to preserve.
 2. Everything else in the standard is judgment-driven and is **not** auto-fixed: restructuring shell config into the loader pattern, choosing Pattern A vs B for a given app config, selecting and proving a format-preserving surgical editor, moving CLAUDE.md content between layers, and so on are manual procedures — CONFORM prints them as TODOs (see [the rubric](references/rubric.md)'s `[J]` list) rather than guessing.
-3. Re-audit until `scripts/govern.ts` is clean and the judgment criteria are satisfied.
+3. Re-audit until `ki repo audit <repo-path> --skill ki-dotfiles-chezmoi` is clean and the judgment criteria are satisfied.
 
-### Mode EDUCATE — vendor the checker into a target repo
+### Mode EDUCATE — add the capability to a target repo
 
-EDUCATE vendors this skill's `scripts/govern.ts` entrypoint into the target's `.ki/bootstrap/` via the central `ki-bootstrap` chain: [`scripts/educate.ts`](scripts/educate.ts) is a thin delegator into that engine, matching every other governance skill's EDUCATE.
+Run `ki skill repo add ki-dotfiles-chezmoi --repo <target>` to link this capability and declare it in the target's `.ki-config.toml`. The KI CLI owns capability activation and native execution; this skill supplies only the standard and rubric contract.
 
 ### Mode REFRESH — re-anchor the standard to its sources
 
