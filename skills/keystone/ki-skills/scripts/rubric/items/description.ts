@@ -1,5 +1,5 @@
-import type { RubricItem } from '../../shared/rubric.ts'
-import type { DescriptionRubricContext } from '../contexts/contexts.ts'
+import type { RubricFamily, RubricItem } from '../../shared/rubric.ts'
+import type { DescriptionRubricContext, KiSkillsRubricContext } from '../contexts/contexts.ts'
 import { containsXmlTag, stripCode } from '../contexts/text.ts'
 
 const DESCRIPTION_MAX_LENGTH = 1024
@@ -107,4 +107,11 @@ export const DESC_9: RubricItem<DescriptionRubricContext> = {
   judgment: { prompt: 'Where skill-selection collision is likely, would explicit non-triggers improve routing?' }
 }
 
-export const DESC = [DESC_1, DESC_2, DESC_3, DESC_4, DESC_5, DESC_6, DESC_7, DESC_8, DESC_9] as const
+export const DESC: RubricFamily<KiSkillsRubricContext, DescriptionRubricContext> = {
+  code: 'DESC',
+  title: 'Frontmatter: description',
+  description: 'The portable skill description contract.',
+  standard: 'standards.md#5-frontmatter-description',
+  selectContext: (context: KiSkillsRubricContext) => context.description,
+  items: [DESC_1, DESC_2, DESC_3, DESC_4, DESC_5, DESC_6, DESC_7, DESC_8, DESC_9]
+}

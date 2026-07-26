@@ -99,7 +99,7 @@ export type RubricFamily<RootContext, FamilyContext> = {
   description: string
   standard: string
   selectContext: (root: RootContext) => FamilyContext
-  items: NonEmptyReadonlyArray<RubricItem<FamilyContext>>
+  items: readonly RubricItem<FamilyContext>[]
 }
 
 type CatalogueRubricFamily<RootContext> = {
@@ -109,13 +109,13 @@ type CatalogueRubricFamily<RootContext> = {
   standard: string
   selectContext: (root: RootContext) => unknown
   /** `never` erases heterogeneous family contexts without making callbacks callable. */
-  items: NonEmptyReadonlyArray<RubricItem<never>>
+  items: readonly RubricItem<never>[]
 }
 
 export type RubricDefinition<RootContext> = {
   name: string
   concern: string
-  families: NonEmptyReadonlyArray<CatalogueRubricFamily<RootContext>>
+  families: readonly CatalogueRubricFamily<RootContext>[]
 }
 
 export type RubricCatalogueIssue = {

@@ -1,4 +1,5 @@
-import type { RubricItem } from '../../shared/rubric.ts'
+import type { RubricFamily, RubricItem } from '../../shared/rubric.ts'
+import type { KiSkillsRubricContext } from '../contexts/contexts.ts'
 
 export const PROC_1: RubricItem<unknown> = {
   code: 'PROC-1',
@@ -16,4 +17,11 @@ export const PROC_2: RubricItem<unknown> = {
   judgment: { prompt: 'Has the skill been tested across its intended models and through real usage?' }
 }
 
-export const PROCESS = [PROC_1, PROC_2] as const
+export const PROCESS: RubricFamily<KiSkillsRubricContext, KiSkillsRubricContext> = {
+  code: 'PROC',
+  title: 'Process / meta',
+  description: 'Evaluation and real-usage evidence for the skill.',
+  standard: 'standards.md#11-process--evaluation',
+  selectContext: (context: KiSkillsRubricContext) => context,
+  items: [PROC_1, PROC_2]
+}

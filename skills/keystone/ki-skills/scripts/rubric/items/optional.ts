@@ -1,5 +1,5 @@
-import type { RubricItem } from '../../shared/rubric.ts'
-import type { OptionalRubricContext } from '../contexts/contexts.ts'
+import type { RubricFamily, RubricItem } from '../../shared/rubric.ts'
+import type { KiSkillsRubricContext, OptionalRubricContext } from '../contexts/contexts.ts'
 
 const COMPATIBILITY_MIN_LENGTH = 1
 const COMPATIBILITY_MAX_LENGTH = 500
@@ -170,4 +170,11 @@ export const OPT_7: RubricItem<OptionalRubricContext> = {
   judgment: { prompt: 'Where the skill has discrete modes, are they named and alphabetically ordered in argument-hint?' }
 }
 
-export const OPTIONAL = [OPT_1, OPT_2, OPT_3, OPT_4, OPT_5, OPT_6, OPT_7] as const
+export const OPTIONAL: RubricFamily<KiSkillsRubricContext, OptionalRubricContext> = {
+  code: 'OPT',
+  title: 'Frontmatter: optional fields',
+  description: 'Optional portable and runtime-specific frontmatter fields.',
+  standard: 'standards.md#6-frontmatter-optional-fields',
+  selectContext: (context: KiSkillsRubricContext) => context.optional,
+  items: [OPT_1, OPT_2, OPT_3, OPT_4, OPT_5, OPT_6, OPT_7]
+}

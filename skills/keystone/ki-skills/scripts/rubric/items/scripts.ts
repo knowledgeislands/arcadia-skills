@@ -1,5 +1,5 @@
-import type { RubricItem } from '../../shared/rubric.ts'
-import type { ScriptsRubricContext } from '../contexts/contexts.ts'
+import type { RubricFamily, RubricItem } from '../../shared/rubric.ts'
+import type { KiSkillsRubricContext, ScriptsRubricContext } from '../contexts/contexts.ts'
 
 export const SCRIPT_1: RubricItem<ScriptsRubricContext> = {
   code: 'SCRIPT-1',
@@ -91,4 +91,11 @@ export const SCRIPT_8: RubricItem<ScriptsRubricContext> = {
   judgment: { prompt: 'Does each top-level command stop and show useful help for `-h` and `--help` without causing side effects?' }
 }
 
-export const SCRIPTS = [SCRIPT_1, SCRIPT_2, SCRIPT_3, SCRIPT_4, SCRIPT_5, SCRIPT_6, SCRIPT_7, SCRIPT_8] as const
+export const SCRIPTS: RubricFamily<KiSkillsRubricContext, ScriptsRubricContext> = {
+  code: 'SCRIPT',
+  title: 'Scripts & executable code',
+  description: 'The quality and autonomy of executable skill support.',
+  standard: 'standards.md#10-scripts',
+  selectContext: (context: KiSkillsRubricContext) => context.scripts,
+  items: [SCRIPT_1, SCRIPT_2, SCRIPT_3, SCRIPT_4, SCRIPT_5, SCRIPT_6, SCRIPT_7, SCRIPT_8]
+}

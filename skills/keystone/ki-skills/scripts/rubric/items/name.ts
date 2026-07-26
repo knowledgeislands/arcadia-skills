@@ -1,5 +1,5 @@
-import type { RubricItem } from '../../shared/rubric.ts'
-import type { NameRubricContext } from '../contexts/contexts.ts'
+import type { RubricFamily, RubricItem } from '../../shared/rubric.ts'
+import type { KiSkillsRubricContext, NameRubricContext } from '../contexts/contexts.ts'
 import { containsXmlTag } from '../contexts/text.ts'
 
 const NAME_MAX_LENGTH = 64
@@ -134,4 +134,11 @@ export const NAME_7: RubricItem<NameRubricContext> = {
   judgment: { prompt: 'Is this name concrete and appropriately scoped for the capability it governs?' }
 }
 
-export const NAME = [NAME_1, NAME_2, NAME_3, NAME_4, NAME_5, NAME_6, NAME_7] as const
+export const NAME: RubricFamily<KiSkillsRubricContext, NameRubricContext> = {
+  code: 'NAME',
+  title: 'Frontmatter: name',
+  description: 'The portable skill name contract.',
+  standard: 'standards.md#4-frontmatter-name',
+  selectContext: (context: KiSkillsRubricContext) => context.name,
+  items: [NAME_1, NAME_2, NAME_3, NAME_4, NAME_5, NAME_6, NAME_7]
+}

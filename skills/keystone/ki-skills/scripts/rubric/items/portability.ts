@@ -1,5 +1,5 @@
-import type { RubricItem } from '../../shared/rubric.ts'
-import type { PortabilityRubricContext } from '../contexts/contexts.ts'
+import type { RubricFamily, RubricItem } from '../../shared/rubric.ts'
+import type { KiSkillsRubricContext, PortabilityRubricContext } from '../contexts/contexts.ts'
 import { unqualifiedRuntimeAssumptions } from '../contexts/portability.ts'
 
 export const PORT_1: RubricItem<PortabilityRubricContext> = {
@@ -25,4 +25,11 @@ export const PORT_1: RubricItem<PortabilityRubricContext> = {
   }
 }
 
-export const PORTABILITY = [PORT_1] as const
+export const PORTABILITY: RubricFamily<KiSkillsRubricContext, PortabilityRubricContext> = {
+  code: 'PORT',
+  title: 'Runtime portability',
+  description: 'Portable contracts make runtime-specific boundaries explicit.',
+  standard: 'standards.md#16-runtime-portability',
+  selectContext: (context: KiSkillsRubricContext) => context.portability,
+  items: [PORT_1]
+}

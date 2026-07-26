@@ -1,4 +1,5 @@
-import type { RubricItem } from '../../shared/rubric.ts'
+import type { RubricFamily, RubricItem } from '../../shared/rubric.ts'
+import type { KiSkillsRubricContext } from '../contexts/contexts.ts'
 
 export const KI_INVOKE_1: RubricItem<unknown> = {
   code: 'KI-INVOKE-1',
@@ -12,4 +13,11 @@ export const KI_INVOKE_1: RubricItem<unknown> = {
   }
 }
 
-export const KI_INVOKE = [KI_INVOKE_1] as const
+export const KI_INVOKE: RubricFamily<KiSkillsRubricContext, KiSkillsRubricContext> = {
+  code: 'KI-INVOKE',
+  title: 'Invocation protocol',
+  description: 'Safe invocation for a skill with named modes.',
+  standard: '../../../../docs/decisions/ADR-KI-HARNESS-SKILLS-001-audit-conform-educate-refresh-canonical-modes-help.md',
+  selectContext: (context: KiSkillsRubricContext) => context,
+  items: [KI_INVOKE_1]
+}

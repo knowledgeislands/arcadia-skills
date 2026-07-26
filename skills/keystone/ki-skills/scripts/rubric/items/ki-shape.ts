@@ -1,5 +1,5 @@
-import type { AuditOutcome, RubricItem, RubricOutcomes } from '../../shared/rubric.ts'
-import type { KiShapeRubricContext } from '../contexts/contexts.ts'
+import type { AuditOutcome, RubricFamily, RubricItem, RubricOutcomes } from '../../shared/rubric.ts'
+import type { KiShapeRubricContext, KiSkillsRubricContext } from '../contexts/contexts.ts'
 
 const UNIVERSAL_VERBS = ['AUDIT', 'CONFORM', 'HELP', 'EDUCATE', 'REFRESH'] as const
 
@@ -205,7 +205,7 @@ export const KI_SHAPE_12: RubricItem<KiShapeRubricContext> = {
   code: 'KI-SHAPE-12',
   title: 'governance mode vocabulary is canonical and complete',
   description:
-    '_Mode vocabulary is canonical and complete._ A governance skill exposes **AUDIT**, **CONFORM**, **EDUCATE**, **REFRESH** and **HELP** spelled exactly so — a governance skill missing any universal verb from its `argument-hint` (EDUCATE is the common gap) **WARNs**; `NEW`, `OPTIMISE`, and operational verbs are additive, never substitutes for a universal mode (a collection skill exposes both EDUCATE and NEW). The current source-entrypoint migration invariant is validated by KI-SHAPE-15; native delivery resolves registered operations from the verified collection. Process skills are exempt throughout.',
+    '_Mode vocabulary is canonical and complete._ A governance skill exposes **AUDIT**, **CONFORM**, **EDUCATE**, **REFRESH** and **HELP** spelled exactly so — a governance skill missing any universal verb from its `argument-hint` (EDUCATE is the common gap) **WARNs**; `NEW`, `OPTIMISE`, and operational verbs are additive, never substitutes for a universal mode (a collection skill exposes both EDUCATE and NEW). The current source-entrypoint migration invariant is validated by KI-SHAPE-15; direct delivery resolves registered operations from the verified collection. Process skills are exempt throughout.',
   sources: ['ADR-KI-HARNESS-SKILLS-001', 'ADR-KI-HARNESS-SKILLS-006', 'ADR-KI-HARNESS-007'],
   mechanical: {
     level: 'WARN',
@@ -306,7 +306,7 @@ const auditKiShape15 = ({ skill }: KiShapeRubricContext): RubricOutcomes<AuditOu
     if (skill.scriptNames.includes(script))
       violations.push({
         status: 'VIOLATION',
-        message: `\`scripts/${script}\` is retired — expose the native catalogue only through \`scripts/rubric/items/index.ts\``
+        message: `\`scripts/${script}\` is retired — expose the catalogue only through \`scripts/rubric/items/index.ts\``
       })
   const [first, ...rest] = violations
   return first ? [first, ...rest] : [{ status: 'PASS', message: 'governance skills expose no legacy runner entrypoints' }]
@@ -316,7 +316,7 @@ export const KI_SHAPE_15: RubricItem<KiShapeRubricContext> = {
   code: 'KI-SHAPE-15',
   title: 'governance skills expose no legacy runner entrypoints',
   description:
-    '_Direct governance operation shape._ A governance skill exposes its native rubric catalogue from `scripts/rubric/items/index.ts`; `ki` resolves and hosts that catalogue from the verified installed harness. `scripts/govern.ts`, `scripts/educate.ts`, `scripts/audit.ts`, and `scripts/conform.ts` are retired, with no compatibility runner or fallback. REFRESH is harness-only. Process skills and the committed repository-local `.ki/self/skill/` source are exempt.',
+    '_Direct governance operation shape._ A governance skill exposes its rubric catalogue from `scripts/rubric/items/index.ts`; `ki` resolves and hosts that catalogue from the verified installed harness. `scripts/govern.ts`, `scripts/educate.ts`, `scripts/audit.ts`, and `scripts/conform.ts` are retired, with no compatibility runner or fallback. REFRESH is harness-only. Process skills and the committed repository-local `.ki/self/skill/` source are exempt.',
   sources: ['standards.md §14', 'ADR-KI-HARNESS-007'],
   mechanical: {
     level: 'FAIL',
@@ -400,22 +400,29 @@ export const KI_SHAPE_17: RubricItem<KiShapeRubricContext> = {
   }
 }
 
-export const KI_SHAPE = [
-  KI_SHAPE_1,
-  KI_SHAPE_2,
-  KI_SHAPE_3,
-  KI_SHAPE_4,
-  KI_SHAPE_5,
-  KI_SHAPE_6,
-  KI_SHAPE_7,
-  KI_SHAPE_8,
-  KI_SHAPE_9,
-  KI_SHAPE_10,
-  KI_SHAPE_11,
-  KI_SHAPE_12,
-  KI_SHAPE_13,
-  KI_SHAPE_14,
-  KI_SHAPE_15,
-  KI_SHAPE_16,
-  KI_SHAPE_17
-] as const
+export const KI_SHAPE: RubricFamily<KiSkillsRubricContext, KiShapeRubricContext> = {
+  code: 'KI-SHAPE',
+  title: 'Knowledge Islands skill shape',
+  description: 'The common shape of a Knowledge Islands governance skill.',
+  standard: 'standards.md#14-knowledge-islands-skill-shape',
+  selectContext: (context: KiSkillsRubricContext) => context.shape,
+  items: [
+    KI_SHAPE_1,
+    KI_SHAPE_2,
+    KI_SHAPE_3,
+    KI_SHAPE_4,
+    KI_SHAPE_5,
+    KI_SHAPE_6,
+    KI_SHAPE_7,
+    KI_SHAPE_8,
+    KI_SHAPE_9,
+    KI_SHAPE_10,
+    KI_SHAPE_11,
+    KI_SHAPE_12,
+    KI_SHAPE_13,
+    KI_SHAPE_14,
+    KI_SHAPE_15,
+    KI_SHAPE_16,
+    KI_SHAPE_17
+  ]
+}

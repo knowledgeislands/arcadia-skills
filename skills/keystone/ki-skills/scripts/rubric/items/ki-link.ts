@@ -1,5 +1,5 @@
-import type { RubricItem } from '../../shared/rubric.ts'
-import type { KiLinkRubricContext } from '../contexts/contexts.ts'
+import type { RubricFamily, RubricItem } from '../../shared/rubric.ts'
+import type { KiLinkRubricContext, KiSkillsRubricContext } from '../contexts/contexts.ts'
 
 const relativeLinkTargets = (markdown: string): string[] => {
   const targets: string[] = []
@@ -72,4 +72,11 @@ export const KI_LINK_4: RubricItem<KiLinkRubricContext> = {
   judgment: { prompt: 'Does the repository pass its configured Biome, Prettier, and markdownlint toolchain?' }
 }
 
-export const KI_LINK = [KI_LINK_1, KI_LINK_2, KI_LINK_3, KI_LINK_4] as const
+export const KI_LINK: RubricFamily<KiSkillsRubricContext, KiLinkRubricContext> = {
+  code: 'KI-LINK',
+  title: 'Knowledge Islands linking & portability',
+  description: 'Knowledge Islands link and toolchain portability.',
+  standard: 'standards.md#13-knowledge-islands-linking--portability',
+  selectContext: (context: KiSkillsRubricContext) => context.link,
+  items: [KI_LINK_1, KI_LINK_2, KI_LINK_3, KI_LINK_4]
+}

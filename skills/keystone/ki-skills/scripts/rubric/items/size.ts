@@ -1,5 +1,5 @@
-import type { RubricItem } from '../../shared/rubric.ts'
-import type { SizeRubricContext } from '../contexts/contexts.ts'
+import type { RubricFamily, RubricItem } from '../../shared/rubric.ts'
+import type { KiSkillsRubricContext, SizeRubricContext } from '../contexts/contexts.ts'
 
 const BODY_MAX_LINES = 500
 const BODY_MAX_TOKENS = 5000
@@ -92,4 +92,11 @@ export const SIZE_5: RubricItem<SizeRubricContext> = {
   }
 }
 
-export const SIZE = [SIZE_1, SIZE_2, SIZE_3, SIZE_4, SIZE_5] as const
+export const SIZE: RubricFamily<KiSkillsRubricContext, SizeRubricContext> = {
+  code: 'SIZE',
+  title: 'Body: size & conciseness',
+  description: 'The progressive-disclosure budget for a skill body.',
+  standard: 'standards.md#7-size--conciseness',
+  selectContext: (context: KiSkillsRubricContext) => context.size,
+  items: [SIZE_1, SIZE_2, SIZE_3, SIZE_4, SIZE_5]
+}

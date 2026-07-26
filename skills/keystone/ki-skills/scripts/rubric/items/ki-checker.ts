@@ -1,5 +1,5 @@
-import type { RubricItem } from '../../shared/rubric.ts'
-import type { KiCheckerRubricContext } from '../contexts/contexts.ts'
+import type { RubricFamily, RubricItem } from '../../shared/rubric.ts'
+import type { KiCheckerRubricContext, KiSkillsRubricContext } from '../contexts/contexts.ts'
 
 export const KI_CHECKER_1: RubricItem<KiCheckerRubricContext> = {
   code: 'KI-CHECKER-1',
@@ -149,4 +149,11 @@ export const KI_CHECKER_5: RubricItem<KiCheckerRubricContext> = {
   }
 }
 
-export const KI_CHECKER = [KI_CHECKER_1, KI_CHECKER_2, KI_CHECKER_3, KI_CHECKER_4, KI_CHECKER_5] as const
+export const KI_CHECKER: RubricFamily<KiSkillsRubricContext, KiCheckerRubricContext> = {
+  code: 'KI-CHECKER',
+  title: 'Knowledge Islands checker contract',
+  description: 'Knowledge Islands packaging and checker responsibilities.',
+  standard: 'checker-contract.md',
+  selectContext: (context: KiSkillsRubricContext) => context.checker,
+  items: [KI_CHECKER_1, KI_CHECKER_2, KI_CHECKER_3, KI_CHECKER_4, KI_CHECKER_5]
+}

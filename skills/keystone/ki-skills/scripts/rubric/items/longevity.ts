@@ -1,5 +1,5 @@
-import type { RubricItem } from '../../shared/rubric.ts'
-import type { LongevityRubricContext } from '../contexts/contexts.ts'
+import type { RubricFamily, RubricItem } from '../../shared/rubric.ts'
+import type { KiSkillsRubricContext, LongevityRubricContext } from '../contexts/contexts.ts'
 import type { RefreshContext } from '../contexts/longevity.ts'
 
 const REFRESH_GRACE_DAYS = 14
@@ -104,4 +104,11 @@ export const LONG_4: RubricItem<LongevityRubricContext> = {
   }
 }
 
-export const LONGEVITY = [LONG_1, LONG_2, LONG_3, LONG_4] as const
+export const LONGEVITY: RubricFamily<KiSkillsRubricContext, LongevityRubricContext> = {
+  code: 'LONG',
+  title: 'Longevity',
+  description: 'Refresh paths and cadence for knowledge that changes over time.',
+  standard: 'standards.md#12-longevity',
+  selectContext: (context: KiSkillsRubricContext) => context.longevity,
+  items: [LONG_1, LONG_2, LONG_3, LONG_4]
+}

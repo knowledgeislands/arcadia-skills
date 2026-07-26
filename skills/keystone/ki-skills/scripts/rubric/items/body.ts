@@ -1,4 +1,5 @@
-import type { RubricItem } from '../../shared/rubric.ts'
+import type { RubricFamily, RubricItem } from '../../shared/rubric.ts'
+import type { KiSkillsRubricContext } from '../contexts/contexts.ts'
 
 export const BODY_1: RubricItem<unknown> = {
   code: 'BODY-1',
@@ -64,4 +65,11 @@ export const BODY_8: RubricItem<unknown> = {
   judgment: { prompt: 'Do rules explain their rationale rather than stating bare MUST or NEVER directives?' }
 }
 
-export const BODY = [BODY_1, BODY_2, BODY_3, BODY_4, BODY_5, BODY_6, BODY_7, BODY_8] as const
+export const BODY: RubricFamily<KiSkillsRubricContext, KiSkillsRubricContext> = {
+  code: 'BODY',
+  title: 'Body content quality',
+  description: 'The quality and usability of the skill instructions.',
+  standard: 'standards.md#9-body-content-quality',
+  selectContext: (context: KiSkillsRubricContext) => context,
+  items: [BODY_1, BODY_2, BODY_3, BODY_4, BODY_5, BODY_6, BODY_7, BODY_8]
+}

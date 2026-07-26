@@ -37,11 +37,11 @@ type CanonicalFamily = {
   readonly items: readonly (MechanicalRule | JudgmentRule)[]
 }
 
-type NativeSubject = KiSkillsSubject & { readonly directory?: string }
+type SkillSubject = KiSkillsSubject & { readonly directory?: string }
 
-type NativeSkillsContext = {
+type ExecutionContext = {
   readonly repository: string
-  readonly subjects: readonly NativeSubject[]
+  readonly subjects: readonly SkillSubject[]
 }
 
 const universalVerbs = ['AUDIT', 'CONFORM', 'HELP', 'EDUCATE', 'REFRESH'] as const
@@ -51,7 +51,7 @@ const isMechanical = (item: MechanicalRule | JudgmentRule): item is MechanicalRu
 const subjectDirectory = (subject: KiSkillsSubject, directories: readonly string[], index: number) =>
   subject.scope === 'skill' || subject.scope === 'invalidSkill' ? directories[index] : undefined
 
-const nativeSubjects = (repository: string): readonly NativeSubject[] => {
+const subjectsFor = (repository: string): readonly SkillSubject[] => {
   const subjects = createKiSkillsSubjects({ mode: 'audit', roots: [repository], reportTarget: repository }).subjects
   const directories = discoverSkillDirs(repository).sort()
   let directoryIndex = 0
@@ -63,29 +63,29 @@ const nativeSubjects = (repository: string): readonly NativeSubject[] => {
   })
 }
 
-const fallbackSubject = (context: NativeSkillsContext, subject: NativeSubject): string | undefined =>
+const subjectPath = (context: ExecutionContext, subject: SkillSubject): string | undefined =>
   subject.subject ??
   ((subject.scope === 'skill' || subject.scope === 'invalidSkill') && subject.directory
     ? relative(context.repository, subject.directory)
     : undefined)
 
-const outcomesFor = (context: NativeSkillsContext, family: CanonicalFamily, item: MechanicalRule): readonly AuditOutcome[] =>
+const outcomesFor = (context: ExecutionContext, family: CanonicalFamily, item: MechanicalRule): readonly AuditOutcome[] =>
   context.subjects.flatMap((subject) => {
     if (!KI_SKILLS_SUBJECT_FAMILIES[subject.scope].some((code) => code === family.code)) return []
-    const fallback = fallbackSubject(context, subject)
+    const fallback = subjectPath(context, subject)
     return item.mechanical.audit.run(family.selectContext(subject.context())).map((outcome) => ({
       ...outcome,
       ...(outcome.subject || !fallback ? {} : { subject: fallback })
     }))
   })
 
-const layoutContext = (family: CanonicalFamily, subject: NativeSubject): LayoutRubricContext =>
+const layoutContext = (family: CanonicalFamily, subject: SkillSubject): LayoutRubricContext =>
   family.selectContext(subject.context()) as LayoutRubricContext
 
-const skillContext = <Context>(family: CanonicalFamily, subject: NativeSubject): Context =>
+const skillContext = <Context>(family: CanonicalFamily, subject: SkillSubject): Context =>
   family.selectContext(subject.context()) as Context
 
-const skillMarkdown = (context: NativeSkillsContext, subject: NativeSubject): { path: string; content: string } | undefined => {
+const skillMarkdown = (context: ExecutionContext, subject: SkillSubject): { path: string; content: string } | undefined => {
   if (!subject.directory) return undefined
   const path = relative(context.repository, join(subject.directory, 'SKILL.md'))
   return { path, content: readFileSync(join(subject.directory, 'SKILL.md'), 'utf8') }
@@ -101,7 +101,7 @@ const rewriteFrontmatter = (content: string, key: string, value: string): string
 const missingVerbs = (shape: KiShapeRubricContext) =>
   shape.skill ? universalVerbs.filter((verb) => !shape.skill?.hintVerbs.includes(verb)) : []
 
-const coalescedWrites = (context: NativeSkillsContext, catalogue: readonly CanonicalFamily[]) => {
+const coalescedWrites = (context: ExecutionContext, catalogue: readonly CanonicalFamily[]) => {
   const originals = new Map<string, string>()
   const drafts = new Map<string, string>()
   const draft = (path: string, source: string, transform: (content: string) => string): void => {
@@ -163,12 +163,12 @@ const coalescedWrites = (context: NativeSkillsContext, catalogue: readonly Canon
   }
 }
 
-const repairFor = (context: NativeSkillsContext, item: MechanicalRule, catalogue: readonly CanonicalFamily[]) => {
+const repairFor = (context: ExecutionContext, item: MechanicalRule, catalogue: readonly CanonicalFamily[]) => {
   if (['LAY-4', 'NAME-5', 'KI-SHAPE-11', 'KI-SHAPE-12'].includes(item.code)) return coalescedWrites(context, catalogue)
   return { writes: [] }
 }
 
-const nativeItem = (family: CanonicalFamily, item: MechanicalRule | JudgmentRule, catalogue: readonly CanonicalFamily[]) => {
+const executionFor = (family: CanonicalFamily, item: MechanicalRule | JudgmentRule, catalogue: readonly CanonicalFamily[]) => {
   if (!isMechanical(item)) return { kind: 'judgment' as const, code: item.code, title: item.title, prompt: item.judgment.prompt }
   return {
     kind: 'mechanical' as const,
@@ -176,21 +176,21 @@ const nativeItem = (family: CanonicalFamily, item: MechanicalRule | JudgmentRule
     title: item.title,
     level: item.mechanical.level,
     phase: item.mechanical.audit.phase,
-    audit: (context: NativeSkillsContext) => outcomesFor(context, family, item),
-    repair: (context: NativeSkillsContext) => repairFor(context, item, catalogue)
+    audit: (context: ExecutionContext) => outcomesFor(context, family, item),
+    repair: (context: ExecutionContext) => repairFor(context, item, catalogue)
   }
 }
 
-type NativeRuntimeItem = {
+type ItemExecution = {
   readonly kind: 'mechanical' | 'judgment'
   readonly phase?: 'PREPARE' | 'INSPECT' | 'PRIMARY' | 'DERIVED' | 'NORMALISE'
   readonly audit?: (...arguments_: never[]) => unknown
   readonly repair?: (...arguments_: never[]) => unknown
 }
 
-const withNativeExecution = <Context>(item: RubricItem<Context>, runtime: NativeRuntimeItem) => {
+const withExecution = <Context>(item: RubricItem<Context>, runtime: ItemExecution) => {
   if (!item.mechanical) return item
-  if (runtime.kind !== 'mechanical' || !runtime.phase || !runtime.audit) throw new Error(`${item.code} has no native mechanical runtime`)
+  if (runtime.kind !== 'mechanical' || !runtime.phase || !runtime.audit) throw new Error(`${item.code} has no direct mechanical execution`)
   const { repair: conform, ...mechanical } = item.mechanical
   void conform
   return {
@@ -203,27 +203,27 @@ const withNativeExecution = <Context>(item: RubricItem<Context>, runtime: Native
   }
 }
 
-/** Turn the canonical per-subject catalogue into KI's native multi-skill operation. */
-export const createNativeKiSkillsRubric = (definition: RubricDefinition<KiSkillsRubricContext>) => {
+/** Turn the canonical per-subject catalogue into KI's direct multi-skill operation. */
+export const createKiSkillsExecutionDefinition = (definition: RubricDefinition<KiSkillsRubricContext>) => {
   const catalogue = definition.families as unknown as readonly CanonicalFamily[]
   return {
     contract: 1,
     name: definition.name,
     concern: definition.concern,
-    createContext: ({ repository }: { readonly repository: string }): NativeSkillsContext => ({
+    createContext: ({ repository }: { readonly repository: string }): ExecutionContext => ({
       repository,
-      subjects: nativeSubjects(repository)
+      subjects: subjectsFor(repository)
     }),
     families: definition.families.map((family) => {
       const runtimeFamily = catalogue.find((candidate) => candidate.code === family.code)
-      if (!runtimeFamily) throw new Error(`${family.code} has no native family runtime`)
+      if (!runtimeFamily) throw new Error(`${family.code} has no family execution`)
       return {
         ...family,
-        selectContext: (context: NativeSkillsContext) => context,
+        selectContext: (context: ExecutionContext) => context,
         items: family.items.map((item) => {
           const runtimeItem = runtimeFamily.items.find((candidate) => candidate.code === item.code)
-          if (!runtimeItem) throw new Error(`${item.code} has no native item runtime`)
-          return withNativeExecution(item, nativeItem(runtimeFamily, runtimeItem, catalogue))
+          if (!runtimeItem) throw new Error(`${item.code} has no item execution`)
+          return withExecution(item, executionFor(runtimeFamily, runtimeItem, catalogue))
         })
       }
     })

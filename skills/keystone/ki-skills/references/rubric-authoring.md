@@ -482,7 +482,7 @@ The renderer uses family metadata and ordered item metadata to reproduce:
 
 The generated file carries a clear generated marker.
 
-`ki skill rubric <skill>` verifies the tracked publication against the native catalogue; `ki skill rubric <skill> --write` writes it.
+`ki skill rubric <skill>` verifies the tracked publication against the catalogue; `ki skill rubric <skill> --write` writes it.
 
 Runtime code using the shared checker never parses the generated Markdown back into policy.
 
@@ -524,8 +524,8 @@ The target contains no legacy aliases, compatibility adapters, dual response nam
 Complete these units inside `ki-skills` in order, keeping each independently reviewable.
 
 1. **Rubric model.** Replace the provisional shared types with the target rubric, family, execution, outcome, and definition types. Add generic catalogue validation without changing domain behaviour.
-2. **KI skills catalogue.** Wrap the existing item families in family metadata, add focused context selectors, declare violation levels and phases, and export one `KI_SKILLS_RUBRIC` definition. Preserve every existing criterion code and meaning, including hybrid items with both aspects.
-3. **Generated rubric.** Render and parity-check `references/rubric.md` from `KI_SKILLS_RUBRIC`, including its canonical-source notice. Remove Markdown parsing from runtime code only after exact parity passes.
+2. **KI skills catalogue.** Wrap the existing item families in family metadata, add focused context selectors, declare violation levels and phases, and default-export the one rubric definition from `scripts/rubric/items/index.ts`. Preserve every existing criterion code and meaning, including hybrid items with both aspects.
+3. **Generated rubric.** Render and parity-check `references/rubric.md` from that default export, including its canonical-source notice. Remove Markdown parsing from runtime code only after exact parity passes.
 4. **Shared module.** Replace the monolithic reporter helper with the self-contained `scripts/shared/checker.ts`: planning, execution, response construction, response parsing, and validation. Rename the executable schema to `assets/checker-response.schema.json` with no legacy alias.
 5. **Thin wrappers.** Reduce `audit.ts` and `conform.ts` to arguments, subject loading, subject-context factories, checker invocation, persistence, and exit. They contain no criterion codes or private result shape.
 6. **Module publication.** Publish `rubric`, `checker`, and `reporter` as the three `ki-skills` shared modules, prove the declared dependency closure, and add source-level tests for the exact form another skill will vendor.
