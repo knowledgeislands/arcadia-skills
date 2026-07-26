@@ -44,26 +44,6 @@ mcp_servers = 20   # acknowledged overage; documented here for auditability
 
 Every repo declares its own foundations (`[ki-repo]` + `[ki-authoring]`) as `[ki-*]` tables like any other coverage — there is no injected baseline, so the linker resolves purely from the declared set.
 
-### The `ki:skills:copy:project` invocation
-
-The reproducibility contract may wire a `ki:skills:copy:project` script in `package.json`. Running it once after a fresh clone rebuilds `.claude/skills/` from `.ki-config.toml` without any hard-coded paths:
-
-```json
-{
-  "scripts": {
-    "ki:skills:copy:project": "bun skills/keystone/ki-bootstrap/scripts/internal/repo-bootstrap/publish-project-skills.ts"
-  }
-}
-```
-
-Running it:
-
-```bash
-bun run ki:skills:copy:project
-```
-
-The keystone linker self-locates the harness through its own real path — no harness location is hard-coded in the script. The harness uses the identical invocation, unmodified: it links only the skills its own `.ki-config.toml` declares, same as any other repo.
-
 ### Before and after bootstrapping
 
 **Before** — a repo with a `.ki-config.toml` that has never been linked:

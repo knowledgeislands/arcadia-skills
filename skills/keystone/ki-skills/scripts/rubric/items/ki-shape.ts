@@ -171,7 +171,7 @@ export const KI_SHAPE_11: RubricItem<KiShapeRubricContext> = {
   code: 'KI-SHAPE-11',
   title: 'governance skills expose HELP',
   description:
-    "_Exposes the universal HELP mode._ Every governance skill's `argument-hint` lists a `help` verb, so the no-mode default and the `help` / `-h` / `?` pure-explain form are discoverable (ADR-KI-HARNESS-SKILLS-001). The HELP block itself is **generated, not authored** — the shared renderer (`skills/keystone/ki-bootstrap/scripts/skill-help.ts`, surfaced as `ki:skills:help <name>`) reads what the `SKILL.md` already declares and injects HELP into every skill's mode list — so a skill's only footprint is this one token plus the KI-INVOKE-1 prose. The linter verifies the `help` token; the prose HELP semantics are KI-INVOKE-1 **[J]**.",
+    "_Exposes the universal HELP mode._ Every governance skill's `argument-hint` lists a `help` verb, so the no-mode default and the `help` / `-h` / `?` pure-explain form are discoverable (ADR-KI-HARNESS-SKILLS-001). A skill derives its help from its own frontmatter and operating-mode prose; it carries no generated wrapper or separate HELP payload. The linter verifies the `help` token; the prose HELP semantics are KI-INVOKE-1 **[J]**.",
   sources: ['ADR-KI-HARNESS-SKILLS-001'],
   mechanical: {
     level: 'FAIL',

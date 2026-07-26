@@ -49,7 +49,7 @@
     "ki:binding:build-plugin": "bun skills/environment/ki-binding/scripts/build-plugin.ts",
     "ki:eval": "bun evals/harness.ts",
     "prepare": "husky",
-    "test": "bun test --isolate --max-concurrency=1 ./skills ./hooks && bun skills/keystone/ki-bootstrap/scripts/internal/repo-bootstrap/skill-graph.ts --check --check-doc docs/guides/user/skills.md && bun skills/keystone/ki-bootstrap/scripts/internal/repo-bootstrap/skill-help.ts --check"
+    "test": "bun test --isolate --max-concurrency=1 ./skills ./hooks"
   },
   "type": "module"
 }
