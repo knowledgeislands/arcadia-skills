@@ -21,6 +21,7 @@ export type ActivitiesContext = {
   harness?: string
   dryRun: boolean
   activitiesAvailable: boolean
+  indexExists: boolean
   indexContent: string
   notes: readonly ActivityNote[]
   ensureIndex: () => RubricOutcomes<ConformOutcome>
@@ -82,7 +83,8 @@ export const createActivitiesContextFactory = ({
     const activitiesPath = join(root, ACTIVITIES_DIRECTORY)
     const activitiesAvailable = available && isDirectory(activitiesPath)
     const indexPath = join(activitiesPath, ACTIVITIES_INDEX)
-    const indexContent = activitiesAvailable && isFile(indexPath) ? readFileSync(indexPath, 'utf8') : ''
+    const indexExists = activitiesAvailable && isFile(indexPath)
+    const indexContent = indexExists ? readFileSync(indexPath, 'utf8') : ''
     const notes = activitiesAvailable
       ? walkMarkdown(activitiesPath)
           .filter((path) => path !== indexPath)
@@ -128,6 +130,7 @@ export const createActivitiesContextFactory = ({
       harness: resolvedHarness,
       dryRun,
       activitiesAvailable,
+      indexExists,
       indexContent,
       notes,
       ensureIndex,
