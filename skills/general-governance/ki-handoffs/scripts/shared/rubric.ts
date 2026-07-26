@@ -138,11 +138,6 @@ export type SkillRubricDefinition<RootContext> = RubricDefinition<RootContext> &
   createSession: (options: RubricContextOptions) => RubricSession<RootContext>
 }
 
-export type RubricCatalogueIssue = {
-  path: string
-  message: string
-}
-
 export const defineRubricFamily = <RootContext, FamilyContext>(
   family: RubricFamily<RootContext, FamilyContext>
 ): RubricFamily<RootContext, FamilyContext> => family
@@ -151,26 +146,3 @@ export const rubricTypes = <Context>(item: RubricItem<Context>): readonly Rubric
   ...(item.mechanical ? (['MECHANICAL'] as const) : []),
   ...(item.judgment ? (['JUDGMENT'] as const) : [])
 ]
-
-/** Validate semantic catalogue invariants that TypeScript cannot express across entries. */
-export const validateRubricCatalogue = <RootContext>(definition: RubricDefinition<RootContext>): readonly RubricCatalogueIssue[] => {
-  const issues: RubricCatalogueIssue[] = []
-  const familyCodes = new Set<string>()
-  const itemCodes = new Set<string>()
-  for (const [familyIndex, family] of definition.families.entries()) {
-    const familyPath = `definition.families[${familyIndex}]`
-
-    if (familyCodes.has(family.code)) issues.push({ path: `${familyPath}.code`, message: `duplicates family code ${family.code}` })
-    familyCodes.add(family.code)
-
-    for (const [itemIndex, item] of family.items.entries()) {
-      const itemPath = `${familyPath}.items[${itemIndex}]`
-      if (!item.code.startsWith(`${family.code}-`))
-        issues.push({ path: `${itemPath}.code`, message: `must belong to family ${family.code}` })
-      if (itemCodes.has(item.code)) issues.push({ path: `${itemPath}.code`, message: `duplicates rubric item code ${item.code}` })
-      itemCodes.add(item.code)
-    }
-  }
-
-  return issues
-}

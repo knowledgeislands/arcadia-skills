@@ -8,8 +8,7 @@ import {
   type RubricDefinition,
   type RubricItem,
   rubricTypes,
-  VIOLATION_LEVELS,
-  validateRubricCatalogue
+  VIOLATION_LEVELS
 } from './rubric.ts'
 
 type RootContext = {
@@ -68,41 +67,9 @@ const definition: RubricDefinition<RootContext> = {
   families: [documentFamily, proseFamily]
 }
 
-const duplicateDocumentFamily = defineRubricFamily<RootContext, RootContext['document']>({
-  code: 'DOC',
-  title: 'Duplicate document family',
-  description: 'A fixture used to prove semantic duplicate detection.',
-  standard: 'Standard §1',
-  selectContext: ({ document }) => document,
-  items: [hybrid]
-})
-
-const mismatchedFamily = defineRubricFamily<RootContext, RootContext['document']>({
-  code: 'OTHER',
-  title: 'Mismatched family',
-  description: 'A fixture used to prove item family membership.',
-  standard: 'Standard §1',
-  selectContext: ({ document }) => document,
-  items: [
-    {
-      code: 'DOC-2',
-      title: 'item in the wrong family',
-      description: 'The item code does not belong to its containing family.',
-      sources: ['STANDARD §1'],
-      judgment: { prompt: 'Is this fixture intentionally in the wrong family?' }
-    }
-  ]
-})
-
-const invalidDefinition: RubricDefinition<RootContext> = {
-  name: 'invalid fixture',
-  concern: 'semantic catalogue invariants',
-  families: [documentFamily, duplicateDocumentFamily, mismatchedFamily]
-}
-
 describe('structured rubric model', () => {
   test('accepts heterogeneous focused family contexts', () => {
-    expect(validateRubricCatalogue(definition)).toHaveLength(0)
+    expect(definition.families.map(({ code }) => code)).toEqual(['DOC', 'PROSE'])
   })
 
   test('derives both aspects from a hybrid item', () => {
@@ -118,12 +85,5 @@ describe('structured rubric model', () => {
   test('keeps conform actions distinct from host-owned publication and FIXED outcomes', () => {
     expect(hybrid.mechanical.audit.run({ present: true })).toHaveLength(1)
     expect(hybrid.mechanical.conform?.run({ present: false })).toBeUndefined()
-  })
-
-  test('rejects duplicate family and item codes plus mismatched membership', () => {
-    const issues = validateRubricCatalogue(invalidDefinition).map(({ message }) => message)
-    expect(issues).toContain('duplicates family code DOC')
-    expect(issues).toContain('duplicates rubric item code DOC-1')
-    expect(issues).toContain('must belong to family OTHER')
   })
 })
