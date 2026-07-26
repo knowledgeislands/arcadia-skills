@@ -80,7 +80,7 @@ const configurationRepair = (repository: string) => {
   }
 }
 
-const files1Repair = (context: NativeRepoContext) => {
+const filesOneRepair = (context: NativeRepoContext) => {
   const config = configurationRepair(context.repository)
   const gitignore = join(context.repository, '.gitignore')
   return {
@@ -91,7 +91,7 @@ const files1Repair = (context: NativeRepoContext) => {
 const nativeItem = (item: RubricItem<RepoRubricContext>) => {
   if (!item.mechanical) return judgment(item)
   const native = mechanical(item)
-  if (item.code === 'FILES-1') return { ...native, repair: files1Repair }
+  if (item.code === 'FILES-1') return { ...native, repair: filesOneRepair }
   if (item.code === 'FILES-3') return { ...native, repair: (context: NativeRepoContext) => configurationRepair(context.repository) }
   return native
 }
