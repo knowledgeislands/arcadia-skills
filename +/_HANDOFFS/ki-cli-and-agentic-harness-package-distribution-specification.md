@@ -1,10 +1,22 @@
 # KI CLI and Agentic Harness Package Distribution Specification
 
-**Status:** Initial design specification **Proposed command:** `ki` **Project:** Knowledge Islands **Primary scope:** Command-line package installation, management, binding, discovery, and activation for agentic harness components **Configuration format:** TOML **Intended audience:** KI implementers, harness developers, package authors, tool integrators, and repository maintainers
+- **Status:** Historical design proposal
+- **Project:** Knowledge Islands
+- **Intended audience:** KI implementers, harness developers, package authors, tool integrators, and repository maintainers
+
+## Current status
+
+This is a retained incoming handoff, not the CLI contract.
+
+`tools-ki` owns the live `ki` command surface and CLI-004; the compatible-harness boundary is owned by this harness's FND-004.
+
+The proposal's concrete command names and semantics, package store and lock-file designs, binding model, adapter model, release model, and ZIP-bundling assumptions are superseded or unadopted.
+
+Keep this document only for historical rationale and options that a recipient explicitly reconsiders; do not implement a section below merely because it appears here.
 
 ---
 
-# 1. Executive Summary
+## 1. Executive Summary
 
 The **KI CLI** is the command-line interface for the Knowledge Islands agentic ecosystem.
 
@@ -34,9 +46,9 @@ The KI CLI is not merely a wrapper around existing harness commands. It is a pac
 
 ---
 
-# 2. Naming
+## 2. Naming
 
-## 2.1 Command name
+### 2.1 Command name
 
 The primary executable should be:
 
@@ -53,7 +65,7 @@ ki package list
 ki doctor
 ```
 
-## 2.2 Meaning
+### 2.2 Meaning
 
 The name `ki` primarily refers to **Knowledge Islands**.
 
@@ -68,7 +80,7 @@ It may also carry an intentional secondary association with concepts such as:
 
 This secondary meaning supports the wider Knowledge Islands philosophy without changing the technical definition.
 
-## 2.3 Alternative names
+### 2.3 Alternative names
 
 Names such as `kih`, `ki-harness`, or `knowledge-islands` may be retained for:
 
@@ -86,17 +98,17 @@ ki
 
 ---
 
-# 3. Design Principles
+## 3. Design Principles
 
 The KI CLI should follow these principles.
 
-## 3.1 Harness-neutral
+### 3.1 Harness-neutral
 
 KI must not be structurally tied to Claude, Codex, Gemini, OpenAI, or any other single harness.
 
 Harness-specific behaviour should be implemented through adapters.
 
-## 3.2 Install once, bind many times
+### 3.2 Install once, bind many times
 
 A component should normally be downloaded once into the KI package store.
 
@@ -108,7 +120,7 @@ It may then be bound into:
 - project-level harness configuration;
 - temporary workspaces.
 
-## 3.3 KI is the source of truth
+### 3.3 KI is the source of truth
 
 The KI package store owns the installed package.
 
@@ -121,13 +133,13 @@ Harness-specific directories should generally contain:
 
 They should not normally contain independent copied package trees.
 
-## 3.4 Declarative state
+### 3.4 Declarative state
 
 Desired repository and workspace state should be representable in TOML.
 
 The command line may modify this state, but the result must remain inspectable and reproducible.
 
-## 3.5 Explicit lifecycle separation
+### 3.5 Explicit lifecycle separation
 
 The system must distinguish:
 
@@ -142,25 +154,25 @@ currently executing
 
 These states must not be conflated.
 
-## 3.6 Portable package model
+### 3.6 Portable package model
 
 Skills, agents, prompts, workflows, policies, memories, tools, adapters, and other harness components should use a consistent package model.
 
-## 3.7 Safe by default
+### 3.7 Safe by default
 
 Remote packages must not receive arbitrary execution privileges merely by being installed.
 
 Installation, binding, trust, execution, and permission granting are separate concerns.
 
-## 3.8 Human-readable operation
+### 3.8 Human-readable operation
 
 Configuration and lock files should remain understandable without specialist tooling.
 
-## 3.9 Deterministic automation
+### 3.9 Deterministic automation
 
 Commands should support stable non-interactive execution, machine-readable output, predictable exit codes, and lock-file-based reproducibility.
 
-## 3.10 Alignment with Knowledge Islands
+### 3.10 Alignment with Knowledge Islands
 
 The CLI should support the wider Knowledge Islands approach:
 
@@ -175,9 +187,9 @@ The CLI should support the wider Knowledge Islands approach:
 
 ---
 
-# 4. Conceptual Model
+## 4. Conceptual Model
 
-## 4.1 Package
+### 4.1 Package
 
 A **package** is a versioned distributable unit managed by KI.
 
@@ -195,7 +207,7 @@ A package contains one or more components and a manifest describing:
 - integrity information;
 - harness bindings.
 
-## 4.2 Component
+### 4.2 Component
 
 A **component** is a usable agentic capability contained in a package.
 
@@ -216,13 +228,13 @@ profile
 bundle
 ```
 
-## 4.3 Installation
+### 4.3 Installation
 
 Installation places a package into the KI package store.
 
 Installation does not automatically expose the package to any harness.
 
-## 4.4 Binding
+### 4.4 Binding
 
 Binding creates an association between an installed component and a target context.
 
@@ -236,7 +248,7 @@ A binding answers:
 - with what configuration;
 - with what permissions.
 
-## 4.5 Harness
+### 4.5 Harness
 
 A **harness** is an environment capable of discovering or executing agentic components.
 
@@ -251,7 +263,7 @@ Examples may include:
 - editor integrations;
 - automation runners.
 
-## 4.6 Adapter
+### 4.6 Adapter
 
 A **harness adapter** translates KI bindings into the structure expected by a specific harness.
 
@@ -277,7 +289,7 @@ The adapter determines:
 - refresh behaviour;
 - cleanup behaviour.
 
-## 4.7 Scope
+### 4.7 Scope
 
 A binding scope describes where a component is active.
 
@@ -301,7 +313,7 @@ container
 remote-runtime
 ```
 
-## 4.8 Context
+### 4.8 Context
 
 The **current KI context** is resolved from:
 
@@ -316,9 +328,9 @@ The **current KI context** is resolved from:
 
 ---
 
-# 5. Filesystem Layout
+## 5. Filesystem Layout
 
-## 5.1 User-level KI directory
+### 5.1 User-level KI directory
 
 The preferred default should follow XDG conventions where available.
 
@@ -378,7 +390,7 @@ A recommended XDG layout is:
 └── history/
 ```
 
-## 5.2 Consolidated layout
+### 5.2 Consolidated layout
 
 Where a single directory is preferred:
 
@@ -394,7 +406,7 @@ Where a single directory is preferred:
 └── locks/
 ```
 
-## 5.3 Repository configuration
+### 5.3 Repository configuration
 
 The existing repository configuration file should remain:
 
@@ -414,7 +426,7 @@ my-repository/
 └── README.md
 ```
 
-## 5.4 Package manifest
+### 5.4 Package manifest
 
 An installable package should contain:
 
@@ -434,7 +446,7 @@ example-agent-package/
 └── README.md
 ```
 
-## 5.5 Lock file
+### 5.5 Lock file
 
 The repository lock file should be:
 
@@ -444,7 +456,7 @@ The repository lock file should be:
 
 It records exact resolved package identities, versions, source revisions, hashes, and bindings.
 
-## 5.6 Local repository state
+### 5.6 Local repository state
 
 Transient local state that should not normally be committed may live under:
 
@@ -472,9 +484,9 @@ The distinction is:
 
 ---
 
-# 6. Package Store
+## 6. Package Store
 
-## 6.1 Content-addressable storage
+### 6.1 Content-addressable storage
 
 Where practical, packages should be stored by immutable content identity.
 
@@ -489,7 +501,7 @@ packages/
 
 A human-readable index may map package identifiers to content hashes.
 
-## 6.2 Logical package path
+### 6.2 Logical package path
 
 A package may also be addressable using:
 
@@ -505,7 +517,7 @@ knowledge-islands/research-agent/1.2.0
 
 This path should resolve to immutable content.
 
-## 6.3 Mutable source aliases
+### 6.3 Mutable source aliases
 
 Aliases such as:
 
@@ -518,7 +530,7 @@ beta
 
 may exist during resolution, but a lock file must resolve them to immutable versions or revisions.
 
-## 6.4 Package installation states
+### 6.4 Package installation states
 
 Possible package states:
 
@@ -533,7 +545,7 @@ corrupt
 orphaned
 ```
 
-## 6.5 Package immutability
+### 6.5 Package immutability
 
 An installed package version should be treated as immutable.
 
@@ -541,7 +553,7 @@ Updates should install a new resolved package revision rather than modifying the
 
 ---
 
-# 7. Package Sources
+## 7. Package Sources
 
 KI should support a source abstraction.
 
@@ -558,7 +570,7 @@ registry
 workspace
 ```
 
-## 7.1 Git source
+### 7.1 Git source
 
 ```bash
 ki package install https://github.com/knowledge-islands/example.git
@@ -570,7 +582,7 @@ Optional revision:
 ki package install https://github.com/knowledge-islands/example.git#v1.2.0
 ```
 
-## 7.2 GitHub shorthand
+### 7.2 GitHub shorthand
 
 ```bash
 ki package install github:knowledge-islands/example
@@ -588,7 +600,7 @@ With revision:
 ki package install github:knowledge-islands/example@v1.2.0
 ```
 
-## 7.3 Local path
+### 7.3 Local path
 
 ```bash
 ki package install ./packages/example-agent
@@ -600,13 +612,13 @@ For development:
 ki package install ./packages/example-agent --editable
 ```
 
-## 7.4 URL archive
+### 7.4 URL archive
 
 ```bash
 ki package install https://example.org/packages/research-agent-1.2.0.tar.gz
 ```
 
-## 7.5 Registry identifier
+### 7.5 Registry identifier
 
 Future registry syntax:
 
@@ -620,7 +632,7 @@ Versioned:
 ki package install ki:knowledge-islands/research-agent@^1.2
 ```
 
-## 7.6 Source root discovery
+### 7.6 Source root discovery
 
 When given a repository URL, KI should locate manifests using a defined process:
 
@@ -632,9 +644,9 @@ When given a repository URL, KI should locate manifests using a defined process:
 
 ---
 
-# 8. Package Types
+## 8. Package Types
 
-## 8.1 Skill
+### 8.1 Skill
 
 A reusable capability, instruction set, domain procedure, or operational method.
 
@@ -646,7 +658,7 @@ typescript-refactoring
 knowledge-island-publishing
 ```
 
-## 8.2 Agent
+### 8.2 Agent
 
 A defined agent persona or runtime composition containing:
 
@@ -659,19 +671,19 @@ A defined agent persona or runtime composition containing:
 - memory bindings;
 - runtime defaults.
 
-## 8.3 Workflow
+### 8.3 Workflow
 
 A multi-step process involving agents, skills, tools, gates, or approvals.
 
-## 8.4 Prompt
+### 8.4 Prompt
 
 A reusable prompt template or prompt collection.
 
-## 8.5 Policy
+### 8.5 Policy
 
 Rules controlling behaviour, safety, governance, permissions, or review.
 
-## 8.6 Tool
+### 8.6 Tool
 
 A callable capability such as:
 
@@ -682,35 +694,35 @@ A callable capability such as:
 - script;
 - library-backed action.
 
-## 8.7 Memory
+### 8.7 Memory
 
 A reusable memory structure, schema, memory provider, or persisted knowledge binding.
 
 It should not automatically imply access to personal or sensitive content.
 
-## 8.8 Knowledge
+### 8.8 Knowledge
 
 A package of reference material, structured knowledge, ontology, or domain context.
 
-## 8.9 Adapter
+### 8.9 Adapter
 
 A harness integration package that teaches KI how to bind components into a specific harness.
 
-## 8.10 Template
+### 8.10 Template
 
 A reusable repository, agent, workflow, or workspace template.
 
-## 8.11 Profile
+### 8.11 Profile
 
 A named composition of packages, bindings, configuration, and policies.
 
-## 8.12 Bundle
+### 8.12 Bundle
 
 A package that groups other packages or components.
 
 ---
 
-# 9. CLI Command Structure
+## 9. CLI Command Structure (superseded)
 
 The recommended command structure is noun-oriented:
 
@@ -738,7 +750,7 @@ ki status
 ki version
 ```
 
-## 9.1 Top-level command tree
+### 9.1 Top-level command tree
 
 ```text
 ki
@@ -864,9 +876,9 @@ ki
 
 ---
 
-# 10. Command Semantics
+## 10. Command Semantics (superseded)
 
-# 10.1 `ki init`
+### 10.1 `ki init`
 
 Initialises KI configuration in the current repository or directory.
 
@@ -900,7 +912,7 @@ Possible behaviour:
 
 ---
 
-# 10.2 `ki package install`
+### 10.2 `ki package install`
 
 Installs a package into the KI store.
 
@@ -956,7 +968,7 @@ ki skill install <source> --bind --harness claude --scope repository
 
 ---
 
-# 10.3 Typed install commands
+### 10.3 Typed install commands
 
 Convenience commands such as:
 
@@ -981,7 +993,7 @@ ki package install github:example/repo --require-type skill
 
 ---
 
-# 10.4 `ki bind`
+### 10.4 `ki bind`
 
 The generic form may be:
 
@@ -1037,11 +1049,11 @@ Binding should:
 
 ---
 
-# 10.5 Bind versus enable
+### 10.5 Bind versus enable
 
 These should remain conceptually distinct.
 
-## Bind
+#### Bind
 
 Makes a component available to a harness context.
 
@@ -1049,7 +1061,7 @@ Makes a component available to a harness context.
 ki skill bind research --harness claude
 ```
 
-## Enable
+#### Enable
 
 Marks the bound component as active for normal discovery or execution.
 
@@ -1067,7 +1079,7 @@ ki skill bind research --enable
 
 ---
 
-# 10.6 `ki unbind`
+### 10.6 `ki unbind`
 
 Removes a binding without uninstalling the package.
 
@@ -1085,7 +1097,7 @@ This should:
 
 ---
 
-# 10.7 `ki uninstall`
+### 10.7 `ki uninstall`
 
 Removes an installed package where safe.
 
@@ -1104,7 +1116,7 @@ ki package uninstall research-agent --force
 
 ---
 
-# 10.8 `ki sync`
+### 10.8 `ki sync`
 
 Synchronises declarative configuration with local installed and bound state.
 
@@ -1147,7 +1159,7 @@ ki sync --prune    remove unmanaged generated bindings
 
 ---
 
-# 10.9 `ki status`
+### 10.9 `ki status`
 
 Shows the current KI context.
 
@@ -1177,7 +1189,7 @@ ki status --json
 
 ---
 
-# 10.10 `ki doctor`
+### 10.10 `ki doctor`
 
 Diagnoses environmental and configuration problems.
 
@@ -1212,7 +1224,7 @@ ki package verify
 
 ---
 
-# 11. Global CLI Options
+## 11. Global CLI Options
 
 All commands should support a consistent set of global options where applicable.
 
@@ -1235,7 +1247,7 @@ All commands should support a consistent set of global options where applicable.
 --dry-run
 ```
 
-## 11.1 Environment variables
+### 11.1 Environment variables
 
 Suggested environment variables:
 
@@ -1256,7 +1268,7 @@ KI_NO_COLOR
 KI_NON_INTERACTIVE
 ```
 
-## 11.2 Configuration precedence
+### 11.2 Configuration precedence
 
 Highest precedence first:
 
@@ -1283,7 +1295,7 @@ Source: environment variable KI_DATA_HOME
 
 ---
 
-# 12. Repository Configuration Schema
+## 12. Repository Configuration Schema
 
 The canonical repository configuration file is:
 
@@ -1374,7 +1386,7 @@ include_repository_identity = false
 
 ---
 
-# 13. User Configuration Schema
+## 13. User Configuration Schema
 
 Suggested user file:
 
@@ -1425,7 +1437,7 @@ level = "minimal"
 
 ---
 
-# 14. Package Manifest Schema
+## 14. Package Manifest Schema
 
 The canonical package manifest is:
 
@@ -1502,7 +1514,7 @@ minimum_adapter = "1.0.0"
 
 ---
 
-# 15. Component-Specific Metadata
+## 15. Component-Specific Metadata
 
 Each component may have its own metadata file.
 
@@ -1542,7 +1554,7 @@ filesystem = "workspace-read"
 
 ---
 
-# 16. Lock File Schema
+## 16. Lock File Schema
 
 Example `.ki-lock.toml`:
 
@@ -1586,9 +1598,9 @@ It should not contain:
 
 ---
 
-# 17. Binding Model
+## 17. Binding Model
 
-## 17.1 Binding record
+### 17.1 Binding record
 
 A binding should contain:
 
@@ -1609,9 +1621,9 @@ permissions
 creation metadata
 ```
 
-## 17.2 Binding modes
+### 17.2 Binding modes
 
-### Symlink
+#### Symlink
 
 ```text
 mode = "symlink"
@@ -1626,7 +1638,7 @@ Advantages:
 - clear source ownership;
 - simple removal.
 
-### Reference
+#### Reference
 
 ```text
 mode = "reference"
@@ -1636,7 +1648,7 @@ Creates a small harness-specific metadata file pointing to the KI package store.
 
 This requires harness or adapter support.
 
-### Generated
+#### Generated
 
 ```text
 mode = "generated"
@@ -1646,7 +1658,7 @@ Generates harness-specific content from the canonical package.
 
 Useful where a harness requires transformed metadata.
 
-### Copy
+#### Copy
 
 ```text
 mode = "copy"
@@ -1658,7 +1670,7 @@ This should be a compatibility fallback, not the preferred mode.
 
 Copied bindings should record their source and hash so drift can be detected.
 
-## 17.3 Binding target examples
+### 17.3 Binding target examples
 
 User-scoped Claude skill:
 
@@ -1684,7 +1696,7 @@ Repository-scoped Codex component:
 <repo>/.codex/skills/research/
 ```
 
-## 17.4 Binding collision handling
+### 17.4 Binding collision handling
 
 If a target already exists:
 
@@ -1697,7 +1709,7 @@ If a target already exists:
 
 ---
 
-# 18. Harness Adapter Specification
+## 18. Harness Adapter Specification
 
 A harness adapter should define:
 
@@ -1757,7 +1769,7 @@ Adapters should produce a binding plan before making changes.
 
 ---
 
-# 19. Dependency Resolution
+## 19. Dependency Resolution
 
 Packages may depend on other packages.
 
@@ -1780,7 +1792,7 @@ Resolution should consider:
 - feature flags;
 - trust policy.
 
-## 19.1 Conflict behaviour
+### 19.1 Conflict behaviour
 
 KI should not silently choose an incompatible version.
 
@@ -1792,7 +1804,7 @@ Package B requires source-provenance <2.0
 No compatible version can satisfy both constraints.
 ```
 
-## 19.2 Multiple versions
+### 19.2 Multiple versions
 
 The package store may hold multiple versions simultaneously.
 
@@ -1803,7 +1815,7 @@ Whether multiple versions may be bound into one context should depend on:
 - aliasing;
 - adapter support.
 
-## 19.3 Agent dependencies
+### 19.3 Agent dependencies
 
 An agent may declare required skills:
 
@@ -1825,9 +1837,9 @@ When binding the agent, KI should:
 
 ---
 
-# 20. Trust and Security
+## 20. Trust and Security
 
-## 20.1 Trust boundaries
+### 20.1 Trust boundaries
 
 The following actions should be treated separately:
 
@@ -1842,7 +1854,7 @@ execute
 grant permissions
 ```
 
-## 20.2 Installation hooks
+### 20.2 Installation hooks
 
 Package installation scripts should be disabled by default.
 
@@ -1854,7 +1866,7 @@ ki package install ...
 
 was run.
 
-## 20.3 Signatures and integrity
+### 20.3 Signatures and integrity
 
 Packages may support:
 
@@ -1865,7 +1877,7 @@ Packages may support:
 - publisher identities;
 - transparency logs.
 
-## 20.4 Permissions
+### 20.4 Permissions
 
 Packages should declare requested permissions.
 
@@ -1900,7 +1912,7 @@ Grant these permissions? [y/N]
 
 Non-interactive use should require explicit policy configuration.
 
-## 20.5 Trust scopes
+### 20.5 Trust scopes
 
 Trust may be granted at:
 
@@ -1924,7 +1936,7 @@ Trust should not automatically imply unrestricted execution.
 
 ---
 
-# 21. Editable Development Mode
+## 21. Editable Development Mode
 
 Local package development should be supported.
 
@@ -1954,7 +1966,7 @@ local/my-new-skill                0.1.0-dev  editable: ../my-new-skill
 
 ---
 
-# 22. Profiles
+## 22. Profiles
 
 A profile is a reusable composition.
 
@@ -1984,7 +1996,7 @@ Profiles allow Knowledge Islands, HNR, or third parties to publish recommended h
 
 ---
 
-# 23. Workspace Support
+## 23. Workspace Support
 
 A workspace may contain multiple repositories or packages.
 
@@ -2015,7 +2027,7 @@ Inheritance should be explicit and inspectable.
 
 ---
 
-# 24. Discovery
+## 24. Discovery
 
 The CLI should identify context by traversing upward from the current working directory.
 
@@ -2049,9 +2061,9 @@ User configuration:
 
 ---
 
-# 25. Output Design
+## 25. Output Design
 
-## 25.1 Human-readable output
+### 25.1 Human-readable output
 
 Default output should be concise and operational.
 
@@ -2071,7 +2083,7 @@ Stored at:
 No bindings were created.
 ```
 
-## 25.2 JSON output
+### 25.2 JSON output
 
 Every information-bearing command should support:
 
@@ -2096,7 +2108,7 @@ Example:
 }
 ```
 
-## 25.3 Quiet output
+### 25.3 Quiet output
 
 ```bash
 --quiet
@@ -2104,7 +2116,7 @@ Example:
 
 Should suppress normal informational messages while preserving errors.
 
-## 25.4 No colour
+### 25.4 No colour
 
 ```bash
 --no-color
@@ -2116,7 +2128,7 @@ Colour should also be disabled automatically for non-terminal output unless expl
 
 ---
 
-# 26. Exit Codes
+## 26. Exit Codes
 
 Recommended exit code model:
 
@@ -2144,7 +2156,7 @@ Exit codes should be documented and stable.
 
 ---
 
-# 27. Transaction Model
+## 27. Transaction Model
 
 Package installation and binding should be transactional where possible.
 
@@ -2178,7 +2190,7 @@ Transaction commands may be deferred beyond the initial release, but the interna
 
 ---
 
-# 28. Drift Detection
+## 28. Drift Detection
 
 Drift occurs when actual local state differs from declared configuration or the lock file.
 
@@ -2216,9 +2228,9 @@ incompatible
 
 ---
 
-# 29. Example Workflows
+## 29. Example Workflows
 
-## 29.1 Install a skill globally and bind to Claude
+### 29.1 Install a skill globally and bind to Claude
 
 ```bash
 ki skill install github:knowledge-islands/source-assessment
@@ -2235,7 +2247,7 @@ Symlink created:
   -> ~/.local/share/ki/packages/.../skills/source-assessment
 ```
 
-## 29.2 Install and bind to the current repository
+### 29.2 Install and bind to the current repository
 
 ```bash
 cd ~/workspaces/project
@@ -2245,14 +2257,14 @@ ki skill install github:knowledge-islands/typescript-review \
   --scope repository
 ```
 
-## 29.3 Bind one installed agent into two harnesses
+### 29.3 Bind one installed agent into two harnesses
 
 ```bash
 ki agent bind software-architect --harness claude
 ki agent bind software-architect --harness codex
 ```
 
-## 29.4 Configure declaratively
+### 29.4 Configure declaratively
 
 ```toml
 [packages."hnr/software-architect"]
@@ -2272,7 +2284,7 @@ Then:
 ki sync
 ```
 
-## 29.5 Clone and reproduce
+### 29.5 Clone and reproduce
 
 ```bash
 git clone https://github.com/example/project
@@ -2284,7 +2296,7 @@ This installs and binds the exact package revisions recorded in `.ki-lock.toml`.
 
 ---
 
-# 30. Relationship to Harness Runtime
+## 30. Relationship to Harness Runtime
 
 The KI CLI should not initially attempt to become the entire agent execution runtime.
 
@@ -2320,7 +2332,7 @@ This separation allows the CLI to remain useful even where the actual harness is
 
 ---
 
-# 31. Knowledge Islands Alignment
+## 31. Knowledge Islands Alignment
 
 The KI CLI can map naturally onto the wider Knowledge Islands model.
 
@@ -2352,7 +2364,7 @@ The CLI should use the established Knowledge Islands specification process for:
 
 ---
 
-# 32. Proposed Specification Family
+## 32. Proposed Specification Family
 
 The implementation should eventually be divided into separate KI specifications.
 
@@ -2375,9 +2387,9 @@ The first implementation may place these in one repository while keeping the con
 
 ---
 
-# 33. Initial Implementation Scope
+## 33. Initial Implementation Scope
 
-## 33.1 Version 0.1
+### 33.1 Version 0.1
 
 The first usable version should support:
 
@@ -2400,7 +2412,7 @@ The first usable version should support:
 - JSON output;
 - stable exit codes.
 
-## 33.2 Version 0.2
+### 33.2 Version 0.2
 
 Add:
 
@@ -2415,7 +2427,7 @@ Add:
 - binding repair;
 - shell completion.
 
-## 33.3 Version 0.3
+### 33.3 Version 0.3
 
 Add:
 
@@ -2431,7 +2443,7 @@ Add:
 
 ---
 
-# 34. Suggested Technical Architecture
+## 34. Suggested Technical Architecture
 
 A TypeScript implementation would align well with the wider Knowledge Islands technical direction.
 
@@ -2475,7 +2487,7 @@ ki-cli/
 └── package.json
 ```
 
-## 34.1 Core interfaces
+### 34.1 Core interfaces
 
 Possible internal abstractions:
 
@@ -2506,7 +2518,7 @@ interface Resolver {
 
 ---
 
-# 35. Non-Goals for the Initial Release
+## 35. Non-Goals for the Initial Release
 
 The initial release should not attempt to:
 
@@ -2522,53 +2534,53 @@ The initial release should not attempt to:
 
 ---
 
-# 36. Key Product Decisions
+## 36. Key Product Decisions
 
 The following decisions should be treated as foundational.
 
-## Decision 1: The command is `ki`
+### Decision 1: The command is `ki`
 
 The CLI should use the concise, memorable, and extensible command name `ki`.
 
-## Decision 2: KI manages packages independently of harnesses
+### Decision 2: KI manages packages independently of harnesses
 
 Packages are installed into a KI-owned package store.
 
-## Decision 3: Harness exposure happens through binding
+### Decision 3: Harness exposure happens through binding
 
 Binding, rather than installation, activates the relationship between a package and a harness context.
 
-## Decision 4: Packages can contain more than skills
+### Decision 4: Packages can contain more than skills
 
 The package model must support the full agentic harness landscape.
 
-## Decision 5: TOML is the canonical configuration format
+### Decision 5: TOML is the canonical configuration format
 
 Repository configuration, package manifests, lock files, and adapter metadata should use TOML unless a strong future reason requires otherwise.
 
-## Decision 6: `.ki-config.toml` remains the repository configuration file
+### Decision 6: `.ki-config.toml` remains the repository configuration file
 
 This preserves alignment with the existing Knowledge Islands repository structure.
 
-## Decision 7: Symlinks are the preferred local binding mechanism
+### Decision 7: Symlinks are the preferred local binding mechanism
 
 Reference or generated modes may later provide deeper integration.
 
-## Decision 8: Harness adapters isolate harness-specific behaviour
+### Decision 8: Harness adapters isolate harness-specific behaviour
 
 The core package model remains neutral.
 
-## Decision 9: Installation is not execution
+### Decision 9: Installation is not execution
 
 Packages must not gain execution rights merely through installation.
 
-## Decision 10: Declarative configuration and reproducibility are first-class
+### Decision 10: Declarative configuration and reproducibility are first-class
 
 `ki sync` and `.ki-lock.toml` are central rather than secondary features.
 
 ---
 
-# 37. Illustrative End-to-End Experience
+## 37. Illustrative End-to-End Experience
 
 A developer enters a repository:
 
@@ -2660,7 +2672,7 @@ use across harnesses
 
 ---
 
-# 38. Final Definition
+## 38. Final Definition
 
 The KI CLI is:
 

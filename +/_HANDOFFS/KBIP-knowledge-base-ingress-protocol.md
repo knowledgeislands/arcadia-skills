@@ -2,9 +2,17 @@
 
 **Version:** 1.1 (Draft)
 
+## Current status
+
+This is a parked incoming handoff, not an adopted specification or implementation plan.
+
+Its distinction between extraction and governed ingress remains relevant background.
+
+No repository has yet adopted the concrete import lifecycle, governance model, or output structure below; those details must not be implemented from this document without a receiving-repository decision.
+
 ---
 
-# Purpose
+## Purpose
 
 The **Knowledge Islands Knowledge Base Ingress Protocol (KBIP)** defines how extracted knowledge is imported into a Knowledge Islands environment.
 
@@ -18,7 +26,7 @@ KBIP answers the question:
 
 ---
 
-# Separation of Concerns
+## Separation of Concerns
 
 KBEP remains platform-independent.
 
@@ -37,7 +45,7 @@ The original KBEP package always remains available as an immutable historical re
 
 ---
 
-# Objectives
+## Objectives
 
 The import process should:
 
@@ -53,11 +61,11 @@ Import should never discard provenance.
 
 ---
 
-# Import Lifecycle
+## Import Lifecycle
 
 KBIP consists of seven stages.
 
-## Stage 1 — Intake
+### Stage 1 — Intake
 
 Validate the incoming KBEP package.
 
@@ -72,7 +80,7 @@ Assign permanent Knowledge Islands identifiers.
 
 ---
 
-## Stage 2 — Classification
+### Stage 2 — Classification
 
 Identify the type of each knowledge item.
 
@@ -92,7 +100,7 @@ Typical classifications include:
 
 ---
 
-## Stage 3 — Canonicalisation
+### Stage 3 — Canonicalisation
 
 Determine whether knowledge:
 
@@ -106,7 +114,7 @@ Canonical knowledge should evolve while preserving historical lineage.
 
 ---
 
-## Stage 4 — Relationship Enrichment
+### Stage 4 — Relationship Enrichment
 
 Expand the knowledge graph.
 
@@ -129,7 +137,7 @@ Relationships are treated as first-class knowledge.
 
 ---
 
-## Stage 5 — Governance Assignment
+### Stage 5 — Governance Assignment
 
 Assign governance information including:
 
@@ -146,7 +154,7 @@ Governance should evolve independently of provenance.
 
 ---
 
-## Stage 6 — Publication
+### Stage 6 — Publication
 
 Publish knowledge for consumption by:
 
@@ -160,7 +168,7 @@ Publish knowledge for consumption by:
 
 ---
 
-## Stage 7 — Continuous Evolution
+### Stage 7 — Continuous Evolution
 
 As new KBEP packages arrive, continuously:
 
@@ -175,7 +183,7 @@ Knowledge should become progressively richer over time.
 
 ---
 
-# Canonical Knowledge
+## Canonical Knowledge
 
 Multiple extracted artefacts may describe the same underlying concept.
 
@@ -185,7 +193,7 @@ Canonical knowledge should evolve without losing historical traceability.
 
 ---
 
-# Trust Levels
+## Trust Levels
 
 Trust is distinct from confidence.
 
@@ -201,7 +209,7 @@ Suggested trust levels include:
 
 ---
 
-# Knowledge Maturity
+## Knowledge Maturity
 
 Knowledge evolves over time.
 
@@ -216,7 +224,7 @@ Suggested maturity levels include:
 
 ---
 
-# Provenance
+## Provenance
 
 Every canonical item must retain lineage back to:
 
@@ -229,7 +237,7 @@ Knowledge lineage should never be broken.
 
 ---
 
-# Continuous Collaboration
+## Continuous Collaboration
 
 Knowledge Islands assumes collaboration between humans and AI.
 
@@ -253,7 +261,7 @@ Together they cultivate a trusted body of knowledge.
 
 ---
 
-# Recommended Output Structure
+## Recommended Output Structure
 
 ```text
 knowledge-island/
@@ -291,7 +299,7 @@ knowledge-island/
 
 ---
 
-# End Goal
+## End Goal
 
 The objective is not simply to store information.
 

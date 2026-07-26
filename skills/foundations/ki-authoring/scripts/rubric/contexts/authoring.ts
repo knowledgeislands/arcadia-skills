@@ -65,14 +65,14 @@ export const MARKDOWNLINT_DEFAULT = `{
   // machine-produced (ADR-KI-HARNESS-TOOLCHAIN-005) — excluded like dist/, so their
   // formatting is never a finding. Command files are frontmatter-first runtime definitions,
   // while authored \`.claude/\` siblings such as workflows remain in scope.
-  "ignores": ["dist/**", "**/node_modules/**", ".ki/bootstrap/**", ".ki/bin/**", "src/generated/**", ".claude/commands/**", ".claude/skills/**", ".claude/agents/**", ".agents/skills/**", "+/_HANDOFFS/**"]
+  "ignores": ["dist/**", "**/node_modules/**", ".ki/bootstrap/**", ".ki/bin/**", "src/generated/**", ".claude/commands/**", ".claude/skills/**", ".claude/agents/**", ".agents/skills/**"]
 }
 `
 
 const CHECK =
-  'bunx prettier --check "**/*.md" "!.ki/bootstrap/**" "!.ki/bin/**" "!src/generated/**" "!.claude/commands/**" "!.claude/skills/**" "!.claude/agents/**" "!.agents/skills/**" "!+/_HANDOFFS/**" --ignore-path .gitignore && bunx markdownlint-cli2 "**/*.md"'
+  'bunx prettier --check "**/*.md" "!.ki/bootstrap/**" "!.ki/bin/**" "!src/generated/**" "!.claude/commands/**" "!.claude/skills/**" "!.claude/agents/**" "!.agents/skills/**" --ignore-path .gitignore && bunx markdownlint-cli2 "**/*.md"'
 const CONFORM =
-  'bunx prettier --write "**/*.md" "!.ki/bootstrap/**" "!.ki/bin/**" "!src/generated/**" "!.claude/commands/**" "!.claude/skills/**" "!.claude/agents/**" "!.agents/skills/**" "!+/_HANDOFFS/**" --ignore-path .gitignore && bunx markdownlint-cli2 --fix'
+  'bunx prettier --write "**/*.md" "!.ki/bootstrap/**" "!.ki/bin/**" "!src/generated/**" "!.claude/commands/**" "!.claude/skills/**" "!.claude/agents/**" "!.agents/skills/**" --ignore-path .gitignore && bunx markdownlint-cli2 --fix'
 
 export type OwnedFile = '.prettierrc.json' | '.editorconfig' | '.markdownlint-cli2.jsonc'
 export type AuthoringRubricContext = {

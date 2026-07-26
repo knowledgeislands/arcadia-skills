@@ -2,9 +2,17 @@
 
 **Version:** 1.1 (Draft)
 
+## Current status
+
+This is a parked incoming handoff, not an adopted specification or implementation plan.
+
+Its separation between KEP acquisition, extraction, and governed ingress remains relevant background.
+
+No repository has yet adopted the concrete extraction pipeline, source-type support, or output format below; those details must not be implemented from this document without a receiving-repository decision.
+
 ---
 
-# Purpose
+## Purpose
 
 The **Knowledge Base Extraction Protocol (KBEP)** defines a generic, repeatable and platform-independent process for transforming information sources into a structured collection of reusable knowledge.
 
@@ -20,7 +28,7 @@ The resulting output should be consumable by humans, AI systems and downstream k
 
 ---
 
-# Scope
+## Scope
 
 KBEP is concerned solely with **knowledge acquisition and extraction**.
 
@@ -38,7 +46,7 @@ These concerns belong to downstream systems such as the **Knowledge Islands Know
 
 ---
 
-# Supported Source Types
+## Supported Source Types
 
 KBEP should be applicable to any source containing information, discussion, reasoning or artefacts, including (but not limited to):
 
@@ -76,7 +84,7 @@ All are treated simply as potential sources of reusable knowledge.
 
 ---
 
-# Objectives
+## Objectives
 
 Extract reusable knowledge while preserving:
 
@@ -93,7 +101,7 @@ The extracted knowledge should be understandable without requiring access to the
 
 ---
 
-# Principles
+## Principles
 
 Extraction should optimise for:
 
@@ -109,7 +117,7 @@ The objective is **knowledge preservation**, not historical archiving.
 
 ---
 
-# Knowledge Units
+## Knowledge Units
 
 Knowledge should be extracted at the smallest practical reusable level.
 
@@ -140,11 +148,11 @@ These units may later be combined into larger knowledge assets.
 
 ---
 
-# Extraction Pipeline
+## Extraction Pipeline
 
 KBEP consists of six logical stages.
 
-## Stage 1 — Source Capture
+### Stage 1 — Source Capture
 
 Capture the original material and enough context to reconstruct the reasoning if required.
 
@@ -163,7 +171,7 @@ Where appropriate include:
 
 ---
 
-## Stage 2 — Knowledge Extraction
+### Stage 2 — Knowledge Extraction
 
 Identify reusable knowledge.
 
@@ -190,7 +198,7 @@ Each extracted item should stand on its own.
 
 ---
 
-## Stage 3 — Knowledge Normalisation
+### Stage 3 — Knowledge Normalisation
 
 Consolidate duplicated information.
 
@@ -207,7 +215,7 @@ Produce one authoritative extracted representation wherever practical while reta
 
 ---
 
-## Stage 4 — Relationship Discovery
+### Stage 4 — Relationship Discovery
 
 Identify relationships including:
 
@@ -228,7 +236,7 @@ Represent relationships in both human-readable and machine-readable forms where 
 
 ---
 
-## Stage 5 — Provenance
+### Stage 5 — Provenance
 
 Record the origin of every significant knowledge item.
 
@@ -259,7 +267,7 @@ Knowledge without provenance should be explicitly identified.
 
 ---
 
-## Stage 6 — Quality Review
+### Stage 6 — Quality Review
 
 Review the extracted knowledge.
 
@@ -277,7 +285,7 @@ Highlight items requiring human review.
 
 ---
 
-# Confidence
+## Confidence
 
 Each extracted item should carry a confidence level.
 
@@ -289,7 +297,7 @@ Each extracted item should carry a confidence level.
 
 ---
 
-# Knowledge Status
+## Knowledge Status
 
 Each extracted item should also indicate its lifecycle state.
 
@@ -303,7 +311,7 @@ Each extracted item should also indicate its lifecycle state.
 
 ---
 
-# Recommended Output Structure
+## Recommended Output Structure
 
 ```text
 knowledge-export/
@@ -346,7 +354,7 @@ knowledge-export/
 
 ---
 
-# Non-Goals
+## Non-Goals
 
 KBEP is **not** intended to:
 
@@ -361,6 +369,6 @@ Its purpose is the extraction and preservation of reusable knowledge.
 
 ---
 
-# Success Criteria
+## Success Criteria
 
 A successful KBEP extraction should allow another human or AI system to understand, search, maintain and extend the extracted knowledge without requiring access to the original source material.

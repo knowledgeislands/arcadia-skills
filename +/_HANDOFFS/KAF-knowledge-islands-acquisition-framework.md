@@ -4,9 +4,17 @@
 **Audience:** Engineering Team / AI Coding Agent  
 **Purpose:** Build the Knowledge Acquisition Framework responsible for acquiring information from external systems and producing portable Knowledge Export Packages (KEPs).
 
+## Current status
+
+This is a retained incoming handoff, not a current specification or implementation brief.
+
+The KEP payload contract is now defined by KIS-0002, and the user-assisted ChatGPT path is delivered in `tools-ki` as `ki acquire chatgpt import`.
+
+The KAF/KBEP/KBIP lifecycle direction below remains useful background, but its concrete CLI commands, connector design, package layout, and delivery plan are superseded unless a receiving repository explicitly adopts them.
+
 ---
 
-# Overview
+## Overview
 
 The **Knowledge Acquisition Framework (KAF)** is the entry point into the Knowledge Islands ecosystem.
 
@@ -16,7 +24,7 @@ KAF retrieves information from external systems, preserves it faithfully, and pa
 
 The package is subsequently processed by:
 
-```
+```text
 External System
         │
         ▼
@@ -42,7 +50,7 @@ KAF must remain completely independent of KBEP and KBIP.
 
 ---
 
-# Design Principles
+## Design Principles
 
 The framework must be:
 
@@ -64,7 +72,7 @@ KBIP governs knowledge.
 
 ---
 
-# Responsibilities
+## Responsibilities
 
 KAF is responsible for:
 
@@ -91,11 +99,11 @@ KAF is **not** responsible for:
 
 ---
 
-# CLI Specification
+## CLI Specification
 
 The CLI is provided through the existing **`ki`** command.
 
-## General Syntax
+### General Syntax
 
 ```bash
 ki acquire <connector> [options]
@@ -111,7 +119,7 @@ ki export <connector> [options]
 
 ---
 
-## Examples
+### Examples
 
 ### ChatGPT Project
 
@@ -151,7 +159,7 @@ ki acquire notion
 
 ---
 
-# Output
+## Output
 
 Every acquisition produces a **Knowledge Export Package (KEP)**.
 
@@ -189,7 +197,7 @@ Running KAF twice against unchanged data should produce identical packages.
 
 ---
 
-# Connector Architecture
+## Connector Architecture
 
 Each connector implements the following interface:
 
@@ -225,11 +233,11 @@ Example packages:
 
 ---
 
-# ChatGPT Connector
+## ChatGPT Connector
 
 This is considered a **Tier 1** connector because it is expected to be one of the most frequently used acquisition sources.
 
-## Goals
+### Goals
 
 Acquire as much information as possible from:
 
@@ -245,7 +253,7 @@ without performing knowledge extraction.
 
 ---
 
-## Expected Output
+### Expected Output
 
 Example:
 
@@ -279,11 +287,11 @@ logs/
 
 ---
 
-## Acquisition Strategy
+### Acquisition Strategy
 
 The connector should support multiple acquisition methods.
 
-### Method 1 — Official Export (Preferred)
+#### Method 1 — Official Export (Preferred)
 
 If OpenAI exposes an official Project export API or download mechanism, use it.
 
@@ -295,7 +303,7 @@ Advantages:
 
 ---
 
-### Method 2 — Official APIs (Future)
+#### Method 2 — Official APIs (Future)
 
 If future APIs expose:
 
@@ -308,7 +316,7 @@ then acquire directly through authenticated API calls.
 
 ---
 
-### Method 3 — Browser Automation (Current Best Option)
+#### Method 3 — Browser Automation (Current Best Option)
 
 At the time of writing, ChatGPT Projects cannot be comprehensively exported through a documented public API.
 
@@ -334,7 +342,7 @@ Browser automation should avoid scraping presentation details and instead target
 
 ---
 
-### Method 4 — User-Assisted Export
+#### Method 4 — User-Assisted Export
 
 Where automation is not possible, support importing:
 
@@ -347,7 +355,7 @@ This provides a graceful fallback and allows KBEP to operate on partially automa
 
 ---
 
-# ChatGPT Asset Expectations
+## ChatGPT Asset Expectations
 
 For each conversation, preserve:
 
@@ -368,7 +376,7 @@ Assets should be stored separately.
 
 ---
 
-# ChatGPT Conversation Format
+## ChatGPT Conversation Format
 
 Each conversation should be stored as Markdown.
 
@@ -389,17 +397,17 @@ created:
 updated:
 ---
 
-# Conversation
+### Conversation
 
-## User
-
-...
-
-## Assistant
+#### User
 
 ...
 
-## User
+#### Assistant
+
+...
+
+#### User
 
 ...
 ```
@@ -410,7 +418,7 @@ Knowledge extraction occurs later.
 
 ---
 
-# Relationship Capture
+## Relationship Capture
 
 Capture native relationships only.
 
@@ -428,7 +436,7 @@ Do **not** infer semantic relationships.
 
 ---
 
-# Manifest Format
+## Manifest Format
 
 Example:
 
@@ -451,7 +459,7 @@ Example:
 
 ---
 
-# Incremental Acquisition
+## Incremental Acquisition
 
 Every connector should support:
 
@@ -466,7 +474,7 @@ This should minimise unnecessary downloads.
 
 ---
 
-# Engineering Stack
+## Engineering Stack
 
 Recommended:
 
@@ -481,7 +489,7 @@ The connector architecture should allow additional acquisition methods to be add
 
 ---
 
-# Initial Connector Roadmap
+## Initial Connector Roadmap
 
 Priority order:
 
@@ -502,7 +510,7 @@ The Local Filesystem connector should serve as the reference implementation for 
 
 ---
 
-# Success Criteria
+## Success Criteria
 
 A successful KAF implementation should:
 
