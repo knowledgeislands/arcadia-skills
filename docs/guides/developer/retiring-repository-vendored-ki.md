@@ -41,6 +41,34 @@ Use these replacements only once the preconditions hold:
 
 It does not replace the old bootstrap/scaffolding operation; decide each remaining bootstrap fixture deliberately rather than relabelling it as education.
 
+## Preserve a comparison baseline
+
+Before a substantial clean-end-state cutover, record the known-good commit so the before and after states remain directly comparable.
+
+Git history is normally sufficient; a release tag is useful when the comparison should be shared or revisited easily, not a requirement for every change.
+
+```sh
+git rev-parse HEAD
+git tag -a pre-native-cli-cutover -m "Baseline before native CLI cutover"
+git push origin pre-native-cli-cutover # Only when the tag should be shared.
+```
+
+Compare the baseline with the current branch locally:
+
+```sh
+git diff --stat pre-native-cli-cutover..HEAD
+git diff pre-native-cli-cutover..HEAD
+git log --oneline pre-native-cli-cutover..HEAD
+```
+
+After pushing the tag, GitHub provides the same visual comparison at:
+
+```text
+https://github.com/<owner>/<repository>/compare/pre-native-cli-cutover...main
+```
+
+Use the recorded commit SHA in place of the tag when no tag was created.
+
 ## Retire one repository
 
 1. Create one migration commit boundary and preserve a before-state inventory:
