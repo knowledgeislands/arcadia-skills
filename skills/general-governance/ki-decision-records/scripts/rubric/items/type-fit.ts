@@ -1,16 +1,23 @@
-import type { RubricItem } from '../../shared/rubric.ts'
-import type { DecisionRecordsContext } from '../contexts/decision-records.ts'
+import type { RubricFamily, RubricItem } from '../../shared/rubric.ts'
+import type { DecisionRecordsRubricContext, RecordsRubricContext } from '../contexts/decision-records.ts'
 
-export const TYPE_FIT_1: RubricItem<DecisionRecordsContext> = {
+const TYPE_FIT_1: RubricItem<RecordsRubricContext> = {
   code: 'TYPE-FIT-1',
   title: 'Semantic decision classification',
   description:
     'The filename prefix accurately categorises the decision itself; the body makes the type obvious. A mismatch is resolved with a human by choosing the correct canonical record ID or metadata, never by mechanically overwriting either side.',
-  sources: ['dr-format.md'],
+  sources: ['standards-decision-records.md'],
   judgment: {
     prompt:
       'Assess whether the filename prefix accurately categorises the decision itself without a stretch fit and whether the body makes the type obvious. Resolve a mismatch with a human, never by mechanically overwriting either side.'
   }
 }
 
-export const TYPE_FIT = [TYPE_FIT_1] as const satisfies readonly RubricItem<DecisionRecordsContext>[]
+export const TYPE_FIT: RubricFamily<DecisionRecordsRubricContext, RecordsRubricContext> = {
+  code: 'TYPE-FIT',
+  title: 'decision classification',
+  description: 'Semantic alignment between a decision and its canonical prefix.',
+  standard: 'standards-decision-records.md',
+  selectContext: (context) => context.typeFit,
+  items: [TYPE_FIT_1]
+}

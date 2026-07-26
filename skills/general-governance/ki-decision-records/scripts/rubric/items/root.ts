@@ -1,11 +1,13 @@
-import type { AuditOutcome, RubricItem } from '../../shared/rubric.ts'
-import type { DecisionRecordsContext } from '../contexts/decision-records.ts'
-import { outcomes } from './shared.ts'
+import type { AuditOutcome, RubricFamily, RubricItem, RubricOutcomes } from '../../shared/rubric.ts'
+import type { DecisionRecordsRubricContext, RootRubricContext } from '../contexts/decision-records.ts'
 
-const SOURCE = 'dr-format.md'
+const SOURCE = 'standards-decision-records.md'
 const ADOPTION_TITLE = 'Adopting Decision Records'
 
-export const ROOT_1: RubricItem<DecisionRecordsContext> = {
+const outcomes = (values: AuditOutcome[], passMessage: string): RubricOutcomes<AuditOutcome> =>
+  (values.length > 0 ? values : [{ status: 'PASS', message: passMessage }]) as RubricOutcomes<AuditOutcome>
+
+const ROOT_1: RubricItem<RootRubricContext> = {
   code: 'ROOT-1',
   title: 'Adoption root for a new collection',
   description:
@@ -15,7 +17,7 @@ export const ROOT_1: RubricItem<DecisionRecordsContext> = {
     level: 'FAIL',
     audit: {
       phase: 'PREPARE',
-      run: (context: DecisionRecordsContext) => {
+      run: (context: RootRubricContext) => {
         if (!context.adoptionRootRequired)
           return [
             {
@@ -52,4 +54,11 @@ export const ROOT_1: RubricItem<DecisionRecordsContext> = {
   }
 }
 
-export const ROOT = [ROOT_1] as const satisfies readonly RubricItem<DecisionRecordsContext>[]
+export const ROOT: RubricFamily<DecisionRecordsRubricContext, RootRubricContext> = {
+  code: 'ROOT',
+  title: 'collection-root checks',
+  description: 'The first Decision Record in a newly marked collection adopts the instrument itself.',
+  standard: SOURCE,
+  selectContext: (context) => context.root,
+  items: [ROOT_1]
+}

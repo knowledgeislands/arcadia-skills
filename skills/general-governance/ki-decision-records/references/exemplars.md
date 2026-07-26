@@ -5,7 +5,7 @@
 - [Collections](#collections)
 - [Selected patterns](#selected-patterns)
 
-Curated illustrations of well-formed Decision Records. Use these when authoring a new DR, checking a draft against the format standard, or explaining the format to a new contributor. Each pattern is drawn from real DRs in the `ki-arcadia-principal` base — the primary reference implementation — and annotated to make the convention visible. The exemplars demonstrate shape, not topic: the subject matter of a DR is incidental; the structure is the point.
+Curated illustrations of well-formed Decision Records. Use these when authoring a new DR, checking a draft against the format standard, or explaining the format to a new contributor. Each pattern is drawn from real DRs in the `ki-arcadia-principal` base — the primary reference implementation — and annotated to make the convention visible. The examples below are conformed to the current standard even when their historical source used an earlier path. The exemplars demonstrate shape, not topic: the subject matter of a DR is incidental; the structure is the point.
 
 ## Collections
 
@@ -52,7 +52,7 @@ Knowledge Islands adopts **Decision Records (DRs)** as the standard instrument f
 
 ## Consequences
 
-- `Admin/Decisions/` is the canonical decision store for Knowledge Islands KB repos.
+- `Admin/Governance/Decisions/` is the canonical decision store for Knowledge Islands KB repos.
 - Significant Enactment Process proposals may produce a DR as a named `Decision` output.
 - The nine-value `decision_type` taxonomy covers the full decision surface of a knowledge island.
 

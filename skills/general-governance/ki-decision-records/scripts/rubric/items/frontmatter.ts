@@ -1,10 +1,12 @@
-import type { AuditOutcome, RubricItem } from '../../shared/rubric.ts'
-import type { DecisionRecordsContext } from '../contexts/decision-records.ts'
-import { outcomes } from './shared.ts'
+import type { AuditOutcome, RubricFamily, RubricItem, RubricOutcomes } from '../../shared/rubric.ts'
+import type { DecisionRecordsRubricContext, RecordsRubricContext } from '../contexts/decision-records.ts'
 
-const SOURCE = 'dr-format.md'
+const SOURCE = 'standards-decision-records.md'
 
-export const FM_0: RubricItem<DecisionRecordsContext> = {
+const outcomes = (values: AuditOutcome[], passMessage: string): RubricOutcomes<AuditOutcome> =>
+  (values.length > 0 ? values : [{ status: 'PASS', message: passMessage }]) as RubricOutcomes<AuditOutcome>
+
+const FM_0: RubricItem<RecordsRubricContext> = {
   code: 'FM-0',
   title: 'Decision-record frontmatter',
   description: 'YAML frontmatter block is present on every decision record.',
@@ -13,7 +15,7 @@ export const FM_0: RubricItem<DecisionRecordsContext> = {
     level: 'FAIL',
     audit: {
       phase: 'INSPECT',
-      run: (context: DecisionRecordsContext) =>
+      run: (context: RecordsRubricContext) =>
         outcomes(
           context.records
             .filter((record) => !record.frontmatter)
@@ -24,7 +26,7 @@ export const FM_0: RubricItem<DecisionRecordsContext> = {
   }
 }
 
-export const FM_3: RubricItem<DecisionRecordsContext> = {
+const FM_3: RubricItem<RecordsRubricContext> = {
   code: 'FM-3',
   title: 'Human-readable record type',
   description: '`type` is the canonical human-readable record type for the filename prefix.',
@@ -33,7 +35,7 @@ export const FM_3: RubricItem<DecisionRecordsContext> = {
     level: 'FAIL',
     audit: {
       phase: 'INSPECT',
-      run: (context: DecisionRecordsContext) =>
+      run: (context: RecordsRubricContext) =>
         outcomes(
           context.records
             .filter((record) => record.type !== record.expectedType)
@@ -50,7 +52,7 @@ export const FM_3: RubricItem<DecisionRecordsContext> = {
   }
 }
 
-export const FM_4: RubricItem<DecisionRecordsContext> = {
+const FM_4: RubricItem<RecordsRubricContext> = {
   code: 'FM-4',
   title: 'Decision type metadata',
   description: '`decision_type` field is present.',
@@ -59,7 +61,7 @@ export const FM_4: RubricItem<DecisionRecordsContext> = {
     level: 'FAIL',
     audit: {
       phase: 'INSPECT',
-      run: (context: DecisionRecordsContext) =>
+      run: (context: RecordsRubricContext) =>
         outcomes(
           context.records
             .filter((record) => !record.decisionType)
@@ -76,7 +78,7 @@ export const FM_4: RubricItem<DecisionRecordsContext> = {
   }
 }
 
-export const FM_5: RubricItem<DecisionRecordsContext> = {
+const FM_5: RubricItem<RecordsRubricContext> = {
   code: 'FM-5',
   title: 'Prefix and decision type alignment',
   description:
@@ -87,7 +89,7 @@ export const FM_5: RubricItem<DecisionRecordsContext> = {
     overrideLevels: ['WARN'],
     audit: {
       phase: 'INSPECT',
-      run: (context: DecisionRecordsContext) => {
+      run: (context: RecordsRubricContext) => {
         return outcomes(
           context.records
             .filter((record) => record.decisionType !== record.expectedDecisionType)
@@ -105,7 +107,7 @@ export const FM_5: RubricItem<DecisionRecordsContext> = {
   }
 }
 
-export const FM_6: RubricItem<DecisionRecordsContext> = {
+const FM_6: RubricItem<RecordsRubricContext> = {
   code: 'FM-6',
   title: 'Core decision metadata',
   description:
@@ -115,7 +117,7 @@ export const FM_6: RubricItem<DecisionRecordsContext> = {
     level: 'FAIL',
     audit: {
       phase: 'INSPECT',
-      run: (context: DecisionRecordsContext) =>
+      run: (context: RecordsRubricContext) =>
         outcomes(
           context.records.flatMap((record): AuditOutcome[] => {
             if (record.frontmatterId !== record.id)
@@ -144,4 +146,11 @@ export const FM_6: RubricItem<DecisionRecordsContext> = {
   }
 }
 
-export const FM = [FM_0, FM_3, FM_4, FM_5, FM_6] as const satisfies readonly RubricItem<DecisionRecordsContext>[]
+export const FM: RubricFamily<DecisionRecordsRubricContext, RecordsRubricContext> = {
+  code: 'FM',
+  title: 'frontmatter checks',
+  description: 'Required universal decision metadata.',
+  standard: SOURCE,
+  selectContext: (context) => context.frontmatter,
+  items: [FM_0, FM_3, FM_4, FM_5, FM_6]
+}

@@ -1,10 +1,12 @@
-import type { AuditOutcome, RubricItem } from '../../shared/rubric.ts'
-import type { DecisionRecordsContext } from '../contexts/decision-records.ts'
-import { outcomes } from './shared.ts'
+import type { AuditOutcome, RubricFamily, RubricItem, RubricOutcomes } from '../../shared/rubric.ts'
+import type { DecisionRecordsRubricContext, FilenameRubricContext } from '../contexts/decision-records.ts'
 
-const SOURCE = 'dr-format.md'
+const SOURCE = 'standards-decision-records.md'
 
-export const FILENAME_1: RubricItem<DecisionRecordsContext> = {
+const outcomes = (values: AuditOutcome[], passMessage: string): RubricOutcomes<AuditOutcome> =>
+  (values.length > 0 ? values : [{ status: 'PASS', message: passMessage }]) as RubricOutcomes<AuditOutcome>
+
+const FILENAME_1: RubricItem<FilenameRubricContext> = {
   code: 'FILENAME-1',
   title: 'Canonical decision-record filename',
   description:
@@ -14,7 +16,7 @@ export const FILENAME_1: RubricItem<DecisionRecordsContext> = {
     level: 'FAIL',
     audit: {
       phase: 'INSPECT',
-      run: (context: DecisionRecordsContext) =>
+      run: (context: FilenameRubricContext) =>
         outcomes(
           context.invalidFilenames.map(
             (file): AuditOutcome => ({
@@ -29,7 +31,7 @@ export const FILENAME_1: RubricItem<DecisionRecordsContext> = {
   }
 }
 
-export const FILENAME_2: RubricItem<DecisionRecordsContext> = {
+const FILENAME_2: RubricItem<FilenameRubricContext> = {
   code: 'FILENAME-2',
   title: 'Unique serial within prefix and scope',
   description:
@@ -39,7 +41,7 @@ export const FILENAME_2: RubricItem<DecisionRecordsContext> = {
     level: 'WARN',
     audit: {
       phase: 'INSPECT',
-      run: (context: DecisionRecordsContext) =>
+      run: (context: FilenameRubricContext) =>
         outcomes(
           [...context.duplicateIds].map(
             ([id, files]): AuditOutcome => ({
@@ -54,7 +56,7 @@ export const FILENAME_2: RubricItem<DecisionRecordsContext> = {
   }
 }
 
-export const FILENAME_3: RubricItem<DecisionRecordsContext> = {
+const FILENAME_3: RubricItem<FilenameRubricContext> = {
   code: 'FILENAME-3',
   title: 'Contiguous serial series',
   description:
@@ -64,7 +66,7 @@ export const FILENAME_3: RubricItem<DecisionRecordsContext> = {
     level: 'WARN',
     audit: {
       phase: 'INSPECT',
-      run: (context: DecisionRecordsContext) =>
+      run: (context: FilenameRubricContext) =>
         outcomes(
           [...context.serialGaps].map(
             ([series, serials]): AuditOutcome => ({
@@ -79,4 +81,11 @@ export const FILENAME_3: RubricItem<DecisionRecordsContext> = {
   }
 }
 
-export const FILENAME = [FILENAME_1, FILENAME_2, FILENAME_3] as const satisfies readonly RubricItem<DecisionRecordsContext>[]
+export const FILENAME: RubricFamily<DecisionRecordsRubricContext, FilenameRubricContext> = {
+  code: 'FILENAME',
+  title: 'file and naming checks',
+  description: 'Canonical decision-record filenames and serial namespaces.',
+  standard: SOURCE,
+  selectContext: (context) => context.filename,
+  items: [FILENAME_1, FILENAME_2, FILENAME_3]
+}

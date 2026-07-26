@@ -2,13 +2,23 @@ import { afterEach, describe, expect, test } from 'bun:test'
 import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
-import { BODY_3 } from '../items/body.ts'
-import { FILENAME_1, FILENAME_3 } from '../items/filename.ts'
-import { FM_6 } from '../items/frontmatter.ts'
-import { ROOT_1 } from '../items/root.ts'
-import { createDecisionRecordsContextFactory } from './decision-records.ts'
+import type { RubricFamily, RubricItem } from '../../shared/rubric.ts'
+import catalogue from '../items/index.ts'
+import { createDecisionRecordsSession, type DecisionRecordsRubricContext } from './decision-records.ts'
 
 const temporaryRoots: string[] = []
+const families = catalogue.families as unknown as readonly RubricFamily<DecisionRecordsRubricContext, unknown>[]
+const item = (code: string): RubricItem<unknown> => {
+  const selected = families.flatMap((family) => family.items).find((candidate) => candidate.code === code)
+  if (!selected) throw new Error(`Missing rubric item ${code}`)
+  return selected as RubricItem<unknown>
+}
+
+const audit = (code: string, context: DecisionRecordsRubricContext) => {
+  const family = families.find((candidate) => candidate.items.some((candidate) => candidate.code === code))
+  if (!family) throw new Error(`Missing rubric family for ${code}`)
+  return item(code).mechanical?.audit.run(family.selectContext(context))
+}
 
 afterEach(() => {
   for (const root of temporaryRoots.splice(0)) rmSync(root, { recursive: true, force: true })
@@ -51,7 +61,7 @@ const fixture = (filename: string, options: { metadata?: string; legacyDate?: st
   mkdirSync(directory, { recursive: true })
   writeFileSync(join(directory, filename), record(options))
   writeFileSync(join(directory, 'README.md'), `# Decisions\n\n1. [ADR-EXAMPLE-001](${filename}) — record shape.\n`)
-  return createDecisionRecordsContextFactory({ target: root })()
+  return createDecisionRecordsSession({ mode: 'audit', repository: root, userHome: tmpdir(), configuration: {} }).subjects[0]?.context()
 }
 
 const rootRecord = ({ id, title, sharedRecord = false }: { id: string; title: string; sharedRecord?: boolean }) => {
@@ -109,16 +119,16 @@ const rootFixture = ({
     join(directory, 'README.md'),
     `# Decisions\n\n${marker ? '<!-- ki-decision-records: adoption-root -->\n\n' : ''}${entries}\n`
   )
-  return createDecisionRecordsContextFactory({ target: root })()
+  return createDecisionRecordsSession({ mode: 'audit', repository: root, userHome: tmpdir(), configuration: {} }).subjects[0]?.context()
 }
 
 describe('decision-record metadata contract', () => {
   test('accepts a canonical ID followed by the title slug and universal metadata', () => {
     const context = fixture('ADR-EXAMPLE-001-decide-the-record-shape.md')
 
-    expect(context.invalidFilenames).toEqual([])
-    expect(FILENAME_1.mechanical?.audit.run(context)[0]?.status).toBe('PASS')
-    expect(FM_6.mechanical?.audit.run(context)[0]?.status).toBe('PASS')
+    expect(context?.filename.invalidFilenames).toEqual([])
+    expect(audit('FILENAME-1', context as DecisionRecordsRubricContext)?.[0]?.status).toBe('PASS')
+    expect(audit('FM-6', context as DecisionRecordsRubricContext)?.[0]?.status).toBe('PASS')
   })
 
   test('rejects a shortened filename, missing metadata, and a legacy date line', () => {
@@ -132,9 +142,9 @@ decision_type: architecture`,
       legacyDate: '**Date:** 2026-07-21\n'
     })
 
-    expect(FILENAME_1.mechanical?.audit.run(context)[0]?.status).toBe('VIOLATION')
-    expect(FM_6.mechanical?.audit.run(context)[0]?.message).toBe('`status` is absent.')
-    expect(BODY_3.mechanical?.audit.run(context)[0]?.status).toBe('VIOLATION')
+    expect(audit('FILENAME-1', context as DecisionRecordsRubricContext)?.[0]?.status).toBe('VIOLATION')
+    expect(audit('FM-6', context as DecisionRecordsRubricContext)?.[0]?.message).toBe('`status` is absent.')
+    expect(audit('BODY-3', context as DecisionRecordsRubricContext)?.[0]?.status).toBe('VIOLATION')
   })
 })
 
@@ -145,7 +155,7 @@ describe('new collection adoption root', () => {
   test('accepts a marked collection whose first record adopts Decision Records', () => {
     const context = rootFixture({ files: [adoption], indexIds: [adoption.id] })
 
-    expect(ROOT_1.mechanical?.audit.run(context)[0]?.status).toBe('PASS')
+    expect(audit('ROOT-1', context as DecisionRecordsRubricContext)?.[0]?.status).toBe('PASS')
   })
 
   test('rejects a marked collection whose first record has an unrelated type, title, or serial', () => {
@@ -154,20 +164,20 @@ describe('new collection adoption root', () => {
 
     for (const record of [unrelated, wrongTitle, wrongSerial]) {
       const context = rootFixture({ files: [record], indexIds: [record.id] })
-      expect(ROOT_1.mechanical?.audit.run(context)[0]?.status).toBe('VIOLATION')
+      expect(audit('ROOT-1', context as DecisionRecordsRubricContext)?.[0]?.status).toBe('VIOLATION')
     }
   })
 
   test('rejects a marked collection when the adoption root is not first in the index', () => {
     const context = rootFixture({ files: [adoption, unrelated], indexIds: [unrelated.id, adoption.id] })
 
-    expect(ROOT_1.mechanical?.audit.run(context)[0]?.status).toBe('VIOLATION')
+    expect(audit('ROOT-1', context as DecisionRecordsRubricContext)?.[0]?.status).toBe('VIOLATION')
   })
 
   test('leaves an unmarked established collection as a migration case', () => {
     const context = rootFixture({ marker: false, files: [unrelated], indexIds: [unrelated.id] })
 
-    expect(ROOT_1.mechanical?.audit.run(context)[0]?.status).toBe('NOT_APPLICABLE')
+    expect(audit('ROOT-1', context as DecisionRecordsRubricContext)?.[0]?.status).toBe('NOT_APPLICABLE')
   })
 })
 
@@ -183,8 +193,8 @@ describe('shared record mirrors', () => {
   test('excludes a deliberately marked shared record from the receiving collection serial series', () => {
     const context = rootFixture({ files: [shared], indexIds: [shared.id] })
 
-    expect(context.serialGaps).toEqual(new Map())
-    expect(FILENAME_3.mechanical?.audit.run(context)[0]?.status).toBe('PASS')
+    expect(context?.filename.serialGaps).toEqual(new Map())
+    expect(audit('FILENAME-3', context as DecisionRecordsRubricContext)?.[0]?.status).toBe('PASS')
   })
 
   test('retains the shared record in its canonical local series', () => {
@@ -192,13 +202,13 @@ describe('shared record mirrors', () => {
     const third = { file: 'ADR-EXAMPLE-003-third-decision.md', id: 'ADR-EXAMPLE-003', title: 'Third decision' }
     const context = rootFixture({ files: [first, shared, third], indexIds: [first.id, shared.id, third.id] })
 
-    expect(context.serialGaps).toEqual(new Map())
-    expect(FILENAME_3.mechanical?.audit.run(context)[0]?.status).toBe('PASS')
+    expect(context?.filename.serialGaps).toEqual(new Map())
+    expect(audit('FILENAME-3', context as DecisionRecordsRubricContext)?.[0]?.status).toBe('PASS')
   })
 
   test('retains serial continuity enforcement for an ordinary local record', () => {
     const context = rootFixture({ files: [ordinary], indexIds: [ordinary.id] })
 
-    expect(FILENAME_3.mechanical?.audit.run(context)[0]?.status).toBe('VIOLATION')
+    expect(audit('FILENAME-3', context as DecisionRecordsRubricContext)?.[0]?.status).toBe('VIOLATION')
   })
 })

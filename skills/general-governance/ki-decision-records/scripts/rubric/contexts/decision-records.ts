@@ -1,5 +1,6 @@
-import { existsSync, readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs'
-import { dirname, join, resolve } from 'node:path'
+import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs'
+import { dirname, join, relative, resolve } from 'node:path'
+import type { ConformWrite, RubricContextOptions, RubricSession } from '../../shared/rubric.ts'
 
 const CODE_DIR = 'docs/decisions'
 const KB_DIR = 'Admin/Governance/Decisions'
@@ -76,22 +77,45 @@ export type DecisionRecord = {
   missingSections: readonly string[]
 }
 
-export type DecisionRecordsContext = {
-  directory: string
-  dryRun: boolean
-  exists: boolean
-  kbMode: boolean
-  indexFile: string
-  indexExists: boolean
-  adoptionRootRequired: boolean
-  indexIds: readonly string[]
-  indexCounts: ReadonlyMap<string, number>
+export type FilenameRubricContext = {
   invalidFilenames: readonly string[]
-  records: readonly DecisionRecord[]
   duplicateIds: ReadonlyMap<string, readonly string[]>
   serialGaps: ReadonlyMap<string, readonly number[]>
+}
+
+export type RecordsRubricContext = {
+  records: readonly DecisionRecord[]
+}
+
+export type RootRubricContext = {
+  indexFile: string
+  adoptionRootRequired: boolean
+  indexIds: readonly string[]
+  records: readonly DecisionRecord[]
+}
+
+export type IndexRubricContext = {
+  indexFile: string
+  indexExists: boolean
+  indexIds: readonly string[]
+  indexCounts: ReadonlyMap<string, number>
+  records: readonly DecisionRecord[]
   outOfOrderIds: readonly { id: string; previous: number }[]
-  appendMissingIndexEntries: () => readonly DecisionRecord[]
+  appendMissingEntries?: () => void
+}
+
+export type DecisionRecordsRubricContext = {
+  filename: FilenameRubricContext
+  root: RootRubricContext
+  frontmatter: RecordsRubricContext
+  typeFit: RecordsRubricContext
+  body: RecordsRubricContext
+  index: IndexRubricContext
+}
+
+type IndexDraft = {
+  appendMissingEntries: (records: readonly DecisionRecord[], indexCounts: ReadonlyMap<string, number>) => void
+  proposal: () => ConformWrite | undefined
 }
 
 const slugify = (value: string): string =>
@@ -120,10 +144,10 @@ const isKb = (target: string): boolean => {
 }
 
 const isDirectory = (path: string): boolean => existsSync(path) && statSync(path).isDirectory()
+
 const resolveDirectory = (target: string, kbMode: boolean): string => {
   const absolute = resolve(target)
-  for (const relative of kbMode ? [KB_DIR, CODE_DIR] : [CODE_DIR, KB_DIR]) {
-    const candidate = join(absolute, relative)
+  for (const candidate of (kbMode ? [KB_DIR, CODE_DIR] : [CODE_DIR, KB_DIR]).map((path) => join(absolute, path))) {
     if (isDirectory(candidate)) return candidate
   }
   if (
@@ -149,128 +173,157 @@ const frontmatterValue = (frontmatter: string | undefined, key: string): string 
   return quoted?.[2] ?? value
 }
 
-export const createDecisionRecordsContextFactory = ({
-  target,
-  dryRun = false
-}: {
-  target: string
-  dryRun?: boolean
-}): (() => DecisionRecordsContext) => {
-  const kbMode = isKb(target)
-  const directory = resolveDirectory(target, kbMode)
-  return () => {
-    const exists = isDirectory(directory)
-    const entries = exists ? readdirSync(directory).sort() : []
-    const indexFile = kbMode ? 'Decisions.md' : 'README.md'
-    const indexExists = entries.includes(indexFile)
-    const indexContent = indexExists ? readFileSync(join(directory, indexFile), 'utf8') : ''
-    const indexIds = indexContent
-      .split('\n')
-      .map((line) => line.match(INDEX_ID)?.[1])
-      .filter((id): id is string => Boolean(id))
-    const indexCounts = new Map<string, number>()
-    for (const id of indexIds) indexCounts.set(id, (indexCounts.get(id) ?? 0) + 1)
-    const markdownFiles = entries.filter((file) => file.endsWith('.md') && file !== indexFile)
-    const records: DecisionRecord[] = []
+const readRecords = (directory: string, entries: readonly string[], indexFile: string): DecisionRecord[] => {
+  const records: DecisionRecord[] = []
+  for (const file of entries.filter((entry) => entry.endsWith('.md') && entry !== indexFile)) {
+    const content = readFileSync(join(directory, file), 'utf8')
+    const frontmatter = content.match(/^---\n([\s\S]*?)\n---/)?.[1]
+    const body = content.replace(/^---\n[\s\S]*?\n---\n?/, '')
+    const heading = body.match(HEADING)
+    const identity = heading?.[1]?.match(ID)
+    if (!identity || !heading?.[2]) continue
+    const [, prefix, scope, serial] = identity
+    const id = `${prefix}-${scope}-${serial}`
+    const headingTitle = heading[2].trim()
+    const expected = PREFIX_TO_TYPE[prefix] as { decisionType: string; type: string; typeUrl: string }
+    records.push({
+      file,
+      id,
+      prefix,
+      scope,
+      serial,
+      expectedDecisionType: expected.decisionType,
+      expectedType: expected.type,
+      expectedTypeUrl: expected.typeUrl,
+      expectedFilename: `${id}-${slugify(headingTitle)}.md`,
+      content,
+      body,
+      ...(frontmatter ? { frontmatter } : {}),
+      ...(frontmatterValue(frontmatter, 'id') ? { frontmatterId: frontmatterValue(frontmatter, 'id') } : {}),
+      ...(frontmatterValue(frontmatter, 'title') ? { title: frontmatterValue(frontmatter, 'title') } : {}),
+      ...(frontmatterValue(frontmatter, 'date') ? { date: frontmatterValue(frontmatter, 'date') } : {}),
+      ...(frontmatterValue(frontmatter, 'status') ? { status: frontmatterValue(frontmatter, 'status') } : {}),
+      ...(frontmatterValue(frontmatter, 'type') ? { type: frontmatterValue(frontmatter, 'type') } : {}),
+      ...(frontmatterValue(frontmatter, 'type_url') ? { typeUrl: frontmatterValue(frontmatter, 'type_url') } : {}),
+      ...(frontmatterValue(frontmatter, 'decision_type') ? { decisionType: frontmatterValue(frontmatter, 'decision_type') } : {}),
+      sharedRecord: frontmatterValue(frontmatter, 'shared_record') === 'true',
+      headingId: id,
+      headingTitle,
+      missingSections: ['## Context', '## Decision', '## Consequences'].filter((section) => !body.includes(section))
+    })
+  }
+  return records
+}
 
-    for (const file of markdownFiles) {
-      const content = readFileSync(join(directory, file), 'utf8')
-      const frontmatter = content.match(/^---\n([\s\S]*?)\n---/)?.[1]
-      const body = content.replace(/^---\n[\s\S]*?\n---\n?/, '')
-      const heading = body.match(HEADING)
-      const identity = heading?.[1]?.match(ID)
-      if (!identity || !heading?.[2]) continue
-      const [, prefix, scope, serial] = identity
-      const id = `${prefix}-${scope}-${serial}`
-      const headingTitle = heading[2].trim()
-      const expectedFilename = `${id}-${slugify(headingTitle)}.md`
-      const expected = PREFIX_TO_TYPE[prefix] as { decisionType: string; type: string; typeUrl: string }
-      records.push({
-        file,
-        id,
-        prefix,
-        scope,
-        serial,
-        expectedDecisionType: expected.decisionType,
-        expectedType: expected.type,
-        expectedTypeUrl: expected.typeUrl,
-        expectedFilename,
-        content,
-        body,
-        ...(frontmatter ? { frontmatter } : {}),
-        ...(frontmatterValue(frontmatter, 'id') ? { frontmatterId: frontmatterValue(frontmatter, 'id') } : {}),
-        ...(frontmatterValue(frontmatter, 'title') ? { title: frontmatterValue(frontmatter, 'title') } : {}),
-        ...(frontmatterValue(frontmatter, 'date') ? { date: frontmatterValue(frontmatter, 'date') } : {}),
-        ...(frontmatterValue(frontmatter, 'status') ? { status: frontmatterValue(frontmatter, 'status') } : {}),
-        ...(frontmatterValue(frontmatter, 'type') ? { type: frontmatterValue(frontmatter, 'type') } : {}),
-        ...(frontmatterValue(frontmatter, 'type_url') ? { typeUrl: frontmatterValue(frontmatter, 'type_url') } : {}),
-        ...(frontmatterValue(frontmatter, 'decision_type') ? { decisionType: frontmatterValue(frontmatter, 'decision_type') } : {}),
-        sharedRecord: frontmatterValue(frontmatter, 'shared_record') === 'true',
-        headingId: id,
-        headingTitle,
-        missingSections: ['## Context', '## Decision', '## Consequences'].filter((section) => !body.includes(section))
-      })
-    }
+const serialEvidence = (records: readonly DecisionRecord[]) => {
+  const idsToFiles = new Map<string, string[]>()
+  const serialsBySeries = new Map<string, number[]>()
+  const localSerialSeries = new Set(
+    records.filter((record) => record.serial !== 'XXX' && !record.sharedRecord).map((record) => `${record.prefix}-${record.scope}`)
+  )
+  for (const record of records) {
+    idsToFiles.set(record.id, [...(idsToFiles.get(record.id) ?? []), record.file])
+    const key = `${record.prefix}-${record.scope}`
+    if (record.serial !== 'XXX' && (!record.sharedRecord || localSerialSeries.has(key)))
+      serialsBySeries.set(key, [...(serialsBySeries.get(key) ?? []), Number(record.serial)])
+  }
+  const serialGaps = new Map<string, number[]>()
+  for (const [series, serials] of serialsBySeries) {
+    const unique = [...new Set(serials)].sort((left, right) => left - right)
+    const maximum = unique.at(-1) ?? 0
+    const missing = Array.from({ length: maximum }, (_, index) => index + 1).filter((serial) => !unique.includes(serial))
+    if (missing.length > 0) serialGaps.set(series, missing)
+  }
+  return {
+    duplicateIds: new Map([...idsToFiles].filter(([, files]) => files.length > 1)),
+    serialGaps
+  }
+}
 
-    const invalidFilenames = records.filter((record) => record.file !== record.expectedFilename).map((record) => record.file)
-    const idsToFiles = new Map<string, string[]>()
-    const serialsBySeries = new Map<string, number[]>()
-    const localSerialSeries = new Set(
-      records.filter((record) => record.serial !== 'XXX' && !record.sharedRecord).map((record) => `${record.prefix}-${record.scope}`)
-    )
-    for (const record of records) {
-      idsToFiles.set(record.id, [...(idsToFiles.get(record.id) ?? []), record.file])
-      const key = `${record.prefix}-${record.scope}`
-      if (record.serial !== 'XXX' && (!record.sharedRecord || localSerialSeries.has(key))) {
-        serialsBySeries.set(key, [...(serialsBySeries.get(key) ?? []), Number(record.serial)])
-      }
-    }
-    const duplicateIds = new Map([...idsToFiles].filter(([, files]) => files.length > 1))
-    const serialGaps = new Map<string, number[]>()
-    for (const [series, serials] of serialsBySeries) {
-      const unique = [...new Set(serials)].sort((left, right) => left - right)
-      const maximum = unique.at(-1) ?? 0
-      const missing = Array.from({ length: maximum }, (_, index) => index + 1).filter((serial) => !unique.includes(serial))
-      if (missing.length > 0) serialGaps.set(series, missing)
-    }
-    const outOfOrderIds: Array<{ id: string; previous: number }> = []
-    const maximumBySeries = new Map<string, number>()
-    for (const id of indexIds) {
-      const match = id.match(/^(.*)-(\d{3,})$/)
-      if (!match) continue
-      const series = match[1] as string
-      const serial = Number(match[2])
-      const previous = maximumBySeries.get(series)
-      if (previous !== undefined && serial < previous) outOfOrderIds.push({ id, previous })
-      maximumBySeries.set(series, Math.max(previous ?? 0, serial))
-    }
+const revealOrderEvidence = (indexIds: readonly string[]): readonly { id: string; previous: number }[] => {
+  const outOfOrderIds: Array<{ id: string; previous: number }> = []
+  const maximumBySeries = new Map<string, number>()
+  for (const id of indexIds) {
+    const match = id.match(/^(.*)-(\d{3,})$/)
+    if (!match) continue
+    const series = match[1] as string
+    const serial = Number(match[2])
+    const previous = maximumBySeries.get(series)
+    if (previous !== undefined && serial < previous) outOfOrderIds.push({ id, previous })
+    maximumBySeries.set(series, Math.max(previous ?? 0, serial))
+  }
+  return outOfOrderIds
+}
 
-    return {
-      directory,
-      dryRun,
-      exists,
-      kbMode,
+const createIndexDraft = (repository: string, path: string, original: string): IndexDraft => {
+  let working = original
+  return {
+    appendMissingEntries: (records, indexCounts) => {
+      const missing = records.filter((record) => (indexCounts.get(record.id) ?? 0) === 0)
+      if (missing.length === 0) return
+      const additions = missing.map((record) => `- [${record.id}](${record.file}) — ${record.headingTitle ?? '(title unknown — see file)'}`)
+      working = `${working.replace(/\n*$/, '\n')}${additions.join('\n')}\n`
+    },
+    proposal: () => (working === original ? undefined : { path: relative(repository, path), content: working })
+  }
+}
+
+export const createDecisionRecordsSession = ({ mode, repository }: RubricContextOptions): RubricSession<DecisionRecordsRubricContext> => {
+  const kbMode = isKb(repository)
+  const directory = resolveDirectory(repository, kbMode)
+  const exists = isDirectory(directory)
+  const entries = exists ? readdirSync(directory).sort() : []
+  const indexFile = kbMode ? 'Decisions.md' : 'README.md'
+  const indexExists = entries.includes(indexFile)
+  const indexPath = join(directory, indexFile)
+  const indexContent = indexExists ? readFileSync(indexPath, 'utf8') : ''
+  const indexIds = indexContent
+    .split('\n')
+    .map((line) => line.match(INDEX_ID)?.[1])
+    .filter((id): id is string => Boolean(id))
+  const indexCounts = new Map<string, number>()
+  for (const id of indexIds) indexCounts.set(id, (indexCounts.get(id) ?? 0) + 1)
+  const records = readRecords(directory, entries, indexFile)
+  const { duplicateIds, serialGaps } = serialEvidence(records)
+  const indexDraft = mode === 'conform' && indexExists ? createIndexDraft(repository, indexPath, indexContent) : undefined
+
+  const context: DecisionRecordsRubricContext = {
+    filename: {
+      invalidFilenames: records.filter((record) => record.file !== record.expectedFilename).map((record) => record.file),
+      duplicateIds,
+      serialGaps
+    },
+    root: {
       indexFile,
-      indexExists,
       adoptionRootRequired: indexContent.includes('<!-- ki-decision-records: adoption-root -->'),
       indexIds,
+      records
+    },
+    frontmatter: { records },
+    typeFit: { records },
+    body: { records },
+    index: {
+      indexFile,
+      indexExists,
+      indexIds,
       indexCounts,
-      invalidFilenames,
       records,
-      duplicateIds,
-      serialGaps,
-      outOfOrderIds,
-      appendMissingIndexEntries: () => {
-        if (!indexExists) return []
-        const missing = records.filter((record) => (indexCounts.get(record.id) ?? 0) === 0)
-        if (!dryRun && missing.length > 0) {
-          const additions = missing.map(
-            (record) => `- [${record.id}](${record.file}) — ${record.headingTitle ?? '(title unknown — see file)'}`
-          )
-          writeFileSync(join(directory, indexFile), `${indexContent.replace(/\n*$/, '\n')}${additions.join('\n')}\n`)
-        }
-        return missing
-      }
+      outOfOrderIds: revealOrderEvidence(indexIds),
+      ...(indexDraft
+        ? {
+            appendMissingEntries: () => {
+              indexDraft.appendMissingEntries(records, indexCounts)
+            }
+          }
+        : {})
+    }
+  }
+
+  return {
+    subjects: [{ families: ['FILENAME', 'ROOT', 'FM', 'TYPE-FIT', 'BODY', 'INDEX'], context: () => context }],
+    proposal: () => {
+      const indexWrite = indexDraft?.proposal()
+      return { writes: indexWrite ? [indexWrite] : [] }
     }
   }
 }

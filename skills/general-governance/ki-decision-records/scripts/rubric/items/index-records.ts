@@ -1,10 +1,12 @@
-import type { AuditOutcome, RubricItem } from '../../shared/rubric.ts'
-import type { DecisionRecordsContext } from '../contexts/decision-records.ts'
-import { outcomes } from './shared.ts'
+import type { AuditOutcome, RubricFamily, RubricItem, RubricOutcomes } from '../../shared/rubric.ts'
+import type { DecisionRecordsRubricContext, IndexRubricContext } from '../contexts/decision-records.ts'
 
-const SOURCE = 'dr-format.md'
+const SOURCE = 'standards-decision-records.md'
 
-export const INDEX_1: RubricItem<DecisionRecordsContext> = {
+const outcomes = (values: AuditOutcome[], passMessage: string): RubricOutcomes<AuditOutcome> =>
+  (values.length > 0 ? values : [{ status: 'PASS', message: passMessage }]) as RubricOutcomes<AuditOutcome>
+
+const INDEX_1: RubricItem<IndexRubricContext> = {
   code: 'INDEX-1',
   title: 'Decision index exists',
   description: 'The index file exists (`Decisions.md` in a KB, `README.md` in a code repository).',
@@ -13,7 +15,7 @@ export const INDEX_1: RubricItem<DecisionRecordsContext> = {
     level: 'FAIL',
     audit: {
       phase: 'PREPARE',
-      run: (context: DecisionRecordsContext) =>
+      run: (context: IndexRubricContext) =>
         [
           {
             status: context.indexExists ? 'PASS' : 'VIOLATION',
@@ -25,7 +27,7 @@ export const INDEX_1: RubricItem<DecisionRecordsContext> = {
   }
 }
 
-export const INDEX_2: RubricItem<DecisionRecordsContext> = {
+const INDEX_2: RubricItem<IndexRubricContext> = {
   code: 'INDEX-2',
   title: 'Exactly one index entry per record',
   description: 'Every decision-record file has exactly one entry in the index list, linked by ID.',
@@ -34,7 +36,7 @@ export const INDEX_2: RubricItem<DecisionRecordsContext> = {
     level: 'FAIL',
     audit: {
       phase: 'DERIVED',
-      run: (context: DecisionRecordsContext) => {
+      run: (context: IndexRubricContext) => {
         if (!context.indexExists)
           return [{ status: 'NOT_APPLICABLE', message: 'The index is absent.', subject: context.indexFile }] as const
         return outcomes(
@@ -50,11 +52,17 @@ export const INDEX_2: RubricItem<DecisionRecordsContext> = {
           'Every decision record has exactly one index entry.'
         )
       }
+    },
+    conform: {
+      phase: 'DERIVED',
+      run: (context: IndexRubricContext) => {
+        context.appendMissingEntries?.()
+      }
     }
   }
 }
 
-export const INDEX_3: RubricItem<DecisionRecordsContext> = {
+const INDEX_3: RubricItem<IndexRubricContext> = {
   code: 'INDEX-3',
   title: 'No stale index entries',
   description: 'No index entry references a decision-record file that does not exist.',
@@ -63,7 +71,7 @@ export const INDEX_3: RubricItem<DecisionRecordsContext> = {
     level: 'FAIL',
     audit: {
       phase: 'DERIVED',
-      run: (context: DecisionRecordsContext) => {
+      run: (context: IndexRubricContext) => {
         if (!context.indexExists)
           return [{ status: 'NOT_APPLICABLE', message: 'The index is absent.', subject: context.indexFile }] as const
         const ids = new Set(context.records.map((record) => record.id))
@@ -84,7 +92,7 @@ export const INDEX_3: RubricItem<DecisionRecordsContext> = {
   }
 }
 
-export const INDEX_6: RubricItem<DecisionRecordsContext> = {
+const INDEX_6: RubricItem<IndexRubricContext> = {
   code: 'INDEX-6',
   title: 'Reveal order',
   description:
@@ -93,7 +101,7 @@ export const INDEX_6: RubricItem<DecisionRecordsContext> = {
   judgment: { prompt: 'Assess whether index entries form a sensible from-scratch reveal order with roots before dependents.' }
 }
 
-export const INDEX_7: RubricItem<DecisionRecordsContext> = {
+const INDEX_7: RubricItem<IndexRubricContext> = {
   code: 'INDEX-7',
   title: 'Index gloss alignment',
   description: "An entry's gloss matches the decision record's heading title, excluding the ID prefix.",
@@ -101,7 +109,7 @@ export const INDEX_7: RubricItem<DecisionRecordsContext> = {
   judgment: { prompt: "Compare every index gloss with its decision record's heading title, excluding the ID prefix." }
 }
 
-export const INDEX_8: RubricItem<DecisionRecordsContext> = {
+const INDEX_8: RubricItem<IndexRubricContext> = {
   code: 'INDEX-8',
   title: 'Ascending serial reveal order',
   description:
@@ -111,7 +119,7 @@ export const INDEX_8: RubricItem<DecisionRecordsContext> = {
     level: 'WARN',
     audit: {
       phase: 'DERIVED',
-      run: (context: DecisionRecordsContext) =>
+      run: (context: IndexRubricContext) =>
         outcomes(
           context.outOfOrderIds.map(
             ({ id, previous }): AuditOutcome => ({
@@ -126,4 +134,11 @@ export const INDEX_8: RubricItem<DecisionRecordsContext> = {
   }
 }
 
-export const INDEX = [INDEX_1, INDEX_2, INDEX_3, INDEX_6, INDEX_7, INDEX_8] as const satisfies readonly RubricItem<DecisionRecordsContext>[]
+export const INDEX: RubricFamily<DecisionRecordsRubricContext, IndexRubricContext> = {
+  code: 'INDEX',
+  title: 'index checks',
+  description: 'Complete, current, and readable decision-record indexes.',
+  standard: SOURCE,
+  selectContext: (context) => context.index,
+  items: [INDEX_1, INDEX_2, INDEX_3, INDEX_6, INDEX_7, INDEX_8]
+}

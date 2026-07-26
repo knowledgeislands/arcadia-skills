@@ -1,4 +1,4 @@
-# DR format standard
+# Decision Records standard
 
 ## Contents
 
@@ -12,9 +12,7 @@
 - [Index](#index)
 - [Writing guidance](#writing-guidance)
 
-**Contents:** [Naming convention](#naming-convention) · [Prefix table](#prefix-table) · [Placement](#placement) · [Frontmatter](#frontmatter) · [Sections](#sections) · [Templates](#templates) · [Collection root](#collection-root) · [Index](#index) · [Writing guidance](#writing-guidance)
-
-The quotable standard behind [the rubric](rubric.md) and [`../scripts/govern.ts`](../scripts/govern.ts). Grounded in Michael Nygard's original 2011 ADR format (see [sources](sources.md)) with house additions: universal decision metadata, type-specific prefixes, and `## References`. Unified from the former `ki-adrs` and `ki-kdrs` instruments. A DR is a **living present-state record** — it states the decision as it stands now and is edited in place; its metadata status records document currency, never a decision lifecycle, mutability marker, supersession chain, or changelog (see [Writing guidance](#writing-guidance)). Mode REFRESH re-reads the sources and proposes diffs here.
+The normative standard behind [the generated rubric](rubric.md). Grounded in Michael Nygard's original 2011 ADR format (see [the source list](sources.md)) with house additions: universal decision metadata, type-specific prefixes, and `## References`. Unified from the former `ki-adrs` and `ki-kdrs` instruments. A DR is a **living present-state record** — it states the decision as it stands now and is edited in place; its metadata status records document currency, never a decision lifecycle, mutability marker, supersession chain, or changelog (see [Writing guidance](#writing-guidance)). Mode REFRESH re-reads the sources and proposes diffs here.
 
 ## Naming convention
 
