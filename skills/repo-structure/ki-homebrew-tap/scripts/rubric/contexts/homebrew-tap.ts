@@ -1,135 +1,136 @@
-import { spawnSync } from 'node:child_process'
-import { existsSync, readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs'
+import { lstatSync, readdirSync, readFileSync } from 'node:fs'
 import { join, resolve } from 'node:path'
-import type { AuditOutcome, ConformOutcome, RubricOutcomes } from '../../shared/rubric.ts'
+import type { ConformWrite, RubricContextOptions, RubricSession } from '../../shared/rubric.ts'
 
-const FORMULA_DIR = 'Formula'
+const FORMULA_DIRECTORY = 'Formula'
 const CONFIG_FILE = '.ki-config.toml'
-const SECTION = 'ki-homebrew-tap'
-const isDirectory = (path: string): boolean => existsSync(path) && statSync(path).isDirectory()
-const isFile = (path: string): boolean => existsSync(path) && statSync(path).isFile()
+const CONFIG_SECTION = 'ki-homebrew-tap'
 
-export type FormulaEvidence = { name: string; file: string; text: string }
+type NodeKind = 'missing' | 'file' | 'directory' | 'unsafe'
+type FormulaDirectoryState = 'missing' | 'present' | 'unsafe'
+type ConfigState = 'missing' | 'unsafe' | 'malformed' | 'absent' | 'present'
 
-export type HomebrewTapContext = {
-  target: string
-  targetExists: boolean
-  applicable: boolean
-  formulaDirectory: boolean
-  formulae: readonly FormulaEvidence[]
-  readme: string | null
-  config: 'missing' | 'malformed' | 'absent' | 'present'
-  configKeys: readonly string[]
-  brewOutcomes: () => RubricOutcomes<AuditOutcome>
-  conformMarker: () => RubricOutcomes<ConformOutcome>
+export type FormulaEvidence = {
+  readonly name: string
+  readonly file: string
+  readonly text: string
 }
 
-const parseConfig = (path: string): { config: HomebrewTapContext['config']; configKeys: readonly string[] } => {
-  if (!isFile(path)) return { config: 'missing', configKeys: [] }
+export type TapContext = {
+  readonly targetExists: boolean
+  readonly applicable: boolean
+  readonly formulaDirectory: FormulaDirectoryState
+  readonly formulae: readonly FormulaEvidence[]
+  readonly readme: string | null
+}
+
+export type TapConfigContext = {
+  readonly targetExists: boolean
+  readonly applicable: boolean
+  readonly config: ConfigState
+  readonly configKeys: readonly string[]
+  readonly addMarker?: () => void
+}
+
+export type HomebrewTapRubricContext = {
+  readonly tap: TapContext
+  readonly config: TapConfigContext
+}
+
+const nodeKind = (path: string): NodeKind => {
   try {
-    const parsed = Bun.TOML.parse(readFileSync(path, 'utf8')) as Record<string, unknown>
-    const candidate = parsed[SECTION]
-    if (candidate && typeof candidate === 'object' && !Array.isArray(candidate))
-      return { config: 'present', configKeys: Object.keys(candidate as Record<string, unknown>) }
-    return { config: 'absent', configKeys: [] }
+    const stat = lstatSync(path)
+    if (stat.isSymbolicLink()) return 'unsafe'
+    if (stat.isFile()) return 'file'
+    if (stat.isDirectory()) return 'directory'
+    return 'unsafe'
   } catch {
-    return { config: 'malformed', configKeys: [] }
+    return 'missing'
   }
 }
 
-const brewOutcomes = (target: string, formulae: readonly FormulaEvidence[]): RubricOutcomes<AuditOutcome> => {
-  const available = spawnSync('brew', ['--version'], { encoding: 'utf8', timeout: 120_000 })
-  if (available.error || available.status !== 0)
-    return [{ status: 'NOT_APPLICABLE', message: 'brew is not on PATH; the tap CI remains the backstop for Homebrew checks.' }]
+const inspectConfig = (
+  path: string,
+  kind: NodeKind
+): { readonly state: ConfigState; readonly keys: readonly string[]; readonly content: string | null } => {
+  if (kind === 'missing') return { state: 'missing', keys: [], content: null }
+  if (kind !== 'file') return { state: 'unsafe', keys: [], content: null }
+  const content = readFileSync(path, 'utf8')
+  try {
+    const parsed = Bun.TOML.parse(content) as Record<string, unknown>
+    const candidate = parsed[CONFIG_SECTION]
+    if (candidate && typeof candidate === 'object' && !Array.isArray(candidate))
+      return { state: 'present', keys: Object.keys(candidate as Record<string, unknown>), content }
+    return { state: 'absent', keys: [], content }
+  } catch {
+    return { state: 'malformed', keys: [], content }
+  }
+}
 
-  const outcomes: AuditOutcome[] = []
-  const invocationError = (text: string): boolean =>
-    /no available formula|not tapped|is disabled|Error: Calling|Usage:|invalid option|unknown command/i.test(text)
-  for (const formula of formulae) {
-    for (const [verb, arguments_] of [
-      ['style', ['style', join(target, FORMULA_DIR, formula.file)]],
-      ['audit', ['audit', '--strict', formula.name]]
-    ] as const) {
-      const result = spawnSync('brew', arguments_, { cwd: target, encoding: 'utf8', timeout: 120_000 })
-      if (result.error) {
-        outcomes.push({
-          status: 'NOT_APPLICABLE',
-          message: `brew ${verb} could not be started.`,
-          subject: `${FORMULA_DIR}/${formula.file}`
-        })
-        continue
-      }
-      const output = `${result.stdout ?? ''}\n${result.stderr ?? ''}`.trim()
-      if (result.status === 0)
-        outcomes.push({ status: 'INFO', message: `brew ${verb} completed without findings.`, subject: `${FORMULA_DIR}/${formula.file}` })
-      else if (invocationError(output))
-        outcomes.push({
-          status: 'NOT_APPLICABLE',
-          message: `brew ${verb} could not evaluate this formula.`,
-          subject: `${FORMULA_DIR}/${formula.file}`
-        })
-      else {
-        const detail = output.split(/\r?\n/).filter(Boolean).slice(0, 4).join(' · ')
-        outcomes.push({
-          status: 'VIOLATION',
-          message: `brew ${verb} reported: ${detail || `exit ${result.status}`}`,
-          subject: `${FORMULA_DIR}/${formula.file}`
-        })
-      }
+export const createHomebrewTapSession = ({ mode, repository }: RubricContextOptions): RubricSession<HomebrewTapRubricContext> => {
+  const target = resolve(repository)
+  const targetExists = nodeKind(target) === 'directory'
+  const formulaPath = join(target, FORMULA_DIRECTORY)
+  const formulaKind = targetExists ? nodeKind(formulaPath) : 'missing'
+  const formulaDirectory: FormulaDirectoryState = formulaKind === 'directory' ? 'present' : formulaKind === 'missing' ? 'missing' : 'unsafe'
+  const formulae =
+    formulaDirectory === 'present'
+      ? readdirSync(formulaPath, { withFileTypes: true })
+          .filter((entry) => entry.isFile() && entry.name.endsWith('.rb'))
+          .map((entry) => entry.name)
+          .sort()
+          .map((file) => ({
+            name: file.replace(/\.rb$/, ''),
+            file,
+            text: readFileSync(join(formulaPath, file), 'utf8')
+          }))
+      : []
+  const configPath = join(target, CONFIG_FILE)
+  const configEvidence = targetExists
+    ? inspectConfig(configPath, nodeKind(configPath))
+    : { state: 'missing' as const, keys: [], content: null }
+  const applicable =
+    configEvidence.state === 'present' ||
+    configEvidence.state === 'malformed' ||
+    configEvidence.state === 'unsafe' ||
+    formulaDirectory !== 'missing'
+  const readmePath = join(target, 'README.md')
+  const readme = targetExists && nodeKind(readmePath) === 'file' ? readFileSync(readmePath, 'utf8') : null
+  const originalConfig = configEvidence.content
+  let configDraft = originalConfig
+
+  const context: HomebrewTapRubricContext = {
+    tap: {
+      targetExists,
+      applicable,
+      formulaDirectory,
+      formulae,
+      readme
+    },
+    config: {
+      targetExists,
+      applicable,
+      config: configEvidence.state,
+      configKeys: configEvidence.keys,
+      ...(mode === 'conform' && formulaDirectory === 'present' && configEvidence.state === 'absent' && originalConfig !== null
+        ? {
+            addMarker: () => {
+              if (configDraft !== originalConfig) return
+              configDraft = `${originalConfig.replace(/\n*$/, '\n')}\n# This repo is a Knowledge Islands Homebrew tap.\n[${CONFIG_SECTION}]\n`
+            }
+          }
+        : {})
     }
   }
-  return outcomes.length > 0
-    ? (outcomes as RubricOutcomes<AuditOutcome>)
-    : [{ status: 'NOT_APPLICABLE', message: 'No formulae are available for Homebrew checks.' }]
-}
 
-export const createHomebrewTapContext = ({ target, dryRun }: { target: string; dryRun: boolean }): HomebrewTapContext => {
-  const absolute = resolve(target)
-  const targetExists = isDirectory(absolute)
-  const formulaPath = join(absolute, FORMULA_DIR)
-  const formulaDirectory = targetExists && isDirectory(formulaPath)
-  const formulae = formulaDirectory
-    ? readdirSync(formulaPath)
-        .filter((file) => file.endsWith('.rb'))
-        .sort()
-        .map((file) => ({ name: file.replace(/\.rb$/, ''), file, text: readFileSync(join(formulaPath, file), 'utf8') }))
-    : []
-  const { config, configKeys } = targetExists ? parseConfig(join(absolute, CONFIG_FILE)) : { config: 'missing' as const, configKeys: [] }
-  const readmePath = join(absolute, 'README.md')
-  const readme = isFile(readmePath) ? readFileSync(readmePath, 'utf8') : null
   return {
-    target: absolute,
-    targetExists,
-    applicable: config === 'present' || config === 'malformed' || formulaDirectory,
-    formulaDirectory,
-    formulae,
-    readme,
-    config,
-    configKeys,
-    brewOutcomes: () => brewOutcomes(absolute, formulae),
-    conformMarker: () => {
-      if (!targetExists) return [{ status: 'VIOLATION', level: 'FAIL', message: 'Conform target must be an existing directory.' }]
-      if (!formulaDirectory)
-        return [
-          { status: 'VIOLATION', level: 'FAIL', message: 'Formula/ is absent; no safe conform action is available.', subject: FORMULA_DIR }
-        ]
-      const path = join(absolute, CONFIG_FILE)
-      if (config === 'missing')
-        return [{ status: 'INFO', message: '.ki-config.toml is absent; ki-repo owns creating the shared file.', subject: CONFIG_FILE }]
-      if (config === 'malformed')
-        return [
-          { status: 'INFO', message: '.ki-config.toml is malformed; conform it by hand before adding the marker.', subject: CONFIG_FILE }
-        ]
-      if (config === 'present')
-        return [{ status: 'PASS', message: 'The keyless [ki-homebrew-tap] marker is already present.', subject: CONFIG_FILE }]
-      if (!dryRun)
-        writeFileSync(
-          path,
-          `${readFileSync(path, 'utf8').replace(/\n*$/, '\n')}\n# This repo is a Knowledge Islands Homebrew tap.\n[${SECTION}]\n`
-        )
-      return [
-        { status: 'FIXED', message: `The [ki-homebrew-tap] marker ${dryRun ? 'would be added' : 'was added'}.`, subject: CONFIG_FILE }
-      ]
+    subjects: [{ families: ['TAP', 'CONFIG'], context: () => context }],
+    proposal: () => {
+      const writes: ConformWrite[] =
+        configDraft !== null && originalConfig !== null && configDraft !== originalConfig
+          ? [{ path: CONFIG_FILE, content: configDraft }]
+          : []
+      return { writes }
     }
   }
 }

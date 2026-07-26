@@ -1,10 +1,11 @@
-import type { AuditOutcome, RubricItem, RubricOutcomes } from '../../shared/rubric.ts'
-import type { HomebrewTapContext } from '../contexts/homebrew-tap.ts'
+import type { AuditOutcome, RubricFamily, RubricItem, RubricOutcomes } from '../../shared/rubric.ts'
+import type { HomebrewTapRubricContext, TapContext } from '../contexts/homebrew-tap.ts'
 
-const SOURCE = ['standards.md'] as const
+const STANDARD = 'standards-homebrew-tap.md'
+const SOURCE = [STANDARD] as const
 const many = (outcomes: AuditOutcome[]): RubricOutcomes<AuditOutcome> => outcomes as RubricOutcomes<AuditOutcome>
 
-export const TAP_1: RubricItem<HomebrewTapContext> = {
+const TAP_1: RubricItem<TapContext> = {
   code: 'TAP-1',
   title: 'formula directory',
   description: '`Formula/` exists and contains at least one Ruby formula.',
@@ -15,7 +16,11 @@ export const TAP_1: RubricItem<HomebrewTapContext> = {
       phase: 'INSPECT',
       run: (context) => {
         if (!context.targetExists) return [{ status: 'VIOLATION', message: 'Audit target must be an existing directory.' }]
-        if (!context.formulaDirectory)
+        if (!context.applicable)
+          return [{ status: 'NOT_APPLICABLE', message: 'No tap declaration or Formula/ structural marker is present.' }]
+        if (context.formulaDirectory === 'unsafe')
+          return [{ status: 'VIOLATION', message: 'Formula/ is not a regular directory.', subject: 'Formula/' }]
+        if (context.formulaDirectory !== 'present')
           return [{ status: 'VIOLATION', message: 'Formula/ is absent; this is not a Homebrew tap.', subject: 'Formula/' }]
         if (context.formulae.length === 0)
           return [{ status: 'VIOLATION', message: 'Formula/ contains no Ruby formulae.', subject: 'Formula/' }]
@@ -25,7 +30,7 @@ export const TAP_1: RubricItem<HomebrewTapContext> = {
   }
 }
 
-export const TAP_2: RubricItem<HomebrewTapContext> = {
+const TAP_2: RubricItem<TapContext> = {
   code: 'TAP-2',
   title: 'formula class',
   description: 'Each formula has a `class <Camel> < Formula` declaration.',
@@ -53,7 +58,7 @@ export const TAP_2: RubricItem<HomebrewTapContext> = {
   }
 }
 
-export const TAP_3: RubricItem<HomebrewTapContext> = {
+const TAP_3: RubricItem<TapContext> = {
   code: 'TAP-3',
   title: 'formula fields',
   description: 'Each formula has the required metadata, install method, and test block.',
@@ -89,7 +94,7 @@ export const TAP_3: RubricItem<HomebrewTapContext> = {
   }
 }
 
-export const TAP_4: RubricItem<HomebrewTapContext> = {
+const TAP_4: RubricItem<TapContext> = {
   code: 'TAP-4',
   title: 'formula description style',
   description: 'Formula descriptions are no more than 80 characters and do not start with an article.',
@@ -127,7 +132,7 @@ export const TAP_4: RubricItem<HomebrewTapContext> = {
   }
 }
 
-export const TAP_5: RubricItem<HomebrewTapContext> = {
+const TAP_5: RubricItem<TapContext> = {
   code: 'TAP-5',
   title: 'versioned source URLs',
   description: 'Formula URLs use a tagged-release tarball rather than a branch or HEAD.',
@@ -151,7 +156,7 @@ export const TAP_5: RubricItem<HomebrewTapContext> = {
   }
 }
 
-export const TAP_6: RubricItem<HomebrewTapContext> = {
+const TAP_6: RubricItem<TapContext> = {
   code: 'TAP-6',
   title: 'formula discoverability',
   description: 'README.md lists every formula by name.',
@@ -180,57 +185,75 @@ export const TAP_6: RubricItem<HomebrewTapContext> = {
   }
 }
 
-export const TAP_7: RubricItem<HomebrewTapContext> = {
+const TAP_7: RubricItem<TapContext> = {
   code: 'TAP-7',
   title: 'Homebrew audit',
-  description: 'When available, Homebrew style and strict audit run for every formula.',
+  description: 'Homebrew style and strict audit are run explicitly for every formula.',
   sources: SOURCE,
   mechanical: {
     level: 'WARN',
-    audit: { phase: 'DERIVED', run: (context) => context.brewOutcomes() }
+    audit: {
+      phase: 'DERIVED',
+      run: (context) => {
+        if (!context.applicable) return [{ status: 'NOT_APPLICABLE', message: 'ki-homebrew-tap is not applicable.' }]
+        if (context.formulae.length === 0) return [{ status: 'NOT_APPLICABLE', message: 'No formulae are available for Homebrew checks.' }]
+        return context.formulae.map((formula) => ({
+          status: 'VIOLATION',
+          message: `Run Homebrew validation explicitly: brew style Formula/${formula.file} and brew audit --strict ${formula.name}.`,
+          subject: `Formula/${formula.file}`
+        }))
+      }
+    }
   }
 }
 
-export const TAP_J1: RubricItem<HomebrewTapContext> = {
+const TAP_J1: RubricItem<TapContext> = {
   code: 'TAP-J1',
   title: 'tap naming',
   description: 'The repository name follows Homebrew tap naming conventions.',
   sources: SOURCE,
   judgment: { prompt: 'Does the repository name follow the `homebrew-<name>` convention without an unsafe rename?' }
 }
-export const TAP_J2: RubricItem<HomebrewTapContext> = {
+const TAP_J2: RubricItem<TapContext> = {
   code: 'TAP-J2',
   title: 'meaningful formula test',
   description: 'Each `test do` block exercises an installed binary rather than a placeholder.',
   sources: SOURCE,
   judgment: { prompt: 'Does each formula test exercise its installed binary with a meaningful assertion?' }
 }
-export const TAP_J3: RubricItem<HomebrewTapContext> = {
+const TAP_J3: RubricItem<TapContext> = {
   code: 'TAP-J3',
   title: 'install correctness',
   description: 'Each install block installs the artefact the tool actually ships.',
   sources: SOURCE,
   judgment: { prompt: 'Does each `def install` block install the artefact the tool actually ships?' }
 }
-export const TAP_J4: RubricItem<HomebrewTapContext> = {
+const TAP_J4: RubricItem<TapContext> = {
   code: 'TAP-J4',
   title: 'source integrity',
   description: 'Checksums and release tags correspond to the declared source archive.',
   sources: SOURCE,
   judgment: { prompt: 'Do each source URL, version, and checksum correspond to the intended release archive?' }
 }
-export const TAP_J5: RubricItem<HomebrewTapContext> = {
+const TAP_J5: RubricItem<TapContext> = {
   code: 'TAP-J5',
   title: 'fresh README entries',
   description: 'README formula rows have accurate descriptions and source links.',
   sources: SOURCE,
   judgment: { prompt: 'Are README formula rows complete, current, and accurate?' }
 }
-export const TAP_J6: RubricItem<HomebrewTapContext> = {
+const TAP_J6: RubricItem<TapContext> = {
   code: 'TAP-J6',
   title: 'CI Homebrew coverage',
   description: 'Tap CI runs `brew test-bot` when local Homebrew is unavailable.',
   sources: SOURCE,
   judgment: { prompt: 'When local Homebrew is unavailable, does CI run the appropriate Homebrew test-bot checks?' }
 }
-export const TAP = [TAP_1, TAP_2, TAP_3, TAP_4, TAP_5, TAP_6, TAP_7, TAP_J1, TAP_J2, TAP_J3, TAP_J4, TAP_J5, TAP_J6] as const
+export const TAP: RubricFamily<HomebrewTapRubricContext, TapContext> = {
+  code: 'TAP',
+  title: 'tap structure',
+  description: 'Formula layout, explicit Homebrew validation, and judgment review of tap correctness.',
+  standard: STANDARD,
+  selectContext: (context) => context.tap,
+  items: [TAP_1, TAP_2, TAP_3, TAP_4, TAP_5, TAP_6, TAP_7, TAP_J1, TAP_J2, TAP_J3, TAP_J4, TAP_J5, TAP_J6]
+}

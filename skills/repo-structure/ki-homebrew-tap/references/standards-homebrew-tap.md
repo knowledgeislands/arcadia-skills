@@ -53,7 +53,7 @@ A formula is a Ruby class Homebrew evaluates. The required parts _(spec — Home
 | `def install` | Installs the built artifact(s), e.g. `bin.install "bin/mgit"`.                                  |
 | `test do`     | Exercises the **installed** binary — asserts on `--version`/`--help` output, not a stub `true`. |
 
-The `desc` length and article rules are `brew style`'s; the checker mirrors them as `TAP-DESC-STYLE` so they are caught even when `brew` is not on PATH. Everything finer (interpolation style, `bin`/`libexec` idioms, dependency declarations) is left to `brew audit`/`brew style`.
+The `desc` length and article rules are `brew style`'s; `TAP-4` mirrors them so they are caught without invoking `brew`. Everything finer (interpolation style, `bin`/`libexec` idioms, dependency declarations) is left to explicit `brew audit`/`brew style` checks.
 
 ## Sourcing — versioned tarball, never HEAD
 
@@ -69,7 +69,7 @@ The README carries a `## Formulae` table listing **every** formula, its descript
 | `mgit`  | Run commands across many git repos. | [tools-mgit](https://github.com/…/tools-mgit) |
 ```
 
-Every `Formula/*.rb` must appear in this table (checker `TAP-README`); a formula the table omits is an undiscoverable install.
+Every `Formula/*.rb` must appear in this table (`TAP-6`); a formula the table omits is an undiscoverable install.
 
 ## CI — brew test-bot
 
@@ -81,7 +81,7 @@ The tap opts into governance with a keyless `[ki-homebrew-tap]` table in `.ki-co
 
 ## What `brew` checks that this skill does not
 
-When `brew` is on PATH the checker runs `brew style <formula>` and `brew audit --strict <formula>` and surfaces their findings (WARN) — so the deep formula rules (dependency correctness, `bin`/`libexec` conventions, deprecated DSL, mirror/livecheck hygiene, RuboCop style) are Homebrew's to enforce, not restated here. This skill's own checks are the ones `brew` **cannot** make: that the tap has a `Formula/` dir at all, that a versioned tarball (not HEAD) is used, that the README lists the formula, and that the `[ki-homebrew-tap]` marker is present. When `brew` is absent, only the shape checks run and the deep checks are the tap's CI's job.
+The hosted audit never invokes `brew`. `TAP-7` reports `brew style <formula>` and `brew audit --strict <formula>` as explicit work for every formula, keeping external package-manager state outside a read-only audit and outside conform transactions. Those commands own the deep formula rules—dependency correctness, `bin`/`libexec` conventions, deprecated DSL, mirror/livecheck hygiene, and RuboCop style—rather than this skill restating them. This skill's local checks cover what `brew` cannot: that the tap has a `Formula/` directory, that a versioned tarball rather than HEAD is used, that the README lists the formula, and that the `[ki-homebrew-tap]` marker is present. When local Homebrew is unavailable, the tap's test-bot CI remains the backstop.
 
 [cookbook]: https://docs.brew.sh/Formula-Cookbook
 [testbot]: https://docs.brew.sh/Brew-Test-Bot
