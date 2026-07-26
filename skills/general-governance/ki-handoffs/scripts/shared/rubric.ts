@@ -34,32 +34,35 @@ export type RubricOutcomes<Result> = readonly Result[]
 
 export type RubricExecution<Context, Result> = {
   phase: RubricPhase
-  run: (context: Context) => RubricOutcomes<Result>
+  run: (context: Context) => Result
 }
 
-/** A safe mutation requested only after this item's AUDIT outcome makes it eligible. */
-export type RubricConformOutcome = {
-  /** True only when this invocation observed a persistent target change. */
-  changed: boolean
-  message: string
-  subject?: string
+export type ConformWrite = {
+  path: string
+  content: string
+  create?: boolean
 }
 
-export type RubricConformExecution<Context> = {
-  phase: RubricPhase
-  run: (context: Context) => RubricOutcomes<RubricConformOutcome>
+export type ConformCommand = {
+  program: string
+  arguments: readonly string[]
+}
+
+export type ConformProposal = {
+  writes: readonly ConformWrite[]
+  commands?: readonly ConformCommand[]
 }
 
 export type MechanicalRubric<Context> = {
   level: ViolationLevel
   overrideLevels?: readonly ViolationLevel[]
   heuristic?: boolean
-  audit: RubricExecution<Context, AuditOutcome>
+  audit: RubricExecution<Context, RubricOutcomes<AuditOutcome>>
   /**
-   * The canonical CONFORM action. The checker runs AUDIT, conditionally runs
-   * this action, then immediately runs AUDIT again before emitting a finding.
+   * The canonical CONFORM action. It changes only the operation-scoped
+   * in-memory context; the host publishes the session's final proposal.
    */
-  conform?: RubricConformExecution<Context>
+  conform?: RubricExecution<Context, void>
   /** Additional neutral outcomes that this conform action may safely address. */
   conformOn?: readonly Extract<AuditOutcomeStatus, 'INFO'>[]
 }
@@ -110,6 +113,29 @@ export type RubricDefinition<RootContext> = {
   name: string
   concern: string
   families: readonly CatalogueRubricFamily<RootContext>[]
+}
+
+export type RubricContextOptions = {
+  mode: RubricMode
+  repository: string
+  userHome: string
+  configuration: Readonly<Record<string, unknown>>
+}
+
+export type RubricSubject<RootContext> = {
+  context: () => RootContext
+  families: readonly string[]
+  subject?: string
+}
+
+export type RubricSession<RootContext> = {
+  subjects: readonly RubricSubject<RootContext>[]
+  proposal: () => ConformProposal
+}
+
+export type SkillRubricDefinition<RootContext> = RubricDefinition<RootContext> & {
+  contract: 1
+  createSession: (options: RubricContextOptions) => RubricSession<RootContext>
 }
 
 export type RubricCatalogueIssue = {

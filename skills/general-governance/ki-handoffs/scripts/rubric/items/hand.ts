@@ -1,4 +1,4 @@
-import type { AuditOutcome, RubricItem, RubricOutcomes } from '../../shared/rubric.ts'
+import type { AuditOutcome, RubricFamily, RubricItem, RubricOutcomes } from '../../shared/rubric.ts'
 import { type HandoffsRubricContext, hasDecisionsHeading, hasReadinessMarker, namesEscalate, namesLocked } from '../contexts/handoffs.ts'
 
 const VALID_TIERS = new Set(['haiku', 'sonnet', 'opus'])
@@ -12,7 +12,7 @@ const result = (status: AuditOutcome['status'], message: string, subject?: strin
   { status, message, ...(subject ? { subject } : {}) }
 ]
 
-export const HAND_1: RubricItem<HandoffsRubricContext> = {
+const HAND_1: RubricItem<HandoffsRubricContext> = {
   code: 'HAND-1',
   title: 'Semantic tier marker',
   description:
@@ -46,7 +46,7 @@ export const HAND_1: RubricItem<HandoffsRubricContext> = {
   }
 }
 
-export const HAND_2: RubricItem<HandoffsRubricContext> = {
+const HAND_2: RubricItem<HandoffsRubricContext> = {
   code: 'HAND-2',
   title: 'Decisions locked versus escalate',
   description:
@@ -82,7 +82,7 @@ export const HAND_2: RubricItem<HandoffsRubricContext> = {
   }
 }
 
-export const HAND_3: RubricItem<HandoffsRubricContext> = {
+const HAND_3: RubricItem<HandoffsRubricContext> = {
   code: 'HAND-3',
   title: 'Readiness marker',
   description:
@@ -105,11 +105,22 @@ export const HAND_3: RubricItem<HandoffsRubricContext> = {
           }))
         )
       }
+    },
+    conform: {
+      phase: 'NORMALISE',
+      run: (context: HandoffsRubricContext) => {
+        for (const artifact of context.artifacts) {
+          if (hasReadinessMarker(artifact) || !artifact.writeContent) continue
+          artifact.writeContent(
+            artifact.content.replace(artifact.frontmatterMatch, `---\n${artifact.frontmatterBlock}\nreadiness: pending\n---`)
+          )
+        }
+      }
     }
   }
 }
 
-export const HAND_4: RubricItem<HandoffsRubricContext> = {
+const HAND_4: RubricItem<HandoffsRubricContext> = {
   code: 'HAND-4',
   title: 'Locked decisions are closed',
   description:
@@ -121,7 +132,7 @@ export const HAND_4: RubricItem<HandoffsRubricContext> = {
   }
 }
 
-export const HAND_5: RubricItem<HandoffsRubricContext> = {
+const HAND_5: RubricItem<HandoffsRubricContext> = {
   code: 'HAND-5',
   title: 'Definition of done',
   description: 'each unit carries a definition-of-done that is a pass/fail acceptance test, not a goal (quality bar "Definition-of-done").',
@@ -131,7 +142,7 @@ export const HAND_5: RubricItem<HandoffsRubricContext> = {
   }
 }
 
-export const HAND_6: RubricItem<HandoffsRubricContext> = {
+const HAND_6: RubricItem<HandoffsRubricContext> = {
   code: 'HAND-6',
   title: 'Appropriate assigned tier',
   description:
@@ -143,7 +154,7 @@ export const HAND_6: RubricItem<HandoffsRubricContext> = {
   }
 }
 
-export const HAND_7: RubricItem<HandoffsRubricContext> = {
+const HAND_7: RubricItem<HandoffsRubricContext> = {
   code: 'HAND-7',
   title: 'Cold-agent readiness',
   description:
@@ -155,7 +166,7 @@ export const HAND_7: RubricItem<HandoffsRubricContext> = {
   }
 }
 
-export const HAND_8: RubricItem<HandoffsRubricContext> = {
+const HAND_8: RubricItem<HandoffsRubricContext> = {
   code: 'HAND-8',
   title: 'Tokenomics composition boundary',
   description:
@@ -167,4 +178,11 @@ export const HAND_8: RubricItem<HandoffsRubricContext> = {
   }
 }
 
-export const HAND = [HAND_1, HAND_2, HAND_3, HAND_4, HAND_5, HAND_6, HAND_7, HAND_8] as const
+export const HAND: RubricFamily<HandoffsRubricContext, HandoffsRubricContext> = {
+  code: 'HAND',
+  title: 'Handoff readiness',
+  description: 'The opt-in marker contract and delegation-readiness doctrine.',
+  standard: 'standards.md#the-opt-in-marker-contract',
+  selectContext: (context: HandoffsRubricContext) => context,
+  items: [HAND_1, HAND_2, HAND_3, HAND_4, HAND_5, HAND_6, HAND_7, HAND_8]
+}

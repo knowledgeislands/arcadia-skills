@@ -1,6 +1,6 @@
-import { existsSync, readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs'
+import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs'
 import { join, relative, resolve } from 'node:path'
-import type { ConformOutcome, RubricOutcomes } from '../../shared/rubric.ts'
+import type { ConformWrite, RubricContextOptions, RubricSession } from '../../shared/rubric.ts'
 
 const SKIP_DIRECTORIES = new Set(['node_modules', '.git', 'dist', '.ki', '.attic', '.claude'])
 
@@ -12,14 +12,19 @@ export type HandoffArtifact = {
   frontmatterMatch: string
   frontmatter: Readonly<Record<string, string>>
   body: string
+  writeContent?: (content: string) => void
 }
 
 export type HandoffsRubricContext = {
   target: string
   targetExists: boolean
-  dryRun: boolean
   artifacts: readonly HandoffArtifact[]
-  addReadinessMarker: (artifact: HandoffArtifact) => RubricOutcomes<ConformOutcome>
+}
+
+type HandoffDocument = {
+  read: () => string
+  write: (content: string) => void
+  proposal: () => ConformWrite | undefined
 }
 
 const parseFrontmatter = (block: string): Record<string, string> => {
@@ -50,8 +55,20 @@ const discoverMarkdown = (target: string): string[] => {
   return files.sort()
 }
 
-const readOptedInArtifact = (target: string, path: string): HandoffArtifact | null => {
-  const content = readFileSync(path, 'utf8')
+const createDocument = (path: string, repository: string): HandoffDocument => {
+  const original = readFileSync(path, 'utf8')
+  let working = original
+  return {
+    read: () => working,
+    write: (content) => {
+      working = content
+    },
+    proposal: () => (working === original ? undefined : { path: relative(repository, path), content: working })
+  }
+}
+
+const readOptedInArtifact = (target: string, path: string, document?: HandoffDocument): HandoffArtifact | null => {
+  const content = document?.read() ?? readFileSync(path, 'utf8')
   const match = content.match(/^---\n([\s\S]*?)\n---/)
   if (!match) return null
   const frontmatterBlock = match[1] as string
@@ -64,7 +81,8 @@ const readOptedInArtifact = (target: string, path: string): HandoffArtifact | nu
     frontmatterBlock,
     frontmatterMatch: match[0],
     frontmatter,
-    body: content.slice(match[0].length)
+    body: content.slice(match[0].length),
+    ...(document ? { writeContent: document.write } : {})
   }
 }
 
@@ -74,33 +92,29 @@ export const namesEscalate = (artifact: HandoffArtifact): boolean => /escalate/i
 export const hasReadinessMarker = (artifact: HandoffArtifact): boolean =>
   'readiness' in artifact.frontmatter || /^#{2,}\s+readiness/im.test(artifact.body) || /\[[ xX]\]\s*readiness test/i.test(artifact.body)
 
-export const createHandoffsContext = (targetArgument: string, dryRun: boolean): HandoffsRubricContext => {
-  const target = resolve(targetArgument)
+export const createHandoffsSession = ({ mode, repository }: RubricContextOptions): RubricSession<HandoffsRubricContext> => {
+  const target = resolve(repository)
   const targetExists = existsSync(target)
+  const documents = new Map<string, HandoffDocument>()
   const artifacts = targetExists
     ? discoverMarkdown(target)
-        .map((path) => readOptedInArtifact(target, path))
+        .map((path) => {
+          const document = mode === 'conform' ? createDocument(path, target) : undefined
+          const artifact = readOptedInArtifact(target, path, document)
+          if (artifact && document) documents.set(path, document)
+          return artifact
+        })
         .filter((artifact): artifact is HandoffArtifact => artifact !== null)
     : []
+  const context: HandoffsRubricContext = { target, targetExists, artifacts }
+
   return {
-    target,
-    targetExists,
-    dryRun,
-    artifacts,
-    addReadinessMarker: (artifact) => {
-      if (hasReadinessMarker(artifact)) return [{ status: 'PASS', message: 'Readiness marker is present.', subject: artifact.subject }]
-      if (!dryRun)
-        writeFileSync(
-          artifact.path,
-          artifact.content.replace(artifact.frontmatterMatch, `---\n${artifact.frontmatterBlock}\nreadiness: pending\n---`)
-        )
-      return [
-        {
-          status: 'FIXED',
-          message: `${dryRun ? 'Would add' : 'Added'} readiness: pending (the cold-agent test is not yet recorded).`,
-          subject: artifact.subject
-        }
-      ]
-    }
+    subjects: [{ families: ['HAND'], context: () => context }],
+    proposal: () => ({
+      writes: [...documents.values()].flatMap((document) => {
+        const write = document.proposal()
+        return write ? [write] : []
+      })
+    })
   }
 }

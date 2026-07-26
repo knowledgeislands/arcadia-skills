@@ -41,17 +41,17 @@ Carries the universal **AUDIT · CONFORM · EDUCATE · REFRESH**. Invoked as `he
 
 Check that handoff-opted-in artifacts are delegable. **Run the host artifact's audit first, then add this delta** — `ki-repo-roadmap` AUDIT in a non-KB repository, `ki-kb-streams` AUDIT in a KB; this skill does not re-check plan/proposal structure.
 
-The mechanical half is [`scripts/govern.ts`](scripts/govern.ts) — run `bun run ki:handoffs:audit <dir>` (default `.`). It scans for `handoff: true` artifacts and checks: `tier` present and one of the semantic values; a decisions-locked-vs-escalate section present; a readiness marker present. Its default output is canonical JSONL; add `--reporter=terminal` for the human view and `--reporter-levels=all` to include every outcome. It exits non-zero on any mechanical FAIL, and counts judgment items as unevaluated in the summary rather than emitting synthetic findings.
+Run `ki repo audit --skill ki-handoffs --repo <repo>`. The `ki` host loads this skill's structured rubric, scans the repository once for `handoff: true` artifacts, and checks that `tier` is present and semantic, the decisions section distinguishes locked from escalate, and a readiness marker is present. It exits non-zero on any mechanical FAIL and counts judgment items as unevaluated rather than manufacturing findings.
 
 Then apply the judgment half by reading, per [references/rubric.md](references/rubric.md): are the locked decisions genuinely closed (no residual reasoning), is the assigned tier appropriate to how concrete the steps are, and would the readiness test actually pass. Report FAILs first, then WARNs, then a one-line verdict.
 
 ### Mode CONFORM
 
-Fix what AUDIT found, in place: add a missing `tier`, split an open question into locked-vs-escalate, add or run the readiness marker. Touch only the handoff delta — plan/proposal structure belongs to `ki-repo-roadmap` / `ki-kb-streams`. Re-run AUDIT until clean.
+Run `ki repo conform --skill ki-handoffs --repo <repo>`. The skill may add the safe `readiness: pending` marker through its session-owned draft; assigning a tier, resolving decisions, and recording the actual readiness test remain judgment work. Touch only the handoff delta — plan/proposal structure belongs to `ki-repo-roadmap` / `ki-kb-streams`. Re-run AUDIT until clean.
 
 ### Mode EDUCATE
 
-EDUCATE scaffolds no standalone artifact — a handoff rides on an existing plan or proposal, never a document of its own. It vendors this skill's `scripts/govern.ts` entrypoint into the target's `.ki/bootstrap/` via the central bootstrap chain: [`scripts/educate.ts`](scripts/educate.ts) is a thin delegator into the `ki-bootstrap` engine.
+EDUCATE scaffolds no standalone artifact — a handoff rides on an existing plan or proposal, never a document of its own. Use `ki repo educate --skill ki-handoffs --repo <repo>` to inspect the rubric, then add `handoff: true` only to an existing host artifact that will actually be handed off.
 
 ### Mode REFRESH
 
@@ -72,4 +72,4 @@ Revisit the doctrine against practice: does the reasoning-layer split still matc
 - **Not every plan needs handoff-governance.** Opt in (`handoff: true`) only where work will actually be executed by a different, cheaper tier or a cold agent. Work the planner will execute itself needs only the host artifact's quality bar.
 - **Semantic tiers only.** The body and specs may narrate tiers as cheap / mid / top, but the `tier:` frontmatter field must itself be one of `haiku` / `sonnet` / `opus` per the opt-in marker contract — writing `tier: cheap` trips HAND-1. Concrete model ids and prices resolve at runtime through the `claude-api` skill and are never hard-coded here.
 - **The doctrine is the point, the markers are the teeth.** The markers exist so a checker can confirm a spec is delegable; the value is the reasoning-once-execute-cheap discipline they enforce.
-- Checker output and terminal rendering come from the self-contained canonical modules declared in `ki-shared-dependencies` and vendored from `ki-skills`.
+- `scripts/shared/rubric.ts` is the only vended module: it typechecks the skill-owned catalogue. Execution, reporting, publication, rollback, and re-audit belong to `ki`.

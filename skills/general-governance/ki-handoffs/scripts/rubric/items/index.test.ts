@@ -1,20 +1,17 @@
-import { expect, test } from 'bun:test'
-import { HAND, HAND_1, HAND_2, HAND_3, HAND_4, HAND_5, HAND_6, HAND_7, HAND_8 } from './hand.ts'
-import { KI_HANDOFFS_RUBRIC } from './index.ts'
+import { afterEach, expect, test } from 'bun:test'
+import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs'
+import { tmpdir } from 'node:os'
+import { join } from 'node:path'
+import catalogue from './index.ts'
 
-const items = KI_HANDOFFS_RUBRIC.families.flatMap((family) => family.items)
+const temporaryDirectories: string[] = []
+const items = catalogue.families.flatMap((family) => family.items)
+
+afterEach(() => {
+  for (const directory of temporaryDirectories.splice(0)) rmSync(directory, { recursive: true, force: true })
+})
 
 test('the structured catalogue preserves every handoff criterion', () => {
-  expect(HAND.map((item) => item.code)).toEqual([
-    HAND_1.code,
-    HAND_2.code,
-    HAND_3.code,
-    HAND_4.code,
-    HAND_5.code,
-    HAND_6.code,
-    HAND_7.code,
-    HAND_8.code
-  ])
   expect(items.map((item) => item.code)).toEqual(['HAND-1', 'HAND-2', 'HAND-3', 'HAND-4', 'HAND-5', 'HAND-6', 'HAND-7', 'HAND-8'])
   expect(Object.fromEntries(items.filter((item) => item.mechanical).map((item) => [item.code, item.mechanical?.level]))).toEqual({
     'HAND-1': 'FAIL',
@@ -46,4 +43,45 @@ test('the structured catalogue preserves every handoff criterion', () => {
   expect(items.filter((item) => item.judgment).map((item) => item.judgment?.prompt)).toEqual(
     items.filter((item) => item.judgment).map((item) => item.description)
   )
+})
+
+test('the session keeps one readiness draft and proposes it once', () => {
+  const repository = mkdtempSync(join(tmpdir(), 'ki-handoffs-'))
+  temporaryDirectories.push(repository)
+  const directory = join(repository, 'docs', 'handoffs')
+  const path = join(directory, 'example.md')
+  mkdirSync(directory, { recursive: true })
+  writeFileSync(
+    path,
+    `---
+handoff: true
+tier: opus
+---
+
+# Example
+
+## Decisions
+
+Locked: use the direct catalogue.
+
+Escalate: none.
+`
+  )
+
+  const session = catalogue.createSession({ mode: 'conform', repository, userHome: tmpdir(), configuration: {} })
+  const subject = session.subjects[0]
+  const context = subject?.context()
+  const readiness = items[2]
+
+  expect(subject?.context()).toBe(context)
+  expect(readiness?.mechanical?.audit.run(context as NonNullable<typeof context>)[0]?.status).toBe('VIOLATION')
+
+  readiness?.mechanical?.conform?.run(context as NonNullable<typeof context>)
+
+  expect(session.proposal().writes).toEqual([
+    {
+      path: 'docs/handoffs/example.md',
+      content: expect.stringContaining('readiness: pending')
+    }
+  ])
 })
