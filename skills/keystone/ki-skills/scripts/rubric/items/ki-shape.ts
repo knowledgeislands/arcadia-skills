@@ -1,5 +1,5 @@
 import type { AuditOutcome, RubricFamily, RubricItem, RubricOutcomes } from '../../shared/rubric.ts'
-import type { KiShapeRubricContext, KiSkillsRubricContext } from '../contexts/contexts.ts'
+import { type KiShapeRubricContext, type KiSkillsRubricContext, selectKiSkillsContext } from '../contexts/contexts.ts'
 
 const UNIVERSAL_VERBS = ['AUDIT', 'CONFORM', 'EDUCATE', 'REFRESH', 'HELP'] as const
 
@@ -187,9 +187,8 @@ const KI_SHAPE_11: RubricItem<KiShapeRubricContext> = {
     },
     conform: {
       phase: 'NORMALISE',
-      run: ({ skill, setArgumentHint }) => {
-        if (skill?.governanceSkill && skill.argumentHint && !skill.hintVerbs.includes('HELP'))
-          setArgumentHint?.(`${skill.argumentHint} | help`)
+      run: ({ skill, addArgumentHintVerbs }) => {
+        if (skill?.governanceSkill && skill.argumentHint && !skill.hintVerbs.includes('HELP')) addArgumentHintVerbs?.(['help'])
       }
     }
   }
@@ -219,10 +218,10 @@ const KI_SHAPE_12: RubricItem<KiShapeRubricContext> = {
     audit: { phase: 'INSPECT', run: auditKiShape12 },
     conform: {
       phase: 'PRIMARY',
-      run: ({ skill, setArgumentHint }) => {
-        if (!skill?.governanceSkill || !skill.argumentHint || !setArgumentHint) return
+      run: ({ skill, addArgumentHintVerbs }) => {
+        if (!skill?.governanceSkill || !skill.argumentHint || !addArgumentHintVerbs) return
         const missing = UNIVERSAL_VERBS.filter((verb) => !skill.hintVerbs.includes(verb))
-        if (missing.length > 0) setArgumentHint(`${skill.argumentHint} | ${missing.map((verb) => verb.toLowerCase()).join(' | ')}`)
+        if (missing.length > 0) addArgumentHintVerbs(missing.map((verb) => verb.toLowerCase()))
       }
     }
   }
@@ -420,7 +419,7 @@ export const KI_SHAPE: RubricFamily<KiSkillsRubricContext, KiShapeRubricContext>
   title: 'Knowledge Islands skill shape',
   description: 'The common shape of a Knowledge Islands governance skill.',
   standard: 'standards.md#14-knowledge-islands-skill-shape',
-  selectContext: (context: KiSkillsRubricContext) => context.shape,
+  selectContext: (context: KiSkillsRubricContext) => selectKiSkillsContext(context, 'shape'),
   items: [
     KI_SHAPE_1,
     KI_SHAPE_2,

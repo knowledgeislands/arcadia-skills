@@ -1,5 +1,5 @@
 import type { RubricFamily, RubricItem } from '../../shared/rubric.ts'
-import type { DescriptionRubricContext, KiSkillsRubricContext } from '../contexts/contexts.ts'
+import { type DescriptionRubricContext, type KiSkillsRubricContext, selectKiSkillsContext } from '../contexts/contexts.ts'
 import { containsXmlTag, stripCode } from '../contexts/text.ts'
 
 const DESCRIPTION_MAX_LENGTH = 1024
@@ -112,6 +112,6 @@ export const DESC: RubricFamily<KiSkillsRubricContext, DescriptionRubricContext>
   title: 'Frontmatter: description',
   description: 'The portable skill description contract.',
   standard: 'standards.md#5-frontmatter-description',
-  selectContext: (context: KiSkillsRubricContext) => context.description,
+  selectContext: (context: KiSkillsRubricContext) => selectKiSkillsContext(context, 'description'),
   items: [DESC_1, DESC_2, DESC_3, DESC_4, DESC_5, DESC_6, DESC_7, DESC_8, DESC_9]
 }

@@ -1,5 +1,5 @@
 import type { RubricFamily, RubricItem } from '../../shared/rubric.ts'
-import type { CollisionRubricContext, KiSkillsRubricContext } from '../contexts/contexts.ts'
+import { type CollisionRubricContext, type KiSkillsRubricContext, selectKiSkillsContext } from '../contexts/contexts.ts'
 
 const triggerPhrases = (description: string): string[] => {
   const phrases = new Set<string>()
@@ -63,6 +63,6 @@ export const COLLISION: RubricFamily<KiSkillsRubricContext, CollisionRubricConte
   title: 'Cross-skill collision',
   description: 'Selection boundaries across a set of skills.',
   standard: 'standards.md#15-cross-skill-collision',
-  selectContext: (context: KiSkillsRubricContext) => context.collision,
+  selectContext: (context: KiSkillsRubricContext) => selectKiSkillsContext(context, 'collision'),
   items: [COLL_1, COLL_2]
 }

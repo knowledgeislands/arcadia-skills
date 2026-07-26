@@ -115,7 +115,6 @@ The progressive-disclosure budget for a skill body.
   - _Review prompt:_ Does the body avoid spending tokens on knowledge a competent agent already has?
 - **SIZE-4 [J] — body is an overview that routes to detail** — `SKILL.md` reads as an **overview that routes to detail**, not all detail inlined. (BP, SPEC, CC)
   - _Review prompt:_ Does the body work as an overview that routes rarely used detail into supporting files?
-- **SIZE-5 [M] — the optional footprint report measures every loaded component** — _(INFO, advisory — not a cap.)_ The linter, under `--footprint`, emits a per-skill token estimate of each component the skill adds to context — the `description` (standing cost), the `SKILL.md` body, and each `references/` file — plus a total. Neutral measurement for **Mode OPTIMISE**, never a verdict; the body/references soft limits remain SIZE-1/SIZE-2 and the environment-wide aggregate of all descriptions is `ki-tokenomics`' `skills_surface`. (BP)
 
 ## REF — Progressive disclosure & references
 

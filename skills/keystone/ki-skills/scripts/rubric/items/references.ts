@@ -1,5 +1,5 @@
 import type { RubricFamily, RubricItem } from '../../shared/rubric.ts'
-import type { KiSkillsRubricContext, ReferencesRubricContext } from '../contexts/contexts.ts'
+import { type KiSkillsRubricContext, type ReferencesRubricContext, selectKiSkillsContext } from '../contexts/contexts.ts'
 
 const TOC_LINE_THRESHOLD = 100
 
@@ -72,6 +72,6 @@ export const REFERENCES: RubricFamily<KiSkillsRubricContext, ReferencesRubricCon
   title: 'Progressive disclosure & references',
   description: 'How a skill routes supporting detail into references.',
   standard: 'standards.md#8-progressive-disclosure',
-  selectContext: (context: KiSkillsRubricContext) => context.references,
+  selectContext: (context: KiSkillsRubricContext) => selectKiSkillsContext(context, 'references'),
   items: [REF_1, REF_2, REF_3, REF_4, REF_5]
 }

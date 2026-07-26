@@ -1,5 +1,5 @@
 import type { RubricFamily, RubricItem } from '../../shared/rubric.ts'
-import type { KiSkillsRubricContext, ScriptsRubricContext } from '../contexts/contexts.ts'
+import { type KiSkillsRubricContext, type ScriptsRubricContext, selectKiSkillsContext } from '../contexts/contexts.ts'
 
 const SCRIPT_1: RubricItem<ScriptsRubricContext> = {
   code: 'SCRIPT-1',
@@ -96,6 +96,6 @@ export const SCRIPTS: RubricFamily<KiSkillsRubricContext, ScriptsRubricContext> 
   title: 'Scripts & executable code',
   description: 'The quality and autonomy of executable skill support.',
   standard: 'standards.md#10-scripts',
-  selectContext: (context: KiSkillsRubricContext) => context.scripts,
+  selectContext: (context: KiSkillsRubricContext) => selectKiSkillsContext(context, 'scripts'),
   items: [SCRIPT_1, SCRIPT_2, SCRIPT_3, SCRIPT_4, SCRIPT_5, SCRIPT_6, SCRIPT_7, SCRIPT_8]
 }

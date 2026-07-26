@@ -1,6 +1,5 @@
-import type { FootprintRow } from './footprint.ts'
 import type { ParsedFrontmatter } from './frontmatter.ts'
-import { createRefreshContext, type RefreshContext } from './longevity.ts'
+import type { RefreshContext } from './longevity.ts'
 import { hintVerbs, isProcessSkill } from './modes.ts'
 
 export type DescriptionRubricContext = {
@@ -34,7 +33,6 @@ export type OptionalRubricContext = {
 export type SizeRubricContext = {
   bodyLines?: number
   bodyTokens?: number
-  footprint?: { total: number; rows: readonly FootprintRow[] }
 }
 
 export type ReferencesRubricContext = {
@@ -115,7 +113,7 @@ type CollisionTarget = {
 
 export type CollisionRubricContext = { targets: readonly CollisionTarget[] }
 
-export type LongevityRubricContext = RefreshContext & { reportStatus?: boolean }
+export type LongevityRubricContext = RefreshContext
 
 type CheckerContract = {
   name: string
@@ -159,7 +157,7 @@ export type KiShapeSkillContext = {
 export type KiShapeRubricContext = {
   skill: KiShapeSkillContext | null
   ownershipCollisions: readonly OwnershipCollision[]
-  setArgumentHint?: (argumentHint: string) => void
+  addArgumentHintVerbs?: (verbs: readonly string[]) => void
 }
 
 export const createKiShapeFrontmatterEvidence = ({
@@ -215,19 +213,18 @@ const emptyKiShapeSkill: KiShapeSkillContext = {
 export const createKiShapeContext = ({
   skill,
   ownershipCollisions = [],
-  setArgumentHint
+  addArgumentHintVerbs
 }: {
   skill: Partial<KiShapeSkillContext> | null
   ownershipCollisions?: readonly OwnershipCollision[]
-  setArgumentHint?: (argumentHint: string) => void
+  addArgumentHintVerbs?: (verbs: readonly string[]) => void
 }): KiShapeRubricContext => ({
   skill: skill === null ? null : { ...emptyKiShapeSkill, ...skill },
   ownershipCollisions,
-  setArgumentHint
+  addArgumentHintVerbs
 })
 
-/** Complete root context from which each rubric family selects its focused evidence. */
-export type KiSkillsRubricContext = {
+type KiSkillsRubricFacets = {
   layout: LayoutRubricContext
   frontmatter: FrontmatterRubricContext
   name: NameRubricContext
@@ -244,46 +241,15 @@ export type KiSkillsRubricContext = {
   longevity: LongevityRubricContext
 }
 
-/** Build one complete root context while keeping each family facet focused and required. */
-export const createKiSkillsRubricContext = (overrides: Partial<KiSkillsRubricContext> = {}): KiSkillsRubricContext => ({
-  layout: {},
-  frontmatter: { hasBlock: false, isMapping: false },
-  name: { name: undefined, directoryName: '', localGovernanceSource: false },
-  description: { description: undefined },
-  optional: {
-    compatibility: undefined,
-    metadataPresent: false,
-    metadata: undefined,
-    allowedToolsPresent: false,
-    allowedTools: undefined,
-    disallowedToolsPresent: false,
-    disallowedTools: undefined,
-    licensePresent: false,
-    license: undefined
-  },
-  size: {},
-  references: { lineCount: 0, content: '' },
-  scripts: { helpEvidence: [] },
-  checker: {
-    imports: [],
-    rootSkill: false,
-    declaredSharedModules: [],
-    sharedDependencies: [],
-    legacyLibPresent: false,
-    publishedSharedModules: [],
-    rubricModuleExists: false,
-    checkerModuleExists: false,
-    reporterModuleExists: false,
-    checkerReporterModuleExists: false,
-    structuredRubricRequired: false,
-    itemsIndexExists: false,
-    itemsIndexDefinesRules: false,
-    familyModules: []
-  },
-  link: { markdown: '', relativeTargetExists: () => true },
-  portability: { markdown: '', subject: '', runtimeBinding: false, attributedSourceMaterial: false },
-  shape: createKiShapeContext({ skill: null }),
-  collision: { targets: [] },
-  longevity: createRefreshContext(null),
-  ...overrides
-})
+/** A subject supplies only the evidence facets declared by its applicable families. */
+export type KiSkillsRubricContext = Partial<KiSkillsRubricFacets>
+
+/** Fail closed when subject routing does not supply a family's required evidence. */
+export const selectKiSkillsContext = <Facet extends keyof KiSkillsRubricFacets>(
+  context: KiSkillsRubricContext,
+  facet: Facet
+): KiSkillsRubricFacets[Facet] => {
+  const selected = context[facet]
+  if (selected === undefined) throw new Error(`ki-skills subject does not provide ${facet} evidence`)
+  return selected
+}

@@ -1,22 +1,7 @@
 import type { RubricFamily, RubricItem } from '../../shared/rubric.ts'
-import type { KiSkillsRubricContext, LongevityRubricContext } from '../contexts/contexts.ts'
-import type { RefreshContext } from '../contexts/longevity.ts'
+import { type KiSkillsRubricContext, type LongevityRubricContext, selectKiSkillsContext } from '../contexts/contexts.ts'
 
 const REFRESH_GRACE_DAYS = 14
-
-const refreshStatus = (context: RefreshContext): string => {
-  const status =
-    context.refreshClass === null || context.cadence === null
-      ? 'UNMARKED'
-      : context.windowDays === null
-        ? 'NO-CLOCK'
-        : context.ageDays === null || context.ageDays > context.windowDays + REFRESH_GRACE_DAYS
-          ? 'OVERDUE'
-          : context.ageDays < context.windowDays
-            ? 'WITHIN-WINDOW'
-            : 'DUE'
-  return `${context.refreshClass ?? 'unmarked'} · ${context.cadence ?? '—'} · last ${context.lastReviewed ?? '—'} · age ${context.ageDays ?? '—'}d · ${status}`
-}
 
 const LONG_1: RubricItem<unknown> = {
   code: 'LONG-1',
@@ -47,13 +32,6 @@ const LONG_3: RubricItem<LongevityRubricContext> = {
     audit: {
       phase: 'INSPECT',
       run: (context) => {
-        if (context.reportStatus)
-          return [
-            {
-              status: 'INFO',
-              message: `Refresh status: ${context.sourcesPresent ? refreshStatus(context) : 'no sources.md'}`
-            }
-          ]
         if (!context.sourcesPresent || context.cadence === null || context.windowDays === null)
           return [{ status: 'NOT_APPLICABLE', message: 'no declared refresh cadence to assess' }]
         if (context.ageDays !== null && context.ageDays <= context.windowDays + REFRESH_GRACE_DAYS)
@@ -109,6 +87,6 @@ export const LONGEVITY: RubricFamily<KiSkillsRubricContext, LongevityRubricConte
   title: 'Longevity',
   description: 'Refresh paths and cadence for knowledge that changes over time.',
   standard: 'standards.md#12-longevity',
-  selectContext: (context: KiSkillsRubricContext) => context.longevity,
+  selectContext: (context: KiSkillsRubricContext) => selectKiSkillsContext(context, 'longevity'),
   items: [LONG_1, LONG_2, LONG_3, LONG_4]
 }

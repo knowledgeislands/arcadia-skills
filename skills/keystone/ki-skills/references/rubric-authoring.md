@@ -349,7 +349,7 @@ No additional machine projection is a prerequisite for proving the root `ki-skil
 
 Rubric items receive prepared domain evidence rather than reading files, parsing frontmatter, invoking the reporter, or knowing CLI arguments.
 
-The skill's `createSession` implementation discovers subjects and exposes domain evidence through context factories. The host selects only the subjects declaring the current family code.
+The skill's `createSession` implementation discovers subjects, prepares each subject's domain evidence once, and exposes a stable context function. The host selects only the subjects declaring the current family code.
 
 Contexts are organised by audited granularity and responsibility rather than by creating one thin file for every item:
 
@@ -357,21 +357,21 @@ Contexts are organised by audited granularity and responsibility rather than by 
 - document-level evidence describes a Markdown or frontmatter document;
 - collection-level evidence describes relationships across several skills;
 - conform capabilities expose the exact safe writes an item may request; and
-- footprint or refresh evidence supports those specialised concerns without inflating every item context.
+- specialised evidence supports an active concern without inflating every item context.
 
-The root context may compose named, required facets, but a subject SHOULD NOT construct a repository-wide object full of synthetic empty defaults merely to satisfy unrelated families.
+The root context names the available facets, but each subject supplies only those required by its declared families. It MUST NOT construct a repository-wide object full of synthetic empty defaults merely to satisfy unrelated families.
 
-Dispatch passes only the relevant facet to a family; a family does not accept a repository-wide optional mega-context.
+Dispatch passes only the relevant facet to a family and fails closed when subject routing omitted it; a family does not accept a repository-wide optional mega-context.
 
 Support modules define the neutral data types they produce and never import types back from the families that consume them.
 
-Parse each immutable artifact once.
+Read and parse each immutable artifact once per session.
 
 Audit context factories are read-only.
 
 Conform retains one mutable working model and any raw form needed for faithful persistence.
 
-The host requests subject context for audit and again for an eligible conform action. A conform session returns the same operation-scoped draft capabilities so ordered actions observe earlier changes. Post-publication verification creates a new session and re-reads persistent state.
+The host may request a subject's context several times during audit and conform. The subject returns the same prepared context object and operation-scoped draft capabilities each time, so evidence is not reconstructed and ordered actions observe earlier changes. Post-publication verification creates a new session and re-reads persistent state.
 
 Name an extracted function when it exposes a domain operation, defines a useful boundary, or removes repeated error-prone mechanics.
 
@@ -384,7 +384,8 @@ The skill-owned boundary should read as a short construction sequence:
 ```text
 receive host options
   → discover domain subjects
-  → create each subject-context factory
+  → prepare each subject's focused context once
+  → expose a stable context function
   → retain operation-scoped drafts for conform
   → return subjects plus one final proposal function
 ```

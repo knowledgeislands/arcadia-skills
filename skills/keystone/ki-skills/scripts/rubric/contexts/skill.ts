@@ -1,17 +1,11 @@
 import { existsSync, readdirSync, readFileSync } from 'node:fs'
 import { basename, dirname, join, relative, resolve } from 'node:path'
-import {
-  createKiShapeContext,
-  createKiShapeFrontmatterEvidence,
-  createKiSkillsRubricContext,
-  type KiShapeSkillContext,
-  type KiSkillsRubricContext
-} from './contexts.ts'
-import { estimateTokens } from './footprint.ts'
+import { createKiShapeContext, createKiShapeFrontmatterEvidence, type KiShapeSkillContext, type KiSkillsRubricContext } from './contexts.ts'
 import { type ParsedFrontmatter, parseFrontmatter } from './frontmatter.ts'
 import { scriptHelpEvidence } from './scripts.ts'
 import { listMarkdownFiles } from './skill-files.ts'
 import { stripCode } from './text.ts'
+import { estimateTokens } from './tokens.ts'
 
 export const frontmatterList = (value: string | undefined): string[] => {
   if (!value) return []
@@ -26,11 +20,11 @@ export const frontmatterList = (value: string | undefined): string[] => {
 export type SkillWritableCapabilities = {
   readContent?: () => string
   setName?: (name: string) => void
-  setArgumentHint?: (argumentHint: string) => void
+  addArgumentHintVerbs?: (verbs: readonly string[]) => void
 }
 
-export type SkillRubricContext = {
-  context: () => KiSkillsRubricContext
+type SkillRubricContext = {
+  context: KiSkillsRubricContext
   validFrontmatter: boolean
 }
 
@@ -154,7 +148,7 @@ const endorsesRetiredExtension = (markdown: string): boolean => {
 }
 
 /** Build the complete KI shape evidence used by both AUDIT and CONFORM fallback checks. */
-export const createKiShapeEvidence = (
+const createKiShapeEvidence = (
   skillDirectory: string,
   frontmatter: ParsedFrontmatter,
   description: string,
@@ -234,86 +228,82 @@ export const createKiShapeEvidence = (
 /** Build the same complete per-skill evidence for AUDIT and CONFORM. */
 export const createSkillRubricContext = (directory: string, capabilities: SkillWritableCapabilities = {}): SkillRubricContext => {
   const readContent = capabilities.readContent ?? (() => readFileSync(join(directory, 'SKILL.md'), 'utf8'))
-  const initial = parseFrontmatter(readContent())
-  let helpEvidence: ReturnType<typeof scriptHelpEvidence> | undefined
+  const content = readContent()
+  const frontmatter = parseFrontmatter(content)
+  const validFrontmatter = frontmatter.raw !== null && frontmatter.isMapping
+  const supportDirectories = readdirSync(directory, { withFileTypes: true })
+    .filter((entry) => entry.isDirectory())
+    .map((entry) => entry.name)
+  const frontmatterContext = { hasBlock: frontmatter.raw !== null, isMapping: frontmatter.isMapping }
+
+  if (!frontmatter.isMapping) return { validFrontmatter, context: { layout: { supportDirectories }, frontmatter: frontmatterContext } }
+
+  const name = frontmatter.keys.get('name')
+  const description = frontmatter.keys.get('description')
+  const localGovernanceSource = isLocalGovernanceSource(directory)
+  const body = content.slice((content.match(/^---\r?\n[\s\S]*?\r?\n---\r?\n?/) || [''])[0].length)
+  const scriptsDirectory = join(directory, 'scripts')
+  const sharedDirectory = join(scriptsDirectory, 'shared')
+  const familyEvidence = rubricFamilyModules(scriptsDirectory)
+  const imports = listScriptFiles(scriptsDirectory).flatMap((scriptPath) =>
+    relativeImportSpecifiers(readFileSync(scriptPath, 'utf8')).map((specifier) => {
+      const resolved = resolve(dirname(scriptPath), specifier)
+      return {
+        entry: relative(scriptsDirectory, scriptPath),
+        specifier,
+        resolvesInsideScripts: resolved.startsWith(`${scriptsDirectory}/`)
+      }
+    })
+  )
 
   return {
-    validFrontmatter: initial.raw !== null && initial.isMapping,
-    context: () => {
-      const content = readContent()
-      const frontmatter = parseFrontmatter(content)
-      const supportDirectories = readdirSync(directory, { withFileTypes: true })
-        .filter((entry) => entry.isDirectory())
-        .map((entry) => entry.name)
-      const frontmatterContext = { hasBlock: frontmatter.raw !== null, isMapping: frontmatter.isMapping }
-      if (!frontmatter.isMapping) return createKiSkillsRubricContext({ layout: { supportDirectories }, frontmatter: frontmatterContext })
-
-      const name = frontmatter.keys.get('name')
-      const description = frontmatter.keys.get('description')
-      const localGovernanceSource = isLocalGovernanceSource(directory)
-      const body = content.slice((content.match(/^---\r?\n[\s\S]*?\r?\n---\r?\n?/) || [''])[0].length)
-      const scriptsDirectory = join(directory, 'scripts')
-      const sharedDirectory = join(scriptsDirectory, 'shared')
-      const familyEvidence = rubricFamilyModules(scriptsDirectory)
-      const imports = listScriptFiles(scriptsDirectory).flatMap((scriptPath) =>
-        relativeImportSpecifiers(readFileSync(scriptPath, 'utf8')).map((specifier) => {
-          const resolved = resolve(dirname(scriptPath), specifier)
-          return {
-            entry: relative(scriptsDirectory, scriptPath),
-            specifier,
-            resolvesInsideScripts: resolved.startsWith(`${scriptsDirectory}/`)
-          }
-        })
-      )
-      if (!helpEvidence) helpEvidence = scriptHelpEvidence(directory)
-
-      return createKiSkillsRubricContext({
-        layout: { supportDirectories },
-        frontmatter: frontmatterContext,
-        name: {
-          name,
-          directoryName: localGovernanceSource ? 'ki-self' : basename(directory),
-          localGovernanceSource,
-          setName: capabilities.setName
-        },
-        description: { description },
-        optional: {
-          compatibility: frontmatter.keys.get('compatibility'),
-          metadataPresent: frontmatter.present.has('metadata'),
-          metadata: frontmatter.values.metadata,
-          allowedToolsPresent: frontmatter.present.has('allowed-tools'),
-          allowedTools: frontmatter.values['allowed-tools'],
-          disallowedToolsPresent: frontmatter.present.has('disallowed-tools'),
-          disallowedTools: frontmatter.values['disallowed-tools'],
-          licensePresent: frontmatter.present.has('license'),
-          license: frontmatter.values.license
-        },
-        scripts: { helpEvidence },
-        checker: {
-          imports,
-          rootSkill: name === 'ki-skills',
-          declaredSharedModules: frontmatterList(frontmatter.keys.get('ki-shared-modules')),
-          sharedDependencies: frontmatterList(frontmatter.keys.get('ki-shared-dependencies')),
-          legacyLibPresent: existsSync(join(scriptsDirectory, 'lib')),
-          publishedSharedModules: existsSync(sharedDirectory)
-            ? readdirSync(sharedDirectory, { withFileTypes: true })
-                .filter((entry) => entry.isDirectory() || (entry.isFile() && !entry.name.endsWith('.test.ts')))
-                .map((entry) => (entry.isFile() && entry.name.endsWith('.ts') ? entry.name.slice(0, -3) : entry.name))
-                .sort()
-            : [],
-          rubricModuleExists: existsSync(join(sharedDirectory, 'rubric.ts')),
-          checkerModuleExists: existsSync(join(sharedDirectory, 'checker.ts')),
-          reporterModuleExists: existsSync(join(sharedDirectory, 'reporter.ts')),
-          checkerReporterModuleExists: existsSync(join(sharedDirectory, 'checker-reporter.ts')),
-          structuredRubricRequired: name === 'ki-skills' || frontmatter.present.has('ki-shared-dependencies'),
-          ...familyEvidence
-        },
-        shape: createKiShapeContext({
-          skill: createKiShapeEvidence(directory, frontmatter, description ?? '', body),
-          setArgumentHint: capabilities.setArgumentHint
-        }),
-        size: { bodyLines: body.split(/\r?\n/).length, bodyTokens: estimateTokens(body) }
-      })
+    validFrontmatter,
+    context: {
+      layout: { supportDirectories },
+      frontmatter: frontmatterContext,
+      name: {
+        name,
+        directoryName: localGovernanceSource ? 'ki-self' : basename(directory),
+        localGovernanceSource,
+        setName: capabilities.setName
+      },
+      description: { description },
+      optional: {
+        compatibility: frontmatter.keys.get('compatibility'),
+        metadataPresent: frontmatter.present.has('metadata'),
+        metadata: frontmatter.values.metadata,
+        allowedToolsPresent: frontmatter.present.has('allowed-tools'),
+        allowedTools: frontmatter.values['allowed-tools'],
+        disallowedToolsPresent: frontmatter.present.has('disallowed-tools'),
+        disallowedTools: frontmatter.values['disallowed-tools'],
+        licensePresent: frontmatter.present.has('license'),
+        license: frontmatter.values.license
+      },
+      scripts: { helpEvidence: scriptHelpEvidence(directory) },
+      checker: {
+        imports,
+        rootSkill: name === 'ki-skills',
+        declaredSharedModules: frontmatterList(frontmatter.keys.get('ki-shared-modules')),
+        sharedDependencies: frontmatterList(frontmatter.keys.get('ki-shared-dependencies')),
+        legacyLibPresent: existsSync(join(scriptsDirectory, 'lib')),
+        publishedSharedModules: existsSync(sharedDirectory)
+          ? readdirSync(sharedDirectory, { withFileTypes: true })
+              .filter((entry) => entry.isDirectory() || (entry.isFile() && !entry.name.endsWith('.test.ts')))
+              .map((entry) => (entry.isFile() && entry.name.endsWith('.ts') ? entry.name.slice(0, -3) : entry.name))
+              .sort()
+          : [],
+        rubricModuleExists: existsSync(join(sharedDirectory, 'rubric.ts')),
+        checkerModuleExists: existsSync(join(sharedDirectory, 'checker.ts')),
+        reporterModuleExists: existsSync(join(sharedDirectory, 'reporter.ts')),
+        checkerReporterModuleExists: existsSync(join(sharedDirectory, 'checker-reporter.ts')),
+        structuredRubricRequired: name === 'ki-skills' || frontmatter.present.has('ki-shared-dependencies'),
+        ...familyEvidence
+      },
+      shape: createKiShapeContext({
+        skill: createKiShapeEvidence(directory, frontmatter, description ?? '', body),
+        addArgumentHintVerbs: capabilities.addArgumentHintVerbs
+      }),
+      size: { bodyLines: body.split(/\r?\n/).length, bodyTokens: estimateTokens(body) }
     }
   }
 }

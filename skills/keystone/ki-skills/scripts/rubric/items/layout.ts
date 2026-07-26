@@ -1,5 +1,5 @@
 import type { RubricFamily, RubricItem } from '../../shared/rubric.ts'
-import type { KiSkillsRubricContext, LayoutRubricContext } from '../contexts/contexts.ts'
+import { type KiSkillsRubricContext, type LayoutRubricContext, selectKiSkillsContext } from '../contexts/contexts.ts'
 
 const hasBackslashLink = (markdown: string): boolean => /\[[^\]]*\]\([^)]*\\[^)]*\)/.test(markdown)
 const normaliseLinkSlashes = (markdown: string): string =>
@@ -117,6 +117,6 @@ export const LAYOUT: RubricFamily<KiSkillsRubricContext, LayoutRubricContext> = 
   title: 'File existence & layout',
   description: 'Portable skill layout and supporting-file structure.',
   standard: 'standards.md#2-layout',
-  selectContext: (context: KiSkillsRubricContext) => context.layout,
+  selectContext: (context: KiSkillsRubricContext) => selectKiSkillsContext(context, 'layout'),
   items: [LAY_1, LAY_2, LAY_3, LAY_4, LAY_5, LAY_6]
 }

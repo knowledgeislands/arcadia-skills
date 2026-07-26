@@ -4,6 +4,7 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { KI_SHAPE } from '../items/ki-shape.ts'
 import { NAME } from '../items/name.ts'
+import { selectKiSkillsContext } from './contexts.ts'
 import { createSkillRubricContext } from './skill.ts'
 
 const temporaryDirectories: string[] = []
@@ -61,11 +62,11 @@ afterEach(() => {
 })
 
 const audit = (directory: string) => {
-  const context = createSkillRubricContext(directory).context()
+  const context = createSkillRubricContext(directory).context
   return {
-    name: NAME_5.mechanical?.audit.run(context.name)[0],
-    vocabulary: KI_SHAPE_12.mechanical?.audit.run(context.shape)[0],
-    refresh: KI_SHAPE_14.mechanical?.audit.run(context.shape)[0]
+    name: NAME_5.mechanical?.audit.run(selectKiSkillsContext(context, 'name'))[0],
+    vocabulary: KI_SHAPE_12.mechanical?.audit.run(selectKiSkillsContext(context, 'shape'))[0],
+    refresh: KI_SHAPE_14.mechanical?.audit.run(selectKiSkillsContext(context, 'shape'))[0]
   }
 }
 

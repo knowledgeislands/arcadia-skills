@@ -1,5 +1,5 @@
 import type { RubricFamily, RubricItem } from '../../shared/rubric.ts'
-import type { FrontmatterRubricContext, KiSkillsRubricContext } from '../contexts/contexts.ts'
+import { type FrontmatterRubricContext, type KiSkillsRubricContext, selectKiSkillsContext } from '../contexts/contexts.ts'
 
 const FM_1: RubricItem<FrontmatterRubricContext> = {
   code: 'FM-1',
@@ -25,6 +25,6 @@ export const FRONTMATTER: RubricFamily<KiSkillsRubricContext, FrontmatterRubricC
   title: 'Frontmatter document',
   description: 'The YAML frontmatter document that identifies a skill.',
   standard: 'standards.md#3-frontmatter-document',
-  selectContext: (context: KiSkillsRubricContext) => context.frontmatter,
+  selectContext: (context: KiSkillsRubricContext) => selectKiSkillsContext(context, 'frontmatter'),
   items: [FM_1]
 }

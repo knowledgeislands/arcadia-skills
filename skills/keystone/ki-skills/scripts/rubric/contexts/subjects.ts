@@ -2,14 +2,14 @@ import { existsSync, readFileSync, statSync } from 'node:fs'
 import { basename, dirname, extname, join, relative, resolve } from 'node:path'
 import type { RubricContextOptions, RubricSession, RubricSubject } from '../../shared/rubric.ts'
 import { type ConformDocumentState, createConformDocumentState, createSkillConformState } from './conform.ts'
-import { createKiShapeContext, createKiSkillsRubricContext, type KiSkillsRubricContext } from './contexts.ts'
+import { createKiShapeContext, type KiSkillsRubricContext } from './contexts.ts'
 import { parseFrontmatter } from './frontmatter.ts'
 import { createRefreshContext } from './longevity.ts'
 import { createSkillRubricContext, frontmatterList } from './skill.ts'
 import { discoverSkillDirs, listMarkdownFiles } from './skill-files.ts'
 import { stripCode } from './text.ts'
 
-export type KiSkillsSubjectScope =
+type KiSkillsSubjectScope =
   | 'target'
   | 'invalidSkill'
   | 'skill'
@@ -20,7 +20,7 @@ export type KiSkillsSubjectScope =
   | 'collision'
   | 'ownership'
 
-export type KiSkillsSubject = RubricSubject<KiSkillsRubricContext> & {
+type KiSkillsSubject = RubricSubject<KiSkillsRubricContext> & {
   scope: KiSkillsSubjectScope
 }
 
@@ -37,10 +37,10 @@ const KI_SKILLS_SUBJECT_FAMILIES = {
   ownership: ['KI-SHAPE']
 } as const satisfies Record<KiSkillsSubjectScope, readonly string[]>
 
-const rubricSubject = (scope: KiSkillsSubjectScope, context: () => KiSkillsRubricContext, subject?: string): KiSkillsSubject => ({
+const rubricSubject = (scope: KiSkillsSubjectScope, context: KiSkillsRubricContext, subject?: string): KiSkillsSubject => ({
   scope,
   families: KI_SKILLS_SUBJECT_FAMILIES[scope],
-  context,
+  context: () => context,
   ...(subject ? { subject } : {})
 })
 
@@ -56,21 +56,19 @@ const markdownSubject = ({
   const isSkill = basename(file) === 'SKILL.md'
   const subject = relative(reportTarget, file)
   const scope = isSkill ? 'markdown' : 'reference'
+  const markdown = document?.read() ?? readFileSync(file, 'utf8')
+  const text = stripCode(markdown)
   return rubricSubject(
     scope,
-    () => {
-      const markdown = document?.read() ?? readFileSync(file, 'utf8')
-      const text = stripCode(markdown)
-      return createKiSkillsRubricContext({
-        layout: {
-          markdown: text,
-          sourceMarkdown: markdown,
-          subject,
-          ...(document ? { writeMarkdown: document.write } : {})
-        },
-        link: { markdown: text, relativeTargetExists: (target) => existsSync(resolve(dirname(file), target)) },
-        references: { lineCount: markdown.split(/\r?\n/).length, content: markdown }
-      })
+    {
+      layout: {
+        markdown: text,
+        sourceMarkdown: markdown,
+        subject,
+        ...(document ? { writeMarkdown: document.write } : {})
+      },
+      link: { markdown: text, relativeTargetExists: (target) => existsSync(resolve(dirname(file), target)) },
+      references: { lineCount: markdown.split(/\r?\n/).length, content: markdown }
     },
     subject
   )
@@ -99,19 +97,19 @@ export const createKiSkillsSession = ({ mode, repository }: RubricContextOptions
   if (existsSync(target)) {
     const stat = statSync(target)
     const discovered = discoverSkillDirs(target)
-    const context = createKiSkillsRubricContext({
+    const context: KiSkillsRubricContext = {
       layout: {
         missingSkillRoot: stat.isDirectory() && discovered.length === 0 && !existsSync(join(target, 'SKILL.md')),
         standaloneMarkdownFile: stat.isFile() && extname(target).toLowerCase() === '.md'
       }
-    })
-    subjects.push(rubricSubject('target', () => context))
+    }
+    subjects.push(rubricSubject('target', context))
   }
 
   if (skillDirectories.length === 0) {
     if (subjects.length === 0) {
-      const context = createKiSkillsRubricContext({ layout: { noSkillsFound: true } })
-      subjects.push(rubricSubject('target', () => context))
+      const context: KiSkillsRubricContext = { layout: { noSkillsFound: true } }
+      subjects.push(rubricSubject('target', context))
     }
     return { subjects, proposal: () => ({ writes: [] }) }
   }
@@ -139,15 +137,14 @@ export const createKiSkillsSession = ({ mode, repository }: RubricContextOptions
       subjects.push(
         rubricSubject(
           'portability',
-          () =>
-            createKiSkillsRubricContext({
-              portability: {
-                markdown: document?.read() ?? readFileSync(file, 'utf8'),
-                subject,
-                runtimeBinding,
-                attributedSourceMaterial: basename(file) === 'sources.md'
-              }
-            }),
+          {
+            portability: {
+              markdown: document?.read() ?? readFileSync(file, 'utf8'),
+              subject,
+              runtimeBinding,
+              attributedSourceMaterial: basename(file) === 'sources.md'
+            }
+          },
           subject
         )
       )
@@ -155,25 +152,25 @@ export const createKiSkillsSession = ({ mode, repository }: RubricContextOptions
 
     const sourcesPath = join(skillDirectory, 'references', 'sources.md')
     if (existsSync(sourcesPath)) {
-      const context = createKiSkillsRubricContext({ longevity: createRefreshContext(readFileSync(sourcesPath, 'utf8')) })
-      subjects.push(rubricSubject('longevity', () => context))
+      const context: KiSkillsRubricContext = { longevity: createRefreshContext(readFileSync(sourcesPath, 'utf8')) }
+      subjects.push(rubricSubject('longevity', context))
     }
   }
 
-  const collision = createKiSkillsRubricContext({
+  const collision: KiSkillsRubricContext = {
     collision: {
       targets: skillDirectories.map((directory) => ({
         name: basename(directory),
         description: parseFrontmatter(readFileSync(join(directory, 'SKILL.md'), 'utf8')).keys.get('description') ?? ''
       }))
     }
-  })
-  subjects.push(rubricSubject('collision', () => collision))
+  }
+  subjects.push(rubricSubject('collision', collision))
 
-  const ownership = createKiSkillsRubricContext({
+  const ownership: KiSkillsRubricContext = {
     shape: createKiShapeContext({ skill: null, ownershipCollisions: ownershipCollisions(skillDirectories) })
-  })
-  subjects.push(rubricSubject('ownership', () => ownership))
+  }
+  subjects.push(rubricSubject('ownership', ownership))
 
   return {
     subjects,

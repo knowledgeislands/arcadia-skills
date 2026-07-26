@@ -1,9 +1,8 @@
 import type { RubricFamily, RubricItem } from '../../shared/rubric.ts'
-import type { KiSkillsRubricContext, SizeRubricContext } from '../contexts/contexts.ts'
+import { type KiSkillsRubricContext, type SizeRubricContext, selectKiSkillsContext } from '../contexts/contexts.ts'
 
 const BODY_MAX_LINES = 500
 const BODY_MAX_TOKENS = 5000
-const FOOTPRINT_REFERENCE_NOTE_TOKENS = 1500
 
 const SIZE_1: RubricItem<SizeRubricContext> = {
   code: 'SIZE-1',
@@ -64,39 +63,11 @@ const SIZE_4: RubricItem<SizeRubricContext> = {
   judgment: { prompt: 'Does the body work as an overview that routes rarely used detail into supporting files?' }
 }
 
-const SIZE_5: RubricItem<SizeRubricContext> = {
-  code: 'SIZE-5',
-  title: 'the optional footprint report measures every loaded component',
-  description: `_(INFO, advisory — not a cap.)_ The linter, under \`--footprint\`, emits a per-skill token estimate of each component the skill adds to context — the \`description\` (standing cost), the \`SKILL.md\` body, and each \`references/\` file — plus a total. Neutral measurement for **Mode OPTIMISE**, never a verdict; the body/references soft limits remain SIZE-1/SIZE-2 and the environment-wide aggregate of all descriptions is \`ki-tokenomics\`' \`skills_surface\`.`,
-  sources: ['BP'],
-  mechanical: {
-    level: 'WARN',
-    audit: {
-      phase: 'INSPECT',
-      run: ({ footprint }) => {
-        if (!footprint) return [{ status: 'NOT_APPLICABLE', message: 'footprint reporting is not enabled' }]
-        const references = footprint.rows.filter((row) => row.kind === 'reference').length
-        return [
-          {
-            status: 'INFO',
-            message: `Estimated footprint is ${footprint.total} tokens across description, body, and ${references} reference file(s).`
-          },
-          ...footprint.rows.map((row) => ({
-            status: 'INFO' as const,
-            message: `Estimated ${row.kind} footprint is ${row.tokens} tokens${row.kind === 'reference' && row.tokens > FOOTPRINT_REFERENCE_NOTE_TOKENS ? '; consider splitting or trimming it' : '.'}`,
-            subject: row.path
-          }))
-        ]
-      }
-    }
-  }
-}
-
 export const SIZE: RubricFamily<KiSkillsRubricContext, SizeRubricContext> = {
   code: 'SIZE',
   title: 'Body: size & conciseness',
   description: 'The progressive-disclosure budget for a skill body.',
   standard: 'standards.md#7-size--conciseness',
-  selectContext: (context: KiSkillsRubricContext) => context.size,
-  items: [SIZE_1, SIZE_2, SIZE_3, SIZE_4, SIZE_5]
+  selectContext: (context: KiSkillsRubricContext) => selectKiSkillsContext(context, 'size'),
+  items: [SIZE_1, SIZE_2, SIZE_3, SIZE_4]
 }

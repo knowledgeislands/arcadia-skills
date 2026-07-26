@@ -1,5 +1,5 @@
 import type { RubricFamily, RubricItem } from '../../shared/rubric.ts'
-import type { KiLinkRubricContext, KiSkillsRubricContext } from '../contexts/contexts.ts'
+import { type KiLinkRubricContext, type KiSkillsRubricContext, selectKiSkillsContext } from '../contexts/contexts.ts'
 
 const relativeLinkTargets = (markdown: string): string[] => {
   const targets: string[] = []
@@ -77,6 +77,6 @@ export const KI_LINK: RubricFamily<KiSkillsRubricContext, KiLinkRubricContext> =
   title: 'Knowledge Islands linking & portability',
   description: 'Knowledge Islands link and toolchain portability.',
   standard: 'standards.md#13-knowledge-islands-linking--portability',
-  selectContext: (context: KiSkillsRubricContext) => context.link,
+  selectContext: (context: KiSkillsRubricContext) => selectKiSkillsContext(context, 'link'),
   items: [KI_LINK_1, KI_LINK_2, KI_LINK_3, KI_LINK_4]
 }
