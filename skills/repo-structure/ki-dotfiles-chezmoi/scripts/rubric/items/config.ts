@@ -1,16 +1,23 @@
-import type { RubricItem } from '../../shared/rubric.ts'
-import type { ChezmoiContext } from '../contexts/chezmoi.ts'
+import type { RubricFamily, RubricItem } from '../../shared/rubric.ts'
+import type { ChezmoiRubricContext, ReviewContext } from '../contexts/chezmoi.ts'
 
-export const CONFIG_J1: RubricItem<ChezmoiContext> = {
+const CONFIG_J1: RubricItem<ReviewContext> = {
   code: 'CONFIG-J1',
-  title: 'format-preserving editor selection',
+  title: 'Format-preserving editor selection',
   description:
     'Every Pattern A or Pattern C writer uses an appropriate format-preserving edit API with safe absent-file and invalid-input behaviour.',
-  sources: ['standards.md'],
+  sources: ['standards-chezmoi-dotfiles.md'],
   judgment: {
     prompt:
       'Do Pattern A and Pattern C writers use a format-appropriate edit API, define absent-file and path behaviour, fail closed, and demonstrate syntax preservation and idempotence?'
   }
 }
 
-export const CONFIG = [CONFIG_J1] as const
+export const CONFIG: RubricFamily<ChezmoiRubricContext, ReviewContext> = {
+  code: 'CONFIG',
+  title: 'Configuration editing',
+  description: 'Judgment criteria for format-preserving Pattern A and Pattern C editors.',
+  standard: 'standards-chezmoi-dotfiles.md',
+  selectContext: (context) => context.review,
+  items: [CONFIG_J1]
+}

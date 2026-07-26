@@ -1,33 +1,46 @@
-import type { AuditOutcome, RubricItem } from '../../shared/rubric.ts'
-import { type ChezmoiContext, hasRecognizedPrefix } from '../contexts/chezmoi.ts'
+import type { AuditOutcome, RubricFamily, RubricItem } from '../../shared/rubric.ts'
+import { type BinContext, type ChezmoiRubricContext, hasRecognisedPrefix } from '../contexts/chezmoi.ts'
 
-export const BIN_1: RubricItem<ChezmoiContext> = {
+const BIN_1: RubricItem<BinContext> = {
   code: 'BIN-1',
-  title: 'bin source-attribute prefix',
-  description: 'Every direct file in `bin/` carries a recognised chezmoi source-attribute prefix.',
-  sources: ['standards.md'],
+  title: 'Bin source-attribute prefix',
+  description: 'Every direct physical file in `bin/` carries a recognised chezmoi source-attribute prefix.',
+  sources: ['standards-chezmoi-dotfiles.md'],
   mechanical: {
     level: 'WARN',
     audit: {
       phase: 'INSPECT',
-      run: (context) => {
-        if (!context.available) return [{ status: 'NOT_APPLICABLE', message: 'target is not an existing directory' }]
-        if (context.binEntries === null) return [{ status: 'NOT_APPLICABLE', message: 'no bin/ directory in tree' }]
-        if (context.binEntries.length === 0)
-          return [{ status: 'NOT_APPLICABLE', message: 'bin/ exists but contains no direct files to check' }]
-        const outcomes: AuditOutcome[] = context.binEntries.map((entry) =>
-          hasRecognizedPrefix(entry)
-            ? { status: 'PASS', message: 'follows a recognised chezmoi source-attribute prefix', subject: `bin/${entry}` }
+      run: ({ repositoryState, entries }) => {
+        if (repositoryState !== 'physical')
+          return [{ status: 'NOT_APPLICABLE', message: 'The target repository is not safely inspectable.' }]
+        if (entries === null) return [{ status: 'NOT_APPLICABLE', message: 'No bin/ directory exists in the source tree.' }]
+        if (!entries.length) return [{ status: 'NOT_APPLICABLE', message: 'The bin/ directory contains no direct files.' }]
+        const outcomes: AuditOutcome[] = entries.map((entry) => {
+          if (!entry.physical)
+            return {
+              status: 'VIOLATION',
+              message: 'The bin source entry is not a physical regular file.',
+              subject: `bin/${entry.name}`
+            }
+          return hasRecognisedPrefix(entry.name)
+            ? { status: 'PASS', message: 'The file uses a recognised chezmoi source-attribute prefix.', subject: `bin/${entry.name}` }
             : {
                 status: 'VIOLATION',
-                message: 'no recognised chezmoi source-attribute prefix — confirm this is intentionally unmanaged',
-                subject: `bin/${entry}`
+                message: 'The file has no recognised chezmoi source-attribute prefix.',
+                subject: `bin/${entry.name}`
               }
-        )
-        return outcomes as [AuditOutcome, ...AuditOutcome[]]
+        })
+        return outcomes
       }
     }
   }
 }
 
-export const BIN = [BIN_1] as const
+export const BIN: RubricFamily<ChezmoiRubricContext, BinContext> = {
+  code: 'BIN',
+  title: 'Bin source naming',
+  description: 'Chezmoi source-attribute naming for direct bin files.',
+  standard: 'standards-chezmoi-dotfiles.md',
+  selectContext: (context) => context.bin,
+  items: [BIN_1]
+}

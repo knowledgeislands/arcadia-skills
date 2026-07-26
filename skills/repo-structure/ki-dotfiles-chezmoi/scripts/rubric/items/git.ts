@@ -1,31 +1,36 @@
-import type { RubricItem } from '../../shared/rubric.ts'
-import type { ChezmoiContext } from '../contexts/chezmoi.ts'
+import type { RubricFamily, RubricItem } from '../../shared/rubric.ts'
+import type { ChezmoiRubricContext, GitContext } from '../contexts/chezmoi.ts'
 
-export const GIT_1: RubricItem<ChezmoiContext> = {
+const GIT_1: RubricItem<GitContext> = {
   code: 'GIT-1',
   title: 'Git lock hygiene',
-  description: 'No stray `.git/*.lock` files remain in the repository.',
-  sources: ['standards.md'],
+  description: 'No stray physical `.git/*.lock` files remain in the repository.',
+  sources: ['standards-chezmoi-dotfiles.md'],
   mechanical: {
     level: 'FAIL',
     audit: {
       phase: 'INSPECT',
-      run: (context) => {
-        if (!context.available) return [{ status: 'NOT_APPLICABLE', message: 'target is not an existing directory' }]
-        if (context.strayLocks === null) return [{ status: 'NOT_APPLICABLE', message: 'no .git directory — not a git repo' }]
-        if (context.strayLocks.length === 0) return [{ status: 'PASS', message: 'no stray .git/*.lock files' }]
-        const violations = context.strayLocks.map((lock) => ({
-          status: 'VIOLATION' as const,
-          message: `stray git lock file present: ${lock}`,
-          subject: lock
-        }))
-        return violations as [
-          { status: 'VIOLATION'; message: string; subject: string },
-          ...{ status: 'VIOLATION'; message: string; subject: string }[]
-        ]
+      run: ({ repositoryState, locks }) => {
+        if (repositoryState !== 'physical')
+          return [{ status: 'NOT_APPLICABLE', message: 'The target repository is not safely inspectable.' }]
+        if (locks === null) return [{ status: 'NOT_APPLICABLE', message: 'No physical .git directory exists.' }]
+        return locks.length
+          ? locks.map((lock) => ({
+              status: 'VIOLATION' as const,
+              message: 'A stray Git lock file is present.',
+              subject: lock
+            }))
+          : [{ status: 'PASS', message: 'No stray physical Git lock files are present.' }]
       }
     }
   }
 }
 
-export const GIT = [GIT_1] as const
+export const GIT: RubricFamily<ChezmoiRubricContext, GitContext> = {
+  code: 'GIT',
+  title: 'Git hygiene',
+  description: 'Stray lock files that block Git operations.',
+  standard: 'standards-chezmoi-dotfiles.md',
+  selectContext: (context) => context.git,
+  items: [GIT_1]
+}

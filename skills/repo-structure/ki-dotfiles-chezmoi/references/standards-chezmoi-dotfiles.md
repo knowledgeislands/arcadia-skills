@@ -1,6 +1,6 @@
-# The chezmoi dotfiles-management standard
+# Chezmoi dotfiles-management standard
 
-The rationale behind [the audit rubric](rubric.md) and its native [rubric contract](../scripts/rubric/index.ts). Grounded in chezmoi's own documented behavior plus one anonymized real-repo case study — see [sources](sources.md) for provenance and the honesty note on what's tool-behavior versus house convention.
+The rationale behind [the generated rubric](rubric.md) and its structured catalogue. Grounded in chezmoi's own documented behavior plus one anonymized real-repo case study — see [sources](sources.md) for provenance and the honesty note on what's tool behavior versus house convention.
 
 ## Contents
 
@@ -12,7 +12,7 @@ The rationale behind [the audit rubric](rubric.md) and its native [rubric contra
   - [Native fragment-binding contract](#native-fragment-binding-contract)
   - [Selecting a surgical config editor](#selecting-a-surgical-config-editor)
 - [Single-source, multi-target config templating](#single-source-multi-target-config-templating)
-- [CLAUDE.md / agent-instruction layering](#claudemd--agent-instruction-layering)
+- [Agent-instruction layering](#agent-instruction-layering)
 - [OS/tooling gotchas](#ostooling-gotchas)
 - [Git & audit hygiene](#git--audit-hygiene)
 - [Repo-shape expectations](#repo-shape-expectations-additive-to-generic-repo-standard-checks)
@@ -34,7 +34,7 @@ Prefixes stack in source-name order, e.g. `executable_dot_bash/private_secrets.t
 
 **`chezmoi doctor/status/managed/unmanaged`** is the standard health-check workflow: `doctor` runs chezmoi's own built-in diagnostics, `status` shows pending apply drift, `managed`/`unmanaged` diff the source tree against `$HOME` to catch files that should (or shouldn't) be tracked — run this periodically, not just once at repo setup.
 
-**`.chezmoiignore` negation-through-ignored-parents**: unlike strict `.gitignore` semantics, a `!`-negation line in `.chezmoiignore` matches through a broadly-ignored parent directory without needing an intermediate un-ignore of that parent — `dir/*/*` then `!dir/*/specific-file` un-ignores `specific-file` under any immediate child of `dir/`, with no `!dir/*/` line needed in between.
+**`.chezmoiignore` negation-through-ignored-parents**: unlike strict `.gitignore` semantics, a `!`-negation line in `.chezmoiignore` matches through a broadly ignored parent directory without needing an intermediate un-ignore of that parent — `dir/*/*` then `!dir/*/specific-file` un-ignores `specific-file` under any immediate child of `dir/`, with no `!dir/*/` line needed in between.
 
 ## Edit discipline
 
@@ -98,16 +98,16 @@ Every Pattern A or Pattern C writer defines what happens when the file, parent o
 
 When several distinct targets (client apps, environments, hosts) each need their own rendering of essentially the same list of items, keep **one** structured data file (e.g. a `.chezmoidata/*.yaml`) as the single source of truth, and a **shared** Go-template partial (under `.chezmoitemplates/`) that renders each item into its per-target fragment, filtered by which item applies to which target (e.g. a `targets:` field on each entry). This is a general "N-item source → M rendered targets via one shared partial" shape — invoke the same partial from every place a target's config gets assembled, including a Pattern A script, Pattern B template, or Pattern C `modify_` source, so the rendering logic never forks between call sites.
 
-## CLAUDE.md / agent-instruction layering
+## Agent-instruction layering
 
 Two layers, and the decision rule for which one a piece of guidance belongs in:
 
-- **Layer 1 — repo-local.** A thin root index file (`CLAUDE.md`) that imports one topic file per concern. Extend it by appending to an existing topic file, or by adding a new topic file plus one import line — never by growing the root index itself.
-- **Layer 2 — user-level.** A `private_`-prefixed, `dot_`-targeted file that chezmoi renders to the user's global agent-config location, applying across every repo and session on that machine, and syncing via the normal `chezmoi update`/`apply` flow.
+- **Layer 1 — repository-local.** A thin root index file that imports one topic file per concern. Extend it by appending to an existing topic file, or by adding a new topic file plus one import line — never by growing the root index itself.
+- **Layer 2 — user-level.** A `private_`-prefixed, `dot_`-targeted file that chezmoi renders to the user's global agent-config location, applying across every repository and session on that machine, and syncing via the normal `chezmoi update`/`apply` flow.
 
-**Decision rule**: repo-specific guidance → Layer 1. A personal preference that holds across every project → Layer 2. A fact about the user themselves (their role, their working style) → a persistent-memory mechanism, not either CLAUDE.md layer — CLAUDE.md is instructions, memory is facts.
+**Decision rule**: repository-specific guidance → Layer 1. A personal preference that holds across every project → Layer 2. A fact about the user themselves (their role, their working style) → a persistent-memory mechanism, not either instruction layer.
 
-This is a _repo-local-vs-user-level_ split — a different axis from `ki-repo`'s runtime-neutral-vs-runtime-binding split (a literal root `AGENTS.md` plus a thin runtime adapter that imports it; see [its standard](../../../keystone/ki-repo/references/standards.md#layer-1--repo-files)). A chezmoi repo commonly runs both at once: this skill's Layer 1/Layer 2 for _where_ a piece of guidance lives, `ki-repo`'s split for _which file_ carries the runtime-neutral orientation within Layer 1.
+This is a _repository-local-vs-user-level_ split — a different axis from the runtime-neutral-vs-runtime-binding split owned by `ki-repo`. A chezmoi repository commonly uses both: this skill decides _where_ guidance lives, while `ki-repo` decides _which file_ carries runtime-neutral orientation within Layer 1.
 
 ## OS/tooling gotchas
 
@@ -117,12 +117,12 @@ This is a _repo-local-vs-user-level_ split — a different axis from `ki-repo`'s
 ## Git & audit hygiene
 
 - Don't leave stray git lock files (`.git/index.lock`, `.git/HEAD.lock`, `.git/config.lock`, `.git/refs/**/*.lock`, `.git/packed-refs.lock`) behind — they block all subsequent git operations until manually removed. Don't kill git commands mid-flight; don't run multiple write-mode git commands in parallel (read-only commands — `status`, `log`, `diff`, `show`, `rev-parse` — are safe to parallelize). Verify with `find .git -name '*.lock'` before finishing a session of git activity.
-- **Audit via skills, not hand-rolled shell.** Prefer a dedicated audit skill/script over retyping the same shell loop each time — it's cheaper and less error-prone than re-deriving the check from scratch every session.
+- **Audit via skills, not hand-rolled shell.** Prefer a dedicated audit skill over retyping the same shell loop each time — it's cheaper and less error-prone than re-deriving the check from scratch every session.
 - **Report-then-confirm etiquette.** When auditing, link to the file, state the problem in one line, present options rather than silently applying a single fix, and wait for confirmation before changing anything.
 
 ## Repo-shape expectations (additive to generic repo-standard checks)
 
 This is _additive_ to a generic repo standard's file-presence checks (README/LICENSE/.gitignore etc.), not a restatement of them:
 
-- `.chezmoiignore` is expected to exist in any chezmoi source repo.
-- `.chezmoidata/` and/or `.chezmoitemplates/` are expected to exist whenever the tree contains any `.tmpl` files — a repo using Go templating without either directory is a sign templating is being done ad hoc rather than through the shared-data/shared-partial shape above.
+- `.chezmoiignore` is expected to exist as a physical regular file in any chezmoi source repository. CONFORM may create it only when the path is absent; it never replaces an existing file or unsafe path.
+- `.chezmoidata/` and/or `.chezmoitemplates/` are expected to exist as physical directories whenever the tree contains any physical `.tmpl` files.

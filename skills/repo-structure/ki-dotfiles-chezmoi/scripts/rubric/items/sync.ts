@@ -1,12 +1,19 @@
-import type { RubricItem } from '../../shared/rubric.ts'
-import type { ChezmoiContext } from '../contexts/chezmoi.ts'
+import type { RubricFamily, RubricItem } from '../../shared/rubric.ts'
+import type { ChezmoiRubricContext, ReviewContext } from '../contexts/chezmoi.ts'
 
-export const SYNC_1: RubricItem<ChezmoiContext> = {
+const SYNC_1: RubricItem<ReviewContext> = {
   code: 'SYNC-1',
-  title: 'standard and rubric synchronisation',
+  title: 'Standard and rubric synchronisation',
   description: 'The standard, structured rubric, and mechanical behaviour remain aligned when the standard changes.',
-  sources: ['standards.md'],
+  sources: ['standards-chezmoi-dotfiles.md'],
   judgment: { prompt: 'Do the standard, structured rubric items, and mechanical behaviour still agree?' }
 }
 
-export const SYNC = [SYNC_1] as const
+export const SYNC: RubricFamily<ChezmoiRubricContext, ReviewContext> = {
+  code: 'SYNC',
+  title: 'Standard synchronisation',
+  description: 'Judgment criteria for keeping the standard and implementation aligned.',
+  standard: 'standards-chezmoi-dotfiles.md',
+  selectContext: (context) => context.review,
+  items: [SYNC_1]
+}

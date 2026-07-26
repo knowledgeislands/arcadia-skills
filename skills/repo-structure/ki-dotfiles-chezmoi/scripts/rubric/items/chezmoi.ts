@@ -1,64 +1,90 @@
-import type { RubricItem } from '../../shared/rubric.ts'
-import type { ChezmoiContext } from '../contexts/chezmoi.ts'
+import type { RubricFamily, RubricItem } from '../../shared/rubric.ts'
+import type { ChezmoiRubricContext, ChezmoiShapeContext } from '../contexts/chezmoi.ts'
 
-export const CHEZMOI_1: RubricItem<ChezmoiContext> = {
+const STANDARD = ['standards-chezmoi-dotfiles.md'] as const
+
+const CHEZMOI_1: RubricItem<ChezmoiShapeContext> = {
   code: 'CHEZMOI-1',
-  title: 'managed ignore file',
-  description: '`.chezmoiignore` exists at the repository root.',
-  sources: ['standards.md'],
+  title: 'Managed ignore file',
+  description: 'A physical `.chezmoiignore` exists at the repository root.',
+  sources: STANDARD,
   mechanical: {
     level: 'FAIL',
     audit: {
       phase: 'INSPECT',
-      run: (context) =>
-        !context.available
-          ? [{ status: 'VIOLATION', message: 'audit target is not an existing directory', subject: context.target }]
-          : context.hasIgnore
-            ? [{ status: 'PASS', message: 'managed ignore file is present', subject: '.chezmoiignore' }]
-            : [
-                {
-                  status: 'VIOLATION',
-                  message: 'managed ignore file is missing — run CONFORM to scaffold an empty one',
-                  subject: '.chezmoiignore'
-                }
-              ]
+      run: ({ repository, repositoryState, ignoreState }) => {
+        if (repositoryState === 'absent') return [{ status: 'VIOLATION', message: 'The audit target does not exist.', subject: repository }]
+        if (repositoryState === 'unsafe')
+          return [{ status: 'VIOLATION', message: 'The audit target is not a physical directory.', subject: repository }]
+        if (ignoreState === 'physical')
+          return [{ status: 'PASS', message: 'The managed ignore file is present.', subject: '.chezmoiignore' }]
+        if (ignoreState === 'unsafe')
+          return [
+            {
+              status: 'VIOLATION',
+              message: 'The managed ignore path is not a physical regular file and will not be replaced.',
+              subject: '.chezmoiignore'
+            }
+          ]
+        return [
+          {
+            status: 'VIOLATION',
+            message: 'The managed ignore file is missing; CONFORM can explicitly create it.',
+            subject: '.chezmoiignore'
+          }
+        ]
+      }
+    },
+    conform: {
+      phase: 'PRIMARY',
+      run: ({ requestIgnoreCreate }) => {
+        requestIgnoreCreate?.()
+      }
     }
   }
 }
 
-export const CHEZMOI_2: RubricItem<ChezmoiContext> = {
+const CHEZMOI_2: RubricItem<ChezmoiShapeContext> = {
   code: 'CHEZMOI-2',
-  title: 'template support directory',
-  description: 'When `*.tmpl` files exist, `.chezmoidata/` or `.chezmoitemplates/` also exists.',
-  sources: ['standards.md'],
+  title: 'Template support directory',
+  description: 'When `*.tmpl` files exist, a physical `.chezmoidata/` or `.chezmoitemplates/` also exists.',
+  sources: STANDARD,
   mechanical: {
     level: 'WARN',
     audit: {
       phase: 'INSPECT',
-      run: (context) =>
-        !context.available
-          ? [{ status: 'NOT_APPLICABLE', message: 'target is not an existing directory' }]
-          : !context.hasTemplateFiles
-            ? [{ status: 'NOT_APPLICABLE', message: 'no .tmpl files in tree — template support check not applicable' }]
-            : context.hasTemplateSupport
-              ? [{ status: 'PASS', message: '.chezmoidata/ or .chezmoitemplates/ present alongside .tmpl files' }]
-              : [
-                  {
-                    status: 'VIOLATION',
-                    message: '.tmpl files exist but neither .chezmoidata/ nor .chezmoitemplates/ is present',
-                    subject: '.chezmoidata/ or .chezmoitemplates/'
-                  }
-                ]
+      run: ({ repositoryState, hasTemplateFiles, hasTemplateSupport }) => {
+        if (repositoryState !== 'physical')
+          return [{ status: 'NOT_APPLICABLE', message: 'The target repository is not safely inspectable.' }]
+        if (!hasTemplateFiles)
+          return [{ status: 'NOT_APPLICABLE', message: 'No template files exist, so support directories are not required.' }]
+        return hasTemplateSupport
+          ? [{ status: 'PASS', message: 'Template support is present alongside template files.' }]
+          : [
+              {
+                status: 'VIOLATION',
+                message: 'Template files exist but neither .chezmoidata/ nor .chezmoitemplates/ is a physical directory.',
+                subject: '.chezmoidata/ or .chezmoitemplates/'
+              }
+            ]
+      }
     }
   }
 }
 
-export const CHEZMOI_J1: RubricItem<ChezmoiContext> = {
+const CHEZMOI_J1: RubricItem<ChezmoiShapeContext> = {
   code: 'CHEZMOI-J1',
-  title: 'chezmoiignore negation intent',
+  title: 'Chezmoiignore negation intent',
   description: 'A `.chezmoiignore` negation is deliberate and documented rather than accidentally broad.',
-  sources: ['standards.md'],
+  sources: STANDARD,
   judgment: { prompt: 'Are `.chezmoiignore` negations deliberate, documented exceptions to broad ignores?' }
 }
 
-export const CHEZMOI = [CHEZMOI_1, CHEZMOI_2, CHEZMOI_J1] as const
+export const CHEZMOI: RubricFamily<ChezmoiRubricContext, ChezmoiShapeContext> = {
+  code: 'CHEZMOI',
+  title: 'Chezmoi repository shape',
+  description: 'Required repository-shape files and template support.',
+  standard: 'standards-chezmoi-dotfiles.md',
+  selectContext: (context) => context.shape,
+  items: [CHEZMOI_1, CHEZMOI_2, CHEZMOI_J1]
+}

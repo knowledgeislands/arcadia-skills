@@ -9,11 +9,13 @@ argument-hint: 'audit <repo> | conform <repo> | help | educate <repo> | refresh'
 
 # The chezmoi dotfiles-management standard
 
-You are applying the **chezmoi dotfiles-management standard** — house conventions for structuring and operating a [chezmoi](https://www.chezmoi.io/) source-state repository, on top of what chezmoi itself already enforces. A **chezmoi-managed repo** is any git repository that is chezmoi's source directory: detect it by the presence of `.chezmoiroot`, `.chezmoi.toml.tmpl`, a `.chezmoidata/` directory, or any `dot_*`/`private_*`/`executable_*`-prefixed file at the tree root. The rationale lives in [the standard](references/standards.md); the line-by-line checkable criteria (mechanical vs judgment) are in [the rubric](references/rubric.md); where the standard's claims come from is in [the sources list](references/sources.md).
+You are applying the **chezmoi dotfiles-management standard** — house conventions for structuring and operating a [chezmoi](https://www.chezmoi.io/) source-state repository, on top of what chezmoi itself already enforces. A **chezmoi-managed repo** is any git repository that is chezmoi's source directory: detect it by the presence of `.chezmoiroot`, `.chezmoi.toml.tmpl`, a `.chezmoidata/` directory, or any `dot_*`/`private_*`/`executable_*`-prefixed file at the tree root. The rationale lives in [the standard](references/standards-chezmoi-dotfiles.md); the line-by-line checkable criteria are in [the generated rubric](references/rubric.md); where the standard's claims come from is in [the sources list](references/sources.md).
 
 This is a **standard, repo- and application-agnostic governance skill** — it hard-codes no specific dotfiles content and assumes no particular set of managed applications. It names general-purpose format editors where a reusable default is justified; a repo's exact scripts and package choices remain local. Install it in any chezmoi source repo. How it sits alongside the other skills in this repository is documented once in the `ki-agentic-harness` `README.md`, not repeated here.
 
 **Origin note:** this standard was reverse-engineered from a single real chezmoi repo (a personal dotfiles source tree audited 2026-07-12) — it is an n=1 case study, not a corpus of many repos the way `ki-repo`'s standard was. Treat the mechanical criteria as solid (they check chezmoi's own documented tool behavior) but the judgment criteria as provisional until more repos have been audited against this skill — see [the sources list](references/sources.md) for the honest scoping.
+
+No `exemplars.md` is bundled yet: the single source repo is evidence for provisional house conventions, not a sufficiently broad set of representative outcomes. Add exemplars only after the patterns recur across independently reviewed chezmoi repositories.
 
 ## The standard at a glance
 
@@ -29,23 +31,27 @@ This is a **standard, repo- and application-agnostic governance skill** — it h
 
 ## Operating modes
 
-Like every governance skill it carries the universal **AUDIT · CONFORM · EDUCATE · REFRESH**. Invoked as `help` / `-h` / `?`, it explains itself and stops — the generated HELP block (name, purpose, invocation, modes, off-ramps), taking no action. With no mode it does the same, then, in an interactive session only, offers the mode choice via `AskUserQuestion`, prompting for the target path the chosen mode's `argument-hint` shows.
+Like every governance skill it carries the universal **AUDIT · CONFORM · EDUCATE · REFRESH**.
+
+### Mode HELP — orient without changing anything
+
+Invoked as `help` / `-h` / `?`, it explains itself and stops: name, purpose, invocation, modes, and off-ramps, taking no action. With no mode it does the same, then, in an interactive session only, offers the mode choice and prompts for the target path the chosen mode requires.
 
 ### Mode AUDIT — check a chezmoi repo against the standard
 
-1. **Run the mechanical checker** — `ki repo audit <repo-path> --skill ki-dotfiles-chezmoi`. It checks the four **[M]** criteria in [the rubric](references/rubric.md) (`.chezmoiignore` presence, `.chezmoidata`/`.chezmoitemplates` presence when `.tmpl` files exist, `bin/` executable-prefix conformance, git lock-file hygiene). The result also records the unevaluated **[J]** criteria, which a reader must apply separately. Exit code is non-zero on any FAIL.
+1. **Run the hosted rubric** — `ki repo audit --repo <repo-path> --skill ki-dotfiles-chezmoi`. It checks the four **[M]** criteria in [the rubric](references/rubric.md) (a physical `.chezmoiignore`, template support when `.tmpl` files exist, `bin/` source-prefix conformance, and physical Git lock-file hygiene). The result also counts the unevaluated **[J]** criteria, which a reader must apply separately. Exit code is non-zero on any FAIL.
 2. Apply the **judgment** (`[J]`) criteria named in [the rubric](references/rubric.md) — Pattern A/B correctness for a given app config, format-preserving editor selection and evidence for every surgical writer, CLAUDE.md Layer 1/2 placement quality, `.chezmoiignore` negation intent, and whether audit-reporting etiquette was actually followed.
 3. **Report** by location → criterion → fix; lead with FAIL findings, then judgment findings; present options, don't silently fix.
 
 ### Mode CONFORM — bring a repo into house shape
 
-1. `ki repo conform <repo-path> --skill ki-dotfiles-chezmoi` scaffolds `.chezmoiignore` if it's missing — the one criterion with no legitimate reason to be absent and no per-repo content to preserve.
-2. Everything else in the standard is judgment-driven and is **not** auto-fixed: restructuring shell config into the loader pattern, choosing Pattern A vs B for a given app config, selecting and proving a format-preserving surgical editor, moving CLAUDE.md content between layers, and so on are manual procedures — CONFORM prints them as TODOs (see [the rubric](references/rubric.md)'s `[J]` list) rather than guessing.
-3. Re-audit until `ki repo audit <repo-path> --skill ki-dotfiles-chezmoi` is clean and the judgment criteria are satisfied.
+1. `ki repo conform --repo <repo-path> --skill ki-dotfiles-chezmoi` explicitly creates `.chezmoiignore` only when the path is absent. The host publishes one create-only proposal; an existing file, directory, or symlink is never replaced.
+2. Everything else in the standard remains report-only: restructuring shell config, choosing Pattern A/B/C, selecting and proving a format-preserving editor, moving agent guidance between layers, renaming source files, deleting locks, and running chezmoi all require repository-specific intent.
+3. Re-audit until `ki repo audit --repo <repo-path> --skill ki-dotfiles-chezmoi` is clean and the judgment criteria are satisfied.
 
 ### Mode EDUCATE — add the capability to a target repo
 
-Run `ki skill repo add ki-dotfiles-chezmoi --repo <target>` to link this capability and declare it in the target's `.ki-config.toml`. The KI CLI owns capability activation and native execution; this skill supplies only the standard and rubric contract.
+Run `ki repo educate --skill ki-dotfiles-chezmoi --repo <target>` to explain the standard and its mechanical footprint after the capability is declared. Repository activation remains owned by the KI CLI; this skill supplies the standard and rubric contract.
 
 ### Mode REFRESH — re-anchor the standard to its sources
 
@@ -54,7 +60,7 @@ Run `ki skill repo add ki-dotfiles-chezmoi --repo <target>` to link this capabil
 chezmoi's own documented behavior (naming semantics, `.chezmoiignore`, `run_onchange_` scripts, health-check commands) and the selected format editors' documented APIs are the authoritative tool-behavior layer; the house-convention layer on top of them (shell-loader pattern, the two app-mutated-config patterns, editor-selection and verification policy, the templating pattern) is this skill's own judgment and should be re-anchored as tools change and more repos are audited against it. Run on the declared cadence (see [the sources list](references/sources.md)), or when asked "is the chezmoi standard current".
 
 1. **Read [the source list](references/sources.md)** — each tracked source with its `last reviewed` date.
-2. **Re-fetch each** (WebFetch; fall back to WebSearch if a host is blocked or returns non-200) and diff against [the standard](references/standards.md): changed chezmoi naming/templating behavior, a new `run_onchange_` capability, a changed format-editor preservation contract, or a pattern this standard has not captured yet.
+2. **Re-fetch each** (WebFetch; fall back to WebSearch if a host is blocked or returns non-200) and diff against [the standard](references/standards-chezmoi-dotfiles.md): changed chezmoi naming/templating behavior, a new `run_onchange_` capability, a changed format-editor preservation contract, or a pattern this standard has not captured yet.
 3. **Propose a diff** to the standard and rubric; confirm before writing.
 4. **Update [the source list](references/sources.md)** — bump each `last reviewed` date and refresh the `## Last review` block. What changed goes in the commit, not a changelog.
 
