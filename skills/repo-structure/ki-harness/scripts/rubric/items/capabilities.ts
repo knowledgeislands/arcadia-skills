@@ -1,16 +1,25 @@
-const CAPABILITY_ITEMS = [
-  {
-    code: 'CAP-1',
-    title: 'Capability inventory and boundaries',
-    description:
-      'Each populated harness shelf makes its typed capabilities discoverable and routes their content and runtime semantics to the owning kind standard.',
-    sources: ['standards.md#capability-publication'],
-    judgment: {
-      prompt:
-        'Review each populated shelf: are its capabilities discoverable as a typed harness inventory, and are kind-specific semantics delegated to the appropriate standard?'
-    }
-  }
-] as const
+import type { RubricFamily, RubricItem } from '../../shared/rubric.ts'
+import type { HarnessReviewContext, HarnessRubricContext } from '../contexts/harness.ts'
 
-export const CAP_1 = CAPABILITY_ITEMS[0]
-export const CAPABILITIES = [CAP_1] as const
+const STANDARD = ['standards-compatible-harness.md#capability-publication'] as const
+
+const CAP_1: RubricItem<HarnessReviewContext> = {
+  code: 'CAP-1',
+  title: 'Capability inventory and boundaries',
+  description:
+    'Each populated harness shelf makes its typed capabilities discoverable and routes their content and runtime semantics to the owning kind standard.',
+  sources: STANDARD,
+  judgment: {
+    prompt:
+      'Review each populated shelf: are its capabilities discoverable through the compatible payload, and are kind-specific semantics delegated to the appropriate standard?'
+  }
+}
+
+export const CAP: RubricFamily<HarnessRubricContext, HarnessReviewContext> = {
+  code: 'CAP',
+  title: 'Capability publication',
+  description: 'Typed compatible-harness capability inventory and kind-specific boundaries.',
+  standard: 'standards-compatible-harness.md',
+  selectContext: (context) => context.review,
+  items: [CAP_1]
+}
