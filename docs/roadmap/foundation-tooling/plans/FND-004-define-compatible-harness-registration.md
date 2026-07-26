@@ -11,7 +11,7 @@ blocked-by: —
 
 Knowledge Islands is replacing repository-vendored runners with native `ki` operations, but the earlier one-installed-collection design is no longer the current direction.
 
-`ki` must always include the base `knowledgeislands/ki-agentic-harness` and support additional compatible harnesses, such as an organisation harness, from an XDG-managed user registry.
+`ki` installs the canonical `knowledgeislands/ki-agentic-harness` during bootstrap; it is never uninstallable. It may also support additional compatible harnesses, such as an organisation harness, from an XDG-managed user registry.
 
 The harness owns compatible capability semantics and skill-specific rubrics; `tools-ki` owns the CLI platform, public grammar, and generic governed-rubric runtime; KI Specifications owns portable contracts; and the Website owns public user-guide prose.
 
