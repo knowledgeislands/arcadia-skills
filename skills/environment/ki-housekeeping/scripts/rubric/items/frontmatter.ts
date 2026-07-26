@@ -1,150 +1,75 @@
-import type { AuditOutcome, RubricOutcomes } from '../../shared/rubric.ts'
-import { type HousekeepingRubricContext, VALID_TYPES } from '../contexts/housekeeping.ts'
+import type { RubricFamily, RubricItem } from '../../shared/rubric.ts'
+import type { HousekeepingFrontmatterContext, HousekeepingRubricContext } from '../contexts/housekeeping.ts'
 
-const one = <Result>(outcome: Result): RubricOutcomes<Result> => [outcome]
+const SOURCE = 'standards-auto-memory.md'
 
-const FRONTMATTER_ITEMS = [
-  {
-    code: 'FM-1',
-    title: 'Frontmatter is present',
-    description: 'Frontmatter block (`---` delimited) is present at the top of every `memory/*.md` file. Missing is a FAIL.',
-    sources: ['memory-format.md'],
-    mechanical: {
-      level: 'FAIL' as const,
-      audit: {
-        phase: 'INSPECT' as const,
-        run: (c: HousekeepingRubricContext) =>
-          c.memoryFiles.length
-            ? (c.memoryFiles.map((file) => ({
-                status: file.frontmatter ? ('PASS' as const) : ('VIOLATION' as const),
-                message: file.frontmatter ? 'frontmatter block found' : 'no frontmatter block found',
-                subject: file.file
-              })) as unknown as RubricOutcomes<AuditOutcome>)
-            : one({ status: 'NOT_APPLICABLE', message: 'No memory files to inspect.', subject: c.memoryDir })
-      }
-    }
-  },
-  {
-    code: 'FM-2',
-    title: 'Frontmatter name matches filename',
-    description: '`name` field is present and matches the filename (minus `.md`), kebab-case. Mismatch is a FAIL.',
-    sources: ['memory-format.md'],
-    mechanical: {
-      level: 'FAIL' as const,
-      audit: {
-        phase: 'INSPECT' as const,
-        run: (c: HousekeepingRubricContext) =>
-          c.memoryFiles.length
-            ? (c.memoryFiles.map((file) => {
-                const expected = file.file.replace(/\.md$/, '')
-                const name = file.frontmatter?.name
-                return {
-                  status: typeof name === 'string' && name === expected ? ('PASS' as const) : ('VIOLATION' as const),
-                  message: typeof name !== 'string' ? 'missing name field' : `name '${name}' does not match filename slug '${expected}'`,
-                  subject: file.file
-                }
-              }) as unknown as RubricOutcomes<AuditOutcome>)
-            : one({ status: 'NOT_APPLICABLE', message: 'No memory files to inspect.', subject: c.memoryDir })
-      }
-    }
-  },
-  {
-    code: 'FM-3',
-    title: 'Frontmatter description is present',
-    description: '`description` field is present and non-empty. Missing is a FAIL.',
-    sources: ['memory-format.md'],
-    mechanical: {
-      level: 'FAIL' as const,
-      audit: {
-        phase: 'INSPECT' as const,
-        run: (c: HousekeepingRubricContext) =>
-          c.memoryFiles.length
-            ? (c.memoryFiles.map((file) => ({
-                status:
-                  typeof file.frontmatter?.description === 'string' && file.frontmatter.description.trim()
-                    ? ('PASS' as const)
-                    : ('VIOLATION' as const),
-                message:
-                  typeof file.frontmatter?.description === 'string' && file.frontmatter.description.trim()
-                    ? 'description field present'
-                    : 'missing or empty description field',
-                subject: file.file
-              })) as unknown as RubricOutcomes<AuditOutcome>)
-            : one({ status: 'NOT_APPLICABLE', message: 'No memory files to inspect.', subject: c.memoryDir })
-      }
-    }
-  },
-  {
-    code: 'FM-4',
-    title: 'Frontmatter type is valid',
-    description:
-      '`metadata.type` is present and is exactly one of `user`, `feedback`, `project`, `reference`. Missing or invalid is a FAIL.',
-    sources: ['memory-format.md'],
-    mechanical: {
-      level: 'FAIL' as const,
-      audit: {
-        phase: 'INSPECT' as const,
-        run: (c: HousekeepingRubricContext) =>
-          c.memoryFiles.length
-            ? (c.memoryFiles.map((file) => {
-                const type =
-                  file.frontmatter?.metadata && typeof file.frontmatter.metadata === 'object'
-                    ? (file.frontmatter.metadata as Record<string, string>).type
-                    : undefined
-                return {
-                  status: type && VALID_TYPES.has(type) ? ('PASS' as const) : ('VIOLATION' as const),
-                  message:
-                    type && VALID_TYPES.has(type)
-                      ? 'metadata.type is valid'
-                      : `metadata.type is '${type ?? '(missing)'}', must be one of ${[...VALID_TYPES].join(', ')}`,
-                  subject: file.file
-                }
-              }) as unknown as RubricOutcomes<AuditOutcome>)
-            : one({ status: 'NOT_APPLICABLE', message: 'No memory files to inspect.', subject: c.memoryDir })
-      }
-    }
-  },
-  {
-    code: 'FM-5',
-    title: 'Frontmatter names are unique',
-    description: 'No two files share the same `name:` slug. A duplicate is a FAIL.',
-    sources: ['memory-format.md'],
-    mechanical: {
-      level: 'FAIL' as const,
-      audit: {
-        phase: 'INSPECT' as const,
-        run: (c: HousekeepingRubricContext) => {
-          const seen = new Map<string, string>()
-          const outcomes: AuditOutcome[] = []
-          for (const file of c.memoryFiles) {
-            const name = file.frontmatter?.name
-            if (typeof name !== 'string') continue
-            const prior = seen.get(name)
-            outcomes.push(
-              prior
-                ? { status: 'VIOLATION', message: `duplicate name '${name}' also used by ${prior}`, subject: file.file }
-                : { status: 'PASS', message: 'name slug is unique.', subject: file.file }
-            )
-            if (!prior) seen.set(name, file.file)
-          }
-          return outcomes.length
-            ? (outcomes as unknown as RubricOutcomes<AuditOutcome>)
-            : one({ status: 'NOT_APPLICABLE', message: 'No named memory files to compare.', subject: c.memoryDir })
-        }
+const FM_1: RubricItem<HousekeepingFrontmatterContext> = {
+  code: 'FM-1',
+  title: 'Frontmatter is present',
+  description: 'A `---`-delimited frontmatter block is present at the top of every `memory/*.md` file. Missing is a FAIL.',
+  sources: [SOURCE],
+  mechanical: {
+    level: 'FAIL',
+    audit: { phase: 'INSPECT', run: (context) => context.present }
+  }
+}
+
+const FM_2: RubricItem<HousekeepingFrontmatterContext> = {
+  code: 'FM-2',
+  title: 'Frontmatter name matches filename',
+  description: 'The `name` field is present and matches the kebab-case filename without its `.md` suffix. Mismatch is a FAIL.',
+  sources: [SOURCE],
+  mechanical: {
+    level: 'FAIL',
+    audit: { phase: 'INSPECT', run: (context) => context.namesMatch },
+    conform: {
+      phase: 'NORMALISE',
+      run: (context) => {
+        context.alignNames?.()
       }
     }
   }
-] as const
+}
 
-export const FM_1 = FRONTMATTER_ITEMS[0]
-export const FM_2 = FRONTMATTER_ITEMS[1]
-export const FM_3 = FRONTMATTER_ITEMS[2]
-export const FM_4 = FRONTMATTER_ITEMS[3]
-export const FM_5 = FRONTMATTER_ITEMS[4]
-export const FRONTMATTER_1 = FRONTMATTER_ITEMS[0]
-export const FRONTMATTER_2 = FRONTMATTER_ITEMS[1]
-export const FRONTMATTER_3 = FRONTMATTER_ITEMS[2]
-export const FRONTMATTER_4 = FRONTMATTER_ITEMS[3]
-export const FRONTMATTER_5 = FRONTMATTER_ITEMS[4]
+const FM_3: RubricItem<HousekeepingFrontmatterContext> = {
+  code: 'FM-3',
+  title: 'Frontmatter description is present',
+  description: 'The `description` field is present and non-empty. Missing is a FAIL.',
+  sources: [SOURCE],
+  mechanical: {
+    level: 'FAIL',
+    audit: { phase: 'INSPECT', run: (context) => context.descriptions }
+  }
+}
 
-export const FRONTMATTER = [FRONTMATTER_1, FRONTMATTER_2, FRONTMATTER_3, FRONTMATTER_4, FRONTMATTER_5] as const
+const FM_4: RubricItem<HousekeepingFrontmatterContext> = {
+  code: 'FM-4',
+  title: 'Frontmatter type is valid',
+  description:
+    '`metadata.type` is present and is exactly one of `user`, `feedback`, `project`, or `reference`. Missing or invalid is a FAIL.',
+  sources: [SOURCE],
+  mechanical: {
+    level: 'FAIL',
+    audit: { phase: 'INSPECT', run: (context) => context.types }
+  }
+}
+
+const FM_5: RubricItem<HousekeepingFrontmatterContext> = {
+  code: 'FM-5',
+  title: 'Frontmatter names are unique',
+  description: 'No two files share the same `name:` slug. A duplicate is a FAIL.',
+  sources: [SOURCE],
+  mechanical: {
+    level: 'FAIL',
+    audit: { phase: 'INSPECT', run: (context) => context.uniqueNames }
+  }
+}
+
+export const FRONTMATTER: RubricFamily<HousekeepingRubricContext, HousekeepingFrontmatterContext> = {
+  code: 'FM',
+  title: 'Frontmatter',
+  description: 'Memory frontmatter requirements.',
+  standard: SOURCE,
+  selectContext: (context) => context.frontmatter,
+  items: [FM_1, FM_2, FM_3, FM_4, FM_5]
+}

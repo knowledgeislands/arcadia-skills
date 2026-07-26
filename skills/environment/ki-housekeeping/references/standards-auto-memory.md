@@ -1,6 +1,6 @@
-# The auto-memory format
+# The auto-memory standard
 
-_External-spec reference for `ki-housekeeping`. Sourced from the auto-memory system prompt injected into every Claude Code session in this harness (written by Headroom); dated citations tracked in [sources.md](sources.md)._
+_External-spec-derived standard for `ki-housekeeping`. Sourced from the auto-memory system prompt injected into every Claude Code session in this harness (written by Headroom); dated citations tracked in [sources.md](sources.md)._
 
 ## Layout
 
@@ -12,6 +12,14 @@ _External-spec reference for `ki-housekeeping`. Sourced from the auto-memory sys
 ```
 
 `<slug>` is the repo's absolute path with every `/` replaced by `-` (the same convention Claude Code uses for its project transcript directories).
+
+## Repair boundary
+
+The structured rubric is user-home scoped to `.claude/projects` and discovers only physical project and memory directories. It never follows a symlinked project, memory directory, memory file, or `MEMORY.md`.
+
+Two repairs are safe enough to propose through one operation-scoped draft: align a frontmatter `name` to an already-safe kebab-case physical filename, and append a contained unindexed memory file to an existing physical `MEMORY.md`. The host validates and publishes the coalesced proposal.
+
+Creating a missing index, renaming memory files, removing dangling entries, deduplicating names, changing content doctrine, editing generated Headroom data, promoting content, and deleting files or database records remain manual.
 
 ## `MEMORY.md`
 
