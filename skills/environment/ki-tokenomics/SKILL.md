@@ -12,7 +12,7 @@ argument-hint: 'audit | conform | help | educate | refresh'
 
 You are helping hold a Claude Code working environment to one budget for its **tokenomics** — the cost of the context the model carries, paid not once but on **every turn**, and re-paid by every sub-agent. The premise of this skill is that this cost is rarely one file's fault: it is the **composition** of two configuration layers — the **user-wide** `~/.claude` and the **project-local** `.claude` / `CLAUDE.md` — over any **Knowledge Islands base** in play. You measure that composed surface, attribute it to its layers, hold it to a budget, and tune the runtime levers that multiply it.
 
-This is a **standard, base-agnostic Process skill**. Native user maintenance resolves the durable user layer from `~/.claude`; repository-specific attribution remains a separate concern until a repository-targeted tokenomics command exists. Its quotable standard is [the standard](references/standards.md); the line-by-line criteria (each tagged mechanical/judgment) are [the rubric](references/rubric.md); and `ki user audit --skill ki-tokenomics` executes its mechanical user-home checks. How it sits beside the ki-agentic-harness `README.md`, not repeated here.
+This is a **standard, base-agnostic Process skill**. `ki repo educate --skill ki-tokenomics` declares its bounded user-home evidence for a repository, then `ki repo audit --skill ki-tokenomics` resolves the durable user layer from `~/.claude`; repository-specific attribution remains a separate concern until its native context joins those two evidence sources. Its quotable standard is [the standard](references/standards.md); the line-by-line criteria (each tagged mechanical/judgment) are [the rubric](references/rubric.md). How it sits beside the ki-agentic-harness `README.md`, not repeated here.
 
 ## What it governs — two halves
 
@@ -72,6 +72,6 @@ Every governance skill carries the universal four **AUDIT · CONFORM · EDUCATE 
 
 ## Notes
 
-- `ki user audit --skill ki-tokenomics` reads `~/.claude` as the user-wide layer **by design**. Project-local composition requires a repository-targeted surface and is reported as not applicable by the user command rather than being guessed.
+- `ki repo educate --skill ki-tokenomics` declares the repository scope; `ki repo audit --skill ki-tokenomics` reads `~/.claude` as the user-wide layer **by design**. `ki skill user add ki-tokenomics` installs it globally only; it never creates a user-wide audit or conform surface. Project-local composition requires a native context that joins that repository to the user layer and is reported as not applicable rather than being guessed.
 - Token figures are a **chars/4 estimate for budgeting, not billing** — every figure is marked `~`. For exact accounting use the model's own token counting (the `claude-api` skill).
 - This skill measures and tunes cost; it does not own the artifacts that cause it. A finding routes to the owning skill's standard.
