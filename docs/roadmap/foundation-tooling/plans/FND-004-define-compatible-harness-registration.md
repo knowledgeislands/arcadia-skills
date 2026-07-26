@@ -22,31 +22,31 @@ The compatible-harness identity, installation, activation, and governed-rubric h
 
 The repository-local `.ki/` executor, package-script aliases, publishers, wrapper runners, and legacy educate scripts have been removed. `ki-skills` establishes the intended family/session contract, and `ki-handoffs` is the first additional catalogue cut to that shape.
 
-Twenty-three in-scope structured catalogues still use transitional catalogue or context adapters. All 26 in-scope skills require a final implementation-and-reference review: the 25 structured catalogues other than the deferred `ki-specifications` catalogue, plus the guidance-only `ki-bootstrap`.
+Twenty-three in-scope structured catalogues still use transitional catalogue or context adapters. Twenty-five in-scope skills remain to review after accepting `ki-skills`: the 24 remaining structured catalogues other than the deferred `ki-specifications` catalogue, plus the guidance-only `ki-bootstrap`.
 
 CI still invokes the removed `ki:audit` package alias and describes `.ki/bootstrap`. The pre-commit hook uses the direct CLI but its staged snapshot needs a final dependency-completeness review. Maintainer guidance still contains obsolete vendoring and executor assumptions.
 
 ## Steps
 
 1. Review and finish the 26 in-scope skills one at a time. For every structured catalogue, make each family module export one complete `RubricFamily`, default-export one `SkillRubricDefinition` with `createSession`, keep criterion behaviour on its item, keep shared-draft composition in the session, and remove catalogue splits, `LegacyFamily` casts, family mappers, barrel exports, and per-skill execution or reporting adapters.
-2. Review each skill's reference set in the same pass. Treat `standards.md`, generated `rubric.md`, `sources.md`, and optional `exemplars.md` as the normal core; justify every omission and every additional format, mode, contract, template, or guide reference by a distinct reader need; merge or remove stale and duplicative references; and align `SKILL.md` navigation, family `standard` fields, item sources, and relative links with the retained set. A row is complete only when both its implementation shape and references pass review.
-   - [ ] `ki-skills` — re-review the exemplar first; keep one clean catalogue/session contract, then justify `rubric-authoring.md`, candidate and mode references, and either reconcile or remove the retired checker contract and response documents.
+2. Review each skill's reference set in the same pass. Every top-level Markdown reference must be `standards-<topic>.md`, generated `rubric.md`, `sources.md`, optional `exemplars.md`, or `mode-<verb>.md`; a skill includes only the classes it needs, and each mode file owns exactly one mode. Classify normative artifact formats, shared mode contracts, and process doctrine as standards; split combined mode files such as `mode-audit-conform.md`; move reusable output templates to `assets/`; remove nested references and ad hoc guide, format, or contract filenames; merge stale or duplicative material; and align `SKILL.md` navigation, family `standard` fields, item sources, and relative links with the retained set. A row is complete only when both its implementation shape and closed reference vocabulary pass review.
+   - [x] `ki-skills` — accepted in `42d4e707`: one catalogue/session contract; closed references split into Agent Skills, Knowledge Islands, rubric-authoring, and candidate-finding standards plus one-mode REVIEW and EXTRACT procedures; retired checker-response contract and optional candidate validator removed; no top-level public scripts remain.
    - [ ] `ki-authoring` — move formatter, subprocess, and owned-file proposal policy out of the index; justify the split Markdown and TOML normative standards.
-   - [ ] `ki-binding` — preserve mixed repository and user-home evidence honestly while removing the legacy adapter; decide whether the lack of exemplars is intentional.
-   - [ ] `ki-binding-chezmoi` — retain external chezmoi choices as report-only policy; justify the core set and absent exemplars.
+   - [ ] `ki-binding` — preserve mixed repository and user-home evidence honestly while removing the legacy adapter; rename its bare standard and decide whether the lack of exemplars is intentional.
+   - [ ] `ki-binding-chezmoi` — retain external chezmoi choices as report-only policy; rename its bare standard and justify the core set and absent exemplars.
    - [ ] `ki-bootstrap` — retain its guidance-only, no-catalogue boundary; decide whether `rubric.md` is still useful or is retired catalogue residue.
    - [ ] `ki-decision-records` — separate its context builder and multi-file index draft from catalogue wiring; justify `dr-format.md` and each mode procedure.
    - [ ] `ki-dotfiles-chezmoi` — retain explicit-create semantics for `.chezmoiignore`; decide whether the lack of exemplars is intentional.
-   - [ ] `ki-engineering` — replace `createContext` with `createSession`, remove remaining item exports, split context by evidence responsibility, and confirm its core four references.
+   - [ ] `ki-engineering` — replace `createContext` with `createSession`, remove remaining item exports, split context by evidence responsibility, and rename and confirm its core four references.
    - [ ] `ki-feature-definitions` — remove family mapping and index-owned heading-normalisation policy; justify `feature-format.md` and each mode procedure.
-   - [ ] `ki-handoffs` — retain its completed one-family `createSession` cut and session-owned readiness draft; review the core four references.
+   - [ ] `ki-handoffs` — retain its completed one-family `createSession` cut and session-owned readiness draft; rename and review the core four references.
    - [ ] `ki-harness` — preserve harness-marker append safety while removing index-owned write planning; confirm its references describe the direct installed-harness boundary.
    - [ ] `ki-homebrew-tap` — preserve applicability and manual Homebrew checks, move marker mutation to an item-owned action, and justify its mode procedures and absent exemplars.
    - [ ] `ki-housekeeping` — preserve bounded user-home scope and memory-repair containment while removing its adapter; justify `memory-format.md`, mode procedures, and absent exemplars.
    - [ ] `ki-kb` — split evidence context by responsibility and keep index or `MEMORY.md` creation as session-owned proposals; justify the KB reference, mode procedures, and templates.
-   - [ ] `ki-kb-activities` — retain safe `Activities.md` creation outside catalogue wiring; decide whether its mode documents replace a missing `standards.md`.
+   - [ ] `ki-kb-activities` — retain safe `Activities.md` creation outside catalogue wiring; decide whether its mode documents replace a missing normative standard.
    - [ ] `ki-kb-live-artifacts` — retain safe index and frontmatter drafts while leaving rendering and deletion manual; justify each mode procedure.
-   - [ ] `ki-kb-streams` — preserve controlled-vocabulary normalisation on one shared proposal; reconcile the structure and process references and mode procedures with the missing canonical `standards.md`.
+   - [ ] `ki-kb-streams` — preserve controlled-vocabulary normalisation on one shared proposal; reconcile the structure and process references and mode procedures with its missing normative standard.
    - [ ] `ki-mcp` — retain bounded configuration edits and keep client generation outside conform; justify the surface-specific references and mode procedures.
    - [ ] `ki-plugins` — remain report-only for generated projections; remove the adapter and catalogue barrel, and decide whether absent exemplars are intentional.
    - [ ] `ki-repo` — replace `definitions.ts` and the mixed context adapter; preserve explicit create or append actions and GitHub confirmation boundaries; justify `config-standards.md`.
@@ -56,9 +56,10 @@ CI still invokes the removed `ki:audit` package alias and describes `.ki/bootstr
    - [ ] `ki-tools` — retain bounded executable and configuration repairs as item or session behaviour; justify its mode procedures and absent exemplars.
    - [ ] `ki-website` — retain safe `.gitignore` and `.ki-config.toml` creation in the session proposal while leaving deployment manual; confirm its core four references.
    - [ ] `ki-website-cloudflare` — keep Cloudflare and Wrangler operations report-only, remove the thin adapter, and justify `setup-guide.md`.
-3. Prove native self-hosted parity: run the installed or explicit local canonical harness against this source repository and confirm that `ki repo educate`, `ki repo audit`, and `ki repo conform --dry-run` resolve every declared repository skill, including bounded user-home evidence.
-4. Finish the live-role cutover: replace the stale CI alias and `.ki/bootstrap` description, make the direct pre-commit staged snapshot dependency-complete, and remove obsolete vendoring, executor, bootstrap, and educate guidance. Retain only commands and fixtures whose roles sit outside governed-rubric execution.
-5. Run the complete source-harness verification through the native path and present FND-004 for acceptance.
+3. Review every top-level `skills/**/scripts/*.ts` file in the same skill pass. Retain only a necessary public skill command with a clear purpose, useful `--help`, explicit error handling, and focused tests; move private implementation to `scripts/internal/`, published or materialised compile-time dependencies to `scripts/shared/`, and governed rubric behaviour to `scripts/rubric/`. Remove wrappers, one-off validators, and helpers whose capability now belongs to `ki`. Tests may remain adjacent to the public command they cover.
+4. Prove native self-hosted parity: run the installed or explicit local canonical harness against this source repository and confirm that `ki repo educate`, `ki repo audit`, and `ki repo conform --dry-run` resolve every declared repository skill, including bounded user-home evidence.
+5. Finish the live-role cutover: replace the stale CI alias and `.ki/bootstrap` description, make the direct pre-commit staged snapshot dependency-complete, and remove obsolete vendoring, executor, bootstrap, and educate guidance. Retain only commands and fixtures whose roles sit outside governed-rubric execution.
+6. Run the complete source-harness verification through the native path and present FND-004 for acceptance.
 
 ## Files touched
 
@@ -68,7 +69,7 @@ CI still invokes the removed `ki:audit` package alias and describes `.ki/bootstr
 
 ## Verify
 
-1. Every in-scope skill row records an accepted implementation shape and justified reference set.
+1. Every in-scope skill row records an accepted implementation shape, closed reference vocabulary, and justified top-level script set.
 2. Every in-scope structured catalogue follows the accepted `ki-skills` family/session contract and its generated `references/rubric.md` is in sync.
 3. The canonical installed or local harness passes educate, audit, and conform dry-run for every skill declared by this repository.
 4. CI and pre-commit use the direct `ki` surface without `.ki`, package aliases, compatibility runners, or incomplete staged dependency material.
