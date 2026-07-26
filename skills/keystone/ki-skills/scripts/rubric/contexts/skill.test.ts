@@ -35,7 +35,7 @@ Explain the local workflow.
 
 ### Mode REFRESH
 
-Refresh only this committed .ki/self/skill/ source. If a rule is reusable, stop and promote it to its shared owner.
+Refresh only this committed .agents/skills/ki-self/ source. If a rule is reusable, stop and promote it to its shared owner.
 
 ### Mode HELP
 
@@ -65,8 +65,8 @@ const audit = (directory: string) => {
 }
 
 describe('repository-local ki-self source', () => {
-  test('accepts only the canonical .ki/self/skill shape', () => {
-    const result = audit(createSkill('.ki/self/skill'))
+  test('accepts only the canonical .agents/skills/ki-self shape', () => {
+    const result = audit(createSkill('.agents/skills/ki-self'))
 
     expect(result.name?.status).toBe('PASS')
     expect(result.vocabulary?.status).toBe('PASS')
@@ -75,7 +75,7 @@ describe('repository-local ki-self source', () => {
 
   test.each([
     { relativeDirectory: 'ki-self', nameStatus: 'PASS' },
-    { relativeDirectory: '.ki/self/not-skill', nameStatus: 'VIOLATION' }
+    { relativeDirectory: '.agents/skills/not-ki-self', nameStatus: 'VIOLATION' }
   ])('does not treat an invalid lookalike as a local-source exception', ({ relativeDirectory, nameStatus }) => {
     const result = audit(createSkill(relativeDirectory))
 

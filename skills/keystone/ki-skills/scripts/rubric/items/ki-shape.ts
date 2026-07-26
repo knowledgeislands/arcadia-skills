@@ -261,7 +261,7 @@ export const KI_SHAPE_14: RubricItem<KiShapeRubricContext> = {
   code: 'KI-SHAPE-14',
   title: 'REFRESH states its ownership precondition',
   description:
-    "_REFRESH states its ownership precondition._ REFRESH's write target is normally the skill's own canonical files under `skills/<name>/` in `ki-agentic-harness` — a governance skill's `### Mode REFRESH` section (or, per REF-5, its `references/mode-refresh.md`) must name `ki-agentic-harness` as the only place it writes, and instruct the agent to stop and redirect when invoked from a repo where the skill is merely vendored (to the harness, or — for a pattern recurring across bases — to `ki-kb`'s IMPROVE mode). The one committed repository-local source at `.ki/self/skill/` instead names that local source and stops to promote reusable rules to their shared owner. Missing either half **WARNs**. Process skills (KI-SHAPE-3) are exempt; a skill with no REFRESH section at all is already caught by KI-SHAPE-12.",
+    "_REFRESH states its ownership precondition._ REFRESH's write target is normally the skill's own canonical files under `skills/<name>/` in `ki-agentic-harness` — a governance skill's `### Mode REFRESH` section (or, per REF-5, its `references/mode-refresh.md`) must name `ki-agentic-harness` as the only place it writes, and instruct the agent to stop and redirect when invoked from a repo where the skill is merely vendored (to the harness, or — for a pattern recurring across bases — to `ki-kb`'s IMPROVE mode). The one committed repository-local source at `.agents/skills/ki-self/` instead names that local source and stops to promote reusable rules to their shared owner. Missing either half **WARNs**. Process skills (KI-SHAPE-3) are exempt; a skill with no REFRESH section at all is already caught by KI-SHAPE-12.",
   sources: ['ADR-KI-HARNESS-SKILLS-001', 'ADR-KI-HARNESS-SKILLS-006'],
   mechanical: {
     level: 'WARN',
@@ -271,7 +271,7 @@ export const KI_SHAPE_14: RubricItem<KiShapeRubricContext> = {
         if (!skill?.governanceSkill || !skill.refreshText)
           return [{ status: 'NOT_APPLICABLE', message: 'the target has no governance REFRESH procedure to inspect' }]
         const namesOwner = skill.localGovernanceSource
-          ? /\.ki\/self\/skill/.test(skill.refreshText)
+          ? /\.agents\/skills\/ki-self/.test(skill.refreshText)
           : /ki-agentic-harness/.test(skill.refreshText)
         const stopsAndRedirects = skill.localGovernanceSource
           ? /\bstop(s)?\b[\s\S]{0,160}\bpromot\w*/i.test(skill.refreshText)
@@ -289,7 +289,7 @@ export const KI_SHAPE_14: RubricItem<KiShapeRubricContext> = {
               {
                 status: 'VIOLATION',
                 message: skill.localGovernanceSource
-                  ? 'REFRESH section does not state the repository-local ownership precondition — it should name `.ki/self/skill/` and instruct stopping to promote reusable rules to their shared owner'
+                  ? 'REFRESH section does not state the repository-local ownership precondition — it should name `.agents/skills/ki-self/` and instruct stopping to promote reusable rules to their shared owner'
                   : 'REFRESH section does not state the harness-only precondition — it should name `ki-agentic-harness` as the only place it writes and instruct stopping/redirecting when invoked from a vendored install'
               }
             ]
@@ -316,7 +316,7 @@ export const KI_SHAPE_15: RubricItem<KiShapeRubricContext> = {
   code: 'KI-SHAPE-15',
   title: 'governance skills expose no legacy runner entrypoints',
   description:
-    '_Direct governance operation shape._ A governance skill exposes its rubric catalogue from `scripts/rubric/items/index.ts`; `ki` resolves and hosts that catalogue from the verified installed harness. `scripts/govern.ts`, `scripts/educate.ts`, `scripts/audit.ts`, and `scripts/conform.ts` are retired, with no compatibility runner or fallback. REFRESH is harness-only. Process skills and the committed repository-local `.ki/self/skill/` source are exempt.',
+    '_Direct governance operation shape._ A governance skill exposes its rubric catalogue from `scripts/rubric/items/index.ts`; `ki` resolves and hosts that catalogue from the verified installed harness. `scripts/govern.ts`, `scripts/educate.ts`, `scripts/audit.ts`, and `scripts/conform.ts` are retired, with no compatibility runner or fallback. REFRESH is harness-only. Process skills and the committed repository-local `.agents/skills/ki-self/` source are exempt.',
   sources: ['standards.md §14', 'ADR-KI-HARNESS-007'],
   mechanical: {
     level: 'FAIL',

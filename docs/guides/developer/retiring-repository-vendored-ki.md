@@ -93,7 +93,7 @@ Use the recorded commit SHA in place of the tag when no tag was created.
 
    Do not use a broad recursive deletion.
 
-   Retain `.ki/self` only if it has a deliberate replacement or relocation; it is not collateral cleanup.
+   Retain the committed `.agents/skills/ki-self/` source and its derived Claude projection; it is not collateral cleanup.
 
 5. Run the repository's full test suite, the native audit, and the native dry-run conform.
 

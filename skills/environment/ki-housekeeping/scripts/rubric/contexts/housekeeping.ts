@@ -1,4 +1,4 @@
-import { existsSync, lstatSync, readdirSync, readFileSync, writeFileSync } from 'node:fs'
+import { existsSync, lstatSync, readdirSync, readFileSync, readlinkSync, writeFileSync } from 'node:fs'
 import { homedir } from 'node:os'
 import { basename, join, resolve } from 'node:path'
 import type { ConformOutcome, RubricOutcomes } from '../../shared/rubric.ts'
@@ -8,10 +8,8 @@ export const INDEX_FILE = 'MEMORY.md'
 export type MemoryFrontmatter = Record<string, unknown>
 export type MemoryFile = { file: string; content: string; frontmatter: MemoryFrontmatter | null }
 
-const runtimePaths: Record<string, string> = {
-  'claude-code': '.claude/skills/ki-self/SKILL.md',
-  codex: '.agents/skills/ki-self/SKILL.md'
-}
+const localSkillSourcePath = '.agents/skills/ki-self/SKILL.md'
+const claudeProjectionPath = '.claude/skills/ki-self'
 
 export const slugifyRepoPath = (absolutePath: string): string => absolutePath.replace(/[/.]/g, '-')
 export const resolveMemoryDir = (repo: string): string => join(homedir(), '.claude', 'projects', slugifyRepoPath(resolve(repo)), 'memory')
@@ -54,7 +52,8 @@ export type HousekeepingRubricContext = {
   memoryFiles: readonly MemoryFile[]
   index: string | null
   declaredRuntimes: readonly string[] | null
-  runtimePayload: (runtime: string) => { path: string; state: 'missing' | 'invalid' | 'present'; content?: string } | null
+  localSkillSource: () => { path: string; state: 'missing' | 'invalid' | 'present'; content?: string }
+  claudeProjection: () => { path: string; state: 'missing' | 'invalid' | 'present' }
   appendUnindexed: () => RubricOutcomes<ConformOutcome>
   alignNames: () => RubricOutcomes<ConformOutcome>
 }
@@ -80,14 +79,20 @@ export const createHousekeepingContext = ({
       return { file, content, frontmatter: parseFrontmatter(content) }
     })
   const index = markdownFiles.includes(INDEX_FILE) ? readFileSync(join(absoluteMemory, INDEX_FILE), 'utf8') : null
-  const runtimePayload = (runtime: string) => {
-    const path = runtimePaths[runtime]
-    if (!path) return null
-    const absolutePath = join(absoluteRepo, path)
-    if (!existsSync(absolutePath)) return { path, state: 'missing' as const }
+  const localSkillSource = () => {
+    const absolutePath = join(absoluteRepo, localSkillSourcePath)
+    if (!existsSync(absolutePath)) return { path: localSkillSourcePath, state: 'missing' as const }
     const stat = lstatSync(absolutePath)
-    if (!stat.isFile() || stat.isSymbolicLink()) return { path, state: 'invalid' as const }
-    return { path, state: 'present' as const, content: readFileSync(absolutePath, 'utf8') }
+    if (!stat.isFile() || stat.isSymbolicLink()) return { path: localSkillSourcePath, state: 'invalid' as const }
+    return { path: localSkillSourcePath, state: 'present' as const, content: readFileSync(absolutePath, 'utf8') }
+  }
+  const claudeProjection = () => {
+    const absolutePath = join(absoluteRepo, claudeProjectionPath)
+    if (!existsSync(absolutePath)) return { path: claudeProjectionPath, state: 'missing' as const }
+    const stat = lstatSync(absolutePath)
+    if (!stat.isSymbolicLink() || readlinkSync(absolutePath) !== '../../.agents/skills/ki-self')
+      return { path: claudeProjectionPath, state: 'invalid' as const }
+    return { path: claudeProjectionPath, state: 'present' as const }
   }
   const outcomes = <Result>(values: Result[]): RubricOutcomes<Result> => values as unknown as RubricOutcomes<Result>
   return {
@@ -98,7 +103,8 @@ export const createHousekeepingContext = ({
     memoryFiles,
     index,
     declaredRuntimes: declaredSupportedRuntimes(absoluteRepo),
-    runtimePayload,
+    localSkillSource,
+    claudeProjection,
     alignNames: () => {
       if (!memoryExists)
         return [

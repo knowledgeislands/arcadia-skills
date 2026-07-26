@@ -1,16 +1,13 @@
-import type { AuditOutcome, RubricOutcomes } from '../../shared/rubric.ts'
+import type { RubricOutcomes } from '../../shared/rubric.ts'
 import type { HousekeepingRubricContext } from '../contexts/housekeeping.ts'
 
 const one = <Result>(outcome: Result): RubricOutcomes<Result> => [outcome]
-const runtimeExpected = (context: HousekeepingRubricContext): string[] =>
-  (context.declaredRuntimes ?? []).filter((runtime) => runtime === 'claude-code' || runtime === 'codex')
-
 const SELF_ITEMS = [
   {
     code: 'SELF-1',
-    title: 'Repository-local ki-self payloads',
+    title: 'Repository-local ki-self source',
     description:
-      'For every recognised runtime declared by `[ki-repo].supported_runtimes`, the repository contains the `ki-self` payload at that runtime’s discovery path: `.claude/skills/ki-self/SKILL.md` for `claude-code`; `.agents/skills/ki-self/SKILL.md` for `codex`. Missing is a WARN. A symlink or non-regular file is a FAIL.',
+      'The repository owns one regular `ki-self` source at `.agents/skills/ki-self/SKILL.md`. Missing is a WARN; a symlink or non-regular source is a FAIL.',
     sources: ['standards.md'],
     mechanical: {
       level: 'WARN' as const,
@@ -18,107 +15,66 @@ const SELF_ITEMS = [
       audit: {
         phase: 'INSPECT' as const,
         run: (context: HousekeepingRubricContext) => {
-          if (!context.declaredRuntimes)
+          const source = context.localSkillSource()
+          if (source.state === 'missing')
+            return one({ status: 'VIOLATION', message: 'missing repository-local ki-self source', subject: source.path })
+          if (source.state === 'invalid')
             return one({
-              status: 'NOT_APPLICABLE',
-              message: 'no declared supported_runtimes — ki-repo owns the required runtime-support contract',
-              subject: '.ki-config.toml'
+              status: 'VIOLATION',
+              level: 'FAIL',
+              message: 'repository-local ki-self source must be an owned regular file, not a symlink',
+              subject: source.path
             })
-          const outcomes: AuditOutcome[] = []
-          for (const runtime of runtimeExpected(context)) {
-            const payload = context.runtimePayload(runtime)
-            if (!payload || payload.state === 'missing')
-              outcomes.push({
-                status: 'VIOLATION',
-                message: `missing repo-local ki-self payload for declared ${runtime} runtime`,
-                subject: payload?.path
-              })
-            else if (payload.state === 'invalid')
-              outcomes.push({
-                status: 'VIOLATION',
-                level: 'FAIL',
-                message: `ki-self payload for declared ${runtime} runtime must be an owned regular file, not a symlink`,
-                subject: payload.path
-              })
-            else
-              outcomes.push({
-                status: 'PASS',
-                message: `repo-local ki-self payload present for declared ${runtime} runtime`,
-                subject: payload.path
-              })
-          }
-          return outcomes.length
-            ? (outcomes as unknown as RubricOutcomes<AuditOutcome>)
-            : one({ status: 'NOT_APPLICABLE', message: 'no recognised runtime declaration to check', subject: '.ki-config.toml' })
+          return one({ status: 'PASS', message: 'repository-local ki-self source is present', subject: source.path })
         }
       }
     }
   },
   {
     code: 'SELF-2',
-    title: 'ki-self payload name',
-    description: 'Each present payload declares `name: ki-self`. A mismatch is a FAIL.',
+    title: 'ki-self source name',
+    description: 'The source declares `name: ki-self`. A mismatch is a FAIL.',
     sources: ['standards.md'],
     mechanical: {
       level: 'FAIL' as const,
       audit: {
         phase: 'INSPECT' as const,
         run: (context: HousekeepingRubricContext) => {
-          const outcomes: AuditOutcome[] = runtimeExpected(context).flatMap((runtime) => {
-            const payload = context.runtimePayload(runtime)
-            return payload?.state === 'present'
-              ? [
-                  {
-                    status: /^name:\s*ki-self\s*$/m.test(payload.content ?? '') ? ('PASS' as const) : ('VIOLATION' as const),
-                    message: /^name:\s*ki-self\s*$/m.test(payload.content ?? '')
-                      ? 'repo-local skill payload declares name: ki-self'
-                      : 'repo-local skill payload must declare name: ki-self',
-                    subject: payload.path
-                  }
-                ]
-              : []
+          const source = context.localSkillSource()
+          if (source.state !== 'present')
+            return one({ status: 'NOT_APPLICABLE', message: 'no present repository-local source to check', subject: source.path })
+          return one({
+            status: /^name:\s*ki-self\s*$/m.test(source.content ?? '') ? 'PASS' : 'VIOLATION',
+            message: /^name:\s*ki-self\s*$/m.test(source.content ?? '')
+              ? 'repository-local skill source declares name: ki-self'
+              : 'repository-local skill source must declare name: ki-self',
+            subject: source.path
           })
-          return outcomes.length
-            ? (outcomes as unknown as RubricOutcomes<AuditOutcome>)
-            : one({ status: 'NOT_APPLICABLE', message: 'no present recognised runtime payload to check', subject: 'ki-self' })
         }
       }
     }
   },
   {
     code: 'SELF-3',
-    title: 'Runtime payload parity',
-    description: 'When several recognised runtimes are declared, their `ki-self` payloads are byte-identical. Drift is a FAIL.',
+    title: 'Claude runtime projection',
+    description:
+      'When `claude-code` is declared, `.claude/skills/ki-self` is a relative link to the canonical source. A missing or divergent projection is a FAIL.',
     sources: ['standards.md'],
     mechanical: {
       level: 'FAIL' as const,
       audit: {
         phase: 'INSPECT' as const,
         run: (context: HousekeepingRubricContext) => {
-          const payloads = runtimeExpected(context)
-            .map((runtime) => [runtime, context.runtimePayload(runtime)] as const)
-            .filter(
-              (entry): entry is readonly [string, { path: string; state: 'present'; content?: string }] => entry[1]?.state === 'present'
-            )
-          if (payloads.length < 2)
-            return one({
-              status: 'NOT_APPLICABLE',
-              message: 'fewer than two present recognised runtime payloads to compare',
-              subject: 'ki-self'
-            })
-          const [firstRuntime, first] = payloads[0]
-          const mismatch = payloads.filter(([, payload]) => payload.content !== first.content).map(([runtime]) => runtime)
+          if (!context.declaredRuntimes?.includes('claude-code'))
+            return one({ status: 'NOT_APPLICABLE', message: 'Claude Code is not a declared runtime', subject: '.ki-config.toml' })
+          const projection = context.claudeProjection()
           return one(
-            mismatch.length
-              ? {
-                  status: 'VIOLATION',
-                  message: `runtime payloads differ: ${firstRuntime} is not identical to ${mismatch.join(', ')}`,
-                  subject: 'ki-self'
-                }
+            projection.state === 'present'
+              ? { status: 'PASS', message: 'Claude Code projects the canonical ki-self source', subject: projection.path }
               : {
-                  status: 'PASS',
-                  message: `runtime payloads are byte-identical: ${payloads.map(([runtime]) => runtime).join(', ')}`,
-                  subject: 'ki-self'
+                  status: 'VIOLATION',
+                  message: 'Claude Code must project the canonical ki-self source by relative link',
+                  subject: projection.path
                 }
           )
         }

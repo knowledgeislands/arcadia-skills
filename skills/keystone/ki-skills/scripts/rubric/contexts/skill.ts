@@ -35,7 +35,7 @@ export type SkillRubricContext = {
 }
 
 const isLocalGovernanceSource = (directory: string): boolean =>
-  basename(directory) === 'skill' && basename(dirname(directory)) === 'self' && basename(dirname(dirname(directory))) === '.ki'
+  basename(directory) === 'ki-self' && basename(dirname(directory)) === 'skills' && basename(dirname(dirname(directory))) === '.agents'
 
 const relativeImportSpecifiers = (source: string): string[] =>
   [...source.matchAll(/\b(?:from\s+|import\s*\(\s*|require\s*\(\s*)['"](\.\.?\/[^'"]+)['"]/g)].map((match) => match[1] as string)

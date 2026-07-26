@@ -41,8 +41,8 @@ The server is governed as an MCP server by `ki-mcp`; this skill is its standard-
 
 ### The `ki-self` companion contract
 
-Every governed repository is expected to carry `ki-self` as a committed local governance skill for its local concerns. The contract is runtime-neutral: read only `[ki-repo].supported_runtimes`, never scan runtime directories for an inferred “latest” or preferred location. The discovery paths are `.claude/skills/ki-self/SKILL.md` for `claude-code` and `.agents/skills/ki-self/SKILL.md` for `codex`.
+Every governed repository is expected to carry `ki-self` as a committed local governance skill for its local concerns. Its one canonical source is `.agents/skills/ki-self/SKILL.md`, a regular file with `name: ki-self`; Codex discovers it there directly. When `claude-code` is declared in `[ki-repo].supported_runtimes`, `.claude/skills/ki-self` is a relative link to that same canonical directory. No runtime gets a duplicate source copy.
 
-Each declared runtime's payload is an owned regular file, never a symlink, with `name: ki-self`. When more than one declared runtime is supported, the payload bytes are identical so the same local governance interface travels with the repository. The `ki-housekeeping` checker reports absence as a WARN, unsafe or misidentified payloads as FAIL, and does not inspect the repository-specific local concerns themselves.
+The `ki-housekeeping` checker reports a missing source as a WARN, an unsafe or misidentified source or a missing Claude projection as FAIL, and does not inspect the repository-specific local concerns themselves.
 
 CONFORM does not manufacture a local ledger, audit procedures, or a `ki-self` body: those are local authoring decisions. `ki-self EDUCATE` establishes them when the repository needs them, and `ki-self CONFORM` handles their later source-state remediation.

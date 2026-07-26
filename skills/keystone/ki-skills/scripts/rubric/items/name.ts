@@ -81,7 +81,7 @@ export const NAME_5: RubricItem<NameRubricContext> = {
   code: 'NAME-5',
   title: 'name matches the parent directory name exactly',
   description:
-    '`name` matches the parent directory name exactly. The one local-source exception is the committed `.ki/self/skill/` source, whose required name is `ki-self`.',
+    '`name` matches the parent directory name exactly. The committed repository-local source is `.agents/skills/ki-self/`, whose required name is `ki-self`.',
   sources: ['SPEC'],
   mechanical: {
     level: 'FAIL',
@@ -96,7 +96,7 @@ export const NAME_5: RubricItem<NameRubricContext> = {
                 {
                   status: 'PASS',
                   message: localGovernanceSource
-                    ? 'name matches the canonical repository-local `.ki/self/skill/` source name'
+                    ? 'name matches the canonical repository-local `.agents/skills/ki-self/` source name'
                     : 'name matches the parent directory name exactly'
                 }
               ]

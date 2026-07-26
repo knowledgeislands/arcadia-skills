@@ -40,7 +40,7 @@ Every lifecycle operation resolves its selected scope physically, rejects unsafe
 ### Repository scope
 
 - `.ki-config.toml` is the repository's authored declaration. CLEAN always preserves it. Repository UNINSTALL may remove it only when it is a regular, stable file containing exclusively KI configuration and comments; a mixed, malformed, linked, or otherwise unfamiliar declaration is preserved and causes UNINSTALL to refuse rather than attempt a heuristic edit.
-- `.ki/self/skill/` is repository-authored local governance. CLEAN and repository UNINSTALL preserve it. Repository UNINSTALL may remove a separately proven managed runtime projection of it, because that projection is derived state rather than its source.
+- `.agents/skills/ki-self/` is repository-authored local governance. CLEAN and repository UNINSTALL preserve it. Repository UNINSTALL may remove the separately proven `.claude/skills/ki-self` projection, because that projection is derived state rather than its source.
 - `.ki/{bin,bootstrap,manifest.json}` is legacy generated repository state. A repository operation may inspect or remove it only through an explicit migration with exact, stable ownership proof; native `ki repo` operations never read it to execute governance work.
 - Runtime discovery links are removable only when their marker, declared source identity, and integrity tree all validate. Unmarked payloads, user-authored agents, `.gitignore`, canonical sources, and arbitrary repository paths are outside their ownership boundary and remain untouched.
 - Repository operations never inspect, install, remove, or otherwise mutate user-level material. CLEAN is recoverable through explicit repository-scope activation; repository UNINSTALL intentionally ends only repository adoption.
