@@ -13,7 +13,7 @@ You are operating the **`Streams` zone** of a Knowledge Islands base. `Streams/`
 
 The companion `ki-kb` skill owns the five-zone model and note CRUD / routing, and **delegates the inside of `Streams/` here**; load it for anything outside this zone. This skill carries the structure and process as fixed knowledge; only a couple of store-level **bindings** come from the host base.
 
-The full detail lives in the references (progressive disclosure): the structure in [the Streams structure reference](<references/Streams Structure Reference.md>), the process in [the Enactment Process reference](<references/Enactment Process Reference.md>). The line-by-line checkable items live in [the rubric](references/rubric.md); the mechanical checker is [`scripts/govern.ts`](scripts/govern.ts).
+The full detail lives in the references (progressive disclosure): the structure in [the Streams structure reference](<references/Streams Structure Reference.md>), the process in [the Enactment Process reference](<references/Enactment Process Reference.md>). The line-by-line checkable items live in [the rubric](references/rubric.md); `ki repo audit --skill ki-kb-streams` runs their mechanical evidence and `ki repo conform --skill ki-kb-streams` applies its safe declared repairs.
 
 ## The Streams zone at a glance
 

@@ -1,5 +1,5 @@
 import { existsSync, readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs'
-import { basename, join, resolve } from 'node:path'
+import { basename, join, relative, resolve } from 'node:path'
 import type { ConformOutcome, RubricOutcomes } from '../../vendored/ki-skills/rubric.ts'
 
 const FOCI = ['Active', 'Background', 'Dormant', 'Future', 'Settled'] as const
@@ -71,6 +71,42 @@ export type StreamsContext = {
   dryRun: boolean
   auditFindings: readonly Finding[]
   conformRule: (code: string) => RubricOutcomes<ConformOutcome>
+}
+
+/**
+ * Declare the one mechanical repair that does not need a content decision:
+ * trim a recognised lifecycle token to its controlled-vocabulary value.
+ * The native KI host owns validation and publication of these replacements.
+ */
+export const normalisationWrites = (target: string): readonly { readonly path: string; readonly content: string }[] => {
+  const root = resolve(target)
+  if (!dir(root)) return []
+  const config = parse(file(join(root, '.ki-config.toml')) ? readFileSync(join(root, '.ki-config.toml'), 'utf8') : '')
+  const streams = join(root, config.streams)
+  return markdown(streams)
+    .filter((path) => basename(path, '.md').endsWith(SUFFIX))
+    .flatMap((path) => {
+      const text = readFileSync(path, 'utf8')
+      const lines = text.split('\n')
+      let inside = false
+      let dirty = false
+      for (let index = 0; index < lines.length; index++) {
+        const line = lines[index] as string
+        if (index === 0 && line.trim() === '---') {
+          inside = true
+          continue
+        }
+        if (inside && line.trim() === '---') break
+        const match = inside ? line.match(/^(status|priority):\s*(.+)$/) : null
+        if (!match) continue
+        const value = bare(match[2] as string, match[1] === 'status' ? STATUS : PRIORITY)
+        if (value) {
+          lines[index] = `${match[1]}: ${value}`
+          dirty = true
+        }
+      }
+      return dirty ? [{ path: relative(root, path), content: lines.join('\n') }] : []
+    })
 }
 export const collectStreamsAudit = (target: string): readonly Finding[] => {
   const root = resolve(target),
@@ -179,35 +215,11 @@ export const createStreamsContext = (target: string, dryRun: boolean): StreamsCo
     if (code !== 'ENACT-2') return one({ status: 'NOT_APPLICABLE', message: 'This criterion has no safe conform action.' })
     const root = resolve(target)
     if (!dir(root)) return one({ status: 'VIOLATION', message: 'Target is not a directory.', subject: root })
-    const config = parse(file(join(root, '.ki-config.toml')) ? readFileSync(join(root, '.ki-config.toml'), 'utf8') : ''),
-      streams = join(root, config.streams)
-    let changed = 0
-    for (const path of markdown(streams).filter((item) => basename(item, '.md').endsWith(SUFFIX))) {
-      const text = readFileSync(path, 'utf8'),
-        lines = text.split('\n')
-      let inside = false,
-        dirty = false
-      for (let index = 0; index < lines.length; index++) {
-        const line = lines[index] as string
-        if (index === 0 && line.trim() === '---') {
-          inside = true
-          continue
-        }
-        if (inside && line.trim() === '---') break
-        const match = inside ? line.match(/^(status|priority):\s*(.+)$/) : null
-        if (!match) continue
-        const value = bare(match[2] as string, match[1] === 'status' ? STATUS : PRIORITY)
-        if (value) {
-          lines[index] = `${match[1]}: ${value}`
-          dirty = true
-          changed++
-        }
-      }
-      if (dirty && !dryRun) writeFileSync(path, lines.join('\n'))
-    }
+    const writes = normalisationWrites(target)
+    if (!dryRun) for (const write of writes) writeFileSync(join(root, write.path), write.content)
     return one(
-      changed
-        ? { status: 'FIXED', message: `${changed} status or priority value(s) ${dryRun ? 'would be normalised' : 'normalised'}.` }
+      writes.length
+        ? { status: 'FIXED', message: `${writes.length} proposal file(s) ${dryRun ? 'would be normalised' : 'normalised'}.` }
         : { status: 'PASS', message: 'No safely normalisable status or priority values.' }
     )
   }
