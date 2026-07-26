@@ -1,6 +1,6 @@
-# Streams Structure Reference
+# Streams structure standard
 
-Long-form detail on how the `Streams` zone is laid out, for the [Knowledge Islands Streams](../SKILL.md) skill. Loaded on demand so the `SKILL.md` body stays lean. The process that runs over this structure is in [the Enactment Process reference](<Enactment Process Reference.md>).
+This standard defines how the `Streams` zone is laid out for the [Knowledge Islands Streams](../SKILL.md) skill. The process that runs over this structure is defined by the [Enactment Process standard](standards-enactment-process.md).
 
 ## Contents
 
@@ -88,7 +88,7 @@ The zone uses the machine-readable `type:` key (the canonical scheme; see the sk
 
 **Frontmatter applies by type.** Only `stream-proposal` and `stream-note` notes carry the lifecycle fields `status`, `priority`, and `dependencies` (plus the base's descriptive keys such as `title`/`description`, and any local scoping keys). `stream-zone` and `stream-focus` index notes carry `type` and the common keys only — **not** `status`/`priority`/`dependencies`. The checker enforces the lifecycle fields on `<Name> Proposal.md` notes, so it does not wrongly demand them of index notes.
 
-**Full proposals vs lightweight streams.** A stream comes in [two weights](<Enactment Process Reference.md>): a **full proposal** (a `stream-proposal` with the `Proposal` suffix and the apparatus) or a **lightweight stream** (a plain tracker note — no suffix, no proposal frontmatter — for work that isn't a governed canonical change). The suffix and `STREAM-3` apply only to full proposals; a lightweight stream is just a note under a Focus folder.
+**Full proposals vs lightweight streams.** A stream comes in [two weights](standards-enactment-process.md): a **full proposal** (a `stream-proposal` with the `Proposal` suffix and the apparatus) or a **lightweight stream** (a plain tracker note — no suffix, no proposal frontmatter — for work that isn't a governed canonical change). The suffix and `STREAM-3` apply only to full proposals; a lightweight stream is just a note under a Focus folder.
 
 ## Index notes
 
@@ -106,7 +106,7 @@ The `Streams/` zone index note (`type: stream-zone`) also carries a cross-Focus 
 
 ## What lives in a stream note
 
-A stream note is a proposal document and status tracker. Inside the [proposal anatomy](<Enactment Process Reference.md>) frame it holds: current status, progress updates, decisions made within the stream, next steps, blockers, and links out to the canonical zones. What does **not** belong: durable analysis, drafting work product, reusable methodology (→ `Pillars/`); external reference material (→ `Resources/`); a settled change to the base's operating model — a process, convention, or configuration (→ `Admin/`); time-bound records (→ `Calendar/`). When a stream produces lasting insight, extract it to its canonical zone and link back.
+A stream note is a proposal document and status tracker. Inside the [proposal anatomy](standards-enactment-process.md) frame it holds: current status, progress updates, decisions made within the stream, next steps, blockers, and links out to the canonical zones. What does **not** belong: durable analysis, drafting work product, reusable methodology (→ `Pillars/`); external reference material (→ `Resources/`); a settled change to the base's operating model — a process, convention, or configuration (→ `Admin/`); time-bound records (→ `Calendar/`). When a stream produces lasting insight, extract it to its canonical zone and link back.
 
 ## Settled streams
 

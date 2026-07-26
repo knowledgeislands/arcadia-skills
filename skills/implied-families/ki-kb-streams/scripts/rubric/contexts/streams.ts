@@ -1,35 +1,111 @@
-import { existsSync, readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs'
+import { existsSync, lstatSync, readdirSync, readFileSync } from 'node:fs'
 import { basename, join, relative, resolve } from 'node:path'
-import type { ConformOutcome, RubricOutcomes } from '../../shared/rubric.ts'
+import type { AuditOutcome, ConformWrite, RubricContextOptions, RubricSession, ViolationLevel } from '../../shared/rubric.ts'
 
 const FOCI = ['Active', 'Background', 'Dormant', 'Future', 'Settled'] as const
-const STATUS = ['draft', 'ready', 'rejected', 'in-progress', 'rolled-out', 'reviewed', 'completed']
-const PRIORITY = ['urgent', 'high', 'medium', 'low']
+const STATUS = ['draft', 'ready', 'rejected', 'in-progress', 'rolled-out', 'reviewed', 'completed'] as const
+const PRIORITY = ['urgent', 'high', 'medium', 'low'] as const
 const SUFFIX = ' Proposal'
-type Finding = { level: 'FAIL' | 'WARN' | 'INFO' | 'NOT_APPLICABLE' | 'PASS'; code: string; message: string; subject?: string }
-type Config = { keys: Record<string, string>; streams: string }
-const dir = (path: string): boolean => existsSync(path) && statSync(path).isDirectory()
-const file = (path: string): boolean => existsSync(path) && statSync(path).isFile()
+
+export type StreamsEvidence = {
+  level: 'FAIL' | 'WARN' | 'INFO' | 'NOT_APPLICABLE' | 'PASS'
+  message: string
+  subject?: string
+}
+
+export type StreamRubricContext = {
+  focusFolders: readonly StreamsEvidence[]
+  focusIndexes: readonly StreamsEvidence[]
+  proposalSuffix: readonly StreamsEvidence[]
+}
+
+export type EnactmentRubricContext = {
+  proposalFrontmatter: readonly StreamsEvidence[]
+  lifecycle: readonly StreamsEvidence[]
+  normaliseLifecycle?: () => void
+}
+
+export type GateRubricContext = {
+  anchor: readonly StreamsEvidence[]
+}
+
+export type ConfigRubricContext = {
+  knownKeys: readonly StreamsEvidence[]
+  noteTypeScheme: readonly StreamsEvidence[]
+}
+
+export type StreamsRubricContext = {
+  stream: StreamRubricContext
+  enactment: EnactmentRubricContext
+  gate: GateRubricContext
+  config: ConfigRubricContext
+}
+
+type ParsedFrontmatter = {
+  values: Record<string, string>
+  closed: boolean
+}
+
+type StreamsConfiguration = {
+  keys: Record<string, string>
+  ownKeys: readonly string[]
+  streams: string
+}
+
+type MarkdownDocument = {
+  absolutePath: string
+  relativePath: string
+  content: string
+  frontmatter: ParsedFrontmatter | null
+}
+
+export const auditEvidence = (
+  evidence: readonly StreamsEvidence[],
+  defaultLevel: ViolationLevel,
+  overrideLevels?: readonly ViolationLevel[]
+): readonly AuditOutcome[] =>
+  evidence.map((finding): AuditOutcome => {
+    if (finding.level === 'FAIL' || finding.level === 'WARN') {
+      const level = finding.level
+      return {
+        status: 'VIOLATION',
+        message: finding.message,
+        ...(finding.subject ? { subject: finding.subject } : {}),
+        ...(level !== defaultLevel && overrideLevels?.includes(level) ? { level } : {})
+      }
+    }
+    return {
+      status: finding.level,
+      message: finding.message,
+      ...(finding.subject ? { subject: finding.subject } : {})
+    }
+  })
+
+const directory = (path: string): boolean => existsSync(path) && lstatSync(path).isDirectory()
+const regularFile = (path: string): boolean => existsSync(path) && lstatSync(path).isFile() && !lstatSync(path).isSymbolicLink()
+
 const directories = (path: string): string[] =>
-  dir(path)
+  directory(path)
     ? readdirSync(path, { withFileTypes: true })
         .filter((entry) => entry.isDirectory())
         .map((entry) => entry.name)
     : []
-const markdown = (path: string, values: string[] = []): string[] => {
-  for (const entry of dir(path) ? readdirSync(path, { withFileTypes: true }) : []) {
+
+const markdownPaths = (path: string, values: string[] = []): string[] => {
+  for (const entry of directory(path) ? readdirSync(path, { withFileTypes: true }) : []) {
     if (entry.name.startsWith('.')) continue
     const child = join(path, entry.name)
-    if (entry.isDirectory()) markdown(child, values)
-    else if (entry.name.endsWith('.md')) values.push(child)
+    if (entry.isDirectory()) markdownPaths(child, values)
+    else if (entry.isFile() && entry.name.endsWith('.md')) values.push(child)
   }
   return values
 }
-const parse = (text: string): Config => {
+
+const parseConfiguration = (text: string): StreamsConfiguration => {
   try {
-    const doc = Bun.TOML.parse(text) as Record<string, unknown>
-    const own = doc['ki-kb-streams'] as Record<string, unknown> | undefined
-    const kb = doc['ki-kb'] as Record<string, unknown> | undefined
+    const document = Bun.TOML.parse(text) as Record<string, unknown>
+    const own = document['ki-kb-streams'] as Record<string, unknown> | undefined
+    const kb = document['ki-kb'] as Record<string, unknown> | undefined
     const zones = kb?.zones as Record<string, unknown> | undefined
     return {
       keys: Object.fromEntries(
@@ -37,190 +113,255 @@ const parse = (text: string): Config => {
           .filter(([key]) => ['process_note', 'note_type_scheme'].includes(key))
           .map(([key, value]) => [key, String(value)])
       ),
+      ownKeys: Object.keys(own ?? {}),
       streams: typeof zones?.Streams === 'string' ? zones.Streams : 'Streams'
     }
   } catch {
-    return { keys: {}, streams: 'Streams' }
+    return { keys: {}, ownKeys: [], streams: 'Streams' }
   }
 }
-const fm = (text: string): { values: Record<string, string>; closed: boolean } | null => {
+
+const parseFrontmatter = (text: string): ParsedFrontmatter | null => {
   const lines = text.split(/\r?\n/)
   if (lines[0]?.trim() !== '---') return null
   const values: Record<string, string> = {}
-  for (let i = 1; i < lines.length; i++) {
-    const line = lines[i] as string
+  for (let index = 1; index < lines.length; index++) {
+    const line = lines[index] as string
     if (line.trim() === '---') return { values, closed: true }
     if (/^\s/.test(line)) continue
-    const at = line.indexOf(':')
-    if (at > 0)
-      values[line.slice(0, at).trim()] = line
-        .slice(at + 1)
+    const separator = line.indexOf(':')
+    if (separator > 0)
+      values[line.slice(0, separator).trim()] = line
+        .slice(separator + 1)
         .trim()
         .replace(/^['"]|['"]$/g, '')
   }
   return { values, closed: false }
 }
-const sample = (values: string[]): string => values.slice(0, 10).join('; ')
-const bare = (value: string, vocabulary: readonly string[]): string | null =>
+
+const sample = (values: readonly string[]): string => values.slice(0, 10).join('; ')
+const escapeRegularExpression = (value: string): string => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+
+const bareToken = (value: string, vocabulary: readonly string[]): string | undefined =>
   vocabulary.includes(value)
-    ? null
-    : (vocabulary.find((token) => value.startsWith(token) && /[\s,;.()-]/.test(value.charAt(token.length))) ?? null)
+    ? undefined
+    : vocabulary.find((token) => value.startsWith(token) && /[\s,;.()-]/.test(value.charAt(token.length)))
 
-export type StreamsContext = {
-  root: string
-  dryRun: boolean
-  auditFindings: readonly Finding[]
-  conformRule: (code: string) => RubricOutcomes<ConformOutcome>
+const proposalDocument = (document: MarkdownDocument): boolean => {
+  const values = document.frontmatter?.values
+  return (
+    basename(document.absolutePath, '.md').endsWith(SUFFIX) ||
+    values?.type === 'stream-proposal' ||
+    (Boolean(values?.status) && Boolean(values?.priority) && Boolean(values?.dependencies))
+  )
 }
 
-/**
- * Declare the one mechanical conform that does not need a content decision:
- * trim a recognised lifecycle token to its controlled-vocabulary value.
- * The native KI host owns validation and publication of these replacements.
- */
-export const normalisationWrites = (target: string): readonly { readonly path: string; readonly content: string }[] => {
-  const root = resolve(target)
-  if (!dir(root)) return []
-  const config = parse(file(join(root, '.ki-config.toml')) ? readFileSync(join(root, '.ki-config.toml'), 'utf8') : '')
-  const streams = join(root, config.streams)
-  return markdown(streams)
-    .filter((path) => basename(path, '.md').endsWith(SUFFIX))
-    .flatMap((path) => {
-      const text = readFileSync(path, 'utf8')
-      const lines = text.split('\n')
-      let inside = false
-      let dirty = false
-      for (let index = 0; index < lines.length; index++) {
-        const line = lines[index] as string
-        if (index === 0 && line.trim() === '---') {
-          inside = true
-          continue
-        }
-        if (inside && line.trim() === '---') break
-        const match = inside ? line.match(/^(status|priority):\s*(.+)$/) : null
-        if (!match) continue
-        const value = bare(match[2] as string, match[1] === 'status' ? STATUS : PRIORITY)
-        if (value) {
-          lines[index] = `${match[1]}: ${value}`
-          dirty = true
-        }
-      }
-      return dirty ? [{ path: relative(root, path), content: lines.join('\n') }] : []
-    })
-}
-export const collectStreamsAudit = (target: string): readonly Finding[] => {
-  const root = resolve(target),
-    findings: Finding[] = []
-  const add = (level: Finding['level'], code: string, message: string, subject?: string) =>
-    findings.push({ level, code, message, ...(subject ? { subject } : {}) })
-  if (!dir(root)) {
-    add('FAIL', 'STREAM-1', 'Target is not a directory.', root)
-    return findings
-  }
-  const config = parse(file(join(root, '.ki-config.toml')) ? readFileSync(join(root, '.ki-config.toml'), 'utf8') : '')
-  const streams = join(root, config.streams)
-  if (!dir(streams)) {
-    add('NOT_APPLICABLE', 'STREAM-1', `No ${config.streams}/ zone; its presence is owned by ki-kb.`)
-    return findings
-  }
-  const raw = file(join(root, '.ki-config.toml')) ? readFileSync(join(root, '.ki-config.toml'), 'utf8') : ''
-  const own = raw.match(/\[ki-kb-streams\]([\s\S]*?)(?=^\[|$)/m)?.[1] ?? ''
-  for (const line of own.split(/\r?\n/)) {
-    const key = line.replace(/#.*$/, '').split('=')[0]?.trim()
-    if (key && !['process_note', 'note_type_scheme'].includes(key))
-      add('WARN', 'CONFIG-1', `Unrecognised ki-kb-streams key: ${key}.`, '.ki-config.toml')
-  }
-  if (!findings.some((f) => f.code === 'CONFIG-1'))
-    add('PASS', 'CONFIG-1', 'Only recognised ki-kb-streams keys are present.', '.ki-config.toml')
-  const scheme = config.keys.note_type_scheme
-  add(
-    scheme && !['type', 'tags'].includes(scheme) ? 'WARN' : 'PASS',
-    'CONFIG-2',
-    scheme && !['type', 'tags'].includes(scheme) ? `Invalid note_type_scheme: ${scheme}.` : 'Note type scheme is canonical or absent.',
-    '.ki-config.toml'
-  )
-  const present = directories(streams),
-    foci = FOCI.filter((focus) => present.includes(focus))
-  const stray = present.filter((name) => !FOCI.includes(name as (typeof FOCI)[number]))
-  add(
-    stray.length ? 'WARN' : 'PASS',
-    'STREAM-1',
-    stray.length ? `Non-Focus folders: ${sample(stray)}.` : 'All direct folders are Focus folders.',
-    config.streams
-  )
-  for (const focus of foci) {
-    const index = join(streams, focus, `${focus}.md`)
-    add(
-      file(index) ? 'PASS' : 'WARN',
-      'STREAM-2',
-      file(index) ? 'Focus index is present.' : 'Focus index is missing.',
-      `${config.streams}/${focus}/${focus}.md`
-    )
-  }
-  const proposals = markdown(streams).filter((path) => basename(path, '.md').endsWith(SUFFIX)),
-    missing: string[] = [],
-    badStatus: string[] = [],
-    badPriority: string[] = [],
-    malformed: string[] = []
-  for (const path of proposals) {
-    const value = fm(readFileSync(path, 'utf8')),
-      relative = path.slice(root.length + 1)
-    if (!value?.closed) {
-      malformed.push(relative)
+const normalisedContent = (content: string): string => {
+  const lines = content.split('\n')
+  let inside = false
+  for (let index = 0; index < lines.length; index++) {
+    const line = lines[index] as string
+    if (index === 0 && line.trim() === '---') {
+      inside = true
       continue
     }
-    for (const key of ['status', 'priority', 'dependencies']) if (!(key in value.values)) missing.push(`${relative} (${key})`)
-    if (value.values.status && !STATUS.includes(value.values.status)) badStatus.push(relative)
-    if (value.values.priority && !PRIORITY.includes(value.values.priority)) badPriority.push(relative)
+    if (inside && line.trim() === '---') break
+    const match = inside ? line.match(/^(status|priority):\s*(.+)$/) : null
+    if (!match) continue
+    const vocabulary = match[1] === 'status' ? STATUS : PRIORITY
+    const value = bareToken(match[2] as string, vocabulary)
+    if (value) lines[index] = `${match[1]}: ${value}`
   }
-  add(
-    malformed.length ? 'FAIL' : missing.length ? 'WARN' : 'PASS',
-    'ENACT-1',
-    malformed.length
-      ? `Malformed proposal frontmatter: ${sample(malformed)}.`
-      : missing.length
-        ? `Missing proposal frontmatter: ${sample(missing)}.`
-        : 'Proposal frontmatter is complete.'
-  )
-  add(
-    badStatus.length || badPriority.length ? 'WARN' : 'PASS',
-    'ENACT-2',
-    badStatus.length || badPriority.length
-      ? `Non-lifecycle status or priority: ${sample([...badStatus, ...badPriority])}.`
-      : 'Proposal status and priority use bare lifecycle tokens.'
-  )
-  const anchor = ['CLAUDE.md', 'AGENTS.md'].find((name) => file(join(root, name)))
-  const anchored =
-    anchor &&
-    /Enactment Process|ki-kb-streams/i.test(readFileSync(join(root, anchor), 'utf8')) &&
-    /proposal|canonical/i.test(readFileSync(join(root, anchor), 'utf8'))
-  add(
-    proposals.length === 0 ? 'NOT_APPLICABLE' : anchored ? 'PASS' : 'WARN',
-    'GATE-1',
-    proposals.length === 0
-      ? 'No proposals yet; the gate is not required.'
-      : anchored
-        ? 'Enactment gate is anchored.'
-        : 'Enactment gate is not anchored in root CLAUDE.md or AGENTS.md.',
-    anchor
-  )
-  return findings
+  return lines.join('\n')
 }
-const one = (value: ConformOutcome): RubricOutcomes<ConformOutcome> => [value]
-export const createStreamsContext = (target: string, dryRun: boolean): StreamsContext => ({
-  root: resolve(target),
-  dryRun,
-  auditFindings: collectStreamsAudit(target),
-  conformRule: (code) => {
-    if (code !== 'ENACT-2') return one({ status: 'NOT_APPLICABLE', message: 'This criterion has no safe conform action.' })
-    const root = resolve(target)
-    if (!dir(root)) return one({ status: 'VIOLATION', message: 'Target is not a directory.', subject: root })
-    const writes = normalisationWrites(target)
-    if (!dryRun) for (const write of writes) writeFileSync(join(root, write.path), write.content)
-    return one(
-      writes.length
-        ? { status: 'FIXED', message: `${writes.length} proposal file(s) ${dryRun ? 'would be normalised' : 'normalised'}.` }
-        : { status: 'PASS', message: 'No safely normalisable status or priority values.' }
-    )
+
+const unavailableContext = (level: 'FAIL' | 'NOT_APPLICABLE', message: string, subject?: string): StreamsRubricContext => {
+  const evidence: StreamsEvidence = { level, message, ...(subject ? { subject } : {}) }
+  const notApplicable: StreamsEvidence[] = [{ level: 'NOT_APPLICABLE', message: 'Streams evidence is unavailable.' }]
+  return {
+    stream: { focusFolders: [evidence], focusIndexes: notApplicable, proposalSuffix: notApplicable },
+    enactment: { proposalFrontmatter: notApplicable, lifecycle: notApplicable },
+    gate: { anchor: notApplicable },
+    config: { knownKeys: notApplicable, noteTypeScheme: notApplicable }
   }
-})
+}
+
+export const createStreamsSession = ({ mode, repository }: RubricContextOptions): RubricSession<StreamsRubricContext> => {
+  const root = resolve(repository)
+  if (!directory(root)) {
+    const context = unavailableContext('FAIL', 'Target is not a directory.', root)
+    return {
+      subjects: [{ families: ['STREAM', 'ENACT', 'GATE', 'CONFIG'], context: () => context }],
+      proposal: () => ({ writes: [] })
+    }
+  }
+
+  const configPath = join(root, '.ki-config.toml')
+  const configuration = parseConfiguration(regularFile(configPath) ? readFileSync(configPath, 'utf8') : '')
+  const streamsPath = join(root, configuration.streams)
+  if (!directory(streamsPath)) {
+    const context = unavailableContext('NOT_APPLICABLE', `No ${configuration.streams}/ zone; its presence is owned by ki-kb.`)
+    return {
+      subjects: [{ families: ['STREAM', 'ENACT', 'GATE', 'CONFIG'], context: () => context }],
+      proposal: () => ({ writes: [] })
+    }
+  }
+
+  const documents: MarkdownDocument[] = markdownPaths(streamsPath).map((absolutePath) => {
+    const content = readFileSync(absolutePath, 'utf8')
+    return {
+      absolutePath,
+      relativePath: relative(root, absolutePath),
+      content,
+      frontmatter: parseFrontmatter(content)
+    }
+  })
+  const proposals = documents.filter(proposalDocument)
+  const originals = new Map(proposals.map((document) => [document.relativePath, document.content]))
+  const drafts = new Map(originals)
+  const present = directories(streamsPath)
+  const foci = FOCI.filter((focus) => present.includes(focus))
+  const stray = present.filter((name) => !FOCI.includes(name as (typeof FOCI)[number]))
+  const focusFolders: StreamsEvidence[] = [
+    {
+      level: stray.length ? 'WARN' : 'PASS',
+      message: stray.length ? `Non-Focus folders: ${sample(stray)}.` : 'All direct folders are Focus folders.',
+      subject: configuration.streams
+    }
+  ]
+  const focusIndexes: StreamsEvidence[] =
+    foci.length === 0
+      ? [{ level: 'NOT_APPLICABLE', message: 'No Focus folders are present.' }]
+      : foci.map((focus) => {
+          const path = join(streamsPath, focus, `${focus}.md`)
+          return {
+            level: regularFile(path) ? 'PASS' : 'WARN',
+            message: regularFile(path) ? 'Focus index is present.' : 'Focus index is missing.',
+            subject: `${configuration.streams}/${focus}/${focus}.md`
+          }
+        })
+  const suffixDrift = proposals.flatMap((document) => {
+    const expected = basename(document.absolutePath, '.md')
+    const values = document.frontmatter?.values
+    const problems = [
+      expected.endsWith(SUFFIX) ? '' : 'filename',
+      new RegExp(`^#\\s+${escapeRegularExpression(expected)}\\s*$`, 'm').test(document.content) ? '' : 'H1',
+      values?.title === expected ? '' : 'title'
+    ].filter(Boolean)
+    return problems.length ? [`${document.relativePath} (${problems.join(', ')})`] : []
+  })
+  const proposalSuffix: StreamsEvidence[] = [
+    {
+      level: suffixDrift.length ? 'WARN' : proposals.length ? 'PASS' : 'NOT_APPLICABLE',
+      message: suffixDrift.length
+        ? `Proposal suffix drift: ${sample(suffixDrift)}.`
+        : proposals.length
+          ? 'Proposal filenames, headings, and titles carry the Proposal suffix.'
+          : 'No full proposals are present.'
+    }
+  ]
+  const malformed: string[] = []
+  const missing: string[] = []
+  const badStatus: string[] = []
+  const badPriority: string[] = []
+  for (const document of proposals) {
+    const frontmatter = document.frontmatter
+    if (!frontmatter?.closed) {
+      malformed.push(document.relativePath)
+      continue
+    }
+    for (const key of ['status', 'priority', 'dependencies'])
+      if (!(key in frontmatter.values)) missing.push(`${document.relativePath} (${key})`)
+    if (frontmatter.values.status && !STATUS.includes(frontmatter.values.status as (typeof STATUS)[number]))
+      badStatus.push(document.relativePath)
+    if (frontmatter.values.priority && !PRIORITY.includes(frontmatter.values.priority as (typeof PRIORITY)[number]))
+      badPriority.push(document.relativePath)
+  }
+  const proposalFrontmatter: StreamsEvidence[] = [
+    {
+      level: malformed.length ? 'FAIL' : missing.length ? 'WARN' : proposals.length ? 'PASS' : 'NOT_APPLICABLE',
+      message: malformed.length
+        ? `Malformed proposal frontmatter: ${sample(malformed)}.`
+        : missing.length
+          ? `Missing proposal frontmatter: ${sample(missing)}.`
+          : proposals.length
+            ? 'Proposal frontmatter is complete.'
+            : 'No full proposals are present.'
+    }
+  ]
+  const lifecycle: StreamsEvidence[] = [
+    {
+      level: badStatus.length || badPriority.length ? 'WARN' : proposals.length ? 'PASS' : 'NOT_APPLICABLE',
+      message:
+        badStatus.length || badPriority.length
+          ? `Non-lifecycle status or priority: ${sample([...badStatus, ...badPriority])}.`
+          : proposals.length
+            ? 'Proposal status and priority use bare lifecycle tokens.'
+            : 'No full proposals are present.'
+    }
+  ]
+  const anchorFiles = ['CLAUDE.md', 'AGENTS.md'].filter((name) => regularFile(join(root, name)))
+  const anchored = anchorFiles.some((name) => {
+    const content = readFileSync(join(root, name), 'utf8')
+    return /Enactment Process|ki-kb-streams/i.test(content) && /proposal|canonical/i.test(content)
+  })
+  const anchor: StreamsEvidence[] = [
+    {
+      level: proposals.length === 0 ? 'NOT_APPLICABLE' : anchored ? 'PASS' : 'WARN',
+      message:
+        proposals.length === 0
+          ? 'No proposals yet; the gate is not required.'
+          : anchored
+            ? 'Enactment gate is anchored.'
+            : 'Enactment gate is not anchored in root CLAUDE.md or AGENTS.md.',
+      ...(anchorFiles.length ? { subject: anchorFiles.join(', ') } : {})
+    }
+  ]
+  const unknownKeys = configuration.ownKeys.filter((key) => !['process_note', 'note_type_scheme'].includes(key))
+  const knownKeys: StreamsEvidence[] = [
+    {
+      level: unknownKeys.length ? 'WARN' : 'PASS',
+      message: unknownKeys.length
+        ? `Unrecognised ki-kb-streams key(s): ${unknownKeys.join(', ')}.`
+        : 'Only recognised ki-kb-streams keys are present.',
+      subject: '.ki-config.toml'
+    }
+  ]
+  const scheme = configuration.keys.note_type_scheme
+  const noteTypeScheme: StreamsEvidence[] = [
+    {
+      level: scheme && !['type', 'tags'].includes(scheme) ? 'WARN' : 'PASS',
+      message:
+        scheme && !['type', 'tags'].includes(scheme) ? `Invalid note_type_scheme: ${scheme}.` : 'Note type scheme is canonical or absent.',
+      subject: '.ki-config.toml'
+    }
+  ]
+  const mutable = mode === 'conform'
+  const context: StreamsRubricContext = {
+    stream: { focusFolders, focusIndexes, proposalSuffix },
+    enactment: {
+      proposalFrontmatter,
+      lifecycle,
+      ...(mutable
+        ? {
+            normaliseLifecycle: () => {
+              for (const [path, content] of drafts) drafts.set(path, normalisedContent(content))
+            }
+          }
+        : {})
+    },
+    gate: { anchor },
+    config: { knownKeys, noteTypeScheme }
+  }
+
+  return {
+    subjects: [{ families: ['STREAM', 'ENACT', 'GATE', 'CONFIG'], context: () => context }],
+    proposal: () => {
+      const writes: ConformWrite[] = []
+      for (const [path, content] of drafts) {
+        if (content !== originals.get(path)) writes.push({ path, content })
+      }
+      return { writes }
+    }
+  }
+}

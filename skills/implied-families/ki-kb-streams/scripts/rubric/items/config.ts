@@ -1,9 +1,35 @@
-import { mechanical } from './common.ts'
-export const CONFIG_1 = mechanical(
-  'CONFIG-1',
-  'known Streams configuration',
-  'Only process_note and note_type_scheme are recognised under ki-kb-streams.',
-  'WARN'
-)
-export const CONFIG_2 = mechanical('CONFIG-2', 'note type scheme', 'note_type_scheme is type or tags when declared.', 'WARN')
-export const CONFIG = [CONFIG_1, CONFIG_2] as const
+import type { RubricFamily, RubricItem } from '../../shared/rubric.ts'
+import { auditEvidence, type ConfigRubricContext, type StreamsRubricContext } from '../contexts/streams.ts'
+
+const SOURCE = 'standards-enactment-process.md'
+
+const CONFIG_1: RubricItem<ConfigRubricContext> = {
+  code: 'CONFIG-1',
+  title: 'known Streams configuration',
+  description: 'Only process_note and note_type_scheme are recognised under ki-kb-streams.',
+  sources: [SOURCE],
+  mechanical: {
+    level: 'WARN',
+    audit: { phase: 'INSPECT', run: (context) => auditEvidence(context.knownKeys, 'WARN') }
+  }
+}
+
+const CONFIG_2: RubricItem<ConfigRubricContext> = {
+  code: 'CONFIG-2',
+  title: 'note type scheme',
+  description: 'note_type_scheme is type or tags when declared.',
+  sources: [SOURCE],
+  mechanical: {
+    level: 'WARN',
+    audit: { phase: 'INSPECT', run: (context) => auditEvidence(context.noteTypeScheme, 'WARN') }
+  }
+}
+
+export const CONFIG: RubricFamily<StreamsRubricContext, ConfigRubricContext> = {
+  code: 'CONFIG',
+  title: 'Streams configuration',
+  description: 'The skill-owned ki-kb-streams table.',
+  standard: SOURCE,
+  selectContext: (context) => context.config,
+  items: [CONFIG_1, CONFIG_2]
+}
