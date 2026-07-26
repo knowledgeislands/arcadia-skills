@@ -1,7 +1,7 @@
 import type { RubricFamily, RubricItem } from '../../shared/rubric.ts'
 import type { FrontmatterRubricContext, KiSkillsRubricContext } from '../contexts/contexts.ts'
 
-export const FM_1: RubricItem<FrontmatterRubricContext> = {
+const FM_1: RubricItem<FrontmatterRubricContext> = {
   code: 'FM-1',
   title: 'SKILL.md begins with a valid YAML frontmatter mapping',
   description:

@@ -1,7 +1,7 @@
 import type { RubricFamily, RubricItem } from '../../shared/rubric.ts'
 import type { KiSkillsRubricContext } from '../contexts/contexts.ts'
 
-export const KI_INVOKE_1: RubricItem<unknown> = {
+const KI_INVOKE_1: RubricItem<unknown> = {
   code: 'KI-INVOKE-1',
   title: 'HELP is the safe bare-invocation default',
   description:

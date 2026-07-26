@@ -62,8 +62,8 @@ const rubricFamilyModules = (
   familyModules: readonly {
     collection: string
     source: string | null
-    individuallyExportedRules: number
     exportsOrderedCollection: boolean
+    unexpectedExports: readonly string[]
   }[]
 } => {
   const indexPath = join(scriptsDirectory, 'rubric', 'items', 'index.ts')
@@ -91,11 +91,14 @@ const rubricFamilyModules = (
     const members = collectionMatch
       ? [...new Set([...(collectionMatch[1] as string).matchAll(/\b([A-Z][A-Z0-9_]+)\b/g)].map((match) => match[1] as string))]
       : []
-    const individuallyExportedRules = source
-      ? members.filter((member) => new RegExp(`export\\s+const\\s+${member}\\b`).test(source)).length
-      : 0
     const exportsOrderedCollection = collectionMatch !== null && collectionMatch !== undefined && members.length > 0
-    return { collection, source, individuallyExportedRules, exportsOrderedCollection }
+    const publicExports = source
+      ? [
+          ...source.matchAll(/^export\s+(?:const|function|class|interface|type|enum)\s+([A-Za-z_$][A-Za-z0-9_$]*)|^export\s+default\b/gm)
+        ].map((match) => match[1] ?? 'default')
+      : []
+    const unexpectedExports = publicExports.filter((name) => name !== collection)
+    return { collection, source, exportsOrderedCollection, unexpectedExports }
   })
 
   return {

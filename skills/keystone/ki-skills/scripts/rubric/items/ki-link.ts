@@ -19,7 +19,7 @@ const relativeLinkTargets = (markdown: string): string[] => {
 
 const hasWikilink = (markdown: string): boolean => /\[\[[^\]]+\]\]/.test(markdown)
 
-export const KI_LINK_1: RubricItem<KiLinkRubricContext> = {
+const KI_LINK_1: RubricItem<KiLinkRubricContext> = {
   code: 'KI-LINK-1',
   title: 'internal links use standard relative Markdown links',
   description: 'Internal links are **standard relative markdown links**, not wikilinks.',
@@ -36,7 +36,7 @@ export const KI_LINK_1: RubricItem<KiLinkRubricContext> = {
   }
 }
 
-export const KI_LINK_2: RubricItem<KiLinkRubricContext> = {
+const KI_LINK_2: RubricItem<KiLinkRubricContext> = {
   code: 'KI-LINK-2',
   title: 'relative link targets resolve',
   description: 'Links resolve — every relative target exists (angle-bracket form for paths with spaces).',
@@ -56,7 +56,7 @@ export const KI_LINK_2: RubricItem<KiLinkRubricContext> = {
   }
 }
 
-export const KI_LINK_3: RubricItem<KiLinkRubricContext> = {
+const KI_LINK_3: RubricItem<KiLinkRubricContext> = {
   code: 'KI-LINK-3',
   title: 'other skills are referred to by name',
   description: 'Other skills are referenced by `name`, never by file path.',
@@ -64,7 +64,7 @@ export const KI_LINK_3: RubricItem<KiLinkRubricContext> = {
   judgment: { prompt: 'Are other skills referred to by their public name rather than by a file path?' }
 }
 
-export const KI_LINK_4: RubricItem<KiLinkRubricContext> = {
+const KI_LINK_4: RubricItem<KiLinkRubricContext> = {
   code: 'KI-LINK-4',
   title: 'the house toolchain passes',
   description: 'The house toolchain passes: Biome (TS/JSON), Prettier + markdownlint-cli2 (markdown).',

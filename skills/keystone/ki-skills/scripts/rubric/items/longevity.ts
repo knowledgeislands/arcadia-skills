@@ -18,7 +18,7 @@ const refreshStatus = (context: RefreshContext): string => {
   return `${context.refreshClass ?? 'unmarked'} · ${context.cadence ?? '—'} · last ${context.lastReviewed ?? '—'} · age ${context.ageDays ?? '—'}d · ${status}`
 }
 
-export const LONG_1: RubricItem<unknown> = {
+const LONG_1: RubricItem<unknown> = {
   code: 'LONG-1',
   title: 'volatile facts have a refresh path',
   description:
@@ -27,7 +27,7 @@ export const LONG_1: RubricItem<unknown> = {
   judgment: { prompt: 'Do volatile facts resolve at runtime or have a tracked source list and refresh path?' }
 }
 
-export const LONG_2: RubricItem<unknown> = {
+const LONG_2: RubricItem<unknown> = {
   code: 'LONG-2',
   title: 'the refresh path has a cadence',
   description:
@@ -36,7 +36,7 @@ export const LONG_2: RubricItem<unknown> = {
   judgment: { prompt: 'Does the refresh path have an appropriate declared cadence and scheduled execution where supported?' }
 }
 
-export const LONG_3: RubricItem<LongevityRubricContext> = {
+const LONG_3: RubricItem<LongevityRubricContext> = {
   code: 'LONG-3',
   title: 'the declared refresh cadence is being met',
   description:
@@ -71,7 +71,7 @@ export const LONG_3: RubricItem<LongevityRubricContext> = {
   }
 }
 
-export const LONG_4: RubricItem<LongevityRubricContext> = {
+const LONG_4: RubricItem<LongevityRubricContext> = {
   code: 'LONG-4',
   title: 'the refresh marker is present and coherent',
   description:

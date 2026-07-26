@@ -1,6 +1,9 @@
 import { describe, expect, test } from 'bun:test'
-import { PORT_1 } from '../items/portability.ts'
+import { PORTABILITY } from '../items/portability.ts'
 import { unqualifiedRuntimeAssumptions } from './portability.ts'
+
+const PORT_1 = PORTABILITY.items.find(({ code }) => code === 'PORT-1')
+if (!PORT_1) throw new Error('expected PORT-1 in the portability family')
 
 const findings = (markdown: string, overrides: Partial<Parameters<typeof unqualifiedRuntimeAssumptions>[0]> = {}) =>
   unqualifiedRuntimeAssumptions({

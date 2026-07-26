@@ -5,7 +5,7 @@ import { containsXmlTag } from '../contexts/text.ts'
 const NAME_MAX_LENGTH = 64
 const RESERVED_WORDS = ['anthropic', 'claude']
 
-export const NAME_1: RubricItem<NameRubricContext> = {
+const NAME_1: RubricItem<NameRubricContext> = {
   code: 'NAME-1',
   title: 'name is present',
   description: '`name` present (spec requires it; CC defaults to dir name — see ※1).',
@@ -20,7 +20,7 @@ export const NAME_1: RubricItem<NameRubricContext> = {
   }
 }
 
-export const NAME_2: RubricItem<NameRubricContext> = {
+const NAME_2: RubricItem<NameRubricContext> = {
   code: 'NAME-2',
   title: 'name is no longer than 64 characters',
   description: '`name` ≤ 64 characters.',
@@ -39,7 +39,7 @@ export const NAME_2: RubricItem<NameRubricContext> = {
   }
 }
 
-export const NAME_3: RubricItem<NameRubricContext> = {
+const NAME_3: RubricItem<NameRubricContext> = {
   code: 'NAME-3',
   title: 'name uses lowercase letters, digits, and hyphens only',
   description: '`name` is lowercase letters, digits, hyphens only.',
@@ -58,7 +58,7 @@ export const NAME_3: RubricItem<NameRubricContext> = {
   }
 }
 
-export const NAME_4: RubricItem<NameRubricContext> = {
+const NAME_4: RubricItem<NameRubricContext> = {
   code: 'NAME-4',
   title: 'name has no leading or trailing hyphen and no consecutive hyphens',
   description: '`name` has no leading/trailing hyphen and no consecutive hyphens.',
@@ -77,7 +77,7 @@ export const NAME_4: RubricItem<NameRubricContext> = {
   }
 }
 
-export const NAME_5: RubricItem<NameRubricContext> = {
+const NAME_5: RubricItem<NameRubricContext> = {
   code: 'NAME-5',
   title: 'name matches the parent directory name exactly',
   description:
@@ -110,7 +110,7 @@ export const NAME_5: RubricItem<NameRubricContext> = {
   }
 }
 
-export const NAME_6: RubricItem<NameRubricContext> = {
+const NAME_6: RubricItem<NameRubricContext> = {
   code: 'NAME-6',
   title: 'name contains no XML tags or reserved words',
   description: '`name` contains no XML tags and no reserved words (`anthropic`, `claude`).',
@@ -132,7 +132,7 @@ export const NAME_6: RubricItem<NameRubricContext> = {
   }
 }
 
-export const NAME_7: RubricItem<NameRubricContext> = {
+const NAME_7: RubricItem<NameRubricContext> = {
   code: 'NAME-7',
   title: 'name is specific rather than generic',
   description: '`name` is specific, not generic (avoid `helper`, `utils`, `tools`, `data`).',

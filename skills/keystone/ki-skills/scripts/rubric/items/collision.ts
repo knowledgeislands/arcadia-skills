@@ -13,7 +13,7 @@ const triggerPhrases = (description: string): string[] => {
   return [...phrases]
 }
 
-export const COLL_1: RubricItem<CollisionRubricContext> = {
+const COLL_1: RubricItem<CollisionRubricContext> = {
   code: 'COLL-1',
   title: 'quoted trigger phrases are not shared across skills',
   description:
@@ -47,7 +47,7 @@ export const COLL_1: RubricItem<CollisionRubricContext> = {
   }
 }
 
-export const COLL_2: RubricItem<CollisionRubricContext> = {
+const COLL_2: RubricItem<CollisionRubricContext> = {
   code: 'COLL-2',
   title: 'adjacent skills have non-overlapping scope and reciprocal off-ramps',
   description:

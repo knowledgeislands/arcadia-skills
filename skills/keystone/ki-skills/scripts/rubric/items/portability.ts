@@ -2,7 +2,7 @@ import type { RubricFamily, RubricItem } from '../../shared/rubric.ts'
 import type { KiSkillsRubricContext, PortabilityRubricContext } from '../contexts/contexts.ts'
 import { unqualifiedRuntimeAssumptions } from '../contexts/portability.ts'
 
-export const PORT_1: RubricItem<PortabilityRubricContext> = {
+const PORT_1: RubricItem<PortabilityRubricContext> = {
   code: 'PORT-1',
   title: 'portable contracts make runtime assumptions explicit',
   description:

@@ -9,7 +9,7 @@ const hasTableOfContents = (markdown: string): boolean => {
   return (head.match(/^\s*[-*]\s+\[[^\]]+\]\(/gm) || []).length >= 3
 }
 
-export const REF_1: RubricItem<ReferencesRubricContext> = {
+const REF_1: RubricItem<ReferencesRubricContext> = {
   code: 'REF-1',
   title: 'rarely used detail is separated into on-demand files',
   description: 'Detailed/rarely-used material is in on-demand files; mutually-exclusive domains are split.',
@@ -17,7 +17,7 @@ export const REF_1: RubricItem<ReferencesRubricContext> = {
   judgment: { prompt: 'Is detailed or rarely used material routed to on-demand files, with mutually exclusive domains split?' }
 }
 
-export const REF_2: RubricItem<ReferencesRubricContext> = {
+const REF_2: RubricItem<ReferencesRubricContext> = {
   code: 'REF-2',
   title: 'supporting files are referenced from SKILL.md with a loading cue',
   description: 'Every supporting file is referenced from `SKILL.md` with when-to-load — no orphans.',
@@ -25,7 +25,7 @@ export const REF_2: RubricItem<ReferencesRubricContext> = {
   judgment: { prompt: 'Is every supporting file referenced from SKILL.md with clear guidance on when to load it?' }
 }
 
-export const REF_3: RubricItem<ReferencesRubricContext> = {
+const REF_3: RubricItem<ReferencesRubricContext> = {
   code: 'REF-3',
   title: 'long reference files open with a table of contents',
   description: 'Reference files > 100 lines open with a table of contents.',
@@ -48,7 +48,7 @@ export const REF_3: RubricItem<ReferencesRubricContext> = {
   }
 }
 
-export const REF_4: RubricItem<ReferencesRubricContext> = {
+const REF_4: RubricItem<ReferencesRubricContext> = {
   code: 'REF-4',
   title: 'script execution intent is explicit',
   description: 'Execution intent is explicit per script (run vs read).',
@@ -56,7 +56,7 @@ export const REF_4: RubricItem<ReferencesRubricContext> = {
   judgment: { prompt: 'Is the execution intent for each script explicit: run it or read it?' }
 }
 
-export const REF_5: RubricItem<ReferencesRubricContext> = {
+const REF_5: RubricItem<ReferencesRubricContext> = {
   code: 'REF-5',
   title: 'many-moded skills route independently invoked procedures',
   description: `_Mode-router for many-moded skills._ A skill whose body is dominated by **independently-invoked** modes keeps the shared model + a dispatch table in \`SKILL.md\` and moves each mode's procedure to a flat \`references/mode-<name>.md\` (tightly-coupled modes co-located, e.g. AUDIT+CONFORM); behaviour anchors and the shared model stay in the body. Not required when modes are few, short, or call-chained.`,

@@ -5,7 +5,7 @@ const BODY_MAX_LINES = 500
 const BODY_MAX_TOKENS = 5000
 const FOOTPRINT_REFERENCE_NOTE_TOKENS = 1500
 
-export const SIZE_1: RubricItem<SizeRubricContext> = {
+const SIZE_1: RubricItem<SizeRubricContext> = {
   code: 'SIZE-1',
   title: 'body is under 500 lines',
   description: '`SKILL.md` body is under **500 lines**.',
@@ -29,7 +29,7 @@ export const SIZE_1: RubricItem<SizeRubricContext> = {
   }
 }
 
-export const SIZE_2: RubricItem<SizeRubricContext> = {
+const SIZE_2: RubricItem<SizeRubricContext> = {
   code: 'SIZE-2',
   title: 'body stays below approximately 5,000 tokens',
   description: 'Body instructions stay under **~5,000 tokens**.',
@@ -48,7 +48,7 @@ export const SIZE_2: RubricItem<SizeRubricContext> = {
   }
 }
 
-export const SIZE_3: RubricItem<SizeRubricContext> = {
+const SIZE_3: RubricItem<SizeRubricContext> = {
   code: 'SIZE-3',
   title: 'body omits knowledge the agent already has',
   description: 'No token spent on what a competent agent already knows.',
@@ -56,7 +56,7 @@ export const SIZE_3: RubricItem<SizeRubricContext> = {
   judgment: { prompt: 'Does the body avoid spending tokens on knowledge a competent agent already has?' }
 }
 
-export const SIZE_4: RubricItem<SizeRubricContext> = {
+const SIZE_4: RubricItem<SizeRubricContext> = {
   code: 'SIZE-4',
   title: 'body is an overview that routes to detail',
   description: '`SKILL.md` reads as an **overview that routes to detail**, not all detail inlined.',
@@ -64,7 +64,7 @@ export const SIZE_4: RubricItem<SizeRubricContext> = {
   judgment: { prompt: 'Does the body work as an overview that routes rarely used detail into supporting files?' }
 }
 
-export const SIZE_5: RubricItem<SizeRubricContext> = {
+const SIZE_5: RubricItem<SizeRubricContext> = {
   code: 'SIZE-5',
   title: 'the optional footprint report measures every loaded component',
   description: `_(INFO, advisory — not a cap.)_ The linter, under \`--footprint\`, emits a per-skill token estimate of each component the skill adds to context — the \`description\` (standing cost), the \`SKILL.md\` body, and each \`references/\` file — plus a total. Neutral measurement for **Mode OPTIMISE**, never a verdict; the body/references soft limits remain SIZE-1/SIZE-2 and the environment-wide aggregate of all descriptions is \`ki-tokenomics\`' \`skills_surface\`.`,

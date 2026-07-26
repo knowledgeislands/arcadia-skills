@@ -3,7 +3,7 @@ import type { KiShapeRubricContext, KiSkillsRubricContext } from '../contexts/co
 
 const UNIVERSAL_VERBS = ['AUDIT', 'CONFORM', 'EDUCATE', 'REFRESH', 'HELP'] as const
 
-export const KI_SHAPE_1: RubricItem<KiShapeRubricContext> = {
+const KI_SHAPE_1: RubricItem<KiShapeRubricContext> = {
   code: 'KI-SHAPE-1',
   title: 'standard skills resolve base bindings at runtime',
   description: 'A **standard** KI skill resolves base bindings at runtime and hard-codes **no single base**.',
@@ -11,7 +11,7 @@ export const KI_SHAPE_1: RubricItem<KiShapeRubricContext> = {
   judgment: { prompt: 'Does this standard skill resolve base bindings at runtime without hard-coding one base?' }
 }
 
-export const KI_SHAPE_2: RubricItem<KiShapeRubricContext> = {
+const KI_SHAPE_2: RubricItem<KiShapeRubricContext> = {
   code: 'KI-SHAPE-2',
   title: 'skills compose rather than extend',
   description:
@@ -38,7 +38,7 @@ export const KI_SHAPE_2: RubricItem<KiShapeRubricContext> = {
   judgment: { prompt: 'Does every inter-skill relationship use declared composition rather than base-coupled extension?' }
 }
 
-export const KI_SHAPE_3: RubricItem<KiShapeRubricContext> = {
+const KI_SHAPE_3: RubricItem<KiShapeRubricContext> = {
   code: 'KI-SHAPE-3',
   title: 'the skill declares its kind',
   description:
@@ -47,7 +47,7 @@ export const KI_SHAPE_3: RubricItem<KiShapeRubricContext> = {
   judgment: { prompt: 'Does the skill correctly and clearly declare its governance or process kind?' }
 }
 
-export const KI_SHAPE_4: RubricItem<KiShapeRubricContext> = {
+const KI_SHAPE_4: RubricItem<KiShapeRubricContext> = {
   code: 'KI-SHAPE-4',
   title: 'a skill validates only its own configuration table',
   description:
@@ -56,7 +56,7 @@ export const KI_SHAPE_4: RubricItem<KiShapeRubricContext> = {
   judgment: { prompt: 'Does this skill validate only its own configuration table and ignore unrelated tables?' }
 }
 
-export const KI_SHAPE_5: RubricItem<KiShapeRubricContext> = {
+const KI_SHAPE_5: RubricItem<KiShapeRubricContext> = {
   code: 'KI-SHAPE-5',
   title: 'governance skills expose universal modes',
   description:
@@ -65,7 +65,7 @@ export const KI_SHAPE_5: RubricItem<KiShapeRubricContext> = {
   judgment: { prompt: 'Does this governance skill expose the universal modes with appropriate additional modes only?' }
 }
 
-export const KI_SHAPE_6: RubricItem<KiShapeRubricContext> = {
+const KI_SHAPE_6: RubricItem<KiShapeRubricContext> = {
   code: 'KI-SHAPE-6',
   title: 'governance skills use the KI file shape',
   description:
@@ -74,7 +74,7 @@ export const KI_SHAPE_6: RubricItem<KiShapeRubricContext> = {
   judgment: { prompt: 'Does this KI governance skill use the required reference and executable file shape?' }
 }
 
-export const KI_SHAPE_7: RubricItem<KiShapeRubricContext> = {
+const KI_SHAPE_7: RubricItem<KiShapeRubricContext> = {
   code: 'KI-SHAPE-7',
   title: 'behaviour-changing skills define and check their anchor',
   description:
@@ -103,7 +103,7 @@ export const KI_SHAPE_7: RubricItem<KiShapeRubricContext> = {
   judgment: { prompt: 'Does a behaviour-changing skill have an appropriate always-loaded anchor that its checker verifies?' }
 }
 
-export const KI_SHAPE_8: RubricItem<KiShapeRubricContext> = {
+const KI_SHAPE_8: RubricItem<KiShapeRubricContext> = {
   code: 'KI-SHAPE-8',
   title: 'governance checkers emit the canonical checker response',
   description:
@@ -130,7 +130,7 @@ export const KI_SHAPE_8: RubricItem<KiShapeRubricContext> = {
   judgment: { prompt: 'Does the checker fully follow the canonical checker and response contracts beyond the mechanical checks?' }
 }
 
-export const KI_SHAPE_9: RubricItem<KiShapeRubricContext> = {
+const KI_SHAPE_9: RubricItem<KiShapeRubricContext> = {
   code: 'KI-SHAPE-9',
   title: 'mechanical work belongs in the checker',
   description:
@@ -158,7 +158,7 @@ export const KI_SHAPE_9: RubricItem<KiShapeRubricContext> = {
   judgment: { prompt: 'Do remaining judgment criteria genuinely require review rather than deterministic checking?' }
 }
 
-export const KI_SHAPE_10: RubricItem<KiShapeRubricContext> = {
+const KI_SHAPE_10: RubricItem<KiShapeRubricContext> = {
   code: 'KI-SHAPE-10',
   title: 'skills do not assume private user configuration',
   description:
@@ -167,7 +167,7 @@ export const KI_SHAPE_10: RubricItem<KiShapeRubricContext> = {
   judgment: { prompt: 'Does the skill avoid assuming private personal configuration?' }
 }
 
-export const KI_SHAPE_11: RubricItem<KiShapeRubricContext> = {
+const KI_SHAPE_11: RubricItem<KiShapeRubricContext> = {
   code: 'KI-SHAPE-11',
   title: 'governance skills expose HELP',
   description:
@@ -208,7 +208,7 @@ const auditKiShape12 = ({ skill }: KiShapeRubricContext): RubricOutcomes<AuditOu
   return first ? [first, ...rest] : [{ status: 'PASS', message: 'governance mode vocabulary is canonical and complete' }]
 }
 
-export const KI_SHAPE_12: RubricItem<KiShapeRubricContext> = {
+const KI_SHAPE_12: RubricItem<KiShapeRubricContext> = {
   code: 'KI-SHAPE-12',
   title: 'governance mode vocabulary is canonical and complete',
   description:
@@ -228,7 +228,7 @@ export const KI_SHAPE_12: RubricItem<KiShapeRubricContext> = {
   }
 }
 
-export const KI_SHAPE_13: RubricItem<KiShapeRubricContext> = {
+const KI_SHAPE_13: RubricItem<KiShapeRubricContext> = {
   code: 'KI-SHAPE-13',
   title: 'mode headings have a canonical structure',
   description:
@@ -272,7 +272,7 @@ export const KI_SHAPE_13: RubricItem<KiShapeRubricContext> = {
   }
 }
 
-export const KI_SHAPE_14: RubricItem<KiShapeRubricContext> = {
+const KI_SHAPE_14: RubricItem<KiShapeRubricContext> = {
   code: 'KI-SHAPE-14',
   title: 'REFRESH states its ownership precondition',
   description:
@@ -327,7 +327,7 @@ const auditKiShape15 = ({ skill }: KiShapeRubricContext): RubricOutcomes<AuditOu
   return first ? [first, ...rest] : [{ status: 'PASS', message: 'governance skills expose no legacy runner entrypoints' }]
 }
 
-export const KI_SHAPE_15: RubricItem<KiShapeRubricContext> = {
+const KI_SHAPE_15: RubricItem<KiShapeRubricContext> = {
   code: 'KI-SHAPE-15',
   title: 'governance skills expose no legacy runner entrypoints',
   description:
@@ -339,7 +339,7 @@ export const KI_SHAPE_15: RubricItem<KiShapeRubricContext> = {
   }
 }
 
-export const KI_SHAPE_16: RubricItem<KiShapeRubricContext> = {
+const KI_SHAPE_16: RubricItem<KiShapeRubricContext> = {
   code: 'KI-SHAPE-16',
   title: 'target files have declared ownership',
   description:
@@ -382,7 +382,7 @@ export const KI_SHAPE_16: RubricItem<KiShapeRubricContext> = {
   }
 }
 
-export const KI_SHAPE_17: RubricItem<KiShapeRubricContext> = {
+const KI_SHAPE_17: RubricItem<KiShapeRubricContext> = {
   code: 'KI-SHAPE-17',
   title: 'dependencies are declared explicitly',
   description:

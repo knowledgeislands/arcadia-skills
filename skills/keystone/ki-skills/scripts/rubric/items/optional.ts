@@ -4,7 +4,7 @@ import type { KiSkillsRubricContext, OptionalRubricContext } from '../contexts/c
 const COMPATIBILITY_MIN_LENGTH = 1
 const COMPATIBILITY_MAX_LENGTH = 500
 
-export const OPT_1: RubricItem<OptionalRubricContext> = {
+const OPT_1: RubricItem<OptionalRubricContext> = {
   code: 'OPT-1',
   title: 'compatibility is between 1 and 500 characters when present',
   description: '`compatibility`, if present, is 1–500 chars.',
@@ -28,7 +28,7 @@ export const OPT_1: RubricItem<OptionalRubricContext> = {
   }
 }
 
-export const OPT_2: RubricItem<OptionalRubricContext> = {
+const OPT_2: RubricItem<OptionalRubricContext> = {
   code: 'OPT-2',
   title: 'metadata is a string-to-string map when present',
   description: '`metadata`, if present, is a string→string map.',
@@ -50,7 +50,7 @@ export const OPT_2: RubricItem<OptionalRubricContext> = {
   }
 }
 
-export const OPT_3: RubricItem<OptionalRubricContext> = {
+const OPT_3: RubricItem<OptionalRubricContext> = {
   code: 'OPT-3',
   title: 'tool declarations use valid tool specifications',
   description: '`allowed-tools` / `disallowed-tools`, if present, are valid tool specs (`allowed-tools` is **experimental**).',
@@ -74,7 +74,7 @@ export const OPT_3: RubricItem<OptionalRubricContext> = {
   }
 }
 
-export const OPT_4: RubricItem<OptionalRubricContext> = {
+const OPT_4: RubricItem<OptionalRubricContext> = {
   code: 'OPT-4',
   title: 'license declarations are non-empty YAML string scalars',
   description: '`license`, if present, is a non-empty YAML string scalar. Prefer a short name or bundled-file reference.',
@@ -146,7 +146,7 @@ const validToolRule = (rule: string): boolean => {
   return depth === 0 && rule.slice(opening + 1, -1).trim() !== ''
 }
 
-export const OPT_5: RubricItem<OptionalRubricContext> = {
+const OPT_5: RubricItem<OptionalRubricContext> = {
   code: 'OPT-5',
   title: 'runtime-specific fields are flagged where portability matters',
   description: 'CC-only fields are flagged when cross-platform portability matters (see ※3).',
@@ -154,7 +154,7 @@ export const OPT_5: RubricItem<OptionalRubricContext> = {
   judgment: { prompt: 'Where cross-platform portability matters, are runtime-specific fields clearly identified?' }
 }
 
-export const OPT_6: RubricItem<OptionalRubricContext> = {
+const OPT_6: RubricItem<OptionalRubricContext> = {
   code: 'OPT-6',
   title: 'manually timed side effects disable model invocation',
   description: 'Side-effecting / manually-timed workflows set `disable-model-invocation: true` (contrast `user-invocable: false`).',
@@ -162,7 +162,7 @@ export const OPT_6: RubricItem<OptionalRubricContext> = {
   judgment: { prompt: 'Do side-effecting or manually timed workflows set disable-model-invocation: true where appropriate?' }
 }
 
-export const OPT_7: RubricItem<OptionalRubricContext> = {
+const OPT_7: RubricItem<OptionalRubricContext> = {
   code: 'OPT-7',
   title: 'discrete modes have an ordered argument hint',
   description: 'A skill with discrete modes sets `argument-hint`; modes are **named** (not lettered) and **alphabetically ordered**.',

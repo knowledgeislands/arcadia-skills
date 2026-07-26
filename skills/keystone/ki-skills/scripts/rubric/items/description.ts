@@ -4,7 +4,7 @@ import { containsXmlTag, stripCode } from '../contexts/text.ts'
 
 const DESCRIPTION_MAX_LENGTH = 1024
 
-export const DESC_1: RubricItem<DescriptionRubricContext> = {
+const DESC_1: RubricItem<DescriptionRubricContext> = {
   code: 'DESC-1',
   title: 'description is present and non-empty',
   description: '`description` present and non-empty.',
@@ -21,7 +21,7 @@ export const DESC_1: RubricItem<DescriptionRubricContext> = {
   }
 }
 
-export const DESC_2: RubricItem<DescriptionRubricContext> = {
+const DESC_2: RubricItem<DescriptionRubricContext> = {
   code: 'DESC-2',
   title: 'description is no longer than 1024 characters',
   description: '`description` ≤ 1024 characters (spec hard cap — see ※2).',
@@ -40,7 +40,7 @@ export const DESC_2: RubricItem<DescriptionRubricContext> = {
   }
 }
 
-export const DESC_3: RubricItem<DescriptionRubricContext> = {
+const DESC_3: RubricItem<DescriptionRubricContext> = {
   code: 'DESC-3',
   title: 'description contains no XML tags',
   description: '`description` contains no XML tags (placeholders inside backticks are fine).',
@@ -59,7 +59,7 @@ export const DESC_3: RubricItem<DescriptionRubricContext> = {
   }
 }
 
-export const DESC_4: RubricItem<DescriptionRubricContext> = {
+const DESC_4: RubricItem<DescriptionRubricContext> = {
   code: 'DESC-4',
   title: 'description states what the skill does and when to use it',
   description: 'States **both** what it does **and** when to use it.',
@@ -67,7 +67,7 @@ export const DESC_4: RubricItem<DescriptionRubricContext> = {
   judgment: { prompt: 'Does the description state both what this skill does and when it should be used?' }
 }
 
-export const DESC_5: RubricItem<DescriptionRubricContext> = {
+const DESC_5: RubricItem<DescriptionRubricContext> = {
   code: 'DESC-5',
   title: 'description is written in the third person',
   description: 'Written in the **third person**, never first/second person.',
@@ -75,7 +75,7 @@ export const DESC_5: RubricItem<DescriptionRubricContext> = {
   judgment: { prompt: 'Is the description consistently written in the third person?' }
 }
 
-export const DESC_6: RubricItem<DescriptionRubricContext> = {
+const DESC_6: RubricItem<DescriptionRubricContext> = {
   code: 'DESC-6',
   title: 'description includes concrete trigger phrases',
   description: 'Includes concrete **trigger keywords/phrases** a user would say.',
@@ -83,7 +83,7 @@ export const DESC_6: RubricItem<DescriptionRubricContext> = {
   judgment: { prompt: 'Does the description include concrete trigger phrases a user would say?' }
 }
 
-export const DESC_7: RubricItem<DescriptionRubricContext> = {
+const DESC_7: RubricItem<DescriptionRubricContext> = {
   code: 'DESC-7',
   title: 'description leans toward firing and front-loads its main trigger',
   description: 'Leans toward firing, and front-loads the most important trigger.',
@@ -91,7 +91,7 @@ export const DESC_7: RubricItem<DescriptionRubricContext> = {
   judgment: { prompt: 'Does the description lean toward appropriate selection and front-load its most important trigger?' }
 }
 
-export const DESC_8: RubricItem<DescriptionRubricContext> = {
+const DESC_8: RubricItem<DescriptionRubricContext> = {
   code: 'DESC-8',
   title: 'description avoids vague phrasing',
   description: 'Avoids vague phrasing ("helps with documents").',
@@ -99,7 +99,7 @@ export const DESC_8: RubricItem<DescriptionRubricContext> = {
   judgment: { prompt: 'Does the description avoid vague phrases such as "helps with documents"?' }
 }
 
-export const DESC_9: RubricItem<DescriptionRubricContext> = {
+const DESC_9: RubricItem<DescriptionRubricContext> = {
   code: 'DESC-9',
   title: 'description may state explicit non-triggers where collision is likely',
   description: '_(Advanced)_ Where collision is likely, may end with explicit non-triggers.',

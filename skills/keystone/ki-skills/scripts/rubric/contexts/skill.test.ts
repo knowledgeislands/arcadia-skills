@@ -2,11 +2,16 @@ import { afterEach, describe, expect, test } from 'bun:test'
 import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
-import { KI_SHAPE_12, KI_SHAPE_14 } from '../items/ki-shape.ts'
-import { NAME_5 } from '../items/name.ts'
+import { KI_SHAPE } from '../items/ki-shape.ts'
+import { NAME } from '../items/name.ts'
 import { createSkillRubricContext } from './skill.ts'
 
 const temporaryDirectories: string[] = []
+const KI_SHAPE_12 = KI_SHAPE.items.find(({ code }) => code === 'KI-SHAPE-12')
+const KI_SHAPE_14 = KI_SHAPE.items.find(({ code }) => code === 'KI-SHAPE-14')
+const NAME_5 = NAME.items.find(({ code }) => code === 'NAME-5')
+
+if (!KI_SHAPE_12 || !KI_SHAPE_14 || !NAME_5) throw new Error('expected rubric items are missing from their families')
 
 const validLocalSkill = `---
 name: ki-self

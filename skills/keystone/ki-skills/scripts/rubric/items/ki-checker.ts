@@ -1,7 +1,7 @@
 import type { RubricFamily, RubricItem } from '../../shared/rubric.ts'
 import type { KiCheckerRubricContext, KiSkillsRubricContext } from '../contexts/contexts.ts'
 
-export const KI_CHECKER_1: RubricItem<KiCheckerRubricContext> = {
+const KI_CHECKER_1: RubricItem<KiCheckerRubricContext> = {
   code: 'KI-CHECKER-1',
   title: 'governance checkers receive the repository root and scope themselves',
   description:
@@ -13,7 +13,7 @@ export const KI_CHECKER_1: RubricItem<KiCheckerRubricContext> = {
   }
 }
 
-export const KI_CHECKER_2: RubricItem<KiCheckerRubricContext> = {
+const KI_CHECKER_2: RubricItem<KiCheckerRubricContext> = {
   code: 'KI-CHECKER-2',
   title: 'skill script imports remain inside its own payload',
   description:
@@ -37,7 +37,7 @@ export const KI_CHECKER_2: RubricItem<KiCheckerRubricContext> = {
   }
 }
 
-export const KI_CHECKER_3: RubricItem<KiCheckerRubricContext> = {
+const KI_CHECKER_3: RubricItem<KiCheckerRubricContext> = {
   code: 'KI-CHECKER-3',
   title: 'ki-skills publishes the portable rubric contract',
   description:
@@ -73,11 +73,11 @@ export const KI_CHECKER_3: RubricItem<KiCheckerRubricContext> = {
   }
 }
 
-export const KI_CHECKER_4: RubricItem<KiCheckerRubricContext> = {
+const KI_CHECKER_4: RubricItem<KiCheckerRubricContext> = {
   code: 'KI-CHECKER-4',
   title: 'structured rubric items follow the uniform family layout',
   description:
-    '`scripts/rubric/items/index.ts` is catalogue wiring only. Each family collection is imported from one semantic family module; that module individually exports every stable rule and one ordered family collection. Rule definitions and execution callbacks do not live in the catalogue index.',
+    '`scripts/rubric/items/index.ts` is catalogue wiring only. Each family is imported from one semantic family module, which exports only that complete ordered `RubricFamily`; item constants and helpers remain private. Rule definitions and execution callbacks do not live in the catalogue index.',
   sources: ['rubric-authoring.md#rubric-families-and-items'],
   mechanical: {
     level: 'FAIL',
@@ -107,10 +107,10 @@ export const KI_CHECKER_4: RubricItem<KiCheckerRubricContext> = {
                 status: 'VIOLATION' as const,
                 message: `family module for \`${family.collection}\` does not export its ordered collection`
               })
-            if (family.individuallyExportedRules === 0)
+            if (family.unexpectedExports.length > 0)
               violations.push({
                 status: 'VIOLATION' as const,
-                message: `family module for \`${family.collection}\` does not individually export its rubric rules`
+                message: `family module for \`${family.collection}\` exports additional public symbols: ${family.unexpectedExports.join(', ')}`
               })
           }
         }
@@ -121,7 +121,7 @@ export const KI_CHECKER_4: RubricItem<KiCheckerRubricContext> = {
   }
 }
 
-export const KI_CHECKER_5: RubricItem<KiCheckerRubricContext> = {
+const KI_CHECKER_5: RubricItem<KiCheckerRubricContext> = {
   code: 'KI-CHECKER-5',
   title: 'shared and internal script packaging is explicit',
   description:

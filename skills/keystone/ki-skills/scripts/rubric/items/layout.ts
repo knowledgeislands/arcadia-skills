@@ -7,7 +7,7 @@ const normaliseLinkSlashes = (markdown: string): string =>
     (target as string).includes('\\') ? `[${text}](${(target as string).replace(/\\/g, '/')})` : whole
   )
 
-export const LAY_1: RubricItem<LayoutRubricContext> = {
+const LAY_1: RubricItem<LayoutRubricContext> = {
   code: 'LAY-1',
   title: 'SKILL.md exists at the skill root',
   description: '`SKILL.md` exists at the skill root.',
@@ -25,7 +25,7 @@ export const LAY_1: RubricItem<LayoutRubricContext> = {
   }
 }
 
-export const LAY_2: RubricItem<LayoutRubricContext> = {
+const LAY_2: RubricItem<LayoutRubricContext> = {
   code: 'LAY-2',
   title: 'the skill is a directory named after the skill',
   description: 'The skill is a **directory** named after the skill, with `SKILL.md` inside — not a bare `.md`.',
@@ -42,7 +42,7 @@ export const LAY_2: RubricItem<LayoutRubricContext> = {
   }
 }
 
-export const LAY_3: RubricItem<LayoutRubricContext> = {
+const LAY_3: RubricItem<LayoutRubricContext> = {
   code: 'LAY-3',
   title: 'optional directories use standard names',
   description:
@@ -69,7 +69,7 @@ export const LAY_3: RubricItem<LayoutRubricContext> = {
   }
 }
 
-export const LAY_4: RubricItem<LayoutRubricContext> = {
+const LAY_4: RubricItem<LayoutRubricContext> = {
   code: 'LAY-4',
   title: 'file references use forward slashes',
   description: 'File references use forward slashes, never backslashes.',
@@ -96,7 +96,7 @@ export const LAY_4: RubricItem<LayoutRubricContext> = {
   }
 }
 
-export const LAY_5: RubricItem<LayoutRubricContext> = {
+const LAY_5: RubricItem<LayoutRubricContext> = {
   code: 'LAY-5',
   title: 'reference chains are shallow',
   description: 'Reference files are **one level deep** from `SKILL.md` — no nested chains (SKILL → a → b → c).',
@@ -104,7 +104,7 @@ export const LAY_5: RubricItem<LayoutRubricContext> = {
   judgment: { prompt: 'Are supporting files one level deep from SKILL.md, without nested reference chains?' }
 }
 
-export const LAY_6: RubricItem<LayoutRubricContext> = {
+const LAY_6: RubricItem<LayoutRubricContext> = {
   code: 'LAY-6',
   title: 'supporting files are named by their content',
   description: 'Supporting files are named by content (`form-validation-rules.md`, not `doc2.md`).',

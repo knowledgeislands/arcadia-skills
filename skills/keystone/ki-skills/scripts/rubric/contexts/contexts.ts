@@ -87,8 +87,8 @@ type CheckerImport = {
 type RubricFamilyModule = {
   collection: string
   source: string | null
-  individuallyExportedRules: number
   exportsOrderedCollection: boolean
+  unexpectedExports: readonly string[]
 }
 
 export type KiCheckerRubricContext = {
