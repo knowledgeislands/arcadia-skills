@@ -1,8 +1,6 @@
-import { spawnSync } from 'node:child_process'
-import { existsSync, readdirSync, readFileSync, realpathSync, writeFileSync } from 'node:fs'
+import { existsSync, readdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { homedir } from 'node:os'
-import { dirname, join, resolve } from 'node:path'
-import { fileURLToPath } from 'node:url'
+import { join, resolve } from 'node:path'
 import type { ConformOutcome, RubricOutcomes } from '../../../../../shared/rubric-contract.ts'
 
 declare const Bun: { YAML: { parse(input: string): unknown }; TOML: { parse(input: string): unknown } }
@@ -19,17 +17,10 @@ export type BindingRubricContext = {
     status: (path: string) => 'already' | 'unreadable' | 'pending'
     conform: () => RubricOutcomes<ConformOutcome>
   }
-  project: string | undefined
-  projectCheck: 'not-requested' | 'unavailable' | 'clean' | 'drift'
 }
 
 export const RECOGNISED = new Set(['mcporter', 'claude-code', 'claude-desktop', 'chatgpt-codex'])
 
-export const projectPublisherPath = (): string => {
-  const self = realpathSync(fileURLToPath(import.meta.url))
-  const skillsRoot = resolve(dirname(self), '..', '..', '..', '..', '..')
-  return join(skillsRoot, 'keystone', 'ki-bootstrap', 'scripts', 'internal', 'repo-bootstrap', 'publish-project-skills.ts')
-}
 const HOME = homedir()
 const XDG_CONFIG = process.env.XDG_CONFIG_HOME ?? join(HOME, '.config')
 const CANONICAL_SOURCE = join(XDG_CONFIG, 'ki', 'mcp-servers.yaml')
@@ -92,14 +83,12 @@ const coworkStatus = (path: string, marketplace: string, plugin: string, repo: s
 
 export const createBindingContext = ({
   sourceOverride,
-  project,
   dryRun,
   repo = COWORK_REPO,
   marketplace = COWORK_MARKETPLACE,
   plugin = 'knowledge-islands'
 }: {
   sourceOverride?: string
-  project?: string
   dryRun: boolean
   repo?: string
   marketplace?: string
@@ -154,20 +143,10 @@ export const createBindingContext = ({
     }
     return outcomes as RubricOutcomes<ConformOutcome>
   }
-  const bootstrap = projectPublisherPath()
-  const projectCheck = !project
-    ? 'not-requested'
-    : !existsSync(bootstrap)
-      ? 'unavailable'
-      : spawnSync('bun', [bootstrap, resolve(project), '--check'], { encoding: 'utf8' }).status === 0
-        ? 'clean'
-        : 'drift'
   return {
     source,
     sourceState,
     surfaces: SURFACES.map((surface) => ({ surface, serverKeys: surfaceServerKeys(surface) })),
-    cowork: { base: COWORK_BASE, files, status: (path) => coworkStatus(path, marketplace, plugin, repo), conform },
-    project,
-    projectCheck
+    cowork: { base: COWORK_BASE, files, status: (path) => coworkStatus(path, marketplace, plugin, repo), conform }
   }
 }

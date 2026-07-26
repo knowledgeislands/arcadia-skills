@@ -1,12 +1,8 @@
 ---
 name: ki-bootstrap
-ki-depends-on: [ki-repo]
-ki-runtime-binding: true
-ki-shared-modules: [educator]
-ki-shared-dependencies: [ki-skills:rubric, ki-skills:checker, ki-skills:reporter, ki-skills:govern]
 description: >
-  Governs Knowledge Islands compatible-harness activation and the explicit migration away from repository-vendored runners. Use when registering a harness, activating a capability, declaring a repo's governance coverage, preparing a repository or CI for native `ki repo` operations, or safely assessing legacy `.ki/` bootstrap state. The authoritative target is verified XDG-installed compatible harnesses, explicit managed runtime activation, and native registered operations; vendored `.ki/bin` runners have no execution fallback. Triggers: "activate a KI skill", "migrate this repo from .ki", "set up KI governance", "why won't ki repo audit run", "configure KI CI". For which skills a repository should declare use `ki-repo`; for the native CLI implementation and release availability use `tools-ki`.
-argument-hint: 'help | audit [path] | conform [path] | educate [target] | refresh'
+  Explains first-time Knowledge Islands activation through the `ki` CLI: bootstrap a user, select a verified canonical harness, and distinguish user skills from repository-declared governance. Use for guidance on `ki bootstrap`, `ki harness`, `ki skill user`, and `ki skill repo`; the CLI itself owns all mechanics. Triggers: "set up KI", "what does ki bootstrap do", "activate a KI skill", "why won't ki repo audit run". For repository coverage use `ki-repo`; for command behaviour use `ki help`.
+argument-hint: 'help | refresh'
 ---
 
 # Knowledge Islands Bootstrap

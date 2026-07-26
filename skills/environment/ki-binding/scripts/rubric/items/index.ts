@@ -1,9 +1,8 @@
 import type { RubricItem } from '../../../../../shared/rubric-contract.ts'
 import { type BindingRubricContext, createBindingContext } from '../contexts/binding.ts'
-import { BIND_3 } from './bind.ts'
 import { KI_BINDING_RUBRIC } from './catalogue.ts'
 
-type NativeBindingContext = Omit<BindingRubricContext, 'project' | 'projectCheck'> & {
+type NativeBindingContext = BindingRubricContext & {
   readonly repository: string
 }
 
@@ -35,23 +34,7 @@ const judgment = (item: RubricItem<BindingRubricContext>) => {
   return { kind: 'judgment' as const, code: item.code, title: item.title, prompt: definition.prompt }
 }
 
-// Project-local runtime links are not repository content and the old check delegated
-// to the retired bootstrap publisher.  Native activation will need to expose its own
-// runtime-link evidence; until then, retain this catalogue entry without invoking a
-// legacy runner or claiming that `ki repo` can repair it.
-const nativeProjectLinks = () => ({
-  ...mechanical(BIND_3),
-  audit: (context: NativeBindingContext) => [
-    {
-      status: 'NOT_APPLICABLE' as const,
-      message: 'Project-local runtime links are outside the native repository audit scope.',
-      subject: context.repository
-    }
-  ]
-})
-
 const nativeItem = (item: RubricItem<BindingRubricContext>) => {
-  if (item.code === 'BIND-3') return nativeProjectLinks()
   // BIND-4's legacy conform callback writes Cowork settings beneath the user home.
   // The repository transaction cannot safely own that path, so it remains audit-only
   // until an explicit `ki user conform` scope supplies equivalent containment proof.
@@ -85,8 +68,7 @@ export default {
   name: 'ki-binding',
   concern: catalogueDefinition.concern,
   createContext: ({ repository }: { readonly repository: string }): NativeBindingContext => {
-    const { project: _project, projectCheck: _projectCheck, ...evidence } = createBindingContext({ dryRun: true })
-    return { repository, ...evidence }
+    return { repository, ...createBindingContext({ dryRun: true }) }
   },
   families: catalogue.map((family) => ({
     ...family,

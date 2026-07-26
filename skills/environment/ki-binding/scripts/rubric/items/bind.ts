@@ -105,33 +105,6 @@ export const BIND_2: RubricItem<BindingRubricContext> = {
   }
 }
 
-export const BIND_3: RubricItem<BindingRubricContext> = {
-  code: 'BIND-3',
-  title: 'project-local skill links are wired',
-  description: 'A requested project passes the ki-bootstrap link check.',
-  sources: ['standards.md'],
-  mechanical: {
-    level: 'WARN',
-    audit: {
-      phase: 'DERIVED',
-      run: ({ project, projectCheck }) =>
-        projectCheck === 'not-requested'
-          ? [{ status: 'INFO', message: 'No project was given, so the project-local skill links were not audited.' }]
-          : projectCheck === 'unavailable'
-            ? [{ status: 'INFO', message: 'The ki-bootstrap publisher is unavailable, so project-local skill copies were not audited.' }]
-            : projectCheck === 'clean'
-              ? [{ status: 'PASS', message: 'The project-local skill links are clean.', subject: project }]
-              : [
-                  {
-                    status: 'VIOLATION',
-                    message: 'The project-local skill publisher reported findings; run ki-bootstrap CONFORM.',
-                    subject: project
-                  }
-                ]
-    }
-  }
-}
-
 export const BIND_4: RubricItem<BindingRubricContext> = {
   code: 'BIND-4',
   title: 'Cowork plugin integrity',
@@ -172,4 +145,4 @@ export const BIND_5: RubricItem<BindingRubricContext> = {
   judgment: { prompt: 'Does each server target the surfaces the project needs, without carrying surfaces it should not?' }
 }
 
-export const BIND = [BIND_1, BIND_2, BIND_3, BIND_4, BIND_5] as const
+export const BIND = [BIND_1, BIND_2, BIND_4, BIND_5] as const
