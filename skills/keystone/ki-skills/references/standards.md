@@ -1,6 +1,6 @@
 # Agent Skills Standard
 
-The normative reference behind `ki-skills`: what a _good_ Agent Skill looks like, and why. The [Audit Rubric](rubric.md) is the line-by-line checklist derived from this — each rubric criterion (`NAME-1`, `DESC-2`, …) verifies a convention stated here. Read the standard to understand or quote a convention; run the rubric (and its [linter](../scripts/govern.ts)) to check a skill against it.
+The normative reference behind `ki-skills`: what a _good_ Agent Skill looks like, and why. The [Audit Rubric](rubric.md) is the line-by-line checklist derived from this — each rubric criterion (`NAME-1`, `DESC-2`, …) verifies a convention stated here. Read the standard to understand or quote a convention; run `ki repo audit --skill ki-skills` to check a repository's skills against it.
 
 A skill is a directory with a `SKILL.md` (YAML frontmatter + markdown body) per the [Agent Skills open standard](https://agentskills.io/), optionally with `references/`, `scripts/`, `assets/`. Source abbreviations resolve in [the source list](sources.md).
 
@@ -37,7 +37,7 @@ Read this standard from the most portable authority to the most local:
 
 ## 1. Two-aspect model
 
-Every rubric criterion carries one or both of two aspects, and the distinction is a contract with the [linter](../scripts/govern.ts):
+Every rubric criterion carries one or both of two aspects, and the distinction is a contract with the `ki` rubric host:
 
 - **Mechanical** — deterministically checkable (a file exists, frontmatter parses, a length cap holds, a link resolves). The bundled linter owns these; never eyeball what it checks better.
 - **Judgment** — needs a model reading the skill (is the description trigger-rich, is the body at the right altitude, is detail correctly deferred). The linter cannot assess these.
