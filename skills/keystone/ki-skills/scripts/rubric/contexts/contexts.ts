@@ -142,7 +142,7 @@ export type KiShapeSkillContext = {
   anchorMentioned: boolean
   checkerReadsAnchor: boolean
   mechanicalRubricCount: number
-  hasChecker: boolean
+  hasMechanicalImplementation: boolean
   documentsMechanicalDelegation: boolean
   checkers: readonly CheckerContract[]
   dependsOnPresent: boolean
@@ -198,7 +198,7 @@ const emptyKiShapeSkill: KiShapeSkillContext = {
   anchorMentioned: false,
   checkerReadsAnchor: false,
   mechanicalRubricCount: 0,
-  hasChecker: false,
+  hasMechanicalImplementation: false,
   documentsMechanicalDelegation: false,
   checkers: [],
   dependsOnPresent: false,

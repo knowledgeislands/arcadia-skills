@@ -132,9 +132,9 @@ const KI_SHAPE_8: RubricItem<KiShapeRubricContext> = {
 
 const KI_SHAPE_9: RubricItem<KiShapeRubricContext> = {
   code: 'KI-SHAPE-9',
-  title: 'mechanical work belongs in the checker',
+  title: 'mechanical work belongs in the structured rubric',
   description:
-    '_Mechanical work belongs in the checker, not in tokens._ A criterion a script can decide deterministically — no judgment, no AI benefit — is tagged **[M]** and **implemented in the checker**; a **[J]** tag is earned by the judgment a criterion genuinely needs, never by "no checker written yet". The reader\'s context is spent only on the **[J]** items, so a mechanical criterion left to prose, or a **[J]** the checker already decides, is drift — it **moves into the checker and flips to [M]**. The linter surfaces the mechanical heuristic — a rubric carrying **[M]** criteria but shipping no `scripts/` checker (nor a documented toolchain delegation to a skill-scoped audit) — as a WARN; the **[J]** gate is whether each remaining **[J]** genuinely needs a reader rather than a script.',
+    '_Mechanical work belongs in the structured rubric, not in tokens._ A criterion a script can decide deterministically — no judgment, no AI benefit — is tagged **[M]** and implemented in `scripts/rubric/items/`; a **[J]** tag is earned by the judgment a criterion genuinely needs, never by "no implementation written yet". The reader\'s context is spent only on the **[J]** items, so a mechanical criterion left to prose, or a **[J]** the rubric already decides, is drift — it **moves into the structured rubric and flips to [M]**. The linter surfaces the mechanical heuristic — a rubric carrying **[M]** criteria but shipping no structured rubric (nor a documented toolchain delegation to a skill-scoped audit) — as a WARN; the **[J]** gate is whether each remaining **[J]** genuinely needs a reader rather than a script.',
   sources: ['[Rubric authoring](rubric-authoring.md)'],
   mechanical: {
     level: 'WARN',
@@ -144,12 +144,12 @@ const KI_SHAPE_9: RubricItem<KiShapeRubricContext> = {
       run: ({ skill }) => {
         if (!skill || skill.mechanicalRubricCount === 0)
           return [{ status: 'NOT_APPLICABLE', message: 'the skill declares no mechanical rubric criteria' }]
-        return skill.hasChecker || skill.documentsMechanicalDelegation
-          ? [{ status: 'PASS', message: 'mechanical work belongs in the checker' }]
+        return skill.hasMechanicalImplementation || skill.documentsMechanicalDelegation
+          ? [{ status: 'PASS', message: 'mechanical work belongs in the structured rubric' }]
           : [
               {
                 status: 'VIOLATION',
-                message: `rubric tags ${skill.mechanicalRubricCount} criteria [M] but the skill ships no scripts/ checker (nor a documented toolchain delegation) — mechanical work belongs in the checker, not in tokens, per KI-SHAPE-9`
+                message: `rubric tags ${skill.mechanicalRubricCount} criteria [M] but the skill ships no structured rubric (nor a documented toolchain delegation) — mechanical work belongs in the structured rubric, not in tokens, per KI-SHAPE-9`
               }
             ]
       }

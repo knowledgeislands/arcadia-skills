@@ -212,7 +212,8 @@ const createKiShapeEvidence = (
       (name) => name.endsWith('.ts') && /CLAUDE\.md|AGENTS\.md/.test(readFileSync(join(scriptsDirectory, name), 'utf8'))
     ),
     mechanicalRubricCount: (rubricItemSources.match(/\bmechanical\s*:/g) ?? []).length,
-    hasChecker: scriptNames.some((name) => name.endsWith('.ts')),
+    hasMechanicalImplementation:
+      scriptNames.some((name) => name.endsWith('.ts')) || existsSync(join(scriptsDirectory, 'rubric', 'items', 'index.ts')),
     documentsMechanicalDelegation: /lint:md|toolchain (?:already )?enforces/i.test(skillText),
     checkers,
     dependsOnPresent: frontmatter.present.has('ki-depends-on'),

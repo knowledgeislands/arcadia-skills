@@ -125,22 +125,25 @@ const KI_CHECKER_5: RubricItem<KiCheckerRubricContext> = {
   code: 'KI-CHECKER-5',
   title: 'shared and internal script packaging is explicit',
   description:
-    'Private implementation belongs under `scripts/internal/`; cross-skill modules belong under `scripts/shared/`, whose non-test entries must exactly match `ki-shared-modules:`.',
+    'Private implementation belongs under `scripts/internal/`; cross-skill modules belong under `scripts/shared/`, whose non-test entries must exactly match the modules published through `ki-shared-modules:` or vended through `ki-shared-dependencies:`.',
   sources: ['KI'],
   mechanical: {
     level: 'FAIL',
     audit: {
       phase: 'INSPECT',
-      run: ({ declaredSharedModules, legacyLibPresent, publishedSharedModules }) => {
+      run: ({ declaredSharedModules, legacyLibPresent, publishedSharedModules, sharedDependencies }) => {
         const violations = []
         if (legacyLibPresent)
           violations.push({ status: 'VIOLATION' as const, message: 'classify `scripts/lib/` contents as shared or internal' })
-        const declared = [...new Set(declaredSharedModules)].sort()
+        const dependencyModules = sharedDependencies
+          .map((dependency) => dependency.split(':').at(-1))
+          .filter((module): module is string => Boolean(module))
+        const declared = [...new Set([...declaredSharedModules, ...dependencyModules])].sort()
         const published = [...new Set(publishedSharedModules)].sort()
         if (declared.join('\n') !== published.join('\n'))
           violations.push({
             status: 'VIOLATION' as const,
-            message: `\`scripts/shared/\` must exactly publish \`ki-shared-modules:\` (declared: ${declared.join(', ') || 'none'}; published: ${published.join(', ') || 'none'})`
+            message: `\`scripts/shared/\` must exactly match published and vended modules (declared: ${declared.join(', ') || 'none'}; present: ${published.join(', ') || 'none'})`
           })
         const [first, ...rest] = violations
         return first ? [first, ...rest] : [{ status: 'PASS', message: 'shared and internal script packaging is explicit' }]
