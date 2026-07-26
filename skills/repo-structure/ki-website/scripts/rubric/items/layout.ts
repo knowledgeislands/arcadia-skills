@@ -111,7 +111,7 @@ export const WEB_41: RubricItem<WebsiteContext> = {
   ...mechanical(
     'WEB-41',
     'website opt-in',
-    'on an applicable site, the `[ki-website]` opt-in table is present in `.ki-config.toml` (`audit.ts --educate` scaffolds it).',
+    'on an applicable site, the `[ki-website]` opt-in table is present in `.ki-config.toml` (`ki repo conform --skill ki-website` can add it).',
     'WARN',
     (c) =>
       inactive(c) ?? [
