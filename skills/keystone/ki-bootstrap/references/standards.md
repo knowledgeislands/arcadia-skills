@@ -11,7 +11,7 @@ It replaces the former repository-vendored executor model.
 - [Declarative repository selection](#declarative-repository-selection)
 - [Native operation registration and execution](#native-operation-registration-and-execution)
 - [Managed runtime activation](#managed-runtime-activation)
-- [Explicit legacy migration](#explicit-legacy-migration)
+- [Guide-led legacy retirement](#guide-led-legacy-retirement)
 - [CI and direct automation](#ci-and-direct-automation)
 - [Scope and safety separation](#scope-and-safety-separation)
 
@@ -27,7 +27,7 @@ They do not define a supported native operation and are never an execution fallb
 
 ## Authoritative installed harnesses
 
-One verified XDG-managed harness set exists per user. The base `knowledgeislands/ki-agentic-harness` is always registered; each additional compatible harness is installed explicitly.
+One verified XDG-managed harness set exists per user. The canonical `knowledgeislands/ki-agentic-harness` is always registered; each additional compatible harness is installed explicitly.
 
 `ki` uses `$XDG_CONFIG_HOME/ki` for configuration, `$XDG_CACHE_HOME/ki` for disposable acquisition data, and `$XDG_STATE_HOME/ki` for mutable state.
 
@@ -86,11 +86,11 @@ It must record ownership, validate containment, be idempotent, support dry-run, 
 
 No operation may traverse or erase unproven links or files.
 
-## Explicit legacy migration
+## Guide-led legacy retirement
 
 Vendored repository execution is retired.
 
-Existing `.ki/bootstrap/`, `.ki/bin/`, and manifest state are examined only by an explicit repository migration operation.
+Existing `.ki/bootstrap/`, `.ki/bin/`, and manifest state are examined only through the maintainer [retirement guide](../../../../docs/guides/developer/retiring-repository-vendored-ki.md).
 
 Migration validates the required installed harnesses, repository declaration, target ownership, and complete removal set before writing.
 
@@ -98,9 +98,9 @@ It removes generated legacy material only when it proves ownership of every targ
 
 Migration never runs legacy material to complete a native operation, never silently cleans up, and never treats legacy state as proof that native operations are available.
 
-Before the migration operation ships, existing legacy code is useful for inventory and tests only.
+The guide replaces a migration command because the remaining estate is private and reviewed repository by repository.
 
-Do not direct users to manually remove `.ki/` state, recreate it from a checkout, or use it as a compatibility runner.
+It does not permit broad deletion: unfamiliar or unproven state is retained, and native execution never uses it as a compatibility runner.
 
 ## CI and direct automation
 

@@ -6,7 +6,7 @@ ki-shared-modules: [educator]
 ki-shared-dependencies: [ki-skills:rubric, ki-skills:checker, ki-skills:reporter, ki-skills:govern]
 description: >
   Governs Knowledge Islands compatible-harness activation and the explicit migration away from repository-vendored runners. Use when registering a harness, activating a capability, declaring a repo's governance coverage, preparing a repository or CI for native `ki repo` operations, or safely assessing legacy `.ki/` bootstrap state. The authoritative target is verified XDG-installed compatible harnesses, explicit managed runtime activation, and native registered operations; vendored `.ki/bin` runners have no execution fallback. Triggers: "activate a KI skill", "migrate this repo from .ki", "set up KI governance", "why won't ki repo audit run", "configure KI CI". For which skills a repository should declare use `ki-repo`; for the native CLI implementation and release availability use `tools-ki`.
-argument-hint: 'help | audit [path] | conform [path] | educate [target] | migrate [target] | refresh'
+argument-hint: 'help | audit [path] | conform [path] | educate [target] | refresh'
 ---
 
 # Knowledge Islands Bootstrap
@@ -27,7 +27,7 @@ They are useful for inventorying and testing a migration, but are not a supporte
 
 ## The compatible-harness model
 
-Knowledge Islands has a verified XDG-managed set of compatible harnesses for a user. The base `knowledgeislands/ki-agentic-harness` is always included; additional compatible harnesses are registered explicitly.
+Knowledge Islands has a verified XDG-managed set of compatible harnesses for a user. The canonical `knowledgeislands/ki-agentic-harness` is always included; additional compatible harnesses are registered explicitly.
 
 The normal XDG defaults apply when a variable is unset: `~/.local/share`, `~/.config`, `~/.cache`, and `~/.local/state` for data, configuration, cache, and mutable state respectively.
 
@@ -70,13 +70,13 @@ It keeps user and repository state separate: a repository operation does not alt
 
 Repository vendoring has ended.
 
-An existing `.ki/` runner or manifest is migration input only, inspected by an explicit repository migration operation once that operation is delivered.
+An existing `.ki/` runner or manifest is migration input only, inspected through the maintainer [retirement guide](../../../docs/guides/developer/retiring-repository-vendored-ki.md).
 
 Migration must prove complete ownership before removing any generated legacy state; altered, partial, unfamiliar, linked, or concurrently changed material is preserved and reported as a fail-closed blocker.
 
 The migration does not execute legacy runners, does not silently remove state, and does not infer that a verified installed harness is available.
 
-Until that native migration operation exists, retain legacy state for assessment rather than manually deleting it or trying to recreate it from a checkout.
+Until the guide's preconditions are met, retain legacy state for assessment rather than manually deleting it or trying to recreate it from a checkout.
 
 ## Operating modes
 
@@ -113,14 +113,6 @@ This is a contract description, not an instruction to run unreleased commands.
 Invoked as `help` / `-h` / `?`, explain this skill's current delivery status, target contract, and off-ramps, then stop without changing files.
 
 With no mode in an interactive session, explain the same boundary before offering the available modes.
-
-### Mode MIGRATE — retire a proven legacy footprint
-
-Use the future explicit migration operation, never implicit bootstrap, to examine legacy `.ki/` state.
-
-It must validate installed harnesses, repository declarations, runtime ownership, and every legacy removal target before it writes.
-
-If any proof is missing, stop with recovery guidance and leave the legacy material untouched.
 
 ### Mode REFRESH — re-anchor the contract
 

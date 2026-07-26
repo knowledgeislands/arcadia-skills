@@ -12,7 +12,7 @@ For released CLI commands and current availability, see [the CLI guide](command-
 
 ## The target model
 
-Each user has a verified XDG-managed compatible-harness set. The base `knowledgeislands/ki-agentic-harness` is always included; additional compatible harnesses are installed explicitly.
+Each user has a verified XDG-managed compatible-harness set. The canonical `knowledgeislands/ki-agentic-harness` is always included; additional compatible harnesses are installed explicitly.
 
 `ki` uses `$XDG_CONFIG_HOME/ki`, `$XDG_CACHE_HOME/ki`, and `$XDG_STATE_HOME/ki` for configuration, disposable acquisition data, and mutable state.
 
@@ -67,13 +67,11 @@ The former bootstrap model created `.ki/bootstrap/`, `.ki/bin/`, and manifest st
 
 That material is now a migration source, not an executor for the native model.
 
-Migration will be a separate explicit repository operation once delivered.
+The private existing-repository estate uses a maintainer [retirement guide](../developer/retiring-repository-vendored-ki.md), not a public migration command.
 
-It must validate required verified harnesses, the repository declaration, runtime activation ownership, and every legacy removal target before changing anything.
+That guide requires verified harnesses, repository declaration, runtime-activation ownership, a complete role map, and explicit removal evidence before changing anything.
 
-If any legacy state is altered, partial, unfamiliar, linked, dangling, escaping, or concurrently changed, migration must stop and preserve it as a fail-closed blocker.
-
-Do not manually delete legacy `.ki/` state, regenerate it from a harness checkout, or use its runners while native operations are unavailable.
+If any legacy state is altered, partial, unfamiliar, linked, dangling, escaping, or concurrently changed, the guide stops and preserves it as a fail-closed blocker.
 
 Legacy scripts can inform inventory and implementation tests, but their passing result does not show that a repository has native governance.
 
@@ -99,6 +97,6 @@ Every mutation must resolve its selected scope, prove ownership and containment,
 
 If you are onboarding a new repository, wait for a `tools-ki` release that exposes native harness and repository operations, then follow that release's HELP.
 
-If you maintain an existing vendored repository, retain its legacy state until the explicit native migration operation is available.
+If you maintain an existing vendored repository, use the maintainer [retirement guide](../developer/retiring-repository-vendored-ki.md) once its preconditions are met.
 
 If a project needs a coverage decision today, record it in `.ki-config.toml` through the `ki-repo` contract; do not create `.ki/bin` compatibility scaffolding around it.

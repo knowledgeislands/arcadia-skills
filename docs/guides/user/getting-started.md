@@ -53,7 +53,7 @@ For the complete native flow, including existing-repository migration and CI, se
 
 Existing `.ki/bootstrap/`, `.ki/bin/`, and manifest material is a future migration source, not the executor for native governance.
 
-Keep that legacy state in place until the explicit native migration operation is released. Do not recreate it, manually delete it, or treat it as a compatibility path for native commands.
+Keep that legacy state in place until the maintainer [retirement guide](../developer/retiring-repository-vendored-ki.md) establishes that its native replacement is proven. Do not recreate it, manually delete it, or treat it as a compatibility path for native commands.
 
 ## Start using skills
 
