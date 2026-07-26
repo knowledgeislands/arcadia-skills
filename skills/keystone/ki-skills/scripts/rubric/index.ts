@@ -86,22 +86,6 @@ const layoutContext = (family: LegacyFamily, subject: NativeSubject): LayoutRubr
 
 const skillContext = <Context>(family: LegacyFamily, subject: NativeSubject): Context => family.selectContext(subject.context()) as Context
 
-const repairLayout4 = (context: NativeSkillsContext, family: LegacyFamily) => ({
-  writes: context.subjects.flatMap((subject) => {
-    if (!KI_SKILLS_SUBJECT_FAMILIES[subject.scope].some((code) => code === family.code) || !subject.subject) return []
-    const layout = layoutContext(family, subject)
-    if (layout.markdown === undefined || !/\[[^\]]*\]\([^)]*\\[^)]*\)/.test(layout.markdown)) return []
-    return [
-      {
-        path: subject.subject,
-        content: layout.markdown.replace(/\[([^\]]*)\]\(([^)]+)\)/g, (whole, text, target) =>
-          (target as string).includes('\\') ? `[${text}](${(target as string).replace(/\\/g, '/')})` : whole
-        )
-      }
-    ]
-  })
-})
-
 const skillMarkdown = (context: NativeSkillsContext, subject: NativeSubject): { path: string; content: string } | undefined => {
   if (!subject.directory) return undefined
   const path = relative(context.repository, join(subject.directory, 'SKILL.md'))
@@ -115,65 +99,78 @@ const rewriteFrontmatter = (content: string, key: string, value: string): string
   return rewritten === frontmatter.raw ? undefined : content.replace(frontmatter.raw, rewritten)
 }
 
-const repairName5 = (context: NativeSkillsContext, family: LegacyFamily) => ({
-  writes: context.subjects.flatMap((subject) => {
-    if (subject.scope !== 'skill') return []
-    const name = skillContext<NameRubricContext>(family, subject)
-    if (!name.name || name.name === name.directoryName) return []
-    const document = skillMarkdown(context, subject)
-    if (!document) return []
-    const frontmatter = parseFrontmatter(document.content)
-    if (frontmatter.raw === null) return []
-    const line = frontmatterLine(frontmatter.raw, 'name')
-    return line ? [{ path: document.path, content: document.content.replace(line, `name: ${name.directoryName}`) }] : []
-  })
-})
-
 const missingVerbs = (shape: KiShapeRubricContext) =>
   shape.skill ? universalVerbs.filter((verb) => !shape.skill?.hintVerbs.includes(verb)) : []
 
-const repairHint = (
-  context: NativeSkillsContext,
-  family: LegacyFamily,
-  shouldRepair: (missing: readonly string[]) => boolean,
-  values: (missing: readonly string[]) => readonly string[]
-) => ({
-  writes: context.subjects.flatMap((subject) => {
-    if (subject.scope !== 'skill') return []
-    const shape = skillContext<KiShapeRubricContext>(family, subject)
-    if (!shape.skill?.governanceSkill || !shape.skill.argumentHint) return []
-    const missing = missingVerbs(shape)
-    if (!shouldRepair(missing)) return []
-    const document = skillMarkdown(context, subject)
-    if (!document) return []
-    const content = rewriteFrontmatter(
-      document.content,
-      'argument-hint',
-      `${shape.skill.argumentHint} | ${values(missing)
-        .map((verb) => verb.toLowerCase())
-        .join(' | ')}`
-    )
-    return content ? [{ path: document.path, content }] : []
-  })
-})
+/**
+ * Legacy CONFORM callbacks mutate a shared in-memory document. Native repairs
+ * propose complete immutable replacements, so compose every safe direct repair
+ * into one final replacement per document before handing it to the host.
+ */
+const coalescedWrites = (context: NativeSkillsContext) => {
+  const originals = new Map<string, string>()
+  const drafts = new Map<string, string>()
+  const draft = (path: string, source: string, transform: (content: string) => string): void => {
+    originals.set(path, originals.get(path) ?? source)
+    drafts.set(path, transform(drafts.get(path) ?? source))
+  }
 
-const repairFor = (context: NativeSkillsContext, family: LegacyFamily, item: LegacyMechanicalItem) => {
-  if (item.code === 'LAY-4') return repairLayout4(context, family)
-  if (item.code === 'NAME-5') return repairName5(context, family)
-  if (item.code === 'KI-SHAPE-11')
-    return repairHint(
-      context,
-      family,
-      (missing) => missing.includes('HELP'),
-      (missing) => missing
-    )
-  if (item.code === 'KI-SHAPE-12')
-    return repairHint(
-      context,
-      family,
-      (missing) => missing.length > 0 && !missing.includes('HELP'),
-      (missing) => missing
-    )
+  const layoutFamily = catalogue.find((family) => family.code === 'LAY')
+  if (layoutFamily) {
+    for (const subject of context.subjects) {
+      if (!KI_SKILLS_SUBJECT_FAMILIES[subject.scope].some((code) => code === 'LAY') || !subject.subject) continue
+      const layout = layoutContext(layoutFamily, subject)
+      if (layout.markdown === undefined || !/\[[^\]]*\]\([^)]*\\[^)]*\)/.test(layout.markdown)) continue
+      draft(subject.subject, layout.markdown, (content) =>
+        content.replace(/\[([^\]]*)\]\(([^)]+)\)/g, (whole, text, target) =>
+          (target as string).includes('\\') ? `[${text}](${(target as string).replace(/\\/g, '/')})` : whole
+        )
+      )
+    }
+  }
+
+  const nameFamily = catalogue.find((family) => family.code === 'NAME')
+  const shapeFamily = catalogue.find((family) => family.code === 'KI-SHAPE')
+  for (const subject of context.subjects) {
+    if (subject.scope !== 'skill') continue
+    const document = skillMarkdown(context, subject)
+    if (!document) continue
+    if (nameFamily) {
+      const name = skillContext<NameRubricContext>(nameFamily, subject)
+      if (name.name && name.name !== name.directoryName) {
+        draft(document.path, document.content, (content) => {
+          const frontmatter = parseFrontmatter(content)
+          const line = frontmatter.raw ? frontmatterLine(frontmatter.raw, 'name') : null
+          return line ? content.replace(line, `name: ${name.directoryName}`) : content
+        })
+      }
+    }
+    if (shapeFamily) {
+      const shape = skillContext<KiShapeRubricContext>(shapeFamily, subject)
+      const missing = missingVerbs(shape)
+      const argumentHint = shape.skill?.argumentHint
+      if (shape.skill?.governanceSkill && argumentHint && missing.length > 0) {
+        draft(
+          document.path,
+          document.content,
+          (content) =>
+            rewriteFrontmatter(content, 'argument-hint', `${argumentHint} | ${missing.map((verb) => verb.toLowerCase()).join(' | ')}`) ??
+            content
+        )
+      }
+    }
+  }
+
+  return {
+    writes: [...drafts]
+      .filter(([path, content]) => originals.get(path) !== content)
+      .sort(([left], [right]) => left.localeCompare(right))
+      .map(([path, content]) => ({ path, content }))
+  }
+}
+
+const repairFor = (context: NativeSkillsContext, item: LegacyMechanicalItem) => {
+  if (['LAY-4', 'NAME-5', 'KI-SHAPE-11', 'KI-SHAPE-12'].includes(item.code)) return coalescedWrites(context)
   return { writes: [] }
 }
 
@@ -186,7 +183,7 @@ const nativeItem = (family: LegacyFamily, item: LegacyMechanicalItem | LegacyJud
     level: item.mechanical.level,
     phase: item.mechanical.audit.phase,
     audit: (context: NativeSkillsContext) => outcomesFor(context, family, item),
-    repair: (context: NativeSkillsContext) => repairFor(context, family, item)
+    repair: (context: NativeSkillsContext) => repairFor(context, item)
   }
 }
 

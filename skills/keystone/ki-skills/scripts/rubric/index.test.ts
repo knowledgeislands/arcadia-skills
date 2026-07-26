@@ -38,12 +38,11 @@ test('declares pure skill-document repairs for native conform', async () => {
         subject: 'sample-skill'
       }
     ])
-    expect(await repair('NAME-5')(context)).toEqual({
-      writes: [{ path: 'sample-skill/SKILL.md', content: source.replace('name: not-the-directory', 'name: sample-skill') }]
-    })
-    expect(await repair('LAY-4')(context)).toEqual({
-      writes: [{ path: 'sample-skill/SKILL.md', content: source.replace('references\\example.md', 'references/example.md') }]
-    })
+    const expected = source
+      .replace('name: not-the-directory', 'name: sample-skill')
+      .replace('references\\example.md', 'references/example.md')
+    expect(await repair('NAME-5')(context)).toEqual({ writes: [{ path: 'sample-skill/SKILL.md', content: expected }] })
+    expect(await repair('LAY-4')(context)).toEqual({ writes: [{ path: 'sample-skill/SKILL.md', content: expected }] })
     expect(await readFile(join(directory, 'SKILL.md'), 'utf8')).toBe(source)
   } finally {
     await rm(repository, { recursive: true, force: true })
