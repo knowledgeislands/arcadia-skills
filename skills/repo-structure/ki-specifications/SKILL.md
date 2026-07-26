@@ -14,7 +14,7 @@ Apply the intentionally small repository-structure standard for KI Specification
 
 The current floor is deliberately sparse. Detailed KIP/KIS content rules, numbering, lifecycle, conformance semantics, and publication formats remain canonical in the Specifications repository itself and should be promoted into this skill only after they prove stable and reusable.
 
-Read [the standard](references/standards.md) for the current floor, [the rubric](references/rubric.md) for checkable criteria, and [the source list](references/sources.md) when refreshing it. The mechanical checker is [`scripts/govern.ts`](scripts/govern.ts).
+Read [the standard](references/standards.md) for the current floor, [the rubric](references/rubric.md) for checkable criteria, and [the source list](references/sources.md) when refreshing it. The `ki` CLI runs the mechanical checker.
 
 ## Canonical shape
 
@@ -34,21 +34,21 @@ ki-specifications/
 
 ### Mode AUDIT
 
-1. Run `bun scripts/govern.ts <repo>` and capture its canonical findings.
+1. Run `ki repo audit --repo <repo> --skill ki-specifications` and capture its findings.
 2. Confirm the repository declares `[ki-specifications]` and retains the seven top-level areas without judging their evolving internal contents.
 3. Apply the judgment criteria in [the rubric](references/rubric.md), especially whether a proposed new invariant is mature enough to belong here.
 
 ### Mode CONFORM
 
 1. Run AUDIT first.
-2. Run `bun scripts/govern.ts <repo>` to add the keyless marker when `.ki-config.toml` exists.
+2. Run `ki repo conform --repo <repo> --skill ki-specifications` to add the keyless marker when `.ki-config.toml` exists.
 3. Create a missing top-level area only after confirming its intended contents; an empty directory cannot be governed by git, so the conformer does not manufacture placeholders.
 4. Re-run AUDIT.
 
 ### Mode EDUCATE
 
 1. Establish a normal `ki-repo` first.
-2. Run `bun scripts/educate.ts <repo>` to vendor this skill and the universal baseline.
+2. Add this skill to the repository through `ki skill repo add ki-specifications --repo <repo>`.
 3. Add the seven top-level areas with their first real artefacts, then run AUDIT.
 
 ### Mode HELP
@@ -61,7 +61,7 @@ Explain the skill's purpose, modes, invocation, and boundaries without changing 
 
 1. Read [the source list](references/sources.md) and inspect the live KI Specifications repository.
 2. Promote only stable, repeated structural constraints; leave changing specification-process detail in that repository.
-3. Update the standard, rubric, checker, tests, and source review together.
+3. Update the standard, rubric, native definition, tests, and source review together, then regenerate the publication with `ki skill rubric ki-specifications --write`.
 
 ## Boundaries
 
