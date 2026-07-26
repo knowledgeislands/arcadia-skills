@@ -53,6 +53,11 @@ The shared ecosystem GDR now establishes the five-repository ownership model. It
      - [x] Prove that slice through `ki dev on`: native audit, byte-identical dry run, host-owned conform, and post-conform re-audit against a canonical development payload.
      - [x] Port `ki-feature-definitions`, retaining its read-only corpus evidence and declaring its heading-normalisation repair as a cached file-replacement plan; prove it through the canonical development payload.
      - [x] Port `ki-subagents`, scope its evidence to each repository's `subagents/` directory, and declare filename alignment as a host-owned replacement rather than a direct writer; prove audit, dry-run, conform, and re-audit through the canonical development payload.
+     - [ ] Add an explicit tools-owned subprocess capability for `ki-authoring` and `ki-engineering`; native definitions must declare the bounded operation, while `ki` owns execution, dry-run, reporting, and failure handling.
+     - [ ] Port the remaining pure repository-local catalogues: `ki-decision-records`, `ki-harness`, and `ki-skills`.
+     - [ ] Port the exceptional repository catalogues: `ki-repo-roadmap` as a multi-file repair plan and `ki-repo` only after its GitHub and hardened transaction effects have a native host design.
+     - [ ] Resolve user-scope evidence and repair boundaries for the declared `ki-housekeeping` and `ki-tokenomics` catalogues without treating user-home state as ordinary repository files.
+     - [ ] Remove each converted skill's legacy execution wrappers — `scripts/govern.ts`, `scripts/educate.ts`, their wrapper-only tests, and obsolete per-skill rubric publishers — only after all callers use native `ki repo` and `ki skill rubric` surfaces.
    - [x] Resolve the source harness's nested shared-module symlinks without weakening installed-payload validation: materialise regular, integrity-checked payload files or replace the links before an installed or local direct payload executes rubrics.
    - [ ] Prove `ki repo audit --repo .` and `ki repo conform --repo . --dry-run` against an installed current harness, then move package scripts, CI, and pre-commit to those commands.
    - [ ] Execute the explicit, fail-closed source-harness migration and remove only the legacy entries proven redundant; retain or relocate `.ki/self` deliberately rather than deleting it as collateral.
