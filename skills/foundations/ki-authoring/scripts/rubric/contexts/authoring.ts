@@ -1,7 +1,8 @@
-import { execSync } from 'node:child_process'
+import { spawnSync } from 'node:child_process'
 import { createHash } from 'node:crypto'
-import { existsSync, readFileSync, writeFileSync } from 'node:fs'
+import { existsSync, lstatSync, readFileSync } from 'node:fs'
 import { join, resolve } from 'node:path'
+import type { ConformCommand, ConformWrite, RubricContextOptions, RubricSession } from '../../shared/rubric.ts'
 
 export const PRETTIER_DEFAULT = `{
   "printWidth": 160,
@@ -69,41 +70,57 @@ export const MARKDOWNLINT_DEFAULT = `{
 }
 `
 
-const CHECK =
-  'bunx prettier --check "**/*.md" "!.ki/bootstrap/**" "!.ki/bin/**" "!src/generated/**" "!.claude/commands/**" "!.claude/skills/**" "!.claude/agents/**" "!.agents/skills/**" --ignore-path .gitignore && bunx markdownlint-cli2 "**/*.md"'
-const CONFORM =
-  'bunx prettier --write "**/*.md" "!.ki/bootstrap/**" "!.ki/bin/**" "!src/generated/**" "!.claude/commands/**" "!.claude/skills/**" "!.claude/agents/**" "!.agents/skills/**" --ignore-path .gitignore && bunx markdownlint-cli2 --fix'
-
-export const MARKDOWN_CONFORM_COMMANDS = [
-  {
-    program: 'bunx',
-    arguments: [
-      'prettier',
-      '--write',
-      '**/*.md',
-      '!.ki/bootstrap/**',
-      '!.ki/bin/**',
-      '!src/generated/**',
-      '!.claude/commands/**',
-      '!.claude/skills/**',
-      '!.claude/agents/**',
-      '!.agents/skills/**',
-      '--ignore-path',
-      '.gitignore'
-    ]
-  },
-  { program: 'bunx', arguments: ['markdownlint-cli2', '--fix'] }
+const MARKDOWN_PATHS = [
+  '**/*.md',
+  '!.ki/bootstrap/**',
+  '!.ki/bin/**',
+  '!src/generated/**',
+  '!.claude/commands/**',
+  '!.claude/skills/**',
+  '!.claude/agents/**',
+  '!.agents/skills/**'
 ] as const
 
+const MARKDOWN_AUDIT_COMMANDS: readonly ConformCommand[] = [
+  { program: 'bunx', arguments: ['prettier', '--check', ...MARKDOWN_PATHS, '--ignore-path', '.gitignore'] },
+  { program: 'bunx', arguments: ['markdownlint-cli2', '**/*.md'] }
+]
+
+const MARKDOWN_CONFORM_COMMANDS: readonly ConformCommand[] = [
+  { program: 'bunx', arguments: ['prettier', '--write', ...MARKDOWN_PATHS, '--ignore-path', '.gitignore'] },
+  { program: 'bunx', arguments: ['markdownlint-cli2', '--fix'] }
+]
+
 export type OwnedFile = '.prettierrc.json' | '.editorconfig' | '.markdownlint-cli2.jsonc'
-export type AuthoringRubricContext = {
+export type OwnedFileState = 'missing' | 'canonical' | 'drifted' | 'unsafe'
+export type MarkdownAudit = { clean: boolean; detail?: string }
+export type MarkdownRubricContext = {
   target: string
-  dryRun: boolean
   exists: boolean
-  markdownAudit: () => { clean: boolean; detail?: string }
-  markdownConform: () => boolean
-  owned: (name: OwnedFile) => 'missing' | 'canonical' | 'drifted'
-  syncOwned: (name: OwnedFile) => 'scaffolded' | 'overwritten' | 'canonical'
+  audit: MarkdownAudit
+  normalise?: () => void
+}
+export type OwnedFileEvidence = {
+  name: OwnedFile
+  state: OwnedFileState
+  synchronise?: () => void
+}
+export type OwnedRubricContext = {
+  targetExists: boolean
+  files: readonly OwnedFileEvidence[]
+}
+export type TomlRubricContext = Record<string, never>
+export type SynchronisationRubricContext = Record<string, never>
+export type AuthoringRubricContext = {
+  markdown: MarkdownRubricContext
+  owned: OwnedRubricContext
+  toml: TomlRubricContext
+  synchronisation: SynchronisationRubricContext
+}
+
+type OwnedFileDraft = {
+  evidence: OwnedFileEvidence
+  proposal: () => ConformWrite | undefined
 }
 
 const canonical: Record<OwnedFile, string> = {
@@ -111,48 +128,107 @@ const canonical: Record<OwnedFile, string> = {
   '.editorconfig': EDITORCONFIG_DEFAULT,
   '.markdownlint-cli2.jsonc': MARKDOWNLINT_DEFAULT
 }
+
 const sha256 = (content: string): string => createHash('sha256').update(content).digest('hex')
 
-export const createAuthoringContextFactory = ({
-  target,
-  dryRun = false
-}: {
-  target: string
-  dryRun?: boolean
-}): (() => AuthoringRubricContext) => {
-  const absoluteTarget = resolve(target)
-  const owned = (name: OwnedFile): 'missing' | 'canonical' | 'drifted' => {
-    const path = join(absoluteTarget, name)
-    if (!existsSync(path)) return 'missing'
-    return sha256(readFileSync(path, 'utf8')) === sha256(canonical[name]) ? 'canonical' : 'drifted'
+const inspectOwnedFile = (repository: string, name: OwnedFile): OwnedFileState => {
+  const path = join(repository, name)
+  if (!existsSync(path)) return 'missing'
+  const metadata = lstatSync(path)
+  if (!metadata.isFile() || metadata.isSymbolicLink()) return 'unsafe'
+  const original = readFileSync(path, 'utf8')
+  return sha256(original) === sha256(canonical[name]) ? 'canonical' : 'drifted'
+}
+
+const createOwnedFileDraft = (repository: string, name: OwnedFile, mutable: boolean): OwnedFileDraft => {
+  const state = inspectOwnedFile(repository, name)
+  let requested = false
+  return {
+    evidence: {
+      name,
+      state,
+      ...(mutable && state !== 'unsafe'
+        ? {
+            synchronise: () => {
+              requested = true
+            }
+          }
+        : {})
+    },
+    proposal: () =>
+      requested && state !== 'canonical'
+        ? {
+            path: name,
+            content: canonical[name],
+            ...(state === 'missing' ? { create: true } : {})
+          }
+        : undefined
   }
-  return () => ({
-    target: absoluteTarget,
-    dryRun,
-    exists: existsSync(absoluteTarget),
-    markdownAudit: () => {
-      try {
-        execSync(CHECK, { cwd: absoluteTarget, stdio: ['pipe', 'pipe', 'pipe'], encoding: 'utf8' })
-        return { clean: true }
-      } catch (error) {
-        const output = (error as { stdout?: string }).stdout?.trim()
-        return { clean: false, ...(output ? { detail: output.split('\n').slice(0, 8).join('\n    ') } : {}) }
-      }
+}
+
+const commandDetail = (stdout: string | null, stderr: string | null, fallback?: string): string | undefined => {
+  const detail = [stdout, stderr, fallback]
+    .filter((value): value is string => Boolean(value?.trim()))
+    .join('\n')
+    .trim()
+  return detail ? detail.split('\n').slice(0, 8).join('\n    ') : undefined
+}
+
+const inspectMarkdown = (repository: string): MarkdownAudit => {
+  for (const command of MARKDOWN_AUDIT_COMMANDS) {
+    const result = spawnSync(command.program, command.arguments, {
+      cwd: repository,
+      encoding: 'utf8',
+      shell: false,
+      stdio: ['ignore', 'pipe', 'pipe']
+    })
+    if (!result.error && result.status === 0) continue
+    const detail = commandDetail(result.stdout, result.stderr, result.error?.message)
+    return { clean: false, ...(detail ? { detail } : {}) }
+  }
+  return { clean: true }
+}
+
+export type MarkdownInspector = (repository: string) => MarkdownAudit
+
+export const createAuthoringSession = (
+  { mode, repository }: RubricContextOptions,
+  markdownInspector: MarkdownInspector = inspectMarkdown
+): RubricSession<AuthoringRubricContext> => {
+  const target = resolve(repository)
+  const targetExists = existsSync(target) && lstatSync(target).isDirectory()
+  const mutable = mode === 'conform' && targetExists
+  let normaliseMarkdown = false
+  const ownedDrafts = (Object.keys(canonical) as OwnedFile[]).map((name) => createOwnedFileDraft(target, name, mutable))
+  const context: AuthoringRubricContext = {
+    markdown: {
+      target,
+      exists: targetExists,
+      audit: targetExists ? markdownInspector(target) : { clean: false },
+      ...(mutable
+        ? {
+            normalise: () => {
+              normaliseMarkdown = true
+            }
+          }
+        : {})
     },
-    markdownConform: () => {
-      try {
-        execSync(dryRun ? CHECK : CONFORM, { cwd: absoluteTarget, stdio: ['pipe', 'pipe', 'pipe'], encoding: 'utf8' })
-        return true
-      } catch {
-        return false
-      }
+    owned: {
+      targetExists,
+      files: ownedDrafts.map((draft) => draft.evidence)
     },
-    owned,
-    syncOwned: (name) => {
-      const state = owned(name)
-      if (state === 'canonical') return 'canonical'
-      if (!dryRun) writeFileSync(join(absoluteTarget, name), canonical[name])
-      return state === 'missing' ? 'scaffolded' : 'overwritten'
-    }
-  })
+    toml: {},
+    synchronisation: {}
+  }
+
+  return {
+    subjects: [{ families: ['MD', 'OWN', 'TOML', 'SYNC'], context: () => context }],
+    proposal: () => ({
+      writes: ownedDrafts.flatMap((draft) => {
+        const write = draft.proposal()
+        return write ? [write] : []
+      }),
+      ...(normaliseMarkdown ? { commands: MARKDOWN_CONFORM_COMMANDS } : {})
+    })
+  }
 }
