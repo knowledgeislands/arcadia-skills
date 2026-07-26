@@ -51,6 +51,17 @@ The shared ecosystem GDR now establishes the five-repository ownership model. It
    - [ ] Prove `ki repo audit --repo .` and `ki repo conform --repo . --dry-run` against an installed current harness, then move package scripts, CI, and pre-commit to those commands.
    - [ ] Execute the explicit, fail-closed source-harness migration and remove only the legacy entries proven redundant; retain or relocate `.ki/self` deliberately rather than deleting it as collateral.
 
+## Cross-repository delivery split
+
+The work proceeds in dependency order, with no overlapping implementation ownership.
+
+1. **`tools-ki` / Claude-owned bulk move** — define and implement the versioned governed-rubric contract and its generic runtime: contained definition loading, audit execution, finding conversion and rendering, dependency ordering, dry-run, transaction/rollback, and repair-plan validation. Its fixtures must prove a malformed or unsafe payload fails closed. This is the interface-setting tranche; it touches `tools-ki` only.
+2. **Harness / Codex-owned preparation** — the completed inventory identifies every direct-writing context and the 131 nested shared-module links. The first conversion waits for the tools contract to be committed and then ports `ki-handoffs`: one repository-local Markdown-frontmatter repair, with no process, network, GitHub, or user-home side effects. Its fixture proves audit, byte-identical dry-run, host-applied conform, and refusal after a replacement or link attack.
+3. **Harness / Codex-owned migration batches** — after that vertical slice proves the contract, port `ki-decision-records`, `ki-feature-definitions`, and `ki-subagents`, then the remaining repository-scoped skills. Treat `ki-authoring` and `ki-engineering` as explicit subprocess-capability designs, `ki-repo-roadmap` as a multi-file transaction, and `ki-repo` as a later exceptional case because it includes hardened transaction and GitHub effects. Route `ki-housekeeping` and `ki-tokenomics` separately because they are user-scoped.
+4. **Joint integration boundary** — only after the converted harness runs from an installed or explicit local regular-file payload do the command host, CI, package scripts, and pre-commit migrate. `.ki` is removed last, one proven-redundant surface at a time.
+
+The synchronization point is the committed tools contract and fixture package, not a speculative shared wrapper. The harness migration consumes that contract; it does not alter the tools runtime during a conversion batch.
+
 ## Files touched
 
 - Affected decisions and indexes across the five primary repositories
