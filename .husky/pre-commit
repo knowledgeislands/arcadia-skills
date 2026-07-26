@@ -12,7 +12,7 @@ audit_staged_skills() {
   trap 'rm -rf "$snapshot" "$focus"' EXIT HUP INT TERM
   git checkout-index --all --prefix="$snapshot/" || return 1
   cp "$snapshot/.ki-config.toml" "$focus/.ki-config.toml" || return 1
-  for path in AGENTS.md CLAUDE.md package.json docs; do
+  for path in AGENTS.md CLAUDE.md README.md package.json docs; do
     if [ -e "$snapshot/$path" ]; then cp -R "$snapshot/$path" "$focus/$path" || return 1; fi
   done
   skill_roots="$(printf '%s\n' "$staged_paths" | awk -F/ '$1 == "skills" && NF >= 3 { print $1 "/" $2 "/" $3 }' | sort -u)"
