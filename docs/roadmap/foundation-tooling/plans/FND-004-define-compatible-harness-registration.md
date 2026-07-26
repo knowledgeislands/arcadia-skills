@@ -56,7 +56,9 @@ The shared ecosystem GDR now establishes the five-repository ownership model. It
      - [x] Add an explicit tools-owned subprocess capability; native definitions declare bounded pathless commands, while `ki` validates, reports, dry-runs, executes from the resolved repository without a shell, and re-audits.
      - [x] Port `ki-authoring`: declare its Markdown formatter/linter repair through that host capability, retain owned-file drift as host file replacements, and prove audit, dry-run, conform, and re-audit through the canonical development payload.
      - [ ] Port `ki-engineering` through the subprocess capability, separating its safe file replacements from the toolchain commands.
-     - [ ] Port the remaining pure repository-local catalogues: `ki-decision-records`, `ki-harness`, and `ki-skills`.
+     - [x] Port `ki-decision-records`, retaining its audit catalogue and declaring index maintenance as a host-owned file replacement; prove audit, dry-run, conform, and re-audit through the canonical development payload.
+     - [x] Port `ki-harness`, retaining its audit catalogue and declaring the existing harness-marker append as a host-owned replacement; its full CLI proof remains blocked by declared dependencies that have no native contract yet.
+     - [ ] Port `ki-skills`, coalescing overlapping canonical edits to each `SKILL.md` into one host-owned replacement per file.
      - [ ] Port the exceptional repository catalogues: `ki-repo-roadmap` as a multi-file repair plan and `ki-repo` only after its GitHub and hardened transaction effects have a native host design.
      - [ ] Resolve user-scope evidence and repair boundaries for the declared `ki-housekeeping` and `ki-tokenomics` catalogues without treating user-home state as ordinary repository files.
      - [ ] Remove each converted skill's legacy execution wrappers — `scripts/govern.ts`, `scripts/educate.ts`, their wrapper-only tests, and obsolete per-skill rubric publishers — only after all callers use native `ki repo` and `ki skill rubric` surfaces.
