@@ -1,86 +1,77 @@
-# Bootstrap Exemplars
+# Bootstrap exemplars
 
-## Contents
+These examples illustrate the scope boundaries in [the bootstrap standard](standards-bootstrap.md). For the exact options supported by an installed release, use `ki help`.
 
-- [Collections](#collections)
-- [Selected patterns](#selected-patterns)
+## First-time setup
 
-Concrete patterns showing what a correctly bootstrapped Knowledge Islands repo looks like: the `.ki-config.toml` declaration, the `package.json` reproducibility contract, the `CLAUDE.md` import pattern, and the invocation that wires it all together. The bootstrap flow itself is the exemplar — the before/after of a repo acquiring its project-local skill set from a single command.
-
-## Collections
-
-| Source               | URL             | What it covers                                                                 |
-| -------------------- | --------------- | ------------------------------------------------------------------------------ |
-| ki-arcadia-principal | No public URL ※ | Live `.ki-config.toml`, `package.json` script, and post-link `.claude/skills/` |
-| ki-agentic-harness   | No public URL ※ | Links only its own declared coverage, same as any other repo †                 |
-
-† The harness is the authoring hub but is not a special case here: a structural skill (`ki-mcp`, `ki-website`, …) is exercised against a repo of its own type, not loaded in the harness itself, so it links what governs it, not the whole fleet.
-
-※ KI repos are the primary exemplars; they have no public URL.
-
-## Selected patterns
-
-### Correct `.ki-config.toml` bootstrap declaration
-
-A repo opts skills in by adding `[ki-<skill>]` tables. The keystone linker reads these tables and mirrors the matching skills from the harness into each declared runtime's project-local skills dir — `.claude/skills/` for Claude Code (the running example below), `.agents/skills/` for Codex, per `[ki-repo] supported_runtimes`. Tables with no keys (bare `[ki-kb]`) are valid — presence alone is the opt-in signal. From `ki-arcadia-principal/.ki-config.toml`:
-
-```toml
-# Read by the ki-kb skill.
-# Presence opts this base into the kb standard; canonical zone names, no aliases.
-[ki-kb]
-
-# Read by the ki-kb-streams skill.
-# Presence opts the Streams zone into the Enactment Process; uses the defaults.
-[ki-kb-streams]
-
-# Tokenomics governance — audits the standing context surface.
-[ki-tokenomics]
-headroom = "recommended"
-preferred_model_type = "standard"
-
-[ki-tokenomics.budgets]
-mcp_servers = 20   # acknowledged overage; documented here for auditability
+```sh
+ki bootstrap
+ki doctor
+ki diag
 ```
 
-Every repo declares its own foundations (`[ki-repo]` + `[ki-authoring]`) as `[ki-*]` tables like any other coverage — there is no injected baseline, so the linker resolves purely from the declared set.
+The first command detects supported agent runtimes, establishes the user configuration, installs the canonical harness, and activates the five core user skills. `ki doctor` checks the resulting environment; `ki diag` reports the effective configuration, harness inventory, repository, and XDG paths.
 
-### Before and after bootstrapping
+Running `ki bootstrap` again leaves correctly managed state in place. Use the refresh form after adding or removing a supported agent runtime or after reconciling installed state:
 
-**Before** — a repo with a `.ki-config.toml` that has never been linked:
-
-```text
-.claude/
-└── (no skills/ directory)
+```sh
+ki bootstrap --refresh
 ```
 
-**After** `bun run ki:skills:copy:project` — `.claude/skills/` contains complete generated copies for every declared skill plus the baseline:
+## Additional compatible harness
 
-```text
-.claude/
-└── skills/
-    ├── ki-authoring/
-    ├── ki-kb/
-    ├── ki-kb-streams/
-    ├── ki-repo/
-    └── ki-tokenomics/
+```sh
+ki harness install example/operations
+ki harness list
+ki harness info example/operations
 ```
 
-The `.claude/skills/` directory is gitignored — the committed artifact is the `ki:skills:copy:project` script and a `.gitignore` line. The copied payloads are regenerated, never committed.
+Installation adds verified capability sources to the user-owned harness set. It does not make every skill in that harness discoverable and does not change a repository.
 
-Bootstrap publishes a harness's declared runtime skills as relative links to that harness's canonical source skills. Ordinary repositories continue to receive regular-file copies.
+When exactly one installed harness provides `example-engineering`, activate it for the configured user runtimes:
 
-### CLAUDE.md import pattern for skills
-
-A repo's `CLAUDE.md` does not list available skills inline; Claude Code discovers them from `.claude/skills/` automatically. The only authoring convention needed is a one-line pointer to where the conventions live — the global `CLAUDE.md` carries this for all KI sessions:
-
-```markdown
-<!-- In ~/.claude/CLAUDE.md or a project CLAUDE.md -->
-
-The authoring conventions for Markdown and TOML live in the `ki-authoring` skill.
+```sh
+ki skill user add example-engineering
 ```
 
-Skills are referenced by their `name` value (the directory name under `skills/`), never by file path. A project `CLAUDE.md` that needs to invoke a skill explicitly uses the slash-command form:
+Remove that activation without uninstalling its harness:
 
-```markdown
-For KB operations in this session, use the `ki-kb` skill.
+```sh
+ki skill user remove example-engineering
 ```
+
+## Repository activation and maintenance
+
+Given an existing KI repository whose `.ki-config.toml` does not yet declare `ki-repo-roadmap`, add the installed skill at repository scope:
+
+```sh
+ki skill repo add ki-repo-roadmap --repo .
+```
+
+The command adds the `[ki-repo-roadmap]` declaration and managed runtime-discovery links only for that repository. It does not add the skill to user scope.
+
+Native repository maintenance then resolves the repository's declared skills from verified installed harnesses:
+
+```sh
+ki repo educate --repo .
+ki repo audit --repo .
+ki repo conform --repo . --dry-run
+```
+
+Remove the repository declaration and its managed repository links without changing user activation:
+
+```sh
+ki skill repo remove ki-repo-roadmap --repo .
+```
+
+## Canonical harness development
+
+Use a checkout only through the explicit development switch:
+
+```sh
+ki dev on /absolute/path/to/ki-agentic-harness
+ki repo audit --repo /absolute/path/to/governed-repository
+ki dev off
+```
+
+The first command validates the checkout before switching the canonical installed payload. The last restores the verified archive; proximity to a checkout never changes resolution by itself.
