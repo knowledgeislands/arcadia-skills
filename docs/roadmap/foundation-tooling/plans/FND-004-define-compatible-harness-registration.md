@@ -51,6 +51,7 @@ The shared ecosystem GDR now establishes the five-repository ownership model. It
    - [ ] Convert every repository-scoped declared governance skill to that definition contract, replacing direct-writing callbacks only after the tools-owned transaction preserves its existing fail-closed safety guarantees.
      - [x] Port `ki-handoffs` as the first definition-contract vertical slice, including its pure readiness-marker repair plan and focused contract test.
      - [x] Prove that slice through `ki dev on`: native audit, byte-identical dry run, host-owned conform, and post-conform re-audit against a canonical development payload.
+     - [x] Port `ki-feature-definitions`, retaining its read-only corpus evidence and declaring its heading-normalisation repair as a cached file-replacement plan; prove it through the canonical development payload.
    - [x] Resolve the source harness's nested shared-module symlinks without weakening installed-payload validation: materialise regular, integrity-checked payload files or replace the links before an installed or local direct payload executes rubrics.
    - [ ] Prove `ki repo audit --repo .` and `ki repo conform --repo . --dry-run` against an installed current harness, then move package scripts, CI, and pre-commit to those commands.
    - [ ] Execute the explicit, fail-closed source-harness migration and remove only the legacy entries proven redundant; retain or relocate `.ki/self` deliberately rather than deleting it as collateral.
