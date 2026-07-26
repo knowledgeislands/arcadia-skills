@@ -1,6 +1,6 @@
-import type { RubricDefinition } from '../../shared/rubric.ts'
+import type { SkillRubricDefinition } from '../../shared/rubric.ts'
 import type { KiSkillsRubricContext } from '../contexts/contexts.ts'
-import { bindExecution, createExecutionContext, executableCatalogue } from '../contexts/execution.ts'
+import { createKiSkillsSession } from '../contexts/subjects.ts'
 import { BODY } from './body.ts'
 import { COLLISION } from './collision.ts'
 import { DESC } from './description.ts'
@@ -19,9 +19,11 @@ import { REFERENCES } from './references.ts'
 import { SCRIPTS } from './scripts.ts'
 import { SIZE } from './size.ts'
 
-const rubric: RubricDefinition<KiSkillsRubricContext> = {
+export default {
+  contract: 1,
   name: 'ki-skills',
   concern: 'Agent Skills',
+  createSession: createKiSkillsSession,
   families: [
     LAYOUT,
     FRONTMATTER,
@@ -41,14 +43,4 @@ const rubric: RubricDefinition<KiSkillsRubricContext> = {
     COLLISION,
     LONGEVITY
   ]
-}
-
-const catalogue = executableCatalogue(rubric.families)
-
-export default {
-  contract: 1,
-  name: rubric.name,
-  concern: rubric.concern,
-  createContext: createExecutionContext,
-  families: catalogue.map((family) => bindExecution(family, catalogue))
-} as const
+} satisfies SkillRubricDefinition<KiSkillsRubricContext>

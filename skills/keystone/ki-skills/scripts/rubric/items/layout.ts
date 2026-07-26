@@ -87,14 +87,10 @@ export const LAY_4: RubricItem<LayoutRubricContext> = {
     },
     conform: {
       phase: 'NORMALISE',
-      run: ({ sourceMarkdown, subject, writeMarkdown }) => {
-        if (sourceMarkdown === undefined || !writeMarkdown)
-          return [{ changed: false, message: 'Markdown is unavailable for conform', ...(subject ? { subject } : {}) }]
+      run: ({ sourceMarkdown, writeMarkdown }) => {
+        if (sourceMarkdown === undefined || !writeMarkdown) return
         const normalised = normaliseLinkSlashes(sourceMarkdown)
-        if (normalised === sourceMarkdown)
-          return [{ changed: false, message: 'file references already use forward slashes', ...(subject ? { subject } : {}) }]
-        writeMarkdown(normalised)
-        return [{ changed: true, message: 'normalised link targets to forward slashes', ...(subject ? { subject } : {}) }]
+        if (normalised !== sourceMarkdown) writeMarkdown(normalised)
       }
     }
   }

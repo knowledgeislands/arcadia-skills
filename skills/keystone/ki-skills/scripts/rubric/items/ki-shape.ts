@@ -188,11 +188,8 @@ export const KI_SHAPE_11: RubricItem<KiShapeRubricContext> = {
     conform: {
       phase: 'NORMALISE',
       run: ({ skill, setArgumentHint }) => {
-        if (!skill?.governanceSkill || !skill.argumentHint || !setArgumentHint)
-          return [{ changed: false, message: 'HELP mode does not have a safe conform' }]
-        if (skill.hintVerbs.includes('HELP')) return [{ changed: false, message: 'governance skill already exposes HELP' }]
-        setArgumentHint(`${skill.argumentHint} | help`)
-        return [{ changed: true, message: 'added the universal help mode' }]
+        if (skill?.governanceSkill && skill.argumentHint && !skill.hintVerbs.includes('HELP'))
+          setArgumentHint?.(`${skill.argumentHint} | help`)
       }
     }
   }
@@ -223,12 +220,9 @@ export const KI_SHAPE_12: RubricItem<KiShapeRubricContext> = {
     conform: {
       phase: 'PRIMARY',
       run: ({ skill, setArgumentHint }) => {
-        if (!skill?.governanceSkill || !skill.argumentHint || !setArgumentHint)
-          return [{ changed: false, message: 'governance mode vocabulary does not have a safe conform' }]
+        if (!skill?.governanceSkill || !skill.argumentHint || !setArgumentHint) return
         const missing = UNIVERSAL_VERBS.filter((verb) => !skill.hintVerbs.includes(verb))
-        if (missing.length === 0) return [{ changed: false, message: 'governance mode vocabulary is already complete' }]
-        setArgumentHint(`${skill.argumentHint} | ${missing.map((verb) => verb.toLowerCase()).join(' | ')}`)
-        return [{ changed: true, message: `added missing universal mode(s): ${missing.map((verb) => verb.toLowerCase()).join(', ')}` }]
+        if (missing.length > 0) setArgumentHint(`${skill.argumentHint} | ${missing.map((verb) => verb.toLowerCase()).join(' | ')}`)
       }
     }
   }

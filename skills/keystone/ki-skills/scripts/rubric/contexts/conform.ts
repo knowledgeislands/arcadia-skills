@@ -1,12 +1,8 @@
 import { readFileSync } from 'node:fs'
 import { join, relative } from 'node:path'
+import type { ConformWrite } from '../../shared/rubric.ts'
 import { frontmatterLine, parseFrontmatter, replaceFrontmatterScalar } from './frontmatter.ts'
 import type { SkillWritableCapabilities } from './skill.ts'
-
-export type ConformWrite = {
-  readonly path: string
-  readonly content: string
-}
 
 export type ConformDocumentState = {
   read: () => string

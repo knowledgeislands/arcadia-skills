@@ -104,9 +104,7 @@ export const NAME_5: RubricItem<NameRubricContext> = {
     conform: {
       phase: 'NORMALISE',
       run: ({ name, directoryName, setName }) => {
-        if (!name || name === directoryName || !setName) return [{ changed: false, message: 'skill name does not need a safe conform' }]
-        setName(directoryName)
-        return [{ changed: true, message: `set skill name to "${directoryName}"` }]
+        if (name && name !== directoryName) setName?.(directoryName)
       }
     }
   }

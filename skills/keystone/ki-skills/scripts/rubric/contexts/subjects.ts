@@ -1,9 +1,8 @@
 import { existsSync, readFileSync, statSync } from 'node:fs'
 import { basename, dirname, extname, join, relative, resolve } from 'node:path'
-import type { RubricMode } from '../../shared/rubric.ts'
+import type { RubricContextOptions, RubricSession, RubricSubject } from '../../shared/rubric.ts'
 import { type ConformDocumentState, createConformDocumentState, createSkillConformState } from './conform.ts'
 import { createKiShapeContext, createKiSkillsRubricContext, type KiSkillsRubricContext } from './contexts.ts'
-import { createFootprint } from './footprint.ts'
 import { parseFrontmatter } from './frontmatter.ts'
 import { createRefreshContext } from './longevity.ts'
 import { createSkillRubricContext, frontmatterList } from './skill.ts'
@@ -20,22 +19,13 @@ export type KiSkillsSubjectScope =
   | 'longevity'
   | 'collision'
   | 'ownership'
-  | 'footprint'
-  | 'refreshStatus'
 
-export type KiSkillsSubject = {
+export type KiSkillsSubject = RubricSubject<KiSkillsRubricContext> & {
   scope: KiSkillsSubjectScope
-  context: () => KiSkillsRubricContext
-  subject?: string
-}
-
-export type KiSkillsSubjects = {
-  subjects: readonly KiSkillsSubject[]
-  proposal: () => { readonly writes: readonly { readonly path: string; readonly content: string }[] }
 }
 
 /** Applicable rubric families for each kind of evidence subject. */
-export const KI_SKILLS_SUBJECT_FAMILIES = {
+const KI_SKILLS_SUBJECT_FAMILIES = {
   target: ['LAY'],
   invalidSkill: ['LAY', 'FM'],
   skill: ['LAY', 'FM', 'NAME', 'DESC', 'OPT', 'SIZE', 'BODY', 'SCRIPT', 'KI-CHECKER', 'KI-SHAPE', 'KI-INVOKE', 'PROC'],
@@ -44,10 +34,15 @@ export const KI_SKILLS_SUBJECT_FAMILIES = {
   portability: ['PORT'],
   longevity: ['LONG'],
   collision: ['COLL'],
-  ownership: ['KI-SHAPE'],
-  footprint: ['SIZE'],
-  refreshStatus: ['LONG']
+  ownership: ['KI-SHAPE']
 } as const satisfies Record<KiSkillsSubjectScope, readonly string[]>
+
+const rubricSubject = (scope: KiSkillsSubjectScope, context: () => KiSkillsRubricContext, subject?: string): KiSkillsSubject => ({
+  scope,
+  families: KI_SKILLS_SUBJECT_FAMILIES[scope],
+  context,
+  ...(subject ? { subject } : {})
+})
 
 const markdownSubject = ({
   file,
@@ -60,10 +55,10 @@ const markdownSubject = ({
 }): KiSkillsSubject => {
   const isSkill = basename(file) === 'SKILL.md'
   const subject = relative(reportTarget, file)
-  return {
-    scope: isSkill ? 'markdown' : 'reference',
-    subject,
-    context: () => {
+  const scope = isSkill ? 'markdown' : 'reference'
+  return rubricSubject(
+    scope,
+    () => {
       const markdown = document?.read() ?? readFileSync(file, 'utf8')
       const text = stripCode(markdown)
       return createKiSkillsRubricContext({
@@ -76,8 +71,9 @@ const markdownSubject = ({
         link: { markdown: text, relativeTargetExists: (target) => existsSync(resolve(dirname(file), target)) },
         references: { lineCount: markdown.split(/\r?\n/).length, content: markdown }
       })
-    }
-  }
+    },
+    subject
+  )
 }
 
 const ownershipCollisions = (directories: readonly string[]): { file: string; skills: string[] }[] => {
@@ -92,27 +88,15 @@ const ownershipCollisions = (directories: readonly string[]): { file: string; sk
   return [...byFile].flatMap(([file, skills]) => (skills.size > 1 ? [{ file, skills: [...skills] }] : []))
 }
 
-/** Discover one scope and construct the same complete subjects for AUDIT and CONFORM. */
-export const createKiSkillsSubjects = ({
-  mode,
-  roots,
-  reportTarget,
-  footprint = false,
-  refreshStatus = false
-}: {
-  mode: RubricMode
-  roots: readonly string[]
-  reportTarget: string
-  footprint?: boolean
-  refreshStatus?: boolean
-}): KiSkillsSubjects => {
-  const skillDirectories = [...new Set((roots.length ? roots : ['.']).flatMap(discoverSkillDirs))].sort()
+/** Build one operation-scoped repository session for the generic KI rubric host. */
+export const createKiSkillsSession = ({ mode, repository }: RubricContextOptions): RubricSession<KiSkillsRubricContext> => {
+  const reportTarget = repository
+  const skillDirectories = discoverSkillDirs(repository).sort()
   const subjects: KiSkillsSubject[] = []
   const documents: ConformDocumentState[] = []
 
-  for (const root of roots) {
-    const target = resolve(root)
-    if (!existsSync(target)) continue
+  const target = resolve(repository)
+  if (existsSync(target)) {
     const stat = statSync(target)
     const discovered = discoverSkillDirs(target)
     const context = createKiSkillsRubricContext({
@@ -121,13 +105,13 @@ export const createKiSkillsSubjects = ({
         standaloneMarkdownFile: stat.isFile() && extname(target).toLowerCase() === '.md'
       }
     })
-    subjects.push({ scope: 'target', context: () => context })
+    subjects.push(rubricSubject('target', () => context))
   }
 
   if (skillDirectories.length === 0) {
     if (subjects.length === 0) {
       const context = createKiSkillsRubricContext({ layout: { noSkillsFound: true } })
-      subjects.push({ scope: 'target', context: () => context })
+      subjects.push(rubricSubject('target', () => context))
     }
     return { subjects, proposal: () => ({ writes: [] }) }
   }
@@ -136,11 +120,7 @@ export const createKiSkillsSubjects = ({
     const conform = mode === 'conform' ? createSkillConformState(skillDirectory, reportTarget) : undefined
     const skill = createSkillRubricContext(skillDirectory, conform?.capabilities)
     const skillSubject = relative(reportTarget, skillDirectory) || '.'
-    subjects.push({
-      scope: skill.validFrontmatter ? 'skill' : 'invalidSkill',
-      context: skill.context,
-      subject: skillSubject
-    })
+    subjects.push(rubricSubject(skill.validFrontmatter ? 'skill' : 'invalidSkill', skill.context, skillSubject))
     if (conform) documents.push(conform.document)
     if (!skill.validFrontmatter) continue
 
@@ -156,45 +136,27 @@ export const createKiSkillsSubjects = ({
       if (document && document !== conform?.document) documents.push(document)
       subjects.push(markdownSubject({ file, reportTarget, document }))
       const subject = relative(reportTarget, file)
-      subjects.push({
-        scope: 'portability',
-        subject,
-        context: () =>
-          createKiSkillsRubricContext({
-            portability: {
-              markdown: document?.read() ?? readFileSync(file, 'utf8'),
-              subject,
-              runtimeBinding,
-              attributedSourceMaterial: basename(file) === 'sources.md'
-            }
-          })
-      })
+      subjects.push(
+        rubricSubject(
+          'portability',
+          () =>
+            createKiSkillsRubricContext({
+              portability: {
+                markdown: document?.read() ?? readFileSync(file, 'utf8'),
+                subject,
+                runtimeBinding,
+                attributedSourceMaterial: basename(file) === 'sources.md'
+              }
+            }),
+          subject
+        )
+      )
     }
 
     const sourcesPath = join(skillDirectory, 'references', 'sources.md')
     if (existsSync(sourcesPath)) {
       const context = createKiSkillsRubricContext({ longevity: createRefreshContext(readFileSync(sourcesPath, 'utf8')) })
-      subjects.push({ scope: 'longevity', context: () => context })
-    }
-
-    if (footprint) {
-      const measured = createFootprint(skillDirectory)
-      const context = createKiSkillsRubricContext({
-        size: {
-          footprint: {
-            total: measured.total,
-            rows: measured.rows.map((row) => ({ ...row, path: relative(reportTarget, join(skillDirectory, row.path)) }))
-          }
-        }
-      })
-      subjects.push({ scope: 'footprint', context: () => context })
-    }
-
-    if (refreshStatus) {
-      const context = createKiSkillsRubricContext({
-        longevity: { ...createRefreshContext(existsSync(sourcesPath) ? readFileSync(sourcesPath, 'utf8') : null), reportStatus: true }
-      })
-      subjects.push({ scope: 'refreshStatus', subject: relative(reportTarget, sourcesPath), context: () => context })
+      subjects.push(rubricSubject('longevity', () => context))
     }
   }
 
@@ -206,12 +168,12 @@ export const createKiSkillsSubjects = ({
       }))
     }
   })
-  subjects.push({ scope: 'collision', context: () => collision })
+  subjects.push(rubricSubject('collision', () => collision))
 
   const ownership = createKiSkillsRubricContext({
     shape: createKiShapeContext({ skill: null, ownershipCollisions: ownershipCollisions(skillDirectories) })
   })
-  subjects.push({ scope: 'ownership', context: () => ownership })
+  subjects.push(rubricSubject('ownership', () => ownership))
 
   return {
     subjects,
