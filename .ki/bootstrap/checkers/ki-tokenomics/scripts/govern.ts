@@ -1,1 +1,0 @@
-../../../../../skills/environment/ki-tokenomics/scripts/govern.ts

@@ -1,1 +1,0 @@
-../../../../skills/keystone/ki-bootstrap/scripts/shared/educator.ts
