@@ -39,9 +39,9 @@ export const KI_CHECKER_2: RubricItem<KiCheckerRubricContext> = {
 
 export const KI_CHECKER_3: RubricItem<KiCheckerRubricContext> = {
   code: 'KI-CHECKER-3',
-  title: 'ki-skills is the self-governing checker-contract root',
+  title: 'ki-skills publishes the portable rubric contract',
   description:
-    '`ki-skills` is the self-governing checker-contract root: it declares `ki-shared-modules: [rubric, checker, reporter, checker-reporter, govern]` and ships those canonical modules under `scripts/shared/`. Its checker must use those owned files directly and must not vendor a `ki-skills:*` dependency back into itself. Separately owned lifecycle modules may be declared and copied under `scripts/vendored/<provider>/`; shared-module declarations are implementation packaging, not `ki-depends-on:` or composition.',
+    '`ki-skills` publishes the sole portable shared dependency, `scripts/shared/rubric.ts`, declared as `ki-shared-modules: [rubric]`. It provides catalogue authoring types for independently installed skills; `ki` owns execution, reporting, and transaction handling. The provider never declares a dependency on itself.',
   sources: ['ADR-KI-HARNESS-SKILLS-012'],
   mechanical: {
     level: 'FAIL',
@@ -51,47 +51,28 @@ export const KI_CHECKER_3: RubricItem<KiCheckerRubricContext> = {
         rootSkill,
         declaredSharedModules,
         sharedDependencies,
-        rubricModuleExists,
-        checkerModuleExists,
-        reporterModuleExists,
-        checkerReporterModuleExists
+        rubricModuleExists
       }) => {
         if (!rootSkill) return [{ status: 'NOT_APPLICABLE', message: 'the audited skill is not the checker-contract root' }]
         const violations = []
-        for (const module of ['rubric', 'checker', 'reporter', 'checker-reporter', 'govern'])
-          if (!declaredSharedModules.includes(module))
-            violations.push({
-              status: 'VIOLATION' as const,
-              message: `\`ki-skills\` must expose \`${module}\` under \`ki-shared-modules:\``
-            })
+        if (declaredSharedModules.length !== 1 || declaredSharedModules[0] !== 'rubric')
+          violations.push({
+            status: 'VIOLATION' as const,
+            message: '`ki-skills` must expose only `rubric` under `ki-shared-modules:`'
+          })
         if (!rubricModuleExists)
           violations.push({
             status: 'VIOLATION' as const,
             message: '`ki-skills` must ship `scripts/shared/rubric.ts` from its own files'
           })
-        if (!checkerModuleExists)
-          violations.push({
-            status: 'VIOLATION' as const,
-            message: '`ki-skills` must ship `scripts/shared/checker.ts` from its own files'
-          })
-        if (!reporterModuleExists)
-          violations.push({
-            status: 'VIOLATION' as const,
-            message: '`ki-skills` must ship `scripts/shared/reporter.ts` from its own files'
-          })
-        if (!checkerReporterModuleExists)
-          violations.push({
-            status: 'VIOLATION' as const,
-            message: '`ki-skills` must ship `scripts/shared/checker-reporter.ts` from its own files'
-          })
         const selfDependencies = sharedDependencies.filter((dependency) => dependency.startsWith('ki-skills:'))
         if (selfDependencies.length > 0)
           violations.push({
             status: 'VIOLATION' as const,
-            message: `\`ki-skills\` must use its owned checker modules directly, not declare ${selfDependencies.join(', ')}`
+            message: `\`ki-skills\` must use its owned rubric contract directly, not declare ${selfDependencies.join(', ')}`
           })
         const [first, ...rest] = violations
-        return first ? [first, ...rest] : [{ status: 'PASS', message: 'ki-skills is the self-governing checker-contract root' }]
+        return first ? [first, ...rest] : [{ status: 'PASS', message: 'ki-skills publishes the portable rubric contract' }]
       }
     }
   }
