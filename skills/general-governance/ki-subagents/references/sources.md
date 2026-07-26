@@ -2,9 +2,9 @@
 
 **Refresh:** external-spec · monthly
 
-The sources behind [the standard](standards.md) and its [rubric](rubric.md). Mode REFRESH reads this file, re-fetches each source, diffs it against the standard + rubric, then **bumps the `last reviewed` dates** and refreshes the `## Last review` block below (what changed is recorded in the commit, not a changelog). This is the skill's memory of where best practice comes from — keep it current.
+The sources behind [the subagent-definitions standard](standards-subagent-definitions.md) and its [rubric](rubric.md). Mode REFRESH reads this file, re-fetches each source, diffs it against the standard + rubric, then **bumps the `last reviewed` dates** and refreshes the `## Last review` block below (what changed is recorded in the commit, not a changelog). This is the skill's memory of where best practice comes from — keep it current.
 
-Abbreviations match the `(SOURCE)` tags in [the standard](standards.md) and [rubric](rubric.md).
+Abbreviations match the `(SOURCE)` tags in [the standard](standards-subagent-definitions.md) and [rubric](rubric.md).
 
 ## Authoritative
 

@@ -1,6 +1,6 @@
-import { existsSync, readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs'
-import { basename, join, resolve } from 'node:path'
-import type { ConformOutcome, RubricOutcomes } from '../../shared/rubric.ts'
+import { type Dirent, lstatSync, readdirSync, readFileSync } from 'node:fs'
+import { basename, dirname, join, relative, resolve } from 'node:path'
+import type { ConformWrite, RubricContextOptions, RubricSession } from '../../shared/rubric.ts'
 
 export type AgentFrontmatter = {
   keys: ReadonlyMap<string, string>
@@ -18,12 +18,39 @@ export type AgentDefinition = {
   body: string
 }
 
-export type AgentsRubricContext = {
-  roots: readonly string[]
-  missingRoots: readonly string[]
+type ScopeState = 'absent' | 'physical' | 'unsafe'
+
+export type AgentFileContext = {
+  repository: string
+  scopeState: ScopeState
+  agent: AgentDefinition | null
+  unsafePath: string | null
+  duplicateNameFiles: readonly string[]
+  requestNameAlignment?: () => void
+}
+
+export type AgentSetContext = {
+  repository: string
+  scopeState: ScopeState
   agents: readonly AgentDefinition[]
-  dryRun: boolean
-  alignName: (agent: AgentDefinition) => RubricOutcomes<ConformOutcome>
+  unsafePaths: readonly string[]
+}
+
+export type AgentsRubricContext = {
+  file: AgentFileContext
+  set: AgentSetContext
+}
+
+const pathState = (path: string): 'missing' | 'file' | 'directory' | 'unsafe' => {
+  try {
+    const state = lstatSync(path)
+    if (state.isSymbolicLink()) return 'unsafe'
+    if (state.isFile()) return 'file'
+    if (state.isDirectory()) return 'directory'
+    return 'unsafe'
+  } catch (error) {
+    return (error as NodeJS.ErrnoException).code === 'ENOENT' ? 'missing' : 'unsafe'
+  }
 }
 
 const stripQuotes = (value: string): string => {
@@ -103,84 +130,130 @@ const readAgent = (file: string): AgentDefinition => {
   }
 }
 
-const agentsRoot = (path: string): string => {
-  if (basename(path) === 'subagents') return path
-  const candidate = join(path, 'subagents')
-  return existsSync(candidate) && statSync(candidate).isDirectory() ? candidate : path
-}
-
-const discoverAgentFiles = (path: string): string[] => {
-  if (!existsSync(path)) return []
-  if (statSync(path).isFile()) return path.endsWith('.md') ? [path] : []
+const inspectAgentFiles = (repository: string, root: string): { files: string[]; unsafePaths: string[] } => {
   const files: string[] = []
-  const walk = (directory: string): void => {
-    for (const entry of readdirSync(directory, { withFileTypes: true })) {
-      if (entry.name.startsWith('.') || entry.name === 'node_modules') continue
+  const unsafePaths: string[] = []
+  const walk = (directory: string, depth: number): void => {
+    if (depth > 12) {
+      unsafePaths.push(relative(repository, directory))
+      return
+    }
+    let entries: Dirent[]
+    try {
+      entries = readdirSync(directory, { withFileTypes: true })
+    } catch {
+      unsafePaths.push(relative(repository, directory))
+      return
+    }
+    for (const entry of entries) {
+      if (entry.name.startsWith('.') || entry.name === 'node_modules' || entry.name === 'README.md') continue
       const candidate = join(directory, entry.name)
-      if (entry.isDirectory() || entry.isSymbolicLink()) {
-        try {
-          if (statSync(candidate).isDirectory()) walk(candidate)
-        } catch {
-          // A dangling symlink is outside the agent-definition surface.
-        }
-      } else if (entry.name.endsWith('.md') && entry.name !== 'README.md') files.push(candidate)
+      const state = pathState(candidate)
+      if (state === 'directory') walk(candidate, depth + 1)
+      else if (state === 'file' && entry.name.endsWith('.md')) files.push(candidate)
+      else if (state === 'unsafe') unsafePaths.push(relative(repository, candidate))
     }
   }
-  walk(agentsRoot(path))
-  return files.sort()
+  walk(root, 0)
+  return { files: files.sort(), unsafePaths: [...new Set(unsafePaths)].sort() }
 }
 
-export const relativeLinkTargets = (markdown: string): string[] => {
-  const targets: string[] = []
-  const expression = /\[[^\]]*\]\(([^)]+)\)/g
-  let match: RegExpExecArray | null
-  // biome-ignore lint/suspicious/noAssignInExpressions: standard regex-exec loop
-  while ((match = expression.exec(markdown)) !== null) {
-    let target = (match[1] as string).trim()
-    if (target.startsWith('<') && target.endsWith('>')) target = target.slice(1, -1).trim()
-    if (/^[a-z]+:\/\//i.test(target) || target.startsWith('mailto:') || target.startsWith('#')) continue
-    const hash = target.indexOf('#')
-    if (hash !== -1) target = target.slice(0, hash)
-    if (target) targets.push(target)
+const alignedNameContent = (agent: AgentDefinition): string | null => {
+  const openingLength = agent.content.match(/^---\r?\n/)?.[0].length
+  if (openingLength === undefined) return null
+  const closing = agent.content.slice(openingLength).search(/\r?\n---(?:\r?\n|$)/)
+  if (closing === -1) return null
+  const frontmatterEnd = openingLength + closing
+  const frontmatter = agent.content.slice(0, frontmatterEnd)
+  if (!/^name:[^\r\n]*$/m.test(frontmatter)) return null
+  return `${frontmatter.replace(/^name:[^\r\n]*$/m, `name: ${agent.stem}`)}${agent.content.slice(frontmatterEnd)}`
+}
+
+export const createAgentsSession = ({ mode, repository }: RubricContextOptions): RubricSession<AgentsRubricContext> => {
+  const root = resolve(repository)
+  const agentsRoot = join(root, 'subagents')
+  const rawRootState = pathState(agentsRoot)
+  const scopeState: ScopeState = rawRootState === 'missing' ? 'absent' : rawRootState === 'directory' ? 'physical' : 'unsafe'
+  const inspected = scopeState === 'physical' ? inspectAgentFiles(root, agentsRoot) : { files: [], unsafePaths: [] }
+  if (scopeState === 'unsafe') inspected.unsafePaths.push('subagents')
+
+  const agents: AgentDefinition[] = []
+  for (const file of inspected.files) {
+    try {
+      agents.push(readAgent(file))
+    } catch {
+      inspected.unsafePaths.push(relative(root, file))
+    }
   }
-  return targets
-}
+  inspected.unsafePaths = [...new Set(inspected.unsafePaths)].sort()
 
-export const triggerPhrases = (description: string): string[] => {
-  const phrases = new Set<string>()
-  const expression = /"([^"]{2,})"/g
-  let match: RegExpExecArray | null
-  // biome-ignore lint/suspicious/noAssignInExpressions: standard regex-exec loop
-  while ((match = expression.exec(description)) !== null) {
-    const phrase = (match[1] as string).toLowerCase().replace(/\s+/g, ' ').trim()
-    if (phrase) phrases.add(phrase)
+  const byName = new Map<string, string[]>()
+  for (const agent of agents) {
+    if (!agent.name) continue
+    byName.set(agent.name, [...(byName.get(agent.name) ?? []), agent.file])
   }
-  return [...phrases]
-}
 
-export const stripCode = (markdown: string): string => markdown.replace(/```[\s\S]*?```/g, '').replace(/`[^`\n]*`/g, '')
-
-export const createAgentsContext = (roots: readonly string[], dryRun: boolean): AgentsRubricContext => {
-  const resolvedRoots = roots.map((root) => resolve(root))
-  const files = [...new Set(resolvedRoots.flatMap(discoverAgentFiles))].sort()
+  const requestedDrafts = new Map<string, string>()
+  const set: AgentSetContext = { repository: root, scopeState, agents, unsafePaths: inspected.unsafePaths }
+  const fileSubjects = agents.map((agent) => {
+    const aligned = alignedNameContent(agent)
+    const file: AgentFileContext = {
+      repository: root,
+      scopeState,
+      agent,
+      unsafePath: null,
+      duplicateNameFiles: agent.name ? (byName.get(agent.name) ?? []) : [],
+      ...(mode === 'conform' && agent.name !== agent.stem && aligned !== null
+        ? {
+            requestNameAlignment: () => {
+              requestedDrafts.set(relative(root, agent.file), aligned)
+            }
+          }
+        : {})
+    }
+    const context: AgentsRubricContext = { file, set }
+    return {
+      families: ['LAY', 'NAME', 'DESC', 'FM', 'PROMPT', 'LANE', 'LINK', 'PROC', 'LONG'],
+      context: () => context,
+      subject: relative(root, agent.file)
+    }
+  })
+  const unavailableSubjects = inspected.unsafePaths.map((unsafePath) => {
+    const context: AgentsRubricContext = {
+      file: { repository: root, scopeState, agent: null, unsafePath, duplicateNameFiles: [] },
+      set
+    }
+    return {
+      families: ['LAY', 'NAME', 'DESC', 'FM', 'PROMPT', 'LANE', 'LINK', 'PROC', 'LONG'],
+      context: () => context,
+      subject: unsafePath
+    }
+  })
+  if (fileSubjects.length === 0 && unavailableSubjects.length === 0) {
+    const context: AgentsRubricContext = {
+      file: { repository: root, scopeState, agent: null, unsafePath: null, duplicateNameFiles: [] },
+      set
+    }
+    unavailableSubjects.push({
+      families: ['LAY', 'NAME', 'DESC', 'FM', 'PROMPT', 'LANE', 'LINK', 'PROC', 'LONG'],
+      context: () => context,
+      subject: relative(dirname(agentsRoot), agentsRoot)
+    })
+  }
+  const collectionContext: AgentsRubricContext = {
+    file: { repository: root, scopeState, agent: null, unsafePath: null, duplicateNameFiles: [] },
+    set
+  }
   return {
-    roots: resolvedRoots,
-    missingRoots: resolvedRoots.filter((root) => !existsSync(root)),
-    agents: files.map(readAgent),
-    dryRun,
-    alignName: (agent) => {
-      if (!agent.name)
-        return [{ status: 'NOT_APPLICABLE', message: 'No name field is available for the filename-alignment fix.', subject: agent.file }]
-      if (agent.name === agent.stem) return [{ status: 'PASS', message: 'Filename stem already matches name.', subject: agent.file }]
-      if (!dryRun) {
-        const lines = agent.content.split(/\r?\n/)
-        const nameLine = lines.findIndex((line) => /^name:/.test(line))
-        if (nameLine === -1)
-          return [{ status: 'NOT_APPLICABLE', message: 'No name field is available for the filename-alignment fix.', subject: agent.file }]
-        lines[nameLine] = `name: ${agent.stem}`
-        writeFileSync(agent.file, lines.join('\n'))
-      }
-      return [{ status: 'FIXED', message: `${dryRun ? 'Would rewrite' : 'Rewrote'} name to ${agent.stem}.`, subject: agent.file }]
-    }
+    subjects: [
+      ...fileSubjects,
+      ...unavailableSubjects,
+      { families: ['COLL'], context: () => collectionContext, subject: relative(root, agentsRoot) }
+    ],
+    proposal: () => ({
+      writes: [...requestedDrafts.entries()]
+        .sort(([left], [right]) => left.localeCompare(right))
+        .map(([path, content]): ConformWrite => ({ path, content }))
+    })
   }
 }
