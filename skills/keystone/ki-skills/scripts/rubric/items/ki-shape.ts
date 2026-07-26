@@ -300,29 +300,23 @@ export const KI_SHAPE_14: RubricItem<KiShapeRubricContext> = {
 
 const auditKiShape15 = ({ skill }: KiShapeRubricContext): RubricOutcomes<AuditOutcome> => {
   if (!skill?.governanceSkill || skill.localGovernanceSource)
-    return [{ status: 'NOT_APPLICABLE', message: 'the target is not a vendored governance capability' }]
+    return [{ status: 'NOT_APPLICABLE', message: 'the target is not a direct governance capability' }]
   const violations: AuditOutcome[] = []
-  for (const script of ['govern.ts', 'educate.ts'])
-    if (!skill.scriptNames.includes(script))
-      violations.push({
-        status: 'VIOLATION',
-        message: `\`scripts/${script}\` missing — governance capabilities publish one governed entrypoint and one educator`
-      })
-  for (const script of ['audit.ts', 'conform.ts'])
+  for (const script of ['govern.ts', 'educate.ts', 'audit.ts', 'conform.ts'])
     if (skill.scriptNames.includes(script))
       violations.push({
         status: 'VIOLATION',
-        message: `\`scripts/${script}\` is retired — use the imported \`plan\`/\`check\` exports from \`govern.ts\``
+        message: `\`scripts/${script}\` is retired — expose the native catalogue only through \`scripts/rubric/items/index.ts\``
       })
   const [first, ...rest] = violations
-  return first ? [first, ...rest] : [{ status: 'PASS', message: 'governed entrypoints have a uniform shape' }]
+  return first ? [first, ...rest] : [{ status: 'PASS', message: 'governance skills expose no legacy runner entrypoints' }]
 }
 
 export const KI_SHAPE_15: RubricItem<KiShapeRubricContext> = {
   code: 'KI-SHAPE-15',
-  title: 'governed source entrypoints have a uniform shape',
+  title: 'governance skills expose no legacy runner entrypoints',
   description:
-    '_Uniform governed source-entrypoint shape._ During the native-operation migration, every governance skill provides `scripts/govern.ts`, exporting programmatic `plan` and `check` functions and its CLI `main`, plus `scripts/educate.ts` for source-authoring and migration fixtures. The aggregate imports `govern.ts` directly only in that legacy fixture model; it is not a repository delivery or fallback contract. Native delivery instead uses manifest-covered in-process registrations from the verified collection; separate `audit.ts` and `conform.ts` entrypoints are retired. REFRESH is harness-only. Process skills and the committed repository-local `.ki/self/skill/` source are exempt.',
+    '_Direct governance operation shape._ A governance skill exposes its native rubric catalogue from `scripts/rubric/items/index.ts`; `ki` resolves and hosts that catalogue from the verified installed harness. `scripts/govern.ts`, `scripts/educate.ts`, `scripts/audit.ts`, and `scripts/conform.ts` are retired, with no compatibility runner or fallback. REFRESH is harness-only. Process skills and the committed repository-local `.ki/self/skill/` source are exempt.',
   sources: ['standards.md §14', 'ADR-KI-HARNESS-007'],
   mechanical: {
     level: 'FAIL',

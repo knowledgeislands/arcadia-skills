@@ -15,9 +15,9 @@ export const KI_CHECKER_1: RubricItem<KiCheckerRubricContext> = {
 
 export const KI_CHECKER_2: RubricItem<KiCheckerRubricContext> = {
   code: 'KI-CHECKER-2',
-  title: 'skill script imports remain inside the vendored payload',
+  title: 'skill script imports use the direct harness contract',
   description:
-    "A skill's `scripts/**/*.ts` files contain no static `from`, dynamic `import()`, or CommonJS `require()` relative import that resolves outside that skill's own `scripts/` directory. `ki-bootstrap` vendors a skill's mechanical unit as a standalone payload into every governed repo's `.ki/bootstrap/checkers/<skill>/` ([ADR-KI-HARNESS-006](../../../../docs/decisions/ADR-KI-HARNESS-006-user-installation-repository-bootstrap-and-self-sufficiency.md)); no sibling skill directory or other source file is implicitly available. The payload may only import files packaged within its own `scripts/` directory.",
+    "A skill's `scripts/**/*.ts` files may import their own script payload or the canonical harness contract at `skills/shared/rubric-contract.ts`; no other checkout-relative or cross-skill source import is allowed. `ki` loads the complete verified harness, so the shared contract is one owned module rather than a copied vendored payload.",
   sources: ['KI'],
   mechanical: {
     level: 'FAIL',
@@ -25,13 +25,13 @@ export const KI_CHECKER_2: RubricItem<KiCheckerRubricContext> = {
       phase: 'INSPECT',
       run: ({ imports }) => {
         const violations = imports
-          .filter((entry) => !entry.resolvesInsideScripts)
+          .filter((entry) => !entry.resolvesInsideScripts && !entry.resolvesCanonicalSharedContract)
           .map((entry) => ({
             status: 'VIOLATION' as const,
-            message: `\`scripts/${entry.entry}\` imports \`${entry.specifier}\`, which resolves outside its own scripts directory — package the required module locally before importing it`
+            message: `\`scripts/${entry.entry}\` imports \`${entry.specifier}\`, which is neither its own script payload nor the canonical harness rubric contract`
           }))
         const [first, ...rest] = violations
-        return first ? [first, ...rest] : [{ status: 'PASS', message: 'skill script imports remain inside the vendored payload' }]
+        return first ? [first, ...rest] : [{ status: 'PASS', message: 'skill script imports use the direct harness contract' }]
       }
     }
   }

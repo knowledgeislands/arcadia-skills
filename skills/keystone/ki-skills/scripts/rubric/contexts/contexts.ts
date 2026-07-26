@@ -81,6 +81,7 @@ type CheckerImport = {
   entry: string
   specifier: string
   resolvesInsideScripts: boolean
+  resolvesCanonicalSharedContract: boolean
 }
 
 type RubricFamilyModule = {

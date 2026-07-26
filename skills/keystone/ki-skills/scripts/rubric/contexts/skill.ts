@@ -248,13 +248,18 @@ export const createSkillRubricContext = (directory: string, capabilities: SkillW
       const body = content.slice((content.match(/^---\r?\n[\s\S]*?\r?\n---\r?\n?/) || [''])[0].length)
       const scriptsDirectory = join(directory, 'scripts')
       const sharedDirectory = join(scriptsDirectory, 'shared')
+      const canonicalSharedContract = join(dirname(dirname(directory)), 'shared', 'rubric-contract.ts')
       const familyEvidence = rubricFamilyModules(scriptsDirectory)
       const imports = listScriptFiles(scriptsDirectory).flatMap((scriptPath) =>
-        relativeImportSpecifiers(readFileSync(scriptPath, 'utf8')).map((specifier) => ({
-          entry: relative(scriptsDirectory, scriptPath),
-          specifier,
-          resolvesInsideScripts: resolve(dirname(scriptPath), specifier).startsWith(`${scriptsDirectory}/`)
-        }))
+        relativeImportSpecifiers(readFileSync(scriptPath, 'utf8')).map((specifier) => {
+          const resolved = resolve(dirname(scriptPath), specifier)
+          return {
+            entry: relative(scriptsDirectory, scriptPath),
+            specifier,
+            resolvesInsideScripts: resolved.startsWith(`${scriptsDirectory}/`),
+            resolvesCanonicalSharedContract: resolved === canonicalSharedContract
+          }
+        })
       )
       if (!helpEvidence) helpEvidence = scriptHelpEvidence(directory)
 
