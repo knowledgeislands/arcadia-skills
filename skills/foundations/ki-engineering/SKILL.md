@@ -1,6 +1,7 @@
 ---
 name: ki-engineering
 ki-depends-on: []
+ki-shared-dependencies: [ki-skills:rubric]
 owns: [mise.toml, tsconfig.json, biome.json, knip.json]
 contributes: ['.ki-config.toml', package.json]
 description: >
@@ -16,8 +17,8 @@ This is a **standard, base-agnostic Process skill**. It hard-codes no single rep
 
 ## What this skill owns
 
-1. **The common toolchain** — the baseline every TS/Bun repo meets, plus capability conditionals that fire only when a repo opts into a capability. The full, quotable standard is [the engineering standard](references/standards.md); the line-by-line items are in [the rubric](references/rubric.md).
-2. **The governance-skill rubric model** — the shared mechanism for turning any standard into structured criteria, focused evidence, phased audit and conform execution, and canonical checker responses. It is owned by `ki-skills` in [the rubric-authoring guide](../../keystone/ki-skills/references/rubric-authoring.md); this skill conforms to it.
+1. **The common toolchain** — the baseline every TS/Bun repo meets, plus capability conditionals that fire only when a repo opts into a capability. The full, quotable standard is [the engineering standard](references/standards-engineering.md); the line-by-line items are in [the rubric](references/rubric.md).
+2. **The governance-skill rubric model** — the shared mechanism for turning any standard into structured criteria, focused evidence, phased audit and conform execution, and canonical checker responses. It is owned by `ki-skills` in [the rubric-authoring standard](../../keystone/ki-skills/references/standards-rubric-authoring.md); this skill conforms to it.
 
 **Artifact-specific rules are not here.** Anything meaningful only for one artifact type (an MCP's `bin`, `ki:server:mcp:*` scripts, coverage-exclude list, tool surface) lives in that artifact's skill. A repo is fully audited by **composing** this skill's checker with the artifact skill's — see below.
 
@@ -43,6 +44,10 @@ A repo is "clean" only when **every applicable** skill's audit passes. The `.ki-
 ## Operating modes
 
 The installed CLI exposes the repository modes directly: `ki repo educate`, `ki repo audit`, and `ki repo conform`. It resolves the skills declared by the repository, imports each canonical `scripts/rubric/items/index.ts` catalogue, and owns execution, reporting, and transactional repairs. REFRESH remains a maintainer operation over this skill's own sources.
+
+### Mode HELP — describe the engineering boundary
+
+Explain the common TypeScript/Bun toolchain, the direct `ki repo` workflow, the supported modes, and the off-ramps to `ki-authoring`, `ki-repo`, and artifact-specific skills, then stop without inspecting or changing a repository.
 
 ### Mode AUDIT — check a repo's common toolchain
 

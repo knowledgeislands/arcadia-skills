@@ -1,28 +1,127 @@
-import { existsSync, readFileSync } from 'node:fs'
+import { existsSync, lstatSync, readFileSync } from 'node:fs'
 import { join, resolve } from 'node:path'
+import type {
+  AuditOutcome,
+  ConformCommand,
+  ConformWrite,
+  RubricContextOptions,
+  RubricSession,
+  ViolationLevel
+} from '../../shared/rubric.ts'
 import { collectAuditEvidence, type EngineeringEvidenceFinding } from './audit-evidence.ts'
 
-export type EngineeringConformWrite = {
-  readonly path: string
-  readonly content: string
-  readonly create?: boolean
+export type EngineeringEvidence = readonly EngineeringEvidenceFinding[]
+
+export type PackageRubricContext = {
+  pkg1: EngineeringEvidence
+  pkg2: EngineeringEvidence
+  pkg3: EngineeringEvidence
+  pkg4: EngineeringEvidence
+  pkg5: EngineeringEvidence
+  pkg6: EngineeringEvidence
+  synchronise?: () => void
 }
 
-export type EngineeringConformCommand = {
-  readonly program: string
-  readonly arguments: readonly string[]
+export type MiseRubricContext = {
+  mise1: EngineeringEvidence
+  mise2: EngineeringEvidence
+  mise3: EngineeringEvidence
+  scaffold?: () => void
 }
 
-export type EngineeringConformProposal = {
-  readonly writes: readonly EngineeringConformWrite[]
-  readonly commands?: readonly EngineeringConformCommand[]
+export type CiRubricContext = { ci1: EngineeringEvidence; ci2: EngineeringEvidence }
+export type ScriptsRubricContext = {
+  scr1: EngineeringEvidence
+  scr2: EngineeringEvidence
+  scr3: EngineeringEvidence
+  scr4: EngineeringEvidence
+  scr5: EngineeringEvidence
+  scr6: EngineeringEvidence
+  scr7: EngineeringEvidence
+  synchronisePackage?: () => void
+}
+export type BunRubricContext = Record<string, never>
+export type TypescriptRubricContext = {
+  tsc1: EngineeringEvidence
+  tsc2: EngineeringEvidence
+  scaffold?: () => void
+}
+export type BiomeRubricContext = {
+  bio1: EngineeringEvidence
+  bio2: EngineeringEvidence
+  normalise?: () => void
+  scaffold?: () => void
+}
+export type KnipRubricContext = {
+  knip1: EngineeringEvidence
+  knip2: EngineeringEvidence
+  scaffold?: () => void
+  repair?: () => void
+}
+export type SyncRubricContext = { sync1: EngineeringEvidence; normalise?: () => void }
+export type DependenciesRubricContext = { deps1: EngineeringEvidence; update?: () => void }
+export type GeneratedRubricContext = { gen1: EngineeringEvidence }
+export type TestRubricContext = {
+  test1: EngineeringEvidence
+  test2: EngineeringEvidence
+  test3: EngineeringEvidence
+  test4: EngineeringEvidence
+  test5: EngineeringEvidence
+}
+export type BuildRubricContext = {
+  build1: EngineeringEvidence
+  build2: EngineeringEvidence
+  build3: EngineeringEvidence
+  build4: EngineeringEvidence
+}
+export type EnvironmentRubricContext = { env1: EngineeringEvidence; env2: EngineeringEvidence }
+export type TomlRubricContext = {
+  toml1: EngineeringEvidence
+  toml2: EngineeringEvidence
+  declare?: () => void
 }
 
 export type EngineeringRubricContext = {
-  readonly repository: string
-  readonly documents: ReadonlyMap<string, string>
-  readonly audit: (code: string) => readonly EngineeringEvidenceFinding[]
-  readonly conform: (code: string) => EngineeringConformProposal
+  package: PackageRubricContext
+  mise: MiseRubricContext
+  ci: CiRubricContext
+  scripts: ScriptsRubricContext
+  bun: BunRubricContext
+  typescript: TypescriptRubricContext
+  biome: BiomeRubricContext
+  knip: KnipRubricContext
+  sync: SyncRubricContext
+  dependencies: DependenciesRubricContext
+  generated: GeneratedRubricContext
+  test: TestRubricContext
+  build: BuildRubricContext
+  environment: EnvironmentRubricContext
+  toml: TomlRubricContext
+}
+
+export type EngineeringEvidenceInspector = (repository: string) => readonly EngineeringEvidenceFinding[]
+
+export const auditEvidence = (
+  evidence: EngineeringEvidence,
+  defaultLevel: ViolationLevel,
+  overrideLevels?: readonly ViolationLevel[]
+): readonly AuditOutcome[] => {
+  const outcomes = evidence.map((finding): AuditOutcome => {
+    if (finding.level === 'PASS')
+      return { status: 'PASS', message: finding.message, ...(finding.subject ? { subject: finding.subject } : {}) }
+    if (finding.level === 'NOT_APPLICABLE')
+      return { status: 'NOT_APPLICABLE', message: finding.message, ...(finding.subject ? { subject: finding.subject } : {}) }
+    if (finding.level === 'INFO')
+      return { status: 'INFO', message: finding.message, ...(finding.subject ? { subject: finding.subject } : {}) }
+    const level = finding.level as ViolationLevel
+    return {
+      status: 'VIOLATION',
+      message: finding.message,
+      ...(finding.subject ? { subject: finding.subject } : {}),
+      ...(level !== defaultLevel && overrideLevels?.includes(level) ? { level } : {})
+    }
+  })
+  return outcomes.length ? outcomes : [{ status: 'NOT_APPLICABLE', message: 'This criterion did not apply to the target.' }]
 }
 
 const requiredDev = ['@biomejs/biome', 'knip', 'prettier', 'husky', 'lint-staged', 'markdownlint-cli2', 'syncpack', 'typescript']
@@ -40,7 +139,7 @@ const lintStaged = {
   '*.{ts,tsx,js,jsx,json,jsonc}': ['bunx @biomejs/biome check --write --no-errors-on-unmatched'],
   '*.md': ['bunx prettier --write', 'bunx markdownlint-cli2 --no-globs']
 }
-const defaults: Record<string, string> = {
+const defaults = {
   'mise.toml': `[tools]\nnode = "22"\nbun = "1.3.14"\n`,
   'tsconfig.json': `{
   "compilerOptions": {
@@ -105,7 +204,7 @@ const defaults: Record<string, string> = {
   "ignoreExportsUsedInFile": true
 }
 `
-}
+} as const
 
 const legacyAggregateScript = (key: string): boolean =>
   key === 'ki:audit' || key === 'ki:conform' || key === 'ki:educate' || key === 'ki:help'
@@ -120,14 +219,18 @@ const legacyRuntimeOnlyScript = (value: string): boolean =>
     value
   )
 
-const packageWrite = (context: EngineeringRubricContext): EngineeringConformProposal => {
-  const source = context.documents.get('package.json')
-  if (!source) return { writes: [] }
+const isSafeRegularFile = (path: string): boolean => {
+  if (!existsSync(path)) return false
+  const metadata = lstatSync(path)
+  return metadata.isFile() && !metadata.isSymbolicLink()
+}
+
+const packageContent = (source: string): string | undefined => {
   let value: Record<string, unknown>
   try {
     value = JSON.parse(source) as Record<string, unknown>
   } catch {
-    return { writes: [] }
+    return undefined
   }
   const packageJson = structuredClone(value)
   packageJson.type = 'module'
@@ -145,78 +248,183 @@ const packageWrite = (context: EngineeringRubricContext): EngineeringConformProp
   scripts.clean = scripts.clean?.includes('node_modules') ? scripts.clean : 'rm -rf dist node_modules'
   scripts.prepare = 'husky'
   packageJson.scripts = scripts
-  const content = `${JSON.stringify(packageJson, null, 2)}\n`
-  return content === source ? { writes: [] } : { writes: [{ path: 'package.json', content }] }
+  return `${JSON.stringify(packageJson, null, 2)}\n`
 }
 
-const scaffold = (context: EngineeringRubricContext, name: keyof typeof defaults): EngineeringConformProposal =>
-  context.documents.has(name) ? { writes: [] } : { writes: [{ path: name, content: defaults[name], create: true }] }
-
-const engineeringMarker = (context: EngineeringRubricContext): EngineeringConformProposal => {
-  const source = context.documents.get('.ki-config.toml')
-  if (source === undefined) return { writes: [{ path: '.ki-config.toml', content: '[ki-engineering]\n', create: true }] }
-  if (/^\[ki-engineering\]/m.test(source)) return { writes: [] }
-  return { writes: [{ path: '.ki-config.toml', content: `${source.replace(/\n*$/, '\n\n')}[ki-engineering]\n` }] }
-}
-
-const commands = (value: readonly EngineeringConformCommand[]): EngineeringConformProposal => ({ writes: [], commands: value })
-
-const conform = (code: string, context: EngineeringRubricContext): EngineeringConformProposal => {
-  switch (code) {
-    case 'PKG-1':
-    case 'PKG-2':
-    case 'PKG-3':
-    case 'PKG-5':
-    case 'PKG-6':
-    case 'SCR-2':
-    case 'SCR-3':
-    case 'SCR-4':
-    case 'SCR-5':
-      return packageWrite(context)
-    case 'MISE-1':
-      return scaffold(context, 'mise.toml')
-    case 'TSC-2':
-      return scaffold(context, 'tsconfig.json')
-    case 'BIO-1':
-      return commands([
-        { program: 'bunx', arguments: ['@biomejs/biome', 'check', '--write', '--unsafe'] },
-        { program: 'bunx', arguments: ['@biomejs/biome', 'format', '--write'] }
-      ])
-    case 'BIO-2':
-      return scaffold(context, 'biome.json')
-    case 'KNIP-1':
-      return scaffold(context, 'knip.json')
-    case 'KNIP-2':
-      return commands([{ program: 'bunx', arguments: ['knip', '--fix', '--no-config-hints'] }])
-    case 'SYNC-1':
-      return commands([{ program: 'bunx', arguments: ['syncpack', 'format'] }])
-    case 'DEPS-1':
-      return commands([
-        { program: 'bun', arguments: ['update', '--latest'] },
-        { program: 'bun', arguments: ['install'] }
-      ])
-    case 'TOML-1':
-      return engineeringMarker(context)
-    default:
-      return { writes: [] }
+const evidenceByCode = (findings: readonly EngineeringEvidenceFinding[]): ((code: string) => readonly EngineeringEvidenceFinding[]) => {
+  const grouped = new Map<string, EngineeringEvidenceFinding[]>()
+  for (const finding of findings) {
+    const values = grouped.get(finding.code) ?? []
+    values.push(finding)
+    grouped.set(finding.code, values)
   }
+  return (code) => grouped.get(code) ?? []
 }
 
-const readDocuments = (repository: string): ReadonlyMap<string, string> =>
-  new Map(
-    ['package.json', '.ki-config.toml', 'mise.toml', 'tsconfig.json', 'biome.json', 'knip.json'].flatMap((name) => {
-      const path = join(repository, name)
-      return existsSync(path) ? [[name, readFileSync(path, 'utf8')] as const] : []
-    })
-  )
+export const createEngineeringSession = (
+  { mode, repository }: RubricContextOptions,
+  inspect: EngineeringEvidenceInspector = collectAuditEvidence
+): RubricSession<EngineeringRubricContext> => {
+  const target = resolve(repository)
+  const mutable = mode === 'conform'
+  const evidence = evidenceByCode(inspect(target))
+  const packagePath = join(target, 'package.json')
+  const packageSource = isSafeRegularFile(packagePath) ? readFileSync(packagePath, 'utf8') : undefined
+  let synchronisePackage = false
+  const scaffold = new Set<keyof typeof defaults>()
+  let declareEngineering = false
+  const requestedCommands = new Map<string, ConformCommand>()
 
-export const createEngineeringContext = ({ repository }: { readonly repository: string }): EngineeringRubricContext => {
-  const absoluteRepository = resolve(repository)
+  const requestCommands = (commands: readonly ConformCommand[]): void => {
+    for (const command of commands) requestedCommands.set(JSON.stringify(command), command)
+  }
+  const requestScaffold = (name: keyof typeof defaults): void => {
+    const path = join(target, name)
+    if (!existsSync(path)) scaffold.add(name)
+  }
+  const requestEngineeringTable = (): void => {
+    const path = join(target, '.ki-config.toml')
+    if (!existsSync(path) || isSafeRegularFile(path)) declareEngineering = true
+  }
+
+  const packageContext: PackageRubricContext = {
+    pkg1: evidence('PKG-1'),
+    pkg2: evidence('PKG-2'),
+    pkg3: evidence('PKG-3'),
+    pkg4: evidence('PKG-4'),
+    pkg5: evidence('PKG-5'),
+    pkg6: evidence('PKG-6'),
+    ...(mutable && packageSource !== undefined
+      ? {
+          synchronise: () => {
+            synchronisePackage = true
+          }
+        }
+      : {})
+  }
+  const synchronisePackageCapability =
+    mutable && packageSource !== undefined
+      ? {
+          synchronisePackage: () => {
+            synchronisePackage = true
+          }
+        }
+      : {}
+
   const context: EngineeringRubricContext = {
-    repository: absoluteRepository,
-    documents: readDocuments(absoluteRepository),
-    audit: (code) => collectAuditEvidence(absoluteRepository, code),
-    conform: (code) => conform(code, context)
+    package: packageContext,
+    mise: {
+      mise1: evidence('MISE-1'),
+      mise2: evidence('MISE-2'),
+      mise3: evidence('MISE-3'),
+      ...(mutable ? { scaffold: () => requestScaffold('mise.toml') } : {})
+    },
+    ci: { ci1: evidence('CI-1'), ci2: evidence('CI-2') },
+    scripts: {
+      scr1: evidence('SCR-1'),
+      scr2: evidence('SCR-2'),
+      scr3: evidence('SCR-3'),
+      scr4: evidence('SCR-4'),
+      scr5: evidence('SCR-5'),
+      scr6: evidence('SCR-6'),
+      scr7: evidence('SCR-7'),
+      ...synchronisePackageCapability
+    },
+    bun: {},
+    typescript: {
+      tsc1: evidence('TSC-1'),
+      tsc2: evidence('TSC-2'),
+      ...(mutable ? { scaffold: () => requestScaffold('tsconfig.json') } : {})
+    },
+    biome: {
+      bio1: evidence('BIO-1'),
+      bio2: evidence('BIO-2'),
+      ...(mutable
+        ? {
+            normalise: () =>
+              requestCommands([
+                { program: 'bunx', arguments: ['@biomejs/biome', 'check', '--write', '--unsafe'] },
+                { program: 'bunx', arguments: ['@biomejs/biome', 'format', '--write'] }
+              ]),
+            scaffold: () => requestScaffold('biome.json')
+          }
+        : {})
+    },
+    knip: {
+      knip1: evidence('KNIP-1'),
+      knip2: evidence('KNIP-2'),
+      ...(mutable
+        ? {
+            scaffold: () => requestScaffold('knip.json'),
+            repair: () => requestCommands([{ program: 'bunx', arguments: ['knip', '--fix', '--no-config-hints'] }])
+          }
+        : {})
+    },
+    sync: {
+      sync1: evidence('SYNC-1'),
+      ...(mutable ? { normalise: () => requestCommands([{ program: 'bunx', arguments: ['syncpack', 'format'] }]) } : {})
+    },
+    dependencies: {
+      deps1: evidence('DEPS-1'),
+      ...(mutable
+        ? {
+            update: () =>
+              requestCommands([
+                { program: 'bun', arguments: ['update', '--latest'] },
+                { program: 'bun', arguments: ['install'] }
+              ])
+          }
+        : {})
+    },
+    generated: { gen1: evidence('GEN-1') },
+    test: {
+      test1: evidence('TEST-1'),
+      test2: evidence('TEST-2'),
+      test3: evidence('TEST-3'),
+      test4: evidence('TEST-4'),
+      test5: evidence('TEST-5')
+    },
+    build: {
+      build1: evidence('BUILD-1'),
+      build2: evidence('BUILD-2'),
+      build3: evidence('BUILD-3'),
+      build4: evidence('BUILD-4')
+    },
+    environment: { env1: evidence('ENV-1'), env2: evidence('ENV-2') },
+    toml: {
+      toml1: evidence('TOML-1'),
+      toml2: evidence('TOML-2'),
+      ...(mutable ? { declare: requestEngineeringTable } : {})
+    }
   }
-  return context
+
+  return {
+    subjects: [
+      {
+        families: ['PKG', 'MISE', 'CI', 'SCR', 'BUN', 'TSC', 'BIO', 'KNIP', 'SYNC', 'DEPS', 'GEN', 'TEST', 'BUILD', 'ENV', 'TOML'],
+        context: () => context
+      }
+    ],
+    proposal: () => {
+      const writes: ConformWrite[] = []
+      if (synchronisePackage && packageSource !== undefined) {
+        const content = packageContent(packageSource)
+        if (content !== undefined && content !== packageSource) writes.push({ path: 'package.json', content })
+      }
+      for (const name of scaffold) writes.push({ path: name, content: defaults[name], create: true })
+      if (declareEngineering) {
+        const path = join(target, '.ki-config.toml')
+        if (!existsSync(path)) writes.push({ path: '.ki-config.toml', content: '[ki-engineering]\n', create: true })
+        else {
+          const source = readFileSync(path, 'utf8')
+          if (!/^\[ki-engineering\]/m.test(source))
+            writes.push({ path: '.ki-config.toml', content: `${source.replace(/\n*$/, '\n\n')}[ki-engineering]\n` })
+        }
+      }
+      return {
+        writes,
+        ...(requestedCommands.size ? { commands: [...requestedCommands.values()] } : {})
+      }
+    }
+  }
 }

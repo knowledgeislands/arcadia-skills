@@ -41,13 +41,13 @@ type Finding = { level: Level; area: string; msg: string; ref?: string; file?: s
 
 // Reference-doc pointers — the substantive standard (cited by every minted code) and
 // the rubric that maps code↔criterion (cited by the judgment/scope handoff).
-const STD = 'references/standards.md'
+const STD = 'references/standards-engineering.md'
 
-/** Collect evidence for one rubric item; no other code's tool checks are invoked. */
-export const collectAuditEvidence = (repo: string, onlyCode?: string): readonly EngineeringEvidenceFinding[] => {
+/** Inspect the repository once and return the complete engineering evidence set. */
+export const collectAuditEvidence = (repo: string): readonly EngineeringEvidenceFinding[] => {
   const findings: Finding[] = []
   const add = (level: Level, area: string, msg: string, ref?: string, file?: string): void => {
-    if (!onlyCode || area === onlyCode) findings.push({ level, area, msg, ref, file })
+    findings.push({ level, area, msg, ref, file })
   }
   if (!repo || !existsSync(repo)) {
     add('FAIL', 'PKG-4', 'Audit target is missing or does not exist.', STD)
@@ -55,7 +55,6 @@ export const collectAuditEvidence = (repo: string, onlyCode?: string): readonly 
   }
   const at = (...p: string[]) => join(repo, ...p)
   function runCheck(area: string, label: string, cmd: string, ref?: string, file?: string) {
-    if (onlyCode && area !== onlyCode) return
     try {
       execSync(cmd, { cwd: repo, encoding: 'utf8', stdio: ['pipe', 'pipe', 'pipe'] })
       add('PASS', area, `${label} exits 0`, ref, file)
@@ -263,7 +262,13 @@ export const collectAuditEvidence = (repo: string, onlyCode?: string): readonly 
     if (scripts.test) {
       const testIndex = commandIndex('bun run test')
       if (testIndex < 0)
-        add('FAIL', 'CI-2', 'ci.yml must run the exact command "bun run test" after native audit when package.json exposes tests', STD, '.github/workflows/ci.yml')
+        add(
+          'FAIL',
+          'CI-2',
+          'ci.yml must run the exact command "bun run test" after native audit when package.json exposes tests',
+          STD,
+          '.github/workflows/ci.yml'
+        )
       else if (auditIndex >= 0 && auditIndex < testIndex)
         add('PASS', 'CI-2', 'ci.yml runs the repository self-test suite "bun run test" after native audit', STD, '.github/workflows/ci.yml')
       else add('FAIL', 'CI-2', 'ci.yml must run "ki repo audit" before "bun run test"', STD, '.github/workflows/ci.yml')
@@ -501,9 +506,7 @@ export const collectAuditEvidence = (repo: string, onlyCode?: string): readonly 
     ['biome.json', biome],
     ['knip.json', read('knip.json') || read('knip.jsonc') || read('knip.ts')],
     ['.markdownlint-cli2.jsonc', markdownlint]
-  ].flatMap(([file, content]) =>
-    ['.ki/bootstrap', '.ki/bin'].flatMap((path) => (content.includes(path) ? [`${file} → ${path}`] : []))
-  )
+  ].flatMap(([file, content]) => ['.ki/bootstrap', '.ki/bin'].flatMap((path) => (content.includes(path) ? [`${file} → ${path}`] : [])))
   const activeGeneratedSurfaces = GENERATED_SURFACES.filter((surface) => isDir(...surface.signal))
   if (legacyExclusions.length) {
     add('FAIL', 'GEN-1', `remove legacy KI runtime exclusion(s): ${legacyExclusions.join('; ')}`, STD)

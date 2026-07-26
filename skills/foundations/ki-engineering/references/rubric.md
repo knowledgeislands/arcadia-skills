@@ -1,6 +1,6 @@
 <!-- GENERATED FILE: produced by `ki skill rubric`. Do not hand-edit; edit scripts/rubric/items/, then rerun `ki skill rubric <skill> --write`. -->
 
-# Generated rubric — engineering standards
+# Generated rubric — Knowledge Islands engineering standards
 
 > **Generated publication.** The TypeScript rubric items under `scripts/rubric/items/` are canonical. Edit those definitions, then rerun `ki skill rubric ki-engineering --write`.
 
@@ -8,177 +8,177 @@ Line-by-line criteria for auditing ki-engineering. Classifications are derived f
 
 ## Contents
 
-- [PKG — PKG engineering rules](#pkg--pkg-engineering-rules)
-- [MISE — MISE engineering rules](#mise--mise-engineering-rules)
-- [CI — CI engineering rules](#ci--ci-engineering-rules)
-- [SCR — SCR engineering rules](#scr--scr-engineering-rules)
-- [BUN — BUN engineering rules](#bun--bun-engineering-rules)
-- [TSC — TSC engineering rules](#tsc--tsc-engineering-rules)
-- [BIO — BIO engineering rules](#bio--bio-engineering-rules)
-- [KNIP — KNIP engineering rules](#knip--knip-engineering-rules)
-- [SYNC — SYNC engineering rules](#sync--sync-engineering-rules)
-- [DEPS — DEPS engineering rules](#deps--deps-engineering-rules)
-- [GEN — GEN engineering rules](#gen--gen-engineering-rules)
-- [TEST — TEST engineering rules](#test--test-engineering-rules)
-- [BUILD — BUILD engineering rules](#build--build-engineering-rules)
-- [ENV — ENV engineering rules](#env--env-engineering-rules)
-- [TOML — TOML engineering rules](#toml--toml-engineering-rules)
+- [PKG — Package metadata](#pkg--package-metadata)
+- [MISE — Toolchain pins](#mise--toolchain-pins)
+- [CI — Continuous integration](#ci--continuous-integration)
+- [SCR — Package scripts](#scr--package-scripts)
+- [BUN — Bun and Node runtime boundary](#bun--bun-and-node-runtime-boundary)
+- [TSC — TypeScript](#tsc--typescript)
+- [BIO — Biome](#bio--biome)
+- [KNIP — Knip](#knip--knip)
+- [SYNC — Dependency synchronisation](#sync--dependency-synchronisation)
+- [DEPS — Dependency freshness](#deps--dependency-freshness)
+- [GEN — Generated surfaces](#gen--generated-surfaces)
+- [TEST — Tests](#test--tests)
+- [BUILD — Compiled builds](#build--compiled-builds)
+- [ENV — Environment configuration](#env--environment-configuration)
+- [TOML — Engineering configuration](#toml--engineering-configuration)
 
-## PKG — PKG engineering rules
+## PKG — Package metadata
 
-→ [standard](standards.md)
+→ [standard](standards-engineering.md)
 
-Stable engineering criteria preserved from the engineering standard.
+The shared package metadata and toolchain dependency surface.
 
-- **PKG-1 [M] — module package type** — `"type": "module"`. (standards.md)
-- **PKG-2 [M] — Bun package-manager pin** — `"packageManager"` starts with `bun@` (pinned patch). (standards.md)
-- **PKG-3 [M] — Node engine floor** — `"engines.node"` floor is `>= 22`. (standards.md)
-- **PKG-4 [M] — closed package coverage manifest** — Every top-level `package.json` key is in the engineering coverage manifest; an unknown key is drift. This is also the criterion for an unparseable `package.json`. (standards.md)
-- **PKG-5 [M] — toolchain dependencies declared** — The toolchain devDependencies `@biomejs/biome`, `knip`, `prettier`, `husky`, `lint-staged`, `markdownlint-cli2`, `syncpack`, and `typescript` are declared rather than implied. (standards.md)
-- **PKG-6 [M] — lint-staged fan-out** — `lint-staged` is present and fans out to Biome on code and Prettier plus `markdownlint-cli2 --no-globs` on staged Markdown only. (standards.md)
+- **PKG-1 [M] — Module package type** — `"type": "module"`. (standards-engineering.md)
+- **PKG-2 [M] — Bun package-manager pin** — `"packageManager"` starts with `bun@` (pinned patch). (standards-engineering.md)
+- **PKG-3 [M] — Node engine floor** — `"engines.node"` floor is `>= 22`. (standards-engineering.md)
+- **PKG-4 [M] — Closed package coverage manifest** — Every top-level `package.json` key is in the engineering coverage manifest; an unknown key is drift. This is also the criterion for an unparseable `package.json`. (standards-engineering.md)
+- **PKG-5 [M] — Toolchain dependencies declared** — The toolchain devDependencies `@biomejs/biome`, `knip`, `prettier`, `husky`, `lint-staged`, `markdownlint-cli2`, `syncpack`, and `typescript` are declared rather than implied. (standards-engineering.md)
+- **PKG-6 [M] — Lint-staged fan-out** — `lint-staged` is present and fans out to Biome on code and Prettier plus `markdownlint-cli2 --no-globs` on staged Markdown only. (standards-engineering.md)
 
-## MISE — MISE engineering rules
+## MISE — Toolchain pins
 
-→ [standard](standards.md)
+→ [standard](standards-engineering.md)
 
-Stable engineering criteria preserved from the engineering standard.
+The single root Node and Bun toolchain declaration.
 
-- **MISE-1 [M] — root toolchain pin** — A root `mise.toml` pins both `node` and `bun` under `[tools]`. (standards.md)
-- **MISE-2 [M] — Bun pin drift pair** — The `mise.toml` Bun version equals the `packageManager` Bun version. (standards.md)
-- **MISE-3 [M] — no legacy tool pins** — No legacy `.node-version`, `.nvmrc`, or `.bun-version` file lingers beside `mise.toml`. (standards.md)
+- **MISE-1 [M] — Root toolchain pin** — A root `mise.toml` pins both `node` and `bun` under `[tools]`. (standards-engineering.md)
+- **MISE-2 [M] — Bun pin drift pair** — The `mise.toml` Bun version equals the `packageManager` Bun version. (standards-engineering.md)
+- **MISE-3 [M] — No legacy tool pins** — No legacy `.node-version`, `.nvmrc`, or `.bun-version` file lingers beside `mise.toml`. (standards-engineering.md)
 
-## CI — CI engineering rules
+## CI — Continuous integration
 
-→ [standard](standards.md)
+→ [standard](standards-engineering.md)
 
-Stable engineering criteria preserved from the engineering standard.
+CI installs the declared toolchain and runs canonical repository gates.
 
-- **CI-1 [M] — CI installs the declared toolchain** — Where `.github/workflows/ci.yml` exists, it uses `jdx/mise-action` and hardcodes no Bun or Node version. (standards.md)
-- **CI-2 [M] — CI runs the canonical gates** — `ci.yml` runs `ki repo audit`, then `bun run test` when tests exist, and does not route governance through package scripts. (standards.md)
+- **CI-1 [M] — CI installs the declared toolchain** — Where `.github/workflows/ci.yml` exists, it uses `jdx/mise-action` and hardcodes no Bun or Node version. (standards-engineering.md)
+- **CI-2 [M] — CI runs the canonical gates** — `ci.yml` runs `ki repo audit`, then `bun run test` when tests exist, and does not route governance through package scripts. (standards-engineering.md)
 
-## SCR — SCR engineering rules
+## SCR — Package scripts
 
-→ [standard](standards.md)
+→ [standard](standards-engineering.md)
 
-Stable engineering criteria preserved from the engineering standard.
+The direct CLI boundary, lifecycle idioms, and clean cutover discipline.
 
-- **SCR-1 [M] — ki script naming law** — Every script is a permitted bare lifecycle idiom or carries the `ki:` prefix; a bare non-idiom name is drift. (standards.md)
-- **SCR-2 [M] — repository maintenance stays CLI-owned** — Package scripts do not alias `ki repo audit`, `ki repo conform`, or `ki repo educate`; repositories invoke the installed CLI directly. (standards.md)
-- **SCR-3 [M] — retired script families absent** — Retired `ki:lint:*`, `ki:deps:*`, `ki:knip`, `ki:verify`, and aggregate governance aliases are absent. (standards.md)
-- **SCR-4 [M] — per-skill wrapper aliases absent** — Package scripts contain no derived `ki:<skill>:<mode>` aliases and no command that invokes `.ki`, `govern.ts`, `educate.ts`, an adapter, or a vendored runtime. (standards.md)
-- **SCR-5 [M] — lifecycle clean and prepare scripts** — `clean` removes `node_modules` (and `dist` where built), and `prepare` is `husky`. (standards.md)
-- **SCR-6 [M] — no test-entrypoint bypass** — Only the bare `test` script may use `bun test`; every other script uses `bun run test` to invoke the governed entrypoint. (standards.md)
-- **SCR-7 [M] — runner-neutral test and build entrypoints** — Test-capable repos expose bare `test`; compiled repos expose bare `build`; repository governance remains outside package scripts. (standards.md)
-- **SCR-8 [J] — repo-specific scripts retain clear ownership** — Repo-specific scripts beyond the governance surface are valid only when an owning skill governs them and they do not shadow a governed entrypoint. (standards.md)
+- **SCR-1 [M] — KI script naming law** — Every script is a permitted bare lifecycle idiom or carries the `ki:` prefix; a bare non-idiom name is drift. (standards-engineering.md)
+- **SCR-2 [M] — Repository maintenance stays CLI-owned** — Package scripts do not alias `ki repo audit`, `ki repo conform`, or `ki repo educate`; repositories invoke the installed CLI directly. (standards-engineering.md)
+- **SCR-3 [M] — Retired script families absent** — Retired `ki:lint:*`, `ki:deps:*`, `ki:knip`, `ki:verify`, and aggregate governance aliases are absent. (standards-engineering.md)
+- **SCR-4 [M] — Per-skill wrapper aliases absent** — Package scripts contain no derived `ki:<skill>:<mode>` aliases and no command that invokes `.ki`, `govern.ts`, `educate.ts`, an adapter, or a vendored runtime. (standards-engineering.md)
+- **SCR-5 [M] — Lifecycle clean and prepare scripts** — `clean` removes `node_modules` (and `dist` where built), and `prepare` is `husky`. (standards-engineering.md)
+- **SCR-6 [M] — No test-entrypoint bypass** — Only the bare `test` script may use `bun test`; every other script uses `bun run test` to invoke the governed entrypoint. (standards-engineering.md)
+- **SCR-7 [M] — Runner-neutral test and build entrypoints** — Test-capable repos expose bare `test`; compiled repos expose bare `build`; repository governance remains outside package scripts. (standards-engineering.md)
+- **SCR-8 [J] — Repo-specific scripts retain clear ownership** — Repo-specific scripts beyond the governance surface are valid only when an owning skill governs them and they do not shadow a governed entrypoint. (standards-engineering.md)
   - _Review prompt:_ Do repo-specific scripts have a clear owner and avoid divergent shadows of governed entrypoints?
-- **SCR-9 [J] — clean-end-state cutovers** — Repository-footprint replacements cut directly to the intended contract, remove the superseded implementation, and verify the result without compatibility code that exists only for an intermediate state. (standards.md)
+- **SCR-9 [J] — Clean-end-state cutovers** — Repository-footprint replacements cut directly to the intended contract, remove the superseded implementation, and verify the result without compatibility code that exists only for an intermediate state. (standards-engineering.md)
   - _Review prompt:_ Did the cutover reach and verify the correct clean end state without retaining transitional compatibility code?
 
-## BUN — BUN engineering rules
+## BUN — Bun and Node runtime boundary
 
-→ [standard](standards.md)
+→ [standard](standards-engineering.md)
 
-Stable engineering criteria preserved from the engineering standard.
+Environment loading remains equivalent when built output runs under Node.
 
-- **BUN-1 [J] — Node environment-loading parity** — Where the repo loads `.env`, `loadConfig` (or equivalent) calls `process.loadEnvFile()` in a try/catch for Node parity. (standards.md)
+- **BUN-1 [J] — Node environment-loading parity** — Where the repo loads `.env`, `loadConfig` (or equivalent) calls `process.loadEnvFile()` in a try/catch for Node parity. (standards-engineering.md)
   - _Review prompt:_ Where `.env` is loaded, does the loader call `process.loadEnvFile()` safely?
 
-## TSC — TSC engineering rules
+## TSC — TypeScript
 
-→ [standard](standards.md)
+→ [standard](standards-engineering.md)
 
-Stable engineering criteria preserved from the engineering standard.
+The TypeScript gate and universal strict compiler invariants.
 
-- **TSC-1 [M] — type-check passes** — `tsc --noEmit` exits clean at the root, or each declared workspace has a clean `tsc --noEmit -p <workspace>/tsconfig.json`. (standards.md)
-- **TSC-2 [M] — universal TypeScript invariants** — `tsconfig.json` exists with strict, NodeNext, noEmit, isolatedModules, esModuleInterop, and skipLibCheck invariants. (standards.md)
-- **TSC-3 [J] — strictness is not weakened** — No repo loosens `strict` or the `noUnused*` and `noImplicit*` flags. (standards.md)
+- **TSC-1 [M] — Type-check passes** — `tsc --noEmit` exits clean at the root, or each declared workspace has a clean `tsc --noEmit -p <workspace>/tsconfig.json`. (standards-engineering.md)
+- **TSC-2 [M] — Universal TypeScript invariants** — `tsconfig.json` exists with strict, NodeNext, noEmit, isolatedModules, esModuleInterop, and skipLibCheck invariants. (standards-engineering.md)
+- **TSC-3 [J] — Strictness is not weakened** — No repo loosens `strict` or the `noUnused*` and `noImplicit*` flags. (standards-engineering.md)
   - _Review prompt:_ Does the effective TypeScript configuration preserve the required strictness flags?
 
-## BIO — BIO engineering rules
+## BIO — Biome
 
-→ [standard](standards.md)
+→ [standard](standards-engineering.md)
 
-Stable engineering criteria preserved from the engineering standard.
+The read-only code-quality gate and shared formatter/linter configuration.
 
-- **BIO-1 [M] — Biome read-only gate passes** — `bunx @biomejs/biome check` exits clean. (standards.md)
-- **BIO-2 [M] — Biome shared configuration** — `biome.json` exists and matches the shared formatter, JavaScript formatter, linter, and import-organisation field set. (standards.md)
+- **BIO-1 [M] — Biome read-only gate passes** — `bunx @biomejs/biome check` exits clean. (standards-engineering.md)
+- **BIO-2 [M] — Biome shared configuration** — `biome.json` exists and matches the shared formatter, JavaScript formatter, linter, and import-organisation field set. (standards-engineering.md)
 
-## KNIP — KNIP engineering rules
+## KNIP — Knip
 
-→ [standard](standards.md)
+→ [standard](standards-engineering.md)
 
-Stable engineering criteria preserved from the engineering standard.
+The unused-code configuration and gate.
 
-- **KNIP-1 [M] — Knip configuration exists** — `knip.json` exists with per-repo entry points and ignores. (standards.md)
-- **KNIP-2 [M] — Knip gate passes** — `bunx knip` exits clean. (standards.md)
+- **KNIP-1 [M] — Knip configuration exists** — `knip.json` exists with per-repo entry points and ignores. (standards-engineering.md)
+- **KNIP-2 [M] — Knip gate passes** — `bunx knip` exits clean. (standards-engineering.md)
 
-## SYNC — SYNC engineering rules
+## SYNC — Dependency synchronisation
 
-→ [standard](standards.md)
+→ [standard](standards-engineering.md)
 
-Stable engineering criteria preserved from the engineering standard.
+Declared dependency ranges are canonically ordered and aligned.
 
-- **SYNC-1 [M] — dependency synchronisation passes** — `bunx syncpack format --check` exits clean. (standards.md)
+- **SYNC-1 [M] — Dependency synchronisation passes** — `bunx syncpack format --check` exits clean. (standards-engineering.md)
 
-## DEPS — DEPS engineering rules
+## DEPS — Dependency freshness
 
-→ [standard](standards.md)
+→ [standard](standards-engineering.md)
 
-Stable engineering criteria preserved from the engineering standard.
+Available dependency updates are surfaced and deliberately applied.
 
-- **DEPS-1 [M] — dependencies are current** — `bun outdated` reports no available updates; available updates are reviewed through `ki repo conform`. (standards.md)
+- **DEPS-1 [M] — Dependencies are current** — `bun outdated` reports no available updates; available updates are reviewed through `ki repo conform`. (standards-engineering.md)
 
-## GEN — GEN engineering rules
+## GEN — Generated surfaces
 
-→ [standard](standards.md)
+→ [standard](standards-engineering.md)
 
-Stable engineering criteria preserved from the engineering standard.
+Managed discovery surfaces carry consistent tool exclusions.
 
-- **GEN-1 [M] — managed discovery surfaces share exclusions** — Known generated or managed discovery surfaces have matching Biome, Knip, and Markdown exclusions, and no legacy `.ki` runtime exclusion remains. (standards.md)
+- **GEN-1 [M] — Managed discovery surfaces share exclusions** — Known generated or managed discovery surfaces have matching Biome, Knip, and Markdown exclusions, and no legacy `.ki` runtime exclusion remains. (standards-engineering.md)
 
-## TEST — TEST engineering rules
+## TEST — Tests
 
-→ [standard](standards.md)
+→ [standard](standards-engineering.md)
 
-Stable engineering criteria preserved from the engineering standard.
+Runner-neutral tests and the conditional Vitest coverage profile.
 
-- **TEST-1 [M] — test capability and Vitest profile** — Test-capable repos expose bare `test`; a recognised root Vitest config requires the canonical test, coverage, and watch scripts, while no capability is not applicable. (standards.md)
-- **TEST-2 [M] — Vitest coverage thresholds** — Under the Vitest profile, coverage thresholds are exactly 100% for lines, functions, branches, and statements. (standards.md)
-- **TEST-3 [M] — Vitest test-source exclusion** — Under the Vitest profile, coverage excludes `src/**/*.test.ts`. (standards.md)
-- **TEST-4 [M] — Vitest monorepo scoping** — Under the Vitest profile, workspace repos scope include, exclude, and reportsDirectory to the workspace rather than a flat root. (standards.md)
-- **TEST-5 [M] — Vitest coverage command passes** — Under the Vitest profile, `bun run test:coverage` exits clean when the companion script exists. (standards.md)
-- **TEST-6 [J] — tests are colocated and genuinely complete** — Under the Vitest profile, tests are colocated with the source they cover and genuinely reach the 100% bar. (standards.md)
+- **TEST-1 [M] — Test capability and Vitest profile** — Test-capable repos expose bare `test`; a recognised root Vitest config requires the canonical test, coverage, and watch scripts, while no capability is not applicable. (standards-engineering.md)
+- **TEST-2 [M] — Vitest coverage thresholds** — Under the Vitest profile, coverage thresholds are exactly 100% for lines, functions, branches, and statements. (standards-engineering.md)
+- **TEST-3 [M] — Vitest test-source exclusion** — Under the Vitest profile, coverage excludes `src/**/*.test.ts`. (standards-engineering.md)
+- **TEST-4 [M] — Vitest monorepo scoping** — Under the Vitest profile, workspace repos scope include, exclude, and reportsDirectory to the workspace rather than a flat root. (standards-engineering.md)
+- **TEST-5 [M] — Vitest coverage command passes** — Under the Vitest profile, `bun run test:coverage` exits clean when the companion script exists. (standards-engineering.md)
+- **TEST-6 [J] — Tests are colocated and genuinely complete** — Under the Vitest profile, tests are colocated with the source they cover and genuinely reach the 100% bar. (standards-engineering.md)
   - _Review prompt:_ Are tests colocated with their source and does their coverage evidence substantiate the 100% claim?
 
-## BUILD — BUILD engineering rules
+## BUILD — Compiled builds
 
-→ [standard](standards.md)
+→ [standard](standards-engineering.md)
 
-Stable engineering criteria preserved from the engineering standard.
+The conditional compiled-TypeScript profile and CLI executable bit.
 
-- **BUILD-1 [M] — compiled-build shape** — `build` is `tsc -p tsconfig.build.json` (optionally with CLI chmod), `files` includes the scoped `dist`, and repos without compiled build are not applicable. (standards.md)
-- **BUILD-2 [M] — build TypeScript configuration** — `tsconfig.build.json` extends the base with the required emit, declaration, output, import, index-access, and test-exclusion settings. (standards.md)
-- **BUILD-3 [M] — compiled shared TypeScript base** — Compiled repos set the richer shared TypeScript base: es2024 target, verbatimModuleSyntax, and noUnusedLocals. (standards.md)
-- **BUILD-4 [M] — CLI chmod iff rule** — `build` chmods `dist/cli/cli.js` iff `src/cli/` exists and chmods no other path. (standards.md)
+- **BUILD-1 [M] — Compiled-build shape** — `build` is `tsc -p tsconfig.build.json` (optionally with CLI chmod), `files` includes the scoped `dist`, and repos without compiled build are not applicable. (standards-engineering.md)
+- **BUILD-2 [M] — Build TypeScript configuration** — `tsconfig.build.json` extends the base with the required emit, declaration, output, import, index-access, and test-exclusion settings. (standards-engineering.md)
+- **BUILD-3 [M] — Compiled shared TypeScript base** — Compiled repos set the richer shared TypeScript base: es2024 target, verbatimModuleSyntax, and noUnusedLocals. (standards-engineering.md)
+- **BUILD-4 [M] — CLI chmod iff rule** — `build` chmods `dist/cli/cli.js` iff `src/cli/` exists and chmods no other path. (standards-engineering.md)
 
-## ENV — ENV engineering rules
+## ENV — Environment configuration
 
-→ [standard](standards.md)
+→ [standard](standards-engineering.md)
 
-Stable engineering criteria preserved from the engineering standard.
+Environment templates, development-mode confinement, and portable paths.
 
-- **ENV-1 [M] — environment example template** — Environment-capable repos commit an `.env*.example` template; no environment capability is not applicable. (standards.md)
-- **ENV-2 [M] — development NODE_ENV confinement** — `NODE_ENV=development` appears only in dev or inspect scripts, never start, build, or test. (standards.md)
-- **ENV-3 [J] — real environment files are protected** — Real non-example `.env.*` files are gitignored and the loader has the Node parity call. (standards.md)
+- **ENV-1 [M] — Environment example template** — Environment-capable repos commit an `.env*.example` template; no environment capability is not applicable. (standards-engineering.md)
+- **ENV-2 [M] — Development NODE_ENV confinement** — `NODE_ENV=development` appears only in dev or inspect scripts, never start, build, or test. (standards-engineering.md)
+- **ENV-3 [J] — Real environment files are protected** — Real non-example `.env.*` files are gitignored and the loader has the Node parity call. (standards-engineering.md)
   - _Review prompt:_ Are real environment files ignored and is the loader Node-parity-safe?
-- **ENV-4 [J] — XDG paths are honoured** — Config, data, cache, and state paths honour the matching `$XDG_*` variable before falling back to the specification default. (standards.md)
+- **ENV-4 [J] — XDG paths are honoured** — Config, data, cache, and state paths honour the matching `$XDG_*` variable before falling back to the specification default. (standards-engineering.md)
   - _Review prompt:_ Do config, data, cache, and state paths honour the appropriate XDG environment variable?
 
-## TOML — TOML engineering rules
+## TOML — Engineering configuration
 
-→ [standard](standards.md)
+→ [standard](standards-engineering.md)
 
-Stable engineering criteria preserved from the engineering standard.
+The repository selector and validate-down configuration boundary.
 
-- **TOML-1 [M] — engineering selector table** — A `[ki-engineering]` table is present. (standards.md)
-- **TOML-2 [M] — engineering configuration validates down** — Every key under `[ki-engineering]` is known to the checker; an unknown key is drift. (standards.md)
+- **TOML-1 [M] — Engineering selector table** — A `[ki-engineering]` table is present. (standards-engineering.md)
+- **TOML-2 [M] — Engineering configuration validates down** — Every key under `[ki-engineering]` is known to the checker; an unknown key is drift. (standards-engineering.md)
