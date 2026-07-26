@@ -287,7 +287,7 @@ export const createSkillRubricContext = (directory: string, capabilities: SkillW
         declaredSharedModules: frontmatterList(frontmatter.keys.get('ki-shared-modules')),
         sharedDependencies: frontmatterList(frontmatter.keys.get('ki-shared-dependencies')),
         legacyLibPresent: existsSync(join(scriptsDirectory, 'lib')),
-        publishedSharedModules: existsSync(sharedDirectory)
+        presentSharedModules: existsSync(sharedDirectory)
           ? readdirSync(sharedDirectory, { withFileTypes: true })
               .filter((entry) => entry.isDirectory() || (entry.isFile() && !entry.name.endsWith('.test.ts')))
               .map((entry) => (entry.isFile() && entry.name.endsWith('.ts') ? entry.name.slice(0, -3) : entry.name))

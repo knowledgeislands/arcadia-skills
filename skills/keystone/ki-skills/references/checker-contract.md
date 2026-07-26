@@ -172,9 +172,9 @@ The reusable implementation is split into three declared modules owned by `ki-sk
 - `scripts/shared/checker.ts` contains planning, AUDIT and CONFORM execution, JSONL response construction, and validation; and
 - `scripts/shared/reporter.ts` contains shared display filtering and terminal presentation.
 
-Each declared module is one self-contained vendorable file rather than a directory tree.
+Each declared module is one self-contained materialisable file rather than a directory tree.
 
-A dependent governance skill vendors all three modules into `scripts/vendored/ki-skills/` and imports only those local copies.
+A dependent governance skill materialises the declared compile-time contract at `scripts/shared/rubric.ts` and imports only that local copy.
 
 The dependent supplies its domain rubric items, contexts, generated rubric publication, and thin command wrappers. Repository bootstrap copies that private `scripts/rubric/` tree beside the wrappers so the vendored checker remains standalone; the tree is not a declared module and no sibling skill may import it.
 

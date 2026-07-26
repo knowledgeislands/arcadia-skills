@@ -62,7 +62,7 @@ _Verify:_ `skills/keystone/ki-bootstrap/scripts/repo-bootstrap.sh` line 1 is `#!
 
 ### BOOT-009 — Runtime publication follows the target type
 
-Repository bootstrap MUST publish only declared runtime skill coverage. Ordinary repositories receive generated regular-file copies; a harness receives links from runtime skill locations to its own canonical source skills. A harness also links frontmatter-declared local `scripts/vendored/` payloads to their canonical providers. Vendored `.ki/` payloads always remain regular files.
+Repository bootstrap MUST publish only declared runtime skill coverage. Ordinary repositories receive generated regular-file copies; a harness receives links from runtime skill locations to its own canonical source skills. Declared compile-time shared modules remain regular local files under each skill's `scripts/shared/` directory.
 
 _Verify:_ run `scripts/internal/repo-bootstrap/publish-project-skills.ts` against a declared ordinary-repository fixture and confirm each published runtime skill is a regular file. Run it against a harness fixture and confirm each declared runtime skill is a source link.
 

@@ -64,7 +64,7 @@ Each layer has one responsibility:
 ```text
 scripts/
   shared/
-    rubric.ts                  # vendored compile-time rubric contract
+    rubric.ts                  # materialised compile-time rubric contract
     rubric.test.ts
   rubric/                      # private implementation for this skill
     items/
@@ -80,13 +80,13 @@ references/
 
 The host loads only `scripts/rubric/items/index.ts`; a governed skill does not ship its own AUDIT, CONFORM, checker, or reporter command surface.
 
-Private reusable implementation lives in `scripts/internal/`. Only modules explicitly published through `ki-shared-modules` live in `scripts/shared/` and form a cross-skill contract for checkers.
+Private reusable implementation lives in `scripts/internal/`. Modules published through `ki-shared-modules` and local copies materialised through `ki-shared-dependencies` live in `scripts/shared/`.
 
-Another skill receives a declared module below `scripts/vendored/<provider>/` and imports only that local copy. `ki-skills` uses its owned rubric module directly from `scripts/shared/`; it never vendors its own module back into itself.
+Another skill receives a declared module at `scripts/shared/<module>.ts` and imports only that local copy. `ki-skills` uses its owned rubric module directly from the same location; it never materialises its own module back into itself.
 
-The one target shared module is `scripts/shared/rubric.ts`. It is vendored only to let a skill's TypeScript catalogue compile and type-check without crossing the skill-root boundary. Generic execution, finding conversion, progress, ordering, transactions, rollback, and reporting belong to `tools-ki` and MUST NOT be vendored into a skill.
+The one target shared module is `scripts/shared/rubric.ts`. It is materialised only to let a skill's TypeScript catalogue compile and type-check without crossing the skill-root boundary. Generic execution, finding conversion, progress, ordering, transactions, rollback, and reporting belong to `tools-ki` and MUST NOT be copied into a skill.
 
-A dependent governance skill declares `ki-shared-dependencies: [ki-skills:rubric]` and imports only its local `scripts/vendored/ki-skills/rubric.ts` copy.
+A dependent governance skill declares `ki-shared-dependencies: [ki-skills:rubric]` and imports only its local `scripts/shared/rubric.ts` copy.
 
 ## Reviewing structural consistency
 
@@ -96,7 +96,7 @@ Assess these boundaries, recording whether each difference is intentional concer
 
 - **Governed entrypoint** — `scripts/rubric/items/index.ts` is the sole host-loaded entrypoint and default-exports one `SkillRubricDefinition`.
 - **Rubric structure and publication** — contexts, family catalogues, generated `references/rubric.md`, provenance, citations, and exact publication-parity evidence remain aligned with the structured catalogue.
-- **Host boundary and shared modules** — private domain code stays local; a consumer imports only the vendored rubric type contract; generic runtime behaviour remains in `tools-ki`.
+- **Host boundary and shared modules** — private domain code stays local; a consumer imports only the materialised rubric type contract; generic runtime behaviour remains in `tools-ki`.
 - **Safe writes and external boundaries** — mutation scope, dry-run, idempotence, symlink handling, atomicity, and subprocess boundaries have evidence proportionate to their risk.
 - **Generated publication** — the source catalogue and tracked `references/rubric.md` agree exactly.
 - **Documentation, ownership, and evidence** — standards, provenance, implementation location, and focused tests identify the same owner; a test proving a private implementation contract normally lives with that implementation.
@@ -468,7 +468,7 @@ At minimum, a structured rubric proves:
 - the host refuses malformed sessions, outcomes, proposals, escaping writes, conflicts, and publication races;
 - post-conform re-audit, not an item callback, determines which findings are fixed;
 - generated `rubric.md` exactly matches the structured catalogue; and
-- the vendored rubric type contract behaves the same as its source module.
+- the materialised rubric type contract behaves the same as its source module.
 
 ## Review boundary
 

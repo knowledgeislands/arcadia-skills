@@ -12,17 +12,17 @@ decision_type: architecture
 
 ## Context
 
-Every governance checker must run after its skill is installed alone or copied into a repository's durable mechanical surface.
+Every governance rubric catalogue must compile and type-check within its own skill root while the `ki` host owns execution.
 
-The canonical checker reporter belongs to `ki-skills`, but each checker needs that same implementation without importing a path in the `ki-skills` source tree or assuming another vendored skill is adjacent.
+The canonical rubric type contract belongs to `ki-skills`, but each catalogue needs that same contract without importing a path in the `ki-skills` source tree or assuming another skill is adjacent.
 
 The existing composition rule correctly prevents either of those assumptions, but it does not yet distinguish reusable implementation payload from governance coverage or mode composition.
 
 ## Decision
 
-`ki-skills` is the root of the **checker-contract system**.
+`ki-skills` owns the canonical compile-time `rubric` contract.
 
-It owns the canonical checker reporter and its executable modules, self-governs from its own shipped files, and has no shared-module dependency on itself.
+It uses that owned module directly and has no shared-module dependency on itself. Generic catalogue loading, validation, execution, progress, transactions, and reporting belong to the `ki` host.
 
 Shared modules are a narrow packaging relationship, declared separately from `ki-depends-on:`.
 
@@ -30,27 +30,29 @@ A provider declares the modules it offers with `ki-shared-modules:`.
 
 A dependent declares the exact `provider:module` references it needs with `ki-shared-dependencies:`.
 
-The module identifier has no extension and resolves to exactly one provider payload in `scripts/shared/`: either `scripts/shared/<module>.ts` or a self-contained `scripts/shared/<module>/` directory.
+The module identifier has no extension and resolves to exactly one provider file at `scripts/shared/<module>.ts`.
 
-The bootstrap engine validates those declarations and materialises a shape-preserving copy under `scripts/vendored/<provider>/` in the dependent skill's source payload and in its generated `.ki-meta` checker payload.
+The dependency materialiser validates those declarations and places a regular-file copy at the matching `scripts/shared/<module>.ts` path in the dependent skill.
 
-The source payload and every entry in a directory payload must be regular, non-symlinked filesystem entries.
+Published and materialised modules share that one local namespace, so their module names must not collide.
+
+The source and local copy must be regular, non-symlinked files.
 
 A dependent imports only its local copied module.
 
-Shared modules may use builtins and other files in their own copied local closure, but never a sibling skill path.
+Shared modules may use builtins but must otherwise be self-contained; they never import a sibling skill path.
 
 Shared-module declarations do not add a `ki-depends-on:` edge, select a skill for governance coverage, or alter composition order.
 
 ## Consequences
 
-The checker contract has one owned implementation while every consuming checker remains directly runnable and portable.
+The rubric contract has one owned implementation while every consuming catalogue remains independently compilable and portable.
 
-The source and generated payloads gain an explicit, attributable copied subtree that bootstrap can validate and hash.
+Each consumer gains an explicit, attributable local module that tooling can validate against its declaration.
 
 The `ki-skills` checker can mechanically reject a direct or escaping import while allowing the declared local copy.
 
-Bootstrap must resolve, copy, test, and audit the full declared shared-module closure before a dependent checker uses it.
+The materialiser must resolve, copy, test, and audit each declared shared module before a dependent catalogue uses it.
 
 This is deliberately narrower than a shared runtime library or a general skill-dependency system: policy relationships remain composition only.
 

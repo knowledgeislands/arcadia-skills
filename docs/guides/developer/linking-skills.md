@@ -40,7 +40,7 @@ When EDUCATE runs in a harness, bootstrap maintains links from its runtime skill
 bun run ki:educate
 ```
 
-The links are gitignored and generated; they are never committed because they depend on the local harness checkout. Bootstrap also links the harness's frontmatter-declared `scripts/vendored/` support payloads to their canonical providers. Ordinary repository bootstrap remains copy-based.
+The links are gitignored and generated; they are never committed because they depend on the local harness checkout. Declared shared-module dependencies are regular local files at `scripts/shared/<module>.ts`, including in the source harness.
 
 `ki-self` is different from both generated runtime payloads and harness development links: author its one committed source at `.agents/skills/ki-self/SKILL.md`. Codex reads that canonical source directly; Claude Code projects `.claude/skills/ki-self` to it by relative link. Do not create a second copy.
 

@@ -125,13 +125,13 @@ const KI_CHECKER_5: RubricItem<KiCheckerRubricContext> = {
   code: 'KI-CHECKER-5',
   title: 'shared and internal script packaging is explicit',
   description:
-    'Private implementation belongs under `scripts/internal/`; cross-skill modules belong under `scripts/shared/`, whose non-test entries must exactly match the modules published through `ki-shared-modules:` or vended through `ki-shared-dependencies:`.',
+    'Private implementation belongs under `scripts/internal/`; cross-skill modules belong under `scripts/shared/`, whose non-test entries must exactly match the modules published through `ki-shared-modules:` or materialised through `ki-shared-dependencies:`.',
   sources: ['KI'],
   mechanical: {
     level: 'FAIL',
     audit: {
       phase: 'INSPECT',
-      run: ({ declaredSharedModules, legacyLibPresent, publishedSharedModules, sharedDependencies }) => {
+      run: ({ declaredSharedModules, legacyLibPresent, presentSharedModules, sharedDependencies }) => {
         const violations = []
         if (legacyLibPresent)
           violations.push({ status: 'VIOLATION' as const, message: 'classify `scripts/lib/` contents as shared or internal' })
@@ -139,11 +139,11 @@ const KI_CHECKER_5: RubricItem<KiCheckerRubricContext> = {
           .map((dependency) => dependency.split(':').at(-1))
           .filter((module): module is string => Boolean(module))
         const declared = [...new Set([...declaredSharedModules, ...dependencyModules])].sort()
-        const published = [...new Set(publishedSharedModules)].sort()
-        if (declared.join('\n') !== published.join('\n'))
+        const present = [...new Set(presentSharedModules)].sort()
+        if (declared.join('\n') !== present.join('\n'))
           violations.push({
             status: 'VIOLATION' as const,
-            message: `\`scripts/shared/\` must exactly match published and vended modules (declared: ${declared.join(', ') || 'none'}; present: ${published.join(', ') || 'none'})`
+            message: `\`scripts/shared/\` must exactly match published and materialised modules (declared: ${declared.join(', ') || 'none'}; present: ${present.join(', ') || 'none'})`
           })
         const [first, ...rest] = violations
         return first ? [first, ...rest] : [{ status: 'PASS', message: 'shared and internal script packaging is explicit' }]

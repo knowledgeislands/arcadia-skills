@@ -11,7 +11,7 @@ The tools-owned governed-rubric runtime is on `tools-ki` `main` (through commit 
 ## Conversion recipe (per skill, first slice `ki-handoffs`)
 
 1. Reshape `scripts/rubric/` so `index.ts` default-exports the contract-1 definition (families → items; phases `PREPARE`/`INSPECT`/`PRIMARY`/`DERIVED`/`NORMALISE`; judgment items as data with prompts; repairs returning `{ writes: [{ path, content }] }` — never writing).
-2. Delete the skill's `govern.ts`, `publish.ts`, and `scripts/vendored/ki-skills/` copies; the generic engine now lives in `tools-ki` (`runtime.ts`, `runtime-loader.ts`, `rubric-render.ts`).
+2. Delete the skill's `govern.ts` and `publish.ts`; retain only the declared compile-time rubric contract at `scripts/shared/rubric.ts`, because the generic engine lives in `tools-ki` (`runtime.ts`, `runtime-loader.ts`, `rubric-render.ts`).
 3. Regenerate `references/rubric.md` with `ki skill rubric <skill> --write` from the dev-linked checkout, and adopt the read-only `ki skill rubric <skill>` drift check in this repository's gate.
 4. Verify with `ki repo audit` / `ki repo conform --dry-run` against this repository; the current `does not provide a native rubric definition` error clears per converted skill.
 

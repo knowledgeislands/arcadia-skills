@@ -95,7 +95,7 @@ export type KiCheckerRubricContext = {
   declaredSharedModules: readonly string[]
   sharedDependencies: readonly string[]
   legacyLibPresent: boolean
-  publishedSharedModules: readonly string[]
+  presentSharedModules: readonly string[]
   rubricModuleExists: boolean
   checkerModuleExists: boolean
   reporterModuleExists: boolean

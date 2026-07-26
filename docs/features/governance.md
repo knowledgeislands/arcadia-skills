@@ -28,7 +28,7 @@ _Verify:_ each checker vendors the canonical `ki-skills` rubric, checker, and re
 
 ### GOV-004 — Composition, not extension
 
-A skill MUST NOT import another skill's source tree; it composes by running a sibling's checker or mode in sequence and declaring the edge, per [ADR-KI-HARNESS-004](../decisions/ADR-KI-HARNESS-004-composition-over-extension.md). The narrow implementation exception is a declared shared-module dependency that bootstrap copies into the consumer's own `scripts/vendored/<provider>/` namespace before execution.
+A skill MUST NOT import another skill's source tree; it composes by running a sibling's checker or mode in sequence and declaring the edge, per [ADR-KI-HARNESS-004](../decisions/ADR-KI-HARNESS-004-composition-over-extension.md). The narrow implementation exception is a declared shared-module dependency materialised as a regular local file at the consumer's own `scripts/shared/<module>.ts` path.
 
 _Verify:_ no `skills/*/scripts/**/*.ts` relative import resolves outside its own `scripts/` directory; shared dependencies resolve only to safe declared provider modules and execute from local copies.
 

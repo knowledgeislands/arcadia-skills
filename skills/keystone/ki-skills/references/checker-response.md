@@ -110,7 +110,7 @@ The response schema is a shipped asset of `ki-skills` for review and validation 
 
 The target reusable implementation belongs to `ki-skills`: `scripts/shared/checker.ts` consumes the generic model at `scripts/shared/rubric.ts`, while `scripts/shared/reporter.ts` presents its canonical result.
 
-A dependent governance skill vendors those three declared modules into `scripts/vendored/ki-skills/` and imports only its local copies.
+A dependent governance skill materialises the declared compile-time contract at `scripts/shared/rubric.ts` and imports only that local copy.
 
 Shared-module dependencies supply implementation; they do not create a `ki-depends-on:` governance-coverage edge.
 
