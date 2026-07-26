@@ -1,69 +1,52 @@
-import type { RubricItem } from '../../shared/rubric.ts'
-import type { LiveArtifactsContext } from '../contexts/live-artifacts.ts'
+import type { RubricFamily, RubricItem } from '../../shared/rubric.ts'
+import type { LiveArtifactsFrontmatterContext, LiveArtifactsRubricContext } from '../contexts/live-artifacts.ts'
 
-const SOURCE = ['standards.md'] as const
+const SOURCE = 'standards-live-artifacts.md'
 
-export const LA_F_1: RubricItem<LiveArtifactsContext> = {
+const LA_F_1: RubricItem<LiveArtifactsFrontmatterContext> = {
   code: 'LA-F-1',
   title: 'artifact status',
-  description: 'Each artifact source declares `status: active` or `status: archived`.',
-  sources: SOURCE,
+  description: 'Each artifact source declares status: active or status: archived.',
+  sources: [SOURCE],
   mechanical: {
     level: 'WARN',
-    audit: {
-      phase: 'INSPECT',
-      run: (context) => {
-        if (!context.artifactsDirectoryExists || context.sources.length === 0)
-          return [{ status: 'NOT_APPLICABLE', message: 'No artifact sources are available for frontmatter checks.' }]
-        const violations = context.sources.flatMap((source) => {
-          const status = source.frontmatter?.status
-          if (!status)
-            return [
-              { status: 'VIOLATION' as const, message: "The required frontmatter field 'status' is absent.", subject: source.relativePath }
-            ]
-          return ['active', 'archived'].includes(status)
-            ? []
-            : [
-                {
-                  status: 'VIOLATION' as const,
-                  message: `status '${status}' is not one of active / archived.`,
-                  subject: source.relativePath
-                }
-              ]
-        })
-        return violations.length > 0
-          ? (violations as [(typeof violations)[number], ...(typeof violations)[number][]])
-          : [{ status: 'PASS', message: 'Every artifact source has a valid status.' }]
-      }
-    }
+    audit: { phase: 'INSPECT', run: (context) => context.status }
   }
 }
 
-export const LA_F_2: RubricItem<LiveArtifactsContext> = {
+const LA_F_2: RubricItem<LiveArtifactsFrontmatterContext> = {
   code: 'LA-F-2',
   title: 'render declaration',
-  description: 'Each frontmatter block declares `renders: html`.',
-  sources: SOURCE,
+  description: 'Each frontmatter block includes html in its renders declaration.',
+  sources: [SOURCE],
   mechanical: {
     level: 'WARN',
-    audit: {
-      phase: 'INSPECT',
+    audit: { phase: 'INSPECT', run: (context) => context.renders },
+    conform: {
+      phase: 'NORMALISE',
       run: (context) => {
-        if (!context.artifactsDirectoryExists || context.sources.length === 0)
-          return [{ status: 'NOT_APPLICABLE', message: 'No artifact sources are available for frontmatter checks.' }]
-        const violations = context.sources
-          .filter((source) => !source.frontmatter?.renders)
-          .map((source) => ({
-            status: 'VIOLATION' as const,
-            message: "The required frontmatter field 'renders' is absent.",
-            subject: source.relativePath
-          }))
-        return violations.length > 0
-          ? (violations as [(typeof violations)[number], ...(typeof violations)[number][]])
-          : [{ status: 'PASS', message: 'Every frontmatter block declares renders.' }]
+        context.ensureRenders?.()
       }
     }
   }
 }
 
-export const LA_FRONTMATTER = [LA_F_1, LA_F_2] as const
+const LA_F_3: RubricItem<LiveArtifactsFrontmatterContext> = {
+  code: 'LA-F-3',
+  title: 'artifact owner',
+  description: 'Each artifact source declares the author who owns and maintains it.',
+  sources: [SOURCE],
+  mechanical: {
+    level: 'WARN',
+    audit: { phase: 'INSPECT', run: (context) => context.author }
+  }
+}
+
+export const LA_FRONTMATTER: RubricFamily<LiveArtifactsRubricContext, LiveArtifactsFrontmatterContext> = {
+  code: 'LA-F',
+  title: 'artifact frontmatter',
+  description: 'Required metadata on Markdown artifact sources.',
+  standard: SOURCE,
+  selectContext: (context) => context.frontmatter,
+  items: [LA_F_1, LA_F_2, LA_F_3]
+}
