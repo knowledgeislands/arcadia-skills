@@ -59,9 +59,6 @@ ki
 Examples:
 
 ```bash
-ki skill install github:knowledge-islands/example-skill
-ki agent bind research-agent --harness claude
-ki package list
 ki doctor
 ```
 
