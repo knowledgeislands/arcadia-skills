@@ -1,8 +1,9 @@
 #!/usr/bin/env bun
 /**
  * Materialise frontmatter-declared shared modules in source skills scoped by a
- * command target.  A same-harness consumer links its provider; ordinary source
- * trees copy their own provider payloads.  Vendored `.ki/bootstrap/` remains copies.
+ * command target. Source payloads always use regular verified copies, so both
+ * local development and installed harness payloads have the same link-free shape.
+ * Vendored `.ki/bootstrap/` remains copies.
  *
  * Internal bootstrap command: bun sync-shared-modules.ts [target] [--check|--dry-run] [--quiet]
  */
@@ -298,7 +299,7 @@ for (const consumer of skills) {
     const source = payload(providerDirectory(consumer, module.provider, skills), module.provider, module.module)
     const destination = join(consumer.directory, 'scripts', 'vendored', module.provider, source.targetName)
     expectedPayloads.set(destination, source)
-    operations.push({ source, destination, consumer, module, link: consumer.harness !== undefined })
+    operations.push({ source, destination, consumer, module, link: false })
   }
 }
 
@@ -333,9 +334,4 @@ if (drift.length) {
   process.exit(1)
 }
 
-if (!quiet)
-  console.log(
-    checkOnly
-      ? 'shared module payloads are current'
-      : `shared module payloads synchronized (${operations.filter((item) => item.link).length ? 'links and copies' : 'copies'})`
-  )
+if (!quiet) console.log(checkOnly ? 'shared module payloads are current' : 'shared module payloads synchronized (regular copies)')

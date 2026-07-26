@@ -1,5 +1,5 @@
 #!/usr/bin/env bun
-/** Direct source-payload regression for declared harness shared-module links. */
+/** Direct source-payload regression for declared regular shared-module copies. */
 import { spawnSync } from 'node:child_process'
 import {
   cpSync,
@@ -9,7 +9,6 @@ import {
   readdirSync,
   readFileSync,
   readlinkSync,
-  realpathSync,
   rmSync,
   symlinkSync,
   writeFileSync
@@ -33,8 +32,8 @@ for (const skill of allSkillNames()) {
   for (const module of sharedDependenciesOf(skill)) {
     const payload = sharedModulePayload(module)
     const target = join(skillDir(skill), 'scripts', 'vendored', module.provider, payload.targetName)
-    if (!lstatSync(target).isSymbolicLink() || realpathSync(target) !== realpathSync(payload.source)) {
-      console.error(`shared module is not a canonical source link: ${skill}/${module.provider}/${payload.targetName}`)
+    if (lstatSync(target).isSymbolicLink() || !readFileSync(target).equals(readFileSync(payload.source))) {
+      console.error(`shared module is not a regular source copy: ${skill}/${module.provider}/${payload.targetName}`)
       process.exit(1)
     }
   }
@@ -62,7 +61,7 @@ function assertNoUndeclaredLinks(path: string): void {
 
 assertNoUndeclaredLinks(join(harnessRoot, '.ki'))
 
-const fixture = mkdtempSync(join(tmpdir(), 'ki-shared-module-links-'))
+const fixture = mkdtempSync(join(tmpdir(), 'ki-shared-module-copies-'))
 try {
   cpSync(SKILLS_ROOT, join(fixture, 'skills'), { recursive: true, dereference: true })
   writeFileSync(join(fixture, '.ki-config.toml'), '[ki-repo]\n')
@@ -82,32 +81,19 @@ try {
   const preview = spawnSync('bun', [scriptPath, fixture, '--dry-run'], { encoding: 'utf8' })
   if (preview.status !== 0 || lstatSync(fixturePayload).isSymbolicLink()) {
     console.error(`${preview.stdout ?? ''}${preview.stderr ?? ''}`)
-    throw new Error('harness shared-module dry run must not write a link')
-  }
-
-  const linked = spawnSync('bun', [scriptPath, fixture], { encoding: 'utf8' })
-  if (
-    linked.status !== 0 ||
-    !lstatSync(fixturePayload).isSymbolicLink() ||
-    realpathSync(fixturePayload) !== realpathSync(fixtureProvider)
-  ) {
-    console.error(`${linked.stdout ?? ''}${linked.stderr ?? ''}`)
-    throw new Error('harness source synchronisation must create a canonical link')
+    throw new Error('harness shared-module dry run must not write a copy')
   }
 
   rmSync(fixturePayload)
-  writeFileSync(fixturePayload, readFileSync(fixtureProvider))
-  const regularDeclared = spawnSync('bun', [scriptPath, fixture, '--check'], { encoding: 'utf8' })
-  if (
-    regularDeclared.status === 0 ||
-    !`${regularDeclared.stdout ?? ''}${regularDeclared.stderr ?? ''}`.includes('ki-repo/scripts/vendored/ki-skills/checker.ts')
-  )
-    throw new Error('harness source check must reject a regular declared payload')
+  symlinkSync(relative(dirname(fixturePayload), fixtureProvider), fixturePayload)
+  const linked = spawnSync('bun', [scriptPath, fixture, '--check'], { encoding: 'utf8' })
+  if (linked.status === 0 || !`${linked.stdout ?? ''}${linked.stderr ?? ''}`.includes('ki-repo/scripts/vendored/ki-skills/checker.ts'))
+    throw new Error('harness source check must reject a declared shared-module link')
 
   const restored = spawnSync('bun', [scriptPath, fixture], { encoding: 'utf8' })
-  if (restored.status !== 0 || !lstatSync(fixturePayload).isSymbolicLink()) {
+  if (restored.status !== 0 || lstatSync(fixturePayload).isSymbolicLink()) {
     console.error(`${restored.stdout ?? ''}${restored.stderr ?? ''}`)
-    throw new Error('harness source synchronisation must restore a regular declared payload to a link')
+    throw new Error('harness source synchronisation must restore a declared link to a regular copy')
   }
 
   const stray = join(fixture, 'skills', 'keystone', 'ki-repo', 'scripts', 'vendored', 'ki-skills', 'stray.ts')
@@ -166,17 +152,17 @@ try {
   const innerProvider = writeSkill(nestedRoot, 'inner', 'ki-provider', ['ki-shared-modules: [checker]'])
   mkdirSync(join(innerProvider, 'scripts', 'shared'), { recursive: true })
   writeFileSync(join(innerProvider, 'scripts', 'shared', 'checker.ts'), 'export const nestedChecker = true\n')
-  const linked = spawnSync('bun', [scriptPath, nested], { encoding: 'utf8' })
+  const copied = spawnSync('bun', [scriptPath, nested], { encoding: 'utf8' })
   const innerPayload = join(innerConsumer, 'scripts', 'vendored', 'ki-provider', 'checker.ts')
   if (
-    linked.status !== 0 ||
-    !lstatSync(outerPayload).isSymbolicLink() ||
-    realpathSync(outerPayload) !== realpathSync(join(provider, 'scripts', 'shared', 'checker.ts')) ||
-    !lstatSync(innerPayload).isSymbolicLink() ||
-    realpathSync(innerPayload) !== realpathSync(join(innerProvider, 'scripts', 'shared', 'checker.ts'))
+    copied.status !== 0 ||
+    lstatSync(outerPayload).isSymbolicLink() ||
+    !readFileSync(outerPayload).equals(readFileSync(join(provider, 'scripts', 'shared', 'checker.ts'))) ||
+    lstatSync(innerPayload).isSymbolicLink() ||
+    !readFileSync(innerPayload).equals(readFileSync(join(innerProvider, 'scripts', 'shared', 'checker.ts')))
   ) {
-    console.error(`${linked.stdout ?? ''}${linked.stderr ?? ''}`)
-    throw new Error('each same-root harness consumer must materialise its local live shared-module link')
+    console.error(`${copied.stdout ?? ''}${copied.stderr ?? ''}`)
+    throw new Error('each same-root harness consumer must materialise its local regular shared-module copy')
   }
 } finally {
   rmSync(nested, { recursive: true, force: true })

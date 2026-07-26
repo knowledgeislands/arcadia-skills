@@ -262,9 +262,9 @@ export const BOOT_12: RubricItem<BootstrapRubricContext> = {
 
 export const BOOT_13: RubricItem<BootstrapRubricContext> = {
   code: 'BOOT-13',
-  title: 'source harness shared payloads are declared canonical links',
+  title: 'source harness shared payloads are declared regular copies',
   description:
-    'A source harness has no copied or undeclared payload beneath canonical `skills/**/scripts/vendored/`: every payload is declared by `ki-shared-dependencies` and resolves as a link to its provider. This source-only rule never applies to deliberately self-contained `.ki/bootstrap/` copies or ordinary repository payloads.',
+    'A source harness has no link or undeclared payload beneath canonical `skills/**/scripts/vendored/`: every payload is declared by `ki-shared-dependencies` and is a byte-identical regular copy of its provider. This source-only rule never applies to deliberately self-contained `.ki/bootstrap/` copies or ordinary repository payloads.',
   sources: ['[AH]', '[ADR-KI-HARNESS-006]'],
   mechanical: {
     level: 'FAIL',
@@ -281,7 +281,7 @@ export const BOOT_13: RubricItem<BootstrapRubricContext> = {
               subject: 'skills'
             }
           ]
-        return [{ status: 'PASS', message: 'source-vendored shared payloads are declared canonical links', subject: 'skills' }]
+        return [{ status: 'PASS', message: 'source-vendored shared payloads are declared regular copies', subject: 'skills' }]
       }
     }
   }

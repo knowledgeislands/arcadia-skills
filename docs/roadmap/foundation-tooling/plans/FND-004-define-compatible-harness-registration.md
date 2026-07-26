@@ -19,7 +19,9 @@ The harness owns compatible capability semantics and skill-specific rubrics; `to
 
 The released `tools-ki` surface installs direct compatible payloads under a user KI data directory, derives harness identity from the owner/repository path, provides the initial `ki repo audit` and `ki repo conform` host commands without vendored runners, and activates skills through `ki skill user` and `ki skill repo`.
 
-The host is ready, but `tools-ki` has not yet absorbed the generic governed-rubric runtime currently shared through this harness's `govern.ts` and `checker.ts`. This source repository still depends on its tracked `.ki/` aggregate, bootstrap payload, manifest, and package-script aliases for CI, pre-commit, and local governance. That legacy state cannot be removed until the tools-owned runtime executes the harness's rubrics and safe repairs directly.
+`tools-ki` now owns the versioned generic governed-rubric runtime, including host-owned repair transactions and identity checks. The harness's first native definition is `ki-handoffs`; its one safe repair is declared as a Markdown frontmatter replacement and never writes directly. Its source payload is now link-free: every declared shared module is an integrity-checked regular copy, matching the installed-payload rule.
+
+This source repository still depends on its tracked `.ki/` aggregate, bootstrap payload, manifest, and package-script aliases for CI, pre-commit, and local governance. That legacy state cannot be removed until the tools-owned runtime executes the harness's converted rubrics directly.
 
 [ADR-KI-HARNESS-012](../../../decisions/ADR-KI-HARNESS-012-compatible-harness-publication-and-governed-rubric-boundary.md) defines the direct compatible-payload and governed-rubric boundary. `tools-ki` owns the host implementation and its current command grammar. KI Specifications work is deliberately deferred until the implementation contract has settled.
 
@@ -45,9 +47,10 @@ The shared ecosystem GDR now establishes the five-repository ownership model. It
 7. Align the harness guide, bootstrap standards, capability rubrics, and `ki(1)` with the settled boundary; preserve current-versus-planned command status and remove obsolete one-collection terminology.
 8. Retire the harness's repository-local `.ki/` executor only after `ki repo audit` and `ki repo conform` can replace its aggregate, CI, and pre-commit roles for this source harness.
    - [x] Inventory the source harness's live legacy surface: `.ki/bin`, `.ki/bootstrap`, `.ki/manifest.json`, package-script aliases, CI, pre-commit, and the `.ki/self` orientation.
-   - [ ] Move the generic governed-rubric runtime out of the harness and into `tools-ki`: execution, finding rendering, dry-run, dependency order, and safe publication. The harness retains only skill-specific rubric definitions, context/evidence builders, and declared repair plans; do not retain a parallel wrapper or runner convention.
+   - [x] Move the generic governed-rubric runtime out of the harness and into `tools-ki`: execution, finding rendering, dry-run, dependency order, and safe publication. The harness retains only skill-specific rubric definitions, context/evidence builders, and declared repair plans; do not retain a parallel wrapper or runner convention.
    - [ ] Convert every repository-scoped declared governance skill to that definition contract, replacing direct-writing callbacks only after the tools-owned transaction preserves its existing fail-closed safety guarantees.
-   - [ ] Resolve the source harness's nested shared-module symlinks without weakening installed-payload validation: materialise regular, integrity-checked payload files or replace the links before an installed or local direct payload executes rubrics.
+     - [x] Port `ki-handoffs` as the first definition-contract vertical slice, including its pure readiness-marker repair plan and focused contract test.
+   - [x] Resolve the source harness's nested shared-module symlinks without weakening installed-payload validation: materialise regular, integrity-checked payload files or replace the links before an installed or local direct payload executes rubrics.
    - [ ] Prove `ki repo audit --repo .` and `ki repo conform --repo . --dry-run` against an installed current harness, then move package scripts, CI, and pre-commit to those commands.
    - [ ] Execute the explicit, fail-closed source-harness migration and remove only the legacy entries proven redundant; retain or relocate `.ki/self` deliberately rather than deleting it as collateral.
 
