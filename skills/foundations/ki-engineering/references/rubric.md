@@ -71,8 +71,8 @@ Stable engineering criteria preserved from the engineering standard.
 - **SCR-7 [M] — runner-neutral test and build entrypoints** — Test-capable repos expose bare `test`; compiled repos expose bare `build`; repository governance remains outside package scripts. (standards.md)
 - **SCR-8 [J] — repo-specific scripts retain clear ownership** — Repo-specific scripts beyond the governance surface are valid only when an owning skill governs them and they do not shadow a governed entrypoint. (standards.md)
   - _Review prompt:_ Do repo-specific scripts have a clear owner and avoid divergent shadows of governed entrypoints?
-- **SCR-9 [J] — clean-end-state cutovers** — Repository-footprint replacements protect the known-good state with a tag or release, cut directly to the intended contract without compatibility shims, verify it, and tag or release the resulting state. (standards.md)
-  - _Review prompt:_ Did the cutover protect both known-good states while avoiding compatibility code that exists only for an intermediate state?
+- **SCR-9 [J] — clean-end-state cutovers** — Repository-footprint replacements cut directly to the intended contract, remove the superseded implementation, and verify the result without compatibility code that exists only for an intermediate state. (standards.md)
+  - _Review prompt:_ Did the cutover reach and verify the correct clean end state without retaining transitional compatibility code?
 
 ## BUN — BUN engineering rules
 

@@ -52,7 +52,7 @@ export const SCR_8 = judgment(
 export const SCR_9 = judgment(
   'SCR-9',
   'clean-end-state cutovers',
-  'Repository-footprint replacements protect the known-good state with a tag or release, cut directly to the intended contract without compatibility shims, verify it, and tag or release the resulting state.',
-  'Did the cutover protect both known-good states while avoiding compatibility code that exists only for an intermediate state?'
+  'Repository-footprint replacements cut directly to the intended contract, remove the superseded implementation, and verify the result without compatibility code that exists only for an intermediate state.',
+  'Did the cutover reach and verify the correct clean end state without retaining transitional compatibility code?'
 )
 export const SCR = [SCR_1, SCR_2, SCR_3, SCR_4, SCR_5, SCR_6, SCR_7, SCR_8, SCR_9] as const

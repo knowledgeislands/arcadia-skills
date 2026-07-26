@@ -87,7 +87,7 @@ Where the repo has CI (`.github/workflows/ci.yml`), it is a single `build` job o
 
 ### Clean-end-state cutovers
 
-A repository-footprint replacement prefers the correct clean end state over transitional operability. Before the cutover, tag or release the last known-good state. Replace the old contract directly, remove the superseded implementation in the same bounded change, run the complete verification appropriate to the repository, then tag or release the verified result. Do not retain compatibility shims, dual paths, legacy aliases, or fallback runners merely to preserve an intermediate state: Git history and the bounding tags are the recovery mechanism.
+A repository-footprint replacement prefers the correct clean end state over transitional operability. Replace the old contract directly, remove the superseded implementation in the same bounded change, and run the complete verification appropriate to the repository. Do not retain compatibility shims, dual paths, legacy aliases, or fallback runners merely to preserve an intermediate state. Git history is the recovery mechanism.
 
 ## 2. The governed script surface (core)
 
