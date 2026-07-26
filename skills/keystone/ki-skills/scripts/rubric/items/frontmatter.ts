@@ -24,7 +24,7 @@ export const FRONTMATTER: RubricFamily<KiSkillsRubricContext, FrontmatterRubricC
   code: 'FM',
   title: 'Frontmatter document',
   description: 'The YAML frontmatter document that identifies a skill.',
-  standard: 'standards.md#3-frontmatter-document',
+  standard: 'standards-agent-skills.md#3-frontmatter-document',
   selectContext: (context: KiSkillsRubricContext) => selectKiSkillsContext(context, 'frontmatter'),
   items: [FM_1]
 }

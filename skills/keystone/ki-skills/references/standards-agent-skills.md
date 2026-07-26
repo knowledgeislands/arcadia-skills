@@ -1,4 +1,4 @@
-# Agent Skills Standard
+# Agent Skills standard
 
 The normative reference behind `ki-skills`: what a _good_ Agent Skill looks like, and why. The [Audit Rubric](rubric.md) is the line-by-line checklist derived from this — each rubric criterion (`NAME-1`, `DESC-2`, …) verifies a convention stated here. Read the standard to understand or quote a convention; run `ki repo audit --skill ki-skills` to check a repository's skills against it.
 
@@ -10,7 +10,7 @@ Read this standard from the most portable authority to the most local:
 
 1. **Portable Agent Skills contract** — `SPEC` defines the cross-runtime requirements a skill must meet.
 2. **Established authoring practice** — `AS`, `BP`, `ENG`, and `COMMUNITY` explain effective patterns where the portable contract leaves room for judgment.
-3. **Knowledge Islands house standard** — the harness, its decision records, and KI reference skills define the local governance model.
+3. **Knowledge Islands house standard** — [the separate KI standard](standards-knowledge-islands.md) defines conventions added by this harness.
 
 `CC` is a **runtime overlay**, not a fourth authority level. It may extend or qualify a portable or KI rule for Claude Code, but it never weakens the portable contract. Runtime-only requirements remain explicitly labelled so a skill can distinguish portability from a supported runtime feature.
 
@@ -28,12 +28,8 @@ Read this standard from the most portable authority to the most local:
 10. [Scripts](#10-scripts)
 11. [Process / evaluation](#11-process--evaluation)
 12. [Longevity](#12-longevity)
-13. [Knowledge Islands linking & portability](#13-knowledge-islands-linking--portability)
-14. [Knowledge Islands skill shape](#14-knowledge-islands-skill-shape)
-15. [Cross-skill collision](#15-cross-skill-collision)
-16. [Runtime portability](#16-runtime-portability)
-17. [Disagreements & moving targets](#17-disagreements--moving-targets)
-18. [Exact numbers](#18-exact-numbers)
+13. [Runtime binding](#runtime-binding)
+14. [Exact numbers](#14-exact-numbers)
 
 ## 1. Two-aspect model
 
@@ -80,7 +76,7 @@ The `SKILL.md` body stays under **500 lines** and **~5,000 tokens** (the recomme
 
 Detailed or rarely-used material lives in separate files loaded on demand, and mutually-exclusive domains are split (`references/finance.md` vs `references/sales.md`) so irrelevant context never loads. Every supporting file is referenced from `SKILL.md` with a note on what it holds and when to load it — no orphan files. Reference files longer than 100 lines open with a table of contents, so a partial read still shows full scope. Execution intent is explicit per script: "Run `x.ts`" (execute) vs "see `x.ts` for the algorithm" (read). (BP, ENG, SPEC, COMMUNITY)
 
-**The mode-router shape.** When a skill's body is dominated by many _independently-invoked_ modes — a governance skill with a dozen modes, where any one fire uses one mode — treat the unused modes as the mutually-exclusive domains above: keep the **shared model and a dispatch table** in `SKILL.md`, and move each mode's _procedure_ to a flat `references/mode-<name>.md` that the table names with its when-to-load. Only the invoked mode loads, instead of every mode on every fire. **Co-locate tightly-coupled modes** in one file (e.g. AUDIT + CONFORM, where CONFORM runs AUDIT first) so a mode file never chains to another. **Keep in the body** anything every mode needs (the shared model) and any _behaviour anchor_ a checker verifies (a gate, a standing cascade) — never push an always-on rule onto an on-demand path. Use it when the body would otherwise carry many independent mode procedures and the footprint's body component dominates; **not** when modes are few, short, or call-chained, or the body already routes. (BP, ENG)
+**The mode-router shape.** When a skill's body is dominated by many _independently-invoked_ modes — a governance skill with a dozen modes, where any one fire uses one mode — treat the unused modes as the mutually-exclusive domains above: keep the **shared model and a dispatch table** in `SKILL.md`, and move each mode's _procedure_ to its own flat `references/mode-<name>.md` that the table names with its when-to-load. Only the invoked mode loads, instead of every mode on every fire. One file owns one mode: `mode-audit-conform.md` is split into `mode-audit.md` and `mode-conform.md`, and each procedure states its own preconditions without requiring a reference chain. **Keep in the body** anything every mode needs (the shared model) and any _behaviour anchor_ a checker verifies (a gate, a standing cascade) — never push an always-on rule onto an on-demand path. Use it when the body would otherwise carry many independent mode procedures and the footprint's body component dominates; **not** when modes are few, short, or call-chained, or the body already routes. (BP, ENG)
 
 ### 9. Body content quality
 
@@ -88,7 +84,7 @@ Match **degrees of freedom to task fragility**: prose + judgment for open-ended 
 
 ### 10. Scripts
 
-Scripts solve problems rather than punt back to the agent — they handle expected errors (missing file, permissions) explicitly. Every config value is justified in a comment (no unexplained magic numbers). Required packages are listed and verified for the target runtime (a model API has no network/runtime install); when a skill invokes MCP tools, use fully-qualified `ServerName:tool_name` names so the agent can locate the tool when multiple MCP servers are loaded. Deterministic, frequently-reused logic is pre-written as a script rather than regenerated each run. Validation scripts are verbose — error messages name the problem and the valid options. For batch/destructive operations, follow plan-validate-execute: produce a verifiable intermediate artifact, validate it, then act. Every supported non-test script directly under `scripts/` is a public command entry point: it exits successfully for `-h` and `--help` and prints useful usage or help text. Private reusable modules live under `scripts/internal/`; only modules explicitly published for cross-skill use live under `scripts/shared/`. The retired `scripts/lib/` directory is a packaging error. When adding a regex- or text-based mechanical check, run it against the checker's own test files before considering it complete: adversarial fixture strings often resemble real violations, so the scan must target the production files the rule actually governs (for example, exclude `*.test.ts` when tests are not vendored) rather than matching fixture data as source. (AS, BP, COMMUNITY, KI)
+Scripts solve problems rather than punt back to the agent — they handle expected errors (missing file, permissions) explicitly. Every config value is justified in a comment (no unexplained magic numbers). Required packages are listed and verified for the target runtime (a model API has no network/runtime install); when a skill invokes MCP tools, use fully-qualified `ServerName:tool_name` names so the agent can locate the tool when multiple MCP servers are loaded. Deterministic, frequently-reused logic is pre-written as a script rather than regenerated each run. Validation scripts are verbose — error messages name the problem and the valid options. For batch/destructive operations, follow plan-validate-execute: produce a verifiable intermediate artifact, validate it, then act. Every supported non-test script directly under `scripts/` is a public command entry point: it exits successfully for `-h` and `--help` and prints useful usage or help text. Private reusable modules live under `scripts/internal/`; only modules explicitly published for cross-skill use live under `scripts/shared/`. The retired `scripts/lib/` directory is a packaging error. When adding a regex- or text-based mechanical check, run it against focused adversarial fixtures before considering it complete: fixture strings often resemble real violations, so the evidence builder must scan only the production files the rule actually governs rather than matching test data as source. (AS, BP, COMMUNITY, KI)
 
 ### 11. Process / evaluation
 
@@ -101,41 +97,9 @@ These check the skill against **time** — they matter most once it ships into a
 - **Volatile facts need a refresh path.** A skill that hard-codes facts that drift — model IDs/prices, API/SDK versions, tool/MCP-server names, CLI flags, dated spec numbers, third-party URLs — rots silently. It must either **(a)** resolve the volatile fact at runtime, or **(b)** carry a tracked source list with `last reviewed` dates **and** a REFRESH mode that re-anchors it (as `ki-skills` and `ki-mcp` do). The refresh path must name what to re-fetch and how to tell it has gone stale. This extends "no time-sensitive content in the body" from prose hygiene to a durability guarantee.
 - **A cadence, not just a capability.** A REFRESH mode nobody runs decays as surely as no refresh. A skill that ships a refresh path should also state a **cadence** (periodic, or a clear "run when X" trigger) and, where the host supports it, register a scheduled run. Treat the schedule as a recommendation, but a refresh capability with no stated cadence is a half-measure. (BP, COMMUNITY)
 
-## Knowledge Islands house standard
+## Runtime binding
 
-### 13. Knowledge Islands linking & portability
-
-These are Knowledge Islands house rules so a skill survives relocation and symlinking. Internal links are **standard relative markdown links, not Obsidian wikilinks**, and every relative target resolves on disk (use the CommonMark angle-bracket form for paths with spaces). Reference **another skill by its `name`** ("the `ki-kb` skill"), never by file path — a skill's on-disk location is not stable. The house toolchain passes: Biome (TS/JSON), Prettier + markdownlint-cli2 (markdown). (ki-agentic-harness README)
-
-### 14. Knowledge Islands skill shape
-
-A **standard** Knowledge Islands skill carries reusable mode logic and resolves base-level bindings (store aliases, scope, writing standards) at runtime — base-specific **data** from the host repo's `.ki-config.toml` table, base-specific **prose** from its `CLAUDE.md` and memory index — so it hard-codes **no single base**. The skill declares its **kind** (Knowledge Islands / process / scoped) clearly enough that a reader can place it. (ki-agentic-harness README, `ki-kb`)
-
-**Inter-skill relationships are composition, only.** A skill builds on another by **running that skill's checker/mode in sequence and adding its own delta** — never by importing it, so each stays valid installed standalone (`ki-mcp` runs `ki-engineering`'s toolchain audit, then audits the MCP delta). The composing skill **declares the edge**: it names the sibling and the run order in its AUDIT mode, and the relationship is drawn once in the ki-agentic-harness README map. **Delegation between two standards** — `ki-kb` handing the `Streams` zone to `ki-kb-streams` — is the same mechanism at sub-scope, not a separate kind. There is **no base-coupled extension skill**: a base never ships a `<base>-kb`-style skill that takes the shared modes by name. What a base needs differently is **declared, not forked** — data in its own `.ki-config.toml` table (read validate-down by the standard), prose guidance in its `CLAUDE.md` — so base-specificity stays auditable rather than hidden in a drift-prone coupled skill. A genuinely base-specific _behaviour_ that no declaration can express is a signal to **generalise it into the standard** (a REFRESH candidate), not to fork a skill. (ki-agentic-harness README, `ki-kb`)
-
-**Shared modules are the narrow implementation exception.** A provider exposes modules with `ki-shared-modules:`; a dependent names each exact `provider:module` reference with `ki-shared-dependencies:`. The extension-free module name resolves to one safe provider file at `scripts/shared/<module>.ts`, and the dependency materialiser places a regular-file copy at the same `scripts/shared/<module>.ts` path in the consumer. A skill imports only that local module, never a sibling skill source path or a checkout-relative path. Published and materialised module names share one namespace and must not collide. The declaration creates no governance coverage or composition edge. `ki-skills` provides the canonical compile-time `rubric` contract; generic execution, validation, progress, transactions, and reporting belong to `ki`. (ADR-KI-HARNESS-SKILLS-012, [compatible harness contract](../../../../docs/decisions/references/compatible-harness-contract.md))
-
-A skill that reads declared repo config does so through the shared **`.ki-config.toml`** — the file whose presence marks a Knowledge Islands–compliant repo, whose contract is defined by `ki-repo` — and only through **its own `[<skill-name>]` table**. It **validates that table**: it warns on a key it doesn't recognise (a typo or stale option should surface, not silently do nothing) and advises dropping one that merely restates a default, while leaving every other skill's table untouched, even keys it can't interpret. Validate down, ignore across. (`ki-repo` is the reference implementation.)
-
-A Knowledge Islands skill is installed by any contributor, not only its author. It must not assume the user carries any particular personal runtime configuration or imported conventions — plan-mode rules, house footnote style, workflow preferences — that the open spec does not guarantee. Any convention the skill relies on must be anchored in always-loaded repo context (a `CLAUDE.md` or `AGENTS.md` alongside the skill, or a KI-SHAPE-7 companion) so it applies for every user. Degrading gracefully when personal config is absent is the minimum; anchoring the requirement explicitly is the standard. (rubric **KI-SHAPE-10**)
-
-A **governance skill** — one that holds a house standard — exposes a common mode set so a reader moves between skills without relearning: the universal four are **AUDIT** (check an artifact against the standard), **CONFORM** (bring an existing artifact into line), **EDUCATE** (render the catalogue's guidance), and **REFRESH** (re-anchor the standard to its sources). Modes beyond the four are fixed in meaning where they appear: **NEW** authors one new instance into a collection the skill governs (present only in collection skills, presupposing EDUCATE, never a substitute for it), **OPTIMISE** pushes a compliant artifact toward excellent, and operational modes serve a skill's own domain (the `ki-kb` note-ops — DIGEST / EXTRACT / QUERY / SAVE / UPDATE). The modes live under a single `## Operating modes` H2, each as a `### Mode <NAME>` H3 or — for router skills — rows of a `| Mode | … |` dispatch table, with every `argument-hint` verb present in that section (rubric **KI-SHAPE-12**, **KI-SHAPE-13**). A governance skill publishes its complete rubric from `scripts/rubric/items/index.ts`; `ki` resolves and hosts it from a verified installed compatible harness, and REFRESH remains harness-only. Legacy `scripts/govern.ts`, `scripts/educate.ts`, `scripts/audit.ts`, and `scripts/conform.ts` runners are retired. All `ki-*` skills are governance skills on this model. (ki-agentic-harness README, ADR-KI-HARNESS-SKILLS-001, ADR-KI-HARNESS-007, [compatible harness contract](../../../../docs/decisions/references/compatible-harness-contract.md))
-
-Within a **Knowledge Islands repo** (one carrying a `.ki-config.toml`), a governance skill also takes a shared **file shape** so a reader — or a new such skill — moves between them without relearning: its primary normative reference is `references/standards.md`; its pass/fail criteria are `references/rubric.md`; its tracked provenance is `references/sources.md`; and its executable catalogue is `scripts/rubric/items/index.ts`. Use `references/exemplars.md` for optional worked examples and `references/mode-<verb>.md` for independently invoked mode procedures, co-locating tightly coupled modes. A skill with a genuinely separate secondary normative topic gives only that file a descriptive `<topic>-standards.md` name (for example, `config-standards.md`); distinct contracts, formats, frameworks, and guides remain descriptively named. Domain-specific helpers stay descriptive; legacy standalone governance executables are absent. This is a convention of the `ki-*` set rather than a requirement on every Agent Skill, so a governance skill outside such a repo is exempt for now (rubric **KI-SHAPE-6**). (ki-agentic-harness README)
-
-When a KI-governed skill needs durable, generated local state that is neither a source script nor a reference, it stores it in a root `.ki-meta/` directory. This is the one KI-specific addition to the portable `references/` / `scripts/` / `assets/` support-directory vocabulary; it remains local implementation state, not a second skill root. (rubric **LAY-3**)
-
-### 15. Cross-skill collision
-
-Most conventions audit one `SKILL.md` in isolation; these check it against its **siblings** (so an audit runs the linter over the whole set, not one skill). No two descriptions in a set should declare the **same quoted trigger phrase** — two skills firing on the identical phrase compete at selection time. Beyond exact strings, where two skills could plausibly fire on one request, **each** description names the other as the off-ramp — the reciprocal `ki-mcp` ↔ `ki-skills` pattern; a one-directional guard is a half-fix. This promotes the per-skill _option_ of naming non-triggers into a **set-level requirement** wherever real overlap exists. (COMMUNITY, ki-agentic-harness README)
-
-### 16. Runtime portability
-
-A portable contract describes behaviour without assuming one vendor, agent runtime, runtime-specific home, or interaction model. Name a runtime only when the text makes its boundary explicit: a skill whose entire purpose is runtime binding declares `ki-runtime-binding: true` in its frontmatter; a mixed contract puts the bounded material beneath a `##`–`###### Runtime binding` heading; tracked `references/sources.md` material is attribution rather than instruction; and a same-line comparison may name two or more runtimes to describe their difference. Do not use these boundaries to preserve incidental historical wording: move or rewrite a genuine portable rule until it has no vendor-specific premise. (KI)
-
-## Runtime overlay: Claude Code
-
-### 17. Disagreements & moving targets
+### 13. Claude Code differences and moving targets
 
 - **※1 `name` required vs optional.** Open spec: required, must match the directory. Claude Code: optional (defaults to directory name). For portable skills, always state it and match the directory.
 - **※2 Description length.** Authoring cap is **1024 chars** (spec, BP). Claude Code's _runtime_ listing truncates `description` + `when_to_use` at **1,536 chars** (configurable; budget scales ~1% of context). Author to 1024; the larger number is a display limit, not an authoring target.
@@ -143,7 +107,7 @@ A portable contract describes behaviour without assuming one vendor, agent runti
 - **※4 Commands → skills.** In Claude Code, `.claude/commands/*.md` and `.claude/skills/<name>/SKILL.md` both yield `/<name>`; skills are the recommended form. Suggest migrating old command files.
 - **※5 Budgets are soft.** "< 500 lines" and "< 5,000 tokens" are performance recommendations, not enforced — the linter reports them as WARN, never FAIL. The reference validator (`skills-ref validate`) checks frontmatter/naming only.
 
-## 18. Exact numbers
+## 14. Exact numbers
 
 | Item                               | Value               | Hard/Soft | Source     |
 | ---------------------------------- | ------------------- | --------- | ---------- |

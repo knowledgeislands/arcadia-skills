@@ -1,4 +1,4 @@
-# Candidate findings
+# Candidate-finding standard
 
 REVIEW and EXTRACT are judgment-led discovery modes. Their result is a compact proposal set for a user to assess, not permission to change a skill, a roadmap, or a plan.
 
@@ -35,16 +35,6 @@ Use this readable report shape:
 - **Roadmap treatment:** amend existing item — `foundation-tooling/review-ki-bootstrap-for-further-simplification`
 - **Proposed action:** add a pure scan helper and focused tests; retain judgment over which files are candidates.
 ```
-
-## Optional mechanical validation
-
-When findings will be handed to another agent or retained beyond the current conversation, encode them as JSON and run the read-only validator:
-
-```bash
-bun skills/keystone/ki-skills/scripts/candidate-contract.ts --validate candidates.json
-```
-
-The validator requires non-empty evidence, one allowed disposition, and a valid treatment. An `amend existing item` treatment must name a qualified roadmap locator; a `new item` or `no roadmap work` treatment must not claim one. It can also surface exact normalised-title matches against a supplied canonical roadmap inventory, but exact text is only a prompt for human reconciliation, never an automatic duplicate decision.
 
 ## Reconcile and route
 

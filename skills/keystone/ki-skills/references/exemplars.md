@@ -56,14 +56,14 @@ HELP explains this skill's purpose, invocation, modes, and off-ramps without tak
 
 Review an agent (or every agent in a directory) against the rubric and report.
 
-1. **Run the linter.** From the repository root, run `bun run ki:subagents:audit`. It reports mechanical findings with `FAIL`, `WARN`, `FIXED`, `INFO`, `NOT_APPLICABLE`, and `PASS`, and exits non-zero on any FAIL. Capture its output verbatim — do not re-derive what it found.
+1. **Run the host.** From the repository root, run `ki repo audit --skill ki-subagents`. It reports mechanical findings with `FAIL`, `WARN`, `INFO`, `NOT_APPLICABLE`, and `PASS`, and exits non-zero on any FAIL. Capture its output verbatim — do not re-derive what it found.
 2. **Read the agent definition** and apply the **judgment** ([J]-tagged) criteria from [the rubric](references/rubric.md) — the linter owns the [M] ones.
 3. **Report** findings by location → criterion → fix; lead with FAIL findings.
 ```
 
 ### Well-formed mode definition (EDUCATE)
 
-EDUCATE is one of the universal four (its mechanical half a per-skill `scripts/educate.ts` that scaffolds a new artifact — or brings an off-standard one onto the floor from scratch); a skill-specific mode (e.g. an operational note-op, or OPTIMISE) follows the same definition shape, sitting alongside the four, named and alphabetical in the body. A mode definition states what kind of artifact it produces, the inputs it needs, what it reads before writing, and the output format. Do not name a skill-specific mode AUDIT, CONFORM, EDUCATE, or REFRESH — those are reserved for the universal four.
+EDUCATE is one of the universal four. It teaches or creates the governed artifact from the standard; it does not restore a per-skill runner. A skill-specific mode (e.g. an operational note-op, or OPTIMISE) follows the same definition shape, sitting alongside the four, named and alphabetical in the body. A mode definition states what kind of artifact it produces, the inputs it needs, what it reads before writing, and the output format. Do not name a skill-specific mode AUDIT, CONFORM, EDUCATE, or REFRESH — those are reserved for the universal four.
 
 ```markdown
 ### Mode EDUCATE — write a new agent definition
@@ -71,9 +71,9 @@ EDUCATE is one of the universal four (its mechanical half a per-skill `scripts/e
 Create a well-formed agent definition from a plain-English description of the agent's role.
 
 1. **Gather inputs.** If the description is missing a lane boundary (what it defers), ask for it — the own-vs-defer line is the most important judgment call and cannot be inferred from a role alone.
-2. **Read [the standard](references/standards.md)** before writing — do not generate frontmatter from memory.
+2. **Read [the Agent Skills standard](standards-agent-skills.md)** before writing — do not generate frontmatter from memory.
 3. **Draft the frontmatter** (`name`, `description`, optional `model` / `tools`) then the system prompt (role declaration, grounding statement, own-vs-defer boundary, operating notes).
-4. **Run the linter** from the repository root: `bun run ki:subagents:audit`. Fix any FAIL findings before delivering.
+4. **Run the host** from the repository root: `ki repo audit --skill ki-subagents`. Fix any FAIL findings before delivering.
 5. Return the complete `.md` file content, annotated with the reasoning for any non-obvious choices.
 ```
 
@@ -86,7 +86,7 @@ When a skill runs a sibling's checker in sequence, it declares the edge explicit
 
 ### Mode AUDIT — audit the harness bundle
 
-1. **Run the skills checker.** From the harness root, run `bun run ki:skills:audit` — it audits every `SKILL.md` in `skills/` against the mechanical criteria. Capture its output verbatim.
-2. **Compose a sibling only when its concern is in scope.** For example, invoke `ki-engineering` in AUDIT mode when the requested harness review includes the toolchain, `tsconfig`, or Biome configuration. Capture its findings; do not re-derive them here.
+1. **Run the skills audit.** From the harness root, run `ki repo audit --skill ki-skills` — it audits every `SKILL.md` in `skills/` against the mechanical criteria. Capture its output verbatim.
+2. **Compose a sibling only when its concern is in scope.** For example, run `ki repo audit --skill ki-engineering` when the requested harness review includes the toolchain, `tsconfig`, or Biome configuration. Capture its findings; do not re-derive them here.
 3. **Apply harness-specific judgment** — five-part bundle completeness, `.ki-config.toml` table presence for each populated part, and cross-skill consistency (no two skills claiming the same domain). State the harness-specific delta separately from any sibling's findings.
 ```

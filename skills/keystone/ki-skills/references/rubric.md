@@ -17,7 +17,7 @@ Line-by-line criteria for auditing ki-skills. Classifications are derived from i
 - [REF — Progressive disclosure & references](#ref--progressive-disclosure--references)
 - [BODY — Body content quality](#body--body-content-quality)
 - [SCRIPT — Scripts & executable code](#script--scripts--executable-code)
-- [KI-CHECKER — Knowledge Islands checker contract](#ki-checker--knowledge-islands-checker-contract)
+- [KI-CHECKER — Knowledge Islands rubric contract](#ki-checker--knowledge-islands-rubric-contract)
 - [KI-LINK — Knowledge Islands linking & portability](#ki-link--knowledge-islands-linking--portability)
 - [PORT — Runtime portability](#port--runtime-portability)
 - [KI-SHAPE — Knowledge Islands skill shape](#ki-shape--knowledge-islands-skill-shape)
@@ -28,7 +28,7 @@ Line-by-line criteria for auditing ki-skills. Classifications are derived from i
 
 ## LAY — File existence & layout
 
-→ [standard](standards.md#2-layout)
+→ [standard](standards-agent-skills.md#2-layout)
 
 Portable skill layout and supporting-file structure.
 
@@ -43,7 +43,7 @@ Portable skill layout and supporting-file structure.
 
 ## FM — Frontmatter document
 
-→ [standard](standards.md#3-frontmatter-document)
+→ [standard](standards-agent-skills.md#3-frontmatter-document)
 
 The YAML frontmatter document that identifies a skill.
 
@@ -51,7 +51,7 @@ The YAML frontmatter document that identifies a skill.
 
 ## NAME — Frontmatter: name
 
-→ [standard](standards.md#4-frontmatter-name)
+→ [standard](standards-agent-skills.md#4-frontmatter-name)
 
 The portable skill name contract.
 
@@ -66,7 +66,7 @@ The portable skill name contract.
 
 ## DESC — Frontmatter: description
 
-→ [standard](standards.md#5-frontmatter-description)
+→ [standard](standards-agent-skills.md#5-frontmatter-description)
 
 The portable skill description contract.
 
@@ -88,7 +88,7 @@ The portable skill description contract.
 
 ## OPT — Frontmatter: optional fields
 
-→ [standard](standards.md#6-frontmatter-optional-fields)
+→ [standard](standards-agent-skills.md#6-frontmatter-optional-fields)
 
 Optional portable and runtime-specific frontmatter fields.
 
@@ -105,7 +105,7 @@ Optional portable and runtime-specific frontmatter fields.
 
 ## SIZE — Body: size & conciseness
 
-→ [standard](standards.md#7-size--conciseness)
+→ [standard](standards-agent-skills.md#7-size--conciseness)
 
 The progressive-disclosure budget for a skill body.
 
@@ -118,7 +118,7 @@ The progressive-disclosure budget for a skill body.
 
 ## REF — Progressive disclosure & references
 
-→ [standard](standards.md#8-progressive-disclosure)
+→ [standard](standards-agent-skills.md#8-progressive-disclosure)
 
 How a skill routes supporting detail into references.
 
@@ -129,12 +129,12 @@ How a skill routes supporting detail into references.
 - **REF-3 [M] — long reference files open with a table of contents** — Reference files > 100 lines open with a table of contents. (BP, COMMUNITY)
 - **REF-4 [J] — script execution intent is explicit** — Execution intent is explicit per script (run vs read). (BP, ENG)
   - _Review prompt:_ Is the execution intent for each script explicit: run it or read it?
-- **REF-5 [J] — many-moded skills route independently invoked procedures** — _Mode-router for many-moded skills._ A skill whose body is dominated by **independently-invoked** modes keeps the shared model + a dispatch table in `SKILL.md` and moves each mode's procedure to a flat `references/mode-<name>.md` (tightly-coupled modes co-located, e.g. AUDIT+CONFORM); behaviour anchors and the shared model stay in the body. Not required when modes are few, short, or call-chained. (BP, SPEC §8)
+- **REF-5 [J] — many-moded skills route independently invoked procedures** — _Mode-router for many-moded skills._ A skill whose body is dominated by **independently-invoked** modes keeps the shared model + a dispatch table in `SKILL.md` and moves each mode's procedure to its own flat `references/mode-<name>.md`; combined mode files such as `mode-audit-conform.md` are split, and each procedure states its own preconditions. Behaviour anchors and the shared model stay in the body. Not required when modes are few, short, or call-chained. (BP, SPEC §8)
   - _Review prompt:_ Where this skill has many independently invoked modes, does SKILL.md retain the shared model and dispatch while flat mode files hold their procedures?
 
 ## BODY — Body content quality
 
-→ [standard](standards.md#9-body-content-quality)
+→ [standard](standards-agent-skills.md#9-body-content-quality)
 
 The quality and usability of the skill instructions.
 
@@ -157,7 +157,7 @@ The quality and usability of the skill instructions.
 
 ## SCRIPT — Scripts & executable code
 
-→ [standard](standards.md#10-scripts)
+→ [standard](standards-agent-skills.md#10-scripts)
 
 The quality and autonomy of executable skill support.
 
@@ -175,25 +175,25 @@ The quality and autonomy of executable skill support.
   - _Review prompt:_ Do batch or destructive operations plan and validate before execution?
 - **SCRIPT-7 [J] — target-repository scripts are copied** — Scripts installed into a target repo's `scripts/` directory are **copies**, not symlinks or out-of-repo references — the target repo must be autonomous. (BP)
   - _Review prompt:_ Are target-repository scripts copied rather than symlinked or referenced outside the repository?
-- **SCRIPT-8 [M-heuristic + J] — top-level scripts expose command help** — Every supported non-test script directly under `scripts/` is a public command entry point that exits successfully for `-h` and `--help` and prints useful usage or help text. A local entrypoint may delegate that behaviour through the declared, vendored `ki-bootstrap:educator` module or the local `govern.ts` command dispatcher. Private reusable modules belong under `scripts/internal/`; only explicitly published cross-skill modules belong under `scripts/shared/`. (AS, KI)
-  - _Review prompt:_ Does each top-level command stop and show useful help for `-h` and `--help` without causing side effects?
+- **SCRIPT-8 [M-heuristic + J] — top-level scripts are necessary public commands** — Every supported non-test script directly under `scripts/` is a necessary public command whose capability sits outside governed rubric execution. It exits successfully for `-h` and `--help`, prints useful usage, handles expected errors, and has focused tests. Private implementation belongs under `scripts/internal/`; published or materialised compile-time modules belong under `scripts/shared/`; rubric behaviour belongs under `scripts/rubric/`; generic execution belongs to `ki`. (AS, KI)
+  - _Review prompt:_ Is each top-level script still a necessary, tested public command at the correct ownership boundary, with useful help and expected-error handling?
 
-## KI-CHECKER — Knowledge Islands checker contract
+## KI-CHECKER — Knowledge Islands rubric contract
 
-→ [standard](checker-contract.md)
+→ [standard](standards-rubric-authoring.md)
 
-Knowledge Islands packaging and checker responsibilities.
+Knowledge Islands catalogue, session, and packaging responsibilities.
 
-- **KI-CHECKER-1 [J] — governance checkers receive the repository root and scope themselves** — A governance `audit`/`conform` is invoked with the **repo root** (`bun .ki/bootstrap/checkers/<skill>/scripts/govern.ts audit .`), not its own content sub-directory. It must therefore **resolve its own scope under the arg** (`docs/features`, `docs/roadmap`, `docs/decisions`, `memory/`, …) and emit a single `NOT_APPLICABLE` result, then stop, when that scope is absent — rather than treating the arg as its sub-directory (which scans the whole repo and flags unrelated files, e.g. `ROADMAP.md`) or scanning the root and vacuously passing on zero files. Mirrors `ki-engineering` (no `package.json` → `NOT_APPLICABLE`) and `ki-website-cloudflare` (no `wrangler` → `NOT_APPLICABLE`). This is what makes the coverage-scoped aggregate `ki:audit` (ADR-KI-HARNESS-007) a clean gate. (KI)
-  - _Review prompt:_ Does a governance checker receive the repository root, resolve its own scope, and stop with one NOT_APPLICABLE result when that scope is absent?
-- **KI-CHECKER-2 [M] — skill script imports remain inside its own payload** — A skill's `scripts/**/*.ts` files contain no static `from`, dynamic `import()`, or CommonJS `require()` relative import that resolves outside its own `scripts/` directory. A portable rubric dependency is copied into `scripts/shared/rubric.ts`, so every rubric item and context remains typecheckable inside the skill root. (KI)
+- **KI-CHECKER-1 [J] — rubric sessions scope subjects beneath the repository root** — `ki repo audit` and `ki repo conform` pass the repository root to `createSession`. The skill discovers only its governed subjects beneath that root and represents an absent scope explicitly with `NOT_APPLICABLE`; it does not reinterpret the root as its content directory, scan unrelated files, or claim a vacuous pass. (standards-rubric-authoring.md#context-and-evidence, standards-rubric-authoring.md#host-and-session-boundary)
+  - _Review prompt:_ Does the rubric session discover only its governed subjects and represent an absent scope explicitly?
+- **KI-CHECKER-2 [M] — skill implementation imports remain inside its own payload** — A skill's `scripts/**/*.ts` files contain no static `from`, dynamic `import()`, or CommonJS `require()` relative import that resolves outside its own `scripts/` directory. A portable rubric dependency is copied into `scripts/shared/rubric.ts`, so every rubric item and context remains typecheckable inside the skill root. (KI)
 - **KI-CHECKER-3 [M] — ki-skills publishes the portable rubric contract** — `ki-skills` publishes the sole portable shared dependency, `scripts/shared/rubric.ts`, declared as `ki-shared-modules: [rubric]`. It provides catalogue authoring types for independently installed skills; `ki` owns execution, reporting, and transaction handling. The provider never declares a dependency on itself. (ADR-KI-HARNESS-SKILLS-012)
-- **KI-CHECKER-4 [M] — structured rubric items follow the uniform family layout** — `scripts/rubric/items/index.ts` is catalogue wiring only. Each family is imported from one semantic family module, which exports only that complete ordered `RubricFamily`; item constants and helpers remain private. Rule definitions and execution callbacks do not live in the catalogue index. (rubric-authoring.md#rubric-families-and-items)
+- **KI-CHECKER-4 [M] — structured rubric items follow the uniform family layout** — `scripts/rubric/items/index.ts` is catalogue wiring only. Each family is imported from one semantic family module, which exports only that complete ordered `RubricFamily`; item constants and helpers remain private. Rule definitions and execution callbacks do not live in the catalogue index. (standards-rubric-authoring.md#rubric-families-and-items)
 - **KI-CHECKER-5 [M] — shared and internal script packaging is explicit** — Private implementation belongs under `scripts/internal/`; cross-skill modules belong under `scripts/shared/`, whose non-test entries must exactly match the modules published through `ki-shared-modules:` or materialised through `ki-shared-dependencies:`. (KI)
 
 ## KI-LINK — Knowledge Islands linking & portability
 
-→ [standard](standards.md#13-knowledge-islands-linking--portability)
+→ [standard](standards-knowledge-islands.md#1-linking-and-portability)
 
 Knowledge Islands link and toolchain portability.
 
@@ -206,7 +206,7 @@ Knowledge Islands link and toolchain portability.
 
 ## PORT — Runtime portability
 
-→ [standard](standards.md#16-runtime-portability)
+→ [standard](standards-knowledge-islands.md#4-runtime-portability)
 
 Portable contracts make runtime-specific boundaries explicit.
 
@@ -214,7 +214,7 @@ Portable contracts make runtime-specific boundaries explicit.
 
 ## KI-SHAPE — Knowledge Islands skill shape
 
-→ [standard](standards.md#14-knowledge-islands-skill-shape)
+→ [standard](standards-knowledge-islands.md#2-skill-shape)
 
 The common shape of a Knowledge Islands governance skill.
 
@@ -222,28 +222,27 @@ The common shape of a Knowledge Islands governance skill.
   - _Review prompt:_ Does this standard skill resolve base bindings at runtime without hard-coding one base?
 - **KI-SHAPE-2 [M-heuristic + J] — skills compose rather than extend** — **Composition is the only inter-skill relationship — the base-coupled extension pattern is retired.** A skill builds on another by running the sibling's checker/mode **in sequence** and adding its delta (never importing it), and **declares the edge** — naming the sibling and the run order in its AUDIT mode. What a base needs differently is **declared, not forked**: data in the repo's own `.ki-config` table (read validate-down), prose in its `CLAUDE.md` — never a `<base>-kb`-style skill that takes the shared modes by name. _Delegation between two standards (kb → streams) is composition at sub-scope._ The linter flags **endorsement of the retired pattern** (telling a base to ship/"prefer" an extension skill, or that a skill "delegates the modes back" / "extends this one") as a mechanical heuristic; the **[J]** gate is that no skill in the set models a relationship as a base-coupled extension. (ki-agentic-harness README, `ki-engineering`)
   - _Review prompt:_ Does every inter-skill relationship use declared composition rather than base-coupled extension?
-- **KI-SHAPE-3 [J] — the skill declares its kind** — The skill declares its **kind** — **governance** or **process** — clearly (ADR-KI-HARNESS-SKILLS-006). A **governance skill** holds a house standard: it exposes the universal modes (KI-SHAPE-5) and, in a Knowledge Islands repo, the four-file shape (KI-SHAPE-6). A **process skill** drives an action or lifecycle rather than holding a standard: it is lightweight, may bundle a helper `scripts/` and a `references/` procedure, and is **exempt** from the governance four-file shape and universal modes — its mode count follows its own lifecycle and it exposes HELP only optionally. Both kinds are dual-invocable (`/<name>` and model-triggered); a process skill is a slash command with a script and references attached. (ki-agentic-harness README, ADR-KI-HARNESS-SKILLS-006)
+- **KI-SHAPE-3 [J] — the skill declares its kind** — The skill declares its **kind** — **governance** or **process** — clearly (ADR-KI-HARNESS-SKILLS-006). A **governance skill** holds a house standard and exposes the universal modes (KI-SHAPE-5). A **process skill** drives an action or lifecycle rather than holding a standard: it is lightweight, may bundle a helper `scripts/` and a `references/` procedure, and is exempt from universal governance modes — its mode count follows its own lifecycle and it exposes HELP only optionally. Both kinds use the closed Knowledge Islands reference vocabulary (KI-SHAPE-6) and are dual-invocable (`/<name>` and model-triggered). (ki-agentic-harness README, ADR-KI-HARNESS-SKILLS-006)
   - _Review prompt:_ Does the skill correctly and clearly declare its governance or process kind?
 - **KI-SHAPE-4 [J] — a skill validates only its own configuration table** — A skill that reads the shared `.ki-config.toml` consumes and **validates only its own `[<skill>]` table** — warns on a key it doesn't recognise, advises dropping one that merely restates a default — and never inspects another skill's table. Validate down, ignore across. (contract defined by `ki-repo`)
   - _Review prompt:_ Does this skill validate only its own configuration table and ignore unrelated tables?
-- **KI-SHAPE-5 [J] — governance skills expose universal modes** — A **governance skill** (one that holds a standard) exposes the universal modes **AUDIT** + **CONFORM** + **EDUCATE** + **REFRESH** — EDUCATE scaffolds a new artifact (or brings an off-standard one onto the floor from scratch), its mechanical half being the per-skill `scripts/educate.ts` (the EDUCATE counterpart to `audit-*.ts`, a thin delegator into the central chain engine); any further modes (`OPTIMISE` to push a compliant artifact from the floor toward excellent, and operational modes like kb's note-ops) are skill-specific. Modes are named, not lettered, and ordered alphabetically in the body and `argument-hint`. (ki-agentic-harness README)
+- **KI-SHAPE-5 [J] — governance skills expose universal modes** — A **governance skill** (one that holds a standard) exposes the universal modes **AUDIT** + **CONFORM** + **EDUCATE** + **REFRESH**. AUDIT and CONFORM run through the skill's hosted rubric; EDUCATE teaches or creates the governed artifact from that standard; REFRESH re-anchors the standard to its sources. Further modes (`OPTIMISE` to push a compliant artifact from the floor toward excellent, and operational modes like kb's note-ops) are skill-specific. Modes are named, not lettered, and ordered alphabetically in the body and `argument-hint`. (ki-agentic-harness README)
   - _Review prompt:_ Does this governance skill expose the universal modes with appropriate additional modes only?
-- **KI-SHAPE-6 [J] — governance skills use the KI file shape** — _Governance-skill file shape — Knowledge Islands repos only, for now._ A governance skill **shipped in a Knowledge Islands repo** (one carrying a `.ki-config.toml`) uses the shared names **`references/standards.md`** for its primary normative reference, **`references/rubric.md`** for pass/fail criteria tagged **[M]**/**[J]**, and **`references/sources.md`** for provenance with `last reviewed` dates (see **LONG-1**). Optional worked examples use `exemplars.md`; independently invoked procedures use `mode-<verb>.md`, co-locating tightly coupled modes. A genuinely separate secondary normative topic alone retains a descriptive `<topic>-standards.md` filename; contracts, formats, frameworks, and guides remain descriptively named. Universal governance executables are bare `scripts/govern.ts` and `scripts/educate.ts`; domain-specific helpers remain descriptive. A skill tracking a moving external spec also keeps a current-state **`## Last review`** block (pinned revision, confirmations, open watch-items), overwritten each refresh. A governance skill outside a Knowledge Islands repo is exempt until the convention is generalised. (ki-agentic-harness README)
-  - _Review prompt:_ Does this KI governance skill use the required reference and executable file shape?
-- **KI-SHAPE-7 [M-heuristic + J] — behaviour-changing skills define and check their anchor** — _A behaviour-changing skill defines its gate — and checks the anchor._ A skill that changes a **default behaviour** — installs a gate, a standing "always do X before Y" rule, or a routing intercept — cannot rely on its own `description` to fire it, because skills load **on demand** and the triggering request often won't mention the skill (e.g. "edit this note" never says "proposal"). Such a skill must **anchor the behaviour in always-loaded context** (the base/repo `CLAUDE.md` / `AGENTS.md`, or a companion skill that _does_ reliably load handing off to it), **and its checker must verify the anchor is present** so it can't be silently lost. The linter surfaces candidates mechanically (strong gate phrasing in the body or a reference file — body + references scanned as one unit, since mode-routing lifts procedures out of the body — without an anchor its checker reads); the **[J]** call is whether the skill genuinely changes a default and so _needs_ a gate. Realised as `ki-kb-streams`' **GATE-1** (the Enactment gate) and `ki-kb`'s **MEM-2** (the memory cascade); `ki-repo`'s `.ki-config.toml` marker is the same pattern (anchor + checked). (checker-contract.md, checker-response.md)
-  - _Review prompt:_ Does a behaviour-changing skill have an appropriate always-loaded anchor that its checker verifies?
-- **KI-SHAPE-8 [M + J] — governance checkers emit the canonical checker response** — _Governance-skill checker contract._ With no reporter selected, a governance skill's audit and conform scripts emit the complete canonical checker response as JSONL. A direct human invocation may explicitly select the shared local `reporter` module, which filters presentation without suppressing checks or changing exit status. The wrapper imports its local compile-time rubric contract from `scripts/shared/rubric.ts` and has no private terminal renderer, `--json` switch, report-file output, or cross-skill import. Exit code is non-zero if and only if a mechanical finding is `FAIL`; `WARN`, `FIXED`, `INFO`, `NOT_APPLICABLE`, and `PASS` all exit 0. Judgment aspects emit no synthetic findings; the summary reports their unevaluated count, including hybrid items. Findings use the canonical levels defined in [the checker contract](checker-contract.md). The linter mechanically **[M]** verifies the local checker imports and response emission; the source-harness checker test verifies stream shape, summary agreement, judgment-count coverage, and exit-code behaviour. (checker-contract.md, checker-response.md)
-  - _Review prompt:_ Does the checker fully follow the canonical checker and response contracts beyond the mechanical checks?
-- **KI-SHAPE-9 [M-heuristic + J] — mechanical work belongs in the structured rubric** — _Mechanical work belongs in the structured rubric, not in tokens._ A criterion a script can decide deterministically — no judgment, no AI benefit — is tagged **[M]** and implemented in `scripts/rubric/items/`; a **[J]** tag is earned by the judgment a criterion genuinely needs, never by "no implementation written yet". The reader's context is spent only on the **[J]** items, so a mechanical criterion left to prose, or a **[J]** the rubric already decides, is drift — it **moves into the structured rubric and flips to [M]**. The linter surfaces the mechanical heuristic — a rubric carrying **[M]** criteria but shipping no structured rubric (nor a documented toolchain delegation to a skill-scoped audit) — as a WARN; the **[J]** gate is whether each remaining **[J]** genuinely needs a reader rather than a script. ([Rubric authoring](rubric-authoring.md))
+- **KI-SHAPE-6 [M + J] — Knowledge Islands skills use the closed reference vocabulary** — _Closed reference vocabulary — Knowledge Islands skills only._ Every top-level Markdown reference is `standards-<topic>.md`, generated `rubric.md`, `sources.md`, optional `exemplars.md`, or one-mode-only `mode-<verb>.md`; a skill includes only the classes it needs. Normative formats, process doctrine, and shared mode contracts are standards. Combined mode names, bare `standards.md`, `<topic>-standards.md`, nested references, and ad hoc guide, format, or contract filenames are retired. Templates and reusable output material live in `assets/`. A skill tracking a moving external spec keeps a current-state `## Last review` block in `sources.md`. Skills outside the Knowledge Islands set are exempt. (ki-agentic-harness README)
+  - _Review prompt:_ Does each retained reference class serve a distinct reader need, with templates and executable helpers elsewhere?
+- **KI-SHAPE-7 [M-heuristic + J] — behaviour-changing skills define and check their anchor** — _A behaviour-changing skill defines its gate — and checks the anchor._ A skill that changes a **default behaviour** — installs a gate, a standing "always do X before Y" rule, or a routing intercept — cannot rely on its own `description` to fire it, because skills load **on demand** and the triggering request often won't mention the skill (e.g. "edit this note" never says "proposal"). Such a skill must **anchor the behaviour in always-loaded context** (the base/repo `CLAUDE.md` / `AGENTS.md`, or a companion skill that _does_ reliably load handing off to it), **and its rubric must verify the anchor is present** so it can't be silently lost. The hosted audit surfaces candidates mechanically (strong gate phrasing in the body or a reference file — body + references scanned as one unit, since mode-routing lifts procedures out of the body — without an anchor its rubric reads); the **[J]** call is whether the skill genuinely changes a default and so _needs_ a gate. Realised as `ki-kb-streams`' **GATE-1** (the Enactment gate) and `ki-kb`'s **MEM-2** (the memory cascade); `ki-repo`'s `.ki-config.toml` marker is the same pattern (anchor + checked). (standards-knowledge-islands.md §2, standards-rubric-authoring.md#context-and-evidence)
+  - _Review prompt:_ Does a behaviour-changing skill have an appropriate always-loaded anchor that its rubric verifies?
+- **KI-SHAPE-9 [M-heuristic + J] — mechanical work belongs in the structured rubric** — _Mechanical work belongs in the structured rubric, not in tokens._ A criterion a script can decide deterministically — no judgment, no AI benefit — is tagged **[M]** and implemented in `scripts/rubric/items/`; a **[J]** tag is earned by the judgment a criterion genuinely needs, never by "no implementation written yet". The reader's context is spent only on the **[J]** items, so a mechanical criterion left to prose, or a **[J]** the rubric already decides, is drift — it **moves into the structured rubric and flips to [M]**. The linter surfaces the mechanical heuristic — a rubric carrying **[M]** criteria but shipping no structured rubric (nor a documented toolchain delegation to a skill-scoped audit) — as a WARN; the **[J]** gate is whether each remaining **[J]** genuinely needs a reader rather than a script. ([Rubric authoring](standards-rubric-authoring.md))
   - _Review prompt:_ Do remaining judgment criteria genuinely require review rather than deterministic checking?
-- **KI-SHAPE-10 [J] — skills do not assume private user configuration** — _A skill must not assume personal runtime configuration._ A Knowledge Islands skill is installed by any contributor, not only its author. It must not assume the user has any particular private configuration or imported topic files — plan-mode gates, house style rules, footnote conventions, workflow preferences. Any behaviour a skill requires beyond what the open spec guarantees must be **anchored in always-loaded repo context** (`CLAUDE.md`, `AGENTS.md`, or a KI-SHAPE-7-style companion hook) — not in the author's private config. Where a skill cross-checks a convention that _might_ live in personal config, it must degrade gracefully rather than silently rely on that content being present. (standards.md §14)
+- **KI-SHAPE-10 [J] — skills do not assume private user configuration** — _A skill must not assume personal runtime configuration._ A Knowledge Islands skill is installed by any contributor, not only its author. It must not assume the user has any particular private configuration or imported topic files — plan-mode gates, house style rules, footnote conventions, workflow preferences. Any behaviour a skill requires beyond what the open spec guarantees must be **anchored in always-loaded repo context** (`CLAUDE.md`, `AGENTS.md`, or a KI-SHAPE-7-style companion hook) — not in the author's private config. Where a skill cross-checks a convention that _might_ live in personal config, it must degrade gracefully rather than silently rely on that content being present. (standards-knowledge-islands.md §2)
   - _Review prompt:_ Does the skill avoid assuming private personal configuration?
 - **KI-SHAPE-11 [M] — governance skills expose HELP** — _Exposes the universal HELP mode._ Every governance skill's `argument-hint` lists a `help` verb, so the no-mode default and the `help` / `-h` / `?` pure-explain form are discoverable (ADR-KI-HARNESS-SKILLS-001). A skill derives its help from its own frontmatter and operating-mode prose; it carries no generated wrapper or separate HELP payload. The linter verifies the `help` token; the prose HELP semantics are KI-INVOKE-1 **[J]**. (ADR-KI-HARNESS-SKILLS-001)
 - **KI-SHAPE-12 [M] — governance mode vocabulary is canonical and complete** — _Mode vocabulary is canonical and complete._ A governance skill exposes **AUDIT**, **CONFORM**, **EDUCATE**, **REFRESH** and **HELP** spelled exactly so — a governance skill missing any universal verb from its `argument-hint` (EDUCATE is the common gap) **WARNs**; `NEW`, `OPTIMISE`, and operational verbs are additive, never substitutes for a universal mode (a collection skill exposes both EDUCATE and NEW). The current source-entrypoint migration invariant is validated by KI-SHAPE-15; direct delivery resolves registered operations from the verified collection. Process skills are exempt throughout. (ADR-KI-HARNESS-SKILLS-001, ADR-KI-HARNESS-SKILLS-006, ADR-KI-HARNESS-007)
 - **KI-SHAPE-13 [M] — mode headings have a canonical structure** — _Mode-heading structure._ A governance skill presents its modes under a **single `## Operating modes` H2** (the home for the shared no-mode/HELP intro), with each mode as a **`### Mode <NAME>` H3** or — for router skills with many operational verbs — a **`| Mode | … |` dispatch table** inside that section. The linter WARNs on a flat `## Mode X` H2, a bare `### X` heading missing the `Mode` prefix, and any `argument-hint` verb absent from the Operating-modes body (hint ⊆ body). Process skills are exempt. (ADR-KI-HARNESS-SKILLS-001)
 - **KI-SHAPE-14 [M] — REFRESH states its ownership precondition** — _REFRESH states its ownership precondition._ REFRESH's write target is normally the skill's own canonical files under `skills/<name>/` in `ki-agentic-harness` — a governance skill's `### Mode REFRESH` section (or, per REF-5, its `references/mode-refresh.md`) must name `ki-agentic-harness` as the only place it writes, and instruct the agent to stop and redirect when invoked from a repo where the skill is merely vendored (to the harness, or — for a pattern recurring across bases — to `ki-kb`'s IMPROVE mode). The one committed repository-local source at `.agents/skills/ki-self/` instead names that local source and stops to promote reusable rules to their shared owner. Missing either half **WARNs**. Process skills (KI-SHAPE-3) are exempt; a skill with no REFRESH section at all is already caught by KI-SHAPE-12. (ADR-KI-HARNESS-SKILLS-001, ADR-KI-HARNESS-SKILLS-006)
-- **KI-SHAPE-15 [M] — governance skills expose no legacy runner entrypoints** — _Direct governance operation shape._ A governance skill exposes its rubric catalogue from `scripts/rubric/items/index.ts`; `ki` resolves and hosts that catalogue from the verified installed harness. `scripts/govern.ts`, `scripts/educate.ts`, `scripts/audit.ts`, and `scripts/conform.ts` are retired, with no compatibility runner or fallback. REFRESH is harness-only. Process skills and the committed repository-local `.agents/skills/ki-self/` source are exempt. (standards.md §14, ADR-KI-HARNESS-007)
-- **KI-SHAPE-16 [M-heuristic] — target files have declared ownership** — _Declared file ownership, three tiers._ A skill that writes a house-standard file into a **target repo's** working tree (not `.ki/bootstrap/`, which has its own manifest hash mechanism) declares that relationship in frontmatter, alongside `ki-depends-on:`, under one of three keys: `requires:` (must exist, doesn't create/control it — any number of skills may share a `requires:` filename), `contributes:` (writes/expects only its own section of a shared file — any number of skills may share a `contributes:` filename, e.g. `.ki-config.toml`, `package.json`), or `owns:` (sole author of the whole file — **exclusive**, at most one skill per filename). The linter runs three heuristic passes: (1) per-skill, any filename passed to a literal `scaffold(...)`/`syncOwned(...)` call in the skill's own CONFORM implementation must appear under that skill's `owns:` — WARN if scaffolded-but-undeclared; (2) per-skill, every filename declared under `owns:`/`contributes:`/`requires:` must appear literally somewhere in that skill's own checker implementation — WARN if declared-but-unaudited; (3) cross-skill, no filename may appear under `owns:` in more than one skill's frontmatter — WARN naming both skills. Thin entry points may delegate to private `scripts/rubric/` modules; vendored dependencies do not count as the skill's own implementation. Heuristic: only `scaffold(`/`syncOwned(` call sites are matched, so a skill using a differently named write helper needs it renamed or the pattern extended. (KI)
+- **KI-SHAPE-15 [M] — governance skills expose no legacy runner entrypoints** — _Direct governance operation shape._ A governance skill exposes its rubric catalogue from `scripts/rubric/items/index.ts`; `ki` resolves and hosts that catalogue from the verified installed harness. `scripts/govern.ts`, `scripts/educate.ts`, `scripts/audit.ts`, and `scripts/conform.ts` are retired, with no compatibility runner or fallback. REFRESH is harness-only. Process skills and the committed repository-local `.agents/skills/ki-self/` source are exempt. (standards-knowledge-islands.md §2, ADR-KI-HARNESS-007)
+- **KI-SHAPE-16 [M-heuristic + J] — target files have declared ownership** — _Declared file ownership, three tiers._ A skill whose rubric reads or changes a house-standard file in the **target repository's** working tree declares that relationship in frontmatter, alongside `ki-depends-on:`, under one of three keys: `requires:` (must exist, doesn't create/control it — any number of skills may share a `requires:` filename), `contributes:` (writes/expects only its own section of a shared file — any number of skills may share a `contributes:` filename, e.g. `.ki-config.toml`, `package.json`), or `owns:` (sole author of the whole file — **exclusive**, at most one skill per filename). The mechanical heuristic verifies that declared filenames occur in the skill's production implementation and that no filename is owned by more than one skill. Judgment confirms that every session proposal and governed read has the appropriate declaration. (KI)
+  - _Review prompt:_ Do all governed target-file reads and session proposals carry the appropriate ownership declaration?
 - **KI-SHAPE-17 [M] — dependencies are declared explicitly** — _Explicit dependency declaration._ Every skill declares `ki-depends-on:` as a single-line flow list. `ki-depends-on: []` is the required explicit form when a skill has no governance dependencies. The listed capability names and a governed repository's matching `.ki-config.toml` tables are validated by the dependency graph and bootstrap; the skill checker enforces the local declaration shape. (ADR-KI-HARNESS-SKILLS-006)
 
 ## KI-INVOKE — Invocation protocol
@@ -257,7 +256,7 @@ Safe invocation for a skill with named modes.
 
 ## PROC — Process / meta
 
-→ [standard](standards.md#11-process--evaluation)
+→ [standard](standards-agent-skills.md#11-process--evaluation)
 
 Evaluation and real-usage evidence for the skill.
 
@@ -268,7 +267,7 @@ Evaluation and real-usage evidence for the skill.
 
 ## COLL — Cross-skill collision
 
-→ [standard](standards.md#15-cross-skill-collision)
+→ [standard](standards-knowledge-islands.md#3-cross-skill-collision)
 
 Selection boundaries across a set of skills.
 
@@ -278,7 +277,7 @@ Selection boundaries across a set of skills.
 
 ## LONG — Longevity
 
-→ [standard](standards.md#12-longevity)
+→ [standard](standards-agent-skills.md#12-longevity)
 
 Refresh paths and cadence for knowledge that changes over time.
 

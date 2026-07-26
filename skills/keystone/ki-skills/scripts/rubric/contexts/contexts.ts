@@ -45,8 +45,6 @@ export type ScriptHelpEvidence = {
   declaresShortHelp: boolean
   declaresLongHelp: boolean
   declaresUsageText: boolean
-  delegatesSharedEducator: boolean
-  delegatesGovern: boolean
 }
 
 export type ScriptsRubricContext = {
@@ -97,9 +95,6 @@ export type KiCheckerRubricContext = {
   legacyLibPresent: boolean
   presentSharedModules: readonly string[]
   rubricModuleExists: boolean
-  checkerModuleExists: boolean
-  reporterModuleExists: boolean
-  checkerReporterModuleExists: boolean
   structuredRubricRequired: boolean
   itemsIndexExists: boolean
   itemsIndexDefinesRules: boolean
@@ -115,22 +110,19 @@ export type CollisionRubricContext = { targets: readonly CollisionTarget[] }
 
 export type LongevityRubricContext = RefreshContext
 
-type CheckerContract = {
-  name: string
-  usesCanonicalChecker: boolean
-}
-
 type OwnershipCollision = {
   file: string
   skills: readonly string[]
 }
 
 export type KiShapeSkillContext = {
+  knowledgeIslandsSkill: boolean
   governanceSkill: boolean
   localGovernanceSource: boolean
   argumentHint: string | undefined
   hintVerbs: readonly string[]
   scriptNames: readonly string[]
+  referencePaths: readonly string[]
   operatingModesSection: string | null
   bodyModes: ReadonlySet<string>
   operatingModesIntro: string
@@ -140,18 +132,16 @@ export type KiShapeSkillContext = {
   retiredExtensionFiles: readonly string[]
   strongGate: boolean
   anchorMentioned: boolean
-  checkerReadsAnchor: boolean
+  rubricReadsAnchor: boolean
   mechanicalRubricCount: number
   hasMechanicalImplementation: boolean
   documentsMechanicalDelegation: boolean
-  checkers: readonly CheckerContract[]
   dependsOnPresent: boolean
   dependsOn: string
   owns: readonly string[]
   contributes: readonly string[]
   requires: readonly string[]
-  scaffoldedFiles: readonly string[]
-  checkerSource: string | null
+  implementationSource: string | null
 }
 
 export type KiShapeRubricContext = {
@@ -170,9 +160,13 @@ export const createKiShapeFrontmatterEvidence = ({
   description: string
   scriptNames: readonly string[]
   localGovernanceSource?: boolean
-}): Pick<KiShapeSkillContext, 'governanceSkill' | 'localGovernanceSource' | 'argumentHint' | 'hintVerbs' | 'scriptNames'> => {
+}): Pick<
+  KiShapeSkillContext,
+  'knowledgeIslandsSkill' | 'governanceSkill' | 'localGovernanceSource' | 'argumentHint' | 'hintVerbs' | 'scriptNames'
+> => {
   const argumentHint = frontmatter.keys.get('argument-hint')
   return {
+    knowledgeIslandsSkill: (frontmatter.keys.get('name') ?? '').startsWith('ki-'),
     governanceSkill: !isProcessSkill(description),
     localGovernanceSource,
     argumentHint,
@@ -182,11 +176,13 @@ export const createKiShapeFrontmatterEvidence = ({
 }
 
 const emptyKiShapeSkill: KiShapeSkillContext = {
+  knowledgeIslandsSkill: false,
   governanceSkill: false,
   localGovernanceSource: false,
   argumentHint: undefined,
   hintVerbs: [],
   scriptNames: [],
+  referencePaths: [],
   operatingModesSection: null,
   bodyModes: new Set(),
   operatingModesIntro: '',
@@ -196,18 +192,16 @@ const emptyKiShapeSkill: KiShapeSkillContext = {
   retiredExtensionFiles: [],
   strongGate: false,
   anchorMentioned: false,
-  checkerReadsAnchor: false,
+  rubricReadsAnchor: false,
   mechanicalRubricCount: 0,
   hasMechanicalImplementation: false,
   documentsMechanicalDelegation: false,
-  checkers: [],
   dependsOnPresent: false,
   dependsOn: '',
   owns: [],
   contributes: [],
   requires: [],
-  scaffoldedFiles: [],
-  checkerSource: null
+  implementationSource: null
 }
 
 export const createKiShapeContext = ({

@@ -67,7 +67,7 @@ export const SIZE: RubricFamily<KiSkillsRubricContext, SizeRubricContext> = {
   code: 'SIZE',
   title: 'Body: size & conciseness',
   description: 'The progressive-disclosure budget for a skill body.',
-  standard: 'standards.md#7-size--conciseness',
+  standard: 'standards-agent-skills.md#7-size--conciseness',
   selectContext: (context: KiSkillsRubricContext) => selectKiSkillsContext(context, 'size'),
   items: [SIZE_1, SIZE_2, SIZE_3, SIZE_4]
 }

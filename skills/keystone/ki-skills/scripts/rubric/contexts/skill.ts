@@ -48,6 +48,20 @@ const listScriptFiles = (scriptsDirectory: string): string[] => {
   return scriptFiles
 }
 
+const listReferenceFiles = (referencesDirectory: string): string[] => {
+  if (!existsSync(referencesDirectory)) return []
+  const files: string[] = []
+  const walk = (path: string): void => {
+    for (const entry of readdirSync(path, { withFileTypes: true })) {
+      const entryPath = join(path, entry.name)
+      if (entry.isDirectory()) walk(entryPath)
+      else if (entry.isFile()) files.push(relative(referencesDirectory, entryPath))
+    }
+  }
+  walk(referencesDirectory)
+  return files.sort()
+}
+
 const rubricFamilyModules = (
   scriptsDirectory: string
 ): {
@@ -164,37 +178,19 @@ const createKiShapeEvidence = (
   const skillText = `${body}\n${referenceText}`
   const scriptsDirectory = join(skillDirectory, 'scripts')
   const scriptNames = existsSync(scriptsDirectory) ? readdirSync(scriptsDirectory) : []
+  const referencePaths = listReferenceFiles(join(skillDirectory, 'references'))
   const refreshReference = join(skillDirectory, 'references', 'mode-refresh.md')
   const refreshSection = section?.match(/^###\s+Mode\s+REFRESH\b[\s\S]*?(?=^###\s+Mode\s+|$(?![\s\S]))/im)?.[0] ?? ''
   const rubricItemSources = listScriptFiles(join(scriptsDirectory, 'rubric', 'items'))
     .map((file) => readFileSync(file, 'utf8'))
     .join('\n')
-  const checkerFiles = listScriptFiles(scriptsDirectory).filter((file) => !file.includes(`${join(scriptsDirectory, 'vendored')}/`))
-  const checkerSource = checkerFiles.map((file) => readFileSync(file, 'utf8')).join('\n')
-  const conformSource = checkerFiles
-    .filter((file) => basename(file) === 'conform.ts' || file.includes(`${join(scriptsDirectory, 'rubric')}/`))
+  const implementationSource = listScriptFiles(scriptsDirectory)
     .map((file) => readFileSync(file, 'utf8'))
     .join('\n')
-    .replace(/\/\/.*$/gm, '')
-  const scaffoldedFiles = [...conformSource.matchAll(/\b(?:scaffold|syncOwned)\(\s*['"]([^'"]+)['"]/g)].map((match) => match[1] as string)
-  const checkers = scriptNames
-    .filter((name) =>
-      scriptNames.includes('govern.ts')
-        ? name === 'govern.ts'
-        : name === 'audit.ts' || name.startsWith('audit-') || name.startsWith('lint-')
-    )
-    .map((name) => {
-      const source = readFileSync(join(scriptsDirectory, name), 'utf8')
-      return {
-        name,
-        usesCanonicalChecker:
-          (/from\s+['"][^'"]*checker\.ts['"]/.test(source) && /\b(?:runChecker|planChecker)\b/.test(source)) ||
-          (/from\s+['"][^'"]*govern\.ts['"]/.test(source) && /\bdefine(?:Structured)?GovernedChecker\b/.test(source))
-      }
-    })
 
   return {
     ...createKiShapeFrontmatterEvidence({ frontmatter, description, scriptNames, localGovernanceSource }),
+    referencePaths,
     operatingModesSection: section,
     bodyModes: extractBodyModes(section),
     operatingModesIntro: section?.split(/^###\s+|^\s*\|/m)[0] ?? '',
@@ -208,21 +204,17 @@ const createKiShapeEvidence = (
       .map((file) => file.slice(skillDirectory.length + 1)),
     strongGate: /do not edit[^.\n]*directly|go through (a )?proposal|standing directive|installing the gate/i.test(stripCode(skillText)),
     anchorMentioned: /CLAUDE\.md|AGENTS\.md|always-loaded|installing the gate|\banchor/i.test(skillText),
-    checkerReadsAnchor: scriptNames.some(
-      (name) => name.endsWith('.ts') && /CLAUDE\.md|AGENTS\.md/.test(readFileSync(join(scriptsDirectory, name), 'utf8'))
-    ),
+    rubricReadsAnchor: /CLAUDE\.md|AGENTS\.md/.test(implementationSource),
     mechanicalRubricCount: (rubricItemSources.match(/\bmechanical\s*:/g) ?? []).length,
     hasMechanicalImplementation:
       scriptNames.some((name) => name.endsWith('.ts')) || existsSync(join(scriptsDirectory, 'rubric', 'items', 'index.ts')),
     documentsMechanicalDelegation: /lint:md|toolchain (?:already )?enforces/i.test(skillText),
-    checkers,
     dependsOnPresent: frontmatter.present.has('ki-depends-on'),
     dependsOn: (frontmatter.keys.get('ki-depends-on') ?? '').trim(),
     owns: frontmatterList(frontmatter.keys.get('owns')),
     contributes: frontmatterList(frontmatter.keys.get('contributes')),
     requires: frontmatterList(frontmatter.keys.get('requires')),
-    scaffoldedFiles,
-    checkerSource: checkerFiles.length > 0 ? checkerSource : null
+    implementationSource: implementationSource || null
   }
 }
 
@@ -294,9 +286,6 @@ export const createSkillRubricContext = (directory: string, capabilities: SkillW
               .sort()
           : [],
         rubricModuleExists: existsSync(join(sharedDirectory, 'rubric.ts')),
-        checkerModuleExists: existsSync(join(sharedDirectory, 'checker.ts')),
-        reporterModuleExists: existsSync(join(sharedDirectory, 'reporter.ts')),
-        checkerReporterModuleExists: existsSync(join(sharedDirectory, 'checker-reporter.ts')),
         structuredRubricRequired: name === 'ki-skills' || frontmatter.present.has('ki-shared-dependencies'),
         ...familyEvidence
       },

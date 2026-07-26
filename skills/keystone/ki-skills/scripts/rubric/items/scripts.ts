@@ -60,9 +60,9 @@ const SCRIPT_7: RubricItem<ScriptsRubricContext> = {
 
 const SCRIPT_8: RubricItem<ScriptsRubricContext> = {
   code: 'SCRIPT-8',
-  title: 'top-level scripts expose command help',
+  title: 'top-level scripts are necessary public commands',
   description:
-    'Every supported non-test script directly under `scripts/` is a public command entry point that exits successfully for `-h` and `--help` and prints useful usage or help text. A local entrypoint may delegate that behaviour through the declared, vendored `ki-bootstrap:educator` module or the local `govern.ts` command dispatcher. Private reusable modules belong under `scripts/internal/`; only explicitly published cross-skill modules belong under `scripts/shared/`.',
+    'Every supported non-test script directly under `scripts/` is a necessary public command whose capability sits outside governed rubric execution. It exits successfully for `-h` and `--help`, prints useful usage, handles expected errors, and has focused tests. Private implementation belongs under `scripts/internal/`; published or materialised compile-time modules belong under `scripts/shared/`; rubric behaviour belongs under `scripts/rubric/`; generic execution belongs to `ki`.',
   sources: ['AS', 'KI'],
   mechanical: {
     level: 'FAIL',
@@ -73,13 +73,11 @@ const SCRIPT_8: RubricItem<ScriptsRubricContext> = {
         if (helpEvidence.length === 0) return [{ status: 'NOT_APPLICABLE', message: 'the skill has no top-level scripts' }]
         const violations = helpEvidence
           .filter(
-            ({ declaresShortHelp, declaresLongHelp, declaresUsageText, delegatesSharedEducator, delegatesGovern }) =>
-              !delegatesSharedEducator && !delegatesGovern && (!declaresShortHelp || !declaresLongHelp || !declaresUsageText)
+            ({ declaresShortHelp, declaresLongHelp, declaresUsageText }) => !declaresShortHelp || !declaresLongHelp || !declaresUsageText
           )
           .map(({ subject }) => ({
             status: 'VIOLATION' as const,
-            message:
-              'source must declare `-h`, `--help`, and useful `Usage:` text, or delegate to the local govern dispatcher or vendored educator',
+            message: 'source must declare `-h`, `--help`, and useful `Usage:` text',
             subject
           }))
         return violations.length > 0
@@ -88,14 +86,17 @@ const SCRIPT_8: RubricItem<ScriptsRubricContext> = {
       }
     }
   },
-  judgment: { prompt: 'Does each top-level command stop and show useful help for `-h` and `--help` without causing side effects?' }
+  judgment: {
+    prompt:
+      'Is each top-level script still a necessary, tested public command at the correct ownership boundary, with useful help and expected-error handling?'
+  }
 }
 
 export const SCRIPTS: RubricFamily<KiSkillsRubricContext, ScriptsRubricContext> = {
   code: 'SCRIPT',
   title: 'Scripts & executable code',
   description: 'The quality and autonomy of executable skill support.',
-  standard: 'standards.md#10-scripts',
+  standard: 'standards-agent-skills.md#10-scripts',
   selectContext: (context: KiSkillsRubricContext) => selectKiSkillsContext(context, 'scripts'),
   items: [SCRIPT_1, SCRIPT_2, SCRIPT_3, SCRIPT_4, SCRIPT_5, SCRIPT_6, SCRIPT_7, SCRIPT_8]
 }

@@ -59,7 +59,7 @@ const REF_4: RubricItem<ReferencesRubricContext> = {
 const REF_5: RubricItem<ReferencesRubricContext> = {
   code: 'REF-5',
   title: 'many-moded skills route independently invoked procedures',
-  description: `_Mode-router for many-moded skills._ A skill whose body is dominated by **independently-invoked** modes keeps the shared model + a dispatch table in \`SKILL.md\` and moves each mode's procedure to a flat \`references/mode-<name>.md\` (tightly-coupled modes co-located, e.g. AUDIT+CONFORM); behaviour anchors and the shared model stay in the body. Not required when modes are few, short, or call-chained.`,
+  description: `_Mode-router for many-moded skills._ A skill whose body is dominated by **independently-invoked** modes keeps the shared model + a dispatch table in \`SKILL.md\` and moves each mode's procedure to its own flat \`references/mode-<name>.md\`; combined mode files such as \`mode-audit-conform.md\` are split, and each procedure states its own preconditions. Behaviour anchors and the shared model stay in the body. Not required when modes are few, short, or call-chained.`,
   sources: ['BP', 'SPEC §8'],
   judgment: {
     prompt:
@@ -71,7 +71,7 @@ export const REFERENCES: RubricFamily<KiSkillsRubricContext, ReferencesRubricCon
   code: 'REF',
   title: 'Progressive disclosure & references',
   description: 'How a skill routes supporting detail into references.',
-  standard: 'standards.md#8-progressive-disclosure',
+  standard: 'standards-agent-skills.md#8-progressive-disclosure',
   selectContext: (context: KiSkillsRubricContext) => selectKiSkillsContext(context, 'references'),
   items: [REF_1, REF_2, REF_3, REF_4, REF_5]
 }

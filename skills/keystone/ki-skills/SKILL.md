@@ -9,7 +9,7 @@ argument-hint: 'audit <skill-or-repo> | conform <skill> | educate <description> 
 
 # Knowledge Islands Skills
 
-You are helping author or audit **Agent Skills** — directories with a `SKILL.md` (frontmatter + body), per the [Agent Skills open standard](https://agentskills.io/). This skill is the house rubric for what a _good_ skill looks like, plus the three modes you run over it.
+You are helping author or audit **Agent Skills** — directories with a `SKILL.md` (frontmatter + body), per the [Agent Skills open standard](https://agentskills.io/). This skill is the house rubric for what a _good_ skill looks like and the procedures that apply it.
 
 The canonical home for these skills is the **ki-agentic-harness** repository; its `README.md` covers install, the symlink workflow, and the Knowledge Islands structure. This skill governs skill _quality_, not installation.
 
@@ -22,7 +22,9 @@ Every criterion carries a mechanical aspect, a judgment aspect, or both:
 
 A hybrid criterion retains one code and shared meaning while its deterministic evidence runs mechanically and its remaining judgment is counted for later review.
 
-The conventions a good skill follows — what each is and why — live in [the Agent Skills standard](references/standards.md); the current readable criteria live in [the rubric](references/rubric.md), each citing its standard section. [Rubric authoring](references/rubric-authoring.md) defines the code-first model that makes structured rubric families the authored source of truth and `rubric.md` their generated publication. The checker protocol lives in [the checker contract](references/checker-contract.md); its Knowledge Islands-specific criteria form the rubric's `KI-CHECKER` family. The machine result returned by governance checkers is defined in [the canonical checker response](references/checker-response.md) and its executable [schema](assets/checker-response.schema.json). Load the standard and rubric before an AUDIT, CONFORM, or EDUCATE; load [candidate findings](references/candidate-findings.md) before REVIEW or EXTRACT; additionally load the rubric-authoring guide, checker contract, and checker response when writing or reviewing a governance checker.
+The portable and general conventions a good skill follows live in [the Agent Skills standard](references/standards-agent-skills.md); [the Knowledge Islands standard](references/standards-knowledge-islands.md) adds the house contract. The current readable criteria live in [the generated rubric](references/rubric.md), each citing its standard section; [the exemplars](references/exemplars.md) illustrate selected authoring choices. Load the applicable standards and rubric before an AUDIT, CONFORM, or EDUCATE, and the exemplars when a rule needs a worked example.
+
+[The rubric-authoring standard](references/standards-rubric-authoring.md) defines the code-first catalogue, session, context, and host boundary for writing or reviewing a governance rubric. Generic execution, findings, progress, transactions, and reporting belong to `ki`, not this skill. REVIEW and EXTRACT use the shared [candidate-finding standard](references/standards-candidate-findings.md) and their focused [REVIEW](references/mode-review.md) or [EXTRACT](references/mode-extract.md) procedure.
 
 ## Operating modes
 
@@ -80,9 +82,9 @@ Read and follow [the EXTRACT procedure](references/mode-extract.md). It produces
 Keep the rubric current — the standard and the community move, and this is why the skill tracks its own sources. Run on its declared cadence (see `references/sources.md`), or when asked "is the skills rubric current".
 
 1. **Read [the source list](references/sources.md)** — the tracked authoritative + community sources, each with a `last reviewed` date and what it governs. For Agent Skills, fetch its [documentation index](https://agentskills.io/llms.txt) first, reconcile the listed page inventory (add new pages and retire removed ones), then review every current page individually.
-2. **Re-fetch each source** (WebFetch/WebSearch) and **diff against the current [standard](references/standards.md) + [rubric](references/rubric.md)**: new required/optional frontmatter fields, changed caps (length, line, token budgets), new anti-patterns, deprecations. Note where sources disagree.
+2. **Re-fetch each source** (WebFetch/WebSearch) and **diff against the current [Agent Skills](references/standards-agent-skills.md) and [Knowledge Islands](references/standards-knowledge-islands.md) standards plus [rubric](references/rubric.md)**: new required/optional frontmatter fields, changed caps (length, line, token budgets), new anti-patterns, deprecations. Note where sources disagree.
 3. **Scan our own skills** in the ki-agentic-harness repo for emergent patterns that work but aren't yet codified — promote the good ones into the standard + rubric; flag drift that contradicts them.
-4. **Propose a diff** to [the standard](references/standards.md) and the structured item definitions under `scripts/rubric/items/`; update a criterion's mechanical execution when new evidence can be checked deterministically. Confirm before writing, then republish [the readable rubric](references/rubric.md) with `ki skill rubric ki-skills --write`.
+4. **Propose a diff** to the applicable standard and the structured item definitions under `scripts/rubric/items/`; update a criterion's mechanical execution when new evidence can be checked deterministically. Confirm before writing, then republish [the readable rubric](references/rubric.md) with `ki skill rubric ki-skills --write`.
 5. **Update [the source list](references/sources.md)** — bump each `last reviewed` date, add any new source, retire any dead one, and refresh the `## Last review` block (what's confirmed, open watch-items). The record of _what changed_ is the commit itself — history lives in git, not a changelog. This step is mandatory: the source list is the skill's memory of where best practice comes from.
 
 ### Mode REVIEW — assess an existing skill's evolution opportunities
@@ -96,4 +98,4 @@ Read and follow [the REVIEW procedure](references/mode-review.md). It begins wit
 - **Run the linter, then judge.** The linter owns the mechanical layer; you own the judgment layer. Reporting a mechanical failure the linter already catches, or hand-waving a judgment call the linter can't make, are both misses.
 - A WARN is not a FAIL. Line/token budgets and the third-person description heuristic are _recommendations_ — report them, but a skill can ship over a soft cap with a reason.
 - This skill audits skills, including itself. When you change the rubric, re-run Mode AUDIT on `ki-skills`.
-- Checker output conforms to the [canonical checker response](references/checker-response.md); `ki-skills` owns the shared severity ladder and checker protocol.
+- The catalogue owns criterion policy and typed outcomes; the `ki` host owns finding conversion, progress, reporting, exit status, and publication.
