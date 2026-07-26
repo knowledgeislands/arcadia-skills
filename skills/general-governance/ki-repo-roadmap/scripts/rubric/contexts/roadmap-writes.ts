@@ -362,6 +362,60 @@ function atomicWrite(path: string, content: string, expected: string | null): vo
   }
 }
 
+/**
+ * Read-only normalisation candidates for the native rubric host.
+ *
+ * The host can publish several replacements atomically, but it deliberately only
+ * replaces existing regular files.  Keep creation and directory-pruning out of
+ * this proposal: callers receive no writes when a complete legacy conform would
+ * need either operation.
+ */
+export type RoadmapReplacement = {
+  readonly path: string
+  readonly content: string
+  readonly areas: readonly ('ROAD-4' | 'PLAN-2' | 'PROJ-1')[]
+}
+
+export const roadmapReplacements = (target: string): readonly RoadmapReplacement[] => {
+  root = resolve(target)
+  roadmapDir = join(root, 'docs', 'roadmap')
+  rootRoadmap = join(root, 'ROADMAP.md')
+
+  if (!existsSync(root) || !lstatSync(root).isDirectory() || isKb()) return []
+
+  const auditResults = inspectRoadmap(root)
+  const supported = new Set(['ROAD-4', 'PLAN-2', 'PROJ-1'])
+  if (auditResults.some((finding) => finding.level === 'FAIL' && !supported.has(finding.area))) return []
+
+  if (!existsSync(roadmapDir)) {
+    const current = outputBytes(rootRoadmap)
+    if (current === null) return []
+    const content = withHorizonBlurbs(current)
+    return content === current ? [] : [{ path: 'ROADMAP.md', content, areas: ['ROAD-4'] }]
+  }
+
+  // A thematic root projection may be absent in a valid thematic tree.  Native
+  // conform cannot create it yet, so defer the entire dependent batch rather than
+  // publishing a partial normalisation.
+  if (outputBytes(rootRoadmap) === null) return []
+
+  const { themes, items, plans } = discover()
+  const authored = themes.flatMap((theme) => {
+    const path = join(roadmapDir, theme, 'ROADMAP.md')
+    const original = outputBytes(path)
+    if (original === null) return []
+    const withBlurbs = withHorizonBlurbs(original)
+    const content = withLocalPlanReferences(withBlurbs, theme, plans)
+    const areas: Array<'ROAD-4' | 'PLAN-2'> = []
+    if (original !== withBlurbs) areas.push('ROAD-4')
+    if (withBlurbs !== content) areas.push('PLAN-2')
+    return content === original ? [] : [{ path: `docs/roadmap/${theme}/ROADMAP.md`, content, areas }]
+  })
+  const rootContent = projection(items)
+  const rootOriginal = outputBytes(rootRoadmap)
+  return [...authored, ...(rootOriginal === rootContent ? [] : [{ path: 'ROADMAP.md', content: rootContent, areas: ['PROJ-1'] as const }])]
+}
+
 export const conformRoadmap = (target: string, dryRun: boolean): Finding[] => {
   root = resolve(target)
   roadmapDir = join(root, 'docs', 'roadmap')
