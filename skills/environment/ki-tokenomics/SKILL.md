@@ -12,7 +12,7 @@ argument-hint: 'audit | conform | help | educate | refresh'
 
 You are helping hold a Claude Code working environment to one budget for its **tokenomics** — the cost of the context the model carries, paid not once but on **every turn**, and re-paid by every sub-agent. The premise of this skill is that this cost is rarely one file's fault: it is the **composition** of two configuration layers — the **user-wide** `~/.claude` and the **project-local** `.claude` / `CLAUDE.md` — over any **Knowledge Islands base** in play. You measure that composed surface, attribute it to its layers, hold it to a budget, and tune the runtime levers that multiply it.
 
-This is a **standard, base-agnostic Process skill**: it hard-codes no single environment, resolving the user layer from `~/.claude` at runtime and taking the project or base as its target. Its quotable standard is [the standard](references/standards.md); the line-by-line criteria (each tagged mechanical/judgment) are [the rubric](references/rubric.md); the mechanical checker is [`scripts/govern.ts`](scripts/govern.ts). How it sits beside the other skills is documented once in the ki-agentic-harness `README.md`, not repeated here.
+This is a **standard, base-agnostic Process skill**. Native user maintenance resolves the durable user layer from `~/.claude`; repository-specific attribution remains a separate concern until a repository-targeted tokenomics command exists. Its quotable standard is [the standard](references/standards.md); the line-by-line criteria (each tagged mechanical/judgment) are [the rubric](references/rubric.md); and `ki user audit --skill ki-tokenomics` executes its mechanical user-home checks. How it sits beside the ki-agentic-harness `README.md`, not repeated here.
 
 ## What it governs — two halves
 
@@ -72,6 +72,6 @@ Every governance skill carries the universal four **AUDIT · CONFORM · EDUCATE 
 
 ## Notes
 
-- The checker reads `~/.claude` as the user-wide layer **by design** — the standard _is_ the composition of user-wide and project-local config. `--no-user` audits the project layer alone; `--user <dir>` points elsewhere (for testing).
+- `ki user audit --skill ki-tokenomics` reads `~/.claude` as the user-wide layer **by design**. Project-local composition requires a repository-targeted surface and is reported as not applicable by the user command rather than being guessed.
 - Token figures are a **chars/4 estimate for budgeting, not billing** — every figure is marked `~`. For exact accounting use the model's own token counting (the `claude-api` skill).
 - This skill measures and tunes cost; it does not own the artifacts that cause it. A finding routes to the owning skill's standard.
