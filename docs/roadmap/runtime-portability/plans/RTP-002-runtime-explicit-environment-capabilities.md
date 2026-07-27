@@ -1,11 +1,11 @@
 ---
 id: 'RTP-002'
 title: Make environment capabilities runtime-explicit
-status: ready
+status: in-progress
 roadmap: runtime-portability/make-environment-capabilities-runtime-explicit
 blocks: —
 blocked-by: —
-baseline-ref: —
+baseline-ref: 28caaee699a2fd493947d6484fde0b6d92f7e9fc
 ---
 
 ## Context
