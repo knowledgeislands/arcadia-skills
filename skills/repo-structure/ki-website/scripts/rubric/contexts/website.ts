@@ -1,16 +1,22 @@
-import { existsSync, readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs'
-import { join, resolve } from 'node:path'
+import { existsSync, lstatSync, readdirSync, readFileSync } from 'node:fs'
+import { join, relative, resolve, sep } from 'node:path'
+import type { ConformWrite, RubricContextOptions, RubricSession } from '../../shared/rubric.ts'
 
 const CONFIG_NAMES = ['eleventy.config.ts', 'eleventy.config.js', 'eleventy.config.mjs', 'eleventy.config.cjs'] as const
 const KI_SECTION = 'ki-website'
-export const KI_DEFAULT = `# ${KI_SECTION} — opt-in marker: presence of this table opts the repo into the
+const KI_DEFAULT = `# ${KI_SECTION} — opt-in marker: presence of this table opts the repo into the
 # Eleventy + Tailwind site-build standard. It takes no per-repo keys today.
 [${KI_SECTION}]
 `
 
+type Draft = {
+  path: string
+  original: string | null
+  content: string
+}
+
 export type WebsiteContext = {
   target: string
-  dryRun: boolean
   available: boolean
   applicable: boolean
   siteRoot: '' | 'site'
@@ -26,8 +32,8 @@ export type WebsiteContext = {
   kiWebsiteTable: Record<string, unknown> | null
   malformedConfig: boolean
   seoMeta: boolean
-  ensureOptIn: () => 'canonical' | 'fixed'
-  ensureDistIgnore: () => 'canonical' | 'fixed' | 'not-applicable'
+  addOptIn?: () => void
+  addDistIgnore?: () => void
 }
 
 const parseToml = (text: string): { document: Record<string, unknown> | null; malformed: boolean } => {
@@ -37,70 +43,118 @@ const parseToml = (text: string): { document: Record<string, unknown> | null; ma
     return { document: null, malformed: true }
   }
 }
+
 const asTable = (value: unknown): Record<string, unknown> | null =>
   value && typeof value === 'object' && !Array.isArray(value) ? (value as Record<string, unknown>) : null
 
-export const createWebsiteContextFactory = ({ target, dryRun = false }: { target: string; dryRun?: boolean }): (() => WebsiteContext) => {
-  const root = resolve(target)
-  const available = existsSync(root) && statSync(root).isDirectory()
-  const at = (...parts: string[]) => join(root, ...parts)
-  const has = (...parts: string[]) => existsSync(at(...parts))
-  const read = (...parts: string[]) => {
-    try {
-      return readFileSync(at(...parts), 'utf8')
-    } catch {
-      return ''
-    }
+const physicalDirectory = (path: string): boolean => {
+  if (!existsSync(path)) return false
+  const state = lstatSync(path)
+  return state.isDirectory() && !state.isSymbolicLink()
+}
+
+const containedPhysical = (root: string, path: string, kind: 'file' | 'directory'): boolean => {
+  const remainder = relative(root, path)
+  if (remainder.startsWith('..') || remainder === '..' || !physicalDirectory(root)) return false
+  let cursor = root
+  for (const segment of remainder.split(sep).filter(Boolean)) {
+    cursor = join(cursor, segment)
+    if (!existsSync(cursor) || lstatSync(cursor).isSymbolicLink()) return false
   }
-  const isDir = (...parts: string[]) => has(...parts) && statSync(at(...parts)).isDirectory()
-  const flatCfg = CONFIG_NAMES.find((name) => has(name))
-  const siteCfg = CONFIG_NAMES.find((name) => has('site', name))
+  const state = lstatSync(path)
+  return kind === 'file' ? state.isFile() : state.isDirectory()
+}
+
+export const createWebsiteSession = ({ mode, repository }: RubricContextOptions): RubricSession<WebsiteContext> => {
+  const root = resolve(repository)
+  const available = physicalDirectory(root)
+  const at = (...parts: string[]) => join(root, ...parts)
+  const has = (...parts: string[]) =>
+    available && (containedPhysical(root, at(...parts), 'file') || containedPhysical(root, at(...parts), 'directory'))
+  const read = (...parts: string[]) =>
+    available && containedPhysical(root, at(...parts), 'file') ? readFileSync(at(...parts), 'utf8') : ''
+  const isDir = (...parts: string[]) => available && containedPhysical(root, at(...parts), 'directory')
+
+  const flatCfg = CONFIG_NAMES.find((name) => containedPhysical(root, at(name), 'file'))
+  const siteCfg = CONFIG_NAMES.find((name) => containedPhysical(root, at('site', name), 'file'))
+  const structuralMarker = CONFIG_NAMES.some((name) => existsSync(at(name)) || existsSync(at('site', name)))
   const siteRoot: '' | 'site' = flatCfg ? '' : siteCfg ? 'site' : ''
   const cfgName = flatCfg ?? siteCfg ?? ''
   const siteAt = (...parts: string[]) => (siteRoot ? join(siteRoot, ...parts) : join(...parts))
-  const ki = parseToml(read('.ki-config.toml'))
+
+  const configPath = at('.ki-config.toml')
+  const configExists = existsSync(configPath)
+  const configSafe = !configExists || containedPhysical(root, configPath, 'file')
+  const configRaw = configSafe && configExists ? read('.ki-config.toml') : ''
+  const ki = configSafe ? parseToml(configRaw) : { document: null, malformed: true }
   const kiWebsiteTable = asTable(ki.document?.[KI_SECTION])
-  const applicable = available && (kiWebsiteTable !== null || ki.malformed || Boolean(flatCfg || siteCfg))
+  const applicable = available && (kiWebsiteTable !== null || ki.malformed || structuralMarker)
+
+  const packageSource = read('package.json')
   let packageOk = true
-  let pkg: Record<string, unknown> = {}
+  let packageDocument: Record<string, unknown> = {}
   try {
-    pkg = JSON.parse(read('package.json')) as Record<string, unknown>
+    if (!packageSource) throw new Error('package.json unavailable')
+    packageDocument = JSON.parse(packageSource) as Record<string, unknown>
   } catch {
     packageOk = false
   }
-  const deps = { ...((pkg.dependencies as object) ?? {}), ...((pkg.devDependencies as object) ?? {}) } as Record<string, string>
-  const scripts = (pkg.scripts ?? {}) as Record<string, string>
+  const deps = {
+    ...((packageDocument.dependencies as object) ?? {}),
+    ...((packageDocument.devDependencies as object) ?? {})
+  } as Record<string, string>
+  const scripts = (packageDocument.scripts ?? {}) as Record<string, string>
+
   const partials = siteAt('src', '_includes', 'partials')
   let seoMeta = false
-  const walk = (path: string) => {
+  const walkPartials = (path: string): void => {
     if (!isDir(path)) return
     for (const entry of readdirSync(at(path), { withFileTypes: true })) {
-      if (entry.isDirectory()) walk(join(path, entry.name))
+      if (entry.isSymbolicLink()) continue
+      if (entry.isDirectory()) walkPartials(join(path, entry.name))
       else if (/seo-meta/i.test(entry.name)) seoMeta = true
     }
   }
-  if (available) walk(partials)
-  const ensureOptIn = (): 'canonical' | 'fixed' => {
-    if (kiWebsiteTable) return 'canonical'
-    const next = read('.ki-config.toml')
-    if (!dryRun) writeFileSync(at('.ki-config.toml'), next ? `${next.replace(/\n*$/, '\n')}\n${KI_DEFAULT}` : KI_DEFAULT)
-    return 'fixed'
+  if (available) walkPartials(partials)
+
+  const drafts = new Map<string, Draft>()
+  const prepareDraft = (path: '.ki-config.toml' | '.gitignore'): Draft | undefined => {
+    const absolute = at(path)
+    if (!existsSync(absolute)) {
+      const draft = { path, original: null, content: '' }
+      drafts.set(path, draft)
+      return draft
+    }
+    if (!containedPhysical(root, absolute, 'file')) return undefined
+    const original = read(path)
+    const draft = { path, original, content: original }
+    drafts.set(path, draft)
+    return draft
   }
-  const ensureDistIgnore = (): 'canonical' | 'fixed' | 'not-applicable' => {
-    if (!cfgName) return 'not-applicable'
-    const current = read('.gitignore')
-    const correct = siteRoot ? /^\s*\/?site\/dist\/?\s*$/m.test(current) : /^\s*\/?dist\/?\s*$/m.test(current)
-    if (correct) return 'canonical'
-    const next =
-      siteRoot && /^\s*\/dist\/?\s*$/m.test(current)
-        ? current.replace(/^(\s*)\/dist(\/?)(\s*)$/m, '$1/site/dist$2$3')
-        : `${current ? current.replace(/\n*$/, '\n') : ''}${siteRoot ? 'site/dist' : 'dist'}\n`
-    if (!dryRun) writeFileSync(at('.gitignore'), next)
-    return 'fixed'
-  }
-  return () => ({
+
+  const configDraft = mode === 'conform' && !kiWebsiteTable && !ki.malformed ? prepareDraft('.ki-config.toml') : undefined
+  const ignoreDraft = mode === 'conform' && cfgName ? prepareDraft('.gitignore') : undefined
+  const addOptIn =
+    configDraft === undefined
+      ? undefined
+      : (): void => {
+          if (/\[ki-website]/.test(configDraft.content)) return
+          configDraft.content = configDraft.content ? `${configDraft.content.replace(/\n*$/, '\n')}\n${KI_DEFAULT}` : KI_DEFAULT
+        }
+  const addDistIgnore =
+    ignoreDraft === undefined
+      ? undefined
+      : (): void => {
+          const correct = siteRoot ? /^\s*\/?site\/dist\/?\s*$/m.test(ignoreDraft.content) : /^\s*\/?dist\/?\s*$/m.test(ignoreDraft.content)
+          if (correct) return
+          ignoreDraft.content =
+            siteRoot && /^\s*\/dist\/?\s*$/m.test(ignoreDraft.content)
+              ? ignoreDraft.content.replace(/^(\s*)\/dist(\/?)(\s*)$/m, '$1/site/dist$2$3')
+              : `${ignoreDraft.content ? ignoreDraft.content.replace(/\n*$/, '\n') : ''}${siteRoot ? 'site/dist' : 'dist'}\n`
+        }
+
+  const context: WebsiteContext = {
     target: root,
-    dryRun,
     available,
     applicable,
     siteRoot,
@@ -116,7 +170,18 @@ export const createWebsiteContextFactory = ({ target, dryRun = false }: { target
     kiWebsiteTable,
     malformedConfig: ki.malformed,
     seoMeta,
-    ensureOptIn,
-    ensureDistIgnore
-  })
+    ...(addOptIn ? { addOptIn } : {}),
+    ...(addDistIgnore ? { addDistIgnore } : {})
+  }
+
+  return {
+    subjects: [{ families: ['WEB'], subject: root, context: () => context }],
+    proposal: () => ({
+      writes: [...drafts.values()].flatMap((draft): ConformWrite[] =>
+        draft.content === (draft.original ?? '')
+          ? []
+          : [{ path: draft.path, content: draft.content, ...(draft.original === null ? { create: true } : {}) }]
+      )
+    })
+  }
 }

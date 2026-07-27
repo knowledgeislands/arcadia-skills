@@ -1,4 +1,4 @@
-# The Eleventy site standard
+# Eleventy site standard
 
 The normative, quotable reference for the Knowledge Islands 11ty website standard — what a good site looks like, and why. The audit rubric ([rubric.md](rubric.md)) turns each section into checkable items; the procedure is in the [SKILL.md](../SKILL.md). See [the source list](sources.md) for provenance.
 
