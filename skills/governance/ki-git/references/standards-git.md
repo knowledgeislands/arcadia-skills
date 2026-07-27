@@ -44,6 +44,10 @@ Prefer recoverable, explicit-path commits after independently verified work.
 
 Do not remove a lock merely because it exists, interrupt a live Git process to clear one, or use destructive history or worktree operations without explicit authority.
 
+Separate pathspecs with `--` whenever a path begins with `-`, because Git parses a leading `-` as an option: `git add '-/README.md'` fails with `unknown switch`, while `git add -- '-/README.md'` succeeds.
+
+This affects every KI-conformant repository, not an unusual corner case: the repo standard scaffolds a top-level `-/` working area (`ki-repo` WORK-1), so any `add`, `restore`, `checkout`, `diff`, `log`, or `rm` naming a path inside it needs the separator.
+
 ## Stale-lock guard
 
 `hooks/git-lock-check.sh` is a best-effort recovery guard for a trusted user account, not a general cleanup command.
