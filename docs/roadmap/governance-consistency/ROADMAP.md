@@ -12,6 +12,12 @@ Actively broken, or blocking the `Next` horizon: takes priority over everything 
 
 Scoped and ready to start — the immediate queue, picked up before anything in **Soon** or **Future**.
 
+### Reconcile core repository roadmaps and handoffs
+
+Take a five-repository portfolio view across Arcadia Principal, the agentic harness, `tools-ki`, KI Specifications, and the KI Website. Make every transferred responsibility visible in its receiving repository, close working handoffs once their durable destination exists, and repair roadmap, plan, or Stream drift that prevents a reliable cross-repository view. Permit a detailed received handoff to materialise as an open handoff plan before its roadmap item reaches the immediate queue, without allowing that plan to become ready or execute until the item reaches Blocking or Next.
+
+**Plan:** [GOV-004](plans/GOV-004-reconcile-core-roadmaps-and-handoffs.md)
+
 ## Soon
 
 Understood and roughly scoped but not yet started — worth doing once the **Next** queue clears, ahead of anything still speculative.
