@@ -83,8 +83,6 @@ test('conform retains drafts, coalesces writes, and leaves publication to the ho
           'prettier',
           '--write',
           '**/*.md',
-          '!.ki/bootstrap/**',
-          '!.ki/bin/**',
           '!src/generated/**',
           '!.claude/commands/**',
           '!.claude/skills/**',

@@ -15,14 +15,30 @@ audit_staged_skills() {
   for path in AGENTS.md CLAUDE.md README.md package.json docs; do
     if [ -e "$snapshot/$path" ]; then cp -R "$snapshot/$path" "$focus/$path" || return 1; fi
   done
-  skill_roots="$(printf '%s\n' "$staged_paths" | awk -F/ '$1 == "skills" && NF >= 3 { print $1 "/" $2 "/" $3 }' | sort -u)"
-  for root in $skill_roots; do
-    if [ -d "$snapshot/$root" ]; then
-      mkdir -p "$focus/$(dirname "$root")" || return 1
-      cp -R "$snapshot/$root" "$focus/$root" || return 1
-    fi
-  done
-  ki repo audit --repo "$focus" --skill ki-skills
+
+  # Set-level collision, ownership, and shared-provider checks need the unchanged
+  # siblings as well as the staged roots. Keep the deliberately deferred
+  # ki-specifications migration outside this staged gate until its own plan resumes.
+  find "$snapshot/skills" -mindepth 3 -maxdepth 3 -type f -name SKILL.md | sort | while IFS= read -r skill_file; do
+    root="${skill_file%/SKILL.md}"
+    relative_root="${root#"$snapshot"/}"
+    if [ "$relative_root" = "skills/repo-structure/ki-specifications" ]; then continue; fi
+    mkdir -p "$focus/$(dirname "$relative_root")" || exit 1
+    cp -R "$root" "$focus/$relative_root" || exit 1
+  done || return 1
+
+  # ki-self is the canonical repository-local sibling and participates in the same
+  # skill-quality audit even though it is intentionally outside the shared tree.
+  if [ -d "$snapshot/.agents/skills/ki-self" ]; then
+    mkdir -p "$focus/.agents/skills" || return 1
+    cp -R "$snapshot/.agents/skills/ki-self" "$focus/.agents/skills/ki-self" || return 1
+    cp "$snapshot/.ki-config.toml" "$focus/.agents/.ki-config.toml" || return 1
+  fi
+
+  ki repo audit --repo "$focus" --skill ki-skills || return 1
+  if [ -d "$focus/.agents/skills/ki-self" ]; then
+    ki repo audit --repo "$focus/.agents" --skill ki-skills || return 1
+  fi
   result=$?
   trap - EXIT HUP INT TERM
   rm -rf "$snapshot" "$focus"
@@ -30,4 +46,4 @@ audit_staged_skills() {
 }
 
 if matches_staged '\.ts$'; then bunx tsc --noEmit || exit 1; fi
-if matches_staged '^skills/'; then audit_staged_skills || exit 1; fi
+if matches_staged '^(skills/|\.agents/skills/ki-self/)'; then audit_staged_skills || exit 1; fi
