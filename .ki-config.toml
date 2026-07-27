@@ -1,75 +1,34 @@
-# Knowledge Islands repo config — read by the ki-repo skill.
-# One [table] per skill that needs per-repo options.
 [ki-repo]
-visibility = "public"    # "public" | "private" — public + MIT
-license = "MIT"          # SPDX id; the LICENSE, package.json, and GitHub must match (default MIT).
-# Supported runtimes — a repo-wide capability (it drives orientation,
-# skills, agents, MCP), not a harness-structure detail, so it lives on [ki-repo]. The bootstrap
-# linkers loop over these, each with its own discovery path (Claude Code → .claude/, Codex →
-# .agents/; see the runtime feature-coverage matrix in SDR-KI-HARNESS-002). This repo
-# supports both — dogfooding Codex skill discovery (.agents/skills) alongside Claude Code.
-# Codex agent install is not wired yet (TOML generator pending the subagent-format spike) —
-# supporting Codex here is reported-and-skipped by link-agents, not silently dropped.
+visibility = "public"
+license = "MIT"
 supported_runtimes = ["claude-code", "codex"]
-# This repo fully conforms, so it declares no check overrides. To diverge, add a
-# [ki-repo.checks] table with one boolean per check (true = enforce).
 
-# The authoring standard (Markdown/TOML house style) is baseline for every KI repo —
-# declared explicitly, not assumed. Presence is the compliance marker.
 [ki-authoring]
 
-# Read by the ki-engineering skill (the common build/lint/test toolchain).
 [ki-engineering]
-# This repo fully conforms, so it declares no check overrides. To diverge, add a
-# [ki-engineering.checks] table with one boolean per check (true = enforce).
 
-# This repo IS a Knowledge Islands agentic harness (the five-part skills/ subagents/ mcp/ evals/ hooks/
-# layout), so it declares governance by the ki-harness standard. Presence of this
-# table is the compliance marker.
 [ki-harness]
 
-# This repo ships skills under skills/, so it declares governance by the ki-skills
-# standard. (Read by ki-repo's coverage check; the skills linter lints the SKILL.md
-# files themselves.)
 [ki-skills]
 
-# This repo ships agents under subagents/governance/, so it declares governance by the
-# ki-subagents standard (opt-in). Presence of this table is the compliance marker.
 [ki-subagents]
 
-# This repo ships the ki-decision-records skill, so it declares governance by its own standard.
 [ki-decision-records]
 
-# This repo ships the ki-feature-definitions skill, so it declares governance by its own standard
-# over its own docs/features/ Feature Definitions corpus.
 [ki-feature-definitions]
 
-# This repo supports Claude Code, so it declares Claude housekeeping over the selected
-# repository's auto-memory directory (~/.claude/projects/<slug>/memory/).
 [ki-housekeeping-claude]
 
-# This repo uses the non-KB repository-roadmap standard. The table is the compliance marker;
-# this repository's thematic profile lives under docs/roadmap/.
 [ki-roadmap]
 
-# Tokenomics governance — audits the standing context surface for this environment.
-# MCP server count is user-scoped (not harness-controlled); all 19 are intentional.
-# With Claude Code's default tool search (ENABLE_TOOL_SEARCH=auto), schemas are deferred,
-# so the real standing cost is lower than the raw count implies. The raised budget documents
-# the acknowledged state; the WARN is there to revisit when the global MCP set is pruned.
 [ki-tokenomics]
 headroom = "recommended"
-# The `standard` type is the sensible overall default (set user-globally); the harness
-# overrides to `reasoning` because governing the skill set — cross-skill consistency,
-# rubric judgment, checker design — is high-reasoning work that earns the type. Project
-# default wins. The type resolves to the runtime's model (Claude Code → opus); no
-# model_tier_bindings table is needed here because each runtime resolves the portable type.
+# Cross-skill governance benefits from the higher-reasoning project default.
 preferred_model_type = "reasoning"
 
 [ki-tokenomics.budgets]
-mcp_servers = 20   # 19 user-scoped at time of first audit (2026-06-22); revisit when scoped
+mcp_servers = 20 # User-scoped; revisit if the global MCP set is pruned.
 
-# Runtime adapters provide bounded evidence for each supported runtime.
 [ki-tokenomics-claude]
 
 [ki-tokenomics-codex]
