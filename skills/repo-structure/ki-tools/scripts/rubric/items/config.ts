@@ -1,24 +1,55 @@
-import { mechanical, one } from './shared.ts'
-export const CONFIG_1 = mechanical(
-  'CONFIG-1',
-  'Opt-in marker and keys',
-  'A keyless `[ki-tools]` marker is present and validated down.',
-  'WARN',
-  (c) => {
-    if (!c.applicable) return one({ status: 'NOT_APPLICABLE', message: 'not applicable: no [ki-tools] declaration or bin/ marker' })
-    if (c.config === 'missing')
-      return one({
-        status: 'VIOLATION',
-        message: 'configuration file is absent — add a [ki-tools] opt-in marker',
-        subject: '.ki-config.toml'
-      })
-    if (c.config === 'malformed')
-      return one({ status: 'VIOLATION', message: 'configuration file is malformed', subject: '.ki-config.toml' })
-    if (c.config === 'absent')
-      return one({ status: 'VIOLATION', message: 'no [ki-tools] table — add the opt-in marker', subject: '.ki-config.toml' })
-    return c.configKeys.length
-      ? one({ status: 'VIOLATION', message: `unknown key under [ki-tools]: ${c.configKeys.join(', ')}`, subject: '.ki-config.toml' })
-      : one({ status: 'PASS', message: '[ki-tools] table present', subject: '.ki-config.toml' })
+import type { RubricFamily, RubricItem } from '../../shared/rubric.ts'
+import type { ToolsConfigContext, ToolsRubricContext } from '../contexts/tools.ts'
+
+const STANDARD = 'standards-tool-repositories.md'
+
+const CONFIG_1: RubricItem<ToolsConfigContext> = {
+  code: 'CONFIG-1',
+  title: 'Opt-in marker and keys',
+  description: 'A keyless `[ki-tools]` marker is present and validated down.',
+  sources: [STANDARD],
+  mechanical: {
+    level: 'WARN',
+    overrideLevels: ['FAIL'],
+    audit: {
+      phase: 'INSPECT',
+      run: (context) => {
+        if (context.rootState === 'absent') return [{ status: 'VIOLATION', level: 'FAIL', message: 'Audit target does not exist.' }]
+        if (context.rootState === 'unsafe')
+          return [{ status: 'VIOLATION', level: 'FAIL', message: 'Audit target is not a physical directory.' }]
+        if (!context.applicable)
+          return [{ status: 'NOT_APPLICABLE', message: 'No [ki-tools] declaration or bin/ structural marker is present.' }]
+        if (context.config === 'unsafe')
+          return [{ status: 'VIOLATION', message: '.ki-config.toml is not a physical regular file.', subject: '.ki-config.toml' }]
+        if (context.config === 'missing')
+          return [{ status: 'VIOLATION', message: '.ki-config.toml is absent.', subject: '.ki-config.toml' }]
+        if (context.config === 'malformed')
+          return [{ status: 'VIOLATION', message: '.ki-config.toml is malformed.', subject: '.ki-config.toml' }]
+        if (context.config === 'absent')
+          return [{ status: 'VIOLATION', message: '[ki-tools] is absent from .ki-config.toml.', subject: '.ki-config.toml' }]
+        return [
+          context.configKeys.length === 0
+            ? { status: 'PASS', message: 'The keyless [ki-tools] marker is present.', subject: '.ki-config.toml' }
+            : {
+                status: 'VIOLATION',
+                message: `The keyless marker contains unknown keys: ${context.configKeys.join(', ')}.`,
+                subject: '.ki-config.toml'
+              }
+        ]
+      }
+    },
+    conform: {
+      phase: 'PRIMARY',
+      run: (context) => context.requestMarker?.()
+    }
   }
-)
-export const CONFIG = [CONFIG_1] as const
+}
+
+export const CONFIG: RubricFamily<ToolsRubricContext, ToolsConfigContext> = {
+  code: 'CONFIG',
+  title: 'configuration',
+  description: 'Applicability marker and validate-down keys.',
+  standard: STANDARD,
+  selectContext: (context) => context.config,
+  items: [CONFIG_1]
+}

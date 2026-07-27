@@ -1,4 +1,4 @@
-# Knowledge Islands tool-repo standard
+# Knowledge Islands tool-repository standard
 
 The full, quotable standard behind the `ki-tools` skill. A `tools-*` repo holds **one** standalone command-line tool, distributed by a `curl | bash` installer and a companion Homebrew tap formula. This document governs the **container** — the repo's shape — language-agnostically. The reference implementation is `tools-mgit` (a bash CLI). The line-by-line audit items are in [rubric.md](rubric.md); the tracked external specs are in [sources.md](sources.md).
 
