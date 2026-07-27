@@ -76,7 +76,7 @@ Bootstraps a repository into governance from its `.ki-config.toml`. It vendors t
 
 ### `ki-repo`
 
-Audits, conforms, and onboards any **Knowledge Islands–compliant** git repo (one carrying a `.ki-config.toml`) against the repo standard — local files, GitHub settings, and security. Owns the cross-cutting **`.ki-config.toml` contract** and discovers repos from a local tree or a whole org.
+Audits, conforms, and onboards any **Knowledge Islands–compliant** git repo (one carrying a `.ki-config.toml`) against the repo standard — local files, GitHub settings, and security. Owns the cross-cutting **`.ki-config.toml` contract** and discovers repos from a local tree or a whole org. Its human-led `REVIEW` mode examines repository architecture and implementation, interviews material uncertainty, and routes evidence-backed findings without turning them into compliance rules or automatic verdicts.
 
 ### `ki-skills`
 
@@ -117,10 +117,6 @@ Drives the **plan lifecycle** for a non-KB repository — `ready` / `execute` / 
 ### `ki-recap`
 
 Drives a live-session recap: **summarise** what happened (changes, decisions, files touched), **surface what is outstanding** (unfinished threads, deferred fixes — a ROADMAP item added this session is "what happened", not outstanding), and **harvest the learnings**, routing each to its proper home (a `CLAUDE.md` learned-pattern entry via `headroom learn`, a skill fix or rubric criterion, a new agent, a hook, memory, or a `ki-plan`/ROADMAP item), confirming before writing anywhere durable. When a grounded action needs a portfolio decision, it may offer `ki-next` as an optional current-session handoff; that never writes or invokes `ki-next` automatically. An optional **compress** leg writes a carry-forward digest — true in-context compression is the native / PreCompact-hook path, not something a skill can do. Installable globally, cross-repo, alongside `ki-bootstrap` — and like `ki-bootstrap`, never declared via a `.ki-config.toml` table.
-
-### `ki-repo-review`
-
-Guides a **human-led repository review**: frames scope, gathers inspectable evidence, interviews material uncertainty, records findings, and routes each outcome to a plan, Decision Record, feature definition, guide, or no action. Optional `REV-<NNN>` review records and `REV-<NNN>-F<NNN>` findings remain working evidence only while a concrete plan or Decision Record retains them; the process requires explicit confirmation before pruning. It composes with `ki-roadmap` and `ki-plan` for delivery routing but does not create an automatic verdict, checker score, plan, or Decision Record.
 
 ## Tooling
 

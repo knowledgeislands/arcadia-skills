@@ -51,7 +51,6 @@ import { scenarios as housekeepingScenarios } from './scenarios/ki-housekeeping.
 import { scenarios as bindingScenarios } from './scenarios/ki-binding.ts'
 import { scenarios as featureDefinitionsScenarios } from './scenarios/ki-feature-definitions.ts'
 import { scenarios as pluginsScenarios } from './scenarios/ki-plugins.ts'
-import { scenarios as repoReviewScenarios } from './scenarios/ki-repo-review.ts'
 
 export type Assertion = { name: string; re: RegExp }
 export type Scenario = { skill: string; id: string; prompt: string; assertions: Assertion[]; rubric: string }
@@ -78,8 +77,7 @@ const ALL: Scenario[] = [
   ...liveArtifactsScenarios,
   ...housekeepingScenarios,
   ...bindingScenarios,
-  ...pluginsScenarios,
-  ...repoReviewScenarios
+  ...pluginsScenarios
 ]
 
 const C = { reset: '\x1b[0m', dim: '\x1b[2m', green: '\x1b[32m', yellow: '\x1b[33m', red: '\x1b[31m', cyan: '\x1b[36m', bold: '\x1b[1m' }
@@ -212,15 +210,21 @@ for (const s of scenarios) {
 
   const meanB = mean(bTrial)
   const meanT = mean(tTrial)
-  console.log(`  ${paint(C.dim, 'assertions')}  baseline ${fmt(meanB)}/${n}   treatment ${fmt(meanT)}/${n}${runs > 1 ? paint(C.dim, ` (mean of ${runs})`) : ''}`)
+  console.log(
+    `  ${paint(C.dim, 'assertions')}  baseline ${fmt(meanB)}/${n}   treatment ${fmt(meanT)}/${n}${runs > 1 ? paint(C.dim, ` (mean of ${runs})`) : ''}`
+  )
   s.assertions.forEach((a, idx) => {
-    const cell = (hits: number): string => (runs === 1 ? (hits ? paint(C.green, '✓') : paint(C.red, '✗')) : paint(hits === runs ? C.green : hits === 0 ? C.red : C.yellow, `${hits}/${runs}`))
+    const cell = (hits: number): string =>
+      runs === 1 ? (hits ? paint(C.green, '✓') : paint(C.red, '✗')) : paint(hits === runs ? C.green : hits === 0 ? C.red : C.yellow, `${hits}/${runs}`)
     console.log(`    ${cell(bHits[idx])} ${cell(tHits[idx])}  ${paint(C.dim, a.name)}`)
   })
 
   const mjb = mean(jb)
   const mjt = mean(jt)
-  const jstr = mjb < 0 ? paint(C.yellow, lastNote || 'judge parse failed') : `baseline ${fmt(mjb)}/5   treatment ${fmt(mjt)}/5${runs === 1 ? paint(C.dim, ` — ${lastNote}`) : ''}`
+  const jstr =
+    mjb < 0
+      ? paint(C.yellow, lastNote || 'judge parse failed')
+      : `baseline ${fmt(mjb)}/5   treatment ${fmt(mjt)}/5${runs === 1 ? paint(C.dim, ` — ${lastNote}`) : ''}`
   console.log(`  ${paint(C.dim, 'judge')}       ${jstr}`)
 
   const detDelta = meanT - meanB

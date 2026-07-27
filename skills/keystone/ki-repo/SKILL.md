@@ -6,8 +6,8 @@ ki-shared-dependencies: [ki-skills:rubric]
 owns: ['.gitignore']
 contributes: ['.ki-config.toml']
 description: >
-  Codifies, audits, and applies the Knowledge Islands repo standard to any KI-compliant git repo carrying `.ki-config.toml`, not only the `knowledgeislands` reference org. Covers local files, optional `+` / `-` working areas, GitHub settings, and security. Use when checking or bringing a repo into line, onboarding a repo, or refreshing the standard against GitHub's surface. Triggers: "audit the repos", "do our repos follow the standard", "apply the repo standard", "enable secret scanning / Dependabot", "refresh the repo standard". Discovers repos from a local tree or an org via `gh`. Governs repo configuration, not source code. Off-ramps: `ki-authoring` (Markdown/TOML), `ki-engineering` (toolchain), `ki-harness` (bundle layout).
-argument-hint: 'audit | conform <repo> | educate <repo> | help | refresh'
+  Codifies, audits, and applies the Knowledge Islands repo standard to any KI-compliant git repo carrying `.ki-config.toml`, not only the `knowledgeislands` reference org. Covers local files, optional `+` / `-` working areas, GitHub settings, and security; its human-led REVIEW mode examines repository architecture and implementation without turning those observations into compliance rules. Use when checking or bringing a repo into line, onboarding a repo, reviewing its architecture or implementation, or refreshing the standard against GitHub's surface. Triggers: "audit the repos", "do our repos follow the standard", "apply the repo standard", "review this repository", "architecture review", "implementation review", "review findings", "enable secret scanning / Dependabot", "refresh the repo standard". Discovers repos from a local tree or an org via `gh`. Off-ramps: `ki-authoring` (Markdown/TOML), `ki-engineering` (toolchain), `ki-harness` (bundle layout), `ki-roadmap` and `ki-plan` (delivery routing).
+argument-hint: 'audit | conform <repo> | educate <repo> | help | refresh | review [scope] | review close <REV-NNN>'
 ---
 
 # Knowledge Islands repo
@@ -16,7 +16,7 @@ You are helping hold git repos to one **Knowledge Islands repo standard** — ho
 
 Load [the exemplars](references/exemplars.md) when onboarding a repo or when a standard rule needs a worked example.
 
-This skill governs a repo's **configuration and Knowledge Islands compliance** — how a repo is set up, not its source code. It owns the shared shape and lifecycle of optional repository `+` / `-` working areas; `ki-roadmap` owns their periodic review against a local roadmap, while `ki-kb` applies the same directionality within its fixed base staging model. It is a **standard, base-agnostic governance skill**: it hard-codes no single repo or org and discovers its targets at runtime (a local tree, or a whole org via `gh`). How it sits alongside the other skills in this repo (where they complement and where they must not overlap) is documented once in the ki-agentic-harness `README.md`, not repeated here.
+This skill governs a repo's **configuration and Knowledge Islands compliance** — how a repo is set up, not its source code. REVIEW is the deliberate exception: it may inspect architecture and implementation as evidence, but it creates no compliance criterion or automatic verdict. The skill owns the shared shape and lifecycle of optional repository `+` / `-` working areas; `ki-roadmap` owns their periodic review against a local roadmap, while `ki-kb` applies the same directionality within its fixed base staging model. It is a **standard, base-agnostic governance skill**: it hard-codes no single repo or org and discovers its targets at runtime (a local tree, or a whole org via `gh`). How it sits alongside the other skills in this repo (where they complement and where they must not overlap) is documented once in the ki-agentic-harness `README.md`, not repeated here.
 
 ## The standard at a glance
 
@@ -30,7 +30,7 @@ This skill governs a repo's **configuration and Knowledge Islands compliance** �
 
 ## Operating modes
 
-Every governance skill carries the universal four **AUDIT · CONFORM · EDUCATE · REFRESH**; EDUCATE here onboards a repo. Invoked as `help` / `-h` / `?`, it explains itself and stops — the generated HELP block (name, purpose, invocation, modes, off-ramps), taking no action. With no mode it does the same, then, in an interactive session only, offers the mode choice via `AskUserQuestion`, prompting for any `argument-hint` target the chosen mode shows.
+Every governance skill carries the universal four **AUDIT · CONFORM · EDUCATE · REFRESH**; EDUCATE here onboards a repo. **REVIEW** is the additional human-led repository-review mode. Invoked as `help` / `-h` / `?`, the skill explains itself and stops — the generated HELP block (name, purpose, invocation, modes, off-ramps), taking no action. With no mode it does the same, then, in an interactive session only, offers the mode choice via `AskUserQuestion`, prompting for any `argument-hint` target the chosen mode shows.
 
 ### Mode AUDIT — check a repo against the standard
 
@@ -73,11 +73,18 @@ GitHub's settings surface moves (rulesets vs classic protection, new security to
 4. **Propose a diff** to the applicable standard, the structured family module, and this file; confirm before writing.
 5. **Update [the source list](references/sources.md)** — bump each `last reviewed` date and refresh the `## Last review` block (what's confirmed, open watch-items). What changed goes in the commit, not a changelog. Mandatory: the source list is the skill's memory of where the standard comes from.
 
+### Mode REVIEW — examine repository architecture and implementation
+
+Run a bounded, human-led repository review: agree the frame, gather inspectable evidence, interview material uncertainty, identify findings, and route each outcome to `ki-roadmap` / `ki-plan`, `ki-decision-records`, `ki-feature-definitions`, a guide, or no action.
+
+Read and follow [the REVIEW procedure](references/mode-review.md). Mechanical `ki repo audit` output may be evidence, but REVIEW does not turn architecture or implementation observations into repository-compliance rules, create an automatic score, or publish a durable route without explicit confirmation. Use `review close <REV-NNN>` to assess whether an optional review record can be pruned.
+
 ## Notes
 
 - Requires the `gh` CLI authenticated with **repo-admin** scope to apply settings.
 - `main` is **open by default** — direct pushes are allowed, so local-file fixes (EDUCATE / CONFORM step 2) can land as a direct commit. A repo overrides the `branch-protection` check on (`[…checks]` `branch-protection = true`); only then does CONFORM protect that repo's `main`.
 - **Private repos**: secret scanning is plan-limited; the standard exempts it (public-only check). Revisit via **GHAS** if the org upgrades — a REFRESH follow-up.
 - The auditor is **read-only**; EDUCATE and CONFORM are the write modes. CONFORM limits local mutation to mechanically confirmed gaps before it considers live GitHub changes.
+- REVIEW is human-led and judgmental. It may inspect source code, but it does not broaden the AUDIT rubric or CONFORM mutation boundary.
 - This skill owns the `.ki-config.toml` **file-level contract and foundation scaffold** (including the coverage cascade — which `[ki-*]` tables a repo declares). Other skills own and may conform their own table schemas; they must preserve unrelated tables. ADR-KI-HARNESS-012 assigns runtime activation to native `ki repo skill add`, which creates only managed runtime discovery links after ownership and containment checks; it does not vendor an executor into `.ki/` or change the configuration contract.
 - The structured catalogue owns criterion policy; `ki` owns validation, execution, findings, progress, and reporting.

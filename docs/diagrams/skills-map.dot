@@ -86,7 +86,7 @@ digraph skills_map {
     style="rounded,filled"
     fillcolor="#edf8f1"
     bootstrap [fillcolor="#d9f0e2", label=< <b>ki-bootstrap</b><br/><font point-size="9">install · link · self-govern</font> >, tooltip="Keystone installer and self-governance bootstrap"]
-    repo [fillcolor="#d9f0e2", label=< <b>ki-repo</b><br/><font point-size="9">repository standard</font> >, tooltip="Repository structure, settings, and .ki-config.toml"]
+    repo [fillcolor="#d9f0e2", label=< <b>ki-repo</b><br/><font point-size="9">repository standard · review</font> >, tooltip="Repository structure, settings, .ki-config.toml, and human-led review"]
     skills [fillcolor="#d9f0e2", label=< <b>ki-skills</b><br/><font point-size="9">skill quality · checker contract</font> >]
   }
 
@@ -114,7 +114,6 @@ digraph skills_map {
     next [fillcolor="#e7ebf1", label=< <b>ki-next</b><br/><font point-size="9">next-work selection</font> >]
     plan [fillcolor="#e7ebf1", label=< <b>ki-plan</b><br/><font point-size="9">plan lifecycle</font> >]
     recap [fillcolor="#e7ebf1", label=< <b>ki-recap</b><br/><font point-size="9">session recap</font> >]
-    repo_review [fillcolor="#e7ebf1", label=< <b>ki-repo-review</b><br/><font point-size="9">human-led review</font> >]
   }
 
   subgraph cluster_tooling {

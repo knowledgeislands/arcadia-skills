@@ -1,6 +1,6 @@
-# Repository-review procedure
+# Repository REVIEW procedure
 
-_On-demand procedure for `ki-repo-review`. Its purpose, boundaries, and relationship map live in [`SKILL.md`](../SKILL.md)._
+_On-demand REVIEW procedure for `ki-repo`. The repository compliance standard and universal modes live in [`SKILL.md`](../SKILL.md); REVIEW inspects architecture and implementation without turning them into compliance rules._
 
 ## 1. Frame before inspecting
 
@@ -55,7 +55,7 @@ Create a review record only when the user asks to retain working evidence beyond
 
 Review records are working evidence, not permanent documentation. Before closing an owning delivery item, move every independently durable conclusion to its route. When no concrete artifact remains in `retained-by`, show the exact review record and its dependent state, then require explicit confirmation before pruning it. Preserve identifiers in Git history; never reuse them.
 
-`close <REV-NNN>` is a review-evidence decision, not `ki-plan prune`: it must not remove a plan, roadmap item, Decision Record, or guide.
+`review close <REV-NNN>` is a review-evidence decision, not `ki-plan prune`: it must not remove a plan, roadmap item, Decision Record, or guide.
 
 ## 7. Finish
 
