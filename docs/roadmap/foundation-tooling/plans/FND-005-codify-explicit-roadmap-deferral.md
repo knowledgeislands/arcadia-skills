@@ -1,7 +1,7 @@
 ---
 id: 'FND-005'
 title: Codify explicit roadmap deferral
-status: in-progress
+status: acceptance
 roadmap: foundation-tooling/codify-explicit-roadmap-deferral-in-ki-next
 blocks: —
 blocked-by: —
@@ -43,3 +43,32 @@ Make `defer` an explicit, user-confirmed `ki-next` horizon-transition operation 
 ## Dependencies / blocks
 
 No plan dependency. The fixed working-area scaffold is already committed; this plan reconciles the stale process wording before relying on its handoff flow.
+
+## Acceptance
+
+### Delivered
+
+Codified `ki-next` deferral as an explicit, confirmed later-horizon operation and reconciled it with the permanent handoff working-area scaffold.
+
+### Summary of changes
+
+- Added `defer <item> <soon|waiting-for|future>` to `ki-next`, including exact confirmation, destination, wording, and plan-handling requirements.
+- Defined the only honest destinations: Soon for understood but non-immediate work, Waiting for with a named external condition, and Future with `_(candidate)_` for re-scoping.
+- Made ordinary plan state a hard stop for deferral; `ki-next` cannot silently detach, reopen, or delete a plan.
+- Kept `ki-plan promote` distinct from roadmap promotion or deferral.
+- Corrected `ki-next` so required `_HANDOFFS/README.md` orientation remains after briefs are resolved.
+- Updated `ki-roadmap`’s transition criterion and regenerated its rubric publication.
+
+### Verification
+
+At `40737329`, the focused roadmap catalogue test, TypeScript, `ki repo audit --skill ki-roadmap --repo .`, and `ki repo audit --skill ki-skills --repo .` passed.
+
+At `bb852f63`, `bun run test` passed with 190 tests, along with `bunx tsc --noEmit` and both focused audits.
+
+### Outstanding concerns
+
+None.
+
+### Mini recap
+
+Horizon movement is authored work, not a marker convention. A later-horizon move needs the same explicit evidence and confirmation discipline as a promotion, and it cannot be used to bypass a plan lifecycle.
