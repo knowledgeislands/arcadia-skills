@@ -49,7 +49,7 @@ Canonical horizon structure, placement, and readiness.
 - **ROAD-3 [J] — open finite work** — Roadmaps are open-only and contain finite work rather than continuous practice. (standards-repository-roadmaps.md)
   - _Review prompt:_ Review that roadmap items are finite open work, not completed work or ongoing practice.
 - **ROAD-4 [M] — canonical horizon blurbs** — Every horizon heading is followed immediately by its exact canonical blurb; CONFORM inserts a missing blurb without removing existing authored content. (standards-repository-roadmaps.md)
-- **ROAD-5 [J] — promotion and readiness** — Horizon placement and transitions meet the readiness contract; only Blocking or Next work receives a plan, and CONFORM never chooses a move. (standards-repository-roadmaps.md)
+- **ROAD-5 [J] — promotion and readiness** — Horizon placement and transitions meet the readiness contract; ordinary and non-open plans require Blocking or Next, while an open plan with a non-empty transferred-from origin may preserve detail at another honest horizon without implying readiness. CONFORM never chooses a move. (standards-repository-roadmaps.md)
   - _Review prompt:_ Review each horizon transition against its readiness contract.
 
 ## THEME — themes
@@ -86,12 +86,12 @@ The exact generated root portfolio for a thematic roadmap.
 
 Plan identity, linkage, dependencies, and lifecycle integrity.
 
-- **PLAN-1 [M] — plan placement and shape** — Plans use the canonical thematic path, stable theme code and serial, required frontmatter, matching filename and ID, and an immutable execution baseline commit. (standards-plan-format.md)
-- **PLAN-2 [M] — plan roadmap linkage** — `roadmap:` is a qualified locator in the same theme and resolves to a Blocking or Next item; that item carries exactly one matching local plan reference. (standards-plan-format.md)
+- **PLAN-1 [M] — plan placement and shape** — Plans use the canonical thematic path, stable theme code and serial, required frontmatter, an optional non-empty transferred-from origin, matching filename and ID, and an immutable execution baseline commit. (standards-plan-format.md)
+- **PLAN-2 [M] — plan roadmap linkage** — `roadmap:` is a qualified locator in the same theme and resolves to a Blocking or Next item, except that an open plan with a non-empty transferred-from origin may preserve detail at another honest horizon; the item carries exactly one matching local plan reference. (standards-plan-format.md)
 - **PLAN-3 [M] — plan dependencies** — Dependencies use canonical plan identifiers, exist, are reverse-consistent, and acyclic; a ready, in-progress, or acceptance plan has no non-done blocker. (standards-plan-format.md)
 - **PLAN-4 [J] — ready plan content** — Ready, in-progress, and acceptance plans have concrete Steps, checkable Verify, honest Current state, and minimal Files touched. (standards-plan-format.md)
   - _Review prompt:_ Review active plan content for concrete, checkable execution detail.
-- **PLAN-5 [J] — honest plan status** — Open awaits readiness approval; ready awaits execution; in-progress reflects live work; acceptance awaits explicit user acceptance; done is a retained closure record. (standards-plan-format.md)
+- **PLAN-5 [J] — honest plan status** — Open awaits readiness approval or preserves transferred detail without implying readiness; ready awaits execution; in-progress reflects live work; acceptance awaits explicit user acceptance; done is a retained closure record. Every non-open plan resolves to Blocking or Next. (standards-plan-format.md)
   - _Review prompt:_ Review whether the plan status honestly reflects its lifecycle gate or retained completion record.
 
 ## SAFE — safe mechanics

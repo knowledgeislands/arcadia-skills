@@ -44,7 +44,7 @@ const COMMIT_ID_RE = /^(?:[0-9a-f]{40}|[0-9a-f]{64})$/
 const PLAN_RE = /^([A-Z][A-Z0-9]{1,7}-\d{3,})-([a-z0-9]+(?:-[a-z0-9]+)*)\.md$/
 const PLAN_LINE_RE = /^\*\*Plan:\*\* \[([A-Z][A-Z0-9]{1,7}-\d{3,})\]\((plans\/[A-Z][A-Z0-9]{1,7}-\d{3,}-[a-z0-9]+(?:-[a-z0-9]+)*\.md)\)$/
 const REQUIRED = ['id', 'title', 'status', 'roadmap', 'blocks', 'blocked-by', 'baseline-ref']
-const OPTIONAL = ['handoff', 'tier', 'readiness']
+const OPTIONAL = ['transferred-from']
 const VALID_STATUS = new Set(['open', 'ready', 'in-progress', 'acceptance', 'done'])
 const STANDARD_REF = 'references/standards-repository-roadmaps.md'
 const FORMAT_REF = 'references/standards-plan-format.md'
@@ -430,6 +430,8 @@ function discoverThematic(): { themes: string[]; items: Item[]; plans: Plan[] } 
       for (const field of ['id', 'title', 'status', 'roadmap', 'baseline-ref']) {
         if (field in fm && !fm[field].trim()) add('FAIL', 'PLAN-1', `frontmatter field '${field}' must not be empty`, FORMAT_REF, display)
       }
+      if ('transferred-from' in fm && !fm['transferred-from'].trim())
+        add('FAIL', 'PLAN-1', "optional frontmatter field 'transferred-from' must be a non-empty string", FORMAT_REF, display)
       if (!/^id:\s*(['"])[A-Z][A-Z0-9]{1,7}-\d{3,}\1\s*$/m.test(parsed.raw))
         add('FAIL', 'PLAN-1', 'id must be quoted in frontmatter', FORMAT_REF, display)
       if (fm.id && !PLAN_ID_RE.test(fm.id))
@@ -544,8 +546,14 @@ export const inspectRoadmap = (target: string): Finding[] => {
         else {
           if (item.theme !== plan.theme)
             add('FAIL', 'PLAN-2', `locator theme '${item.theme}' does not match plan theme '${plan.theme}'`, FORMAT_REF, plan.file)
-          if (!NEAR.has(item.horizon))
-            add('FAIL', 'PLAN-2', `locator resolves to ${item.horizon}; plans exist only in Blocking or Next`, FORMAT_REF, plan.file)
+          if (!NEAR.has(item.horizon) && (plan.fm.status !== 'open' || !plan.fm['transferred-from']?.trim()))
+            add(
+              'FAIL',
+              'PLAN-2',
+              `locator resolves to ${item.horizon}; only an open plan with non-empty transferred-from may exist outside Blocking or Next`,
+              FORMAT_REF,
+              plan.file
+            )
         }
       }
       const plansByLocator = new Map(plans.map((plan) => [plan.fm.roadmap, plan]))

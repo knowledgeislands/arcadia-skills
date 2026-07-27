@@ -7,7 +7,7 @@
 - [Local roadmap reference](#local-roadmap-reference)
 - [Body](#body)
 
-Plans exist only in the thematic profile and only for `Blocking` or `Next` items.
+Plans exist only in the thematic profile. Ordinary plans resolve only to `Blocking` or `Next` items. An open plan with a non-empty `transferred-from` origin may resolve to any other honest horizon solely to preserve transferred detail; it cannot become `ready`, `in-progress`, `acceptance`, or `done` there.
 
 ## Placement
 
@@ -32,9 +32,10 @@ baseline-ref: —
 ```
 
 - `status` is `open`, `ready`, `in-progress`, `acceptance`, or `done`. `open` awaits explicit approval to start; `ready` is approved and unblocked; `acceptance` means planned work and verification are complete and the plan awaits the user's explicit acceptance; `done` is a retained completion record awaiting an explicit later prune. Explicitly named plans may transition from `open` to `ready` together under one approval, and from `ready` to `in-progress` together under one coordinated start; each batch is all-or-nothing and committed once.
-- `roadmap` is a qualified `<theme>/<item-slug>` locator for an item in `Blocking` or `Next`; its theme must match the plan directory.
+- `roadmap` is a qualified `<theme>/<item-slug>` locator whose theme matches the plan directory. It resolves to a `Blocking` or `Next` item unless the plan is both `status: open` and carries a non-empty `transferred-from`; that exception may resolve to any other honest horizon.
 - `blocks` and `blocked-by` are comma-separated canonical `<THEME>-<NNN>` plan identifiers or `—`, and are reverse-consistent.
 - `baseline-ref` is `—` while a plan is `open` or `ready`. The initial `execute` transition replaces it with the full lowercase commit object ID at `HEAD` immediately before work starts. The immutable ID remains unchanged through `in-progress`, `acceptance`, and `done`, providing the recoverable comparison baseline without requiring a tag or release.
+- `transferred-from` is an optional non-empty string naming the origin of transferred execution detail, for example `knowledgeislands/tools-ki:CLI-006`. Outside `Blocking` or `Next`, it is valid only with `status: open`; moving the item to a near horizon is a separate authored priority decision required before `ready`.
 - There is no `phase` field; the canonical roadmap horizon is authoritative.
 
 ## Local roadmap reference
@@ -115,4 +116,4 @@ What was learned and any proposed route. The route remains a proposal until the 
 
 After explicit acceptance, retain the packet and append one non-empty terminal `## Done` H2 recording the outcome. Re-run a plan's implementation checks when entering acceptance and after any material implementation, verification, or environment change. An editorial refinement to the acceptance packet instead runs the relevant documentation and roadmap checks; it retains the earlier evidence revision rather than needlessly repeating unrelated full gates. `done` plans remain visible in the completed-plan index until an explicit `ki-plan prune` removes a selected committed batch.
 
-Composed governance may add `handoff`, `tier`, or `readiness` frontmatter and additional H2 sections, but it must preserve the six core sections exactly once and in the order above.
+Additional H2 sections must preserve the six core sections exactly once and in the order above. `## Delegation` remains the optional execution-delegation surface defined by this standard.

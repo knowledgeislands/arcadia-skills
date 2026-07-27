@@ -4,7 +4,7 @@ ki-depends-on: []
 ki-shared-dependencies: [ki-skills:rubric]
 owns: ['ROADMAP.md']
 description: >
-  Governs repository roadmaps and execution plans in non-KB repositories. Use for "audit the roadmap", "split this roadmap by theme", "expand the roadmap", "audit plans", roadmap horizons, thematic roadmaps, qualified roadmap locators, plan dependencies, or generated portfolio drift. Supports a simple root-only ROADMAP and a thematic docs/roadmap tree with plans. Knowledge Bases are out of scope: use ki-kb-streams, where streams and proposal checklists replace repository roadmaps and plans. The ki-plan process skill drives individual plan lifecycle operations; ki-decision-records owns durable decisions.
+  Governs repository roadmaps and execution plans in non-KB repositories. Use for "audit the roadmap", "split this roadmap by theme", "expand the roadmap", "audit plans", roadmap horizons, thematic roadmaps, qualified roadmap locators, transferred plan origins, plan dependencies, or generated portfolio drift. Supports a simple root-only ROADMAP and a thematic docs/roadmap tree with plans. Knowledge Bases are out of scope: use ki-kb-streams, where streams and proposal checklists replace repository roadmaps and plans. The ki-plan process skill drives individual plan lifecycle operations; ki-decision-records owns durable decisions.
 argument-hint: 'audit <repo> | conform <repo> | expand <theme> | help | educate <repo> | refresh'
 ---
 
@@ -21,7 +21,7 @@ The standard has two profiles, detected from repository shape:
 - **Simple** — root `ROADMAP.md` is canonical and carries the five horizons. It has no plan files. A substantial item that needs a plan first moves to the thematic profile through EXPAND.
 - **Thematic** — each `docs/roadmap/<theme>/ROADMAP.md` is canonical. Its active and retained done plans live in `docs/roadmap/<theme>/plans/`; root `ROADMAP.md` is an exact generated portfolio projection.
 
-An item has one authoritative home. Every roadmap carries the standard's exact explanatory blurb immediately beneath each horizon heading so its placement model is understandable in the file itself. In the thematic profile an item's stable locator is `<theme>/<item-slug>`, where the slug derives from the item heading. Every theme declares a stable uppercase code, and plan ids use that code plus a serial from `001`: `<THEME>-<NNN>`. That globally unique identifier is also used by dependencies. Plans exist only for `Blocking` and `Next` items.
+An item has one authoritative home. Every roadmap carries the standard's exact explanatory blurb immediately beneath each horizon heading so its placement model is understandable in the file itself. In the thematic profile an item's stable locator is `<theme>/<item-slug>`, where the slug derives from the item heading. Every theme declares a stable uppercase code, and plan ids use that code plus a serial from `001`: `<THEME>-<NNN>`. That globally unique identifier is also used by dependencies. Ordinary plans exist only for `Blocking` and `Next` items. An open plan with a non-empty `transferred-from` origin may preserve transferred detail at another honest horizon, but it cannot advance there.
 
 ## Operating modes
 
@@ -45,7 +45,7 @@ EXPAND is judgment-led because selecting coherent themes and moving prose cannot
 
 1. Read the simple `ROADMAP.md`; choose one kebab-case theme and identify whole items that belong to it without splitting their prose.
 2. Create `docs/roadmap/<theme>/ROADMAP.md` with all five horizons and move those items, preserving horizon, heading, and prose byte-for-byte where practical.
-3. Repeat until every open item has exactly one thematic home. Create no plan unless a `Blocking` or `Next` item needs multi-file or multi-step execution.
+3. Repeat until every open item has exactly one thematic home. Create no ordinary plan unless a `Blocking` or `Next` item needs multi-file or multi-step execution; preserving already-transferred detail is the narrow open-plan exception defined by the plan-format standard.
 4. Delete the legacy generated `docs/roadmap/README.md`, then run CONFORM to replace root `ROADMAP.md` with the portfolio projection.
 5. Run AUDIT; confirm no item was lost or duplicated. Commit the migration as one reviewable change.
 

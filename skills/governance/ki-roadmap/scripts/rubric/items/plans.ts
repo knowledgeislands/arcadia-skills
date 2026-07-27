@@ -17,7 +17,7 @@ const mechanical = (code: string, title: string, description: string, passMessag
 const PLAN_1 = mechanical(
   'PLAN-1',
   'plan placement and shape',
-  'Plans use the canonical thematic path, stable theme code and serial, required frontmatter, matching filename and ID, and an immutable execution baseline commit.',
+  'Plans use the canonical thematic path, stable theme code and serial, required frontmatter, an optional non-empty transferred-from origin, matching filename and ID, and an immutable execution baseline commit.',
   'Every plan has canonical placement, identity, frontmatter, and body structure.'
 )
 
@@ -25,7 +25,7 @@ const PLAN_2: RubricItem<RoadmapPlanContext> = {
   ...mechanical(
     'PLAN-2',
     'plan roadmap linkage',
-    '`roadmap:` is a qualified locator in the same theme and resolves to a Blocking or Next item; that item carries exactly one matching local plan reference.',
+    '`roadmap:` is a qualified locator in the same theme and resolves to a Blocking or Next item, except that an open plan with a non-empty transferred-from origin may preserve detail at another honest horizon; the item carries exactly one matching local plan reference.',
     'Every plan and roadmap item has a consistent inverse link.'
   ),
   mechanical: {
@@ -58,7 +58,7 @@ const PLAN_5: RubricItem<RoadmapPlanContext> = {
   code: 'PLAN-5',
   title: 'honest plan status',
   description:
-    'Open awaits readiness approval; ready awaits execution; in-progress reflects live work; acceptance awaits explicit user acceptance; done is a retained closure record.',
+    'Open awaits readiness approval or preserves transferred detail without implying readiness; ready awaits execution; in-progress reflects live work; acceptance awaits explicit user acceptance; done is a retained closure record. Every non-open plan resolves to Blocking or Next.',
   sources: [SOURCE],
   judgment: { prompt: 'Review whether the plan status honestly reflects its lifecycle gate or retained completion record.' }
 }

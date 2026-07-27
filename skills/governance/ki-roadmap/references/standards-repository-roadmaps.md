@@ -10,9 +10,9 @@ Every roadmap carries these five `##` horizons exactly once and in this order:
 
 1. `Blocking` — actively broken or preventing `Next`; plans permitted.
 2. `Next` — scoped and ready for immediate work; plans permitted.
-3. `Soon` — understood but not yet started; no plans.
-4. `Waiting for` — blocked by a named external condition; no plans.
-5. `Future` — speculative or unscoped; no plans, with `(candidate)` on uncommitted work.
+3. `Soon` — understood but not yet started; no ordinary plans.
+4. `Waiting for` — blocked by a named external condition; no ordinary plans.
+5. `Future` — speculative or unscoped; no ordinary plans, with `(candidate)` on uncommitted work.
 
 Each horizon heading is followed by one blank line, its exact canonical blurb, and one blank line before any item or the next horizon:
 
@@ -33,7 +33,8 @@ Horizon moves are authored, judgment-led decisions. CONFORM never makes them: it
 - **Future → Soon** requires enough scope to state the intended outcome and boundary. It remains Future when that minimum is not known.
 - **Soon → Next** requires actionable scope, understood dependencies, and readiness to start. It is not a planning shortcut: the item must first be moved to Next, then evaluated there.
 - **Waiting for → another horizon** requires evidence that its named external condition has changed and a fresh placement judgment.
-- **Blocking / Next** are the only horizons that may carry a plan. A plan is created only after the item is there and the user has confirmed it.
+- **Blocking / Next** are the only horizons that may carry an ordinary plan. A plan is created only after the item is there and the user has confirmed it.
+- An open plan with a non-empty `transferred-from` origin may instead remain linked to an item in any other honest horizon. This narrow exception preserves useful transferred execution detail without asserting that the item is ready or changing its priority. It is not eligible for readiness or execution until the item moves to Blocking or Next.
 
 When the immediate queue has no eligible work, a human-led process such as `ki-next` replenishes it in stages: evaluate Blocking and Next first, then evaluate Soon, and only then scope Future candidates to enter Soon. Each confirmed move is re-evaluated at its destination because the readiness contract changes. The process presents proposals and obtains confirmation before every authored move; this governance skill does not depend on that process.
 
@@ -76,7 +77,7 @@ CONFORM is narrower. It may insert a missing canonical horizon blurb and rebuild
 
 ## Plan discipline
 
-Plans are recoverable execution documents for multi-file or multi-step changes. They exist only for `Blocking` and `Next` items and use the [plan-format standard](standards-plan-format.md). Each theme's code prefixes a separate zero-padded serial sequence beginning at `001`, so a canonical plan identifier is `<THEME>-<NNN>`. Dependencies use those globally unique identifiers and are bidirectional, existent, and acyclic. No plan moves to `ready`, `in-progress`, or `acceptance` while a listed blocker is not `done`.
+Plans are recoverable execution documents for multi-file or multi-step changes. Ordinary plans exist only for `Blocking` and `Next` items and use the [plan-format standard](standards-plan-format.md). An open plan with a non-empty `transferred-from` origin may preserve transferred detail beside an item in another honest horizon, but it does not imply readiness and cannot advance there. Each theme's code prefixes a separate zero-padded serial sequence beginning at `001`, so a canonical plan identifier is `<THEME>-<NNN>`. Dependencies use those globally unique identifiers and are bidirectional, existent, and acyclic. Every `ready`, `in-progress`, `acceptance`, or `done` plan resolves to Blocking or Next, and no plan moves to `ready`, `in-progress`, or `acceptance` while a listed blocker is not `done`.
 
 A ready plan has concrete Steps, a checkable Verify section, an honest Current state, and a minimal Files touched list. The lifecycle is `open` → `ready` → `in-progress` → `acceptance` → `done`: `open` awaits an explicit start decision, `ready` records that approved and unblocked decision, and the initial execution transition records the full immutable `HEAD` commit ID as the plan's `baseline-ref`. Acceptance records a compact review packet and waits for explicit user approval; it does not silently route a learning into another durable artifact. `done` retains a committed outcome record beside its still-visible canonical item. An explicit later prune, not the done transition, removes a selected completed batch and its canonical items.
 

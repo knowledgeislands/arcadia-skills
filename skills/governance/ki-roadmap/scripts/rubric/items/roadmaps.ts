@@ -47,7 +47,7 @@ const ROAD_5: RubricItem<RoadmapBlurbsContext> = {
   code: 'ROAD-5',
   title: 'promotion and readiness',
   description:
-    'Horizon placement and transitions meet the readiness contract; only Blocking or Next work receives a plan, and CONFORM never chooses a move.',
+    'Horizon placement and transitions meet the readiness contract; ordinary and non-open plans require Blocking or Next, while an open plan with a non-empty transferred-from origin may preserve detail at another honest horizon without implying readiness. CONFORM never chooses a move.',
   sources: [SOURCE],
   judgment: { prompt: 'Review each horizon transition against its readiness contract.' }
 }
