@@ -7,11 +7,11 @@ const WORK_J1: RubricItem<WorkingAreasRubricContext> = {
   code: 'WORK-J1',
   title: 'working-area direction and lifecycle',
   description:
-    'Optional +/ and -/ working areas distinguish inbound from outbound material, and any _HANDOFFS contents have a clear adoption, follow-up, or closure route.',
+    'Optional +/ and -/ working areas distinguish inbound from outbound material, and retained handoffs have an owner, active disposition, reason or request, and named review trigger while resolved copies are removed.',
   sources: ['standards-repository.md'],
   judgment: {
     prompt:
-      'Where +/ or -/ exists, review that it is working material rather than a shadow canonical store, and that each handoff has an identifiable receiving owner and next route.'
+      'Where +/ or -/ exists, review that it remains working material rather than a shadow canonical store or archive: each retained handoff has a receiving owner, active disposition, reason or request, and named review trigger; resolved inbound and outbound copies are removed.'
   }
 }
 

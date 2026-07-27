@@ -54,12 +54,10 @@ No document may represent a legacy `.ki/bin` runner as the current self-check co
 
 Repository-level implementation briefs use the matching subareas:
 
-| Path | Holds | Lifecycle |
-| --- | --- | --- |
-| `+/_HANDOFFS/` | Incoming handoffs awaiting a local adoption or decline decision. | Adopt accepted work into this repository's roadmap and, when appropriate, plan; delete declined, adopted, or superseded material. |
-| `-/_HANDOFFS/<receiving-repository>/` | Outgoing handoffs grouped by their receiving repository. | Retain the originating brief only while it is useful; review receiving progress and delete it once its durable destination is clear. |
+- **`+/_HANDOFFS/`** — incoming handoffs awaiting a local disposition. A resolved adoption belongs in this repository's roadmap and, where needed, plan; declined and superseded material is deleted. A retained `park` or `clarify` handoff records its receiving owner, disposition, reason or clarification request, and a named review trigger. It is presented again only when that trigger fires.
+- **`-/_HANDOFFS/<receiving-repository>/`** — outgoing handoffs grouped by their receiving repository. Retain an originating brief only while the receiver has not resolved it; remove it when the receiver's durable adoption, decline, or supersession is known.
 
-A handoff names the receiving repository, originating context, scope, constraints, and what the receiver owns. It never replaces the receiver's own priority, roadmap item, plan, implementation, or delivery decision. `ki-roadmap` performs the judgment-led periodic handoff review; it reports candidate adoption, follow-up, or closure work and never moves files or changes either repository automatically.
+A handoff names the receiving repository, originating context, scope, constraints, and what the receiver owns. It never replaces the receiver's own priority, roadmap item, plan, implementation, or delivery decision. `ki-roadmap` performs the judgment-led periodic handoff review; `ki-next` performs confirmed inbound dispositions as part of normal non-KB work selection after a clean roadmap audit. Neither working area is an archive: every retained handoff has a current owner, disposition, reason or request, and review trigger; resolved inbound and outbound copies are removed.
 
 Knowledge Bases retain their own fixed `+/` and `-/` staging model under `ki-kb`. When a KB uses repository-level handoffs, its `+/_HANDOFFS/` and `-/_HANDOFFS/` contents follow this shared direction and ownership model while `ki-kb` continues to own note routing and frontmatter.
 

@@ -2,7 +2,7 @@
 name: ki-next
 ki-depends-on: []
 description: >
-  Selects and prepares the most valuable next roadmap work in a non-KB repository: re-grounds the roadmap, optionally reviews its relevance, replenishes an empty immediate queue through user-confirmed horizon promotions, and creates review-first governed plans through `ki-plan`. A process skill (kind: process, ADR-KI-HARNESS-SKILLS-006): it applies the transition rules owned by `ki-roadmap`; it does not hold a separate roadmap standard. Installable globally, cross-repo — usable in any non-KB repository on the machine. Triggers: "what should we do next", "pick the next roadmap item", "plan the next work", "/ki-next". Not a session recap (`ki-recap`), a roadmap checker or horizon authority (`ki-roadmap`), or an individual plan lifecycle (`ki-plan`).
+  Selects and prepares the most valuable next roadmap work in a non-KB repository: re-grounds the roadmap, triages inbound handoffs, optionally reviews relevance, replenishes an empty immediate queue through user-confirmed horizon promotions, and creates review-first governed plans through `ki-plan`. A process skill (kind: process, ADR-KI-HARNESS-SKILLS-006): it applies the transition rules owned by `ki-roadmap`; it does not hold a separate roadmap standard. Installable globally, cross-repo — usable in any non-KB repository on the machine. Triggers: "what should we do next", "pick the next roadmap item", "plan the next work", "/ki-next". Not a session recap (`ki-recap`), a roadmap checker or horizon authority (`ki-roadmap`), or an individual plan lifecycle (`ki-plan`).
 argument-hint: 'next [--review] | help'
 ---
 
@@ -14,10 +14,11 @@ argument-hint: 'next [--review] | help'
 
 `ki-next` turns a fresh roadmap read into a small, user-confirmed planning queue.
 
-1. **Ground** the current roadmap, profile, active-plan index, and dependency graph. Stop on mechanical drift; this process never repairs it as a side effect.
-2. **Review** relevance when asked or when a stale signal is evident. It may identify obsolete, duplicated, already-planned, or newly-unblocked work, but presents every change as a proposal.
-3. **Select** eligible, dependency-ready Blocking and Next work first. If neither horizon supplies work, it evaluates Soon; only after confirmation does it promote selected ready work to Next and evaluate it again there. If Soon supplies none, it scopes a selected Future candidate only enough to enter Soon, confirms that authored move, and then evaluates the new stage before any later promotion.
-4. **Plan** only confirmed Blocking or Next work, through `ki-plan`, and stop for review after creating or revising each plan.
+1. **Ground** the current roadmap, profile, active-plan index, dependency graph, and inbound handoff inbox. Stop on mechanical drift; this process never repairs it as a side effect.
+2. **Triage** unreviewed or review-triggered incoming handoffs through a separately confirmed local disposition; dormant parked or clarify material is acknowledged and skipped.
+3. **Review** relevance when asked or when a stale signal is evident. It may identify obsolete, duplicated, already-planned, or newly-unblocked work, but presents every change as a proposal.
+4. **Select** eligible, dependency-ready Blocking and Next work first. If neither horizon supplies work, it evaluates Soon; only after confirmation does it promote selected ready work to Next and evaluate it again there. If Soon supplies none, it scopes a selected Future candidate only enough to enter Soon, confirms that authored move, and then evaluates the new stage before any later promotion.
+5. **Plan** only confirmed Blocking or Next work, through `ki-plan`, and stop for review after creating or revising each plan.
 
 ## Relationship map
 
