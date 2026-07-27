@@ -56,6 +56,7 @@ export type BiomeRubricContext = {
 export type KnipRubricContext = {
   knip1: EngineeringEvidence
   knip2: EngineeringEvidence
+  knip3: EngineeringEvidence
   scaffold?: () => void
   repair?: () => void
 }
@@ -356,6 +357,7 @@ export const createEngineeringSession = (
     knip: {
       knip1: evidence('KNIP-1'),
       knip2: evidence('KNIP-2'),
+      knip3: evidence('KNIP-3'),
       ...(mutable
         ? {
             scaffold: () => requestScaffold('knip.json'),

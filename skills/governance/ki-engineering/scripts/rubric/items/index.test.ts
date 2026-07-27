@@ -7,6 +7,7 @@ import {
   type BiomeRubricContext,
   createEngineeringSession,
   type EngineeringRubricContext,
+  type KnipRubricContext,
   type PackageRubricContext
 } from '../contexts/engineering.ts'
 import catalogue from './index.ts'
@@ -43,7 +44,7 @@ test('the structured catalogue preserves the engineering criteria', () => {
     'TOML'
   ])
   const codes = catalogue.families.filter((family) => family.code !== 'RUBRIC').flatMap((family) => family.items.map((item) => item.code))
-  expect(codes).toHaveLength(47)
+  expect(codes).toHaveLength(48)
   expect(new Set(codes).size).toBe(codes.length)
   expect(codes[0]).toBe('PKG-1')
   expect(codes.at(-1)).toBe('TOML-2')
@@ -121,4 +122,28 @@ test('conform never replaces a symlinked contributed package file', () => {
   root.package.synchronise?.()
   expect(session.proposal().writes).toEqual([])
   expect(readFileSync(source, 'utf8')).toBe('{}\n')
+})
+
+test('knip export coverage is audited without offering a repair', () => {
+  const repository = mkdtempSync(join(tmpdir(), 'ki-engineering-'))
+  temporaryDirectories.push(repository)
+  writeFileSync(join(repository, 'package.json'), '{}\n')
+  const session = createEngineeringSession({ mode: 'conform', repository, userHome: tmpdir(), configuration: {} }, () => [
+    { level: 'FAIL', code: 'KNIP-3', message: 'export "./cli" is unreachable', subject: 'knip.json' }
+  ])
+  const root = session.subjects[1]?.context() as EngineeringRubricContext
+  const family = catalogue.families.find((candidate) => candidate.code === 'KNIP') as RubricFamily<
+    EngineeringRubricContext,
+    KnipRubricContext
+  >
+  const item = family.items.find((candidate) => candidate.code === 'KNIP-3')
+
+  // Choosing which entry glob to add is a judgment call, so KNIP-3 never proposes a
+  // conform action — and in particular never reaches for the `knip --fix` repair that
+  // would delete the very exports this criterion protects.
+  expect(item?.mechanical?.conform).toBeUndefined()
+  expect(item?.mechanical?.audit.run(family.selectContext(root))).toEqual([
+    { status: 'VIOLATION', message: 'export "./cli" is unreachable', subject: 'knip.json' }
+  ])
+  expect(session.proposal().commands).toBeUndefined()
 })
