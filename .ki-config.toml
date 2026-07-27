@@ -51,7 +51,7 @@ supported_runtimes = ["claude-code", "codex"]
 
 # This repo uses the non-KB repository-roadmap standard. The table is the compliance marker;
 # this repository's thematic profile lives under docs/roadmap/.
-[ki-repo-roadmap]
+[ki-roadmap]
 
 # This repo ships the ki-handoffs skill, so it declares governance by its own standard.
 # Presence of this table is the compliance marker; tier cost/selection defaults live in

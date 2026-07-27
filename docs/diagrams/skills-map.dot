@@ -36,72 +36,17 @@ digraph skills_map {
     penwidth=1.1
   ]
 
-  subgraph cluster_keystone {
-    color="#9ac8b1"
-    fontcolor="#266242"
-    fontsize=12
-    label="Keystone"
-    style="rounded,filled"
-    fillcolor="#edf8f1"
-    bootstrap [fillcolor="#d9f0e2", label=< <b>ki-bootstrap</b><br/><font point-size="9">install · link · self-govern</font> >, tooltip="Keystone installer and self-governance bootstrap"]
-    repo [fillcolor="#d9f0e2", label=< <b>ki-repo</b><br/><font point-size="9">repository standard</font> >, tooltip="Repository structure, settings, and .ki-config.toml"]
-  }
-
-  subgraph cluster_foundations {
-    color="#c9b3e8"
-    fontcolor="#67439b"
-    fontsize=12
-    label="Foundations"
-    style="rounded,filled"
-    fillcolor="#f6f0fc"
-    authoring [fillcolor="#eee3fb", label=< <b>ki-authoring</b><br/><font point-size="9">writing conventions</font> >, tooltip="Markdown and TOML authoring conventions"]
-    engineering [fillcolor="#eee3fb", label=< <b>ki-engineering</b><br/><font point-size="9">toolchain · tests</font> >, tooltip="Engineering toolchain and tests"]
-  }
-
-  subgraph cluster_structure {
+  subgraph cluster_agentic_systems {
     color="#a9cbe8"
     fontcolor="#2e608d"
     fontsize=12
-    label="Repository structure"
+    label="Agentic systems"
     style="rounded,filled"
     fillcolor="#eff7fd"
     harness [fillcolor="#e0f0fc", label=< <b>ki-harness</b><br/><font point-size="9">agentic-harness shape</font> >]
-    kb [fillcolor="#e0f0fc", label=< <b>ki-kb</b><br/><font point-size="9">knowledge-base shape</font> >]
-    website [fillcolor="#e0f0fc", label=< <b>ki-website</b><br/><font point-size="9">site build</font> >]
     mcp [fillcolor="#e0f0fc", label=< <b>ki-mcp</b><br/><font point-size="9">MCP server shape</font> >]
     plugins [fillcolor="#e0f0fc", label=< <b>ki-plugins</b><br/><font point-size="9">plugin marketplace</font> >]
-    tools [fillcolor="#e0f0fc", label=< <b>ki-tools</b><br/><font point-size="9">standalone CLI</font> >]
-    tap [fillcolor="#e0f0fc", label=< <b>ki-homebrew-tap</b><br/><font point-size="9">formula repository</font> >]
-    dotfiles [fillcolor="#e0f0fc", label=< <b>ki-dotfiles-chezmoi</b><br/><font point-size="9">managed user environment</font> >]
-  }
-
-  subgraph cluster_governance {
-    color="#f0bd86"
-    fontcolor="#8c4d16"
-    fontsize=12
-    label="General governance"
-    style="rounded,filled"
-    fillcolor="#fff7ed"
-    skills [fillcolor="#feead2", label=< <b>ki-skills</b><br/><font point-size="9">skill quality · checker contract</font> >]
-    agents [fillcolor="#feead2", label=< <b>ki-subagents</b><br/><font point-size="9">agent quality</font> >]
-    decisions [fillcolor="#feead2", label=< <b>ki-decision-records</b><br/><font point-size="9">decision records</font> >]
-    features [fillcolor="#feead2", label=< <b>ki-feature-definitions</b><br/><font point-size="9">feature behaviour</font> >]
-    roadmap [fillcolor="#feead2", label=< <b>ki-repo-roadmap</b><br/><font point-size="9">forward work</font> >]
-    handoffs [fillcolor="#feead2", label=< <b>ki-handoffs</b><br/><font point-size="9">implementation-ready handoffs</font> >]
-  }
-
-  subgraph cluster_families {
-    color="#e7b0c9"
-    fontcolor="#91405f"
-    fontsize=12
-    label="Implied families"
-    style="rounded,filled"
-    fillcolor="#fff1f6"
-    kb_activities [fillcolor="#f8dce8", label=< <b>ki-kb-activities</b><br/><font point-size="9">KB activities</font> >]
-    kb_artifacts [fillcolor="#f8dce8", label=< <b>ki-kb-live-artifacts</b><br/><font point-size="9">KB live artifacts</font> >]
-    kb_streams [fillcolor="#f8dce8", label=< <b>ki-kb-streams</b><br/><font point-size="9">KB streams</font> >]
-    cloudflare [fillcolor="#f8dce8", label=< <b>ki-website-cloudflare</b><br/><font point-size="9">deployment</font> >]
-    binding_chezmoi [fillcolor="#f8dce8", label=< <b>ki-binding-chezmoi</b><br/><font point-size="9">MCP render path</font> >]
+    agents [fillcolor="#e0f0fc", label=< <b>ki-subagents</b><br/><font point-size="9">agent quality</font> >]
   }
 
   subgraph cluster_environment {
@@ -112,8 +57,50 @@ digraph skills_map {
     style="rounded,filled"
     fillcolor="#ecfbf9"
     binding [fillcolor="#d7f2ee", label=< <b>ki-binding</b><br/><font point-size="9">MCP binding</font> >]
+    binding_chezmoi [fillcolor="#d7f2ee", label=< <b>ki-binding-chezmoi</b><br/><font point-size="9">MCP render path</font> >]
+    dotfiles [fillcolor="#d7f2ee", label=< <b>ki-dotfiles-chezmoi</b><br/><font point-size="9">managed user environment</font> >]
     housekeeping [fillcolor="#d7f2ee", label=< <b>ki-housekeeping</b><br/><font point-size="9">machine-state hygiene</font> >]
     tokenomics [fillcolor="#d7f2ee", label=< <b>ki-tokenomics</b><br/><font point-size="9">context cost</font> >]
+  }
+
+  subgraph cluster_governance {
+    color="#f0bd86"
+    fontcolor="#8c4d16"
+    fontsize=12
+    label="Governance"
+    style="rounded,filled"
+    fillcolor="#fff7ed"
+    authoring [fillcolor="#feead2", label=< <b>ki-authoring</b><br/><font point-size="9">writing conventions</font> >, tooltip="Markdown and TOML authoring conventions"]
+    decisions [fillcolor="#feead2", label=< <b>ki-decision-records</b><br/><font point-size="9">decision records</font> >]
+    engineering [fillcolor="#feead2", label=< <b>ki-engineering</b><br/><font point-size="9">toolchain · tests</font> >, tooltip="Engineering toolchain and tests"]
+    features [fillcolor="#feead2", label=< <b>ki-feature-definitions</b><br/><font point-size="9">feature behaviour</font> >]
+    handoffs [fillcolor="#feead2", label=< <b>ki-handoffs</b><br/><font point-size="9">implementation-ready handoffs</font> >]
+    roadmap [fillcolor="#feead2", label=< <b>ki-roadmap</b><br/><font point-size="9">forward work</font> >]
+  }
+
+  subgraph cluster_keystone {
+    color="#9ac8b1"
+    fontcolor="#266242"
+    fontsize=12
+    label="Keystone"
+    style="rounded,filled"
+    fillcolor="#edf8f1"
+    bootstrap [fillcolor="#d9f0e2", label=< <b>ki-bootstrap</b><br/><font point-size="9">install · link · self-govern</font> >, tooltip="Keystone installer and self-governance bootstrap"]
+    repo [fillcolor="#d9f0e2", label=< <b>ki-repo</b><br/><font point-size="9">repository standard</font> >, tooltip="Repository structure, settings, and .ki-config.toml"]
+    skills [fillcolor="#d9f0e2", label=< <b>ki-skills</b><br/><font point-size="9">skill quality · checker contract</font> >]
+  }
+
+  subgraph cluster_knowledge_bases {
+    color="#e7b0c9"
+    fontcolor="#91405f"
+    fontsize=12
+    label="Knowledge bases"
+    style="rounded,filled"
+    fillcolor="#fff1f6"
+    kb [fillcolor="#f8dce8", label=< <b>ki-kb</b><br/><font point-size="9">knowledge-base shape</font> >]
+    kb_activities [fillcolor="#f8dce8", label=< <b>ki-kb-activities</b><br/><font point-size="9">KB activities</font> >]
+    kb_artifacts [fillcolor="#f8dce8", label=< <b>ki-kb-live-artifacts</b><br/><font point-size="9">KB live artifacts</font> >]
+    kb_streams [fillcolor="#f8dce8", label=< <b>ki-kb-streams</b><br/><font point-size="9">KB streams</font> >]
   }
 
   subgraph cluster_process {
@@ -123,9 +110,43 @@ digraph skills_map {
     label="Process skills"
     style="rounded,filled"
     fillcolor="#f4f6f9"
-    recap [fillcolor="#e7ebf1", label=< <b>ki-recap</b><br/><font point-size="9">session recap</font> >]
-    plan [fillcolor="#e7ebf1", label=< <b>ki-plan</b><br/><font point-size="9">plan lifecycle</font> >]
     delegate [fillcolor="#e7ebf1", label=< <b>ki-delegate</b><br/><font point-size="9">tiered delegation</font> >]
+    next [fillcolor="#e7ebf1", label=< <b>ki-next</b><br/><font point-size="9">next-work selection</font> >]
+    plan [fillcolor="#e7ebf1", label=< <b>ki-plan</b><br/><font point-size="9">plan lifecycle</font> >]
+    recap [fillcolor="#e7ebf1", label=< <b>ki-recap</b><br/><font point-size="9">session recap</font> >]
+    repo_review [fillcolor="#e7ebf1", label=< <b>ki-repo-review</b><br/><font point-size="9">human-led review</font> >]
+  }
+
+  subgraph cluster_tooling {
+    color="#c9b3e8"
+    fontcolor="#67439b"
+    fontsize=12
+    label="Tooling"
+    style="rounded,filled"
+    fillcolor="#f6f0fc"
+    tap [fillcolor="#eee3fb", label=< <b>ki-homebrew-tap</b><br/><font point-size="9">formula repository</font> >]
+    tools [fillcolor="#eee3fb", label=< <b>ki-tools</b><br/><font point-size="9">standalone CLI</font> >]
+  }
+
+  subgraph cluster_websites {
+    color="#9fb4e8"
+    fontcolor="#405b91"
+    fontsize=12
+    label="Websites"
+    style="rounded,filled"
+    fillcolor="#f0f4fd"
+    website [fillcolor="#e1e9fb", label=< <b>ki-website</b><br/><font point-size="9">site build</font> >]
+    cloudflare [fillcolor="#e1e9fb", label=< <b>ki-website-cloudflare</b><br/><font point-size="9">deployment</font> >]
+  }
+
+  subgraph cluster_deferred {
+    color="#c7a76a"
+    fontcolor="#70521d"
+    fontsize=12
+    label="Deferred physical exception"
+    style="rounded,filled,dashed"
+    fillcolor="#fff9ea"
+    specifications [fillcolor="#fff0c9", label=< <b>ki-specifications</b><br/><font point-size="9">migration deferred</font> >]
   }
 
   subgraph cluster_local {
@@ -170,7 +191,7 @@ digraph skills_map {
   housekeeping -> mcp_housekeeping [xlabel="judges", style=dashed]
   housekeeping -> self [xlabel="recognises", style=dashed, ltail=cluster_environment, lhead=cluster_local]
   self -> concerns [xlabel="audits"]
-  self -> skills [xlabel="promotes patterns into", style=dashed, ltail=cluster_local, lhead=cluster_governance]
+  self -> skills [xlabel="promotes patterns into", style=dashed, ltail=cluster_local, lhead=cluster_keystone]
   skills -> checkers [xlabel="governs", style=dashed]
   checkers -> meta [xlabel="vendored into", style=dashed]
   binding -> hooks [xlabel="binds runtime", style=dashed]

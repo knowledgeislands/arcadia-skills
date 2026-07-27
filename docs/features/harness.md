@@ -10,7 +10,7 @@ The behaviour of the harness as a repository: the five-part bundle and the conta
 
 The repo root MUST contain `skills/`, `subagents/`, `mcp/`, `evals/`, and `hooks/` as directories, per [ADR-KI-HARNESS-001](../decisions/ADR-KI-HARNESS-001-repository-structure-the-five-part-bundle.md).
 
-_Verify:_ `bun skills/repo-structure/ki-harness/scripts/audit-harness.ts .` — LAY-1 PASSes only when all five directories are present (a missing one is a FAIL).
+_Verify:_ `bun skills/agentic-systems/ki-harness/scripts/audit-harness.ts .` — LAY-1 PASSes only when all five directories are present (a missing one is a FAIL).
 
 ### HARN-002 — Each part declares its status
 
@@ -38,7 +38,7 @@ _Verify:_ `audit-harness.ts` CONFIG-1 (`[ki-harness]`, FAIL if absent) and CONFI
 
 `package.json` MUST expose the normal `ki-bootstrap` project delivery script `ki:skills:copy:project` and the skill quality gate `ki:skills:audit`. Aggregate toolchain entrypoints belong separately to `ki-engineering` rather than being duplicated in the harness contract.
 
-_Verify:_ `bun skills/repo-structure/ki-harness/scripts/govern.ts audit .` — PKG-1 / PKG-2 FAIL when the two harness-specific scripts are missing and emit no duplicate PKG-3 toolchain finding.
+_Verify:_ `bun skills/agentic-systems/ki-harness/scripts/govern.ts audit .` — PKG-1 / PKG-2 FAIL when the two harness-specific scripts are missing and emit no duplicate PKG-3 toolchain finding.
 
 ## Skills convention
 
@@ -54,13 +54,13 @@ _Verify:_ `audit-harness.ts` SKILLS-1 FAILs on any directory-name/`name:` mismat
 
 The repository roadmap MUST list only open work — no completed items, no ticked checkboxes, no `~~struck~~` entries — items being removed when done rather than checked off. In the thematic profile, each item's prose MUST live only in its canonical `docs/roadmap/<theme>/ROADMAP.md`, while the root `ROADMAP.md` MUST be the exact generated linked portfolio.
 
-_Verify:_ `ki-repo-roadmap`'s [repository-roadmap standard](../../skills/general-governance/ki-repo-roadmap/references/standards.md), plus its mechanical audit of the exact root projection.
+_Verify:_ `ki-roadmap`'s [repository-roadmap standard](../../skills/governance/ki-roadmap/references/standards-repository-roadmaps.md), plus its mechanical audit of the exact root projection.
 
 ### HARN-008 — CLAUDE.md orientation coverage
 
 `CLAUDE.md` MUST open with a paragraph naming all five part-directories (`skills/`, `subagents/`, `mcp/`, `evals/`, `hooks/`) and MUST carry a five-part status table marking each part populated or an empty shelf, per the `ki-harness` standard.
 
-_Verify:_ `ki-harness`'s rubric CLAUDE-1 and CLAUDE-2 ([`skills/repo-structure/ki-harness/references/rubric.md`](../../skills/repo-structure/ki-harness/references/rubric.md)), applied by reading (judgment-graded).
+_Verify:_ `ki-harness`'s rubric CLAUDE-1 and CLAUDE-2 ([`skills/agentic-systems/ki-harness/references/rubric.md`](../../skills/agentic-systems/ki-harness/references/rubric.md)), applied by reading (judgment-graded).
 
 ### HARN-009 — Claude Code plan lifecycle hooks
 

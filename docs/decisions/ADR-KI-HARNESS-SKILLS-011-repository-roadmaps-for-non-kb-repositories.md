@@ -16,14 +16,14 @@ Non-KB repositories vary in how much forward-work structure they need. A small r
 
 ## Decision
 
-The general-governance skill for non-KB forward work is **`ki-repo-roadmap`**, replacing `ki-plans`. It governs two automatically detected profiles:
+The general-governance skill for non-KB forward work is **`ki-roadmap`**, replacing `ki-plans`. It governs two automatically detected profiles:
 
 - **Simple:** the root `ROADMAP.md` is the complete and only roadmap artifact. It carries the open work and has no plan collection.
 - **Thematic:** each theme owns its canonical open work in `docs/roadmap/<theme>/ROADMAP.md`, with executable plans at `docs/roadmap/<theme>/plans/<THEME>-<NNN>-<slug>.md`. The root `ROADMAP.md` is an exact generated portfolio linking to the theme roadmaps rather than a second home for their prose. Plan frontmatter and canonical local references supply lifecycle state and dependencies directly; no global plan index is retained.
 
 Each thematic roadmap item has a stable qualified locator, `<theme>/<item-slug>`. Every theme declares a stable uppercase code, and plan ids pair it with a serial starting at `001`; the canonical plan identifier is `<THEME>-<NNN>`, which dependencies use across the repository. An item has exactly one authoritative home. Work requiring an executable plan expands into the thematic profile before the plan is created.
 
-`ki-plan` remains the process skill that drives individual plan lifecycles and composes on the `ki-repo-roadmap` standard. A Knowledge Base does not use either repository-roadmap profile or its artifacts: `ki-kb-streams` wholly owns its thematic forward view and execution checklists.
+`ki-plan` remains the process skill that drives individual plan lifecycles and composes on the `ki-roadmap` standard. A Knowledge Base does not use either repository-roadmap profile or its artifacts: `ki-kb-streams` wholly owns its thematic forward view and execution checklists.
 
 The replacement is direct. There is no `ki-plans` alias, configuration or script alias, resolver rename, dual-write period, `docs/plans/` fallback, or compatibility bridge.
 
@@ -38,4 +38,4 @@ The replacement is direct. There is no `ki-plans` alias, configuration or script
 ## References
 
 - [ADR-KI-HARNESS-SKILLS-003](ADR-KI-HARNESS-SKILLS-003-dependency-order-for-multi-skill-composition.md) — the skill naming grammar and dependency-order model this name participates in.
-- [ADR-KI-HARNESS-SKILLS-006](ADR-KI-HARNESS-SKILLS-006-six-cluster-skill-taxonomy-and-the-implication-graph.md) — the governance/process distinction and cluster taxonomy that place ki-repo-roadmap beside ki-plan.
+- [ADR-KI-HARNESS-SKILLS-006](ADR-KI-HARNESS-SKILLS-006-six-cluster-skill-taxonomy-and-the-implication-graph.md) — the governance/process distinction and cluster taxonomy that place ki-roadmap beside ki-plan.

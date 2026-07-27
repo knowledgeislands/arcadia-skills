@@ -25,7 +25,7 @@ This is the map of `docs/` and the guiding principles that govern everything in 
 
 ### Guides — the _how_
 
-[`guides/user/`](guides/user) is the standalone user guide: [Overview](guides/user/overview.md) (what the harness is and how the parts fit), [Install and get started](guides/user/getting-started.md) (optional machine tools, repository bootstrap, and user-environment hook payloads), [Use skills](guides/user/using-skills.md) (how a skill fires), [Skills](guides/user/skills.md) (the set and its clusters), [Skill catalogue](guides/user/skill-catalogue.md) (each skill, one by one), [Bootstrap reference](guides/user/onboarding.md) (the detailed bootstrap and governance flows), [Recommended tools](guides/user/recommended-tools.md) (chezmoi, headroom-ai, Codex skill discovery, mcporter, claude.ai connectors), and [Tuning](guides/user/tuning.md) (making a session lean — which tools, skills, and MCP servers load).
+[`guides/user/`](guides/user) is the standalone user guide: [Overview](guides/user/overview.md) (what the harness is and how the parts fit), [Install and get started](guides/user/getting-started.md) (optional machine tools, repository bootstrap, and user-environment hook payloads), [Use skills](guides/user/using-skills.md) (how a skill fires), [Skills](guides/user/skills.md) (the set and its domains), [Skill catalogue](guides/user/skill-catalogue.md) (each skill, one by one), [Bootstrap reference](guides/user/onboarding.md) (the detailed bootstrap and governance flows), [Recommended tools](guides/user/recommended-tools.md) (chezmoi, headroom-ai, Codex skill discovery, mcporter, claude.ai connectors), and [Tuning](guides/user/tuning.md) (making a session lean — which tools, skills, and MCP servers load).
 
 [`guides/developer/`](guides/developer) holds contributor-facing mechanics that are not part of normal user setup, currently [local skill linking](guides/developer/linking-skills.md).
 
@@ -33,7 +33,7 @@ This is the map of `docs/` and the guiding principles that govern everything in 
 
 ### Repository roadmaps — the _when_
 
-[`roadmap/`](roadmap) holds this non-KB repository's canonical thematic roadmaps and their near-horizon implementation plans. The root [`ROADMAP.md`](../ROADMAP.md) is the generated portfolio view; `ki-repo-roadmap` governs both layers. Knowledge Bases use `ki-kb-streams` instead of this repository-roadmap layout.
+[`roadmap/`](roadmap) holds this non-KB repository's canonical thematic roadmaps and their near-horizon implementation plans. The root [`ROADMAP.md`](../ROADMAP.md) is the generated portfolio view; `ki-roadmap` governs both layers. Knowledge Bases use `ki-kb-streams` instead of this repository-roadmap layout.
 
 ## Temporary working documents
 

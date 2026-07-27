@@ -32,8 +32,8 @@ This is repository bootstrap: it creates that repository's governance machinery 
 - [Overview](docs/guides/user/overview.md) — a short account of what the harness is, what it does for its owner, and how the parts fit.
 - [Install and get started](docs/guides/user/getting-started.md) — the practical starting point: optional tools, repository bootstrap, and user-environment hook payloads.
 - [Use skills](docs/guides/user/using-skills.md) — how a skill fires from a plain-language request or slash command.
-- [Skills](docs/guides/user/skills.md) — what a skill is, the map of the set (the six clusters and their interdependencies), and the shared governance-skill shape.
-- [Skill catalogue](docs/guides/user/skill-catalogue.md) — every skill, one by one, grouped by cluster: what each governs and when to reach for it.
+- [Skills](docs/guides/user/skills.md) — what a skill is, the domain map of the set and its interdependencies, and the shared governance-skill shape.
+- [Skill catalogue](docs/guides/user/skill-catalogue.md) — every skill, one by one, grouped by domain: what each governs and when to reach for it.
 - [Bootstrap reference](docs/guides/user/onboarding.md) — the detailed bootstrap model: remote transport, `.ki/`, day-to-day bins, fleet use, and keeping current.
 - [Command-line interface](docs/guides/user/command-line-interface.md) — the staged end-user `ki` command surface, seed release, and scope boundaries.
 - [Recommended tools](docs/guides/user/recommended-tools.md) — optional user and system tools: chezmoi, headroom-ai, Codex skill discovery, mcporter, and claude.ai connectors.

@@ -59,7 +59,7 @@ Repository-level implementation briefs use the matching subareas:
 | `+/_HANDOFFS/` | Incoming handoffs awaiting a local adoption or decline decision. | Adopt accepted work into this repository's roadmap and, when appropriate, plan; delete declined, adopted, or superseded material. |
 | `-/_HANDOFFS/<receiving-repository>/` | Outgoing handoffs grouped by their receiving repository. | Retain the originating brief only while it is useful; review receiving progress and delete it once its durable destination is clear. |
 
-A handoff names the receiving repository, originating context, scope, constraints, and what the receiver owns. It never replaces the receiver's own priority, roadmap item, plan, implementation, or delivery decision. `ki-repo-roadmap` performs the judgment-led periodic handoff review; it reports candidate adoption, follow-up, or closure work and never moves files or changes either repository automatically.
+A handoff names the receiving repository, originating context, scope, constraints, and what the receiver owns. It never replaces the receiver's own priority, roadmap item, plan, implementation, or delivery decision. `ki-roadmap` performs the judgment-led periodic handoff review; it reports candidate adoption, follow-up, or closure work and never moves files or changes either repository automatically.
 
 Knowledge Bases retain their own fixed `+/` and `-/` staging model under `ki-kb`. When a KB uses repository-level handoffs, its `+/_HANDOFFS/` and `-/_HANDOFFS/` contents follow this shared direction and ownership model while `ki-kb` continues to own note routing and frontmatter.
 

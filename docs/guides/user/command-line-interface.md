@@ -122,7 +122,7 @@ ki skill user remove <skill>
 A fully qualified skill name is `<harness-id>:<skill-name>`:
 
 ```text
-ki skill repo add knowledgeislands/ki-agentic-harness:ki-repo-roadmap
+ki skill repo add knowledgeislands/ki-agentic-harness:ki-roadmap
 ki skill user add hnr/hnr-harness:hnr-engineering
 ```
 

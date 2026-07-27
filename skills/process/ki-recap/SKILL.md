@@ -8,7 +8,7 @@ argument-hint: 'recap [--compress] [--runtime detect|claude|codex] [--transcript
 
 # ki-recap
 
-**Kind:** process. Recaps a **live** session — warm, in-context, run inside the session itself. Full procedure in [references/recap.md](references/recap.md).
+**Kind:** process. Recaps a **live** session — warm, in-context, run inside the session itself. Full procedure in [the session-recap standard](references/standards-session-recap.md).
 
 ## What this skill does
 

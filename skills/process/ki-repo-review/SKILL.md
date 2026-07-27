@@ -2,13 +2,13 @@
 name: ki-repo-review
 ki-depends-on: []
 description: >
-  Guides a human-led review of a repository's architecture and implementation: frame the scope, gather inspectable evidence, interview material uncertainties, record findings, and route each outcome to a plan, Decision Record, guide, feature definition, or no action. It can maintain optional review records and findings while delivery depends on them, then prune them deliberately. A process skill (kind: process, ADR-KI-HARNESS-SKILLS-006): it does not produce an automatic architecture verdict or replace `ki-repo-roadmap`, `ki-plan`, or `ki-decision-records`. Triggers: "review this repository", "architecture review", "implementation review", "review findings", "/ki-repo-review". Not a mechanical repository audit or a delivery-plan lifecycle.
+  Guides a human-led review of a repository's architecture and implementation: frame the scope, gather inspectable evidence, interview material uncertainties, record findings, and route each outcome to a plan, Decision Record, guide, feature definition, or no action. It can maintain optional review records and findings while delivery depends on them, then prune them deliberately. A process skill (kind: process, ADR-KI-HARNESS-SKILLS-006): it does not produce an automatic architecture verdict or replace `ki-roadmap`, `ki-plan`, or `ki-decision-records`. Triggers: "review this repository", "architecture review", "implementation review", "review findings", "/ki-repo-review". Not a mechanical repository audit or a delivery-plan lifecycle.
 argument-hint: 'review [scope] | close <REV-NNN> | help'
 ---
 
 # ki-repo-review
 
-**Kind:** process. Guides an inspectable, human-led repository review. The full review and review-record procedure is in [references/review.md](references/review.md).
+**Kind:** process. Guides an inspectable, human-led repository review. The full review and review-record procedure is in [the repository-review standard](references/standards-repository-review.md).
 
 ## What this skill does
 
@@ -27,7 +27,7 @@ The process creates neither a universal score nor an authoritative verdict. It s
 
 ```text
 ki-repo-review (evidence, interview, findings)
-  ├─> ki-repo-roadmap / ki-plan (delivery work)
+  ├─> ki-roadmap / ki-plan (delivery work)
   ├─> ki-decision-records (durable why)
   ├─> ki-feature-definitions (durable what)
   └─> repository guides (durable how)

@@ -18,7 +18,7 @@ Curated illustrations of well-formed `SKILL.md` files. Use these when writing a 
 | `ki-subagents` SKILL.md †            | Reference implementation: full frontmatter + skill-specific EDUCATE mode | 2026-06-21    |
 | `ki-repo` SKILL.md ‡                 | Reference implementation: argument-hint, standard-skill mode structure   | 2026-06-21    |
 
-† Located at `skills/general-governance/ki-subagents/SKILL.md` in the harness.
+† Located at `skills/agentic-systems/ki-subagents/SKILL.md` in the harness.
 
 ‡ Located at `skills/keystone/ki-repo/SKILL.md` in the harness.
 

@@ -28,7 +28,7 @@ Two lenses, deliberately separate: the **feature-coverage matrix** tracks the _n
 
 § Codex documentation describes subagents as TOML under `~/.codex/agents/` (`name`/`description`/`developer_instructions`), a different shape from Claude Code's Markdown+YAML. The generated agent publisher reports-and-skips Codex pending the generator; the format is spiked, not built. Against codex-cli 0.145.0, however, no `~/.codex/agents/` directory is created and there is no subagents subcommand (only `~/.codex/skills/` exists), so the format is documented, not verified-present.
 
-¶ `plan-stamp`/`plan-sync` ride Claude Code's native Plan Mode, which the matrix marks **None known** for Codex. Parity here likely means a KI-invented reimplementation of the capability, not a port — the way `ki-repo-roadmap`/`ki-plan` are already pure KI inventions with zero runtime dependency.
+¶ `plan-stamp`/`plan-sync` ride Claude Code's native Plan Mode, which the matrix marks **None known** for Codex. Parity here likely means a KI-invented reimplementation of the capability, not a port — the way `ki-roadmap`/`ki-plan` are already pure KI inventions with zero runtime dependency.
 
 ## Working in both concurrently — the critical path
 

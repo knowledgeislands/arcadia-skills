@@ -65,4 +65,4 @@ Several of the skills are built for **Knowledge Islands** work and take its shap
 - **[Tuning](tuning.md)** covers making a session lean — the standing surface vs runtime split, which built-in tools and MCP servers to load, and where a compression proxy does and does not help.
 - **[Bootstrap reference](onboarding.md)** explains what repository bootstrap creates, its fleet and local forms, the day-to-day bins, and keeping a repository current.
 - **[Command-line interface](command-line-interface.md)** explains the staged end-user `ki` command surface and its scope boundaries.
-- **[Skills](skills.md)** covers what a skill is, the six clusters, and the shape they all share; the **[skill catalogue](skill-catalogue.md)** then describes them one by one.
+- **[Skills](skills.md)** covers what a skill is, the domain taxonomy, and the shape they all share; the **[skill catalogue](skill-catalogue.md)** then describes them one by one.

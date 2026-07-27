@@ -2,7 +2,7 @@
 
 The reusable pattern is a "deep audit to implementation-ready roadmap" request. It does not depend on legal work, Knowledge Islands, Streams, or even a software repository.
 
-This is a reusable request template, not a competing planning standard. The `ki-repo-roadmap` and `ki-handoffs` skills remain the normative sources for repository plans and cold-agent handoffs.
+This is a reusable request template, not a competing planning standard. The `ki-roadmap` and `ki-handoffs` skills remain the normative sources for repository plans and cold-agent handoffs.
 
 ## Generic principles
 

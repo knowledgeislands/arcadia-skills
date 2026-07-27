@@ -2,19 +2,19 @@
 name: ki-plan
 ki-depends-on: []
 description: >
-  Drives the lifecycle of governed plans in a non-KB repository — ready / execute / accept / done / prune / new / promote / status — as an installable process skill (kind: process, ADR-KI-HARNESS-SKILLS-006). It creates plans in a thematic repository roadmap, records explicit start approval, can transition an explicitly named readiness or start batch atomically, presents completed work for a manual acceptance gate, retains accepted completion records until an explicit batch prune, and can deliberately promote a runtime-native Plan Mode scratch plan. The profiles, format, and methodology belong to the governance skill `ki-repo-roadmap`, which this skill composes on and never restates. Triggers: "ready these plans", "start these plans", "accept this plan", "close this plan", "prune done plans", "execute plan", "new plan", "promote this Plan Mode plan", "plan status", "/ki-plan". Not for Knowledge Islands KB repos (`repo_type = "kb"`), where planning is a `ki-kb-streams` proposal Checklist.
+  Drives the lifecycle of governed plans in a non-KB repository — ready / execute / accept / done / prune / new / promote / status — as an installable process skill (kind: process, ADR-KI-HARNESS-SKILLS-006). It creates plans in a thematic repository roadmap, records explicit start approval, can transition an explicitly named readiness or start batch atomically, presents completed work for a manual acceptance gate, retains accepted completion records until an explicit batch prune, and can deliberately promote a runtime-native Plan Mode scratch plan. The profiles, format, and methodology belong to the governance skill `ki-roadmap`, which this skill composes on and never restates. Triggers: "ready these plans", "start these plans", "accept this plan", "close this plan", "prune done plans", "execute plan", "new plan", "promote this Plan Mode plan", "plan status", "/ki-plan". Not for Knowledge Islands KB repos (`repo_type = "kb"`), where planning is a `ki-kb-streams` proposal Checklist.
 argument-hint: 'ready <THEME>-<NNN>... | execute <THEME>-<NNN>... | accept <THEME>-<NNN> | done <THEME>-<NNN> | prune [theme] | new <theme> <title> | promote | status [theme] | help'
 ---
 
 # ki-plan
 
-**Kind:** process. Drives one plan's lifecycle; the class-level standard (profiles, format, and methodology) is owned by `ki-repo-roadmap` — see [references/lifecycle.md](references/lifecycle.md) for the full procedure this skill carries out.
+**Kind:** process. Drives one plan's lifecycle; the class-level standard (profiles, format, and methodology) is owned by `ki-roadmap` — see [the plan-lifecycle standard](references/standards-plan-lifecycle.md) for the full procedure this skill carries out.
 
 ## What this skill does
 
-Runs the governed-plan lifecycle for a **non-KB repository**: `ready` (record explicit approval to start one or more named plans), `execute` (start one or more ready plans or work a plan's Steps), `accept` (prepare a manual review packet and stop), `done` (record an explicitly accepted plan's completion without deleting it), `prune` (separately remove a user-confirmed batch of committed done records and canonical items), `new` (write a plan file), `promote` (turn a current runtime-native Plan Mode scratch plan into a governed plan), and `status` (show active plans and retained records). A batch is always explicit and all-or-nothing: validate every selected plan before publishing any status change, then commit the transition once. It is the process counterpart to `ki-repo-roadmap`. It reads the plan format and quality bar from that governance skill rather than restating them.
+Runs the governed-plan lifecycle for a **non-KB repository**: `ready` (record explicit approval to start one or more named plans), `execute` (start one or more ready plans or work a plan's Steps), `accept` (prepare a manual review packet and stop), `done` (record an explicitly accepted plan's completion without deleting it), `prune` (separately remove a user-confirmed batch of committed done records and canonical items), `new` (write a plan file), `promote` (turn a current runtime-native Plan Mode scratch plan into a governed plan), and `status` (show active plans and retained records). A batch is always explicit and all-or-nothing: validate every selected plan before publishing any status change, then commit the transition once. It is the process counterpart to `ki-roadmap`. It reads the plan format and quality bar from that governance skill rather than restating them.
 
-`ki-plan` operates only on the **thematic profile**. The simple profile deliberately has no plan collection. `new` and `promote` in a simple repository stop without writing and give the concrete expansion route `/ki-repo-roadmap expand <theme>`; the user runs `ki-plan` again after expansion.
+`ki-plan` operates only on the **thematic profile**. The simple profile deliberately has no plan collection. `new` and `promote` in a simple repository stop without writing and give the concrete expansion route `/ki-roadmap expand <theme>`; the user runs `ki-plan` again after expansion.
 
 ## Planning is repo-first
 
@@ -24,7 +24,7 @@ When referring in prose to a specific governed plan, link its canonical document
 
 ## Invocation
 
-`help` / `-h` / `?` explains this skill and stops, taking no action. With no argument, present the eight lifecycle verbs in the order above using the runtime's available interactive choice mechanism; in a non-interactive session, print the same choices and stop. Otherwise dispatch on the first token of the argument per [references/lifecycle.md](references/lifecycle.md).
+`help` / `-h` / `?` explains this skill and stops, taking no action. With no argument, present the eight lifecycle verbs in the order above using the runtime's available interactive choice mechanism; in a non-interactive session, print the same choices and stop. Otherwise dispatch on the first token of the argument per [the plan-lifecycle standard](references/standards-plan-lifecycle.md).
 
 ### Runtime binding: promotion session token
 
@@ -34,7 +34,7 @@ The runtime-native `promote` integration receives its session token from the hos
 
 1. Run `git rev-parse --show-toplevel` to find the git root, then physically resolve it.
 2. If `.ki-config.toml` at the git root has `repo_type = "kb"`: **stop** — in a KB, planning is a stream proposal's `## Checklist`, governed by `ki-kb-streams`. This skill creates no KB artifact.
-3. Ask `ki-repo-roadmap` to identify and validate the repository profile. In the simple profile, `status` reports that profile from the root `ROADMAP.md`; `ready`, `execute`, `accept`, `done`, and `prune` report that no governed plan collection exists; `new` and `promote` stop with `/ki-repo-roadmap expand <theme>`. In the thematic profile, use only `docs/roadmap/<theme>/ROADMAP.md` and `docs/roadmap/<theme>/plans/`.
+3. Ask `ki-roadmap` to identify and validate the repository profile. In the simple profile, `status` reports that profile from the root `ROADMAP.md`; `ready`, `execute`, `accept`, `done`, and `prune` report that no governed plan collection exists; `new` and `promote` stop with `/ki-roadmap expand <theme>`. In the thematic profile, use only `docs/roadmap/<theme>/ROADMAP.md` and `docs/roadmap/<theme>/plans/`.
 4. Resolve and validate every existing path component physically before reading or writing it. Never follow a symlink outside the physical git root, infer an alternative plan tree, or repair governance state as a side effect of a lifecycle command.
 
 ## Notes
