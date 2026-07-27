@@ -16,11 +16,11 @@ The behaviour-level contract for what the **ki-agentic-harness** does — the **
 
 Each requirement is a level-3 heading `### <PREFIX>-NNN — <title>`, one RFC-2119 statement, and a `_Verify:_` hook. For example:
 
-    ### BOOT-001 — Self-governing after EDUCATE
+    ### BOOT-015 — Repository governance executes natively
 
-    After the EDUCATE chain runs, a target repo MUST pass `./.ki/bin/ki-audit` with zero skills installed.
+    `ki repo audit` MUST resolve and execute the repository's declared compatible catalogues through the CLI host.
 
-    _Verify:_ bootstrap a bare fixture and run `./.ki/bin/ki-audit`; it executes the vendored checkers.
+    _Verify:_ run the command against a declared fixture and confirm its compatible catalogues execute without a repository-local runner.
 
 RFC-2119 keywords (`MUST` / `MUST NOT` / `SHOULD` / `SHOULD NOT` / `MAY`) are normative and uppercase. `_Verify:_` names the concrete check. A requirement governed by a recorded decision cites its DR.
 
@@ -36,7 +36,7 @@ Each area file may end with a `## Gaps` section of **unnumbered** bullets — kn
 
 | File          | Prefix | Covers                                                                 |
 | ------------- | ------ | ---------------------------------------------------------------------- |
-| bootstrap.md  | `BOOT` | The EDUCATE chain, self-sufficiency contract, vendoring                |
+| bootstrap.md  | `BOOT` | User bootstrap, activation scopes, native repository operations        |
 | governance.md | `GOV`  | Universal modes, mechanical-first, severity, composition, checker root |
 | harness.md    | `HARN` | Five-part bundle, root anchors, toolchain, skills naming               |
 | modes.md      | `MODE` | The four universal modes + HELP as a behavioural contract              |

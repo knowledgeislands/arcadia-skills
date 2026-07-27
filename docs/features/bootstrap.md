@@ -1,73 +1,99 @@
 # Bootstrap — `BOOT`
 
-The behaviour of the bootstrap chain: how the harness brings a target repo under governance so it governs itself. Part of the Feature Definitions corpus; see [index.md](index.md).
+The behaviour of user bootstrap, harness selection, skill activation, and native repository operations. Part of the Feature Definitions corpus; see [index.md](index.md).
 
 > **Status:** as-built baseline, behaviour-level.
 
-## Self-sufficiency
+## Retired repository-vendored bootstrap
 
-### BOOT-001 — Self-governing after EDUCATE
+### BOOT-001 — ~~Self-governing after EDUCATE~~ (deprecated)
 
-After the EDUCATE chain runs against a target repo, that repo MUST govern itself with `./.ki/bin/ki-audit` and **zero** Knowledge Islands skills installed — and with **no `package.json` of its own** — per [ADR-KI-HARNESS-006](../decisions/ADR-KI-HARNESS-006-user-installation-repository-bootstrap-and-self-sufficiency.md).
+Replaced by BOOT-015. Repositories now execute their declared governance through the installed `ki` CLI and compatible harnesses.
 
-_Verify:_ bootstrap a bare fixture (`.ki-config.toml` only, no `package.json`, no `.claude/skills/`) with `skills/keystone/ki-bootstrap/scripts/internal/repo-bootstrap/repo-bootstrap.ts <fixture>`, then run `./.ki/bin/ki-audit` in it — the vendored checkers execute and report.
+### BOOT-002 — ~~Vendored checker copies~~ (deprecated)
 
-### BOOT-002 — Vendored copies, not symlinks
+Replaced by BOOT-013 and BOOT-015. Repository-local checker copies are not an execution source.
 
-EDUCATE MUST vendor each resolved skill's checker (and any `conform-*.ts`) into the target's `.ki/bootstrap/checkers/<skill>/` as file **copies**, never symlinks, so they run with no harness beside the repo (SCRIPT-7 / [ADR-KI-HARNESS-006](../decisions/ADR-KI-HARNESS-006-user-installation-repository-bootstrap-and-self-sufficiency.md)).
-
-_Verify:_ after bootstrap, `.ki/bootstrap/checkers/ki-repo/scripts/govern.ts` in the target is a regular file whose contents equal the harness source, and `git check-ignore` does not ignore it.
+## Declarative repository coverage
 
 ### BOOT-003 — Explicit declared skill coverage
 
-The resolved skill set MUST contain exactly the governance skills declared by `[ki-<skill>]` tables in the target's `.ki-config.toml`, plus any explicit `--seed` required to bootstrap a fresh target, per [ADR-KI-HARNESS-SKILLS-006](../decisions/ADR-KI-HARNESS-SKILLS-006-six-cluster-skill-taxonomy-and-the-implication-graph.md).
+A native repository operation MUST select exactly the compatible governance skills declared by `[ki-<skill>]` tables in the target's `.ki-config.toml`, require every explicit dependency to be declared, and fail before execution when a declaration is missing, incompatible, or ambiguous, per [ADR-KI-HARNESS-012](../decisions/ADR-KI-HARNESS-012-compatible-harness-publication-and-governed-rubric-boundary.md).
 
-Every selected skill's `ki-depends-on:` entries MUST be declared explicitly in that same configuration; bootstrap fails before mutation when one is absent.
+_Verify:_ run `ki repo audit` against a fixture with one valid declared catalogue, then remove a required dependency declaration and confirm resolution fails before the catalogue executes.
 
-_Verify:_ a target declaring `ki-website` also explicitly declares `ki-website-cloudflare`; a missing table fails before `repo-bootstrap.ts` writes.
+## Retired repository-local execution
 
-### BOOT-004 — Repo-wide aggregates
+### BOOT-004 — ~~Repository-local aggregate runners~~ (deprecated)
 
-EDUCATE MUST vendor a `.ki/bin/aggregate.ts` runner that discovers the vendored checkers on the filesystem (no `package.json` read) and fans out over them for a given verb, so the aggregate stays correct as skills are vendored in or out. It validates every canonical JSONL finding, then defaults its human output to FAIL/WARN/POLISH; `--reporter-levels=<levels>` changes only that presentation. The `package.json` convenience keys are explicitly OUT of `ki-bootstrap`'s scope — `ki-engineering` wires them later as sugar over this runner.
+Replaced by BOOT-015. The CLI host owns operation ordering and reporting.
 
-_Verify:_ a bootstrapped repo has `.ki/bin/aggregate.ts`; running `bun .ki/bin/aggregate.ts audit` invokes every vendored `ki:<skill>:audit` in sequence.
+### BOOT-005 — ~~Repository-local command wrappers~~ (deprecated)
 
-### BOOT-005 — package.json-free entry point
+Replaced by BOOT-015. Package-free repositories use the installed `ki` executable.
 
-EDUCATE MUST write four executable wrappers `.ki/bin/{ki-audit,ki-conform,ki-educate,ki-help}` (each mode `0755`) over the vendored aggregate, so a repo with no `package.json` (dotfiles, KB, tap) governs itself through `./.ki/bin/ki-audit`, `./.ki/bin/ki-conform`, `./.ki/bin/ki-educate`, and `./.ki/bin/ki-help <skill>` alone, per [ADR-KI-HARNESS-006](../decisions/ADR-KI-HARNESS-006-user-installation-repository-bootstrap-and-self-sufficiency.md). `ki-help` is pure bash over the vendored `help.md` snapshots, so it runs with no `bun`.
+### BOOT-006 — ~~Per-skill EDUCATE delegators~~ (deprecated)
 
-_Verify:_ after bootstrap, all four of `.ki/bin/{ki-audit,ki-conform,ki-educate,ki-help}` exist and are executable (mode `0755`), and `./.ki/bin/ki-help <skill>` prints its snapshot with `bun` off `PATH`.
+Replaced by BOOT-014 and BOOT-015. Activation and operation dispatch belong to the CLI.
 
-## The chain
+### BOOT-007 — ~~Vendored-set alignment checks~~ (deprecated)
 
-### BOOT-006 — Per-skill EDUCATE delegators
+Replaced by BOOT-003. The native resolver checks declared compatible capabilities.
 
-Every governance skill MUST own a `scripts/educate.ts` that delegates to the `ki-bootstrap` chain engine with itself as an explicit `--seed`, delegating by subprocess (composition), not by cross-skill import, per [ADR-KI-HARNESS-SKILLS-004](../decisions/ADR-KI-HARNESS-SKILLS-004-skills-must-be-valid-standalone.md).
+### BOOT-008 — ~~Remote EDUCATE transport~~ (deprecated)
 
-_Verify:_ each `skills/*/scripts/educate.ts` execs `../../ki-bootstrap/scripts/internal/repo-bootstrap/repo-bootstrap.ts` and passes `--seed <its own name>`.
+Replaced by BOOT-011. First-time setup uses the installed CLI and verified harness acquisition.
 
-Re-running the idempotent bootstrap chain is the single update path — there are no aggressiveness flags; a re-run brings the target up to date.
+## Repository activation
 
-### BOOT-007 — Vendored-set alignment check
+### BOOT-009 — Runtime publication follows repository scope
 
-The harness MUST be able to verify a target's `.ki/bootstrap/checkers/` matches the expected declared skill set (restricted to skills carrying a checker). It validates `ki-depends-on:` declarations against source SKILL.md frontmatter harness-side, because that graph is not part of a target's standalone payload. Missing dependencies are a FAIL before bootstrap mutation; checker-set drift is a WARN, reconciled by re-bootstrap. See [BOOT-9](../../skills/keystone/ki-bootstrap/references/rubric.md).
+`ki skill repo add <skill>` and `ki skill repo remove <skill>` MUST update only the selected repository's `.ki-config.toml` declaration and managed discovery links for its supported runtimes, without copying executable governance payloads or changing user activation.
 
-_Verify:_ `bun skills/keystone/ki-bootstrap/scripts/govern.ts audit <target>` reports PASS when `.ki/bootstrap/checkers/` equals the expected set, and WARNs (listing both directions) when a checker is stray-vendored or missing.
+_Verify:_ add and remove a declared skill in a two-runtime fixture, then inspect `.ki-config.toml` and both runtime discovery locations while confirming the user configuration is unchanged.
 
-### BOOT-008 — Remote EDUCATE transport
+### BOOT-010 — ~~Generated-state CLEAN entrypoint~~ (deprecated)
 
-The EDUCATE chain MUST be runnable on a machine carrying nothing but `bun` — via the POSIX-`sh` `repo-bootstrap.sh` entry point that fetches the repo tarball from `codeload.github.com` and execs the engine, and via a vendored `.ki/bin/ki-educate` wrapper that re-runs the same remote script — per [ADR-KI-HARNESS-006](../decisions/ADR-KI-HARNESS-006-user-installation-repository-bootstrap-and-self-sufficiency.md).
+Replaced by BOOT-016. Legacy retirement is guide-led and fail-closed rather than a compatibility command.
 
-_Verify:_ `skills/keystone/ki-bootstrap/scripts/repo-bootstrap.sh` line 1 is `#!/bin/sh` and its `codeload.github.com` fetch pipes into `lib/repo-bootstrap.ts`; a governed repo's `.ki/bin/ki-educate` re-invokes that script (never `bun run <raw-url>`, which Bun cannot execute over HTTP).
+## User bootstrap
 
-### BOOT-009 — Runtime publication follows the target type
+### BOOT-011 — First-time bootstrap establishes the minimum user environment
 
-Repository bootstrap MUST publish only declared runtime skill coverage. Ordinary repositories receive generated regular-file copies; a harness receives links from runtime skill locations to its own canonical source skills. Declared compile-time shared modules remain regular local files under each skill's `scripts/shared/` directory.
+`ki bootstrap` MUST detect supported local agent runtimes, create the KI user configuration when absent, install or restore the canonical `knowledgeislands/ki-agentic-harness`, and activate `ki-bootstrap`, `ki-delegate`, `ki-next`, `ki-plan`, and `ki-recap` for every detected runtime.
 
-_Verify:_ run `scripts/internal/repo-bootstrap/publish-project-skills.ts` against a declared ordinary-repository fixture and confirm each published runtime skill is a regular file. Run it against a harness fixture and confirm each declared runtime skill is a source link.
+_Verify:_ run `ki bootstrap` against isolated empty XDG and runtime homes, then inspect `config.toml`, the canonical harness installation, and the five managed user-skill links in each detected runtime.
 
-### BOOT-010 — CLEAN removes only proven generated state
+### BOOT-012 — Refresh reconciles detected user state
 
-The source-owned CLEAN entrypoint MUST remove `.ki/` only when its complete regular-file tree matches the hashed generation manifest, and remove only unchanged marker-owned regular runtime skill copies. It MUST preserve configuration, authored source, runtime links, agents, altered or unmarked payloads, and every unsafe or concurrent-mutated path.
+`ki bootstrap --refresh` MUST redetect supported runtimes and rebuild the recorded installed-harness and managed user-skill inventory from current state without declaring governance in a repository.
 
-_Verify:_ bootstrap a fixture, preview `scripts/clean.ts --dry-run`, run CLEAN, confirm generated metadata and ordinary runtime copies disappear, then re-run EDUCATE. Fixtures with altered payloads, explicit links, unfamiliar metadata, or an injected concurrent mutation remain preserved.
+_Verify:_ change the detectable runtime set in an isolated bootstrapped environment, run `ki bootstrap --refresh`, and confirm the user inventory and managed links reconcile while a repository `.ki-config.toml` remains unchanged.
+
+## Harness authority and activation scopes
+
+### BOOT-013 — Installed compatible harnesses are authoritative
+
+Native capability resolution MUST use verified installed compatible harnesses, treat the canonical harness as non-removable, and MUST NOT implicitly use a nearby checkout, runtime link, or repository-local payload as an execution source.
+
+_Verify:_ run capability resolution with only a nearby harness checkout and confirm it fails, then install the compatible harness and confirm resolution succeeds; confirm `ki harness uninstall knowledgeislands/ki-agentic-harness` is refused.
+
+### BOOT-014 — User and repository activation remain separate
+
+User skill operations MUST change only configured user runtime spaces, while repository skill operations MUST change only the selected repository declaration and managed runtime links.
+
+_Verify:_ run `ki skill user add <skill>` and `ki skill repo add <skill>` in isolated state and confirm each command mutates only its own configuration and discovery scope.
+
+## Native operations and retirement
+
+### BOOT-015 — Repository governance executes natively
+
+`ki repo educate`, `ki repo audit`, and `ki repo conform` MUST resolve the selected repository's declared compatible catalogues and execute them through the CLI host without invoking `.ki/bin`, copied checkers, standalone `govern.ts`, or a nearby checkout as a fallback.
+
+_Verify:_ run all three operations against a declared fixture and confirm the compatible catalogue executes; add an otherwise runnable legacy wrapper and confirm it is neither read nor invoked.
+
+### BOOT-016 — Legacy retirement is explicit and fail-closed
+
+Retirement of a repository-vendored KI footprint MUST follow the maintainer guide, remove only completely proven legacy state, and preserve any changed, linked, partial, unfamiliar, or concurrently modified target for review.
+
+_Verify:_ apply the retirement procedure to one known generated fixture and one altered fixture; confirm the known footprint is removed and the altered footprint is retained with a blocker.
