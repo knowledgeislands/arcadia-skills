@@ -16,21 +16,31 @@ Scoped and ready to start — the immediate queue, picked up before anything in 
 
 After the released CLI and canonical harness are available through the normal installation path, inventory every active Knowledge Islands repository's GitHub Actions workflows and prove that each works in a clean hosted runner. Ensure CI installs the verified released `ki`, detects and rejects a stale shadow executable earlier on `PATH`, establishes the declared harness inventory non-interactively, and runs the repository's declared audit, test, build, and release-adjacent gates with the required permissions, secrets, caches, and platform coverage. Fix repository-owned workflow drift in the receiving repository rather than hiding it in the harness, and keep this fleet acceptance pass independent of any one CLI or release plan. Completion requires a green default-branch workflow for every active repository, with any intentional exclusion recorded and justified.
 
+**Plan:** [FND-001](plans/FND-001-verify-github-ci-across-fleet.md)
+
 ### Protect generated rubric publications from drift
 
 Make the `ki` CLI the one canonical renderer for every structured skill rubric. A skill's TypeScript catalogue is authoritative; its tracked `references/rubric.md` is derived output. `ki repo audit --skill ki-skills` must treat any difference between the rendered and tracked publication as drift, while `ki repo conform --skill ki-skills --dry-run` reports and real CONFORM regenerates the affected publications for review. Add generic renderer and transaction coverage in `tools-ki`, then reconcile generated-source notices, classifications, citations, and judgment prompts with the `ki-skills` rubric-authoring contract. Do not retain per-skill publication renderers or divergent output shapes.
+
+**Plan:** [FND-002](plans/FND-002-protect-generated-rubric-publications.md)
 
 ### Review `ki-bootstrap` for further simplification
 
 After the current boundary refactor settles, review the complete `ki-bootstrap` implementation for residual complexity across user installation, repository bootstrap, shared transport, generation, publication, rubric contexts, and tests. Start with local process launches between bootstrap-owned publisher, synchroniser, HELP, and scaffold modules; replace them only after each has an import-safe entry point and preserves its guarded transaction. Keep external commands and user-install failure isolation where those are real boundaries.
 
+**Plan:** [FND-003](plans/FND-003-review-ki-bootstrap-simplification.md)
+
 ### Codify Git workflow and commit conventions
 
 Choose an owner for repository Git discipline, including Conventional Commit messages, the allowed type and scope vocabulary, safe lock and cleanup behaviour, and consistency with repository-local instructions. Decide whether that owner should be a dedicated `ki-git` skill, including ownership of the shipped stale Git-lock guard rather than leaving it as an ungoverned hook. Add mechanical enforcement only after the standard is settled.
 
+**Plan:** [FND-004](plans/FND-004-codify-git-workflow-and-commit-conventions.md)
+
 ### Codify explicit roadmap deferral in `ki-next`
 
 Add `defer` to `ki-next` as a user-confirmed, horizon-qualified move to an honest later horizon. Define its relationship to promotion and Future `_(candidate)_` marking, distinguish it from `ki-plan promote`, and keep transient transition directions out of canonical roadmap headings.
+
+**Plan:** [FND-005](plans/FND-005-codify-explicit-roadmap-deferral.md)
 
 ## Soon
 
