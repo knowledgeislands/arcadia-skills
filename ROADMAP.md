@@ -18,6 +18,7 @@ Understood and roughly scoped but not yet started — worth doing once the **Nex
 - [Foundation Tooling: Establish a top-level script self-description contract _(candidate)_](docs/roadmap/foundation-tooling/ROADMAP.md#establish-a-top-level-script-self-description-contract-candidate)
 - [Foundation Tooling: Protect generated rubric publications from drift](docs/roadmap/foundation-tooling/ROADMAP.md#protect-generated-rubric-publications-from-drift)
 - [Foundation Tooling: Review `ki-bootstrap` for further simplification](docs/roadmap/foundation-tooling/ROADMAP.md#review-ki-bootstrap-for-further-simplification)
+- [Foundation Tooling: Verify GitHub CI across the repository fleet](docs/roadmap/foundation-tooling/ROADMAP.md#verify-github-ci-across-the-repository-fleet)
 - [Governance Consistency: Align KB Stream focus with non-KB roadmap horizons](docs/roadmap/governance-consistency/ROADMAP.md#align-kb-stream-focus-with-non-kb-roadmap-horizons)
 - [Governance Consistency: Codify convention placement and the knowledge-promotion loop](docs/roadmap/governance-consistency/ROADMAP.md#codify-convention-placement-and-the-knowledge-promotion-loop)
 - [Governance Consistency: Review the skill dependency graph and implementation quality _(candidate)_](docs/roadmap/governance-consistency/ROADMAP.md#review-the-skill-dependency-graph-and-implementation-quality-candidate)

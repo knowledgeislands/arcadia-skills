@@ -16,6 +16,10 @@ Scoped and ready to start — the immediate queue, picked up before anything in 
 
 Understood and roughly scoped but not yet started — worth doing once the **Next** queue clears, ahead of anything still speculative.
 
+### Verify GitHub CI across the repository fleet
+
+After the released CLI and canonical harness are available through the normal installation path, inventory every active Knowledge Islands repository's GitHub Actions workflows and prove that each works in a clean hosted runner. Ensure CI installs the verified released `ki`, establishes the declared harness inventory non-interactively, and runs the repository's declared audit, test, build, and release-adjacent gates with the required permissions, secrets, caches, and platform coverage. Fix repository-owned workflow drift in the receiving repository rather than hiding it in the harness, and keep this fleet acceptance pass independent of any one CLI or release plan. Completion requires a green default-branch workflow for every active repository, with any intentional exclusion recorded and justified.
+
 ### Protect generated rubric publications from drift
 
 Complete the rubric-publication contract across the ten governance skills that have structured item catalogues and tracked `references/rubric.md` but no exact-parity test: `ki-housekeeping`, `ki-binding`, `ki-engineering`, `ki-authoring`, `ki-tokenomics`, `ki-binding-chezmoi`, `ki-repo`, `ki-roadmap`, `ki-kb-streams`, and `ki-kb`. Add focused read-only tests that render each in-memory catalogue and exact-compare its publication, then reconcile any missing generated-source notice, classification, citation, or judgment-prompt presentation with `ki-skills`' rubric-authoring contract. Preserve legitimate local renderer choices; do not extract a shared renderer merely for visual uniformity.
