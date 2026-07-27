@@ -1,3 +1,4 @@
+import type { RubricPublication } from '../../shared/rubric.ts'
 import type { ParsedFrontmatter } from './frontmatter.ts'
 import type { RefreshContext } from './longevity.ts'
 import { hintVerbs, isProcessSkill } from './modes.ts'
@@ -100,6 +101,7 @@ export type KiCheckerRubricContext = {
   itemsIndexExists: boolean
   itemsIndexDefinesRules: boolean
   familyModules: readonly RubricFamilyModule[]
+  publication?: RubricPublication
 }
 
 type CollisionTarget = {

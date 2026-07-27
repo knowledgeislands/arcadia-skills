@@ -6,15 +6,15 @@ import { createKiSkillsSession } from './subjects.ts'
 
 const temporaryDirectories: string[] = []
 
-const createRepository = (): string => {
+const createRepository = (name = 'ki-example'): string => {
   const repository = mkdtempSync(join(tmpdir(), 'ki-skills-session-'))
   temporaryDirectories.push(repository)
-  const skillDirectory = join(repository, 'skills', 'ki-example')
+  const skillDirectory = join(repository, 'skills', name)
   mkdirSync(skillDirectory, { recursive: true })
   writeFileSync(
     join(skillDirectory, 'SKILL.md'),
     `---
-name: ki-example
+name: ${name}
 ki-depends-on: []
 description: Checks a small example skill.
 argument-hint: 'audit'
@@ -35,7 +35,13 @@ const createSession = (mode: 'audit' | 'conform') =>
     mode,
     repository: createRepository(),
     userHome: tmpdir(),
-    configuration: {}
+    configuration: {},
+    publication: {
+      target: 'references/rubric.md',
+      rendered: '',
+      state: 'in-sync',
+      propose: () => {}
+    }
   })
 
 describe('ki-skills session evidence', () => {
@@ -78,5 +84,24 @@ describe('ki-skills session evidence', () => {
     shape?.addArgumentHintVerbs?.(['refresh', 'help'])
 
     expect(session.proposal().writes[0]?.content).toContain("argument-hint: 'audit | conform | educate | refresh | help'")
+  })
+
+  test('passes the host publication capability only to the structured rubric exemplar', () => {
+    const publication = {
+      target: 'references/rubric.md',
+      rendered: '# Rubric\n',
+      state: 'stale' as const,
+      propose: () => {}
+    }
+    const session = createKiSkillsSession({
+      mode: 'audit',
+      repository: createRepository('ki-skills'),
+      userHome: tmpdir(),
+      configuration: {},
+      publication
+    })
+    const context = session.subjects.find((subject) => subject.subject === 'skills/ki-skills')?.context()
+
+    expect(context?.checker?.publication).toBe(publication)
   })
 })

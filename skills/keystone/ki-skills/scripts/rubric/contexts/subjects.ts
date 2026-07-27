@@ -87,7 +87,7 @@ const ownershipCollisions = (directories: readonly string[]): { file: string; sk
 }
 
 /** Build one operation-scoped repository session for the generic KI rubric host. */
-export const createKiSkillsSession = ({ mode, repository }: RubricContextOptions): RubricSession<KiSkillsRubricContext> => {
+export const createKiSkillsSession = ({ mode, repository, publication }: RubricContextOptions): RubricSession<KiSkillsRubricContext> => {
   const reportTarget = repository
   const skillDirectories = discoverSkillDirs(repository).sort()
   const subjects: KiSkillsSubject[] = []
@@ -116,7 +116,7 @@ export const createKiSkillsSession = ({ mode, repository }: RubricContextOptions
 
   for (const skillDirectory of skillDirectories) {
     const conform = mode === 'conform' ? createSkillConformState(skillDirectory, reportTarget) : undefined
-    const skill = createSkillRubricContext(skillDirectory, conform?.capabilities)
+    const skill = createSkillRubricContext(skillDirectory, conform?.capabilities, publication)
     const skillSubject = relative(reportTarget, skillDirectory) || '.'
     subjects.push(rubricSubject(skill.validFrontmatter ? 'skill' : 'invalidSkill', skill.context, skillSubject))
     if (conform) documents.push(conform.document)

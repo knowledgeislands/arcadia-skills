@@ -120,6 +120,25 @@ export type RubricContextOptions = {
   repository: string
   userHome: string
   configuration: Readonly<Record<string, unknown>>
+  /** Host-validated generated-publication evidence for this skill's catalogue. */
+  publication: RubricPublication
+}
+
+export type RubricPublicationState = 'in-sync' | 'missing' | 'stale'
+
+/**
+ * A criterion-agnostic capability for a skill's derived rubric publication.
+ *
+ * The host determines the canonical bytes and controls the resulting write. A
+ * rubric may inspect the evidence and request publication during CONFORM, but
+ * it cannot select a path or replacement content.
+ */
+export type RubricPublication = {
+  target: string
+  rendered: string
+  existing?: string
+  state: RubricPublicationState
+  propose: () => void
 }
 
 export type RubricSubject<RootContext> = {

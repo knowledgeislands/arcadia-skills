@@ -342,6 +342,8 @@ The required projection is the readable `references/rubric.md` publication.
 
 It is generated from the structured catalogue, begins with a conspicuous notice that the canonical definitions live under `scripts/rubric/`, and has an exact read-only parity check.
 
+The `ki-skills` exemplar's `KI-CHECKER-6` makes missing or differing publication bytes a FAIL. During CONFORM, the item requests only a host-injected derived-publication capability; `ki` validates the catalogue, chooses the target and bytes, and includes the write in its guarded repository transaction.
+
 A versioned machine projection of rubric metadata or an execution schedule MAY be added when a concrete consumer needs to load the catalogue without importing callback code.
 
 Such a projection is generated, never authored, and its path and responsibility-based name are decided by that integration rather than fixed prematurely here.
@@ -449,7 +451,7 @@ The renderer uses family metadata and ordered item metadata to reproduce:
 
 The generated file carries a clear generated marker.
 
-`ki skill rubric <skill>` verifies the tracked publication against the catalogue; `ki skill rubric <skill> --write` writes it.
+`ki skill rubric <skill>` verifies the tracked publication against the catalogue; `ki skill rubric <skill> --write` writes it. The exemplar also exposes that exact parity through `ki repo audit --skill ki-skills`; `ki repo conform --skill ki-skills` schedules the same host-owned publication write when drift is found.
 
 Runtime code never parses the generated Markdown back into policy.
 

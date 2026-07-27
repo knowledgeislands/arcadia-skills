@@ -1,5 +1,6 @@
 import { existsSync, readdirSync, readFileSync } from 'node:fs'
 import { basename, dirname, join, relative, resolve } from 'node:path'
+import type { RubricPublication } from '../../shared/rubric.ts'
 import { createKiShapeContext, createKiShapeFrontmatterEvidence, type KiShapeSkillContext, type KiSkillsRubricContext } from './contexts.ts'
 import { type ParsedFrontmatter, parseFrontmatter } from './frontmatter.ts'
 import { scriptHelpEvidence } from './scripts.ts'
@@ -222,7 +223,11 @@ const createKiShapeEvidence = (
 }
 
 /** Build the same complete per-skill evidence for AUDIT and CONFORM. */
-export const createSkillRubricContext = (directory: string, capabilities: SkillWritableCapabilities = {}): SkillRubricContext => {
+export const createSkillRubricContext = (
+  directory: string,
+  capabilities: SkillWritableCapabilities = {},
+  publication?: RubricPublication
+): SkillRubricContext => {
   const readContent = capabilities.readContent ?? (() => readFileSync(join(directory, 'SKILL.md'), 'utf8'))
   const content = readContent()
   const frontmatter = parseFrontmatter(content)
@@ -293,6 +298,7 @@ export const createSkillRubricContext = (directory: string, capabilities: SkillW
           : [],
         rubricModuleExists: existsSync(join(sharedDirectory, 'rubric.ts')),
         structuredRubricRequired: name === 'ki-skills' || frontmatter.present.has('ki-shared-dependencies'),
+        ...(name === 'ki-skills' && publication ? { publication } : {}),
         ...familyEvidence
       },
       shape: createKiShapeContext({

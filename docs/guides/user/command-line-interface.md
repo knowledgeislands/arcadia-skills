@@ -102,7 +102,7 @@ The host resolves operations only from verified installed harnesses. It does not
 
 ## Rubric publication
 
-`ki skill rubric <skill>` verifies that the generated `references/rubric.md` publication agrees with the installed skill's structured catalogue. `--write` refreshes that publication in the selected development source when the command's ownership checks permit it.
+`ki skill rubric <skill>` verifies that the generated `references/rubric.md` publication agrees with the installed skill's structured catalogue. `--write` refreshes that publication in the selected development source when the command's ownership checks permit it. The `ki-skills` exemplar also reports missing or stale publication as `KI-CHECKER-6` through `ki repo audit --skill ki-skills`; `ki repo conform --skill ki-skills` schedules the same guarded derived write.
 
 ## Local harness development
 
