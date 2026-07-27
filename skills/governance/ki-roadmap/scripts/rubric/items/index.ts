@@ -6,6 +6,7 @@ import { ITEM } from './item.ts'
 import { PLAN } from './plans.ts'
 import { PROFILE } from './profile.ts'
 import { PROJ } from './proj.ts'
+import { RUBRIC } from './publication.ts'
 import { ROAD } from './roadmaps.ts'
 import { SAFE } from './safety.ts'
 import { SCOPE } from './scope.ts'
@@ -16,5 +17,5 @@ export default {
   name: 'ki-roadmap',
   concern: 'repository roadmaps',
   createSession: createRoadmapSession,
-  families: [SCOPE, PROFILE, ROAD, THEME, ITEM, PROJ, PLAN, SAFE, EXPAND, HANDOFF]
+  families: [RUBRIC, SCOPE, PROFILE, ROAD, THEME, ITEM, PROJ, PLAN, SAFE, EXPAND, HANDOFF]
 } satisfies SkillRubricDefinition<RoadmapRubricContext>

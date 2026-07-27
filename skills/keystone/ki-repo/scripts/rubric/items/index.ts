@@ -12,6 +12,7 @@ import { GH } from './gh.ts'
 import { MERGE } from './merge.ts'
 import { OVR } from './overrides.ts'
 import { PKG } from './pkg.ts'
+import { RUBRIC } from './publication.ts'
 import { RUNTIMES } from './runtimes.ts'
 import { SEC } from './secrets.ts'
 import { STRUCT } from './structure.ts'
@@ -26,5 +27,27 @@ export default {
   name: 'ki-repo',
   concern: 'Knowledge Islands repositories',
   createSession: createRepoSession,
-  families: [FILES, GH, PKG, MERGE, TOGGLE, VIS, TOPICS, BP, DEP, SEC, ACT, CHECKS, COV, STRUCT, ACCESS, RUNTIMES, DESCFIT, OVR, SYNC, WORK]
+  families: [
+    RUBRIC,
+    FILES,
+    GH,
+    PKG,
+    MERGE,
+    TOGGLE,
+    VIS,
+    TOPICS,
+    BP,
+    DEP,
+    SEC,
+    ACT,
+    CHECKS,
+    COV,
+    STRUCT,
+    ACCESS,
+    RUNTIMES,
+    DESCFIT,
+    OVR,
+    SYNC,
+    WORK
+  ]
 } satisfies SkillRubricDefinition<RepoRubricContext>

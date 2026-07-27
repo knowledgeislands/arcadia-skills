@@ -1,6 +1,6 @@
 import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs'
 import { dirname, join, relative, resolve } from 'node:path'
-import type { ConformWrite, RubricContextOptions, RubricSession } from '../../shared/rubric.ts'
+import type { ConformWrite, RubricContextOptions, RubricPublicationContext, RubricSession } from '../../shared/rubric.ts'
 
 const CODE_DIR = 'docs/decisions'
 const KB_DIR = 'Admin/Governance/Decisions'
@@ -105,6 +105,7 @@ export type IndexRubricContext = {
 }
 
 export type DecisionRecordsRubricContext = {
+  rubric: RubricPublicationContext
   filename: FilenameRubricContext
   root: RootRubricContext
   frontmatter: RecordsRubricContext
@@ -268,7 +269,11 @@ const createIndexDraft = (repository: string, path: string, original: string): I
   }
 }
 
-export const createDecisionRecordsSession = ({ mode, repository }: RubricContextOptions): RubricSession<DecisionRecordsRubricContext> => {
+export const createDecisionRecordsSession = ({
+  mode,
+  repository,
+  publication
+}: RubricContextOptions): RubricSession<DecisionRecordsRubricContext> => {
   const kbMode = isKb(repository)
   const directory = resolveDirectory(repository, kbMode)
   const exists = isDirectory(directory)
@@ -288,6 +293,7 @@ export const createDecisionRecordsSession = ({ mode, repository }: RubricContext
   const indexDraft = mode === 'conform' && indexExists ? createIndexDraft(repository, indexPath, indexContent) : undefined
 
   const context: DecisionRecordsRubricContext = {
+    rubric: { publication },
     filename: {
       invalidFilenames: records.filter((record) => record.file !== record.expectedFilename).map((record) => record.file),
       duplicateIds,
@@ -320,7 +326,10 @@ export const createDecisionRecordsSession = ({ mode, repository }: RubricContext
   }
 
   return {
-    subjects: [{ families: ['FILENAME', 'ROOT', 'FM', 'TYPE-FIT', 'BODY', 'INDEX'], context: () => context }],
+    subjects: [
+      { families: ['RUBRIC'], context: () => context },
+      { families: ['FILENAME', 'ROOT', 'FM', 'TYPE-FIT', 'BODY', 'INDEX'], context: () => context }
+    ],
     proposal: () => {
       const indexWrite = indexDraft?.proposal()
       return { writes: indexWrite ? [indexWrite] : [] }

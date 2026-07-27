@@ -7,7 +7,10 @@ import { type KbRubricContext, ZONES } from '../contexts/kb.ts'
 import catalogue from './index.ts'
 
 const temporaryDirectories: string[] = []
-const families = catalogue.families as unknown as readonly RubricFamily<KbRubricContext, unknown>[]
+const families = catalogue.families.filter((family) => family.code !== 'RUBRIC') as unknown as readonly RubricFamily<
+  KbRubricContext,
+  unknown
+>[]
 const items = families.flatMap((family) => family.items) as readonly RubricItem<unknown>[]
 const familyModules = readdirSync(import.meta.dir)
   .filter((file) => file.endsWith('.ts') && file !== 'index.ts' && !file.endsWith('.test.ts'))
@@ -30,7 +33,7 @@ test('the structured catalogue preserves every KB criterion', () => {
   expect(catalogue.contract).toBe(1)
   expect(catalogue.name).toBe('ki-kb')
   expect(catalogue.createSession).toBeFunction()
-  expect(catalogue.families.map((family) => family.code)).toEqual(['ZONE', 'CONFIG', 'ADMIN', 'ROUTE', 'NOTE', 'MEM', 'LINK'])
+  expect(catalogue.families.map((family) => family.code)).toEqual(['RUBRIC', 'ZONE', 'CONFIG', 'ADMIN', 'ROUTE', 'NOTE', 'MEM', 'LINK'])
   expect(items.map((item) => item.code)).toEqual([
     'ZONE-1',
     'ZONE-2',
@@ -72,7 +75,7 @@ test('each family module exports one complete family', async () => {
 test('audit is read-only and returns one stable focused context', () => {
   const repository = createBase()
   const session = catalogue.createSession({ mode: 'audit', repository, userHome: tmpdir(), configuration: {} })
-  const subject = session.subjects[0]
+  const subject = session.subjects[1]
   const context = subject?.context()
 
   expect(subject?.context()).toBe(context)
@@ -89,7 +92,7 @@ test('audit is read-only and returns one stable focused context', () => {
 test('index and MEMORY actions aggregate safe creates behind one session proposal', () => {
   const repository = createBase()
   const session = catalogue.createSession({ mode: 'conform', repository, userHome: tmpdir(), configuration: {} })
-  const context = session.subjects[0]?.context() as KbRubricContext
+  const context = session.subjects[1]?.context() as KbRubricContext
   const zone = families.find((family) => family.code === 'ZONE')
   const zoneContext = zone?.selectContext(context)
   for (const code of ['ZONE-2', 'ZONE-3']) zone?.items.find((item) => item.code === code)?.mechanical?.conform?.run(zoneContext)
@@ -116,7 +119,7 @@ test('a symlinked output is never proposed or followed', () => {
   writeFileSync(outside, 'outside\n')
   symlinkSync(outside, join(repository, 'Admin', 'Admin.md'))
   const session = catalogue.createSession({ mode: 'conform', repository, userHome: tmpdir(), configuration: {} })
-  const context = session.subjects[0]?.context() as KbRubricContext
+  const context = session.subjects[1]?.context() as KbRubricContext
   const zone = families.find((family) => family.code === 'ZONE')
   zone?.items.find((item) => item.code === 'ZONE-2')?.mechanical?.conform?.run(zone.selectContext(context))
 
@@ -132,7 +135,7 @@ test('a zone alias cannot propose a create through an intermediate symlink', () 
   symlinkSync(outside, join(repository, 'linked'))
   writeFileSync(join(repository, '.ki-config.toml'), ['[ki-kb]', '', '[ki-kb.zones]', 'Resources = "linked/Resources"', ''].join('\n'))
   const session = catalogue.createSession({ mode: 'conform', repository, userHome: tmpdir(), configuration: {} })
-  const context = session.subjects[0]?.context() as KbRubricContext
+  const context = session.subjects[1]?.context() as KbRubricContext
   const zone = families.find((family) => family.code === 'ZONE')
   zone?.items.find((item) => item.code === 'ZONE-2')?.mechanical?.conform?.run(zone.selectContext(context))
 

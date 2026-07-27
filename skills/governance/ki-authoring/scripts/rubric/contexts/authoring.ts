@@ -2,7 +2,7 @@ import { spawnSync } from 'node:child_process'
 import { createHash } from 'node:crypto'
 import { existsSync, lstatSync, readFileSync } from 'node:fs'
 import { join, resolve } from 'node:path'
-import type { ConformCommand, ConformWrite, RubricContextOptions, RubricSession } from '../../shared/rubric.ts'
+import type { ConformCommand, ConformWrite, RubricContextOptions, RubricPublicationContext, RubricSession } from '../../shared/rubric.ts'
 
 export const PRETTIER_DEFAULT = `{
   "printWidth": 160,
@@ -109,6 +109,7 @@ export type OwnedRubricContext = {
 export type TomlRubricContext = Record<string, never>
 export type SynchronisationRubricContext = Record<string, never>
 export type AuthoringRubricContext = {
+  rubric: RubricPublicationContext
   markdown: MarkdownRubricContext
   owned: OwnedRubricContext
   toml: TomlRubricContext
@@ -189,7 +190,7 @@ const inspectMarkdown = (repository: string): MarkdownAudit => {
 export type MarkdownInspector = (repository: string) => MarkdownAudit
 
 export const createAuthoringSession = (
-  { mode, repository }: RubricContextOptions,
+  { mode, repository, publication }: RubricContextOptions,
   markdownInspector: MarkdownInspector = inspectMarkdown
 ): RubricSession<AuthoringRubricContext> => {
   const target = resolve(repository)
@@ -198,6 +199,7 @@ export const createAuthoringSession = (
   let normaliseMarkdown = false
   const ownedDrafts = (Object.keys(canonical) as OwnedFile[]).map((name) => createOwnedFileDraft(target, name, mutable))
   const context: AuthoringRubricContext = {
+    rubric: { publication },
     markdown: {
       target,
       exists: targetExists,
@@ -219,7 +221,10 @@ export const createAuthoringSession = (
   }
 
   return {
-    subjects: [{ families: ['MD', 'OWN', 'TOML', 'SYNC'], context: () => context }],
+    subjects: [
+      { families: ['RUBRIC'], context: () => context },
+      { families: ['MD', 'OWN', 'TOML', 'SYNC'], context: () => context }
+    ],
     proposal: () => ({
       writes: ownedDrafts.flatMap((draft) => {
         const write = draft.proposal()

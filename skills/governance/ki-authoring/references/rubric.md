@@ -8,10 +8,19 @@ Line-by-line criteria for auditing ki-authoring. Classifications are derived fro
 
 ## Contents
 
+- [RUBRIC — Generated rubric publication](#rubric--generated-rubric-publication)
 - [MD — Markdown authoring](#md--markdown-authoring)
 - [OWN — Owned authoring configuration](#own--owned-authoring-configuration)
 - [TOML — TOML formatting](#toml--toml-formatting)
 - [SYNC — Convention synchronisation](#sync--convention-synchronisation)
+
+## RUBRIC — Generated rubric publication
+
+→ [standard](../../../keystone/ki-skills/references/standards-rubric-authoring.md)
+
+The tracked readable rubric is the exact publication of the structured catalogue.
+
+- **RUBRIC-1 [M] — structured catalogue publication is exact** — A structured catalogue tracks `references/rubric.md` as its exact generated publication. The host supplies only validated publication evidence: a missing or differing file is a FAIL; during CONFORM this item requests the host-owned derived write without choosing its path or bytes. (../../../keystone/ki-skills/references/standards-rubric-authoring.md#generated-rubric-publication)
 
 ## MD — Markdown authoring
 

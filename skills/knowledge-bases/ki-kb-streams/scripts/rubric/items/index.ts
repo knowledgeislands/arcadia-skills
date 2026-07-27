@@ -3,6 +3,7 @@ import { createStreamsSession, type StreamsRubricContext } from '../contexts/str
 import { CONFIG } from './config.ts'
 import { ENACT } from './enactment.ts'
 import { GATE } from './gate.ts'
+import { RUBRIC } from './publication.ts'
 import { STREAM } from './stream.ts'
 
 export default {
@@ -10,5 +11,5 @@ export default {
   name: 'ki-kb-streams',
   concern: 'Knowledge Islands Streams zones',
   createSession: createStreamsSession,
-  families: [STREAM, ENACT, GATE, CONFIG]
+  families: [RUBRIC, STREAM, ENACT, GATE, CONFIG]
 } satisfies SkillRubricDefinition<StreamsRubricContext>

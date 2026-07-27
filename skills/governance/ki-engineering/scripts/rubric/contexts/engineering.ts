@@ -5,6 +5,7 @@ import type {
   ConformCommand,
   ConformWrite,
   RubricContextOptions,
+  RubricPublicationContext,
   RubricSession,
   ViolationLevel
 } from '../../shared/rubric.ts'
@@ -82,6 +83,7 @@ export type TomlRubricContext = {
 }
 
 export type EngineeringRubricContext = {
+  rubric: RubricPublicationContext
   package: PackageRubricContext
   mise: MiseRubricContext
   ci: CiRubricContext
@@ -262,7 +264,7 @@ const evidenceByCode = (findings: readonly EngineeringEvidenceFinding[]): ((code
 }
 
 export const createEngineeringSession = (
-  { mode, repository }: RubricContextOptions,
+  { mode, repository, publication }: RubricContextOptions,
   inspect: EngineeringEvidenceInspector = collectAuditEvidence
 ): RubricSession<EngineeringRubricContext> => {
   const target = resolve(repository)
@@ -312,6 +314,7 @@ export const createEngineeringSession = (
       : {}
 
   const context: EngineeringRubricContext = {
+    rubric: { publication },
     package: packageContext,
     mise: {
       mise1: evidence('MISE-1'),
@@ -400,6 +403,7 @@ export const createEngineeringSession = (
 
   return {
     subjects: [
+      { families: ['RUBRIC'], context: () => context },
       {
         families: ['PKG', 'MISE', 'CI', 'SCR', 'BUN', 'TSC', 'BIO', 'KNIP', 'SYNC', 'DEPS', 'GEN', 'TEST', 'BUILD', 'ENV', 'TOML'],
         context: () => context

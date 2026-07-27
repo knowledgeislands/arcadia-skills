@@ -8,6 +8,7 @@ Line-by-line criteria for auditing ki-kb. Classifications are derived from item 
 
 ## Contents
 
+- [RUBRIC — Generated rubric publication](#rubric--generated-rubric-publication)
 - [ZONE — zone layout](#zone--zone-layout)
 - [CONFIG — KB configuration](#config--kb-configuration)
 - [ADMIN — Admin zone](#admin--admin-zone)
@@ -15,6 +16,14 @@ Line-by-line criteria for auditing ki-kb. Classifications are derived from item 
 - [NOTE — note conventions](#note--note-conventions)
 - [MEM — memory cascade](#mem--memory-cascade)
 - [LINK — base linking](#link--base-linking)
+
+## RUBRIC — Generated rubric publication
+
+→ [standard](../../../keystone/ki-skills/references/standards-rubric-authoring.md)
+
+The tracked readable rubric is the exact publication of the structured catalogue.
+
+- **RUBRIC-1 [M] — structured catalogue publication is exact** — A structured catalogue tracks `references/rubric.md` as its exact generated publication. The host supplies only validated publication evidence: a missing or differing file is a FAIL; during CONFORM this item requests the host-owned derived write without choosing its path or bytes. (../../../keystone/ki-skills/references/standards-rubric-authoring.md#generated-rubric-publication)
 
 ## ZONE — zone layout
 

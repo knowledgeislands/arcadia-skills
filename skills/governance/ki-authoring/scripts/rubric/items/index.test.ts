@@ -27,8 +27,10 @@ test('the default export is the sole catalogue entrypoint and families are compl
   expect(Object.keys(ownedModule)).toEqual(['OWNED'])
   expect(Object.keys(tomlModule)).toEqual(['TOML'])
   expect(Object.keys(synchronisationModule)).toEqual(['SYNCHRONISATION'])
-  expect(catalogue.families.map((family) => family.code)).toEqual(['MD', 'OWN', 'TOML', 'SYNC'])
-  expect(catalogue.families.flatMap((family) => family.items.map((item) => item.code))).toEqual([
+  expect(catalogue.families.map((family) => family.code)).toEqual(['RUBRIC', 'MD', 'OWN', 'TOML', 'SYNC'])
+  expect(
+    catalogue.families.filter((family) => family.code !== 'RUBRIC').flatMap((family) => family.items.map((item) => item.code))
+  ).toEqual([
     'MD-mech',
     'MD-table',
     'MD-footnote',
@@ -52,7 +54,7 @@ test('conform retains drafts, coalesces writes, and leaves publication to the ho
     inspections += 1
     return { clean: false, detail: 'formatter drift' }
   })
-  const subject = session.subjects[0]
+  const subject = session.subjects[1]
   const context = subject?.context()
   const markdown = markdownModule.MARKDOWN.items[0]
   const owned = ownedModule.OWNED.items[0]
@@ -106,7 +108,7 @@ test('owned-file conform refuses to propose a write through a symlink', () => {
   writeFileSync(outside, 'do not replace\n')
   symlinkSync(outside, join(repository, '.editorconfig'))
   const session = createAuthoringSession({ mode: 'conform', repository, userHome: tmpdir(), configuration: {} }, () => ({ clean: true }))
-  const context = session.subjects[0]?.context()
+  const context = session.subjects[1]?.context()
   const owned = ownedModule.OWNED.items[0]
 
   expect(context?.owned.files.find((file) => file.name === '.editorconfig')?.state).toBe('unsafe')

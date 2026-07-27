@@ -5,8 +5,8 @@ test('the catalogue exposes the complete ordered Activity family', () => {
   expect(definition.contract).toBe(1)
   expect(definition.name).toBe('ki-kb-activities')
   expect(definition.createSession).toBeFunction()
-  expect(definition.families.map((family) => family.code)).toEqual(['ACT'])
-  expect(definition.families[0]?.items.map((item) => item.code)).toEqual([
+  expect(definition.families.map((family) => family.code)).toEqual(['RUBRIC', 'ACT'])
+  expect(definition.families[1]?.items.map((item) => item.code)).toEqual([
     'ACT-S-1',
     'ACT-S-2',
     'ACT-S-3',

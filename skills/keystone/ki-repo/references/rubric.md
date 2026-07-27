@@ -8,6 +8,7 @@ Line-by-line criteria for auditing ki-repo. Classifications are derived from ite
 
 ## Contents
 
+- [RUBRIC — Generated rubric publication](#rubric--generated-rubric-publication)
 - [FILES — Repository files](#files--repository-files)
 - [GH — Core GitHub settings](#gh--core-github-settings)
 - [PKG — Package metadata](#pkg--package-metadata)
@@ -28,6 +29,14 @@ Line-by-line criteria for auditing ki-repo. Classifications are derived from ite
 - [OVR — Override rationale](#ovr--override-rationale)
 - [SYNC — Standard synchronisation](#sync--standard-synchronisation)
 - [WORK — Working areas](#work--working-areas)
+
+## RUBRIC — Generated rubric publication
+
+→ [standard](../../ki-skills/references/standards-rubric-authoring.md)
+
+The tracked readable rubric is the exact publication of the structured catalogue.
+
+- **RUBRIC-1 [M] — structured catalogue publication is exact** — A structured catalogue tracks `references/rubric.md` as its exact generated publication. The host supplies only validated publication evidence: a missing or differing file is a FAIL; during CONFORM this item requests the host-owned derived write without choosing its path or bytes. (../../ki-skills/references/standards-rubric-authoring.md#generated-rubric-publication)
 
 ## FILES — Repository files
 

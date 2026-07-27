@@ -1,7 +1,7 @@
 import { expect, test } from 'bun:test'
 import definition from './index.ts'
 
-const expectedFamilies = ['TAP', 'CONFIG']
+const expectedFamilies = ['RUBRIC', 'TAP', 'CONFIG']
 const expectedItems = [
   'TAP-1',
   'TAP-2',
@@ -24,7 +24,9 @@ test('the catalogue exposes every ordered Homebrew-tap family and criterion', ()
   expect(definition.name).toBe('ki-homebrew-tap')
   expect(definition.createSession).toBeFunction()
   expect(definition.families.map((family) => family.code)).toEqual(expectedFamilies)
-  expect(definition.families.flatMap((family) => family.items.map((item) => item.code))).toEqual(expectedItems)
+  expect(
+    definition.families.filter((family) => family.code !== 'RUBRIC').flatMap((family) => family.items.map((item) => item.code))
+  ).toEqual(expectedItems)
 })
 
 test('the catalogue and family modules keep their public surfaces narrow', async () => {

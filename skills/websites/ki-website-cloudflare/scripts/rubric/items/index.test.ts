@@ -3,8 +3,8 @@ import definition, * as catalogueModule from './index.ts'
 import * as familyModule from './wcf.ts'
 
 test('the catalogue exposes the complete ordered Cloudflare hosting family', () => {
-  expect(definition.families.map((family) => family.code)).toEqual(['WCF'])
-  expect(definition.families[0]?.items.map((item) => item.code)).toEqual([
+  expect(definition.families.map((family) => family.code)).toEqual(['RUBRIC', 'WCF'])
+  expect(definition.families[1]?.items.map((item) => item.code)).toEqual([
     'WCF-1',
     'WCF-2',
     'WCF-3',

@@ -3,7 +3,9 @@ import { readdirSync } from 'node:fs'
 import type { RubricItem } from '../../shared/rubric.ts'
 import catalogue from './index.ts'
 
-const items = catalogue.families.flatMap((family) => family.items as readonly RubricItem<unknown>[])
+const items = catalogue.families
+  .filter((family) => family.code !== 'RUBRIC')
+  .flatMap((family) => family.items as readonly RubricItem<unknown>[])
 const familyModules = readdirSync(import.meta.dir)
   .filter((file) => file.endsWith('.ts') && file !== 'index.ts' && !file.endsWith('.test.ts'))
   .sort()
@@ -12,7 +14,7 @@ test('the structured catalogue preserves the complete website rule surface', () 
   expect(catalogue.contract).toBe(1)
   expect(catalogue.name).toBe('ki-website')
   expect(catalogue.createSession).toBeFunction()
-  expect(catalogue.families.map((family) => family.code)).toEqual(['WEB'])
+  expect(catalogue.families.map((family) => family.code)).toEqual(['RUBRIC', 'WEB'])
   expect(items.map((item) => item.code)).toEqual(Array.from({ length: 42 }, (_, index) => `WEB-${index + 1}`))
   expect(new Set(items.map((item) => item.code)).size).toBe(items.length)
   expect(items.filter((item) => item.judgment).every((item) => Boolean(item.judgment?.prompt.trim()))).toBe(true)
@@ -20,7 +22,7 @@ test('the structured catalogue preserves the complete website rule surface', () 
 })
 
 test('the sole semantic family module exports one complete family', async () => {
-  expect(familyModules).toEqual(['web.ts'])
+  expect(familyModules).toEqual(['publication.ts', 'web.ts'])
   const module = (await import('./web.ts')) as Record<string, unknown>
   expect(Object.keys(module)).toEqual(['WEB'])
   const family = module.WEB as { code?: unknown; items?: unknown }
@@ -35,8 +37,8 @@ test('the session exposes one stable repository subject for the WEB family', () 
     userHome: import.meta.dir,
     configuration: {}
   })
-  expect(session.subjects).toHaveLength(1)
-  expect(session.subjects[0]?.families).toEqual(['WEB'])
-  expect(session.subjects[0]?.context()).toBe(session.subjects[0]?.context())
+  expect(session.subjects).toHaveLength(2)
+  expect(session.subjects[1]?.families).toEqual(['WEB'])
+  expect(session.subjects[1]?.context()).toBe(session.subjects[1]?.context())
   expect(session.proposal()).toEqual({ writes: [] })
 })

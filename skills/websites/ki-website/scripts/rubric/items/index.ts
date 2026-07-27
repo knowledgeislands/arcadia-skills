@@ -1,5 +1,6 @@
 import type { SkillRubricDefinition } from '../../shared/rubric.ts'
 import { createWebsiteSession, type WebsiteContext } from '../contexts/website.ts'
+import { RUBRIC } from './publication.ts'
 import { WEB } from './web.ts'
 
 export default {
@@ -7,5 +8,5 @@ export default {
   name: 'ki-website',
   concern: 'Eleventy static-site build',
   createSession: createWebsiteSession,
-  families: [WEB]
+  families: [RUBRIC, WEB]
 } satisfies SkillRubricDefinition<WebsiteContext>

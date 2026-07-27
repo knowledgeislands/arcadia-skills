@@ -1,6 +1,6 @@
 import { type Dirent, lstatSync, readdirSync, readFileSync } from 'node:fs'
 import { basename, join, resolve } from 'node:path'
-import type { ConformCommand, ConformWrite, RubricContextOptions, RubricSession } from '../../shared/rubric.ts'
+import type { ConformCommand, ConformWrite, RubricContextOptions, RubricPublicationContext, RubricSession } from '../../shared/rubric.ts'
 
 type NodeKind = 'missing' | 'file' | 'directory' | 'unsafe'
 type RootState = 'absent' | 'physical' | 'unsafe'
@@ -59,6 +59,7 @@ export type ToolsConfigContext = {
 }
 
 export type ToolsRubricContext = {
+  readonly rubric: RubricPublicationContext
   readonly tool: ToolRepositoryContext
   readonly shell: ShellToolsContext
   readonly language: LanguageToolsContext
@@ -136,7 +137,7 @@ const inspectDirectory = (
   return { state: 'present', files: files.sort(), unsafe: unsafe.sort() }
 }
 
-export const createToolsSession = ({ mode, repository }: RubricContextOptions): RubricSession<ToolsRubricContext> => {
+export const createToolsSession = ({ mode, repository, publication }: RubricContextOptions): RubricSession<ToolsRubricContext> => {
   const root = resolve(repository)
   const rootKind = nodeKind(root)
   const rootState: RootState = rootKind === 'missing' ? 'absent' : rootKind === 'directory' ? 'physical' : 'unsafe'
@@ -194,6 +195,7 @@ export const createToolsSession = ({ mode, repository }: RubricContextOptions): 
   let markerRequested = false
   const originalConfig = configEvidence.content
   const context: ToolsRubricContext = {
+    rubric: { publication },
     tool: {
       repository: root,
       rootState,
@@ -252,7 +254,10 @@ export const createToolsSession = ({ mode, repository }: RubricContextOptions): 
   }
 
   return {
-    subjects: [{ families: ['TOOL', 'SHELL', 'LANG', 'CONFIG'], context: () => context, subject: root }],
+    subjects: [
+      { families: ['RUBRIC'], context: () => context },
+      { families: ['TOOL', 'SHELL', 'LANG', 'CONFIG'], context: () => context, subject: root }
+    ],
     proposal: () => {
       const commands = [...requestedExecutables].sort().map((path): ConformCommand => ({ program: 'chmod', arguments: ['+x', path] }))
       const writes: ConformWrite[] =

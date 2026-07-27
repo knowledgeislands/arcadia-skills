@@ -5,6 +5,7 @@ import { CONFIG } from './config.ts'
 import { LINK } from './links.ts'
 import { MEM } from './memory.ts'
 import { NOTE } from './notes.ts'
+import { RUBRIC } from './publication.ts'
 import { ROUTE } from './routing.ts'
 import { ZONE } from './zones.ts'
 
@@ -13,5 +14,5 @@ export default {
   name: 'ki-kb',
   concern: 'Knowledge Islands knowledge bases',
   createSession: createKbSession,
-  families: [ZONE, CONFIG, ADMIN, ROUTE, NOTE, MEM, LINK]
+  families: [RUBRIC, ZONE, CONFIG, ADMIN, ROUTE, NOTE, MEM, LINK]
 } satisfies SkillRubricDefinition<KbRubricContext>

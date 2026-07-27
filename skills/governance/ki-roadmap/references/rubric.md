@@ -8,6 +8,7 @@ Line-by-line criteria for auditing ki-roadmap. Classifications are derived from 
 
 ## Contents
 
+- [RUBRIC — Generated rubric publication](#rubric--generated-rubric-publication)
 - [SCOPE — scope](#scope--scope)
 - [PROFILE — profile](#profile--profile)
 - [ROAD — roadmaps](#road--roadmaps)
@@ -18,6 +19,14 @@ Line-by-line criteria for auditing ki-roadmap. Classifications are derived from 
 - [SAFE — safe mechanics](#safe--safe-mechanics)
 - [EXPAND — expansion](#expand--expansion)
 - [HANDOFF — handoff review](#handoff--handoff-review)
+
+## RUBRIC — Generated rubric publication
+
+→ [standard](../../../keystone/ki-skills/references/standards-rubric-authoring.md)
+
+The tracked readable rubric is the exact publication of the structured catalogue.
+
+- **RUBRIC-1 [M] — structured catalogue publication is exact** — A structured catalogue tracks `references/rubric.md` as its exact generated publication. The host supplies only validated publication evidence: a missing or differing file is a FAIL; during CONFORM this item requests the host-owned derived write without choosing its path or bytes. (../../../keystone/ki-skills/references/standards-rubric-authoring.md#generated-rubric-publication)
 
 ## SCOPE — scope
 

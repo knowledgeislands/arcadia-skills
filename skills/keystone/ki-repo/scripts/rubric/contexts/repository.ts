@@ -1,6 +1,13 @@
 import { existsSync, lstatSync, readFileSync } from 'node:fs'
 import { join, resolve } from 'node:path'
-import type { AuditOutcome, ConformWrite, RubricContextOptions, RubricSession, ViolationLevel } from '../../shared/rubric.ts'
+import type {
+  AuditOutcome,
+  ConformWrite,
+  RubricContextOptions,
+  RubricPublicationContext,
+  RubricSession,
+  ViolationLevel
+} from '../../shared/rubric.ts'
 import { collectAuditFindings, declaresRootTable, type RepoAuditCollection, type RepoEvidenceFinding } from './audit.ts'
 
 const KI_REPO_DEFAULT = `[ki-repo]
@@ -122,6 +129,7 @@ export type WorkingAreasRubricContext = {
 }
 
 export type RepoRubricContext = {
+  rubric: RubricPublicationContext
   files: FilesRubricContext
   gh: GhRubricContext
   pkg: EvidenceRubricContext
@@ -249,7 +257,7 @@ const findingsByCode = (findings: readonly RepoEvidenceFinding[]) => {
 export type RepoEvidenceInspector = (repository: string) => RepoAuditCollection
 
 export const createRepoSession = (
-  { mode, repository }: RubricContextOptions,
+  { mode, repository, publication }: RubricContextOptions,
   inspect: RepoEvidenceInspector = (target) => collectAuditFindings([target])
 ): RubricSession<RepoRubricContext> => {
   const target = resolve(repository)
@@ -267,6 +275,7 @@ export const createRepoSession = (
   let workingAreaScaffoldRequested = false
 
   const context: RepoRubricContext = {
+    rubric: { publication },
     files: {
       files1: evidence('FILES-1'),
       files3: evidence('FILES-3'),
@@ -320,6 +329,7 @@ export const createRepoSession = (
 
   return {
     subjects: [
+      { families: ['RUBRIC'], context: () => context },
       {
         families: [
           'FILES',

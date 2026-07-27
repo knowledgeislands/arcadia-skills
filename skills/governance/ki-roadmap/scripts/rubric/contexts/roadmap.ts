@@ -1,4 +1,4 @@
-import type { AuditOutcome, RubricContextOptions, RubricOutcomes, RubricSession } from '../../shared/rubric.ts'
+import type { AuditOutcome, RubricContextOptions, RubricOutcomes, RubricPublicationContext, RubricSession } from '../../shared/rubric.ts'
 import { createRoadmapDraft } from './roadmap-drafts.ts'
 import { type Finding, inspectRoadmap } from './roadmap-evidence.ts'
 
@@ -19,6 +19,7 @@ export type RoadmapProjectionContext = RoadmapAuditContext & {
 }
 
 export type RoadmapRubricContext = {
+  readonly rubric: RubricPublicationContext
   readonly scope: RoadmapAuditContext
   readonly profile: RoadmapAuditContext
   readonly roadmaps: RoadmapBlurbsContext
@@ -49,11 +50,12 @@ export const outcomesFor = (context: RoadmapAuditContext, code: string, passMess
   return outcomes.length > 0 ? outcomes : [{ status: 'PASS', message: passMessage }]
 }
 
-export const createRoadmapSession = ({ mode, repository }: RubricContextOptions): RubricSession<RoadmapRubricContext> => {
+export const createRoadmapSession = ({ mode, repository, publication }: RubricContextOptions): RubricSession<RoadmapRubricContext> => {
   const findings = inspectRoadmap(repository)
   const draft = mode === 'conform' ? createRoadmapDraft(repository, findings) : undefined
   const audit = { findings }
   const context: RoadmapRubricContext = {
+    rubric: { publication },
     scope: audit,
     profile: audit,
     roadmaps: { ...audit, ...(draft ? { normaliseHorizonBlurbs: draft.normaliseHorizonBlurbs } : {}) },
@@ -68,6 +70,7 @@ export const createRoadmapSession = ({ mode, repository }: RubricContextOptions)
 
   return {
     subjects: [
+      { families: ['RUBRIC'], context: () => context },
       {
         families: ['SCOPE', 'PROFILE', 'ROAD', 'THEME', 'ITEM', 'PROJ', 'PLAN', 'SAFE', 'EXPAND', 'HANDOFF'],
         context: () => context

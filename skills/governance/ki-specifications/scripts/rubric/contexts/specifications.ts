@@ -1,6 +1,6 @@
 import { existsSync, lstatSync, readFileSync } from 'node:fs'
 import { join, resolve } from 'node:path'
-import type { ConformWrite, RubricContextOptions, RubricSession } from '../../shared/rubric.ts'
+import type { ConformWrite, RubricContextOptions, RubricPublicationContext, RubricSession } from '../../shared/rubric.ts'
 
 const SECTION = 'ki-specifications'
 const core = ['proposals', 'specifications', 'schemas'] as const
@@ -22,6 +22,7 @@ const asTable = (value: unknown): Readonly<Record<string, unknown>> | null =>
   value && typeof value === 'object' && !Array.isArray(value) ? (value as Readonly<Record<string, unknown>>) : null
 
 export type SpecificationsContext = {
+  readonly rubric: RubricPublicationContext
   readonly target: string
   readonly targetExists: boolean
   readonly applicable: boolean
@@ -33,7 +34,11 @@ export type SpecificationsContext = {
   readonly addMarker?: () => void
 }
 
-export const createSpecificationsSession = ({ mode, repository }: RubricContextOptions): RubricSession<SpecificationsContext> => {
+export const createSpecificationsSession = ({
+  mode,
+  repository,
+  publication
+}: RubricContextOptions): RubricSession<SpecificationsContext> => {
   const target = resolve(repository)
   const targetExists = isPhysicalDirectory(target)
   const configPath = join(target, '.ki-config.toml')
@@ -66,6 +71,7 @@ export const createSpecificationsSession = ({ mode, repository }: RubricContextO
         }
 
   const context: SpecificationsContext = {
+    rubric: { publication },
     target,
     targetExists,
     configExists,
@@ -78,7 +84,10 @@ export const createSpecificationsSession = ({ mode, repository }: RubricContextO
   }
 
   return {
-    subjects: [{ families: ['SPEC', 'SYNC'], subject: target, context: () => context }],
+    subjects: [
+      { families: ['RUBRIC'], context: () => context },
+      { families: ['SPEC', 'SYNC'], subject: target, context: () => context }
+    ],
     proposal: () => ({
       writes:
         draft === undefined || draft === configSource

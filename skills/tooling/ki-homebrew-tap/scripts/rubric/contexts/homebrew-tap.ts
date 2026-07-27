@@ -1,6 +1,6 @@
 import { lstatSync, readdirSync, readFileSync } from 'node:fs'
 import { join, resolve } from 'node:path'
-import type { ConformWrite, RubricContextOptions, RubricSession } from '../../shared/rubric.ts'
+import type { ConformWrite, RubricContextOptions, RubricPublicationContext, RubricSession } from '../../shared/rubric.ts'
 
 const FORMULA_DIRECTORY = 'Formula'
 const CONFIG_FILE = '.ki-config.toml'
@@ -33,6 +33,7 @@ export type TapConfigContext = {
 }
 
 export type HomebrewTapRubricContext = {
+  readonly rubric: RubricPublicationContext
   readonly tap: TapContext
   readonly config: TapConfigContext
 }
@@ -67,7 +68,11 @@ const inspectConfig = (
   }
 }
 
-export const createHomebrewTapSession = ({ mode, repository }: RubricContextOptions): RubricSession<HomebrewTapRubricContext> => {
+export const createHomebrewTapSession = ({
+  mode,
+  repository,
+  publication
+}: RubricContextOptions): RubricSession<HomebrewTapRubricContext> => {
   const target = resolve(repository)
   const targetExists = nodeKind(target) === 'directory'
   const formulaPath = join(target, FORMULA_DIRECTORY)
@@ -100,6 +105,7 @@ export const createHomebrewTapSession = ({ mode, repository }: RubricContextOpti
   let configDraft = originalConfig
 
   const context: HomebrewTapRubricContext = {
+    rubric: { publication },
     tap: {
       targetExists,
       applicable,
@@ -124,7 +130,10 @@ export const createHomebrewTapSession = ({ mode, repository }: RubricContextOpti
   }
 
   return {
-    subjects: [{ families: ['TAP', 'CONFIG'], context: () => context }],
+    subjects: [
+      { families: ['RUBRIC'], context: () => context },
+      { families: ['TAP', 'CONFIG'], context: () => context }
+    ],
     proposal: () => {
       const writes: ConformWrite[] =
         configDraft !== null && originalConfig !== null && configDraft !== originalConfig

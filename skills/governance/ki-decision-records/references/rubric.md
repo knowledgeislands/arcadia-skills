@@ -8,12 +8,21 @@ Line-by-line criteria for auditing ki-decision-records. Classifications are deri
 
 ## Contents
 
+- [RUBRIC — Generated rubric publication](#rubric--generated-rubric-publication)
 - [FILENAME — file and naming checks](#filename--file-and-naming-checks)
 - [ROOT — collection-root checks](#root--collection-root-checks)
 - [FM — frontmatter checks](#fm--frontmatter-checks)
 - [TYPE-FIT — decision classification](#type-fit--decision-classification)
 - [BODY — body structure checks](#body--body-structure-checks)
 - [INDEX — index checks](#index--index-checks)
+
+## RUBRIC — Generated rubric publication
+
+→ [standard](../../../keystone/ki-skills/references/standards-rubric-authoring.md)
+
+The tracked readable rubric is the exact publication of the structured catalogue.
+
+- **RUBRIC-1 [M] — structured catalogue publication is exact** — A structured catalogue tracks `references/rubric.md` as its exact generated publication. The host supplies only validated publication evidence: a missing or differing file is a FAIL; during CONFORM this item requests the host-owned derived write without choosing its path or bytes. (../../../keystone/ki-skills/references/standards-rubric-authoring.md#generated-rubric-publication)
 
 ## FILENAME — file and naming checks
 

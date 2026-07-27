@@ -7,6 +7,7 @@ import { BEHAVIOUR } from './behaviour.ts'
 import { DR_LINK } from './decision-link.ts'
 import { ID } from './identity.ts'
 import { INDEX } from './index-family.ts'
+import { RUBRIC } from './publication.ts'
 import { REQ } from './requirement.ts'
 import { SPLIT } from './split.ts'
 import { VERIFY } from './verification.ts'
@@ -16,5 +17,5 @@ export default {
   name: 'ki-feature-definitions',
   concern: 'Feature Definitions',
   createSession: createFeatureDefinitionsSession,
-  families: [INDEX, AREA, ID, REQ, VERIFY, BEHAVIOUR, AS_BUILT, SPLIT, DR_LINK, AREA_FIT]
+  families: [RUBRIC, INDEX, AREA, ID, REQ, VERIFY, BEHAVIOUR, AS_BUILT, SPLIT, DR_LINK, AREA_FIT]
 } satisfies SkillRubricDefinition<FeatureDefinitionsRubricContext>

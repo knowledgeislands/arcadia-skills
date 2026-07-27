@@ -6,7 +6,9 @@ import type { RubricItem } from '../../shared/rubric.ts'
 import catalogue from './index.ts'
 
 const temporaryDirectories: string[] = []
-const items = catalogue.families.flatMap((family) => family.items as readonly RubricItem<unknown>[])
+const items = catalogue.families
+  .filter((family) => family.code !== 'RUBRIC')
+  .flatMap((family) => family.items as readonly RubricItem<unknown>[])
 const familyModules = readdirSync(import.meta.dir)
   .filter((file) => file.endsWith('.ts') && file !== 'index.ts' && !file.endsWith('.test.ts'))
   .sort()
@@ -19,13 +21,13 @@ test('the structured catalogue preserves the specifications structural floor', (
   expect(catalogue.contract).toBe(1)
   expect(catalogue.name).toBe('ki-specifications')
   expect(catalogue.createSession).toBeFunction()
-  expect(catalogue.families.map((family) => family.code)).toEqual(['SPEC', 'SYNC'])
+  expect(catalogue.families.map((family) => family.code)).toEqual(['RUBRIC', 'SPEC', 'SYNC'])
   expect(items.map((item) => item.code)).toEqual(['SPEC-1', 'SPEC-2', 'SPEC-3', 'SPEC-J1', 'SPEC-J2', 'SYNC-1'])
   expect(items.every((item) => item.sources.includes('standards-specifications.md'))).toBe(true)
 })
 
 test('each family module exports one complete family', async () => {
-  expect(familyModules).toEqual(['specifications.ts', 'sync.ts'])
+  expect(familyModules).toEqual(['publication.ts', 'specifications.ts', 'sync.ts'])
   for (const file of familyModules) {
     const module = (await import(`./${file}`)) as Record<string, unknown>
     expect(Object.keys(module)).toHaveLength(1)
@@ -42,7 +44,7 @@ test('the session keeps one configuration draft and proposes the marker once', (
   for (const directory of ['proposals', 'specifications', 'schemas']) mkdirSync(join(repository, directory))
 
   const session = catalogue.createSession({ mode: 'conform', repository, userHome: tmpdir(), configuration: {} })
-  const subject = session.subjects[0]
+  const subject = session.subjects[1]
   const context = subject?.context()
   const marker = items.find((item) => item.code === 'SPEC-1')
 

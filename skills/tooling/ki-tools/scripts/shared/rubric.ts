@@ -120,6 +120,30 @@ export type RubricContextOptions = {
   repository: string
   userHome: string
   configuration: Readonly<Record<string, unknown>>
+  /** Host-validated generated-publication evidence for this skill's catalogue, when requested. */
+  publication?: RubricPublication
+}
+
+export type RubricPublicationState = 'in-sync' | 'missing' | 'stale'
+
+/**
+ * A criterion-agnostic capability for a skill's derived rubric publication.
+ *
+ * The host determines the canonical bytes and controls the resulting write. A
+ * rubric may inspect the evidence and request publication during CONFORM, but
+ * it cannot select a path or replacement content.
+ */
+export type RubricPublication = {
+  target: string
+  rendered: string
+  existing?: string
+  state: RubricPublicationState
+  propose: () => void
+}
+
+/** Focused evidence supplied to a rubric-publication family by its session. */
+export type RubricPublicationContext = {
+  publication?: RubricPublication
 }
 
 export type RubricSubject<RootContext> = {
@@ -141,6 +165,61 @@ export type SkillRubricDefinition<RootContext> = RubricDefinition<RootContext> &
 export const defineRubricFamily = <RootContext, FamilyContext>(
   family: RubricFamily<RootContext, FamilyContext>
 ): RubricFamily<RootContext, FamilyContext> => family
+
+/**
+ * The uniform derived-publication policy for a structured rubric catalogue.
+ *
+ * The host owns rendered bytes and the guarded write. A skill supplies only
+ * its focused publication evidence and selects the corresponding subject.
+ */
+export const createRubricPublicationFamily = <RootContext>(
+  selectContext: (root: RootContext) => RubricPublicationContext,
+  standard: string,
+  sources: NonEmptyReadonlyArray<string>
+): RubricFamily<RootContext, RubricPublicationContext> => ({
+  code: 'RUBRIC',
+  title: 'Generated rubric publication',
+  description: 'The tracked readable rubric is the exact publication of the structured catalogue.',
+  standard,
+  selectContext,
+  items: [
+    {
+      code: 'RUBRIC-1',
+      title: 'structured catalogue publication is exact',
+      description:
+        'A structured catalogue tracks `references/rubric.md` as its exact generated publication. The host supplies only validated publication evidence: a missing or differing file is a FAIL; during CONFORM this item requests the host-owned derived write without choosing its path or bytes.',
+      sources,
+      mechanical: {
+        level: 'FAIL',
+        audit: {
+          phase: 'DERIVED',
+          run: ({ publication }) => {
+            if (!publication)
+              return [
+                { status: 'VIOLATION', message: 'the host did not provide generated-publication evidence for this structured catalogue' }
+              ]
+            if (publication.state === 'in-sync') return [{ status: 'PASS', message: 'the structured catalogue publication is exact' }]
+            return [
+              {
+                status: 'VIOLATION',
+                message:
+                  publication.state === 'missing'
+                    ? '`references/rubric.md` is missing from the structured catalogue'
+                    : '`references/rubric.md` differs from the structured catalogue'
+              }
+            ]
+          }
+        },
+        conform: {
+          phase: 'DERIVED',
+          run: ({ publication }) => {
+            if (publication && publication.state !== 'in-sync') publication.propose()
+          }
+        }
+      }
+    }
+  ]
+})
 
 export const rubricTypes = <Context>(item: RubricItem<Context>): readonly RubricType[] => [
   ...(item.mechanical ? (['MECHANICAL'] as const) : []),

@@ -25,6 +25,7 @@ test('the structured catalogue preserves the engineering criteria', () => {
   expect(catalogue.name).toBe('ki-engineering')
   expect(catalogue.createSession).toBeFunction()
   expect(catalogue.families.map((family) => family.code)).toEqual([
+    'RUBRIC',
     'PKG',
     'MISE',
     'CI',
@@ -41,7 +42,7 @@ test('the structured catalogue preserves the engineering criteria', () => {
     'ENV',
     'TOML'
   ])
-  const codes = catalogue.families.flatMap((family) => family.items.map((item) => item.code))
+  const codes = catalogue.families.filter((family) => family.code !== 'RUBRIC').flatMap((family) => family.items.map((item) => item.code))
   expect(codes).toHaveLength(47)
   expect(new Set(codes).size).toBe(codes.length)
   expect(codes[0]).toBe('PKG-1')
@@ -66,8 +67,8 @@ test('the session keeps stable focused context and coalesces package drafts', ()
     { level: 'FAIL', code: 'PKG-1', message: 'type missing', subject: 'package.json' },
     { level: 'FAIL', code: 'PKG-2', message: 'package manager missing', subject: 'package.json' }
   ])
-  const root = session.subjects[0]?.context()
-  expect(session.subjects[0]?.context()).toBe(root)
+  const root = session.subjects[1]?.context()
+  expect(session.subjects[1]?.context()).toBe(root)
 
   const family = catalogue.families.find((candidate) => candidate.code === 'PKG') as RubricFamily<
     EngineeringRubricContext,
@@ -92,7 +93,7 @@ test('formatter commands are bounded arrays and coalesced', () => {
   const session = createEngineeringSession({ mode: 'conform', repository, userHome: tmpdir(), configuration: {} }, () => [
     { level: 'FAIL', code: 'BIO-1', message: 'formatting drift' }
   ])
-  const root = session.subjects[0]?.context() as EngineeringRubricContext
+  const root = session.subjects[1]?.context() as EngineeringRubricContext
   const family = catalogue.families.find((candidate) => candidate.code === 'BIO') as RubricFamily<
     EngineeringRubricContext,
     BiomeRubricContext
@@ -116,7 +117,7 @@ test('conform never replaces a symlinked contributed package file', () => {
   const session = createEngineeringSession({ mode: 'conform', repository, userHome: tmpdir(), configuration: {} }, () => [
     { level: 'FAIL', code: 'PKG-1', message: 'type missing' }
   ])
-  const root = session.subjects[0]?.context() as EngineeringRubricContext
+  const root = session.subjects[1]?.context() as EngineeringRubricContext
   root.package.synchronise?.()
   expect(session.proposal().writes).toEqual([])
   expect(readFileSync(source, 'utf8')).toBe('{}\n')

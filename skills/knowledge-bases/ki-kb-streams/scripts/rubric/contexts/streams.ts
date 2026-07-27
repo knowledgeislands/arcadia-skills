@@ -1,6 +1,14 @@
 import { existsSync, lstatSync, readdirSync, readFileSync } from 'node:fs'
 import { basename, join, relative, resolve } from 'node:path'
-import type { AuditOutcome, ConformWrite, RubricContextOptions, RubricSession, ViolationLevel } from '../../shared/rubric.ts'
+import type {
+  AuditOutcome,
+  ConformWrite,
+  RubricContextOptions,
+  RubricPublication,
+  RubricPublicationContext,
+  RubricSession,
+  ViolationLevel
+} from '../../shared/rubric.ts'
 
 const FOCI = ['Active', 'Background', 'Dormant', 'Future', 'Settled'] as const
 const STATUS = ['draft', 'ready', 'rejected', 'in-progress', 'rolled-out', 'reviewed', 'completed'] as const
@@ -35,6 +43,7 @@ export type ConfigRubricContext = {
 }
 
 export type StreamsRubricContext = {
+  rubric: RubricPublicationContext
   stream: StreamRubricContext
   enactment: EnactmentRubricContext
   gate: GateRubricContext
@@ -175,10 +184,16 @@ const normalisedContent = (content: string): string => {
   return lines.join('\n')
 }
 
-const unavailableContext = (level: 'FAIL' | 'NOT_APPLICABLE', message: string, subject?: string): StreamsRubricContext => {
+const unavailableContext = (
+  publication: RubricPublication | undefined,
+  level: 'FAIL' | 'NOT_APPLICABLE',
+  message: string,
+  subject?: string
+): StreamsRubricContext => {
   const evidence: StreamsEvidence = { level, message, ...(subject ? { subject } : {}) }
   const notApplicable: StreamsEvidence[] = [{ level: 'NOT_APPLICABLE', message: 'Streams evidence is unavailable.' }]
   return {
+    rubric: { publication },
     stream: { focusFolders: [evidence], focusIndexes: notApplicable, proposalSuffix: notApplicable },
     enactment: { proposalFrontmatter: notApplicable, lifecycle: notApplicable },
     gate: { anchor: notApplicable },
@@ -186,12 +201,15 @@ const unavailableContext = (level: 'FAIL' | 'NOT_APPLICABLE', message: string, s
   }
 }
 
-export const createStreamsSession = ({ mode, repository }: RubricContextOptions): RubricSession<StreamsRubricContext> => {
+export const createStreamsSession = ({ mode, repository, publication }: RubricContextOptions): RubricSession<StreamsRubricContext> => {
   const root = resolve(repository)
   if (!directory(root)) {
-    const context = unavailableContext('FAIL', 'Target is not a directory.', root)
+    const context = unavailableContext(publication, 'FAIL', 'Target is not a directory.', root)
     return {
-      subjects: [{ families: ['STREAM', 'ENACT', 'GATE', 'CONFIG'], context: () => context }],
+      subjects: [
+        { families: ['RUBRIC'], context: () => context },
+        { families: ['STREAM', 'ENACT', 'GATE', 'CONFIG'], context: () => context }
+      ],
       proposal: () => ({ writes: [] })
     }
   }
@@ -200,9 +218,12 @@ export const createStreamsSession = ({ mode, repository }: RubricContextOptions)
   const configuration = parseConfiguration(regularFile(configPath) ? readFileSync(configPath, 'utf8') : '')
   const streamsPath = join(root, configuration.streams)
   if (!directory(streamsPath)) {
-    const context = unavailableContext('NOT_APPLICABLE', `No ${configuration.streams}/ zone; its presence is owned by ki-kb.`)
+    const context = unavailableContext(publication, 'NOT_APPLICABLE', `No ${configuration.streams}/ zone; its presence is owned by ki-kb.`)
     return {
-      subjects: [{ families: ['STREAM', 'ENACT', 'GATE', 'CONFIG'], context: () => context }],
+      subjects: [
+        { families: ['RUBRIC'], context: () => context },
+        { families: ['STREAM', 'ENACT', 'GATE', 'CONFIG'], context: () => context }
+      ],
       proposal: () => ({ writes: [] })
     }
   }
@@ -338,6 +359,7 @@ export const createStreamsSession = ({ mode, repository }: RubricContextOptions)
   ]
   const mutable = mode === 'conform'
   const context: StreamsRubricContext = {
+    rubric: { publication },
     stream: { focusFolders, focusIndexes, proposalSuffix },
     enactment: {
       proposalFrontmatter,
@@ -355,7 +377,10 @@ export const createStreamsSession = ({ mode, repository }: RubricContextOptions)
   }
 
   return {
-    subjects: [{ families: ['STREAM', 'ENACT', 'GATE', 'CONFIG'], context: () => context }],
+    subjects: [
+      { families: ['RUBRIC'], context: () => context },
+      { families: ['STREAM', 'ENACT', 'GATE', 'CONFIG'], context: () => context }
+    ],
     proposal: () => {
       const writes: ConformWrite[] = []
       for (const [path, content] of drafts) {

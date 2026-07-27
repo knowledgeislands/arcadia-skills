@@ -5,8 +5,10 @@ describe('ki-kb-live-artifacts rubric catalogue', () => {
   test('exports one complete ordered definition', () => {
     expect(definition.contract).toBe(1)
     expect(definition.name).toBe('ki-kb-live-artifacts')
-    expect(definition.families.map((family) => family.code)).toEqual(['LA', 'LA-F'])
-    const codes = definition.families.flatMap((family) => family.items.map((item) => item.code))
+    expect(definition.families.map((family) => family.code)).toEqual(['RUBRIC', 'LA', 'LA-F'])
+    const codes = definition.families
+      .filter((family) => family.code !== 'RUBRIC')
+      .flatMap((family) => family.items.map((item) => item.code))
     expect(codes).toHaveLength(11)
     expect(new Set(codes).size).toBe(codes.length)
   })

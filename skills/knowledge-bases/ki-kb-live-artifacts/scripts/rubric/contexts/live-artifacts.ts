@@ -1,6 +1,6 @@
 import { existsSync, lstatSync, readdirSync, readFileSync } from 'node:fs'
 import { basename, extname, isAbsolute, join, relative, resolve } from 'node:path'
-import type { AuditOutcome, ConformWrite, RubricContextOptions, RubricSession } from '../../shared/rubric.ts'
+import type { AuditOutcome, ConformWrite, RubricContextOptions, RubricPublicationContext, RubricSession } from '../../shared/rubric.ts'
 
 const INDEX_NOTE = 'Live Artifacts.md'
 const DEFAULT_ARTIFACTS_DIRECTORY = 'Admin/Operations/Live Artifacts'
@@ -32,6 +32,7 @@ export type LiveArtifactsFrontmatterContext = {
 }
 
 export type LiveArtifactsRubricContext = {
+  rubric: RubricPublicationContext
   structure: LiveArtifactsStructureContext
   frontmatter: LiveArtifactsFrontmatterContext
 }
@@ -105,7 +106,11 @@ const addRendersDeclaration = (text: string): string => {
   return lines.join('\n')
 }
 
-export const createLiveArtifactsSession = ({ mode, repository }: RubricContextOptions): RubricSession<LiveArtifactsRubricContext> => {
+export const createLiveArtifactsSession = ({
+  mode,
+  repository,
+  publication
+}: RubricContextOptions): RubricSession<LiveArtifactsRubricContext> => {
   const root = resolve(repository)
   const configuration = parseConfiguration(root)
   const artifactsDirectory = join(root, configuration.artifactsDirectory)
@@ -267,6 +272,7 @@ export const createLiveArtifactsSession = ({ mode, repository }: RubricContextOp
 
   const mutable = mode === 'conform'
   const context: LiveArtifactsRubricContext = {
+    rubric: { publication },
     structure: {
       index,
       publishedSources,
@@ -307,7 +313,10 @@ export const createLiveArtifactsSession = ({ mode, repository }: RubricContextOp
   }
 
   return {
-    subjects: [{ families: ['LA', 'LA-F'], context: () => context }],
+    subjects: [
+      { families: ['RUBRIC'], context: () => context },
+      { families: ['LA', 'LA-F'], context: () => context }
+    ],
     proposal: () => {
       const writes: ConformWrite[] = []
       for (const [path, content] of drafts) {

@@ -1,6 +1,6 @@
 import { existsSync, lstatSync, readdirSync, readFileSync } from 'node:fs'
 import { join, relative, resolve, sep } from 'node:path'
-import type { ConformWrite, RubricContextOptions, RubricSession } from '../../shared/rubric.ts'
+import type { ConformWrite, RubricContextOptions, RubricPublicationContext, RubricSession } from '../../shared/rubric.ts'
 
 const CONFIG_NAMES = ['eleventy.config.ts', 'eleventy.config.js', 'eleventy.config.mjs', 'eleventy.config.cjs'] as const
 const KI_SECTION = 'ki-website'
@@ -16,6 +16,7 @@ type Draft = {
 }
 
 export type WebsiteContext = {
+  rubric: RubricPublicationContext
   target: string
   available: boolean
   applicable: boolean
@@ -65,7 +66,7 @@ const containedPhysical = (root: string, path: string, kind: 'file' | 'directory
   return kind === 'file' ? state.isFile() : state.isDirectory()
 }
 
-export const createWebsiteSession = ({ mode, repository }: RubricContextOptions): RubricSession<WebsiteContext> => {
+export const createWebsiteSession = ({ mode, repository, publication }: RubricContextOptions): RubricSession<WebsiteContext> => {
   const root = resolve(repository)
   const available = physicalDirectory(root)
   const at = (...parts: string[]) => join(root, ...parts)
@@ -154,6 +155,7 @@ export const createWebsiteSession = ({ mode, repository }: RubricContextOptions)
         }
 
   const context: WebsiteContext = {
+    rubric: { publication },
     target: root,
     available,
     applicable,
@@ -175,7 +177,10 @@ export const createWebsiteSession = ({ mode, repository }: RubricContextOptions)
   }
 
   return {
-    subjects: [{ families: ['WEB'], subject: root, context: () => context }],
+    subjects: [
+      { families: ['RUBRIC'], context: () => context },
+      { families: ['WEB'], subject: root, context: () => context }
+    ],
     proposal: () => ({
       writes: [...drafts.values()].flatMap((draft): ConformWrite[] =>
         draft.content === (draft.original ?? '')

@@ -3,7 +3,9 @@ import { readdirSync } from 'node:fs'
 import type { RubricItem } from '../../shared/rubric.ts'
 import catalogue from './index.ts'
 
-const items = catalogue.families.flatMap((family) => family.items as readonly RubricItem<unknown>[])
+const items = catalogue.families
+  .filter((family) => family.code !== 'RUBRIC')
+  .flatMap((family) => family.items as readonly RubricItem<unknown>[])
 const familyModules = readdirSync(import.meta.dir)
   .filter((file) => file.endsWith('.ts') && file !== 'index.ts' && !file.endsWith('.test.ts'))
   .sort()
@@ -12,7 +14,7 @@ test('the catalogue preserves every ordered ki-tools criterion', () => {
   expect(catalogue.contract).toBe(1)
   expect(catalogue.name).toBe('ki-tools')
   expect(catalogue.createSession).toBeFunction()
-  expect(catalogue.families.map((family) => family.code)).toEqual(['TOOL', 'SHELL', 'LANG', 'CONFIG'])
+  expect(catalogue.families.map((family) => family.code)).toEqual(['RUBRIC', 'TOOL', 'SHELL', 'LANG', 'CONFIG'])
   expect(items.map((item) => item.code)).toEqual([
     'TOOL-BIN',
     'TOOL-EXEC',
@@ -55,7 +57,7 @@ test('the catalogue preserves every ordered ki-tools criterion', () => {
 test('the catalogue and family modules expose only the final public surfaces', async () => {
   const entrypoint = (await import('./index.ts')) as Record<string, unknown>
   expect(Object.keys(entrypoint)).toEqual(['default'])
-  expect(familyModules).toHaveLength(4)
+  expect(familyModules).toHaveLength(5)
   for (const file of familyModules) {
     const module = (await import(`./${file}`)) as Record<string, unknown>
     expect(Object.keys(module)).toHaveLength(1)

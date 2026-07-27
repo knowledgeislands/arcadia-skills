@@ -1,6 +1,6 @@
 import { existsSync, lstatSync, readdirSync, readFileSync } from 'node:fs'
 import { isAbsolute, join, relative, resolve } from 'node:path'
-import type { ConformWrite, RubricContextOptions, RubricSession } from '../../shared/rubric.ts'
+import type { ConformWrite, RubricContextOptions, RubricPublicationContext, RubricSession } from '../../shared/rubric.ts'
 
 const DEFAULT_ACTIVITIES_DIRECTORY = 'Admin/Operations/Activities'
 const ACTIVITIES_INDEX = 'Activities.md'
@@ -41,6 +41,7 @@ export type ActivitiesContext = {
 }
 
 export type ActivitiesRubricContext = {
+  readonly rubric: RubricPublicationContext
   readonly activities: ActivitiesContext
 }
 
@@ -111,7 +112,8 @@ const indexEntry = (note: ActivityNote): string => {
 export const createActivitiesSession = ({
   mode,
   repository,
-  configuration
+  configuration,
+  publication
 }: RubricContextOptions): RubricSession<ActivitiesRubricContext> => {
   const root = resolve(repository)
   const repositoryAvailable = isDirectory(root)
@@ -148,6 +150,7 @@ export const createActivitiesSession = ({
   let indexDraft = original
 
   const context: ActivitiesRubricContext = {
+    rubric: { publication },
     activities: {
       repository: { path: root, available: repositoryAvailable },
       collection: {
@@ -188,7 +191,10 @@ export const createActivitiesSession = ({
   }
 
   return {
-    subjects: [{ families: ['ACT'], context: () => context }],
+    subjects: [
+      { families: ['RUBRIC'], context: () => context },
+      { families: ['ACT'], context: () => context }
+    ],
     proposal: () => {
       if (indexDraft === undefined || indexDraft === original || !activitiesRelative) return { writes: [] }
       const write: ConformWrite = {

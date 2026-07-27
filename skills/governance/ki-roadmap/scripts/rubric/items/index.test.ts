@@ -8,7 +8,10 @@ import { inspectRoadmap } from '../contexts/roadmap-evidence.ts'
 import catalogue from './index.ts'
 
 const temporaryDirectories: string[] = []
-const families = catalogue.families as unknown as readonly RubricFamily<RoadmapRubricContext, unknown>[]
+const families = catalogue.families.filter((family) => family.code !== 'RUBRIC') as unknown as readonly RubricFamily<
+  RoadmapRubricContext,
+  unknown
+>[]
 const items = families.flatMap((family) => family.items) as readonly RubricItem<unknown>[]
 const familyModules = readdirSync(import.meta.dir)
   .filter((file) => file.endsWith('.ts') && file !== 'index.ts' && !file.endsWith('.test.ts'))
@@ -209,6 +212,7 @@ test('the structured catalogue preserves every repository-roadmap criterion', ()
   expect(catalogue.name).toBe('ki-roadmap')
   expect(catalogue.createSession).toBeFunction()
   expect(catalogue.families.map((family) => family.code)).toEqual([
+    'RUBRIC',
     'SCOPE',
     'PROFILE',
     'ROAD',
@@ -310,7 +314,7 @@ test('audit is read-only and returns one stable prepared context', () => {
   const { repository, roadmapPath } = createThematicFixture()
   const before = readFileSync(roadmapPath, 'utf8')
   const session = catalogue.createSession({ mode: 'audit', repository, userHome: tmpdir(), configuration: {} })
-  const subject = session.subjects[0]
+  const subject = session.subjects[1]
   const context = subject?.context()
 
   expect(subject?.context()).toBe(context)
@@ -326,7 +330,7 @@ test('audit is read-only and returns one stable prepared context', () => {
 test('ordered conform actions coalesce multi-file replacements behind one session proposal', () => {
   const { repository } = createThematicFixture()
   const session = catalogue.createSession({ mode: 'conform', repository, userHome: tmpdir(), configuration: {} })
-  const context = session.subjects[0]?.context() as RoadmapRubricContext
+  const context = session.subjects[1]?.context() as RoadmapRubricContext
   for (const code of ['ROAD-4', 'PROJ-1', 'PLAN-2']) {
     const family = families.find((candidate) => candidate.items.some((item) => item.code === code))
     const item = family?.items.find((candidate) => candidate.code === code)

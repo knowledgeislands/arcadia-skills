@@ -1,6 +1,6 @@
 import { existsSync, lstatSync, readdirSync, readFileSync } from 'node:fs'
 import { basename, isAbsolute, join, relative, resolve } from 'node:path'
-import type { ConformWrite, RubricContextOptions, RubricSession } from '../../shared/rubric.ts'
+import type { ConformWrite, RubricContextOptions, RubricPublicationContext, RubricSession } from '../../shared/rubric.ts'
 
 const DEFAULT_DIRECTORY = 'docs/features'
 const INDEX_FILE = 'index.md'
@@ -55,6 +55,7 @@ export type FeatureVerificationContext = {
 export type FeatureJudgmentContext = Record<never, never>
 
 export type FeatureDefinitionsRubricContext = {
+  readonly rubric: RubricPublicationContext
   readonly index: FeatureIndexContext
   readonly area: FeatureAreaContext
   readonly identity: FeatureIdentityContext
@@ -138,7 +139,8 @@ const featuresDirectory = (target: string): string => {
 
 export const createFeatureDefinitionsSession = ({
   mode,
-  repository
+  repository,
+  publication
 }: RubricContextOptions): RubricSession<FeatureDefinitionsRubricContext> => {
   const root = resolve(repository)
   const directory = featuresDirectory(root)
@@ -225,6 +227,7 @@ export const createFeatureDefinitionsSession = ({
 
   const drafts = new Map(originals)
   const context: FeatureDefinitionsRubricContext = {
+    rubric: { publication },
     index: { exists: indexExists, prefixToFile },
     area: { registeredMissingFiles, unregisteredFiles },
     identity: {
@@ -260,6 +263,7 @@ export const createFeatureDefinitionsSession = ({
 
   return {
     subjects: [
+      { families: ['RUBRIC'], context: () => context },
       {
         families: ['INDEX', 'AREA', 'ID', 'REQ', 'VERIFY', 'BEHAVIOUR', 'AS-BUILT', 'SPLIT', 'DR-LINK', 'AREA-FIT'],
         context: () => context

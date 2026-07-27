@@ -1,6 +1,6 @@
 import { lstatSync, readdirSync, readFileSync } from 'node:fs'
 import { dirname, join, resolve } from 'node:path'
-import type { RubricContextOptions, RubricSession } from '../../shared/rubric.ts'
+import type { RubricContextOptions, RubricPublicationContext, RubricSession } from '../../shared/rubric.ts'
 
 const CONFIG_FILE = '.ki-config.toml'
 const CONFIG_SECTION = 'ki-website-cloudflare'
@@ -47,6 +47,7 @@ export type WebsiteCloudflareContext = {
 }
 
 export type WebsiteCloudflareRubricContext = {
+  readonly rubric: RubricPublicationContext
   readonly hosting: WebsiteCloudflareContext
 }
 
@@ -170,7 +171,10 @@ const inspectText = (path: string): { readonly state: TextState; readonly text: 
   return text === null ? { state: 'unsafe', text: '' } : { state: 'present', text }
 }
 
-export const createWebsiteCloudflareSession = ({ repository }: RubricContextOptions): RubricSession<WebsiteCloudflareRubricContext> => {
+export const createWebsiteCloudflareSession = ({
+  repository,
+  publication
+}: RubricContextOptions): RubricSession<WebsiteCloudflareRubricContext> => {
   const target = resolve(repository)
   const targetExists = nodeKind(target) === 'directory'
   const configs = targetExists ? collectWranglerConfigs(target) : []
@@ -194,10 +198,13 @@ export const createWebsiteCloudflareSession = ({ repository }: RubricContextOpti
     package: targetExists ? inspectPackage(join(target, 'package.json')) : { state: 'missing' as const, scripts: {} },
     gitignore: targetExists ? inspectText(join(target, '.gitignore')) : { state: 'missing' as const, text: '' }
   }
-  const context: WebsiteCloudflareRubricContext = { hosting }
+  const context: WebsiteCloudflareRubricContext = { rubric: { publication }, hosting }
 
   return {
-    subjects: [{ families: ['WCF'], context: () => context }],
+    subjects: [
+      { families: ['RUBRIC'], context: () => context },
+      { families: ['WCF'], context: () => context }
+    ],
     proposal: () => ({ writes: [] })
   }
 }

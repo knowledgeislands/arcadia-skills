@@ -1,6 +1,13 @@
 import { existsSync, lstatSync, readdirSync, readFileSync } from 'node:fs'
 import { dirname, isAbsolute, join, relative, resolve } from 'node:path'
-import type { AuditOutcome, ConformProposal, RubricContextOptions, RubricOutcomes, RubricSession } from '../../shared/rubric.ts'
+import type {
+  AuditOutcome,
+  ConformProposal,
+  RubricContextOptions,
+  RubricOutcomes,
+  RubricPublicationContext,
+  RubricSession
+} from '../../shared/rubric.ts'
 
 export const ZONES = ['Calendar', 'Pillars', 'Resources', 'Streams', 'Admin'] as const
 export const STAGING = ['+', '-'] as const
@@ -142,6 +149,7 @@ export type KbMemoryContext = {
 export type KbLinkContext = Record<never, never>
 
 export type KbRubricContext = {
+  readonly rubric: RubricPublicationContext
   readonly zones: KbZoneContext
   readonly config: KbConfigContext
   readonly admin: KbAdminContext
@@ -377,11 +385,12 @@ const createKbDraft = (repository: string): KbDraft | undefined => {
   }
 }
 
-export const createKbSession = ({ mode, repository }: RubricContextOptions): RubricSession<KbRubricContext> => {
+export const createKbSession = ({ mode, repository, publication }: RubricContextOptions): RubricSession<KbRubricContext> => {
   const findings = collectKbAuditEvidence(repository)
   const check = (code: string): KbCheck => outcomesFor(findings, code)
   const draft = mode === 'conform' ? createKbDraft(repository) : undefined
   const context: KbRubricContext = {
+    rubric: { publication },
     zones: {
       requiredLayout: check('ZONE-1'),
       zoneIndexes: check('ZONE-2'),
@@ -418,7 +427,10 @@ export const createKbSession = ({ mode, repository }: RubricContextOptions): Rub
   }
 
   return {
-    subjects: [{ families: ['ZONE', 'CONFIG', 'ADMIN', 'ROUTE', 'NOTE', 'MEM', 'LINK'], context: () => context }],
+    subjects: [
+      { families: ['RUBRIC'], context: () => context },
+      { families: ['ZONE', 'CONFIG', 'ADMIN', 'ROUTE', 'NOTE', 'MEM', 'LINK'], context: () => context }
+    ],
     proposal: () => draft?.proposal() ?? { writes: [] }
   }
 }
