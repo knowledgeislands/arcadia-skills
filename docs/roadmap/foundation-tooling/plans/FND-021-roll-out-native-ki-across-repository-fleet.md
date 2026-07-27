@@ -1,11 +1,11 @@
 ---
 id: 'FND-021'
 title: Roll out native KI activation across the repository fleet
-status: ready
+status: in-progress
 roadmap: foundation-tooling/roll-out-native-ki-activation-across-the-repository-fleet
 blocks: —
 blocked-by: —
-baseline-ref: —
+baseline-ref: 4515a613f05bee0f0c2c8588d98458d263dbbc5c
 ---
 
 ## Context
