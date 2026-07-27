@@ -1,11 +1,11 @@
 ---
 id: 'FND-002'
 title: Protect generated rubric publications from drift
-status: open
+status: acceptance
 roadmap: foundation-tooling/protect-generated-rubric-publications-from-drift
 blocks: —
 blocked-by: —
-baseline-ref: —
+baseline-ref: 4df00bec34261e99eb429037c69fcc3d241afdc7
 ---
 
 ## Context
@@ -19,12 +19,12 @@ The host delivery in [CLI-002](https://github.com/knowledgeislands/tools-ki/comm
 ## Steps
 
 1. ✓ Agree the narrow host-injected publication capability and its failure semantics: repository containment, catalogue validation, missing/stale publication, invalid import, symlink refusal, and deterministic rendered bytes. Added the reciprocal [CLI-002](https://github.com/knowledgeislands/tools-ki/blob/main/docs/roadmap/cli/plans/CLI-002-host-generated-rubric-publication-capability.md) plan before implementation.
-2. In `tools-ki`, route standalone and repository publication preparation through one validated renderer and guarded incremental publisher without weakening installed-harness validation. Confirm the [CLI-002](https://github.com/knowledgeislands/tools-ki/commit/99d08d2) contract: each safe write is atomic and independently guarded, while a later failure retains earlier completed writes and produces a re-audited remaining-state report.
+2. ✓ In `tools-ki`, route standalone and repository publication preparation through one validated renderer and guarded incremental publisher without weakening installed-harness validation. Confirmed the [CLI-002](https://github.com/knowledgeislands/tools-ki/commit/99d08d2) contract: each safe write is atomic and independently guarded, while a later failure retains earlier completed writes and produces a re-audited remaining-state report.
 3. ✓ Extend the rubric context contract so `ki-skills` receives only rendered-publication evidence and can propose derived writes; do not put criterion identity or automatic findings in the host.
 4. ✓ Add exemplar `RUBRIC-1` in its own `RUBRIC` family: its exact derived publication is required; missing or differing bytes are FAIL drift and CONFORM schedules a DERIVED write. Other structured catalogues remain for the rollout step and skills without structured catalogues are exempt.
-5. Lock the canonical output contract for notices, family metadata, classifications, citations, judgment prompts, ordering, and final newline. Exercise drift audit, dry-run, real conform, idempotence, batching, per-file race refusal, partial-failure retention, malformed catalogues, and FIXED reporting.
+5. ✓ Lock the canonical output contract for notices, family metadata, classifications, citations, judgment prompts, ordering, and final newline. Exercised drift audit, dry-run, real conform, idempotence, batching, per-file race refusal, partial-failure retention, malformed catalogues, and FIXED reporting through the refreshed `tools-ki` full-coverage gate.
 6. ✓ Standardise a visible `RUBRIC-1` derived-publication item in a `RUBRIC` family for every structured catalogue, backed by one portable vendored item factory. Each skill projects only host publication evidence into that local family; no skill adds rendering, path selection, byte construction, or writes.
-7. Regenerate every affected publication through `ki skill rubric <skill> --write` or the declared repository CONFORM scope, review the derived-only diff, remove residual per-skill publication logic, update authoring/CLI guidance for incremental publication, and run both repositories' final gates.
+7. ✓ Regenerate every affected publication through `ki skill rubric <skill> --write` or the declared repository CONFORM scope, review the derived-only diff, remove residual per-skill publication logic, update authoring/CLI guidance for incremental publication, and run both repositories' final gates. All 30 structured publications have exact parity.
 
 ## Files touched
 
@@ -47,3 +47,29 @@ The host-injected capability is specified in reciprocal [CLI-002](https://github
 - Round 2 — mechanical: CLI worker owns `tools-ki/src/**`; harness worker owns only `ki-skills` contract/context/item/test paths; gate: focused suites agree on the frozen contract.
 - Round 3 — mechanical: orchestrator runs canonical CONFORM, reviews the derived diff, updates guidance, and removes duplicates.
 - Orchestrator: adversarially review loader, writer, symlink, per-file race, partial-failure retention, re-audit, and dry-run behaviour before final gates.
+
+## Acceptance
+
+### Delivered
+
+`ki` remains the sole structured-rubric renderer and publisher. The host contract is now accurately recorded as guarded incremental publication: each write is independently guarded and atomic; a later failure retains prior safe writes, then re-audits and reports the remaining state.
+
+### Summary of changes
+
+- Replaced the stale rollback and transaction claims in FND-002, the foundation roadmap, and the rubric-authoring standard with the delivered [CLI-002](https://github.com/knowledgeislands/tools-ki/commit/99d08d2) guarded-incremental contract.
+- Returned the invalid old packet to open work, reset its affected steps, then revalidated the host behaviour and all harness publications.
+- Kept the renderer, target selection, bytes, guarded publisher, and reporting in `ki`; skills retain only their visible policy item and conform request.
+
+### Verification
+
+- `tools-ki`: `bun run test:coverage` — 342 passing tests and 100% statements, branches, functions, and lines; `bunx tsc --noEmit` passed.
+- Harness: `bun run test` — 209 passing tests; `bunx tsc --noEmit`; `ki repo audit --skill ki-roadmap --repo .`; `ki repo audit --skill ki-skills --repo .`; and `ki repo conform --skill ki-skills --repo . --dry-run` all passed.
+- `ki skill rubric <skill>` confirmed exact parity for all 30 structured catalogues; `git diff --check` passed.
+
+### Outstanding concerns
+
+None for FND-002. The locally installed Homebrew binary predates the source host capability, so the refreshed verification and staged audit used the current checked-out CLI source; no release has been made or required.
+
+### Mini recap
+
+The plan now describes the shipped incremental behaviour honestly, its validation is refreshed across both repositories, and every generated publication is exact. It is ready for user acceptance.
