@@ -1,6 +1,7 @@
 ---
 name: ki-git
 ki-depends-on: []
+ki-shared-dependencies: [ki-skills:rubric]
 description: >
   Governs portable Knowledge Islands Git working and commit conventions: Conventional Commit messages, direct-main versus branch selection, safe Git hygiene, and the stale-lock guard's semantics. Use when preparing or reviewing a commit, deciding whether work needs a branch, recovering a stale Git lock, or clarifying who owns hook payload versus runtime registration. Does not configure GitHub repository settings, install hooks, or write agent settings; use ki-repo for repository configuration and ki-dotfiles-chezmoi for runtime bindings.
 argument-hint: 'audit <repo> | conform <repo> | help | educate <repo> | refresh'
@@ -12,9 +13,9 @@ argument-hint: 'audit <repo> | conform <repo> | help | educate <repo> | refresh'
 
 Read [the Git standard](references/standards-git.md) before preparing a commit, choosing a branch boundary, or assessing a stale lock.
 
-This is guidance-only until a compatible native rubric contract is deliberately designed.
+The hosted native rubric records the portable review prompts below. It deliberately has no mechanical policy checks yet.
 
-It does not add a `.ki-config.toml` table, publish a repository operation, install a hook, or write runtime settings.
+It does not install a hook, write runtime settings, or add a compatibility execution path.
 
 ## Boundaries
 
@@ -28,7 +29,7 @@ It does not add a `.ki-config.toml` table, publish a repository operation, insta
 
 Read the selected repository's commit history and working-state evidence against the Git standard.
 
-This mode is judgment-led until a native rubric is deliberately designed; it does not infer a missing configuration table or run a private wrapper.
+Run `ki repo audit --skill ki-git --repo <repo>` to render the portable review prompts. It does not infer a missing configuration table or run a private wrapper.
 
 ### Mode CONFORM
 

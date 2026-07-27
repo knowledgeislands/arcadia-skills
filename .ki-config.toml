@@ -17,6 +17,8 @@ supported_runtimes = ["claude-code", "codex"]
 
 [ki-feature-definitions]
 
+[ki-git]
+
 [ki-housekeeping-claude]
 
 [ki-roadmap]

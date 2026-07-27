@@ -76,6 +76,10 @@ The shared **engineering toolchain** every TS/Bun repo builds on — native repo
 
 Governs **Feature Definitions** — the behaviour-level "what" of a system, the third leg of the `docs/` triad (decisions = why, features = what, guides = how). Definitions live in `docs/features/`, flat one-file-per-area, with an `index.md` defining the ID scheme and an areas table. Each requirement is a `### <PREFIX>-NNN — title` heading carrying one RFC-2119 (`MUST` / `SHOULD` / `MAY`) statement and a `_Verify:_` test hook; IDs are append-only, and an unnumbered `## Gaps` section holds the backlog. Off-ramps the governing decisions a requirement cites to `ki-decision-records`.
 
+### `ki-git`
+
+Governs portable Knowledge Islands Git working and commit conventions: the Conventional Commit vocabulary, direct-main versus branch choice, safe Git hygiene, and the stale-lock guard's semantics. Its initial native rubric is deliberately judgment-only; repository GitHub settings stay with `ki-repo`, hook payload layout with `ki-harness`, and runtime-specific hook registration with `ki-dotfiles-chezmoi`.
+
 ### `ki-roadmap`
 
 Governs **forward work in non-KB repositories** through two automatically detected profiles. A simple repository keeps its complete open view in root `ROADMAP.md`. A thematic repository keeps canonical work in `docs/roadmap/<theme>/ROADMAP.md`, plans for Blocking/Next items beside it under `plans/`, and an exact generated root portfolio. Qualified `<theme>/<item-slug>` locators bind plans to one authoritative item home, while plan frontmatter supplies lifecycle state and dependencies directly. It owns the readiness rules for authored horizon transitions; the `ki-next` process applies those rules to select and promote work, while `ki-plan` drives individual plan lifecycles. Knowledge Bases use `ki-kb-streams` instead; repo-roadmap artifacts do not apply there.

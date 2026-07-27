@@ -14,7 +14,7 @@ Give repository Git discipline one explicit owner: Conventional Commit messages,
 
 ## Current state
 
-The harness has repository-local commit guidance and a tested `hooks/git-lock-check.sh` payload, but no governed owner for the full Git convention. The roadmap intentionally leaves open whether the correct end state is a dedicated `ki-git` skill or an extension of an existing governance skill; mechanical enforcement must wait until that decision is settled.
+`ki-git` is now the governed owner of portable commit shape, branch-selection guidance, Git hygiene, and stale-lock semantics. Its initial host-loadable catalogue is judgment-only, while `hooks/` retains payload layout, `ki-dotfiles-chezmoi` retains Claude Code registration, and `ki-repo` retains repository and GitHub configuration. Mechanical enforcement remains deliberately absent until a deterministic host contract is separately designed.
 
 ## Steps
 
@@ -22,7 +22,7 @@ The harness has repository-local commit guidance and a tested `hooks/git-lock-ch
 2. ✓ Compare the viable ownership models: a dedicated `ki-git` governance skill, an explicit `ki-repo` extension, or a split that keeps the hook/runtime binding with its existing owner. Record the chosen boundary and rejected alternatives in the appropriate durable decision surface.
 3. ✓ Author the resulting standard: allowed Conventional Commit types/scopes, message shape, direct-main/branch expectations, safe lock recovery, cleanup limits, and the distinction between repository policy and user-environment hook registration.
 4. ✓ Move or link the stale-lock guard, its documentation, and tests under the chosen owner without duplicating rules across `AGENTS.md`, skills, hooks, and guides.
-5. Add only deterministic enforcement that the settled standard can justify; keep review-dependent commit quality as judgment guidance. Update onboarding/user documentation and run the full relevant gates.
+5. ✓ Add only deterministic enforcement that the settled standard can justify; keep review-dependent commit quality as judgment guidance. Updated onboarding/user documentation, added the initial judgment-only native catalogue, and ran the full relevant gates. No mechanical enforcement was justified before a separate deterministic host-contract design.
 
 ## Files touched
 
