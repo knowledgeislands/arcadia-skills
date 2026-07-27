@@ -1,7 +1,7 @@
 ---
 id: 'FND-002'
 title: Protect generated rubric publications from drift
-status: in-progress
+status: acceptance
 roadmap: foundation-tooling/protect-generated-rubric-publications-from-drift
 blocks: —
 blocked-by: —
@@ -14,7 +14,7 @@ Make `ki` the sole renderer for structured rubrics. TypeScript catalogues remain
 
 ## Current state
 
-The host delivery in [CLI-002](https://github.com/knowledgeislands/tools-ki/commit/9032fa9) now provides one validated renderer, guarded transaction path, and criterion-agnostic publication evidence. The `ki-skills` exemplar consumes that evidence through `RUBRIC-1`: a missing or stale publication fails audit, and CONFORM requests only the host-owned derived write. The remaining work is to apply the proven pattern to every other structured catalogue and review the resulting derived-only publications.
+The host delivery in [CLI-002](https://github.com/knowledgeislands/tools-ki/commit/9032fa9) now provides one validated renderer, guarded transaction path, and criterion-agnostic publication evidence. Every one of the 30 structured catalogues consumes that evidence through a visible `RUBRIC-1` family item: a missing or stale publication fails audit, and CONFORM requests only the host-owned derived write. All vendor copies of the portable authoring contract are byte-identical, and every generated publication has been regenerated and verified in sync.
 
 ## Steps
 
@@ -23,8 +23,8 @@ The host delivery in [CLI-002](https://github.com/knowledgeislands/tools-ki/comm
 3. ✓ Extend the rubric context contract so `ki-skills` receives only rendered-publication evidence and can propose derived writes; do not put criterion identity or automatic findings in the host.
 4. ✓ Add exemplar `RUBRIC-1` in its own `RUBRIC` family: its exact derived publication is required; missing or differing bytes are FAIL drift and CONFORM schedules a DERIVED write. Other structured catalogues remain for the rollout step and skills without structured catalogues are exempt.
 5. ✓ Lock the canonical output contract for notices, family metadata, classifications, citations, judgment prompts, ordering, and final newline. Exercise drift audit, dry-run, real conform, idempotence, batching, rollback/race refusal, malformed catalogues, and FIXED reporting.
-6. Standardise a visible `RUBRIC-1` derived-publication item in a `RUBRIC` family for every structured catalogue, backed by one portable vendored item factory. Each skill projects only host publication evidence into that local family; do not add per-skill rendering, path selection, byte construction, or writes.
-7. Regenerate every affected publication through `ki skill rubric <skill> --write` or the declared repository CONFORM scope, review the derived-only diff, remove residual per-skill publication logic, update authoring/CLI guidance, and run both repositories' final gates.
+6. ✓ Standardise a visible `RUBRIC-1` derived-publication item in a `RUBRIC` family for every structured catalogue, backed by one portable vendored item factory. Each skill projects only host publication evidence into that local family; no skill adds rendering, path selection, byte construction, or writes.
+7. ✓ Regenerate every affected publication through `ki skill rubric <skill> --write` or the declared repository CONFORM scope, review the derived-only diff, remove residual per-skill publication logic, update authoring/CLI guidance, and run both repositories' final gates.
 
 ## Files touched
 
@@ -47,3 +47,32 @@ The host-injected capability is specified in reciprocal [CLI-002](https://github
 - Round 2 — mechanical: CLI worker owns `tools-ki/src/**`; harness worker owns only `ki-skills` contract/context/item/test paths; gate: focused suites agree on the frozen contract.
 - Round 3 — mechanical: orchestrator runs canonical CONFORM, reviews the derived diff, updates guidance, and removes duplicates.
 - Orchestrator: adversarially review loader, writer, symlink, race, rollback, and dry-run behaviour before final gates.
+
+## Acceptance
+
+### Delivered
+
+`ki` is the sole structured-rubric renderer and publisher. Every structured catalogue now exposes one local `RUBRIC-1` policy item that consumes host-validated publication evidence and requests only the host-owned transaction write during CONFORM.
+
+### Summary of changes
+
+- Added the criterion-agnostic publication capability and guarded transaction path in `tools-ki` through [CLI-002](https://github.com/knowledgeislands/tools-ki/commit/9032fa9).
+- Replaced the exemplar-only `KI-CHECKER-6` with a portable `RUBRIC` family factory, then materialised it in all 30 structured catalogues.
+- Added a dedicated publication subject to every catalogue session and regenerated every `references/rubric.md` publication.
+- Kept renderer, target selection, bytes, transaction, and reporting in `ki`; skills own only their visible policy item and conform request.
+
+### Verification
+
+At `3d7f24c3`, the harness passed:
+
+- `bun run test` — 209 passing tests.
+- `bunx tsc --noEmit`.
+- `ki repo audit --repo .` and `ki repo conform --repo . --dry-run`.
+- `ki skill rubric ki-skills` and all 30 per-skill rubric parity checks.
+- `git diff --check`.
+
+The reciprocal `tools-ki` host implementation passed its full test and 100% coverage gates before hand-off.
+
+### Outstanding concerns
+
+None. Acceptance remains for user review.
