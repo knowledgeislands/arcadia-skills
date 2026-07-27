@@ -2,7 +2,27 @@
 
 The reusable pattern is a "deep audit to implementation-ready roadmap" request. It does not depend on legal work, Knowledge Islands, Streams, or even a software repository.
 
-This is a reusable request template, not a competing planning standard. The `ki-roadmap` and `ki-handoffs` skills remain the normative sources for repository plans and cold-agent handoffs.
+This is a reusable request template, not a competing planning standard. `ki-roadmap` owns repository-roadmap and plan structure; `ki-plan` owns the plan lifecycle; `ki-delegate` owns delegation-ready execution.
+
+## Live work lifecycle
+
+The process skills form one continuous route from a live session into governed delivery:
+
+```text
+ki-recap → identifies unfinished or newly transferred work
+     ↓
+ki-next → triages, prioritises, and materialises it
+     ↓
+ki-plan → preserves and executes the detailed work
+     ↓
+ki-roadmap → owns horizons, plan shape, links, and transition rules
+```
+
+The arrows show responsibility passing between processes; `ki-roadmap` is the governance foundation each process reads rather than merely the final execution step.
+
+`ki-next` checks the current repository's `+/_HANDOFFS/` inbox automatically while grounding the portfolio. An unreviewed handoff, or a parked handoff whose named review trigger has fired, is presented for an adopt, park, clarify, decline, or supersede decision before ordinary work selection. A parked handoff whose trigger has not fired is acknowledged and skipped. No separate handoff invocation is required.
+
+Adoption creates a recipient-owned roadmap item at its honest horizon. Where transferred detail should be preserved, a thematic repository may also carry an open plan naming its origin without promoting the item into the immediate queue. The inbox copy is then removed; the sender may remove its corresponding outbound copy once the durable destination is confirmed. Agent or model-tier delegation is a separate concern recorded in a plan's `## Delegation` section and executed through `ki-delegate`.
 
 ## Generic principles
 
