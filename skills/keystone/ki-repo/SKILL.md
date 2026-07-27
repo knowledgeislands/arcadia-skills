@@ -37,7 +37,7 @@ Every governance skill carries the universal four **AUDIT · CONFORM · EDUCATE 
 Auditing a whole tree or org is a set audit — **bound the context** (the set-audit discipline in `ki-skills`' enforcement framework §5): take the checker's one set-level run over every repo, then do the per-repo judgment pass **one repo at a time**, fully (its composed `engineering` / artifact-skill audits included) before moving to the next; repos are independent, so the order is free.
 
 1. Confirm `gh` is authenticated against the org (`gh auth status`).
-2. **Run the native audit:** `ki repo audit <repo>` resolves the selected repo's declared roots, validates their explicit dependencies, resolves only compatible registered operations from the verified active installed collection, and runs them in dependency order through the shared finding model. Missing, incompatible, undeclared, or untrusted skills fail before an operation runs.
+2. **Run the native audit:** `ki repo audit --repo <repo>` resolves the selected repo's declared roots, validates their explicit dependencies, resolves only compatible registered operations from the verified active installed collection, and runs them in dependency order through the shared finding model. Missing, incompatible, undeclared, or untrusted skills fail before an operation runs.
 3. **Do the judgment pass the mechanical layer cannot** — the `[J]` items in [the rubric](references/rubric.md): does each description actually _match the repo's purpose_ (the mechanical layer checks non-emptiness and `package.json` sync, but not fit); is each per-repo override (a `note` in the output) a warranted decision rather than waved-off drift; and, where `+/` or `-/` exists, whether its contents follow the working-area contract rather than becoming a shadow roadmap or uncontrolled archive.
 4. **Report** by `repo · check · fix`, lead with FAILs, surface any **coverage** WARNs (a detected standard with no opt-in table), and call out the overrides (`note`s) you judged warranted.
 
@@ -45,10 +45,10 @@ Auditing a whole tree or org is a set audit — **bound the context** (the set-a
 
 Outward-facing: it changes live GitHub settings and may open PRs. Show the diff and confirm before mutating.
 
-`ki repo conform <repo>` first resolves the declared, verified installed collection as AUDIT does, then proposes the local `.gitignore` and required config root-marker repairs. A missing config receives the canonical `[ki-repo]` defaults plus bare `[ki-authoring]`; a partial config receives only its missing exact root marker; existing bytes remain an exact prefix; repeat runs are byte-identical; and `--dry-run` writes nothing. Missing, incompatible, undeclared, or untrusted skills fail before any write.
+`ki repo conform --repo <repo>` first resolves the declared, verified installed collection as AUDIT does, then proposes the local `.gitignore` and required config root-marker repairs. A missing config receives the canonical `[ki-repo]` defaults plus bare `[ki-authoring]`; a partial config receives only its missing exact root marker; existing bytes remain an exact prefix; repeat runs are byte-identical; and `--dry-run` writes nothing. Missing, incompatible, undeclared, or untrusted skills fail before any write.
 
 1. Run **AUDIT** first, so you change against a known gap list.
-2. Run `ki repo conform <repo>` for the bounded local mechanical layer. Live GitHub settings remain outside the session proposal: inspect the commands in [the repository standard](references/standards-repository.md#applying-it), show the exact diff, and obtain explicit confirmation before applying them.
+2. Run `ki repo conform --repo <repo>` for the bounded local mechanical layer. Live GitHub settings remain outside the session proposal: inspect the commands in [the repository standard](references/standards-repository.md#applying-it), show the exact diff, and obtain explicit confirmation before applying them.
 3. Resolve the judgment items yourself — document content, description fit, runtime orientation, override rationale, and standard synchronisation.
 4. **Re-audit** to confirm convergence.
 
@@ -58,7 +58,7 @@ Onboard a repo by adding the marker file (and the other root files) so it joins 
 
 1. Add any missing root files: `README.md` / `LICENSE` / `.gitignore` (`.editorconfig` is `ki-authoring`'s).
 2. Establish the declarative foundations only: a missing config gets one canonical `[ki-repo]` default block plus one bare `[ki-authoring]`; a partial file gets only whichever exact root marker is absent. A dotted sub-table such as `[ki-repo.checks]` does not satisfy the root marker. Existing values, comments, order, and all other bytes are preserved; repeat runs are idempotent. Native activation resolves the declared skills from the verified installed collection rather than vendoring checkers or runners into the repository.
-3. Activation is deliberately separate from configuration: `ki repo skill add <harness-id>:<skill-name>` and `ki user skill add <harness-id>:<skill-name>` create only managed runtime discovery links after ownership and containment checks. They do not change a declaration into an execution payload.
+3. Activation is deliberately separate from configuration: `ki skill repo add <skill>` and `ki skill user add <skill>` create only managed runtime discovery links after ownership and containment checks. They do not change a declaration into an execution payload.
 4. Set `visibility` and any `[…checks]` overrides (see [the configuration standard](references/standards-configuration.md)), commit (a direct push to `main` is fine — it's open), then run **CONFORM** for the GitHub settings.
 
 ### Mode REFRESH — re-anchor the standard to GitHub's surface
@@ -86,5 +86,5 @@ Read and follow [the REVIEW procedure](references/mode-review.md). Mechanical `k
 - **Private repos**: secret scanning is plan-limited; the standard exempts it (public-only check). Revisit via **GHAS** if the org upgrades — a REFRESH follow-up.
 - The auditor is **read-only**; EDUCATE and CONFORM are the write modes. CONFORM limits local mutation to mechanically confirmed gaps before it considers live GitHub changes.
 - REVIEW is human-led and judgmental. It may inspect source code, but it does not broaden the AUDIT rubric or CONFORM mutation boundary.
-- This skill owns the `.ki-config.toml` **file-level contract and foundation scaffold** (including the coverage cascade — which `[ki-*]` tables a repo declares). Other skills own and may conform their own table schemas; they must preserve unrelated tables. ADR-KI-HARNESS-012 assigns runtime activation to native `ki repo skill add`, which creates only managed runtime discovery links after ownership and containment checks; it does not vendor an executor into `.ki/` or change the configuration contract.
+- This skill owns the `.ki-config.toml` **file-level contract and foundation scaffold** (including the coverage cascade — which `[ki-*]` tables a repo declares). Other skills own and may conform their own table schemas; they must preserve unrelated tables. ADR-KI-HARNESS-012 assigns runtime activation to native `ki skill repo add`, which creates only managed runtime discovery links after ownership and containment checks; it does not vendor an executor into `.ki/` or change the configuration contract.
 - The structured catalogue owns criterion policy; `ki` owns validation, execution, findings, progress, and reporting.
