@@ -1,7 +1,7 @@
 ---
 id: 'GOV-004'
 title: Reconcile core repository roadmaps and handoffs
-status: acceptance
+status: done
 roadmap: governance-consistency/reconcile-core-repository-roadmaps-and-handoffs
 blocks: —
 blocked-by: —
@@ -101,3 +101,7 @@ KI Specifications now carries a separate `Soon` item for its whole-repository re
 ### Mini recap
 
 Cross-repository transfer is temporary working material, not a second planning system. The recipient preserves useful detail at an honest horizon, owns priority, and removes the transfer copy after durable adoption. Execution delegation is a separate concern owned by `ki-delegate`.
+
+## Done
+
+Accepted and recorded complete. The five core repositories have durable recipient-owned work, resolved working handoffs, and clean focused roadmap or Stream audits. The separate KI Specifications whole-repository review is scheduled in its `Soon` horizon, and stale CLI shadow detection is retained in the fleet CI roadmap item.
