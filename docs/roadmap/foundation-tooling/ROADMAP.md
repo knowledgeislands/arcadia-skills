@@ -12,12 +12,6 @@ Actively broken, or blocking the `Next` horizon: takes priority over everything 
 
 Scoped and ready to start — the immediate queue, picked up before anything in **Soon** or **Future**.
 
-### Define compatible harness registration and native repository-maintenance boundaries
-
-Replace the vendored repository-runner model with verified installed compatible payloads. Define the harness identity and skill-resolution boundary, `ki`'s governed-rubric host boundary, explicit repository and user activation, physical repository resolution, and migration without a hidden fallback to vendored scripts or a nearby checkout. Keep `tools-ki` responsible for the CLI platform; portable Specifications work is deliberately deferred.
-
-**Plan:** [FND-004](plans/FND-004-define-compatible-harness-registration.md)
-
 ## Soon
 
 Understood and roughly scoped but not yet started — worth doing once the **Next** queue clears, ahead of anything still speculative.
