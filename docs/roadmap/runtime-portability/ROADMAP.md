@@ -8,6 +8,12 @@ code: RTP
 
 Actively broken, or blocking the `Next` horizon: takes priority over everything else and must clear before `Next` work proceeds. Empty means nothing is on fire.
 
+### Make environment capabilities runtime-explicit
+
+Review every environment skill against the agent vendors and runtimes it actually governs. Preserve a generic capability only where a real portable contract remains; give vendor-bound capabilities explicit names and independently selectable activation, without empty counterpart skills or compatibility aliases. Restore the repository-plus-runtime context lost from housekeeping and tokenomics during the native rubric cutover, make runtime housekeeping and tokenomics part of every repository's declared supported-runtime coverage, and migrate the existing fleet in one clean end-state cut.
+
+**Plan:** [RTP-002](plans/RTP-002-runtime-explicit-environment-capabilities.md)
+
 ## Next
 
 Scoped and ready to start — the immediate queue, picked up before anything in **Soon** or **Future**.
