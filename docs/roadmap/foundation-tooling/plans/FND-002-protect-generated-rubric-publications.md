@@ -19,7 +19,7 @@ Make `ki` the sole renderer for structured rubrics. TypeScript catalogues remain
 ## Steps
 
 1. ✓ Agree the narrow host-injected publication capability and its failure semantics: repository containment, catalogue validation, missing/stale publication, invalid import, symlink refusal, and deterministic rendered bytes. Added the reciprocal [CLI-002](https://github.com/knowledgeislands/tools-ki/blob/main/docs/roadmap/cli/plans/CLI-002-host-generated-rubric-publication-capability.md) plan before implementation.
-2. In `tools-ki`, route standalone and repository publication preparation through one validated renderer and guarded transaction path without weakening installed-harness validation.
+2. ✓ In `tools-ki`, route standalone and repository publication preparation through one validated renderer and guarded transaction path without weakening installed-harness validation. Delivered by [CLI-002](https://github.com/knowledgeislands/tools-ki/commit/9032fa9).
 3. Extend the rubric context contract so `ki-skills` receives only rendered-publication evidence and can propose derived writes; do not put criterion identity or automatic findings in the host.
 4. Add `KI-CHECKER-6`: every structured catalogue has an exact derived publication; missing or differing bytes are FAIL drift and CONFORM schedules a DERIVED write. Exempt skills without structured catalogues.
 5. Lock the canonical output contract for notices, family metadata, classifications, citations, judgment prompts, ordering, and final newline. Exercise drift audit, dry-run, real conform, idempotence, batching, rollback/race refusal, malformed catalogues, and FIXED reporting.
