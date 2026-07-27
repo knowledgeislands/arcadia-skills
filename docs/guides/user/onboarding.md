@@ -60,9 +60,9 @@ The harness's pre-commit hook audits a complete staged snapshot when governed sk
 
 ## Existing repository-vendored state
 
-The former model created `.ki/bootstrap/`, `.ki/bin/`, and manifest state inside governed repositories.
+The former models created `.ki/` or `.ki-meta/` executors and regular-file skill copies under repository runtime-discovery directories.
 
-That material is now migration evidence, not an executor. Use the maintainer [retirement guide](../developer/retiring-repository-vendored-ki.md) to map every consumer to its native replacement and prove ownership before removal.
+That material is now migration evidence, not an executor or a managed runtime link. Use the maintainer [retirement guide](../developer/retiring-repository-vendored-ki.md) to map every consumer to its native replacement, prove generated ownership, and replace unchanged runtime copies through `ki skill repo`.
 
 If legacy state is altered, partial, unfamiliar, linked, dangling, escaping, or concurrently changed, preserve it and stop. A passing legacy runner does not prove that native governance is available.
 
