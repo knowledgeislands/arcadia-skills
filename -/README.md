@@ -1,7 +1,7 @@
 # Outgoing working area
 
-`-` is this repository's top-level working area for material prepared here for another repository or external recipient.
+`-` is this repository's top-level working area for material prepared here for another repository or external recipient. Outbound implementation briefs belong in [_HANDOFFS](_HANDOFFS/).
 
-An outbound handoff records the originating context, receiving owner, agreed boundaries, and implementation-ready brief. It does not replace the receiving repository's own roadmap item or plan.
+For material received here to triage, use [the matching inbound working area](../+/README.md).
 
-The existing CLI handoffs are under [_HANDOFFS/ki](_HANDOFFS/ki/). The repository-wide `+` / `-` convention is being codified by FND-004.
+It is not a canonical roadmap, plan, decision record, or knowledge-base destination. Keep a brief only until its receiving repository has adopted, declined, or superseded it.

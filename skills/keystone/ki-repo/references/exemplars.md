@@ -116,19 +116,21 @@ visibility = "private"
 # This repo authors and maintains decision records.
 ```
 
-### Optional `+` / `-` working areas
+### Required `+` / `-` working areas
 
-A repository creates working areas only when it has material to triage or send. Inbound and outbound handoffs are kept distinct, and an outgoing handoff is grouped by its receiving repository. The handoff remains an originating brief; the receiver independently adopts work into its own roadmap and plan.
-
-Once the last handoff in one direction is resolved, its `_HANDOFFS/README.md` and empty `_HANDOFFS/` directory are removed rather than retained as placeholders.
+A KI repository always carries its inbound and outbound working-area scaffold. Inbound and outbound handoffs stay distinct, and an outgoing handoff is grouped by its receiving repository. The handoff remains an originating brief; the receiver independently adopts work into its own roadmap and plan. The four README files are conformed `ki-repo` orientation, not handoff placeholders: remove resolved handoffs, but retain the scaffold.
 
 ```text
 my-repo/
 ├── +/
+│   ├── README.md
 │   └── _HANDOFFS/
+│       ├── README.md
 │       └── partner-repo.md
 └── -/
+    ├── README.md
     └── _HANDOFFS/
+        ├── README.md
         └── receiving-repo/
             └── implement-feature.md
 ```

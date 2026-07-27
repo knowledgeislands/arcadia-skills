@@ -48,18 +48,27 @@ No document may represent a legacy `.ki/bin` runner as the current self-check co
 
 ## Working areas
 
-`+/` and `-/` are optional top-level working areas. When a repository has no incoming or outgoing working material, it need not create either directory or declare configuration for them.
+Every KI repository carries this fixed working-area scaffold:
 
-`+/` is inbound: material received from another repository or external source that needs local triage. `-/` is outbound: material prepared here for another repository or external recipient. Neither is a canonical roadmap, plan, decision-record collection, or automatic transfer channel.
+```text
++/
+├── README.md
+└── _HANDOFFS/
+    └── README.md
+-/
+├── README.md
+└── _HANDOFFS/
+    └── README.md
+```
+
+`+/` is inbound: material received from another repository or external source that needs local triage. `-/` is outbound: material prepared here for another repository or external recipient. Neither is a canonical roadmap, plan, decision-record collection, or automatic transfer channel. The four README files are canonical direction and boundary orientation owned by `ki-repo`; AUDIT checks them and CONFORM creates or restores their exact text. They remain when their handoff area is empty, so every KI repository has the same navigable structure.
 
 Repository-level implementation briefs use the matching subareas:
 
 - **`+/_HANDOFFS/`** — incoming handoffs awaiting a local disposition. A resolved adoption belongs in this repository's roadmap and, where needed, plan; declined and superseded material is deleted. A retained `park` or `clarify` handoff records its receiving owner, disposition, reason or clarification request, and a named review trigger. It is presented again only when that trigger fires.
 - **`-/_HANDOFFS/<receiving-repository>/`** — outgoing handoffs grouped by their receiving repository. Retain an originating brief only while the receiver has not resolved it; remove it when the receiver's durable adoption, decline, or supersession is known.
 
-A handoff names the receiving repository, originating context, scope, constraints, and what the receiver owns. It never replaces the receiver's own priority, roadmap item, plan, implementation, or delivery decision. `ki-roadmap` performs the judgment-led periodic handoff review; `ki-next` performs confirmed inbound dispositions as part of normal non-KB work selection after a clean roadmap audit. Neither working area is an archive: every retained handoff has a current owner, disposition, reason or request, and review trigger; resolved inbound and outbound copies are removed.
-
-An `_HANDOFFS/README.md` may explain an active handoff area, but it does not justify retaining the area by itself. After the last inbound or outbound handoff is resolved, remove its README and empty `_HANDOFFS/` directory. The absence of the subarea is the immediate structural signal that its direction has nothing to consider.
+A handoff names the receiving repository, originating context, scope, constraints, and what the receiver owns. It never replaces the receiver's own priority, roadmap item, plan, implementation, or delivery decision. `ki-roadmap` performs the judgment-led periodic handoff review; `ki-next` performs confirmed inbound dispositions as part of normal non-KB work selection after a clean roadmap audit. Neither working area is an archive: every retained handoff has a current owner, disposition, reason or request, and review trigger; resolved inbound and outbound copies are removed, while the fixed scaffold remains.
 
 Knowledge Bases retain their own fixed `+/` and `-/` staging model under `ki-kb`. When a KB uses repository-level handoffs, its `+/_HANDOFFS/` and `-/_HANDOFFS/` contents follow this shared direction and ownership model while `ki-kb` continues to own note routing and frontmatter.
 

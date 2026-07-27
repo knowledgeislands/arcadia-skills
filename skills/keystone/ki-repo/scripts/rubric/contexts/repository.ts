@@ -71,6 +71,56 @@ export type RuntimesRubricContext = {
   runtimes2: readonly RepoEvidenceFinding[]
 }
 
+const WORKING_AREA_READMES = [
+  {
+    path: '+/README.md',
+    content: `# Incoming working area
+
+\`+\` is this repository's top-level working area for material received from another repository or external source that needs local triage. Incoming cross-repository implementation briefs belong in [_HANDOFFS](_HANDOFFS/).
+
+For material prepared here to send elsewhere, use [the matching outbound working area](../-/README.md).
+
+It is not a canonical roadmap, plan, decision record, or knowledge-base destination. Triage each item into its durable home, or remove it when it has no value to retain.
+`
+  },
+  {
+    path: '+/_HANDOFFS/README.md',
+    content: `# Incoming handoffs
+
+This directory holds active inbound handoffs awaiting a local disposition.
+
+Each brief names its originating context, scope, constraints, receiving owner, and requested disposition. Adopt durable work into this repository's roadmap and, where needed, a plan; remove declined or superseded briefs.
+`
+  },
+  {
+    path: '-/README.md',
+    content: `# Outgoing working area
+
+\`-\` is this repository's top-level working area for material prepared here for another repository or external recipient. Outbound implementation briefs belong in [_HANDOFFS](_HANDOFFS/).
+
+For material received here to triage, use [the matching inbound working area](../+/README.md).
+
+It is not a canonical roadmap, plan, decision record, or knowledge-base destination. Keep a brief only until its receiving repository has adopted, declined, or superseded it.
+`
+  },
+  {
+    path: '-/_HANDOFFS/README.md',
+    content: `# Outgoing handoffs
+
+This directory holds active outbound handoffs, grouped by receiving repository.
+
+Each brief names its originating context, scope, constraints, receiving owner, and what that receiver owns. Remove it when the receiver's durable adoption, decline, or supersession is known.
+`
+  }
+] as const
+
+const WORKING_AREA_DIRECTORIES = ['+', '+/_HANDOFFS', '-', '-/_HANDOFFS'] as const
+
+export type WorkingAreasRubricContext = {
+  workingAreas1: readonly AuditOutcome[]
+  ensureWorkingAreaScaffold?: () => void
+}
+
 export type RepoRubricContext = {
   files: FilesRubricContext
   gh: GhRubricContext
@@ -91,7 +141,7 @@ export type RepoRubricContext = {
   descriptionFit: Record<string, never>
   overrides: Record<string, never>
   synchronisation: Record<string, never>
-  workingAreas: Record<string, never>
+  workingAreas: WorkingAreasRubricContext
 }
 
 export const auditEvidence = (
@@ -121,6 +171,61 @@ const isSafeRegularFile = (path: string): boolean => {
   const metadata = lstatSync(path)
   return metadata.isFile() && !metadata.isSymbolicLink()
 }
+
+const isSafeDirectory = (path: string): boolean => {
+  if (!existsSync(path)) return false
+  const metadata = lstatSync(path)
+  return metadata.isDirectory() && !metadata.isSymbolicLink()
+}
+
+const pathState = (path: string): ReturnType<typeof lstatSync> | undefined => {
+  try {
+    return lstatSync(path)
+  } catch {
+    return undefined
+  }
+}
+
+const workingAreaOutcomes = (target: string): readonly AuditOutcome[] => {
+  const outcomes: AuditOutcome[] = []
+  for (const directory of WORKING_AREA_DIRECTORIES) {
+    const path = join(target, directory)
+    if (!isSafeDirectory(path)) {
+      outcomes.push({
+        status: 'VIOLATION',
+        message: `required working-area directory ${directory}/ is absent or unsafe`,
+        subject: directory
+      })
+    }
+  }
+  for (const readme of WORKING_AREA_READMES) {
+    const path = join(target, readme.path)
+    if (!isSafeRegularFile(path)) {
+      outcomes.push({
+        status: 'VIOLATION',
+        message: `required working-area README ${readme.path} is absent or unsafe`,
+        subject: readme.path
+      })
+    } else if (readFileSync(path, 'utf8') !== readme.content) {
+      outcomes.push({
+        status: 'VIOLATION',
+        message: `working-area README ${readme.path} differs from the canonical ki-repo orientation`,
+        subject: readme.path
+      })
+    }
+  }
+  return outcomes.length > 0 ? outcomes : [{ status: 'PASS', message: 'working-area scaffold is present and conformed' }]
+}
+
+const canConformWorkingAreaScaffold = (target: string): boolean =>
+  [...WORKING_AREA_DIRECTORIES].every((directory) => {
+    const state = pathState(join(target, directory))
+    return !state || (state.isDirectory() && !state.isSymbolicLink())
+  }) &&
+  WORKING_AREA_READMES.every((readme) => {
+    const state = pathState(join(target, readme.path))
+    return !state || (state.isFile() && !state.isSymbolicLink())
+  })
 
 const appendBlocks = (source: string, blocks: readonly string[]): string => {
   if (blocks.length === 0) return source
@@ -159,6 +264,7 @@ export const createRepoSession = (
   let repoConfigurationRequested = false
   let authoringConfigurationRequested = false
   let gitignoreRequested = false
+  let workingAreaScaffoldRequested = false
 
   const context: RepoRubricContext = {
     files: {
@@ -200,7 +306,16 @@ export const createRepoSession = (
     descriptionFit: {},
     overrides: {},
     synchronisation: {},
-    workingAreas: {}
+    workingAreas: {
+      workingAreas1: workingAreaOutcomes(target),
+      ...(mutable && canConformWorkingAreaScaffold(target)
+        ? {
+            ensureWorkingAreaScaffold: () => {
+              workingAreaScaffoldRequested = true
+            }
+          }
+        : {})
+    }
   }
 
   return {
@@ -242,6 +357,13 @@ export const createRepoSession = (
         if (content !== configSource) writes.push({ path: '.ki-config.toml', content, ...(!configExists ? { create: true } : {}) })
       }
       if (gitignoreRequested) writes.push({ path: '.gitignore', content: GITIGNORE_DEFAULT, create: true })
+      if (workingAreaScaffoldRequested) {
+        for (const readme of WORKING_AREA_READMES) {
+          const path = join(target, readme.path)
+          if (isSafeRegularFile(path) && readFileSync(path, 'utf8') === readme.content) continue
+          writes.push({ path: readme.path, content: readme.content, ...(!pathState(path) ? { create: true } : {}) })
+        }
+      }
       return { writes }
     }
   }

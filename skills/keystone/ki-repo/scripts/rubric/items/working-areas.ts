@@ -1,25 +1,42 @@
 import type { RubricFamily, RubricItem } from '../../shared/rubric.ts'
-import type { RepoRubricContext } from '../contexts/repository.ts'
+import type { RepoRubricContext, WorkingAreasRubricContext } from '../contexts/repository.ts'
 
-type WorkingAreasRubricContext = Record<string, never>
+const SOURCE = 'standards-repository.md'
+
+const WORK_1: RubricItem<WorkingAreasRubricContext> = {
+  code: 'WORK-1',
+  title: 'Working-area scaffold',
+  description: 'Every KI repository has the canonical inbound and outbound working areas, handoff subdirectories, and README orientation.',
+  sources: [SOURCE],
+  mechanical: {
+    level: 'FAIL',
+    audit: { phase: 'INSPECT', run: (context) => context.workingAreas1 },
+    conform: {
+      phase: 'PRIMARY',
+      run: (context) => {
+        context.ensureWorkingAreaScaffold?.()
+      }
+    }
+  }
+}
 
 const WORK_J1: RubricItem<WorkingAreasRubricContext> = {
   code: 'WORK-J1',
   title: 'working-area direction and lifecycle',
   description:
-    'Optional +/ and -/ working areas distinguish inbound from outbound material, retained handoffs have an owner and active disposition, and an empty handoff direction retains no README or directory placeholder.',
-  sources: ['standards-repository.md'],
+    'The required +/ and -/ working areas distinguish inbound from outbound material, and every retained handoff has an owner and active disposition.',
+  sources: [SOURCE],
   judgment: {
     prompt:
-      'Where +/ or -/ exists, review that it remains working material rather than a shadow canonical store or archive: each retained handoff has a receiving owner, active disposition, reason or request, and named review trigger; resolved copies are removed; and a direction with no handoffs retains neither `_HANDOFFS/README.md` nor the empty `_HANDOFFS/` directory.'
+      'Review that +/ and -/ remain working material rather than a shadow canonical store or archive: each retained handoff has a receiving owner, active disposition, reason or request, and named review trigger; resolved copies are removed while the required scaffold remains.'
   }
 }
 
 export const WORK: RubricFamily<RepoRubricContext, WorkingAreasRubricContext> = {
   code: 'WORK',
   title: 'Working areas',
-  description: 'Judgment-led review of optional inbound and outbound working material.',
-  standard: 'standards-repository.md',
+  description: 'Required inbound and outbound working-area scaffold and handoff lifecycle.',
+  standard: SOURCE,
   selectContext: (context) => context.workingAreas,
-  items: [WORK_J1]
+  items: [WORK_1, WORK_J1]
 }

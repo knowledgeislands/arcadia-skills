@@ -1,11 +1,12 @@
 import { afterEach, describe, expect, test } from 'bun:test'
 import { mkdirSync, mkdtempSync, rmSync, symlinkSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
-import { join } from 'node:path'
+import { dirname, join } from 'node:path'
 import type { RubricContextOptions } from '../../shared/rubric.ts'
 import { FILES } from '../items/files.ts'
+import { WORK } from '../items/working-areas.ts'
 import { collectAuditFindings } from './audit.ts'
-import { createRepoSession, type FilesRubricContext } from './repository.ts'
+import { createRepoSession, type FilesRubricContext, type WorkingAreasRubricContext } from './repository.ts'
 
 const roots: string[] = []
 
@@ -43,6 +44,24 @@ const filesContext = (session: ReturnType<typeof createRepoSession>): FilesRubri
   const [subject] = session.subjects
   if (!subject) throw new Error('ki-repo session did not expose its repository subject')
   return FILES.selectContext(subject.context())
+}
+
+const workingAreasContext = (session: ReturnType<typeof createRepoSession>): WorkingAreasRubricContext => {
+  const [subject] = session.subjects
+  if (!subject) throw new Error('ki-repo session did not expose its repository subject')
+  return WORK.selectContext(subject.context())
+}
+
+const runWorkingAreasConform = (context: WorkingAreasRubricContext): void => {
+  for (const item of WORK.items) item.mechanical?.conform?.run(context)
+}
+
+const applyWrites = (root: string, writes: ReturnType<ReturnType<typeof createRepoSession>['proposal']>['writes']): void => {
+  for (const write of writes) {
+    const path = join(root, write.path)
+    mkdirSync(dirname(path), { recursive: true })
+    writeFileSync(path, write.content)
+  }
 }
 
 describe('ki-repo session', () => {
@@ -85,6 +104,52 @@ describe('ki-repo session', () => {
     const context = filesContext(conform)
     expect(context.ensureRepoConfiguration).toBeUndefined()
     expect(context.ensureAuthoringConfiguration).toBeUndefined()
+  })
+
+  test('conforms the required inbound and outbound working-area scaffold', () => {
+    const root = repository()
+    const session = createRepoSession(options(root, 'conform'), inspect)
+    runWorkingAreasConform(workingAreasContext(session))
+
+    const writes = session.proposal().writes
+    expect(writes.map((write) => write.path)).toEqual(['+/README.md', '+/_HANDOFFS/README.md', '-/README.md', '-/_HANDOFFS/README.md'])
+    expect(writes.every((write) => write.create)).toBe(true)
+
+    applyWrites(root, writes)
+    const audit = createRepoSession(options(root, 'audit'), inspect)
+    const [item] = WORK.items
+    expect(item?.mechanical?.audit.run(workingAreasContext(audit))).toEqual([
+      { status: 'PASS', message: 'working-area scaffold is present and conformed' }
+    ])
+  })
+
+  test('repairs a drifted working-area README without recreating it', () => {
+    const root = repository()
+    const initial = createRepoSession(options(root, 'conform'), inspect)
+    runWorkingAreasConform(workingAreasContext(initial))
+    applyWrites(root, initial.proposal().writes)
+    writeFileSync(join(root, '+', 'README.md'), '# drift\n')
+
+    const session = createRepoSession(options(root, 'conform'), inspect)
+    runWorkingAreasConform(workingAreasContext(session))
+    const [write] = session.proposal().writes
+
+    expect(session.proposal().writes).toHaveLength(1)
+    expect(write?.path).toBe('+/README.md')
+    expect(write?.create).toBeUndefined()
+    expect(write?.content).toContain('[the matching outbound working area](../-/README.md)')
+  })
+
+  test('does not write a working-area scaffold through an unsafe directory', () => {
+    const root = repository()
+    const outside = join(root, 'outside')
+    mkdirSync(outside)
+    symlinkSync(outside, join(root, '+'), 'dir')
+
+    const session = createRepoSession(options(root, 'conform'), inspect)
+    runWorkingAreasConform(workingAreasContext(session))
+
+    expect(session.proposal().writes).toEqual([])
   })
 })
 
