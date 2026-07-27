@@ -31,7 +31,6 @@ The current `audit.ts` / `conform.ts` pair is therefore the initial executable b
 | `ki-subagents` | Inspect agent definitions | Scaffold/conform agent files | Agent files precede authoring normalisation. |
 | `ki-decision-records` | Inspect decisions/index | Conform decision records/index | Decision writers precede authoring normalisation. |
 | `ki-feature-definitions` | Inspect feature definitions/index | Conform feature documents/index | Feature writers precede authoring normalisation. |
-| `ki-handoffs` | Inspect handoff artifacts | Conform handoff artifacts | Handoff writers precede authoring normalisation. |
 | `ki-roadmap` | Inspect roadmap projections | Generate roadmap projections | Must follow thematic roadmap and plan writers. |
 | `ki-skills` | Inspect skill contract | Conform skill content | Skill writers precede authoring normalisation. |
 | `ki-binding-chezmoi` | Inspect chezmoi binding | Render managed binding surface | Depends on binding/domain inputs before external render. |

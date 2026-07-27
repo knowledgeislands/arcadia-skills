@@ -74,7 +74,6 @@ digraph skills_map {
     decisions [fillcolor="#feead2", label=< <b>ki-decision-records</b><br/><font point-size="9">decision records</font> >]
     engineering [fillcolor="#feead2", label=< <b>ki-engineering</b><br/><font point-size="9">toolchain · tests</font> >, tooltip="Engineering toolchain and tests"]
     features [fillcolor="#feead2", label=< <b>ki-feature-definitions</b><br/><font point-size="9">feature behaviour</font> >]
-    handoffs [fillcolor="#feead2", label=< <b>ki-handoffs</b><br/><font point-size="9">implementation-ready handoffs</font> >]
     roadmap [fillcolor="#feead2", label=< <b>ki-roadmap</b><br/><font point-size="9">forward work</font> >]
     specifications [fillcolor="#feead2", label=< <b>ki-specifications</b><br/><font point-size="9">specification repository shape</font> >]
   }
@@ -111,7 +110,7 @@ digraph skills_map {
     label="Process skills"
     style="rounded,filled"
     fillcolor="#f4f6f9"
-    delegate [fillcolor="#e7ebf1", label=< <b>ki-delegate</b><br/><font point-size="9">tiered delegation</font> >]
+    delegate [fillcolor="#e7ebf1", label=< <b>ki-delegate</b><br/><font point-size="9">delegation-ready execution</font> >]
     next [fillcolor="#e7ebf1", label=< <b>ki-next</b><br/><font point-size="9">next-work selection</font> >]
     plan [fillcolor="#e7ebf1", label=< <b>ki-plan</b><br/><font point-size="9">plan lifecycle</font> >]
     recap [fillcolor="#e7ebf1", label=< <b>ki-recap</b><br/><font point-size="9">session recap</font> >]

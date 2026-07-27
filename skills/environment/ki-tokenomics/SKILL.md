@@ -29,7 +29,7 @@ This is a **standard, base-agnostic Process skill**. `ki repo educate --skill ki
 - **Prompt caching** — is the stable prefix actually cacheable, and being hit?
 - **Model type** — is the work on the right-cost model _type_ (`frontier` / `reasoning` / `standard` / `fast`), whatever concrete model each resolves to per runtime?
 - **Compaction** — is a long conversation compacted before it bloats?
-- **Sub-agent fan-out** — each sub-agent re-pays the standing surface; is the fan-out worth it? Whether a given unit of work is delegation-ready in the first place is `ki-handoffs`'s concern, not this skill's.
+- **Sub-agent fan-out** — each sub-agent re-pays the standing surface; is the fan-out worth it? Whether a given unit of work is delegation-ready in the first place is `ki-delegate`'s concern, not this skill's.
 - **Tool-result verbosity** — raw logs / JSON dumps re-read every turn; this is where context-**compression** tooling earns its place.
 
 The full catalogue, the budget table, and the rationale (curate context as a finite resource; keep tool sets minimal) are in [the tokenomics standard](references/standards-tokenomics.md). The volatile reference numbers it leans on — model ids, prices, cache TTLs, context-window sizes — are **not** restated here; resolve them through the `claude-api` skill.

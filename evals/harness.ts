@@ -43,7 +43,6 @@ import { scenarios as skillsScenarios } from './scenarios/ki-skills.ts'
 import { scenarios as streamsScenarios } from './scenarios/ki-kb-streams.ts'
 import { scenarios as tokenomicsScenarios } from './scenarios/ki-tokenomics.ts'
 import { scenarios as decisionRecordsScenarios } from './scenarios/ki-decision-records.ts'
-import { scenarios as handoffsScenarios } from './scenarios/ki-handoffs.ts'
 import { scenarios as repoRoadmapScenarios } from './scenarios/ki-roadmap.ts'
 import { scenarios as activitiesScenarios } from './scenarios/ki-kb-activities.ts'
 import { scenarios as liveArtifactsScenarios } from './scenarios/ki-kb-live-artifacts.ts'
@@ -71,7 +70,6 @@ const ALL: Scenario[] = [
   ...tokenomicsScenarios,
   ...decisionRecordsScenarios,
   ...featureDefinitionsScenarios,
-  ...handoffsScenarios,
   ...repoRoadmapScenarios,
   ...activitiesScenarios,
   ...liveArtifactsScenarios,

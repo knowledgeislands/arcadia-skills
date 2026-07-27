@@ -43,7 +43,7 @@ The records are living, compact, and independent. The order below is a **curated
 16. [ADR-KI-HARNESS-TOOLCHAIN-001](ADR-KI-HARNESS-TOOLCHAIN-001-bun-biome-and-knip-standard-toolchain.md) — the Bun / Biome / knip standard toolchain.
 17. [ADR-KI-HARNESS-TOOLCHAIN-002](ADR-KI-HARNESS-TOOLCHAIN-002-complementary-tooling-current-adoptions.md) — complementary tooling currently adopted.
 18. [ADR-KI-HARNESS-TOOLCHAIN-003](ADR-KI-HARNESS-TOOLCHAIN-003-proxy-local-mcp-servers-behind-mcporter.md) — proxying local MCP servers behind mcporter.
-19. [ADR-KI-HARNESS-SKILLS-005](ADR-KI-HARNESS-SKILLS-005-the-handoff-doctrine-is-its-own-skill.md) — the handoff doctrine is its own skill.
+19. [ADR-KI-HARNESS-SKILLS-005](ADR-KI-HARNESS-SKILLS-005-the-handoff-doctrine-is-its-own-skill.md) — archived decision to create a standalone handoff skill; superseded by execution delegation in `ki-delegate`.
 20. [ADR-KI-HARNESS-SKILLS-006](ADR-KI-HARNESS-SKILLS-006-six-cluster-skill-taxonomy-and-the-implication-graph.md) — the six-cluster taxonomy and the machine-readable implication graph.
 21. [ADR-KI-HARNESS-SKILLS-007](ADR-KI-HARNESS-SKILLS-007-ki-housekeeping-scope-and-the-server-pairing.md) — ki-housekeeping's scope and the server pairing.
 22. [ADR-KI-HARNESS-SKILLS-008](ADR-KI-HARNESS-SKILLS-008-a-feature-definitions-skill-for-the-what.md) — a Feature Definitions skill for the "what".

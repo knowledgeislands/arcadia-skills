@@ -15,7 +15,7 @@ Filenames carry the model version (`opus-4-8`, `gpt-5-5`, `glm-5-2`) so a new ge
 | Claude Sonnet 5 | [sonnet-5.md](sonnet-5.md) | Fast, cost-efficient tier: well-scoped coding and agentic tasks, high-volume or latency-sensitive workloads |
 | Claude Haiku 4.5 | [haiku.md](haiku.md) | Fastest, lowest-cost tier: mechanical/bulk steps, sub-agent fan-out, scaffolding and conform-style edits |
 
-The tier pick — how to trade cost against capability — is governed by the `ki-tokenomics` skill, and plan-at-the-top-tier / execute-at-a-cheaper-tier by `ki-handoffs`.
+The model pick — how to trade cost against capability — is governed by the `ki-tokenomics` skill, while `ki-delegate` turns banked planning reasoning into bounded, cold-agent-ready execution briefs.
 
 ### Portable model types — one vocabulary across runtimes
 

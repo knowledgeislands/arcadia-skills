@@ -2,7 +2,7 @@
 id: ADR-KI-HARNESS-SKILLS-005
 title: 'The handoff doctrine is its own skill'
 date: 2026-07-02
-status: current
+status: archive
 type: Architecture Decision Record
 type_url: https://knowledgeislands.info/specifications/decision-records/adr
 decision_type: architecture
@@ -12,18 +12,21 @@ decision_type: architecture
 
 ## Context
 
-A reusable methodology recurs across bases: spend the top reasoning tier once to plan a body of work, then bank that reasoning as an implementation-ready spec a cheaper tier or a cold agent can execute without re-reasoning. Two existing skills own neighbouring concerns. `ki-roadmap` owns non-KB roadmap and plan quality (in a KB the equivalent is a `ki-kb-streams` proposal Checklist). `ki-tokenomics` owns model-tier cost and selection — `preferred_model_type`, the mode→tier table, the runtime levers and multi-model flows. Neither owns the connective concern: how to decompose and write work so a cheaper tier can execute it — decisions-locked-vs-escalate, a per-unit recommended tier, and a cold-model readiness test. The set's cardinal rule is composition, not duplication, so the question is whether this is a new skill or an extension of the two.
+This historical record addressed a recurring methodology: reason about a body of work once, then bank that reasoning in an implementation-ready brief a cheaper model or cold agent can execute without reconstructing the planner's context. At the time, `ki-roadmap` owned non-KB roadmap and plan quality, `ki-kb-streams` owned the Knowledge Base equivalent, and `ki-tokenomics` owned model cost and selection. The unresolved question was whether delegation readiness needed a separate governance standard.
 
 ## Decision
 
-The handoff doctrine is a **new, composition-shaped governance skill, `ki-handoffs`**. It owns _how to make work delegable across tiers_ and nothing else: the reasoning-layer split, the handoff-spec quality bar, the opt-in marker contract (`handoff: true`, `tier`, a decisions-locked-vs-escalate section, a readiness marker), and the cold-model readiness test. It owns no artifact of its own — the host artifact is a `ki-roadmap` thematic plan in a non-KB repository or a `ki-kb-streams` proposal Checklist in a KB, and `ki-handoffs` adds only the delegation-readiness delta. It refers tier cost and selection to `ki-tokenomics` and never restates the tier table or hard-codes a model id (tiers are named semantically; ids resolve via `claude-api`). The composition edges to `ki-roadmap`, `ki-kb-streams`, `ki-tokenomics`, and `ki-subagents` are reciprocal off-ramps.
+The original decision created the composition-shaped governance skill `ki-handoffs`. It owned the reasoning-layer split, a delegation-readiness quality bar, the `handoff: true` opt-in marker, semantic tier metadata, locked-versus-escalate decisions, and a recorded cold-agent readiness test. It owned no artifact of its own and added that delta to plans and proposal checklists, while deferring model cost and selection to `ki-tokenomics`.
 
 ## Consequences
 
-- The doctrine is discoverable as a named method (`is this ready to hand off`, `make this delegable`) rather than buried in another skill's quality bar.
-- `ki-roadmap` and `ki-tokenomics` remain separate standards; `ki-handoffs` composes on them at runtime by being run in sequence (ADR-KI-HARNESS-SKILLS-003), while staying valid standalone (ADR-KI-HARNESS-SKILLS-004).
-- A new opt-in artifact convention (`handoff: true`) is added; only artifacts that opt in are audited, so existing plans and proposals are unaffected.
-- The skill slots into the canonical dependency order (ADR-KI-HARNESS-SKILLS-003) after `ki-roadmap` / `ki-tokenomics`, which it composes on.
+- The doctrine became discoverable, but its governance shape introduced a standalone declaration, rubric, and marker contract for a concern exercised only while delegating execution.
+- The term “handoff” became ambiguous with cross-repository work transfer, whose receiving repository owns adoption, priority, and planning.
+- The separate semantic tier metadata duplicated the more portable, explicit per-spawn model choice already made by `ki-delegate`.
+
+## Supersession
+
+This decision was superseded on 2026-07-27. Delegation readiness now belongs to the `ki-delegate` process: reason once, lock or escalate decisions, give every unit a definition of done, choose the explicit minimum-viable model per spawn, test the brief against a cold agent, bound its scope, gate, and checkpoint, then require orchestrator review. Cross-repository transfer is a distinct roadmap lifecycle concern. The standalone governance skill, declaration, rubric, evals, marker fields, and compatibility surface were retired.
 
 ## References
 
