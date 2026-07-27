@@ -170,7 +170,7 @@ The target placement of `ki-specifications` is recorded for completeness, but it
 
 1. Every in-scope skill row records an accepted implementation shape, closed reference vocabulary, and justified top-level script set.
 2. Every in-scope structured catalogue follows the accepted `ki-skills` family/session contract and its generated `references/rubric.md` is in sync.
-3. The in-scope physical tree matches the target taxonomy, `ki-roadmap` is the only roadmap-governance capability name, and no source path retains `implied-families`, `foundations`, `general-governance`, or `repo-structure`.
+3. The in-scope physical tree matches the target taxonomy, except for the explicitly deferred `skills/repo-structure/ki-specifications` path; `ki-roadmap` is the only roadmap-governance capability name; and no other source path retains `implied-families`, `foundations`, `general-governance`, or `repo-structure`.
 4. The canonical installed or local harness passes educate, audit, and conform dry-run for every skill declared by this repository.
 5. CI and pre-commit use the direct `ki` surface without `.ki`, package aliases, compatibility runners, or incomplete staged dependency material.
 6. `bun run test`, the TypeScript and authoring gates, the roadmap audit, and the aggregate native repository audit pass.
