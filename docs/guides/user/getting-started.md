@@ -1,64 +1,88 @@
 # Getting Started
 
-Knowledge Islands is moving to native `ki`-hosted repository governance. The approved model is a verified XDG-managed set of compatible harnesses, with explicit skill activation and repository maintenance through `ki`.
-
-Those native skill and repository commands are planned, not yet released. Until they appear in `ki help` and completion, use this guide to understand the destination and follow [the CLI guide](command-line-interface.md) for released command availability.
-
-## Before you begin
-
-The public native `ki` command contract will not depend on a repository-local Bun toolchain. [Bun](https://bun.sh) remains necessary when developing the harness itself or running its source checks.
-
-The [recommended tools](recommended-tools.md) guide covers optional machine-level tools: chezmoi manages user configuration, headroom-ai helps manage context, and mcporter provides a local MCP tool surface.
+Knowledge Islands uses the `ki` command to install verified compatible harnesses, activate skills in explicit scopes, and run repository governance.
 
 ## 1. Install `ki`
 
-Install the released `ki` executable in a user command directory, then ensure that directory is on `PATH`.
+Install the released CLI with Homebrew:
 
-The installer, its selected version, and recovery guidance are described in [the CLI installation reference](command-line-interface.md#installation).
+```bash
+brew install knowledgeislands/tap/ki
+```
 
-The current seed release exposes its general commands and acquisition import only. It does not yet expose skill installation, activation, native repository maintenance, or migration.
+Confirm the executable and its paths:
 
-## 2. Install a harness and activate skills
+```bash
+ki --version
+ki diag
+```
 
-When the native skill surface is released, install each required verified harness, then activate only the skills needed in the chosen scope:
+The [recommended tools](recommended-tools.md) guide covers optional machine-level tools such as chezmoi, headroom-ai, and mcporter.
 
-```text
+## 2. Bootstrap the user environment
+
+Run:
+
+```bash
+ki bootstrap
+```
+
+`ki bootstrap` detects supported local agent runtimes, creates the KI XDG configuration, installs the verified canonical `knowledgeislands/ki-agentic-harness`, and activates the core user skills.
+
+Use `ki bootstrap --refresh` later to redetect agents and reconcile the recorded installed inventory. `ki doctor` reports the current environment and gives recovery guidance.
+
+## 3. Install another harness when needed
+
+The canonical harness is installed by bootstrap. Add another compatible harness only when a required capability comes from it:
+
+```bash
 ki harness install <harness-id>
-ki user skill add <harness-id>:<skill-name>
-ki repo skill add <harness-id>:<skill-name>
+ki harness list
+ki harness info <harness-id>
 ```
 
-- `ki harness install` will acquire or atomically replace one verified harness in the XDG-managed harness set; it will not activate every capability or change a repository.
-- `ki user skill add` will create managed discovery links for one installed skill in the selected user runtime.
-- `ki repo skill add` will declare one installed skill in the selected repository's `.ki-config.toml` and create only its managed repository-runtime links.
+Installing a harness makes its registered capabilities available for explicit activation; it does not activate all of them.
 
-`ki` uses the standard XDG locations: data under `$XDG_DATA_HOME/ki`, configuration under `$XDG_CONFIG_HOME/ki`, disposable downloads under `$XDG_CACHE_HOME/ki`, and mutable state under `$XDG_STATE_HOME/ki`. It does not use a separate KI home variable.
+## 4. Activate a skill in the right scope
 
-## 3. Govern a repository
+Use user scope when a skill should be available across configured agent runtimes:
 
-Once the native harness and repository operations are released, a repository declares its coverage in `.ki-config.toml` and uses the selected installed skills through:
-
-```text
-ki repo audit
-ki repo conform
+```bash
+ki skill user add <harness-id>:<skill-name>
 ```
 
-`ki repo audit` will read the physical repository's declared skill roots and run their registered native audit operations. `ki repo conform` will apply their safe mechanical changes through the same resolution and reporting model.
+Use repository scope when a skill governs one existing KI repository:
 
-Neither command will execute a repository's `.ki/bin` wrappers, copied `govern.ts` scripts, a nearby harness checkout, or another fallback executor.
+```bash
+ki skill repo add <harness-id>:<skill-name> --repo <repository>
+```
 
-For the complete native flow, including existing-repository migration and CI, see [the onboarding guide](onboarding.md).
+The repository command updates that repository's `.ki-config.toml` and creates only the managed runtime-discovery links for the selected skill. A bare skill name is accepted when exactly one installed harness provides it.
 
-## Existing vendored repositories
+## 5. Govern a repository
 
-Existing `.ki/bootstrap/`, `.ki/bin/`, and manifest material is a future migration source, not the executor for native governance.
+A repository declares its coverage in `.ki-config.toml`. Run:
 
-Keep that legacy state in place until the maintainer [retirement guide](../developer/retiring-repository-vendored-ki.md) establishes that its native replacement is proven. Do not recreate it, manually delete it, or treat it as a compatibility path for native commands.
+```bash
+ki repo educate --repo <repository>
+ki repo audit --repo <repository>
+ki repo conform --repo <repository> --dry-run
+```
+
+`ki repo educate` explains the declared rubrics. `ki repo audit` runs their registered read-only operations. `ki repo conform --dry-run` validates and reports safe proposed changes without publishing them; omit `--dry-run` only after reviewing the proposal.
+
+Use `--skill <skill>` to narrow any repository operation to one declared capability.
+
+The native host resolves declared capabilities from verified installed harnesses. It does not execute repository-local wrappers, copied rubric runners, nearby checkouts, or package aliases.
+
+## Existing repositories with `.ki/`
+
+Former repository-vendored `.ki/` state is migration evidence, not an execution fallback.
+
+Keep unfamiliar legacy state in place until the maintainer [retirement guide](../developer/retiring-repository-vendored-ki.md) proves its native replacement and ownership. Do not recreate it or remove it piecemeal.
 
 ## Start using skills
 
-Once a required skill is activated in the relevant runtime scope, describe what you need in plain language or use the runtime's skill invocation mechanism.
+Once a required skill is active in the relevant scope, describe what you need in plain language or use the runtime's skill invocation mechanism.
 
-[Use skills](using-skills.md) explains both approaches.
-
-For the current skill model, activation boundaries, and future native migration, continue to [the onboarding guide](onboarding.md).
+[Use skills](using-skills.md) explains both approaches. [Onboard a repository](onboarding.md) gives the detailed trust, activation, CI, and migration boundaries.

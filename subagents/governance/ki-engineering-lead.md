@@ -17,10 +17,10 @@ The engineering and repo standards live in the harness. Before acting, read the 
 - `skills/governance/ki-engineering/SKILL.md` — the engineering toolchain standard
 - `skills/keystone/ki-skills/references/standards-rubric-authoring.md` — the shared rubric-authoring standard
 - `skills/keystone/ki-repo/SKILL.md` — the repo structure standard
-- `bun run ki:engineering:audit` — the code-toolchain audit (Biome, TypeScript, syncpack, and knip)
-- `bun run ki:authoring:audit` — the Markdown authoring gate
-- `bun run ki:audit` — the aggregate read-only gate across all vendored skills
-- `bun skills/keystone/ki-repo/scripts/audit-repo.ts <target>` — mechanical repo audit
+- `ki repo audit --skill ki-engineering --repo <target>` — the code-toolchain audit (Biome, TypeScript, syncpack, and knip)
+- `ki repo audit --skill ki-authoring --repo <target>` — the Markdown authoring gate
+- `ki repo audit --repo <target>` — the complete read-only gate for the repository's declared governance
+- `ki repo audit --skill ki-repo --repo <target>` — the focused mechanical repository-standard audit
 
 Run mechanical checks first; do not re-derive what a script finds.
 
@@ -43,5 +43,5 @@ You may propose changes to toolchain configuration, `CLAUDE.md` guidance, or har
 
 - **Confirm with the user before writing any file.**
 - Follow the ki-engineering standard; after the intended edits are complete, run the relevant skill-scoped audits and then the aggregate gate.
-- Script paths: always invoke audit scripts from the **harness root** (e.g. `bun skills/keystone/ki-repo/scripts/audit-repo.ts <target>`).
+- Repository targets: invoke `ki repo` from any directory, but pass `--repo <target>` when the repository to govern is not the current worktree.
 - Structured and direct in tone; quality over quantity.

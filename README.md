@@ -10,7 +10,7 @@ The [KI Website](https://github.com/knowledgeislands/ki-website) may vendor sour
 
 A harness is **five parts** — the things an agent is given to work with:
 
-- **Skills** ([`skills/`](skills)) — reusable [Agent Skills](https://agentskills.io/specification): the most-built-out part of the harness today, all governance skills — including `ki-harness`, which governs this five-part container itself, and `ki-bootstrap`, the repository bootstrap keystone. What a skill is and the map of the set are in [Skills](docs/guides/user/skills.md); the per-skill catalogue is in [Skill catalogue](docs/guides/user/skill-catalogue.md).
+- **Skills** ([`skills/`](skills)) — reusable [Agent Skills](https://agentskills.io/specification): the most-built-out part of the harness today, all governance skills — including `ki-harness`, which governs this five-part container itself, and `ki-bootstrap`, which explains first-time activation through the CLI. What a skill is and the map of the set are in [Skills](docs/guides/user/skills.md); the per-skill catalogue is in [Skill catalogue](docs/guides/user/skill-catalogue.md).
 - **Agents** ([`subagents/`](subagents)) — Knowledge Islands [Claude Code subagents](https://code.claude.com/docs/en/sub-agents), one per file. Governance agents live under `subagents/governance/`, governed by the `ki-subagents` skill. See [`subagents/README.md`](agents/README.md).
 - **MCP servers** ([`mcp/`](mcp)) — where KI's MCP servers would consolidate as workspace packages. An empty **shelf** today; they currently live as separate `mcp-*` repos, governed by the `ki-mcp` skill. See [`mcp/README.md`](mcp/README.md).
 - **Evals** ([`evals/`](evals)) — a behavioural test suite that checks a skill actually _changes what the model does_, not just that its `SKILL.md` is well-formed. A rough signal, not a gate. See [`evals/README.md`](evals/README.md).
@@ -21,21 +21,21 @@ All five parts are first-class; skills are simply the most built-out, with agent
 ## Get started
 
 ```bash
-cd /path/to/repository-you-want-to-govern
-curl -fsSL https://knowledgeislands.info/harness/install | sh
+brew install knowledgeislands/tap/ki
+ki bootstrap
 ```
 
-This is repository bootstrap: it creates that repository's governance machinery and does not change the rest of your user environment. The stable Knowledge Islands URL redirects to this repository's canonical bootstrap script. [Install and get started](docs/guides/user/getting-started.md) covers optional user-environment tooling and hook payloads; [Use skills](docs/guides/user/using-skills.md) explains how to work with the resulting skills. Harness contributors should see [local skill linking](docs/guides/developer/linking-skills.md).
+`ki bootstrap` configures detected agent runtimes, installs the verified canonical harness, and activates the core user skills. Repository governance remains explicit through `.ki-config.toml`, `ki skill repo`, and the native `ki repo` operations. [Install and get started](docs/guides/user/getting-started.md) covers the complete flow; [Use skills](docs/guides/user/using-skills.md) explains how to work with the resulting skills. Harness contributors should see [local skill linking](docs/guides/developer/linking-skills.md).
 
 ## Documentation
 
 - [Overview](docs/guides/user/overview.md) — a short account of what the harness is, what it does for its owner, and how the parts fit.
-- [Install and get started](docs/guides/user/getting-started.md) — the practical starting point: optional tools, repository bootstrap, and user-environment hook payloads.
+- [Install and get started](docs/guides/user/getting-started.md) — install `ki`, bootstrap the user environment, activate skills, and govern a repository.
 - [Use skills](docs/guides/user/using-skills.md) — how a skill fires from a plain-language request or slash command.
 - [Skills](docs/guides/user/skills.md) — what a skill is, the domain map of the set and its interdependencies, and the shared governance-skill shape.
 - [Skill catalogue](docs/guides/user/skill-catalogue.md) — every skill, one by one, grouped by domain: what each governs and when to reach for it.
-- [Bootstrap reference](docs/guides/user/onboarding.md) — the detailed bootstrap model: remote transport, `.ki/`, day-to-day bins, fleet use, and keeping current.
-- [Command-line interface](docs/guides/user/command-line-interface.md) — the staged end-user `ki` command surface, seed release, and scope boundaries.
+- [Onboarding reference](docs/guides/user/onboarding.md) — the detailed installed-harness, activation, native-governance, and legacy-retirement boundaries.
+- [Command-line interface](docs/guides/user/command-line-interface.md) — the current end-user `ki` command surface and scope boundaries.
 - [Recommended tools](docs/guides/user/recommended-tools.md) — optional user and system tools: chezmoi, headroom-ai, Codex skill discovery, mcporter, and claude.ai connectors.
 - [Developer linking](docs/guides/developer/linking-skills.md) — the current local live-link workflow for harness contributors.
 - [Prompting guides](docs/guides/prompting/README.md) — how to prompt the models we run: one guide per model (Fable 5, Opus 4.8, Sonnet 5), each with a Sources section for refresh.

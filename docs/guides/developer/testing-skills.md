@@ -1,38 +1,37 @@
-# Testing an individual skill
+# Testing skills
 
-Use the source checker while developing one skill so its mechanical result is isolated from the repository's vendored `.ki/` state and from unrelated skills.
+Use the native repository host while developing skills. It loads the staged capability contract used by governed repositories rather than invoking a skill-owned wrapper.
 
-From the harness repository root, run:
-
-```bash
-bun run ./skills/keystone/ki-skills/scripts/govern.ts audit \
-  ./skills/<area>/<skill> \
-  --reporter=terminal
-```
-
-For example, to test `ki-skills` itself:
+From the harness repository root, run the complete mechanical `ki-skills` audit:
 
 ```bash
-bun run ./skills/keystone/ki-skills/scripts/govern.ts audit \
-  ./skills/keystone/ki-skills \
-  --reporter=terminal
+ki repo audit --skill ki-skills --repo .
 ```
 
-The terminal reporter shows `FAIL` and `WARN` findings by default, followed by complete summary counts. Add `--reporter-levels=all` when investigating every mechanical outcome.
+The audit deliberately examines the whole skill set. Cross-skill names, composition edges, shared-module providers, and off-ramp reciprocity cannot be validated from one isolated skill directory.
 
-Use `--progress=always` to show execution status when stderr is not interactive; the default `auto` shows it only on an interactive terminal, and `never` suppresses it. Progress uses stderr and does not alter the reporter output or canonical JSONL on stdout.
-
-Omit `--reporter=terminal` when a script or test needs the canonical JSONL response. The checker still runs every selected rubric item; reporter levels filter presentation only.
-
-Always pass the skill path when isolating one skill. With no target, the checker discovers skills from the current directory and may audit the whole harness. Use that repository-wide form when validating cross-skill criteria such as collisions.
-
-Preview the same skill's safe mechanical repairs with:
+Preview safe mechanical repairs without publishing them:
 
 ```bash
-bun run ./skills/keystone/ki-skills/scripts/govern.ts conform \
-  ./skills/<area>/<skill> \
-  --dry-run \
-  --reporter=terminal
+ki repo conform --skill ki-skills --repo . --dry-run
 ```
 
-These commands exercise authored source. Package aliases such as `bun run ki:skills:audit` exercise the repository's vendored `.ki/` checker through the aggregate reporter. In an ordinary repository, re-vendor before using them to verify a source change; in this source harness, direct checker links are live, so run `bun run ki:bootstrap:audit` and re-bootstrap only when generated bootstrap material changes.
+The progress display is automatic on an interactive terminal and suppressed when stderr is not a TTY. Findings and recap output remain available in both cases.
+
+When changing a rubric implementation, run its focused source tests as well. For example:
+
+```bash
+bun test ./skills/keystone/ki-skills/scripts/rubric
+```
+
+Those Bun tests are maintainer fixtures for the implementation. They supplement the native repository audit; they are not a second public execution path.
+
+Before handing off a skill change, run the repository gates in order:
+
+```bash
+bun run test
+bunx tsc --noEmit
+ki repo audit --skill ki-skills --repo .
+```
+
+The pre-commit hook applies the same principle to the index: it builds a complete staged snapshot, includes unchanged sibling and provider roots, and audits the repository-local `ki-self` source when relevant.

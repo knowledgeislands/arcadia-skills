@@ -1,53 +1,52 @@
 # Local skill linking for harness development
 
-This is a developer workflow for working on a local checkout of the harness. It is not part of normal user installation: a person using the harness should start with [Install and get started](../user/getting-started.md) and repository bootstrap.
+This is the contributor workflow for making an installed canonical harness follow a local checkout. Normal users should start with [Install and get started](../user/getting-started.md).
 
-Normal bootstrap and CONFORM publish generated regular-file copies into each ordinary project's runtime skill directory. A harness is different: bootstrap links its declared runtime skills to the canonical sources in that same checkout.
+## Prepare the user environment
 
-This guide covers the harness's automatic project-local links and the explicit user-global development links. A consumer remains copy-based.
-
-## Normal global installation
-
-Normal users install the five process and keystone skills as regular-file copies with the stable user route:
+Install the released `ki` executable, then bootstrap the detected agent runtimes:
 
 ```bash
-curl -fsSL https://knowledgeislands.info/harness/install | sh
+brew install knowledgeislands/tap/ki
+ki bootstrap
 ```
 
-The installer detects only two regular top-level user directories: `~/.claude/` for Claude Code and `~/.agents/` for the Agents/Codex skill surface. It installs `ki-bootstrap`, `ki-recap`, `ki-next`, `ki-plan`, and `ki-delegate` into every conformant matching user skill directory. Claude Code uses `~/.claude/skills/`; Agents/Codex uses `~/.agents/skills/`. It is re-runnable and refuses to clobber a real file or directory. Pass `--runtime claude-code` or `--runtime codex` to choose explicitly when required. Repository review is the `REVIEW` mode of a repository-declared `ki-repo`, not a user-global skill.
+Bootstrap installs the verified canonical harness and the core user skills. It does not declare repository governance.
 
-## Link the global development set
+## Enable the development checkout
 
-Harness authors can replace those six managed global copies with symlinks into this checkout:
+From any directory, point `ki` at the physical harness checkout:
 
 ```bash
-bun run ki:skills:link:global
+ki dev on /path/to/ki-agentic-harness
 ```
 
-This is deliberately a local-checkout command, not a public route. It refuses a source without a local Git checkout and detects the same two runtime directories as normal installation. Pass `--runtime claude-code` or `--runtime codex` to force one runtime when needed. Check that the links still resolve to this checkout with:
+The command validates the required `skills/`, `subagents/`, and `hooks/` roots before replacing the installed canonical payload with managed links to the checkout. It also refreshes configured user skills so the next agent session sees the local sources.
+
+Confirm the active installation:
 
 ```bash
-bun run ki:skills:link:global -- --check
+ki diag
+ki doctor
 ```
 
-To restore portable regular-file copies, re-run the public install route above. Start a new agent session after changing global skill payloads.
-
-## Harness project skills
-
-When EDUCATE runs in a harness, bootstrap maintains links from its runtime skill locations to its canonical sources:
+Repository-scoped skill links resolve through the installed harness location, so they follow the development checkout without a separate source linker. Add a missing repository capability with:
 
 ```bash
-bun run ki:educate
+ki skill repo add <skill> --repo <repository>
 ```
 
-The links are gitignored and generated; they are never committed because they depend on the local harness checkout. Declared shared-module dependencies are regular local files at `scripts/shared/<module>.ts`, including in the source harness.
+`ki-self` is different from an installed harness skill: author its one committed source at `.agents/skills/ki-self/SKILL.md`. Codex reads that source directly; Claude Code projects `.claude/skills/ki-self` to it by relative link. Do not create a second copy.
 
-`ki-self` is different from both generated runtime payloads and harness development links: author its one committed source at `.agents/skills/ki-self/SKILL.md`. Codex reads that canonical source directly; Claude Code projects `.claude/skills/ki-self` to it by relative link. Do not create a second copy.
+Start a new agent session after changing skill activation or switching harness source so the runtime re-scans its skill directories.
 
-Verify the selected development state with:
+## Restore the verified harness
+
+When checkout-local development is complete, restore the verified canonical archive and refresh the user projections:
 
 ```bash
-bun run ki:bootstrap:audit
+ki dev off
+ki doctor
 ```
 
-Start a new agent session after adding or removing a link so the runtime re-scans its skill directories.
+`ki dev off` preserves unfamiliar state and fails with recovery guidance rather than deleting an unproven installation.

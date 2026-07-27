@@ -54,7 +54,7 @@ Governs **Decision Records** in any Knowledge Islands repo, code or KB — the t
 
 ### `ki-engineering`
 
-The shared **engineering toolchain** every TS/Bun repo builds on — aggregate/scoped governance entrypoints, direct code-tool execution, `tsconfig`/`biome`, the Bun-install / Node-run split, a runner-neutral bare `test` entrypoint, the config-gated Vitest profile with 100% coverage, and the build/cli-chmod rule. The toolchain twin of `ki-authoring`; artifact skills (e.g. `ki-mcp`) **compose** their delta on top of its common layer. The shared mode and checker rules are owned separately by `ki-skills`.
+The shared **engineering toolchain** every TS/Bun repo builds on — native repository audit wiring, direct code-tool execution, `tsconfig`/`biome`, the Bun-install / Node-run split, a runner-neutral bare `test` entrypoint, the config-gated Vitest profile with 100% coverage, and the build/cli-chmod rule. The toolchain twin of `ki-authoring`; artifact skills (e.g. `ki-mcp`) **compose** their delta on top of its common layer. The shared mode and rubric rules are owned separately by `ki-skills`.
 
 ### `ki-feature-definitions`
 
@@ -72,7 +72,7 @@ Governs **forward work in non-KB repositories** through two automatically detect
 
 ### `ki-bootstrap`
 
-Bootstraps a repository into governance from its `.ki-config.toml`. It vendors the mechanical checks that let a repository govern itself with no skills installed, and it makes the repository's declared skills available to the active runtime. **Composes on** `ki-repo`, which owns the `.ki-config.toml` contract and coverage cascade it reads. The user-facing starting point is [Install and get started](getting-started.md); live linking from a harness checkout is contributor-only machinery.
+Explains first-time Knowledge Islands activation through the `ki` CLI: bootstrap a user, select a verified compatible harness, distinguish user skills from repository declarations, and route exact command behaviour to `ki help`. It is guidance-only; the CLI owns installation, activation, and repository-operation mechanics. The user-facing starting point is [Install and get started](getting-started.md); local harness selection is contributor-only machinery.
 
 ### `ki-repo`
 

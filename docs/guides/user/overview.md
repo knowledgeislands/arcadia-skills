@@ -10,7 +10,7 @@ An agentic harness is everything around an agent that helps it do a job well. Li
 
 The harness turns loose conventions into something an agent can apply and check consistently. A skill usually combines guidance with the practical checks or actions that put it to work. Governance skills share four modes:
 
-- **Educate (`EDUCATE`)** — give a target the knowledge, checkers, and commands it needs to govern itself. Run it to establish that foundation or bring it up to date.
+- **Educate (`EDUCATE`)** — explain a target's declared standard, criteria, and maintenance route without changing it.
 - **Audit** — read a target (a repository, a document, a knowledge base) and report where it departs from the standard.
 - **Conform** — bring the target into line, doing the mechanical fixes automatically.
 - **Refresh** — revisit the standard itself against its upstream source, so it stays relevant.
@@ -41,17 +41,18 @@ When a repository genuinely needs something different from the shared standard, 
 
 The approved model has two deliberately separate scopes. **Harness installation** gives a person verified compatible harnesses under the standard XDG locations. **Skill activation** then makes one installed skill discoverable in a selected user runtime or for one repository, and repository activation updates that repository's `.ki-config.toml`. Native repository operations read those declarations but do not own the user's wider runtime state. Keeping the scopes separate makes it clear what a command will change.
 
-The planned command group is deliberately small:
+The command group is deliberately small:
 
 ```text
 ki harness install <harness-id>
-ki user skill add <harness-id>:<skill-name>
-ki repo skill add <harness-id>:<skill-name>
+ki skill user add <harness-id>:<skill-name>
+ki skill repo add <harness-id>:<skill-name>
+ki repo educate
 ki repo audit
 ki repo conform
 ```
 
-The native skill and repository commands are not yet released. Current `ki` availability and the command contract are in [the CLI guide](command-line-interface.md); the eventual onboarding and migration flow is in [the onboarding guide](onboarding.md). Existing vendored `.ki` state is a migration input only, never a compatibility executor for the native model.
+The current command contract is in [the CLI guide](command-line-interface.md); the onboarding and migration flow is in [the onboarding guide](onboarding.md). Existing vendored `.ki` state is migration evidence only, never a compatibility executor for the native model.
 
 ## What "Knowledge Islands" means
 
@@ -59,10 +60,10 @@ Several of the skills are built for **Knowledge Islands** work and take its shap
 
 ## Where to go deeper
 
-- **[Getting started](getting-started.md)** covers optional machine tools, repository bootstrap, and the separate hook-payload installer.
+- **[Getting started](getting-started.md)** covers CLI installation, user bootstrap, harnesses, skill activation, and repository governance.
 - **[Use skills](using-skills.md)** covers how a skill fires — by plain-language request or slash command.
 - **[Recommended tools](recommended-tools.md)** explains optional machine-level tools such as chezmoi, headroom-ai, and mcporter.
 - **[Tuning](tuning.md)** covers making a session lean — the standing surface vs runtime split, which built-in tools and MCP servers to load, and where a compression proxy does and does not help.
-- **[Bootstrap reference](onboarding.md)** explains what repository bootstrap creates, its fleet and local forms, the day-to-day bins, and keeping a repository current.
-- **[Command-line interface](command-line-interface.md)** explains the staged end-user `ki` command surface and its scope boundaries.
+- **[Onboarding reference](onboarding.md)** explains installed harnesses, activation scopes, native operations, CI, and legacy retirement.
+- **[Command-line interface](command-line-interface.md)** explains the current end-user `ki` command surface and its scope boundaries.
 - **[Skills](skills.md)** covers what a skill is, the domain taxonomy, and the shape they all share; the **[skill catalogue](skill-catalogue.md)** then describes them one by one.
