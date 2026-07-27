@@ -1,4 +1,4 @@
-import type { AuditOutcome, RubricContextOptions, RubricSession } from '../../shared/rubric.ts'
+import type { AuditOutcome, RubricContextOptions, RubricPublicationContext, RubricSession } from '../../shared/rubric.ts'
 
 const outcome = (status: AuditOutcome['status'], message: string, level?: 'FAIL' | 'WARN'): AuditOutcome =>
   status === 'VIOLATION' ? { status, message, ...(level ? { level } : {}) } : { status, message }
@@ -17,9 +17,9 @@ export type TokenomicsConfigContext = {
   readonly routing: readonly AuditOutcome[]
 }
 
-export type TokenomicsRubricContext = { readonly config: TokenomicsConfigContext }
+export type TokenomicsRubricContext = { readonly rubric: RubricPublicationContext; readonly config: TokenomicsConfigContext }
 
-export const createTokenomicsSession = ({ configuration }: RubricContextOptions): RubricSession<TokenomicsRubricContext> => {
+export const createTokenomicsSession = ({ configuration, publication }: RubricContextOptions): RubricSession<TokenomicsRubricContext> => {
   const table = object(configuration)
   const unknown = Object.keys(table ?? {}).filter(
     (key) => !['headroom', 'context_window_tokens', 'preferred_model_type', 'budgets', 'model_tier_bindings'].includes(key)
@@ -38,6 +38,7 @@ export const createTokenomicsSession = ({ configuration }: RubricContextOptions)
   for (const [key, value] of Object.entries(object(table?.model_tier_bindings) ?? {}))
     if (!MODEL_TYPES.has(key) || typeof value !== 'string' || !value.trim()) invalid.push(`model_tier_bindings.${key}`)
   const context: TokenomicsRubricContext = {
+    rubric: { publication },
     config: {
       validates: invalid.length
         ? one(outcome('VIOLATION', `Malformed [ki-tokenomics] value(s): ${invalid.join(', ')}`, 'FAIL'))
@@ -49,5 +50,11 @@ export const createTokenomicsSession = ({ configuration }: RubricContextOptions)
       routing: one(outcome('PASS', 'Standing-surface findings route to their artifact owner and selected runtime adapter.'))
     }
   }
-  return { subjects: [{ families: ['CFG', 'POL'], subject: '[ki-tokenomics]', context: () => context }], proposal: () => ({ writes: [] }) }
+  return {
+    subjects: [
+      { families: ['CFG', 'POL'], subject: '[ki-tokenomics]', context: () => context },
+      { families: ['RUBRIC'], subject: '[ki-tokenomics]', context: () => context }
+    ],
+    proposal: () => ({ writes: [] })
+  }
 }

@@ -10,6 +10,7 @@ Line-by-line criteria for auditing ki-tokenomics-claude. Classifications are der
 
 - [SURF — Claude standing surfaces](#surf--claude-standing-surfaces)
 - [RUN — Claude runtime evidence](#run--claude-runtime-evidence)
+- [RUBRIC — Generated rubric publication](#rubric--generated-rubric-publication)
 
 ## SURF — Claude standing surfaces
 
@@ -27,3 +28,11 @@ Model and compression evidence.
 
 - **CLAUDE-RUN-1 [M] — Default and effective models are distinct** — The configured user default and selected-repository effective model are reported separately where documented settings expose them. (standards-claude-tokenomics.md)
 - **CLAUDE-RUN-2 [M] — Compression evidence is report-only** — Headroom wiring may be reported, but no compression configuration or operational history is changed. (standards-claude-tokenomics.md)
+
+## RUBRIC — Generated rubric publication
+
+→ [standard](../../../keystone/ki-skills/references/standards-rubric-authoring.md)
+
+The tracked readable rubric is the exact publication of the structured catalogue.
+
+- **RUBRIC-1 [M] — structured catalogue publication is exact** — A structured catalogue tracks `references/rubric.md` as its exact generated publication. The host supplies only validated publication evidence: a missing or differing file is a FAIL; during CONFORM this item requests the host-owned derived write without choosing its path or bytes. (../../../keystone/ki-skills/references/standards-rubric-authoring.md#generated-rubric-publication)

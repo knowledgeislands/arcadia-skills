@@ -15,6 +15,7 @@ Line-by-line criteria for auditing ki-harness. Classifications are derived from 
 - [SKILLS — Skill capability identity](#skills--skill-capability-identity)
 - [LONG — Longevity](#long--longevity)
 - [COLL — Capability boundary](#coll--capability-boundary)
+- [RUBRIC — Generated rubric publication](#rubric--generated-rubric-publication)
 
 ## CAP — Capability publication
 
@@ -92,3 +93,11 @@ Container ownership, host ownership, and sibling off-ramps.
 
 - **COLL-1 [J] — Capability boundary** — Declared prerequisites, coverage-selected siblings, and contents-governing off-ramps are complete and distinct. (standards-compatible-harness.md#ownership-boundaries)
   - _Review prompt:_ Are prerequisite dependencies, coverage-selected siblings, and description off-ramps complete and non-overlapping?
+
+## RUBRIC — Generated rubric publication
+
+→ [standard](../../../keystone/ki-skills/references/standards-rubric-authoring.md)
+
+The tracked readable rubric is the exact publication of the structured catalogue.
+
+- **RUBRIC-1 [M] — structured catalogue publication is exact** — A structured catalogue tracks `references/rubric.md` as its exact generated publication. The host supplies only validated publication evidence: a missing or differing file is a FAIL; during CONFORM this item requests the host-owned derived write without choosing its path or bytes. (../../../keystone/ki-skills/references/standards-rubric-authoring.md#generated-rubric-publication)

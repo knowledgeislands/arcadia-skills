@@ -43,7 +43,7 @@ test('the catalogue preserves the current compatible-harness criteria', () => {
   expect(catalogue.contract).toBe(1)
   expect(catalogue.name).toBe('ki-harness')
   expect(catalogue.createSession).toBeFunction()
-  expect(catalogue.families.map((family) => family.code)).toEqual(['CAP', 'LAY', 'CLAUDE', 'CONFIG', 'SKILLS', 'LONG', 'COLL'])
+  expect(catalogue.families.map((family) => family.code)).toEqual(['CAP', 'LAY', 'CLAUDE', 'CONFIG', 'SKILLS', 'LONG', 'COLL', 'RUBRIC'])
   const codes = catalogue.families.flatMap((family) => family.items.map((item) => item.code))
   expect(codes).toEqual([
     'CAP-1',
@@ -63,7 +63,8 @@ test('the catalogue preserves the current compatible-harness criteria', () => {
     'SKILLS-1',
     'SKILLS-2',
     'LONG-1',
-    'COLL-1'
+    'COLL-1',
+    'RUBRIC-1'
   ])
   expect(new Set(codes).size).toBe(codes.length)
 })

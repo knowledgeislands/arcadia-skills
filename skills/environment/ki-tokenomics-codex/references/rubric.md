@@ -10,6 +10,7 @@ Line-by-line criteria for auditing ki-tokenomics-codex. Classifications are deri
 
 - [SURF — Codex standing surfaces](#surf--codex-standing-surfaces)
 - [NA — Unavailable metrics](#na--unavailable-metrics)
+- [RUBRIC — Generated rubric publication](#rubric--generated-rubric-publication)
 
 ## SURF — Codex standing surfaces
 
@@ -26,3 +27,11 @@ Bounded documented Codex evidence.
 Metrics not inferred from local state.
 
 - **CODEX-NA-1 [M] — Unavailable token metrics are explicit** — Actual billing, tool-schema weights, compaction totals, and transcript metrics are explicitly not applicable until Codex documents a safe evidence contract. (standards-codex-tokenomics.md)
+
+## RUBRIC — Generated rubric publication
+
+→ [standard](../../../keystone/ki-skills/references/standards-rubric-authoring.md)
+
+The tracked readable rubric is the exact publication of the structured catalogue.
+
+- **RUBRIC-1 [M] — structured catalogue publication is exact** — A structured catalogue tracks `references/rubric.md` as its exact generated publication. The host supplies only validated publication evidence: a missing or differing file is a FAIL; during CONFORM this item requests the host-owned derived write without choosing its path or bytes. (../../../keystone/ki-skills/references/standards-rubric-authoring.md#generated-rubric-publication)

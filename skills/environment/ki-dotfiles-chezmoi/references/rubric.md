@@ -16,6 +16,7 @@ Line-by-line criteria for auditing ki-dotfiles-chezmoi. Classifications are deri
 - [LAYER — Instruction layering](#layer--instruction-layering)
 - [ETIQ — Audit etiquette](#etiq--audit-etiquette)
 - [SYNC — Standard synchronisation](#sync--standard-synchronisation)
+- [RUBRIC — Generated rubric publication](#rubric--generated-rubric-publication)
 
 ## CHEZMOI — Chezmoi repository shape
 
@@ -90,3 +91,11 @@ Judgment criteria for keeping the standard and implementation aligned.
 
 - **SYNC-1 [J] — Standard and rubric synchronisation** — The standard, structured rubric, and mechanical behaviour remain aligned when the standard changes. (standards-chezmoi-dotfiles.md)
   - _Review prompt:_ Do the standard, structured rubric items, and mechanical behaviour still agree?
+
+## RUBRIC — Generated rubric publication
+
+→ [standard](../../../keystone/ki-skills/references/standards-rubric-authoring.md)
+
+The tracked readable rubric is the exact publication of the structured catalogue.
+
+- **RUBRIC-1 [M] — structured catalogue publication is exact** — A structured catalogue tracks `references/rubric.md` as its exact generated publication. The host supplies only validated publication evidence: a missing or differing file is a FAIL; during CONFORM this item requests the host-owned derived write without choosing its path or bytes. (../../../keystone/ki-skills/references/standards-rubric-authoring.md#generated-rubric-publication)

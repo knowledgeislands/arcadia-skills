@@ -1,13 +1,14 @@
 import { existsSync, lstatSync, readFileSync } from 'node:fs'
 import { homedir } from 'node:os'
 import { join, resolve } from 'node:path'
-import type { RubricContextOptions, RubricSession } from '../../shared/rubric.ts'
+import type { RubricContextOptions, RubricPublicationContext, RubricSession } from '../../shared/rubric.ts'
 
 declare const Bun: { YAML: { parse(input: string): unknown } }
 
 export type ServerEntry = { name?: string; clients?: string[]; url?: string; command?: string }
 export type SourceState = { kind: 'absent' } | { kind: 'invalid'; message: string } | { kind: 'valid'; entries: readonly ServerEntry[] }
 export type BindingRubricContext = {
+  rubric: RubricPublicationContext
   source: string
   sourceState: SourceState
   mcporterServerKeys: ReadonlySet<string> | null
@@ -56,7 +57,7 @@ const mcporterKeys = (path: string): ReadonlySet<string> | null => {
   }
 }
 
-export const createBindingSession = ({ repository, userHome }: RubricContextOptions): RubricSession<BindingRubricContext> => {
+export const createBindingSession = ({ repository, userHome, publication }: RubricContextOptions): RubricSession<BindingRubricContext> => {
   const project = resolve(repository)
   const home = resolve(userHome)
   const xdgRoot = home === resolve(homedir()) ? process.env.XDG_CONFIG_HOME : undefined
@@ -65,10 +66,17 @@ export const createBindingSession = ({ repository, userHome }: RubricContextOpti
   const source = override ? resolve(override) : canonicalSource
   const mcporterPath = join(home, '.mcporter', 'mcporter.json')
   const context: BindingRubricContext = {
+    rubric: { publication },
     source,
     sourceState: readSource(source),
     mcporterPath,
     mcporterServerKeys: mcporterKeys(mcporterPath)
   }
-  return { subjects: [{ families: ['BIND'], context: () => context, subject: project }], proposal: () => ({ writes: [] }) }
+  return {
+    subjects: [
+      { families: ['BIND'], context: () => context, subject: project },
+      { families: ['RUBRIC'], context: () => context, subject: project }
+    ],
+    proposal: () => ({ writes: [] })
+  }
 }

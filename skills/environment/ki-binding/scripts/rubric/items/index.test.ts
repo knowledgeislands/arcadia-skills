@@ -10,9 +10,11 @@ const temporaryDirectories: string[] = []
 afterEach(() => {
   for (const directory of temporaryDirectories.splice(0)) rmSync(directory, { recursive: true, force: true })
 })
-test('the portable catalogue has no runtime publication criterion', () => {
+test('the portable catalogue publishes the host-owned rubric criterion', () => {
   expect(catalogue.name).toBe('ki-binding')
+  expect(catalogue.families.map((family) => family.code)).toEqual(['BIND', 'RUBRIC'])
   expect(catalogue.families[0]?.items.map((item) => item.code)).toEqual(['BIND-1', 'BIND-2', 'BIND-J1'])
+  expect(catalogue.families[1]?.items.map((item) => item.code)).toEqual(['RUBRIC-1'])
 })
 test('the session compares only mcporter against a canonical source', () => {
   const repository = mkdtempSync(join(tmpdir(), 'ki-binding-repository-'))

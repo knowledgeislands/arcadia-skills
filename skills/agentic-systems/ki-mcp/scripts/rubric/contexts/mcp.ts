@@ -1,6 +1,6 @@
 import { lstatSync, readdirSync, readFileSync } from 'node:fs'
 import { isAbsolute, join, relative, resolve } from 'node:path'
-import type { ConformWrite, RubricContextOptions, RubricSession } from '../../shared/rubric.ts'
+import type { ConformWrite, RubricContextOptions, RubricPublicationContext, RubricSession } from '../../shared/rubric.ts'
 
 const CONFIG_FILE = '.ki-config.toml'
 const CONFIG_SECTION = 'ki-mcp'
@@ -70,6 +70,7 @@ export type McpCiContext = {
 }
 
 export type McpRubricContext = {
+  readonly rubric: RubricPublicationContext
   readonly applicability: McpApplicabilityContext
   readonly layout: McpLayoutContext
   readonly documentation: McpDocumentationContext
@@ -148,7 +149,7 @@ const inspectPackage = (
 
 const packageScripts = (value: Record<string, unknown> | null): Record<string, unknown> => asTable(value?.scripts) ?? {}
 
-export const createMcpSession = ({ mode, repository }: RubricContextOptions): RubricSession<McpRubricContext> => {
+export const createMcpSession = ({ mode, repository, publication }: RubricContextOptions): RubricSession<McpRubricContext> => {
   const root = resolve(repository)
   const rootExists = nodeKind(root) === 'directory'
   const at = (...parts: string[]): string => join(root, ...parts)
@@ -182,6 +183,7 @@ export const createMcpSession = ({ mode, repository }: RubricContextOptions): Ru
   const toolFiles = sourceFiles.filter((file) => file.path.startsWith('src/tools/') && !file.path.endsWith('.test.ts'))
 
   const context: McpRubricContext = {
+    rubric: { publication },
     applicability: {
       root,
       rootExists,
@@ -292,7 +294,10 @@ export const createMcpSession = ({ mode, repository }: RubricContextOptions): Ru
   }
 
   return {
-    subjects: [{ families: applicable ? FAMILY_CODES : ['KI'], context: () => context }],
+    subjects: [
+      { families: applicable ? FAMILY_CODES : ['KI'], context: () => context },
+      { families: ['RUBRIC'], context: () => context, subject: root }
+    ],
     proposal: () => {
       const writes: ConformWrite[] = []
       if (configDraft !== null && originalConfig !== null && configDraft !== originalConfig)

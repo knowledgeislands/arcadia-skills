@@ -1,6 +1,6 @@
 import { existsSync, lstatSync, readdirSync, readFileSync } from 'node:fs'
 import { join, relative, resolve } from 'node:path'
-import type { RubricContextOptions, RubricSession } from '../../shared/rubric.ts'
+import type { RubricContextOptions, RubricPublicationContext, RubricSession } from '../../shared/rubric.ts'
 
 type CoworkFile = {
   path: string
@@ -10,6 +10,7 @@ type CoworkFile = {
   proposal: () => { path: string; content: string } | undefined
 }
 export type ClaudeBindingContext = {
+  rubric: RubricPublicationContext
   codePath: string
   desktopPath: string
   codeServers: ReadonlySet<string> | null
@@ -92,11 +93,17 @@ const find = (directory: string, depth = 0): string[] =>
         const path = join(directory, entry.name)
         return entry.name === 'cowork_settings.json' ? [path] : entry.isDirectory() && !entry.isSymbolicLink() ? find(path, depth + 1) : []
       })
-export const createClaudeBindingSession = ({ mode, repository, userHome }: RubricContextOptions): RubricSession<ClaudeBindingContext> => {
+export const createClaudeBindingSession = ({
+  mode,
+  repository,
+  userHome,
+  publication
+}: RubricContextOptions): RubricSession<ClaudeBindingContext> => {
   const home = resolve(userHome),
     base = join(home, 'Library', 'Application Support', 'Claude', 'local-agent-mode-sessions')
   const source = process.env.KI_MCP_SOURCE ? resolve(process.env.KI_MCP_SOURCE) : join(home, '.config', 'ki', 'mcp-servers.yaml')
   const context: ClaudeBindingContext = {
+    rubric: { publication },
     codePath: join(home, '.claude.json'),
     desktopPath: join(home, 'Library', 'Application Support', 'Claude', 'claude_desktop_config.json'),
     codeServers: servers(join(home, '.claude.json')),
@@ -109,7 +116,10 @@ export const createClaudeBindingSession = ({ mode, repository, userHome }: Rubri
       .map((path) => coworkFile(path, home, mode === 'conform'))
   }
   return {
-    subjects: [{ families: ['CLAUDEBIND'], context: () => context, subject: resolve(repository) }],
+    subjects: [
+      { families: ['CLAUDEBIND'], context: () => context, subject: resolve(repository) },
+      { families: ['RUBRIC'], context: () => context, subject: resolve(repository) }
+    ],
     proposal: () => ({
       writes: context.cowork.flatMap((file) => {
         const write = file.proposal()

@@ -1,6 +1,6 @@
 import { type Dirent, lstatSync, readdirSync, readFileSync } from 'node:fs'
 import { basename, join, relative, resolve } from 'node:path'
-import type { ConformWrite, RubricContextOptions, RubricSession } from '../../shared/rubric.ts'
+import type { ConformWrite, RubricContextOptions, RubricPublicationContext, RubricSession } from '../../shared/rubric.ts'
 
 export const HARNESS_PARTS = ['skills', 'subagents', 'mcp', 'evals', 'hooks'] as const
 export type HarnessPart = (typeof HARNESS_PARTS)[number]
@@ -47,6 +47,7 @@ export type HarnessReviewContext = {
 }
 
 export type HarnessRubricContext = {
+  rubric: RubricPublicationContext
   layout: HarnessLayoutContext
   config: HarnessConfigContext
   skills: HarnessSkillsContext
@@ -129,7 +130,7 @@ const inspectSkills = (
 
 const hasTomlTable = (toml: string, table: string): boolean => new RegExp(`^\\[${table.replace(/-/g, '\\-')}\\]`, 'm').test(toml)
 
-export const createHarnessSession = ({ mode, repository }: RubricContextOptions): RubricSession<HarnessRubricContext> => {
+export const createHarnessSession = ({ mode, repository, publication }: RubricContextOptions): RubricSession<HarnessRubricContext> => {
   const root = resolve(repository)
   const state = repositoryState(root)
   const configPath = join(root, '.ki-config.toml')
@@ -156,6 +157,7 @@ export const createHarnessSession = ({ mode, repository }: RubricContextOptions)
     }
   })
   const context: HarnessRubricContext = {
+    rubric: { publication },
     layout: {
       repository: root,
       repositoryState: state,
@@ -193,7 +195,8 @@ export const createHarnessSession = ({ mode, repository }: RubricContextOptions)
         families: ['CAP', 'LAY', 'CLAUDE', 'CONFIG', 'SKILLS', 'LONG', 'COLL'],
         context: () => context,
         subject: root
-      }
+      },
+      { families: ['RUBRIC'], context: () => context, subject: root }
     ],
     proposal: () => {
       const writes: ConformWrite[] = []

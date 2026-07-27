@@ -1,6 +1,6 @@
 import { existsSync, lstatSync, readdirSync, readFileSync } from 'node:fs'
 import { join, relative, resolve, sep } from 'node:path'
-import type { RubricContextOptions, RubricSession } from '../../shared/rubric.ts'
+import type { RubricContextOptions, RubricPublicationContext, RubricSession } from '../../shared/rubric.ts'
 
 export type JsonDocument = {
   raw: string
@@ -8,6 +8,7 @@ export type JsonDocument = {
 }
 
 export type PluginsContext = {
+  rubric: RubricPublicationContext
   target: string
   available: boolean
   applicable: boolean
@@ -62,7 +63,7 @@ const containedPhysical = (root: string, path: string, kind: 'file' | 'directory
   return kind === 'file' ? state.isFile() : state.isDirectory()
 }
 
-export const createPluginsSession = ({ repository }: RubricContextOptions): RubricSession<PluginsContext> => {
+export const createPluginsSession = ({ repository, publication }: RubricContextOptions): RubricSession<PluginsContext> => {
   const root = resolve(repository)
   const available = physicalDirectory(root)
   const at = (...parts: string[]) => join(root, ...parts)
@@ -126,6 +127,7 @@ export const createPluginsSession = ({ repository }: RubricContextOptions): Rubr
   if (pluginName && isDir(pluginName)) walk(at(pluginName))
 
   const context: PluginsContext = {
+    rubric: { publication },
     target: root,
     available,
     applicable,
@@ -148,7 +150,10 @@ export const createPluginsSession = ({ repository }: RubricContextOptions): Rubr
   }
 
   return {
-    subjects: [{ families: ['PLUG'], subject: root, context: () => context }],
+    subjects: [
+      { families: ['PLUG'], subject: root, context: () => context },
+      { families: ['RUBRIC'], subject: root, context: () => context }
+    ],
     proposal: () => ({ writes: [] })
   }
 }

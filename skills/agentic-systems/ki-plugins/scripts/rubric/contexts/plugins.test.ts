@@ -73,7 +73,7 @@ describe('ki-plugins session', () => {
     const evidence = context(session)
     const mechanical = PLUG.items.flatMap((item) => (item.mechanical ? item.mechanical.audit.run(evidence) : []))
 
-    expect(session.subjects).toHaveLength(1)
+    expect(session.subjects).toHaveLength(2)
     expect(mechanical.some((outcome) => outcome.status === 'VIOLATION')).toBe(false)
     expect(session.proposal()).toEqual({ writes: [] })
   })

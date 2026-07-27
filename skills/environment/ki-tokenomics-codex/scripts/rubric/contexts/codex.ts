@@ -1,6 +1,6 @@
 import { existsSync, lstatSync, readdirSync } from 'node:fs'
 import { join, resolve } from 'node:path'
-import type { AuditOutcome, RubricContextOptions, RubricSession } from '../../shared/rubric.ts'
+import type { AuditOutcome, RubricContextOptions, RubricPublicationContext, RubricSession } from '../../shared/rubric.ts'
 
 const physical = (path: string) => existsSync(path) && !lstatSync(path).isSymbolicLink()
 const directoryEntries = (path: string) =>
@@ -16,9 +16,9 @@ const presence = (label: string, path: string) =>
     : result('NOT_APPLICABLE', `${label} is absent at ${path}.`)
 
 export type CodexEvidenceContext = { readonly surfaces: readonly AuditOutcome[]; readonly unavailableMetrics: readonly AuditOutcome[] }
-export type CodexRubricContext = { readonly codex: CodexEvidenceContext }
+export type CodexRubricContext = { readonly rubric: RubricPublicationContext; readonly codex: CodexEvidenceContext }
 
-export const createCodexSession = ({ repository, userHome }: RubricContextOptions): RubricSession<CodexRubricContext> => {
+export const createCodexSession = ({ repository, userHome, publication }: RubricContextOptions): RubricSession<CodexRubricContext> => {
   const repo = resolve(repository)
   const home = resolve(userHome)
   const codex = join(home, '.codex')
@@ -26,6 +26,7 @@ export const createCodexSession = ({ repository, userHome }: RubricContextOption
   const codexSkills = directoryEntries(join(codex, 'skills'))
   const sharedUserSkills = directoryEntries(join(home, '.agents', 'skills'))
   const context: CodexRubricContext = {
+    rubric: { publication },
     codex: {
       surfaces: [
         presence('Bounded Codex configuration and MCP declaration surface', join(codex, 'config.toml')),
@@ -41,5 +42,11 @@ export const createCodexSession = ({ repository, userHome }: RubricContextOption
       )
     }
   }
-  return { subjects: [{ families: ['SURF', 'NA'], subject: repo, context: () => context }], proposal: () => ({ writes: [] }) }
+  return {
+    subjects: [
+      { families: ['SURF', 'NA'], subject: repo, context: () => context },
+      { families: ['RUBRIC'], subject: repo, context: () => context }
+    ],
+    proposal: () => ({ writes: [] })
+  }
 }

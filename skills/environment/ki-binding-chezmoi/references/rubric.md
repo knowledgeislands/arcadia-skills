@@ -9,6 +9,7 @@ Line-by-line criteria for auditing ki-binding-chezmoi. Classifications are deriv
 ## Contents
 
 - [BINDCHEZ — Chezmoi binding render path](#bindchez--chezmoi-binding-render-path)
+- [RUBRIC — Generated rubric publication](#rubric--generated-rubric-publication)
 
 ## BINDCHEZ — Chezmoi binding render path
 
@@ -25,3 +26,11 @@ The renderer-specific delta connecting MCP source data, a chezmoi partial, and r
   - _Review prompt:_ Does a reviewed chezmoi diff reproduce exactly the intended renderer-neutral surface state?
 - **BINDCHEZ-7 [J] — Contract coherence** — The render standard, structured rubric, provenance, and sibling ownership boundaries remain coherent. (standards-chezmoi-mcp-rendering.md)
   - _Review prompt:_ Do the standard, rubric, sources, and composition instructions describe the same render contract without duplicating sibling policy?
+
+## RUBRIC — Generated rubric publication
+
+→ [standard](../../../keystone/ki-skills/references/standards-rubric-authoring.md)
+
+The tracked readable rubric is the exact publication of the structured catalogue.
+
+- **RUBRIC-1 [M] — structured catalogue publication is exact** — A structured catalogue tracks `references/rubric.md` as its exact generated publication. The host supplies only validated publication evidence: a missing or differing file is a FAIL; during CONFORM this item requests the host-owned derived write without choosing its path or bytes. (../../../keystone/ki-skills/references/standards-rubric-authoring.md#generated-rubric-publication)

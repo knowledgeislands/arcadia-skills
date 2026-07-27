@@ -12,6 +12,7 @@ Line-by-line criteria for auditing ki-housekeeping-claude. Classifications are d
 - [FM — Frontmatter](#fm--frontmatter)
 - [LINK — Explicitly not checked](#link--explicitly-not-checked)
 - [DOC — Content doctrine](#doc--content-doctrine)
+- [RUBRIC — Generated rubric publication](#rubric--generated-rubric-publication)
 
 ## IDX — Index/file agreement
 
@@ -64,3 +65,11 @@ Judgment-applied memory content doctrine.
   - _Review prompt:_ No memory is stale — a `project` memory whose fact or decision has visibly been superseded by current repo state (check against `git log`/current files, not the memory’s own text).
 - **DOC-6 [J] — Semantic index ordering** — `MEMORY.md` entries are organized semantically by topic, not chronologically. (standards-auto-memory.md)
   - _Review prompt:_ `MEMORY.md` entries are organized semantically by topic, not chronologically.
+
+## RUBRIC — Generated rubric publication
+
+→ [standard](../../../keystone/ki-skills/references/standards-rubric-authoring.md)
+
+The tracked readable rubric is the exact publication of the structured catalogue.
+
+- **RUBRIC-1 [M] — structured catalogue publication is exact** — A structured catalogue tracks `references/rubric.md` as its exact generated publication. The host supplies only validated publication evidence: a missing or differing file is a FAIL; during CONFORM this item requests the host-owned derived write without choosing its path or bytes. (../../../keystone/ki-skills/references/standards-rubric-authoring.md#generated-rubric-publication)

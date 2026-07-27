@@ -9,6 +9,7 @@ Line-by-line criteria for auditing ki-binding-claude. Classifications are derive
 ## Contents
 
 - [CLAUDEBIND — Claude binding](#claudebind--claude-binding)
+- [RUBRIC — Generated rubric publication](#rubric--generated-rubric-publication)
 
 ## CLAUDEBIND — Claude binding
 
@@ -20,3 +21,11 @@ Claude-native JSON and Cowork plugin evidence.
 - **CLAUDEBIND-2 [M] — Cowork plugin integrity** — Every safe Cowork workspace registers and enables the KI plugin. (standards-claude-binding.md)
 - **CLAUDEBIND-J1 [J] — Web convention is intentional** — claude.ai web use is documented as a convention rather than a local render target. (standards-claude-binding.md)
   - _Review prompt:_ Is the web convention explicit without claiming a local file or renderer exists?
+
+## RUBRIC — Generated rubric publication
+
+→ [standard](../../../keystone/ki-skills/references/standards-rubric-authoring.md)
+
+The tracked readable rubric is the exact publication of the structured catalogue.
+
+- **RUBRIC-1 [M] — structured catalogue publication is exact** — A structured catalogue tracks `references/rubric.md` as its exact generated publication. The host supplies only validated publication evidence: a missing or differing file is a FAIL; during CONFORM this item requests the host-owned derived write without choosing its path or bytes. (../../../keystone/ki-skills/references/standards-rubric-authoring.md#generated-rubric-publication)

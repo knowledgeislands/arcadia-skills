@@ -155,7 +155,7 @@ describe('ki-housekeeping-claude session', () => {
     const session = createHousekeepingSession(options(home, 'audit'))
     const context = memoryContext(session)
 
-    expect(session.subjects).toHaveLength(1)
+    expect(session.subjects).toHaveLength(2)
     expect(context.index.exists[0]?.status).toBe('PASS')
     expect(context.frontmatter.present[0]?.status).toBe('NOT_APPLICABLE')
     expect(JSON.stringify(context)).not.toContain('foreign')

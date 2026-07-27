@@ -18,6 +18,7 @@ Line-by-line criteria for auditing ki-subagents. Classifications are derived fro
 - [PROC — Process and evaluation](#proc--process-and-evaluation)
 - [LONG — Longevity](#long--longevity)
 - [COLL — Cross-agent collision](#coll--cross-agent-collision)
+- [RUBRIC — Generated rubric publication](#rubric--generated-rubric-publication)
 
 ## LAY — File and frontmatter layout
 
@@ -168,3 +169,11 @@ Trigger collisions and reciprocal off-ramps.
 - **COLL-1 [M] — Distinct quoted trigger phrases** — Within a set of at least two agents, no two descriptions declare the same quoted trigger phrase. (standards-subagent-definitions.md#13-cross-agent-collision, HOUSE)
 - **COLL-2 [J] — Reciprocal collision off-ramps** — Agents that could take the same request name each other as off-ramps. (standards-subagent-definitions.md#13-cross-agent-collision, HOUSE)
   - _Review prompt:_ Where two agents could take one request, each names the other as the off-ramp; a one-directional guard is a half-fix.
+
+## RUBRIC — Generated rubric publication
+
+→ [standard](../../../keystone/ki-skills/references/standards-rubric-authoring.md)
+
+The tracked readable rubric is the exact publication of the structured catalogue.
+
+- **RUBRIC-1 [M] — structured catalogue publication is exact** — A structured catalogue tracks `references/rubric.md` as its exact generated publication. The host supplies only validated publication evidence: a missing or differing file is a FAIL; during CONFORM this item requests the host-owned derived write without choosing its path or bytes. (../../../keystone/ki-skills/references/standards-rubric-authoring.md#generated-rubric-publication)

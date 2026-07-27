@@ -81,7 +81,8 @@ test('the structured catalogue preserves the complete ki-subagents rule surface'
     'PROC-2',
     'LONG-1',
     'COLL-1',
-    'COLL-2'
+    'COLL-2',
+    'RUBRIC-1'
   ])
   expect(Object.fromEntries(items.filter((item) => item.mechanical).map((item) => [item.code, item.mechanical?.level]))).toEqual({
     'LAY-1': 'FAIL',
@@ -97,14 +98,15 @@ test('the structured catalogue preserves the complete ki-subagents rule surface'
     'FM-11': 'FAIL',
     'PROMPT-1': 'FAIL',
     'LINK-1': 'FAIL',
-    'COLL-1': 'WARN'
+    'COLL-1': 'WARN',
+    'RUBRIC-1': 'FAIL'
   })
   expect(items.filter((item) => item.judgment)).toHaveLength(33)
   expect(items.filter((item) => item.judgment).every((item) => Boolean(item.judgment?.prompt.trim()))).toBe(true)
 })
 
 test('each family module exports one complete family', async () => {
-  expect(familyModules).toHaveLength(10)
+  expect(familyModules).toHaveLength(11)
   for (const file of familyModules) {
     const module = (await import(`./${file}`)) as Record<string, unknown>
     expect(Object.keys(module)).toHaveLength(1)
@@ -116,13 +118,14 @@ test('each family module exports one complete family', async () => {
 
 test('the session creates stable per-agent subjects and one set subject', () => {
   const session = catalogue.createSession({ mode: 'audit', repository: fixture(), userHome: tmpdir(), configuration: {} })
-  expect(session.subjects.map((subject) => subject.subject)).toEqual([
+  expect(session.subjects.slice(0, 3).map((subject) => subject.subject)).toEqual([
     'subagents/governance/reviewer.md',
     'subagents/writer.md',
     'subagents'
   ])
   for (const subject of session.subjects) expect(subject.context()).toBe(subject.context())
-  expect(session.subjects.at(-1)?.families).toEqual(['COLL'])
+  expect(session.subjects.at(-2)?.families).toEqual(['COLL'])
+  expect(session.subjects.at(-1)?.families).toEqual(['RUBRIC'])
   expect(session.proposal().writes).toEqual([])
 })
 

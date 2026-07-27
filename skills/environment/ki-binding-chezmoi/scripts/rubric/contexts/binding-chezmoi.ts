@@ -1,6 +1,6 @@
 import { type Dirent, existsSync, lstatSync, readdirSync, readFileSync } from 'node:fs'
 import { basename, join, relative, resolve } from 'node:path'
-import type { RubricContextOptions, RubricSession } from '../../shared/rubric.ts'
+import type { RubricContextOptions, RubricPublicationContext, RubricSession } from '../../shared/rubric.ts'
 
 export type RenderDataEvidence = {
   path: string
@@ -8,6 +8,7 @@ export type RenderDataEvidence = {
 }
 
 export type BindingChezMoiContext = {
+  rubric: RubricPublicationContext
   repository: string
   repositoryState: 'absent' | 'physical' | 'unsafe'
   data: readonly RenderDataEvidence[]
@@ -16,7 +17,7 @@ export type BindingChezMoiContext = {
   unsafePaths: readonly string[]
 }
 
-const inspectRepository = (repository: string): BindingChezMoiContext => {
+const inspectRepository = (repository: string): Omit<BindingChezMoiContext, 'rubric'> => {
   if (!existsSync(repository))
     return {
       repository,
@@ -102,11 +103,14 @@ const inspectRepository = (repository: string): BindingChezMoiContext => {
   }
 }
 
-export const createBindingChezMoiSession = ({ repository }: RubricContextOptions): RubricSession<BindingChezMoiContext> => {
+export const createBindingChezMoiSession = ({ repository, publication }: RubricContextOptions): RubricSession<BindingChezMoiContext> => {
   const root = resolve(repository)
-  const context = inspectRepository(root)
+  const context = { ...inspectRepository(root), rubric: { publication } }
   return {
-    subjects: [{ families: ['BINDCHEZ'], context: () => context, subject: root }],
+    subjects: [
+      { families: ['BINDCHEZ'], context: () => context, subject: root },
+      { families: ['RUBRIC'], context: () => context, subject: root }
+    ],
     proposal: () => ({ writes: [] })
   }
 }

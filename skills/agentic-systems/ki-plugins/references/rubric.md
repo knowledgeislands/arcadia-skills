@@ -9,6 +9,7 @@ Line-by-line criteria for auditing ki-plugins. Classifications are derived from 
 ## Contents
 
 - [PLUG — Plugin marketplace projection](#plug--plugin-marketplace-projection)
+- [RUBRIC — Generated rubric publication](#rubric--generated-rubric-publication)
 
 ## PLUG — Plugin marketplace projection
 
@@ -35,3 +36,11 @@ The marketplace manifest, generated plugin projection, and repository scaffold.
 - **PLUG-15 [M] — Governance declaration** — Applicable repositories declare `[ki-plugins]` and no unknown keys. (standards-plugin-marketplace.md)
 - **PLUG-16 [J] — Projection documentation** — `README.md` and `CLAUDE.md` describe the projection model without drift and the licence exception remains deliberate. (standards-plugin-marketplace.md)
   - _Review prompt:_ Do the repository documents accurately describe the projection, generated-content boundary, and deliberate licence exception?
+
+## RUBRIC — Generated rubric publication
+
+→ [standard](../../../keystone/ki-skills/references/standards-rubric-authoring.md)
+
+The tracked readable rubric is the exact publication of the structured catalogue.
+
+- **RUBRIC-1 [M] — structured catalogue publication is exact** — A structured catalogue tracks `references/rubric.md` as its exact generated publication. The host supplies only validated publication evidence: a missing or differing file is a FAIL; during CONFORM this item requests the host-owned derived write without choosing its path or bytes. (../../../keystone/ki-skills/references/standards-rubric-authoring.md#generated-rubric-publication)

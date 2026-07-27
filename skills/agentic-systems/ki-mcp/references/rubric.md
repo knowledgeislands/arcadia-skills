@@ -18,6 +18,7 @@ Line-by-line criteria for auditing ki-mcp. Classifications are derived from item
 - [PKG — Package entry points](#pkg--package-entry-points)
 - [SCR — MCP scripts](#scr--mcp-scripts)
 - [CI — Smoke CI](#ci--smoke-ci)
+- [RUBRIC — Generated rubric publication](#rubric--generated-rubric-publication)
 
 ## KI — Applicability and declaration
 
@@ -105,3 +106,11 @@ Smoke-test wiring is mechanically visible while execution remains an explicit ex
 
 - **CI-1 [M] — MCP smoke CI** — When ki:test:smoke is defined, ci.yml invokes it after the common engineering gate. (standards-mcp-servers.md#8-packagejson)
 - **CI-2 [M] — MCP smoke execution** — When ki:test:smoke is defined, its execution remains an explicit verification step outside hosted audit and conform. (standards-mcp-servers.md#8-packagejson)
+
+## RUBRIC — Generated rubric publication
+
+→ [standard](../../../keystone/ki-skills/references/standards-rubric-authoring.md)
+
+The tracked readable rubric is the exact publication of the structured catalogue.
+
+- **RUBRIC-1 [M] — structured catalogue publication is exact** — A structured catalogue tracks `references/rubric.md` as its exact generated publication. The host supplies only validated publication evidence: a missing or differing file is a FAIL; during CONFORM this item requests the host-owned derived write without choosing its path or bytes. (../../../keystone/ki-skills/references/standards-rubric-authoring.md#generated-rubric-publication)

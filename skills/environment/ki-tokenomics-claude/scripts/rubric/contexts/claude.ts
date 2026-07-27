@@ -1,6 +1,6 @@
 import { existsSync, lstatSync, readdirSync, readFileSync } from 'node:fs'
 import { join, relative, resolve } from 'node:path'
-import type { AuditOutcome, RubricContextOptions, RubricSession } from '../../shared/rubric.ts'
+import type { AuditOutcome, RubricContextOptions, RubricPublicationContext, RubricSession } from '../../shared/rubric.ts'
 
 const physical = (path: string) => existsSync(path) && !lstatSync(path).isSymbolicLink()
 const text = (path: string) => (physical(path) && lstatSync(path).isFile() ? readFileSync(path, 'utf8') : undefined)
@@ -58,8 +58,8 @@ export type ClaudeContext = {
   readonly models: readonly AuditOutcome[]
   readonly headroom: readonly AuditOutcome[]
 }
-export type ClaudeRubricContext = { readonly claude: ClaudeContext }
-export const createClaudeSession = ({ repository, userHome }: RubricContextOptions): RubricSession<ClaudeRubricContext> => {
+export type ClaudeRubricContext = { readonly rubric: RubricPublicationContext; readonly claude: ClaudeContext }
+export const createClaudeSession = ({ repository, userHome, publication }: RubricContextOptions): RubricSession<ClaudeRubricContext> => {
   const repo = resolve(repository)
   const user = join(resolve(userHome), '.claude')
   const userSettings = json(join(user, 'settings.json'))
@@ -72,6 +72,7 @@ export const createClaudeSession = ({ repository, userHome }: RubricContextOptio
   const selectedMemory = join(user, 'projects', repo.replace(/[/.]/g, '-'), 'memory')
   const memoryFiles = directoryEntries(selectedMemory)
   const context: ClaudeRubricContext = {
+    rubric: { publication },
     claude: {
       surface: [
         ...instructions(user, join(user, 'CLAUDE.md')),
@@ -97,5 +98,11 @@ export const createClaudeSession = ({ repository, userHome }: RubricContextOptio
       ]
     }
   }
-  return { subjects: [{ families: ['SURF', 'RUN'], subject: repo, context: () => context }], proposal: () => ({ writes: [] }) }
+  return {
+    subjects: [
+      { families: ['SURF', 'RUN'], subject: repo, context: () => context },
+      { families: ['RUBRIC'], subject: repo, context: () => context }
+    ],
+    proposal: () => ({ writes: [] })
+  }
 }

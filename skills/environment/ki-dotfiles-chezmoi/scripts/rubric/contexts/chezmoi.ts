@@ -1,6 +1,6 @@
 import { type Dirent, lstatSync, readdirSync } from 'node:fs'
 import { join, relative, resolve } from 'node:path'
-import type { ConformWrite, RubricContextOptions, RubricSession } from '../../shared/rubric.ts'
+import type { ConformWrite, RubricContextOptions, RubricPublicationContext, RubricSession } from '../../shared/rubric.ts'
 
 const SKIP_DIRECTORIES = new Set(['.git', 'node_modules', '.ki', '.agents', '.claude'])
 const RECOGNISED_PREFIXES = ['executable_', 'symlink_', 'private_', 'readonly_', 'dot_', 'create_', 'modify_'] as const
@@ -40,6 +40,7 @@ export type ReviewContext = {
 }
 
 export type ChezmoiRubricContext = {
+  rubric: RubricPublicationContext
   shape: ChezmoiShapeContext
   bin: BinContext
   git: GitContext
@@ -132,7 +133,7 @@ const inspectGitLocks = (repository: string, state: RepositoryState): readonly s
 
 export const hasRecognisedPrefix = (name: string): boolean => RECOGNISED_PREFIXES.some((prefix) => name.startsWith(prefix))
 
-export const createChezmoiSession = ({ mode, repository }: RubricContextOptions): RubricSession<ChezmoiRubricContext> => {
+export const createChezmoiSession = ({ mode, repository, publication }: RubricContextOptions): RubricSession<ChezmoiRubricContext> => {
   const root = resolve(repository)
   const state = repositoryState(root)
   const ignorePath = join(root, '.chezmoiignore')
@@ -155,6 +156,7 @@ export const createChezmoiSession = ({ mode, repository }: RubricContextOptions)
       : {})
   }
   const context: ChezmoiRubricContext = {
+    rubric: { publication },
     shape,
     bin: { repository: root, repositoryState: state, entries: inspectBin(root, state) },
     git: { repository: root, repositoryState: state, locks: inspectGitLocks(root, state) },
@@ -162,7 +164,8 @@ export const createChezmoiSession = ({ mode, repository }: RubricContextOptions)
   }
   return {
     subjects: [
-      { families: ['CHEZMOI', 'BIN', 'GIT', 'PATTERN', 'CONFIG', 'LAYER', 'ETIQ', 'SYNC'], context: () => context, subject: root }
+      { families: ['CHEZMOI', 'BIN', 'GIT', 'PATTERN', 'CONFIG', 'LAYER', 'ETIQ', 'SYNC'], context: () => context, subject: root },
+      { families: ['RUBRIC'], context: () => context, subject: root }
     ],
     proposal: () => {
       const writes: ConformWrite[] = []

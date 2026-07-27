@@ -31,7 +31,7 @@ test('the catalogue preserves the complete chezmoi binding rubric', () => {
   expect(catalogue.contract).toBe(1)
   expect(catalogue.name).toBe('ki-binding-chezmoi')
   expect(catalogue.createSession).toBeFunction()
-  expect(catalogue.families.map((family) => family.code)).toEqual(['BINDCHEZ'])
+  expect(catalogue.families.map((family) => family.code)).toEqual(['BINDCHEZ', 'RUBRIC'])
   expect(catalogue.families[0]?.items.map((item) => item.code)).toEqual([
     'BINDCHEZ-1',
     'BINDCHEZ-2',
@@ -41,6 +41,7 @@ test('the catalogue preserves the complete chezmoi binding rubric', () => {
     'BINDCHEZ-6',
     'BINDCHEZ-7'
   ])
+  expect(catalogue.families[1]?.items.map((item) => item.code)).toEqual(['RUBRIC-1'])
 })
 
 test('each family module exports one complete family', async () => {

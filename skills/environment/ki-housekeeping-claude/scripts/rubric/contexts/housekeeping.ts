@@ -1,6 +1,6 @@
 import { existsSync, lstatSync, readdirSync, readFileSync } from 'node:fs'
 import { basename, join, relative, resolve } from 'node:path'
-import type { AuditOutcome, ConformWrite, RubricContextOptions, RubricSession } from '../../shared/rubric.ts'
+import type { AuditOutcome, ConformWrite, RubricContextOptions, RubricPublicationContext, RubricSession } from '../../shared/rubric.ts'
 
 const VALID_TYPES = new Set(['user', 'feedback', 'project', 'reference'])
 const INDEX_FILE = 'MEMORY.md'
@@ -39,6 +39,7 @@ export type HousekeepingLinkContext = {
 export type HousekeepingDocContext = Record<never, never>
 
 export type HousekeepingRubricContext = {
+  rubric: RubricPublicationContext
   index: HousekeepingIndexContext
   frontmatter: HousekeepingFrontmatterContext
   link: HousekeepingLinkContext
@@ -88,9 +89,10 @@ const replaceName = (content: string, expected: string): string => {
   return content.replace(block[0], `---\n${replacement}\n---`)
 }
 
-const unavailableMemoryContext = (subject: string): HousekeepingRubricContext => {
+const unavailableMemoryContext = (subject: string, publication?: RubricContextOptions['publication']): HousekeepingRubricContext => {
   const memory = notApplicable('The selected repository has no physical Claude project memory directory.', subject)
   return {
+    rubric: { publication },
     index: {
       exists: memory,
       entriesResolve: memory,
@@ -118,7 +120,7 @@ const projectContext = (
   memoryDirectory: string,
   mutable: boolean,
   drafts: Map<string, MemoryDraft>
-): HousekeepingRubricContext => {
+): Omit<HousekeepingRubricContext, 'rubric'> => {
   const names = readdirSync(memoryDirectory, { withFileTypes: true })
   const memoryFiles: MemoryFile[] = names
     .filter((entry) => entry.isFile() && entry.name.endsWith('.md') && entry.name !== INDEX_FILE)
@@ -363,7 +365,8 @@ const projectContext = (
 export const createHousekeepingSession = ({
   mode,
   repository,
-  userHome
+  userHome,
+  publication
 }: RubricContextOptions): RubricSession<HousekeepingRubricContext> => {
   const home = resolve(userHome)
   const repositoryRoot = resolve(repository)
@@ -376,7 +379,10 @@ export const createHousekeepingSession = ({
   const memoryDirectory = join(projectsRoot, repositorySlug, 'memory')
   const selectedMemory =
     physicalDirectory(claudeRoot) && physicalDirectory(projectsRoot) && physicalDirectory(memoryDirectory)
-      ? projectContext(home, repositoryName, memoryRelativePath, memoryDirectory, mode === 'conform', drafts)
+      ? {
+          ...projectContext(home, repositoryName, memoryRelativePath, memoryDirectory, mode === 'conform', drafts),
+          rubric: { publication }
+        }
       : null
   const memoryFamilies = ['IDX', 'FM', 'LINK', 'DOC']
 
@@ -385,7 +391,12 @@ export const createHousekeepingSession = ({
       {
         families: memoryFamilies,
         subject: memoryRelativePath,
-        context: () => selectedMemory ?? unavailableMemoryContext(memoryRelativePath)
+        context: () => selectedMemory ?? unavailableMemoryContext(memoryRelativePath, publication)
+      },
+      {
+        families: ['RUBRIC'],
+        subject: repositoryRoot,
+        context: () => selectedMemory ?? unavailableMemoryContext(memoryRelativePath, publication)
       }
     ],
     proposal: () => {
