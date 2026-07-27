@@ -1,7 +1,7 @@
 ---
 id: 'FND-002'
 title: Protect generated rubric publications from drift
-status: acceptance
+status: done
 roadmap: foundation-tooling/protect-generated-rubric-publications-from-drift
 blocks: —
 blocked-by: —
@@ -73,3 +73,11 @@ None for FND-002. The locally installed Homebrew binary predates the source host
 ### Mini recap
 
 The plan now describes the shipped incremental behaviour honestly, its validation is refreshed across both repositories, and every generated publication is exact. It is ready for user acceptance.
+
+## Done
+
+FND-002 completed after manual acceptance. `ki` is the sole structured-rubric renderer and guarded incremental publisher, and all 30 generated rubric publications have exact parity.
+
+Residual concerns: None for this plan.
+
+Follow-up: record CLI-002's reciprocal handoff and completion separately; retain this done record until the related work tranche is ready for a confirmed prune.
