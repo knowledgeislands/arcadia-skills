@@ -10,15 +10,15 @@ Actively broken, or blocking the `Next` horizon: takes priority over everything 
 
 Scoped and ready to start — the immediate queue, picked up before anything in **Soon** or **Future**.
 
+- [Foundation Tooling: Codify Git workflow and commit conventions](docs/roadmap/foundation-tooling/ROADMAP.md#codify-git-workflow-and-commit-conventions)
+- [Foundation Tooling: Protect generated rubric publications from drift](docs/roadmap/foundation-tooling/ROADMAP.md#protect-generated-rubric-publications-from-drift)
+- [Foundation Tooling: Review `ki-bootstrap` for further simplification](docs/roadmap/foundation-tooling/ROADMAP.md#review-ki-bootstrap-for-further-simplification)
+- [Foundation Tooling: Verify GitHub CI across the repository fleet](docs/roadmap/foundation-tooling/ROADMAP.md#verify-github-ci-across-the-repository-fleet)
+
 ## Soon
 
 Understood and roughly scoped but not yet started — worth doing once the **Next** queue clears, ahead of anything still speculative.
 
-- [Foundation Tooling: Codify Git workflow and commit conventions _(candidate)_](docs/roadmap/foundation-tooling/ROADMAP.md#codify-git-workflow-and-commit-conventions-candidate)
-- [Foundation Tooling: Establish a top-level script self-description contract _(candidate)_](docs/roadmap/foundation-tooling/ROADMAP.md#establish-a-top-level-script-self-description-contract-candidate)
-- [Foundation Tooling: Protect generated rubric publications from drift](docs/roadmap/foundation-tooling/ROADMAP.md#protect-generated-rubric-publications-from-drift)
-- [Foundation Tooling: Review `ki-bootstrap` for further simplification](docs/roadmap/foundation-tooling/ROADMAP.md#review-ki-bootstrap-for-further-simplification)
-- [Foundation Tooling: Verify GitHub CI across the repository fleet](docs/roadmap/foundation-tooling/ROADMAP.md#verify-github-ci-across-the-repository-fleet)
 - [Governance Consistency: Align KB Stream focus with non-KB roadmap horizons](docs/roadmap/governance-consistency/ROADMAP.md#align-kb-stream-focus-with-non-kb-roadmap-horizons)
 - [Governance Consistency: Codify convention placement and the knowledge-promotion loop](docs/roadmap/governance-consistency/ROADMAP.md#codify-convention-placement-and-the-knowledge-promotion-loop)
 - [Governance Consistency: Review the skill dependency graph and implementation quality _(candidate)_](docs/roadmap/governance-consistency/ROADMAP.md#review-the-skill-dependency-graph-and-implementation-quality-candidate)
@@ -38,6 +38,7 @@ Speculative or not yet scoped — items marked _(candidate)_ need a scoping pass
 
 - [Foundation Tooling: Codify context-aware delegation policy _(candidate)_](docs/roadmap/foundation-tooling/ROADMAP.md#codify-context-aware-delegation-policy-candidate)
 - [Foundation Tooling: Document per-skill `.ki-config.toml` ownership _(candidate)_](docs/roadmap/foundation-tooling/ROADMAP.md#document-per-skill-ki-configtoml-ownership-candidate)
+- [Foundation Tooling: Establish a top-level script self-description contract _(candidate)_](docs/roadmap/foundation-tooling/ROADMAP.md#establish-a-top-level-script-self-description-contract-candidate)
 - [Foundation Tooling: Inventory non-critical writers for bounded follow-up _(candidate)_](docs/roadmap/foundation-tooling/ROADMAP.md#inventory-non-critical-writers-for-bounded-follow-up-candidate)
 - [Foundation Tooling: Replace local tokenomics engine subprocesses _(candidate)_](docs/roadmap/foundation-tooling/ROADMAP.md#replace-local-tokenomics-engine-subprocesses-candidate)
 - [Foundation Tooling: Review the Cloudflare agent-setup prompt for the Cloudflare skill _(candidate)_](docs/roadmap/foundation-tooling/ROADMAP.md#review-the-cloudflare-agent-setup-prompt-for-the-cloudflare-skill-candidate)
