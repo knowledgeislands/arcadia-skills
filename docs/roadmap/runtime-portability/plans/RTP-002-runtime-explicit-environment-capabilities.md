@@ -1,7 +1,7 @@
 ---
 id: 'RTP-002'
 title: Make environment capabilities runtime-explicit
-status: in-progress
+status: acceptance
 roadmap: runtime-portability/make-environment-capabilities-runtime-explicit
 blocks: —
 blocked-by: —
@@ -43,10 +43,10 @@ Runtime-specific capabilities should be installable and declarable only for the 
 4. ✓ Reconcile the learning and local-governance boundary. Keep `ki-recap` responsible for harvesting and routing learnings, `ki-self` responsible for repository-local recurring concerns, runtime housekeeping responsible for runtime state hygiene, and runtime tokenomics responsible for the cost and placement of loaded context. Move or rewrite rubric items that cross those owners.
 5. ✓ Refactor cross-surface binding around its two independent axes: the portable canonical MCP source and client-targeting contract; vendor adapters for Claude and Codex surfaces; and renderer adapters such as chezmoi. Preserve one source of truth while allowing users to activate only the vendor and renderer capabilities they use.
 6. ✓ Implement evidence-backed Claude and Codex environment capabilities for the state and surfaces each runtime actually exposes. Rename the existing Claude-only housekeeping and tokenomics capabilities explicitly; add a Codex counterpart only with a real standard, sources, rubric, and executable context.
-7. Make environment coverage conditional on `[ki-repo].supported_runtimes`: every repository resolves portable tokenomics; `claude-code` resolves Claude housekeeping and tokenomics; and `codex` resolves Codex tokenomics. Park Codex housekeeping until its missing repository-identity and safe-cleanup contracts exist. Keep binding and renderer capabilities coverage-detected by their actual source and tool usage rather than making chezmoi or a particular MCP binding universal.
+7. ✓ Make environment coverage conditional on `[ki-repo].supported_runtimes`: every repository resolves portable tokenomics; `claude-code` resolves Claude housekeeping and tokenomics; and `codex` resolves Codex tokenomics. Park Codex housekeeping until its missing repository-identity and safe-cleanup contracts exist. Keep binding and renderer capabilities coverage-detected by their actual source and tool usage rather than making chezmoi or a particular MCP binding universal.
 8. ✓ Update `ki` activation where necessary so repository declarations and user skill links select only capabilities compatible with configured or detected runtimes. Materialise any `tools-ki` change as a direct recipient-owned roadmap plan before changing that repository.
-9. Migrate the harness, all affected `.ki-config.toml` files, user guidance, taxonomy, diagrams, decisions, dependency edges, installed-skill selections, and fleet declarations directly to the final names and composition. Remove superseded names and paths in the same bounded change.
-10. Regenerate rubric publications, run focused catalogue and context tests, then audit every affected repository with its declared runtime set. Confirm that Claude-only state is never read for a Codex-only repository and vice versa.
+9. ✓ Migrate the harness, all affected `.ki-config.toml` files, user guidance, taxonomy, diagrams, decisions, dependency edges, installed-skill selections, and fleet declarations directly to the final names and composition. Remove superseded names and paths in the same bounded change.
+10. ✓ Regenerate rubric publications, run focused catalogue and context tests, then audit every affected repository with its declared runtime set. Confirm that Claude-only state is never read for a Codex-only repository and vice versa.
 
 ## Files touched
 
@@ -83,3 +83,36 @@ Runtime-specific capabilities should be installable and declarable only for the 
 This plan follows the completed RTP-001 runtime-binding audit and turns its structural distinction into an explicit environment-capability model.
 
 The output-control restoration in `tools-ki` is independent. Runtime-aware activation was materialised directly as `tools-ki` CLI-003 and has reached acceptance with its complete verification gate passing.
+
+## Acceptance
+
+### Delivered
+
+Environment capabilities now expose one clean runtime-explicit contract. Portable tokenomics and MCP binding remain substantive unqualified roots; Claude and Codex evidence and native surfaces are separate compatible adapters; Claude housekeeping is selected-repository-scoped; and no speculative Codex housekeeping capability exists.
+
+### Summary of changes
+
+- Replaced the generic Claude housekeeping skill with `ki-housekeeping-claude`, removed its misplaced local-governance family, and bounded all memory evidence and conform proposals to the selected repository.
+- Split tokenomics into portable `ki-tokenomics` policy plus `ki-tokenomics-claude` and `ki-tokenomics-codex` evidence adapters.
+- Split binding into portable `ki-binding`, `ki-binding-claude`, and `ki-binding-codex`, retaining chezmoi as an orthogonal renderer choice.
+- Added runtime compatibility metadata, repository coverage rules, runtime-aware `ki` activation, and matching diagnostics.
+- Migrated all fourteen fleet repositories and their managed Claude/Codex skill projections to the final capability matrix.
+- Updated the taxonomy, guides, diagrams, decisions, evals, build entrypoints, and the explicit waiting condition for a future Codex housekeeping contract.
+
+### Verification
+
+- The harness passed 187 tests and `bunx tsc --noEmit`; focused `ki-authoring`, `ki-decision-records`, `ki-roadmap`, `ki-skills`, `ki-repo`, and affected environment audits are clean.
+- `tools-ki` passed 318 tests, 100% statement/branch/function/line coverage, Biome, TypeScript, knip, installer syntax, and diff checks for recipient plan CLI-003.
+- All fourteen fleet configurations contain the portable and runtime-specific environment declarations, all fourteen worktrees are clean, and every managed projection contains only capabilities compatible with its runtime.
+- All 56 focused fleet environment audits passed except the expected selected-repository `ki-housekeeping-claude` finding for `ki-website`, which has a physical memory directory without `MEMORY.md`.
+- Unit and CLI-contract coverage prove that runtime-restricted skills are never activated for the other runtime and that housekeeping ignores foreign repository memory.
+
+### Outstanding concerns
+
+- `ki-website` now exposes one genuine Claude memory hygiene failure: its selected-repository memory directory lacks `MEMORY.md`. Repairing that user-owned runtime state is separate from this capability migration.
+- Existing `ki-repo` policy failures remain in `ki-arcadia-principal`, `ki-plugins`, `ki-specifications`, and `tools-ki`; they pre-date and are independent of RTP-002.
+- `ki-housekeeping-codex` remains explicitly parked until Codex exposes a documented selected-repository identity and supported retention, cleanup, and safe-conform boundaries.
+
+### Mini recap
+
+Runtime compatibility is capability metadata, not suffix inference. Portable policy and vendor evidence compose as independently selectable skills; repository declarations state the complete runtime coverage; activation intersects that intent with configured agents; and a missing vendor contract stays absent rather than being represented by an empty skill.
