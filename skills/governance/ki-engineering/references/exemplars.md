@@ -95,12 +95,12 @@ The governance surface is direct native `ki repo audit` / `ki repo conform` comm
 
 The three Vitest scripts above apply only when the repository carries `vitest.config.*`. A runner-neutral repository supplies only its appropriate bare `test` script; it does not restore aggregate or scoped governance-script aliases.
 
-The harness's [actual package manifest](../../../../package.json) uses the same bare idiom without a Vitest configuration; each standalone test program remains explicit and the complete entry chains the whole suite. An abbreviated shape:
+The harness's [actual package manifest](../../../../package.json) uses the same bare idiom without a Vitest configuration; the complete entry delegates discovery and execution to Bun without recreating retired bootstrap or governance runners. An abbreviated shape:
 
 ```jsonc
 {
   "scripts": {
-    "test": "bun hooks/plan-stamp.test.ts && bun hooks/plan-sync.test.ts && bun skills/keystone/ki-bootstrap/scripts/internal/repo-bootstrap/resolve.test.ts"
+    "test": "bun test --isolate --max-concurrency=1 ./skills ./hooks"
   }
 }
 ```

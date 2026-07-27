@@ -34,11 +34,11 @@ _Verify:_ `audit-harness.ts` CONFIG-1 (`[ki-harness]`, FAIL if absent) and CONFI
 
 ## Toolchain surface
 
-### HARN-005 — Harness delivery and skill-quality scripts
+### HARN-005 — Harness test surface
 
-`package.json` MUST expose the normal `ki-bootstrap` project delivery script `ki:skills:copy:project` and the skill quality gate `ki:skills:audit`. Aggregate toolchain entrypoints belong separately to `ki-engineering` rather than being duplicated in the harness contract.
+`package.json` MUST expose the harness's appropriate bare `test` entrypoint. Harness delivery, capability activation, and native governance execution belong to the installed `ki` CLI rather than package-script aliases or repository-local bootstrap runners.
 
-_Verify:_ `bun skills/agentic-systems/ki-harness/scripts/govern.ts audit .` — PKG-1 / PKG-2 FAIL when the two harness-specific scripts are missing and emit no duplicate PKG-3 toolchain finding.
+_Verify:_ `bun run test` runs the complete harness suite; `ki repo audit --skill ki-engineering --repo .` checks the package-toolchain contract without requiring retired governance aliases.
 
 ## Skills convention
 
@@ -64,15 +64,15 @@ _Verify:_ `ki-harness`'s rubric CLAUDE-1 and CLAUDE-2 ([`skills/agentic-systems/
 
 ### HARN-009 — Claude Code plan lifecycle hooks
 
-The harness MUST ship `hooks/plan-stamp.sh` and `hooks/plan-sync.sh` as a Claude-Code-specific lifecycle pair and expose `ki:hooks:install` to install the complete hook payload as manifest-verified executable regular files under an owned content-addressed `~/.claude/hooks/knowledgeislands/ki-agentic-harness/` namespace. Its active manifest MUST declare stable regular `current/<hook-name>` command copies, each matching the manifest checksum, for a user-environment manager to register without embedding a payload hash. It MUST NOT write Claude settings or create hook symlinks.
+The harness MUST ship `hooks/plan-stamp.sh` and `hooks/plan-sync.sh` as a Claude-Code-specific lifecycle pair. The compatible harness payload makes hooks available to runtime bindings; the source harness MUST NOT claim a repository-local installer, mutate Claude settings, or create hook symlinks.
 
-_Verify:_ `bun hooks/plan-stamp.test.ts && bun hooks/plan-sync.test.ts` exercises the pair; `bun skills/keystone/ki-bootstrap/scripts/internal/user-install/install-claude-hook-payload.test.ts` exercises payload ownership, durability, and settings non-mutation.
+_Verify:_ `bun hooks/plan-stamp.test.ts && bun hooks/plan-sync.test.ts` exercises the pair; compatible-harness inventory checks confirm that the hooks payload is published without source-harness installation side effects.
 
 ### HARN-010 — Claude Code stale Git-lock guard
 
-The harness MUST ship `hooks/git-lock-check.sh` as a Claude-Code-specific `Stop(*)` hook that removes stale lock files only from the current worktree's physical Git directory and only when no relevant Git process is active. The payload installer MUST carry it with the lifecycle pair and provide an active, manifest-verified payload for a separate user-environment binding to register.
+The harness MUST ship `hooks/git-lock-check.sh` as a Claude-Code-specific `Stop(*)` hook that removes stale lock files only from the current worktree's physical Git directory and only when no relevant Git process is active. The compatible harness publishes it for a separate user-environment binding to register; the source harness does not install it itself.
 
-_Verify:_ `bun hooks/git-lock-check.test.ts` exercises repository, process, path, and symlink safety; `bun skills/keystone/ki-bootstrap/scripts/internal/user-install/install-claude-hook-payload.test.ts` exercises the payload installer.
+_Verify:_ `bun hooks/git-lock-check.test.ts` exercises repository, process, path, and symlink safety; compatible-harness inventory checks confirm the hook is present in the published payload.
 
 ## Gaps
 

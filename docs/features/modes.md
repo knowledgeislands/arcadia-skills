@@ -10,7 +10,7 @@ The behavioural contract of the operating vocabulary every governance skill expo
 
 Every governance skill MUST expose AUDIT, CONFORM, EDUCATE, and REFRESH under those exact names, presented under a single `## Operating modes` H2, per [ADR-KI-HARNESS-SKILLS-001](../decisions/ADR-KI-HARNESS-SKILLS-001-audit-conform-educate-refresh-canonical-modes-help.md).
 
-_Verify:_ `bun skills/keystone/ki-skills/scripts/lint-skills.ts skills` — the SHAPE mode-coverage check FAILs a governance `SKILL.md` missing any of the four.
+_Verify:_ `ki repo audit --skill ki-skills --repo .` — the hosted skill rubric reports a governance `SKILL.md` missing any of the four modes.
 
 ### MODE-002 — AUDIT reports, does not fix
 
@@ -26,9 +26,9 @@ _Verify:_ each governance `SKILL.md`'s `## Mode CONFORM` describes the audit →
 
 ### MODE-004 — EDUCATE is mandatory even when thin
 
-Every governance skill MUST carry an EDUCATE — a `scripts/educate.ts` delegating into the `ki-bootstrap` chain — even when it scaffolds no standalone artifact, in which case EDUCATE's job is to vendor the skill's `scripts/govern.ts` entrypoint into the target's `.ki/`, per [ADR-KI-HARNESS-SKILLS-001](../decisions/ADR-KI-HARNESS-SKILLS-001-audit-conform-educate-refresh-canonical-modes-help.md).
+Every governance skill MUST carry an EDUCATE procedure, even when it scaffolds no standalone artifact. The installed `ki` CLI renders the selected compatible rubric's education; EDUCATE MAY create its skill-specific declared artifact, but it MUST NOT copy a checker, wrapper, or alternate executor into the target, per [ADR-KI-HARNESS-SKILLS-001](../decisions/ADR-KI-HARNESS-SKILLS-001-audit-conform-educate-refresh-canonical-modes-help.md).
 
-_Verify:_ every `skills/*/scripts/educate.ts` exists and execs the chain engine; `lint-skills.ts` SHAPE checks the EDUCATE mode and delegator.
+_Verify:_ `ki repo educate --skill <declared-skill> --repo <repo>` renders that skill's registered concern and rubric without creating a repository-local executor; `ki repo audit --skill ki-skills --repo .` checks the documented mode shape.
 
 ### MODE-005 — REFRESH runs only in the harness
 
@@ -42,7 +42,7 @@ _Verify:_ each `## Mode REFRESH` section declares the harness-only write target 
 
 Every governance skill MUST expose HELP — invoked as `help` / `-h` / `?` — which surfaces the skill's name, one-line purpose, invocation, mode list, and off-ramps from what the `SKILL.md` already declares, and takes no action, per [ADR-KI-HARNESS-SKILLS-001](../decisions/ADR-KI-HARNESS-SKILLS-001-audit-conform-educate-refresh-canonical-modes-help.md).
 
-_Verify:_ `bun run ki:skills:help <name>` renders the generated block via `skills/keystone/ki-bootstrap/scripts/skill-help.ts` with no per-skill authored prose; the block is non-acting.
+_Verify:_ the skill's `## Operating modes` section defines its non-acting HELP route, and `ki repo audit --skill ki-skills --repo .` checks that governance skill mode shape.
 
 ## Exemptions
 
@@ -72,4 +72,4 @@ _Verify:_ `ki-skills`'s `### Mode OPTIMISE`; the fixed meaning is pinned in [`sk
 
 Invoked with no mode, a governance skill MUST emit the same HELP explanation, then — in an interactive session only — offer the mode choice via `AskUserQuestion`; the pure `help` / `-h` / `?` form MUST take no further action (the headless-safe form), per [ADR-KI-HARNESS-SKILLS-001](../decisions/ADR-KI-HARNESS-SKILLS-001-audit-conform-educate-refresh-canonical-modes-help.md).
 
-_Verify:_ every governance `SKILL.md`'s `## Operating modes` section carries the no-mode/`AskUserQuestion` sentence; `bun run ki:skills:help:check` guards HELP-block coverage.
+_Verify:_ every governance `SKILL.md`'s `## Operating modes` section carries the no-mode/`AskUserQuestion` sentence; `ki repo audit --skill ki-skills --repo .` checks its presence.

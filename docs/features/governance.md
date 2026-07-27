@@ -10,13 +10,13 @@ The behaviour of the governance model the harness applies to itself and to the r
 
 Every governance skill MUST carry the universal modes EDUCATE · AUDIT · CONFORM · REFRESH (plus any skill-specific modes), per [ADR-KI-HARNESS-SKILLS-001](../decisions/ADR-KI-HARNESS-SKILLS-001-audit-conform-educate-refresh-canonical-modes-help.md).
 
-_Verify:_ `ki-skills`' enforcement framework §5 lists the four modes, and each `skills/*/SKILL.md` exposes them; `ki:skills:audit` passes.
+_Verify:_ `ki-skills`' rubric lists the four modes, and `ki repo audit --skill ki-skills --repo .` reports a governance `SKILL.md` that omits one.
 
 ### GOV-002 — Mechanical-first, LLM-optional
 
-Each skill's mechanical criteria MUST be executable as a CLI checker with no LLM, exiting non-zero on any FAIL, per [ADR-KI-HARNESS-003](../decisions/ADR-KI-HARNESS-003-mechanical-first-agent-judgment-progressively-enhances.md).
+Each skill's mechanical criteria MUST be executable by the installed CLI host with no LLM, exiting non-zero on any FAIL, per [ADR-KI-HARNESS-003](../decisions/ADR-KI-HARNESS-003-mechanical-first-agent-judgment-progressively-enhances.md).
 
-_Verify:_ every governance skill ships a `scripts/govern.ts` that runs standalone under `bun`; its `audit` command emits the canonical JSONL checker response by default and returns a non-zero exit on FAIL findings.
+_Verify:_ `ki repo audit --skill <declared-skill> --repo <repo>` loads the compatible native rubric, renders findings, and exits non-zero when it finds a FAIL.
 
 ## Contracts
 
@@ -24,7 +24,7 @@ _Verify:_ every governance skill ships a `scripts/govern.ts` that runs standalon
 
 A checker's findings MUST use the unified response levels FAIL / WARN / FIXED / INFO / NOT_APPLICABLE / PASS, and the process MUST exit non-zero only when a FAIL is present. `FIXED` is valid only for CONFORM. Judgment aspects are counted as unevaluated in the summary rather than emitted as synthetic findings.
 
-_Verify:_ each checker vendors the canonical `ki-skills` rubric, checker, and reporter modules; their shared response validator enforces the level and exit contracts.
+_Verify:_ `ki repo audit --skill <declared-skill> --repo <repo>` renders the host-validated rubric outcomes at the stated levels and exits non-zero only for FAIL findings.
 
 ### GOV-004 — Composition, not extension
 
@@ -54,9 +54,9 @@ _Verify:_ `ki-repo`'s `audit-repo.ts` `license` / `license-file` / `package-lice
 
 ### GOV-008 — Self-governing checker-contract root
 
-`ki-skills` MUST provide the canonical rubric, checker, and reporter modules from its own shipped files and MUST NOT declare a shared-module dependency on itself or another skill, per [ADR-KI-HARNESS-SKILLS-012](../decisions/ADR-KI-HARNESS-SKILLS-012-local-copies-for-shared-modules.md).
+`ki-skills` MUST provide its compatible native rubric catalogue from its own shipped files and MUST NOT declare a shared-module dependency on itself or another skill, per [ADR-KI-HARNESS-SKILLS-012](../decisions/ADR-KI-HARNESS-SKILLS-012-local-copies-for-shared-modules.md).
 
-_Verify:_ `bun skills/keystone/ki-skills/scripts/govern.ts audit skills/keystone/ki-skills` passes KI-CHECKER-3, and the focused checker tests cover missing or invalid root-module declarations.
+_Verify:_ `ki repo audit --skill ki-skills --repo .` loads the catalogue through the host; the focused catalogue tests cover missing or invalid root-module declarations.
 
 ### GOV-009 — Structured rubric orchestration
 
@@ -64,6 +64,6 @@ Every mechanical rubric aspect MUST declare its execution phase inside the canon
 
 The checker MUST validate the complete catalogue and selected execution plan before a CONFORM context can write. It orders executions by phase, then family, item, and subject; AUDIT and fallback executions remain read-only.
 
-The repository aggregate MUST import each selected skill's standalone `scripts/govern.ts` exactly once and call its programmatic check operation. Cross-skill ordering comes from the resolved governance set; skill-local phase ordering comes from that skill's checker.
+The CLI host MUST load each selected compatible native rubric exactly once and execute it through the shared host model. Cross-skill ordering comes from the resolved governance set; skill-local phase ordering comes from the rubric items.
 
-_Verify:_ the `ki-skills` checker tests cover phase ordering and invalid plans; `ki-bootstrap`'s resolve and entrypoint-parity tests prove standalone vendoring, one invocation per skill, strict response validation, and aggregate parity.
+_Verify:_ the `ki-skills` catalogue tests cover phase ordering and invalid plans; the CLI runtime tests prove one host invocation per selected skill and strict catalogue/result validation.

@@ -18,11 +18,11 @@ Confirm that `ki-bootstrap` has reached the intended clean boundary: guidance li
 
 ## Steps
 
-1. Inventory current `ki-bootstrap` ownership across the harness and `tools-ki`, classifying each boundary as in-process local, external command, or user-space mutation with its safety evidence.
-2. Confirm that no local bootstrap process launch remains to replace. Preserve validated external commands and per-agent/per-skill user-install failure isolation unless the inventory proves a boundary is only an adjacent local module.
-3. Reconcile stale feature-definition and engineering-exemplar claims with the current CLI-hosted rubric and bootstrap model; remove claims about retired scripts, vendored executors, generated HELP, and legacy project-copy contracts.
-4. Refresh the bootstrap source-review record: direct CLI ownership is current, no local process boundary remains, and any user-space publication hardening belongs to the existing `tools-ki` follow-up.
-5. Run focused skill, feature-definition, roadmap, documentation, and read-only CLI-boundary verification; commit the harness-only clarification unless the inventory identifies a real regression.
+1. ✓ Inventory current `ki-bootstrap` ownership across the harness and `tools-ki`, classifying each boundary as in-process local, external command, or user-space mutation with its safety evidence.
+2. ✓ Confirm that no local bootstrap process launch remains to replace. Preserve validated external commands and per-agent/per-skill user-install failure isolation unless the inventory proves a boundary is only an adjacent local module.
+3. ✓ Reconcile stale feature-definition and engineering-exemplar claims with the current CLI-hosted rubric and bootstrap model; remove claims about retired scripts, vendored executors, generated HELP, and legacy project-copy contracts.
+4. ✓ Refresh the bootstrap source-review record: direct CLI ownership is current, no local process boundary remains, and any user-space publication hardening belongs to the existing `tools-ki` follow-up.
+5. ✓ Run focused skill, feature-definition, roadmap, documentation, and read-only CLI-boundary verification; commit the harness-only clarification unless the inventory identifies a real regression.
 
 ## Files touched
 
