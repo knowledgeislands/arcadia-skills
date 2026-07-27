@@ -1,7 +1,7 @@
 ---
 id: 'FND-004'
 title: Codify Git workflow and commit conventions
-status: in-progress
+status: acceptance
 roadmap: foundation-tooling/codify-git-workflow-and-commit-conventions
 blocks: —
 blocked-by: —
@@ -41,3 +41,38 @@ Give repository Git discipline one explicit owner: Conventional Commit messages,
 ## Dependencies / blocks
 
 No plan dependency. Ownership is the first decision gate; do not create a compatibility layer or apply mechanical enforcement before that decision is recorded.
+
+## Acceptance
+
+### Delivered
+
+Established `ki-git` as the single portable owner of Git and commit policy, with a host-loadable initial judgement catalogue and explicit boundaries for hook payload and runtime registration.
+
+### Summary of changes
+
+- Added [GDR-KI-HARNESS-003](../../../decisions/GDR-KI-HARNESS-003-portable-git-governance-ownership.md), selecting a dedicated `ki-git` owner and rejecting `ki-repo` extension or split policy ownership.
+- Added `ki-git`'s portable standard, provenance record, local rubric type vendoring, native `createSession` catalogue, four judgement families, generated rubric, and focused tests.
+- Declared `ki-git` in this harness and added it to the user skills map and catalogue.
+- Routed hook payload, stale-lock semantics, and chezmoi runtime registration to their respective owners without changing hook behaviour or user settings.
+- Deliberately left deterministic commit-message enforcement for a separate host-contract design rather than introducing an unreviewed hook or compatibility path.
+
+### Verification
+
+At `e488939c`, all relevant gates passed:
+
+- `bun hooks/git-lock-check.test.ts`
+- `bun run test` (193 passing tests)
+- `bunx tsc --noEmit`
+- `ki repo audit --skill ki-git --repo .`
+- `ki repo audit --skill ki-skills --repo .`
+- `ki repo audit --skill ki-roadmap --repo .`
+- `ki repo audit --skill ki-authoring --repo .`
+- `git diff --check`
+
+### Outstanding concerns
+
+No mechanical enforcement exists yet by design. A future deterministic host-contract plan must define its scope, false-positive boundary, and rollout before any commit hook or repository-wide enforcement is added.
+
+### Mini recap
+
+One policy owner can coexist cleanly with specialised payload and runtime owners. The initial native catalogue makes the human judgment explicit without pretending that subjective commit quality can safely be automated.
