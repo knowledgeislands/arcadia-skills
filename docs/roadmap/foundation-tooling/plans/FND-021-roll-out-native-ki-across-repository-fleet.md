@@ -18,12 +18,12 @@ RTP-002 separately redesigns environment capabilities by runtime and vendor. Thi
 
 ## Current state
 
-- Fourteen git repositories exist directly under `/Users/krisbrown/workspaces/kis/knowledgeislands/`; every one carries `.ki-config.toml`.
-- Twelve repositories still track 511 `.ki-meta` files in total. The harness and `tools-ki` already track neither `.ki-meta` nor `.ki`.
-- Six MCP repositories still declare the retired `ki-repo-roadmap` capability and fail before any audit operation runs because the canonical harness no longer provides it.
-- `homebrew-tap` and `tools-mgit` resolve and complete native audits with warnings only. The harness, Arcadia Principal, `ki-plugins`, KI Specifications, the Website, and `tools-ki` reach native execution but report genuine findings. Those findings need classification in their owning repositories, not compatibility restoration.
-- All fourteen worktrees are currently clean and track `origin/main`. Several contain committed local work ahead of their upstream; the rollout must preserve those commits and must not push without explicit instruction.
-- The separate fleet-CI roadmap item remains responsible for clean hosted-runner installation and GitHub Actions verification after local activation is sound.
+- Fourteen git repositories exist directly under `/Users/krisbrown/workspaces/kis/knowledgeislands/`; every one carries `.ki-config.toml` and declares support for Claude Code and Codex.
+- No repository tracks `.ki` or `.ki-meta`; the twelve legacy repositories removed 511 tracked `.ki-meta` files in total.
+- The six MCP repositories declare `ki-roadmap` instead of the retired `ki-repo-roadmap`, and no live legacy invocation remains.
+- Every repository resolves its declared stable capabilities and reaches native audit execution. Remaining non-zero outcomes are genuine standards findings for the owning repositories, not activation failures.
+- All fourteen worktrees were clean at their individual migration checkpoints and at the final fleet scan. Several contain committed local work ahead of their upstream; no rollout commit was pushed.
+- The separate fleet-CI roadmap item remains responsible for clean hosted-runner installation and GitHub Actions verification.
 
 ## Execution baseline
 
@@ -50,13 +50,13 @@ All targets except `tools-ki` were clean and on `main` tracking `origin/main` at
 
 1. ✓ Record the full immutable baseline commit for every repository and recheck its worktree, branch, upstream, installed `ki` resolution, canonical harness inventory, `.ki-config.toml`, supported runtimes, declared skills, runtime links, and tracked legacy footprint. Stop on a dirty or concurrently changed target rather than absorbing its work.
 2. ✓ Define the stable rollout matrix for all fourteen repositories: repository shape, current declarations, declarations retained or corrected, runtime activation required, retired paths removed, and expected native audit result. Exclude housekeeping, tokenomics, binding, and renderer-name normalisation owned by RTP-002.
-3. In each of the twelve legacy repositories, delete the tracked `.ki-meta` payload and remove live `.ki-meta`, `.ki/bin`, wrapper, package-alias, and vendored-runner instructions. Preserve historical records where their explicit subject is the retired design.
-4. Repair only settled configuration drift. Replace `ki-repo-roadmap` with `ki-roadmap` where a repository has the non-KB roadmap shape, remove declarations for absent capabilities, add presently applicable stable declarations, and ensure `[ki-repo].supported_runtimes` honestly names the repository's supported agents.
-5. Reconcile repository and user runtime discovery through `ki skill repo` or `ki skill user` only where the current activation contract requires it. Never restore copied checkers, aggregate runners, or repository-local execution payloads.
-6. Run each repository's declared native audit. Separate activation failures—unresolved capability, unsafe path, stale declaration, or missing runtime publication—from genuine standards findings emitted after execution. Fix activation in this plan; record substantive content findings in the owning repository's existing roadmap, Stream, or a narrowly scoped new item only when they lack a durable home.
-7. Run the relevant repository-owned test, typecheck, build, and focused audit gates after each migration. Commit every repository independently with explicit paths, preserving pre-existing commits and leaving pushes for explicit user instruction.
-8. Re-run the fourteen-repository matrix from clean worktrees. Require zero tracked `.ki` or `.ki-meta`, zero live runner invocation, successful declared-skill resolution, and an honest recorded outcome for every native audit.
-9. Update the onboarding and migration guidance with the proven fleet procedure and its boundary from RTP-002 and the later GitHub CI acceptance pass.
+3. ✓ In each of the twelve legacy repositories, delete the tracked `.ki-meta` payload and remove live `.ki-meta`, `.ki/bin`, wrapper, package-alias, and vendored-runner instructions. Preserve historical records where their explicit subject is the retired design.
+4. ✓ Repair only settled configuration drift. Replace `ki-repo-roadmap` with `ki-roadmap` where a repository has the non-KB roadmap shape, remove declarations for absent capabilities, add presently applicable stable declarations, and ensure `[ki-repo].supported_runtimes` honestly names the repository's supported agents.
+5. ✓ Reconcile repository and user runtime discovery through `ki skill repo` or `ki skill user` only where the current activation contract requires it. Never restore copied checkers, aggregate runners, or repository-local execution payloads.
+6. ✓ Run each repository's declared native audit. Separate activation failures—unresolved capability, unsafe path, stale declaration, or missing runtime publication—from genuine standards findings emitted after execution. Fix activation in this plan; record substantive content findings in the owning repository's existing roadmap, Stream, or a narrowly scoped new item only when they lack a durable home.
+7. ✓ Run the relevant repository-owned test, typecheck, build, and focused audit gates after each migration. Commit every repository independently with explicit paths, preserving pre-existing commits and leaving pushes for explicit user instruction.
+8. ✓ Re-run the fourteen-repository matrix from clean worktrees. Require zero tracked `.ki` or `.ki-meta`, zero live runner invocation, successful declared-skill resolution, and an honest recorded outcome for every native audit.
+9. ✓ Update the onboarding and migration guidance with the proven fleet procedure and its boundary from RTP-002 and the later GitHub CI acceptance pass.
 
 ## Files touched
 
@@ -93,3 +93,45 @@ All targets except `tools-ki` were clean and on `main` tracking `origin/main` at
 This local activation rollout is independent of RTP-002 because it excludes environment-capability naming and conditional coverage. RTP-002 will later migrate only that deliberately deferred configuration surface.
 
 The rollout prepares but does not complete the separate GitHub CI fleet item. It changes no live GitHub settings and performs no push without explicit instruction.
+
+## Acceptance
+
+### Delivered
+
+- Removed all 511 tracked `.ki-meta` files from the twelve legacy repositories and left all fourteen repositories with no tracked `.ki` or `.ki-meta` footprint.
+- Replaced integrity-verified generated runtime skill copies with `ki skill repo` managed links for both Claude Code and Codex. The harness retains `.agents/skills/ki-self/` as the single intentional repository-owned runtime skill source.
+- Replaced the six MCP repositories' retired `ki-repo-roadmap` declaration with `ki-roadmap`, removed live legacy invocations, and declared `claude-code` and `codex` as supported runtimes throughout the fleet.
+- Regenerated the `ki-plugins` projection from the current harness and proved the result idempotent.
+- Replaced the harness's vendored-bootstrap Feature Definitions and updated the onboarding and developer migration guidance for the native activation procedure.
+
+### Verification
+
+- Every repository's declared capabilities resolve and `ki repo audit` reaches native execution. Remaining non-zero outcomes are explicit standards findings owned by the affected repository, not unresolved capability, runtime publication, or legacy-runner failures.
+- The final fleet scan found no broken managed links, no retired `ki-repo-roadmap` runtime entry, and no regular runtime skill copy other than the canonical `ki-self` source.
+- The harness passed `bun run test` with 177 tests, `bunx tsc --noEmit`, and focused native audits for `ki-feature-definitions`, `ki-roadmap`, and `ki-repo`.
+- All six MCP repositories passed their test and build gates: 307 housekeeping tests, 161 Git-audit tests, 464 Google Workspace tests, 236 KB filesystem tests, 288 Notion-mirror tests, and 551 Microsoft 365 tests.
+- Homebrew formula style and strict audit passed; `tools-mgit` passed all 23 Bats tests; the plugin builder passed both tests and its generator produced no follow-up diff.
+- All repositories were clean at their individual rollout checkpoints and again at the final fleet scan. No repository was pushed.
+
+### Evidence revisions
+
+- `homebrew-tap` — `89ee26019db37b310b928cb5f826cc665ca08f86`, `b677d4cbce560e8deed271122d6b52f3cb540d96`
+- `ki-agentic-harness` — `5163fd98`, `bd7bfb54`
+- `ki-arcadia-principal` — `4afca1e7`, `204768d4`
+- `ki-plugins` — `951a0b59`
+- `ki-specifications` — `b6aeaece`
+- `ki-website` — `b4b137a8`, `ab14b7de`
+- `mcp-claude-housekeeping` — `079bfccd`
+- `mcp-git-audit` — `0924835a`
+- `mcp-gsuite` — `ca5929fc`
+- `mcp-ki-kb-fs` — `3dbca60d`
+- `mcp-ki-kb-notion-mirror` — `9d0839f1`
+- `mcp-m365` — `8395eae2`
+- `tools-ki` — `6d4973f0`
+- `tools-mgit` — `5b9fa411`, `eec7382a`
+
+### Deferred boundaries
+
+- Repository standards findings exposed by native audit remain with their owning repositories; this activation plan does not conceal them with compatibility code or expand into their remediation.
+- RTP-002 remains responsible for runtime- and vendor-specific environment capabilities.
+- The separate fleet-CI roadmap item remains responsible for proving installation and native commands on clean GitHub-hosted runners.
