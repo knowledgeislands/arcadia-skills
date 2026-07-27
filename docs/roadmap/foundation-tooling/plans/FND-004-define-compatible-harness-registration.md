@@ -1,7 +1,7 @@
 ---
 id: 'FND-004'
 title: Define compatible harness registration and native repository-maintenance boundaries
-status: acceptance
+status: done
 roadmap: foundation-tooling/define-compatible-harness-registration-and-native-repository-maintenance-boundaries
 blocks: —
 blocked-by: —
@@ -228,3 +228,11 @@ The user setting reported by `ki-tokenomics` contains the literal value `claude-
 ### Mini recap
 
 The clean-end-state cutover removed compatibility machinery instead of preserving an intermediate executor. Keeping criterion semantics in rubric items, cross-item coalescing in skill sessions, and generic publication in `tools-ki` produced a smaller and clearer ownership boundary. The next catalogue migration should reuse the accepted exemplar directly rather than introduce adapters.
+
+## Done
+
+FND-004 completed after manual acceptance. The compatible-harness boundary, native repository-maintenance host, 26-skill catalogue migration, target taxonomy, and direct-CLI guidance cutover are retained as the delivered outcome.
+
+Residual concerns remain deliberately outside this plan: `ki-specifications`, external user-home housekeeping findings, and the stored malformed model value recorded in the acceptance packet.
+
+Follow-up belongs to `tools-ki` CLI-004 acceptance, CLI-006 release installation, and repository-by-repository rollout using the capability-renaming and legacy-retirement guide.
