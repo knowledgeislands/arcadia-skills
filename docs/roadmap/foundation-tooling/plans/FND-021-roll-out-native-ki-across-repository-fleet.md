@@ -25,10 +25,31 @@ RTP-002 separately redesigns environment capabilities by runtime and vendor. Thi
 - All fourteen worktrees are currently clean and track `origin/main`. Several contain committed local work ahead of their upstream; the rollout must preserve those commits and must not push without explicit instruction.
 - The separate fleet-CI roadmap item remains responsible for clean hosted-runner installation and GitHub Actions verification after local activation is sound.
 
+## Execution baseline
+
+The start gate recorded these immutable repository revisions before any rollout edit:
+
+- `homebrew-tap` — `ee4fec66ef40f7575c7ac8dacd3cdbc1e06a9b9f`
+- `ki-agentic-harness` — `4515a613f05bee0f0c2c8588d98458d263dbbc5c`
+- `ki-arcadia-principal` — `01cc68c7dc6d92e33b46ee6d44511595888b0a29`
+- `ki-plugins` — `9ae2e981ba4967c235a445619545d9910a97f281`
+- `ki-specifications` — `c6409bfca823da0c2c679598b4e59a13bfc6084c`
+- `ki-website` — `15602f960a6174391892f188176e8e24c448174d`
+- `mcp-claude-housekeeping` — `442ed0bca6d5340584e8e29434ea0859f92a6c9c`
+- `mcp-git-audit` — `4faa74a0e59668feab4a839c498511a9046deb03`
+- `mcp-gsuite` — `487eaebf2c8251414a34fdeb749a115f1c2c8f94`
+- `mcp-ki-kb-fs` — `b7cfa647fff4277f30b5eb11fe14cf5460b2bf50`
+- `mcp-ki-kb-notion-mirror` — `1226a4a7ff91a2af1bc674bed69b351b218e1e52`
+- `mcp-m365` — `772fb5ba1854d3220331cf7ed87c5feb99cb5fe3`
+- `tools-ki` — `f1e17e8582a03376ddc441fd513c8b4f505108b1`
+- `tools-mgit` — `08980d3e274683d093403f5ed00be0530111fcd6`
+
+All targets except `tools-ki` were clean and on `main` tracking `origin/main` at the execution gate. `tools-ki` had an unrelated uncommitted `src/core/runtime.ts` change and was quarantined from rollout edits pending a clean recheck. Every target resolved `ki` 0.2.6; the harness used its local development link and the other repositories used the Homebrew installation.
+
 ## Steps
 
 1. Record the full immutable baseline commit for every repository and recheck its worktree, branch, upstream, installed `ki` resolution, canonical harness inventory, `.ki-config.toml`, supported runtimes, declared skills, runtime links, and tracked legacy footprint. Stop on a dirty or concurrently changed target rather than absorbing its work.
-2. Define the stable rollout matrix for all fourteen repositories: repository shape, current declarations, declarations retained or corrected, runtime activation required, retired paths removed, and expected native audit result. Exclude housekeeping, tokenomics, binding, and renderer-name normalisation owned by RTP-002.
+2. ✓ Define the stable rollout matrix for all fourteen repositories: repository shape, current declarations, declarations retained or corrected, runtime activation required, retired paths removed, and expected native audit result. Exclude housekeeping, tokenomics, binding, and renderer-name normalisation owned by RTP-002.
 3. In each of the twelve legacy repositories, delete the tracked `.ki-meta` payload and remove live `.ki-meta`, `.ki/bin`, wrapper, package-alias, and vendored-runner instructions. Preserve historical records where their explicit subject is the retired design.
 4. Repair only settled configuration drift. Replace `ki-repo-roadmap` with `ki-roadmap` where a repository has the non-KB roadmap shape, remove declarations for absent capabilities, add presently applicable stable declarations, and ensure `[ki-repo].supported_runtimes` honestly names the repository's supported agents.
 5. Reconcile repository and user runtime discovery through `ki skill repo` or `ki skill user` only where the current activation contract requires it. Never restore copied checkers, aggregate runners, or repository-local execution payloads.
@@ -60,7 +81,7 @@ RTP-002 separately redesigns environment capabilities by runtime and vendor. Thi
 - Round 2A — general worker, mechanical, `gpt-5.6-terra` at medium reasoning: migrate the six homogeneous MCP repositories (`mcp-claude-housekeeping`, `mcp-git-audit`, `mcp-gsuite`, `mcp-ki-kb-fs`, `mcp-ki-kb-notion-mirror`, and `mcp-m365`). Remove `.ki-meta`, replace `ki-repo-roadmap` with `ki-roadmap`, remove live legacy-runner references, run repository gates, and commit each repository independently.
 - Round 2B — general worker, mechanical, `gpt-5.6-terra` at medium reasoning: migrate `homebrew-tap`, `ki-plugins`, and `tools-mgit`. Remove `.ki-meta` and live legacy-runner references, retain only settled stable declarations, run repository gates, and commit each repository independently.
 - Round 2C — general worker, mechanical with bounded classification, `gpt-5.6-terra` at medium reasoning: migrate `ki-arcadia-principal`, `ki-specifications`, and `ki-website`. Remove `.ki-meta` and live legacy-runner references, retain stable configuration, run repository gates, and commit each repository independently. Preserve explicit historical discussion of the retired design.
-- Locked decisions for every worker: do not add compatibility paths, copied checkers, aggregate runners, environment-capability renames, GitHub CI changes, pushes, or unrelated content fixes. A native audit that reaches execution but emits standards findings is evidence, not an activation failure.
+- Locked decisions for every worker: do not add compatibility paths, copied checkers, aggregate runners, environment-capability renames, remote GitHub changes, hosted-runner redesign, pushes, or unrelated content fixes. Tracked workflows may change only to replace live retired aliases with native `ki repo` commands. A native audit that reaches execution but emits standards findings is evidence, not an activation failure.
 - Escalate rather than guess when a reference may be historical, a stable capability does not resolve, a repository becomes dirty or changes from its recorded baseline, a config change would touch RTP-002 scope, or a failing gate appears unrelated to activation.
 - Definition of done for each delegated repository: no tracked `.ki` or `.ki-meta`; no live legacy invocation; stable declarations resolve; native audit reaches execution; relevant local gates are recorded; one explicit-path commit exists; and the worktree is clean.
 - Orchestrator gate: review every diff and commit against the recorded baseline, repeat the legacy scan and native audit, classify remaining findings, and reject scope expansion before completing the fleet matrix.
