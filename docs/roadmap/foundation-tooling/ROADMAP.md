@@ -8,6 +8,12 @@ code: FND
 
 Actively broken, or blocking the `Next` horizon: takes priority over everything else and must clear before `Next` work proceeds. Empty means nothing is on fire.
 
+### Roll out native KI activation across the repository fleet
+
+Move every active repository under `/Users/krisbrown/workspaces/kis/knowledgeislands/` onto the current direct `ki` repository contract. Remove tracked `.ki-meta` payloads and live references to retired runners, repair current stable capability declarations, and prove that each repository resolves and executes its declared skills through the installed canonical harness. Keep genuine repository-content findings visible and recipient-owned rather than folding them into activation, and leave environment-capability naming and coverage to RTP-002.
+
+**Plan:** [FND-021](plans/FND-021-roll-out-native-ki-across-repository-fleet.md)
+
 ## Next
 
 Scoped and ready to start — the immediate queue, picked up before anything in **Soon** or **Future**.

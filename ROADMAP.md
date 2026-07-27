@@ -6,6 +6,7 @@ This portfolio view is generated from the canonical theme roadmaps under `docs/r
 
 Actively broken, or blocking the `Next` horizon: takes priority over everything else and must clear before `Next` work proceeds. Empty means nothing is on fire.
 
+- [Foundation Tooling: Roll out native KI activation across the repository fleet](docs/roadmap/foundation-tooling/ROADMAP.md#roll-out-native-ki-activation-across-the-repository-fleet)
 - [Runtime Portability: Make environment capabilities runtime-explicit](docs/roadmap/runtime-portability/ROADMAP.md#make-environment-capabilities-runtime-explicit)
 
 ## Next
