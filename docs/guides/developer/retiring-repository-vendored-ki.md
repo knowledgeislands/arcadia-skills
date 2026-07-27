@@ -23,6 +23,29 @@ Stop if any condition is false.
 
 Record the blocker in the repository's plan rather than adding a compatibility wrapper or deleting only the convenient portion of `.ki/`.
 
+## Align declared capability names
+
+Before interpreting an unresolved-skill error as an installation problem, compare `.ki-config.toml` with the current harness capability names.
+
+The clean-end-state renames used by the current harness are:
+
+| Retired declaration     | Current declaration     |
+| ----------------------- | ----------------------- |
+| `ki-repo-roadmap`       | `ki-roadmap`            |
+| `ki-11ty-websites`      | `ki-website`            |
+| `ki-cloudflare-hosting` | `ki-website-cloudflare` |
+
+For a marker-only table, remove the retired declaration and add the current capability through the CLI so both the configuration and managed runtime links converge:
+
+```sh
+ki skill repo remove <retired-skill> --repo .
+ki skill repo add <current-skill> --repo .
+```
+
+When the retired table has authored keys or adjacent explanatory comments, rename and review that table deliberately, then run `ki skill repo add <current-skill> --repo . --replace` to reconcile managed runtime links without discarding configuration.
+
+Re-run `ki repo audit --repo .` immediately. Do not retain both names or add an alias: an unavailable declaration is migration work, not a compatibility requirement.
+
 ## Map the old roles
 
 Use these replacements only once the preconditions hold:
