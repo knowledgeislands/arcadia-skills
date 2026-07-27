@@ -20,7 +20,7 @@ After the released CLI and canonical harness are available through the normal in
 
 ### Protect generated rubric publications from drift
 
-Make the `ki` CLI the one canonical renderer for every structured skill rubric. A skill's TypeScript catalogue is authoritative; its tracked `references/rubric.md` is derived output. `ki repo audit --skill ki-skills` must treat any difference between the rendered and tracked publication as drift, while `ki repo conform --skill ki-skills --dry-run` reports and real CONFORM regenerates the affected publications for review. Add generic renderer and transaction coverage in `tools-ki`, then reconcile generated-source notices, classifications, citations, and judgment prompts with the `ki-skills` rubric-authoring contract. Do not retain per-skill publication renderers or divergent output shapes.
+Make the `ki` CLI the one canonical renderer for every structured skill rubric. A skill's TypeScript catalogue is authoritative; its tracked `references/rubric.md` is derived output. `ki repo audit --skill ki-skills` must treat any difference between the rendered and tracked publication as drift, while `ki repo conform --skill ki-skills --dry-run` reports and real CONFORM regenerates the affected publications for review. Add generic renderer and guarded incremental-publication coverage in `tools-ki`, then reconcile generated-source notices, classifications, citations, and judgment prompts with the `ki-skills` rubric-authoring contract. Do not retain per-skill publication renderers or divergent output shapes.
 
 **Plan:** [FND-002](plans/FND-002-protect-generated-rubric-publications.md)
 
