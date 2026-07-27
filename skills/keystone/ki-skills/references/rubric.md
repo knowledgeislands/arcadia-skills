@@ -60,7 +60,7 @@ The portable skill name contract.
 - **NAME-3 [M] — name uses lowercase letters, digits, and hyphens only** — `name` is lowercase letters, digits, hyphens only. (SPEC, BP)
 - **NAME-4 [M] — name has no leading or trailing hyphen and no consecutive hyphens** — `name` has no leading/trailing hyphen and no consecutive hyphens. (SPEC)
 - **NAME-5 [M] — name matches the parent directory name exactly** — `name` matches the parent directory name exactly. The committed repository-local source is `.agents/skills/ki-self/`, whose required name is `ki-self`. (SPEC)
-- **NAME-6 [M] — name contains no XML tags or reserved words** — `name` contains no XML tags and no reserved words (`anthropic`, `claude`). (BP)
+- **NAME-6 [M] — name contains no XML tags or reserved words** — `name` contains no XML tags and no reserved words (`anthropic`, `claude`), except that an explicit runtime adapter may use its matching vendor word. (BP, KI)
 - **NAME-7 [J] — name is specific rather than generic** — `name` is specific, not generic (avoid `helper`, `utils`, `tools`, `data`). (BP)
   - _Review prompt:_ Is this name concrete and appropriately scoped for the capability it governs?
 
@@ -244,6 +244,7 @@ The common shape of a Knowledge Islands governance skill.
 - **KI-SHAPE-16 [M-heuristic + J] — target files have declared ownership** — _Declared file ownership, three tiers._ A skill whose rubric reads or changes a house-standard file in the **target repository's** working tree declares that relationship in frontmatter, alongside `ki-depends-on:`, under one of three keys: `requires:` (must exist, doesn't create/control it — any number of skills may share a `requires:` filename), `contributes:` (writes/expects only its own section of a shared file — any number of skills may share a `contributes:` filename, e.g. `.ki-config.toml`, `package.json`), or `owns:` (sole author of the whole file — **exclusive**, at most one skill per filename). The mechanical heuristic verifies that declared filenames occur in the skill's production implementation and that no filename is owned by more than one skill. Judgment confirms that every session proposal and governed read has the appropriate declaration. (KI)
   - _Review prompt:_ Do all governed target-file reads and session proposals carry the appropriate ownership declaration?
 - **KI-SHAPE-17 [M] — dependencies are declared explicitly** — _Explicit dependency declaration._ Every skill declares `ki-depends-on:` as a single-line flow list. `ki-depends-on: []` is the required explicit form when a skill has no governance dependencies. The listed capability names and a governed repository's matching `.ki-config.toml` tables are validated by the dependency graph and bootstrap; the skill checker enforces the local declaration shape. (ADR-KI-HARNESS-SKILLS-006)
+- **KI-SHAPE-18 [M] — runtime compatibility is explicit and bounded** — A vendor-bound skill declares `ki-supported-runtimes:` as a non-empty, duplicate-free flow list of recognised repository runtime identifiers and also declares `ki-runtime-binding: true`; an absent list means the skill is portable across supported runtimes. (standards-knowledge-islands.md §2)
 
 ## KI-INVOKE — Invocation protocol
 

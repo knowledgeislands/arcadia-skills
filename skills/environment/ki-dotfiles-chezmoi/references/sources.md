@@ -7,7 +7,7 @@ The authoritative sources behind [the standard](standards-chezmoi-dotfiles.md), 
 Two different kinds of claim live in this standard, and they carry different confidence:
 
 - **Tool-behavior claims** (chezmoi behavior and format-editor APIs) are grounded in the tools' own official documentation — authoritative for the documented capability, but not a guarantee that every real input round-trips byte-for-byte.
-- **House-convention claims** (the shell-loader pattern, the bin/env dispatcher pattern, the Pattern A/B decision rule, the editor-selection and verification policy, the single-source multi-target templating pattern, the CLAUDE.md layering split, the audit-reporting etiquette) are derived from a **single anonymized case-study repo** (n=1, initially audited 2026-07-12, with the config-editing case reviewed 2026-07-14) — not a corpus the way `ki-repo`'s repo standard was derived from ten `knowledgeislands`-org repos. Treat every `[J]` criterion in the rubric as provisional until more repos have been audited against this skill and the pattern is confirmed to generalize.
+- **House-convention claims** (the shell-loader pattern, the bin/env dispatcher pattern, the Pattern A/B decision rule, the editor-selection and verification policy, the single-source multi-target templating pattern, the agent-instruction layering split, the audit-reporting etiquette) are derived from a **single anonymized case-study repo** (n=1, initially audited 2026-07-12, with the config-editing case reviewed 2026-07-14) — not a corpus the way `ki-repo`'s repo standard was derived from ten `knowledgeislands`-org repos. Treat every `[J]` criterion in the rubric as provisional until more repos have been audited against this skill and the pattern is confirmed to generalize.
 
 ## Authoritative (chezmoi.io)
 
@@ -38,7 +38,7 @@ Two different kinds of claim live in this standard, and they carry different con
 | One anonymized personal chezmoi dotfiles repo, audited directly | House patterns†           | 2026-07-12    |
 | A surgical TOML patch in the same repo, reviewed directly       | Config-editing heuristic‡ | 2026-07-14    |
 
-† Shell-loader and bin/env dispatcher patterns; Pattern A/B decision rule; single-source multi-target templating; CLAUDE.md layering; audit etiquette.
+† Shell-loader and bin/env dispatcher patterns; Pattern A/B decision rule; single-source multi-target templating; agent-instruction layering; audit etiquette.
 
 ‡ Editor selection, missing-key handling, preservation fixtures, and idempotence.
 

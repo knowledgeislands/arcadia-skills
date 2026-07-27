@@ -4,6 +4,7 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import type { RubricContextOptions } from '../../shared/rubric.ts'
 import { FILES } from '../items/files.ts'
+import { collectAuditFindings } from './audit.ts'
 import { createRepoSession, type FilesRubricContext } from './repository.ts'
 
 const roots: string[] = []
@@ -84,5 +85,41 @@ describe('ki-repo session', () => {
     const context = filesContext(conform)
     expect(context.ensureRepoConfiguration).toBeUndefined()
     expect(context.ensureAuthoringConfiguration).toBeUndefined()
+  })
+})
+
+describe('runtime environment coverage', () => {
+  const runtimeFindings = (configuration: string) => {
+    const root = repository()
+    writeFileSync(join(root, '.ki-config.toml'), configuration)
+    return collectAuditFindings([root]).findings.filter(({ code }) => code === 'RUNTIMES-1' || code === 'RUNTIMES-2')
+  }
+
+  test('requires the portable and runtime-specific environment tables', () => {
+    expect(runtimeFindings('[ki-repo]\nsupported_runtimes = ["claude-code", "codex"]\n')).toEqual([
+      {
+        level: 'FAIL',
+        code: 'RUNTIMES-2',
+        message:
+          'supported runtime coverage requires missing table(s): [ki-housekeeping-claude], [ki-tokenomics], [ki-tokenomics-claude], [ki-tokenomics-codex]',
+        subject: expect.any(String)
+      }
+    ])
+  })
+
+  test('accepts the complete environment matrix for both runtimes', () => {
+    expect(
+      runtimeFindings(`[ki-repo]
+supported_runtimes = ["claude-code", "codex"]
+
+[ki-tokenomics]
+
+[ki-housekeeping-claude]
+
+[ki-tokenomics-claude]
+
+[ki-tokenomics-codex]
+`)
+    ).toEqual([])
   })
 })

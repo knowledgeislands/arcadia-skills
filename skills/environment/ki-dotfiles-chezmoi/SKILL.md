@@ -3,7 +3,7 @@ name: ki-dotfiles-chezmoi
 ki-shared-dependencies: [ki-skills:rubric]
 ki-depends-on: [ki-authoring]
 description: >
-  Codify, audit, and conform the chezmoi dotfiles-management standard — naming-prefix semantics, edit-source-not-target discipline, shell-loader layering, the bin/ dispatcher pattern, app-mutated-config handling (surgical patch, fragment binding, or full-template reverse-merge), format-preserving config editor selection, single-source-to-multi-target config templating, repo-local-vs-user-level CLAUDE.md layering, and chezmoi-specific repo-shape and OS gotchas. Use when auditing or authoring a chezmoi source repo, deciding how to manage an app-mutated config, structuring shell config or a bin/ directory, or checking dotfiles conventions are followed. Triggers: "chezmoi standard", "audit my chezmoi repo", "how should I manage this dotfile", "configuration fragment binding", "surgical patch or reverse-merge", "preserve config comments", "dotfiles conventions". Not for a specific repo's own personal tool choices (its exact scripts, taps, MCP servers) — those belong in that repo's own `CLAUDE.md`, not this skill.
+  Codify, audit, and conform the chezmoi dotfiles-management standard — naming-prefix semantics, edit-source-not-target discipline, shell-loader layering, the bin/ dispatcher pattern, app-mutated-config handling (surgical patch, fragment binding, or full-template reverse-merge), format-preserving config editor selection, single-source-to-multi-target config templating, repo-local-vs-user-level agent-instruction layering, and chezmoi-specific repo-shape and OS gotchas. Use when auditing or authoring a chezmoi source repo, deciding how to manage an app-mutated config, structuring shell config or a bin/ directory, or checking dotfiles conventions are followed. Triggers: "chezmoi standard", "audit my chezmoi repo", "how should I manage this dotfile", "configuration fragment binding", "surgical patch or reverse-merge", "preserve config comments", "dotfiles conventions". Not for a specific repo's own personal tool choices — those belong in that repo's own agent guidance, not this skill.
 argument-hint: 'audit <repo> | conform <repo> | help | educate <repo> | refresh'
 ---
 
@@ -25,7 +25,7 @@ No `exemplars.md` is bundled yet: the single source repo is evidence for provisi
 - **bin/ dispatcher pattern** — a single bootstrap entrypoint dispatching `{install|update|cleanup|backup}` across independent, self-contained subsystem scripts.
 - **App-mutated config handling** — Pattern A (surgical patch), Pattern B (full template + reverse-merge), or Pattern C (native fragment binding), with a decision rule and format-preserving editor selection for writes.
 - **Single-source, multi-target templating** — one structured data file rendered into several per-target config fragments via a shared template partial.
-- **CLAUDE.md / agent-instruction layering** — repo-local vs user-level, and how to choose between them (and memory).
+- **Agent-instruction layering** — repo-local vs user-level, and how to choose between them (and memory).
 - **OS/tooling gotchas** — macOS case-insensitive filesystems; `sed` and non-ASCII characters.
 - **Git & audit hygiene** — lock-file discipline; audit via skills, not hand-rolled shell; report-then-confirm etiquette.
 
@@ -40,7 +40,7 @@ Invoked as `help` / `-h` / `?`, it explains itself and stops: name, purpose, inv
 ### Mode AUDIT — check a chezmoi repo against the standard
 
 1. **Run the hosted rubric** — `ki repo audit --repo <repo-path> --skill ki-dotfiles-chezmoi`. It checks the four **[M]** criteria in [the rubric](references/rubric.md) (a physical `.chezmoiignore`, template support when `.tmpl` files exist, `bin/` source-prefix conformance, and physical Git lock-file hygiene). The result also counts the unevaluated **[J]** criteria, which a reader must apply separately. Exit code is non-zero on any FAIL.
-2. Apply the **judgment** (`[J]`) criteria named in [the rubric](references/rubric.md) — Pattern A/B correctness for a given app config, format-preserving editor selection and evidence for every surgical writer, CLAUDE.md Layer 1/2 placement quality, `.chezmoiignore` negation intent, and whether audit-reporting etiquette was actually followed.
+2. Apply the **judgment** (`[J]`) criteria named in [the rubric](references/rubric.md) — Pattern A/B correctness for a given app config, format-preserving editor selection and evidence for every surgical writer, agent-guidance Layer 1/2 placement quality, `.chezmoiignore` negation intent, and whether audit-reporting etiquette was actually followed.
 3. **Report** by location → criterion → fix; lead with FAIL findings, then judgment findings; present options, don't silently fix.
 
 ### Mode CONFORM — bring a repo into house shape

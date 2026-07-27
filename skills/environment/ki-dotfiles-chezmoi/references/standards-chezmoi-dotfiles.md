@@ -103,11 +103,11 @@ When several distinct targets (client apps, environments, hosts) each need their
 Two layers, and the decision rule for which one a piece of guidance belongs in:
 
 - **Layer 1 — repository-local.** A thin root index file that imports one topic file per concern. Extend it by appending to an existing topic file, or by adding a new topic file plus one import line — never by growing the root index itself.
-- **Layer 2 — user-level.** A `private_`-prefixed, `dot_`-targeted file that chezmoi renders to the user's global agent-config location, applying across every repository and session on that machine, and syncing via the normal `chezmoi update`/`apply` flow.
+- **Layer 2 — user-level.** A `private_`-prefixed, `dot_`-targeted file that chezmoi renders to the selected runtime's global agent-config location, applying across every repository and session on that machine, and syncing via the normal `chezmoi update`/`apply` flow.
 
 **Decision rule**: repository-specific guidance → Layer 1. A personal preference that holds across every project → Layer 2. A fact about the user themselves (their role, their working style) → a persistent-memory mechanism, not either instruction layer.
 
-This is a _repository-local-vs-user-level_ split — a different axis from the runtime-neutral-vs-runtime-binding split owned by `ki-repo`. A chezmoi repository commonly uses both: this skill decides _where_ guidance lives, while `ki-repo` decides _which file_ carries runtime-neutral orientation within Layer 1.
+This is a _repository-local-vs-user-level_ split — a different axis from the runtime-neutral-vs-runtime-binding split owned by `ki-repo`. A chezmoi repository commonly uses both: this skill decides where guidance lives, while `ki-repo` decides which file carries runtime-neutral orientation within Layer 1.
 
 ## OS/tooling gotchas
 

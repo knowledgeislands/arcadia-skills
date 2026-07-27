@@ -15,6 +15,7 @@ export type NameRubricContext = {
   name: string | undefined
   directoryName: string
   localGovernanceSource: boolean
+  reservedVendorNameAllowed: boolean
   setName?: (name: string) => void
 }
 
@@ -138,6 +139,9 @@ export type KiShapeSkillContext = {
   documentsMechanicalDelegation: boolean
   dependsOnPresent: boolean
   dependsOn: string
+  supportedRuntimesPresent: boolean
+  supportedRuntimes: string
+  runtimeBinding: boolean
   owns: readonly string[]
   contributes: readonly string[]
   requires: readonly string[]
@@ -198,6 +202,9 @@ const emptyKiShapeSkill: KiShapeSkillContext = {
   documentsMechanicalDelegation: false,
   dependsOnPresent: false,
   dependsOn: '',
+  supportedRuntimesPresent: false,
+  supportedRuntimes: '',
+  runtimeBinding: false,
   owns: [],
   contributes: [],
   requires: [],

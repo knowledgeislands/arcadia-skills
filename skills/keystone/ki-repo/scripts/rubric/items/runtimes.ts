@@ -14,6 +14,18 @@ const RUNTIMES_1: RubricItem<RuntimesRubricContext> = {
   }
 }
 
+const RUNTIMES_2: RubricItem<RuntimesRubricContext> = {
+  code: 'RUNTIMES-2',
+  title: 'Runtime environment coverage',
+  description:
+    'Every repository declares portable tokenomics and the real housekeeping and tokenomics capabilities required by its supported runtimes.',
+  sources: [SOURCE],
+  mechanical: {
+    level: 'FAIL',
+    audit: { phase: 'INSPECT', run: (context) => auditEvidence(context.runtimes2, 'FAIL') }
+  }
+}
+
 const RUNTIMES_J1: RubricItem<RuntimesRubricContext> = {
   code: 'RUNTIMES-J1',
   title: 'Runtime orientation split',
@@ -31,5 +43,5 @@ export const RUNTIMES: RubricFamily<RepoRubricContext, RuntimesRubricContext> = 
   description: 'Declared agent-runtime support and orientation.',
   standard: SOURCE,
   selectContext: (context) => context.runtimes,
-  items: [RUNTIMES_1, RUNTIMES_J1]
+  items: [RUNTIMES_1, RUNTIMES_2, RUNTIMES_J1]
 }

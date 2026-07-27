@@ -8,17 +8,15 @@ Line-by-line criteria for auditing ki-binding. Classifications are derived from 
 
 ## Contents
 
-- [BIND — Cross-surface agreement](#bind--cross-surface-agreement)
+- [BIND — Canonical MCP binding](#bind--canonical-mcp-binding)
 
-## BIND — Cross-surface agreement
+## BIND — Canonical MCP binding
 
 → [standard](standards-cross-surface-binding.md)
 
-Agreement between the canonical source, repository delivery, and enabled run surfaces.
+Portable source validity, client targeting, and mcporter drift evidence.
 
-- **BIND-1 [M] — File-editable surfaces agree with the source** — Every rendered surface contains exactly the KI-governed servers that target it. (standards-cross-surface-binding.md)
-- **BIND-2 [M] — Single MCP source is valid** — The source exists, parses, and names supported surfaces. (standards-cross-surface-binding.md)
-- **BIND-3 [M] — Project-local skill links are wired** — Declared governance skills are present for each repository-supported runtime. (standards-cross-surface-binding.md)
-- **BIND-4 [M] — Cowork plugin integrity** — Cowork settings register and enable the KI plugin. (standards-cross-surface-binding.md)
-- **BIND-5 [J] — Client targeting is right for project use** — The clients set reflects intended surface use. (standards-cross-surface-binding.md)
-  - _Review prompt:_ Does each server target the surfaces the project needs, without carrying surfaces it should not?
+- **BIND-1 [M] — mcporter agrees with the source** — The vendor-neutral mcporter target contains exactly the KI servers targeting `mcporter`. (standards-cross-surface-binding.md)
+- **BIND-2 [M] — Single MCP source is valid** — The canonical source exists, parses, and gives each entry a valid client target. (standards-cross-surface-binding.md)
+- **BIND-J1 [J] — Client targeting is right for use** — The clients set reflects intended, least-surprising client availability. (standards-cross-surface-binding.md)
+  - _Review prompt:_ Does each server target the clients that need it, without exposing it on clients that do not?

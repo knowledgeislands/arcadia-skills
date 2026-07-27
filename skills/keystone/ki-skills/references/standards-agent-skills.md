@@ -52,7 +52,7 @@ The rubric tags each criterion `[M]`, `[J]`, or `[M + J]` accordingly. If part o
 
 ### 4. Frontmatter: name
 
-`name` is required by the open spec (a runtime overlay may default it to the directory name, but a portable skill states it explicitly — see ※1). It is ≤ 64 characters; lowercase letters, digits, and hyphens only (no uppercase, spaces, or underscores); no leading/trailing or consecutive hyphens; and matches the parent directory name exactly. It carries no XML tags and no reserved words (`anthropic`, `claude`). Make it **specific, not generic** — avoid `helper`, `utils`, `tools`, `data`; a gerund (`processing-pdfs`), noun phrase (`pdf-processing`), or action form (`process-pdfs`) all read well. (SPEC, BP)
+`name` is required by the open spec (a runtime overlay may default it to the directory name, but a portable skill states it explicitly — see ※1). It is ≤ 64 characters; lowercase letters, digits, and hyphens only (no uppercase, spaces, or underscores); no leading/trailing or consecutive hyphens; and matches the parent directory name exactly. It carries no XML tags and no reserved words (`anthropic`, `claude`). A Knowledge Islands runtime adapter may use its vendor word only when its frontmatter explicitly binds and restricts the skill to that vendor's runtime. Make it **specific, not generic** — avoid `helper`, `utils`, `tools`, `data`; a gerund (`processing-pdfs`), noun phrase (`pdf-processing`), or action form (`process-pdfs`) all read well. (SPEC, BP, KI)
 
 ### 5. Frontmatter: description
 

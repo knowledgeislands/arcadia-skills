@@ -401,6 +401,55 @@ const KI_SHAPE_17: RubricItem<KiShapeRubricContext> = {
   }
 }
 
+const KI_SHAPE_18: RubricItem<KiShapeRubricContext> = {
+  code: 'KI-SHAPE-18',
+  title: 'runtime compatibility is explicit and bounded',
+  description:
+    'A vendor-bound skill declares `ki-supported-runtimes:` as a non-empty, duplicate-free flow list of recognised repository runtime identifiers and also declares `ki-runtime-binding: true`; an absent list means the skill is portable across supported runtimes.',
+  sources: ['standards-knowledge-islands.md §2'],
+  mechanical: {
+    level: 'FAIL',
+    audit: {
+      phase: 'INSPECT',
+      run: ({ skill }) => {
+        if (!skill) return [{ status: 'NOT_APPLICABLE', message: 'skill evidence is unavailable for runtime inspection' }]
+        if (!skill.supportedRuntimesPresent) return [{ status: 'PASS', message: 'the skill declares no runtime compatibility restriction' }]
+        if (!/^\[[^\]]+\]$/.test(skill.supportedRuntimes))
+          return [
+            {
+              status: 'VIOLATION',
+              message: '`ki-supported-runtimes:` must be a non-empty single-line flow list'
+            }
+          ]
+        const runtimes = skill.supportedRuntimes
+          .slice(1, -1)
+          .split(',')
+          .map((runtime) => runtime.trim())
+          .filter(Boolean)
+        const recognised = new Set(['claude-code', 'codex'])
+        const unknown = runtimes.filter((runtime) => !recognised.has(runtime))
+        if (new Set(runtimes).size !== runtimes.length)
+          return [{ status: 'VIOLATION', message: '`ki-supported-runtimes:` must not repeat a runtime' }]
+        if (unknown.length > 0)
+          return [
+            {
+              status: 'VIOLATION',
+              message: `\`ki-supported-runtimes:\` names unknown runtime(s): ${unknown.join(', ')}`
+            }
+          ]
+        if (!skill.runtimeBinding)
+          return [
+            {
+              status: 'VIOLATION',
+              message: 'a runtime-restricted skill must also declare `ki-runtime-binding: true`'
+            }
+          ]
+        return [{ status: 'PASS', message: 'runtime compatibility is explicit and bounded' }]
+      }
+    }
+  }
+}
+
 export const KI_SHAPE: RubricFamily<KiSkillsRubricContext, KiShapeRubricContext> = {
   code: 'KI-SHAPE',
   title: 'Knowledge Islands skill shape',
@@ -423,6 +472,7 @@ export const KI_SHAPE: RubricFamily<KiSkillsRubricContext, KiShapeRubricContext>
     KI_SHAPE_14,
     KI_SHAPE_15,
     KI_SHAPE_16,
-    KI_SHAPE_17
+    KI_SHAPE_17,
+    KI_SHAPE_18
   ]
 }

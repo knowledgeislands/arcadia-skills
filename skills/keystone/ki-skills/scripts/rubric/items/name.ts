@@ -113,20 +113,29 @@ const NAME_5: RubricItem<NameRubricContext> = {
 const NAME_6: RubricItem<NameRubricContext> = {
   code: 'NAME-6',
   title: 'name contains no XML tags or reserved words',
-  description: '`name` contains no XML tags and no reserved words (`anthropic`, `claude`).',
-  sources: ['BP'],
+  description:
+    '`name` contains no XML tags and no reserved words (`anthropic`, `claude`), except that an explicit runtime adapter may use its matching vendor word.',
+  sources: ['BP', 'KI'],
   mechanical: {
     level: 'FAIL',
     audit: {
       phase: 'INSPECT',
-      run: ({ name }) => {
+      run: ({ name, reservedVendorNameAllowed }) => {
         if (!name) return [{ status: 'NOT_APPLICABLE', message: 'name is not present' }]
         const violations = containsXmlTag(name) ? [{ status: 'VIOLATION' as const, message: '`name` contains an XML tag' }] : []
         for (const word of RESERVED_WORDS)
-          if (name.includes(word)) violations.push({ status: 'VIOLATION', message: `\`name\` contains the reserved word "${word}"` })
+          if (name.includes(word) && !reservedVendorNameAllowed)
+            violations.push({ status: 'VIOLATION', message: `\`name\` contains the reserved word "${word}"` })
         return violations.length > 0
           ? [violations[0] as (typeof violations)[number], ...violations.slice(1)]
-          : [{ status: 'PASS', message: 'name contains no XML tags or reserved words' }]
+          : [
+              {
+                status: 'PASS',
+                message: reservedVendorNameAllowed
+                  ? 'name contains no XML tags and its vendor word matches the explicit runtime boundary'
+                  : 'name contains no XML tags or reserved words'
+              }
+            ]
       }
     }
   }

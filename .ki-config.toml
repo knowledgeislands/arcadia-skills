@@ -44,10 +44,9 @@ supported_runtimes = ["claude-code", "codex"]
 # over its own docs/features/ Feature Definitions corpus.
 [ki-feature-definitions]
 
-# This repo ships the ki-housekeeping skill, so it declares governance by its own standard over the
-# Claude Code auto-memory directory (~/.claude/projects/<slug>/memory/), which lives outside
-# this repo's tree — same repo-external-artifact pattern as a KB base.
-[ki-housekeeping]
+# This repo supports Claude Code, so it declares Claude housekeeping over the selected
+# repository's auto-memory directory (~/.claude/projects/<slug>/memory/).
+[ki-housekeeping-claude]
 
 # This repo uses the non-KB repository-roadmap standard. The table is the compliance marker;
 # this repository's thematic profile lives under docs/roadmap/.
@@ -64,8 +63,13 @@ headroom = "recommended"
 # overrides to `reasoning` because governing the skill set — cross-skill consistency,
 # rubric judgment, checker design — is high-reasoning work that earns the type. Project
 # default wins. The type resolves to the runtime's model (Claude Code → opus); no
-# model_tier_bindings table is needed here since this repo runs under Claude Code.
+# model_tier_bindings table is needed here because each runtime resolves the portable type.
 preferred_model_type = "reasoning"
 
 [ki-tokenomics.budgets]
 mcp_servers = 20   # 19 user-scoped at time of first audit (2026-06-22); revisit when scoped
+
+# Runtime adapters provide bounded evidence for each supported runtime.
+[ki-tokenomics-claude]
+
+[ki-tokenomics-codex]

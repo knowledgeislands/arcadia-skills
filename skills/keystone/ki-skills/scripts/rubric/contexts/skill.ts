@@ -211,6 +211,9 @@ const createKiShapeEvidence = (
     documentsMechanicalDelegation: /lint:md|toolchain (?:already )?enforces/i.test(skillText),
     dependsOnPresent: frontmatter.present.has('ki-depends-on'),
     dependsOn: (frontmatter.keys.get('ki-depends-on') ?? '').trim(),
+    supportedRuntimesPresent: frontmatter.present.has('ki-supported-runtimes'),
+    supportedRuntimes: (frontmatter.keys.get('ki-supported-runtimes') ?? '').trim(),
+    runtimeBinding: frontmatter.values['ki-runtime-binding'] === true,
     owns: frontmatterList(frontmatter.keys.get('owns')),
     contributes: frontmatterList(frontmatter.keys.get('contributes')),
     requires: frontmatterList(frontmatter.keys.get('requires')),
@@ -258,6 +261,9 @@ export const createSkillRubricContext = (directory: string, capabilities: SkillW
         name,
         directoryName: localGovernanceSource ? 'ki-self' : basename(directory),
         localGovernanceSource,
+        reservedVendorNameAllowed:
+          frontmatter.values['ki-runtime-binding'] === true &&
+          /^\[[^\]]*\bclaude-code\b[^\]]*]$/.test((frontmatter.keys.get('ki-supported-runtimes') ?? '').trim()),
         setName: capabilities.setName
       },
       description: { description },

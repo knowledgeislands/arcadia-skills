@@ -68,6 +68,7 @@ export type StructureRubricContext = {
 
 export type RuntimesRubricContext = {
   runtimes1: readonly RepoEvidenceFinding[]
+  runtimes2: readonly RepoEvidenceFinding[]
 }
 
 export type RepoRubricContext = {
@@ -195,7 +196,7 @@ export const createRepoSession = (
     coverage: { evidence: evidence('COV-1') },
     structure: { structure1: evidence('STRUCT-1'), structure2: evidence('STRUCT-2') },
     access: { evidence: evidence('ACCESS-1') },
-    runtimes: { runtimes1: evidence('RUNTIMES-1') },
+    runtimes: { runtimes1: evidence('RUNTIMES-1'), runtimes2: evidence('RUNTIMES-2') },
     descriptionFit: {},
     overrides: {},
     synchronisation: {},

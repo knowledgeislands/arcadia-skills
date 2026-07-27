@@ -674,23 +674,27 @@ const KNOWN_RUNTIMES = ['claude-code', 'codex']
 // home of the key — table-aware, unlike the bootstrap resolver's tolerant match).
 // Returns null when the key is absent (the ["claude-code"] default applies, nothing to
 // check), else the declared list (possibly empty).
-function parseSupportedRuntimes(text: string): { runtimes: string[]; issue?: string } {
+function parseSupportedRuntimes(text: string): { runtimes: string[]; rootTables: string[]; issue?: string } {
   let document: Record<string, unknown>
   try {
     document = TOML.parse(text) as Record<string, unknown>
   } catch {
-    return { runtimes: [], issue: 'must be valid TOML' }
+    return { runtimes: [], rootTables: [], issue: 'must be valid TOML' }
   }
+  const rootTables = Object.entries(document)
+    .filter(([, value]) => value && typeof value === 'object' && !Array.isArray(value))
+    .map(([name]) => name)
   const table = document[KI_SECTION]
-  if (!table || typeof table !== 'object' || Array.isArray(table)) return { runtimes: [], issue: `must contain a [${KI_SECTION}] table` }
+  if (!table || typeof table !== 'object' || Array.isArray(table))
+    return { runtimes: [], rootTables, issue: `must contain a [${KI_SECTION}] table` }
   const runtimes = (table as Record<string, unknown>).supported_runtimes
-  if (runtimes === undefined) return { runtimes: [], issue: 'is required' }
-  if (!Array.isArray(runtimes)) return { runtimes: [], issue: 'must be an array of runtime names' }
-  if (runtimes.length === 0) return { runtimes: [], issue: 'must not be empty' }
-  if (runtimes.some((runtime) => typeof runtime !== 'string')) return { runtimes: [], issue: 'must contain only runtime names' }
+  if (runtimes === undefined) return { runtimes: [], rootTables, issue: 'is required' }
+  if (!Array.isArray(runtimes)) return { runtimes: [], rootTables, issue: 'must be an array of runtime names' }
+  if (runtimes.length === 0) return { runtimes: [], rootTables, issue: 'must not be empty' }
+  if (runtimes.some((runtime) => typeof runtime !== 'string')) return { runtimes: [], rootTables, issue: 'must contain only runtime names' }
   const list = runtimes as string[]
-  if (new Set(list).size !== list.length) return { runtimes: [], issue: 'must not repeat a runtime' }
-  return { runtimes: list }
+  if (new Set(list).size !== list.length) return { runtimes: [], rootTables, issue: 'must not repeat a runtime' }
+  return { runtimes: list, rootTables }
 }
 
 // RUNTIMES-1: validate the required `[ki-repo] supported_runtimes` declaration. A pure
@@ -710,6 +714,22 @@ function localConfigFindings(dir: string): Finding[] {
     fail(
       'RUNTIMES-1',
       `[${KI_SECTION}] supported_runtimes names unknown runtime(s): ${unknown.join(', ')} (known: ${KNOWN_RUNTIMES.join(', ')})`,
+      KI_CONFIG
+    )
+  if (unknown.length) return f
+
+  const required = new Set(['ki-tokenomics'])
+  if (parsed.runtimes.includes('claude-code')) {
+    required.add('ki-housekeeping-claude')
+    required.add('ki-tokenomics-claude')
+  }
+  if (parsed.runtimes.includes('codex')) required.add('ki-tokenomics-codex')
+  const declared = new Set(parsed.rootTables)
+  const missing = [...required].filter((skill) => !declared.has(skill)).sort()
+  if (missing.length)
+    fail(
+      'RUNTIMES-2',
+      `supported runtime coverage requires missing table(s): ${missing.map((skill) => `[${skill}]`).join(', ')}`,
       KI_CONFIG
     )
   return f
