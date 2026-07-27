@@ -59,6 +59,8 @@ Repository-level implementation briefs use the matching subareas:
 
 A handoff names the receiving repository, originating context, scope, constraints, and what the receiver owns. It never replaces the receiver's own priority, roadmap item, plan, implementation, or delivery decision. `ki-roadmap` performs the judgment-led periodic handoff review; `ki-next` performs confirmed inbound dispositions as part of normal non-KB work selection after a clean roadmap audit. Neither working area is an archive: every retained handoff has a current owner, disposition, reason or request, and review trigger; resolved inbound and outbound copies are removed.
 
+An `_HANDOFFS/README.md` may explain an active handoff area, but it does not justify retaining the area by itself. After the last inbound or outbound handoff is resolved, remove its README and empty `_HANDOFFS/` directory. The absence of the subarea is the immediate structural signal that its direction has nothing to consider.
+
 Knowledge Bases retain their own fixed `+/` and `-/` staging model under `ki-kb`. When a KB uses repository-level handoffs, its `+/_HANDOFFS/` and `-/_HANDOFFS/` contents follow this shared direction and ownership model while `ki-kb` continues to own note routing and frontmatter.
 
 ## Layer 2 — core GitHub settings

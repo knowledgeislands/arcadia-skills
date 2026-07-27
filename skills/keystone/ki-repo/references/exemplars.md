@@ -120,6 +120,8 @@ visibility = "private"
 
 A repository creates working areas only when it has material to triage or send. Inbound and outbound handoffs are kept distinct, and an outgoing handoff is grouped by its receiving repository. The handoff remains an originating brief; the receiver independently adopts work into its own roadmap and plan.
 
+Once the last handoff in one direction is resolved, its `_HANDOFFS/README.md` and empty `_HANDOFFS/` directory are removed rather than retained as placeholders.
+
 ```text
 my-repo/
 ├── +/

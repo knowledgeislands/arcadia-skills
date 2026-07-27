@@ -7,11 +7,11 @@ const WORK_J1: RubricItem<WorkingAreasRubricContext> = {
   code: 'WORK-J1',
   title: 'working-area direction and lifecycle',
   description:
-    'Optional +/ and -/ working areas distinguish inbound from outbound material, and retained handoffs have an owner, active disposition, reason or request, and named review trigger while resolved copies are removed.',
+    'Optional +/ and -/ working areas distinguish inbound from outbound material, retained handoffs have an owner and active disposition, and an empty handoff direction retains no README or directory placeholder.',
   sources: ['standards-repository.md'],
   judgment: {
     prompt:
-      'Where +/ or -/ exists, review that it remains working material rather than a shadow canonical store or archive: each retained handoff has a receiving owner, active disposition, reason or request, and named review trigger; resolved inbound and outbound copies are removed.'
+      'Where +/ or -/ exists, review that it remains working material rather than a shadow canonical store or archive: each retained handoff has a receiving owner, active disposition, reason or request, and named review trigger; resolved copies are removed; and a direction with no handoffs retains neither `_HANDOFFS/README.md` nor the empty `_HANDOFFS/` directory.'
   }
 }
 

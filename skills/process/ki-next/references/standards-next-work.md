@@ -7,7 +7,7 @@ _On-demand procedure for `ki-next`. The kind, scope, and relationship map live i
 1. Resolve the current git repository physically and read its `.ki-config.toml` when present. If `repo_type = "kb"`, stop: Knowledge Bases select work through `ki-kb-streams` proposals rather than this process.
 2. Ask `ki-roadmap` to identify the simple or thematic profile. Run `ki repo audit --skill ki-roadmap --repo <git-root>`. Stop on any FAIL or WARN; name the repair route, but do not run CONFORM or repair unrelated state.
 3. Read the canonical source of truth: root `ROADMAP.md` for the simple profile; each `docs/roadmap/<theme>/ROADMAP.md` and its `plans/` directory, plus the generated root projection, for the thematic profile. In the thematic profile, derive active plans and dependencies from plan frontmatter before ranking items.
-4. Inspect `+/_HANDOFFS/` after the clean roadmap audit. If it is absent or contains no regular handoff files other than `README`, continue without a handoff step. Do not treat a directory, symlink, or `README` as a handoff.
+4. Inspect `+/_HANDOFFS/` after the clean roadmap audit. If it is absent, continue without a handoff step. Do not treat a directory, symlink, or `README` as a handoff. If only `README.md` remains, present removal of that stale placeholder and the empty `_HANDOFFS/` directory for confirmation before normal selection.
 5. If the user continues from a current `ki-recap`, use only its grounded outstanding work, learning routes with their approval status, and Specific actions as context. Re-check every dynamic roadmap claim now; an unapproved route remains a proposal, and a roadmap item parked during recap is not automatically a candidate. Do not scan stored or historical transcripts. A recap is optional: without one, ground the same facts directly.
 
 ## 2. Inbound handoff triage
@@ -18,7 +18,7 @@ Every normal `ki-next` grounding performs this inbox pass; it is not a separate 
 2. For every handoff that needs review, present its origin, scope, constraints, prior disposition if any, and the available dispositions: **adopt**, **park**, **clarify**, **decline**, and **supersede**. Require explicit confirmation of the exact file, selected disposition, wording, horizon, and resulting writes or deletion before changing anything.
 3. **Adopt** creates this repository's own roadmap item at its honest horizon; it does not promote priority or infer readiness. In a thematic profile, when the transferred detail merits preservation, create an open plan with a non-empty `transferred-from` origin. A simple profile may adopt the roadmap item, but must run `ki-roadmap` EXPAND before preserving detailed transferred work in a plan; do not discard a detail-bearing inbound brief until that preservation is confirmed.
 4. **Park** or **clarify** retains the inbound file only with a recorded receiving owner, its disposition, a reason for parking or a concrete clarification request, and a named review trigger. The review trigger is the event or evidence that will make the item eligible for presentation again; it cannot be an indefinite archive label.
-5. **Decline** or **supersede** resolves the handoff without local roadmap work. Delete its inbound copy after confirmation. For an adoption, delete the inbound copy only after its approved roadmap item and any required preservation plan are durable. After any resolved disposition, prompt the sender to remove its corresponding outbound copy.
+5. **Decline** or **supersede** resolves the handoff without local roadmap work. Delete its inbound copy after confirmation. For an adoption, delete the inbound copy only after its approved roadmap item and any required preservation plan are durable. After any resolved disposition, prompt the sender to remove its corresponding outbound copy. When no inbound handoff remains, remove `+/_HANDOFFS/README.md` and the empty `_HANDOFFS/` directory as part of the confirmed cleanup.
 6. After an adoption changes the roadmap or plan collection, regenerate derived views, re-run the roadmap audit, and ground the affected state again before continuing. Do not turn a newly adopted item into the selected next work without the ordinary staged candidate loop and its separate confirmation.
 
 ## 3. Optional relevance review
@@ -69,6 +69,7 @@ Apply these behavioural checks whenever the process changes:
 | Waiting condition changed | Present the evidence and proposed re-entry; do not move it automatically. |
 | Existing valid plan covers selected work | Reuse it and respect its cross-theme dependency edges. |
 | No regular inbound handoff exists | Continue normal selection without presenting an inbox step. |
+| Only `+/_HANDOFFS/README.md` remains | Present removal of the README and empty handoff directory; absence is the empty-inbox signal. |
 | Unreviewed inbound handoff exists | Present its exact proposed disposition and require confirmation before any write or deletion. |
 | Parked or clarified handoff's trigger has not fired | Acknowledge it and skip it; do not re-present or alter it. |
 | Parked or clarified handoff's trigger has fired | Present it for a newly confirmed disposition. |

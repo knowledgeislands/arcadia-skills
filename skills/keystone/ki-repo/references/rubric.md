@@ -198,5 +198,5 @@ Alignment across the knowledge chain.
 
 Judgment-led review of optional inbound and outbound working material.
 
-- **WORK-J1 [J] — working-area direction and lifecycle** — Optional +/ and -/ working areas distinguish inbound from outbound material, and retained handoffs have an owner, active disposition, reason or request, and named review trigger while resolved copies are removed. (standards-repository.md)
-  - _Review prompt:_ Where +/ or -/ exists, review that it remains working material rather than a shadow canonical store or archive: each retained handoff has a receiving owner, active disposition, reason or request, and named review trigger; resolved inbound and outbound copies are removed.
+- **WORK-J1 [J] — working-area direction and lifecycle** — Optional +/ and -/ working areas distinguish inbound from outbound material, retained handoffs have an owner and active disposition, and an empty handoff direction retains no README or directory placeholder. (standards-repository.md)
+  - _Review prompt:_ Where +/ or -/ exists, review that it remains working material rather than a shadow canonical store or archive: each retained handoff has a receiving owner, active disposition, reason or request, and named review trigger; resolved copies are removed; and a direction with no handoffs retains neither `_HANDOFFS/README.md` nor the empty `_HANDOFFS/` directory.
