@@ -1,6 +1,6 @@
-# Cloudflare hosting setup guide
+# Mode EDUCATE — scaffold Cloudflare hosting
 
-Step-by-step procedure for wiring Cloudflare Workers + Static Assets hosting for a new Knowledge Islands site. Follow this once per site; subsequent changes are handled by CONFORM or AUDIT modes. The full standard is in [standards.md](standards.md); this guide is the opinionated walkthrough of it.
+Scaffold Cloudflare Workers + Static Assets hosting for a new Knowledge Islands site. Follow this once per site; subsequent changes are handled by CONFORM or AUDIT. The full contract is in [the Cloudflare hosting standard](standards-cloudflare-hosting.md).
 
 ## Contents
 
@@ -26,13 +26,13 @@ Step-by-step procedure for wiring Cloudflare Workers + Static Assets hosting for
 | `wrangler` CLI in `devDependencies`                     | `bun add -D wrangler`                       |
 | A built `dist/` produced by `ki-website`                | run `bun run ki:site:build` once to confirm |
 
-Log in to wrangler before doing anything else:
+Wrangler authentication and every Cloudflare control-plane operation below are explicit operator steps; the hosted rubric never launches them. Log in to Wrangler before doing anything else:
 
 ```bash
 bunx wrangler login
 ```
 
-This opens a browser OAuth flow and writes credentials to `~/.wrangler/config/default.toml`. They persist across sessions; re-run only if they expire or you switch accounts.
+This opens a browser OAuth flow and stores user-scoped credentials outside the repository. Re-run only if they expire or you switch accounts.
 
 ---
 
@@ -45,8 +45,8 @@ The config lives at the **site root** — the repo root for a flat layout, the `
   // <site-name> — Cloudflare Workers deployment (Workers + Static Assets, not Pages).
   "name": "<site-name>",
   "compatibility_date": "<YYYY-MM-DD>",
-  // Eleventy builds to dist/ at the repo root; the Worker serves it directly.
-  // Path is relative to THIS file — "./dist" flat, "../dist" from a site/ subfolder.
+  // Eleventy builds to dist/ beside this file; the Worker serves it directly.
+  // Path is relative to THIS file.
   "assets": { "directory": "./dist" },
   // Custom domains — apex plus www (www → apex via a Cloudflare redirect rule, see §8).
   // Omit routes for the initial deploy if the domain is not yet in Cloudflare; add them in §7.
@@ -62,7 +62,7 @@ The config lives at the **site root** — the repo root for a flat layout, the `
 `assets.directory` notes:
 
 - **`"./dist"`** — `wrangler.jsonc` is at the repo root (`dist/` is a sibling).
-- **`"../dist"`** — `wrangler.jsonc` is under `site/` (`dist/` is one level up at the repo root).
+- **`"dist"`** — `wrangler.jsonc` and the build output both live in the canonical `site/` workspace.
 
 Set `compatibility_date` to today's date (`YYYY-MM-DD`). For a pure-assets Worker there is no runtime code, but the field is required.
 
@@ -77,7 +77,7 @@ Add these three scripts to the root `package.json`. Use the `site:` prefix for t
   "scripts": {
     "ki:site:deploy": "cd site && bunx wrangler deploy",
     "ki:site:preview": "bun run ki:site:build && cd site && bunx wrangler dev",
-    "ki:site:clean": "rm -rf dist site/.wrangler"
+    "ki:site:clean": "rm -rf site/dist site/.wrangler"
   }
 }
 ```
@@ -100,7 +100,7 @@ For a **flat** layout (no `site/` subfolder, `wrangler.jsonc` at repo root):
 
 ## 4. Update `.gitignore`
 
-Two entries are required at the repo root's `.gitignore`:
+For a flat layout, add these entries to the repository `.gitignore`:
 
 ```gitignore
 dist/
@@ -109,9 +109,10 @@ dist/
 
 `dist/` is regenerated on every build; committing it causes conflicts and bloats history. `.wrangler/` holds wrangler's local cache and upload state.
 
-If using the `site/`-subfolder layout, also add:
+For the canonical `site/` workspace, use the workspace-relative entries instead:
 
 ```gitignore
+site/dist/
 site/.wrangler/
 ```
 

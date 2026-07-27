@@ -17,16 +17,16 @@ This skill owns the **deploy/serve delta for the site Worker**. The `dist/` it s
 
 The site is **one Cloudflare Worker that serves static assets**. The Worker has an `assets` block naming a directory of built files; `wrangler deploy` uploads them and wires the Worker. There is no server-side code for a pure static site — the assets are served directly at the edge.
 
-- **Workers + Static Assets**, deployed with `wrangler deploy`. **Never `wrangler pages deploy`** — Cloudflare steers new static sites to Workers + Static Assets (new features and optimizations focus on Workers; `wrangler pages` now nudges to `wrangler deploy`), and the the house sites were explicitly **migrated off Pages to Workers + Static Assets**. A `pages deploy` in any script is a finding.
+- **Workers + Static Assets**, deployed with `wrangler deploy`. **Never `wrangler pages deploy`** — Cloudflare steers new static sites to Workers + Static Assets (new features and optimizations focus on Workers; `wrangler pages` now nudges to `wrangler deploy`), and the house sites were explicitly **migrated off Pages to Workers + Static Assets**. A `pages deploy` in any script is a finding.
 - **One `wrangler.jsonc` per deployable.** The **site** Worker's config carries an `assets` block (and no `main`). This is the only config this standard governs.
-- The site root — and thus where its `wrangler.jsonc` lives — follows `ki-website`'s layout, which is a **monorepo** (engineering §0): the site is the **`site/` workspace**, so `wrangler.jsonc` lives at `site/wrangler.jsonc` and `dist/` sits at the repo root (so `assets.directory` is `../dist`, §3). This skill can serve any static `dist/`, so a one-off **flat** consumer (config at the repo root, `assets.directory: "./dist"`) is still valid hosting — but every house 11ty site is a monorepo, never flat.
+- The site root — and thus where its `wrangler.jsonc` lives — follows `ki-website`'s layout: the site is the **`site/` workspace**, so `wrangler.jsonc` and the generated `dist/` both live under `site/` and `assets.directory` is `"dist"` (§3). This skill can serve any static `dist/`, so a one-off **flat** consumer (config at the repo root, `assets.directory: "./dist"`) is still valid hosting.
 
 ## 2. The `dist/` seam
 
 The hosting layer and the build layer meet at exactly one place: the **`dist/` directory**.
 
 - `ki-website` **emits** a portable `dist/` (relative internal links, `assets/css/main.css`, sitemap/robots for a public site). This skill **serves** it by pointing `assets.directory` at it.
-- **`assets.directory` is relative to the `wrangler.jsonc` file**: `"./dist"` when the config is at the repo root (flat layout), `"../dist"` when the config is under `site/`. It must resolve to the build's actual output directory.
+- **`assets.directory` is relative to the `wrangler.jsonc` file**: `"./dist"` when the config is at the repo root and `"dist"` in the canonical `site/` workspace. A different layout may use another relative path, but it must resolve to the build's actual `dist/` output.
 - **The build runs before deploy.** `dist/` is gitignored and regenerated; deploy reads whatever the last build produced. A `ki:site:preview` script chains build → `wrangler dev` for a local check against the real Worker runtime.
 - Neither layer needs the other's internals — only the `dist/` path. That is what makes the split clean and the hosting skill reusable for any static `dist/`.
 
@@ -39,9 +39,9 @@ The hosting layer and the build layer meet at exactly one place: the **`dist/` d
   // <site> — Cloudflare Workers deployment (migrated off Pages to Workers + Static Assets).
   "name": "<site-name>",
   "compatibility_date": "<YYYY-MM-DD>",
-  // Eleventy builds to dist/ at the repo root; the Worker serves it directly.
-  // Path is relative to THIS file — "./dist" flat, "../dist" from a site/ subfolder.
-  "assets": { "directory": "../dist" },
+  // Eleventy builds dist/ beside this file; the Worker serves it directly.
+  // Path is relative to THIS file.
+  "assets": { "directory": "dist" },
   // Custom domains — canonical apex plus www (www → apex via a Cloudflare redirect rule).
   "routes": [
     { "pattern": "example.com", "custom_domain": true },
