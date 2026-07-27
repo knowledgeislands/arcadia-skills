@@ -202,7 +202,7 @@
         ['ki-feature-definitions', 'governance', 'Feature behavioural definitions.'],
         ['ki-handoffs', 'governance', 'Implementation-ready handoffs.'],
         ['ki-roadmap', 'governance', 'Thematic forward work.'],
-        ['ki-bootstrap', 'keystone', 'Installs governance, links declared skills, and vendors checkers.'],
+        ['ki-bootstrap', 'keystone', 'Guidance for CLI bootstrap, compatible harnesses, and explicit skill activation.'],
         ['ki-repo', 'keystone', 'Governs repository structure and settings, and provides human-led repository review.'],
         ['ki-skills', 'keystone', 'Quality standard for SKILL.md files and checker contract.'],
         ['ki-kb', 'knowledge', 'Knowledge-base shape.'],
@@ -221,7 +221,7 @@
         ['ki-self', 'local', 'Repository-local governance: AUDIT, CONFORM, EDUCATE, REFRESH, plus local diagnostic commands.'],
         ['local concerns', 'local', 'Ledger, focused audits, and repository-specific maintenance.'],
         ['checkers', 'mechanical', 'Audit, conform, and test mechanical arms.'],
-        ['.ki', 'mechanical', 'Vendored checkers and runners.'],
+        ['ki host', 'mechanical', 'Native repository rubric execution.'],
         ['mcp-claude-housekeeping', 'mechanical', 'Access-gated machine-state tools.'],
         ['hooks', 'mechanical', 'Runtime hook payloads.']
       ].map(([id, group, description]) => ({ id, group, description }))
@@ -246,7 +246,7 @@
         ['ki-self', 'local concerns', 'audits'],
         ['ki-self', 'ki-skills', 'promotes patterns into'],
         ['ki-skills', 'checkers', 'governs'],
-        ['checkers', '.ki', 'vendored into'],
+        ['checkers', 'ki host', 'hosted by'],
         ['ki-binding', 'hooks', 'binds runtime']
       ].map(([source, target, label]) => ({ source, target, label }))
       const byId = new Map(nodes.map((node) => [node.id, node]))

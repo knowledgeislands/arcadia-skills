@@ -85,7 +85,7 @@ digraph skills_map {
     label="Keystone"
     style="rounded,filled"
     fillcolor="#edf8f1"
-    bootstrap [fillcolor="#d9f0e2", label=< <b>ki-bootstrap</b><br/><font point-size="9">install · link · self-govern</font> >, tooltip="Keystone installer and self-governance bootstrap"]
+    bootstrap [fillcolor="#d9f0e2", label=< <b>ki-bootstrap</b><br/><font point-size="9">user setup · activation guidance</font> >, tooltip="Guidance for CLI bootstrap, harnesses, and skill activation"]
     repo [fillcolor="#d9f0e2", label=< <b>ki-repo</b><br/><font point-size="9">repository standard · review</font> >, tooltip="Repository structure, settings, .ki-config.toml, and human-led review"]
     skills [fillcolor="#d9f0e2", label=< <b>ki-skills</b><br/><font point-size="9">skill quality · checker contract</font> >]
   }
@@ -167,7 +167,7 @@ digraph skills_map {
     style="rounded,filled"
     fillcolor="#f7f9fb"
     checkers [fillcolor="#edf1f5", label=< <b>checkers</b><br/><font point-size="9">audit · conform · tests</font> >, shape=component]
-    meta [fillcolor="#edf1f5", label=< <b>.ki</b><br/><font point-size="9">vendored checkers and runners</font> >, shape=folder]
+    native_host [fillcolor="#edf1f5", label=< <b>ki host</b><br/><font point-size="9">native rubric execution</font> >, shape=component]
     mcp_housekeeping [fillcolor="#edf1f5", label=< <b>mcp-claude-housekeeping</b><br/><font point-size="9">access-gated machine tools</font> >, shape=component]
     hooks [fillcolor="#edf1f5", label=< <b>hooks</b><br/><font point-size="9">runtime payloads</font> >, shape=component]
   }
@@ -192,6 +192,6 @@ digraph skills_map {
   self -> concerns [xlabel="audits"]
   self -> skills [xlabel="promotes patterns into", style=dashed, ltail=cluster_local, lhead=cluster_keystone]
   skills -> checkers [xlabel="governs", style=dashed]
-  checkers -> meta [xlabel="vendored into", style=dashed]
+  checkers -> native_host [xlabel="hosted by", style=dashed]
   binding -> hooks [xlabel="binds runtime", style=dashed]
 }

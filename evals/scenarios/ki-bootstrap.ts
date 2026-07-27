@@ -1,53 +1,52 @@
 /**
- * Eval scenarios for the `ki-bootstrap` skill — the install keystone.
+ * Eval scenarios for the `ki-bootstrap` guidance skill.
  *
- * Design note: a capable model knows symlinks and gitignore generically, so testing that
- * shows "no difference". These scenarios target house-ARBITRARY specifics a baseline
- * cannot derive: the declared-coverage + repo/authoring baseline, the committed-artifacts
- * (script + gitignore line, never runtime payloads) rule, and why the global process set is small.
+ * These target house-specific scope and trust boundaries a baseline cannot derive:
+ * what first-time bootstrap installs, how harness installation differs from skill
+ * activation, and why repository operations never fall back to checkout-local runners.
  */
 import type { Scenario } from '../harness.ts'
 
 export const scenarios: Scenario[] = [
   {
     skill: 'ki-bootstrap',
-    id: 'boot-baseline',
-    prompt:
-      "When publishing a Knowledge Islands repo's project-local runtime skills, which skills are copied — and which two are always included even if the repo declares no coverage tables in its `.ki-config.toml`?",
+    id: 'boot-first-time-user',
+    prompt: 'What exactly does `ki bootstrap` establish for a first-time user, and what repository state does it deliberately leave alone?',
     assertions: [
-      { name: 'declared coverage from .ki-config tables', re: /declared coverage|\[ki-|coverage table|\.ki-config\.toml/i },
-      { name: 'repo + authoring baseline', re: /ki-repo[^.\n]{0,30}ki-authoring|repo[^.\n]{0,8}\+[^.\n]{0,8}authoring|authoring[^.\n]{0,8}\+[^.\n]{0,8}repo/i },
-      {
-        name: 'keystone never project-local',
-        re: /keystone[^.\n]{0,30}(never|not)[^.\n]{0,20}(project-local|copied)|global[^.\n]{0,20}only|never[^.\n]{0,20}project-local/i
-      }
+      { name: 'detects agent runtimes', re: /detect[^.\n]{0,30}(agent|runtime)/i },
+      { name: 'installs canonical harness', re: /(install|verified)[^.\n]{0,50}(canonical|ki-agentic-harness)/i },
+      { name: 'activates core user skills', re: /(core|five)[^.\n]{0,40}user skills|user skills[^.\n]{0,40}(core|five)/i },
+      { name: 'does not declare repository governance', re: /(does not|doesn't|never)[^.\n]{0,50}(\.ki-config|repository|repo)/i }
     ],
     rubric:
-      "House model: a repo's runtime skill directory mirrors its **declared coverage** — the `[ki-<skill>]` tables in its `.ki-config.toml` — **plus a baseline of `ki-repo` + `ki-authoring`**, always, so a greenfield repo with no tables can still reach repo's EDUCATE and Markdown/TOML style is always governed. The keystone (`ki-bootstrap`) itself is **never copied project-local** because the user installer provides it globally. A correct answer names declared-coverage-from-the-config plus the repo + authoring baseline."
+      'House contract: `ki bootstrap` detects supported local agent runtimes, creates the KI XDG configuration, installs the verified canonical `knowledgeislands/ki-agentic-harness`, and activates the five core user skills. It does not edit a repository or declare repository governance. A correct answer names both the user-environment work and the repository boundary.'
   },
   {
     skill: 'ki-bootstrap',
-    id: 'boot-committed-artifacts',
+    id: 'boot-activation-scopes',
     prompt:
-      'Our project-local runtime skill copies under `.claude/skills/` are gitignored. So what actually gets committed to make publication reproducible on a fresh clone, and why are the copies not committed?',
+      'After `ki harness install example/operations`, are its skills active automatically? Explain the user-scope and repository-scope commands and what each changes.',
     assertions: [
-      { name: 'ki:skills:copy:project script committed', re: /skills:copy:project/i },
-      { name: '.gitignore line committed', re: /\.gitignore/i },
-      { name: 'copies regenerated', re: /regenerat|gitignored|bootstrap/i }
+      { name: 'installation does not activate', re: /(does not|doesn't|not)[^.\n]{0,40}(activate|active)/i },
+      { name: 'user activation command', re: /ki skill user add/ },
+      { name: 'repository activation command', re: /ki skill repo add/ },
+      { name: 'repository declaration', re: /\.ki-config\.toml/ }
     ],
     rubric:
-      'House rule: normal runtime payloads are **regular-file copies, gitignored and regenerated**. The **committed artifacts are the `ki:skills:copy:project` package.json script and the `.gitignore` line** — never the generated copies themselves. A correct answer names the committed copy script and the gitignore entry, and explains that repository bootstrap reproduces the copies.'
+      "House contract: installing a compatible harness only makes its registered capabilities available. `ki skill user add <skill>` creates managed user-runtime links and records the selected provider. `ki skill repo add <skill>` updates one repository's `.ki-config.toml` and its managed repository-runtime links. Neither scope implies the other."
   },
   {
     skill: 'ki-bootstrap',
-    id: 'boot-why-global',
-    prompt: 'Why does `/harness/install` globally install only `ki-bootstrap` and the four process skills, while governance skills remain project-local?',
+    id: 'boot-native-operation-trust',
+    prompt:
+      'A repository declares a governance skill that is missing from the verified installed harness set, but it still has an old local runner and a nearby harness checkout. What should `ki repo audit` do?',
     assertions: [
-      { name: 'keystone and process skills', re: /ki-bootstrap|keystone/i },
-      { name: 'global description paid every turn', re: /every turn|standing (cost|description)|paid[^.\n]{0,20}(turn|everywhere)/i },
-      { name: 'others project-local, load where applicable', re: /project-local[^.\n]{0,40}(load|appl|only)|load only where/i }
+      { name: 'fail before operation', re: /(fail|stop|refuse)[^.\n]{0,50}(before|without)[^.\n]{0,30}(audit|operation|run)/i },
+      { name: 'installed harness authority', re: /(verified|installed)[^.\n]{0,40}harness/i },
+      { name: 'no local runner fallback', re: /(no|never|not)[^.\n]{0,50}(runner|wrapper|\.ki)/i },
+      { name: 'development checkout must be explicit', re: /ki dev on/ }
     ],
     rubric:
-      "House reasoning (a tokenomics decision): a global skill's `description` is paid on **every turn everywhere**, so the global set is **minimal** — the `ki-bootstrap` keystone plus the four lightweight process skills used across repositories. Governance skills remain **project-local**, loading only in repos that declare them. A correct answer ties the small global set to the every-turn description cost and states governance skills load only where they apply."
+      'House trust boundary: repository operations resolve declared capabilities only from verified installed compatible harnesses and fail before execution when resolution is incomplete. They never fall back to `.ki` wrappers, copied runners, or a nearby checkout. A contributor may select a validated checkout only through explicit `ki dev on <path>`.'
   }
 ]

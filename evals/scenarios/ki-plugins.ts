@@ -35,7 +35,7 @@ export const scenarios: Scenario[] = [
       { name: 'flags an unexpected .mcp.json', re: /\.mcp\.json|flag|warn/i }
     ],
     rubric:
-      "House rule: the plugin ships `skills/` and `agents/` ONLY (v1) — no `.mcp.json`. The KI MCP servers are host-local and do not run in Cowork's gVisor sandbox, so they are deferred, not projected. `audit-plugins.ts` WARNs if a `.mcp.json` appears in the plugin. A correct answer says skills+agents only, MCP deferred (sandbox reason), and that an `.mcp.json` would be flagged."
+      "House rule: the plugin ships `skills/` and `agents/` ONLY (v1) — no `.mcp.json`. The KI MCP servers are host-local and do not run in Cowork's gVisor sandbox, so they are deferred, not projected. The native `ki-plugins` audit WARNs if a `.mcp.json` appears in the plugin. A correct answer says skills+agents only, MCP deferred (sandbox reason), and that an `.mcp.json` would be flagged."
   },
   {
     skill: 'ki-plugins',
