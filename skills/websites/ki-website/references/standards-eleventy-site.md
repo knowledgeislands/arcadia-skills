@@ -102,7 +102,7 @@ The site-specific scripts (aggregate/scoped governance and direct code-tool chec
 
 - **`ki:site:dev`** — `concurrently` runs the Tailwind `--watch` (`ki:site:dev:css`) and the Eleventy `--serve --port 3000` (`ki:site:dev:serve`) in parallel, named `css`,`11ty`.
 - **`ki:site:build`** — `bun …/@11ty/eleventy/cmd.cjs --config=eleventy.config.ts` (the `eleventy.before` hook compiles Tailwind with `--minify`).
-- **`ki:site:clean`** — removes `dist/` (and `.wrangler/` where present). TypeScript checking runs inside `ki:engineering:audit`; the aggregate gate is `ki:audit`, so the site does not add parallel `types` or `verify` scripts.
+- **`ki:site:clean`** — removes `dist/` (and `.wrangler/` where present). TypeScript checking runs inside the registered `ki-engineering` rubric; `ki repo audit` is the aggregate gate, so the site does not add parallel `types` or `verify` scripts.
 
 All site scripts take the `site:` prefix — the site is always the `site/` workspace of a monorepo (§2).
 

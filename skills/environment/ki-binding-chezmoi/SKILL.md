@@ -51,7 +51,7 @@ EDUCATE scaffolds no standalone artifact. Use `ki repo educate --skill ki-bindin
 
 ### Mode REFRESH — re-anchor the render contract
 
-**Precondition:** REFRESH edits this skill's own canonical files, which exist only in `ki-agentic-harness`. Invoked from a repo where the skill is vendored, it stops here and names the harness as where to run it — or, for a pattern recurring across bases, routes it through `ki-kb`'s IMPROVE mode instead.
+**Precondition:** REFRESH edits this skill's own canonical files, which exist only in `ki-agentic-harness`. Invoked from an installed copy, it stops here and names the harness as where to run it — or, for a pattern recurring across bases, routes it through `ki-kb`'s IMPROVE mode instead.
 
 Re-anchor when the chezmoi render contract changes — the `mcp-servers-json` template shape, the `.chezmoidata` wiring, or the `chezmoi apply` behaviour — or when either composed sibling's contract moves. Read [the sources list](references/sources.md), confirm the standard still matches the render template and each surface's real config, propose a diff, bump the dates.
 
@@ -64,4 +64,4 @@ Re-anchor when the chezmoi render contract changes — the `mcp-servers-json` te
 ## Notes
 
 - **Why a separate skill, not a flag:** `ki-binding` is renderer-neutral by design — folding chezmoi into it would couple every surface audit to one renderer. The render path is a genuine delta over both siblings, so it composes them rather than forking their modes (`ADR-KI-HARNESS-SKILLS-004`).
-- **Not coverage-scoped everywhere:** this skill is only vendored where the chezmoi render path is actually in use; a plain (non-chezmoi) setup runs `ki-binding` alone and re-renders through whatever tool reads the canonical source.
+- **Not coverage-scoped everywhere:** this skill is installed only where the chezmoi render path is actually in use; a plain (non-chezmoi) setup runs `ki-binding` alone and re-renders through whatever tool reads the canonical source.

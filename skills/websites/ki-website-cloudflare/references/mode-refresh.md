@@ -2,7 +2,7 @@
 
 Refresh this skill's Cloudflare-facing facts and house convention.
 
-**Precondition:** run only against the canonical `ki-agentic-harness` source. A vendored or installed copy stops and names the harness as the editing home.
+**Precondition:** run only against the canonical `ki-agentic-harness` source. An installed copy stops and names the harness as the editing home.
 
 1. Read [the source list](sources.md), including its cadence, review dates, and open watch-items.
 2. Re-fetch each authoritative source and compare it with the [Cloudflare hosting standard](standards-cloudflare-hosting.md), structured catalogue, and [worked exemplars](exemplars.md). Recheck the Static Assets keys, compatibility-date guidance, Wrangler major version, and Pages-to-Workers guidance.

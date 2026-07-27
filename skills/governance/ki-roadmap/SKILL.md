@@ -57,7 +57,7 @@ Run `ki repo educate --skill ki-roadmap --repo <repo>` to render the catalogue's
 
 ### Mode REFRESH
 
-**Precondition:** REFRESH writes only the canonical skill files in `ki-agentic-harness`. If invoked from a repo where the skill is vendored, stop and redirect to that harness; route recurring base-specific pressure through the `ki-kb` IMPROVE mode.
+**Precondition:** REFRESH writes only the canonical skill files in `ki-agentic-harness`. If invoked from an installed copy, stop and redirect to that harness; route recurring base-specific pressure through the `ki-kb` IMPROVE mode.
 
 On the cadence in [the source list](references/sources.md), compare actual repository-roadmap usage with [the repository-roadmap standard](references/standards-repository-roadmaps.md), [the plan-format standard](references/standards-plan-format.md), and [the generated rubric](references/rubric.md). Revisit the horizon model, simple-to-thematic threshold, locator stability, projection usefulness, and plan quality bar. Update the source review dates and explain normative changes in the commit.
 

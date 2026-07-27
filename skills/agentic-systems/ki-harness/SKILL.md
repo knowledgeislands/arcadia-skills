@@ -38,7 +38,7 @@ Run `ki repo educate --skill ki-harness --repo <path>` to explain the source lay
 
 ### Mode REFRESH — re-anchor the source and installed contracts
 
-**Precondition:** REFRESH edits this skill's canonical files only in `ki-agentic-harness`. In a vendored or installed copy, stop and redirect to that source repository.
+**Precondition:** REFRESH edits this skill's canonical files only in `ki-agentic-harness`. In an installed copy, stop and redirect to that source repository.
 
 1. Read [the source list](references/sources.md) and its review cadence.
 2. Re-check the Agent Skills and agent-definition sources for changes affecting capability source shape.

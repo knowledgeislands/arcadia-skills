@@ -55,7 +55,7 @@ Run `ki repo educate --skill ki-dotfiles-chezmoi --repo <target>` to explain the
 
 ### Mode REFRESH — re-anchor the standard to its sources
 
-**Precondition:** REFRESH edits this skill's own canonical files, which exist only in `ki-agentic-harness`. Invoked from a repo where the skill is vendored, it stops here and names the harness as where to run it.
+**Precondition:** REFRESH edits this skill's own canonical files, which exist only in `ki-agentic-harness`. Invoked from an installed copy, it stops here and names the harness as where to run it.
 
 chezmoi's own documented behavior (naming semantics, `.chezmoiignore`, `run_onchange_` scripts, health-check commands) and the selected format editors' documented APIs are the authoritative tool-behavior layer; the house-convention layer on top of them (shell-loader pattern, the two app-mutated-config patterns, editor-selection and verification policy, the templating pattern) is this skill's own judgment and should be re-anchored as tools change and more repos are audited against it. Run on the declared cadence (see [the sources list](references/sources.md)), or when asked "is the chezmoi standard current".
 

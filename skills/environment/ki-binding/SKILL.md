@@ -51,7 +51,7 @@ EDUCATE scaffolds no standalone artifact — the single source (`mcp-servers.yam
 
 ### Mode REFRESH — re-anchor
 
-**Precondition:** REFRESH edits this skill's own canonical files, which exist only in `ki-agentic-harness`. Invoked from a repo where the skill is vendored, it stops here and names the harness as where to run it — or, for a pattern recurring across bases, routes it through `ki-kb`'s IMPROVE mode instead.
+**Precondition:** REFRESH edits this skill's own canonical files, which exist only in `ki-agentic-harness`. Invoked from an installed copy, it stops here and names the harness as where to run it — or, for a pattern recurring across bases, routes it through `ki-kb`'s IMPROVE mode instead.
 
 Re-anchor when a surface's config contract changes, a surface is added or removed, or the Cowork plugin contract changes. Read [the source list](references/sources.md), confirm the standard still matches each surface's real config, verify Cowork external edits against a disposable workspace, propose a diff, and update the review dates. The chezmoi render contract is refreshed by `ki-binding-chezmoi`; the cross-surface design record is refreshed by `ki-mcp`.
 
