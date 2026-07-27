@@ -1,7 +1,7 @@
 ---
 id: 'RTP-002'
 title: Make environment capabilities runtime-explicit
-status: acceptance
+status: done
 roadmap: runtime-portability/make-environment-capabilities-runtime-explicit
 blocks: —
 blocked-by: —
@@ -116,3 +116,11 @@ Environment capabilities now expose one clean runtime-explicit contract. Portabl
 ### Mini recap
 
 Runtime compatibility is capability metadata, not suffix inference. Portable policy and vendor evidence compose as independently selectable skills; repository declarations state the complete runtime coverage; activation intersects that intent with configured agents; and a missing vendor contract stays absent rather than being represented by an empty skill.
+
+## Done
+
+RTP-002 is complete after explicit acceptance. It leaves the fleet on the runtime-explicit capability matrix with no compatibility path retained.
+
+Residual concerns remain separate from this migration: `ki-website` needs its selected Claude-memory `MEMORY.md`, existing repository-policy findings remain with their owning repositories, and Codex housekeeping remains parked pending a supported safe contract.
+
+The intended follow-up is the separately queued fleet CI verification work; no additional runtime-portability implementation is required now.
