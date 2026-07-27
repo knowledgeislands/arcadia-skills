@@ -1,40 +1,39 @@
-import type { AuditOutcome } from '../../shared/rubric.ts'
-import type { McpRubricContext } from '../contexts/mcp.ts'
-import { outcomes } from './common.ts'
+import type { AuditOutcome, RubricFamily, RubricItem } from '../../shared/rubric.ts'
+import type { McpLayoutContext, McpRubricContext } from '../contexts/mcp.ts'
 
-export const LAY_1 = {
+const STANDARD = 'standards-mcp-servers.md#1-project-layout'
+
+const LAY_1: RubricItem<McpLayoutContext> = {
   code: 'LAY-1',
   title: 'MCP source layout',
   description: 'src/ contains config/, mcp-server/, tools/, main/, and utils/; an optional cli/ contains cli.ts and index.ts.',
-  sources: ['standards.md#canonical-shape'],
+  sources: [STANDARD],
   mechanical: {
-    level: 'FAIL' as const,
+    level: 'FAIL',
     audit: {
-      phase: 'INSPECT' as const,
-      run: (context: McpRubricContext) => {
-        const required = ['config', 'mcp-server', 'tools', 'main', 'utils'].map(
-          (directory) =>
-            ({
-              status: context.isDir('src', directory) ? 'PASS' : 'VIOLATION',
-              message: context.isDir('src', directory)
-                ? `Required directory is present: src/${directory}/.`
-                : `Required directory is missing: src/${directory}/.`,
-              subject: `src/${directory}`
-            }) as AuditOutcome
-        )
-        const cli = context.isDir('src', 'cli')
-          ? ['cli.ts', 'index.ts'].map(
-              (file) =>
-                ({
-                  status: context.exists('src', 'cli', file) ? 'PASS' : 'VIOLATION',
-                  message: context.exists('src', 'cli', file)
-                    ? `Required CLI file is present: src/cli/${file}.`
-                    : `Required CLI file is missing: src/cli/${file}.`,
-                  subject: `src/cli/${file}`
-                }) as AuditOutcome
-            )
-          : []
-        return outcomes([...required, ...cli])
+      phase: 'INSPECT',
+      run: (context) => {
+        const required: AuditOutcome[] = context.requiredDirectories.map(({ path, state }) => ({
+          status: state === 'directory' ? 'PASS' : 'VIOLATION',
+          message:
+            state === 'directory'
+              ? `Required directory is present: ${path}/.`
+              : state === 'unsafe'
+                ? `Required path is not a regular directory: ${path}/.`
+                : `Required directory is missing: ${path}/.`,
+          subject: path
+        }))
+        if (context.cli.state === 'unsafe')
+          required.push({ status: 'VIOLATION', message: 'Optional src/cli/ is not a regular directory.', subject: 'src/cli' })
+        if (context.cli.state === 'directory')
+          required.push(
+            ...context.cli.files.map(({ path, state }) => ({
+              status: state === 'file' ? ('PASS' as const) : ('VIOLATION' as const),
+              message: state === 'file' ? `Required CLI file is present: ${path}.` : `Required CLI file is missing or unsafe: ${path}.`,
+              subject: path
+            }))
+          )
+        return required
       }
     }
   },
@@ -42,46 +41,13 @@ export const LAY_1 = {
     prompt:
       'Review tools/ for thin validation-and-envelope shells, main/ for concern-grouped implementation, no console output in main/utils, and cli/ as a shared-main human shell rather than a second implementation.'
   }
-} as const
+}
 
-export const DOC_1 = {
-  code: 'DOC-1',
-  title: 'MCP root documents',
-  description: 'ROADMAP.md is present; CONTRIBUTING.md and SECURITY.md are present; CHANGELOG.md is present and non-empty.',
-  sources: ['standards.md#documentation'],
-  mechanical: {
-    level: 'FAIL' as const,
-    overrideLevels: ['WARN'] as const,
-    audit: {
-      phase: 'INSPECT' as const,
-      run: (context: McpRubricContext) => {
-        const documents: AuditOutcome[] = context.exists('ROADMAP.md')
-          ? [{ status: 'PASS', message: 'MCP roadmap is present.', subject: 'ROADMAP.md' }]
-          : [{ status: 'VIOLATION', level: 'WARN', message: 'MCP roadmap is absent.', subject: 'ROADMAP.md' }]
-        for (const file of ['CONTRIBUTING.md', 'SECURITY.md'])
-          documents.push({
-            status: context.exists(file) ? 'PASS' : 'VIOLATION',
-            message: context.exists(file) ? 'Required MCP root document is present.' : 'Required MCP root document is missing.',
-            subject: file
-          })
-        const changelog = context.read('CHANGELOG.md').trim()
-        documents.push({
-          status: changelog ? 'PASS' : 'VIOLATION',
-          message: changelog
-            ? 'Release history is present and non-empty.'
-            : context.exists('CHANGELOG.md')
-              ? 'Release history is an empty stub; add a release entry or remove it.'
-              : 'Release history is missing.',
-          subject: 'CHANGELOG.md'
-        })
-        return outcomes(documents)
-      }
-    }
-  },
-  judgment: {
-    prompt: 'Review CLAUDE.md for drift against the code and README setup documentation for current client and configuration instructions.'
-  }
-} as const
-export const LAYOUT = [LAY_1, DOC_1] as const
-export const LAY = [LAY_1] as const
-export const DOC = [DOC_1] as const
+export const LAY: RubricFamily<McpRubricContext, McpLayoutContext> = {
+  code: 'LAY',
+  title: 'Source layout',
+  description: 'The repository separates MCP wiring, tool shells, reusable implementation, configuration, and shared utilities.',
+  standard: STANDARD,
+  selectContext: (context) => context.layout,
+  items: [LAY_1]
+}

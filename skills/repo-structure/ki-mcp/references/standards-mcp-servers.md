@@ -4,7 +4,7 @@ The canonical shape shared by every stdio MCP server in the `knowledgeislands/` 
 
 ## Applicability
 
-The standard applies when a repository either declares `[ki-mcp]` in `.ki-config.toml` or carries the structural marker `src/mcp-server/`. Neither signal means the standard is not applicable and the checker reports one `NA`; either signal activates the complete audit. A declaration with missing structure remains an applicable, failing MCP repository, and MCP structure without a declaration remains applicable and is audited for the missing marker.
+The standard applies when a repository either declares `[ki-mcp]` in `.ki-config.toml` or carries the structural marker `src/mcp-server/`. Neither signal means the standard is not applicable and the hosted audit reports one `NA`; either signal activates the complete audit. A declaration with missing structure remains an applicable, failing MCP repository, and MCP structure without a declaration remains applicable and is audited for the missing marker.
 
 ## Contents
 
@@ -115,17 +115,17 @@ Levels nest `read ⊂ write ⊂ destructive`; env `MCP_<APP>_ACCESS_LEVEL` (defa
 
 ## 7. Bun vs Node
 
-The Bun-install / Node-run split, the **`bun test` trap**, the `process.loadEnvFile()` parity call, and `NODE_ENV`-only-in-dev are the **common engineering standard**, owned by `ki-engineering` (its [standards.md](../../../foundations/ki-engineering/references/standards.md) §3). Run `ki:engineering:audit` for this layer — it is not re-checked here. The MCP-specific consequence: `ki:server:mcp:dev` / `:inspect` set `NODE_ENV=development`, so production ignores `.env.*` and config must come from the client's `env` block.
+The Bun-install / Node-run split, the **`bun test` trap**, the `process.loadEnvFile()` parity call, and `NODE_ENV`-only-in-dev are the **common engineering standard**, owned by `ki-engineering`. Run `ki repo audit --skill ki-engineering --repo <repo>` for this layer—it is not re-checked here. The MCP-specific consequence: `ki:server:mcp:dev` / `:inspect` set `NODE_ENV=development`, so production ignores `.env.*` and config must come from the client's `env` block.
 
 ## 8. package.json
 
-`type` / `packageManager` / `engines` / `files`, aggregate/scoped audit wiring, lifecycle scripts, and the `build`/cli-chmod rule are the **common engineering standard** (`ki-engineering`) — copy them from a healthy sibling and let `ki:engineering:audit` check them; not re-checked here. This section is the **MCP delta** on top:
+`type` / `packageManager` / `engines` / `files`, aggregate/scoped audit wiring, lifecycle scripts, and the `build`/cli-chmod rule are the **common engineering standard** (`ki-engineering`)—copy them from a healthy sibling and let its hosted audit check them; they are not re-checked here. This section is the **MCP delta** on top:
 
 - **`main` / `bin`** — `"main": "dist/mcp-server/index.js"`; `"bin": { "mcp-<name>": "dist/mcp-server/index.js" }`, plus a second entry for a CLI (`"mcp-<name>-<verb>": "dist/cli/cli.js"`) or auth server (`"mcp-<name>-auth"`) where present.
 - **`exports`** — always `"."` (→ `dist/mcp-server`), `"./config"`, and `"./package.json"`; plus one entry per reusable `main/<concern>`.
 - **`ki:server:mcp:*` scripts** — `ki:server:mcp:dev` / `ki:server:mcp:inspect` (both `NODE_ENV=development bun …`) / `ki:server:mcp:start` (`bun run build && node dist/mcp-server/index.js`); OAuth repos with an `src/auth-server/` add the `ki:server:auth:*` pair (`ki:server:auth:dev` / `ki:server:auth:start`), and a repo with a CLI/smoke harness adds `ki:test:smoke`.
-- **`ki:test:record` / `ki:test:replay` (record/replay harness).** A repo with mcporter integration recordings ships the pair together — `ki:test:record` captures a live run into `fixtures/recordings/`, `ki:test:replay` runs against the committed fixture. Defining one without the other is drift (checked by the native MCP rubric).
-- **CI — the smoke delta.** The common CI shape (`jdx/mise-action` + aggregate `bun run ki:audit` + runner-neutral `bun run test`) is `ki-engineering`'s. An MCP repo with a smoke harness also includes `bun run ki:test:smoke` in `.github/workflows/ci.yml` — the MCP delta checked by the native MCP rubric.
+- **`ki:test:record` / `ki:test:replay` (record/replay harness).** A repo with mcporter integration recordings ships the pair together — `ki:test:record` captures a live run into `fixtures/recordings/`, `ki:test:replay` runs against the committed fixture. Defining one without the other is drift (checked by the hosted MCP rubric).
+- **CI — the smoke delta.** The common CI shape (`jdx/mise-action` + direct `ki repo audit` + runner-neutral `bun run test`) is `ki-engineering`'s. An MCP repo with a smoke harness also includes `bun run ki:test:smoke` in `.github/workflows/ci.yml` — the MCP delta checked by the hosted MCP rubric. The hosted audit verifies this workflow wiring and reports the explicit smoke command; it does not launch repository scripts.
 - **Typed client — `ki:generate:client` script.** Every repo ships a `ki:generate:client` script that emits a typed TypeScript client via `mcporter emit-ts <server-name> --mode client --out src/generated/client.ts --types-out src/generated/types.d.ts`. The emitted `src/generated/client.ts` is committed (it is the deliverable, not build output); it is excluded from vitest coverage. Run `bun run ki:generate:client` explicitly when refreshing it: the script is application code, not a host-owned `ki repo conform` repair. The `<server-name>` must match a registered mcporter instance (`mcporter list`).
 
 ## 9. tsconfig / vitest / biome

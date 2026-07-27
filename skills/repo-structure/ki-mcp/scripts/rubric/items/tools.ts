@@ -1,8 +1,8 @@
-import { readdirSync, readFileSync } from 'node:fs'
-import { join } from 'node:path'
-import type { AuditOutcome } from '../../shared/rubric.ts'
-import type { McpRubricContext } from '../contexts/mcp.ts'
-import { outcomes } from './common.ts'
+import type { AuditOutcome, RubricFamily, RubricItem } from '../../shared/rubric.ts'
+import type { McpRubricContext, McpToolsContext } from '../contexts/mcp.ts'
+
+const STANDARD = 'standards-mcp-servers.md#3-tool-naming'
+const RESULT_STANDARD = 'standards-mcp-servers.md#12-spec-conformance-tool-results-errors--metadata'
 
 const registrations = (source: string): string[] => {
   const callers = new Set(['registerTool'])
@@ -11,20 +11,20 @@ const registrations = (source: string): string[] => {
   return [...source.matchAll(expression)].map((match) => match[1] as string)
 }
 
-export const TOOL_1 = {
+const TOOL_1: RubricItem<McpToolsContext> = {
   code: 'TOOL-1',
   title: 'MCP tool surface',
   description:
     'Registered tool names use snake-case app/resource/action forms; structured output declares outputSchema; and group registration order is stable.',
-  sources: ['standards.md#tool-naming', 'standards.md#tool-results'],
+  sources: [STANDARD, RESULT_STANDARD],
   mechanical: {
-    level: 'WARN' as const,
+    level: 'WARN',
     audit: {
-      phase: 'INSPECT' as const,
-      run: (context: McpRubricContext) => {
-        const names = context.toolFiles.flatMap((file) => registrations(readFileSync(file, 'utf8')))
+      phase: 'INSPECT',
+      run: (context) => {
+        const names = context.files.flatMap((file) => registrations(file.content))
         const checks: AuditOutcome[] = []
-        if (!names.length)
+        if (names.length === 0)
           checks.push({ status: 'VIOLATION', message: 'No registerTool(...) calls found; verify tool registration.', subject: 'src/tools' })
         else {
           const invalid = names.filter((name) => !/^[a-z0-9]+(_[a-z0-9]+){1,}$/.test(name))
@@ -34,14 +34,15 @@ export const TOOL_1 = {
             subject: 'src/tools'
           })
           checks.push({
-            status: invalid.length ? 'VIOLATION' : 'PASS',
-            message: invalid.length
-              ? `Names not matching the documented form: ${invalid.join(', ')}.`
-              : 'All tool names use the documented form.',
+            status: invalid.length > 0 ? 'VIOLATION' : 'PASS',
+            message:
+              invalid.length > 0
+                ? `Names not matching the documented form: ${invalid.join(', ')}.`
+                : 'All tool names use the documented form.',
             subject: 'src/tools'
           })
         }
-        const source = context.toolFiles.map((file) => readFileSync(file, 'utf8')).join('\n')
+        const source = context.files.map((file) => file.content).join('\n')
         const structured = /\bstructuredContent\b/.test(source)
         const json = /\bjsonResult\b/.test(source)
         const schema = /\boutputSchema\b/.test(source)
@@ -55,27 +56,19 @@ export const TOOL_1 = {
           })
         if (json && !schema)
           checks.push({ status: 'VIOLATION', message: 'Tools use jsonResult but declare no outputSchema.', subject: 'src/tools' })
-        if (context.isDir('src', 'tools'))
-          for (const entry of readdirSync(join(context.root, 'src', 'tools'), { withFileTypes: true })) {
-            const file = join(context.root, 'src', 'tools', entry.name, 'index.ts')
-            if (!entry.isDirectory() || !context.exists('src', 'tools', entry.name, 'index.ts')) continue
-            const group = [...readFileSync(file, 'utf8').matchAll(/server\.registerTool\(\s*['"]([^'"]+)['"]/g)].map(
-              (match) => match[1] as string
-            )
-            if (group.length > 1) {
-              const ascending = [...group].sort()
-              const descending = [...ascending].reverse()
-              checks.push({
-                status:
-                  JSON.stringify(group) === JSON.stringify(ascending) || JSON.stringify(group) === JSON.stringify(descending)
-                    ? 'PASS'
-                    : 'VIOLATION',
-                message: `Tool registration order is ${JSON.stringify(group) === JSON.stringify(ascending) || JSON.stringify(group) === JSON.stringify(descending) ? 'deterministic' : 'not alphabetical; verify intentional stability'} (${group.join(', ')}).`,
-                subject: `src/tools/${entry.name}/index.ts`
-              })
-            }
-          }
-        return outcomes(checks)
+        for (const file of context.files.filter((candidate) => /^src\/tools\/[^/]+\/index\.ts$/.test(candidate.path))) {
+          const group = [...file.content.matchAll(/server\.registerTool\(\s*['"]([^'"]+)['"]/g)].map((match) => match[1] as string)
+          if (group.length <= 1) continue
+          const ascending = [...group].sort()
+          const descending = [...ascending].reverse()
+          const stable = JSON.stringify(group) === JSON.stringify(ascending) || JSON.stringify(group) === JSON.stringify(descending)
+          checks.push({
+            status: stable ? 'PASS' : 'VIOLATION',
+            message: `Tool registration order is ${stable ? 'deterministic' : 'not alphabetical; verify intentional stability'} (${group.join(', ')}).`,
+            subject: file.path
+          })
+        }
+        return checks
       }
     }
   },
@@ -83,6 +76,13 @@ export const TOOL_1 = {
     prompt:
       'Review plural/singular resource choices, CLI mirroring and README catalogues; confirm the annotation-driven access gate, annotation presets, dry-run defaults, read default, audit/error envelopes, path and subprocess hardening, bounded schemas, error aggregation, output sanitisation, and the applicable OAuth security requirements. Optional metadata remains opt-in.'
   }
-} as const
-export const TOOLS = [TOOL_1] as const
-export const TOOL = [TOOL_1] as const
+}
+
+export const TOOL: RubricFamily<McpRubricContext, McpToolsContext> = {
+  code: 'TOOL',
+  title: 'Tool surface',
+  description: 'Tool names, result envelopes, schemas, and registration order form a stable MCP surface.',
+  standard: STANDARD,
+  selectContext: (context) => context.tools,
+  items: [TOOL_1]
+}

@@ -1,6 +1,6 @@
-# Controlling claude.ai MCP connectors
+# claude.ai MCP connector control standard
 
-How MCP connectors added through **claude.ai** are governed — the levers, where each one persists, and how they interact with Claude Code. This is the claude.ai leg of the per-surface enablement design in [cross-surface-enablement.md](cross-surface-enablement.md); it settles that record's "manual-only" verdict for this surface.
+How MCP connectors added through **claude.ai** are governed—the levers, where each one persists, and how they interact with Claude Code. This is the claude.ai leg of the [cross-surface enablement standard](standards-cross-surface-enablement.md); it settles that standard's manual-only verdict for this surface.
 
 ## The one thing to know first
 
