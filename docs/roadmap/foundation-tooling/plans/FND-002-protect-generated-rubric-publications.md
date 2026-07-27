@@ -18,7 +18,7 @@ Make `ki` the sole renderer for structured rubrics. TypeScript catalogues remain
 
 ## Steps
 
-1. Agree the narrow host-injected publication capability and its failure semantics: repository containment, catalogue validation, missing/stale publication, invalid import, symlink refusal, and deterministic rendered bytes. Add the reciprocal `tools-ki` roadmap item and governed plan before implementation.
+1. ✓ Agree the narrow host-injected publication capability and its failure semantics: repository containment, catalogue validation, missing/stale publication, invalid import, symlink refusal, and deterministic rendered bytes. Added the reciprocal [CLI-002](https://github.com/knowledgeislands/tools-ki/blob/main/docs/roadmap/cli/plans/CLI-002-host-generated-rubric-publication-capability.md) plan before implementation.
 2. In `tools-ki`, route standalone and repository publication preparation through one validated renderer and guarded transaction path without weakening installed-harness validation.
 3. Extend the rubric context contract so `ki-skills` receives only rendered-publication evidence and can propose derived writes; do not put criterion identity or automatic findings in the host.
 4. Add `KI-CHECKER-6`: every structured catalogue has an exact derived publication; missing or differing bytes are FAIL drift and CONFORM schedules a DERIVED write. Exempt skills without structured catalogues.
@@ -38,7 +38,7 @@ Make `ki` the sole renderer for structured rubrics. TypeScript catalogues remain
 
 ## Dependencies / blocks
 
-The host-injected capability and reciprocal `tools-ki` plan are required before implementation. Existing renderer and transaction mechanisms are prerequisites, not blockers. Source implementation may use a local development-linked CLI; no released CLI is required.
+The host-injected capability is specified in reciprocal [CLI-002](https://github.com/knowledgeislands/tools-ki/blob/main/docs/roadmap/cli/plans/CLI-002-host-generated-rubric-publication-capability.md), which blocks this plan's `ki-skills` context and `KI-CHECKER-6` implementation until its host contract is delivered. Existing renderer and transaction mechanisms are prerequisites, not blockers. Source implementation may use a local development-linked CLI; no released CLI is required.
 
 ## Delegation
 
