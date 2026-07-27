@@ -27,7 +27,7 @@ Working handoff files are temporary transfer material, not a historical archive.
 ## Steps
 
 1. Amend the shared roadmap and repository-working-area contracts so an open plan with `handoff: true` may link to any honest horizon, while `ready`, execution, acceptance, and done remain restricted to Blocking or Next. Require transferred detail to name its origin and disposition, and remove working handoff copies once adopted, declined, superseded, or durably materialised.
-2. Update the `ki-roadmap` catalogue, contexts, tests, generated rubric publication, and `ki-plan` lifecycle wording for the handoff-plan exception; verify that ordinary non-near plans still fail.
+2. Add a judgment-led `ki-next` handoff-triage path that presents each incoming file for adopt, park, clarify, decline, or supersede; materialises adopted work at its honest horizon without promoting it; records a review trigger for parked work; and removes resolved inbox material. Update the `ki-roadmap` catalogue, contexts, tests, generated rubric publication, and `ki-plan` lifecycle wording for the handoff-plan exception; verify that ordinary non-near plans still fail.
 3. Reconcile the harness inbox: remove consumed or superseded CLI/package/KAF material, and retain KBEP/KBIP detail only until matching KI Specifications items and open handoff plans are committed.
 4. Reconcile KI Specifications by establishing recipient-owned KBEP and KBIP roadmap items and open handoff plans, then regenerate and audit its portfolio.
 5. Reconcile `tools-ki` and the Website: remove the consumed CLI-004 inbox item; separate tools-owned release completion from Website-owned redirect work; materialise the redirect in the Website at its honest dependency horizon; migrate the Website roadmap capability and retire its obsolete generated index; route any remaining guide-documentation changes to their receiving repositories.
@@ -36,7 +36,7 @@ Working handoff files are temporary transfer material, not a historical archive.
 
 ## Files touched
 
-- Harness: `skills/governance/ki-roadmap/`, `skills/process/ki-plan/`, `skills/keystone/ki-repo/`, roadmap files, and `+/_HANDOFFS/`
+- Harness: `skills/governance/ki-roadmap/`, `skills/process/ki-plan/`, `skills/process/ki-next/`, `skills/keystone/ki-repo/`, roadmap files, and `+/_HANDOFFS/`
 - KI Specifications: `.ki-config.toml`, `ROADMAP.md`, and `docs/roadmap/`
 - `tools-ki`: CLI roadmap/plan files and working handoffs
 - KI Website: `.ki-config.toml`, roadmap/plan files, and retired generated roadmap index
@@ -49,7 +49,8 @@ Working handoff files are temporary transfer material, not a historical archive.
 3. `ki repo audit --skill ki-kb-streams` passes in Arcadia Principal.
 4. Catalogue tests prove that only an open `handoff: true` plan may remain outside Blocking or Next and that it cannot transition to ready or execute there.
 5. Every active working handoff has an unresolved receiving decision or named review trigger; every adopted or superseded transfer has left the working area.
-6. Every repository is clean after its own explicit-path commit, with pre-existing unpushed commits preserved.
+6. `ki-next` documents and tests the reusable adopt, park, clarify, decline, and supersede workflow without silently prioritising adopted work.
+7. Every repository is clean after its own explicit-path commit, with pre-existing unpushed commits preserved.
 
 ## Dependencies / blocks
 
