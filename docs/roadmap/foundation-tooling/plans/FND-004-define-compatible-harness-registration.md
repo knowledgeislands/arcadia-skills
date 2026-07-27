@@ -198,11 +198,11 @@ FND-004 delivers the compatible-harness registration boundary, the native govern
 
 The canonical harness now publishes complete `RubricFamily` modules and `SkillRubricDefinition` session entrypoints consumed directly by `tools-ki`. The in-scope skill tree uses the accepted domain taxonomy, `ki-roadmap` is the sole roadmap-governance capability, and every reviewed reference set and public script surface follows the closed authoring contract.
 
-CI, pre-commit, active user and developer guides, process skills, evals, hooks, subagent guidance, and skill standards now invoke native `ki` operations. Historical decision evidence, the dedicated `.ki` retirement guide, and explicit legacy-detection rules remain intentionally.
+CI, pre-commit, active user and developer guides, process skills, evals, hooks, subagent guidance, and skill standards now invoke native `ki` operations. The retirement guide records the clean-end-state capability renames needed by existing repositories. Historical decision evidence and explicit legacy-detection rules remain intentionally.
 
 ### Verification
 
-Verified at harness revision `fb861597cbb8d20eeba4210ffe5cf63d52ef8996` with the local `tools-ki` CLI:
+The implementation was verified at harness revision `fb861597cbb8d20eeba4210ffe5cf63d52ef8996` with the local `tools-ki` CLI:
 
 - `bun run test` — 173 passed, 0 failed.
 - `bunx tsc --noEmit` — clean.
@@ -214,6 +214,8 @@ Verified at harness revision `fb861597cbb8d20eeba4210ffe5cf63d52ef8996` with the
 - `ki repo audit --skill ki-roadmap` and `ki repo conform --skill ki-roadmap --dry-run` — zero FAIL and zero WARN.
 - `ki repo educate` — all 12 declared executions resolved and rendered.
 - Aggregate `ki repo audit` and `ki repo conform --dry-run` — all declared executions resolved; no proposed writes or commands; only the excluded findings recorded below remain.
+
+The subsequent guidance-only commits `ad99d04b` and `9ce317d2` aligned the documented native command grammar and recorded the rollout capability renames. Their focused Prettier, markdownlint, `ki-authoring`, and `ki-repo` audits passed without changing the verified runtime.
 
 ### Outstanding concerns
 
