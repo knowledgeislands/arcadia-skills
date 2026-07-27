@@ -24,7 +24,15 @@ Audits, writes, and conforms **Claude Code subagent definitions** against a chec
 
 ### `ki-binding`
 
-Governs the **cross-surface binding** — enabling the KI MCP servers, skills, and agents consistently across the surfaces that run them (Claude Code, Desktop, mcporter, Cowork; claude.ai by convention) from the single renderer-neutral `mcp-servers.yaml` source (canonically `~/.config/ki/mcp-servers.yaml`), whose per-server `clients:` field is the targeting lever. Reads the source directly — requiring no particular renderer installed — verifies each surface agrees with it, and composes `ki-bootstrap` for the project-local skill half. The write path for the file-editable surfaces is a renderer (the chezmoi render path lives in `ki-binding-chezmoi`), never a hand-written per-surface config, which drifts; Cowork is gated on an external-edit verification before its `enabledPlugins` are wired. Implements the `ki-mcp` design record on cross-surface enablement.
+Governs the portable MCP binding contract: the single renderer-neutral `mcp-servers.yaml` source, its schema and `clients:` targeting, and the vendor-neutral mcporter projection. Runtime-native configuration belongs to `ki-binding-claude` and `ki-binding-codex`; the chezmoi render path remains a separate concern.
+
+### `ki-binding-claude`
+
+Composes `ki-binding` with the Claude-specific delta: Claude Code and Desktop JSON surfaces, the claude.ai convention, Cowork settings, and generation of the Cowork plugin marketplace projection. It owns the safe Claude writer and is activated only for repositories supporting Claude Code.
+
+### `ki-binding-codex`
+
+Composes `ki-binding` with Codex's native `[mcp_servers]` TOML surface. Its conformer uses `codex mcp add` as the safe merge boundary rather than rewriting the live application configuration, and it is activated only for repositories supporting Codex.
 
 ### `ki-binding-chezmoi`
 
@@ -34,13 +42,21 @@ The **chezmoi render path** for the cross-surface binding — a composition skil
 
 Codifies, audits, and conforms the **chezmoi dotfiles-management standard** — naming-prefix semantics (`dot_`/`executable_`/`private_`/`.tmpl`), edit-source-not-target discipline, shell-loader layering, the bin/ dispatcher pattern, app-mutated-config handling (surgical patch, native fragment binding, or full-template reverse-merge), single-source-to-multi-target config templating, CLAUDE.md/agent-instruction layering, and chezmoi-specific repo-shape and OS gotchas. It governs any git repo that is a chezmoi source-state directory (detected via `.chezmoiroot`/`.chezmoi.toml.tmpl`/`.chezmoidata`/root-level `dot_*` files), additive to `ki-repo`'s generic file-presence checks rather than restating them. Derived from a single case-study repo (n=1) — its judgment criteria stay provisional until more repos are audited against it. **Composes on** `ki-authoring`.
 
-### `ki-housekeeping`
+### `ki-housekeeping-claude`
 
-Governs the hygiene of accumulated **Claude state** across all its areas — memory, plus sessions, artifacts, and storage that pile up across Claude Desktop / Cowork, Claude Code (`~/.claude/`), and VSCode. It pairs with the `mcp-claude-housekeeping` server on one principle: the skill is the standard and the judgment; the server is the tools (`ADR-KI-HARNESS-SKILLS-007`). **Memory** it governs fully in-skill — the per-project `memory/*.md` files and `MEMORY.md` index Headroom writes at `~/.claude/projects/<slug>/memory/`; every other area is audited and cleaned through the server's codified audits and access-gated tools. Distinct from `ki-kb`'s own memory cascade (a KB's own root `Admin/MEMORY.md`); off-ramps token-cost measurement to `ki-tokenomics`.
+Governs the hygiene of accumulated **Claude state** across all its areas — memory, sessions, artifacts, and storage that pile up across Claude Desktop / Cowork, Claude Code (`~/.claude/`), and VSCode. It pairs with the `mcp-claude-housekeeping` server on one principle: the skill is the standard and judgment; the server is the tools (`ADR-KI-HARNESS-SKILLS-007`). Its in-skill memory audit is limited to the selected repository's physical auto-memory directory and never enumerates another repository's state. There is no empty Codex counterpart: one should be created only when Codex exposes a supported selected-repository identity and safe housekeeping contract.
 
 ### `ki-tokenomics`
 
-Audits, conforms, and tunes the **tokenomics** of a Claude Code environment — the standing context surface paid on every turn, as **composed** across the user-wide `~/.claude` and project-local layers and any base, plus the runtime levers (caching, model tier, compaction, sub-agent fan-out, tool-result verbosity). Attributes cost per layer, holds it to overridable budgets (a `[ki-tokenomics]` table, read validate-down), and checks context-compression tooling — **Headroom**, an extensible registry — is set up optimally. **Composes** on the artifact skills whose surfaces it measures (`ki-mcp` for the tool surface, `ki-skills` for the description surface, `ki-kb` for a base's loaded surface) and defers the volatile reference numbers to the `claude-api` skill.
+Owns portable agent-context tokenomics: standing-surface attribution, guide-rail budgets, the portable model-purpose taxonomy, and the `[ki-tokenomics]` configuration table. It does not inspect a vendor's private runtime state; runtime evidence comes from the matching adapter.
+
+### `ki-tokenomics-claude`
+
+Composes `ki-tokenomics` with bounded Claude Code evidence for the selected repository and user layer: instructions, settings, installed skills, MCP configuration, auto-memory, Headroom wiring, and effective versus default model where documented.
+
+### `ki-tokenomics-codex`
+
+Composes `ki-tokenomics` with documented Codex evidence for the selected repository and bounded user configuration: instructions, skills, MCP declarations, memory, and subagent surfaces. It reports structure without reading or exposing secrets and makes no claim about unavailable billing or transcript metrics.
 
 ## Governance
 

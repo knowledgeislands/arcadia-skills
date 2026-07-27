@@ -23,14 +23,14 @@ Its universal modes apply at local scale:
 - **CONFORM** runs AUDIT first, then proposes and—only after confirmation—applies the appropriate source-state remediation.
 - **REFRESH** retires resolved concerns and promotes either a recurring cross-repository pattern into a named Knowledge Islands skill or multi-step change work into the repository roadmap.
 
-`ki-housekeeping` recognises this boundary: it governs accumulated machine state, while `ki-self` governs the repository-local concerns that sit beside it. The [single-page skills illustration](../../diagrams/skills-map.svg) shows `ki-self` outside the shared harness cluster, with its universal modes and any local commands, plus a promotion edge back to a named shared skill. Its [interactive companion](../../diagrams/skills-map.html) adds purpose tooltips and direct-relationship tracing without changing the canonical SVG map.
+`ki-housekeeping-claude` recognises this boundary: it governs accumulated Claude machine state, while `ki-self` governs the repository-local concerns that sit beside it. The [single-page skills illustration](../../diagrams/skills-map.svg) shows `ki-self` outside the shared harness cluster, with its universal modes and any local commands, plus a promotion edge back to a named shared skill. Its [interactive companion](../../diagrams/skills-map.html) adds purpose tooltips and direct-relationship tracing without changing the canonical SVG map.
 
 ## The skill domains
 
 The source tree groups capabilities into eight semantic domains:
 
 1. **Agentic systems** — `ki-harness`, `ki-mcp`, `ki-plugins`, and `ki-subagents`: the containers and capability types that equip an agent.
-2. **Environment** — `ki-binding`, `ki-binding-chezmoi`, `ki-dotfiles-chezmoi`, `ki-housekeeping`, and `ki-tokenomics`: user-environment binding, maintenance, and context economics.
+2. **Environment** — portable `ki-binding` and `ki-tokenomics`; their `-claude` and `-codex` runtime adapters; `ki-housekeeping-claude`; and the renderer-specific `ki-binding-chezmoi` and `ki-dotfiles-chezmoi`.
 3. **Governance** — `ki-authoring`, `ki-decision-records`, `ki-engineering`, `ki-feature-definitions`, `ki-roadmap`, and `ki-specifications`: reusable standards and instruments that cut across repository shapes.
 4. **Keystone** — `ki-bootstrap`, `ki-repo`, and `ki-skills`: the installation, repository, and skill-quality contracts that hold the set together.
 5. **Knowledge bases** — `ki-kb`, `ki-kb-activities`, `ki-kb-live-artifacts`, and `ki-kb-streams`: the base shape and its operational families.
@@ -69,9 +69,21 @@ ki-specifications
 
 ki-feature-definitions
 
-ki-housekeeping
+ki-housekeeping-claude
+
+ki-tokenomics-claude
+└─ ki-tokenomics
+
+ki-tokenomics-codex
+└─ ki-tokenomics
 
 ki-tokenomics
+
+ki-binding-claude
+└─ ki-binding
+
+ki-binding-codex
+└─ ki-binding
 
 ki-binding-chezmoi
 ├─ ki-binding

@@ -56,11 +56,15 @@ digraph skills_map {
     label="Environment"
     style="rounded,filled"
     fillcolor="#ecfbf9"
-    binding [fillcolor="#d7f2ee", label=< <b>ki-binding</b><br/><font point-size="9">MCP binding</font> >]
+    binding [fillcolor="#d7f2ee", label=< <b>ki-binding</b><br/><font point-size="9">portable MCP binding</font> >]
+    binding_claude [fillcolor="#d7f2ee", label=< <b>ki-binding-claude</b><br/><font point-size="9">Claude MCP adapter</font> >]
+    binding_codex [fillcolor="#d7f2ee", label=< <b>ki-binding-codex</b><br/><font point-size="9">Codex MCP adapter</font> >]
     binding_chezmoi [fillcolor="#d7f2ee", label=< <b>ki-binding-chezmoi</b><br/><font point-size="9">MCP render path</font> >]
     dotfiles [fillcolor="#d7f2ee", label=< <b>ki-dotfiles-chezmoi</b><br/><font point-size="9">managed user environment</font> >]
-    housekeeping [fillcolor="#d7f2ee", label=< <b>ki-housekeeping</b><br/><font point-size="9">machine-state hygiene</font> >]
-    tokenomics [fillcolor="#d7f2ee", label=< <b>ki-tokenomics</b><br/><font point-size="9">context cost</font> >]
+    housekeeping_claude [fillcolor="#d7f2ee", label=< <b>ki-housekeeping-claude</b><br/><font point-size="9">Claude-state hygiene</font> >]
+    tokenomics [fillcolor="#d7f2ee", label=< <b>ki-tokenomics</b><br/><font point-size="9">portable context policy</font> >]
+    tokenomics_claude [fillcolor="#d7f2ee", label=< <b>ki-tokenomics-claude</b><br/><font point-size="9">Claude context evidence</font> >]
+    tokenomics_codex [fillcolor="#d7f2ee", label=< <b>ki-tokenomics-codex</b><br/><font point-size="9">Codex context evidence</font> >]
   }
 
   subgraph cluster_governance {
@@ -175,13 +179,18 @@ digraph skills_map {
   dotfiles -> authoring [xlabel="implies"]
   binding_chezmoi -> binding [xlabel="composes"]
   binding_chezmoi -> dotfiles [xlabel="composes"]
+  binding_claude -> binding [xlabel="composes"]
+  binding_codex -> binding [xlabel="composes"]
+  tokenomics_claude -> tokenomics [xlabel="composes"]
+  tokenomics_codex -> tokenomics [xlabel="composes"]
   plan -> roadmap [xlabel="drives", style=dashed]
   delegate -> plan [xlabel="executes", style=dashed]
-  housekeeping -> mcp_housekeeping [xlabel="judges", style=dashed]
-  housekeeping -> self [xlabel="recognises", style=dashed, ltail=cluster_environment, lhead=cluster_local]
+  housekeeping_claude -> mcp_housekeeping [xlabel="judges", style=dashed]
+  housekeeping_claude -> self [xlabel="recognises", style=dashed, ltail=cluster_environment, lhead=cluster_local]
   self -> concerns [xlabel="audits"]
   self -> skills [xlabel="promotes patterns into", style=dashed, ltail=cluster_local, lhead=cluster_keystone]
   skills -> checkers [xlabel="governs", style=dashed]
   checkers -> native_host [xlabel="hosted by", style=dashed]
-  binding -> hooks [xlabel="binds runtime", style=dashed]
+  binding_claude -> hooks [xlabel="binds runtime", style=dashed]
+  binding_codex -> hooks [xlabel="binds runtime", style=dashed]
 }

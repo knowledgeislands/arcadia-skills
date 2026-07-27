@@ -97,8 +97,8 @@ The prose surface — `CLAUDE.md` and its `@imports`, the `MEMORY.md` index, and
 
 Memory is the one layer where two different audits apply, and they are complementary — do the hygiene pass first, because it usually shrinks the surface the cost pass then measures:
 
-- **Hygiene (housekeeping)** — whether the `memory/*.md` entries are still true, correctly typed (user / feedback / project / reference), agree with the index, and are reconciled (a fact promoted to a `CLAUDE.md` must be _deleted_ from memory, not left in both). `ki repo audit --skill ki-housekeeping` runs the memory audit over the per-project store.
-- **Cost (tokenomics)** — how many tokens the `MEMORY.md` index and the injected memory block add to the standing prefix. `ki repo audit --skill ki-tokenomics` measures it against the budget.
+- **Hygiene (Claude housekeeping)** — whether the `memory/*.md` entries are still true, correctly typed (user / feedback / project / reference), agree with the index, and are reconciled (a fact promoted to a `CLAUDE.md` must be _deleted_ from memory, not left in both). `ki repo audit --skill ki-housekeeping-claude` runs the memory audit over the selected repository's Claude store.
+- **Cost (Claude tokenomics evidence)** — how many tokens the `MEMORY.md` index and the injected memory block add to the standing prefix. `ki repo audit --skill ki-tokenomics-claude` reports the runtime evidence; `ki-tokenomics` owns the portable budget.
 
 The scope rule the hygiene pass enforces is also the cheapest way to keep the index small: repo-specific guidance belongs in that repo's `CLAUDE.md`, cross-project personal preferences in `~/.claude/*.md`, and only genuine user/reference facts stay in memory. Machine-generated noise — stale "learned patterns" blocks, another repo's paths — is both a hygiene failure and dead standing cost; prune it here rather than compressing it at runtime.
 
@@ -106,7 +106,7 @@ There is a fourth route for substantial guidance that is relevant only to a reco
 
 ### When the hygiene audit reports issues
 
-`ki repo audit --skill ki-housekeeping` is only the mechanical, read-only half — it reports; it does not fix. When it flags anything, hand the store to the skill's CONFORM mode rather than hand-editing against the findings: `/ki-housekeeping` CONFORM applies the judgment the checker can't — deciding whether an entry is still true, which layer it belongs in (memory vs. a `CLAUDE.md`), and what to prune vs. reword. Re-running that audit afterwards confirms `FAIL=0`; `ki repo audit --skill ki-tokenomics` then shows whether the prune moved the cost number.
+`ki repo audit --skill ki-housekeeping-claude` is only the mechanical, read-only half — it reports; it does not fix. When it flags anything, hand the store to the skill's CONFORM mode rather than hand-editing against the findings: `/ki-housekeeping-claude` CONFORM applies the judgment the checker can't — deciding whether an entry is still true, which layer it belongs in (memory vs. a `CLAUDE.md`), and what to prune vs. reword. Re-running that audit afterwards confirms `FAIL=0`; `ki repo audit --skill ki-tokenomics-claude` then shows whether the prune moved the cost number.
 
 ### Watch what `headroom learn` writes into the prefix
 
@@ -137,7 +137,7 @@ A recurring temptation is to have Headroom (or any `ANTHROPIC_BASE_URL` proxy) s
 
 `ki repo audit --skill ki-tokenomics` is the mechanical, read-only half — it measures and flags; it does not cut. Budgets are **WARN-only** (a `warn` is a prompt to look, not a build break) and every figure is a `~chars/4` estimate, so treat them as directional. When it flags a layer, hand it to `/ki-tokenomics` CONFORM rather than working codes by hand: the mode applies the judgment the checker can't — whether an over-budget layer earns its size or should be cut, which layer a fact belongs in, and whether a model-tier or Headroom setting actually fits the work. The concrete cuts it draws on — disabling unused built-ins, scoping MCP servers per surface, trimming the standing prose — are the levers documented earlier in this guide.
 
-The memory layer is the one exception worth calling out: a `MEMORY.md` overage is the same content the [hygiene pass](#when-the-hygiene-audit-reports-issues) prunes, so fix it upstream in the store (via `/ki-housekeeping` CONFORM), not with a runtime lever. Re-run the audit afterwards to confirm the number moved.
+The memory layer is the one exception worth calling out: a `MEMORY.md` overage is the same content the [hygiene pass](#when-the-hygiene-audit-reports-issues) prunes, so fix it upstream in the store (via `/ki-housekeeping-claude` CONFORM), not with a runtime lever. Re-run the audit afterwards to confirm the number moved.
 
 ## A starting profile for this harness
 
@@ -147,4 +147,4 @@ This repo is a governance-skills repo: it does not lean on `Workflow`, and it ke
 2. Optionally disable built-ins you never use — `WORKFLOWS`, `ARTIFACT`, `ADVISOR_TOOL`, and the two bundled guide skills (`CLAUDE_API_SKILL`, `CLAUDE_CODE_SKILL`). With deferral on this matters less, but it removes them from discovery entirely.
 3. Keep memory, `CLAUDE.md`, and background/cron tooling unless you have measured they go unused.
 4. Treat MCP curation via `ki-binding` (and per-conversation connector toggles) as the structural lever — audit which servers each surface actually needs.
-5. Restart, confirm with `/context`, then re-measure with `ki repo audit --skill ki-tokenomics` and iterate against the budgets in the `ki-tokenomics` standard.
+5. Restart, confirm with `/context`, then re-measure with `ki repo audit --skill ki-tokenomics-claude` and iterate against the budgets in the portable `ki-tokenomics` standard.

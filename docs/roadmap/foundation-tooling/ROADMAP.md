@@ -22,7 +22,7 @@ After the released CLI and canonical harness are available through the normal in
 
 ### Protect generated rubric publications from drift
 
-Complete the rubric-publication contract across the ten governance skills that have structured item catalogues and tracked `references/rubric.md` but no exact-parity test: `ki-housekeeping`, `ki-binding`, `ki-engineering`, `ki-authoring`, `ki-tokenomics`, `ki-binding-chezmoi`, `ki-repo`, `ki-roadmap`, `ki-kb-streams`, and `ki-kb`. Add focused read-only tests that render each in-memory catalogue and exact-compare its publication, then reconcile any missing generated-source notice, classification, citation, or judgment-prompt presentation with `ki-skills`' rubric-authoring contract. Preserve legitimate local renderer choices; do not extract a shared renderer merely for visual uniformity.
+Complete the rubric-publication contract across governance skills that have structured item catalogues and tracked `references/rubric.md` but no exact-parity test, including the runtime-explicit environment family: `ki-housekeeping-claude`, portable `ki-binding` and `ki-tokenomics`, their Claude and Codex adapters, `ki-engineering`, `ki-authoring`, `ki-binding-chezmoi`, `ki-repo`, `ki-roadmap`, `ki-kb-streams`, and `ki-kb`. Add focused read-only tests that render each in-memory catalogue and exact-compare its publication, then reconcile any missing generated-source notice, classification, citation, or judgment-prompt presentation with `ki-skills`' rubric-authoring contract. Preserve legitimate local renderer choices; do not extract a shared renderer merely for visual uniformity.
 
 ### Review `ki-bootstrap` for further simplification
 
@@ -58,7 +58,7 @@ Document the existing validate-down convention: each skill owns and validates it
 
 ### Inventory non-critical writers for bounded follow-up _(candidate)_
 
-After the rollout-critical filesystem work closes, inventory remaining report generators and direct conformers by mutation class. Prioritise external, user-space, or destructive writers; leave ordinary local report writers alone unless the inventory identifies a concrete risk. The initial FND-019 review identifies `ki-binding`'s Cowork settings writer, `ki-housekeeping`'s state writers, and `ki-subagents`' recursive agent-surface writer as the first candidates for dry-run, idempotence, symlink, and atomic-publication evidence. Opaque subprocess writers retain honest exclusions unless a separate isolation design is approved.
+After the rollout-critical filesystem work closes, inventory remaining report generators and direct conformers by mutation class. Prioritise external, user-space, or destructive writers; leave ordinary local report writers alone unless the inventory identifies a concrete risk. The initial FND-019 review identifies `ki-binding-claude`'s Cowork settings writer, `ki-binding-codex`'s native CLI merge, `ki-housekeeping-claude`'s state writers, and `ki-subagents`' recursive agent-surface writer as the first candidates for dry-run, idempotence, symlink, and atomic-publication evidence. Opaque subprocess writers retain honest exclusions unless a separate isolation design is approved.
 
 ### Review the Cloudflare agent-setup prompt for the Cloudflare skill _(candidate)_
 

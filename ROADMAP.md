@@ -31,6 +31,7 @@ Worth doing, but presently blocked on an external dependency or decision. Revisi
 
 - [Operations: Complete the approved Claude-state cleanup](docs/roadmap/operations/ROADMAP.md#complete-the-approved-claude-state-cleanup)
 - [Operations: Reconcile the three memory-store defects](docs/roadmap/operations/ROADMAP.md#reconcile-the-three-memory-store-defects)
+- [Runtime Portability: Add Codex housekeeping when a safe contract exists](docs/roadmap/runtime-portability/ROADMAP.md#add-codex-housekeeping-when-a-safe-contract-exists)
 - [Runtime Portability: Make KI MCP servers reachable from Cowork](docs/roadmap/runtime-portability/ROADMAP.md#make-ki-mcp-servers-reachable-from-cowork)
 
 ## Future

@@ -23,9 +23,13 @@ The current `audit.ts` / `conform.ts` pair is therefore the initial executable b
 
 | Skill | Current AUDIT element | Current CONFORM element | Principal effect / ordering constraint |
 | --- | --- | --- | --- |
-| `ki-binding` | Inspect cross-surface bindings | Reconcile generated binding files | External/user configuration is a terminal consumer. |
-| `ki-housekeeping` | Inspect accumulated agent state | Prune safe stale state | User-environment maintenance; never precedes repository writers. |
-| `ki-tokenomics` | Inspect standing context | Reconcile token-budget guidance | Documentation/configuration consumer. |
+| `ki-binding` | Inspect portable source and mcporter | Report portable drift | Vendor-neutral binding policy. |
+| `ki-binding-claude` | Inspect Claude binding surfaces | Reconcile safe Claude projections | Claude user configuration is a terminal consumer. |
+| `ki-binding-codex` | Inspect Codex binding surface | Merge through the native Codex writer | Codex user configuration is a terminal consumer. |
+| `ki-housekeeping-claude` | Inspect selected-repository Claude state | Prune safe stale Claude state | User-environment maintenance; never precedes repository writers. |
+| `ki-tokenomics` | Inspect portable policy | Reconcile token-budget guidance | Documentation/configuration consumer. |
+| `ki-tokenomics-claude` | Inspect bounded Claude evidence | Report only | Runtime evidence consumer. |
+| `ki-tokenomics-codex` | Inspect bounded Codex evidence | Report only | Runtime evidence consumer. |
 | `ki-authoring` | Inspect authored Markdown/TOML | Own config files; normalise Markdown | Split owned-file preparation from late Markdown normalisation. |
 | `ki-engineering` | Inspect toolchain | Format and reconcile toolchain | Toolchain formatting follows source writers. |
 | `ki-subagents` | Inspect agent definitions | Scaffold/conform agent files | Agent files precede authoring normalisation. |

@@ -26,6 +26,10 @@ Understood and roughly scoped but not yet started — worth doing once the **Nex
 
 Worth doing, but presently blocked on an external dependency or decision. Revisit when its named condition changes rather than treating it as dormant local work.
 
+### Add Codex housekeeping when a safe contract exists
+
+Create `ki-housekeeping-codex` only after Codex exposes an official or documented selected-repository identity together with supported retention, cleanup, and safe-conform boundaries for accumulated state. Do not add an empty symmetric capability or infer ownership from undocumented caches.
+
 ### Make KI MCP servers reachable from Cowork
 
 Choose between sandbox-bundled servers and authenticated remote endpoints for host-local KI MCP servers in Cowork, then prove one supported path. Resolve the `ki-plugins` license and visibility conflict as part of that decision. Unblock when the owner selects the sandbox-versus-endpoint security posture and settles the plugin's license and visibility. Web remains a separate, manual-connector concern.
