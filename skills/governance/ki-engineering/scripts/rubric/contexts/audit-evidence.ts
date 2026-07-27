@@ -457,6 +457,175 @@ export const collectAuditEvidence = (repo: string): readonly EngineeringEvidence
     ? add('PASS', 'KNIP-1', 'knip.json present (entry points + ignores for the native knip check)', STD, 'knip.json')
     : add('FAIL', 'KNIP-1', 'knip.json missing (config for the native knip check)', STD, 'knip.json')
 
+  // ── core: knip entry points cover every package export ──────────────────────
+  // `knip --fix` (the KNIP-2 repair) DELETES exports it believes are unused. An
+  // entrypoint published through `exports` but not reachable from any `entry` glob
+  // is invisible to knip as a public surface, so genuine public API gets deleted.
+  // Mechanically checkable, so it is checked here rather than left to review.
+  // Audit only: which entry glob to add is a judgment call, so there is no repair.
+  const knipConfigSource = read('knip.json') || read('knip.jsonc')
+  const exportsMap = pkg.exports
+  if (!exportsMap || typeof exportsMap !== 'object' || Array.isArray(exportsMap)) {
+    add('NOT_APPLICABLE', 'KNIP-3', 'package.json declares no exports map', STD, 'package.json')
+  } else {
+    // knip.json is JSON with C-style comments permitted; strip them string-aware so
+    // that `"$schema": "https://…"` is not mistaken for a line comment.
+    const stripJsonComments = (text: string): string => {
+      let out = ''
+      let inString = false
+      let escaped = false
+      for (let index = 0; index < text.length; index += 1) {
+        const ch = text[index] as string
+        if (inString) {
+          out += ch
+          if (escaped) escaped = false
+          else if (ch === '\\') escaped = true
+          else if (ch === '"') inString = false
+          continue
+        }
+        if (ch === '"') {
+          inString = true
+          out += ch
+          continue
+        }
+        if (ch === '/' && text[index + 1] === '/') {
+          while (index < text.length && text[index] !== '\n') index += 1
+          out += '\n'
+          continue
+        }
+        if (ch === '/' && text[index + 1] === '*') {
+          index += 2
+          while (index < text.length && !(text[index] === '*' && text[index + 1] === '/')) index += 1
+          index += 1
+          out += ' '
+          continue
+        }
+        out += ch
+      }
+      return out
+    }
+    let knipConfig: Record<string, unknown> | undefined
+    if (knipConfigSource) {
+      try {
+        const parsed: unknown = JSON.parse(stripJsonComments(knipConfigSource))
+        if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) knipConfig = parsed as Record<string, unknown>
+      } catch {
+        knipConfig = undefined
+      }
+    }
+    if (!knipConfig) {
+      add('INFO', 'KNIP-3', 'knip entry list is not mechanically readable (no parseable knip.json / knip.jsonc)', STD, 'knip.json')
+    } else {
+      const entryList = (value: unknown): readonly string[] =>
+        typeof value === 'string' ? [value] : Array.isArray(value) ? value.filter((item): item is string => typeof item === 'string') : []
+      const workspaces = knipConfig.workspaces
+      const rootWorkspace =
+        workspaces && typeof workspaces === 'object' && !Array.isArray(workspaces)
+          ? ((workspaces as Record<string, unknown>)['.'] ?? (workspaces as Record<string, unknown>)['./'])
+          : undefined
+      const declaredEntries = [
+        ...entryList(knipConfig.entry),
+        ...(rootWorkspace && typeof rootWorkspace === 'object' && !Array.isArray(rootWorkspace)
+          ? entryList((rootWorkspace as Record<string, unknown>).entry)
+          : [])
+      ]
+      // A knip entry pattern may carry a trailing `!` (production mode) or a leading
+      // `!` (negation); neither is part of the path glob.
+      const trimSuffix = (pattern: string): string => pattern.replace(/!+$/, '')
+      const included = declaredEntries.filter((pattern) => !pattern.startsWith('!')).map(trimSuffix)
+      const excluded = declaredEntries.filter((pattern) => pattern.startsWith('!')).map((pattern) => trimSuffix(pattern.slice(1)))
+      const globToRegExp = (pattern: string): RegExp => {
+        let source = ''
+        for (let index = 0; index < pattern.length; index += 1) {
+          const ch = pattern[index] as string
+          if (ch === '*') {
+            if (pattern[index + 1] === '*') {
+              index += 1
+              if (pattern[index + 1] === '/') {
+                index += 1
+                source += '(?:[^/]*/)*'
+              } else source += '.*'
+            } else source += '[^/]*'
+            continue
+          }
+          if (ch === '?') {
+            source += '[^/]'
+            continue
+          }
+          if (ch === '{') {
+            source += '(?:'
+            continue
+          }
+          if (ch === '}') {
+            source += ')'
+            continue
+          }
+          if (ch === ',') {
+            source += '|'
+            continue
+          }
+          source += ch.replace(/[.+^$()|[\]\\]/g, '\\$&')
+        }
+        return new RegExp(`^${source}$`)
+      }
+      const covered = (path: string): boolean =>
+        included.some((pattern) => globToRegExp(pattern).test(path)) && !excluded.some((pattern) => globToRegExp(pattern).test(path))
+      // A built target maps back to its source: ./dist/X.js and ./dist/X.d.ts → src/X.ts.
+      const sourceForTarget = (target: string): string | undefined => {
+        const relative = target.replace(/^\.\//, '')
+        const mapped = relative.startsWith('dist/') ? `src/${relative.slice('dist/'.length)}` : relative
+        if (mapped.endsWith('.d.ts')) return `${mapped.slice(0, -'.d.ts'.length)}.ts`
+        const built = /\.(?:js|mjs|cjs)$/.exec(mapped)
+        if (built) return `${mapped.slice(0, -built[0].length)}.ts`
+        return mapped.endsWith('.ts') ? mapped : undefined
+      }
+      const targets: [string, string][] = []
+      const collect = (subpath: string, value: unknown): void => {
+        if (typeof value === 'string') targets.push([subpath, value])
+        else if (value && typeof value === 'object' && !Array.isArray(value))
+          for (const nested of Object.values(value as Record<string, unknown>)) collect(subpath, nested)
+      }
+      for (const [subpath, value] of Object.entries(exportsMap as Record<string, unknown>)) {
+        if (subpath === './package.json') continue
+        collect(subpath, value)
+      }
+      const seen = new Set<string>()
+      let checked = 0
+      for (const [subpath, target] of targets) {
+        if (target === './package.json') continue
+        const source = sourceForTarget(target)
+        if (source === undefined) {
+          const key = `unmapped:${subpath}:${target}`
+          if (seen.has(key)) continue
+          seen.add(key)
+          add('INFO', 'KNIP-3', `export "${subpath}" → ${target} does not map to a source file mechanically`, STD, 'package.json')
+          continue
+        }
+        if (source.includes('*')) {
+          const key = `pattern:${subpath}:${source}`
+          if (seen.has(key)) continue
+          seen.add(key)
+          add('INFO', 'KNIP-3', `export "${subpath}" is a subpath pattern (${target}); entry coverage needs review`, STD, 'package.json')
+          continue
+        }
+        const key = `${subpath}:${source}`
+        if (seen.has(key)) continue
+        seen.add(key)
+        checked += 1
+        covered(source)
+          ? add('PASS', 'KNIP-3', `export "${subpath}" → ${source} is reachable from a knip entry point`, STD, 'knip.json')
+          : add(
+              'FAIL',
+              'KNIP-3',
+              `export "${subpath}" → ${source} is not reachable from any knip entry point (knip --fix may delete its exports)`,
+              STD,
+              'knip.json'
+            )
+      }
+      if (!checked && !seen.size) add('NOT_APPLICABLE', 'KNIP-3', 'package.json declares no non-exempt exports', STD, 'package.json')
+    }
+  }
+
   // ── core: generated and managed discovery surfaces ──────────────────────────
   // These are byte-for-byte artifacts owned elsewhere. Formatting or dead-code checks
   // must never rewrite or report them. `ki-authoring` owns the Markdown configuration,

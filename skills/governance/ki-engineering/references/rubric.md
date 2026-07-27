@@ -120,6 +120,7 @@ The unused-code configuration and gate.
 
 - **KNIP-1 [M] — Knip configuration exists** — `knip.json` exists with per-repo entry points and ignores. (standards-engineering.md)
 - **KNIP-2 [M] — Knip gate passes** — `bunx knip` exits clean. (standards-engineering.md)
+- **KNIP-3 [M] — Knip entry points cover every package export** — Every target in the `exports` map of `package.json` is reachable from at least one glob in the `entry` list of `knip.json`, mapping the built path back to its source (`./dist/X.js` and `./dist/X.d.ts` map to `src/X.ts`); `./package.json` is exempt. An unreachable published entrypoint is invisible to knip as a public surface, so the KNIP-2 repair deletes genuine public API. Audit only — which entry glob to add is a judgment call, so there is no conform action. (standards-engineering.md)
 
 ## SYNC — Dependency synchronisation
 
