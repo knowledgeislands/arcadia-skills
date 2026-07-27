@@ -1,7 +1,7 @@
 ---
 name: ki-repo
 ki-runtime-binding: true
-ki-depends-on: [ki-authoring]
+ki-depends-on: [ki-authoring, ki-git]
 ki-shared-dependencies: [ki-skills:rubric]
 owns: ['.gitignore']
 contributes: ['.ki-config.toml']
@@ -37,7 +37,7 @@ Every governance skill carries the universal four **AUDIT · CONFORM · EDUCATE 
 Auditing a whole tree or org is a set audit — **bound the context** (the set-audit discipline in `ki-skills`' enforcement framework §5): take the checker's one set-level run over every repo, then do the per-repo judgment pass **one repo at a time**, fully (including every coverage-selected engineering and artifact standard) before moving to the next; repos are independent, so the order is free.
 
 1. Confirm `gh` is authenticated against the org (`gh auth status`).
-2. **Run the native audit:** `ki repo audit --repo <repo>` resolves the selected repo's declared roots, validates their explicit dependencies, resolves only compatible registered operations from the verified active installed collection, and runs them in dependency order through the shared finding model. Missing, incompatible, undeclared, or untrusted skills fail before an operation runs.
+2. **Run the native audit:** `ki repo audit --repo <repo>` resolves the selected repo's declared roots, validates their explicit dependencies, resolves only compatible registered operations from the verified active installed collection, and runs them in dependency order through the shared finding model. The declared `ki-authoring` prerequisite governs authored repository surfaces, while `ki-git` supplies portable working and commit policy before this skill adds repository shape and GitHub settings. Missing, incompatible, undeclared, or untrusted skills fail before an operation runs.
 3. **Do the judgment pass the mechanical layer cannot** — the `[J]` items in [the rubric](references/rubric.md): does each description actually _match the repo's purpose_ (the mechanical layer checks non-emptiness and `package.json` sync, but not fit); is each per-repo override (a `note` in the output) a warranted decision rather than waved-off drift; and, where `+/` or `-/` exists, whether its contents follow the working-area contract rather than becoming a shadow roadmap or uncontrolled archive.
 4. **Report** by `repo · check · fix`, lead with FAILs, surface any **coverage** WARNs (a detected standard with no opt-in table), and call out the overrides (`note`s) you judged warranted.
 

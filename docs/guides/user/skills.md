@@ -105,7 +105,8 @@ ki-plan
 ki-recap
 
 ki-repo
-└─ ki-authoring
+├─ ki-authoring
+└─ ki-git
 
 ki-tools
 ```
