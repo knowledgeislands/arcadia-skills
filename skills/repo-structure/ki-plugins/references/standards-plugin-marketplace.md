@@ -1,4 +1,4 @@
-# Plugin-marketplace standard
+# The plugin-marketplace standard
 
 The quotable standard for a Knowledge Islands **plugin-marketplace repo** — a generated Claude plugin marketplace that projects the harness's skills and agents onto the Claude Cowork surface. The reference instance is `knowledgeislands/ki-plugins`. The [SKILL.md](../SKILL.md) is the operating procedure and carries the canonical shape; this file is the standard it audits against.
 

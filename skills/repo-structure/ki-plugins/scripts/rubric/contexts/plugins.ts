@@ -1,24 +1,14 @@
-import { existsSync, readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs'
-import { join, resolve } from 'node:path'
+import { existsSync, lstatSync, readdirSync, readFileSync } from 'node:fs'
+import { join, relative, resolve, sep } from 'node:path'
+import type { RubricContextOptions, RubricSession } from '../../shared/rubric.ts'
 
-const ORG = 'Knowledge Islands'
-
-type JsonDocument = { raw: string; value: Record<string, unknown> | null }
-
-const jsonDocument = (raw: string): JsonDocument => {
-  try {
-    return { raw, value: JSON.parse(raw) as Record<string, unknown> }
-  } catch {
-    return { raw, value: null }
-  }
+export type JsonDocument = {
+  raw: string
+  value: Record<string, unknown> | null
 }
-
-const table = (value: unknown): Record<string, unknown> | null =>
-  value && typeof value === 'object' && !Array.isArray(value) ? (value as Record<string, unknown>) : null
 
 export type PluginsContext = {
   target: string
-  dryRun: boolean
   available: boolean
   applicable: boolean
   malformedConfig: boolean
@@ -37,24 +27,51 @@ export type PluginsContext = {
   agentCount: number
   nestedAgentDirectories: readonly string[]
   mcpFiles: readonly string[]
-  conformMarketplaceOwner: () => 'canonical' | 'fixed' | 'unavailable'
-  conformJsonFormatting: () => readonly string[]
-  conformPluginAgreement: () => readonly string[]
 }
 
-export const createPluginsContextFactory = ({ target, dryRun = false }: { target: string; dryRun?: boolean }): (() => PluginsContext) => {
-  const root = resolve(target)
-  const available = existsSync(root) && statSync(root).isDirectory()
-  const at = (...parts: string[]) => join(root, ...parts)
-  const has = (...parts: string[]) => existsSync(at(...parts))
-  const read = (...parts: string[]) => {
-    try {
-      return readFileSync(at(...parts), 'utf8')
-    } catch {
-      return ''
+const jsonDocument = (raw: string): JsonDocument => {
+  try {
+    const value: unknown = JSON.parse(raw)
+    return {
+      raw,
+      value: value && typeof value === 'object' && !Array.isArray(value) ? (value as Record<string, unknown>) : null
     }
+  } catch {
+    return { raw, value: null }
   }
-  const isDir = (...parts: string[]) => has(...parts) && statSync(at(...parts)).isDirectory()
+}
+
+const table = (value: unknown): Record<string, unknown> | null =>
+  value && typeof value === 'object' && !Array.isArray(value) ? (value as Record<string, unknown>) : null
+
+const physicalDirectory = (path: string): boolean => {
+  if (!existsSync(path)) return false
+  const state = lstatSync(path)
+  return state.isDirectory() && !state.isSymbolicLink()
+}
+
+const containedPhysical = (root: string, path: string, kind: 'file' | 'directory'): boolean => {
+  const remainder = relative(root, path)
+  if (remainder.startsWith('..') || remainder === '..' || !physicalDirectory(root)) return false
+  let cursor = root
+  for (const segment of remainder.split(sep).filter(Boolean)) {
+    cursor = join(cursor, segment)
+    if (!existsSync(cursor) || lstatSync(cursor).isSymbolicLink()) return false
+  }
+  const state = lstatSync(path)
+  return kind === 'file' ? state.isFile() : state.isDirectory()
+}
+
+export const createPluginsSession = ({ repository }: RubricContextOptions): RubricSession<PluginsContext> => {
+  const root = resolve(repository)
+  const available = physicalDirectory(root)
+  const at = (...parts: string[]) => join(root, ...parts)
+  const has = (...parts: string[]) =>
+    available && (containedPhysical(root, at(...parts), 'file') || containedPhysical(root, at(...parts), 'directory'))
+  const read = (...parts: string[]) =>
+    available && containedPhysical(root, at(...parts), 'file') ? readFileSync(at(...parts), 'utf8') : ''
+  const isDir = (...parts: string[]) => available && containedPhysical(root, at(...parts), 'directory')
+
   const configRaw = read('.ki-config.toml')
   let config: Record<string, unknown> | null = null
   let malformedConfig = false
@@ -65,6 +82,7 @@ export const createPluginsContextFactory = ({ target, dryRun = false }: { target
   }
   const configTable = table(config?.['ki-plugins'])
   const marketplaceFile = '.claude-plugin/marketplace.json'
+  const marketplacePath = at('.claude-plugin', 'marketplace.json')
   const marketplace = jsonDocument(read('.claude-plugin', 'marketplace.json'))
   const pluginEntries = Array.isArray(marketplace.value?.plugins) ? (marketplace.value.plugins as Record<string, unknown>[]) : []
   const entry = pluginEntries.length === 1 ? pluginEntries[0] : null
@@ -72,89 +90,43 @@ export const createPluginsContextFactory = ({ target, dryRun = false }: { target
   const pluginDescription = typeof entry?.description === 'string' ? entry.description : ''
   const pluginFile = pluginName ? `${pluginName}/.claude-plugin/plugin.json` : ''
   const plugin = jsonDocument(pluginFile ? read(pluginName, '.claude-plugin', 'plugin.json') : '')
-  const applicable = available && (configTable !== null || malformedConfig || Boolean(marketplace.raw))
+  const applicable = available && (configTable !== null || malformedConfig || existsSync(marketplacePath) || Boolean(marketplace.raw))
 
   const skillRoot = pluginName ? at(pluginName, 'skills') : ''
   const projectedSkills =
     skillRoot && isDir(pluginName, 'skills')
-      ? readdirSync(skillRoot, { withFileTypes: true }).filter((entry) => entry.isDirectory() && !entry.name.startsWith('.'))
+      ? readdirSync(skillRoot, { withFileTypes: true }).filter(
+          (skill) => skill.isDirectory() && !skill.isSymbolicLink() && !skill.name.startsWith('.')
+        )
       : []
   const projectedSkillsWithoutManifest = projectedSkills
-    .filter((entry) => !has(pluginName, 'skills', entry.name, 'SKILL.md'))
-    .map((entry) => entry.name)
+    .filter((skill) => !has(pluginName, 'skills', skill.name, 'SKILL.md'))
+    .map((skill) => skill.name)
+
   const agentRoot = pluginName ? at(pluginName, 'agents') : ''
   const agentEntries =
     agentRoot && isDir(pluginName, 'agents')
-      ? readdirSync(agentRoot, { withFileTypes: true }).filter((entry) => !entry.name.startsWith('.'))
+      ? readdirSync(agentRoot, { withFileTypes: true }).filter((agent) => !agent.isSymbolicLink() && !agent.name.startsWith('.'))
       : []
-  const nestedAgentDirectories = agentEntries.filter((entry) => entry.isDirectory()).map((entry) => entry.name)
+  const nestedAgentDirectories = agentEntries.filter((agent) => agent.isDirectory()).map((agent) => agent.name)
+
   const mcpFiles: string[] = []
-  const walk = (directory: string) => {
-    if (!existsSync(directory)) return
+  const walk = (directory: string): void => {
+    if (!containedPhysical(root, directory, 'directory')) return
     for (const entry of readdirSync(directory, { withFileTypes: true })) {
       if (entry.name === 'node_modules' || entry.name.startsWith('.git')) continue
-      const full = join(directory, entry.name)
-      if (entry.isDirectory()) walk(full)
-      else if (entry.name === '.mcp.json') mcpFiles.push(full.replace(`${root}/`, ''))
-    }
-  }
-  if (pluginName) walk(at(pluginName))
-
-  const writeJson = (file: string, value: Record<string, unknown>) => {
-    if (!dryRun) writeFileSync(at(file), `${JSON.stringify(value, null, 2)}\n`)
-  }
-  const conformMarketplaceOwner = (): 'canonical' | 'fixed' | 'unavailable' => {
-    if (!marketplace.value) return 'unavailable'
-    const owner = table(marketplace.value.owner) ?? {}
-    if (owner.name === ORG) return 'canonical'
-    marketplace.value.owner = { ...owner, name: ORG }
-    writeJson(marketplaceFile, marketplace.value)
-    return 'fixed'
-  }
-  const conformJsonFormatting = (): readonly string[] => {
-    const fixed: string[] = []
-    for (const [file, document] of [
-      [marketplaceFile, marketplace],
-      [pluginFile, plugin]
-    ] as const) {
-      if (!file || !document.value) continue
-      if (document.raw !== `${JSON.stringify(document.value, null, 2)}\n`) {
-        writeJson(file, document.value)
-        fixed.push(file)
+      const path = join(directory, entry.name)
+      if (entry.name === '.mcp.json') {
+        mcpFiles.push(relative(root, path))
+        continue
       }
+      if (entry.isDirectory() && !entry.isSymbolicLink()) walk(path)
     }
-    return fixed
   }
-  const conformPluginAgreement = (): readonly string[] => {
-    if (!plugin.value) return []
-    const fixed: string[] = []
-    if (pluginDescription && plugin.value.description !== pluginDescription) {
-      plugin.value.description = pluginDescription
-      fixed.push('description')
-    }
-    const version = plugin.value.version
-    if (typeof version !== 'string' || !/^\d+\.\d+\.\d+/.test(version)) {
-      try {
-        const packageVersion = (
-          JSON.parse(readFileSync(join(import.meta.dir, '..', '..', '..', '..', '..', '..', 'package.json'), 'utf8')) as {
-            version?: unknown
-          }
-        ).version
-        if (typeof packageVersion === 'string') {
-          plugin.value.version = packageVersion
-          fixed.push('version')
-        }
-      } catch {
-        // Missing harness metadata leaves the conform judgmental.
-      }
-    }
-    if (fixed.length) writeJson(pluginFile, plugin.value)
-    return fixed
-  }
+  if (pluginName && isDir(pluginName)) walk(at(pluginName))
 
-  return () => ({
+  const context: PluginsContext = {
     target: root,
-    dryRun,
     available,
     applicable,
     malformedConfig,
@@ -170,11 +142,13 @@ export const createPluginsContextFactory = ({ target, dryRun = false }: { target
     isDir,
     projectedSkillCount: projectedSkills.length,
     projectedSkillsWithoutManifest,
-    agentCount: agentEntries.filter((entry) => entry.isFile() && entry.name.endsWith('.md')).length,
+    agentCount: agentEntries.filter((agent) => agent.isFile() && agent.name.endsWith('.md')).length,
     nestedAgentDirectories,
-    mcpFiles,
-    conformMarketplaceOwner,
-    conformJsonFormatting,
-    conformPluginAgreement
-  })
+    mcpFiles
+  }
+
+  return {
+    subjects: [{ families: ['PLUG'], subject: root, context: () => context }],
+    proposal: () => ({ writes: [] })
+  }
 }
