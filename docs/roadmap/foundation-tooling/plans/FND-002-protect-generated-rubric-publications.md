@@ -14,14 +14,14 @@ Make `ki` the sole renderer for structured rubrics. TypeScript catalogues remain
 
 ## Current state
 
-The host delivery in [CLI-002](https://github.com/knowledgeislands/tools-ki/commit/9032fa9) now provides one validated renderer, guarded transaction path, and criterion-agnostic publication evidence. The `ki-skills` exemplar consumes that evidence through `KI-CHECKER-6`: a missing or stale publication fails audit, and CONFORM requests only the host-owned derived write. The remaining work is to apply the proven pattern to every other structured catalogue and review the resulting derived-only publications.
+The host delivery in [CLI-002](https://github.com/knowledgeislands/tools-ki/commit/9032fa9) now provides one validated renderer, guarded transaction path, and criterion-agnostic publication evidence. The `ki-skills` exemplar consumes that evidence through `RUBRIC-1`: a missing or stale publication fails audit, and CONFORM requests only the host-owned derived write. The remaining work is to apply the proven pattern to every other structured catalogue and review the resulting derived-only publications.
 
 ## Steps
 
 1. ✓ Agree the narrow host-injected publication capability and its failure semantics: repository containment, catalogue validation, missing/stale publication, invalid import, symlink refusal, and deterministic rendered bytes. Added the reciprocal [CLI-002](https://github.com/knowledgeislands/tools-ki/blob/main/docs/roadmap/cli/plans/CLI-002-host-generated-rubric-publication-capability.md) plan before implementation.
 2. ✓ In `tools-ki`, route standalone and repository publication preparation through one validated renderer and guarded transaction path without weakening installed-harness validation. Delivered by [CLI-002](https://github.com/knowledgeislands/tools-ki/commit/9032fa9).
 3. ✓ Extend the rubric context contract so `ki-skills` receives only rendered-publication evidence and can propose derived writes; do not put criterion identity or automatic findings in the host.
-4. ✓ Add exemplar `KI-CHECKER-6`: its exact derived publication is required; missing or differing bytes are FAIL drift and CONFORM schedules a DERIVED write. Other structured catalogues remain for the rollout step and skills without structured catalogues are exempt.
+4. ✓ Add exemplar `RUBRIC-1` in its own `RUBRIC` family: its exact derived publication is required; missing or differing bytes are FAIL drift and CONFORM schedules a DERIVED write. Other structured catalogues remain for the rollout step and skills without structured catalogues are exempt.
 5. ✓ Lock the canonical output contract for notices, family metadata, classifications, citations, judgment prompts, ordering, and final newline. Exercise drift audit, dry-run, real conform, idempotence, batching, rollback/race refusal, malformed catalogues, and FIXED reporting.
 6. Standardise a visible `RUBRIC-1` derived-publication item in a `RUBRIC` family for every structured catalogue, backed by one portable vendored item factory. Each skill projects only host publication evidence into that local family; do not add per-skill rendering, path selection, byte construction, or writes.
 7. Regenerate every affected publication through `ki skill rubric <skill> --write` or the declared repository CONFORM scope, review the derived-only diff, remove residual per-skill publication logic, update authoring/CLI guidance, and run both repositories' final gates.
@@ -39,7 +39,7 @@ The host delivery in [CLI-002](https://github.com/knowledgeislands/tools-ki/comm
 
 ## Dependencies / blocks
 
-The host-injected capability is specified in reciprocal [CLI-002](https://github.com/knowledgeislands/tools-ki/blob/main/docs/roadmap/cli/plans/CLI-002-host-generated-rubric-publication-capability.md), which blocks this plan's `ki-skills` context and `KI-CHECKER-6` implementation until its host contract is delivered. Existing renderer and transaction mechanisms are prerequisites, not blockers. Source implementation may use a local development-linked CLI; no released CLI is required.
+The host-injected capability is specified in reciprocal [CLI-002](https://github.com/knowledgeislands/tools-ki/blob/main/docs/roadmap/cli/plans/CLI-002-host-generated-rubric-publication-capability.md), which blocks this plan's `ki-skills` context and `RUBRIC-1` implementation until its host contract is delivered. Existing renderer and transaction mechanisms are prerequisites, not blockers. Source implementation may use a local development-linked CLI; no released CLI is required.
 
 ## Delegation
 

@@ -342,7 +342,7 @@ The required projection is the readable `references/rubric.md` publication.
 
 It is generated from the structured catalogue, begins with a conspicuous notice that the canonical definitions live under `scripts/rubric/`, and has an exact read-only parity check.
 
-The `ki-skills` exemplar's `KI-CHECKER-6` makes missing or differing publication bytes a FAIL. During CONFORM, the item requests only a host-injected derived-publication capability; `ki` validates the catalogue, chooses the target and bytes, and includes the write in its guarded repository transaction.
+The `ki-skills` exemplar's `RUBRIC-1` makes missing or differing publication bytes a FAIL. During CONFORM, the item requests only a host-injected derived-publication capability; `ki` validates the catalogue, chooses the target and bytes, and includes the write in its guarded repository transaction.
 
 A versioned machine projection of rubric metadata or an execution schedule MAY be added when a concrete consumer needs to load the catalogue without importing callback code.
 

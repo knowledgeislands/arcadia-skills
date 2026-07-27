@@ -86,7 +86,7 @@ describe('ki-skills session evidence', () => {
     expect(session.proposal().writes[0]?.content).toContain("argument-hint: 'audit | conform | educate | refresh | help'")
   })
 
-  test('passes the host publication capability only to the structured rubric exemplar', () => {
+  test('routes the host publication capability to one dedicated rubric subject', () => {
     const publication = {
       target: 'references/rubric.md',
       rendered: '# Rubric\n',
@@ -100,8 +100,10 @@ describe('ki-skills session evidence', () => {
       configuration: {},
       publication
     })
-    const context = session.subjects.find((subject) => subject.subject === 'skills/ki-skills')?.context()
+    const rubricSubjects = session.subjects.filter((subject) => subject.families.includes('RUBRIC'))
 
-    expect(context?.checker?.publication).toBe(publication)
+    expect(rubricSubjects).toHaveLength(1)
+    expect(rubricSubjects[0]?.subject).toBe('skills/ki-skills')
+    expect(rubricSubjects[0]?.context().rubric?.publication).toBe(publication)
   })
 })

@@ -18,6 +18,7 @@ Line-by-line criteria for auditing ki-skills. Classifications are derived from i
 - [BODY — Body content quality](#body--body-content-quality)
 - [SCRIPT — Scripts & executable code](#script--scripts--executable-code)
 - [KI-CHECKER — Knowledge Islands rubric contract](#ki-checker--knowledge-islands-rubric-contract)
+- [RUBRIC — Generated rubric publication](#rubric--generated-rubric-publication)
 - [KI-LINK — Knowledge Islands linking & portability](#ki-link--knowledge-islands-linking--portability)
 - [PORT — Runtime portability](#port--runtime-portability)
 - [KI-SHAPE — Knowledge Islands skill shape](#ki-shape--knowledge-islands-skill-shape)
@@ -190,7 +191,14 @@ Knowledge Islands catalogue, session, and packaging responsibilities.
 - **KI-CHECKER-3 [M] — ki-skills publishes the portable rubric contract** — `ki-skills` publishes the sole portable shared dependency, `scripts/shared/rubric.ts`, declared as `ki-shared-modules: [rubric]`. It provides catalogue authoring types for independently installed skills; `ki` owns execution, reporting, and transaction handling. The provider never declares a dependency on itself. (ADR-KI-HARNESS-SKILLS-012)
 - **KI-CHECKER-4 [M] — structured rubric items follow the uniform family layout** — `scripts/rubric/items/index.ts` is catalogue wiring only. Each family is imported from one semantic family module, which exports only that complete ordered `RubricFamily`; item constants and helpers remain private. Rule definitions and execution callbacks do not live in the catalogue index. (standards-rubric-authoring.md#rubric-families-and-items)
 - **KI-CHECKER-5 [M] — shared and internal script packaging is explicit** — Private implementation belongs under `scripts/internal/`; cross-skill modules belong under `scripts/shared/`, whose non-test entries must exactly match the modules published through `ki-shared-modules:` or materialised through `ki-shared-dependencies:`. (KI)
-- **KI-CHECKER-6 [M] — structured catalogue publication is exact** — A structured catalogue tracks `references/rubric.md` as its exact generated publication. The host supplies only validated publication evidence: a missing or differing file is a FAIL; during CONFORM this item requests the host-owned derived write without choosing its path or bytes. (standards-rubric-authoring.md#generated-rubric-publication)
+
+## RUBRIC — Generated rubric publication
+
+→ [standard](standards-rubric-authoring.md)
+
+The tracked readable rubric is the exact publication of the structured catalogue.
+
+- **RUBRIC-1 [M] — structured catalogue publication is exact** — A structured catalogue tracks `references/rubric.md` as its exact generated publication. The host supplies only validated publication evidence: a missing or differing file is a FAIL; during CONFORM this item requests the host-owned derived write without choosing its path or bytes. (standards-rubric-authoring.md#generated-rubric-publication)
 
 ## KI-LINK — Knowledge Islands linking & portability
 

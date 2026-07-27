@@ -13,6 +13,7 @@ type KiSkillsSubjectScope =
   | 'target'
   | 'invalidSkill'
   | 'skill'
+  | 'rubric'
   | 'markdown'
   | 'reference'
   | 'portability'
@@ -29,6 +30,7 @@ const KI_SKILLS_SUBJECT_FAMILIES = {
   target: ['LAY'],
   invalidSkill: ['LAY', 'FM'],
   skill: ['LAY', 'FM', 'NAME', 'DESC', 'OPT', 'SIZE', 'BODY', 'SCRIPT', 'KI-CHECKER', 'KI-SHAPE', 'KI-INVOKE', 'PROC'],
+  rubric: ['RUBRIC'],
   markdown: ['LAY', 'KI-LINK'],
   reference: ['LAY', 'KI-LINK', 'REF'],
   portability: ['PORT'],
@@ -121,6 +123,8 @@ export const createKiSkillsSession = ({ mode, repository, publication }: RubricC
     subjects.push(rubricSubject(skill.validFrontmatter ? 'skill' : 'invalidSkill', skill.context, skillSubject))
     if (conform) documents.push(conform.document)
     if (!skill.validFrontmatter) continue
+
+    if (basename(skillDirectory) === 'ki-skills') subjects.push(rubricSubject('rubric', skill.context, skillSubject))
 
     const runtimeBinding = parseFrontmatter(readFileSync(join(skillDirectory, 'SKILL.md'), 'utf8')).values['ki-runtime-binding'] === true
 

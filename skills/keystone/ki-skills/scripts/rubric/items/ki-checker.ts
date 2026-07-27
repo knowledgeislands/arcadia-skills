@@ -151,48 +151,11 @@ const KI_CHECKER_5: RubricItem<KiCheckerRubricContext> = {
   }
 }
 
-const KI_CHECKER_6: RubricItem<KiCheckerRubricContext> = {
-  code: 'KI-CHECKER-6',
-  title: 'structured catalogue publication is exact',
-  description:
-    'A structured catalogue tracks `references/rubric.md` as its exact generated publication. The host supplies only validated publication evidence: a missing or differing file is a FAIL; during CONFORM this item requests the host-owned derived write without choosing its path or bytes.',
-  sources: ['standards-rubric-authoring.md#generated-rubric-publication'],
-  mechanical: {
-    level: 'FAIL',
-    audit: {
-      phase: 'DERIVED',
-      run: ({ rootSkill, structuredRubricRequired, publication }) => {
-        if (!rootSkill || !structuredRubricRequired)
-          return [{ status: 'NOT_APPLICABLE', message: 'the audited skill is not the structured rubric exemplar' }]
-        if (!publication)
-          return [{ status: 'VIOLATION', message: 'the host did not provide generated-publication evidence for this structured catalogue' }]
-        if (publication.state === 'in-sync') return [{ status: 'PASS', message: 'the structured catalogue publication is exact' }]
-        return [
-          {
-            status: 'VIOLATION',
-            message:
-              publication.state === 'missing'
-                ? '`references/rubric.md` is missing from the structured catalogue'
-                : '`references/rubric.md` differs from the structured catalogue'
-          }
-        ]
-      }
-    },
-    conform: {
-      phase: 'DERIVED',
-      run: ({ rootSkill, structuredRubricRequired, publication }) => {
-        if (!rootSkill || !structuredRubricRequired || !publication || publication.state === 'in-sync') return
-        publication.propose()
-      }
-    }
-  }
-}
-
 export const KI_CHECKER: RubricFamily<KiSkillsRubricContext, KiCheckerRubricContext> = {
   code: 'KI-CHECKER',
   title: 'Knowledge Islands rubric contract',
   description: 'Knowledge Islands catalogue, session, and packaging responsibilities.',
   standard: 'standards-rubric-authoring.md',
   selectContext: (context: KiSkillsRubricContext) => selectKiSkillsContext(context, 'checker'),
-  items: [KI_CHECKER_1, KI_CHECKER_2, KI_CHECKER_3, KI_CHECKER_4, KI_CHECKER_5, KI_CHECKER_6]
+  items: [KI_CHECKER_1, KI_CHECKER_2, KI_CHECKER_3, KI_CHECKER_4, KI_CHECKER_5]
 }

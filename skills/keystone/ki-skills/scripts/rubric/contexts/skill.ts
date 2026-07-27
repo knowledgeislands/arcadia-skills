@@ -100,7 +100,10 @@ const rubricFamilyModules = (
     const members = collectionMatch
       ? [...new Set([...(collectionMatch[1] as string).matchAll(/\b([A-Z][A-Z0-9_]+)\b/g)].map((match) => match[1] as string))]
       : []
-    const exportsOrderedCollection = collectionMatch !== null && collectionMatch !== undefined && members.length > 0
+    const factoryFamily = new RegExp(`export\\s+const\\s+${collection}\\b[\\s\\S]*?=\\s*createRubricPublicationFamily\\b`, 'm').test(
+      source ?? ''
+    )
+    const exportsOrderedCollection = (collectionMatch !== null && collectionMatch !== undefined && members.length > 0) || factoryFamily
     const publicExports = source
       ? [
           ...source.matchAll(/^export\s+(?:const|function|class|interface|type|enum)\s+([A-Za-z_$][A-Za-z0-9_$]*)|^export\s+default\b/gm)
@@ -298,9 +301,9 @@ export const createSkillRubricContext = (
           : [],
         rubricModuleExists: existsSync(join(sharedDirectory, 'rubric.ts')),
         structuredRubricRequired: name === 'ki-skills' || frontmatter.present.has('ki-shared-dependencies'),
-        ...(name === 'ki-skills' && publication ? { publication } : {}),
         ...familyEvidence
       },
+      ...(name === 'ki-skills' ? { rubric: { publication } } : {}),
       shape: createKiShapeContext({
         skill: createKiShapeEvidence(directory, frontmatter, description ?? '', body),
         addArgumentHintVerbs: capabilities.addArgumentHintVerbs
