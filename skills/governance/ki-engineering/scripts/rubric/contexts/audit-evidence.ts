@@ -294,7 +294,7 @@ export const collectAuditEvidence = (repo: string): readonly EngineeringEvidence
   // ── core: the read-only toolchain, run directly (audit = lint WITHOUT fixing) ──
   // The native ki-engineering rubric runs all read-only tool checks itself. The tools
   // are not hidden behind package scripts. The Markdown gate remains ki-authoring's
-  // responsibility and is composed by `ki repo audit`.
+  // responsibility and is orchestrated by `ki repo audit`.
   runCheck('BIO-1', 'biome check', 'bunx @biomejs/biome check', STD)
   if (workspaces.length) {
     const noTsconfig = workspaces.filter((p) => !read(`${p}/tsconfig.json`))

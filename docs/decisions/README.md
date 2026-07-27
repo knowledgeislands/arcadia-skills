@@ -35,7 +35,7 @@ The records are living, compact, and independent. The order below is a **curated
 8. [SDR-KI-HARNESS-002](SDR-KI-HARNESS-002-runtime-portable-contracts-and-executor-positioning.md) — runtime-portable contracts, executor positioning (Claude Code now, Hermes next, Pi as conformance test), and the best-tool-for-the-job tenet.
 9. [ADR-KI-HARNESS-SKILLS-002](ADR-KI-HARNESS-SKILLS-002-mechanical-and-judgment-checker-split.md) — the mechanical/judgment checker split.
 10. [ADR-KI-HARNESS-004](ADR-KI-HARNESS-004-composition-over-extension.md) — composition over extension, the principle no skill may break.
-11. [ADR-KI-HARNESS-SKILLS-003](ADR-KI-HARNESS-SKILLS-003-dependency-order-for-multi-skill-composition.md) — the naming grammar and dependency order for composition.
+11. [ADR-KI-HARNESS-SKILLS-003](ADR-KI-HARNESS-SKILLS-003-dependency-order-for-multi-skill-composition.md) — the naming grammar, executable dependency order, and review priority.
 12. [ADR-KI-HARNESS-SKILLS-004](ADR-KI-HARNESS-SKILLS-004-skills-must-be-valid-standalone.md) — every skill must be valid standalone.
 13. [ADR-KI-HARNESS-005](ADR-KI-HARNESS-005-validate-down-ki-config-toml-contract.md) — the validate-down `.ki-config.toml` contract, the repo-to-skill binding every skill reads.
 14. [ADR-KI-HARNESS-006](ADR-KI-HARNESS-006-user-installation-repository-bootstrap-and-self-sufficiency.md) — user installation, repository bootstrap, and the self-sufficiency contract.

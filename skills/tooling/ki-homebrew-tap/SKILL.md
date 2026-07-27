@@ -79,7 +79,7 @@ The four procedures remain on demand because each coordinates work outside the h
 
 → Read [references/mode-refresh.md](references/mode-refresh.md)
 
-## Composition — what this skill rides and what it defers
+## Coverage — what this skill rides and what it defers
 
 This skill **rides `ki-repo`** (the tap is first a git repo: README, LICENSE, `.gitignore`, GitHub settings, security—all `ki-repo`'s) through explicit audit and conform sequencing. It does **not** ride `ki-engineering`: a tap has no `package.json`/TypeScript toolchain, so a bare `[ki-repo]` + `[ki-homebrew-tap]` config is complete (the `ki-plugins` precedent). As recorded by the repo-structure decision, that separate repository coverage is not a catalogue dependency, so frontmatter remains `ki-depends-on: []`.
 

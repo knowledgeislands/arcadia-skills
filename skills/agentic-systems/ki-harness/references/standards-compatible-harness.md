@@ -113,4 +113,4 @@ This standard governs the source container and compatible-payload boundary. Cont
 | Repository declaration and GitHub settings   | `ki-repo`        |
 | Harness install, activation, and CLI runtime | `tools-ki`       |
 
-A harness audit composes the applicable sibling audits and adds only the container and publication delta defined here.
+Selecting `ki-harness` also selects its declared prerequisites: `ki-skills`, `ki-subagents`, `ki-decision-records`, and `ki-roadmap`. Coverage selects `ki-mcp`, `ki-engineering`, and `ki-repo` separately when their concerns apply. This standard adds only the container and publication delta defined here.

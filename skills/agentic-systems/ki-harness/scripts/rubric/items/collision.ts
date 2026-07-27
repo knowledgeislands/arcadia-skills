@@ -3,17 +3,17 @@ import type { HarnessReviewContext, HarnessRubricContext } from '../contexts/har
 
 const COLL_1: RubricItem<HarnessReviewContext> = {
   code: 'COLL-1',
-  title: 'Composition boundary',
-  description: 'AUDIT names its composed sibling checks and the description provides contents-governing off-ramps.',
+  title: 'Capability boundary',
+  description: 'Declared prerequisites, coverage-selected siblings, and contents-governing off-ramps are complete and distinct.',
   sources: ['standards-compatible-harness.md#ownership-boundaries'],
   judgment: {
-    prompt: 'Are the AUDIT composition list and description off-ramps complete and non-overlapping?'
+    prompt: 'Are prerequisite dependencies, coverage-selected siblings, and description off-ramps complete and non-overlapping?'
   }
 }
 
 export const COLL: RubricFamily<HarnessRubricContext, HarnessReviewContext> = {
   code: 'COLL',
-  title: 'Composition boundary',
+  title: 'Capability boundary',
   description: 'Container ownership, host ownership, and sibling off-ramps.',
   standard: 'standards-compatible-harness.md',
   selectContext: (context) => context.review,

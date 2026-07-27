@@ -1,6 +1,6 @@
 # Lifecycle procedure
 
-_On-demand procedure for `ki-plan`'s sub-commands. The preflight, invocation, and composition-on-`ki-roadmap` model live in [`SKILL.md`](../SKILL.md) and are already loaded; this file is the sub-command procedure only._
+_On-demand procedure for `ki-plan`'s sub-commands. The preflight, invocation, and `ki-roadmap` ownership boundary live in [`SKILL.md`](../SKILL.md) and are already loaded; this file is the sub-command procedure only._
 
 Split the argument on the first space to get **sub-command** and **rest**. The lifecycle verbs are `ready`, `execute`, `accept`, `done`, `prune`, `new`, `promote`, and `status`. `ready` and `execute` parse `rest` as one or more whitespace-separated canonical plan identifiers; every other identifier-taking verb accepts exactly one.
 

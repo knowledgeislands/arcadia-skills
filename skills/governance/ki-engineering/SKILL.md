@@ -20,7 +20,7 @@ This is a **standard, base-agnostic Process skill**. It hard-codes no single rep
 1. **The common toolchain** — the baseline every TS/Bun repo meets, plus capability conditionals that fire only when a repo opts into a capability. The full, quotable standard is [the engineering standard](references/standards-engineering.md); the line-by-line items are in [the rubric](references/rubric.md).
 2. **The governance-skill rubric model** — the shared mechanism for turning any standard into structured criteria, focused evidence, phased audit and conform execution, and canonical checker responses. It is owned by `ki-skills` in [the rubric-authoring standard](../../keystone/ki-skills/references/standards-rubric-authoring.md); this skill conforms to it.
 
-**Artifact-specific rules are not here.** Anything meaningful only for one artifact type (an MCP's `bin`, `ki:server:mcp:*` scripts, coverage-exclude list, tool surface) lives in that artifact's skill. A repo is fully audited by **composing** this skill's checker with the artifact skill's — see below.
+**Artifact-specific rules are not here.** Anything meaningful only for one artifact type (an MCP's `bin`, `ki:server:mcp:*` scripts, coverage-exclude list, tool surface) lives in that artifact's skill. A repo is fully audited by running this coverage-detected standard alongside its declared artifact standard — see below.
 
 ## The common standard at a glance
 
@@ -29,9 +29,9 @@ This is a **standard, base-agnostic Process skill**. It hard-codes no single rep
 - **tsconfig / biome** — the universal `tsconfig.json` invariants (strict, nodenext, noEmit, …) for every repo; the fuller shared base for compiled-TS repos. `biome.json` matching the shared formatter/linter fields.
 - **Capability conditionals** — tests ⇒ a bare `test` entrypoint using the repo's chosen runner; `vitest.config.*` ⇒ the canonical Vitest scripts + 100% coverage; compiled build ⇒ `build`/`tsconfig.build.json`/`files` + the **cli-chmod rule** (`build` chmods `dist/cli/cli.js` iff `src/cli/`, and never a server bin); env ⇒ `.env*.example` + `NODE_ENV`-in-dev.
 
-## Composition — how a repo gets fully audited
+## Layering — how a repo gets fully audited
 
-The checker is the **common layer**; each artifact skill audits its own delta. They compose by being **run in sequence**, never by importing each other (so each stays valid when symlinked standalone):
+The checker is the **common layer**; each independently applicable artifact skill audits its own delta. The unscoped host runs all declared layers in a stable dependency-respecting order:
 
 ```text
 ki repo audit
@@ -53,7 +53,7 @@ Explain the common TypeScript/Bun toolchain, the direct `ki repo` workflow, the 
 
 1. Run `ki repo audit --skill ki-engineering` for the focused mechanical pass, or `ki repo audit` for the repository's complete declared set. The native host loads [the canonical item catalogue](scripts/rubric/items/index.ts), runs its code-tool checks, checks the script and CI surface, the `bun test` trap, `tsconfig`/`biome`, capability conditionals, and the `[ki-engineering]` table, then reports findings with rubric codes.
 2. **Apply the judgment items** in [the rubric](references/rubric.md): no per-repo loosening of `strict`/the `noImplicit*` family, the Node `.env` parity call where env is loaded, Vitest-configured source tests actually reaching the 100% bar, and repo-specific scripts not shadowing governed entrypoints.
-3. Ensure the artifact skill is declared in `.ki-config.toml`; the unscoped `ki repo audit` composes it automatically. Report by location → criterion → fix, grouped by severity (FAIL first).
+3. Ensure the artifact skill is declared in `.ki-config.toml`; the unscoped `ki repo audit` runs every declared layer. Report by location → criterion → fix, grouped by severity (FAIL first).
 
 ### Mode CONFORM — bring a repo's toolchain into line
 

@@ -8,7 +8,7 @@ This file is the **normative, quotable** standard. The checkable items and their
 
 ## Contents
 
-- [Scope, layers, and composition](#scope-layers-and-composition)
+- [Scope and layers](#scope-and-layers)
 - [0. Repo shapes — flat vs monorepo (core)](#0-repo-shapes--flat-vs-monorepo-core)
 - [1. package.json & toolchain pinning (core)](#1-packagejson--toolchain-pinning-core)
 - [2. The governed script surface (core)](#2-the-governed-script-surface-core)
@@ -20,14 +20,14 @@ This file is the **normative, quotable** standard. The checkable items and their
 - [8. .env discipline](#8-env-discipline-capability-the-repo-reads-env-config)
 - [9. .ki-config.toml](#9-ki-configtoml--ki-engineering-core)
 
-## Scope, layers, and composition
+## Scope and layers
 
 The standard applies to any repo carrying a `[ki-engineering]` table in its `.ki-config.toml` (§9) — today the 10 TS/Bun repos under `knowledgeislands/`. It is split into:
 
 - **Core** — the baseline every such repo MUST meet, unconditionally (§1–§5).
 - **Capability conditionals** — common rules that fire only when the repo opts into a capability, detected by a marker in the repo (§6–§8). A repo with no tests is not required to have a test script; a repo that ships tests exposes them through the bare `test` idiom. Vitest is recommended, not mandated; when a repo selects it by carrying `vitest.config.*`, the canonical Vitest scripts and 100% coverage rules apply in full.
 
-**Artifact-specific rules are NOT here.** Anything meaningful only for one artifact type — the MCP coverage-exclude list, `bin → dist/mcp-server/index.js`, `ki:server:mcp:*` scripts, `exports` per `main/<concern>` — lives in that artifact's skill (e.g. `ki-mcp`). Under ADR-KI-HARNESS-012, a repo is fully audited by native `ki repo audit` composition: it resolves each declared compatible registered operation from the verified active installed collection and runs them in dependency order. The native operation delivery is planned migration work; this does not claim that the current standalone checkers already compose that way.
+**Artifact-specific rules are NOT here.** Anything meaningful only for one artifact type — the MCP coverage-exclude list, `bin → dist/mcp-server/index.js`, `ki:server:mcp:*` scripts, `exports` per `main/<concern>` — lives in that artifact's skill (e.g. `ki-mcp`). A repository is fully audited when `ki repo audit` resolves every declared compatible operation from the verified active installed collection. Coverage selects this standard alongside each applicable artifact standard; a declared `ki-depends-on` edge instead makes one capability an executable prerequisite of another.
 
 The capability markers, and what each unlocks:
 

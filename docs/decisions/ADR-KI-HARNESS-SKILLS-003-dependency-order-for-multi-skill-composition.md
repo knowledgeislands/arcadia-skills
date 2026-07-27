@@ -12,17 +12,19 @@ decision_type: architecture
 
 ## Context
 
-When auditing a repo that multiple governance skills apply to, the skills must be applied in some order. A skill that composes on a sibling (e.g. `ki-mcp` composes on `ki-engineering`) produces more accurate results if the base has already been judged. Without a canonical order, different callers would apply skills in different sequences, producing inconsistent results and risking context overflow when all skill files are loaded simultaneously.
+When auditing a repo that multiple governance skills apply to, executable prerequisites and independent governance layers must not be conflated. A formal composition edge, such as `ki-binding-claude` depending on `ki-binding`, requires the prerequisite first. Coverage-detected standards such as `ki-engineering` and `ki-mcp` remain independent even when a complete repository audit runs both. Human judgment synthesis still benefits from a foundations-first reading priority, but that priority is not another executable dependency graph.
 
 ## Decision
 
-When walking a set of skills serially in a single agent context, apply them in **dependency order**, foundations first:
+Executable repository operations use the declared `ki-depends-on:` graph. Dependencies run before their dependent; list order has no meaning; and the host orders otherwise independent capabilities stably by canonical name.
+
+When synthesising judgment across an already completed multi-skill mechanical audit, use this **foundations-first review priority**:
 
 ```text
 authoring → engineering → repo → decision-records → feature-definitions → housekeeping-claude → kb → streams → activities → live-artifacts → mcp → website → website-cloudflare → plugins → tools → homebrew-tap → plans → agents → skills → tokenomics → tokenomics-claude → tokenomics-codex → harness → bootstrap → binding → binding-claude → binding-codex
 ```
 
-Portable capabilities precede their runtime adapters: `tokenomics` precedes its Claude and Codex evidence providers, while `binding` precedes its Claude and Codex native-surface adapters. `bootstrap` precedes binding because it establishes compatible skill activation. The repo-structure skills run together — `mcp` → `website` → `website-cloudflare` → `plugins` → `tools` → `homebrew-tap` — each governing one repo shape. The KB-zone skills cluster after `kb` (`streams` → `activities` → `live-artifacts`), while `decision-records`, `feature-definitions`, and `housekeeping-claude` sit after `repo` as governance instruments. Load and release one skill at a time to keep peak context at one skill, not the full set.
+The priority keeps foundational judgment ahead of downstream interpretation. It is intentionally broader than the executable dependency graph: adjacent entries may be independently coverage-detected. Portable capabilities precede their runtime adapters, and KB or repository-shape families stay together for coherent synthesis.
 
 ### Naming grammar
 
@@ -30,5 +32,6 @@ Skill names follow the grammar **`ki-<concern>[-<technology>]`**. The set has th
 
 ## Consequences
 
-- A composing skill's base is judged before the skill itself is reached.
-- In a serial walk, execution time scales with the number of skills; in parallel invocations (ADR-KI-HARNESS-AGENTS-001, later in the reading order), this order governs synthesis ranking, not execution order.
+- A composing skill's declared prerequisite executes before the skill itself.
+- Reordering TOML tables or dependency-array entries cannot change executable order.
+- In parallel judgment review (ADR-KI-HARNESS-AGENTS-001), the foundations-first list governs synthesis ranking only.

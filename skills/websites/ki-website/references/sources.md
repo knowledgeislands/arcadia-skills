@@ -18,9 +18,9 @@ Two layers feed the standard: the **upstream tools** (Eleventy, Tailwind, Lucide
 
 The standard is self-contained; it is the source of truth for house style. Any conformant site repo that carries a `[ki-website]` table is an example, not a source.
 
-| Tag | Source           | Governs                                                         | Last reviewed |
-| --- | ---------------- | --------------------------------------------------------------- | ------------- |
-| ENG | `ki-engineering` | The toolchain layer this composes on (referenced, not restated) | 2026-07-04    |
+| Tag | Source           | Governs                                                                 | Last reviewed |
+| --- | ---------------- | ----------------------------------------------------------------------- | ------------- |
+| ENG | `ki-engineering` | Separately coverage-selected toolchain layer (referenced, not restated) | 2026-07-04    |
 
 ## Last review
 

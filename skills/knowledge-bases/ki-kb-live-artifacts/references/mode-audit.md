@@ -4,5 +4,5 @@ _On-demand procedure for live-artifacts AUDIT. The live artifact model — pairi
 
 1. **Run the mechanical checker** — `ki repo audit --skill ki-kb-live-artifacts`. It reports unpublished Markdown sources, orphaned HTML renders, stale pairs, missing or invalid required frontmatter, an absent index when artifact sources exist, and informational evidence for source names omitted from an existing index. This domain has no FAIL criteria.
 2. **Apply the judgment layer** — read the **[J]** criteria in [the rubric](rubric.md): whether the index accurately lists active artifacts, Markdown remains authoritative, archived artifacts carry a rationale, and names are stable.
-3. **Compose on `ki-kb`** — zone and zone-index checks are owned by `ki-kb`; run its audit for the base first and record its result instead of re-deriving it here.
+3. **Respect the delegated boundary** — this focused audit owns Live Artifacts only. Selecting `ki-kb` runs this capability as a declared prerequisite and adds the wider base-zone checks.
 4. **Report** by location → criterion → fix, leading with WARNs.

@@ -12,4 +12,4 @@ KI Specifications is a normal Knowledge Islands repository with one additional s
 
 This is a floor, not a frozen ontology. The checker verifies the areas and marker but does not prescribe their internal layout, numbering, lifecycle, or document semantics. Those remain in the canonical Specifications repository until experience justifies factoring a stable rule into this skill.
 
-The skill composes with `ki-repo` by adding only this structural delta. It does not repeat universal requirements such as README, LICENSE, `.gitignore`, GitHub configuration, or security settings.
+The skill adds only this structural delta. Coverage selects `ki-repo` separately for universal requirements such as README, LICENSE, `.gitignore`, GitHub configuration, and security settings.

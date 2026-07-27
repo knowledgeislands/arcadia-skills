@@ -15,7 +15,7 @@ const KI_SHAPE_2: RubricItem<KiShapeRubricContext> = {
   code: 'KI-SHAPE-2',
   title: 'skills compose rather than extend',
   description:
-    '**Composition is the only inter-skill relationship — the base-coupled extension pattern is retired.** A skill builds on another by running the sibling\'s checker/mode **in sequence** and adding its delta (never importing it), and **declares the edge** — naming the sibling and the run order in its AUDIT mode. What a base needs differently is **declared, not forked**: data in the repo\'s own `.ki-config` table (read validate-down), prose in its `CLAUDE.md` — never a `<base>-kb`-style skill that takes the shared modes by name. _Delegation between two standards (kb → streams) is composition at sub-scope._ The linter flags **endorsement of the retired pattern** (telling a base to ship/"prefer" an extension skill, or that a skill "delegates the modes back" / "extends this one") as a mechanical heuristic; the **[J]** gate is that no skill in the set models a relationship as a base-coupled extension.',
+    '**Composition is the only dependent inter-skill relationship — the base-coupled extension pattern is retired.** Formal composition means selecting one skill necessarily selects and runs another governance capability before adding its delta. The composing skill declares the prerequisite in `ki-depends-on:` and names it in AUDIT; dependency-list order is not semantic. Separately coverage-detected standards are audited alongside, off-ramps are routing, and `ki-shared-dependencies:` is packaging — none is composition. What a base needs differently is **declared, not forked**: data in the repo\'s own `.ki-config` table (read validate-down), prose in its `CLAUDE.md` — never a `<base>-kb`-style skill that takes the shared modes by name. _Delegation between two standards (kb → streams) is composition at sub-scope and is declared by the delegating parent._ The linter flags **endorsement of the retired pattern** (telling a base to ship/"prefer" an extension skill, or that a skill "delegates the modes back" / "extends this one") as a mechanical heuristic; the **[J]** gate is that every claimed composition has the matching dependency edge and no adjacent relationship is mislabeled as composition.',
   sources: ['ki-agentic-harness README', '`ki-engineering`'],
   mechanical: {
     level: 'WARN',
@@ -35,7 +35,10 @@ const KI_SHAPE_2: RubricItem<KiShapeRubricContext> = {
       }
     }
   },
-  judgment: { prompt: 'Does every inter-skill relationship use declared composition rather than base-coupled extension?' }
+  judgment: {
+    prompt:
+      'Does every claimed composition have a matching dependency edge, while coverage-detected standards, off-ramps, and shared-module packaging remain correctly distinct from composition?'
+  }
 }
 
 const KI_SHAPE_3: RubricItem<KiShapeRubricContext> = {

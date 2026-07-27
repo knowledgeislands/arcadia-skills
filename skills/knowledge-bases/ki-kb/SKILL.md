@@ -44,7 +44,7 @@ The `Admin/` zone carries two canonical subdivisions:
 
 Each subdivision carries an index note of the same name (`Governance.md`, `Operations.md`). The root `Admin/MEMORY.md` remains the memory-cascade anchor and is not replaced by these. Absence of either subdivision is a WARN (not FAIL) — a base may legitimately omit one if that concern is not yet active; presence without an index note is also a WARN.
 
-The specific artefact types under these subdivisions are governed by sibling skills that compose on this one — decision records by `ki-decision-records`, activity notes by `ki-kb-activities`, and live-artifact pairs by `ki-kb-live-artifacts` — each deferring here for the zone structure and the KI-wide frontmatter standard.
+The specific artefact types under these subdivisions have separate owners. This skill delegates Activity notes to its declared `ki-kb-activities` dependency and Live Artifact pairs to `ki-kb-live-artifacts`; selecting `ki-kb` therefore runs both first. Decision Records remain independently selected through `ki-decision-records`. Each focused skill defers the parent zone structure and KI-wide frontmatter standard back here.
 
 ### Charter and Conformance baseline
 

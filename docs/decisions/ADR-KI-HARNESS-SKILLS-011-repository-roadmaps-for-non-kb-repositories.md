@@ -23,7 +23,7 @@ The general-governance skill for non-KB forward work is **`ki-roadmap`**, replac
 
 Each thematic roadmap item has a stable qualified locator, `<theme>/<item-slug>`. Every theme declares a stable uppercase code, and plan ids pair it with a serial starting at `001`; the canonical plan identifier is `<THEME>-<NNN>`, which dependencies use across the repository. An item has exactly one authoritative home. Work requiring an executable plan expands into the thematic profile before the plan is created.
 
-`ki-plan` remains the process skill that drives individual plan lifecycles and composes on the `ki-roadmap` standard. A Knowledge Base does not use either repository-roadmap profile or its artifacts: `ki-kb-streams` wholly owns its thematic forward view and execution checklists.
+`ki-plan` remains the process skill that drives individual plan lifecycles using the format and methodology owned by `ki-roadmap`; this process ownership boundary is not an executable dependency edge. A Knowledge Base does not use either repository-roadmap profile or its artifacts: `ki-kb-streams` wholly owns its thematic forward view and execution checklists.
 
 The replacement is direct. There is no `ki-plans` alias, configuration or script alias, resolver rename, dual-write period, `docs/plans/` fallback, or compatibility bridge.
 

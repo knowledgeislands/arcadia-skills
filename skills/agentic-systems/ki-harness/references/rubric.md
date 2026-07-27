@@ -14,7 +14,7 @@ Line-by-line criteria for auditing ki-harness. Classifications are derived from 
 - [CONFIG — Harness declaration](#config--harness-declaration)
 - [SKILLS — Skill capability identity](#skills--skill-capability-identity)
 - [LONG — Longevity](#long--longevity)
-- [COLL — Composition boundary](#coll--composition-boundary)
+- [COLL — Capability boundary](#coll--capability-boundary)
 
 ## CAP — Capability publication
 
@@ -72,8 +72,8 @@ Knowledge Islands source-harness governance declarations.
 Recursive physical skill discovery and identity integrity within the compatible payload.
 
 - **SKILLS-1 [M] — Skill directory and name alignment** — Each discovered physical skill root matches its SKILL.md name frontmatter. (standards-compatible-harness.md#skill-capability-identity)
-- **SKILLS-2 [M + J] — Unique skill names** — No two discovered skill roots share a frontmatter name, and composed installed surfaces remain unambiguous. (standards-compatible-harness.md#skill-capability-identity)
-  - _Review prompt:_ Does another installed or composed harness make an otherwise unique local skill name ambiguous?
+- **SKILLS-2 [M + J] — Unique skill names** — No two discovered skill roots share a frontmatter name, and combined installed surfaces remain unambiguous. (standards-compatible-harness.md#skill-capability-identity)
+  - _Review prompt:_ Does another installed harness make an otherwise unique local skill name ambiguous?
 
 ## LONG — Longevity
 
@@ -84,11 +84,11 @@ Refresh discipline for the compatible-harness standard.
 - **LONG-1 [J] — Refresh path** — The ki-harness skill carries REFRESH and a dated source review record. (standards-compatible-harness.md)
   - _Review prompt:_ Do the ki-harness REFRESH procedure and sources.md cadence provide a usable current refresh path?
 
-## COLL — Composition boundary
+## COLL — Capability boundary
 
 → [standard](standards-compatible-harness.md)
 
 Container ownership, host ownership, and sibling off-ramps.
 
-- **COLL-1 [J] — Composition boundary** — AUDIT names its composed sibling checks and the description provides contents-governing off-ramps. (standards-compatible-harness.md#ownership-boundaries)
-  - _Review prompt:_ Are the AUDIT composition list and description off-ramps complete and non-overlapping?
+- **COLL-1 [J] — Capability boundary** — Declared prerequisites, coverage-selected siblings, and contents-governing off-ramps are complete and distinct. (standards-compatible-harness.md#ownership-boundaries)
+  - _Review prompt:_ Are prerequisite dependencies, coverage-selected siblings, and description off-ramps complete and non-overlapping?

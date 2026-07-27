@@ -17,7 +17,7 @@ This runtime adapter composes `ki-binding` and owns the Claude-specific delta: C
 
 ### Mode AUDIT
 
-Run `ki-binding` first, then `ki repo audit --skill ki-binding-claude --repo <project>`. The adapter reports Code/Desktop evidence and Cowork plugin drift. Web has no local configuration and is a judgment-only convention.
+Run `ki repo audit --skill ki-binding-claude --repo <project>`. The host resolves and runs the declared `ki-binding` prerequisite first; the adapter then reports Code/Desktop evidence and Cowork plugin drift. Web has no local configuration and is a judgment-only convention.
 
 ### Mode CONFORM
 

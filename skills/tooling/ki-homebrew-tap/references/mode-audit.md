@@ -1,6 +1,6 @@
 # Mode AUDIT — check a tap against the standard
 
-_On-demand procedure for ki-homebrew-tap's AUDIT mode. The canonical shape, the name constraint, and the composition edges live in [`SKILL.md`](../SKILL.md) and are already loaded; this file is the procedure only._
+_On-demand procedure for ki-homebrew-tap's AUDIT mode. The canonical shape, name constraint, and adjacent coverage boundaries live in [`SKILL.md`](../SKILL.md) and are already loaded; this file is the procedure only._
 
 1. **Identify the target.** Confirm the tap path (default: the cwd repo). It should be a `homebrew-<x>` repo with a `Formula/` directory.
 2. **Run the mechanical checker.** `ki repo audit --skill ki-homebrew-tap --repo <tap-path>` checks `Formula/` presence, per-formula class, fields, description style, versioned URL, the README table, and the `[ki-homebrew-tap]` marker. `TAP-7` reports the exact Homebrew commands still requiring explicit execution; the host does not invoke them.

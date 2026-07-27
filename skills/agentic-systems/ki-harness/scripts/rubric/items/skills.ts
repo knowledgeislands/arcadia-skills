@@ -54,7 +54,7 @@ const SKILLS_1: RubricItem<HarnessSkillsContext> = {
 const SKILLS_2: RubricItem<HarnessSkillsContext> = {
   code: 'SKILLS-2',
   title: 'Unique skill names',
-  description: 'No two discovered skill roots share a frontmatter name, and composed installed surfaces remain unambiguous.',
+  description: 'No two discovered skill roots share a frontmatter name, and combined installed surfaces remain unambiguous.',
   sources: STANDARD,
   mechanical: {
     level: 'FAIL',
@@ -80,7 +80,7 @@ const SKILLS_2: RubricItem<HarnessSkillsContext> = {
     }
   },
   judgment: {
-    prompt: 'Does another installed or composed harness make an otherwise unique local skill name ambiguous?'
+    prompt: 'Does another installed harness make an otherwise unique local skill name ambiguous?'
   }
 }
 

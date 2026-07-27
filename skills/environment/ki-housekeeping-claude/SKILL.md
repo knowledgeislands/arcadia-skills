@@ -37,5 +37,5 @@ Carries the universal **AUDIT · CONFORM · EDUCATE · REFRESH**. Invoked as `he
 
 - The state this skill governs lives **outside the repo tree** — under `~/.claude/`, `~/Library/Application Support/Claude/`, and VSCode's `workspaceStorage/`. Its structured session is restricted to the selected repository's Claude project memory; the session / artifact / storage areas are machine-level and audited directly through the server, not by repository audit.
 - A repo with no `memory/` directory yet (never used auto-memory) is an **NA**, not a FAIL.
-- Composes on `ki-authoring` for the Markdown formatting delta of the memory files and on the `ki-skills` rubric contract for execution and severity.
+- Route Markdown formatting to the separately applicable `ki-authoring` standard. The local `ki-skills:rubric` shared module is compile-time packaging, not a governance dependency.
 - Does not assume any particular personal `~/.claude/CLAUDE.md` content — the doctrines checked are the systems' own universal instructions, not one user's private elaboration of them.

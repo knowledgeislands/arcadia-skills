@@ -40,7 +40,7 @@ The source tree groups capabilities into eight semantic domains:
 
 ## Interdependencies
 
-The domains group the skills by concern. A second relationship runs across them: which governance capability each skill requires. Because skills compose rather than fork, a skill declares its requirements in `ki-depends-on:` frontmatter. A repository explicitly declares both a selected skill and each dependency; the tree below mirrors those declarations rather than expanding coverage. Each root has no dependency; its children are its `ki-depends-on:` entries.
+The domains group the skills by concern. A second relationship runs across them: which governance capability each skill necessarily requires. Formal composition is declared in `ki-depends-on:` frontmatter; selecting a dependent runs its prerequisites first. A repository explicitly declares both the selected skill and every dependency. Textual list order has no meaning, and separately coverage-detected standards do not appear as dependency edges. The tree below mirrors the declarations rather than expanding coverage.
 
 <!-- BEGIN GENERATED SKILL GRAPH -->
 

@@ -28,7 +28,7 @@ _Verify:_ each checker vendors the canonical `ki-skills` rubric, checker, and re
 
 ### GOV-004 — Composition, not extension
 
-A skill MUST NOT import another skill's source tree; it composes by running a sibling's checker or mode in sequence and declaring the edge, per [ADR-KI-HARNESS-004](../decisions/ADR-KI-HARNESS-004-composition-over-extension.md). The narrow implementation exception is a declared shared-module dependency materialised as a regular local file at the consumer's own `scripts/shared/<module>.ts` path.
+A skill MUST NOT import another skill's source tree. It composes by declaring each prerequisite in `ki-depends-on` so the host selects and executes that capability first, per [ADR-KI-HARNESS-004](../decisions/ADR-KI-HARNESS-004-composition-over-extension.md). The narrow implementation exception is a declared shared-module dependency materialised as a regular local file at the consumer's own `scripts/shared/<module>.ts` path.
 
 _Verify:_ no `skills/*/scripts/**/*.ts` relative import resolves outside its own `scripts/` directory; shared dependencies resolve only to safe declared provider modules and execute from local copies.
 
@@ -36,7 +36,7 @@ _Verify:_ no `skills/*/scripts/**/*.ts` relative import resolves outside its own
 
 Each `SKILL.md` MUST declare a `ki-depends-on:` frontmatter list, and the resulting graph MUST be acyclic with every edge resolving to an existing skill, per [ADR-KI-HARNESS-SKILLS-006](../decisions/ADR-KI-HARNESS-SKILLS-006-six-cluster-skill-taxonomy-and-the-implication-graph.md).
 
-A dependency identifies a governance capability a selected skill requires; it does not select coverage or establish mode execution order. A target that declares a skill MUST explicitly declare each of its dependencies in `.ki-config.toml`.
+A dependency identifies a prerequisite governance capability that selection of a skill also selects. The host MUST execute every dependency before its dependent; the order of names within `ki-depends-on` has no meaning, and the host MUST use a stable order between otherwise independent capabilities. Coverage selection is separate. A target that declares a skill MUST explicitly declare each of its dependencies in `.ki-config.toml`.
 
 _Verify:_ `bun run ki:skills:graph:check` passes — it validates that every edge resolves and the graph is acyclic.
 

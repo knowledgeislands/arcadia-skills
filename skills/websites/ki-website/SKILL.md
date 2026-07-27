@@ -6,7 +6,7 @@ owns: [eleventy.config.ts, eleventy.config.js, eleventy.config.mjs, eleventy.con
 contributes: ['.ki-config.toml', '.gitignore', package.json]
 requires: [ROADMAP.md]
 description: >-
-  Codifies, audits, and enforces the Knowledge Islands static-site standard: Eleventy 3 with Nunjucks and Markdown, TypeScript run natively on Bun, Tailwind 4 in config-less mode with semantic design tokens, and a portable `dist/` output. Use when building a new KI static site, auditing an existing site against the standard, conforming one to the standard, or scaffolding the initial `eleventy.config.ts`, Tailwind token pair, `src/` layout, and SEO wiring. Triggers: "audit my 11ty site", "does this site follow our standard", "scaffold a new 11ty site", "conform this site to KI standard", "build a static site with Eleventy", "my Tailwind build isn't generating any output", "add a page layout". Builds on ki-engineering (the aggregate/scoped Bun code-toolchain gate) and ki-authoring (Markdown style); for deploying the built `dist/` to Cloudflare use ki-website-cloudflare. Not for Astro, Next, or other frameworks.
+  Codifies, audits, and enforces the Knowledge Islands static-site standard: Eleventy 3 with Nunjucks and Markdown, TypeScript run natively on Bun, Tailwind 4 in config-less mode with semantic design tokens, and a portable `dist/` output. Use when building a new KI static site, auditing an existing site against the standard, conforming one to the standard, or scaffolding the initial `eleventy.config.ts`, Tailwind token pair, `src/` layout, and SEO wiring. Triggers: "audit my 11ty site", "does this site follow our standard", "scaffold a new 11ty site", "conform this site to KI standard", "build a static site with Eleventy", "my Tailwind build isn't generating any output", "add a page layout". The separately coverage-detected ki-engineering and ki-authoring standards own the code toolchain and Markdown style; for deploying the built `dist/` to Cloudflare use ki-website-cloudflare. Not for Astro, Next, or other frameworks.
 argument-hint: 'audit <repo> | conform <repo> | help | educate <repo> | refresh'
 ---
 
@@ -16,7 +16,7 @@ You are applying the **Knowledge Islands 11ty website standard** — the shared 
 
 This is a **base-agnostic governance skill**. It hard-codes no single repo; it applies to any repo carrying a `[ki-website]` table in its `.ki-config.toml`. How it sits beside the other skills, and where it must not overlap them, is documented once in the ki-agentic-harness `README.md`.
 
-This skill owns the **site-build delta** only. The generic toolchain (Bun mandate, aggregate/scoped audit wiring, and direct `tsconfig`/Biome/TypeScript checks) is `ki-engineering`'s; Markdown/TOML style is `ki-authoring`'s; **serving the built `dist/`** on Cloudflare is `ki-website-cloudflare`'s. It **composes** on top of those rather than restating them.
+This skill owns the **site-build delta** only. The generic toolchain (Bun mandate, aggregate/scoped audit wiring, and direct `tsconfig`/Biome/TypeScript checks) is `ki-engineering`'s; Markdown/TOML style is `ki-authoring`'s; **serving the built `dist/`** on Cloudflare is `ki-website-cloudflare`'s. Those independently selected standards are audited alongside this one rather than restated here.
 
 The full, quotable standard is [the Eleventy site standard](references/standards-eleventy-site.md); the line-by-line pass/fail items are in [the audit rubric](references/rubric.md); the tracked provenance is [the source list](references/sources.md). `ki repo audit --skill ki-website` runs the mechanical checks. Read those for detail; this file is the operating procedure.
 
@@ -47,9 +47,9 @@ Four invariants define the standard — most findings are a breach of one:
 3. **TypeScript runs natively — no transpile.** `eleventy.config.ts` and `_data/*.ts` run under Bun; `.ts` + `.json5` data extensions are registered in the config. `tsc` is type-check only (engineering's layer).
 4. **Tailwind compiles inside the Eleventy lifecycle.** An `eleventy.before` hook runs the Tailwind CLI in build mode; dev runs a parallel `--watch` and an `addWatchTarget` on the compiled CSS.
 
-## Composition — how a site repo gets fully audited
+## Layering — how a site repo gets fully audited
 
-The checker is the **site-build layer**; the toolchain and hosting layers each audit their own. They compose by being **run in sequence**, never by importing each other (each skill is symlinked standalone):
+The checker is the **site-build layer**; the independently applicable toolchain and hosting layers each audit their own concern. The unscoped host runs every declared layer:
 
 ```text
 ki repo audit --repo <repo> --skill ki-engineering          → common toolchain

@@ -66,10 +66,10 @@ Modes: **AUDIT · CONFORM · EDUCATE · NEW · REFRESH** (named, alphabetical). 
 
 → Read [references/mode-refresh.md](references/mode-refresh.md)
 
-## Composition
+## Delegated boundary
 
-- `ki-kb` — owns the Admin/Operations/ zone and the base-level zone audit. This skill composes on it for zone checks; run `ki-kb` AUDIT first when auditing a full base.
-- `ki-authoring` — Markdown style for the `.md` source files.
+- `ki-kb` — owns the Admin/Operations/ zone and the base-level audit. Its declared dependency edge delegates Live Artifact governance here, so selecting `ki-kb` runs this capability first. A focused `ki-kb-live-artifacts` audit remains limited to the collection.
+- `ki-authoring` — the separately applicable Markdown style for `.md` source files.
 
 ## Project bindings
 

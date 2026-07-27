@@ -30,5 +30,5 @@ This decision was superseded on 2026-07-27. Delegation readiness now belongs to 
 
 ## References
 
-- [ADR-KI-HARNESS-SKILLS-003](ADR-KI-HARNESS-SKILLS-003-dependency-order-for-multi-skill-composition.md) — composition by run-in-sequence and the canonical dependency order.
+- [ADR-KI-HARNESS-SKILLS-003](ADR-KI-HARNESS-SKILLS-003-dependency-order-for-multi-skill-composition.md) — executable dependency ordering and the separate foundations-first review priority.
 - [ADR-KI-HARNESS-SKILLS-004](ADR-KI-HARNESS-SKILLS-004-skills-must-be-valid-standalone.md) — standalone validity.

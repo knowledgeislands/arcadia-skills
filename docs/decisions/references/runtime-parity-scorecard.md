@@ -24,7 +24,7 @@ Two lenses, deliberately separate: the **feature-coverage matrix** tracks the _n
 
 † Skill checkers are `bun` scripts and the `ki:*` package.json keys wrap them — runtime-blind, so they run identically under either runtime once discovered.
 
-‡ `ki-binding`'s source is a renderer-neutral `mcp-servers.yaml`; its Codex renderer (`render-codex.ts`) shells Codex's native merge-safe `codex mcp add|remove` to write `[mcp_servers.<name>]` into `~/.codex/config.toml`, verified end-to-end against codex-cli 0.144.4. Separately, `mcp/` ships no servers yet.
+‡ `ki-binding`'s source is a renderer-neutral `mcp-servers.yaml`; `ki-binding-codex` shells Codex's native merge-safe `codex mcp add|remove` to write `[mcp_servers.<name>]` into `~/.codex/config.toml`, verified end-to-end against codex-cli 0.144.4. Separately, `mcp/` ships no servers yet.
 
 § Codex documentation describes subagents as TOML under `~/.codex/agents/` (`name`/`description`/`developer_instructions`), a different shape from Claude Code's Markdown+YAML. The generated agent publisher reports-and-skips Codex pending the generator; the format is spiked, not built. Against codex-cli 0.145.0, however, no `~/.codex/agents/` directory is created and there is no subagents subcommand (only `~/.codex/skills/` exists), so the format is documented, not verified-present.
 
@@ -36,7 +36,7 @@ The near-term goal was **not** full feature parity of everything shipped today. 
 
 1. **Skills — done.** Both runtimes install and discover them; nothing blocks concurrent use here.
 2. **`AGENTS.md` — done.** The runtime-neutral orientation core; `CLAUDE.md` opens with `@AGENTS.md`.
-3. **MCP → Codex — done.** `ki-binding`'s Codex renderer emits `~/.codex/config.toml` `[mcp_servers.*]` from the neutral `mcp-servers.yaml`.
+3. **MCP → Codex — done.** `ki-binding-codex` merges `~/.codex/config.toml` `[mcp_servers.*]` from `ki-binding`'s neutral `mcp-servers.yaml`.
 
 The develop-in-both milestone is closed. Explicitly **off** that path, still open as their own future items: **agents** (MD→TOML generator), **hooks** (Phase 3 generator + the Plan-Mode question), and **evals** on Codex. These are governance/automation depth, not blockers to concurrent development.
 

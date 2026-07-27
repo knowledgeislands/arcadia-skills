@@ -41,9 +41,9 @@ Modes: **AUDIT · CONFORM · EDUCATE · NEW · REFRESH** (named, alphabetical). 
 
 → Read [references/mode-refresh.md](references/mode-refresh.md)
 
-## Composition
+## Delegated boundary
 
-- `ki-kb` — owns the Admin/Operations/ zone and the base-level zone audit. This skill composes on it for zone checks; run `ki-kb` AUDIT first when auditing a full base.
+- `ki-kb` — owns the Admin/Operations/ zone and the base-level audit. Its declared dependency edge delegates Activity-note governance here, so selecting `ki-kb` runs this capability first. A focused `ki-kb-activities` audit remains limited to the collection.
 - `ki-skills` — authors a missing skill when a `slash-command` activity names one that does not exist.
 - `ki-harness` — the harness bundle layout; the checker resolves `skills/<name>/SKILL.md` relative to the harness root declared in the base's `.ki-config.toml`.
 

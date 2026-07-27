@@ -79,14 +79,15 @@ Create a well-formed agent definition from a plain-English description of the ag
 
 ### Correct cross-skill composition declaration
 
-When a skill runs a sibling's checker in sequence, it declares the edge explicitly rather than inheriting by coupling. The declaration appears in the mode step that calls the sibling, names the sibling by its `name` (never a file path), and explains what the sibling contributes and what this skill adds on top. This is the **composition-only** principle: each skill is valid standalone; the composition is in the calling skill's prose, not a shared base.
+When selecting one skill necessarily selects and executes another first, the dependent declares that prerequisite in `ki-depends-on`. The host resolves the graph and runs prerequisites before dependents. Array order has no semantic meaning. The skill body explains the prerequisite's contribution and the dependent's delta without importing the sibling's source.
 
-```markdown
-## Operating modes
+Coverage-selected governance is different: if two independently declared standards merely apply to the same repository, neither declares the other as a dependency. Off-ramps and shared-module dependencies are also separate contracts.
 
-### Mode AUDIT — audit the harness bundle
-
-1. **Run the skills audit.** From the harness root, run `ki repo audit --skill ki-skills` — it audits every `SKILL.md` in `skills/` against the mechanical criteria. Capture its output verbatim.
-2. **Compose a sibling only when its concern is in scope.** For example, run `ki repo audit --skill ki-engineering` when the requested harness review includes the toolchain, `tsconfig`, or Biome configuration. Capture its findings; do not re-derive them here.
-3. **Apply harness-specific judgment** — five-part bundle completeness, `.ki-config.toml` table presence for each populated part, and cross-skill consistency (no two skills claiming the same domain). State the harness-specific delta separately from any sibling's findings.
+```yaml
+---
+name: ki-website-cloudflare
+ki-depends-on: [ki-website]
+---
 ```
+
+Here `ki-website` is a prerequisite because the hosting capability consumes the site capability's built output. `ki-engineering` may also govern the repository, but coverage selects it separately rather than implying a dependency from either website skill.

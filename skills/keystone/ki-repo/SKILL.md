@@ -34,7 +34,7 @@ Every governance skill carries the universal four **AUDIT · CONFORM · EDUCATE 
 
 ### Mode AUDIT — check a repo against the standard
 
-Auditing a whole tree or org is a set audit — **bound the context** (the set-audit discipline in `ki-skills`' enforcement framework §5): take the checker's one set-level run over every repo, then do the per-repo judgment pass **one repo at a time**, fully (its composed `engineering` / artifact-skill audits included) before moving to the next; repos are independent, so the order is free.
+Auditing a whole tree or org is a set audit — **bound the context** (the set-audit discipline in `ki-skills`' enforcement framework §5): take the checker's one set-level run over every repo, then do the per-repo judgment pass **one repo at a time**, fully (including every coverage-selected engineering and artifact standard) before moving to the next; repos are independent, so the order is free.
 
 1. Confirm `gh` is authenticated against the org (`gh auth status`).
 2. **Run the native audit:** `ki repo audit --repo <repo>` resolves the selected repo's declared roots, validates their explicit dependencies, resolves only compatible registered operations from the verified active installed collection, and runs them in dependency order through the shared finding model. Missing, incompatible, undeclared, or untrusted skills fail before an operation runs.

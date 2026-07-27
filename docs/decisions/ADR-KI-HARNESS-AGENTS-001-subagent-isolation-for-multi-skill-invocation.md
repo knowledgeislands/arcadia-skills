@@ -22,7 +22,7 @@ For any multi-skill invocation (AUDIT, CONFORM, REFRESH, or other modes run acro
 
 1. **Run the mechanical aggregate first** — the repository's `ki:audit` entrypoint is the authoritative mechanical result. Keep set-level checks such as skill-name collisions and description reciprocity in the orchestrator, because they are cross-skill by nature.
 2. **Fan out only independent judgment review** — when the host supports subagents and the review is large enough to justify them, use `ki-delegate` to give each reviewer one bounded concern and the already-captured mechanical result. Do not re-run or reinterpret another concern's checker in a subagent.
-3. **Synthesise in the main agent** — collect the bounded reviews, rank findings with dependency-order priority (foundations first, per ADR-KI-HARNESS-SKILLS-003), and report across concerns. The orchestrator remains responsible for gating any resulting changes.
+3. **Synthesise in the main agent** — collect the bounded reviews, rank findings with the foundations-first review priority from ADR-KI-HARNESS-SKILLS-003, and report across concerns. The orchestrator remains responsible for gating any resulting changes.
 
 This is a method, not a tracked runtime workflow. Each host uses its available delegation mechanism without making that mechanism part of the governed harness contract.
 
@@ -30,11 +30,11 @@ This is a method, not a tracked runtime workflow. Each host uses its available d
 
 - The mechanical audit remains reproducible without an agent runtime or custom workflow code.
 - When used, each reviewer’s context is bounded to a single concern and independent judgment review can complete in parallel.
-- The dependency order from ADR-KI-HARNESS-SKILLS-003 becomes synthesis ranking priority, not execution order.
+- The review priority from ADR-KI-HARNESS-SKILLS-003 governs synthesis ranking, while executable prerequisites come only from `ki-depends-on:`.
 - A reviewer failure does not invalidate the aggregate mechanical result; report the review gap honestly and retry or review it in the main context.
 - Cross-skill checks remain in the main context because they cannot be isolated per concern.
 - No Claude-specific workflow must track changing checker paths, concern names, or runtime APIs.
 
 ## References
 
-- [ADR-KI-HARNESS-SKILLS-003](ADR-KI-HARNESS-SKILLS-003-dependency-order-for-multi-skill-composition.md) — the dependency order that governs synthesis ranking.
+- [ADR-KI-HARNESS-SKILLS-003](ADR-KI-HARNESS-SKILLS-003-dependency-order-for-multi-skill-composition.md) — executable dependency order and the separate review priority.

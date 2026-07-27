@@ -6,7 +6,7 @@ Every skill in the harness, grouped by [source domain](skills.md#the-skill-domai
 
 ### `ki-harness`
 
-Audits, conforms, and scaffolds a **harness repository** — the container that bundles the other parts: the five-part `skills/` / `subagents/` / `mcp/` / `evals/` / `hooks/` layout, the root `CLAUDE.md` / `ROADMAP.md` / `package.json` script families / `.ki-config.toml` table, and the delivery conventions that make its components available. Governs the **container, not the contents**: the bridge into the sibling skills rather than a replacement — it **composes** their checkers (`ki-skills`, `ki-subagents`, `ki-roadmap`, `ki-mcp`, `ki-engineering`, `ki-repo`) and adds only the bundle-structure delta. Empty shelves are valid — a shelf is not a gap.
+Audits, conforms, and scaffolds a **harness repository** — the container that bundles the other parts: the five-part `skills/` / `subagents/` / `mcp/` / `evals/` / `hooks/` layout, the root `CLAUDE.md` / `ROADMAP.md` / `package.json` script families / `.ki-config.toml` table, and the delivery conventions that make its components available. Governs the **container, not the contents**: it depends on `ki-skills`, `ki-subagents`, `ki-decision-records`, and `ki-roadmap`, while coverage separately selects `ki-mcp`, `ki-engineering`, and `ki-repo` when their concerns apply. Empty shelves are valid — a shelf is not a gap.
 
 ### `ki-mcp`
 
@@ -14,7 +14,7 @@ Audits, conforms, and scaffolds workspace MCP servers against the "workspace MCP
 
 ### `ki-plugins`
 
-Audits, conforms, and scaffolds a Knowledge Islands **plugin-marketplace** repo — the generated Claude plugin marketplace that projects the harness's skills and agents onto the Cowork surface (`knowledgeislands/ki-plugins`, `ADR-KI-HARNESS-002`). It governs the on-disk projection (the `marketplace.json` / `plugin.json` manifests, the verbatim `skills/` copy and flattened `subagents/`, the MCP-deferred rule, and the generated-not-hand-edited invariant). Generation and cross-surface enablement stay with `ki-binding`.
+Audits, conforms, and scaffolds a Knowledge Islands **plugin-marketplace** repo — the generated Claude plugin marketplace that projects the harness's skills and agents onto the Cowork surface (`knowledgeislands/ki-plugins`, `ADR-KI-HARNESS-002`). It governs the on-disk projection (the `marketplace.json` / `plugin.json` manifests, the verbatim `skills/` copy and flattened `subagents/`, the MCP-deferred rule, and the generated-not-hand-edited invariant). Generation and Cowork enablement stay with `ki-binding-claude`.
 
 ### `ki-subagents`
 
@@ -70,7 +70,7 @@ Governs **Decision Records** in any Knowledge Islands repo, code or KB — the t
 
 ### `ki-engineering`
 
-The shared **engineering toolchain** every TS/Bun repo builds on — native repository audit wiring, direct code-tool execution, `tsconfig`/`biome`, the Bun-install / Node-run split, a runner-neutral bare `test` entrypoint, the config-gated Vitest profile with 100% coverage, and the build/cli-chmod rule. The toolchain twin of `ki-authoring`; artifact skills (e.g. `ki-mcp`) **compose** their delta on top of its common layer. The shared mode and rubric rules are owned separately by `ki-skills`.
+The shared **engineering toolchain** every TS/Bun repo builds on — native repository audit wiring, direct code-tool execution, `tsconfig`/`biome`, the Bun-install / Node-run split, a runner-neutral bare `test` entrypoint, the config-gated Vitest profile with 100% coverage, and the build/cli-chmod rule. The toolchain twin of `ki-authoring`; coverage selects it alongside artifact skills such as `ki-mcp` when a repository uses this toolchain. The shared mode and rubric rules are owned separately by `ki-skills`.
 
 ### `ki-feature-definitions`
 
@@ -106,11 +106,11 @@ Interacts with a Knowledge Islands knowledge base over the standard zone model: 
 
 ### `ki-kb-activities`
 
-Governs **Activity notes** — the operational record of work adopted in a base, kept under `Admin/Operations/Activities/` (naming, frontmatter, realization type, and the index). Checks that an activity declared as a slash command has a backing skill, and that scheduled ones are flagged for the external scheduler. Composes on `ki-kb` for the zone structure.
+Governs **Activity notes** — the operational record of work adopted in a base, kept under `Admin/Operations/Activities/` (naming, frontmatter, realization type, and the index). Checks that an activity declared as a slash command has a backing skill, and that scheduled ones are flagged for the external scheduler. `ki-kb` delegates this focused capability and supplies the wider zone structure.
 
 ### `ki-kb-live-artifacts`
 
-Governs **Live Artifacts** — operational documents that track island state (dashboards, boards, queues, trackers) as a `.md` source paired with a rendered `.html`, kept under `Admin/Operations/Live Artifacts/` with an index, plus the sync rules between the two halves. Composes on `ki-kb` for the zone structure.
+Governs **Live Artifacts** — operational documents that track island state (dashboards, boards, queues, trackers) as a `.md` source paired with a rendered `.html`, kept under `Admin/Operations/Live Artifacts/` with an index, plus the sync rules between the two halves. `ki-kb` delegates this focused capability and supplies the wider zone structure.
 
 ### `ki-kb-streams`
 
@@ -148,7 +148,7 @@ Audits, conforms, and scaffolds a **standalone command-line tool** repo (`tools-
 
 ### `ki-website`
 
-Audits, conforms, and scaffolds static websites against the house build standard — **Eleventy 3 + Nunjucks + Markdown, TypeScript run natively on Bun, Tailwind 4 config-less with design tokens** — that compile to a portable `dist/`. Owns the **site-build delta** and **composes on** `ki-engineering` (toolchain) and `ki-authoring` (Markdown), handing the built `dist/` to `ki-website-cloudflare`.
+Audits, conforms, and scaffolds static websites against the house build standard — **Eleventy 3 + Nunjucks + Markdown, TypeScript run natively on Bun, Tailwind 4 config-less with design tokens** — that compile to a portable `dist/`. Owns the **site-build delta**; coverage separately selects `ki-engineering` for the toolchain and `ki-authoring` for Markdown, while `ki-website-cloudflare` depends on this skill and consumes the built `dist/`.
 
 ### `ki-website-cloudflare`
 

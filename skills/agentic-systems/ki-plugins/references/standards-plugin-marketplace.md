@@ -17,7 +17,7 @@ The standard applies when a repository either declares `[ki-plugins]` in `.ki-co
 
 ## The projection model
 
-The marketplace repo is a **lossy, per-surface projection** of the `ki-agentic-harness` (`ADR-KI-HARNESS-002`). The harness `skills/` and `agents/governance/` are the single source of truth. The marketplace is **generated** from them by `ki-binding`'s `bun run ki:binding:build-plugin <repo>` and is **never hand-maintained** — re-running the generator reproduces `.claude-plugin/` and `knowledge-islands/` byte-for-byte. Content changes are made at the harness source and then regenerated; the repo scaffold (below) is the repo's own and is left untouched by regeneration.
+The marketplace repo is a **lossy, per-surface projection** of the `ki-agentic-harness` (`ADR-KI-HARNESS-002`). The harness `skills/` and `subagents/governance/` are the single source of truth. The marketplace is **generated** from them by `ki-binding-claude`'s `bun skills/environment/ki-binding-claude/scripts/build-plugin.ts <repo>` and is **never hand-maintained** — re-running the generator reproduces `.claude-plugin/` and `knowledge-islands/` byte-for-byte. Content changes are made at the harness source and then regenerated; the repo scaffold (below) is the repo's own and is left untouched by regeneration.
 
 ## Repository layout
 
@@ -67,4 +67,4 @@ Owned by the repo, not the generator: `LICENSE`, `README.md`, `.gitignore`, `.ed
 
 ## Boundary with ki-binding
 
-`ki-binding` owns **generation** (`build-plugin.ts`) and **cross-surface enablement** (BIND-4 checks the machine's `cowork_settings.json` points at the repo and enables the plugin). `ki-plugins` owns the **repo's on-disk shape**. The two do not re-check each other's half. This is composition — each skill runs its own lane and declares the edge (`ADR-KI-HARNESS-004`).
+`ki-binding-claude` owns **generation** (`build-plugin.ts`) and **cross-surface enablement** (its checker verifies that the machine's `cowork_settings.json` points at the repo and enables the plugin). `ki-plugins` owns the **repo's on-disk shape**. The two do not re-check each other's half. This is an ownership and coverage boundary, not a dependency edge.
