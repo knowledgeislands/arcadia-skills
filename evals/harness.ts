@@ -46,7 +46,7 @@ import { scenarios as decisionRecordsScenarios } from './scenarios/ki-decision-r
 import { scenarios as repoRoadmapScenarios } from './scenarios/ki-roadmap.ts'
 import { scenarios as activitiesScenarios } from './scenarios/ki-kb-activities.ts'
 import { scenarios as liveArtifactsScenarios } from './scenarios/ki-kb-live-artifacts.ts'
-import { scenarios as housekeepingScenarios } from './scenarios/ki-housekeeping.ts'
+import { scenarios as housekeepingScenarios } from './scenarios/ki-housekeeping-claude.ts'
 import { scenarios as bindingScenarios } from './scenarios/ki-binding.ts'
 import { scenarios as featureDefinitionsScenarios } from './scenarios/ki-feature-definitions.ts'
 import { scenarios as pluginsScenarios } from './scenarios/ki-plugins.ts'
