@@ -1,7 +1,7 @@
 ---
 id: 'FND-021'
 title: Roll out native KI activation across the repository fleet
-status: in-progress
+status: acceptance
 roadmap: foundation-tooling/roll-out-native-ki-activation-across-the-repository-fleet
 blocks: —
 blocked-by: —
@@ -104,6 +104,10 @@ The rollout prepares but does not complete the separate GitHub CI fleet item. It
 - Regenerated the `ki-plugins` projection from the current harness and proved the result idempotent.
 - Replaced the harness's vendored-bootstrap Feature Definitions and updated the onboarding and developer migration guidance for the native activation procedure.
 
+### Summary of changes
+
+The rollout replaced the repository-local KI executor footprint with the direct native CLI contract across all fourteen Knowledge Islands repositories. It removed tracked legacy payloads, reconciled stable capability declarations, activated both supported runtimes through managed links, updated live commands and guidance, and preserved repository-specific standards findings for their owners rather than adding compatibility paths.
+
 ### Verification
 
 - Every repository's declared capabilities resolve and `ki repo audit` reaches native execution. Remaining non-zero outcomes are explicit standards findings owned by the affected repository, not unresolved capability, runtime publication, or legacy-runner failures.
@@ -111,27 +115,14 @@ The rollout prepares but does not complete the separate GitHub CI fleet item. It
 - The harness passed `bun run test` with 177 tests, `bunx tsc --noEmit`, and focused native audits for `ki-feature-definitions`, `ki-roadmap`, and `ki-repo`.
 - All six MCP repositories passed their test and build gates: 307 housekeeping tests, 161 Git-audit tests, 464 Google Workspace tests, 236 KB filesystem tests, 288 Notion-mirror tests, and 551 Microsoft 365 tests.
 - Homebrew formula style and strict audit passed; `tools-mgit` passed all 23 Bats tests; the plugin builder passed both tests and its generator produced no follow-up diff.
-- All repositories were clean at their individual rollout checkpoints and again at the final fleet scan. No repository was pushed.
+- All repositories were clean at their individual rollout checkpoints and again at the final fleet scan.
+- Evidence revisions: `homebrew-tap` `89ee2601` and `b677d4cb`; harness `5163fd98` and `bd7bfb54`; Arcadia `4afca1e7` and `204768d4`; plugins `951a0b59`; specifications `b6aeaece`; website `b4b137a8` and `ab14b7de`; the six MCP repositories `079bfccd`, `0924835a`, `ca5929fc`, `3dbca60d`, `9d0839f1`, and `8395eae2`; `tools-ki` `6d4973f0`; and `tools-mgit` `5b9fa411` and `eec7382a`.
+- Acceptance recheck at harness revision `1d3ac190` confirmed all fourteen worktrees clean, with zero commits ahead of or behind their configured upstreams.
 
-### Evidence revisions
+### Outstanding concerns
 
-- `homebrew-tap` — `89ee26019db37b310b928cb5f826cc665ca08f86`, `b677d4cbce560e8deed271122d6b52f3cb540d96`
-- `ki-agentic-harness` — `5163fd98`, `bd7bfb54`
-- `ki-arcadia-principal` — `4afca1e7`, `204768d4`
-- `ki-plugins` — `951a0b59`
-- `ki-specifications` — `b6aeaece`
-- `ki-website` — `b4b137a8`, `ab14b7de`
-- `mcp-claude-housekeeping` — `079bfccd`
-- `mcp-git-audit` — `0924835a`
-- `mcp-gsuite` — `ca5929fc`
-- `mcp-ki-kb-fs` — `3dbca60d`
-- `mcp-ki-kb-notion-mirror` — `9d0839f1`
-- `mcp-m365` — `8395eae2`
-- `tools-ki` — `6d4973f0`
-- `tools-mgit` — `5b9fa411`, `eec7382a`
+No activation concern remains. Repository standards findings exposed by native audit remain with their owning repositories; RTP-002 owns runtime- and vendor-specific environment capabilities; and the separate fleet-CI roadmap item owns clean GitHub-hosted-runner verification.
 
-### Deferred boundaries
+### Mini recap
 
-- Repository standards findings exposed by native audit remain with their owning repositories; this activation plan does not conceal them with compatibility code or expand into their remediation.
-- RTP-002 remains responsible for runtime- and vendor-specific environment capabilities.
-- The separate fleet-CI roadmap item remains responsible for proving installation and native commands on clean GitHub-hosted runners.
+The rollout confirmed that a direct clean-end-state cutover produces a simpler and more diagnosable fleet than retaining repository-local compatibility paths. That practice and the native migration procedure are already recorded in the harness guidance; no additional learning route is proposed.
