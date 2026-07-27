@@ -14,15 +14,15 @@ Make `ki` the sole renderer for structured rubrics. TypeScript catalogues remain
 
 ## Current state
 
-`tools-ki` already has one renderer and `ki skill rubric` detects missing or stale publications, but that writer is outside repository CONFORM. `ki repo audit --skill ki-skills` does not yet assess publication parity, and the rubric context has no host-injected way to obtain rendered bytes without duplicating host behaviour.
+The host delivery in [CLI-002](https://github.com/knowledgeislands/tools-ki/commit/9032fa9) now provides one validated renderer, guarded transaction path, and criterion-agnostic publication evidence. The `ki-skills` exemplar consumes that evidence through `KI-CHECKER-6`: a missing or stale publication fails audit, and CONFORM requests only the host-owned derived write. The remaining work is to apply the proven pattern to every other structured catalogue and review the resulting derived-only publications.
 
 ## Steps
 
 1. ✓ Agree the narrow host-injected publication capability and its failure semantics: repository containment, catalogue validation, missing/stale publication, invalid import, symlink refusal, and deterministic rendered bytes. Added the reciprocal [CLI-002](https://github.com/knowledgeislands/tools-ki/blob/main/docs/roadmap/cli/plans/CLI-002-host-generated-rubric-publication-capability.md) plan before implementation.
 2. ✓ In `tools-ki`, route standalone and repository publication preparation through one validated renderer and guarded transaction path without weakening installed-harness validation. Delivered by [CLI-002](https://github.com/knowledgeislands/tools-ki/commit/9032fa9).
-3. Extend the rubric context contract so `ki-skills` receives only rendered-publication evidence and can propose derived writes; do not put criterion identity or automatic findings in the host.
-4. Add `KI-CHECKER-6`: every structured catalogue has an exact derived publication; missing or differing bytes are FAIL drift and CONFORM schedules a DERIVED write. Exempt skills without structured catalogues.
-5. Lock the canonical output contract for notices, family metadata, classifications, citations, judgment prompts, ordering, and final newline. Exercise drift audit, dry-run, real conform, idempotence, batching, rollback/race refusal, malformed catalogues, and FIXED reporting.
+3. ✓ Extend the rubric context contract so `ki-skills` receives only rendered-publication evidence and can propose derived writes; do not put criterion identity or automatic findings in the host.
+4. ✓ Add exemplar `KI-CHECKER-6`: its exact derived publication is required; missing or differing bytes are FAIL drift and CONFORM schedules a DERIVED write. Other structured catalogues remain for the rollout step and skills without structured catalogues are exempt.
+5. ✓ Lock the canonical output contract for notices, family metadata, classifications, citations, judgment prompts, ordering, and final newline. Exercise drift audit, dry-run, real conform, idempotence, batching, rollback/race refusal, malformed catalogues, and FIXED reporting.
 6. Regenerate every affected publication through repository CONFORM, review the derived-only diff, remove any residual per-skill publication logic, update authoring/CLI guidance, and run both repositories' final gates.
 
 ## Files touched
