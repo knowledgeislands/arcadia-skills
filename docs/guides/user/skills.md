@@ -31,14 +31,12 @@ The source tree groups capabilities into eight semantic domains:
 
 1. **Agentic systems** — `ki-harness`, `ki-mcp`, `ki-plugins`, and `ki-subagents`: the containers and capability types that equip an agent.
 2. **Environment** — `ki-binding`, `ki-binding-chezmoi`, `ki-dotfiles-chezmoi`, `ki-housekeeping`, and `ki-tokenomics`: user-environment binding, maintenance, and context economics.
-3. **Governance** — `ki-authoring`, `ki-decision-records`, `ki-engineering`, `ki-feature-definitions`, `ki-handoffs`, and `ki-roadmap`: reusable standards and instruments that cut across repository shapes.
+3. **Governance** — `ki-authoring`, `ki-decision-records`, `ki-engineering`, `ki-feature-definitions`, `ki-handoffs`, `ki-roadmap`, and `ki-specifications`: reusable standards and instruments that cut across repository shapes.
 4. **Keystone** — `ki-bootstrap`, `ki-repo`, and `ki-skills`: the installation, repository, and skill-quality contracts that hold the set together.
 5. **Knowledge bases** — `ki-kb`, `ki-kb-activities`, `ki-kb-live-artifacts`, and `ki-kb-streams`: the base shape and its operational families.
 6. **Process** — `ki-delegate`, `ki-next`, `ki-plan`, and `ki-recap`: action and lifecycle skills rather than house standards.
 7. **Tooling** — `ki-homebrew-tap` and `ki-tools`: standalone command-line tools and their distribution surface.
 8. **Websites** — `ki-website` and `ki-website-cloudflare`: portable site builds and their Cloudflare hosting delta.
-
-`ki-specifications` is the one temporary physical exception: its migration and content remain deferred in the legacy category until that scope resumes. Repository-shape mutual exclusion remains a semantic governance rule; it is no longer inferred from a shared physical directory.
 
 ## Interdependencies
 

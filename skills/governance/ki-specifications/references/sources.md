@@ -6,9 +6,9 @@ This deliberately small standard is derived from the live `knowledgeislands/ki-s
 
 | Source                                            | Governs                                            | Last reviewed |
 | ------------------------------------------------- | -------------------------------------------------- | ------------- |
-| `knowledgeislands/ki-specifications` working tree | Current stable top-level areas                     | 2026-07-18    |
-| `ADR-KI-HARNESS-SKILLS-006`                       | Repo-structure skill taxonomy and mutual exclusion | 2026-07-18    |
+| `knowledgeislands/ki-specifications` working tree | Current stable top-level areas                     | 2026-07-27    |
+| `ADR-KI-HARNESS-SKILLS-006`                       | Repo-structure skill taxonomy and mutual exclusion | 2026-07-27    |
 
 ## Last review
 
-Initial extraction, 2026-07-18 — promoted only the keyless structural identity and the seven already-established top-level areas. KIP/KIS internals, lifecycle, numbering, and conformance semantics remain in the canonical repository until they have enough operational evidence to become reusable governance.
+Review, 2026-07-27 — confirmed the keyless structural identity and seven top-level areas against the canonical repository while moving the skill to the shared catalogue/session contract. KIP/KIS internals, lifecycle, numbering, and conformance semantics remain in the canonical repository until they have enough operational evidence to become reusable governance.

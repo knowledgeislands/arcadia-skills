@@ -4,17 +4,19 @@ ki-depends-on: []
 ki-shared-dependencies: [ki-skills:rubric]
 contributes: [.ki-config.toml]
 description: >-
-  Audits, conforms, and scaffolds the deliberately minimal repository structure for KI Specifications: a keyless `[ki-specifications]` marker plus the top-level proposals, specifications, schemas, templates, examples, docs, and tooling areas. Use when bootstrapping KI Specifications, checking its repository shape, or evolving that shape as the specification system matures. Triggers: "audit KI Specifications", "bootstrap the specifications repo", "check the KIP/KIS repository structure", "conform the specifications repository". It adds only the specifications-specific structural delta; use `ki-repo` for universal repository files and GitHub settings, `ki-decision-records` for decisions, and `ki-repo-roadmap` for planning.
-argument-hint: 'audit <repo> | conform <repo> | help | educate <repo> | refresh'
+  Audits, conforms, and scaffolds the deliberately minimal repository structure for KI Specifications: a keyless `[ki-specifications]` marker plus the top-level proposals, specifications, schemas, templates, examples, docs, and tooling areas. Use when bootstrapping KI Specifications, checking its repository shape, or evolving that shape as the specification system matures. Triggers: "audit KI Specifications", "bootstrap the specifications repo", "check the KIP/KIS repository structure", "conform the specifications repository". It adds only the specifications-specific structural delta; use `ki-repo` for universal repository files and GitHub settings, `ki-decision-records` for decisions, and `ki-roadmap` for planning.
+argument-hint: 'audit <repo> | conform <repo> | educate <repo> | help | refresh'
 ---
 
 # KI Specifications repository structure
 
 Apply the intentionally small repository-structure standard for KI Specifications. The repository remains a standard `ki-repo` in every general respect; this skill names its structural identity and protects only the stable top-level seams that distinguish a specification authority.
 
+This is a governance skill. It deliberately governs repository structure without taking ownership of normative specification content.
+
 The current floor is deliberately sparse. Detailed KIP/KIS content rules, numbering, lifecycle, conformance semantics, and publication formats remain canonical in the Specifications repository itself and should be promoted into this skill only after they prove stable and reusable.
 
-Read [the standard](references/standards.md) for the current floor, [the rubric](references/rubric.md) for checkable criteria, and [the source list](references/sources.md) when refreshing it. The `ki` CLI runs the mechanical checker.
+Read [the standard](references/standards-specifications.md) for the current floor, [the rubric](references/rubric.md) for checkable criteria, and [the source list](references/sources.md) when refreshing it. The `ki` CLI runs the mechanical checker.
 
 ## Canonical shape
 
@@ -57,15 +59,15 @@ Explain the skill's purpose, modes, invocation, and boundaries without changing 
 
 ### Mode REFRESH
 
-**Precondition:** REFRESH writes only in `ki-agentic-harness`. When invoked from a vendored install, stop and redirect the work to the Harness source repository.
+**Precondition:** REFRESH writes only in `ki-agentic-harness`. When invoked from an installed copy, stop and redirect the work to the Harness source repository.
 
 1. Read [the source list](references/sources.md) and inspect the live KI Specifications repository.
 2. Promote only stable, repeated structural constraints; leave changing specification-process detail in that repository.
-3. Update the standard, rubric, native definition, tests, and source review together, then regenerate the publication with `ki skill rubric ki-specifications --write`.
+3. Update the standard, structured catalogue, tests, and source review together, then regenerate the rubric publication with `ki skill rubric ki-specifications --write`.
 
 ## Boundaries
 
 - Universal repository files, licensing, GitHub settings, and security belong to `ki-repo`.
 - Markdown/TOML style belongs to `ki-authoring`.
-- Decision collections belong to `ki-decision-records`; non-KB planning belongs to `ki-repo-roadmap`.
+- Decision collections belong to `ki-decision-records`; non-KB planning belongs to `ki-roadmap`.
 - Normative KIP/KIS meaning remains owned by KI Specifications, not by this structural checker.

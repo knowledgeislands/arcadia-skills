@@ -39,7 +39,7 @@ test('the staged skill audit includes unchanged siblings, providers, and the loc
   write(repository, 'skills/governance/ki-consumer/SKILL.md', skill('ki-consumer', 'ki-shared-dependencies: [ki-skills:rubric]\n'))
   write(repository, 'skills/governance/ki-sibling/SKILL.md', skill('ki-sibling'))
   write(repository, 'skills/keystone/ki-skills/SKILL.md', skill('ki-skills', 'ki-shared-modules: [rubric]\n'))
-  write(repository, 'skills/repo-structure/ki-specifications/SKILL.md', skill('ki-specifications'))
+  write(repository, 'skills/governance/ki-specifications/SKILL.md', skill('ki-specifications'))
   write(repository, '.agents/skills/ki-self/SKILL.md', skill('ki-self'))
 
   write(repository, 'test-bin/bunx', '#!/bin/sh\nexit 0\n')
@@ -59,7 +59,7 @@ case "$focus" in
     test -f "$focus/skills/governance/ki-sibling/SKILL.md" || exit 12
     test -f "$focus/skills/keystone/ki-skills/SKILL.md" || exit 13
     test -f "$focus/.agents/skills/ki-self/SKILL.md" || exit 14
-    test ! -e "$focus/skills/repo-structure/ki-specifications" || exit 15
+    test -f "$focus/skills/governance/ki-specifications/SKILL.md" || exit 15
     ! grep -q 'Unstaged sibling bytes' "$focus/skills/governance/ki-sibling/SKILL.md" || exit 16
     printf '%s\\n' "$focus" > "$KI_HOOK_SET_CAPTURE"
     ;;

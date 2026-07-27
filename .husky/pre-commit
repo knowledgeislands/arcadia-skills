@@ -17,12 +17,10 @@ audit_staged_skills() {
   done
 
   # Set-level collision, ownership, and shared-provider checks need the unchanged
-  # siblings as well as the staged roots. Keep the deliberately deferred
-  # ki-specifications migration outside this staged gate until its own plan resumes.
+  # siblings as well as the staged roots.
   find "$snapshot/skills" -mindepth 3 -maxdepth 3 -type f -name SKILL.md | sort | while IFS= read -r skill_file; do
     root="${skill_file%/SKILL.md}"
     relative_root="${root#"$snapshot"/}"
-    if [ "$relative_root" = "skills/repo-structure/ki-specifications" ]; then continue; fi
     mkdir -p "$focus/$(dirname "$relative_root")" || exit 1
     cp -R "$root" "$focus/$relative_root" || exit 1
   done || return 1

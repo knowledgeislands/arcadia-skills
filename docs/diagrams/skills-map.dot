@@ -76,6 +76,7 @@ digraph skills_map {
     features [fillcolor="#feead2", label=< <b>ki-feature-definitions</b><br/><font point-size="9">feature behaviour</font> >]
     handoffs [fillcolor="#feead2", label=< <b>ki-handoffs</b><br/><font point-size="9">implementation-ready handoffs</font> >]
     roadmap [fillcolor="#feead2", label=< <b>ki-roadmap</b><br/><font point-size="9">forward work</font> >]
+    specifications [fillcolor="#feead2", label=< <b>ki-specifications</b><br/><font point-size="9">specification repository shape</font> >]
   }
 
   subgraph cluster_keystone {
@@ -136,16 +137,6 @@ digraph skills_map {
     fillcolor="#f0f4fd"
     website [fillcolor="#e1e9fb", label=< <b>ki-website</b><br/><font point-size="9">site build</font> >]
     cloudflare [fillcolor="#e1e9fb", label=< <b>ki-website-cloudflare</b><br/><font point-size="9">deployment</font> >]
-  }
-
-  subgraph cluster_deferred {
-    color="#c7a76a"
-    fontcolor="#70521d"
-    fontsize=12
-    label="Deferred physical exception"
-    style="rounded,filled,dashed"
-    fillcolor="#fff9ea"
-    specifications [fillcolor="#fff0c9", label=< <b>ki-specifications</b><br/><font point-size="9">migration deferred</font> >]
   }
 
   subgraph cluster_local {

@@ -68,6 +68,10 @@ Governs the **handoff doctrine** — plan work once at the top reasoning tier, t
 
 Governs **forward work in non-KB repositories** through two automatically detected profiles. A simple repository keeps its complete open view in root `ROADMAP.md`. A thematic repository keeps canonical work in `docs/roadmap/<theme>/ROADMAP.md`, plans for Blocking/Next items beside it under `plans/`, and an exact generated root portfolio. Qualified `<theme>/<item-slug>` locators bind plans to one authoritative item home, while plan frontmatter supplies lifecycle state and dependencies directly. It owns the readiness rules for authored horizon transitions; the `ki-next` process applies those rules to select and promote work, while `ki-plan` drives individual plan lifecycles. Knowledge Bases use `ki-kb-streams` instead; repo-roadmap artifacts do not apply there.
 
+### `ki-specifications`
+
+Audits, conforms, and scaffolds the deliberately minimal **KI Specifications** repository shape: a keyless `[ki-specifications]` marker and the established `proposals/`, `specifications/`, `schemas/`, `templates/`, `examples/`, `docs/`, and `tooling/` areas. It remains a thin structural delta over `ki-repo`; deeper KIP/KIS rules remain in the canonical Specifications repository until they are stable enough to factor into reusable governance.
+
 ## Keystone
 
 ### `ki-bootstrap`
@@ -137,13 +141,5 @@ Audits, conforms, and scaffolds static websites against the house build standard
 ### `ki-website-cloudflare`
 
 Audits, conforms, and scaffolds the house convention for serving a built site on **Cloudflare Workers + Static Assets** (not Pages): one `wrangler.jsonc` pointing `assets.directory` at the site's `dist/`, custom-domain routes, observability, and the `ki:site:deploy` script family. Owns the **hosting delta** for the site Worker; the `dist/` is the seam from `ki-website`. Companion Workers (bots, ingress) route to the generic `cloudflare` / `wrangler` skills.
-
-## Deferred
-
-`ki-specifications` is catalogued separately because its content and physical move are intentionally outside the current migration. Its eventual target is the governance domain.
-
-### `ki-specifications`
-
-Audits, conforms, and scaffolds the deliberately minimal **KI Specifications** repository shape: a keyless `[ki-specifications]` marker and the established `proposals/`, `specifications/`, `schemas/`, `templates/`, `examples/`, `docs/`, and `tooling/` areas. It starts as a thin delta over `ki-repo`; deeper KIP/KIS rules remain in the canonical Specifications repository until they are stable enough to factor into reusable governance.
 
 Where the set is going next is in the roadmap.
