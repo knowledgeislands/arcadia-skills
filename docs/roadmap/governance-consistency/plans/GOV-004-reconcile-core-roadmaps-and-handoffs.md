@@ -1,11 +1,11 @@
 ---
 id: 'GOV-004'
 title: Reconcile core repository roadmaps and handoffs
-status: ready
+status: in-progress
 roadmap: governance-consistency/reconcile-core-repository-roadmaps-and-handoffs
 blocks: —
 blocked-by: —
-baseline-ref: —
+baseline-ref: b0eae309c49e08f2cca835c5c7a1fa7e06f9ba1c
 ---
 
 ## Context
