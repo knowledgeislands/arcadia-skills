@@ -14,11 +14,11 @@ Every active Knowledge Islands repository must prove its declared governance and
 
 ## Current state
 
-The harness workflow currently runs `ki repo audit` from its checkout without first proving a released `ki` installation and canonical harness bootstrap. The fleet has a mixture of existing and absent workflows. A signed released CLI is available, but its clean hosted-runner installation and shadow-path rejection still need proving before the workflow pattern is rolled out.
+The harness workflow currently runs `ki repo audit` from its checkout without first proving a released `ki` installation and canonical harness bootstrap. Seven existing governance workflows fail because `ki` is absent, while five active repositories have no workflow. A signed released CLI is available, but its documented one-file installer download is incomplete: it also requires an adjacent public key, and the current GitHub release is not immutable. The clean hosted-runner release-install and shadow-path contract therefore remains unproven.
 
 ## Steps
 
-1. Freeze a manifest of every non-archived Knowledge Islands repository and record its current workflow, declared skills, required test/build/release-adjacent gates, permissions, secrets, caches, and justified runner platforms.
+1. ✓ Freeze a manifest of every non-archived Knowledge Islands repository and record its current workflow, declared skills, required test/build/release-adjacent gates, permissions, secrets, caches, and justified runner platforms.
 2. Prove the released-install contract once on a clean Linux runner: install a signed release into a known directory; assert `ki --version`, `ki diag`, and `command -v ki` identify that executable; bootstrap isolated KI state; and prove the canonical harness is installed. Add a fail-closed shadow-path guard before bootstrap or audit.
 3. Have each receiving repository own its workflow change or an explicit, reviewed exclusion. Each workflow installs and verifies released `ki`, rejects a shadow executable, bootstraps the canonical harness non-interactively, runs `ki repo audit --repo .` before its repository-specific gates, and retains only its justified platforms, permissions, caches, and secrets.
 4. Review and land each receiving-repository change through its normal default-branch path. Record the accepted commit, workflow URL or run ID, release version, resolved executable path, harness evidence, and gate result in this plan's acceptance packet.
@@ -37,7 +37,7 @@ The harness workflow currently runs `ki repo audit` from its checkout without fi
 
 ## Dependencies / blocks
 
-No plan dependency is introduced. The work is conditional on the clean hosted-runner release-install spike; any failure belongs to `tools-ki`, Homebrew Tap, or the receiving repository rather than this harness.
+The work is blocked before fleet rollout by the `tools-ki` release-install contract: the installer must publish all verified inputs through its documented path, and release evidence must be immutable or otherwise meet the agreed release-integrity contract. The clean hosted-runner spike remains the acceptance gate. Do not repair this by using a checkout, package alias, vendored executor, or unsigned side download; the receiving `tools-ki` plan must own the release fix.
 
 ## Delegation
 
