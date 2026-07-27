@@ -149,6 +149,56 @@ const inspectPackage = (
 
 const packageScripts = (value: Record<string, unknown> | null): Record<string, unknown> => asTable(value?.scripts) ?? {}
 
+/**
+ * Strip comments from one source line, carrying block-comment state across lines.
+ *
+ * A per-line `//` test cannot see a block comment: a JSDoc continuation line reads as bare code, so
+ * prose describing `process.env` is indistinguishable from a real read. String literals are tracked
+ * so a `//` inside one (a URL, say) does not truncate the rest of the line.
+ */
+const stripComments = (line: string, state: { inBlock: boolean }): string => {
+  let code = ''
+  let quote: string | null = null
+  let index = 0
+  while (index < line.length) {
+    const character = line[index]
+    if (state.inBlock) {
+      if (line.startsWith('*/', index)) {
+        state.inBlock = false
+        index += 2
+        continue
+      }
+      index += 1
+      continue
+    }
+    if (quote) {
+      if (character === '\\') {
+        index += 2
+        continue
+      }
+      if (character === quote) quote = null
+      code += character
+      index += 1
+      continue
+    }
+    if (character === "'" || character === '"' || character === '`') {
+      quote = character
+      code += character
+      index += 1
+      continue
+    }
+    if (line.startsWith('//', index)) break
+    if (line.startsWith('/*', index)) {
+      state.inBlock = true
+      index += 2
+      continue
+    }
+    code += character
+    index += 1
+  }
+  return code
+}
+
 export const createMcpSession = ({ mode, repository, publication }: RubricContextOptions): RubricSession<McpRubricContext> => {
   const root = resolve(repository)
   const rootExists = nodeKind(root) === 'directory'
@@ -227,13 +277,14 @@ export const createMcpSession = ({ mode, repository, publication }: RubricContex
             file.path !== 'src/mcp-server/index.ts' &&
             file.path !== 'src/cli/cli.ts'
         )
-        .filter((file) =>
-          file.content.split('\n').some((line) => {
-            const index = line.indexOf('process.env')
-            if (index === -1 || line.trimStart().startsWith('//') || line.slice(0, index).includes('//')) return false
-            return !/(?:=\s*|\.\.\.)process\.env(?![\w.[])/.test(line)
+        .filter((file) => {
+          const state = { inBlock: false }
+          return file.content.split('\n').some((line) => {
+            const code = stripComments(line, state)
+            if (!code.includes('process.env')) return false
+            return !/(?:=\s*|\.\.\.)process\.env(?![\w.[])/.test(code)
           })
-        )
+        })
         .map((file) => file.path)
     },
     utilities: {
