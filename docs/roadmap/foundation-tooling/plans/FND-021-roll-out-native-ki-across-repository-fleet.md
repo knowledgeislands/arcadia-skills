@@ -54,6 +54,18 @@ RTP-002 separately redesigns environment capabilities by runtime and vendor. Thi
 7. No temporary RTP-002 environment naming or coverage decision is propagated by this rollout.
 8. The later fleet-CI item remains the sole owner of GitHub Actions and clean hosted-runner acceptance.
 
+## Delegation
+
+- Round 1 — orchestrator, judgment: record and lock the fourteen-repository baseline and rollout matrix, including the distinction between activation defects and substantive audit findings. Gate: every target is clean, its immutable commit is recorded, and no RTP-002 environment decision is included.
+- Round 2A — general worker, mechanical, `gpt-5.6-terra` at medium reasoning: migrate the six homogeneous MCP repositories (`mcp-claude-housekeeping`, `mcp-git-audit`, `mcp-gsuite`, `mcp-ki-kb-fs`, `mcp-ki-kb-notion-mirror`, and `mcp-m365`). Remove `.ki-meta`, replace `ki-repo-roadmap` with `ki-roadmap`, remove live legacy-runner references, run repository gates, and commit each repository independently.
+- Round 2B — general worker, mechanical, `gpt-5.6-terra` at medium reasoning: migrate `homebrew-tap`, `ki-plugins`, and `tools-mgit`. Remove `.ki-meta` and live legacy-runner references, retain only settled stable declarations, run repository gates, and commit each repository independently.
+- Round 2C — general worker, mechanical with bounded classification, `gpt-5.6-terra` at medium reasoning: migrate `ki-arcadia-principal`, `ki-specifications`, and `ki-website`. Remove `.ki-meta` and live legacy-runner references, retain stable configuration, run repository gates, and commit each repository independently. Preserve explicit historical discussion of the retired design.
+- Locked decisions for every worker: do not add compatibility paths, copied checkers, aggregate runners, environment-capability renames, GitHub CI changes, pushes, or unrelated content fixes. A native audit that reaches execution but emits standards findings is evidence, not an activation failure.
+- Escalate rather than guess when a reference may be historical, a stable capability does not resolve, a repository becomes dirty or changes from its recorded baseline, a config change would touch RTP-002 scope, or a failing gate appears unrelated to activation.
+- Definition of done for each delegated repository: no tracked `.ki` or `.ki-meta`; no live legacy invocation; stable declarations resolve; native audit reaches execution; relevant local gates are recorded; one explicit-path commit exists; and the worktree is clean.
+- Orchestrator gate: review every diff and commit against the recorded baseline, repeat the legacy scan and native audit, classify remaining findings, and reject scope expansion before completing the fleet matrix.
+- Completion checkpoint: each worker returns repository-by-repository commit hashes, commands and outcomes, remaining substantive findings, and any escalations. Medium-reasoning Terra is the minimum viable choice because the edits are mechanical but live-versus-historical references and audit classification still require reliable bounded judgment.
+
 ## Dependencies / blocks
 
 This local activation rollout is independent of RTP-002 because it excludes environment-capability naming and conditional coverage. RTP-002 will later migrate only that deliberately deferred configuration surface.
