@@ -1,7 +1,7 @@
 ---
 id: 'FND-021'
 title: Roll out native KI activation across the repository fleet
-status: acceptance
+status: done
 roadmap: foundation-tooling/roll-out-native-ki-activation-across-the-repository-fleet
 blocks: —
 blocked-by: —
@@ -126,3 +126,7 @@ No activation concern remains. Repository standards findings exposed by native a
 ### Mini recap
 
 The rollout confirmed that a direct clean-end-state cutover produces a simpler and more diagnosable fleet than retaining repository-local compatibility paths. That practice and the native migration procedure are already recorded in the harness guidance; no additional learning route is proposed.
+
+## Done
+
+Native KI activation across the fourteen-repository fleet is complete and manually accepted. No activation concern remains; repository-specific standards findings stay with their owners, while RTP-002 and the fleet-CI roadmap item retain their separate follow-up scopes.
