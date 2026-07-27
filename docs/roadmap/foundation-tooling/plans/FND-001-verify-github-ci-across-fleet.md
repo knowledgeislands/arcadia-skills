@@ -14,7 +14,7 @@ Every active Knowledge Islands repository must prove its declared governance and
 
 ## Current state
 
-The harness workflow currently runs `ki repo audit` from its checkout without first proving a released `ki` installation and canonical harness bootstrap. Seven existing governance workflows fail because `ki` is absent, while five active repositories have no workflow. A signed released CLI is available, but its documented one-file installer download is incomplete: it also requires an adjacent public key, and the current GitHub release is not immutable. The clean hosted-runner release-install and shadow-path contract therefore remains unproven.
+The harness workflow currently runs `ki repo audit` from its checkout without first proving a released `ki` installation and canonical harness bootstrap. Seven existing governance workflows fail because `ki` is absent, while five active repositories have no workflow. [CLI-005](https://github.com/knowledgeislands/tools-ki/blob/main/docs/roadmap/cli/plans/CLI-005-repair-verified-release-installer-contract.md) has made the installer self-contained and added a fail-closed hosted proof, but GitHub immutable releases must be enabled and a new release published before that proof can run. The clean hosted-runner release-install and shadow-path contract therefore remains unproven.
 
 ## Steps
 
@@ -37,7 +37,7 @@ The harness workflow currently runs `ki repo audit` from its checkout without fi
 
 ## Dependencies / blocks
 
-The work is blocked before fleet rollout by the `tools-ki` release-install contract: the installer must publish all verified inputs through its documented path, and release evidence must be immutable or otherwise meet the agreed release-integrity contract. The clean hosted-runner spike remains the acceptance gate. Do not repair this by using a checkout, package alias, vendored executor, or unsigned side download; the receiving `tools-ki` plan must own the release fix.
+The work is blocked before fleet rollout by [CLI-005](https://github.com/knowledgeislands/tools-ki/blob/main/docs/roadmap/cli/plans/CLI-005-repair-verified-release-installer-contract.md)'s external acceptance gate: enable GitHub immutable releases and publish a new immutable release so its clean hosted-runner proof can run. The clean hosted-runner spike remains the acceptance gate. Do not repair this by using a checkout, package alias, vendored executor, or unsigned side download.
 
 ## Delegation
 
