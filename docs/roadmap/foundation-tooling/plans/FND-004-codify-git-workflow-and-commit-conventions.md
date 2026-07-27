@@ -1,7 +1,7 @@
 ---
 id: 'FND-004'
 title: Codify Git workflow and commit conventions
-status: open
+status: ready
 roadmap: foundation-tooling/codify-git-workflow-and-commit-conventions
 blocks: —
 blocked-by: —

@@ -1,7 +1,7 @@
 ---
 id: 'FND-001'
 title: Verify GitHub CI across the repository fleet
-status: open
+status: ready
 roadmap: foundation-tooling/verify-github-ci-across-the-repository-fleet
 blocks: —
 blocked-by: —

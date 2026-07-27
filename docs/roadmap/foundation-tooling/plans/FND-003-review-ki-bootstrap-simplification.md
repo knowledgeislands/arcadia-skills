@@ -1,7 +1,7 @@
 ---
 id: 'FND-003'
 title: Review ki-bootstrap for further simplification
-status: open
+status: ready
 roadmap: foundation-tooling/review-ki-bootstrap-for-further-simplification
 blocks: —
 blocked-by: —
