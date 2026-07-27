@@ -14,7 +14,7 @@ The rationale behind [the generated rubric](rubric.md) and its structured catalo
 - [Single-source, multi-target config templating](#single-source-multi-target-config-templating)
 - [Agent-instruction layering](#agent-instruction-layering)
 - [OS/tooling gotchas](#ostooling-gotchas)
-- [Git & audit hygiene](#git--audit-hygiene)
+- [Git boundary](#git-boundary)
 - [Repo-shape expectations](#repo-shape-expectations-additive-to-generic-repo-standard-checks)
 
 ## Repo layout & naming
@@ -114,11 +114,13 @@ This is a _repository-local-vs-user-level_ split — a different axis from the r
 - **macOS case-insensitive filesystems.** APFS and HFS+ are case-insensitive by default: two paths differing only in letter case resolve to the _same inode_. Before treating two differently-cased "files" (often left behind by a rename that only changed case) as distinct, verify with `stat -f "%i" path1 path2` — matching inode numbers mean it's one file under two names, and deleting one deletes both.
 - **macOS `sed` and non-ASCII characters.** Set `export LC_ALL=C` before running `sed` on text that may contain box-drawing or other non-ASCII characters (`├`, `└`, `│`) — macOS's `sed` raises `illegal byte sequence` without it.
 
-## Git & audit hygiene
+## Git boundary
 
-- Don't leave stray git lock files (`.git/index.lock`, `.git/HEAD.lock`, `.git/config.lock`, `.git/refs/**/*.lock`, `.git/packed-refs.lock`) behind — they block all subsequent git operations until manually removed. Don't kill git commands mid-flight; don't run multiple write-mode git commands in parallel (read-only commands — `status`, `log`, `diff`, `show`, `rev-parse` — are safe to parallelize). Verify with `find .git -name '*.lock'` before finishing a session of git activity.
-- **Audit via skills, not hand-rolled shell.** Prefer a dedicated audit skill over retyping the same shell loop each time — it's cheaper and less error-prone than re-deriving the check from scratch every session.
-- **Report-then-confirm etiquette.** When auditing, link to the file, state the problem in one line, present options rather than silently applying a single fix, and wait for confirmation before changing anything.
+`ki-git` owns portable Git and commit policy, including safe lock recovery.
+
+This standard owns only chezmoi's runtime-specific registration of a selected compatible hook payload; it does not define Git hygiene or remove locks.
+
+Its existing local physical-lock observation is scoped evidence for a chezmoi repository, not an independent portable Git policy.
 
 ## Repo-shape expectations (additive to generic repo-standard checks)
 

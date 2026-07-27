@@ -70,7 +70,7 @@ _Verify:_ `bun hooks/plan-stamp.test.ts && bun hooks/plan-sync.test.ts` exercise
 
 ### HARN-010 — Claude Code stale Git-lock guard
 
-The harness MUST ship `hooks/git-lock-check.sh` as a Claude-Code-specific `Stop(*)` hook that removes stale lock files only from the current worktree's physical Git directory and only when no relevant Git process is active. The compatible harness publishes it for a separate user-environment binding to register; the source harness does not install it itself.
+The harness MUST ship `hooks/git-lock-check.sh` as a Claude-Code-specific `Stop(*)` hook that removes stale lock files only from the current worktree's physical Git directory and only when no relevant Git process is active. `ki-git` owns that portable safety contract. The compatible harness publishes the payload for a separate user-environment binding to register; the source harness does not install it itself.
 
 _Verify:_ `bun hooks/git-lock-check.test.ts` exercises repository, process, path, and symlink safety; compatible-harness inventory checks confirm the hook is present in the published payload.
 

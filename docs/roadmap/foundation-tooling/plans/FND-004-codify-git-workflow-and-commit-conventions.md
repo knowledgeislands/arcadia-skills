@@ -18,10 +18,10 @@ The harness has repository-local commit guidance and a tested `hooks/git-lock-ch
 
 ## Steps
 
-1. Inventory current Git guidance, commit history conventions, hook ownership, lock recovery behaviour, and runtime-specific binding across the harness and representative KI repositories.
-2. Compare the viable ownership models: a dedicated `ki-git` governance skill, an explicit `ki-repo` extension, or a split that keeps the hook/runtime binding with its existing owner. Record the chosen boundary and rejected alternatives in the appropriate durable decision surface.
-3. Author the resulting standard: allowed Conventional Commit types/scopes, message shape, direct-main/branch expectations, safe lock recovery, cleanup limits, and the distinction between repository policy and user-environment hook registration.
-4. Move or link the stale-lock guard, its documentation, and tests under the chosen owner without duplicating rules across `AGENTS.md`, skills, hooks, and guides.
+1. ✓ Inventory current Git guidance, commit history conventions, hook ownership, lock recovery behaviour, and runtime-specific binding across the harness and representative KI repositories.
+2. ✓ Compare the viable ownership models: a dedicated `ki-git` governance skill, an explicit `ki-repo` extension, or a split that keeps the hook/runtime binding with its existing owner. Record the chosen boundary and rejected alternatives in the appropriate durable decision surface.
+3. ✓ Author the resulting standard: allowed Conventional Commit types/scopes, message shape, direct-main/branch expectations, safe lock recovery, cleanup limits, and the distinction between repository policy and user-environment hook registration.
+4. ✓ Move or link the stale-lock guard, its documentation, and tests under the chosen owner without duplicating rules across `AGENTS.md`, skills, hooks, and guides.
 5. Add only deterministic enforcement that the settled standard can justify; keep review-dependent commit quality as judgment guidance. Update onboarding/user documentation and run the full relevant gates.
 
 ## Files touched
