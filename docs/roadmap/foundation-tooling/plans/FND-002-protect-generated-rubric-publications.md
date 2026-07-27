@@ -23,7 +23,8 @@ The host delivery in [CLI-002](https://github.com/knowledgeislands/tools-ki/comm
 3. ✓ Extend the rubric context contract so `ki-skills` receives only rendered-publication evidence and can propose derived writes; do not put criterion identity or automatic findings in the host.
 4. ✓ Add exemplar `KI-CHECKER-6`: its exact derived publication is required; missing or differing bytes are FAIL drift and CONFORM schedules a DERIVED write. Other structured catalogues remain for the rollout step and skills without structured catalogues are exempt.
 5. ✓ Lock the canonical output contract for notices, family metadata, classifications, citations, judgment prompts, ordering, and final newline. Exercise drift audit, dry-run, real conform, idempotence, batching, rollback/race refusal, malformed catalogues, and FIXED reporting.
-6. Regenerate every affected publication through repository CONFORM, review the derived-only diff, remove any residual per-skill publication logic, update authoring/CLI guidance, and run both repositories' final gates.
+6. Standardise a visible `RUBRIC-1` derived-publication item in a `RUBRIC` family for every structured catalogue, backed by one portable vendored item factory. Each skill projects only host publication evidence into that local family; do not add per-skill rendering, path selection, byte construction, or writes.
+7. Regenerate every affected publication through `ki skill rubric <skill> --write` or the declared repository CONFORM scope, review the derived-only diff, remove residual per-skill publication logic, update authoring/CLI guidance, and run both repositories' final gates.
 
 ## Files touched
 
