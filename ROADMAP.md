@@ -10,6 +10,7 @@ Actively broken, or blocking the `Next` horizon: takes priority over everything 
 
 Scoped and ready to start — the immediate queue, picked up before anything in **Soon** or **Future**.
 
+- [Foundation Tooling: Codify explicit roadmap deferral in `ki-next`](docs/roadmap/foundation-tooling/ROADMAP.md#codify-explicit-roadmap-deferral-in-ki-next)
 - [Foundation Tooling: Codify Git workflow and commit conventions](docs/roadmap/foundation-tooling/ROADMAP.md#codify-git-workflow-and-commit-conventions)
 - [Foundation Tooling: Protect generated rubric publications from drift](docs/roadmap/foundation-tooling/ROADMAP.md#protect-generated-rubric-publications-from-drift)
 - [Foundation Tooling: Review `ki-bootstrap` for further simplification](docs/roadmap/foundation-tooling/ROADMAP.md#review-ki-bootstrap-for-further-simplification)

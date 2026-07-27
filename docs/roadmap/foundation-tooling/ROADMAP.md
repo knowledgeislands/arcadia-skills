@@ -28,6 +28,10 @@ After the current boundary refactor settles, review the complete `ki-bootstrap` 
 
 Choose an owner for repository Git discipline, including Conventional Commit messages, the allowed type and scope vocabulary, safe lock and cleanup behaviour, and consistency with repository-local instructions. Decide whether that owner should be a dedicated `ki-git` skill, including ownership of the shipped stale Git-lock guard rather than leaving it as an ungoverned hook. Add mechanical enforcement only after the standard is settled.
 
+### Codify explicit roadmap deferral in `ki-next`
+
+Add `defer` to `ki-next` as a user-confirmed, horizon-qualified move to an honest later horizon. Define its relationship to promotion and Future `_(candidate)_` marking, distinguish it from `ki-plan promote`, and keep transient transition directions out of canonical roadmap headings.
+
 ## Soon
 
 Understood and roughly scoped but not yet started — worth doing once the **Next** queue clears, ahead of anything still speculative.
