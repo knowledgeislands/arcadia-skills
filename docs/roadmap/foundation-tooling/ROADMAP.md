@@ -22,7 +22,7 @@ After the released CLI and canonical harness are available through the normal in
 
 ### Protect generated rubric publications from drift
 
-Complete the rubric-publication contract across governance skills that have structured item catalogues and tracked `references/rubric.md` but no exact-parity test, including the runtime-explicit environment family: `ki-housekeeping-claude`, portable `ki-binding` and `ki-tokenomics`, their Claude and Codex adapters, `ki-engineering`, `ki-authoring`, `ki-binding-chezmoi`, `ki-repo`, `ki-roadmap`, `ki-kb-streams`, and `ki-kb`. Add focused read-only tests that render each in-memory catalogue and exact-compare its publication, then reconcile any missing generated-source notice, classification, citation, or judgment-prompt presentation with `ki-skills`' rubric-authoring contract. Preserve legitimate local renderer choices; do not extract a shared renderer merely for visual uniformity.
+Make the `ki` CLI the one canonical renderer for every structured skill rubric. A skill's TypeScript catalogue is authoritative; its tracked `references/rubric.md` is derived output. `ki repo audit --skill ki-skills` must treat any difference between the rendered and tracked publication as drift, while `ki repo conform --skill ki-skills --dry-run` reports and real CONFORM regenerates the affected publications for review. Add generic renderer and transaction coverage in `tools-ki`, then reconcile generated-source notices, classifications, citations, and judgment prompts with the `ki-skills` rubric-authoring contract. Do not retain per-skill publication renderers or divergent output shapes.
 
 ### Review `ki-bootstrap` for further simplification
 
