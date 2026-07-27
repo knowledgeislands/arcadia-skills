@@ -1,7 +1,7 @@
 ---
 id: 'FND-004'
 title: Codify Git workflow and commit conventions
-status: acceptance
+status: done
 roadmap: foundation-tooling/codify-git-workflow-and-commit-conventions
 blocks: —
 blocked-by: —
@@ -76,3 +76,7 @@ No mechanical enforcement exists yet by design. A future deterministic host-cont
 ### Mini recap
 
 One policy owner can coexist cleanly with specialised payload and runtime owners. The initial native catalogue makes the human judgment explicit without pretending that subjective commit quality can safely be automated.
+
+## Done
+
+Recorded done after explicit user acceptance. A future deterministic enforcement contract remains separately scoped and is not a residual defect in this plan.

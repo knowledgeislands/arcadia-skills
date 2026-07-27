@@ -1,7 +1,7 @@
 ---
 id: 'FND-003'
 title: Review ki-bootstrap for further simplification
-status: acceptance
+status: done
 roadmap: foundation-tooling/review-ki-bootstrap-for-further-simplification
 blocks: —
 blocked-by: —
@@ -78,3 +78,7 @@ None. User-space publication hardening remains the independent `tools-ki` follow
 ### Mini recap
 
 The direct CLI boundary is now documented consistently: remove retired local wrappers rather than preserving them as explanatory compatibility surfaces. No local bootstrap-process migration remains.
+
+## Done
+
+Recorded done after explicit user acceptance. No residual concern or follow-up is required within this plan.

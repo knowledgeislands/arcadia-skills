@@ -1,7 +1,7 @@
 ---
 id: 'FND-005'
 title: Codify explicit roadmap deferral
-status: acceptance
+status: done
 roadmap: foundation-tooling/codify-explicit-roadmap-deferral-in-ki-next
 blocks: —
 blocked-by: —
@@ -72,3 +72,7 @@ None.
 ### Mini recap
 
 Horizon movement is authored work, not a marker convention. A later-horizon move needs the same explicit evidence and confirmation discipline as a promotion, and it cannot be used to bypass a plan lifecycle.
+
+## Done
+
+Recorded done after explicit user acceptance. No residual concern or follow-up is required within this plan.
