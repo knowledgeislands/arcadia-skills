@@ -18,12 +18,12 @@ Make `defer` an explicit, user-confirmed `ki-next` horizon-transition operation 
 
 ## Steps
 
-1. Define the portable transition vocabulary and ownership: `ki-roadmap` continues to own honest horizon rules; `ki-next` applies user-confirmed promote and defer operations; `ki-plan promote` remains a distinct runtime-plan conversion.
-2. Specify valid deferral destinations and evidence: Next or Blocking work moves to Soon when understood but not immediate, to Waiting for only with a named external condition, or to Future with `_(candidate)_` when it needs re-scoping. Preserve ordinary-plan constraints and require explicit handling of any existing plan.
-3. Update `ki-next` selection/relevance procedures, help/description, examples, and scenario table so every move presents exact wording, destination, order, and consequences for confirmation. Do not add persistent marker syntax to roadmap items.
-4. Reconcile `ki-next` handoff guidance with the fixed `ki-repo` scaffold: resolved handoff briefs are removed, while the canonical direction, subdirectory, and README orientation remain.
-5. Update `ki-roadmap` transition guidance and judgment criterion wording only where needed to express the shared vocabulary without taking process ownership. Add focused tests or scenarios for promotion, each deferral destination, plan constraints, and fixed-scaffold handoff cleanup.
-6. Regenerate affected rubric publications, run focused process/roadmap/repository checks, and document the final user-facing invocation and terminology.
+1. ✓ Define the portable transition vocabulary and ownership: `ki-roadmap` continues to own honest horizon rules; `ki-next` applies user-confirmed promote and defer operations; `ki-plan promote` remains a distinct runtime-plan conversion.
+2. ✓ Specify valid deferral destinations and evidence: Next or Blocking work moves to Soon when understood but not immediate, to Waiting for only with a named external condition, or to Future with `_(candidate)_` when it needs re-scoping. Preserve ordinary-plan constraints and require explicit handling of any existing plan.
+3. ✓ Update `ki-next` selection/relevance procedures, help/description, examples, and scenario table so every move presents exact wording, destination, order, and consequences for confirmation. Do not add persistent marker syntax to roadmap items.
+4. ✓ Reconcile `ki-next` handoff guidance with the fixed `ki-repo` scaffold: resolved handoff briefs are removed, while the canonical direction, subdirectory, and README orientation remain.
+5. ✓ Update `ki-roadmap` transition guidance and judgment criterion wording only where needed to express the shared vocabulary without taking process ownership. Add focused tests or scenarios for promotion, each deferral destination, plan constraints, and fixed-scaffold handoff cleanup.
+6. ✓ Regenerate affected rubric publications, run focused process/roadmap/repository checks, and document the final user-facing invocation and terminology.
 
 ## Files touched
 

@@ -7,7 +7,7 @@ _On-demand procedure for `ki-next`. The kind, scope, and relationship map live i
 1. Resolve the current git repository physically and read its `.ki-config.toml` when present. If `repo_type = "kb"`, stop: Knowledge Bases select work through `ki-kb-streams` proposals rather than this process.
 2. Ask `ki-roadmap` to identify the simple or thematic profile. Run `ki repo audit --skill ki-roadmap --repo <git-root>`. Stop on any FAIL or WARN; name the repair route, but do not run CONFORM or repair unrelated state.
 3. Read the canonical source of truth: root `ROADMAP.md` for the simple profile; each `docs/roadmap/<theme>/ROADMAP.md` and its `plans/` directory, plus the generated root projection, for the thematic profile. In the thematic profile, derive active plans and dependencies from plan frontmatter before ranking items.
-4. Inspect `+/_HANDOFFS/` after the clean roadmap audit. If it is absent, continue without a handoff step. Do not treat a directory, symlink, or `README` as a handoff. If only `README.md` remains, present removal of that stale placeholder and the empty `_HANDOFFS/` directory for confirmation before normal selection.
+4. Inspect `+/_HANDOFFS/` after the clean roadmap audit. If it is absent, continue without a handoff step. Do not treat a directory, symlink, or `README` as a handoff. The required `README.md` is orientation, not a placeholder: if it is the only file, record an empty inbox and continue normally.
 5. If the user continues from a current `ki-recap`, use only its grounded outstanding work, learning routes with their approval status, and Specific actions as context. Re-check every dynamic roadmap claim now; an unapproved route remains a proposal, and a roadmap item parked during recap is not automatically a candidate. Do not scan stored or historical transcripts. A recap is optional: without one, ground the same facts directly.
 
 ## 2. Inbound handoff triage
@@ -18,7 +18,7 @@ Every normal `ki-next` grounding performs this inbox pass; it is not a separate 
 2. For every handoff that needs review, present its origin, scope, constraints, prior disposition if any, and the available dispositions: **adopt**, **park**, **clarify**, **decline**, and **supersede**. Require explicit confirmation of the exact file, selected disposition, wording, horizon, and resulting writes or deletion before changing anything.
 3. **Adopt** creates this repository's own roadmap item at its honest horizon; it does not promote priority or infer readiness. In a thematic profile, when the transferred detail merits preservation, create an open plan with a non-empty `transferred-from` origin. A simple profile may adopt the roadmap item, but must run `ki-roadmap` EXPAND before preserving detailed transferred work in a plan; do not discard a detail-bearing inbound brief until that preservation is confirmed.
 4. **Park** or **clarify** retains the inbound file only with a recorded receiving owner, its disposition, a reason for parking or a concrete clarification request, and a named review trigger. The review trigger is the event or evidence that will make the item eligible for presentation again; it cannot be an indefinite archive label.
-5. **Decline** or **supersede** resolves the handoff without local roadmap work. Delete its inbound copy after confirmation. For an adoption, delete the inbound copy only after its approved roadmap item and any required preservation plan are durable. After any resolved disposition, prompt the sender to remove its corresponding outbound copy. When no inbound handoff remains, remove `+/_HANDOFFS/README.md` and the empty `_HANDOFFS/` directory as part of the confirmed cleanup.
+5. **Decline** or **supersede** resolves the handoff without local roadmap work. Delete its inbound copy after confirmation. For an adoption, delete the inbound copy only after its approved roadmap item and any required preservation plan are durable. After any resolved disposition, prompt the sender to remove its corresponding outbound copy. When no inbound handoff remains, retain `+/_HANDOFFS/README.md` and the empty directory as the required working-area orientation.
 6. After an adoption changes the roadmap or plan collection, regenerate derived views, re-run the roadmap audit, and ground the affected state again before continuing. Do not turn a newly adopted item into the selected next work without the ordinary staged candidate loop and its separate confirmation.
 
 ## 3. Optional relevance review
@@ -43,7 +43,15 @@ Apply the readiness rules in `ki-roadmap`; do not invent a local substitute.
 
 After every confirmed transition, return to the destination horizon's evaluation rather than assuming that an earlier assessment is still valid.
 
-## 5. Rank and confirm
+## 5. Explicit deferral
+
+`defer <item> <soon|waiting-for|future>` is an explicit, user-confirmed later-horizon operation. It is distinct from `ki-plan promote`, which is a runtime-plan conversion rather than a roadmap move.
+
+1. Resolve the exact canonical item and identify every linked plan before proposing a move. An ordinary plan with `ready`, `in-progress`, `acceptance`, or `done` status prevents deferral: stop and require the user to resolve its lifecycle through `ki-plan` before changing the item's horizon. Do not silently delete, reopen, or detach a plan.
+2. Present one honest destination with the resulting wording: use **Soon** only when the work remains understood but is no longer immediate; use **Waiting for** only when a named external condition blocks it; use **Future** only when it needs re-scoping, adding `_(candidate)_` to the item. Do not create a persistent `(defer)` marker.
+3. Require confirmation of the exact item, destination, wording, order, dependency consequences, and any required plan handling. Write only that confirmed authored move, regenerate derived views, run the roadmap audit, and report the result. A rejected proposal leaves every artifact untouched.
+
+## 6. Rank and confirm
 
 For each viable option, give a compact evidence-backed comparison covering expected benefit, leverage, risk reduction, delivery cost, reversibility, readiness, and dependency availability. Do not collapse these into a misleading single score. Preserve any order the user supplies.
 
@@ -56,7 +64,7 @@ Before writing, show:
 
 Require explicit confirmation for the exact set and order. Write only the approved authored transitions, then regenerate and audit projections. Invoke `ki-plan` only once a confirmed item is in Blocking or Next. `ki-plan` creates or revises the plan under its own lifecycle contract; `ki-next` then stops for plan review rather than beginning implementation.
 
-## 6. Scenario checks
+## 7. Scenario checks
 
 Apply these behavioural checks whenever the process changes:
 
@@ -69,18 +77,22 @@ Apply these behavioural checks whenever the process changes:
 | Waiting condition changed | Present the evidence and proposed re-entry; do not move it automatically. |
 | Existing valid plan covers selected work | Reuse it and respect its cross-theme dependency edges. |
 | No regular inbound handoff exists | Continue normal selection without presenting an inbox step. |
-| Only `+/_HANDOFFS/README.md` remains | Present removal of the README and empty handoff directory; absence is the empty-inbox signal. |
+| Only `+/_HANDOFFS/README.md` remains | Treat it as the required empty-inbox orientation and continue normally. |
 | Unreviewed inbound handoff exists | Present its exact proposed disposition and require confirmation before any write or deletion. |
 | Parked or clarified handoff's trigger has not fired | Acknowledge it and skip it; do not re-present or alter it. |
 | Parked or clarified handoff's trigger has fired | Present it for a newly confirmed disposition. |
 | Adopted detailed handoff in a thematic profile | Create its honest-horizon item and, when its detail merits retention, an open plan with non-empty `transferred-from`. |
 | Adopted detailed handoff in a simple profile | Adopt the item, then require EXPAND before a detail-preserving plan; retain the inbound brief until that plan is confirmed. |
 | Declined or superseded handoff | Delete the confirmed inbound copy and prompt the sender to remove its outbound copy. |
+| Explicit deferral to Soon | Confirm that the work remains understood but is not immediate, then move it without a marker. |
+| Explicit deferral to Waiting for | Require and retain the named external condition before the confirmed move. |
+| Explicit deferral to Future | Confirm that re-scoping is needed and add `_(candidate)_` to the item. |
+| Deferral with an ordinary active or retained plan | Stop until its lifecycle is explicitly resolved through `ki-plan`; never silently detach or alter the plan. |
 | Current recap offers a handoff | Re-audit the roadmap; use only grounded action labels and approval state as context, never as authority to write. |
 | Recap contains an unapproved learning route | Keep it a proposal; do not write it while selecting or planning work. |
 | User rejects a proposal | Leave roadmap and plans untouched. |
 | KB repository | Stop and route to `ki-kb-streams`. |
 
-## 7. Finish
+## 8. Finish
 
 Report each confirmed handoff disposition, exact inbound files removed or retained, any sender-removal prompt, the roadmap and plan files changed, and the audit result. If plans were created or revised, ask for their review; do not begin execution. If no work is eligible, say so plainly and identify the required external condition or scoping decision.

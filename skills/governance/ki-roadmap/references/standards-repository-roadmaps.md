@@ -12,7 +12,7 @@ Every roadmap carries these five `##` horizons exactly once and in this order:
 2. `Next` — scoped and ready for immediate work; plans permitted.
 3. `Soon` — understood but not yet started; no ordinary plans.
 4. `Waiting for` — blocked by a named external condition; no ordinary plans.
-5. `Future` — speculative or unscoped; no ordinary plans, with `(candidate)` on uncommitted work.
+5. `Future` — speculative or unscoped; no ordinary plans, with `_(candidate)_` on uncommitted work.
 
 Each horizon heading is followed by one blank line, its exact canonical blurb, and one blank line before any item or the next horizon:
 
@@ -26,17 +26,19 @@ The blurb is the empty-horizon explanation; do not add a separate `Nothing queue
 
 Roadmaps are open-only: completed work is removed. Continuous practices belong in a standard or orientation file, not among finite work items.
 
-## Promotion and readiness
+## Horizon transitions and readiness
 
 Horizon moves are authored, judgment-led decisions. CONFORM never makes them: it may repair only mechanical blurbs and generated projections.
 
 - **Future → Soon** requires enough scope to state the intended outcome and boundary. It remains Future when that minimum is not known.
 - **Soon → Next** requires actionable scope, understood dependencies, and readiness to start. It is not a planning shortcut: the item must first be moved to Next, then evaluated there.
 - **Waiting for → another horizon** requires evidence that its named external condition has changed and a fresh placement judgment.
+- **Blocking or Next → Soon** is an explicit deferral only when work remains understood but is no longer immediate. **Blocking, Next, or Soon → Waiting for** requires a named external condition. **Blocking, Next, Soon, or Waiting for → Future** requires re-scoping and marks the item `_(candidate)_`.
 - **Blocking / Next** are the only horizons that may carry an ordinary plan. A plan is created only after the item is there and the user has confirmed it.
 - An open plan with a non-empty `transferred-from` origin may instead remain linked to an item in any other honest horizon. This narrow exception preserves useful transferred execution detail without asserting that the item is ready or changing its priority. It is not eligible for readiness or execution until the item moves to Blocking or Next.
+- An ordinary plan prevents a later-horizon move until its lifecycle is explicitly resolved. A roadmap process must never silently delete, reopen, or detach it to make a deferral fit.
 
-When the immediate queue has no eligible work, a human-led process such as `ki-next` replenishes it in stages: evaluate Blocking and Next first, then evaluate Soon, and only then scope Future candidates to enter Soon. Each confirmed move is re-evaluated at its destination because the readiness contract changes. The process presents proposals and obtains confirmation before every authored move; this governance skill does not depend on that process.
+When the immediate queue has no eligible work, a human-led process such as `ki-next` replenishes it in stages: evaluate Blocking and Next first, then evaluate Soon, and only then scope Future candidates to enter Soon. The same process may apply a user-confirmed deferral to an honest later horizon. Each confirmed move is re-evaluated at its destination because the readiness contract changes. The process presents proposals and obtains confirmation before every authored move; this governance skill does not depend on that process.
 
 ## Handoff review
 

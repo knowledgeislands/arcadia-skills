@@ -17,7 +17,8 @@ const ROAD_1: RubricItem<RoadmapBlurbsContext> = {
 const ROAD_2: RubricItem<RoadmapBlurbsContext> = {
   code: 'ROAD-2',
   title: 'honest horizon placement',
-  description: 'Items sit in honest horizons; Waiting-for items name their external condition; speculative Future work says `(candidate)`.',
+  description:
+    'Items sit in honest horizons; Waiting-for items name their external condition; speculative Future work says `_(candidate)_`.',
   sources: [SOURCE],
   judgment: { prompt: 'Review horizon placement, waiting conditions, and Future candidate marking.' }
 }
@@ -45,11 +46,11 @@ const ROAD_4: RubricItem<RoadmapBlurbsContext> = {
 
 const ROAD_5: RubricItem<RoadmapBlurbsContext> = {
   code: 'ROAD-5',
-  title: 'promotion and readiness',
+  title: 'horizon transitions and readiness',
   description:
-    'Horizon placement and transitions meet the readiness contract; ordinary and non-open plans require Blocking or Next, while an open plan with a non-empty transferred-from origin may preserve detail at another honest horizon without implying readiness. CONFORM never chooses a move.',
+    'Horizon promotion and deferral meet the readiness contract; ordinary plans prevent later-horizon moves until their lifecycle is explicitly resolved, while an open plan with a non-empty transferred-from origin may preserve detail at another honest horizon without implying readiness. CONFORM never chooses a move.',
   sources: [SOURCE],
-  judgment: { prompt: 'Review each horizon transition against its readiness contract.' }
+  judgment: { prompt: 'Review each promotion or deferral against its readiness contract and plan state.' }
 }
 
 export const ROAD: RubricFamily<RoadmapRubricContext, RoadmapBlurbsContext> = {

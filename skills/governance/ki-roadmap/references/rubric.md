@@ -44,13 +44,13 @@ Simple and thematic roadmap profile structure.
 Canonical horizon structure, placement, and readiness.
 
 - **ROAD-1 [M] — roadmap structure** — Every authored roadmap has one H1 and the five horizons exactly once, in canonical order. (standards-repository-roadmaps.md)
-- **ROAD-2 [J] — honest horizon placement** — Items sit in honest horizons; Waiting-for items name their external condition; speculative Future work says `(candidate)`. (standards-repository-roadmaps.md)
+- **ROAD-2 [J] — honest horizon placement** — Items sit in honest horizons; Waiting-for items name their external condition; speculative Future work says `_(candidate)_`. (standards-repository-roadmaps.md)
   - _Review prompt:_ Review horizon placement, waiting conditions, and Future candidate marking.
 - **ROAD-3 [J] — open finite work** — Roadmaps are open-only and contain finite work rather than continuous practice. (standards-repository-roadmaps.md)
   - _Review prompt:_ Review that roadmap items are finite open work, not completed work or ongoing practice.
 - **ROAD-4 [M] — canonical horizon blurbs** — Every horizon heading is followed immediately by its exact canonical blurb; CONFORM inserts a missing blurb without removing existing authored content. (standards-repository-roadmaps.md)
-- **ROAD-5 [J] — promotion and readiness** — Horizon placement and transitions meet the readiness contract; ordinary and non-open plans require Blocking or Next, while an open plan with a non-empty transferred-from origin may preserve detail at another honest horizon without implying readiness. CONFORM never chooses a move. (standards-repository-roadmaps.md)
-  - _Review prompt:_ Review each horizon transition against its readiness contract.
+- **ROAD-5 [J] — horizon transitions and readiness** — Horizon promotion and deferral meet the readiness contract; ordinary plans prevent later-horizon moves until their lifecycle is explicitly resolved, while an open plan with a non-empty transferred-from origin may preserve detail at another honest horizon without implying readiness. CONFORM never chooses a move. (standards-repository-roadmaps.md)
+  - _Review prompt:_ Review each promotion or deferral against its readiness contract and plan state.
 
 ## THEME — themes
 
