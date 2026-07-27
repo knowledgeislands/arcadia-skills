@@ -63,7 +63,7 @@ The single root Node and Bun toolchain declaration.
 CI installs the declared toolchain and runs canonical repository gates.
 
 - **CI-1 [M] — CI installs the declared toolchain** — Where `.github/workflows/ci.yml` exists, it uses `jdx/mise-action` and hardcodes no Bun or Node version. (standards-engineering.md)
-- **CI-2 [M] — CI runs the canonical gates** — `ci.yml` runs `ki repo audit`, then `bun run test` when tests exist, and does not route governance through package scripts. (standards-engineering.md)
+- **CI-2 [M] — CI runs the canonical gates** — `ci.yml` runs `ki repo audit --repo .`, then `bun run test` when tests exist, and does not route governance through package scripts. (standards-engineering.md)
 
 ## SCR — Package scripts
 

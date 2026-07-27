@@ -37,7 +37,7 @@ export const CI: RubricFamily<EngineeringRubricContext, CiRubricContext> = {
     item(
       'CI-2',
       'CI runs the canonical gates',
-      '`ci.yml` runs `ki repo audit`, then `bun run test` when tests exist, and does not route governance through package scripts.',
+      '`ci.yml` runs `ki repo audit --repo .`, then `bun run test` when tests exist, and does not route governance through package scripts.',
       'FAIL',
       (context) => context.ci2,
       ['WARN']

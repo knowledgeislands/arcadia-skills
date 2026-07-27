@@ -83,7 +83,7 @@ The manifest is the **engineering** standard's because engineering owns the clos
 
 ### CI workflow
 
-Where the repo has CI (`.github/workflows/ci.yml`), it is a single `build` job on `push` to `main` and `pull_request`, running the common gate **in order**: `jdx/mise-action` (installs the toolchain from `mise.toml`, pinning **no** version itself — no `bun-version:` / `node-version:`, which would bypass `mise.toml` and is drift) → `bun install --frozen-lockfile` → acquire and verify the active KI skill collection → **`ki repo audit`** → **`bun run test`** when the repo ships self-tests. Native audit resolves registered rubrics from that verified collection; it does not bootstrap a checkout-local executor or invoke a vendored runner. A `ki:test:smoke` step that follows in an MCP repo is that artifact's **delta**, owned by `ki-mcp` — not part of this common shape.
+Where the repo has CI (`.github/workflows/ci.yml`), it is a single `build` job on `push` to `main` and `pull_request`, running the common gate **in order**: `jdx/mise-action` (installs the toolchain from `mise.toml`, pinning **no** version itself — no `bun-version:` / `node-version:`, which would bypass `mise.toml` and is drift) → `bun install --frozen-lockfile` → acquire and verify the active KI skill collection → **`ki repo audit --repo .`** → **`bun run test`** when the repo ships self-tests. Native audit resolves registered rubrics from that verified collection; it does not bootstrap a checkout-local executor or invoke a vendored runner. A `ki:test:smoke` step that follows in an MCP repo is that artifact's **delta**, owned by `ki-mcp` — not part of this common shape.
 
 ### Clean-end-state cutovers
 

@@ -255,10 +255,14 @@ export const collectAuditEvidence = (repo: string): readonly EngineeringEvidence
         STD,
         '.github/workflows/ci.yml'
       )
-    const auditIndex = commandIndex('ki repo audit')
+    // CI names its target explicitly. The bare form remains a valid local CLI
+    // invocation, but a workflow must prove which checkout it governs.
+    const auditIndex = ci.search(
+      /(?:^[ \t]*(?:-[ \t]*)?(?:run:[ \t]*)?|&&[ \t]*|\|\|[ \t]*|;[ \t]*)(["']?)ki[ \t]+repo[ \t]+audit[ \t]+--repo[ \t]+\.[ \t]*\1(?=[ \t]*(?:&&|\|\||;|#|\r?$))/m
+    )
     auditIndex >= 0
-      ? add('PASS', 'CI-2', 'ci.yml runs the native repository gate "ki repo audit"', STD, '.github/workflows/ci.yml')
-      : add('FAIL', 'CI-2', 'ci.yml must run "ki repo audit" directly', STD, '.github/workflows/ci.yml')
+      ? add('PASS', 'CI-2', 'ci.yml runs the native repository gate "ki repo audit --repo ."', STD, '.github/workflows/ci.yml')
+      : add('FAIL', 'CI-2', 'ci.yml must run "ki repo audit --repo ." directly', STD, '.github/workflows/ci.yml')
     if (scripts.test) {
       const testIndex = commandIndex('bun run test')
       if (testIndex < 0)
@@ -271,13 +275,13 @@ export const collectAuditEvidence = (repo: string): readonly EngineeringEvidence
         )
       else if (auditIndex >= 0 && auditIndex < testIndex)
         add('PASS', 'CI-2', 'ci.yml runs the repository self-test suite "bun run test" after native audit', STD, '.github/workflows/ci.yml')
-      else add('FAIL', 'CI-2', 'ci.yml must run "ki repo audit" before "bun run test"', STD, '.github/workflows/ci.yml')
+      else add('FAIL', 'CI-2', 'ci.yml must run "ki repo audit --repo ." before "bun run test"', STD, '.github/workflows/ci.yml')
     }
     if (/\bbun\s+run\s+ki:(?:audit|conform|educate|help|verify)\b/.test(ci))
       add(
         'FAIL',
         'CI-2',
-        'ci.yml routes governance through a retired package-script alias; invoke "ki repo audit" directly',
+        'ci.yml routes governance through a retired package-script alias; invoke "ki repo audit --repo ." directly',
         STD,
         '.github/workflows/ci.yml'
       )
