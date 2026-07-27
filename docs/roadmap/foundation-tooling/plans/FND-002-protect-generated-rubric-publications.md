@@ -1,11 +1,11 @@
 ---
 id: 'FND-002'
 title: Protect generated rubric publications from drift
-status: ready
+status: in-progress
 roadmap: foundation-tooling/protect-generated-rubric-publications-from-drift
 blocks: —
 blocked-by: —
-baseline-ref: —
+baseline-ref: 6c0f8dab73b4cb5381dc7b4d4a89cecb9bf0c669
 ---
 
 ## Context

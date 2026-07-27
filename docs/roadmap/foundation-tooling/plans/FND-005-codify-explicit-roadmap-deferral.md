@@ -1,11 +1,11 @@
 ---
 id: 'FND-005'
 title: Codify explicit roadmap deferral
-status: ready
+status: in-progress
 roadmap: foundation-tooling/codify-explicit-roadmap-deferral-in-ki-next
 blocks: —
 blocked-by: —
-baseline-ref: —
+baseline-ref: 6c0f8dab73b4cb5381dc7b4d4a89cecb9bf0c669
 ---
 
 ## Context

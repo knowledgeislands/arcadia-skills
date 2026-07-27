@@ -1,11 +1,11 @@
 ---
 id: 'FND-003'
 title: Review ki-bootstrap for further simplification
-status: ready
+status: in-progress
 roadmap: foundation-tooling/review-ki-bootstrap-for-further-simplification
 blocks: —
 blocked-by: —
-baseline-ref: —
+baseline-ref: 6c0f8dab73b4cb5381dc7b4d4a89cecb9bf0c669
 ---
 
 ## Context
