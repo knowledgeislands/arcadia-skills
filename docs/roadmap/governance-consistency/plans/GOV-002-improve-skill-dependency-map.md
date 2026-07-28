@@ -1,11 +1,11 @@
 ---
 id: 'GOV-002'
 title: Improve skill dependency map and implementation review
-status: open
+status: in-progress
 roadmap: governance-consistency/review-the-skill-dependency-graph-and-implementation-quality
 blocks: —
 blocked-by: —
-baseline-ref: —
+baseline-ref: 73d4a53d0606b52b8434ea6c8c78ea241b18db76
 ---
 
 ## Context
@@ -16,23 +16,30 @@ Graphviz DOT remains the authoritative diagram model. SVG is a generated renderi
 
 ## Current state
 
-`docs/diagrams/skills-map.dot` publishes a one-page Graphviz map and regenerates `skills-map.svg`; `skills-map.html` is an interactive companion with its own presentation data.
+`docs/diagrams/skills-map.dot` publishes a one-page Graphviz map and regenerates `skills-map.svg`. The former interactive companion duplicated its topology and therefore cannot remain a second diagram source.
 
 `ki-depends-on` records only required governance prerequisites. The existing diagram also shows curated implication, composition, process, and runtime relationships, but group-level structure and relation semantics are not yet sufficiently legible.
 
+The map will flow from general foundations on the left to specialised capabilities on the right. Colour identifies a skill family; every node also names that family, so spatial grouping does not need to create a competing hierarchy.
+
 ## Steps
 
-1. Inventory the current map sources and classify every represented relationship: executable dependency, implication, composition, process handoff, runtime binding, coverage, or materialised dependency.
-2. Define a compact diagram information architecture that makes skill groups and cross-group relationships legible while preserving the distinction between relationship classes.
-3. Refactor the DOT source and its generated SVG to implement the agreed structure, retaining Graphviz as the canonical model and removing duplicated topology where a deterministic source can own it.
-4. Bring the interactive companion and skills documentation into alignment with the canonical graph, without introducing a parallel hand-maintained diagram contract.
-5. Record any implementation-quality findings that exceed this bounded map work as separately scoped roadmap items or plans.
+1. [x] Inventory the current map sources and classify every represented relationship: executable dependency, implication, composition, process handoff, runtime binding, coverage, or materialised dependency.
+2. [x] Define a compact diagram information architecture that makes skill groups and cross-group relationships legible while preserving the distinction between relationship classes.
+3. [x] Refactor the DOT source and its generated SVG to implement the agreed structure, retaining Graphviz as the canonical model and removing duplicated topology where a deterministic source can own it.
+4. [x] Retire the duplicate interactive companion and align the skills documentation with the canonical graph.
+5. [x] Record any implementation-quality findings that exceed this bounded map work as separately scoped roadmap items or plans.
+
+## Findings
+
+The interactive D3 companion duplicated the skill and relationship topology in a second hand-maintained source, so it was removed rather than kept in parallel with the DOT graph.
+
+No further implementation-quality work arose from this bounded review.
 
 ## Files touched
 
 - `docs/diagrams/skills-map.dot`
 - `docs/diagrams/skills-map.svg`
-- `docs/diagrams/skills-map.html`
 - `docs/guides/user/skills.md`
 - Relevant dependency sources, diagram-generation support, and focused tests if the review identifies drift.
 
