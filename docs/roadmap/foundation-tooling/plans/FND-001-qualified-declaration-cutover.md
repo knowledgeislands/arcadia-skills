@@ -1,7 +1,7 @@
 ---
 id: 'FND-001'
 title: 'Complete qualified declaration cutover'
-status: in-progress
+status: acceptance
 roadmap: foundation-tooling/complete-qualified-repository-declaration-migration
 blocks: —
 blocked-by: —
@@ -15,19 +15,19 @@ CLI-006 makes a repository declaration a quoted `<harness-id>:<skill-name>` TOML
 
 ## Current state
 
-- The harness's `.ki-config.toml` and central `ki-repo` rubric paths use qualified roots.
-- `ki-tools` reads `parsed['ki-tools']`, writes a bare marker during conform, and documents the old syntax.
-- Other skill-owned configuration readers and generated documentation still contain bare declaration assumptions and test fixtures.
-- `tools-ki` CLI-006 is implemented and its local engineering baseline is clean, but full repository acceptance remains blocked by this incomplete harness migration and live repository evidence.
+- The harness uses qualified `knowledgeislands/ki-agentic-harness:<skill>` roots throughout its repository configuration contract.
+- Skill-owned readers and conformers preserve nested settings while rejecting bare declarations without a compatibility fallback.
+- `ki-tools` recognises the Bun/TypeScript CLI's primary `--version` command and `src/tests/` layout.
+- Current tools-ki source (`0.2.11`) audits cleanly against the migrated harness. The installed `ki 0.2.6` binary is a separate release-update concern.
 
 ## Steps
 
-1. Inventory every remaining skill-owned bare repository-declaration read, write, fixture, standard, example, and generated publication; classify it as a runtime configuration path, a conformance path, or explanatory material.
-2. Establish one harness-local helper or equivalent settled pattern for resolving a skill's own qualified repository configuration without compatibility fallback, preserving nested settings and unrelated TOML.
-3. Migrate every affected skill rubric and conformer to the qualified pattern; update its tests, standards, examples, and generated rubric publication together.
-4. Correct `ki-tools` container evidence so it invokes the primary executable for `--version` and recognises the declared TypeScript/Bun test layout without requiring a shell-only `tests/` directory.
-5. Verify the harness migration and run `tools-ki`'s full repository audit against the updated harness; retain unrelated live-GitHub findings separately.
-6. Record the receiving adoption and report the resulting CLI-006 acceptance and release prerequisites.
+1. [x] Inventory every remaining skill-owned bare repository-declaration read, write, fixture, standard, example, and generated publication; classify it as a runtime configuration path, a conformance path, or explanatory material.
+2. [x] Establish one harness-local helper or equivalent settled pattern for resolving a skill's own qualified repository configuration without compatibility fallback, preserving nested settings and unrelated TOML.
+3. [x] Migrate every affected skill rubric and conformer to the qualified pattern; update its tests, standards, examples, and generated rubric publication together.
+4. [x] Correct `ki-tools` container evidence so it invokes the primary executable for `--version` and recognises the declared TypeScript/Bun test layout without requiring a shell-only `tests/` directory.
+5. [x] Verify the harness migration and run `tools-ki`'s full repository audit against the updated harness; retain unrelated live-GitHub findings separately.
+6. [x] Record the receiving adoption and report the resulting CLI-006 acceptance and release prerequisites.
 
 ## Files touched
 
@@ -52,4 +52,29 @@ CLI-006 makes a repository declaration a quoted `<harness-id>:<skill-name>` TOML
 
 ## Dependencies / blocks
 
-This work was adopted from `knowledgeislands/tools-ki` CLI-006. It blocks CLI-006 acceptance and release coordination, but has no local plan dependency and does not block unrelated harness governance work.
+This work was adopted from `knowledgeislands/tools-ki` CLI-006. CLI-006 is now accepted and pruned in its receiving repository. The installed `ki 0.2.6` binary lagging tools-ki source `0.2.11` is release-update work, not a remaining harness-migration dependency.
+
+## Acceptance
+
+### Delivered
+
+The harness now uses qualified repository skill declarations throughout its owned configuration contract, and every affected reader, conformer, test, standard, example, and generated rubric publication follows that one clean contract.
+
+### Summary of changes
+
+The cutover replaced bare `[ki-*]` declaration assumptions with quoted `knowledgeislands/ki-agentic-harness:<skill>` roots, preserving nested configuration ownership without a compatibility path. `ki-tools` now recognises the primary Bun/TypeScript executable and test layout. `52d421d0` restored the generated root roadmap projection after the later GOV-001 prune.
+
+### Verification
+
+- `bun run test` — 213 passing tests.
+- `bunx tsc --noEmit` and `bunx biome check .` — passed.
+- `ki repo audit --skill ki-skills --repo .`, `ki repo audit --skill ki-roadmap --repo .`, and `ki repo audit --repo .` — no FAIL or WARN findings.
+- `bun /Users/krisbrown/workspaces/kis/knowledgeislands/tools-ki/src/main.ts repo audit --repo /Users/krisbrown/workspaces/kis/knowledgeislands/tools-ki` — no FAIL or WARN findings across 60 evaluated findings.
+
+### Outstanding concerns
+
+The installed `ki 0.2.6` binary predates the verified tools-ki source at `0.2.11`; releasing or upgrading that binary is separate from this completed harness migration.
+
+### Mini recap
+
+No new durable learning route is proposed. The root portfolio drift was repaired through the existing `ki-roadmap` CONFORM contract.
