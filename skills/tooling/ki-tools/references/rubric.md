@@ -37,7 +37,7 @@ Layout, executable, distribution, versioning, and judgment criteria.
 - **TOOL-INSTALL [M] — Installer executable** — `install.sh` is a physical executable file. (standards-tool-repositories.md)
 - **TOOL-INSTALL-QUALITY [J] — Installer quality** — The installer is POSIX-ish, honours overrides, verifies downloads, and is idempotent. (standards-tool-repositories.md)
   - _Review prompt:_ The installer is POSIX-ish, honours overrides, verifies downloads, and is idempotent.
-- **TOOL-VERSION [M] — Version flag** — The primary executable contains `--version` handling. (standards-tool-repositories.md)
+- **TOOL-VERSION [M] — Version flag** — The primary executable successfully runs with `--version`. (standards-tool-repositories.md)
 - **TOOL-VERSION-SOURCE [J] — Version source** — The version marker has one source of truth aligned with the latest tag and changelog. (standards-tool-repositories.md)
   - _Review prompt:_ The version marker has one source of truth aligned with the latest tag and changelog.
 - **TOOL-CHANGELOG [M] — Changelog presence** — `CHANGELOG.md` is a physical regular file. (standards-tool-repositories.md)
@@ -46,7 +46,7 @@ Layout, executable, distribution, versioning, and judgment criteria.
 - **TOOL-CI [M] — CI workflow** — At least one physical workflow YAML file is present. (standards-tool-repositories.md)
 - **TOOL-TAP [J] — Companion formula** — A companion Homebrew formula exists in the governed tap. (standards-tool-repositories.md)
   - _Review prompt:_ A companion Homebrew formula exists in the governed tap.
-- **TOOL-TESTS [M] — Test directory** — A physical `tests/` directory is present. (standards-tool-repositories.md)
+- **TOOL-TESTS [M] — Test directory** — A physical `tests/` or `src/tests/` directory is present. (standards-tool-repositories.md)
 - **TOOL-ENGINEERING [J] — Engineering declaration** — A package.json-bearing repository declares ki-engineering. (standards-tool-repositories.md)
   - _Review prompt:_ A package.json-bearing repository declares ki-engineering.
 - **TOOL-LANGUAGE [J] — Other-language toolchain** — A non-shell, non-JavaScript tool wires its own lint and test toolchain into CI. (standards-tool-repositories.md)
@@ -77,4 +77,4 @@ Language toolchain deferral.
 
 Applicability marker and validate-down keys.
 
-- **CONFIG-1 [M] — Opt-in marker and keys** — A keyless `[ki-tools]` marker is present and validated down. (standards-tool-repositories.md)
+- **CONFIG-1 [M] — Opt-in marker and keys** — A keyless qualified `ki-tools` marker is present and validated down. (standards-tool-repositories.md)

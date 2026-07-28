@@ -6,7 +6,9 @@ const SOURCE = [STANDARD] as const
 const one = (outcome: AuditOutcome): readonly AuditOutcome[] => [outcome]
 
 const unavailable = (context: ShellToolsContext): readonly AuditOutcome[] | null =>
-  context.applicable ? null : one({ status: 'NOT_APPLICABLE', message: 'No [ki-tools] declaration or bin/ structural marker is present.' })
+  context.applicable
+    ? null
+    : one({ status: 'NOT_APPLICABLE', message: 'No qualified ki-tools declaration or bin/ structural marker is present.' })
 
 const SHELL_LINT: RubricItem<ShellToolsContext> = {
   code: 'SHELL-LINT',

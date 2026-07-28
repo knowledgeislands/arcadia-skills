@@ -28,7 +28,9 @@ const judgment = (code: string, title: string, description: string): RubricItem<
 })
 
 const notApplicable = (context: ToolRepositoryContext): readonly AuditOutcome[] | null =>
-  context.applicable ? null : one({ status: 'NOT_APPLICABLE', message: 'No [ki-tools] declaration or bin/ structural marker is present.' })
+  context.applicable
+    ? null
+    : one({ status: 'NOT_APPLICABLE', message: 'No qualified ki-tools declaration or bin/ structural marker is present.' })
 
 const TOOL_BIN = mechanical('TOOL-BIN', 'Tool executable', '`bin/` exists and holds at least one physical file.', 'FAIL', (context) => {
   if (context.rootState === 'absent')
@@ -126,17 +128,23 @@ const TOOL_INSTALL_QUALITY = judgment(
 const TOOL_VERSION = mechanical(
   'TOOL-VERSION',
   'Version flag',
-  'The primary executable contains `--version` handling.',
+  'The primary executable successfully runs with `--version`.',
   'WARN',
   (context) => {
     const skipped = notApplicable(context)
     if (skipped) return skipped
     if (!context.primary) return one({ status: 'NOT_APPLICABLE', message: 'No primary executable is available.' })
-    return context.primaryText.includes('--version')
-      ? one({ status: 'PASS', message: 'Primary executable handles --version.', subject: `bin/${context.primary}` })
+    if (context.version === 'unavailable')
+      return one({
+        status: 'NOT_APPLICABLE',
+        message: 'Primary executable is not executable, so --version cannot run.',
+        subject: `bin/${context.primary}`
+      })
+    return context.version === 'passed'
+      ? one({ status: 'PASS', message: 'Primary executable runs successfully with --version.', subject: `bin/${context.primary}` })
       : one({
           status: 'VIOLATION',
-          message: 'Primary executable has no visible --version handling.',
+          message: 'Primary executable does not complete --version successfully.',
           subject: `bin/${context.primary}`
         })
   }
@@ -188,15 +196,25 @@ const TOOL_CI = mechanical('TOOL-CI', 'CI workflow', 'At least one physical work
 
 const TOOL_TAP = judgment('TOOL-TAP', 'Companion formula', 'A companion Homebrew formula exists in the governed tap.')
 
-const TOOL_TESTS = mechanical('TOOL-TESTS', 'Test directory', 'A physical `tests/` directory is present.', 'WARN', (context) => {
-  const skipped = notApplicable(context)
-  if (skipped) return skipped
-  if (context.tests === 'unsafe')
-    return one({ status: 'VIOLATION', message: 'tests/ is not a physical readable directory.', subject: 'tests/' })
-  return context.tests === 'present'
-    ? one({ status: 'PASS', message: 'tests/ directory is present.', subject: 'tests/' })
-    : one({ status: 'VIOLATION', message: 'tests/ directory is absent.', subject: 'tests/' })
-})
+const TOOL_TESTS = mechanical(
+  'TOOL-TESTS',
+  'Test directory',
+  'A physical `tests/` or `src/tests/` directory is present.',
+  'WARN',
+  (context) => {
+    const skipped = notApplicable(context)
+    if (skipped) return skipped
+    if (context.tests === 'unsafe')
+      return one({ status: 'VIOLATION', message: 'tests/ or src/tests/ is not a physical readable directory.', subject: 'tests/' })
+    return context.tests === 'present'
+      ? one({
+          status: 'PASS',
+          message: `Test directory is present: ${context.testDirectories.join(', ')}.`,
+          subject: context.testDirectories[0]
+        })
+      : one({ status: 'VIOLATION', message: 'tests/ and src/tests/ directories are absent.', subject: 'tests/' })
+  }
+)
 
 const TOOL_ENGINEERING = judgment(
   'TOOL-ENGINEERING',

@@ -1,3 +1,4 @@
+import { spawnSync } from 'node:child_process'
 import { type Dirent, lstatSync, readdirSync, readFileSync } from 'node:fs'
 import { basename, join, resolve } from 'node:path'
 import type { ConformCommand, ConformWrite, RubricContextOptions, RubricPublicationContext, RubricSession } from '../../shared/rubric.ts'
@@ -8,6 +9,10 @@ type DirectoryState = 'missing' | 'present' | 'unsafe'
 type FileState = 'missing' | 'physical' | 'unsafe'
 type ExecutableState = 'missing' | 'executable' | 'non-executable' | 'unsafe'
 type ConfigState = 'missing' | 'unsafe' | 'malformed' | 'absent' | 'present'
+type VersionState = 'passed' | 'failed' | 'unavailable'
+
+const HARNESS_ID = 'knowledgeislands/ki-agentic-harness'
+const TOOLS_TABLE = `${HARNESS_ID}:ki-tools`
 
 export type ToolBinary = {
   readonly name: string
@@ -23,12 +28,14 @@ export type ToolRepositoryContext = {
   readonly unsafeBinEntries: readonly string[]
   readonly primary: string | null
   readonly primaryText: string
+  readonly version: VersionState
   readonly install: ExecutableState
   readonly changelog: FileState
   readonly workflows: DirectoryState
   readonly workflowFiles: readonly string[]
   readonly unsafeWorkflowEntries: readonly string[]
   readonly tests: DirectoryState
+  readonly testDirectories: readonly string[]
   readonly requestBinExecutables?: () => void
   readonly requestInstallExecutable?: () => void
 }
@@ -106,12 +113,28 @@ const inspectConfig = (
   if (content === null) return { state: 'unsafe', keys: [], content: null }
   try {
     const parsed = Bun.TOML.parse(content) as Record<string, unknown>
-    const candidate = parsed['ki-tools']
+    const candidate = parsed[TOOLS_TABLE]
     if (candidate && typeof candidate === 'object' && !Array.isArray(candidate))
       return { state: 'present', keys: Object.keys(candidate as Record<string, unknown>), content }
     return { state: 'absent', keys: [], content }
   } catch {
     return { state: 'malformed', keys: [], content }
+  }
+}
+
+const inspectVersion = (path: string, executableFile: boolean, repository: string): VersionState => {
+  if (!executableFile) return 'unavailable'
+  try {
+    const result = spawnSync(path, ['--version'], {
+      cwd: repository,
+      encoding: 'utf8',
+      env: { LANG: 'C', PATH: process.env.PATH ?? '' },
+      stdio: ['ignore', 'pipe', 'ignore'],
+      timeout: 5_000
+    })
+    return result.status === 0 && result.stdout.trim().length > 0 ? 'passed' : 'failed'
+  } catch {
+    return 'failed'
   }
 }
 
@@ -148,7 +171,10 @@ export const createToolsSession = ({ mode, repository, publication }: RubricCont
   const bins = inspectedBins.files.map((name) => ({ name, executable: executable(join(binPath, name)) }))
   const expected = basename(root).replace(/^tools-/, '')
   const primary = bins.find(({ name }) => name === expected)?.name ?? bins[0]?.name ?? null
-  const primaryText = primary ? (readableText(join(binPath, primary)) ?? '') : ''
+  const primaryPath = primary ? join(binPath, primary) : null
+  const primaryText = primaryPath ? (readableText(primaryPath) ?? '') : ''
+  const primaryExecutable = primary ? bins.find((bin) => bin.name === primary)?.executable === true : false
+  const version = primaryPath ? inspectVersion(primaryPath, primaryExecutable, root) : 'unavailable'
   const shell = /^#!.*\b(bash|sh|dash|zsh|ksh)\b/.test(primaryText.split(/\r?\n/, 1)[0] ?? '')
 
   const installPath = join(root, 'install.sh')
@@ -174,10 +200,22 @@ export const createToolsSession = ({ mode, repository, publication }: RubricCont
   const workflowText = workflowTexts.filter((text): text is string => text !== null).join('\n')
 
   const testsPath = join(root, 'tests')
+  const sourceTestsPath = join(root, 'src', 'tests')
   const inspectedTests =
-    rootState === 'physical'
-      ? inspectDirectory(testsPath, root, (entry) => entry.name.endsWith('.bats'))
-      : { state: 'missing' as const, files: [], unsafe: [] }
+    rootState === 'physical' ? inspectDirectory(testsPath, root, () => true) : { state: 'missing' as const, files: [], unsafe: [] }
+  const inspectedSourceTests =
+    rootState === 'physical' ? inspectDirectory(sourceTestsPath, root, () => true) : { state: 'missing' as const, files: [], unsafe: [] }
+  const testInspections = [
+    ['tests/', inspectedTests],
+    ['src/tests/', inspectedSourceTests]
+  ] as const
+  const tests = testInspections.some(([, inspection]) => inspection.state === 'unsafe')
+    ? 'unsafe'
+    : testInspections.some(([, inspection]) => inspection.state === 'present')
+      ? 'present'
+      : 'missing'
+  const testDirectories = testInspections.filter(([, inspection]) => inspection.state === 'present').map(([path]) => path)
+  const bats = inspectedTests.files.some((name) => name.endsWith('.bats'))
 
   const packageKind = rootState === 'physical' ? nodeKind(join(root, 'package.json')) : 'missing'
   const packageJson: FileState = packageKind === 'missing' ? 'missing' : packageKind === 'file' ? 'physical' : 'unsafe'
@@ -205,12 +243,14 @@ export const createToolsSession = ({ mode, repository, publication }: RubricCont
       unsafeBinEntries: inspectedBins.unsafe,
       primary,
       primaryText,
+      version,
       install,
       changelog,
       workflows: inspectedWorkflows.state,
       workflowFiles: inspectedWorkflows.files,
       unsafeWorkflowEntries,
-      tests: inspectedTests.state,
+      tests,
+      testDirectories,
       ...(mode === 'conform' && bins.some((bin) => !bin.executable)
         ? {
             requestBinExecutables: () => {
@@ -234,7 +274,7 @@ export const createToolsSession = ({ mode, repository, publication }: RubricCont
       workflowText,
       unsafeWorkflowEntries,
       tests: inspectedTests.state,
-      bats: inspectedTests.files.length > 0,
+      bats,
       unsafeTestEntries: inspectedTests.unsafe
     },
     language: { applicable, packageJson },
@@ -262,7 +302,7 @@ export const createToolsSession = ({ mode, repository, publication }: RubricCont
       const commands = [...requestedExecutables].sort().map((path): ConformCommand => ({ program: 'chmod', arguments: ['+x', path] }))
       const writes: ConformWrite[] =
         markerRequested && originalConfig !== null
-          ? [{ path: '.ki-config.toml', content: `${originalConfig.replace(/\n*$/, '\n')}\n[ki-tools]\n` }]
+          ? [{ path: '.ki-config.toml', content: `${originalConfig.replace(/\n*$/, '\n')}\n["${TOOLS_TABLE}"]\n` }]
           : []
       return { writes, ...(commands.length > 0 ? { commands } : {}) }
     }

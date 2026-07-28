@@ -14,7 +14,7 @@ const LANG_DEFER: RubricItem<LanguageToolsContext> = {
       phase: 'INSPECT',
       run: (context) => {
         if (!context.applicable)
-          return [{ status: 'NOT_APPLICABLE', message: 'No [ki-tools] declaration or bin/ structural marker is present.' }]
+          return [{ status: 'NOT_APPLICABLE', message: 'No qualified ki-tools declaration or bin/ structural marker is present.' }]
         if (context.packageJson === 'unsafe')
           return [{ status: 'VIOLATION', message: 'package.json is not a physical regular file.', subject: 'package.json' }]
         return context.packageJson === 'physical'

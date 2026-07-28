@@ -11,7 +11,7 @@ argument-hint: 'audit <repo> | conform <repo> | help | educate <repo> | refresh'
 
 You are helping audit, conform, or scaffold a **`tools-*` repo** — a repo holding exactly **one** standalone command-line tool, distributed two ways: a `curl | bash` installer at the repo root, and a companion Homebrew formula that lives in the tap. The reference implementation is [`tools-mgit`](https://github.com/knowledgeislands/tools-mgit), a bash CLI (`bin/mgit`), but the standard governs the **shape**, not the language — a future Python or Go tool fits the same container.
 
-This skill rides on `ki-repo` (local files, GitHub settings) but **not** `ki-engineering` — a bash tool has no TypeScript/Bun toolchain to govern, so no `[ki-engineering]` is assumed (the same pattern `ki-kb` follows). If the tool grows a `package.json`, that changes: it then declares `[ki-engineering]` too and defers its lint/test there (see the capability rule below).
+This skill rides on `ki-repo` (local files, GitHub settings) but **not** `ki-engineering` — a bash tool has no TypeScript/Bun toolchain to govern, so no `ki-engineering` declaration is assumed (the same pattern `ki-kb` follows). If the tool grows a `package.json`, that changes: it then declares `["knowledgeislands/ki-agentic-harness:ki-engineering"]` too and defers its lint/test there (see the capability rule below).
 
 The full, quotable standard lives in [the tool-repository standard](references/standards-tool-repositories.md); the line-by-line pass/fail items live in [the generated rubric](references/rubric.md). `ki repo audit` and `ki repo conform` execute the structured mechanical contract directly through the host.
 
@@ -29,11 +29,11 @@ tools-<name>/
 ├── bin/<name>              # THE executable — chmod +x (git tracks the exec bit). Answers --version.
 ├── install.sh              # curl installer: POSIX-ish, honours env overrides (target dir + version),
 │                           #   verifies the download, idempotent. The `curl | bash` contract.
-├── tests/                  # executable test suite (a *.bats suite for a shell tool). Expected.
+├── tests/ or src/tests/    # executable test suite (a *.bats suite under tests/ for a shell tool). Expected.
 ├── .github/workflows/*.yml # CI: lint + test on every push. Expected.
 ├── CHANGELOG.md            # keep-a-changelog + semver. Releases are vX.Y.Z git tags + a GitHub release each.
 ├── README.md · LICENSE     # ki-repo's job — not governed here.
-└── .ki-config.toml         # carries [ki-repo] + [ki-tools] (the opt-in marker).
+└── .ki-config.toml         # carries qualified ki-repo + ki-tools declarations (the opt-in marker).
 ```
 
 `bin/` with ≥1 executable file is the only hard requirement (**FAIL** if missing); everything else is **WARN** — expected but not ship-stopping. The companion Homebrew formula lives in the tap repo (`homebrew-<x>`, `Formula/<name>.rb`), governed by `ki-homebrew-tap` — cross-reference it, don't reproduce it.
@@ -43,12 +43,12 @@ tools-<name>/
 Mirrors `ki-engineering`'s capability-conditional pattern: what the repo _is_ decides which checks apply, so the same standard covers a bash tool and a TS tool without forking.
 
 - **Shell entrypoint** (the primary `bin/` file has a `bash`/`sh` shebang): it MUST be shellcheck-clean in CI (a workflow references `shellcheck`) and ship a `bats` suite that CI runs (a `*.bats` file under `tests/` and a workflow that references `bats`).
-- **A `package.json` appears** (a TS/Bun tool): the repo defers lint/test to `ki-engineering` and MUST also declare `[ki-engineering]` in its `.ki-config.toml`. The shell checks don't apply.
+- **A `package.json` appears** (a TS/Bun tool): the repo defers lint/test to `ki-engineering` and MUST also declare `["knowledgeislands/ki-agentic-harness:ki-engineering"]` in its `.ki-config.toml`. The shell checks don't apply.
 - **Another language** (Python, Go, …): defer to that language's own toolchain; the container checks (bin, install.sh, versioning, changelog, CI, tests) still apply.
 
-## The `[ki-tools]` marker
+## The qualified `ki-tools` marker
 
-A `tools-*` repo opts into this standard by declaring a **keyless** `[ki-tools]` table in its `.ki-config.toml` — a bare marker, exactly like `[ki-mcp]`. The table is validated **down** (this skill reads only its own table and warns on any unknown key inside it). `ki repo conform --skill ki-tools` may add the marker to an existing physical, parseable configuration. It may also set executable bits on verified physical `bin/*` files and `install.sh`; missing content, malformed or unsafe paths, external releases, and Homebrew operations remain report-only.
+A `tools-*` repo opts into this standard by declaring a **keyless** `["knowledgeislands/ki-agentic-harness:ki-tools"]` table in its `.ki-config.toml`. The table is validated **down** (this skill reads only its own table and warns on any unknown key inside it). `ki repo conform --skill ki-tools` may add the marker to an existing physical, parseable configuration. It may also set executable bits on verified physical `bin/*` files and `install.sh`; missing content, malformed or unsafe paths, external releases, and Homebrew operations remain report-only.
 
 ## Operating modes
 
