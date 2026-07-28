@@ -49,7 +49,7 @@ Apply the readiness rules in `ki-roadmap` or `ki-kb-streams`, according to the r
 
 ### Non-KB repositories
 
-1. **Blocking and Next.** Gather items that are ready to start and not blocked by an active plan dependency. Reuse a valid existing plan rather than creating a duplicate. If any qualify, rank and present them; do not inspect later horizons for planning candidates.
+1. **Blocking and Next.** Gather items that are ready to start and not blocked by an active plan dependency. Reuse a valid existing plan rather than creating a duplicate. If more than one is independently ready, recommend a small compatible batch only when the items have no unresolved dependencies on one another and each can retain its own plan relationship. Rank the batch in its proposed execution order; do not inspect later horizons for planning candidates.
 2. **Soon.** Only when no eligible Blocking or Next item exists, assess Soon items against the governance-owned Next entry rule: actionable scope, understood dependencies, and readiness to start. Present the viable options. After the user confirms an item, wording, and order, move it to Next as an authored roadmap edit, regenerate derived views, re-run AUDIT, and restart from Blocking and Next. Never create a plan while the item remains Soon.
 3. **Future.** Only when Soon is empty or has no viable candidate, inspect Future items. For a selected candidate, do the minimum scoping needed to state an intended outcome and boundary. Present that proposed wording and Future-to-Soon move. After confirmation, make the authored edit, regenerate and audit, then restart in Soon. A second readiness evaluation and confirmation are required before any Soon-to-Next move. If no candidate can meet the Soon entry rule, report that no eligible work exists; do not manufacture an item.
 4. **Waiting for.** It never becomes a candidate merely because the immediate queue is empty. Reconsider it only when its named external condition has changed, then present the proposed re-entry horizon and the evidence for confirmation.
@@ -58,7 +58,7 @@ Apply the readiness rules in `ki-roadmap` or `ki-kb-streams`, according to the r
 
 ### Knowledge Bases
 
-1. **Blocking and Active.** Gather streams that are ready for current attention and whose proposal dependencies are satisfied. Reuse the existing proposal Checklist; do not create a repository plan.
+1. **Blocking and Active.** Gather streams that are ready for current attention and whose proposal dependencies are satisfied. Reuse the existing proposal Checklist; do not create a repository plan. If more than one is independently ready, recommend a small compatible batch only when the streams have no unresolved dependencies on one another and each retains its own proposal Checklist. Rank the batch in its proposed execution order.
 2. **Background.** Only when no immediate stream qualifies, assess Background streams. After confirmation, move one to Active only when its scope is actionable and its dependencies are understood.
 3. **Waiting for.** It never becomes a candidate merely because immediate work is empty. Reconsider it only when its named dependency or external condition has changed; then present the proposed move to Active or Background.
 4. **Dormant.** It never becomes a candidate merely because immediate work is empty. Reconsider it only when its named return trigger or priority has changed, then present its honest re-entry Focus.
@@ -78,14 +78,16 @@ After every confirmed transition, return to the destination horizon or Focus eva
 
 For each viable option, give a compact evidence-backed comparison covering expected benefit, leverage, risk reduction, delivery cost, reversibility, readiness, and dependency availability. Do not collapse these into a misleading single score. Preserve any order the user supplies.
 
+Recommend a small batch only when more than one item is immediately eligible, the items are independently ready, and grouping them makes the next queue clearer. A batch is a ranked recommendation, not a merged work item: it does not relax a plan or proposal's ownership, lifecycle, or review boundary. Do not batch a later-horizon promotion; every staged transition remains separately confirmed and re-evaluated at its destination.
+
 Before writing, show:
 
-- selected item, plan, or proposal;
+- each selected item and its plan or proposal;
 - proposed horizon or Focus transition and exact wording changes;
 - the proposed order and dependency implications;
 - existing-plan reuse or the new `<theme>/<id>` plan location.
 
-Require explicit confirmation for the exact set and order. Write only the approved authored transitions, then regenerate and audit projections where the local structure has them. Invoke `ki-plan` only once a confirmed item is in an immediate state: Blocking or Next in a non-KB repository, Blocking or Active in a Knowledge Base. `ki-plan` creates or revises the corresponding plan or proposal Checklist under its own lifecycle contract; `ki-next` then stops for review rather than beginning implementation.
+Require explicit confirmation for the exact set and order. Write only the approved authored transitions, then regenerate and audit projections where the local structure has them. Invoke `ki-plan` only once each confirmed item is in an immediate state: Blocking or Next in a non-KB repository, Blocking or Active in a Knowledge Base. `ki-plan` creates or revises the corresponding distinct plan or proposal Checklist under its own lifecycle contract; `ki-next` then stops for review rather than beginning implementation.
 
 ## 7. Scenario checks
 
@@ -99,6 +101,9 @@ Apply these behavioural checks whenever the process changes:
 | Future candidate cannot meet Soon entry | Leave it in Future and report no eligible work. |
 | Waiting condition changed | Present the evidence and proposed re-entry; do not move it automatically. |
 | Existing valid plan covers selected work | Reuse it and respect its cross-theme dependency edges. |
+| Several independently ready immediate items form a useful queue | Present a small ranked batch; preserve a separate plan or proposal Checklist for every item and require confirmation of the exact set and order. |
+| Candidate item depends on another proposed batch item | Do not batch it: it is not independently ready. |
+| Later-horizon items look related | Keep their staged promotions separate; confirm and re-evaluate each item at its destination before it can join an immediate batch. |
 | No regular inbound handoff exists | Continue normal selection without presenting an inbox step. |
 | Only `+/_HANDOFFS/README.md` remains | Treat it as the required empty-inbox orientation and continue normally. |
 | Unreviewed inbound handoff exists | Present its exact proposed disposition and require confirmation before any write or deletion. |
