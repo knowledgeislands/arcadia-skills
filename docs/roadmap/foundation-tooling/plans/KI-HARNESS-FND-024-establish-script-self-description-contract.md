@@ -1,7 +1,7 @@
 ---
 id: 'KI-HARNESS-FND-024'
 title: Establish a top-level script self-description contract
-status: acceptance
+status: done
 roadmap: foundation-tooling/establish-a-top-level-script-self-description-contract
 blocks: —
 blocked-by: —
@@ -72,3 +72,11 @@ None. The heuristic checks stable structural facts; command necessity and header
 ### Mini recap
 
 Public script documentation belongs with skill quality when it describes capability ownership and mutation boundaries, rather than with the repository toolchain.
+
+## Done
+
+Established and verified the public script header contract and its proportionate SCRIPT-8 enforcement.
+
+Residual concern: None.
+
+Follow-up: Apply the existing rule naturally when a future public skill script is introduced.

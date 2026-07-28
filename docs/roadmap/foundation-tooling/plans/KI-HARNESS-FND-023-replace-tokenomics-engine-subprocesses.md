@@ -1,7 +1,7 @@
 ---
 id: 'KI-HARNESS-FND-023'
 title: Replace local tokenomics engine subprocesses
-status: acceptance
+status: done
 roadmap: foundation-tooling/replace-local-tokenomics-engine-subprocesses
 blocks: —
 blocked-by: —
@@ -72,3 +72,11 @@ None. The planned cutover predates this plan's execution baseline and is now evi
 ### Mini recap
 
 When a clean-end-state cut has already landed, verify the current contract and close the stale migration plan rather than recreating transitional code.
+
+## Done
+
+Completed the native tokenomics session verification and closed the stale subprocess migration work.
+
+Residual concern: None.
+
+Follow-up: None.

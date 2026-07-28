@@ -1,7 +1,7 @@
 ---
 id: 'KI-HARNESS-FND-022'
 title: Inventory non-critical writers for bounded follow-up
-status: acceptance
+status: done
 roadmap: foundation-tooling/inventory-non-critical-writers-for-bounded-follow-up
 blocks: —
 blocked-by: —
@@ -73,3 +73,11 @@ None. The two external-writer risks are deliberately retained as bounded candida
 ### Mini recap
 
 Direct writers need evidence proportionate to their target and mutation scope; report-only rubric sessions should remain on the host-owned transaction path.
+
+## Done
+
+Completed the writer inventory and recorded the bounded external-writer follow-up candidates.
+
+Residual concern: None.
+
+Follow-up: Review the two recorded candidates only when their respective external writer is next prioritised.
