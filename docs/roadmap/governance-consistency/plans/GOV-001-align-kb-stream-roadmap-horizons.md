@@ -22,9 +22,25 @@ The shared lifecycle should route work correctly in either structure without for
 
 `ki-next` and `ki-plan` deliberately stop for KB repositories, while `ki-recap` currently names the non-KB roadmap and plan destinations directly.
 
+## Confirmed semantic mapping
+
+Focus and horizons express attention and priority; a KB proposal's `status` remains its separate enactment lifecycle.
+
+| Concern | Non-KB roadmap | KB Streams Focus |
+| --- | --- | --- |
+| Urgent blocker | `Blocking` | `Blocking` |
+| Immediate work | `Next` | `Active` |
+| Understood, not immediate | `Soon` | `Background` |
+| Waiting on a named condition | `Waiting for` | `Waiting for` |
+| Intentionally paused | `Parked` | `Dormant` |
+| Speculative or unscoped | `Future` | `Future` |
+| Completed history | Removed from the roadmap | No `Settled` Focus; retain durable outcomes in canonical documentation and transient history in Git |
+
+A KB item in `Waiting for` names its dependency or external condition. Once it changes, `ki-next` re-evaluates the item and moves it to `Active` or `Background` by the ordinary attention rules.
+
 ## Steps
 
-1. Establish a precise cross-structure mapping that distinguishes priority, attention, dependency waiting, and proposal status; confirm the semantic changes before editing either contract.
+1. [x] Establish a precise cross-structure mapping that distinguishes priority, attention, dependency waiting, and proposal status; confirm the semantic changes before editing either contract.
 2. Update the KB Streams structure and enactment contract, rubric catalogue, and generated publication for the approved Focus model, including its replacement for `Settled` and the handling of parked work.
 3. Make `ki-recap`, `ki-next`, and `ki-plan` dispatch on repository structure: non-KB repositories retain roadmaps and governed plans; KB repositories use Streams and proposal Checklists.
 4. Align user documentation, skill descriptions, and composition boundaries so cross-repository handoffs and everyday lifecycle requests select the correct local structure.
