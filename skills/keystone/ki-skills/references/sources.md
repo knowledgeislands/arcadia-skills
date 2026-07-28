@@ -11,6 +11,7 @@ Abbreviations match the `(SOURCE)` tags in the standards and [rubric](rubric.md)
 - [Portable Agent Skills contract](#portable-agent-skills-contract)
 - [Established authoring practice](#established-authoring-practice)
 - [Anthropic practice](#anthropic-practice)
+- [OpenAI practice](#openai-practice)
 - [Knowledge Islands house standard](#knowledge-islands-house-standard)
 - [Runtime overlay: Claude Code](#runtime-overlay-claude-code)
 - [Last review](#last-review)
@@ -54,6 +55,14 @@ The Claude blog is a discovery source, not a normative standard. On each REFRESH
 | ---- | -------------------------- | ------------------------------------------------ | ------------- |
 | BLOG | [Claude blog][claude-blog] | Agentic-practice and authoring article discovery | 2026-07-28    |
 
+## OpenAI practice
+
+The OpenAI News page is a discovery source, not a normative standard. On each REFRESH, scan its landing page for new articles materially relevant to agent skills, agentic practice, or authoring workflows; open and assess only those relevant articles.
+
+| Tag    | Source                     | Scope                                            | Last reviewed |
+| ------ | -------------------------- | ------------------------------------------------ | ------------- |
+| OPENAI | [OpenAI News][openai-news] | Agentic-practice and authoring article discovery | 2026-07-28    |
+
 ## Community
 
 | Tag       | Source                                               | Scope                  | Last reviewed |
@@ -93,6 +102,7 @@ REFRESH last run **2026-07-19** against the tracked Agent Skills documentation s
 - **CC runtime overlay (Claude Code skills docs):** accessible; full frontmatter table confirms every CC-only field the standard lists. Confirms the 1,536-char `description`+`when_to_use` listing cap (~1% of context, configurable via `skillListingBudgetFraction` / `SLASH_COMMAND_TOOL_CHAR_BUDGET`; the per-skill desc-char cap is now documented as **`skillListingMaxDescChars`** — last run named it `maxSkillDescriptionChars`; the standard does not pin the setting name, so no standard drift), the post-compaction 5,000-tok-per-skill / 25,000-tok combined budgets, and the commands→skills merge. New since last run is runtime/settings, not authoring standard: `disable-model-invocation: true` now also blocks scheduled-task firing and subagent preload (v2.1.196), and `skillOverrides` gained an `"off"` state (v2.1.199) — neither changes a rubric criterion.
 - **ENG (Anthropic Engineering blog):** accessible. Confirms the two required fields, three-level progressive-disclosure model, evaluation-first authoring, and name/description as the trigger signal. No numeric caps — cited for rationale only.
 - **BLOG (Claude blog):** added as a discovery source. Future REFRESH runs scan it for articles materially relevant to agent skills, agentic practice, or authoring workflows; an article is supporting evidence, not a normative rule by itself.
+- **OPENAI (OpenAI News):** added as a discovery source. Future REFRESH runs scan it for articles materially relevant to agent skills, agentic practice, or authoring workflows; an article is supporting evidence, not a normative rule by itself.
 - **COMMUNITY (generativeprogrammer.com Skill Authoring Patterns):** accessible; page dated 2026-04-19, unchanged since last run. 14 named patterns incl. Known Gotchas, Autonomy Calibration, Exclusion Clause; confirms the 1024 / 1536 caps, < 500 lines, third-person "pushy" descriptions. Repeats the soft ~300-line split trigger — compatible with (and below) our 500-line WARN; still not adopted as a separate cap.
 - **`skills-ref` validator:** `validate` CLI documented but internals not fetchable; the frontmatter + naming rules it enforces are fully specified on the SPEC page (which links skills-ref as the validator), so the mechanical baseline (NAME / DESC / OPT) is confirmed there.
 - **In-house scan:** the then-current governed skill set passed its skill-quality audit, including `ki-skills` itself. Exact commands and fleet counts are intentionally omitted because both change as the host and skill set evolve.
@@ -115,6 +125,7 @@ REFRESH last run **2026-07-19** against the tracked Agent Skills documentation s
 [cc]: https://code.claude.com/docs/en/skills
 [eng]: https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills
 [claude-blog]: https://claude.com/blog
+[openai-news]: https://openai.com/news/
 [skills-ref]: https://github.com/agentskills/agentskills/tree/main/skills-ref
 [patterns]: https://generativeprogrammer.com/p/skill-authoring-patterns-from-anthropics
 [superpowers]: https://github.com/obra/superpowers/blob/main/skills/writing-skills/anthropic-best-practices.md
