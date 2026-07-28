@@ -1,7 +1,7 @@
 ---
 id: 'GOV-001'
 title: Align KB Stream focus with non-KB roadmap horizons
-status: open
+status: ready
 roadmap: governance-consistency/align-kb-stream-focus-with-non-kb-roadmap-horizons
 blocks: —
 blocked-by: —
