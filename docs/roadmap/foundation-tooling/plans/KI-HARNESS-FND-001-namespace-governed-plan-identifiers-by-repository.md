@@ -1,7 +1,7 @@
 ---
 id: 'KI-HARNESS-FND-001'
 title: Namespace governed plan identifiers by repository
-status: in-progress
+status: acceptance
 roadmap: foundation-tooling/namespace-governed-plan-identifiers-by-repository
 blocks: —
 blocked-by: —
@@ -46,3 +46,30 @@ Theme-scoped identifiers such as `FND-001` are ambiguous when plans, dependencie
 ## Dependencies / blocks
 
 None.
+
+## Acceptance
+
+### Delivered
+
+Repository-qualified governed-plan identifiers and `ki-roadmap`-owned `repo_code` conformance.
+
+### Summary of changes
+
+Added the `KI-HARNESS` repository code, adopted `<REPO>-<THEME>-<NNN>` plan identifiers, and aligned the roadmap, plan, next, recap, standards, rubric, and user documentation contracts.
+
+### Verification
+
+- `bun run test` — 214 passing.
+- `bunx tsc --noEmit` — passing.
+- `ki repo audit --skill ki-roadmap --repo .` — clean.
+- `ki repo audit --skill ki-skills --repo .` — clean.
+
+Evidence revision: `82f93581234b5caea944f512868df6f1186699f8`.
+
+### Outstanding concerns
+
+None.
+
+### Mini recap
+
+Configured repository prefixes may be intentionally hyphenated, so plan validation treats the configured `repo_code` as authoritative rather than relying on positional splitting.
