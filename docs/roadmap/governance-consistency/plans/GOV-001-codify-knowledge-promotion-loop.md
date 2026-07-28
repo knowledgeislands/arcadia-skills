@@ -1,7 +1,7 @@
 ---
 id: 'GOV-001'
 title: Codify convention placement and the knowledge-promotion loop
-status: in-progress
+status: done
 roadmap: governance-consistency/codify-convention-placement-and-the-knowledge-promotion-loop
 blocks: —
 blocked-by: —
@@ -18,10 +18,10 @@ Useful lessons currently have several possible destinations: ephemeral session c
 
 ## Steps
 
-1. Define the runtime-neutral placement ladder, promotion evidence, durable destinations, and reconciliation actions in `ki-authoring`.
-2. Add the new reference to `ki-authoring`'s router and authoring surface without creating a new guide area or automatic transcript miner.
-3. Align `ki-recap`'s learning-harvest procedure with the shared routing contract and retain its runtime-neutral boundary.
-4. Run focused and full mechanical verification, then record the outcome for acceptance.
+- [x] Define the runtime-neutral placement ladder, promotion evidence, durable destinations, and reconciliation actions in `ki-authoring`.
+- [x] Add the new reference to `ki-authoring`'s router and authoring surface without creating a new guide area or automatic transcript miner.
+- [x] Align `ki-recap`'s learning-harvest procedure with the shared routing contract and retain its runtime-neutral boundary.
+- [x] Run focused and full mechanical verification, then record the outcome for acceptance.
 
 ## Files touched
 
@@ -42,3 +42,30 @@ Useful lessons currently have several possible destinations: ephemeral session c
 ## Dependencies / blocks
 
 None.
+
+## Acceptance
+
+### Delivered
+
+- Added the runtime-neutral knowledge-promotion standard and surfaced it through `ki-authoring`.
+- Routed `ki-recap`'s learning-harvest procedure through that standard instead of naming a Claude-specific durable destination.
+- Corrected the user overview so portable repository guidance belongs in `AGENTS.md`, with runtime files reserved for runtime-specific detail.
+
+### Verification
+
+- `ki repo audit --skill ki-authoring --repo .` — PASS: 0 FAIL, 0 WARN.
+- `ki repo audit --repo .` — PASS: 0 FAIL, 0 WARN across all declared skills.
+- `ki repo conform --repo . --dry-run` — PASS: 0 FAIL, 0 WARN, 0 proposed fixes.
+- Prettier and markdownlint-cli2 — PASS for all changed Markdown files.
+
+### Outstanding concerns
+
+None. The standard deliberately does not add automatic transcript mining or a new guide area.
+
+### Mini recap
+
+The placement ladder provides one owner for each durable learning and instructs reconciliation of lower-layer duplicates. The user approved this work through done.
+
+## Done
+
+Completed 2026-07-28 under the user's approval through done. Retain this completed plan until explicit prune approval.
