@@ -52,16 +52,17 @@ Then look for threads left mid-change: uncommitted edits, a failing gate, a deci
 
 ## 4. Harvest the learnings, and route each
 
-For each dead-end, workaround, or convention discovered this session, route it to its proper home — **confirm with the user before writing anywhere durable**:
+For each dead-end, workaround, or convention discovered this session, apply `ki-authoring`'s [knowledge-promotion standard](../../../governance/ki-authoring/references/standards-knowledge-promotion.md) — **confirm with the user before writing anywhere durable**.
+
+The standard owns the placement ladder, promotion evidence, and duplicate-reconciliation rule; this procedure only identifies the likely route:
 
 | Learning shape | Route to |
 | --- | --- |
-| Repeated dead-end, big-file re-read, tool-arg gotcha (mechanical, local) | `CLAUDE.md` learned-pattern entry — hand into `headroom learn`'s `<!-- headroom:learn:start -->` block, **never duplicate it** |
-| Checker or rubric gap (a mechanical criterion missing or wrong) | A skill fix, or a new rubric criterion (mind the code-numbering caution: scan both the rubric and the linter for the next code) |
-| A recurring task that could be delegated | A new or updated agent |
-| An automatable guardrail (something that should block, not just advise) | A hook |
-| Deferred work with no home yet | `ROADMAP.md`, or a `ki-plan` if it's multi-step |
-| A durable cross-project fact about the user, feedback, or this project | Memory (per the auto-memory system's four types) — never duplicate what's already in a `CLAUDE.md` |
+| Stable repository convention | Portable `AGENTS.md`, or a runtime file only when it is genuinely runtime-specific |
+| Checker, rubric, shared rule, or reusable operation | Its owning skill, standard, reference, agent, or hook — add a criterion only after scanning the relevant catalogue and linter |
+| A bounded procedure | An existing appropriate guide, rather than new standing orientation |
+| Durable personal fact or user preference | Runtime memory or synchronised personal configuration, according to its scope |
+| Deferred work with no home yet | `ROADMAP.md`, or a `ki-plan` if it is multi-step |
 
 Use `highCostCandidates` from the grounding helper as a starting list, not the full set — warm context surfaces things the helper cannot see (a design dead-end, a rejected approach).
 
@@ -75,7 +76,7 @@ Close the recap with a **Specific actions** section: a short, concrete, imperati
 
 - `COMMIT-SESSION-CHANGES` — Commit (or explicitly discard) the session's uncommitted files — name the paths and suggest the commit message.
 - `PARK-DEFERRED-WORK` — Create the offered ROADMAP line or `ki-plan` for outstanding work that has no home.
-- `APPLY-LEARNING-ROUTE` — Apply an approved learning route (the `CLAUDE.md` entry, rubric criterion, hook, or memory write from step 4).
+- `APPLY-LEARNING-ROUTE` — Apply an approved learning route from the knowledge-promotion standard (for example, a repository rule, skill criterion, hook, memory, or personal configuration update).
 - `RERUN-FAILING-GATE` — Re-run a gate that was left failing, or finish a mid-change thread.
 - `CHOOSE-NEXT-WORK` — Offer `ki-next` when one or more grounded actions need a roadmap priority or plan decision. Carry only their labels, the grounded outstanding work, and the approval state of any learning routes; `ki-next` re-reads the roadmap before it ranks anything.
 

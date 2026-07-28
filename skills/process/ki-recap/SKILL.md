@@ -16,7 +16,7 @@ Three legs, always in this order:
 
 1. **Summarise** what happened this session — changes, decisions, files touched.
 2. **Surface what is outstanding** — unfinished threads, deferred fixes, work that should land on `ROADMAP.md` or a `ki-plan`. Always check whether the session's work is fully committed — dirty files this session touched are outstanding; dirty files from other threads are out of scope. A ROADMAP item **added this session** is "what happened", not outstanding.
-3. **Harvest the learnings** — dead-ends, workarounds, conventions discovered in-session — and route each to its proper home: a `CLAUDE.md` learned-pattern entry (via `headroom learn`'s block, never duplicated), a skill fix or rubric criterion, a new agent, a hook, memory, or a ROADMAP/`ki-plan` item. Confirm with the user before writing anywhere durable.
+3. **Harvest the learnings** — dead-ends, workarounds, conventions discovered in-session — and route each through the [knowledge-promotion standard](../../governance/ki-authoring/references/standards-knowledge-promotion.md): distinguish a durable learning from unfinished work, then choose its narrowest appropriate owner. Confirm with the user before writing anywhere durable.
 
 The recap always closes with a **Specific actions** section: a concrete, imperative checklist of everything actionable that fell out of legs 2 and 3 (files to commit, gates to re-run, approved learning routes to apply) — or a one-line "no actions" if the tree is clean and nothing is outstanding. Prefix each action with a short, unique, uppercase hyphenated label that names the work, rather than an arbitrary sequence number (for example, `FIX-AUTHORING-AUDIT`). It is a checklist for the user, not actions taken unprompted.
 
