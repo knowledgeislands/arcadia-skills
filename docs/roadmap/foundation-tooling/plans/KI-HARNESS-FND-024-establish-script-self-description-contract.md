@@ -1,11 +1,11 @@
 ---
 id: 'KI-HARNESS-FND-024'
 title: Establish a top-level script self-description contract
-status: ready
+status: in-progress
 roadmap: foundation-tooling/establish-a-top-level-script-self-description-contract
 blocks: —
 blocked-by: —
-baseline-ref: —
+baseline-ref: ab4c941e95546367ac2548f2036b453a15c5594e
 ---
 
 # KI-HARNESS-FND-024: Establish a top-level script self-description contract

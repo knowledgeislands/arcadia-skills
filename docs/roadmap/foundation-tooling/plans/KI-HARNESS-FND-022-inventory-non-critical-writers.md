@@ -1,11 +1,11 @@
 ---
 id: 'KI-HARNESS-FND-022'
 title: Inventory non-critical writers for bounded follow-up
-status: ready
+status: in-progress
 roadmap: foundation-tooling/inventory-non-critical-writers-for-bounded-follow-up
 blocks: —
 blocked-by: —
-baseline-ref: —
+baseline-ref: ab4c941e95546367ac2548f2036b453a15c5594e
 ---
 
 # KI-HARNESS-FND-022: Inventory non-critical writers for bounded follow-up

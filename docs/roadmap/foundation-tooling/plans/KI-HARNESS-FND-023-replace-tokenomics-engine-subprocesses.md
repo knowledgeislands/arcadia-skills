@@ -1,11 +1,11 @@
 ---
 id: 'KI-HARNESS-FND-023'
 title: Replace local tokenomics engine subprocesses
-status: ready
+status: in-progress
 roadmap: foundation-tooling/replace-local-tokenomics-engine-subprocesses
 blocks: —
 blocked-by: —
-baseline-ref: —
+baseline-ref: ab4c941e95546367ac2548f2036b453a15c5594e
 ---
 
 # KI-HARNESS-FND-023: Replace local tokenomics engine subprocesses
