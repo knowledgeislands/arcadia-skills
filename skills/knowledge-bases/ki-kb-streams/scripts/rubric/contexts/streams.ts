@@ -10,7 +10,7 @@ import type {
   ViolationLevel
 } from '../../shared/rubric.ts'
 
-const FOCI = ['Active', 'Background', 'Dormant', 'Future', 'Settled'] as const
+const FOCI = ['Blocking', 'Active', 'Background', 'Waiting for', 'Dormant', 'Future'] as const
 const STATUS = ['draft', 'ready', 'rejected', 'in-progress', 'rolled-out', 'reviewed', 'completed'] as const
 const PRIORITY = ['urgent', 'high', 'medium', 'low'] as const
 const SUFFIX = ' Proposal'

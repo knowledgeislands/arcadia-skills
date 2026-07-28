@@ -19,13 +19,14 @@ The full detail lives in the references (progressive disclosure): the structure 
 
 A stream lives at `Streams/$Focus/$Category?/$Name…`. **Focus** is mandatory — the level of attention the stream is receiving; moving a stream between Focus folders is an explicit act. **Category** is optional grouping within a Focus (pick one pattern per Focus: none / destination-path / status sub-grouping).
 
-| Focus        | Meaning                             |
-| ------------ | ----------------------------------- |
-| `Active`     | Receiving focused attention now     |
-| `Background` | Being progressed in the background  |
-| `Dormant`    | Paused with intention to return     |
-| `Future`     | Planned or ideated; not yet started |
-| `Settled`    | Concluded                           |
+| Focus         | Meaning                                         |
+| ------------- | ----------------------------------------------- |
+| `Blocking`    | Urgent work preventing focused work from moving |
+| `Active`      | Receiving focused attention now                 |
+| `Background`  | Understood work, but not the current focus      |
+| `Waiting for` | Blocked by a named dependency or condition      |
+| `Dormant`     | Intentionally paused with a return trigger      |
+| `Future`      | Planned or ideated; not yet started             |
 
 Each Focus folder carries a **same-name index note** whose `## Streams` table lists each stream by Topic / Status / Priority, ordered by status then priority (grouped by category where used). The base also keeps a cross-Focus **proposals index** in the `Streams/` zone index note.
 
@@ -49,7 +50,7 @@ A proposal's `status` is its position in the Enactment Process (distinct from it
 | `ready`       | Stable; no open questions; prerequisites satisfied; submitted for approval                |
 | `rejected`    | Rejected; reasons recorded; terminal (may reopen as a new `draft`)                        |
 | `in-progress` | Approved; rollout underway                                                                |
-| `rolled-out`  | Checklist executed; stream moves to `Settled/`; post-change review pending                |
+| `rolled-out`  | Checklist executed; post-change review pending                                            |
 | `reviewed`    | Post-change review complete                                                               |
 | `completed`   | Proven in practice; the proposal document is deleted (its knowledge now lives in a store) |
 

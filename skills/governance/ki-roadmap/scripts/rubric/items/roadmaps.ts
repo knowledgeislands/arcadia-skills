@@ -6,7 +6,7 @@ const SOURCE = 'standards-repository-roadmaps.md'
 const ROAD_1: RubricItem<RoadmapBlurbsContext> = {
   code: 'ROAD-1',
   title: 'roadmap structure',
-  description: 'Every authored roadmap has one H1 and the five horizons exactly once, in canonical order.',
+  description: 'Every authored roadmap has one H1 and the six horizons exactly once, in canonical order.',
   sources: [SOURCE],
   mechanical: {
     level: 'FAIL',

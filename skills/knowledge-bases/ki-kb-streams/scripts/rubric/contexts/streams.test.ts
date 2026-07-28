@@ -94,4 +94,18 @@ describe('ki-kb-streams session', () => {
     expect(context.focusFolders).toEqual([{ level: 'NOT_APPLICABLE', message: 'No Streams/ zone; its presence is owned by ki-kb.' }])
     expect(session.proposal()).toEqual({ writes: [] })
   })
+
+  test('recognises Waiting for as a canonical Focus', () => {
+    const root = repository()
+    mkdirSync(join(root, 'Streams', 'Waiting for'), { recursive: true })
+    writeFileSync(join(root, 'Streams', 'Waiting for', 'Waiting for.md'), '# Waiting for\n')
+
+    const session = createStreamsSession(options(root, 'audit'))
+    const context = STREAM.selectContext(rootContext(session))
+
+    expect(context.focusFolders).toEqual([{ level: 'PASS', message: 'All direct folders are Focus folders.', subject: 'Streams' }])
+    expect(context.focusIndexes).toEqual([
+      { level: 'PASS', message: 'Focus index is present.', subject: 'Streams/Waiting for/Waiting for.md' }
+    ])
+  })
 })

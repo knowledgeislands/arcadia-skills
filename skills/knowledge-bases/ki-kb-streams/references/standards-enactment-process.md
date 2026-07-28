@@ -66,7 +66,7 @@ dependencies: [] # filenames of prerequisite proposals
 | `ready`       | Stable; no open questions; prerequisites satisfied; submitted for approval |
 | `rejected`    | Rejected; reasons recorded; terminal (may reopen as a new `draft`)         |
 | `in-progress` | Approved; rollout underway                                                 |
-| `rolled-out`  | Checklist executed; stream moves to `Settled/`; post-change review pending |
+| `rolled-out`  | Checklist executed; post-change review pending                             |
 | `reviewed`    | Post-change review complete                                                |
 | `completed`   | Proven in practice; the proposal document is deleted                       |
 
@@ -77,9 +77,9 @@ Order: `draft` → `ready` → (`in-progress` | `rejected`) → `rolled-out` →
 1. **Emerge** — a change is conceived; create the stream folder and proposal note under the appropriate Focus (and Category), add a row to the focus index and the proposals index. (Propose the name and path and wait for confirmation first.)
 2. **Mature** — iterate the proposal in place: develop the Design Sections, resolve Open Questions with resolution notes, track prerequisites, keep Inputs / Outputs / Checklist current.
 3. **Submit** — when stable (no open questions) and every prerequisite is at `rolled-out` or beyond, set `status: ready` and submit. Approve → `in-progress`; return to draft → continue; reject → `rejected`, reasons documented, the stream settles.
-4. **Roll out** — execute the Checklist; outputs land in the stores. Set `status: rolled-out`; move the stream to `Settled/`.
+4. **Roll out** — execute the Checklist; outputs land in the stores. Set `status: rolled-out`; keep the stream in the Focus that honestly reflects its remaining review or validation attention.
 5. **Review** — run the post-change review → `reviewed`.
-6. **Complete** — once proven in practice → `completed`; delete the proposal document. The settled marker remains, pointing to where the knowledge now lives.
+6. **Complete** — once proven in practice → `completed`; delete the proposal document. Durable outcomes live in the canonical zones and Git retains transient history.
 
 ## Rollout
 
@@ -122,7 +122,7 @@ The rules that keep the workspace trustworthy:
 
 - **Streams move.** A stream in `Active/` without progress belongs in `Background/` or `Dormant/`; be honest about attention.
 - **Knowledge migrates out.** Substantive subject-matter content in a stream is leaking knowledge that should live in a store — extract it early and link back.
-- **Settled means settled.** A settled stream is a record, not a workspace; if work resumes, move it back to `Active/`.
+- **Completed streams retire.** A completed or final rejected stream is deleted after its durable outcome or rationale is recorded; if work resumes later, open a new stream.
 - **Keep the proposal and indexes current.** Update immediately on a decision, status, or priority change; reload before resuming.
 - **No `ready` while a prerequisite is below `rolled-out`; no rollout without explicit authorisation.**
 - **Re-verify each rollout item against the live file.**

@@ -52,7 +52,7 @@ Simple and thematic roadmap profile structure.
 
 Canonical horizon structure, placement, and readiness.
 
-- **ROAD-1 [M] — roadmap structure** — Every authored roadmap has one H1 and the five horizons exactly once, in canonical order. (standards-repository-roadmaps.md)
+- **ROAD-1 [M] — roadmap structure** — Every authored roadmap has one H1 and the six horizons exactly once, in canonical order. (standards-repository-roadmaps.md)
 - **ROAD-2 [J] — honest horizon placement** — Items sit in honest horizons; Waiting-for items name their external condition; speculative Future work says `_(candidate)_`. (standards-repository-roadmaps.md)
   - _Review prompt:_ Review horizon placement, waiting conditions, and Future candidate marking.
 - **ROAD-3 [J] — open finite work** — Roadmaps are open-only and contain finite work rather than continuous practice. (standards-repository-roadmaps.md)

@@ -6,20 +6,22 @@ This standard applies only to non-KB repositories. A repository whose `.ki-confi
 
 ## Horizons
 
-Every roadmap carries these five `##` horizons exactly once and in this order:
+Every roadmap carries these six `##` horizons exactly once and in this order:
 
 1. `Blocking` — actively broken or preventing `Next`; plans permitted.
 2. `Next` — scoped and ready for immediate work; plans permitted.
 3. `Soon` — understood but not yet started; no ordinary plans.
 4. `Waiting for` — blocked by a named external condition; no ordinary plans.
-5. `Future` — speculative or unscoped; no ordinary plans, with `_(candidate)_` on uncommitted work.
+5. `Parked` — intentionally paused with no current attention; no ordinary plans.
+6. `Future` — speculative or unscoped; no ordinary plans, with `_(candidate)_` on uncommitted work.
 
 Each horizon heading is followed by one blank line, its exact canonical blurb, and one blank line before any item or the next horizon:
 
 - **Blocking:** Actively broken, or blocking the `Next` horizon: takes priority over everything else and must clear before `Next` work proceeds. Empty means nothing is on fire.
 - **Next:** Scoped and ready to start — the immediate queue, picked up before anything in **Soon** or **Future**.
 - **Soon:** Understood and roughly scoped but not yet started — worth doing once the **Next** queue clears, ahead of anything still speculative.
-- **Waiting for:** Worth doing, but presently blocked on an external dependency or decision. Revisit when its named condition changes rather than treating it as dormant local work.
+- **Waiting for:** Worth doing, but presently blocked on an external dependency or decision. Revisit when its named condition changes; do not use this horizon for intentionally paused work.
+- **Parked:** Intentionally paused work with no current attention. Revisit only when its priority or named return trigger changes.
 - **Future:** Speculative or not yet scoped — items marked _(candidate)_ need a scoping pass (or a decision to drop them) before they're actionable.
 
 The blurb is the empty-horizon explanation; do not add a separate `Nothing queued.` placeholder. CONFORM may insert a missing canonical blurb because its wording and position are mechanically derivable. It preserves any existing prose after the insertion rather than guessing whether that prose was an altered blurb or authored context.
@@ -33,7 +35,8 @@ Horizon moves are authored, judgment-led decisions. CONFORM never makes them: it
 - **Future → Soon** requires enough scope to state the intended outcome and boundary. It remains Future when that minimum is not known.
 - **Soon → Next** requires actionable scope, understood dependencies, and readiness to start. It is not a planning shortcut: the item must first be moved to Next, then evaluated there.
 - **Waiting for → another horizon** requires evidence that its named external condition has changed and a fresh placement judgment.
-- **Blocking or Next → Soon** is an explicit deferral only when work remains understood but is no longer immediate. **Blocking, Next, or Soon → Waiting for** requires a named external condition. **Blocking, Next, Soon, or Waiting for → Future** requires re-scoping and marks the item `_(candidate)_`.
+- **Parked → another horizon** requires evidence that its priority or named return trigger has changed and a fresh placement judgment.
+- **Blocking or Next → Soon** is an explicit deferral only when work remains understood but is no longer immediate. **Blocking, Next, or Soon → Waiting for** requires a named external condition. **Blocking, Next, Soon, or Waiting for → Parked** requires an intentional pause with a named return trigger. **Blocking, Next, Soon, Waiting for, or Parked → Future** requires re-scoping and marks the item `_(candidate)_`.
 - **Blocking / Next** are the only horizons that may carry an ordinary plan. A plan is created only after the item is there and the user has confirmed it.
 - An open plan with a non-empty `transferred-from` origin may instead remain linked to an item in any other honest horizon. This narrow exception preserves useful transferred execution detail without asserting that the item is ready or changing its priority. It is not eligible for readiness or execution until the item moves to Blocking or Next.
 - An ordinary plan prevents a later-horizon move until its lifecycle is explicitly resolved. A roadmap process must never silently delete, reopen, or detach it to make a deferral fit.
@@ -51,7 +54,7 @@ The review reports proposed local action only. It does not inspect a remote repo
 
 ## Simple profile
 
-The root `ROADMAP.md` is the sole roadmap artifact. It has one H1 and the five horizons. It can use lower headings to organise its open work, but it carries no `docs/roadmap/` directory or plan files. Requiring an execution plan is the signal to run EXPAND first.
+The root `ROADMAP.md` is the sole roadmap artifact. It has one H1 and the six horizons. It can use lower headings to organise its open work, but it carries no `docs/roadmap/` directory or plan files. Requiring an execution plan is the signal to run EXPAND first.
 
 ## Thematic profile
 
@@ -65,7 +68,7 @@ docs/roadmap/
       <THEME>-<NNN>-<slug>.md
 ```
 
-Theme names are unique lowercase kebab-case names. Every theme roadmap begins with one `code: <THEME>` YAML frontmatter field: an unquoted, uppercase semantic identifier that is stable and unique across the repository. A theme roadmap has one H1, all five horizons, and each item is a `###` heading beneath exactly one horizon. Item prose follows its heading until the next item or horizon. A locator is `<theme>/<item-slug>`; the slug is the normalised item heading. Locators must be unique.
+Theme names are unique lowercase kebab-case names. Every theme roadmap begins with one `code: <THEME>` YAML frontmatter field: an unquoted, uppercase semantic identifier that is stable and unique across the repository. A theme roadmap has one H1, all six horizons, and each item is a `###` heading beneath exactly one horizon. Item prose follows its heading until the next item or horizon. A locator is `<theme>/<item-slug>`; the slug is the normalised item heading. Locators must be unique.
 
 A theme directory exists only while its roadmap has at least one item. An empty scaffold-only theme roadmap is drift. Remove it deliberately only after confirming that it holds no authored prose, plans, or unexpected content; replacement-only CONFORM actions do not delete directories. The thematic profile may have zero remaining themes after pruning.
 

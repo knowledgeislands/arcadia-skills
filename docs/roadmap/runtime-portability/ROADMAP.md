@@ -18,7 +18,7 @@ Understood and roughly scoped but not yet started — worth doing once the **Nex
 
 ## Waiting for
 
-Worth doing, but presently blocked on an external dependency or decision. Revisit when its named condition changes rather than treating it as dormant local work.
+Worth doing, but presently blocked on an external dependency or decision. Revisit when its named condition changes; do not use this horizon for intentionally paused work.
 
 ### Add Codex housekeeping when a safe contract exists
 
@@ -27,6 +27,10 @@ Create `ki-housekeeping-codex` only after Codex exposes an official or documente
 ### Make KI MCP servers reachable from Cowork
 
 Choose between sandbox-bundled servers and authenticated remote endpoints for host-local KI MCP servers in Cowork, then prove one supported path. Resolve the `ki-plugins` license and visibility conflict as part of that decision. Unblock when the owner selects the sandbox-versus-endpoint security posture and settles the plugin's license and visibility. Web remains a separate, manual-connector concern.
+
+## Parked
+
+Intentionally paused work with no current attention. Revisit only when its priority or named return trigger changes.
 
 ## Future
 
