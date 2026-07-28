@@ -51,6 +51,10 @@ None.
 - Routed `ki-recap`'s learning-harvest procedure through that standard instead of naming a Claude-specific durable destination.
 - Corrected the user overview so portable repository guidance belongs in `AGENTS.md`, with runtime files reserved for runtime-specific detail.
 
+### Summary of changes
+
+The new shared reference defines the placement ladder, evidence threshold, durable destination, and lower-layer reconciliation for each learning. `ki-recap` now delegates that judgment to the shared contract, keeping its process portable across runtimes.
+
 ### Verification
 
 - `ki repo audit --skill ki-authoring --repo .` — PASS: 0 FAIL, 0 WARN.
