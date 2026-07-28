@@ -1,7 +1,7 @@
 ---
 id: 'FND-001'
 title: Verify GitHub CI across the repository fleet
-status: acceptance
+status: done
 roadmap: foundation-tooling/verify-github-ci-across-the-repository-fleet
 blocks: —
 blocked-by: —
@@ -103,3 +103,7 @@ None. `ki-plugins` is a reviewed source-owned exclusion, not an unverified activ
 ### Mini recap
 
 The release must embed the harness contract that its workflows verify. CI must also persist all isolated KI state between steps and install the repository toolchain before audit. Once those boundaries were explicit, the remaining failures were ordinary receiving-repository conformance issues and could be corrected in their owning repositories.
+
+## Done
+
+Recorded complete after explicit acceptance on 2026-07-28. All workflow-bearing repositories have green default-branch CI against released `ki` v0.2.11; the `ki-plugins` generated-projection exclusion remains intentional. No residual concern or follow-up is required for this completed tranche.
