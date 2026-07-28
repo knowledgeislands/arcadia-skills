@@ -1,7 +1,7 @@
 ---
 id: 'KI-HARNESS-FND-024'
 title: Establish a top-level script self-description contract
-status: in-progress
+status: acceptance
 roadmap: foundation-tooling/establish-a-top-level-script-self-description-contract
 blocks: —
 blocked-by: —
@@ -42,3 +42,33 @@ The public surface has three scripts: `ki-binding-claude`'s external Cowork proj
 ## Dependencies / blocks
 
 None.
+
+## Acceptance
+
+### Delivered
+
+Established and enforced the public top-level script self-description contract under `ki-skills`.
+
+### Summary of changes
+
+- Defined the required `Purpose:`, canonical `Run:`, and `Boundary:` header fields for public skill commands.
+- Applied the header to the three current public scripts.
+- Extended the existing SCRIPT-8 heuristic and added focused evidence tests.
+
+### Verification
+
+- Focused SCRIPT-8 evidence tests — 13 passing tests.
+- `bun run test` — 216 passing tests.
+- `bunx tsc --noEmit` — passed.
+- `ki repo audit --skill ki-skills --repo .` — clean.
+- `ki repo audit --skill ki-engineering --repo .` — clean.
+- `ki repo audit --skill ki-roadmap --repo .` — clean.
+- Evidence revision: `5293231a9bf91bed1aecc37d4bd1b4b52457e158`.
+
+### Outstanding concerns
+
+None. The heuristic checks stable structural facts; command necessity and header truth remain deliberate judgment review.
+
+### Mini recap
+
+Public script documentation belongs with skill quality when it describes capability ownership and mutation boundaries, rather than with the repository toolchain.

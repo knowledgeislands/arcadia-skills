@@ -1,7 +1,7 @@
 ---
 id: 'KI-HARNESS-FND-023'
 title: Replace local tokenomics engine subprocesses
-status: in-progress
+status: acceptance
 roadmap: foundation-tooling/replace-local-tokenomics-engine-subprocesses
 blocks: —
 blocked-by: —
@@ -43,3 +43,32 @@ The three tokenomics capabilities contain no local Bun or adjacent-source subpro
 ## Dependencies / blocks
 
 None.
+
+## Acceptance
+
+### Delivered
+
+Verified that tokenomics already uses direct native rubric sessions and has no remaining local Bun subprocess boundary to remove.
+
+### Summary of changes
+
+- Traced the portable, Claude, and Codex tokenomics catalogue entrypoints and contexts.
+- Confirmed commit `24b99d37` removed the legacy engine and report publication.
+- Confirmed no local Bun subprocess, adapter, or aggregate-rendering compatibility path remains.
+
+### Verification
+
+- Focused tokenomics tests — 10 passing tests.
+- `bun run test` — 216 passing tests.
+- `bunx tsc --noEmit` — passed.
+- `ki repo audit --skill ki-skills --repo .` — clean.
+- `ki repo audit --skill ki-roadmap --repo .` — clean.
+- Evidence revision: `5293231a9bf91bed1aecc37d4bd1b4b52457e158`.
+
+### Outstanding concerns
+
+None. The planned cutover predates this plan's execution baseline and is now evidenced as complete.
+
+### Mini recap
+
+When a clean-end-state cut has already landed, verify the current contract and close the stale migration plan rather than recreating transitional code.

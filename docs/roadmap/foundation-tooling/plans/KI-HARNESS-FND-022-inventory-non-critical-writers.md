@@ -1,7 +1,7 @@
 ---
 id: 'KI-HARNESS-FND-022'
 title: Inventory non-critical writers for bounded follow-up
-status: in-progress
+status: acceptance
 roadmap: foundation-tooling/inventory-non-critical-writers-for-bounded-follow-up
 blocks: —
 blocked-by: —
@@ -45,3 +45,31 @@ The two direct writers have bounded candidate follow-ups on the thematic roadmap
 ## Dependencies / blocks
 
 None.
+
+## Acceptance
+
+### Delivered
+
+Completed the bounded review of non-critical writers and recorded the only two material risks as future candidate work.
+
+### Summary of changes
+
+- Classified the Claude housekeeping and subagent conformers as host-mediated writers with existing scope and symlink evidence.
+- Identified the separate Cowork projection and native Codex MCP update sequence as the only direct external writers needing follow-up.
+- Added bounded candidates to `docs/roadmap/foundation-tooling/ROADMAP.md` for recoverable Cowork publication and Codex MCP rendering.
+
+### Verification
+
+- `bun run test` — 216 passing tests.
+- `bunx tsc --noEmit` — passed.
+- `ki repo audit --skill ki-skills --repo .` — clean.
+- `ki repo audit --skill ki-roadmap --repo .` — clean.
+- Evidence revision: `5293231a9bf91bed1aecc37d4bd1b4b52457e158`.
+
+### Outstanding concerns
+
+None. The two external-writer risks are deliberately retained as bounded candidate work rather than implied implementation.
+
+### Mini recap
+
+Direct writers need evidence proportionate to their target and mutation scope; report-only rubric sessions should remain on the host-owned transaction path.
