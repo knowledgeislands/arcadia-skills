@@ -8,6 +8,10 @@ Actively broken, or blocking the `Next` horizon: takes priority over everything 
 
 - [Foundation Tooling: Complete qualified repository declaration migration](docs/roadmap/foundation-tooling/ROADMAP.md#complete-qualified-repository-declaration-migration)
 
+## Next
+
+Scoped and ready to start — the immediate queue, picked up before anything in **Soon** or **Future**.
+
 ## Soon
 
 Understood and roughly scoped but not yet started — worth doing once the **Next** queue clears, ahead of anything still speculative.
