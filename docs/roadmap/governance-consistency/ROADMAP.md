@@ -20,14 +20,6 @@ Make the shared process layer structure-aware: `ki-recap` must route outstanding
 
 **Plan:** [GOV-001](plans/GOV-001-align-kb-stream-roadmap-horizons.md)
 
-### Review the skill dependency graph and implementation quality
-
-Extend the completed `ki-depends-on` edge audit into a broader implementation-quality map covering documentation links, configuration ownership, subprocess or import edges, and generated or materialised runtime dependencies. Review skills from roots to dependants across each `SKILL.md`, references, scripts, tests, and generated surfaces while keeping executable prerequisites distinct from coverage, off-ramps, and shared-module packaging. Prefer executable, versioned source files inside the skill — including schemas — referenced from documentation, rather than making Markdown code blocks the only source of truth; retain short examples only where they clarify use. Record concrete repairs as separately scoped plans rather than turning this review into an unbounded rewrite.
-
-Improve the skills-map diagrams from the current Graphviz graph: make group boundaries and the relationships between skill groups legible, retain the graph as the source model for now, and assess SVG only as a rendering output rather than a second hand-maintained diagram.
-
-**Plan:** [GOV-002](plans/GOV-002-improve-skill-dependency-map.md)
-
 ## Soon
 
 Understood and roughly scoped but not yet started — worth doing once the **Next** queue clears, ahead of anything still speculative.
