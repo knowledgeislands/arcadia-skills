@@ -1,7 +1,7 @@
 ---
 id: 'GOV-001'
 title: Codify convention placement and the knowledge-promotion loop
-status: open
+status: ready
 roadmap: governance-consistency/codify-convention-placement-and-the-knowledge-promotion-loop
 blocks: —
 blocked-by: —
