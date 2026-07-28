@@ -7,7 +7,8 @@ const SOURCE = [STANDARD] as const
 const CONFIG_1: RubricItem<TapConfigContext> = {
   code: 'CONFIG-1',
   title: 'identity marker',
-  description: '`.ki-config.toml` contains a keyless `[ki-homebrew-tap]` marker with no unknown keys.',
+  description:
+    '`.ki-config.toml` contains a keyless `["knowledgeislands/ki-agentic-harness:ki-homebrew-tap"]` marker with no unknown keys.',
   sources: SOURCE,
   mechanical: {
     level: 'WARN',
@@ -29,10 +30,20 @@ const CONFIG_1: RubricItem<TapConfigContext> = {
         if (context.config === 'malformed')
           return [{ status: 'VIOLATION', message: '.ki-config.toml is malformed.', subject: '.ki-config.toml' }]
         if (context.config !== 'present')
-          return [{ status: 'VIOLATION', message: '[ki-homebrew-tap] is absent from .ki-config.toml.', subject: '.ki-config.toml' }]
+          return [
+            {
+              status: 'VIOLATION',
+              message: '["knowledgeislands/ki-agentic-harness:ki-homebrew-tap"] is absent from .ki-config.toml.',
+              subject: '.ki-config.toml'
+            }
+          ]
         return [
           context.configKeys.length === 0
-            ? { status: 'PASS', message: 'The keyless [ki-homebrew-tap] marker is present.', subject: '.ki-config.toml' }
+            ? {
+                status: 'PASS',
+                message: 'The keyless ["knowledgeislands/ki-agentic-harness:ki-homebrew-tap"] marker is present.',
+                subject: '.ki-config.toml'
+              }
             : {
                 status: 'VIOLATION',
                 message: `The keyless marker contains unknown keys: ${context.configKeys.join(', ')}.`,

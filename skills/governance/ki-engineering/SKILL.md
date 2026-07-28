@@ -13,7 +13,7 @@ argument-hint: 'audit <repo> | conform <repo> | help | educate <repo> | refresh'
 
 You are applying the **Knowledge Islands engineering standard** — the shared software-engineering toolchain every TypeScript/Bun repo in this work builds on. It is the build/test twin of `ki-authoring`: that skill owns _how we write_ (Markdown/TOML style); this one owns _how we build, lint, and test_. `ki-skills` owns the governance-skill enforcement framework that this skill follows.
 
-This is a **standard, base-agnostic Process skill**. It hard-codes no single repo; it applies to any repo carrying a `[ki-engineering]` table in its `.ki-config.toml` (today the 10 TS/Bun repos under `knowledgeislands/` — the seven `mcp-*` servers plus `ki-agentic-harness`, `ki-arcadia-principal`, `ki-website`). How it sits alongside the other skills, and where it must not overlap them, is documented once in the ki-agentic-harness `README.md`.
+This is a **standard, base-agnostic Process skill**. It hard-codes no single repo; it applies to any repo carrying a `["knowledgeislands/ki-agentic-harness:ki-engineering"]` table in its `.ki-config.toml` (today the 10 TS/Bun repos under `knowledgeislands/` — the seven `mcp-*` servers plus `ki-agentic-harness`, `ki-arcadia-principal`, `ki-website`). How it sits alongside the other skills, and where it must not overlap them, is documented once in the ki-agentic-harness `README.md`.
 
 ## What this skill owns
 
@@ -39,7 +39,7 @@ ki repo audit
   └── ki-mcp          → MCP delta when declared
 ```
 
-A repo is "clean" only when **every applicable** skill's audit passes. The `.ki-config.toml` tables are the selector: `[ki-engineering]` marks the common layer; the artifact skill applies by its own convention.
+A repo is "clean" only when **every applicable** skill's audit passes. The `.ki-config.toml` tables are the selector: `["knowledgeislands/ki-agentic-harness:ki-engineering"]` marks the common layer; the artifact skill applies by its own convention.
 
 ## Operating modes
 
@@ -51,7 +51,7 @@ Explain the common TypeScript/Bun toolchain, the direct `ki repo` workflow, the 
 
 ### Mode AUDIT — check a repo's common toolchain
 
-1. Run `ki repo audit --skill ki-engineering` for the focused mechanical pass, or `ki repo audit` for the repository's complete declared set. The native host loads [the canonical item catalogue](scripts/rubric/items/index.ts), runs its code-tool checks, checks the script and CI surface, the `bun test` trap, `tsconfig`/`biome`, capability conditionals, and the `[ki-engineering]` table, then reports findings with rubric codes.
+1. Run `ki repo audit --skill ki-engineering` for the focused mechanical pass, or `ki repo audit` for the repository's complete declared set. The native host loads [the canonical item catalogue](scripts/rubric/items/index.ts), runs its code-tool checks, checks the script and CI surface, the `bun test` trap, `tsconfig`/`biome`, capability conditionals, and the `["knowledgeislands/ki-agentic-harness:ki-engineering"]` table, then reports findings with rubric codes.
 2. **Apply the judgment items** in [the rubric](references/rubric.md): no per-repo loosening of `strict`/the `noImplicit*` family, the Node `.env` parity call where env is loaded, Vitest-configured source tests actually reaching the 100% bar, and repo-specific scripts not shadowing governed entrypoints.
 3. Ensure the artifact skill is declared in `.ki-config.toml`; the unscoped `ki repo audit` runs every declared layer. Report by location → criterion → fix, grouped by severity (FAIL first).
 
@@ -63,7 +63,7 @@ Explain the common TypeScript/Bun toolchain, the direct `ki repo` workflow, the 
 
 ### Mode EDUCATE — scaffold a new TS/Bun repo's toolchain
 
-Run `ki repo educate --skill ki-engineering` to inspect the complete criterion catalogue without executing checks or writing. When establishing a new TypeScript/Bun repository, declare `[ki-engineering]`, run focused CONFORM for safe scaffolding, make repo-shaped decisions for compiled build and test configuration, then run the complete repository AUDIT.
+Run `ki repo educate --skill ki-engineering` to inspect the complete criterion catalogue without executing checks or writing. When establishing a new TypeScript/Bun repository, declare `["knowledgeislands/ki-agentic-harness:ki-engineering"]`, run focused CONFORM for safe scaffolding, make repo-shaped decisions for compiled build and test configuration, then run the complete repository AUDIT.
 
 ### Mode REFRESH — re-anchor the toolchain pins to their sources
 

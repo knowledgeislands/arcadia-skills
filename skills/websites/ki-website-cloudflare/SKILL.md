@@ -11,7 +11,7 @@ argument-hint: 'audit <repo> | conform <repo> | educate <repo> | help | refresh'
 
 Apply the house convention for serving a built static site on **Cloudflare Workers + Static Assets**: one site Worker points at the build's `dist/`, exposes the intended domains, enables observability, and is reached through the `ki:site:*` script family.
 
-This is a base-agnostic standard skill selected by `[ki-website-cloudflare]` in `.ki-config.toml`. It owns only the deploy/serve delta for the static-site Worker. `ki-website` owns the build that emits `dist/`; `ki-engineering` owns the toolchain. Companion Workers and general Cloudflare or Wrangler concerns route to the `cloudflare` and `wrangler` skills.
+This is a base-agnostic standard skill selected by `["knowledgeislands/ki-agentic-harness:ki-website-cloudflare"]` in `.ki-config.toml`. It owns only the deploy/serve delta for the static-site Worker. `ki-website` owns the build that emits `dist/`; `ki-engineering` owns the toolchain. Companion Workers and general Cloudflare or Wrangler concerns route to the `cloudflare` and `wrangler` skills.
 
 Use these references progressively:
 

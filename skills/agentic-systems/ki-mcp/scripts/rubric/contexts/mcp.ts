@@ -3,7 +3,7 @@ import { isAbsolute, join, relative, resolve } from 'node:path'
 import type { ConformWrite, RubricContextOptions, RubricPublicationContext, RubricSession } from '../../shared/rubric.ts'
 
 const CONFIG_FILE = '.ki-config.toml'
-const CONFIG_SECTION = 'ki-mcp'
+const CONFIG_SECTION = 'knowledgeislands/ki-agentic-harness:ki-mcp'
 const PACKAGE_FILE = 'package.json'
 const MCP_MAIN = 'dist/mcp-server/index.js'
 const FAMILY_CODES = ['KI', 'LAY', 'DOC', 'CFG', 'UTIL', 'TEST', 'TOOL', 'PKG', 'SCR', 'CI'] as const
@@ -244,7 +244,7 @@ export const createMcpSession = ({ mode, repository, publication }: RubricContex
         ? {
             addMarker: () => {
               if (configDraft !== originalConfig) return
-              configDraft = `${originalConfig.replace(/\n*$/, '\n')}\n[${CONFIG_SECTION}]\n`
+              configDraft = `${originalConfig.replace(/\n*$/, '\n')}\n["${CONFIG_SECTION}"]\n`
             }
           }
         : {})

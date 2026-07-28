@@ -52,4 +52,4 @@ Formula layout, explicit Homebrew validation, and judgment review of tap correct
 
 The repository declares the keyless Homebrew-tap governance marker.
 
-- **CONFIG-1 [M] — identity marker** — `.ki-config.toml` contains a keyless `[ki-homebrew-tap]` marker with no unknown keys. (standards-homebrew-tap.md)
+- **CONFIG-1 [M] — identity marker** — `.ki-config.toml` contains a keyless `["knowledgeislands/ki-agentic-harness:ki-homebrew-tap"]` marker with no unknown keys. (standards-homebrew-tap.md)

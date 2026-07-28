@@ -1098,7 +1098,7 @@ export const collectAuditEvidence = (repo: string): readonly EngineeringEvidence
     // shape (flat vs monorepo) is read from package.json `workspaces` (§0), a standard Bun
     // convention, not a bespoke key here. Any key directly under the table is drift.
     const body = ki.split(/^\["knowledgeislands\/ki-agentic-harness:ki-engineering"\]/m)[1]?.split(/^\[/m)[0] ?? ''
-    const KNOWN = new Set<string>() // no keys defined; only a [ki-engineering.checks] sub-table is allowed
+    const KNOWN = new Set<string>() // no keys defined; only a ["knowledgeislands/ki-agentic-harness:ki-engineering".checks] sub-table is allowed
     for (const m of body.matchAll(/^\s*([A-Za-z0-9_-]+)\s*=/gm)) {
       KNOWN.has(m[1])
         ? add('PASS', 'TOML-2', `known key ${m[1]}`, STD, '.ki-config.toml')

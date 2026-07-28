@@ -34,7 +34,7 @@ test('the staged skill audit includes unchanged siblings, providers, and the loc
   const setCapture = join(repository, 'set-audit-focus')
   const localCapture = join(repository, 'local-audit-focus')
 
-  write(repository, '.ki-config.toml', '[ki-skills]\n')
+  write(repository, '.ki-config.toml', '["knowledgeislands/ki-agentic-harness:ki-skills"]\n')
   write(repository, 'README.md', '# Fixture\n')
   write(repository, 'skills/governance/ki-consumer/SKILL.md', skill('ki-consumer', 'ki-shared-dependencies: [ki-skills:rubric]\n'))
   write(repository, 'skills/governance/ki-sibling/SKILL.md', skill('ki-sibling'))

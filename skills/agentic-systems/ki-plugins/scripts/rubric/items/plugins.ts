@@ -251,18 +251,18 @@ const PLUG_14 = mechanical(
 const PLUG_15 = mechanical(
   'PLUG-15',
   'Governance declaration',
-  'Applicable repositories declare `[ki-plugins]` and no unknown keys.',
+  'Applicable repositories declare `["knowledgeislands/ki-agentic-harness:ki-plugins"]` and no unknown keys.',
   'WARN',
   (context) =>
     active(context, () =>
       result(
         Boolean(context.configTable) && Object.keys(context.configTable ?? {}).length === 0,
-        '[ki-plugins] declaration is canonical',
+        '["knowledgeislands/ki-agentic-harness:ki-plugins"] declaration is canonical',
         context.malformedConfig
           ? '.ki-config.toml is malformed'
           : !context.configTable
-            ? '[ki-plugins] declaration is absent'
-            : `unknown [ki-plugins] keys: ${Object.keys(context.configTable).join(', ')}`,
+            ? '["knowledgeislands/ki-agentic-harness:ki-plugins"] declaration is absent'
+            : `unknown ["knowledgeislands/ki-agentic-harness:ki-plugins"] keys: ${Object.keys(context.configTable).join(', ')}`,
         '.ki-config.toml'
       )
     )

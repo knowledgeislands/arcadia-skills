@@ -48,7 +48,7 @@ Governs the hygiene of accumulated **Claude state** across all its areas — mem
 
 ### `ki-tokenomics`
 
-Owns portable agent-context tokenomics: standing-surface attribution, guide-rail budgets, the portable model-purpose taxonomy, and the `[ki-tokenomics]` configuration table. It does not inspect a vendor's private runtime state; runtime evidence comes from the matching adapter.
+Owns portable agent-context tokenomics: standing-surface attribution, guide-rail budgets, the portable model-purpose taxonomy, and the `["knowledgeislands/ki-agentic-harness:ki-tokenomics"]` configuration table. It does not inspect a vendor's private runtime state; runtime evidence comes from the matching adapter.
 
 ### `ki-tokenomics-claude`
 
@@ -86,7 +86,7 @@ Governs **forward work in non-KB repositories** through two automatically detect
 
 ### `ki-specifications`
 
-Audits, conforms, and scaffolds the deliberately minimal **KI Specifications** repository shape: a keyless `[ki-specifications]` marker and the established `proposals/`, `specifications/`, `schemas/`, `templates/`, `examples/`, `docs/`, and `tooling/` areas. It remains a thin structural delta over `ki-repo`; deeper KIP/KIS rules remain in the canonical Specifications repository until they are stable enough to factor into reusable governance.
+Audits, conforms, and scaffolds the deliberately minimal **KI Specifications** repository shape: a keyless `["knowledgeislands/ki-agentic-harness:ki-specifications"]` marker and the established `proposals/`, `specifications/`, `schemas/`, `templates/`, `examples/`, `docs/`, and `tooling/` areas. It remains a thin structural delta over `ki-repo`; deeper KIP/KIS rules remain in the canonical Specifications repository until they are stable enough to factor into reusable governance.
 
 ## Keystone
 

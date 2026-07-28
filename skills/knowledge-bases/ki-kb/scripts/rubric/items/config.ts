@@ -22,7 +22,7 @@ const mechanical = (
 const CONFIG_1 = mechanical(
   'CONFIG-1',
   'known configuration keys',
-  'Only required_frontmatter, preflight, zones, and templates are recognised beneath [ki-kb].',
+  'Only required_frontmatter, preflight, zones, and templates are recognised beneath ["knowledgeislands/ki-agentic-harness:ki-kb"].',
   (context) => context.knownKeys
 )
 const CONFIG_2 = mechanical(
@@ -34,7 +34,7 @@ const CONFIG_2 = mechanical(
 const CONFIG_3 = mechanical(
   'CONFIG-3',
   'canonical zone alias keys',
-  'Every [ki-kb.zones] key names a canonical zone or staging area.',
+  'Every ["knowledgeislands/ki-agentic-harness:ki-kb".zones] key names a canonical zone or staging area.',
   (context) => context.canonicalAliasKeys
 )
 const CONFIG_4 = mechanical(
@@ -53,7 +53,7 @@ const CONFIG_5 = mechanical(
 export const CONFIG: RubricFamily<KbRubricContext, KbConfigContext> = {
   code: 'CONFIG',
   title: 'KB configuration',
-  description: 'Validate-down `[ki-kb]` configuration and zone aliases.',
+  description: 'Validate-down `["knowledgeislands/ki-agentic-harness:ki-kb"]` configuration and zone aliases.',
   standard: SOURCE,
   selectContext: (context) => context.config,
   items: [CONFIG_1, CONFIG_2, CONFIG_3, CONFIG_4, CONFIG_5]

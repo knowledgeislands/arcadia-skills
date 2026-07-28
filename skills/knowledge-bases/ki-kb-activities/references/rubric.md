@@ -28,7 +28,7 @@ Activity note structure, frontmatter, realization-specific declarations, and saf
 - **ACT-S-1 [M + J] — activity index** — `Activities.md` exists when one or more activity notes exist and lists every note. (standards-activities.md)
   - _Review prompt:_ Is the index current, well ordered, and informative rather than merely mechanically complete?
 - **ACT-S-2 [M] — activity collection location** — The configured activity collection resolves safely beneath an existing base. (standards-activities.md)
-- **ACT-S-3 [M] — known Activity configuration** — Only activities_dir and harness are recognized under [ki-kb-activities]. (standards-activities.md)
+- **ACT-S-3 [M] — known Activity configuration** — Only activities_dir and harness are recognized under ["knowledgeislands/ki-agentic-harness:ki-kb-activities"]. (standards-activities.md)
 - **ACT-F-1 [M] — activity status** — Frontmatter-bearing activity notes declare `status` as `active`, `paused`, or `retired`. (standards-activities.md)
 - **ACT-F-2 [M] — activity realization** — Frontmatter-bearing activity notes declare a `realization`. (standards-activities.md)
 - **ACT-F-3 [M] — recognized realization** — Unknown realization values are surfaced for environment documentation without blocking extension. (standards-activities.md)

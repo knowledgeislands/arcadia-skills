@@ -83,5 +83,5 @@ The static-site stack, workspace layout, generated output, and sustainable opera
   - _Review prompt:_ Has Mode REFRESH confirmed the cited sources and updated the review record recently enough?
 - **WEB-39 [M] — Parseable package manifest** — `package.json` is physical and parseable. (standards-eleventy-site.md)
 - **WEB-40 [M] — Tailwind CLI dependency** — `@tailwindcss/cli` is a dependency. (standards-eleventy-site.md)
-- **WEB-41 [M] — Website opt-in** — Applicable sites declare `[ki-website]`. (standards-eleventy-site.md)
+- **WEB-41 [M] — Website opt-in** — Applicable sites declare `["knowledgeislands/ki-agentic-harness:ki-website"]`. (standards-eleventy-site.md)
 - **WEB-42 [M] — Website opt-in validation** — The marker table has no unknown keys. (standards-eleventy-site.md)

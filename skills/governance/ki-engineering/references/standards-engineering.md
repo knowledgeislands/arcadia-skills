@@ -18,11 +18,11 @@ This file is the **normative, quotable** standard. The checkable items and their
 - [6. Testing (capability: the repo ships tests)](#6-testing-capability-the-repo-ships-tests)
 - [7. Compiled build & CLI](#7-compiled-build--cli-capability-the-repo-compiles-to-dist)
 - [8. .env discipline](#8-env-discipline-capability-the-repo-reads-env-config)
-- [9. .ki-config.toml](#9-ki-configtoml--ki-engineering-core)
+- [9. .ki-config.toml](#9-ki-configtoml--knowledgeislandski-agentic-harnesski-engineering-core)
 
 ## Scope and layers
 
-The standard applies to any repo carrying a `[ki-engineering]` table in its `.ki-config.toml` (§9) — today the 10 TS/Bun repos under `knowledgeislands/`. It is split into:
+The standard applies to any repo carrying a `["knowledgeislands/ki-agentic-harness:ki-engineering"]` table in its `.ki-config.toml` (§9) — today the 10 TS/Bun repos under `knowledgeislands/`. It is split into:
 
 - **Core** — the baseline every such repo MUST meet, unconditionally (§1–§5).
 - **Capability conditionals** — common rules that fire only when the repo opts into a capability, detected by a marker in the repo (§6–§8). A repo with no tests is not required to have a test script; a repo that ships tests exposes them through the bare `test` idiom. Vitest is recommended, not mandated; when a repo selects it by carrying `vitest.config.*`, the canonical Vitest scripts and 100% coverage rules apply in full.
@@ -52,7 +52,7 @@ Every KI TS/Bun repo is one of exactly **two shapes**, distinguished by the stan
 - **Per-workspace artifacts and test scope.** In a monorepo every build/test artifact and the config globs that produce it are **scoped to the workspace directory that owns them**, never the repo root: each workspace's compiled `dist/` (§7), its Vitest coverage output — the `reportsDirectory`, e.g. `site/coverage` (§6) — and its test files with their `include`/`exclude` globs all sit under `<workspace>/…`. The repo root carries only shared, workspace-spanning config (root `package.json`, Biome/Prettier/markdownlint configuration, root `.gitignore`). In the **flat** shape these same artifacts live at the root because the root _is_ the single package, so `dist/` and `coverage/` at the root are already "under the workspace". This is the one rule behind a site's output at `site/dist` (not root `dist/`) and its coverage at `site/coverage` (not root `coverage/`); when it is violated the artifact escapes its workspace and the root fills with per-package output. Cross-refs: §6 (tests), §7 (build).
 - **All house 11ty/Cloudflare website repos are monorepos**, even a single-concern site — it declares `"workspaces": ["site"]` from day one so the shape is explicit and adding a companion workspace (an ingress Worker, an API) is a pure addition, not a migration. See `ki-website` §2 and `ki-website-cloudflare` §1/§3 for the site-specific layout this implies.
 
-The shape signal is `workspaces` in `package.json` — a standard tooling convention, read directly by the checker. It is **not** a `.ki-config.toml` key; `.ki-config.toml`'s `[ki-engineering]` table is a conformance marker only (§9).
+The shape signal is `workspaces` in `package.json` — a standard tooling convention, read directly by the checker. It is **not** a `.ki-config.toml` key; `.ki-config.toml`'s `["knowledgeislands/ki-agentic-harness:ki-engineering"]` table is a conformance marker only (§9).
 
 ## 1. package.json & toolchain pinning (core)
 
@@ -210,17 +210,17 @@ When a script computes a filesystem path for its own or another tool's config, d
 
 This does not license inventing a path a tool doesn't already use — mcporter's `~/.mcporter/mcporter.json`, for instance, is that tool's own fixed convention, not one this standard overrides; the rule applies only where the repo itself is choosing the config/data/cache/state location.
 
-## 9. `.ki-config.toml` — `[ki-engineering]` (core)
+## 9. `.ki-config.toml` — `["knowledgeislands/ki-agentic-harness:ki-engineering"]` (core)
 
-A governed repo declares a `[ki-engineering]` table. Presence marks "the engineering standard applies here" (the selector for the common layer). Following the `.ki-config.toml` table-per-skill contract (owned by `ki-repo`), the table is minimal — capabilities are auto-detected from markers (above), so no profile field is needed. A repo that deliberately diverges declares it explicitly:
+A governed repo declares a `["knowledgeislands/ki-agentic-harness:ki-engineering"]` table. Presence marks "the engineering standard applies here" (the selector for the common layer). Following the `.ki-config.toml` table-per-skill contract (owned by `ki-repo`), the table is minimal — capabilities are auto-detected from markers (above), so no profile field is needed. A repo that deliberately diverges declares it explicitly:
 
 ```toml
-[ki-engineering]
+["knowledgeislands/ki-agentic-harness:ki-engineering"]
 # This repo fully conforms, so it declares no overrides. To diverge from a check,
-# add a [ki-engineering.checks] table with one boolean per check id
+# add a ["knowledgeislands/ki-agentic-harness:ki-engineering".checks] table with one boolean per check id
 # (false = waive), and say why in a comment.
 ```
 
 The table carries **no top-level keys**. Repo shape (flat vs monorepo, §0) — which drives engineering's workspace-aware type-checking — is read from the standard Bun `workspaces` array in `package.json`, not from here. Keeping the shape signal in `package.json` means standard tooling (Bun, syncpack) sees it too, rather than hiding it behind a bespoke `.ki-config.toml` extension.
 
-The checker **validates down**: any key under `[ki-engineering]` is drift (the table is a conformance marker; the only allowed sub-structure is a `[ki-engineering.checks]` table), so a typo or a stale override surfaces rather than silently doing nothing.
+The checker **validates down**: any key under `["knowledgeislands/ki-agentic-harness:ki-engineering"]` is drift (the table is a conformance marker; the only allowed sub-structure is a `["knowledgeislands/ki-agentic-harness:ki-engineering".checks]` table), so a typo or a stale override surfaces rather than silently doing nothing.

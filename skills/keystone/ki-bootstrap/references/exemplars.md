@@ -48,7 +48,7 @@ Given an existing KI repository whose `.ki-config.toml` does not yet declare `ki
 ki skill repo add ki-roadmap --repo .
 ```
 
-The command adds the `[ki-roadmap]` declaration and managed runtime-discovery links only for that repository. It does not add the skill to user scope.
+The command adds the `["knowledgeislands/ki-agentic-harness:ki-roadmap"]` declaration and managed runtime-discovery links only for that repository. It does not add the skill to user scope.
 
 Native repository maintenance then resolves the repository's declared skills from verified installed harnesses:
 

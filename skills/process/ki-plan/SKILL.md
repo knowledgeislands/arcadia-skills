@@ -40,5 +40,5 @@ The runtime-native `promote` integration receives its session token from the hos
 ## Notes
 
 - No universal AUDIT/CONFORM/EDUCATE/REFRESH modes — this is a process skill (ADR-KI-HARNESS-SKILLS-001, ADR-KI-HARNESS-SKILLS-006); its modes are the lifecycle sub-commands above.
-- Installed as a core user skill by `ki bootstrap` — usable in any non-KB repository on the machine, not just this one. Like `ki-bootstrap`, it is not a repository-governance root and has no `[ki-plan]` table.
+- Installed as a core user skill by `ki bootstrap` — usable in any non-KB repository on the machine, not just this one. Like `ki-bootstrap`, it is not a repository-governance root and has no `["knowledgeislands/ki-agentic-harness:ki-plan"]` table.
 - The thematic roadmap and file-oriented `ready`, `execute`, `accept`, `done`, `prune`, `new`, and `status` procedures are runtime-neutral; `ready` and the initial `execute` transition accept one or more explicit plan identifiers. Adapt interactive prompts to the host runtime. `promote` is runtime-only because it consumes a host Plan Mode hook state and session substitution.

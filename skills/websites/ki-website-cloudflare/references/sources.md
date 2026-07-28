@@ -20,7 +20,7 @@ Two layers feed the standard: **Cloudflare's platform** (what Workers + Static A
 
 ## In-house (the hosting convention)
 
-The standard is self-contained; it is the source of truth for house style. Any conformant site repo that carries a `[ki-website-cloudflare]` table is an example, not a source.
+The standard is self-contained; it is the source of truth for house style. Any conformant site repo that carries a `["knowledgeislands/ki-agentic-harness:ki-website-cloudflare"]` table is an example, not a source.
 
 | Tag   | Source       | Governs                                                 | Last reviewed |
 | ----- | ------------ | ------------------------------------------------------- | ------------- |

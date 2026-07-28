@@ -3,7 +3,7 @@ import { dirname, join, resolve } from 'node:path'
 import type { RubricContextOptions, RubricPublicationContext, RubricSession } from '../../shared/rubric.ts'
 
 const CONFIG_FILE = '.ki-config.toml'
-const CONFIG_SECTION = 'ki-website-cloudflare'
+const CONFIG_SECTION = 'knowledgeislands/ki-agentic-harness:ki-website-cloudflare'
 const WRANGLER_FILES = ['wrangler.jsonc', 'wrangler.json', 'wrangler.toml'] as const
 const SKIPPED_DIRECTORIES = new Set(['.git', '.wrangler', 'dist', 'node_modules'])
 

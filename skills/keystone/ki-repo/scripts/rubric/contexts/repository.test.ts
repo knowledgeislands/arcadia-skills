@@ -94,7 +94,7 @@ describe('ki-repo session', () => {
 
   test('audit is read-only and unsafe configuration leaves expose no write capability', () => {
     const root = repository()
-    writeFileSync(join(root, 'outside.toml'), '[ki-repo]\n')
+    writeFileSync(join(root, 'outside.toml'), '["knowledgeislands/ki-agentic-harness:ki-repo"]\n')
     symlinkSync('outside.toml', join(root, '.ki-config.toml'))
 
     const audit = createRepoSession(options(root, 'audit'), inspect)

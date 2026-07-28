@@ -49,11 +49,11 @@ The installed path supplies harness identity and physical source. Runtime discov
 A source harness opts into this standard through a keyless marker:
 
 ```toml
-[ki-repo]
+["knowledgeislands/ki-agentic-harness:ki-repo"]
 
-[ki-harness]
+["knowledgeislands/ki-agentic-harness:ki-harness"]
 
-[ki-skills]
+["knowledgeislands/ki-agentic-harness:ki-skills"]
 ```
 
-When the physical file already exists and only `[ki-harness]` is missing, CONFORM may append that marker. Missing or unsafe configuration remains a reported manual case.
+When the physical file already exists and only `["knowledgeislands/ki-agentic-harness:ki-harness"]` is missing, CONFORM may append that marker. Missing or unsafe configuration remains a reported manual case.

@@ -42,13 +42,13 @@ _Verify:_ `bun run ki:skills:graph:check` passes — it validates that every edg
 
 ### GOV-006 — Exactly one repo-structure skill per repo
 
-A Knowledge Islands repo MUST declare at most one repo-structure table (`[ki-harness]`, `[ki-kb]`, `[ki-website]`, `[ki-mcp]`, `[ki-plugins]`, `[ki-tools]`, `[ki-homebrew-tap]`) in its `.ki-config.toml`, since exactly one skill governs a repo's on-disk shape; declaring more than one is a governance error, per [ADR-KI-HARNESS-SKILLS-006](../decisions/ADR-KI-HARNESS-SKILLS-006-six-cluster-skill-taxonomy-and-the-implication-graph.md).
+A Knowledge Islands repo MUST declare at most one repo-structure table (`["knowledgeislands/ki-agentic-harness:ki-harness"]`, `["knowledgeislands/ki-agentic-harness:ki-kb"]`, `["knowledgeislands/ki-agentic-harness:ki-website"]`, `["knowledgeislands/ki-agentic-harness:ki-mcp"]`, `["knowledgeislands/ki-agentic-harness:ki-plugins"]`, `["knowledgeislands/ki-agentic-harness:ki-tools"]`, `["knowledgeislands/ki-agentic-harness:ki-homebrew-tap"]`) in its `.ki-config.toml`, since exactly one skill governs a repo's on-disk shape; declaring more than one is a governance error, per [ADR-KI-HARNESS-SKILLS-006](../decisions/ADR-KI-HARNESS-SKILLS-006-six-cluster-skill-taxonomy-and-the-implication-graph.md).
 
 _Verify:_ `ki-repo`'s `audit-repo.ts` emits a FAIL (`repo-structure`) when more than one repo-structure table is declared; implied family members (`ki-website-cloudflare`, `ki-kb-streams`) are excluded from the count.
 
 ### GOV-007 — Declared SPDX license, matched everywhere
 
-A Knowledge Islands repo MUST declare its license as an SPDX id in `[ki-repo]` `license` (default MIT), and the live GitHub license, the `LICENSE` file, and `package.json` `"license"` MUST all match that declaration, per the `ki-repo` standard.
+A Knowledge Islands repo MUST declare its license as an SPDX id in `["knowledgeislands/ki-agentic-harness:ki-repo"]` `license` (default MIT), and the live GitHub license, the `LICENSE` file, and `package.json` `"license"` MUST all match that declaration, per the `ki-repo` standard.
 
 _Verify:_ `ki-repo`'s `audit-repo.ts` `license` / `license-file` / `package-license` checks FAIL on any mismatch with the declared id.
 

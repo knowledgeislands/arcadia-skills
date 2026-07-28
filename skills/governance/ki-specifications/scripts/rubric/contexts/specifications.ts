@@ -2,7 +2,7 @@ import { existsSync, lstatSync, readFileSync } from 'node:fs'
 import { join, resolve } from 'node:path'
 import type { ConformWrite, RubricContextOptions, RubricPublicationContext, RubricSession } from '../../shared/rubric.ts'
 
-const SECTION = 'ki-specifications'
+const SECTION = 'knowledgeislands/ki-agentic-harness:ki-specifications'
 const core = ['proposals', 'specifications', 'schemas'] as const
 const supporting = ['templates', 'examples', 'docs', 'tooling'] as const
 
@@ -66,7 +66,7 @@ export const createSpecificationsSession = ({
       ? undefined
       : (): void => {
           if (document?.[SECTION] !== undefined || draft === undefined || markerAdded) return
-          draft = `${draft.trimEnd()}\n\n# This repo carries the KI Specifications repository structure.\n[${SECTION}]\n`
+          draft = `${draft.trimEnd()}\n\n# This repo carries the KI Specifications repository structure.\n["${SECTION}"]\n`
           markerAdded = true
         }
 

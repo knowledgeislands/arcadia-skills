@@ -27,7 +27,7 @@ const createThematicFixture = (): { repository: string; roadmapPath: string } =>
   const theme = join(repository, 'docs', 'roadmap', 'foundation')
   const plans = join(theme, 'plans')
   mkdirSync(plans, { recursive: true })
-  writeFileSync(join(repository, '.ki-config.toml'), '[ki-roadmap]\n')
+  writeFileSync(join(repository, '.ki-config.toml'), '["knowledgeislands/ki-agentic-harness:ki-roadmap"]\n')
   const roadmapPath = join(theme, 'ROADMAP.md')
   writeFileSync(
     roadmapPath,
@@ -102,7 +102,7 @@ const createNonNearPlanFixture = ({ status, transferredFrom }: { status: 'open' 
   const theme = join(repository, 'docs', 'roadmap', 'foundation')
   const plans = join(theme, 'plans')
   mkdirSync(plans, { recursive: true })
-  writeFileSync(join(repository, '.ki-config.toml'), '[ki-roadmap]\n')
+  writeFileSync(join(repository, '.ki-config.toml'), '["knowledgeislands/ki-agentic-harness:ki-roadmap"]\n')
   writeFileSync(
     join(theme, 'ROADMAP.md'),
     `---

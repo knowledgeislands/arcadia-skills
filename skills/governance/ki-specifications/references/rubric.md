@@ -26,7 +26,7 @@ The tracked readable rubric is the exact publication of the structured catalogue
 
 Repository identity and stable top-level seams.
 
-- **SPEC-1 [M] — Repository identity marker** — `.ki-config.toml` declares a keyless `[ki-specifications]` table. Unknown keys WARN because the marker has no options yet. (standards-specifications.md)
+- **SPEC-1 [M] — Repository identity marker** — `.ki-config.toml` declares a keyless `["knowledgeislands/ki-agentic-harness:ki-specifications"]` table. Unknown keys WARN because the marker has no options yet. (standards-specifications.md)
 - **SPEC-2 [M] — Authority areas** — `proposals/`, `specifications/`, and `schemas/` exist as directories. Their absence FAILs. (standards-specifications.md)
 - **SPEC-3 [M] — Supporting areas** — `templates/`, `examples/`, `docs/`, and `tooling/` exist as directories. Their absence WARNs. (standards-specifications.md)
 - **SPEC-J1 [J] — Minimal floor** — Every asserted structure has proved stable enough to govern across time. (standards-specifications.md)

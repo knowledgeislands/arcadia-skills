@@ -44,7 +44,7 @@ const fixture = (): {
   writeFileSync(join(repository, 'src', 'tools', 'example', 'index.ts'), "server.registerTool('example_items_list', {})\n")
   for (const file of ['access-level.ts', 'annotations.ts', 'audit-log.ts']) writeFileSync(join(repository, 'src', 'utils', file), '')
   const config = join(repository, '.ki-config.toml')
-  const configContent = '[ki-repo]\n'
+  const configContent = '["knowledgeislands/ki-agentic-harness:ki-repo"]\n'
   writeFileSync(config, configContent)
   const packagePath = join(repository, 'package.json')
   const packageContent = `${JSON.stringify(
@@ -110,7 +110,7 @@ test('item-owned actions coalesce config and package changes into one determinis
 
   const proposal = session.proposal()
   expect(proposal.writes.map((write) => write.path)).toEqual(['.ki-config.toml', 'package.json'])
-  expect(proposal.writes[0]?.content).toBe(`${configContent}\n[ki-mcp]\n`)
+  expect(proposal.writes[0]?.content).toBe(`${configContent}\n["knowledgeislands/ki-agentic-harness:ki-mcp"]\n`)
   const packageWrite = proposal.writes[1]
   if (!packageWrite) throw new Error('package proposal is missing')
   const packageJson = JSON.parse(packageWrite.content) as Record<string, unknown>
@@ -127,7 +127,7 @@ test('symlinked mutation targets remain report-only', () => {
   mkdirSync(join(repository, 'src', 'mcp-server'), { recursive: true })
   const outsideConfig = join(outside, 'config.toml')
   const outsidePackage = join(outside, 'package.json')
-  writeFileSync(outsideConfig, '[ki-repo]\n')
+  writeFileSync(outsideConfig, '["knowledgeislands/ki-agentic-harness:ki-repo"]\n')
   writeFileSync(outsidePackage, '{}\n')
   symlinkSync(outsideConfig, join(repository, '.ki-config.toml'))
   symlinkSync(outsidePackage, join(repository, 'package.json'))
@@ -139,7 +139,7 @@ test('symlinked mutation targets remain report-only', () => {
 
   expect(applicabilityItem().audit.run(KI.selectContext(context))[0]?.message).toContain('not a regular file')
   expect(session.proposal()).toEqual({ writes: [] })
-  expect(readFileSync(outsideConfig, 'utf8')).toBe('[ki-repo]\n')
+  expect(readFileSync(outsideConfig, 'utf8')).toBe('["knowledgeislands/ki-agentic-harness:ki-repo"]\n')
   expect(readFileSync(outsidePackage, 'utf8')).toBe('{}\n')
 })
 

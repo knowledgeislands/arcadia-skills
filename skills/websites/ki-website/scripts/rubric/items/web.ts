@@ -10,7 +10,8 @@ const inactive = (context: WebsiteContext): readonly AuditOutcome[] | null =>
       ? [
           {
             status: 'NOT_APPLICABLE',
-            message: 'ki-website not applicable: no [ki-website] declaration or Eleventy config structural marker'
+            message:
+              'ki-website not applicable: no ["knowledgeislands/ki-agentic-harness:ki-website"] declaration or Eleventy config structural marker'
           }
         ]
       : null
@@ -554,26 +555,38 @@ const WEB_40 = mechanical(
 const WEB_41 = mechanical(
   'WEB-41',
   'Website opt-in',
-  'Applicable sites declare `[ki-website]`.',
+  'Applicable sites declare `["knowledgeislands/ki-agentic-harness:ki-website"]`.',
   'WARN',
   (context) =>
     inactive(context) ??
-    one(Boolean(context.kiWebsiteTable), '[ki-website] table present', 'no [ki-website] table in .ki-config.toml', '.ki-config.toml'),
+    one(
+      Boolean(context.kiWebsiteTable),
+      '["knowledgeislands/ki-agentic-harness:ki-website"] table present',
+      'no ["knowledgeislands/ki-agentic-harness:ki-website"] table in .ki-config.toml',
+      '.ki-config.toml'
+    ),
   { conform: (context) => context.addOptIn?.() }
 )
 
 const WEB_42 = mechanical('WEB-42', 'Website opt-in validation', 'The marker table has no unknown keys.', 'WARN', (context) => {
   const stop = inactive(context)
   if (stop) return stop
-  if (!context.kiWebsiteTable) return [{ status: 'NOT_APPLICABLE', message: '[ki-website] table is absent' }]
+  if (!context.kiWebsiteTable)
+    return [{ status: 'NOT_APPLICABLE', message: '["knowledgeislands/ki-agentic-harness:ki-website"] table is absent' }]
   const keys = Object.keys(context.kiWebsiteTable)
   return keys.length
     ? keys.map((key) => ({
         status: 'VIOLATION' as const,
-        message: `unknown key under [ki-website]: ${key}`,
+        message: `unknown key under ["knowledgeislands/ki-agentic-harness:ki-website"]: ${key}`,
         subject: '.ki-config.toml'
       }))
-    : [{ status: 'PASS', message: '[ki-website] contains no unknown keys', subject: '.ki-config.toml' }]
+    : [
+        {
+          status: 'PASS',
+          message: '["knowledgeislands/ki-agentic-harness:ki-website"] contains no unknown keys',
+          subject: '.ki-config.toml'
+        }
+      ]
 })
 
 export const WEB: RubricFamily<WebsiteContext, WebsiteContext> = {

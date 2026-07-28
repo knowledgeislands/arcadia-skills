@@ -50,7 +50,7 @@ const fixture = (): { readonly repository: string; readonly config: string; read
   )
   writeFileSync(join(repository, 'README.md'), '# Tap\n\n## Formulae\n\n| Formula |\n| --- |\n| `mgit` |\n')
   const config = join(repository, '.ki-config.toml')
-  const original = '[ki-repo]\n'
+  const original = '["knowledgeislands/ki-agentic-harness:ki-repo"]\n'
   writeFileSync(config, original)
   return { repository, config, original }
 }
@@ -106,7 +106,7 @@ test('CONFIG-1 coalesces an idempotent marker repair into one session proposal',
     writes: [
       {
         path: '.ki-config.toml',
-        content: `${original}\n# This repo is a Knowledge Islands Homebrew tap.\n[ki-homebrew-tap]\n`
+        content: `${original}\n# This repo is a Knowledge Islands Homebrew tap.\n["knowledgeislands/ki-agentic-harness:ki-homebrew-tap"]\n`
       }
     ]
   })
@@ -118,7 +118,7 @@ test('a symlinked config is reported but never proposed for replacement', () => 
   const outside = join(temporaryDirectory('ki-homebrew-tap-outside-'), 'config.toml')
   mkdirSync(join(repository, 'Formula'))
   writeFileSync(join(repository, 'Formula', 'mgit.rb'), 'class Mgit < Formula\n')
-  writeFileSync(outside, '[ki-repo]\n')
+  writeFileSync(outside, '["knowledgeislands/ki-agentic-harness:ki-repo"]\n')
   symlinkSync(outside, join(repository, '.ki-config.toml'))
   const session = createHomebrewTapSession(options(repository, 'conform'))
   const { context } = rootContext(session)
@@ -128,7 +128,7 @@ test('a symlinked config is reported but never proposed for replacement', () => 
 
   expect(configItem().audit.run(configContext)[0]?.message).toContain('not a regular file')
   expect(session.proposal()).toEqual({ writes: [] })
-  expect(readFileSync(outside, 'utf8')).toBe('[ki-repo]\n')
+  expect(readFileSync(outside, 'utf8')).toBe('["knowledgeislands/ki-agentic-harness:ki-repo"]\n')
 })
 
 test('an unrelated repository is not applicable', () => {

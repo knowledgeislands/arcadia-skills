@@ -71,7 +71,7 @@ test('the session keeps one index draft and proposes all missing entries once', 
   temporaryDirectories.push(repository)
   const directory = join(repository, 'docs', 'decisions')
   mkdirSync(directory, { recursive: true })
-  writeFileSync(join(repository, '.ki-config.toml'), '[ki-decision-records]\n')
+  writeFileSync(join(repository, '.ki-config.toml'), '["knowledgeislands/ki-agentic-harness:ki-decision-records"]\n')
   writeFileSync(join(directory, 'README.md'), '# Decisions\n')
 
   for (const [serial, title] of [

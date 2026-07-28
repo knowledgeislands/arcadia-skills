@@ -4,7 +4,7 @@ import type { ConformWrite, RubricContextOptions, RubricPublicationContext, Rubr
 
 const FORMULA_DIRECTORY = 'Formula'
 const CONFIG_FILE = '.ki-config.toml'
-const CONFIG_SECTION = 'ki-homebrew-tap'
+const CONFIG_SECTION = 'knowledgeislands/ki-agentic-harness:ki-homebrew-tap'
 
 type NodeKind = 'missing' | 'file' | 'directory' | 'unsafe'
 type FormulaDirectoryState = 'missing' | 'present' | 'unsafe'
@@ -122,7 +122,7 @@ export const createHomebrewTapSession = ({
         ? {
             addMarker: () => {
               if (configDraft !== originalConfig) return
-              configDraft = `${originalConfig.replace(/\n*$/, '\n')}\n# This repo is a Knowledge Islands Homebrew tap.\n[${CONFIG_SECTION}]\n`
+              configDraft = `${originalConfig.replace(/\n*$/, '\n')}\n# This repo is a Knowledge Islands Homebrew tap.\n["${CONFIG_SECTION}"]\n`
             }
           }
         : {})

@@ -12,6 +12,7 @@ import type {
 export const ZONES = ['Calendar', 'Pillars', 'Resources', 'Streams', 'Admin'] as const
 export const STAGING = ['+', '-'] as const
 const CONFIG = '.ki-config.toml'
+const CONFIG_TABLE = 'knowledgeislands/ki-agentic-harness:ki-kb'
 const SNAKE_CASE = /^[a-z][a-z0-9_]*$/
 
 type KiKbConfig = {
@@ -36,7 +37,7 @@ const sample = (values: readonly string[], maximum = 10): string =>
 const parseConfig = (text: string): { value: KiKbConfig | null; malformed: boolean } => {
   try {
     const document = (Bun.TOML.parse(text) ?? {}) as Record<string, unknown>
-    const table = document['ki-kb']
+    const table = document[CONFIG_TABLE]
     if (!table || typeof table !== 'object' || Array.isArray(table)) return { value: null, malformed: false }
     const record = table as Record<string, unknown>
     const zones =
@@ -172,7 +173,11 @@ export const collectKbAuditEvidence = (target: string): readonly KbEvidenceFindi
   const parsed = isFile(configPath) ? parseConfig(readFileSync(configPath, 'utf8')) : { value: null, malformed: false }
   const hasCanonicalZone = ZONES.some((zone) => isDirectory(join(root, zone)))
   if (!parsed.value && !parsed.malformed && !hasCanonicalZone) {
-    add('NOT_APPLICABLE', 'ZONE-1', 'ki-kb is not applicable: no [ki-kb] declaration or canonical KB zone structural marker.')
+    add(
+      'NOT_APPLICABLE',
+      'ZONE-1',
+      'ki-kb is not applicable: no ["knowledgeislands/ki-agentic-harness:ki-kb"] declaration or canonical KB zone structural marker.'
+    )
     return findings
   }
   const config = parsed.value
@@ -182,11 +187,15 @@ export const collectKbAuditEvidence = (target: string): readonly KbEvidenceFindi
       add(
         'NOT_APPLICABLE',
         code,
-        parsed.malformed ? 'Configuration is malformed; the table cannot be inspected.' : '[ki-kb] is not declared.'
+        parsed.malformed
+          ? 'Configuration is malformed; the table cannot be inspected.'
+          : '["knowledgeislands/ki-agentic-harness:ki-kb"] is not declared.'
       )
   } else {
-    for (const key of Object.keys(config.keys)) add('WARN', 'CONFIG-1', `Unrecognised scalar [ki-kb] key: ${key}.`, CONFIG)
-    if (Object.keys(config.keys).length === 0) add('PASS', 'CONFIG-1', 'No unrecognised scalar [ki-kb] keys.', CONFIG)
+    for (const key of Object.keys(config.keys))
+      add('WARN', 'CONFIG-1', `Unrecognised scalar ["knowledgeislands/ki-agentic-harness:ki-kb"] key: ${key}.`, CONFIG)
+    if (Object.keys(config.keys).length === 0)
+      add('PASS', 'CONFIG-1', 'No unrecognised scalar ["knowledgeislands/ki-agentic-harness:ki-kb"] keys.', CONFIG)
     const aliasable = new Set<string>([...ZONES, ...STAGING])
     for (const [zone, folder] of Object.entries(config.zones)) {
       if (!aliasable.has(zone)) add('WARN', 'CONFIG-3', `Zone alias ${zone} is not a canonical zone or staging area.`, CONFIG)

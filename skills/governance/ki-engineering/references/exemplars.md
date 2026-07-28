@@ -129,16 +129,16 @@ export default defineConfig({
 })
 ```
 
-### Minimal `[ki-engineering]` table in `.ki-config.toml`
+### Minimal `["knowledgeislands/ki-agentic-harness:ki-engineering"]` table in `.ki-config.toml`
 
-The table is a conformance marker — its presence declares "the engineering standard applies here". It carries no top-level keys because capabilities (tests, compiled build, env config) are auto-detected from repo markers (`vitest.config.*`, `tsconfig.build.json`, `.env*.example`). The only allowed sub-structure is a `[ki-engineering.checks]` table for deliberate waivers. A repo that fully conforms writes the table header and nothing else.
+The table is a conformance marker — its presence declares "the engineering standard applies here". It carries no top-level keys because capabilities (tests, compiled build, env config) are auto-detected from repo markers (`vitest.config.*`, `tsconfig.build.json`, `.env*.example`). The only allowed sub-structure is a `["knowledgeislands/ki-agentic-harness:ki-engineering".checks]` table for deliberate waivers. A repo that fully conforms writes the table header and nothing else.
 
 ```toml
-[ki-engineering]
+["knowledgeislands/ki-agentic-harness:ki-engineering"]
 # This repo fully conforms. Capabilities (tests, compiled build, env config) are auto-detected
 # from repo markers — no profile key is needed here.
 # To waive a specific check, add:
-# [ki-engineering.checks]
+# ["knowledgeislands/ki-agentic-harness:ki-engineering".checks]
 # <check-id> = false  # reason: …
 ```
 

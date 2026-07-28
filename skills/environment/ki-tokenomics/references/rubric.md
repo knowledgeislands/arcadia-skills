@@ -18,7 +18,7 @@ Line-by-line criteria for auditing ki-tokenomics. Classifications are derived fr
 
 Selected-repository tokenomics configuration.
 
-- **CFG-1 [M] — Selected configuration validates down** — Only the selected repository’s [ki-tokenomics] table is validated; malformed recognised values FAIL and unknown keys WARN. (standards-tokenomics.md)
+- **CFG-1 [M] — Selected configuration validates down** — Only the selected repository’s ["knowledgeislands/ki-agentic-harness:ki-tokenomics"] table is validated; malformed recognised values FAIL and unknown keys WARN. (standards-tokenomics.md)
 
 ## POL — Portable policy and attribution
 

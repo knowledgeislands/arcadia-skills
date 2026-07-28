@@ -30,5 +30,5 @@ Four legs, always in this order:
 - No universal AUDIT/CONFORM/EDUCATE/REFRESH modes — this is a process skill (ADR-KI-HARNESS-SKILLS-001, ADR-KI-HARNESS-SKILLS-006); it has one procedure of four legs.
 - The **method** (classify / assign / sequence / gate) is runtime-neutral; the **mechanics** it uses to spawn work (the Agent tool, subagent types, the per-spawn model override, background / worktree isolation) are Claude-Code-specific and tagged `CC` in the procedure — so the skill itself models the portability discipline it helps deliver.
 - Draws on `ki-tokenomics` for model cost/selection policy and operationalises `ADR-KI-HARNESS-003` (mechanical-first, cheapest model that suffices) — it restates neither.
-- Installed as a core user skill by `ki bootstrap` — usable in any repo on the machine. Like `ki-bootstrap`, it is not a repository-governance root and has no `[ki-delegate]` table.
+- Installed as a core user skill by `ki bootstrap` — usable in any repo on the machine. Like `ki-bootstrap`, it is not a repository-governance root and has no `["knowledgeislands/ki-agentic-harness:ki-delegate"]` table.
 - Owns execution delegation only. Cross-repository transfer is adopted and prioritised through the receiving repository's roadmap lifecycle, not this skill.

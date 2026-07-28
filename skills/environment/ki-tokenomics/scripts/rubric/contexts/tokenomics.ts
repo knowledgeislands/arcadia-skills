@@ -41,10 +41,12 @@ export const createTokenomicsSession = ({ configuration, publication }: RubricCo
     rubric: { publication },
     config: {
       validates: invalid.length
-        ? one(outcome('VIOLATION', `Malformed [ki-tokenomics] value(s): ${invalid.join(', ')}`, 'FAIL'))
+        ? one(
+            outcome('VIOLATION', `Malformed ["knowledgeislands/ki-agentic-harness:ki-tokenomics"] value(s): ${invalid.join(', ')}`, 'FAIL')
+          )
         : unknown.length
-          ? one(outcome('VIOLATION', `Unknown [ki-tokenomics] key(s): ${unknown.join(', ')}`, 'WARN'))
-          : one(outcome('PASS', 'Selected repository [ki-tokenomics] configuration validates down.')),
+          ? one(outcome('VIOLATION', `Unknown ["knowledgeislands/ki-agentic-harness:ki-tokenomics"] key(s): ${unknown.join(', ')}`, 'WARN'))
+          : one(outcome('PASS', 'Selected repository ["knowledgeislands/ki-agentic-harness:ki-tokenomics"] configuration validates down.')),
       budgetPolicy: one(outcome('PASS', 'Budget overages are guide-rail WARNs; they never become FAIL findings.')),
       modelPurpose: one(outcome('PASS', 'Portable model purposes are frontier, reasoning, standard, and fast.')),
       routing: one(outcome('PASS', 'Standing-surface findings route to their artifact owner and selected runtime adapter.'))
@@ -52,8 +54,8 @@ export const createTokenomicsSession = ({ configuration, publication }: RubricCo
   }
   return {
     subjects: [
-      { families: ['CFG', 'POL'], subject: '[ki-tokenomics]', context: () => context },
-      { families: ['RUBRIC'], subject: '[ki-tokenomics]', context: () => context }
+      { families: ['CFG', 'POL'], subject: '["knowledgeislands/ki-agentic-harness:ki-tokenomics"]', context: () => context },
+      { families: ['RUBRIC'], subject: '["knowledgeislands/ki-agentic-harness:ki-tokenomics"]', context: () => context }
     ],
     proposal: () => ({ writes: [] })
   }

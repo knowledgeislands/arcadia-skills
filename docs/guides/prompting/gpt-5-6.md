@@ -29,7 +29,7 @@ There is no separate Codex model for long-horizon autonomy the way Claude has Fa
 | `standard`    | Terra @ `Medium`                  |
 | `fast`        | Luna @ `Light` / `Low`            |
 
-A repo running under Codex declares these in `[ki-tokenomics.model_tier_bindings]` (e.g. `reasoning = "gpt-5.6-sol"`); a config that lists both Claude and Codex models per type (`reasoning = "opus, gpt-5.6-sol"`) is portable across both runtimes, each resolving to the first model it supports.
+A repo running under Codex declares these in `["knowledgeislands/ki-agentic-harness:ki-tokenomics".model_tier_bindings]` (e.g. `reasoning = "gpt-5.6-sol"`); a config that lists both Claude and Codex models per type (`reasoning = "opus, gpt-5.6-sol"`) is portable across both runtimes, each resolving to the first model it supports.
 
 ## Prompting notes
 

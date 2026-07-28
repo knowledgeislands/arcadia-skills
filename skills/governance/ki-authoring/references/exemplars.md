@@ -68,21 +68,21 @@ See `skills/knowledge-bases/ki-kb/SKILL.md` for KB conventions.
 
 ### Well-formed `.ki-config.toml` table
 
-Keys are lowercase `snake_case`. Strings are double-quoted. Arrays use the inline `["a", "b"]` form for short lists. One table per skill, named for the skill (`[ki-repo]`), with sub-tables nested under it. Comment non-obvious keys with a `#` line above them — the _why_, not the _what_. The contract behind what each table means (the one-table-per-skill model, validate-your-own-table protocol) belongs to the `ki-repo` skill; this pattern covers formatting only.
+Keys are lowercase `snake_case`. Strings are double-quoted. Arrays use the inline `["a", "b"]` form for short lists. One table per skill, named for the skill (`["knowledgeislands/ki-agentic-harness:ki-repo"]`), with sub-tables nested under it. Comment non-obvious keys with a `#` line above them — the _why_, not the _what_. The contract behind what each table means (the one-table-per-skill model, validate-your-own-table protocol) belongs to the `ki-repo` skill; this pattern covers formatting only.
 
 ```toml
-[ki-repo]
+["knowledgeislands/ki-agentic-harness:ki-repo"]
 visibility = "public"
 
 # Branch protection is opt-in; most repos leave this off.
-[ki-repo.checks]
+["knowledgeislands/ki-agentic-harness:ki-repo".checks]
 branch-protection = true
 
-[ki-engineering]
+["knowledgeislands/ki-agentic-harness:ki-engineering"]
 node_version = "22"
 lint_paths = ["src", "scripts"]
 
-[ki-kb]
+["knowledgeislands/ki-agentic-harness:ki-kb"]
 zones = ["Pillars", "Admin", "Reference"]
 # default_zone controls where new notes land when no zone is specified.
 default_zone = "Pillars"

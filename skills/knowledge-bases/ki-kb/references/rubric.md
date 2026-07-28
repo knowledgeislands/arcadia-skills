@@ -41,11 +41,11 @@ Required zones, indexes, staging, and output placement.
 
 → [standard](standards-knowledge-base.md)
 
-Validate-down `[ki-kb]` configuration and zone aliases.
+Validate-down `["knowledgeislands/ki-agentic-harness:ki-kb"]` configuration and zone aliases.
 
-- **CONFIG-1 [M] — known configuration keys** — Only required_frontmatter, preflight, zones, and templates are recognised beneath [ki-kb]. (standards-knowledge-base.md)
+- **CONFIG-1 [M] — known configuration keys** — Only required_frontmatter, preflight, zones, and templates are recognised beneath ["knowledgeislands/ki-agentic-harness:ki-kb"]. (standards-knowledge-base.md)
 - **CONFIG-2 [M] — non-redundant zone aliases** — A zone alias does not restate its canonical folder name. (standards-knowledge-base.md)
-- **CONFIG-3 [M] — canonical zone alias keys** — Every [ki-kb.zones] key names a canonical zone or staging area. (standards-knowledge-base.md)
+- **CONFIG-3 [M] — canonical zone alias keys** — Every ["knowledgeislands/ki-agentic-harness:ki-kb".zones] key names a canonical zone or staging area. (standards-knowledge-base.md)
 - **CONFIG-4 [M] — KB configuration boundary** — The checker reads and validates only the ki-kb table, leaving every sibling table untouched. (standards-knowledge-base.md)
 - **CONFIG-5 [M] — declared preflight paths** — Literal preflight paths resolve under the base; globs remain runtime-resolved. (standards-knowledge-base.md)
 

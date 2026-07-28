@@ -68,7 +68,7 @@ The stream note _is_ the proposal document — a working tracker, not a knowledg
 
 ## Project bindings
 
-Almost everything is fixed above. Only these come from the host base — take declarative overrides from the base's `.ki-config.toml` `[ki-kb-streams]` table (the shared-file contract is owned by `ki-repo`; validate your own table, warn on an unrecognised key, never read another skill's), otherwise from the auto-loaded `CLAUDE.md`.
+Almost everything is fixed above. Only these come from the host base — take declarative overrides from the base's `.ki-config.toml` `["knowledgeislands/ki-agentic-harness:ki-kb-streams"]` table (the shared-file contract is owned by `ki-repo`; validate your own table, warn on an unrecognised key, never read another skill's), otherwise from the auto-loaded `CLAUDE.md`.
 
 - **Process note** — the base's local change-process note that streams' `Governance` footers link to: a thin pointer to **this skill** (the canonical definition) plus the base's local specifics. _Default:_ `Enactment Process`. A base may host it under a non-default name or location (e.g. `kit-legal` keeps it under `Admin/Operations/Processes/`); declare it as `process_note = "Admin/Operations/Processes/Enactment Process"`. Resolve every `Governance` link through it.
 - **Frontmatter scheme** — the note-type convention for zone / focus / proposal notes. The canonical scheme is the machine-readable **`type:`** key (`type: stream-zone` / `stream-focus` / `stream-proposal`) — `type` is the fundamental note-type marker, and the checker keys on it. A base still carrying the legacy `card/*` tag scheme declares `note_type_scheme = "tags"` as a transitional accommodation (like a zone alias), to be retired as it migrates to `type`.
@@ -76,7 +76,7 @@ Almost everything is fixed above. Only these come from the host base — take de
 
 ## Step 1 — Load context
 
-1. Resolve the bindings: read the base's `.ki-config.toml` `[ki-kb-streams]` table and `CLAUDE.md`. **This skill is the canonical definition** of the Enactment Process; load the base's bound **process note** if it has one, for its local specifics (it points back here).
+1. Resolve the bindings: read the base's `.ki-config.toml` `["knowledgeislands/ki-agentic-harness:ki-kb-streams"]` table and `CLAUDE.md`. **This skill is the canonical definition** of the Enactment Process; load the base's bound **process note** if it has one, for its local specifics (it points back here).
 2. For any stream work, load the relevant Focus index and the proposal document **fresh** (never act on a cached version), plus the `Streams/` proposals index.
 
 ## Operating modes

@@ -27,7 +27,7 @@
  *                (public); Actions allowed-actions = all.
  *
  * Each repo's `.ki-config.toml` declares its `visibility` and, in a
- * `[ki-repo.checks]` sub-table, per-repo overrides — one
+ * `["knowledgeislands/ki-agentic-harness:ki-repo".checks]` sub-table, per-repo overrides — one
  * boolean per overridable check (`true` = enforce, `false` = don't). A check it
  * omits takes the org default (CHECK_DEFAULTS), so a fully-conforming repo writes
  * no overrides; `branch-protection` defaults off, so `main` is open unless opted in.
@@ -47,7 +47,7 @@ import { join, resolve } from 'node:path'
 
 // ── the standard (keep in sync with references/standards-repository.md) ──────
 const DEFAULT_BRANCH = 'main'
-// The declared license defaults to MIT when `[ki-repo] license` is unset. Decoupled
+// The declared license defaults to MIT when `["knowledgeislands/ki-agentic-harness:ki-repo"] license` is unset. Decoupled
 // from visibility (a private repo may be MIT; a public repo may be proprietary).
 const DEFAULT_LICENSE = 'MIT'
 const TOPICS = ['mcp', 'model-context-protocol', 'claude', 'typescript', 'bun']
@@ -56,7 +56,7 @@ const ALLOWED_ACTIONS = 'all'
 // Reference-doc pointer carried on every mechanical finding.
 const STD = 'references/standards-repository.md'
 // Overridable checks and the org default for each — `true` = enforced by default.
-// A repo overrides any of these per-repo in [ki-repo.checks];
+// A repo overrides any of these per-repo in ["knowledgeislands/ki-agentic-harness:ki-repo".checks];
 // a check it omits takes the default here, so a fully-conforming repo writes none.
 // (The other checks — file presence, default branch, license, description, merge,
 // delete-branch, visibility, Dependabot — are bedrock: always enforced, no override.)
@@ -204,7 +204,7 @@ function treePaths(nwo: string, branch: string): Set<string> {
 }
 
 // `.ki-config.toml` is a shared per-repo file; each skill reads its own [table].
-// This skill owns the [ki-repo] table. The default block
+// This skill owns the ["knowledgeislands/ki-agentic-harness:ki-repo"] table. The default block
 // (written by `--educate`) is the authoritative key list — authoring a repo emits it.
 const HARNESS_ID = 'knowledgeislands/ki-agentic-harness'
 const skillTable = (name: string): string => `${HARNESS_ID}:${name}`
@@ -229,7 +229,7 @@ const KI_DEFAULT = `${KI_REPO_DEFAULT}\n${KI_AUTHORING_DEFAULT}`
 
 // Parse the owned table with Bun's TOML parser so quoted table keys, comments,
 // and multiline strings cannot be mistaken for schema. Returns null when the
-// document is invalid or has no object-valued [ki-repo] table.
+// document is invalid or has no object-valued ["knowledgeislands/ki-agentic-harness:ki-repo"] table.
 type KiConfig = { visibility?: string; license?: string; checks: Record<string, boolean> }
 const CHECKS_SECTION = `${KI_SECTION}.checks`
 const TOML = (globalThis as unknown as { Bun: { TOML: { parse(text: string): unknown } } }).Bun.TOML
@@ -434,13 +434,17 @@ function auditRepo(r: Repo, files: Set<string>, ki: KiConfig | null, kiText: str
   // Native self-check resolution is a host precondition, not repository-local evidence.
   if (files.has(KI_CONFIG)) {
     if (!declaresRootTable(kiText ?? '', skillTable('ki-authoring')))
-      fail('FILES-3', `${KI_CONFIG} does not declare [ki-authoring] — the authoring standard is baseline (run --educate)`, KI_CONFIG)
+      fail(
+        'FILES-3',
+        `${KI_CONFIG} does not declare ["knowledgeislands/ki-agentic-harness:ki-authoring"] — the authoring standard is baseline (run --educate)`,
+        KI_CONFIG
+      )
   }
 
   // ── layer 2: core GitHub ── GH-1
   if (r.defaultBranchRef?.name !== DEFAULT_BRANCH)
     fail('GH-1', `default branch is "${r.defaultBranchRef?.name ?? '?'}" (want ${DEFAULT_BRANCH})`)
-  // License is the declared SPDX id from `[ki-repo] license` (default MIT), decoupled
+  // License is the declared SPDX id from `["knowledgeislands/ki-agentic-harness:ki-repo"] license` (default MIT), decoupled
   // from visibility. The live GitHub license and package.json "license" must match the
   // declared id. A proprietary declaration (`UNLICENSED`/`proprietary`/`none`) expects
   // no recognised OSI license on GitHub and `"UNLICENSED"` in package.json.
@@ -589,7 +593,7 @@ function auditRepo(r: Repo, files: Set<string>, ki: KiConfig | null, kiText: str
     else if (declaredStructure.length === 0 && enforced('structure'))
       warn(
         'STRUCT-2',
-        'declares no repo-structure table — pick the one that matches its layout (ki-harness/ki-kb/ki-website/ki-mcp/ki-plugins/ki-specifications/ki-tools/ki-homebrew-tap/ki-dotfiles-chezmoi), or set `structure = false` in [ki-repo.checks] if this repo genuinely has none'
+        'declares no repo-structure table — pick the one that matches its layout (ki-harness/ki-kb/ki-website/ki-mcp/ki-plugins/ki-specifications/ki-tools/ki-homebrew-tap/ki-dotfiles-chezmoi), or set `structure = false` in ["knowledgeislands/ki-agentic-harness:ki-repo".checks] if this repo genuinely has none'
       )
   }
 
@@ -668,11 +672,11 @@ function auditRepo(r: Repo, files: Set<string>, ki: KiConfig | null, kiText: str
 }
 
 // The agent runtimes the bootstrap linkers know how to install for. A repo may
-// declare a subset in `[ki-repo] supported_runtimes`; anything outside this set has no
+// declare a subset in `["knowledgeislands/ki-agentic-harness:ki-repo"] supported_runtimes`; anything outside this set has no
 // discovery path, so the linker would silently do nothing for it (RUNTIMES-1).
 const KNOWN_RUNTIMES = ['claude-code', 'codex']
 
-// Parse `supported_runtimes = ["a", "b"]` from the [ki-repo] table only (the documented
+// Parse `supported_runtimes = ["a", "b"]` from the ["knowledgeislands/ki-agentic-harness:ki-repo"] table only (the documented
 // home of the key — table-aware, unlike the bootstrap resolver's tolerant match).
 // Returns null when the key is absent (the ["claude-code"] default applies, nothing to
 // check), else the declared list (possibly empty).
@@ -699,7 +703,7 @@ function parseSupportedRuntimes(text: string): { runtimes: string[]; rootTables:
   return { runtimes: list, rootTables }
 }
 
-// RUNTIMES-1: validate the required `[ki-repo] supported_runtimes` declaration. A pure
+// RUNTIMES-1: validate the required `["knowledgeislands/ki-agentic-harness:ki-repo"] supported_runtimes` declaration. A pure
 // local .ki-config.toml read — offline-safe, sitting beside vendor-integrity. Every
 // name must be a runtime the linkers recognise; the support surface is never inferred.
 function localConfigFindings(dir: string): Finding[] {
@@ -780,7 +784,7 @@ const evidenceLevel = (level: Level): RepoEvidenceLevel => level
 
 // ── evidence collection ───────────────────────────────────────────────────
 export const collectAuditFindings = (argv: readonly string[]): RepoAuditCollection => {
-  // `--educate` prints the default [ki-repo] block for a new repo's
+  // `--educate` prints the default ["knowledgeislands/ki-agentic-harness:ki-repo"] block for a new repo's
   // .ki-config.toml (authoring creates the keys; the author edits the values).
   if (argv.includes('--educate')) {
     return { target: resolve('.'), findings: [], educate: KI_DEFAULT }

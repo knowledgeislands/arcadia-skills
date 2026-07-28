@@ -57,7 +57,7 @@ const fixture = (filename: string, options: { metadata?: string; legacyDate?: st
   const root = mkdtempSync(join(tmpdir(), 'ki-decision-records-'))
   temporaryRoots.push(root)
   const directory = join(root, 'docs', 'decisions')
-  writeFileSync(join(root, '.ki-config.toml'), '[ki-decision-records]\n')
+  writeFileSync(join(root, '.ki-config.toml'), '["knowledgeislands/ki-agentic-harness:ki-decision-records"]\n')
   mkdirSync(directory, { recursive: true })
   writeFileSync(join(directory, filename), record(options))
   writeFileSync(join(directory, 'README.md'), `# Decisions\n\n1. [ADR-EXAMPLE-001](${filename}) — record shape.\n`)
@@ -106,7 +106,7 @@ const rootFixture = ({
   const root = mkdtempSync(join(tmpdir(), 'ki-decision-records-root-'))
   temporaryRoots.push(root)
   const directory = join(root, 'docs', 'decisions')
-  writeFileSync(join(root, '.ki-config.toml'), '[ki-decision-records]\n')
+  writeFileSync(join(root, '.ki-config.toml'), '["knowledgeislands/ki-agentic-harness:ki-decision-records"]\n')
   mkdirSync(directory, { recursive: true })
   for (const file of files) writeFileSync(join(directory, file.file), rootRecord(file))
   const entries = indexIds

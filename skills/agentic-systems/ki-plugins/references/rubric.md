@@ -33,7 +33,7 @@ The marketplace manifest, generated plugin projection, and repository scaffold.
   - _Review prompt:_ Is the complete projection byte-for-byte reproducible from the current harness?
 - **PLUG-13 [M] — Repository scaffold** — `LICENSE`, `README.md`, `.gitignore`, and `CLAUDE.md` are physical files. (standards-plugin-marketplace.md)
 - **PLUG-14 [M] — Generated-content warning** — `CLAUDE.md` states the generated-not-hand-edited invariant. (standards-plugin-marketplace.md)
-- **PLUG-15 [M] — Governance declaration** — Applicable repositories declare `[ki-plugins]` and no unknown keys. (standards-plugin-marketplace.md)
+- **PLUG-15 [M] — Governance declaration** — Applicable repositories declare `["knowledgeislands/ki-agentic-harness:ki-plugins"]` and no unknown keys. (standards-plugin-marketplace.md)
 - **PLUG-16 [J] — Projection documentation** — `README.md` and `CLAUDE.md` describe the projection model without drift and the licence exception remains deliberate. (standards-plugin-marketplace.md)
   - _Review prompt:_ Do the repository documents accurately describe the projection, generated-content boundary, and deliberate licence exception?
 

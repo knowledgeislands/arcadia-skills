@@ -27,7 +27,7 @@ const options = (repository: string, mode: 'audit' | 'conform' = 'audit'): Rubri
 
 const writeCanonicalRepository = (repository: string): void => {
   mkdirSync(join(repository, 'site'), { recursive: true })
-  writeFileSync(join(repository, '.ki-config.toml'), '[ki-website-cloudflare]\n')
+  writeFileSync(join(repository, '.ki-config.toml'), '["knowledgeislands/ki-agentic-harness:ki-website-cloudflare"]\n')
   writeFileSync(
     join(repository, 'site', 'wrangler.jsonc'),
     `{
@@ -104,7 +104,7 @@ describe('ki-website-cloudflare session', () => {
     const repository = makeRoot()
     const outside = makeRoot()
     mkdirSync(join(repository, 'site'))
-    writeFileSync(join(repository, '.ki-config.toml'), '[ki-website-cloudflare]\n')
+    writeFileSync(join(repository, '.ki-config.toml'), '["knowledgeislands/ki-agentic-harness:ki-website-cloudflare"]\n')
     const outsideConfig = join(outside, 'wrangler.jsonc')
     const content = '{"assets":{"directory":"dist"}}\n'
     writeFileSync(outsideConfig, content)

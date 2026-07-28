@@ -38,7 +38,7 @@ export const scenarios: Scenario[] = [
       { name: 'validate/read only its own table', re: /(own|its own) (table|section)|validate down|never[^.\n]{0,30}other/i }
     ],
     rubric:
-      'House contract: each skill that needs config owns exactly ONE table named for the skill (e.g. [ki-repo]), with sub-tables nested under it; a skill reads and validates ONLY its own table (warns on an unrecognised key in it) and never inspects another skill\'s — "validate down, ignore across". A correct answer states the one-table-per-skill model and the own-table-only rule.'
+      'House contract: each skill that needs config owns exactly ONE table named for the skill (e.g. ["knowledgeislands/ki-agentic-harness:ki-repo"]), with sub-tables nested under it; a skill reads and validates ONLY its own table (warns on an unrecognised key in it) and never inspects another skill\'s — "validate down, ignore across". A correct answer states the one-table-per-skill model and the own-table-only rule.'
   },
   {
     skill: 'ki-repo',

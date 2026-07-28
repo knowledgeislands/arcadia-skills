@@ -122,7 +122,10 @@ describe('ki-kb-live-artifacts session', () => {
 
   test('honours a safe configured artifacts directory', () => {
     const root = repository()
-    writeFileSync(join(root, '.ki-config.toml'), '[ki-kb-live-artifacts]\nartifacts_dir = "Operational/Boards"\n')
+    writeFileSync(
+      join(root, '.ki-config.toml'),
+      '["knowledgeislands/ki-agentic-harness:ki-kb-live-artifacts"]\nartifacts_dir = "Operational/Boards"\n'
+    )
     mkdirSync(join(root, 'Operational', 'Boards'), { recursive: true })
     writeFileSync(join(root, 'Operational', 'Boards', 'Queue.md'), '---\nstatus: active\nrenders: html\nauthor: Ops\n---\n')
     const session = createLiveArtifactsSession(options(root, 'conform'))

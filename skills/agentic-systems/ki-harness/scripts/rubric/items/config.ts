@@ -25,8 +25,16 @@ const CONFIG_1: RubricItem<HarnessConfigContext> = {
           ]
         return [
           hasHarnessTable
-            ? { status: 'PASS', message: 'The [ki-harness] declaration is present.', subject: '.ki-config.toml' }
-            : { status: 'VIOLATION', message: 'The [ki-harness] declaration is missing.', subject: '.ki-config.toml' }
+            ? {
+                status: 'PASS',
+                message: 'The ["knowledgeislands/ki-agentic-harness:ki-harness"] declaration is present.',
+                subject: '.ki-config.toml'
+              }
+            : {
+                status: 'VIOLATION',
+                message: 'The ["knowledgeislands/ki-agentic-harness:ki-harness"] declaration is missing.',
+                subject: '.ki-config.toml'
+              }
         ]
       }
     },
@@ -53,8 +61,16 @@ const CONFIG_2: RubricItem<HarnessConfigContext> = {
           return [{ status: 'NOT_APPLICABLE', message: 'KI configuration is absent or unsafe.', subject: '.ki-config.toml' }]
         return [
           hasRepositoryTable
-            ? { status: 'PASS', message: 'The [ki-repo] declaration is present.', subject: '.ki-config.toml' }
-            : { status: 'VIOLATION', message: 'The [ki-repo] declaration is missing.', subject: '.ki-config.toml' }
+            ? {
+                status: 'PASS',
+                message: 'The ["knowledgeislands/ki-agentic-harness:ki-repo"] declaration is present.',
+                subject: '.ki-config.toml'
+              }
+            : {
+                status: 'VIOLATION',
+                message: 'The ["knowledgeislands/ki-agentic-harness:ki-repo"] declaration is missing.',
+                subject: '.ki-config.toml'
+              }
         ]
       }
     }

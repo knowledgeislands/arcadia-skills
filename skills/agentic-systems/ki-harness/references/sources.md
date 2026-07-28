@@ -42,7 +42,7 @@ _REFRESH last run **2026-07-27** (previous: 2026-07-04)._
 
 - The standard now separates the five-part source repository from the current three-directory compatible payload and names installed, verified harness state as the only operation source.
 - Retired package aliases, repository-vendored executors, checkout-dependent runtime links, and a skill-owned global linker are removed from the harness contract.
-- The mechanical catalogue now discovers grouped physical skill roots, uses the final session contract, and retains only the safe host-published `[ki-harness]` marker append.
+- The mechanical catalogue now discovers grouped physical skill roots, uses the final session contract, and retains only the safe host-published `["knowledgeislands/ki-agentic-harness:ki-harness"]` marker append.
 
 **Open watch-items:**
 

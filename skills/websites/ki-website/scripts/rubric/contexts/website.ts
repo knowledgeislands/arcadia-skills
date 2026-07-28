@@ -3,10 +3,11 @@ import { join, relative, resolve, sep } from 'node:path'
 import type { ConformWrite, RubricContextOptions, RubricPublicationContext, RubricSession } from '../../shared/rubric.ts'
 
 const CONFIG_NAMES = ['eleventy.config.ts', 'eleventy.config.js', 'eleventy.config.mjs', 'eleventy.config.cjs'] as const
-const KI_SECTION = 'ki-website'
-const KI_DEFAULT = `# ${KI_SECTION} — opt-in marker: presence of this table opts the repo into the
+const SKILL_NAME = 'ki-website'
+const KI_SECTION = 'knowledgeislands/ki-agentic-harness:ki-website'
+const KI_DEFAULT = `# ${SKILL_NAME} — opt-in marker: presence of this table opts the repo into the
 # Eleventy + Tailwind site-build standard. It takes no per-repo keys today.
-[${KI_SECTION}]
+["${KI_SECTION}"]
 `
 
 type Draft = {
@@ -139,7 +140,7 @@ export const createWebsiteSession = ({ mode, repository, publication }: RubricCo
     configDraft === undefined
       ? undefined
       : (): void => {
-          if (/\[ki-website]/.test(configDraft.content)) return
+          if (/\["knowledgeislands\/ki-agentic-harness:ki-website"\]/.test(configDraft.content)) return
           configDraft.content = configDraft.content ? `${configDraft.content.replace(/\n*$/, '\n')}\n${KI_DEFAULT}` : KI_DEFAULT
         }
   const addDistIgnore =

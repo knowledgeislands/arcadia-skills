@@ -26,13 +26,13 @@ Every repo carries these at the root. Presence is checked **on the default branc
 | `.gitignore`      | Keeps build/dep noise out of history.                                                                           |
 | `.editorconfig`   | Shared editor defaults across the workspace toolchain.                                                          |
 | `CLAUDE.md`       | Agent instructions — the always-loaded anchor for any repo-specific gate or convention (skills rubric SHAPE-7). |
-| `.ki-config.toml` | Declares this repo's expected config under `[ki-repo]`. †                                                       |
+| `.ki-config.toml` | Declares this repo's expected config under `["knowledgeislands/ki-agentic-harness:ki-repo"]`. †                 |
 
 † The values it carries: `visibility`, the declared `license` (SPDX id, default MIT), and any per-repo check overrides.
 
-**Baseline governance is declared, not assumed.** Every Knowledge Islands repo is governed by `ki-repo` **and** `ki-authoring`; both are required declarations — a `.ki-config.toml` missing `[ki-authoring]` is a FAIL (`authoring-baseline`). Authoring is no longer an implicit universal hidden in the tooling ([ADR-KI-HARNESS-005](../../../../docs/decisions/ADR-KI-HARNESS-005-validate-down-ki-config-toml-contract.md)); the config shows the full governance set. Portable tokenomics and the real environment capabilities mapped from `[ki-repo].supported_runtimes` are likewise explicit required tables; `ki-repo` checks their presence without reading their contents.
+**Baseline governance is declared, not assumed.** Every Knowledge Islands repo is governed by `ki-repo` **and** `ki-authoring`; both are required declarations — a `.ki-config.toml` missing `["knowledgeislands/ki-agentic-harness:ki-authoring"]` is a FAIL (`authoring-baseline`). Authoring is no longer an implicit universal hidden in the tooling ([ADR-KI-HARNESS-005](../../../../docs/decisions/ADR-KI-HARNESS-005-validate-down-ki-config-toml-contract.md)); the config shows the full governance set. Portable tokenomics and the real environment capabilities mapped from `["knowledgeislands/ki-agentic-harness:ki-repo"].supported_runtimes` are likewise explicit required tables; `ki-repo` checks their presence without reading their contents.
 
-**Foundation scaffolding is owner-controlled and append-only.** `ki-repo` owns the file-level contract and writes its `[ki-repo]` block plus the required bare `[ki-authoring]` foundation marker. Its native CONFORM session creates a missing file with both, or appends only a missing exact root marker to a partial file; a dotted `[ki-repo.checks]` sub-table alone does not satisfy `[ki-repo]`. It preserves all existing bytes, is idempotent, and makes no write in dry-run. Sibling skills may conform their own tables under the validate-down/conform-down boundary. CONFORM completes this local repair before any separately confirmed live GitHub work and carries no TOML template for another skill.
+**Foundation scaffolding is owner-controlled and append-only.** `ki-repo` owns the file-level contract and writes its `["knowledgeislands/ki-agentic-harness:ki-repo"]` block plus the required bare `["knowledgeislands/ki-agentic-harness:ki-authoring"]` foundation marker. Its native CONFORM session creates a missing file with both, or appends only a missing exact root marker to a partial file; a dotted `["knowledgeislands/ki-agentic-harness:ki-repo".checks]` sub-table alone does not satisfy `["knowledgeislands/ki-agentic-harness:ki-repo"]`. It preserves all existing bytes, is idempotent, and makes no write in dry-run. Sibling skills may conform their own tables under the validate-down/conform-down boundary. CONFORM completes this local repair before any separately confirmed live GitHub work and carries no TOML template for another skill.
 
 **Native self-check capability is required.** A confirmed ki-repo must be auditable by resolving its declared governance roots to compatible registered operations in the verified active installed collection. It is not self-sufficient by carrying a vendored `.ki/bin` runner: package-local runners, manifests, and a nearby harness checkout are not execution fallbacks.
 
@@ -133,22 +133,22 @@ Each repo **declares** its expected visibility in `.ki-config.toml` (`visibility
 
 ```toml
 # .ki-config.toml — one [table] per skill that needs per-repo options
-[ki-repo]
+["knowledgeislands/ki-agentic-harness:ki-repo"]
 visibility = "public"   # "public" | "private"
 license = "MIT"         # SPDX id; use "UNLICENSED" for proprietary
 
 # Optional. One boolean per overridable check; omit any to take the org default.
 # A repo that fully conforms needs nothing here.
-[ki-repo.checks]
+["knowledgeislands/ki-agentic-harness:ki-repo".checks]
 branch-protection = true   # default off — protect `main` on this repo
 
 # Required foundation marker — declared, never injected.
-[ki-authoring]
+["knowledgeislands/ki-agentic-harness:ki-authoring"]
 ```
 
 ## Per-repo overrides
 
-The rubric carries the **org default** for every check. Most are bedrock — file presence, default branch, description, merge policy, auto-delete-branch, visibility, Dependabot — and aren't negotiable. License is bedrock and **declared, not inferred from visibility**: a repo names its license as an SPDX id in `[ki-repo]` `license` (default MIT), and the auditor checks that the live GitHub license (`license`), a present LICENSE file (`license-file`), and `package.json` `"license"` (`package-license`) all match it. A proprietary declaration (`UNLICENSED`/`proprietary`) expects no recognised OSI license on GitHub and `"UNLICENSED"` in `package.json`. Visibility is a separate, independent check — a private repo may be MIT, a public repo proprietary. The rest are **overridable**: a repo flips one for itself with a single boolean in its `[ki-repo.checks]` table, where `true` = enforce this check and `false` = don't. A check you omit takes the org default, so **a fully-conforming repo writes no overrides at all**. The auditor reports every active override as a `note` (never a failure), so a deliberate departure stays visible without reading as drift.
+The rubric carries the **org default** for every check. Most are bedrock — file presence, default branch, description, merge policy, auto-delete-branch, visibility, Dependabot — and aren't negotiable. License is bedrock and **declared, not inferred from visibility**: a repo names its license as an SPDX id in `["knowledgeislands/ki-agentic-harness:ki-repo"]` `license` (default MIT), and the auditor checks that the live GitHub license (`license`), a present LICENSE file (`license-file`), and `package.json` `"license"` (`package-license`) all match it. A proprietary declaration (`UNLICENSED`/`proprietary`) expects no recognised OSI license on GitHub and `"UNLICENSED"` in `package.json`. Visibility is a separate, independent check — a private repo may be MIT, a public repo proprietary. The rest are **overridable**: a repo flips one for itself with a single boolean in its `["knowledgeislands/ki-agentic-harness:ki-repo".checks]` table, where `true` = enforce this check and `false` = don't. A check you omit takes the org default, so **a fully-conforming repo writes no overrides at all**. The auditor reports every active override as a `note` (never a failure), so a deliberate departure stays visible without reading as drift.
 
 | Check               | Org default | When enforced, the auditor requires…                |
 | ------------------- | ----------- | --------------------------------------------------- |
@@ -174,11 +174,11 @@ The rubric carries the **org default** for every check. Most are bedrock — fil
 
 ## Coverage cascade
 
-`.ki-config.toml`'s presence is the **gate** (Layer 1): once it confirms the repo is a ki-repo, the auditor checks the repo **declares an opt-in `[ki-<skill>]` table for every governance skill whose applicability it can detect** — a `Streams/` zone ⇒ `[ki-kb-streams]`, an `eleventy.config` ⇒ `[ki-website]`, an `@modelcontextprotocol/sdk` dependency ⇒ `[ki-mcp]`, a `.claude-plugin/marketplace.json` ⇒ `[ki-plugins]`, `proposals/` + `specifications/` + `schemas/` ⇒ `[ki-specifications]`, an `install.sh` + a `bin/<exe>` ⇒ `[ki-tools]`, a `Formula/*.rb` ⇒ `[ki-homebrew-tap]`, `skills/*/SKILL.md` ⇒ `[ki-skills]`, and so on. Detected-but-undeclared WARNs; a declared table with no matching artifact WARNs as possibly stale.
+`.ki-config.toml`'s presence is the **gate** (Layer 1): once it confirms the repo is a ki-repo, the auditor checks the repo **declares an opt-in `[ki-<skill>]` table for every governance skill whose applicability it can detect** — a `Streams/` zone ⇒ `["knowledgeislands/ki-agentic-harness:ki-kb-streams"]`, an `eleventy.config` ⇒ `["knowledgeislands/ki-agentic-harness:ki-website"]`, an `@modelcontextprotocol/sdk` dependency ⇒ `["knowledgeislands/ki-agentic-harness:ki-mcp"]`, a `.claude-plugin/marketplace.json` ⇒ `["knowledgeislands/ki-agentic-harness:ki-plugins"]`, `proposals/` + `specifications/` + `schemas/` ⇒ `["knowledgeislands/ki-agentic-harness:ki-specifications"]`, an `install.sh` + a `bin/<exe>` ⇒ `["knowledgeislands/ki-agentic-harness:ki-tools"]`, a `Formula/*.rb` ⇒ `["knowledgeislands/ki-agentic-harness:ki-homebrew-tap"]`, `skills/*/SKILL.md` ⇒ `["knowledgeislands/ki-agentic-harness:ki-skills"]`, and so on. Detected-but-undeclared WARNs; a declared table with no matching artifact WARNs as possibly stale.
 
-A repo that is **not** a ki-repo (no `.ki-config.toml`) is never coverage-checked — it just takes the `ki-config` FAIL, so a lookalike repo (an `eleventy.config` but no marker) is not falsely told to opt in. This is `ki-repo`'s single cross-table read, and it reads only table **presence**, never another skill's keys. The full signal list and the marker-vs-config model live in [the `.ki-config.toml` standard](standards-configuration.md#coverage-enforcement). Silence one signal with `coverage-<skill> = false` under `[ki-repo.checks]`.
+A repo that is **not** a ki-repo (no `.ki-config.toml`) is never coverage-checked — it just takes the `ki-config` FAIL, so a lookalike repo (an `eleventy.config` but no marker) is not falsely told to opt in. This is `ki-repo`'s single cross-table read, and it reads only table **presence**, never another skill's keys. The full signal list and the marker-vs-config model live in [the `.ki-config.toml` standard](standards-configuration.md#coverage-enforcement). Silence one signal with `coverage-<skill> = false` under `["knowledgeislands/ki-agentic-harness:ki-repo".checks]`.
 
-The cascade's companion is a **cardinality** rule: a repo declares **at most one** repo-structure table — `[ki-harness]`, `[ki-kb]`, `[ki-website]`, `[ki-mcp]`, `[ki-plugins]`, `[ki-specifications]`, `[ki-tools]`, `[ki-homebrew-tap]`, `[ki-dotfiles-chezmoi]` — because exactly one skill governs a repo's on-disk shape ([ADR-KI-HARNESS-SKILLS-006](../../../../docs/decisions/ADR-KI-HARNESS-SKILLS-006-six-cluster-skill-taxonomy-and-the-implication-graph.md)). Declaring two or more FAILs (`repo-structure`, bedrock — not overridable). Implied family members (`ki-website-cloudflare` under website, `ki-kb-streams` under kb) are not distinct structures and do not count. Declaring **zero** WARNs (`structure`, overridable — see the table above): silence usually means nobody declared it, not that none applies, so a genuinely structureless repo says so explicitly via `structure = false`.
+The cascade's companion is a **cardinality** rule: a repo declares **at most one** repo-structure table — `["knowledgeislands/ki-agentic-harness:ki-harness"]`, `["knowledgeislands/ki-agentic-harness:ki-kb"]`, `["knowledgeislands/ki-agentic-harness:ki-website"]`, `["knowledgeislands/ki-agentic-harness:ki-mcp"]`, `["knowledgeislands/ki-agentic-harness:ki-plugins"]`, `["knowledgeislands/ki-agentic-harness:ki-specifications"]`, `["knowledgeislands/ki-agentic-harness:ki-tools"]`, `["knowledgeislands/ki-agentic-harness:ki-homebrew-tap"]`, `["knowledgeislands/ki-agentic-harness:ki-dotfiles-chezmoi"]` — because exactly one skill governs a repo's on-disk shape ([ADR-KI-HARNESS-SKILLS-006](../../../../docs/decisions/ADR-KI-HARNESS-SKILLS-006-six-cluster-skill-taxonomy-and-the-implication-graph.md)). Declaring two or more FAILs (`repo-structure`, bedrock — not overridable). Implied family members (`ki-website-cloudflare` under website, `ki-kb-streams` under kb) are not distinct structures and do not count. Declaring **zero** WARNs (`structure`, overridable — see the table above): silence usually means nobody declared it, not that none applies, so a genuinely structureless repo says so explicitly via `structure = false`.
 
 ## Applying it
 
@@ -189,7 +189,7 @@ all=(ki-arcadia-principal ki-agentic-harness ki-website mcp-claude-housekeeping 
 public=(mcp-claude-housekeeping mcp-git-audit mcp-gsuite mcp-kb-fs mcp-ki-kb-notion-mirror mcp-m365)
 
 # Layer 1 — each repo declares its config in .ki-config.toml (committed via PR like any file).
-#   Native conform scaffolds/repairs [ki-repo] + [ki-authoring] only.
+#   Native conform scaffolds/repairs ["knowledgeislands/ki-agentic-harness:ki-repo"] + ["knowledgeislands/ki-agentic-harness:ki-authoring"] only.
 #   It resolves the verified installed collection; it never vendors self-checks.
 # Visibility is verified (declared vs live), not set here; change actual visibility deliberately:
 #   gh repo edit knowledgeislands/<name> --visibility public|private --accept-visibility-change-consequences

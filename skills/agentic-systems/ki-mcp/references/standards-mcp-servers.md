@@ -4,7 +4,7 @@ The canonical shape shared by every stdio MCP server in the `knowledgeislands/` 
 
 ## Applicability
 
-The standard applies when a repository either declares `[ki-mcp]` in `.ki-config.toml` or carries the structural marker `src/mcp-server/`. Neither signal means the standard is not applicable and the hosted audit reports one `NA`; either signal activates the complete audit. A declaration with missing structure remains an applicable, failing MCP repository, and MCP structure without a declaration remains applicable and is audited for the missing marker.
+The standard applies when a repository either declares `["knowledgeislands/ki-agentic-harness:ki-mcp"]` in `.ki-config.toml` or carries the structural marker `src/mcp-server/`. Neither signal means the standard is not applicable and the hosted audit reports one `NA`; either signal activates the complete audit. A declaration with missing structure remains an applicable, failing MCP repository, and MCP structure without a declaration remains applicable and is audited for the missing marker.
 
 ## Contents
 

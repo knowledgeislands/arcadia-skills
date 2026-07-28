@@ -72,6 +72,6 @@ export const scenarios: Scenario[] = [
       { name: 'inline double-quoted array', re: /\[\s*"mcp"\s*,\s*"bun"\s*\]/ }
     ],
     rubric:
-      'House TOML style: keys are lowercase (multi-word in snake_case); strings are double-quoted; short arrays use the inline ["a", "b"] form; one table per skill, named for the skill in lowercase ([ki-repo]). A correct rewrite uses [ki-repo], `visibility = "private"`, and an inline double-quoted array `["mcp", "bun"]`. Score on those house-specific reformatting moves, not on whether prose was added.'
+      'House TOML style: keys are lowercase (multi-word in snake_case); strings are double-quoted; short arrays use the inline ["a", "b"] form; one table per skill, named for the skill in lowercase (["knowledgeislands/ki-agentic-harness:ki-repo"]). A correct rewrite uses ["knowledgeislands/ki-agentic-harness:ki-repo"], `visibility = "private"`, and an inline double-quoted array `["mcp", "bun"]`. Score on those house-specific reformatting moves, not on whether prose was added.'
   }
 ]

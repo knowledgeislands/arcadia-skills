@@ -2,6 +2,8 @@ import { existsSync, lstatSync, readdirSync, readFileSync } from 'node:fs'
 import { join, relative, resolve, sep } from 'node:path'
 import type { RubricContextOptions, RubricPublicationContext, RubricSession } from '../../shared/rubric.ts'
 
+const CONFIG_TABLE = 'knowledgeislands/ki-agentic-harness:ki-plugins'
+
 export type JsonDocument = {
   raw: string
   value: Record<string, unknown> | null
@@ -81,7 +83,7 @@ export const createPluginsSession = ({ repository, publication }: RubricContextO
   } catch {
     malformedConfig = true
   }
-  const configTable = table(config?.['ki-plugins'])
+  const configTable = table(config?.[CONFIG_TABLE])
   const marketplaceFile = '.claude-plugin/marketplace.json'
   const marketplacePath = at('.claude-plugin', 'marketplace.json')
   const marketplace = jsonDocument(read('.claude-plugin', 'marketplace.json'))

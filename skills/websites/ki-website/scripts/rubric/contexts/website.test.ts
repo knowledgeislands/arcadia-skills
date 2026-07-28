@@ -74,7 +74,7 @@ test('safe marker and ignore repairs are item-owned, coalesced, and idempotent',
   const proposal = session.proposal()
   expect(proposal.writes).toHaveLength(2)
   expect(proposal.writes[0]).toMatchObject({ path: '.ki-config.toml', create: true })
-  expect(proposal.writes[0]?.content).toContain('[ki-website]\n')
+  expect(proposal.writes[0]?.content).toContain('["knowledgeislands/ki-agentic-harness:ki-website"]\n')
   expect(proposal.writes[1]).toEqual({ path: '.gitignore', content: 'site/dist\n', create: true })
   expect(session.proposal()).toEqual(proposal)
   expect(existsSync(join(repository, '.ki-config.toml'))).toBe(false)
@@ -83,7 +83,7 @@ test('safe marker and ignore repairs are item-owned, coalesced, and idempotent',
 
 test('existing physical files are preserved around bounded repairs', () => {
   const repository = fixture()
-  writeFileSync(join(repository, '.ki-config.toml'), '[ki-repo]\n')
+  writeFileSync(join(repository, '.ki-config.toml'), '["knowledgeislands/ki-agentic-harness:ki-repo"]\n')
   writeFileSync(join(repository, '.gitignore'), '# generated\n/dist/\n')
   const session = createWebsiteSession(options(repository, 'conform'))
   const { context } = rootContext(session)
@@ -95,11 +95,11 @@ test('existing physical files are preserved around bounded repairs', () => {
     {
       path: '.ki-config.toml',
       content:
-        '[ki-repo]\n\n# ki-website — opt-in marker: presence of this table opts the repo into the\n# Eleventy + Tailwind site-build standard. It takes no per-repo keys today.\n[ki-website]\n'
+        '["knowledgeislands/ki-agentic-harness:ki-repo"]\n\n# ki-website — opt-in marker: presence of this table opts the repo into the\n# Eleventy + Tailwind site-build standard. It takes no per-repo keys today.\n["knowledgeislands/ki-agentic-harness:ki-website"]\n'
     },
     { path: '.gitignore', content: '# generated\n/site/dist/\n' }
   ])
-  expect(readFileSync(join(repository, '.ki-config.toml'), 'utf8')).toBe('[ki-repo]\n')
+  expect(readFileSync(join(repository, '.ki-config.toml'), 'utf8')).toBe('["knowledgeislands/ki-agentic-harness:ki-repo"]\n')
   expect(readFileSync(join(repository, '.gitignore'), 'utf8')).toBe('# generated\n/dist/\n')
 })
 
@@ -108,7 +108,7 @@ test('symlinked proposal targets are never traversed or replaced', () => {
   const outside = temporaryDirectory('ki-website-outside-')
   const config = join(outside, 'config.toml')
   const ignore = join(outside, 'ignore')
-  writeFileSync(config, '[ki-repo]\n')
+  writeFileSync(config, '["knowledgeislands/ki-agentic-harness:ki-repo"]\n')
   writeFileSync(ignore, '/dist/\n')
   symlinkSync(config, join(repository, '.ki-config.toml'))
   symlinkSync(ignore, join(repository, '.gitignore'))
@@ -122,7 +122,7 @@ test('symlinked proposal targets are never traversed or replaced', () => {
   expect(context.addOptIn).toBeUndefined()
   expect(context.addDistIgnore).toBeUndefined()
   expect(session.proposal()).toEqual({ writes: [] })
-  expect(readFileSync(config, 'utf8')).toBe('[ki-repo]\n')
+  expect(readFileSync(config, 'utf8')).toBe('["knowledgeislands/ki-agentic-harness:ki-repo"]\n')
   expect(readFileSync(ignore, 'utf8')).toBe('/dist/\n')
 })
 
