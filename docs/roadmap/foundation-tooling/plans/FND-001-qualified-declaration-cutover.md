@@ -42,6 +42,14 @@ CLI-006 makes a repository declaration a quoted `<harness-id>:<skill-name>` TOML
 4. `bun run test`, `bunx tsc --noEmit`, relevant direct skill audits, and `ki repo audit --skill ki-roadmap --repo .` pass.
 5. `tools-ki` passes `ki repo audit --repo .` once its separately confirmed GitHub settings and pushed local evidence are available.
 
+## Execution record
+
+- Completed the inventory across the tracked harness, supporting evaluation and hook fixtures, standards, generated publications, and decision/reference material; no bare repository-table header remains.
+- Settled the harness-local pattern as a quoted `knowledgeislands/ki-agentic-harness:<skill>` TOML root, with quoted nested tables such as `["knowledgeislands/ki-agentic-harness:ki-kb".zones]`; skill dependency metadata remains name-based because it is not repository configuration.
+- Migrated the remaining configuration readers and conformers for `ki-plugins`, `ki-kb`, `ki-kb-streams`, `ki-kb-live-artifacts`, `ki-mcp`, `ki-homebrew-tap`, `ki-website`, `ki-website-cloudflare`, and `ki-specifications`, with their focused tests and generated rubric publications.
+- Corrected `ki-tools` to emit and validate the qualified marker, invoke the physical primary executable with a bounded `--version` command, and recognise either `tests/` or `src/tests/` for container evidence while preserving shell-specific Bats requirements.
+- Verified with `bun run test` (212 passing), `bunx tsc --noEmit`, `bunx biome check .`, all generated rubric publications, `ki repo audit --skill ki-skills --repo .`, `ki repo audit --skill ki-roadmap --repo .`, and the full `ki repo audit --repo .` (no FAIL or WARN findings).
+
 ## Dependencies / blocks
 
 This work was adopted from `knowledgeislands/tools-ki` CLI-006. It blocks CLI-006 acceptance and release coordination, but has no local plan dependency and does not block unrelated harness governance work.
