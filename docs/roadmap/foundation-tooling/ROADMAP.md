@@ -12,12 +12,6 @@ Actively broken, or blocking the `Next` horizon: takes priority over everything 
 
 Scoped and ready to start — the immediate queue, picked up before anything in **Soon** or **Future**.
 
-### Verify GitHub CI across the repository fleet
-
-After the released CLI and canonical harness are available through the normal installation path, inventory every active Knowledge Islands repository's GitHub Actions workflows and prove that each works in a clean hosted runner. Ensure CI installs the verified released `ki`, detects and rejects a stale shadow executable earlier on `PATH`, establishes the declared harness inventory non-interactively, and runs the repository's declared audit, test, build, and release-adjacent gates with the required permissions, secrets, caches, and platform coverage. Fix repository-owned workflow drift in the receiving repository rather than hiding it in the harness, and keep this fleet acceptance pass independent of any one CLI or release plan. Completion requires a green default-branch workflow for every active repository, with any intentional exclusion recorded and justified.
-
-**Plan:** [FND-001](plans/FND-001-verify-github-ci-across-fleet.md)
-
 ## Soon
 
 Understood and roughly scoped but not yet started — worth doing once the **Next** queue clears, ahead of anything still speculative.
