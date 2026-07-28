@@ -12,21 +12,27 @@ Actively broken, or blocking the `Next` horizon: takes priority over everything 
 
 Scoped and ready to start — the immediate queue, picked up before anything in **Soon** or **Future**.
 
-## Soon
+### Inventory non-critical writers for bounded follow-up
 
-Understood and roughly scoped but not yet started — worth doing once the **Next** queue clears, ahead of anything still speculative.
+After the rollout-critical filesystem work closes, inventory remaining report generators and direct conformers by mutation class. Prioritise external, user-space, or destructive writers; leave ordinary local report writers alone unless the inventory identifies a concrete risk. The initial FND-019 review identifies `ki-binding-claude`'s Cowork settings writer, `ki-binding-codex`'s native CLI merge, `ki-housekeeping-claude`'s state writers, and `ki-subagents`' recursive agent-surface writer as the first candidates for dry-run, idempotence, symlink, and atomic-publication evidence. Opaque subprocess writers retain honest exclusions unless a separate isolation design is approved.
+
+**Plan:** [KI-HARNESS-FND-022](plans/KI-HARNESS-FND-022-inventory-non-critical-writers.md)
 
 ### Replace local tokenomics engine subprocesses
 
 Extract a pure evidence and findings API from tokenomics’ local audit and conform engines so its checker can invoke them without launching Bun for adjacent source modules. Preserve the engine’s direct CLI behaviour, JSONL/reporting contracts, and external Git boundary; do not couple this migration to aggregate rendering.
 
+**Plan:** [KI-HARNESS-FND-023](plans/KI-HARNESS-FND-023-replace-tokenomics-engine-subprocesses.md)
+
 ### Establish a top-level script self-description contract
 
 Define and audit a concise source-level contract for user-facing top-level skill scripts: a plain-language purpose, intended use, mutation or no-write boundary, canonical invocation, and a matching `--help` response. Inventory `govern.ts`, educators, and intentionally public named helpers separately from private modules and generated surfaces; avoid boilerplate that merely repeats a function name or causes generated drift. Decide ownership between `ki-skills` and `ki-engineering`, then add mechanical enforcement only after the script classes and accepted header shape are settled.
 
-### Inventory non-critical writers for bounded follow-up
+**Plan:** [KI-HARNESS-FND-024](plans/KI-HARNESS-FND-024-establish-script-self-description-contract.md)
 
-After the rollout-critical filesystem work closes, inventory remaining report generators and direct conformers by mutation class. Prioritise external, user-space, or destructive writers; leave ordinary local report writers alone unless the inventory identifies a concrete risk. The initial FND-019 review identifies `ki-binding-claude`'s Cowork settings writer, `ki-binding-codex`'s native CLI merge, `ki-housekeeping-claude`'s state writers, and `ki-subagents`' recursive agent-surface writer as the first candidates for dry-run, idempotence, symlink, and atomic-publication evidence. Opaque subprocess writers retain honest exclusions unless a separate isolation design is approved.
+## Soon
+
+Understood and roughly scoped but not yet started — worth doing once the **Next** queue clears, ahead of anything still speculative.
 
 ## Waiting for
 

@@ -10,13 +10,13 @@ Actively broken, or blocking the `Next` horizon: takes priority over everything 
 
 Scoped and ready to start — the immediate queue, picked up before anything in **Soon** or **Future**.
 
-## Soon
-
-Understood and roughly scoped but not yet started — worth doing once the **Next** queue clears, ahead of anything still speculative.
-
 - [Foundation Tooling: Establish a top-level script self-description contract](docs/roadmap/foundation-tooling/ROADMAP.md#establish-a-top-level-script-self-description-contract)
 - [Foundation Tooling: Inventory non-critical writers for bounded follow-up](docs/roadmap/foundation-tooling/ROADMAP.md#inventory-non-critical-writers-for-bounded-follow-up)
 - [Foundation Tooling: Replace local tokenomics engine subprocesses](docs/roadmap/foundation-tooling/ROADMAP.md#replace-local-tokenomics-engine-subprocesses)
+
+## Soon
+
+Understood and roughly scoped but not yet started — worth doing once the **Next** queue clears, ahead of anything still speculative.
 
 ## Waiting for
 
