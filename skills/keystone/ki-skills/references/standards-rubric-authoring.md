@@ -83,7 +83,7 @@ The host loads only `scripts/rubric/items/index.ts`; a governed skill does not s
 
 Private reusable implementation lives in `scripts/internal/`. Modules published through `ki-shared-modules` and local copies materialised through `ki-shared-dependencies` live in `scripts/shared/`.
 
-Every non-test TypeScript file directly under `scripts/` is a deliberate public skill command. Retain one only when its capability sits outside governed rubric execution and it has a clear purpose, useful `--help`, explicit error handling, and focused tests. Move private implementation to `scripts/internal/`, compile-time shared modules to `scripts/shared/`, and rubric behaviour to `scripts/rubric/`; remove wrappers, one-off migration helpers, and validators whose capability belongs to `ki` or to the rubric host.
+Every non-test TypeScript file directly under `scripts/` is a deliberate public skill command. Its leading documentation comment states `Purpose:`, the canonical `Run: bun scripts/<name> --help` invocation, and `Boundary:` (no-write or exact mutation scope). Retain one only when its capability sits outside governed rubric execution and it has useful `--help`, explicit error handling, and focused tests. Move private implementation to `scripts/internal/`, compile-time shared modules to `scripts/shared/`, and rubric behaviour to `scripts/rubric/`; remove wrappers, one-off migration helpers, and validators whose capability belongs to `ki` or to the rubric host.
 
 Another skill receives a declared module at `scripts/shared/<module>.ts` and imports only that local copy. `ki-skills` uses its owned rubric module directly from the same location; it never materialises its own module back into itself.
 

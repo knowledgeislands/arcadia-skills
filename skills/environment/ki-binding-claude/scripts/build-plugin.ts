@@ -1,6 +1,9 @@
 #!/usr/bin/env bun
 /**
- * Generate the KI Cowork marketplace projection from this harness.
+ * Purpose: Generate the KI Cowork marketplace projection from this harness.
+ * Run: bun scripts/build-plugin.ts --help
+ * Boundary: Replaces only generated paths in a separate output repository after target
+ * and symlink validation; it never writes the source harness or unrelated scaffold.
  *
  * This is intentionally a public command rather than a rubric action: its target is a
  * separate repository, outside the rubric host's repository/user-home transaction.

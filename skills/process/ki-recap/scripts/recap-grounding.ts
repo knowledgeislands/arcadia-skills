@@ -1,9 +1,14 @@
 #!/usr/bin/env bun
 
 /**
- * Grounding helper for ki-recap (not a checker — no severity ladder or exit-1 contract).
+ * Purpose: Ground a ki-recap from current repository and eligible runtime transcripts.
+ * Run: bun scripts/recap-grounding.ts --help
+ * Boundary: Read-only; it reads the selected repository's Git state and eligible Claude
+ * or Codex transcript files, then emits evidence for the recap procedure to interpret.
  *
- * Usage: bun skills/process/ki-recap/scripts/recap-grounding.ts [repo-path] [--json]
+ * This is not a checker, so it has no severity ladder or exit-1 finding contract.
+ *
+ * Usage: bun scripts/recap-grounding.ts [repo-path] [--json]
  *   [--runtime detect|claude|codex] [--transcripts-dir <dir>] [--transcript <session-file>]
  *
  * The helper selects the newest eligible transcript for the resolved repository. Claude

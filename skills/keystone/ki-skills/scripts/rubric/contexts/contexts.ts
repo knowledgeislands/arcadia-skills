@@ -44,6 +44,9 @@ export type ReferencesRubricContext = {
 
 export type ScriptHelpEvidence = {
   subject: string
+  declaresPurpose: boolean
+  declaresCanonicalRun: boolean
+  declaresBoundary: boolean
   declaresShortHelp: boolean
   declaresLongHelp: boolean
   declaresUsageText: boolean

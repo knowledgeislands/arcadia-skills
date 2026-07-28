@@ -16,14 +16,16 @@ User-facing top-level scripts need a concise, source-level description of their 
 
 ## Current state
 
-Ownership between `ki-skills` and `ki-engineering` is undecided. The script classes and acceptable header shape must be established before any mechanical enforcement is added.
+`ki-skills` owns the contract because it governs public Agent Skill command surfaces; `ki-engineering` owns repository toolchain scripts, not skill capability boundaries.
+
+The public surface has three scripts: `ki-binding-claude`'s external Cowork projection, `ki-binding-codex`'s native Codex MCP renderer, and `ki-recap`'s read-only grounding helper. Each now begins with a compact `Purpose:`, canonical `Run: bun scripts/<name> --help`, and `Boundary:` header. The existing `SCRIPT-8` heuristic verifies those source-level facts alongside its `-h`, `--help`, and `Usage:` checks. This is enough mechanical enforcement for the declared contract; whether a command is still necessary, the header is truthful, and errors are useful remain judgment review.
 
 ## Steps
 
-1. Inventory public top-level scripts and separate them from private modules and generated surfaces.
-2. Propose the minimal self-description fields and decide the owning standard.
-3. Apply the accepted contract to representative scripts and assess whether mechanical enforcement is justified.
-4. Add only the agreed documentation or rubric enforcement, with focused tests where applicable.
+1. ✓ Inventory public top-level scripts and separate them from private modules and generated surfaces.
+2. ✓ Define the three-field header and assign the contract to `ki-skills`.
+3. ✓ Apply the contract to every current public script and add proportionate heuristic enforcement.
+4. ✓ Update the standards and generated rubric, with focused evidence tests.
 
 ## Files touched
 

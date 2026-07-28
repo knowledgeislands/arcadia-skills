@@ -62,7 +62,7 @@ const SCRIPT_8: RubricItem<ScriptsRubricContext> = {
   code: 'SCRIPT-8',
   title: 'top-level scripts are necessary public commands',
   description:
-    'Every supported non-test script directly under `scripts/` is a necessary public command whose capability sits outside governed rubric execution. It exits successfully for `-h` and `--help`, prints useful usage, handles expected errors, and has focused tests. Private implementation belongs under `scripts/internal/`; published or materialised compile-time modules belong under `scripts/shared/`; rubric behaviour belongs under `scripts/rubric/`; generic execution belongs to `ki`.',
+    'Every supported non-test script directly under `scripts/` is a necessary public command whose leading comment states its `Purpose:`, canonical `Run: bun scripts/<name> --help`, and `Boundary:`. It exits successfully for `-h` and `--help`, prints useful usage, handles expected errors, and has focused tests. Private implementation belongs under `scripts/internal/`; published or materialised compile-time modules belong under `scripts/shared/`; rubric behaviour belongs under `scripts/rubric/`; generic execution belongs to `ki`.',
   sources: ['AS', 'KI'],
   mechanical: {
     level: 'FAIL',
@@ -73,22 +73,28 @@ const SCRIPT_8: RubricItem<ScriptsRubricContext> = {
         if (helpEvidence.length === 0) return [{ status: 'NOT_APPLICABLE', message: 'the skill has no top-level scripts' }]
         const violations = helpEvidence
           .filter(
-            ({ declaresShortHelp, declaresLongHelp, declaresUsageText }) => !declaresShortHelp || !declaresLongHelp || !declaresUsageText
+            ({ declaresPurpose, declaresCanonicalRun, declaresBoundary, declaresShortHelp, declaresLongHelp, declaresUsageText }) =>
+              !declaresPurpose ||
+              !declaresCanonicalRun ||
+              !declaresBoundary ||
+              !declaresShortHelp ||
+              !declaresLongHelp ||
+              !declaresUsageText
           )
           .map(({ subject }) => ({
             status: 'VIOLATION' as const,
-            message: 'source must declare `-h`, `--help`, and useful `Usage:` text',
+            message: 'source must declare `Purpose:`, canonical `Run:`, `Boundary:`, `-h`, `--help`, and useful `Usage:` text',
             subject
           }))
         return violations.length > 0
           ? [violations[0] as (typeof violations)[number], ...violations.slice(1)]
-          : [{ status: 'PASS', message: 'top-level scripts expose command help' }]
+          : [{ status: 'PASS', message: 'top-level scripts describe their public command boundary and expose help' }]
       }
     }
   },
   judgment: {
     prompt:
-      'Is each top-level script still a necessary, tested public command at the correct ownership boundary, with useful help and expected-error handling?'
+      'Is each top-level script still a necessary, tested public command at the correct ownership boundary, with a truthful header, useful help, and expected-error handling?'
   }
 }
 

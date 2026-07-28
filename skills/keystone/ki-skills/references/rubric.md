@@ -176,8 +176,8 @@ The quality and autonomy of executable skill support.
   - _Review prompt:_ Do batch or destructive operations plan and validate before execution?
 - **SCRIPT-7 [J] — target-repository scripts are copied** — Scripts installed into a target repo's `scripts/` directory are **copies**, not symlinks or out-of-repo references — the target repo must be autonomous. (BP)
   - _Review prompt:_ Are target-repository scripts copied rather than symlinked or referenced outside the repository?
-- **SCRIPT-8 [M-heuristic + J] — top-level scripts are necessary public commands** — Every supported non-test script directly under `scripts/` is a necessary public command whose capability sits outside governed rubric execution. It exits successfully for `-h` and `--help`, prints useful usage, handles expected errors, and has focused tests. Private implementation belongs under `scripts/internal/`; published or materialised compile-time modules belong under `scripts/shared/`; rubric behaviour belongs under `scripts/rubric/`; generic execution belongs to `ki`. (AS, KI)
-  - _Review prompt:_ Is each top-level script still a necessary, tested public command at the correct ownership boundary, with useful help and expected-error handling?
+- **SCRIPT-8 [M-heuristic + J] — top-level scripts are necessary public commands** — Every supported non-test script directly under `scripts/` is a necessary public command whose leading comment states its `Purpose:`, canonical `Run: bun scripts/<name> --help`, and `Boundary:`. It exits successfully for `-h` and `--help`, prints useful usage, handles expected errors, and has focused tests. Private implementation belongs under `scripts/internal/`; published or materialised compile-time modules belong under `scripts/shared/`; rubric behaviour belongs under `scripts/rubric/`; generic execution belongs to `ki`. (AS, KI)
+  - _Review prompt:_ Is each top-level script still a necessary, tested public command at the correct ownership boundary, with a truthful header, useful help, and expected-error handling?
 
 ## KI-CHECKER — Knowledge Islands rubric contract
 

@@ -1,6 +1,9 @@
 #!/usr/bin/env bun
 /**
- * Merge KI-governed MCP servers into Codex CLI configuration.
+ * Purpose: Merge KI-governed MCP servers into Codex CLI configuration.
+ * Run: bun scripts/render-codex.ts --help
+ * Boundary: --check is read-only; writes are delegated to the native Codex CLI so
+ * non-KI configuration remains under that CLI's ownership.
  *
  * This remains a public command because Codex's native writer is the safe merge boundary
  * for a live config that also contains non-KI servers; it is not a rubric-host file draft.
