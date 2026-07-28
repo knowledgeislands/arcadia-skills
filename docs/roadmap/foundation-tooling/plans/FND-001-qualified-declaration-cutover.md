@@ -1,7 +1,7 @@
 ---
 id: 'FND-001'
 title: 'Complete qualified declaration cutover'
-status: acceptance
+status: done
 roadmap: foundation-tooling/complete-qualified-repository-declaration-migration
 blocks: —
 blocked-by: —
@@ -78,3 +78,7 @@ The installed `ki 0.2.6` binary predates the verified tools-ki source at `0.2.11
 ### Mini recap
 
 No new durable learning route is proposed. The root portfolio drift was repaired through the existing `ki-roadmap` CONFORM contract.
+
+## Done
+
+Completed the qualified repository-declaration cutover across the harness and verified it against current tools-ki source. The only residual concern is the separately owned release update from installed `ki 0.2.6` to source `0.2.11`.
