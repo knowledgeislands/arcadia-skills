@@ -1,11 +1,11 @@
 ---
 id: 'FND-001'
 title: 'Complete qualified declaration cutover'
-status: ready
+status: in-progress
 roadmap: foundation-tooling/complete-qualified-repository-declaration-migration
 blocks: —
 blocked-by: —
-baseline-ref: —
+baseline-ref: d9613dac558aa8a466d1a27cb16e5eb2c7f0087f
 transferred-from: 'knowledgeislands/tools-ki:CLI-006'
 ---
 
