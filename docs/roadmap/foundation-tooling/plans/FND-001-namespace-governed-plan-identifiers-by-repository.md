@@ -1,11 +1,11 @@
 ---
 id: 'FND-001'
 title: Namespace governed plan identifiers by repository
-status: ready
+status: in-progress
 roadmap: foundation-tooling/namespace-governed-plan-identifiers-by-repository
 blocks: —
 blocked-by: —
-baseline-ref: —
+baseline-ref: 7b7f599353bc6ca6a60b266d4882df31a468b721
 ---
 
 # FND-001: Namespace governed plan identifiers by repository
