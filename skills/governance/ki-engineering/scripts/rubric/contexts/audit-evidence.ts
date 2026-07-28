@@ -1080,28 +1080,29 @@ export const collectAuditEvidence = (repo: string): readonly EngineeringEvidence
     add('NOT_APPLICABLE', 'ENV-1', 'no env capability — not applicable', STD)
   }
 
-  // ── core: .ki-config.toml [ki-engineering] table ────────────────
+  // ── core: .ki-config.toml qualified ki-engineering table ────────
   const ki = read('.ki-config.toml')
+  const engineeringHeader = '["knowledgeislands/ki-agentic-harness:ki-engineering"]'
   if (!ki) add('WARN', 'TOML-1', '.ki-config.toml missing (ki-repo owns the contract)', STD, '.ki-config.toml')
-  else if (!/^\[ki-engineering\]/m.test(ki)) {
+  else if (!/^\["knowledgeislands\/ki-agentic-harness:ki-engineering"\]/m.test(ki)) {
     add(
       'WARN',
       'TOML-1',
-      'no [ki-engineering] table — add it to mark this repo as governed by the engineering standard',
+      `no ${engineeringHeader} table — add it to mark this repo as governed by the engineering standard`,
       STD,
       '.ki-config.toml'
     )
   } else {
-    add('PASS', 'TOML-1', '[ki-engineering] table present', STD, '.ki-config.toml')
+    add('PASS', 'TOML-1', `${engineeringHeader} table present`, STD, '.ki-config.toml')
     // validate-down: the table is a conformance marker only — it carries no keys. Repo
     // shape (flat vs monorepo) is read from package.json `workspaces` (§0), a standard Bun
     // convention, not a bespoke key here. Any key directly under the table is drift.
-    const body = ki.split(/^\[ki-engineering\]/m)[1]?.split(/^\[/m)[0] ?? ''
+    const body = ki.split(/^\["knowledgeislands\/ki-agentic-harness:ki-engineering"\]/m)[1]?.split(/^\[/m)[0] ?? ''
     const KNOWN = new Set<string>() // no keys defined; only a [ki-engineering.checks] sub-table is allowed
     for (const m of body.matchAll(/^\s*([A-Za-z0-9_-]+)\s*=/gm)) {
       KNOWN.has(m[1])
         ? add('PASS', 'TOML-2', `known key ${m[1]}`, STD, '.ki-config.toml')
-        : add('WARN', 'TOML-2', `unknown key under [ki-engineering]: ${m[1]} (validate-down)`, STD, '.ki-config.toml')
+        : add('WARN', 'TOML-2', `unknown key under ${engineeringHeader}: ${m[1]} (validate-down)`, STD, '.ki-config.toml')
     }
   }
 

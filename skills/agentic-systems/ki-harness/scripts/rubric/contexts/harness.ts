@@ -128,7 +128,9 @@ const inspectSkills = (
   }
 }
 
-const hasTomlTable = (toml: string, table: string): boolean => new RegExp(`^\\[${table.replace(/-/g, '\\-')}\\]`, 'm').test(toml)
+const HARNESS_ID = 'knowledgeislands/ki-agentic-harness'
+const tableIdentity = (name: string): string => `${HARNESS_ID}:${name}`
+const hasTomlTable = (toml: string, name: string): boolean => new RegExp(`^\\["${tableIdentity(name)}"\\]`, 'm').test(toml)
 
 export const createHarnessSession = ({ mode, repository, publication }: RubricContextOptions): RubricSession<HarnessRubricContext> => {
   const root = resolve(repository)
@@ -203,7 +205,7 @@ export const createHarnessSession = ({ mode, repository, publication }: RubricCo
       if (markerRequested && configContent !== null)
         writes.push({
           path: '.ki-config.toml',
-          content: `${configContent.replace(/\n*$/, '\n')}\n[ki-harness]\n`
+          content: `${configContent.replace(/\n*$/, '\n')}\n["${tableIdentity('ki-harness')}"]\n`
         })
       return { writes }
     }

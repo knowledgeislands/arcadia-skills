@@ -206,22 +206,24 @@ function treePaths(nwo: string, branch: string): Set<string> {
 // `.ki-config.toml` is a shared per-repo file; each skill reads its own [table].
 // This skill owns the [ki-repo] table. The default block
 // (written by `--educate`) is the authoritative key list — authoring a repo emits it.
-const KI_SECTION = 'ki-repo'
-const KI_REPO_DEFAULT = `[${KI_SECTION}]
+const HARNESS_ID = 'knowledgeislands/ki-agentic-harness'
+const skillTable = (name: string): string => `${HARNESS_ID}:${name}`
+const KI_SECTION = skillTable('ki-repo')
+const KI_REPO_DEFAULT = `["${KI_SECTION}"]
 visibility = "private"   # "public" | "private" — must match the repo's actual GitHub visibility
 license = "MIT"          # SPDX id the LICENSE, package.json, and GitHub must match; default MIT. Use "UNLICENSED" for proprietary. Pick one at https://choosealicense.com/
 supported_runtimes = ["claude-code", "codex"] # required agent-runtime support surface
 
 # Per-repo check overrides — true = enforce, false = don't. Omit any check to take
 # the org default; a repo that fully conforms needs nothing here.
-# [${KI_SECTION}.checks]
+# ["${KI_SECTION}".checks]
 # branch-protection = true   # default off — protect \`main\` on this repo
 # wiki = false               # default on  — allow this repo's Wiki
 `
 
 const KI_AUTHORING_DEFAULT = `# The authoring standard (Markdown/TOML house style) is baseline — every KI repo is
 # governed by it. Declared explicitly, not assumed; its presence is the compliance marker.
-[ki-authoring]
+["${skillTable('ki-authoring')}"]
 `
 const KI_DEFAULT = `${KI_REPO_DEFAULT}\n${KI_AUTHORING_DEFAULT}`
 
@@ -284,65 +286,65 @@ const WRANGLER = ['wrangler.jsonc', 'wrangler.json', 'wrangler.toml']
 const ELEVENTY = ['eleventy.config.ts', 'eleventy.config.js', 'eleventy.config.cjs', 'eleventy.config.mjs']
 type Signals = { root: Set<string>; tree: Set<string>; pkg: Pkg | null }
 const COVERAGE: { skill: string; table: string; artifact: string; detect: (s: Signals) => boolean }[] = [
-  { skill: 'engineering', table: 'ki-engineering', artifact: 'package.json', detect: (s) => s.root.has('package.json') },
+  { skill: 'engineering', table: skillTable('ki-engineering'), artifact: 'package.json', detect: (s) => s.root.has('package.json') },
   {
     skill: 'kb',
-    table: 'ki-kb',
+    table: skillTable('ki-kb'),
     artifact: 'KB zones (Pillars/ + Resources/)',
     detect: (s) => s.root.has('Pillars') && s.root.has('Resources')
   },
-  { skill: 'streams', table: 'ki-kb-streams', artifact: 'Streams/ zone', detect: (s) => s.root.has('Streams') },
+  { skill: 'streams', table: skillTable('ki-kb-streams'), artifact: 'Streams/ zone', detect: (s) => s.root.has('Streams') },
   {
     skill: 'website',
-    table: 'ki-website',
+    table: skillTable('ki-website'),
     artifact: 'eleventy.config.*',
     detect: (s) => ELEVENTY.some((f) => s.root.has(f)) || [...s.tree].some((p) => ELEVENTY.some((f) => p.endsWith(`/${f}`)))
   },
   {
     skill: 'website-cloudflare',
-    table: 'ki-website-cloudflare',
+    table: skillTable('ki-website-cloudflare'),
     artifact: 'wrangler config',
     detect: (s) => WRANGLER.some((f) => s.root.has(f)) || [...s.tree].some((p) => WRANGLER.some((f) => p.endsWith(`/${f}`)))
   },
   {
     skill: 'mcp',
-    table: 'ki-mcp',
+    table: skillTable('ki-mcp'),
     artifact: '@modelcontextprotocol/sdk dependency',
     detect: (s) => pkgHasDep(s.pkg, '@modelcontextprotocol/sdk')
   },
   {
     skill: 'plugins',
-    table: 'ki-plugins',
+    table: skillTable('ki-plugins'),
     artifact: '.claude-plugin/marketplace.json',
     detect: (s) => s.tree.has('.claude-plugin/marketplace.json') || [...s.tree].some((p) => p.endsWith('/.claude-plugin/marketplace.json'))
   },
   {
     skill: 'specifications',
-    table: 'ki-specifications',
+    table: skillTable('ki-specifications'),
     artifact: 'proposals/ + specifications/ + schemas/',
     detect: (s) => s.root.has('proposals') && s.root.has('specifications') && s.root.has('schemas')
   },
   {
     skill: 'tools',
-    table: 'ki-tools',
+    table: skillTable('ki-tools'),
     artifact: 'install.sh + bin/<exe>',
     detect: (s) => s.root.has('install.sh') && [...s.tree].some((p) => /^bin\/[^/]+$/.test(p))
   },
   {
     skill: 'homebrew-tap',
-    table: 'ki-homebrew-tap',
+    table: skillTable('ki-homebrew-tap'),
     artifact: 'Formula/*.rb',
     detect: (s) => [...s.tree].some((p) => /^Formula\/[^/]+\.rb$/.test(p))
   },
   {
     skill: 'skills',
-    table: 'ki-skills',
+    table: skillTable('ki-skills'),
     artifact: 'skills/**/SKILL.md',
     detect: (s) => [...s.tree].some((p) => /^skills\/.+\/SKILL\.md$/.test(p))
   },
   {
     skill: 'subagents',
-    table: 'ki-subagents',
+    table: skillTable('ki-subagents'),
     artifact: 'subagents/**/*.md',
     detect: (s) => [...s.tree].some((p) => /^subagents\/.+\.md$/.test(p) && !/(^|\/)README\.md$/i.test(p))
   }
@@ -353,15 +355,15 @@ const COVERAGE_SKILLS = new Set(COVERAGE.map((c) => c.skill))
 // family members (ki-website-cloudflare under website, ki-kb-streams under kb) are not
 // distinct structures and are excluded from the count.
 const REPO_STRUCTURE_TABLES = [
-  'ki-harness',
-  'ki-kb',
-  'ki-website',
-  'ki-mcp',
-  'ki-plugins',
-  'ki-specifications',
-  'ki-tools',
-  'ki-homebrew-tap',
-  'ki-dotfiles-chezmoi'
+  skillTable('ki-harness'),
+  skillTable('ki-kb'),
+  skillTable('ki-website'),
+  skillTable('ki-mcp'),
+  skillTable('ki-plugins'),
+  skillTable('ki-specifications'),
+  skillTable('ki-tools'),
+  skillTable('ki-homebrew-tap'),
+  skillTable('ki-dotfiles-chezmoi')
 ]
 type MultilineDelimiter = '"""' | "'''"
 function tripleClose(line: string, delimiter: MultilineDelimiter, from: number): number {
@@ -431,7 +433,7 @@ function auditRepo(r: Repo, files: Set<string>, ki: KiConfig | null, kiText: str
   // A confirmed ki-repo declares the baseline authoring standard explicitly.
   // Native self-check resolution is a host precondition, not repository-local evidence.
   if (files.has(KI_CONFIG)) {
-    if (!declaresRootTable(kiText ?? '', 'ki-authoring'))
+    if (!declaresRootTable(kiText ?? '', skillTable('ki-authoring')))
       fail('FILES-3', `${KI_CONFIG} does not declare [ki-authoring] — the authoring standard is baseline (run --educate)`, KI_CONFIG)
   }
 
@@ -718,12 +720,12 @@ function localConfigFindings(dir: string): Finding[] {
     )
   if (unknown.length) return f
 
-  const required = new Set(['ki-tokenomics'])
+  const required = new Set([skillTable('ki-tokenomics')])
   if (parsed.runtimes.includes('claude-code')) {
-    required.add('ki-housekeeping-claude')
-    required.add('ki-tokenomics-claude')
+    required.add(skillTable('ki-housekeeping-claude'))
+    required.add(skillTable('ki-tokenomics-claude'))
   }
-  if (parsed.runtimes.includes('codex')) required.add('ki-tokenomics-codex')
+  if (parsed.runtimes.includes('codex')) required.add(skillTable('ki-tokenomics-codex'))
   const declared = new Set(parsed.rootTables)
   const missing = [...required].filter((skill) => !declared.has(skill)).sort()
   if (missing.length)

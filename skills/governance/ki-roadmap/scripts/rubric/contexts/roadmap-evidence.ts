@@ -62,7 +62,7 @@ function isKb(repo: string): boolean {
   if (!existsSync(config)) return false
   try {
     const parsed = TOML.parse(readFileSync(config, 'utf8')) as Record<string, unknown>
-    const repoTable = parsed['ki-repo']
+    const repoTable = parsed['knowledgeislands/ki-agentic-harness:ki-repo']
     return (
       parsed.repo_type === 'kb' ||
       (typeof repoTable === 'object' && repoTable !== null && (repoTable as Record<string, unknown>).repo_type === 'kb')

@@ -10,21 +10,24 @@ import type {
 } from '../../shared/rubric.ts'
 import { collectAuditFindings, declaresRootTable, type RepoAuditCollection, type RepoEvidenceFinding } from './audit.ts'
 
-const KI_REPO_DEFAULT = `[ki-repo]
+const HARNESS_ID = 'knowledgeislands/ki-agentic-harness'
+const KI_REPO_TABLE = `${HARNESS_ID}:ki-repo`
+const KI_AUTHORING_TABLE = `${HARNESS_ID}:ki-authoring`
+const KI_REPO_DEFAULT = `["${KI_REPO_TABLE}"]
 visibility = "private"   # "public" | "private" — must match the repo's actual GitHub visibility
 license = "MIT"          # SPDX id the LICENSE, package.json, and GitHub must match; default MIT. Use "UNLICENSED" for proprietary. Pick one at https://choosealicense.com/
 supported_runtimes = ["claude-code", "codex"] # required agent-runtime support surface
 
 # Per-repo check overrides — true = enforce, false = don't. Omit any check to take
 # the org default; a repo that fully conforms needs nothing here.
-# [ki-repo.checks]
+# ["${KI_REPO_TABLE}".checks]
 # branch-protection = true   # default off — protect \`main\` on this repo
 # wiki = false               # default on  — allow this repo's Wiki
 `
 
 const KI_AUTHORING_DEFAULT = `# The authoring standard (Markdown/TOML house style) is baseline — every KI repo is
 # governed by it. Declared explicitly, not assumed; its presence is the compliance marker.
-[ki-authoring]
+["${KI_AUTHORING_TABLE}"]
 `
 
 const GITIGNORE_DEFAULT = 'node_modules/\n.DS_Store\n'
@@ -360,8 +363,8 @@ export const createRepoSession = (
       const writes: ConformWrite[] = []
       if (configSource !== undefined) {
         const blocks = [
-          repoConfigurationRequested && !declaresRootTable(configSource, 'ki-repo') ? KI_REPO_DEFAULT : '',
-          authoringConfigurationRequested && !declaresRootTable(configSource, 'ki-authoring') ? KI_AUTHORING_DEFAULT : ''
+          repoConfigurationRequested && !declaresRootTable(configSource, KI_REPO_TABLE) ? KI_REPO_DEFAULT : '',
+          authoringConfigurationRequested && !declaresRootTable(configSource, KI_AUTHORING_TABLE) ? KI_AUTHORING_DEFAULT : ''
         ].filter(Boolean)
         const content = appendBlocks(configSource, blocks)
         if (content !== configSource) writes.push({ path: '.ki-config.toml', content, ...(!configExists ? { create: true } : {}) })

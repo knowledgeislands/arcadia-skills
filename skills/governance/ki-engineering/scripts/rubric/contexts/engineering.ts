@@ -11,6 +11,8 @@ import type {
 } from '../../shared/rubric.ts'
 import { collectAuditEvidence, type EngineeringEvidenceFinding } from './audit-evidence.ts'
 
+const ENGINEERING_TABLE = 'knowledgeislands/ki-agentic-harness:ki-engineering'
+
 export type EngineeringEvidence = readonly EngineeringEvidenceFinding[]
 
 export type PackageRubricContext = {
@@ -420,11 +422,11 @@ export const createEngineeringSession = (
       for (const name of scaffold) writes.push({ path: name, content: defaults[name], create: true })
       if (declareEngineering) {
         const path = join(target, '.ki-config.toml')
-        if (!existsSync(path)) writes.push({ path: '.ki-config.toml', content: '[ki-engineering]\n', create: true })
+        if (!existsSync(path)) writes.push({ path: '.ki-config.toml', content: `["${ENGINEERING_TABLE}"]\n`, create: true })
         else {
           const source = readFileSync(path, 'utf8')
-          if (!/^\[ki-engineering\]/m.test(source))
-            writes.push({ path: '.ki-config.toml', content: `${source.replace(/\n*$/, '\n\n')}[ki-engineering]\n` })
+          if (!new RegExp(`^\\["${ENGINEERING_TABLE}"\\]`, 'm').test(source))
+            writes.push({ path: '.ki-config.toml', content: `${source.replace(/\n*$/, '\n\n')}["${ENGINEERING_TABLE}"]\n` })
         }
       }
       return {

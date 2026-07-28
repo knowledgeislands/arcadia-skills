@@ -1,36 +1,36 @@
-[ki-repo]
+["knowledgeislands/ki-agentic-harness:ki-repo"]
 visibility = "public"
 license = "MIT"
 supported_runtimes = ["claude-code", "codex"]
 
-[ki-authoring]
+["knowledgeislands/ki-agentic-harness:ki-authoring"]
 
-[ki-engineering]
+["knowledgeislands/ki-agentic-harness:ki-engineering"]
 
-[ki-harness]
+["knowledgeislands/ki-agentic-harness:ki-harness"]
 
-[ki-skills]
+["knowledgeislands/ki-agentic-harness:ki-skills"]
 
-[ki-subagents]
+["knowledgeislands/ki-agentic-harness:ki-subagents"]
 
-[ki-decision-records]
+["knowledgeislands/ki-agentic-harness:ki-decision-records"]
 
-[ki-feature-definitions]
+["knowledgeislands/ki-agentic-harness:ki-feature-definitions"]
 
-[ki-git]
+["knowledgeislands/ki-agentic-harness:ki-git"]
 
-[ki-housekeeping-claude]
+["knowledgeislands/ki-agentic-harness:ki-housekeeping-claude"]
 
-[ki-roadmap]
+["knowledgeislands/ki-agentic-harness:ki-roadmap"]
 
-[ki-tokenomics]
+["knowledgeislands/ki-agentic-harness:ki-tokenomics"]
 headroom = "recommended"
 # Cross-skill governance benefits from the higher-reasoning project default.
 preferred_model_type = "reasoning"
 
-[ki-tokenomics.budgets]
+["knowledgeislands/ki-agentic-harness:ki-tokenomics".budgets]
 mcp_servers = 20 # User-scoped; revisit if the global MCP set is pruned.
 
-[ki-tokenomics-claude]
+["knowledgeislands/ki-agentic-harness:ki-tokenomics-claude"]
 
-[ki-tokenomics-codex]
+["knowledgeislands/ki-agentic-harness:ki-tokenomics-codex"]

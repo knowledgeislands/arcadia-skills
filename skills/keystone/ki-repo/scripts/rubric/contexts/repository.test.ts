@@ -74,13 +74,13 @@ describe('ki-repo session', () => {
     const proposal = session.proposal()
     expect(proposal.writes.map((write) => write.path)).toEqual(['.ki-config.toml', '.gitignore'])
     expect(proposal.writes[0]?.create).toBe(true)
-    expect(proposal.writes[0]?.content).toContain('[ki-repo]')
-    expect(proposal.writes[0]?.content).toContain('[ki-authoring]')
+    expect(proposal.writes[0]?.content).toContain('["knowledgeislands/ki-agentic-harness:ki-repo"]')
+    expect(proposal.writes[0]?.content).toContain('["knowledgeislands/ki-agentic-harness:ki-authoring"]')
   })
 
   test('appends only a missing exact root marker and preserves the original bytes', () => {
     const root = repository()
-    const original = '# retained\n[ki-repo.checks]\nwiki = false\n'
+    const original = '# retained\n["knowledgeislands/ki-agentic-harness:ki-repo".checks]\nwiki = false\n'
     writeFileSync(join(root, '.ki-config.toml'), original)
     const session = createRepoSession(options(root, 'conform'), inspect)
     runFilesConform(filesContext(session))
@@ -88,8 +88,8 @@ describe('ki-repo session', () => {
     const config = session.proposal().writes.find((write) => write.path === '.ki-config.toml')
     expect(config?.create).toBeUndefined()
     expect(config?.content.startsWith(original)).toBe(true)
-    expect(config?.content).toContain('\n[ki-repo]\n')
-    expect(config?.content).toContain('\n[ki-authoring]\n')
+    expect(config?.content).toContain('\n["knowledgeislands/ki-agentic-harness:ki-repo"]\n')
+    expect(config?.content).toContain('\n["knowledgeislands/ki-agentic-harness:ki-authoring"]\n')
   })
 
   test('audit is read-only and unsafe configuration leaves expose no write capability', () => {
@@ -161,12 +161,12 @@ describe('runtime environment coverage', () => {
   }
 
   test('requires the portable and runtime-specific environment tables', () => {
-    expect(runtimeFindings('[ki-repo]\nsupported_runtimes = ["claude-code", "codex"]\n')).toEqual([
+    expect(runtimeFindings('["knowledgeislands/ki-agentic-harness:ki-repo"]\nsupported_runtimes = ["claude-code", "codex"]\n')).toEqual([
       {
         level: 'FAIL',
         code: 'RUNTIMES-2',
         message:
-          'supported runtime coverage requires missing table(s): [ki-housekeeping-claude], [ki-tokenomics], [ki-tokenomics-claude], [ki-tokenomics-codex]',
+          'supported runtime coverage requires missing table(s): [knowledgeislands/ki-agentic-harness:ki-housekeeping-claude], [knowledgeislands/ki-agentic-harness:ki-tokenomics], [knowledgeislands/ki-agentic-harness:ki-tokenomics-claude], [knowledgeislands/ki-agentic-harness:ki-tokenomics-codex]',
         subject: expect.any(String)
       }
     ])
@@ -174,16 +174,16 @@ describe('runtime environment coverage', () => {
 
   test('accepts the complete environment matrix for both runtimes', () => {
     expect(
-      runtimeFindings(`[ki-repo]
+      runtimeFindings(`["knowledgeislands/ki-agentic-harness:ki-repo"]
 supported_runtimes = ["claude-code", "codex"]
 
-[ki-tokenomics]
+["knowledgeislands/ki-agentic-harness:ki-tokenomics"]
 
-[ki-housekeeping-claude]
+["knowledgeislands/ki-agentic-harness:ki-housekeeping-claude"]
 
-[ki-tokenomics-claude]
+["knowledgeislands/ki-agentic-harness:ki-tokenomics-claude"]
 
-[ki-tokenomics-codex]
+["knowledgeislands/ki-agentic-harness:ki-tokenomics-codex"]
 `)
     ).toEqual([])
   })
