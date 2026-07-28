@@ -1,7 +1,7 @@
 ---
 id: 'FND-001'
 title: 'Complete qualified declaration cutover'
-status: open
+status: ready
 roadmap: foundation-tooling/complete-qualified-repository-declaration-migration
 blocks: —
 blocked-by: —
