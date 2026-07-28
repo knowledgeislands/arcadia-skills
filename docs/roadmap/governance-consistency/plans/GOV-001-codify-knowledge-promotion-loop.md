@@ -29,6 +29,7 @@ Useful lessons currently have several possible destinations: ephemeral session c
 - `skills/governance/ki-authoring/references/standards-knowledge-promotion.md`
 - `skills/process/ki-recap/SKILL.md`
 - `skills/process/ki-recap/references/standards-session-recap.md`
+- `docs/guides/user/overview.md`
 - This plan and its canonical roadmap reference.
 
 ## Verify

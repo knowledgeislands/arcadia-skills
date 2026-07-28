@@ -35,7 +35,7 @@ The five are meant to be co-installed and versioned together: the skills carry t
 
 The skills are designed to build on each other rather than repeat each other. Where two standards overlap, the more specific skill calls the more general one's checker and adds only its own extra rules on top — so a rule is written down once and reused, never copied and left to drift out of sync. Two general **foundation skills** sit underneath the rest this way: one for how we write (Markdown, config), one for how we build (the toolchain). Every more specialised skill leans on those two instead of restating them.
 
-When a repository genuinely needs something different from the shared standard, it says so in its own `.ki-config.toml` and its own `CLAUDE.md` — a local exception the skills read and respect. It never copies a skill and edits the copy. That keeps one authoritative version of each standard, with per-repository differences recorded as data rather than as diverging forks.
+When a repository genuinely needs something different from the shared standard, it records the variation in its `.ki-config.toml` or portable `AGENTS.md`; a runtime file such as `CLAUDE.md` is only for detail that genuinely belongs to that runtime. It never copies a skill and edits the copy. That keeps one authoritative version of each standard, with per-repository differences recorded as data rather than as diverging forks.
 
 ## Repository and user environment
 
