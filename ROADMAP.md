@@ -6,6 +6,8 @@ This portfolio view is generated from the canonical theme roadmaps under `docs/r
 
 Actively broken, or blocking the `Next` horizon: takes priority over everything else and must clear before `Next` work proceeds. Empty means nothing is on fire.
 
+- [Foundation Tooling: Complete qualified repository declaration migration](docs/roadmap/foundation-tooling/ROADMAP.md#complete-qualified-repository-declaration-migration)
+
 ## Next
 
 Scoped and ready to start — the immediate queue, picked up before anything in **Soon** or **Future**.
