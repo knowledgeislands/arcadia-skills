@@ -12,6 +12,10 @@ Actively broken, or blocking the `Next` horizon: takes priority over everything 
 
 Scoped and ready to start — the immediate queue, picked up before anything in **Soon** or **Future**.
 
+### Codify convention placement and the knowledge-promotion loop
+
+Define one runtime-neutral routing reference and manual promotion loop that prevents useful knowledge becoming trapped in session or project memory: ephemeral agent memory → project guidance or an on-demand guide → shared governance or reference material → a reusable skill. For each rung, state what belongs there, the evidence that triggers promotion, the durable destination, and the reconciliation step that removes or redirects the lower-layer duplicate. Keep `AGENTS.md` as the portable orientation, reserve runtime files such as `CLAUDE.md` for runtime-specific imports and guidance, and route genuinely personal cross-project conventions to synchronized user configuration. Do not add automatic transcript mining or a new guide area by default.
+
 ## Soon
 
 Understood and roughly scoped but not yet started — worth doing once the **Next** queue clears, ahead of anything still speculative.
@@ -21,10 +25,6 @@ Understood and roughly scoped but not yet started — worth doing once the **Nex
 Align the two open-work models without treating them as identical. Add a Blocking focus to Knowledge Base Streams; represent "waiting for" as explicit dependency detail within Background, from which work promotes to Active when ready; align Dormant with a new Parked roadmap horizon; and remove Settled so completed history lives in canonical documentation and git rather than either open-work structure. Preserve plan status as a separate execution lifecycle.
 
 Make the shared process layer structure-aware: `ki-recap` must route outstanding work to the local structure, `ki-next` must select and promote work in either model, and the plan/execution lifecycle must operate over either a non-KB plan or a KB Stream proposal checklist. Repository-type detection should dispatch to `ki-roadmap` or `ki-kb-streams` as distinct governance adapters rather than forcing both repositories into one file shape. The result should make cross-repository handoffs and everyday lifecycle commands consistent while retaining the distinct Stream and roadmap forms. This is a lifecycle-model alignment, not an enactment of one repository structure inside the other. Origin: the four-repository ecosystem alignment rollout.
-
-### Codify convention placement and the knowledge-promotion loop
-
-Define one runtime-neutral routing reference and manual promotion loop that prevents useful knowledge becoming trapped in session or project memory: ephemeral agent memory → project guidance or an on-demand guide → shared governance or reference material → a reusable skill. For each rung, state what belongs there, the evidence that triggers promotion, the durable destination, and the reconciliation step that removes or redirects the lower-layer duplicate. Keep `AGENTS.md` as the portable orientation, reserve runtime files such as `CLAUDE.md` for runtime-specific imports and guidance, and route genuinely personal cross-project conventions to synchronized user configuration. Do not add automatic transcript mining or a new guide area by default.
 
 ### Review the skill dependency graph and implementation quality _(candidate)_
 
