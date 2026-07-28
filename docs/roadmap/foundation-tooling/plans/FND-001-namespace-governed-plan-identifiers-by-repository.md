@@ -1,7 +1,7 @@
 ---
 id: 'FND-001'
 title: Namespace governed plan identifiers by repository
-status: open
+status: ready
 roadmap: foundation-tooling/namespace-governed-plan-identifiers-by-repository
 blocks: —
 blocked-by: —
