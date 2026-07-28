@@ -12,6 +12,12 @@ Actively broken, or blocking the `Next` horizon: takes priority over everything 
 
 Scoped and ready to start — the immediate queue, picked up before anything in **Soon** or **Future**.
 
+### Namespace governed plan identifiers by repository
+
+Replace the theme-only plan identifier with a repository-qualified identifier so cross-repository plans and dependencies remain unambiguous. `ki-roadmap` will own a configurable `repo_code`, derive and conform a safe default when it is absent, and mechanically migrate canonical plan records without retaining the former identifier grammar.
+
+**Plan:** [FND-001](plans/FND-001-namespace-governed-plan-identifiers-by-repository.md)
+
 ## Soon
 
 Understood and roughly scoped but not yet started — worth doing once the **Next** queue clears, ahead of anything still speculative.
