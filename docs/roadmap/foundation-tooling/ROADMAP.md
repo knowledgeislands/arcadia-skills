@@ -46,6 +46,14 @@ Intentionally paused work with no current attention. Revisit only when its prior
 
 Speculative or not yet scoped — items marked _(candidate)_ need a scoping pass (or a decision to drop them) before they're actionable.
 
+### Harden external Cowork plugin publication _(candidate)_
+
+Make `ki-binding-claude`'s `build-plugin` publication inspectable before mutation and recoverable across replacement of generated output. Preserve its existing output-root and symlink guards and unrelated scaffold; assess a dry-run and same-directory staged replacement only where compatible with the separate target repository.
+
+### Make Codex MCP rendering recoverable _(candidate)_
+
+Improve `ki-binding-codex`'s native `codex mcp remove` / `add` sequence around partial updates. Preserve its no-write `--check` mode and the Codex CLI's ownership of the live configuration; determine whether preflight, snapshot, or reconciliation can provide recovery without claiming native operations are transactional.
+
 ### Codify context-aware delegation policy _(candidate)_
 
 Extend `ki-delegate`'s judgment guidance with an explicit dispatch decision: whether delegated work needs the originating conversation context, whether it needs frontier-level reasoning, and therefore whether to retain it in the main thread, dispatch it with a context fork, or dispatch a fresh lower-cost worker. Require the delegation brief to carry every durable constraint and decision needed by a fresh worker; context forks are a hygiene tool, not a substitute for an adequate brief. Map this policy to the runtime-specific delegation controls only after confirming their portable semantics.

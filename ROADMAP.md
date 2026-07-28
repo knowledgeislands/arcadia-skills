@@ -37,6 +37,8 @@ Speculative or not yet scoped — items marked _(candidate)_ need a scoping pass
 
 - [Foundation Tooling: Codify context-aware delegation policy _(candidate)_](docs/roadmap/foundation-tooling/ROADMAP.md#codify-context-aware-delegation-policy-candidate)
 - [Foundation Tooling: Document per-skill `.ki-config.toml` ownership _(candidate)_](docs/roadmap/foundation-tooling/ROADMAP.md#document-per-skill-ki-configtoml-ownership-candidate)
+- [Foundation Tooling: Harden external Cowork plugin publication _(candidate)_](docs/roadmap/foundation-tooling/ROADMAP.md#harden-external-cowork-plugin-publication-candidate)
+- [Foundation Tooling: Make Codex MCP rendering recoverable _(candidate)_](docs/roadmap/foundation-tooling/ROADMAP.md#make-codex-mcp-rendering-recoverable-candidate)
 - [Foundation Tooling: Review the Cloudflare agent-setup prompt for the Cloudflare skill _(candidate)_](docs/roadmap/foundation-tooling/ROADMAP.md#review-the-cloudflare-agent-setup-prompt-for-the-cloudflare-skill-candidate)
 - [Foundation Tooling: Standardise Prettier and Biome line width across repositories _(candidate)_](docs/roadmap/foundation-tooling/ROADMAP.md#standardise-prettier-and-biome-line-width-across-repositories-candidate)
 - [Governance Consistency: Add engineering change value profiles to the verb map _(candidate)_](docs/roadmap/governance-consistency/ROADMAP.md#add-engineering-change-value-profiles-to-the-verb-map-candidate)

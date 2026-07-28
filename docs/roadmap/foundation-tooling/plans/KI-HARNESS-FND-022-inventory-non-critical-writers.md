@@ -16,13 +16,20 @@ The rollout-critical filesystem work is complete, but several remaining writers 
 
 ## Current state
 
-The first review targets are the Cowork settings writer, native CLI merge, Claude housekeeping state writers, and recursive subagent-surface writer. Opaque subprocesses retain their existing exclusions pending a separate isolation design.
+The review found two host-mediated conformers and two direct external writers.
+
+- `ki-housekeeping-claude` proposes only changed drafts under the selected repository's Claude memory directory; the host owns publication, and its focused tests refuse symlinked Claude roots, memory directories, and memory indexes.
+- `ki-subagents` proposes only changed repository-relative agent drafts; the host owns publication, recursive discovery refuses unsafe paths, and focused tests refuse symlinked agent files without traversal.
+- `ki-binding-claude` regenerates a separate Cowork marketplace projection after target and symlink guards, but deletes generated paths before recreating them. It has no inspection-only mode or staged replacement.
+- `ki-binding-codex` has a no-write `--check` mode, but its native `codex mcp remove` / `add` sequence can leave a partial result if a later native command fails.
+
+The two direct writers have bounded candidate follow-ups on the thematic roadmap. Other opaque subprocesses retain their existing exclusions pending a separate isolation design.
 
 ## Steps
 
-1. Inventory remaining writers by mutation class, ownership boundary, and affected filesystem scope.
-2. Inspect the named high-risk writers for dry-run, idempotence, symlink, and atomic-publication evidence.
-3. Record only concrete, bounded follow-up work for writers that present material risk.
+1. ✓ Inventory remaining writers by mutation class, ownership boundary, and affected filesystem scope.
+2. ✓ Inspect the named high-risk writers for dry-run, idempotence, symlink, and atomic-publication evidence.
+3. ✓ Record only concrete, bounded follow-up work for writers that present material risk.
 
 ## Files touched
 
