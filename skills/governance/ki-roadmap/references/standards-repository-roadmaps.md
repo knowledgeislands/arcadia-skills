@@ -75,7 +75,7 @@ docs/roadmap/
   <theme>/
     ROADMAP.md             # frontmatter: code: <THEME>
     plans/                  # present while the theme has active plans or retained done records
-      <THEME>-<NNN>-<slug>.md
+      <REPO>-<THEME>-<NNN>-<slug>.md
 ```
 
 Theme names are unique lowercase kebab-case names. Every theme roadmap begins with one `code: <THEME>` YAML frontmatter field: an unquoted, uppercase semantic identifier that is stable and unique across the repository. A theme roadmap has one H1, all six horizons, and each item is a `###` heading beneath exactly one horizon. Item prose follows its heading until the next item or horizon. A locator is `<theme>/<item-slug>`; the slug is the normalised item heading. Locators must be unique.
@@ -92,7 +92,7 @@ CONFORM is narrower. It may insert a missing canonical horizon blurb and rebuild
 
 ## Plan discipline
 
-Plans are recoverable execution documents for multi-file or multi-step changes. Ordinary plans exist only for `Blocking` and `Next` items and use the [plan-format standard](standards-plan-format.md). An open plan with a non-empty `transferred-from` origin may preserve transferred detail beside an item in another honest horizon, but it does not imply readiness and cannot advance there. Each theme's code prefixes a separate zero-padded serial sequence beginning at `001`, so a canonical plan identifier is `<THEME>-<NNN>`. Dependencies use those globally unique identifiers and are bidirectional, existent, and acyclic. Every `ready`, `in-progress`, `acceptance`, or `done` plan resolves to Blocking or Next, and no plan moves to `ready`, `in-progress`, or `acceptance` while a listed blocker is not `done`.
+Plans are recoverable execution documents for multi-file or multi-step changes. Ordinary plans exist only for `Blocking` and `Next` items and use the [plan-format standard](standards-plan-format.md). An open plan with a non-empty `transferred-from` origin may preserve transferred detail beside an item in another honest horizon, but it does not imply readiness and cannot advance there. The `ki-roadmap` table's stable `repo_code` prefixes every theme's separate zero-padded serial sequence beginning at `001`, so a canonical plan identifier is `<REPO>-<THEME>-<NNN>`. Dependencies use those globally unique identifiers and are bidirectional, existent, and acyclic. Every `ready`, `in-progress`, `acceptance`, or `done` plan resolves to Blocking or Next, and no plan moves to `ready`, `in-progress`, or `acceptance` while a listed blocker is not `done`.
 
 A ready plan has concrete Steps, a checkable Verify section, an honest Current state, and a minimal Files touched list. The lifecycle is `open` → `ready` → `in-progress` → `acceptance` → `done`: `open` awaits an explicit start decision, `ready` records that approved and unblocked decision, and the initial execution transition records the full immutable `HEAD` commit ID as the plan's `baseline-ref`. Acceptance records a compact review packet and waits for explicit user approval; it does not silently route a learning into another durable artifact. `done` retains a committed outcome record beside its still-visible canonical item. An explicit later prune, not the done transition, removes a selected completed batch and its canonical items.
 
@@ -105,7 +105,7 @@ One explicit-path commit may include any coherent batch of related plan changes,
 An active or retained done plan has one inverse reference in the canonical item named by its `roadmap:` locator. The reference is the final, standalone line in that item's content, immediately before the next item or horizon:
 
 ```markdown
-**Plan:** [HOK-004](plans/HOK-004-short-description.md)
+**Plan:** [KI-HARNESS-HOK-004](plans/KI-HARNESS-HOK-004-short-description.md)
 ```
 
 The identifier and relative path must resolve to that plan file. The line is derived state, not authored item prose: `ki-roadmap` CONFORM repairs it from the plan-record set, and `ki-plan` creates, maintains, or removes it in the same transaction as the plan. An item with no active or retained done plan has no such line. No other `**Plan:**` line is permitted in a canonical theme roadmap.

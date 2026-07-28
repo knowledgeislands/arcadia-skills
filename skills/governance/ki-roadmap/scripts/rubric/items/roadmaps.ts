@@ -53,11 +53,24 @@ const ROAD_5: RubricItem<RoadmapBlurbsContext> = {
   judgment: { prompt: 'Review each promotion or deferral against its readiness contract and plan state.' }
 }
 
+const ROAD_6: RubricItem<RoadmapBlurbsContext> = {
+  code: 'ROAD-6',
+  title: 'repository plan code',
+  description: 'The ki-roadmap table declares a valid repository code; CONFORM derives it from the repository directory when absent.',
+  sources: [SOURCE],
+  mechanical: {
+    level: 'FAIL',
+    audit: { phase: 'INSPECT', run: (context) => outcomesFor(context, 'ROAD-6', 'The repository plan code is valid.') },
+    conformOn: ['INFO'],
+    conform: { phase: 'PRIMARY', run: (context) => context.ensureRepositoryCode?.() }
+  }
+}
+
 export const ROAD: RubricFamily<RoadmapRubricContext, RoadmapBlurbsContext> = {
   code: 'ROAD',
   title: 'roadmaps',
   description: 'Canonical horizon structure, placement, and readiness.',
   standard: SOURCE,
   selectContext: (context) => context.roadmaps,
-  items: [ROAD_1, ROAD_2, ROAD_3, ROAD_4, ROAD_5]
+  items: [ROAD_1, ROAD_2, ROAD_3, ROAD_4, ROAD_5, ROAD_6]
 }

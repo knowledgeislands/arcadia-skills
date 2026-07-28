@@ -19,7 +19,7 @@ argument-hint: 'next [--review] | defer <item> <horizon-or-focus> | help'
 3. **Review** relevance when asked or when a stale signal is evident. It may identify obsolete, duplicated, already-planned, or newly-unblocked work, but presents every change as a proposal.
 4. **Select** one eligible, dependency-ready immediate item, or a small compatible batch: Blocking and Next in a non-KB repository; Blocking and Active in a Knowledge Base. A batch contains only independently ready work and retains a distinct plan or proposal relationship for each item. It promotes later work only after confirmation and re-evaluates it at the destination.
 5. **Defer** an explicitly named item only after presenting its exact later horizon or Focus, wording, and any affected plan or proposal; it never infers a move or disposes of governed work.
-6. **Plan** confirmed immediate work through `ki-plan`: a governed repository plan in a non-KB repository, or the corresponding Streams proposal Checklist in a Knowledge Base.
+6. **Plan** confirmed immediate work through `ki-plan`: a governed repository plan with the `ki-roadmap`-owned `<REPO>-<THEME>-<NNN>` identifier in a non-KB repository, or the corresponding Streams proposal Checklist in a Knowledge Base.
 
 ## Relationship map
 

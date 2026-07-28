@@ -40,16 +40,19 @@ const HORIZON_BLURBS: Record<Horizon, string> = {
 const NEAR = new Set<Horizon>(['Blocking', 'Next'])
 const THEME_RE = /^[a-z0-9]+(?:-[a-z0-9]+)*$/
 const THEME_CODE_RE = /^[A-Z][A-Z0-9]{1,7}$/
-const PLAN_ID_RE = /^[A-Z][A-Z0-9]{1,7}-\d{3,}$/
+const REPO_CODE_RE = /^[A-Z][A-Z0-9-]{1,23}$/
+const PLAN_ID_RE = /^[A-Z][A-Z0-9-]{1,23}-[A-Z][A-Z0-9]{1,7}-\d{3,}$/
 const COMMIT_ID_RE = /^(?:[0-9a-f]{40}|[0-9a-f]{64})$/
-const PLAN_RE = /^([A-Z][A-Z0-9]{1,7}-\d{3,})-([a-z0-9]+(?:-[a-z0-9]+)*)\.md$/
-const PLAN_LINE_RE = /^\*\*Plan:\*\* \[([A-Z][A-Z0-9]{1,7}-\d{3,})\]\((plans\/[A-Z][A-Z0-9]{1,7}-\d{3,}-[a-z0-9]+(?:-[a-z0-9]+)*\.md)\)$/
+const PLAN_RE = /^([A-Z][A-Z0-9-]{1,23}-[A-Z][A-Z0-9]{1,7}-\d{3,})-([a-z0-9]+(?:-[a-z0-9]+)*)\.md$/
+const PLAN_LINE_RE =
+  /^\*\*Plan:\*\* \[([A-Z][A-Z0-9-]{1,23}-[A-Z][A-Z0-9]{1,7}-\d{3,})\]\((plans\/[A-Z][A-Z0-9-]{1,23}-[A-Z][A-Z0-9]{1,7}-\d{3,}-[a-z0-9]+(?:-[a-z0-9]+)*\.md)\)$/
 const REQUIRED = ['id', 'title', 'status', 'roadmap', 'blocks', 'blocked-by', 'baseline-ref']
 const OPTIONAL = ['transferred-from']
 const VALID_STATUS = new Set(['open', 'ready', 'in-progress', 'acceptance', 'done'])
 const STANDARD_REF = 'references/standards-repository-roadmaps.md'
 const FORMAT_REF = 'references/standards-plan-format.md'
 const RUBRIC_REF = 'references/rubric.md'
+const ROADMAP_CONFIG = 'knowledgeislands/ki-agentic-harness:ki-roadmap'
 const TOML = (globalThis as unknown as { Bun: { TOML: { parse(text: string): unknown } } }).Bun.TOML
 let findings: Finding[] = []
 const add = (level: Level, area: string, msg: string, ref = RUBRIC_REF, file?: string): void => {
@@ -57,6 +60,41 @@ const add = (level: Level, area: string, msg: string, ref = RUBRIC_REF, file?: s
 }
 
 let root = ''
+let repositoryCode = ''
+
+function derivedRepositoryCode(repository: string): string {
+  const basename = repository.split('/').at(-1) ?? 'repo'
+  const initials = basename
+    .split(/[^A-Za-z0-9]+/)
+    .filter(Boolean)
+    .map((part) => part[0] ?? '')
+    .join('')
+    .toUpperCase()
+  return (initials.length >= 2 ? initials : `${initials}REPO`).slice(0, 8)
+}
+
+function resolveRepositoryCode(repository: string): string {
+  const fallback = derivedRepositoryCode(repository)
+  const config = join(repository, '.ki-config.toml')
+  if (!existsSync(config)) return fallback
+  try {
+    const parsed = TOML.parse(readFileSync(config, 'utf8')) as Record<string, unknown>
+    const table = parsed[ROADMAP_CONFIG]
+    if (typeof table !== 'object' || table === null || Array.isArray(table)) return fallback
+    const code = (table as Record<string, unknown>).repo_code
+    if (code === undefined) {
+      add('INFO', 'ROAD-6', `repo_code is absent; CONFORM will set '${fallback}'`, STANDARD_REF, '.ki-config.toml')
+      return fallback
+    }
+    if (typeof code !== 'string' || !REPO_CODE_RE.test(code)) {
+      add('FAIL', 'ROAD-6', `repo_code must match ${REPO_CODE_RE.source}`, STANDARD_REF, '.ki-config.toml')
+      return fallback
+    }
+    return code
+  } catch {
+    return fallback
+  }
+}
 
 function isKb(repo: string): boolean {
   const config = join(repo, '.ki-config.toml')
@@ -411,7 +449,7 @@ function discoverThematic(): { themes: string[]; items: Item[]; plans: Plan[] } 
       }
       const match = PLAN_RE.exec(name)
       if (!match || !lstatSync(path).isFile()) {
-        add('FAIL', 'PLAN-1', 'plan filename must be <THEME>-<NNN>-<slug>.md', FORMAT_REF, display)
+        add('FAIL', 'PLAN-1', 'plan filename must be <REPO>-<THEME>-<NNN>-<slug>.md', FORMAT_REF, display)
         continue
       }
       const content = readFileSync(path, 'utf8')
@@ -433,13 +471,13 @@ function discoverThematic(): { themes: string[]; items: Item[]; plans: Plan[] } 
       }
       if ('transferred-from' in fm && !fm['transferred-from'].trim())
         add('FAIL', 'PLAN-1', "optional frontmatter field 'transferred-from' must be a non-empty string", FORMAT_REF, display)
-      if (!/^id:\s*(['"])[A-Z][A-Z0-9]{1,7}-\d{3,}\1\s*$/m.test(parsed.raw))
+      if (!/^id:\s*(['"])[A-Z][A-Z0-9-]{1,23}-[A-Z][A-Z0-9]{1,7}-\d{3,}\1\s*$/m.test(parsed.raw))
         add('FAIL', 'PLAN-1', 'id must be quoted in frontmatter', FORMAT_REF, display)
       if (fm.id && !PLAN_ID_RE.test(fm.id))
-        add('FAIL', 'PLAN-1', `id '${fm.id}' must be a quoted <THEME>-<NNN> identifier`, FORMAT_REF, display)
+        add('FAIL', 'PLAN-1', `id '${fm.id}' must be a quoted <REPO>-<THEME>-<NNN> identifier`, FORMAT_REF, display)
       if (fm.id && fm.id !== match[1]) add('FAIL', 'PLAN-1', `id '${fm.id}' does not match filename id '${match[1]}'`, FORMAT_REF, display)
-      if (fm.id && code && !fm.id.startsWith(`${code}-`))
-        add('FAIL', 'PLAN-1', `id '${fm.id}' does not use theme code '${code}'`, FORMAT_REF, display)
+      if (fm.id && code && !fm.id.startsWith(`${repositoryCode}-${code}-`))
+        add('FAIL', 'PLAN-1', `id '${fm.id}' must begin with repository and theme code '${repositoryCode}-${code}-'`, FORMAT_REF, display)
       if (fm.status && !VALID_STATUS.has(fm.status)) add('FAIL', 'PLAN-1', `invalid status '${fm.status}'`, FORMAT_REF, display)
       if (fm.status && ['open', 'ready'].includes(fm.status) && fm['baseline-ref'] !== '—')
         add('FAIL', 'PLAN-1', `${fm.status} plan baseline-ref must be — until execution starts`, FORMAT_REF, display)
@@ -488,6 +526,8 @@ export const inspectRoadmap = (target: string): Finding[] => {
       else add('NA', 'SCOPE-1', 'KB repository: streams and proposal checklists are governed by ki-kb-streams', STANDARD_REF)
       emit()
     }
+
+    repositoryCode = resolveRepositoryCode(root)
 
     if (existsSync(join(root, 'docs', 'plans'))) {
       add(
@@ -620,7 +660,7 @@ export const inspectRoadmap = (target: string): Finding[] => {
         const reference = planRef(plan)
         for (const dependency of [...plan.blocks, ...plan.blockedBy]) {
           if (!PLAN_ID_RE.test(dependency))
-            add('FAIL', 'PLAN-3', `dependency '${dependency}' is not a <THEME>-<NNN> plan identifier`, FORMAT_REF, plan.file)
+            add('FAIL', 'PLAN-3', `dependency '${dependency}' is not a <REPO>-<THEME>-<NNN> plan identifier`, FORMAT_REF, plan.file)
           else if (!byRef.has(dependency)) add('FAIL', 'PLAN-3', `dependency ${dependency} does not exist`, FORMAT_REF, plan.file)
         }
         for (const blocked of plan.blocks) {

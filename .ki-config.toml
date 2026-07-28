@@ -22,6 +22,7 @@ supported_runtimes = ["claude-code", "codex"]
 ["knowledgeislands/ki-agentic-harness:ki-housekeeping-claude"]
 
 ["knowledgeislands/ki-agentic-harness:ki-roadmap"]
+repo_code = "KI-HARNESS"
 
 ["knowledgeislands/ki-agentic-harness:ki-tokenomics"]
 headroom = "recommended"

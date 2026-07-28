@@ -20,7 +20,7 @@ Three legs, always in this order:
 
 The recap always closes with a **Specific actions** section: a concrete, imperative checklist of everything actionable that fell out of legs 2 and 3 (files to commit, gates to re-run, approved learning routes to apply) — or a one-line "no actions" if the tree is clean and nothing is outstanding. Prefix each action with a short, unique, uppercase hyphenated label that names the work, rather than an arbitrary sequence number (for example, `FIX-AUTHORING-AUDIT`). It is a checklist for the user, not actions taken unprompted.
 
-When `ki-plan accept` asks for a per-plan mini recap, use the same grounding and learning-routing boundary in the smaller plan scope: delivered work, verification evidence, outstanding concerns, and proposed learning routes. The plan's `## Acceptance` section is review evidence, not permission to promote a learning outside that plan.
+When `ki-plan accept` asks for a per-plan mini recap, use the same grounding and learning-routing boundary in the smaller plan scope: delivered work, verification evidence, outstanding concerns, and proposed learning routes. In a non-KB repository, cite the plan by its canonical `<REPO>-<THEME>-<NNN>` identifier. The plan's `## Acceptance` section is review evidence, not permission to promote a learning outside that plan.
 
 When a grounded Specific action needs a portfolio decision, recap may offer `CHOOSE-NEXT-WORK` as an optional handoff to `ki-next`. It carries only this current-session context: grounded outstanding work, learning routes with their approval status, and the action labels. It does not invoke `ki-next`, write a transcript or memory entry, promote a roadmap item, or turn a proposal into approval.
 

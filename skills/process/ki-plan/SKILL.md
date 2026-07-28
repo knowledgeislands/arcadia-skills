@@ -3,7 +3,7 @@ name: ki-plan
 ki-depends-on: []
 description: >
   An installable process skill (kind: process, ADR-KI-HARNESS-SKILLS-006) that drives the governed-plan lifecycle in a non-KB repository — ready / execute / accept / done / prune / new / promote / status — and routes the equivalent KB request to the native Streams proposal Checklist lifecycle. In non-KB repositories it creates thematic-roadmap plans, preserves transferred detail without implying readiness, transitions explicit readiness and start batches atomically, presents manual acceptance, retains done records until prune, and can promote a runtime-native Plan Mode draft. Profiles, format, and methodology belong to `ki-roadmap`; Focus and enactment belong to `ki-kb-streams`. Triggers: "ready these plans", "start these plans", "accept this plan", "close this plan", "prune done plans", "execute plan", "new plan", "promote this Plan Mode plan", "plan status", "/ki-plan".
-argument-hint: 'ready <THEME>-<NNN>... | execute <THEME>-<NNN>... | accept <THEME>-<NNN> | done <THEME>-<NNN> | prune [theme] | new <theme> <title> | promote | status [theme] | help'
+argument-hint: 'ready <REPO>-<THEME>-<NNN>... | execute <REPO>-<THEME>-<NNN>... | accept <REPO>-<THEME>-<NNN> | done <REPO>-<THEME>-<NNN> | prune [theme] | new <theme> <title> | promote | status [theme] | help'
 ---
 
 # ki-plan
@@ -20,7 +20,7 @@ In a Knowledge Base, it does not invent a parallel plan file or translate propos
 
 ## Planning is repo-first
 
-In a KI code repo the plan is a governed file under `docs/roadmap/<theme>/plans/`, authored through this skill — never a runtime-native Plan Mode scratch file. When a user asks to plan, including by entering native Plan Mode, treat `docs/roadmap/<theme>/plans/<THEME>-<NNN>-<slug>.md` as the source of truth and create it here with `new`; the stable `<THEME>` code comes from that theme's `ROADMAP.md`. A native scratch file, if one exists, is only a draft and is never canonical. Where a native draft exists, prefer to leave in it a pointer to the governed repo plan rather than duplicating content. This keeps planning identical across runtimes — the native Plan Mode convenience is optional and unavailable on surfaces that do not support its hook — and removes any dependency on such hooks firing.
+In a KI code repo the plan is a governed file under `docs/roadmap/<theme>/plans/`, authored through this skill — never a runtime-native Plan Mode scratch file. When a user asks to plan, including by entering native Plan Mode, treat `docs/roadmap/<theme>/plans/<REPO>-<THEME>-<NNN>-<slug>.md` as the source of truth and create it here with `new`; `ki-roadmap` owns the stable `<REPO>` code in `.ki-config.toml` and the `<THEME>` code in that theme's `ROADMAP.md`. A native scratch file, if one exists, is only a draft and is never canonical. Where a native draft exists, prefer to leave in it a pointer to the governed repo plan rather than duplicating content. This keeps planning identical across runtimes — the native Plan Mode convenience is optional and unavailable on surfaces that do not support its hook — and removes any dependency on such hooks firing.
 
 When referring in prose to a specific governed plan, link its canonical document using the host's Markdown-link convention; use a bare identifier only where a structured format requires it, such as `blocks`, `blocked-by`, or a lifecycle command.
 

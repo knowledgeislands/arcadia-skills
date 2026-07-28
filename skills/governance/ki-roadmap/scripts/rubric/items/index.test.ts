@@ -1,5 +1,5 @@
 import { afterEach, expect, test } from 'bun:test'
-import { mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
+import { mkdirSync, mkdtempSync, readdirSync, readFileSync, renameSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import type { RubricFamily, RubricItem } from '../../shared/rubric.ts'
@@ -27,7 +27,7 @@ const createThematicFixture = (): { repository: string; roadmapPath: string } =>
   const theme = join(repository, 'docs', 'roadmap', 'foundation')
   const plans = join(theme, 'plans')
   mkdirSync(plans, { recursive: true })
-  writeFileSync(join(repository, '.ki-config.toml'), '["knowledgeislands/ki-agentic-harness:ki-roadmap"]\n')
+  writeFileSync(join(repository, '.ki-config.toml'), '["knowledgeislands/ki-agentic-harness:ki-roadmap"]\nrepo_code = "TEST"\n')
   const roadmapPath = join(theme, 'ROADMAP.md')
   writeFileSync(
     roadmapPath,
@@ -43,7 +43,7 @@ code: FND
 
 Deliver the foundation.
 
-**Plan:** [FND-999](plans/FND-999-missing.md)
+**Plan:** [TEST-FND-999](plans/TEST-FND-999-missing.md)
 
 ## Next
 
@@ -57,9 +57,9 @@ Deliver the foundation.
 `
   )
   writeFileSync(
-    join(plans, 'FND-001-build-the-foundation.md'),
+    join(plans, 'TEST-FND-001-build-the-foundation.md'),
     `---
-id: 'FND-001'
+id: 'TEST-FND-001'
 title: Build the foundation
 status: open
 roadmap: foundation/build-the-foundation
@@ -68,7 +68,7 @@ blocked-by: —
 baseline-ref: —
 ---
 
-# FND-001: Build the foundation
+# TEST-FND-001: Build the foundation
 
 ## Context
 
@@ -104,7 +104,7 @@ const createNonNearPlanFixture = ({ status, transferredFrom }: { status: 'open' 
   const theme = join(repository, 'docs', 'roadmap', 'foundation')
   const plans = join(theme, 'plans')
   mkdirSync(plans, { recursive: true })
-  writeFileSync(join(repository, '.ki-config.toml'), '["knowledgeislands/ki-agentic-harness:ki-roadmap"]\n')
+  writeFileSync(join(repository, '.ki-config.toml'), '["knowledgeislands/ki-agentic-harness:ki-roadmap"]\nrepo_code = "TEST"\n')
   writeFileSync(
     join(theme, 'ROADMAP.md'),
     `---
@@ -129,7 +129,7 @@ Understood and roughly scoped but not yet started — worth doing once the **Nex
 
 Keep the transferred execution detail without promoting its priority.
 
-**Plan:** [FND-001](plans/FND-001-preserve-transferred-work.md)
+**Plan:** [TEST-FND-001](plans/TEST-FND-001-preserve-transferred-work.md)
 
 ## Waiting for
 
@@ -145,9 +145,9 @@ Speculative or not yet scoped — items marked _(candidate)_ need a scoping pass
 `
   )
   writeFileSync(
-    join(plans, 'FND-001-preserve-transferred-work.md'),
+    join(plans, 'TEST-FND-001-preserve-transferred-work.md'),
     `---
-id: 'FND-001'
+id: 'TEST-FND-001'
 title: Preserve transferred work
 status: ${status}
 roadmap: foundation/preserve-transferred-work
@@ -243,6 +243,7 @@ test('the structured catalogue preserves every repository-roadmap criterion', ()
     'ROAD-3',
     'ROAD-4',
     'ROAD-5',
+    'ROAD-6',
     'THEME-1',
     'THEME-2',
     'THEME-3',
@@ -337,6 +338,40 @@ test('audit is read-only and returns one stable prepared context', () => {
   expect(readFileSync(roadmapPath, 'utf8')).toBe(before)
 })
 
+test('conform adds a missing repository plan code without changing plans', () => {
+  const repository = createNonNearPlanFixture({
+    status: 'open',
+    transferredFrom: 'knowledgeislands/tools-ki:TKI-CLI-006'
+  })
+  const repoCode = (repository.split('/').at(-1) ?? 'repo')
+    .split(/[^A-Za-z0-9]+/)
+    .filter(Boolean)
+    .map((part) => part[0] ?? '')
+    .join('')
+    .toUpperCase()
+    .slice(0, 8)
+  const theme = join(repository, 'docs', 'roadmap', 'foundation')
+  const oldPlan = join(theme, 'plans', 'TEST-FND-001-preserve-transferred-work.md')
+  const plan = join(theme, 'plans', `${repoCode}-FND-001-preserve-transferred-work.md`)
+  renameSync(oldPlan, plan)
+  writeFileSync(plan, readFileSync(plan, 'utf8').replaceAll('TEST-FND-001', `${repoCode}-FND-001`))
+  const roadmap = join(theme, 'ROADMAP.md')
+  writeFileSync(roadmap, readFileSync(roadmap, 'utf8').replaceAll('TEST-FND-001', `${repoCode}-FND-001`))
+  writeFileSync(join(repository, '.ki-config.toml'), '["knowledgeislands/ki-agentic-harness:ki-roadmap"]\n')
+  expect(inspectRoadmap(repository)).toContainEqual(expect.objectContaining({ level: 'INFO', area: 'ROAD-6' }))
+
+  const session = catalogue.createSession({ mode: 'conform', repository, userHome: tmpdir(), configuration: {} })
+  const context = session.subjects[1]?.context() as RoadmapRubricContext
+  const family = families.find((candidate) => candidate.code === 'ROAD')
+  const item = family?.items.find((candidate) => candidate.code === 'ROAD-6')
+  item?.mechanical?.conform?.run(family?.selectContext(context))
+
+  const proposal = session.proposal()
+  expect(proposal.writes).toHaveLength(1)
+  expect(proposal.writes[0]).toMatchObject({ path: '.ki-config.toml' })
+  expect(proposal.writes[0]?.content).toMatch(/repo_code = "[A-Z0-9]+"/)
+})
+
 test('ordered conform actions coalesce multi-file replacements behind one session proposal', () => {
   const { repository } = createThematicFixture()
   const session = catalogue.createSession({ mode: 'conform', repository, userHome: tmpdir(), configuration: {} })
@@ -352,6 +387,6 @@ test('ordered conform actions coalesce multi-file replacements behind one sessio
   expect(proposal.writes.map((write) => write.path)).toEqual(['docs/roadmap/foundation/ROADMAP.md', 'ROADMAP.md'])
   expect(proposal.writes[1]).toMatchObject({ path: 'ROADMAP.md', create: true })
   expect(proposal.writes[0]?.content).toContain('Actively broken, or blocking the `Next` horizon: takes priority over everything else')
-  expect(proposal.writes[0]?.content).toContain('**Plan:** [FND-001](plans/FND-001-build-the-foundation.md)')
+  expect(proposal.writes[0]?.content).toContain('**Plan:** [TEST-FND-001](plans/TEST-FND-001-build-the-foundation.md)')
   expect(proposal.writes[0]?.content.match(/\*\*Plan:\*\*/g)).toHaveLength(1)
 })

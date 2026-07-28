@@ -8,6 +8,7 @@ export type RoadmapAuditContext = {
 
 export type RoadmapBlurbsContext = RoadmapAuditContext & {
   readonly normaliseHorizonBlurbs?: () => void
+  readonly ensureRepositoryCode?: () => void
 }
 
 export type RoadmapPlanContext = RoadmapAuditContext & {
@@ -58,7 +59,10 @@ export const createRoadmapSession = ({ mode, repository, publication }: RubricCo
     rubric: { publication },
     scope: audit,
     profile: audit,
-    roadmaps: { ...audit, ...(draft ? { normaliseHorizonBlurbs: draft.normaliseHorizonBlurbs } : {}) },
+    roadmaps: {
+      ...audit,
+      ...(draft ? { normaliseHorizonBlurbs: draft.normaliseHorizonBlurbs, ensureRepositoryCode: draft.ensureRepositoryCode } : {})
+    },
     themes: audit,
     items: audit,
     projection: { ...audit, ...(draft ? { rebuildProjection: draft.rebuildProjection } : {}) },

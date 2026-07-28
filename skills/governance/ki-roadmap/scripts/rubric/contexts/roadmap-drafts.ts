@@ -17,6 +17,7 @@ const HORIZON_BLURBS: Record<Horizon, string> = {
   Future:
     "Speculative or not yet scoped — items marked _(candidate)_ need a scoping pass (or a decision to drop them) before they're actionable."
 }
+const ROADMAP_CONFIG = '["knowledgeislands/ki-agentic-harness:ki-roadmap"]'
 
 type Heading = { level: number; title: string; line: number }
 type Item = { theme: string; title: string; anchor: string; horizon: Horizon }
@@ -25,6 +26,7 @@ type DraftFile = { absolute: string; original?: string; working: string }
 
 export type RoadmapDraft = {
   normaliseHorizonBlurbs: () => void
+  ensureRepositoryCode: () => void
   syncPlanReferences: () => void
   rebuildProjection: () => void
   proposal: () => ConformProposal
@@ -64,6 +66,24 @@ const headingAnchor = (title: string): string =>
     .toLowerCase()
     .replace(/[^\p{L}\p{N}\p{M}\s_-]/gu, '')
     .replace(/\s/g, '-')
+
+const derivedRepositoryCode = (repository: string): string => {
+  const basename = repository.split('/').at(-1) ?? 'repo'
+  const initials = basename
+    .split(/[^A-Za-z0-9]+/)
+    .filter(Boolean)
+    .map((part) => part[0] ?? '')
+    .join('')
+    .toUpperCase()
+  return (initials.length >= 2 ? initials : `${initials}REPO`).slice(0, 8)
+}
+
+const withRepositoryCode = (text: string, code: string): string => {
+  const index = text.indexOf(ROADMAP_CONFIG)
+  if (index >= 0)
+    return `${text.slice(0, index + ROADMAP_CONFIG.length)}\nrepo_code = "${code}"${text.slice(index + ROADMAP_CONFIG.length)}`
+  return `${text.trimEnd()}\n\n${ROADMAP_CONFIG}\nrepo_code = "${code}"\n`
+}
 
 const parseFrontmatter = (text: string): Record<string, string> => {
   const block = text.match(/^---\r?\n([\s\S]*?)\r?\n---(?:\r?\n|$)/)?.[1]
@@ -199,6 +219,7 @@ export const createRoadmapDraft = (repository: string, findings: readonly Findin
   if (!safeToDraft(findings)) return undefined
 
   const root = resolve(repository)
+  const repositoryCode = derivedRepositoryCode(root)
   const roadmapDirectory = join(root, 'docs', 'roadmap')
   const thematic = existsSync(roadmapDirectory)
   const themeNames = thematic
@@ -221,6 +242,7 @@ export const createRoadmapDraft = (repository: string, findings: readonly Findin
   drafts.set(rootPath, { absolute: rootPath, ...(rootContent === undefined ? {} : { original: rootContent }), working: rootContent ?? '' })
 
   const themes = new Map<string, DraftFile>()
+  const configPath = join(root, '.ki-config.toml')
   for (const theme of themeNames) {
     const draft = register(join(roadmapDirectory, theme, 'ROADMAP.md'))
     if (draft) themes.set(theme, draft)
@@ -244,6 +266,10 @@ export const createRoadmapDraft = (repository: string, findings: readonly Findin
     normaliseHorizonBlurbs: () => {
       for (const draft of thematic ? themes.values() : [drafts.get(rootPath)].filter((value): value is DraftFile => Boolean(value)))
         draft.working = withHorizonBlurbs(draft.working)
+    },
+    ensureRepositoryCode: () => {
+      const config = register(configPath)
+      if (config) config.working = withRepositoryCode(config.working, repositoryCode)
     },
     syncPlanReferences: () => {
       for (const [theme, draft] of themes) draft.working = withLocalPlanReferences(draft.working, theme, plans)

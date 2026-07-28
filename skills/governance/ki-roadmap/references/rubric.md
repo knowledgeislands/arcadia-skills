@@ -60,6 +60,7 @@ Canonical horizon structure, placement, and readiness.
 - **ROAD-4 [M] — canonical horizon blurbs** — Every horizon heading is followed immediately by its exact canonical blurb; CONFORM inserts a missing blurb without removing existing authored content. (standards-repository-roadmaps.md)
 - **ROAD-5 [J] — horizon transitions and readiness** — Horizon promotion and deferral meet the readiness contract; ordinary plans prevent later-horizon moves until their lifecycle is explicitly resolved, while an open plan with a non-empty transferred-from origin may preserve detail at another honest horizon without implying readiness. CONFORM never chooses a move. (standards-repository-roadmaps.md)
   - _Review prompt:_ Review each promotion or deferral against its readiness contract and plan state.
+- **ROAD-6 [M] — repository plan code** — The ki-roadmap table declares a valid repository code; CONFORM derives it from the repository directory when absent. (standards-repository-roadmaps.md)
 
 ## THEME — themes
 
