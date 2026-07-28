@@ -1,7 +1,7 @@
 ---
 id: 'KI-HARNESS-FND-001'
 title: Namespace governed plan identifiers by repository
-status: acceptance
+status: done
 roadmap: foundation-tooling/namespace-governed-plan-identifiers-by-repository
 blocks: —
 blocked-by: —
@@ -73,3 +73,7 @@ None.
 ### Mini recap
 
 Configured repository prefixes may be intentionally hyphenated, so plan validation treats the configured `repo_code` as authoritative rather than relying on positional splitting.
+
+## Done
+
+Repository-qualified plan identifiers are implemented, verified, and explicitly accepted. No follow-up is required before pruning this completed plan.
