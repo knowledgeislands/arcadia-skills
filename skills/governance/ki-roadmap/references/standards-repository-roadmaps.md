@@ -42,7 +42,8 @@ Roadmaps are open-only: completed work is removed. Continuous practices belong i
 
 Horizon moves are authored, judgment-led decisions. CONFORM never makes them: it may repair only mechanical blurbs and generated projections.
 
-- **Future → Soon** requires enough scope to state the intended outcome and boundary. It remains Future when that minimum is not known.
+- **Future → Soon** requires enough scope to state the intended outcome and boundary, but not yet the actionable scope, understood dependencies, and readiness to start required for Next. It remains Future when that minimum is not known.
+- **Future → Next** is permitted when a single review establishes both the Future minimum and the full Next entry rule: actionable scope, understood dependencies, and readiness to start. The proposal must state why Soon adds no useful shaping stage; after explicit confirmation, re-evaluate the item at Next before planning.
 - **Soon → Next** requires actionable scope, understood dependencies, and readiness to start. It is not a planning shortcut: the item must first be moved to Next, then evaluated there.
 - **Waiting for → another horizon** requires evidence that its named external condition has changed and a fresh placement judgment.
 - **Parked → another horizon** requires evidence that its priority or named return trigger has changed and a fresh placement judgment.
@@ -51,7 +52,7 @@ Horizon moves are authored, judgment-led decisions. CONFORM never makes them: it
 - An open plan with a non-empty `transferred-from` origin may instead remain linked to an item in any other honest horizon. This narrow exception preserves useful transferred execution detail without asserting that the item is ready or changing its priority. It is not eligible for readiness or execution until the item moves to Blocking or Next.
 - An ordinary plan prevents a later-horizon move until its lifecycle is explicitly resolved. A roadmap process must never silently delete, reopen, or detach it to make a deferral fit.
 
-When the immediate queue has no eligible work, a human-led process such as `ki-next` replenishes it in stages: evaluate Blocking and Next first, then evaluate Soon, and only then scope Future candidates to enter Soon. The same process may apply a user-confirmed deferral to an honest later horizon. Each confirmed move is re-evaluated at its destination because the readiness contract changes. The process presents proposals and obtains confirmation before every authored move; this governance skill does not depend on that process.
+When the immediate queue has no eligible work, a human-led process such as `ki-next` evaluates Blocking and Next first, then Soon, then Future. A Future candidate moves to Soon when it needs an intermediate shaping stage, or directly to Next when the same review establishes the complete Next entry rule. The same process may apply a user-confirmed deferral to an honest later horizon. Each confirmed move is re-evaluated at its destination because the readiness contract changes. The process presents proposals and obtains confirmation before every authored move; this governance skill does not depend on that process.
 
 ## Handoff review
 
