@@ -1,7 +1,7 @@
 ---
 id: 'GOV-002'
 title: Improve skill dependency map and implementation review
-status: in-progress
+status: done
 roadmap: governance-consistency/review-the-skill-dependency-graph-and-implementation-quality
 blocks: —
 blocked-by: —
@@ -55,3 +55,31 @@ No further implementation-quality work arose from this bounded review.
 ## Dependencies / blocks
 
 This plan does not redesign `ki-depends-on`; it makes the existing dependency contract and other relationship types comprehensible. Any change to dependency semantics is a separate decision and plan.
+
+## Acceptance
+
+### Delivered
+
+The canonical Graphviz skills map now flows from general foundations on the left to specialised capabilities on the right, with no rigid family clusters.
+
+### Summary of changes
+
+The DOT graph and generated SVG now show every skill’s name, family, and concise purpose; include `ki-git`; distinguish formal `ki-repo` prerequisites from contextual baseline links; and retain runtime arms as visually secondary non-skill nodes.
+
+The duplicate hand-maintained D3 companion was removed, and the skills guide now directs readers to the canonical SVG.
+
+### Verification
+
+At `f2f6c189`, Graphviz regenerated `docs/diagrams/skills-map.svg`; `bunx prettier --check` passed for the changed Markdown; `ki repo audit --skill ki-skills --repo .` and `ki repo audit --repo .` reported zero FAIL and zero WARN; `bun run test` passed 210 tests; and `bunx tsc --noEmit` passed.
+
+### Outstanding concerns
+
+None.
+
+### Mini recap
+
+The map reads most clearly when rank encodes generality and specialisation while colour and a visible family label encode taxonomy. No follow-up is required for this bounded change.
+
+## Done
+
+Completed the single-source, left-to-right dependency map and its documentation alignment. Residual concern: None. Intended follow-up: prune this retained done record only when the user selects it in a later prune batch.
