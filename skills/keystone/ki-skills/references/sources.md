@@ -65,11 +65,12 @@ The OpenAI News page is a discovery source, not a normative standard. On each RE
 
 ## Community
 
-| Tag       | Source                                               | Scope                  | Last reviewed |
-| --------- | ---------------------------------------------------- | ---------------------- | ------------- |
-| COMMUNITY | [Skill Authoring Patterns][patterns]                 | Patterns and feedback  | 2026-07-04    |
-| COMMUNITY | [obra/superpowers writing-skills][superpowers]†      | Convergent conventions | 2026-06-18    |
-| COMMUNITY | [skills.sh — Open Agent Skills Ecosystem][skills-sh] | Registry and security  | 2026-07-04    |
+| Tag       | Source                                               | Scope                                                    | Last reviewed |
+| --------- | ---------------------------------------------------- | -------------------------------------------------------- | ------------- |
+| COMMUNITY | [Skill Authoring Patterns][patterns]                 | Patterns and feedback                                    | 2026-07-04    |
+| COMMUNITY | [obra/superpowers writing-skills][superpowers]†      | Convergent conventions                                   | 2026-06-18    |
+| COMMUNITY | [skills.sh — Open Agent Skills Ecosystem][skills-sh] | Registry and security                                    | 2026-07-04    |
+| GASTOWN   | [Gas Town Hall][gastown-hall]                        | Multi-agent orchestration and harness-practice discovery | 2026-07-29    |
 
 † Community restatement of the best-practices document.
 
@@ -103,6 +104,7 @@ REFRESH last run **2026-07-19** against the tracked Agent Skills documentation s
 - **ENG (Anthropic Engineering blog):** accessible. Confirms the two required fields, three-level progressive-disclosure model, evaluation-first authoring, and name/description as the trigger signal. No numeric caps — cited for rationale only.
 - **BLOG (Claude blog):** added as a discovery source. Future REFRESH runs scan it for articles materially relevant to agent skills, agentic practice, or authoring workflows; an article is supporting evidence, not a normative rule by itself.
 - **OPENAI (OpenAI News):** added as a discovery source. Future REFRESH runs scan it for articles materially relevant to agent skills, agentic practice, or authoring workflows; an article is supporting evidence, not a normative rule by itself.
+- **GASTOWN (Gas Town Hall):** added as a discovery source. Future REFRESH runs scan its announcements and documentation for material multi-agent orchestration or harness-practice lessons; its practice is supporting evidence, not a normative rule by itself.
 - **COMMUNITY (generativeprogrammer.com Skill Authoring Patterns):** accessible; page dated 2026-04-19, unchanged since last run. 14 named patterns incl. Known Gotchas, Autonomy Calibration, Exclusion Clause; confirms the 1024 / 1536 caps, < 500 lines, third-person "pushy" descriptions. Repeats the soft ~300-line split trigger — compatible with (and below) our 500-line WARN; still not adopted as a separate cap.
 - **`skills-ref` validator:** `validate` CLI documented but internals not fetchable; the frontmatter + naming rules it enforces are fully specified on the SPEC page (which links skills-ref as the validator), so the mechanical baseline (NAME / DESC / OPT) is confirmed there.
 - **In-house scan:** the then-current governed skill set passed its skill-quality audit, including `ki-skills` itself. Exact commands and fleet counts are intentionally omitted because both change as the host and skill set evolve.
@@ -126,6 +128,7 @@ REFRESH last run **2026-07-19** against the tracked Agent Skills documentation s
 [eng]: https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills
 [claude-blog]: https://claude.com/blog
 [openai-news]: https://openai.com/news/
+[gastown-hall]: https://gastownhall.ai/
 [skills-ref]: https://github.com/agentskills/agentskills/tree/main/skills-ref
 [patterns]: https://generativeprogrammer.com/p/skill-authoring-patterns-from-anthropics
 [superpowers]: https://github.com/obra/superpowers/blob/main/skills/writing-skills/anthropic-best-practices.md
