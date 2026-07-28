@@ -45,4 +45,5 @@ Speculative or not yet scoped — items marked _(candidate)_ need a scoping pass
 - [Governance Consistency: Roll Feature Definitions out across the repository fleet _(candidate)_](docs/roadmap/governance-consistency/ROADMAP.md#roll-feature-definitions-out-across-the-repository-fleet-candidate)
 - [Governance Consistency: Separate Knowledge Islands policy from portable governance _(candidate)_](docs/roadmap/governance-consistency/ROADMAP.md#separate-knowledge-islands-policy-from-portable-governance-candidate)
 - [Operations: Define opt-in repository observability via OTLP _(candidate)_](docs/roadmap/operations/ROADMAP.md#define-opt-in-repository-observability-via-otlp-candidate)
+- [Runtime Portability: Evaluate agent-native developer environments and remote session workflows _(candidate)_](docs/roadmap/runtime-portability/ROADMAP.md#evaluate-agent-native-developer-environments-and-remote-session-workflows-candidate)
 - [Runtime Portability: Route multi-machine harness state through durable homes](docs/roadmap/runtime-portability/ROADMAP.md#route-multi-machine-harness-state-through-durable-homes)

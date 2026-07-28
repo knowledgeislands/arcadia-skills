@@ -39,3 +39,7 @@ Speculative or not yet scoped — items marked _(candidate)_ need a scoping pass
 ### Route multi-machine harness state through durable homes
 
 Produce a finite routing table or decision record assigning each state class to repository tracking, knowledge-base content, synchronized personal configuration, or intentionally disposable machine-local storage. Cover project memory, runtime settings and hooks, learned patterns, and caches; create follow-up migrations only for state proven to be in the wrong home.
+
+### Evaluate agent-native developer environments and remote session workflows _(candidate)_
+
+Evaluate [Zed](https://zed.dev/), [Herdr](https://herdr.dev/), and [Pi](https://pi.dev/) as potential runtime or session-integration surfaces, with [Mosh](https://mosh.org/) as remote-terminal context. Determine whether any supported interface warrants a KI runtime binding, a portable session contract, or only documented personal workflow guidance. Do not add runtime configuration, installation instructions, or compatibility claims until a target exposes a precise, supportable integration boundary.
