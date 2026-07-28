@@ -8,12 +8,6 @@ code: FND
 
 Actively broken, or blocking the `Next` horizon: takes priority over everything else and must clear before `Next` work proceeds. Empty means nothing is on fire.
 
-### Complete qualified repository declaration migration
-
-Complete the portable configuration cutover begun for CLI-006. Replace every remaining bare `[ki-*]` repository-declaration assumption in harness standards, examples, rubric contexts, conformers, generated publications, and tests with the resolved quoted `<harness-id>:<skill-name>` root. Correct the `ki-tools` rubric so a Bun/TypeScript CLI’s real `--version` command and `src/tests/` suite satisfy its language-neutral container checks. This is a release-coordination prerequisite for `tools-ki` CLI-006, while remaining independent of the unrelated governance-consistency work.
-
-**Plan:** [FND-001](plans/FND-001-qualified-declaration-cutover.md)
-
 ## Next
 
 Scoped and ready to start — the immediate queue, picked up before anything in **Soon** or **Future**.
