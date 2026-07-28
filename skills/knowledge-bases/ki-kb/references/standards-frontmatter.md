@@ -95,12 +95,12 @@ The `Streams` zone's internal structure is owned by `ki-kb-streams`; these are i
 
 ### Pillars branch (`pillars/`)
 
-Settled internal knowledge. Governed by `ki-kb`.
+Canonical internal knowledge. Governed by `ki-kb`.
 
-| Type            | Path context                                | Defined by |
-| --------------- | ------------------------------------------- | ---------- |
-| `pillars/index` | Pillar and area index notes                 | `ki-kb`    |
-| `pillars/note`  | Settled canonical knowledge within a Pillar | `ki-kb`    |
+| Type            | Path context                        | Defined by |
+| --------------- | ----------------------------------- | ---------- |
+| `pillars/index` | Pillar and area index notes         | `ki-kb`    |
+| `pillars/note`  | Canonical knowledge within a Pillar | `ki-kb`    |
 
 ## Dependent fields
 

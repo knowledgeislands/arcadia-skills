@@ -71,7 +71,7 @@ For all other notes, most-specific match wins:
 
 1. Time-bound record -> `Calendar/`.
 2. Active, in-progress work -> `Streams/` (the `ki-kb-streams` skill owns sub-routing within the zone — Focus, the proposal layout, the lifecycle).
-3. Settled internal knowledge -> `Pillars/<Pillar>/`.
+3. Canonical internal knowledge -> `Pillars/<Pillar>/`.
 4. External reference (would exist without this base) -> `Resources/`.
 5. Unsure -> `+/<Title>.md` at the most specific applicable level.
 
@@ -87,7 +87,7 @@ The skill ships zone-scoped starter templates under `assets/templates/<zone>/`. 
 | ------------ | -------------------------------------------------- | ------------------------------------------- |
 | `Admin/`     | [activity.md](assets/templates/admin/activity.md)  | New activity note (see `ki-kb-activities`). |
 | `Calendar/`  | [session.md](assets/templates/calendar/session.md) | Session notes.                              |
-| `Pillars/`   | [note.md](assets/templates/pillars/note.md)        | Settled canonical knowledge notes.          |
+| `Pillars/`   | [note.md](assets/templates/pillars/note.md)        | Canonical internal knowledge notes.         |
 | `Resources/` | [source.md](assets/templates/resources/source.md)  | External reference entries.                 |
 
 Templates are stubs — headings, frontmatter keys, and inline `<!-- prompts -->`. They do not carry content; the skill fills in what the user provides during SAVE / EXTRACT / EDUCATE.

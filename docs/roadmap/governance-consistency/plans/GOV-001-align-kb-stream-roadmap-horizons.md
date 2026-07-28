@@ -16,11 +16,11 @@ The shared lifecycle should route work correctly in either structure without for
 
 ## Current state
 
-`ki-roadmap` defines `Blocking`, `Next`, `Soon`, `Waiting for`, and `Future` for non-KB repositories.
+`ki-roadmap` now defines `Blocking`, `Next`, `Soon`, `Waiting for`, `Parked`, and `Future` for non-KB repositories.
 
-`ki-kb-streams` currently defines `Active`, `Background`, `Dormant`, `Future`, and `Settled` Focus folders, with proposal status as a separate lifecycle.
+`ki-kb-streams` now defines `Blocking`, `Active`, `Background`, `Waiting for`, `Dormant`, and `Future` Focus folders, with proposal status as a separate lifecycle.
 
-`ki-next` and `ki-plan` deliberately stop for KB repositories, while `ki-recap` currently names the non-KB roadmap and plan destinations directly.
+`ki-recap`, `ki-next`, and `ki-plan` are being aligned to route to the repository's own forward-work structure rather than treating a KB as a roadmap repository.
 
 ## Confirmed semantic mapping
 
@@ -41,10 +41,10 @@ A KB item in `Waiting for` names its dependency or external condition. Once it c
 ## Steps
 
 1. [x] Establish a precise cross-structure mapping that distinguishes priority, attention, dependency waiting, and proposal status; confirm the semantic changes before editing either contract.
-2. Update the KB Streams structure and enactment contract, rubric catalogue, and generated publication for the approved Focus model, including its replacement for `Settled` and the handling of parked work.
-3. Make `ki-recap`, `ki-next`, and `ki-plan` dispatch on repository structure: non-KB repositories retain roadmaps and governed plans; KB repositories use Streams and proposal Checklists.
-4. Align user documentation, skill descriptions, and composition boundaries so cross-repository handoffs and everyday lifecycle requests select the correct local structure.
-5. Add or revise focused tests and run the relevant mechanical audits against both adapters.
+2. [x] Update the KB Streams structure and enactment contract, rubric catalogue, and generated publication for the approved Focus model, including its replacement for `Settled` and the handling of parked work.
+3. [x] Make `ki-recap`, `ki-next`, and `ki-plan` dispatch on repository structure: non-KB repositories retain roadmaps and governed plans; KB repositories use Streams and proposal Checklists.
+4. [x] Align user documentation, skill descriptions, and composition boundaries so cross-repository handoffs and everyday lifecycle requests select the correct local structure.
+5. [x] Add or revise focused tests and run the relevant mechanical audits against both adapters.
 
 ## Files touched
 
@@ -57,8 +57,7 @@ A KB item in `Waiting for` names its dependency or external condition. Once it c
 
 ## Verify
 
-- `ki skill rubric ki-kb-streams --write`
-- `ki repo audit --skill ki-kb-streams --repo .`
+- `bun test skills/knowledge-bases/ki-kb-streams/scripts/rubric/contexts/streams.test.ts`
 - `ki repo audit --skill ki-roadmap --repo .`
 - `ki repo audit --repo .`
 - `bun run test`

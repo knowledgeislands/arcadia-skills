@@ -44,11 +44,11 @@ Using warm context plus the helper's `filesTouched` / `diffStat`: state what cha
 
 **Always check whether everything is committed** — even if the session felt "done", verify the working tree is clean for the files this session touched (staged, unstaged, and untracked). Uncommitted session work is the most common silently-dropped outstanding item. Files dirty from _other_ threads of work are out of scope (per the stay-scoped rule) — note their existence in one line at most, never enumerate or adopt them.
 
-Then look for threads left mid-change: uncommitted edits, a failing gate, a decision still open, work neither done nor parked. **Ground every "uncommitted" or "still dirty" claim in the `filesTouched` from the grounding helper run at the start of _this_ recap, never in a `git status`/`git diff` seen earlier in the conversation** — commits (yours or a concurrent process's) can land between that earlier look and the recap itself, and stale context reads as a false outstanding item. If meaningful time has passed since step 1 ran, re-run it before finalizing this section. Apply the house rule:
+Then look for threads left mid-change: uncommitted edits, a failing gate, a decision still open, work neither done nor parked. First resolve the repository structure: a non-KB repository routes forward work to its roadmap and, when needed, a governed plan; a Knowledge Base routes it to Streams and, when needed, a proposal Checklist. **Ground every "uncommitted" or "still dirty" claim in the `filesTouched` from the grounding helper run at the start of _this_ recap, never in a `git status`/`git diff` seen earlier in the conversation** — commits (yours or a concurrent process's) can land between that earlier look and the recap itself, and stale context reads as a false outstanding item. If meaningful time has passed since step 1 ran, re-run it before finalizing this section. Apply the house rule:
 
-- A ROADMAP item **added during this session** counts as **what happened** (parking work on ROADMAP is a completed action — the roadmap is the durable home for deferred work), not as outstanding.
-- A `ki-plan` opened this session with unchecked Steps **is** outstanding — cite its id and status.
-- If something outstanding warrants a plan or a ROADMAP line and doesn't have one yet, say so and offer to create it (via `ki-plan new` or a ROADMAP edit) rather than silently letting it drop.
+- A roadmap item or Stream **added during this session** counts as **what happened** (placing work in the repository's durable forward-work structure is a completed action), not as outstanding.
+- A non-KB `ki-plan` with unchecked Steps or a KB proposal with unchecked Checklist entries **is** outstanding — cite its identifier and lifecycle state.
+- If something outstanding has no home, offer the correct local route: `ki-plan new` or a roadmap edit for a non-KB repository; `ki-kb-streams` PROPOSE for a Knowledge Base.
 
 ## 4. Harvest the learnings, and route each
 
@@ -62,7 +62,7 @@ The standard owns the placement ladder, promotion evidence, and duplicate-reconc
 | Checker, rubric, shared rule, or reusable operation | Its owning skill, standard, reference, agent, or hook — add a criterion only after scanning the relevant catalogue and linter |
 | A bounded procedure | An existing appropriate guide, rather than new standing orientation |
 | Durable personal fact or user preference | Runtime memory or synchronised personal configuration, according to its scope |
-| Deferred work with no home yet | `ROADMAP.md`, or a `ki-plan` if it is multi-step |
+| Deferred work with no home yet | Non-KB: `ROADMAP.md`, or a `ki-plan` if it is multi-step. KB: Streams, or a proposal Checklist for governed change. |
 
 Use `highCostCandidates` from the grounding helper as a starting list, not the full set — warm context surfaces things the helper cannot see (a design dead-end, a rejected approach).
 
@@ -75,7 +75,7 @@ When `ki-plan accept` requests a plan-scoped recap, do not run or imply a full-s
 Close the recap with a **Specific actions** section: a short, concrete, imperative list of everything actionable that emerged from steps 3 and 4 — each item something that could be done right now, with the exact command, file, or artefact named. Prefix each item with a short, unique, uppercase hyphenated label that names its work (usually two to four words), so the user can respond in chat by label ("do `COMMIT-DOCS` and `FIX-AUTHORING-AUDIT`") instead of restating the action. Do not use arbitrary sequence labels such as `A1`, `A2`, or `A3`; labels are ephemeral recap handles, not roadmap identifiers. Typical entries:
 
 - `COMMIT-SESSION-CHANGES` — Commit (or explicitly discard) the session's uncommitted files — name the paths and suggest the commit message.
-- `PARK-DEFERRED-WORK` — Create the offered ROADMAP line or `ki-plan` for outstanding work that has no home.
+- `PARK-DEFERRED-WORK` — Create the offered roadmap / plan or Stream / proposal Checklist for outstanding work that has no home.
 - `APPLY-LEARNING-ROUTE` — Apply an approved learning route from the knowledge-promotion standard (for example, a repository rule, skill criterion, hook, memory, or personal configuration update).
 - `RERUN-FAILING-GATE` — Re-run a gate that was left failing, or finish a mid-change thread.
 - `CHOOSE-NEXT-WORK` — Offer `ki-next` when one or more grounded actions need a roadmap priority or plan decision. Carry only their labels, the grounded outstanding work, and the approval state of any learning routes; `ki-next` re-reads the roadmap before it ranks anything.

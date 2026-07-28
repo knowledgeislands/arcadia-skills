@@ -14,7 +14,7 @@ Scoped and ready to start — the immediate queue, picked up before anything in 
 
 ### Align KB Stream focus with non-KB roadmap horizons
 
-Align the two open-work models without treating them as identical. Add a Blocking focus to Knowledge Base Streams; represent "waiting for" as explicit dependency detail within Background, from which work promotes to Active when ready; align Dormant with a new Parked roadmap horizon; and remove Settled so completed history lives in canonical documentation and git rather than either open-work structure. Preserve plan status as a separate execution lifecycle.
+Align the two open-work models without treating them as identical. Add a Blocking and a Waiting for Focus to Knowledge Base Streams; align Dormant with the Parked roadmap horizon; and remove Settled so completed history lives in canonical documentation and Git rather than either open-work structure. Preserve proposal status as a separate execution lifecycle.
 
 Make the shared process layer structure-aware: `ki-recap` must route outstanding work to the local structure, `ki-next` must select and promote work in either model, and the plan/execution lifecycle must operate over either a non-KB plan or a KB Stream proposal checklist. Repository-type detection should dispatch to `ki-roadmap` or `ki-kb-streams` as distinct governance adapters rather than forcing both repositories into one file shape. The result should make cross-repository handoffs and everyday lifecycle commands consistent while retaining the distinct Stream and roadmap forms. This is a lifecycle-model alignment, not an enactment of one repository structure inside the other. Origin: the four-repository ecosystem alignment rollout.
 

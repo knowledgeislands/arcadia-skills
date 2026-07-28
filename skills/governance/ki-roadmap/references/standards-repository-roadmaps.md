@@ -4,6 +4,16 @@
 
 This standard applies only to non-KB repositories. A repository whose `.ki-config.toml` declares `repo_type = "kb"` uses `ki-kb-streams`; it must not add a parallel project `ROADMAP.md` or `docs/roadmap/` tree.
 
+## Contents
+
+- [Horizons](#horizons)
+- [Horizon transitions and readiness](#horizon-transitions-and-readiness)
+- [Handoff review](#handoff-review)
+- [Simple profile](#simple-profile)
+- [Thematic profile](#thematic-profile)
+- [Expansion boundary](#expansion-boundary)
+- [Plan discipline](#plan-discipline)
+
 ## Horizons
 
 Every roadmap carries these six `##` horizons exactly once and in this order:

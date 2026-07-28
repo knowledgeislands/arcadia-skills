@@ -2,7 +2,7 @@
 name: ki-plan
 ki-depends-on: []
 description: >
-  An installable process skill (kind: process, ADR-KI-HARNESS-SKILLS-006) that drives the governed-plan lifecycle in a non-KB repository — ready / execute / accept / done / prune / new / promote / status. It creates thematic-roadmap plans, preserves transferred detail without implying readiness, transitions explicit readiness and start batches atomically, presents manual acceptance, retains done records until prune, and can promote a runtime-native Plan Mode draft. Profiles, format, and methodology belong to `ki-roadmap`. Triggers: "ready these plans", "start these plans", "accept this plan", "close this plan", "prune done plans", "execute plan", "new plan", "promote this Plan Mode plan", "plan status", "/ki-plan". Not for KB repos (`repo_type = "kb"`), where `ki-kb-streams` proposal Checklists replace plans.
+  An installable process skill (kind: process, ADR-KI-HARNESS-SKILLS-006) that drives the governed-plan lifecycle in a non-KB repository — ready / execute / accept / done / prune / new / promote / status — and routes the equivalent KB request to the native Streams proposal Checklist lifecycle. In non-KB repositories it creates thematic-roadmap plans, preserves transferred detail without implying readiness, transitions explicit readiness and start batches atomically, presents manual acceptance, retains done records until prune, and can promote a runtime-native Plan Mode draft. Profiles, format, and methodology belong to `ki-roadmap`; Focus and enactment belong to `ki-kb-streams`. Triggers: "ready these plans", "start these plans", "accept this plan", "close this plan", "prune done plans", "execute plan", "new plan", "promote this Plan Mode plan", "plan status", "/ki-plan".
 argument-hint: 'ready <THEME>-<NNN>... | execute <THEME>-<NNN>... | accept <THEME>-<NNN> | done <THEME>-<NNN> | prune [theme] | new <theme> <title> | promote | status [theme] | help'
 ---
 
@@ -13,6 +13,8 @@ argument-hint: 'ready <THEME>-<NNN>... | execute <THEME>-<NNN>... | accept <THEM
 ## What this skill does
 
 Runs the governed-plan lifecycle for a **non-KB repository**: `ready` (record explicit approval to start one or more named plans), `execute` (start one or more ready plans or work a plan's Steps), `accept` (prepare a manual review packet and stop), `done` (record an explicitly accepted plan's completion without deleting it), `prune` (separately remove a user-confirmed batch of committed done records and canonical items), `new` (write a plan file), `promote` (turn a current runtime-native Plan Mode scratch plan into a governed plan), and `status` (show active plans and retained records). A batch is always explicit and all-or-nothing: validate every selected plan before publishing any status change, then commit the transition once. Ordinary plans remain linked to `Blocking` or `Next`; an open plan with a non-empty `transferred-from` origin may preserve transferred detail at another honest horizon but is not eligible for readiness there. It is the process counterpart to `ki-roadmap`. It reads the plan format and quality bar from that governance skill rather than restating them.
+
+In a Knowledge Base, it does not invent a parallel plan file or translate proposal status into plan status. It dispatches to `ki-kb-streams`: `new` → PROPOSE, `ready` → READY, `execute` → ROLLOUT (with its separate explicit rollout authorisation), `accept` → REVIEW, `done` / `prune` → SETTLE, and `status` → the Focus and proposal indexes. `promote` is unavailable in a Knowledge Base.
 
 `ki-plan` operates only on the **thematic profile**. The simple profile deliberately has no plan collection. `new` and `promote` in a simple repository stop without writing and give the concrete expansion route `/ki-roadmap expand <theme>`; the user runs `ki-plan` again after expansion.
 
@@ -33,12 +35,12 @@ The runtime-native `promote` integration receives its session token from the hos
 ## Preflight (every sub-command)
 
 1. Run `git rev-parse --show-toplevel` to find the git root, then physically resolve it.
-2. If `.ki-config.toml` at the git root has `repo_type = "kb"`: **stop** — in a KB, planning is a stream proposal's `## Checklist`, governed by `ki-kb-streams`. This skill creates no KB artifact.
+2. If `.ki-config.toml` at the git root has `repo_type = "kb"`, dispatch the requested lifecycle verb to the corresponding `ki-kb-streams` procedure. Planning is the proposal's `## Checklist`; create no KB plan artifact.
 3. Ask `ki-roadmap` to identify and validate the repository profile. In the simple profile, `status` reports that profile from the root `ROADMAP.md`; `ready`, `execute`, `accept`, `done`, and `prune` report that no governed plan collection exists; `new` and `promote` stop with `/ki-roadmap expand <theme>`. In the thematic profile, use only `docs/roadmap/<theme>/ROADMAP.md` and `docs/roadmap/<theme>/plans/`.
 4. Resolve and validate every existing path component physically before reading or writing it. Never follow a symlink outside the physical git root, infer an alternative plan tree, or repair governance state as a side effect of a lifecycle command.
 
 ## Notes
 
 - No universal AUDIT/CONFORM/EDUCATE/REFRESH modes — this is a process skill (ADR-KI-HARNESS-SKILLS-001, ADR-KI-HARNESS-SKILLS-006); its modes are the lifecycle sub-commands above.
-- Installed as a core user skill by `ki bootstrap` — usable in any non-KB repository on the machine, not just this one. Like `ki-bootstrap`, it is not a repository-governance root and has no `["knowledgeislands/ki-agentic-harness:ki-plan"]` table.
+- Installed as a core user skill by `ki bootstrap` — usable in any repository on the machine. Like `ki-bootstrap`, it is not a repository-governance root and has no `["knowledgeislands/ki-agentic-harness:ki-plan"]` table.
 - The thematic roadmap and file-oriented `ready`, `execute`, `accept`, `done`, `prune`, `new`, and `status` procedures are runtime-neutral; `ready` and the initial `execute` transition accept one or more explicit plan identifiers. Adapt interactive prompts to the host runtime. `promote` is runtime-only because it consumes a host Plan Mode hook state and session substitution.

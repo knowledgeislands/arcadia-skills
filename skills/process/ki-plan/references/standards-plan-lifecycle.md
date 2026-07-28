@@ -133,3 +133,5 @@ In the simple profile, print the root `ROADMAP.md` and report that the repositor
 ## Mandate
 
 For any multi-file or multi-step change in a non-KB repository, create a governed repository plan before touching code. If the repository uses the simple profile, first expand the relevant theme with `/ki-roadmap expand <theme>`. The plan is committed with the work — a recoverable, dependency-ordered record that survives context resets. Ordinary plans exist only for canonical thematic-roadmap `Blocking` or `Next` items under the near-horizon principle owned by `ki-roadmap`. The sole non-near exception is an open plan with a non-empty `transferred-from` origin that preserves already-transferred detail without implying readiness; it must move to Blocking or Next before `ready`.
+
+For a Knowledge Base, the equivalent record is a `ki-kb-streams` proposal and its Checklist. `ki-plan` dispatches there rather than creating a parallel plan file or translating the proposal's native status lifecycle.
