@@ -4,6 +4,8 @@
 
 It never treats a recap, handoff, or historic transcript as authority to write.
 
+Its responsibility ends at selecting, promoting, or deferring work and handing confirmed immediate non-KB work to `ki-plan` for shaping.
+
 ## 1. Ground
 
 1. Resolve the current git repository physically and read `.ki-config.toml`.
@@ -21,6 +23,8 @@ Require confirmation of the exact file, disposition, wording, horizon, and resul
 
 An adoption creates a local work item at an honest horizon; detailed execution material is retained by enriching that item, never a separate plan file.
 
+Preserve the handoff's operating model, sources, alternatives, authority and safety boundaries, and unresolved questions in the work item's structured sections and final topic-oriented Discussion.
+
 After a resolved disposition, prompt the sender to remove its corresponding outbound copy.
 
 ## 3. Review relevance
@@ -35,7 +39,7 @@ Do not change content until the user confirms exact wording and placement.
 
 ### Non-KB repositories
 
-1. Gather dependency-ready `blocking` and `next` items. Reuse their canonical item record; if several are independently ready, recommend a small ranked batch only when each retains its own execution lifecycle.
+1. Gather dependency-ready `blocking` and `next` items. Reuse their canonical item record; if several are independently ready, recommend a small ranked set only when each retains its own lifecycle and the user confirms the set and order.
 2. Only when none is eligible, assess `soon` items against the Next entry rule. After confirmation, change `horizon` to `next`, run CONFORM and AUDIT, then re-evaluate it at the destination.
 3. Only when Soon has no viable item, assess Future candidates. Move directly to Next only when the full Next rule is met and Soon adds no value; otherwise move to Soon once the intended outcome and boundary are known. Re-evaluate after every confirmed move.
 4. Reconsider Waiting-for or Parked items only when their named external condition or return trigger changed.
@@ -64,10 +68,18 @@ Before a write, show selected items, exact frontmatter or wording changes, order
 
 Require explicit confirmation, then run CONFORM and AUDIT.
 
-Invoke `ki-plan` only after a non-KB item is Blocking or Next; it enriches the same item and stops for review.
+Invoke `ki-plan` only after a non-KB item is Blocking or Next.
+
+It shapes the same item through the stage-detail contract and stops for review before marking it Ready.
+
+The planned `ki-batch` process may repeat this selection-and-shaping procedure only within an approved preparation boundary.
+
+That future orchestration does not permit `ki-next` to infer selection authority.
 
 ## 7. Finish
 
 Report each confirmed handoff disposition, files changed, selected work, and audit result.
+
+Identify exact accepted done records that are eligible for pruning when useful, but do not delete them; confirmed pruning belongs to `ki-accept`.
 
 If no work is eligible, identify the missing condition or scoping decision plainly.

@@ -2,33 +2,52 @@
 name: ki-plan
 ki-depends-on: []
 description: >
-  Drives the governed work-item lifecycle in a non-KB repository — ready / execute / accept / done / prune / new / promote / status — and routes the equivalent KB request to the native Streams proposal Checklist lifecycle. A process skill (kind: process, ADR-KI-HARNESS-SKILLS-006): it enriches one canonical work item in place, transitions explicit readiness and start batches atomically, presents manual acceptance, retains done records until prune, and can promote a runtime-native Plan Mode draft. Item shape, horizons, and methodology belong to ki-roadmap; Focus and enactment belong to ki-kb-streams.
-argument-hint: 'ready <REPO>-<THEME>-<NNN>... | execute <REPO>-<THEME>-<NNN>... | accept <REPO>-<THEME>-<NNN> | done <REPO>-<THEME>-<NNN> | prune [theme] | new <theme> <title> | promote | status [theme] | help'
+  Creates and shapes governed work items in a non-KB repository through explicit readiness — new / shape / ready / promote / status — and routes equivalent planning requests to the native Streams proposal Checklist lifecycle in a KB. A process skill (kind: process, ADR-KI-HARNESS-SKILLS-006): it enriches one canonical work item in place and stops at Ready. Item shape, horizons, and methodology belong to ki-roadmap; implementation and acceptance are separate process responsibilities.
+argument-hint: 'new <theme> <title> | shape <REPO>-<THEME>-<NNN>... | ready <REPO>-<THEME>-<NNN>... | promote | status [theme] | help'
 ---
 
 # ki-plan
 
 **Kind:** process.
 
-Drives one repository work item's lifecycle.
+Creates and shapes one or more repository work items through Ready.
 
 The class-level standard—horizons, identity, and file shape—is owned by `ki-roadmap`; read [the lifecycle procedure](references/standards-plan-lifecycle.md) for the complete operation.
 
 ## What this skill does
 
-`ki-plan` operates a **non-KB repository** item through `ready`, `execute`, `accept`, `done`, `prune`, `new`, `promote`, and `status`.
+`ki-plan` operates a **non-KB repository** item through `new`, `shape`, `ready`, `promote`, and `status`.
 
 An item begins as a concise issue under `docs/roadmap/`.
 
-When it needs multi-file or multi-step work, this skill adds the execution sections to that same file.
+As its horizon advances, this skill adds the stage-appropriate shaping and execution-plan sections to that same file.
 
 It never creates a duplicate plan document.
 
-A batch is explicit and all-or-nothing: validate every named item before publishing any status change, then commit the transition once.
+`ready` is an explicit, all-or-nothing transition: validate every named item before publishing any status change, then commit the transition once.
 
-In a Knowledge Base, it dispatches to `ki-kb-streams`: `new` → PROPOSE, `ready` → READY, `execute` → ROLLOUT, `accept` → REVIEW, `done` / `prune` → SETTLE, and `status` → Focus and proposal indexes.
+In a Knowledge Base, it dispatches to `ki-kb-streams`: `new` and `shape` → PROPOSE, `ready` → READY, and `status` → Focus and proposal indexes.
 
 `promote` is unavailable in a Knowledge Base.
+
+## Responsibility boundary
+
+```text
+ki-next
+  selection and horizon placement
+    └─> ki-plan
+          create, shape, and mark Ready
+            └─> ki-implement
+                  Ready → In progress → Acceptance
+                    └─> ki-accept
+                          Acceptance → Done and confirmed prune
+```
+
+`ki-plan` does not implement work, assemble acceptance evidence, accept delivery, mark an item Done, or prune retained records.
+
+Those responsibilities move cleanly to the dedicated process skills; `ki-plan` carries no compatibility verbs or fallback path for them.
+
+Until those skills ship, the relationship map states the target contract rather than claiming their invocation surfaces are available.
 
 ## Planning is repo-first
 
@@ -61,4 +80,4 @@ Otherwise dispatch on the first token of the argument per [the lifecycle procedu
 
 - This is a process skill, not a universal AUDIT / CONFORM / EDUCATE / REFRESH checker.
 - Installed as a core user skill by `ki bootstrap`; it is not a repository-governance root.
-- `ready` and the initial `execute` transition accept one or more explicit item identifiers; `promote` is runtime-only because it consumes host Plan Mode state.
+- `shape` and `ready` accept one or more explicit item identifiers; `promote` is runtime-only because it consumes host Plan Mode state.

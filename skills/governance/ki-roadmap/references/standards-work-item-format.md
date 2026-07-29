@@ -1,5 +1,12 @@
 # Repository work-item format
 
+## Contents
+
+- [Placement and identity](#placement-and-identity)
+- [Frontmatter](#frontmatter)
+- [Body](#body)
+- [Detail by stage](#detail-by-stage)
+
 ## Placement and identity
 
 Each work item is one regular Markdown file directly under `docs/roadmap/`:
@@ -46,7 +53,7 @@ An optional non-empty `transferred-from` records a durable handoff origin.
 
 ## Body
 
-Every item begins with these sections in order:
+Every item begins with these sections in order and ends with `## Discussion`:
 
 ```markdown
 ## Context
@@ -56,13 +63,49 @@ Why the work exists and the intended outcome.
 ## Boundary
 
 What this item deliberately does not include.
+
+## Discussion
+
+### Topic
+
+Decision-useful reasoning, alternatives, or unresolved questions.
 ```
 
-An item may add concise relevant context after `## Boundary`.
+`Discussion` is topic-oriented rather than chronological.
 
-A focused one-step item may remain brief. When an item adopts a material handoff, process design, or architectural proposal, preserve the decision-useful detail rather than reducing it to a prompt: its operating model, authority and safety boundaries, meaningful alternatives or source analysis, and the intended first deliverable. Add these as concise sections after `## Boundary`. The roadmap item is the durable handoff record until its work is planned; external links alone are insufficient.
+Use descriptive `###` headings such as `### Authority model`, `### Source analysis`, `### Alternatives`, or `### Open questions`.
 
-When it enters execution, retain those sections and append these sections in order:
+Do not turn it into a session log.
+
+Material decisions that outlive the item still belong in a Decision Record.
+
+An item may add concise structured sections between `## Boundary` and `## Discussion`.
+
+A focused one-step item may remain brief.
+
+When an item adopts a material handoff, process design, or architectural proposal, preserve the decision-useful detail rather than reducing it to a prompt: its operating model, sources, meaningful alternatives, authority and safety boundaries, unresolved questions, and intended first deliverable.
+
+Use structured sections where the material has a stable shape and retain exploratory reasoning under topic headings in `Discussion`.
+
+The roadmap item is the durable handoff record until its work is planned; external links alone are insufficient.
+
+## Detail by stage
+
+### Future / open
+
+`Context`, `Boundary`, and final `Discussion` are sufficient.
+
+They preserve why the item exists, its deliberate exclusion, and the reasoning needed to shape it later without pretending that it is planned.
+
+### Soon / open
+
+Add `## Shaping` between `Boundary` and `Discussion`.
+
+It states the intended approach, known dependencies, decisions still needed, and the conditions for promotion.
+
+### Next or Blocking / open to ready
+
+Once selected for immediate work, retain the earlier sections and add these sections before `Discussion`, in order:
 
 ```markdown
 ## Current state
@@ -86,12 +129,32 @@ A pass/fail command or assertion.
 Narrative dependency context.
 ```
 
-When delegated work is planned, append `## Delegation` after `## Dependencies / blocks`.
+When delegated work is planned, add `## Delegation` after `## Dependencies / blocks`.
 
 It names bounded worker deliverables and file boundaries, the gate between rounds, and the orchestrator’s final review and verification responsibility.
 
-Before acceptance, append `## Acceptance` with `### Delivered`, `### Summary of changes`, `### Verification`, `### Outstanding concerns`, and `### Mini recap` in that order.
+An immediate item may remain `status: open` while `ki-plan` shapes these sections.
 
-After explicit acceptance, append terminal `## Done`.
+It becomes `status: ready` only after the sections are concrete, dependencies are satisfied, verification is checkable, and the user approves the plan.
+
+### In progress
+
+The implementation process records the immutable full `HEAD` commit in `baseline-ref`, sets `status: in-progress`, and checks completed steps without deleting them.
+
+Record material departures, decisions, and newly discovered constraints under the relevant topic in the final `Discussion`; do not record routine activity.
+
+### Acceptance
+
+Before setting `status: acceptance`, insert `## Acceptance` immediately before `Discussion` with `### Delivered`, `### Summary of changes`, `### Verification`, `### Outstanding concerns`, and `### Mini recap` in that order.
+
+This is the evidence packet for an explicit acceptance decision.
+
+### Done
+
+After explicit acceptance, insert terminal `## Done` immediately before `Discussion` and set `status: done`.
+
+Retain the accepted record until a separately confirmed prune.
+
+At every stage, `Discussion` remains the final top-level section.
 
 Completed steps remain checked rather than being removed.

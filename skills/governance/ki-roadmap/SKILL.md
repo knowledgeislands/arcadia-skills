@@ -4,7 +4,7 @@ ki-depends-on: []
 ki-shared-dependencies: [ki-skills:rubric]
 owns: ['ROADMAP.md']
 description: >
-  Governs flat repository work items and their concise root orientation in non-KB repositories. Use for "audit the roadmap", "audit plans", roadmap horizons, theme grouping, work-item identity, execution lifecycle, plan dependencies, or root-orientation drift. Every repository work item lives directly under docs/roadmap and is enriched in place when planned. Knowledge Bases are out of scope: use ki-kb-streams, where streams and proposal checklists replace repository roadmaps and plans. The ki-plan process skill drives individual work-item lifecycle operations; ki-decision-records owns durable decisions.
+  Governs flat repository work items and their concise root orientation in non-KB repositories. Use for "audit the roadmap", "audit plans", roadmap horizons, theme grouping, work-item identity, lifecycle detail, plan dependencies, or root-orientation drift. Every repository work item lives directly under docs/roadmap and gains detail in place as it moves from an open idea through shaping, implementation evidence, acceptance, and retained completion. Knowledge Bases are out of scope: use ki-kb-streams, where streams and proposal checklists replace repository roadmaps and plans. Process skills apply this lifecycle; ki-decision-records owns durable decisions.
 argument-hint: 'audit <repo> | conform <repo> | help | educate <repo> | refresh'
 ---
 
@@ -26,7 +26,7 @@ Carries the universal **AUDIT · CONFORM · EDUCATE · REFRESH** modes. Invoked 
 
 Run `ki repo audit --skill ki-roadmap --repo <repo>`. The catalogue applies the mechanical criteria in [the generated rubric](references/rubric.md): concise root orientation; configured theme vocabulary; work-item placement, frontmatter, identity, theme grouping, lifecycle, and dependency integrity. It reports KB scope as not applicable, or FAIL when a KB carries repository-roadmap artifacts, and makes no changes.
 
-Then apply the rubric's judgment criteria by reading: item quality, horizon placement and transition readiness, execution detail where present, honest lifecycle state, and theme coherence. Where `+/_HANDOFFS/` exists, identify material that needs a local adoption decision; where `-/_HANDOFFS/` exists, identify known receiving-repository progress that needs a local follow-up or closure decision. Report proposed roadmap action only: never infer remote acceptance, move working material, or edit another repository's roadmap. Iterate until mechanical findings are clean and judgment findings are resolved.
+Then apply the rubric's judgment criteria by reading: item quality, horizon placement and transition readiness, stage-appropriate detail, final topic-oriented Discussion, honest lifecycle state, and theme coherence. Where `+/_HANDOFFS/` exists, identify material that needs a local adoption decision; where `-/_HANDOFFS/` exists, identify known receiving-repository progress that needs a local follow-up or closure decision. Report proposed roadmap action only: never infer remote acceptance, move working material, or edit another repository's roadmap. Iterate until mechanical findings are clean and judgment findings are resolved.
 
 After changing the catalogue or contexts, run their colocated Bun tests for item identity, frontmatter, horizon, dependency, root orientation, KB, and safe-draft fixtures.
 
@@ -49,6 +49,8 @@ On the cadence in [the source list](references/sources.md), compare actual repos
 - Not every change needs a plan. A focused single-file or one-step fix can execute directly.
 - Exploration needs no plan; multi-file or multi-step implementation enriches its item before execution.
 - A plan answers “how”; a Decision Record answers “why”. Use `ki-decision-records` for the latter.
-- The `ki-plan` process skill operates work-item lifecycles. This skill owns their standard and repository-roadmap representation.
-- The `ki-next` process skill selects and promotes work through the readiness contract defined here. It gathers confirmation and invokes `ki-plan`; it does not alter this skill's ownership of horizons, item shape, or execution format.
+- The `ki-next` process skill selects and promotes work through the readiness contract defined here.
+- The `ki-plan` process skill creates, shapes, and marks an immediate work item ready.
+- `ki-implement` owns Ready → In progress → Acceptance; `ki-accept` owns Acceptance → Done and confirmed pruning.
+- `ki-recap` and `ki-next` may recommend pruning; they never delete canonical work-item records.
 - The local `scripts/shared/rubric.ts` is the materialised compile-time contract from `ki-skills`; generic execution, findings, progress, transaction safety, rollback, and reporting belong to `ki`.

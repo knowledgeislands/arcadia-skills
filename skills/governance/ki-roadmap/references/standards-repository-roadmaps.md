@@ -90,9 +90,13 @@ CONFORM never chooses a move; it only repairs the concise root orientation.
 - **Parked → another horizon** requires evidence that its named return trigger or priority changed.
 - A move back to **Soon**, **Waiting for**, **Parked**, or **Future** must preserve honest wording and any linked item lifecycle state.
 
-`Blocking` and `Next` are the only horizons that may enter execution.
+`Blocking` and `Next` are the only horizons that may be shaped into an execution-ready plan or enter implementation.
 
 An item may be expanded with executable steps only after it reaches one of those horizons and the user confirms the work.
+
+An immediate item may remain `status: open` while `ki-plan` shapes it.
+
+It becomes `status: ready` only after its execution detail and verification are reviewable, its dependencies are satisfied, and the user approves it for implementation.
 
 When no immediate work is eligible, `ki-next` evaluates Blocking and Next first, then Soon, then Future.
 
@@ -100,11 +104,13 @@ Every confirmed move is re-evaluated at its destination.
 
 ## Work-item discipline
 
-Every item conforms to [the work-item format](standards-work-item-format.md).
+Every item conforms to [the work-item format](standards-work-item-format.md), including the final topic-oriented `Discussion` section and the detail required at its current horizon and lifecycle state.
 
-An item begins as a concise issue: outcome, boundary, and current context.
+An item begins as a concise issue: outcome, boundary, current context, and enough discussion to preserve decision-useful reasoning.
 
-When multi-file or multi-step execution is needed, `ki-plan` enriches that same file in place with steps, files, verification, delegation where appropriate, acceptance, and done evidence.
+At Soon, shaping records the intended approach, known dependencies, open decisions, and promotion conditions.
+
+When multi-file or multi-step execution is selected for immediate work, `ki-plan` enriches that same file in place with current state, steps, files, verification, dependencies, and delegation where appropriate.
 
 It never creates a duplicate plan file.
 
@@ -112,15 +118,21 @@ It never creates a duplicate plan file.
 
 `open` → `ready` → `in-progress` → `acceptance` → `done`.
 
-`open` is the normal state for unplanned future work.
+`open` covers unplanned and actively shaped work.
 
 `ready`, `in-progress`, `acceptance`, and `done` must remain in Blocking or Next.
 
-The first `execute` transition records the immutable full `HEAD` commit in `baseline-ref`.
+The future `ki-implement` process owns `ready` → `in-progress` → `acceptance`.
+
+Its start transition records the immutable full `HEAD` commit in `baseline-ref`; its completion writes the acceptance evidence packet.
+
+The future `ki-accept` process owns explicit `acceptance` → `done` and confirmed pruning.
+
+`ki-recap` and `ki-next` may identify or recommend eligible pruning, but they never delete a work-item record.
 
 `blocks` and `blocked-by` use work-item identifiers, must be reverse-consistent and acyclic, and cannot permit execution while a blocker is not done.
 
-An explicit later prune removes a selected accepted `done` item.
+An explicit later prune removes only the selected accepted `done` items.
 
 ## Handoff review
 
