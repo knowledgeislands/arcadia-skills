@@ -42,7 +42,7 @@ const TOOL_1: RubricItem<McpToolsContext> = {
             subject: 'src/tools'
           })
         }
-        const source = context.files.map((file) => file.content).join('\n')
+        const source = context.resultFiles.map((file) => file.content).join('\n')
         const structured = /\bstructuredContent\b/.test(source)
         const json = /\bjsonResult\b/.test(source)
         const schema = /\boutputSchema\b/.test(source)
