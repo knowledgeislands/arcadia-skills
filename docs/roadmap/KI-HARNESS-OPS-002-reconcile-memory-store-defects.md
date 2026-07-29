@@ -16,3 +16,9 @@ When project memory is writable, update its runtime-strategy reference and delet
 ## Boundary
 
 Verify changes in the canonical memory directory and avoid speculative backend redesign unless a reproducible inconsistency remains.
+
+## Discussion
+
+### Return condition
+
+Resume when the canonical memory directory is writable; any remaining backend concern must be supported by a reproducible inconsistency after the known records are corrected.

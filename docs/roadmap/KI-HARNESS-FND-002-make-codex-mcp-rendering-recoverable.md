@@ -17,3 +17,9 @@ Improve `ki-binding-codex`'s native `codex mcp remove` / `add` sequence around p
 ## Boundary
 
 Preserve its no-write `--check` mode and the Codex CLI's ownership of live configuration; determine recovery without claiming native operations are transactional.
+
+## Discussion
+
+### Partial-update recovery
+
+The unresolved design question is what evidence and recovery action can safely surround native remove/add operations while leaving Codex as the configuration owner.

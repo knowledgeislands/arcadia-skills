@@ -16,3 +16,9 @@ Choose between sandbox-bundled servers and authenticated remote endpoints for ho
 ## Boundary
 
 Unblock only when the owner selects the security posture and settles the plugin's license and visibility; web remains a separate manual-connector concern.
+
+## Discussion
+
+### Return condition
+
+The owner must choose the endpoint security posture and settle plugin distribution constraints before either reachability path can be treated as supported.

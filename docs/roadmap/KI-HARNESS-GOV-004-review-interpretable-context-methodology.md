@@ -17,3 +17,9 @@ Assess Interpretable Context Methodology alongside current agent models, runtime
 ## Boundary
 
 Extract only evidence-backed improvements and retain differences that serve this architecture.
+
+## Discussion
+
+### Review timing
+
+The methodology review becomes useful only after the harness contracts are stable enough to distinguish an external improvement from churn in the local model.

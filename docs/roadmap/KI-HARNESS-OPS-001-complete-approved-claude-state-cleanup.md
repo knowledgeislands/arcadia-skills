@@ -16,3 +16,9 @@ When destructive housekeeping access is available, refresh the live inventory, r
 ## Boundary
 
 Do not preserve stale counts as a target or broaden cleanup beyond the reviewed set.
+
+## Discussion
+
+### Return condition
+
+Resume only when destructive housekeeping access is available and a refreshed inventory can be presented for exact approval before deletion.

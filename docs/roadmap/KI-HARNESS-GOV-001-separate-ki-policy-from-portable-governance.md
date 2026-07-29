@@ -17,3 +17,9 @@ Write a compact boundary matrix separating portable contract, Knowledge Islands 
 ## Boundary
 
 Do not split standards or redesign composition unless the matrix exposes a concrete ownership conflict.
+
+## Discussion
+
+### Test for separation
+
+The matrix should reveal a real portability or ownership problem before it causes any skill split; taxonomy alone is not a sufficient reason.

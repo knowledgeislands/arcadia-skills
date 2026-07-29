@@ -17,3 +17,9 @@ Select one named repository with externally visible behaviour and an owner, then
 ## Boundary
 
 Do not begin fleet rollout before that pilot exists.
+
+## Discussion
+
+### Pilot selection
+
+The first repository needs visible behaviour, a named owner, and a review path capable of showing whether the format improves maintenance before broader rollout.

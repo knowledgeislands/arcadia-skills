@@ -16,3 +16,9 @@ Create `ki-housekeeping-codex` only after Codex exposes an official selected-rep
 ## Boundary
 
 Do not add an empty symmetric capability or infer ownership from undocumented caches.
+
+## Discussion
+
+### Return condition
+
+Resume only from an official Codex contract that exposes selected-repository identity and supported retention or cleanup operations.

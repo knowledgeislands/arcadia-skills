@@ -17,3 +17,9 @@ Review robust evaluation frameworks such as EuroEval alongside agentic and harne
 ## Boundary
 
 Treat external frameworks as research sources, not dependencies or adoption commitments; record only evidence-backed improvements in their owning standard or item.
+
+## Discussion
+
+### Transferability
+
+The review should separate general evaluation evidence from benchmark-specific assumptions and retain only practices that improve agentic harness evaluation.

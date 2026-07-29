@@ -17,3 +17,9 @@ Extend `ki-delegate` with an explicit dispatch decision: whether work needs orig
 ## Boundary
 
 Require delegation briefs to carry durable constraints and decisions; context forks are hygiene, not a substitute for an adequate brief.
+
+## Discussion
+
+### Dispatch decision
+
+Shaping should distinguish context that must remain with the originating agent from work whose reasoning demand or independence justifies a fresh worker.

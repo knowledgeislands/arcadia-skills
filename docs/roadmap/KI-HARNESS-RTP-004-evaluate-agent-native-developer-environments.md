@@ -17,3 +17,9 @@ Evaluate Zed, Herdr, and Pi as potential runtime or session-integration surfaces
 ## Boundary
 
 Do not add runtime configuration, installation instructions, or compatibility claims until a target exposes a precise, supportable integration boundary.
+
+## Discussion
+
+### Evaluation boundary
+
+The review should distinguish editor, agent runtime, orchestration, and remote-session capabilities so superficial feature overlap does not become a compatibility claim.

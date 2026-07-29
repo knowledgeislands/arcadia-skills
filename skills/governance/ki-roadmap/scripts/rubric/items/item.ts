@@ -2,6 +2,7 @@ import type { RubricFamily, RubricItem } from '../../shared/rubric.ts'
 import { outcomesFor, type RoadmapAuditContext, type RoadmapRubricContext } from '../contexts/roadmap.ts'
 
 const SOURCE = 'standards-repository-roadmaps.md'
+const FORMAT = 'standards-work-item-format.md'
 
 const ITEM_1: RubricItem<RoadmapAuditContext> = {
   code: 'ITEM-1',
@@ -38,8 +39,8 @@ export const ITEM: RubricFamily<RoadmapRubricContext, RoadmapAuditContext> = {
     {
       code: 'ITEM-3',
       title: 'item body shape',
-      description: 'Every item has concise issue sections; execution and terminal statuses carry the required lifecycle sections.',
-      sources: [SOURCE],
+      description: 'Every item ends with Discussion and carries the deterministic sections required by its horizon and lifecycle state.',
+      sources: [FORMAT],
       mechanical: {
         level: 'FAIL',
         audit: { phase: 'INSPECT', run: (context) => outcomesFor(context, 'ITEM-3', 'Every item body matches its lifecycle state.') }

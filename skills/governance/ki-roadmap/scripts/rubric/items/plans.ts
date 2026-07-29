@@ -23,11 +23,14 @@ const PLAN_1 = mechanical(
 
 const EXEC_2: RubricItem<RoadmapAuditContext> = {
   code: 'EXEC-2',
-  title: 'ready execution content',
+  title: 'stage-appropriate work-item detail',
   description:
-    'Ready, in-progress, and acceptance items have concrete Steps, checkable Verify, honest Current state, and minimal Files touched.',
+    'Future items preserve the issue and its discussion; Soon adds useful shaping; immediate and active items have concrete Steps, checkable Verify, honest Current state, and minimal Files touched.',
   sources: [SOURCE],
-  judgment: { prompt: 'Review active work-item execution detail for concreteness and checkability.' }
+  judgment: {
+    prompt:
+      'Review whether each work item has useful detail for its stage, including topic-oriented Discussion and concrete, checkable execution detail when immediate.'
+  }
 }
 
 const EXEC_3: RubricItem<RoadmapAuditContext> = {

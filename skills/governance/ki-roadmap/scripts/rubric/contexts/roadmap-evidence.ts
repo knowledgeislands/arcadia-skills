@@ -146,10 +146,17 @@ const roadmapConfiguration = (repository: string): RoadmapConfiguration | undefi
   }
 }
 
-const requiredSections = (item: WorkItem): readonly string[] =>
-  item.status === 'open'
-    ? ['Context', 'Boundary']
-    : ['Context', 'Boundary', 'Current state', 'Steps', 'Files touched', 'Verify', 'Dependencies / blocks']
+const EXECUTION_SECTIONS = ['Current state', 'Steps', 'Files touched', 'Verify', 'Dependencies / blocks'] as const
+
+const requiredSections = (item: WorkItem): readonly string[] => {
+  const sections: string[] = ['Context', 'Boundary']
+  if (item.status === 'open' && item.horizon === 'soon') sections.push('Shaping')
+  if (item.status !== 'open' || IMMEDIATE.has(item.horizon)) sections.push(...EXECUTION_SECTIONS)
+  if (item.status === 'acceptance' || item.status === 'done') sections.push('Acceptance')
+  if (item.status === 'done') sections.push('Done')
+  sections.push('Discussion')
+  return sections
+}
 
 const headings = (body: string): readonly string[] => body.split(/\r?\n/).flatMap((line) => line.match(/^##\s+(.+?)\s*#*\s*$/)?.[1] ?? [])
 
@@ -159,10 +166,7 @@ const validateBody = (item: WorkItem): void => {
   const sequence = present.filter((heading) => required.includes(heading))
   if (JSON.stringify(sequence) !== JSON.stringify(required))
     add('FAIL', 'ITEM-3', `body must contain ${required.join(' → ')} in order`, FORMAT, item.file)
-  if (item.status === 'acceptance' || item.status === 'done') {
-    if (!present.includes('Acceptance')) add('FAIL', 'ITEM-3', 'acceptance or done item must include ## Acceptance', FORMAT, item.file)
-  }
-  if (item.status === 'done' && !present.includes('Done')) add('FAIL', 'ITEM-3', 'done item must include ## Done', FORMAT, item.file)
+  if (present.at(-1) !== 'Discussion') add('FAIL', 'ITEM-3', '## Discussion must be the final top-level section', FORMAT, item.file)
 }
 
 const parseItem = (repository: string, name: string, configuration?: RoadmapConfiguration): WorkItem | undefined => {

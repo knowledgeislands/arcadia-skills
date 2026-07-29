@@ -57,7 +57,7 @@ Flat work-item identity, grouping, lifecycle, and dependencies.
 
 - **ITEM-1 [M] — flat work-item identity** — Each canonical item lives directly under docs/roadmap with a unique stable identifier and matching filename. (standards-repository-roadmaps.md)
 - **ITEM-2 [M] — item state and theme grouping** — Each item has valid theme, horizon, candidate, status, baseline, and dependency fields. (standards-repository-roadmaps.md)
-- **ITEM-3 [M] — item body shape** — Every item has concise issue sections; execution and terminal statuses carry the required lifecycle sections. (standards-repository-roadmaps.md)
+- **ITEM-3 [M] — item body shape** — Every item ends with Discussion and carries the deterministic sections required by its horizon and lifecycle state. (standards-work-item-format.md)
 - **ITEM-4 [M] — item dependencies** — Dependencies name existing work items, are reverse-consistent and acyclic, and do not permit active blocked work. (standards-repository-roadmaps.md)
 
 ## INDEX — root orientation
@@ -75,8 +75,8 @@ The exact concise root orientation for flat work items.
 In-place execution shape and lifecycle integrity.
 
 - **EXEC-1 [M] — in-place execution record** — A work item entering execution retains its concise issue context and adds the required execution sections in the same file. (standards-work-item-format.md)
-- **EXEC-2 [J] — ready execution content** — Ready, in-progress, and acceptance items have concrete Steps, checkable Verify, honest Current state, and minimal Files touched. (standards-work-item-format.md)
-  - _Review prompt:_ Review active work-item execution detail for concreteness and checkability.
+- **EXEC-2 [J] — stage-appropriate work-item detail** — Future items preserve the issue and its discussion; Soon adds useful shaping; immediate and active items have concrete Steps, checkable Verify, honest Current state, and minimal Files touched. (standards-work-item-format.md)
+  - _Review prompt:_ Review whether each work item has useful detail for its stage, including topic-oriented Discussion and concrete, checkable execution detail when immediate.
 - **EXEC-3 [J] — honest execution status** — Open awaits readiness approval; ready awaits execution; in-progress reflects live work; acceptance awaits explicit user acceptance; done is a retained closure record. Every non-open item is Blocking or Next. (standards-work-item-format.md)
   - _Review prompt:_ Review whether work-item status honestly reflects its lifecycle gate or retained completion record.
 

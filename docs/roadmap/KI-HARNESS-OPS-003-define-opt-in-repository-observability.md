@@ -17,3 +17,9 @@ Define an off-by-default `ki-observability` capability for reporting repository 
 ## Boundary
 
 Disabled means no network activity; enabled reporting is best-effort and never changes AUDIT or CONFORM results. Do not introduce transcript scraping or a required gateway in the first slice.
+
+## Discussion
+
+### Trust boundary
+
+Shaping must make consent, emitted fields, failure isolation, and endpoint ownership inspectable before selecting any instrumentation mechanism.

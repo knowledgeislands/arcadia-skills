@@ -46,6 +46,32 @@ The foundation needs implementation.
 ## Boundary
 
 Do not broaden the work beyond the first slice.
+
+## Current state
+
+The first slice is not implemented.
+
+## Steps
+
+1. [ ] Implement the first slice.
+
+## Files touched
+
+- \`src/foundation.ts\`
+
+## Verify
+
+- \`bun test\`
+
+## Dependencies / blocks
+
+No dependencies.
+
+## Discussion
+
+### Open questions
+
+No open questions are recorded.
 `
   )
   writeFileSync(join(repository, 'ROADMAP.md'), rootRoadmap())
@@ -90,11 +116,42 @@ test('invalid lifecycle placement and missing execution sections fail', () => {
   const item = join(repository, 'docs', 'roadmap', 'TEST-FND-001-build-the-foundation.md')
   writeFileSync(
     item,
-    readFileSync(item, 'utf8').replace('horizon: next\nstatus: open', 'horizon: future\nstatus: in-progress\ncandidate: true')
+    readFileSync(item, 'utf8')
+      .replace('horizon: next\nstatus: open', 'horizon: future\nstatus: in-progress\ncandidate: true')
+      .replace('## Current state', '## Baseline')
   )
   const failures = inspectRoadmap(repository).filter((finding) => finding.level === 'FAIL')
   expect(failures).toContainEqual(expect.objectContaining({ area: 'ITEM-2', msg: 'non-open item must be in blocking or next' }))
   expect(failures).toContainEqual(expect.objectContaining({ area: 'ITEM-3' }))
+})
+
+test('every item ends with Discussion', () => {
+  const repository = createFixture()
+  const item = join(repository, 'docs', 'roadmap', 'TEST-FND-001-build-the-foundation.md')
+  writeFileSync(item, readFileSync(item, 'utf8').replace('\n## Discussion\n', '\n## Discussion moved\n'))
+  expect(inspectRoadmap(repository)).toContainEqual(
+    expect.objectContaining({ area: 'ITEM-3', msg: '## Discussion must be the final top-level section' })
+  )
+})
+
+test('Soon work carries shaping detail', () => {
+  const repository = createFixture()
+  const item = join(repository, 'docs', 'roadmap', 'TEST-FND-001-build-the-foundation.md')
+  writeFileSync(
+    item,
+    readFileSync(item, 'utf8')
+      .replace('horizon: next', 'horizon: soon')
+      .replace(
+        '\n## Current state\n\nThe first slice is not implemented.\n\n## Steps\n\n1. [ ] Implement the first slice.\n\n## Files touched\n\n- `src/foundation.ts`\n\n## Verify\n\n- `bun test`\n\n## Dependencies / blocks\n\nNo dependencies.\n',
+        ''
+      )
+  )
+  expect(inspectRoadmap(repository)).toContainEqual(
+    expect.objectContaining({
+      area: 'ITEM-3',
+      msg: 'body must contain Context → Boundary → Shaping → Discussion in order'
+    })
+  )
 })
 
 test('conform repairs only a stale root orientation', () => {

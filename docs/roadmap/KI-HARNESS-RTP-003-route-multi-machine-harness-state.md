@@ -17,3 +17,9 @@ Produce a finite routing table or decision record assigning each state class to 
 ## Boundary
 
 Cover project memory, runtime settings and hooks, learned patterns, and caches; create follow-up migrations only for state proven to be in the wrong home.
+
+## Discussion
+
+### Routing test
+
+Each state class needs an explicit durability, sharing, sensitivity, and ownership rationale before the work proposes moving it.

@@ -17,3 +17,9 @@ Review Cloudflare's [agent-setup prompt](https://developers.cloudflare.com/agent
 ## Boundary
 
 Adopt only parts that improve current safe Cloudflare work; retain Knowledge Islands ownership and judgment rather than following the prompt wholesale.
+
+## Discussion
+
+### Adoption threshold
+
+Only guidance supported by the current Cloudflare platform contract and compatible with the existing skill boundary should graduate into the canonical source set.
