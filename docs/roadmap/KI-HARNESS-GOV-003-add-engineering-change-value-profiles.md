@@ -2,8 +2,8 @@
 id: KI-HARNESS-GOV-003
 title: Add engineering change value profiles to the verb map
 theme: governance-consistency
-horizon: soon
-status: open
+horizon: next
+status: ready
 blocks: []
 blocked-by: []
 baseline-ref: null
@@ -43,6 +43,37 @@ The current repository has no independent verb map, so this cannot yet be an add
 
 Promote when one canonical owner and one concise presentation shape are selected, and the change can be bounded to named process or standard files without introducing score-driven ceremony.
 
+## Current state
+
+`ki-next` already asks for an evidence-backed comparison of benefit, leverage, risk reduction, delivery cost, reversibility, readiness, and dependency availability.
+
+It does not name the comparison as a reusable profile or include comprehensibility, maintenance reduction, and reliability explicitly.
+
+## Steps
+
+1. Make `ki-next` the sole owner of a concise change-value profile used only when ranking viable material candidates or when a human requests a material comparison.
+2. State the visible dimensions: capability, comprehensibility, maintenance reduction, reliability, leverage, delivery cost, reversibility, readiness, and dependency availability.
+3. Require short evidence for relevant dimensions and prohibit a composite score, stored per-item metadata, or a new tracker.
+4. Add one worked comparison illustrating a trade-off without pretending that the profile chooses work automatically.
+
+## Files touched
+
+- `skills/process/ki-next/SKILL.md` only if its concise ownership statement needs alignment
+- `skills/process/ki-next/references/standards-next-work.md`
+- `skills/process/ki-next/references/exemplars.md` if the worked comparison is clearer there
+- this work-item record
+
+## Verify
+
+- The dimensions are visible and evidence-oriented, not scored or collapsed into a rank.
+- Focused single-step work retains the lightweight path.
+- `ki repo audit --skill ki-skills --repo .`
+- `ki repo audit --skill ki-authoring --repo .`
+
+## Dependencies / blocks
+
+This item is independent.
+
 ## Discussion
 
 ### Comparison shape
@@ -54,3 +85,7 @@ The profile should retain several visible dimensions and their evidence so trade
 The item title refers to a verb map that is not currently a repository artefact.
 
 The shaping work therefore begins by resolving ownership rather than creating a second ungoverned map.
+
+### Ownership decision
+
+The profile belongs to `ki-next`, the existing owner of candidate comparison; no independent verb-map artefact is created.

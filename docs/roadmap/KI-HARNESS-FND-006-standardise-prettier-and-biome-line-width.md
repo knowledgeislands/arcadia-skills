@@ -3,7 +3,7 @@ id: KI-HARNESS-FND-006
 title: Standardise Prettier and Biome line width
 theme: foundation-tooling
 horizon: next
-status: open
+status: ready
 blocks: []
 blocked-by: []
 baseline-ref: null
@@ -50,6 +50,12 @@ The shared engineering standard already records both values and their separate f
 ## Dependencies / blocks
 
 This item is independent.
+
+## Delegation
+
+One bounded mechanical inventory pass may re-check the governed repository configuration files.
+
+The orchestrator reviews the inventory against the two owning standards and decides whether any observed difference is drift or an intentional file-scope boundary.
 
 ## Discussion
 
