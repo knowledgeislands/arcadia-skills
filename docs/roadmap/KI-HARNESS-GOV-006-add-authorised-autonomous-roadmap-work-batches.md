@@ -3,10 +3,10 @@ id: KI-HARNESS-GOV-006
 title: Add authorised autonomous roadmap-work batches
 theme: governance-consistency
 horizon: next
-status: open
+status: acceptance
 blocks: []
 blocked-by: []
-baseline-ref: null
+baseline-ref: 31cc6e4ba6d1454175626c8d3b27a4667a198fca
 ---
 
 ## Context
@@ -143,8 +143,8 @@ The remaining proof is an exercised bounded batch and its judgment review; no CL
 3. [x] Add `ki-batch` with distinct preparation, manual authorisation, implementation, parking, and post-gate procedures.
 4. [x] Add a complete batch-authorisation exemplar, including dependency order, authority, verification, stops, and completion target.
 5. [x] Add a parked-item exemplar and a post-gate acceptance packet that accounts for every admitted item.
-6. [ ] Exercise the process against a bounded set of ready harness work without adding CLI support.
-7. [ ] Apply the judgment portions of the relevant skill and roadmap rubrics, then present the result for acceptance.
+6. [x] Exercise the process against a bounded set of ready harness work without adding CLI support.
+7. [x] Apply the judgment portions of the relevant skill and roadmap rubrics, then present the result for acceptance.
 
 ## Files touched
 
@@ -217,6 +217,60 @@ Batch acceptance is not authorised.
 Mandatory stops are a public-contract change outside either plan, material scope expansion, overlapping write ownership, user-level installation, remote MCP, OAuth, push, release, destructive action, external coordination, failed required verification, or an unapproved policy decision.
 
 If either item is parked, the other may continue only after confirming it is independent.
+
+### Run ledger
+
+`KI-HARNESS-FND-003` entered as `ready` and reached `acceptance`.
+
+Its policy source change is [`8fe77940`](../../commit/8fe77940), and its item acceptance packet is [`5b98b3e3`](../../commit/5b98b3e3).
+
+It exercised the allowed judgment and mechanical delegation boundary without adding a runtime mechanic, model default, or context store.
+
+`KI-HARNESS-FND-005` entered as `ready` and reached `acceptance`.
+
+Its acceptance packet is [`b0a28c68`](../../commit/b0a28c68).
+
+The official Cloudflare prompt review adopted no directive: the prompt is agent-local provisioning guidance, not hosting-standard evidence, and no user-level installation, remote MCP, OAuth, or external coordination occurred.
+
+Both items passed their stated `ki-skills` and `ki-authoring` audits.
+
+The batch post-gate passed `bun run test` (218 pass), `bunx tsc --noEmit`, and clean `ki-skills`, `ki-roadmap`, and `ki-authoring` audits.
+
+No item was parked, skipped, or deferred; no stop condition occurred; and no acceptance, Done transition, prune, push, or release authority was exercised.
+
+The required next human action is normal `ki-accept` review of FND-003 and FND-005.
+
+## Acceptance
+
+### Delivered
+
+Exercised `ki-batch` through one explicitly authorised, independent two-item harness batch and recorded the complete post-gate ledger.
+
+### Summary of changes
+
+Both admitted items progressed from Ready to Acceptance under the approved boundary.
+
+The run retained independent item baselines, evidence, verification, and manual acceptance boundaries; it added no KI CLI command or runtime-specific orchestration.
+
+### Verification
+
+- Revalidated both admitted items as Ready before the run and recorded their immutable common baseline.
+- Reviewed each delegated result before its acceptance packet was recorded.
+- `bun run test` — 218 pass, 0 fail.
+- `bunx tsc --noEmit`
+- `ki repo audit --skill ki-skills --repo .`
+- `ki repo audit --skill ki-roadmap --repo .`
+- `ki repo audit --skill ki-authoring --repo .`
+
+### Outstanding concerns
+
+FND-003 and FND-005 await normal human acceptance.
+
+This item awaits review of the first exercised batch before any CLI support or broader batch authority is considered.
+
+### Mini recap
+
+The rehearsal shows that a tightly scoped, human-authorised batch can deliver independent Ready work to Acceptance while preserving item ownership, explicit stop conditions, and the human closure gate.
 
 ## Discussion
 
