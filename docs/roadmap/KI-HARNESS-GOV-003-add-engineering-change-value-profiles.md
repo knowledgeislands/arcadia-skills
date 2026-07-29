@@ -3,10 +3,10 @@ id: KI-HARNESS-GOV-003
 title: Add engineering change value profiles to the verb map
 theme: governance-consistency
 horizon: next
-status: ready
+status: in-progress
 blocks: []
 blocked-by: []
-baseline-ref: null
+baseline-ref: 02df2024e850dc64ce5c757bfc54ee870ecaaadd
 ---
 
 ## Context

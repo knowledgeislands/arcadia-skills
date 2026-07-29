@@ -3,10 +3,10 @@ id: KI-HARNESS-GOV-007
 title: Run local CLI and process close-out batch
 theme: governance-consistency
 horizon: next
-status: ready
+status: in-progress
 blocks: []
 blocked-by: []
-baseline-ref: null
+baseline-ref: 02df2024e850dc64ce5c757bfc54ee870ecaaadd
 ---
 
 ## Context
