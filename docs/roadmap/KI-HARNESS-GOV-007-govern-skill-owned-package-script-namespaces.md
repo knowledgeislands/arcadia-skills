@@ -2,9 +2,8 @@
 id: KI-HARNESS-GOV-007
 title: Govern skill-owned package-script namespaces
 theme: governance-consistency
-horizon: future
+horizon: soon
 status: open
-candidate: true
 blocks: []
 blocked-by: []
 baseline-ref: null
@@ -19,6 +18,28 @@ The existing families use meaningful namespaces — including `ki:site:*`, `ki:s
 ## Boundary
 
 Do not add package-script aliases for native `ki repo audit` or `ki repo conform`, loosen the retired generic tool aliases, or require every capability to publish a package script. Do not infer ownership from an undeclared naming convention or retain legacy aliases during a migration.
+
+## Shaping
+
+### Intended approach
+
+Define one explicit, repository-local registry that maps every non-lifecycle `ki:*` package-script key to the skill that owns its contract. Keep the registry declarative and exact: the owning skill declares the permitted keys or namespace, while `ki-engineering` reads the registry to reject keys with no owner or an invalid shape.
+
+Inventory the harness and core public repositories before writing the rule. For each existing key, either identify the owning skill and its artifact-level check, or retire the script. Migrate ambiguous keys directly to their final owned form and update CI and documented invocations in the same cut.
+
+### Known dependencies
+
+The harness contains both a capability-specific build script and an evaluation script, while the website has a site-owned namespace. The inventory must establish whether each already has a governing skill and whether that skill is declared in the repository configuration; an undeclared or absent owner is a design finding, not a reason to grandfather the key.
+
+`ki-engineering` owns universal registry membership and grammar. The owner skill validates command semantics and CI only where those concern its artifact. This change affects the harness first and can then be rolled through the other primary public repositories under their own work items.
+
+### Decision still needed
+
+Choose the registry's concrete `.ki-config.toml` shape and its relationship to capability declaration. In particular, decide how a repository records ownership for a script whose owning harness skill is not otherwise selected for that repository's audit coverage.
+
+### Promotion conditions
+
+Promote when the registry syntax, validation ownership split, complete core-repository inventory, clean-cut migration map, and focused harness verification are reviewable.
 
 ## Discussion
 
@@ -37,3 +58,7 @@ Inventory every current `ki:` key, assign its namespace to a skill, and replace 
 ### Promotion condition
 
 Promote once the registry representation, backward-incompatible migration scope, and native checker ownership are concrete enough to plan and verify across the affected repositories.
+
+### Ownership before naming
+
+The namespace communicates ownership only after the registry makes that ownership checkable. A plausible key such as `ki:eval` is not sufficient evidence by itself: its owner must be explicit, or the key must disappear. This prevents the common engineering rule from becoming a broad prefix allow-list.

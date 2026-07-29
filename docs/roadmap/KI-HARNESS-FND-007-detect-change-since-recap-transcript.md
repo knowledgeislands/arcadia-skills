@@ -2,9 +2,8 @@
 id: KI-HARNESS-FND-007
 title: Detect repository change since the recap transcript
 theme: foundation-tooling
-horizon: future
+horizon: soon
 status: open
-candidate: true
 blocks: []
 blocked-by: []
 baseline-ref: null
@@ -17,6 +16,28 @@ baseline-ref: null
 ## Boundary
 
 Do not introduce a time-based freshness threshold, require a transcript for recap, or treat transcript-derived tool counts as a replacement for current Git checks. The helper remains read-only and must state uncertainty when it cannot establish a comparable repository baseline.
+
+## Shaping
+
+### Intended approach
+
+Extend the read-only grounding helper with one small, serialisable repository-evidence record: resolved repository root, full `HEAD` when available, and the observed clean or dirty working-tree state. A recap emits that exact record with its grounded output.
+
+On a later run, inspect only a deliberately marked, compatible record from the selected eligible transcript. Compare its recorded `HEAD` with current Git state, enumerate the commit range and changed tracked paths when Git can resolve both revisions, and report one factual result: `unchanged`, `changed`, or `unavailable`.
+
+Keep the result separate from judgment. `ki-recap` continues to re-check live Git state and uses the comparison only to qualify transcript-derived tool tallies and high-cost suggestions.
+
+### Known dependencies
+
+The implementation is local to `ki-recap`: its grounding helper, its synthetic Claude/Codex transcript fixtures, and the recap procedure. It must recognise a record carried by both runtime transcript formats without treating arbitrary tool output, timestamps, or hash-like text as a baseline.
+
+### Decision still needed
+
+Choose the smallest stable marker and payload format that a later helper can recover from both transcript formats without coupling the record to a particular host's event schema. The record must be observable in the recap output and testable through synthetic transcript fixtures.
+
+### Promotion conditions
+
+Promote when the exact evidence payload, compatible-record selection rule, unavailable behaviour, and fixture cases for unchanged, divergent, and ungrounded transcripts are specified.
 
 ## Discussion
 
@@ -39,3 +60,7 @@ The eventual recap can say whether transcript-derived signals are representative
 ### Conservative presentation
 
 When divergence is established, surface transcript tool tallies and high-cost candidates as historical evidence with their baseline range. When it is unavailable, omit those derived recommendations rather than giving them a spurious live-session authority. The recap still runs its present-state Git and roadmap checks in every case.
+
+### Implementation boundary
+
+This is a provenance feature for historical transcript signals, not a session log or a general Git-history API. It does not alter transcript selection, write to a repository, or decide that a change is material.

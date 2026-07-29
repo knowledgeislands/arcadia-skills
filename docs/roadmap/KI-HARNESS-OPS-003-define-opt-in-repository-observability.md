@@ -23,3 +23,15 @@ Disabled means no network activity; enabled reporting is best-effort and never c
 ### Trust boundary
 
 Shaping must make consent, emitted fields, failure isolation, and endpoint ownership inspectable before selecting any instrumentation mechanism.
+
+### Minimum event model
+
+The first decision is whether repository observability has a useful minimum beyond the existing human-readable `ki` output. Any candidate event must identify its producer, repository scope, operation, outcome, duration, and redacted diagnostic category without exposing command arguments, environment values, file contents, prompt text, transcripts, or user configuration.
+
+### Activation and failure model
+
+An enabled endpoint must be explicit repository or user configuration with a defined owner; an absent configuration is the normal state. Emission must be asynchronous or otherwise isolated so endpoint failure, authentication failure, or network delay cannot alter audit findings, conform writes, exit status, or local CLI usability.
+
+### Evidence for promotion
+
+Before this moves beyond Future, name one operational question that current local logs cannot answer, one consent and configuration owner, the exact event fields needed to answer it, and a test proving that disabled mode makes no network attempt.
