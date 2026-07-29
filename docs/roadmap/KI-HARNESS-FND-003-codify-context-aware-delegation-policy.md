@@ -3,10 +3,10 @@ id: KI-HARNESS-FND-003
 title: Codify context-aware delegation policy
 theme: foundation-tooling
 horizon: next
-status: ready
+status: in-progress
 blocks: []
 blocked-by: []
-baseline-ref: null
+baseline-ref: 31cc6e4ba6d1454175626c8d3b27a4667a198fca
 ---
 
 ## Context

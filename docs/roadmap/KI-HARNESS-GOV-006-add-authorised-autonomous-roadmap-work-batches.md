@@ -188,6 +188,36 @@ Use bounded rounds with separate file ownership:
 
 The orchestrator owns integration, generated publications, full verification, and the final review against this item.
 
+## First authorised batch
+
+### BATCH-2026-07-29-FND-003-FND-005
+
+The user approved this authorisation on 2026-07-29.
+
+It admits `KI-HARNESS-FND-003` and `KI-HARNESS-FND-005` from the immutable baseline `31cc6e4ba6d1454175626c8d3b27a4667a198fca`.
+
+Both are independent: FND-005 research may proceed beside FND-003 drafting, but no workers may edit the same file and final integration remains serial.
+
+Scope is `knowledgeislands/ki-agentic-harness`, limited to each item’s Ready plan and a necessary directly related public-guidance alignment.
+
+Excluded are runtime spawning mechanics, new agents, Cloudflare plugin/skill/MCP/OAuth setup, pushes, releases, pruning, and unrelated refactors.
+
+The timebox is two hours from approval.
+
+The completion target is Acceptance: each item must reach `acceptance` with its own verification packet or be parked with evidence and the exact human decision required.
+
+Allowed delegation is bounded source classification and mechanical wording work.
+
+The orchestrator owns policy judgment, diff review, integration, and verification.
+
+FND-005 may record non-adoption where the Cloudflare prompt exceeds an existing KI owner’s boundary.
+
+Batch acceptance is not authorised.
+
+Mandatory stops are a public-contract change outside either plan, material scope expansion, overlapping write ownership, user-level installation, remote MCP, OAuth, push, release, destructive action, external coordination, failed required verification, or an unapproved policy decision.
+
+If either item is parked, the other may continue only after confirming it is independent.
+
 ## Discussion
 
 ### First deliverable
