@@ -1,0 +1,142 @@
+// Canonical source for the roadmap and implementation cycles. Regenerate with:
+// dot -Tsvg roadmap-implementation-cycles.dot -o roadmap-implementation-cycles.svg
+//
+// Solid arrows move an item between lifecycle states. Dashed arrows show
+// orchestration or optional delegation. Gold diamonds are manual authority gates.
+digraph roadmap_implementation_cycles {
+  graph [
+    bgcolor="#fbfcfe"
+    fontname="Helvetica"
+    fontsize=20
+    label=<
+      <b>Knowledge Islands roadmap and implementation cycles</b><br/>
+      <font point-size="11">Roadmap selection prepares work · implementation delivers it · acceptance closes it · batch reduces repeated preparation without removing authority</font>
+    >
+    labelloc=t
+    margin=0.25
+    nodesep=0.45
+    rankdir=TB
+    ranksep=0.75
+    splines=ortho
+  ]
+
+  node [
+    color="#8291a6"
+    fontcolor="#172033"
+    fontname="Helvetica"
+    fontsize=11
+    margin="0.14,0.1"
+    penwidth=1.2
+    shape=box
+    style="rounded,filled"
+  ]
+
+  edge [
+    arrowsize=0.7
+    color="#5f7087"
+    fontcolor="#41546d"
+    fontname="Helvetica"
+    fontsize=9
+    penwidth=1.1
+  ]
+
+  subgraph cluster_roadmap {
+    color="#afc5db"
+    fontcolor="#294866"
+    fontname="Helvetica"
+    fontsize=13
+    label="Roadmap cycle — select and prepare"
+    style="rounded"
+
+    recap [fillcolor="#e8edf3", label=< <b>ki-recap</b><br/><font point-size="9">ground live session state</font> >]
+    candidate [fillcolor="#e1e9fb", label=< <b>Future / Soon</b><br/><font point-size="9">open roadmap item</font> >]
+    next [fillcolor="#e8edf3", label=< <b>ki-next</b><br/><font point-size="9">triage · rank · select</font> >]
+    select_gate [fillcolor="#fff0b8", label=< <b>Manual selection</b><br/><font point-size="9">priority · horizon · scope</font> >, shape=diamond]
+    planned [fillcolor="#e1e9fb", label=< <b>Next / open</b><br/><font point-size="9">selected roadmap item</font> >]
+    plan [fillcolor="#e8edf3", label=< <b>ki-plan</b><br/><font point-size="9">shape executable plan</font> >]
+    ready_gate [fillcolor="#fff0b8", label=< <b>Manual ready gate</b><br/><font point-size="9">steps · scope · checks</font> >, shape=diamond]
+    ready [fillcolor="#d9f0e2", label=< <b>Ready</b><br/><font point-size="9">execution-ready item</font> >]
+
+    { rank=same; recap; candidate; next; select_gate; planned; plan; ready_gate; ready }
+
+    recap -> next
+    candidate -> next
+    next -> select_gate
+    select_gate -> planned [xlabel="confirm"]
+    planned -> plan
+    plan -> ready_gate
+    ready_gate -> ready [xlabel="approve"]
+  }
+
+  subgraph cluster_implementation {
+    color="#a8cfbd"
+    fontcolor="#24543d"
+    fontname="Helvetica"
+    fontsize=13
+    label="Implementation cycle — deliver one ready item"
+    style="rounded"
+
+    implement [fillcolor="#e8edf3", label=< <b>ki-implement</b><br/><font point-size="9">planned process skill</font> >]
+    progress [fillcolor="#d9f0e2", label=< <b>In progress</b><br/><font point-size="9">baseline recorded</font> >]
+    delegate [fillcolor="#e8edf3", label=< <b>ki-delegate</b><br/><font point-size="9">optional bounded work</font> >]
+    verification [fillcolor="#d9f0e2", label=< <b>Verified delivery</b><br/><font point-size="9">required checks pass</font> >]
+    acceptance [fillcolor="#d9f0e2", label=< <b>Acceptance</b><br/><font point-size="9">evidence packet ready</font> >]
+
+    { rank=same; implement; progress; delegate; verification; acceptance }
+
+    ready -> implement [lhead=cluster_implementation]
+    implement -> progress
+    progress -> verification
+    verification -> acceptance
+    implement -> delegate [style=dashed, xlabel="when useful"]
+    delegate -> progress [style=dashed, xlabel="integrate + gate"]
+  }
+
+  subgraph cluster_acceptance {
+    color="#d9c78d"
+    fontcolor="#6f5118"
+    fontname="Helvetica"
+    fontsize=13
+    label="Acceptance and cleanup — close deliberately"
+    style="rounded"
+
+    acceptance_gate [fillcolor="#fff0b8", label=< <b>Manual acceptance</b><br/><font point-size="9">review evidence + concerns</font> >, shape=diamond]
+    accept [fillcolor="#e8edf3", label=< <b>ki-accept</b><br/><font point-size="9">planned process skill</font> >]
+    done [fillcolor="#efe5c4", label=< <b>Done</b><br/><font point-size="9">retained completion record</font> >]
+    prune [fillcolor="#efe5c4", label=< <b>ki-accept prune</b><br/><font point-size="9">explicit confirmed cleanup</font> >]
+    pruned [fillcolor="#f1f3f5", label=< <b>Pruned</b><br/><font point-size="9">removed after retention</font> >]
+
+    { rank=same; acceptance_gate; accept; done; prune; pruned }
+
+    acceptance -> acceptance_gate
+    acceptance_gate -> accept [xlabel="approve"]
+    accept -> done
+    done -> prune [xlabel="recap / next may recommend"]
+    prune -> pruned [xlabel="confirm exact items"]
+    done -> recap [constraint=false, xlabel="next session"]
+  }
+
+  subgraph cluster_batch {
+    color="#c4b3de"
+    fontcolor="#503d78"
+    fontname="Helvetica"
+    fontsize=13
+    label="Authorised batch — coordinate repeated cycles"
+    style="rounded,dashed"
+
+    batch_prepare [fillcolor="#f0ebfa", label=< <b>ki-batch preparation</b><br/><font point-size="9">pre-handle selected next + plan work</font> >]
+    batch_gate [fillcolor="#fff0b8", label=< <b>Manual batch authorisation</b><br/><font point-size="9">named items · authority · stops</font> >, shape=diamond]
+    batch_run [fillcolor="#f0ebfa", label=< <b>ki-batch implementation</b><br/><font point-size="9">repeat independent delivery cycles</font> >]
+    park [fillcolor="#f6d9d9", label=< <b>Park</b><br/><font point-size="9">ambiguity or authority stop</font> >]
+
+    { rank=same; batch_prepare; batch_gate; batch_run; park }
+
+    planned -> batch_prepare [style=dashed, xlabel="approved candidate set"]
+    batch_prepare -> batch_gate
+    batch_gate -> batch_run [xlabel="approve"]
+    batch_run -> implement [style=dashed, xlabel="one ready item at a time"]
+    batch_run -> park [xlabel="stop / escalate"]
+    park -> recap [style=dashed, xlabel="record + return"]
+    batch_run -> acceptance_gate [style=dashed, xlabel="only if authority permits"]
+  }
+}
