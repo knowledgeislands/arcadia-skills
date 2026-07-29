@@ -19,7 +19,7 @@ The full procedure is in [the next-work standard](references/standards-next-work
 1. **Ground** the generated repository roadmap index and canonical work items, or Streams Focus and proposal index, plus the inbound handoff inbox.
 2. **Triage** incoming handoffs through a separately confirmed local disposition.
 3. **Review** relevance when asked or when a material stale signal is evident.
-4. **Select** one dependency-ready immediate item, or a small explicitly confirmed compatible set.
+4. **Select** one dependency-ready immediate item, or a small explicitly confirmed compatible set. Compare material alternatives with the evidence-based change-value profile in the next-work standard; focused fixes keep the lightweight path.
 5. **Defer** an explicitly named item only after presenting its exact later horizon or Focus, wording, and affected lifecycle state.
 6. **Hand off for planning** confirmed immediate non-KB work to `ki-plan`, which shapes the same `docs/roadmap/` item through Ready; a KB uses its proposal Checklist.
 7. **Recommend cleanup** when accepted done records are eligible for pruning, without deleting them.

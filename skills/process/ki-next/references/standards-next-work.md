@@ -6,6 +6,16 @@ It never treats a recap, handoff, or historic transcript as authority to write.
 
 Its responsibility ends at selecting, promoting, or deferring work and handing confirmed immediate non-KB work to `ki-plan` for shaping.
 
+## Contents
+
+- [1. Ground](#1-ground)
+- [2. Triage inbound handoffs](#2-triage-inbound-handoffs)
+- [3. Review relevance](#3-review-relevance)
+- [4. Select candidates](#4-select-candidates)
+- [5. Defer](#5-defer)
+- [6. Compare, rank, and confirm](#6-compare-rank-and-confirm)
+- [7. Finish](#7-finish)
+
 ## 1. Ground
 
 When a preceding `ki-recap` records high context pressure, require its safe handoff/compaction boundary before starting a new selection cycle. After compaction, treat the digest as orientation only and re-ground every repository fact below.
@@ -60,11 +70,31 @@ Use Soon only for understood but non-immediate work; Waiting for only with a nam
 
 Never silently delete, reopen, or detach a canonical execution record.
 
-## 6. Rank and confirm
+## 6. Compare, rank, and confirm
 
-For each viable option, provide an evidence-backed comparison of expected benefit, leverage, risk reduction, delivery cost, reversibility, readiness, and dependency availability.
+Use the **change-value profile** only when comparing viable material candidates or when a human asks for a material engineering-change comparison.
 
-Do not collapse this to one score.
+For a focused single-step fix, retain the lightweight selection path: explain the immediate reason and confirmation boundary without manufacturing a profile.
+
+The profile makes these dimensions visible, with short evidence only for the dimensions that materially distinguish the candidates:
+
+- **Capability** — user or system outcome enabled.
+- **Comprehensibility** — reduction in ambiguity, indirection, or cognitive load.
+- **Maintenance reduction** — obsolete code, duplication, or recurring manual work removed.
+- **Reliability** — failure mode, verification, or recovery improved.
+- **Leverage** — downstream work or users enabled by the result.
+- **Delivery cost** — bounded implementation and verification effort.
+- **Reversibility** — ease and safety of changing course after delivery.
+- **Readiness** — decision, scope, and evidence are sufficient to begin.
+- **Dependency availability** — required prerequisites, people, repositories, or services are available.
+
+Do not calculate a composite score, store profile metadata on a work item, or imply that the profile chooses work automatically.
+
+### Worked trade-off
+
+Two ready candidates can both be worthwhile: a narrow local repair may have low delivery cost and high reversibility, while a compatibility improvement has higher leverage and reliability but depends on another repository.
+
+Present those facts directly, choose only after the human confirms the order, and record neither candidate as objectively "higher value" once the unavailable dependency or chosen sequencing changes the decision.
 
 Before a write, show selected items, exact frontmatter or wording changes, order, and dependency effects.
 
