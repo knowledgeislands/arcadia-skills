@@ -60,6 +60,8 @@ What this item deliberately does not include.
 
 An item may add concise relevant context after `## Boundary`.
 
+A focused one-step item may remain brief. When an item adopts a material handoff, process design, or architectural proposal, preserve the decision-useful detail rather than reducing it to a prompt: its operating model, authority and safety boundaries, meaningful alternatives or source analysis, and the intended first deliverable. Add these as concise sections after `## Boundary`. The roadmap item is the durable handoff record until its work is planned; external links alone are insufficient.
+
 When it enters execution, retain those sections and append these sections in order:
 
 ```markdown
