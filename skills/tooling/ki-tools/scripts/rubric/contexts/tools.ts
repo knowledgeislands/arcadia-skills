@@ -61,6 +61,8 @@ export type ManualToolsContext = {
   readonly applicable: boolean
   readonly manual: FileState
   readonly manualPath: string
+  readonly packageJson: FileState
+  readonly manualCommand: string | null
   readonly workflows: DirectoryState
   readonly workflowText: string
   readonly unsafeWorkflowEntries: readonly string[]
@@ -225,6 +227,16 @@ export const createToolsSession = ({ mode, repository, publication }: RubricCont
 
   const packageKind = rootState === 'physical' ? nodeKind(join(root, 'package.json')) : 'missing'
   const packageJson: FileState = packageKind === 'missing' ? 'missing' : packageKind === 'file' ? 'physical' : 'unsafe'
+  let manualCommand: string | null = null
+  if (packageJson === 'physical') {
+    try {
+      const parsed = JSON.parse(readableText(join(root, 'package.json')) ?? '') as { readonly scripts?: Record<string, unknown> }
+      const candidate = parsed.scripts?.['ki:tools:lint-man']
+      if (typeof candidate === 'string') manualCommand = candidate
+    } catch {
+      // MAN-SCRIPT reports a missing or unsuitable manual command without failing unrelated tool checks.
+    }
+  }
 
   const manualDirectoryKind = rootState === 'physical' ? nodeKind(join(root, 'man')) : 'missing'
   const manualKind = manualDirectoryKind === 'directory' ? nodeKind(join(root, manualPath)) : manualDirectoryKind
@@ -284,7 +296,7 @@ export const createToolsSession = ({ mode, repository, publication }: RubricCont
       unsafeTestEntries: inspectedTests.unsafe
     },
     language: { applicable, packageJson },
-    manual: { applicable, manual, manualPath, workflows: inspectedWorkflows.state, workflowText, unsafeWorkflowEntries },
+    manual: { applicable, manual, manualPath, packageJson, manualCommand, workflows: inspectedWorkflows.state, workflowText, unsafeWorkflowEntries },
     config: {
       rootState,
       applicable,

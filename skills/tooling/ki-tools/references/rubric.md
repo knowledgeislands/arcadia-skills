@@ -78,7 +78,8 @@ Language toolchain deferral.
 
 Man-page linting requirements.
 
-- **MAN-LINT [M] — Manual lint CI** — A physical man/<tool>.1 page has a CI workflow that runs mandoc -T lint. (standards-tool-repositories.md)
+- **MAN-SCRIPT [M] — Manual lint command** — A physical man/<tool>.1 page has a ki:tools:lint-man command that runs mandoc -T lint. (standards-tool-repositories.md)
+- **MAN-LINT [M] — Manual lint CI** — A physical man/<tool>.1 page has CI that invokes ki:tools:lint-man. (standards-tool-repositories.md)
 
 ## CONFIG — configuration
 

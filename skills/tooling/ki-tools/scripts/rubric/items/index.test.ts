@@ -33,6 +33,7 @@ test('the catalogue preserves every ordered ki-tools criterion', () => {
     'SHELL-LINT',
     'SHELL-TEST',
     'LANG-DEFER',
+    'MAN-SCRIPT',
     'MAN-LINT',
     'CONFIG-1'
   ])
@@ -48,6 +49,7 @@ test('the catalogue preserves every ordered ki-tools criterion', () => {
     'SHELL-LINT': 'WARN',
     'SHELL-TEST': 'WARN',
     'LANG-DEFER': 'WARN',
+    'MAN-SCRIPT': 'WARN',
     'MAN-LINT': 'WARN',
     'CONFIG-1': 'WARN'
   })

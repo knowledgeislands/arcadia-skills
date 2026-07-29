@@ -58,9 +58,9 @@ const configItem = () => {
   return candidate.mechanical
 }
 
-const manualItem = () => {
-  const candidate = MAN.items.find((entry) => entry.code === 'MAN-LINT')
-  if (!candidate?.mechanical) throw new Error('MAN-LINT mechanical item is missing')
+const manualItem = (code: 'MAN-SCRIPT' | 'MAN-LINT') => {
+  const candidate = MAN.items.find((entry) => entry.code === code)
+  if (!candidate?.mechanical) throw new Error(`${code} mechanical item is missing`)
   return candidate.mechanical
 }
 
@@ -152,12 +152,15 @@ test('a physical manual page requires a mandoc lint workflow gate', () => {
 
   const missingGate = createToolsSession(options(repository, 'audit')).subjects[0]?.context()
   if (!missingGate) throw new Error('ki-tools session has no repository context')
-  expect(manualItem().audit.run(MAN.selectContext(missingGate))[0]?.status).toBe('VIOLATION')
+  expect(manualItem('MAN-SCRIPT').audit.run(MAN.selectContext(missingGate))[0]?.status).toBe('VIOLATION')
+  expect(manualItem('MAN-LINT').audit.run(MAN.selectContext(missingGate))[0]?.status).toBe('VIOLATION')
 
-  writeFileSync(join(repository, '.github', 'workflows', 'ci.yml'), `run: mandoc -T lint ${beforeManual.manual.manualPath}\n`)
+  writeFileSync(join(repository, 'package.json'), JSON.stringify({ scripts: { 'ki:tools:lint-man': `mandoc -T lint ${beforeManual.manual.manualPath}` } }))
+  writeFileSync(join(repository, '.github', 'workflows', 'ci.yml'), 'run: bun run ki:tools:lint-man\n')
   const gated = createToolsSession(options(repository, 'audit')).subjects[0]?.context()
   if (!gated) throw new Error('ki-tools session has no repository context')
-  expect(manualItem().audit.run(MAN.selectContext(gated))[0]?.status).toBe('PASS')
+  expect(manualItem('MAN-SCRIPT').audit.run(MAN.selectContext(gated))[0]?.status).toBe('PASS')
+  expect(manualItem('MAN-LINT').audit.run(MAN.selectContext(gated))[0]?.status).toBe('PASS')
 })
 
 test('symlinked governed paths remain report-only and are never traversed', () => {
