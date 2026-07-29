@@ -3,7 +3,7 @@ id: KI-HARNESS-FND-004
 title: Make repository audit evidence local-first
 theme: foundation-tooling
 horizon: next
-status: acceptance
+status: done
 blocks: []
 blocked-by: []
 baseline-ref: d1cff26c9f59c9cdb127017f7f27043f32c4371f
@@ -74,3 +74,7 @@ The current linked CLI exposes no direct remote-repository selector; the collect
 ### Mini recap
 
 FND-004 corrects the remote-first file-evidence regression without granting filesystem access to remote runners or weakening live GitHub checks.
+
+## Done
+
+Accepted by the user on 2026-07-29. Completed by `5bb05cd3` and verified by the focused `ki-repo` suite, TypeScript, the `ki-repo` audit, and the harness test suite.
