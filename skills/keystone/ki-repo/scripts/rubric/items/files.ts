@@ -6,7 +6,8 @@ const SOURCE = 'standards-repository.md'
 const FILES_1: RubricItem<FilesRubricContext> = {
   code: 'FILES-1',
   title: 'Required repository files',
-  description: 'README, license, gitignore, editor configuration, Claude orientation, and the exact ki-repo config marker are present.',
+  description:
+    'README, license, gitignore, editor configuration, Claude orientation, and the exact ki-repo config marker are present in the selected evidence source.',
   sources: [SOURCE],
   mechanical: {
     level: 'FAIL',
@@ -49,7 +50,8 @@ const FILES_J1: RubricItem<FilesRubricContext> = {
 export const FILES: RubricFamily<RepoRubricContext, FilesRubricContext> = {
   code: 'FILES',
   title: 'Repository files',
-  description: 'Required local files and repository document quality.',
+  description:
+    'Required repository files and document quality, using a local checkout when available or GitHub default-branch evidence for remote-only runs.',
   standard: SOURCE,
   selectContext: (context) => context.files,
   items: [FILES_1, FILES_3, FILES_J1]

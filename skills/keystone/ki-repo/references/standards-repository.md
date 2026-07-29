@@ -17,7 +17,7 @@ The canonical configuration a Knowledge Islands repo should carry, so repos pres
 
 ## Layer 1 — repo files
 
-Every repo carries these at the root. Presence is checked **on the default branch via the GitHub API** (the git-tree endpoint), not from a working checkout — so what's actually committed is what's audited, and `--org` mode covers uncloned repos.
+Every repo carries these at the root. A local audit reads the selected checkout's repository tree, configuration, and package metadata first. A remote-only or scheduled audit with no filesystem reads the GitHub default branch through its API instead. Neither mode silently substitutes the other source; findings identify the source used.
 
 | File              | Why                                                                                                             |
 | ----------------- | --------------------------------------------------------------------------------------------------------------- |
@@ -239,11 +239,11 @@ The native command resolves declared operations and checks every applicable laye
 
 ### What is read locally and what is read from GitHub
 
-Evidence comes from two places, and knowing which decides how a finding is interpreted. Live GitHub settings — visibility, default branch, merge and toggle configuration, topics, branch protection, required checks, security and Actions policy — exist only on the remote and have no working-tree equivalent, so they are necessarily read there. Committed file evidence is also read from the default branch: not only the presence of the Layer 1 files, but the **content** of `.ki-config.toml` that the declaration and coverage-cascade criteria depend on. Only bounded local configuration evidence is read from a checkout.
+Evidence comes from two distinct sources, and every finding identifies which one supplied it. A local checkout is primary for Layer 1 file presence, `.ki-config.toml`, tree-based coverage, and `package.json`; it includes tracked, staged, and unignored working-tree content. A local unpushed change therefore appears in a local audit. If a caller explicitly selects a local target and it cannot be read, the audit fails that local evidence collection rather than falling back to GitHub.
 
-The consequence to expect is that **a repository fixed locally still audits as failing until the fix is pushed**, and the failure text describes the corrected state as absent because the default branch has not yet changed. Declaring a table in `.ki-config.toml` and re-running the audit in the same breath will report it undeclared. This is not staleness in the checker and not a caching artefact — the criterion is a statement about the published repository, which is what the standard asserts. When a finding contradicts a file you are looking at, check `git log origin/main..HEAD` before investigating anything else.
+An organisation or other filesystem-free remote run reads that same file and configuration evidence from the repository's GitHub default branch. This lets a scheduled or sandboxed judgmental run assess a repository without granting it filesystem access. It sees published state, not a developer's checkout.
 
-The bias toward the remote also reflects where these criteria have to work: `--org` mode audits repositories that are not cloned at all, so a checkout cannot be assumed. In a cloud or CI context the same skills operate against the repository and its default branch on GitHub with no local tree, and reading committed state remotely is then the only available path. Local-tree mode is a convenience for choosing _which_ repositories to audit, not a switch to auditing the working tree.
+Live GitHub settings — visibility, default branch, merge and toggle configuration, topics, branch protection, required checks, security, and Actions policy — exist only on the remote and are always read through GitHub. A finding that compares a local manifest or declaration with a live setting identifies both sources.
 
 ## Conformance
 

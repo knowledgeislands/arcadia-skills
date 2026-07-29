@@ -1,16 +1,15 @@
 /**
  * Read-only domain evidence collection for the Knowledge Islands repo rubric.
  *
- * Committed files and live settings are checked **against GitHub**: file presence
- * via the git-tree API, settings via `gh repo view`, security/Actions via `gh api`.
- * Bounded local configuration evidence is read from an available checkout. The tree
- * path / `--org` only decide *which* repos to look at — local-tree
- * mode reads each dir's `origin` and audits the github.com ones under their real
- * GitHub identity; `--org` lists the org (and so catches repos not cloned locally).
+ * A physical checkout is the primary source for repository files, configuration,
+ * tree coverage, and package metadata. A remote `--org` run has no filesystem and
+ * reads those same surfaces from the GitHub default branch. Live repository settings
+ * always come from GitHub through `gh`. The tree path / `--org` decide which mode
+ * applies; a local target never silently falls back to remote file evidence.
  *
  * The standard has three layers (see references/standards-repository.md):
  *   1. FILES   — README, LICENSE, .gitignore, and .ki-config.toml
- *                (the repo's declared config), all present on the default branch.
+ *                (the repo's declared config), from the selected evidence source.
  *                .ki-config.toml is also the GATE of the coverage cascade: once a
  *                repo is confirmed a ki-repo by carrying it, each other governance
  *                skill whose applicability is detectable in the repo (a Streams/
@@ -157,8 +156,9 @@ function rootPaths(nwo: string, branch: string): Set<string> {
 const topicNames = (t: unknown): string[] =>
   Array.isArray(t) ? t.map((x) => (typeof x === 'string' ? x : (x?.name ?? x?.topic?.name))).filter(Boolean) : []
 
-// The repo's parsed package.json (or null if absent / unparseable), fetched once
-// and reused for the description-sync check and the MCP-dependency coverage signal.
+// The repo's parsed package.json (or null if absent / unparseable), read once from
+// the selected local checkout or GitHub default branch and reused for the
+// description-sync check and the MCP-dependency coverage signal.
 type Pkg = {
   name?: unknown
   version?: unknown
@@ -173,15 +173,16 @@ type Pkg = {
   dependencies?: Record<string, string>
   devDependencies?: Record<string, string>
 }
-function readPkg(nwo: string, files: Set<string>): Pkg | null {
-  if (!files.has('package.json')) return null
-  const text = ghRaw(nwo, 'package.json')
+function parsePkg(text: string | null): Pkg | null {
   if (text == null) return null
   try {
     return JSON.parse(text) as Pkg
   } catch {
     return null
   }
+}
+function readRemotePkg(nwo: string, files: Set<string>): Pkg | null {
+  return files.has('package.json') ? parsePkg(ghRaw(nwo, 'package.json')) : null
 }
 // package.json `description` (the in-repo source of truth the GitHub description must
 // be SYNCED with), or null when there is none / it isn't a non-empty string.
@@ -200,6 +201,28 @@ function treePaths(nwo: string, branch: string): Set<string> {
     return new Set((t.tree ?? []).map((e) => e.path))
   } catch {
     return new Set()
+  }
+}
+
+// A local audit reads the checkout's current repository content. `git ls-files`
+// covers tracked, staged, and untracked non-ignored paths without traversing
+// dependency directories or `.git`; it is deliberately not a GitHub fallback.
+export function localTreePaths(dir: string): Set<string> {
+  const output = execFileSync('git', ['-C', dir, 'ls-files', '--cached', '--others', '--exclude-standard'], {
+    encoding: 'utf8',
+    stdio: ['ignore', 'pipe', 'pipe']
+  })
+  return new Set(output.split(/\r?\n/).filter(Boolean))
+}
+
+const localRootPaths = (tree: ReadonlySet<string>): Set<string> =>
+  new Set([...tree].map((path) => path.split('/')[0]).filter((path): path is string => Boolean(path)))
+
+const localRaw = (dir: string, path: string): string | null => {
+  try {
+    return readFileSync(join(dir, path), 'utf8')
+  } catch {
+    return null
   }
 }
 
@@ -285,6 +308,34 @@ const REPO_FIELDS =
 const WRANGLER = ['wrangler.jsonc', 'wrangler.json', 'wrangler.toml']
 const ELEVENTY = ['eleventy.config.ts', 'eleventy.config.js', 'eleventy.config.cjs', 'eleventy.config.mjs']
 type Signals = { root: Set<string>; tree: Set<string>; pkg: Pkg | null }
+type ContentSource = 'local checkout' | 'GitHub default branch'
+type ContentEvidence = { files: Set<string>; kiText: string | null; ki: KiConfig | null; signals: Signals; source: ContentSource }
+
+function localContentEvidence(dir: string): ContentEvidence {
+  const tree = localTreePaths(dir)
+  const files = localRootPaths(tree)
+  const kiText = files.has(KI_CONFIG) ? localRaw(dir, KI_CONFIG) : null
+  return {
+    files,
+    kiText,
+    ki: kiText == null ? null : parseKiConfig(kiText),
+    signals: { root: files, tree, pkg: files.has('package.json') ? parsePkg(localRaw(dir, 'package.json')) : null },
+    source: 'local checkout'
+  }
+}
+
+function remoteContentEvidence(nwo: string, branch: string): ContentEvidence {
+  const files = rootPaths(nwo, branch)
+  const kiText = files.has(KI_CONFIG) ? ghRaw(nwo, KI_CONFIG) : null
+  return {
+    files,
+    kiText,
+    ki: kiText == null ? null : parseKiConfig(kiText),
+    signals: { root: files, tree: treePaths(nwo, branch), pkg: readRemotePkg(nwo, files) },
+    source: 'GitHub default branch'
+  }
+}
+
 const COVERAGE: { skill: string; table: string; artifact: string; detect: (s: Signals) => boolean }[] = [
   { skill: 'engineering', table: skillTable('ki-engineering'), artifact: 'package.json', detect: (s) => s.root.has('package.json') },
   {
@@ -782,6 +833,45 @@ export type RepoAuditCollection = {
 
 const evidenceLevel = (level: Level): RepoEvidenceLevel => level
 
+const LIVE_GITHUB_AREAS = new Set(['ACCESS-1', 'GH-1', 'MERGE-1', 'TOGGLE-1', 'VIS-1', 'TOPICS-1', 'BP-1', 'DEP-1', 'SEC-1', 'ACT-1'])
+const MIXED_EVIDENCE_AREAS = new Set(['GH-2', 'GH-3', 'PKG-1'])
+const CONTENT_AREAS = new Set(['FILES-1', 'FILES-3', 'GH-2', 'PKG-1', 'CHECKS-1', 'COV-1', 'STRUCT-1', 'STRUCT-2'])
+
+const findingSource = (area: string, content: ContentSource, live = true): string => {
+  if (!live) return content
+  if (LIVE_GITHUB_AREAS.has(area)) return 'GitHub live state'
+  if (MIXED_EVIDENCE_AREAS.has(area)) return `${content} + GitHub live state`
+  return content
+}
+
+const scoped = (nwo: string, finding: Finding, content: ContentSource, live = true): string =>
+  `${nwo} [${findingSource(finding.area, content, live)}]${finding.file ? `/${finding.file}` : ''}`
+
+const auditLocalContent = (nwo: string, content: ContentEvidence): Finding[] => {
+  const visibility = content.ki?.visibility?.toUpperCase() === 'PUBLIC' ? 'PUBLIC' : 'PRIVATE'
+  const license = content.ki?.license?.toLowerCase() ?? DEFAULT_LICENSE.toLowerCase()
+  const description = pkgDescription(content.signals.pkg) ?? ''
+  const virtualRepo: Repo = {
+    nameWithOwner: nwo,
+    visibility,
+    isArchived: false,
+    defaultBranchRef: { name: DEFAULT_BRANCH },
+    mergeCommitAllowed: false,
+    squashMergeAllowed: true,
+    rebaseMergeAllowed: false,
+    deleteBranchOnMerge: true,
+    hasIssuesEnabled: true,
+    hasProjectsEnabled: false,
+    hasWikiEnabled: false,
+    repositoryTopics: TOPICS,
+    licenseInfo: { key: license },
+    description
+  }
+  return auditRepo(virtualRepo, content.files, content.ki, content.kiText, content.signals).filter((finding) =>
+    CONTENT_AREAS.has(finding.area)
+  )
+}
+
 // ── evidence collection ───────────────────────────────────────────────────
 export const collectAuditFindings = (argv: readonly string[]): RepoAuditCollection => {
   // `--educate` prints the default ["knowledgeislands/ki-agentic-harness:ki-repo"] block for a new repo's
@@ -815,17 +905,33 @@ export const collectAuditFindings = (argv: readonly string[]): RepoAuditCollecti
 
   const reportTarget = resolve('.')
   const all: { level: Level; area: string; msg: string; ref?: string; file?: string }[] = []
-  // Fold the repo identity into `file` for the aggregate/JSON: `area` stays the bare rubric
-  // code (so it reads as a rubric code, not `nwo:code`), and the nwo — plus any in-repo path
-  // the finding carried — disambiguates findings across a multi-repo sweep.
-  const scoped = (nwo: string, f: Finding): string => `${nwo}${f.file ? `/${f.file}` : ''}`
   for (const t of targets) {
-    // Offline, local-disk vendor-integrity check — independent of GitHub reachability,
-    // so it still runs for a target with no github.com origin (or none at all).
+    // Runtime declarations are local-checkout evidence only; an `--org` run has no
+    // filesystem and therefore does not manufacture it from a remote response.
     const localFindings = t.dir ? localConfigFindings(t.dir) : []
+    let localContent: ContentEvidence | undefined
+    if (t.dir) {
+      try {
+        localContent = localContentEvidence(t.dir)
+      } catch (error) {
+        all.push({
+          level: 'FAIL',
+          area: 'ACCESS-1',
+          msg: `could not read local checkout evidence: ${String((error as Error).message ?? error).split('\n')[0]}`,
+          ref: STD,
+          file: `${t.label} [local checkout]`
+        })
+        continue
+      }
+    }
     if (!t.nameWithOwner) {
       all.push({ level: 'NOT_APPLICABLE', area: 'ACCESS-1', msg: t.note ?? 'GitHub checks skipped', ref: STD, file: t.label })
-      for (const x of localFindings) all.push({ level: x.level, area: x.area, msg: x.msg, ref: x.ref, file: scoped(t.label, x) })
+      if (localContent) {
+        for (const x of auditLocalContent(t.label, localContent))
+          all.push({ level: x.level, area: x.area, msg: x.msg, ref: x.ref, file: scoped(t.label, x, localContent.source, false) })
+      }
+      for (const x of localFindings)
+        all.push({ level: x.level, area: x.area, msg: x.msg, ref: x.ref, file: scoped(t.label, x, 'local checkout') })
       continue
     }
     // gh unauthenticated (typically CI): every GitHub-touching check is impossible, so skip
@@ -834,20 +940,30 @@ export const collectAuditFindings = (argv: readonly string[]): RepoAuditCollecti
     if (!ghAuthed()) {
       const note = 'gh not authenticated — GitHub checks skipped (gh auth login)'
       all.push({ level: 'NOT_APPLICABLE', area: 'ACCESS-1', msg: note, ref: STD, file: t.nameWithOwner })
-      for (const x of localFindings) all.push({ level: x.level, area: x.area, msg: x.msg, ref: x.ref, file: scoped(t.nameWithOwner, x) })
+      if (localContent) {
+        for (const x of auditLocalContent(t.nameWithOwner, localContent))
+          all.push({
+            level: x.level,
+            area: x.area,
+            msg: x.msg,
+            ref: x.ref,
+            file: scoped(t.nameWithOwner, x, localContent.source, false)
+          })
+      }
+      for (const x of localFindings)
+        all.push({ level: x.level, area: x.area, msg: x.msg, ref: x.ref, file: scoped(t.nameWithOwner, x, 'local checkout') })
       continue
     }
     let findings: Finding[]
     try {
       const r = JSON.parse(gh(['repo', 'view', t.nameWithOwner, '--json', REPO_FIELDS])) as Repo
       const branch = r.defaultBranchRef?.name ?? DEFAULT_BRANCH
-      const files = rootPaths(t.nameWithOwner, branch)
-      const kiText = files.has(KI_CONFIG) ? ghRaw(t.nameWithOwner, KI_CONFIG) : null
-      const ki = kiText != null ? parseKiConfig(kiText) : null
-      const signals: Signals = { root: files, tree: treePaths(t.nameWithOwner, branch), pkg: readPkg(t.nameWithOwner, files) }
+      const content = localContent ?? remoteContentEvidence(t.nameWithOwner, branch)
       // overrides are applied inside auditRepo: a not-enforced check simply does not fail
       // and is reported as INFO. No post-filtering here.
-      findings = [...auditRepo(r, files, ki, kiText, signals), ...localFindings]
+      findings = [...auditRepo(r, content.files, content.ki, content.kiText, content.signals), ...localFindings]
+      for (const x of findings)
+        all.push({ level: x.level, area: x.area, msg: x.msg, ref: x.ref, file: scoped(t.nameWithOwner, x, content.source) })
     } catch {
       findings = [
         {
@@ -858,8 +974,21 @@ export const collectAuditFindings = (argv: readonly string[]): RepoAuditCollecti
         },
         ...localFindings
       ]
+      if (localContent) {
+        for (const x of auditLocalContent(t.nameWithOwner, localContent))
+          all.push({
+            level: x.level,
+            area: x.area,
+            msg: x.msg,
+            ref: x.ref,
+            file: scoped(t.nameWithOwner, x, localContent.source, false)
+          })
+      }
+      for (const x of findings) {
+        const source = x.area === 'RUNTIMES-1' || x.area === 'RUNTIMES-2' ? 'local checkout' : 'GitHub default branch'
+        all.push({ level: x.level, area: x.area, msg: x.msg, ref: x.ref, file: scoped(t.nameWithOwner, x, source) })
+      }
     }
-    for (const x of findings) all.push({ level: x.level, area: x.area, msg: x.msg, ref: x.ref, file: scoped(t.nameWithOwner, x) })
   }
 
   return {

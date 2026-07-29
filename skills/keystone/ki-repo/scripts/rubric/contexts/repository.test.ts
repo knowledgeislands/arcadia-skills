@@ -1,11 +1,12 @@
 import { afterEach, describe, expect, test } from 'bun:test'
+import { execFileSync } from 'node:child_process'
 import { mkdirSync, mkdtempSync, rmSync, symlinkSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { dirname, join } from 'node:path'
 import type { RubricContextOptions } from '../../shared/rubric.ts'
 import { FILES } from '../items/files.ts'
 import { WORK } from '../items/working-areas.ts'
-import { collectAuditFindings } from './audit.ts'
+import { collectAuditFindings, localTreePaths } from './audit.ts'
 import { createRepoSession, type FilesRubricContext, type WorkingAreasRubricContext } from './repository.ts'
 
 const roots: string[] = []
@@ -17,7 +18,7 @@ afterEach(() => {
 const repository = (): string => {
   const root = mkdtempSync(join(tmpdir(), 'ki-repo-session-'))
   roots.push(root)
-  mkdirSync(join(root, '.git'))
+  execFileSync('git', ['init', '--quiet', root])
   return root
 }
 
@@ -186,5 +187,37 @@ supported_runtimes = ["claude-code", "codex"]
 ["knowledgeislands/ki-agentic-harness:ki-tokenomics-codex"]
 `)
     ).toEqual([])
+  })
+})
+
+describe('local repository evidence', () => {
+  test('uses the checkout tree, including unpushed content and excluding ignored dependencies', () => {
+    const root = repository()
+    mkdirSync(join(root, 'skills', 'ki-example'), { recursive: true })
+    mkdirSync(join(root, 'node_modules', 'ignored'), { recursive: true })
+    writeFileSync(join(root, '.gitignore'), 'node_modules/\n')
+    writeFileSync(join(root, 'README.md'), '# Local\n')
+    writeFileSync(join(root, 'skills', 'ki-example', 'SKILL.md'), '# Example\n')
+    writeFileSync(join(root, 'node_modules', 'ignored', 'package.json'), '{}\n')
+
+    expect(localTreePaths(root)).toEqual(new Set(['.gitignore', 'README.md', 'skills/ki-example/SKILL.md']))
+  })
+
+  test('labels local-content findings with their checkout source', () => {
+    const root = repository()
+    writeFileSync(join(root, 'README.md'), '# Local\n')
+
+    const findings = collectAuditFindings([root]).findings
+    expect(findings.find((finding) => finding.code === 'FILES-1')?.subject).toContain('[local checkout]')
+  })
+
+  test('fails a selected local target rather than falling back to GitHub content', () => {
+    const root = mkdtempSync(join(tmpdir(), 'ki-repo-broken-local-'))
+    roots.push(root)
+    writeFileSync(join(root, '.git'), 'not a git directory\n')
+
+    expect(collectAuditFindings([root]).findings).toContainEqual(
+      expect.objectContaining({ level: 'FAIL', code: 'ACCESS-1', subject: expect.stringContaining('[local checkout]') })
+    )
   })
 })

@@ -42,9 +42,9 @@ The tracked readable rubric is the exact publication of the structured catalogue
 
 → [standard](standards-repository.md)
 
-Required local files and repository document quality.
+Required repository files and document quality, using a local checkout when available or GitHub default-branch evidence for remote-only runs.
 
-- **FILES-1 [M] — Required repository files** — README, license, gitignore, editor configuration, Claude orientation, and the exact ki-repo config marker are present. (standards-repository.md)
+- **FILES-1 [M] — Required repository files** — README, license, gitignore, editor configuration, Claude orientation, and the exact ki-repo config marker are present in the selected evidence source. (standards-repository.md)
 - **FILES-3 [M] — Authoring baseline** — A governed repository declares ki-authoring explicitly. (standards-repository.md)
 - **FILES-J1 [J] — Repository document content** — README and license content is accurate and current. (standards-repository.md)
   - _Review prompt:_ Read the README and license and assess whether they accurately describe and license this repository.
