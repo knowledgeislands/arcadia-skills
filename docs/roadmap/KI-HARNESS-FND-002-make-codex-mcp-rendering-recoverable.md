@@ -3,7 +3,7 @@ id: KI-HARNESS-FND-002
 title: Make Codex MCP rendering recoverable
 theme: foundation-tooling
 horizon: next
-status: in-progress
+status: acceptance
 blocks: []
 blocked-by: []
 baseline-ref: 02df2024e850dc64ce5c757bfc54ee870ecaaadd
@@ -51,11 +51,11 @@ The local CLI exposes `mcp get <name> --json`, `mcp add`, and `mcp remove`, but 
 
 ## Steps
 
-1. Characterize and parse the native JSON representation needed to replay only renderer-supported stdio and URL servers, without printing secret values.
-2. Add a narrow native-command seam so focused tests can model `get`, `remove`, `add`, and post-write verification without running the real CLI.
-3. Before replacing a managed server, reject an unsupported or unreplayable prior representation; otherwise capture it, remove, add the desired canonical entry, and verify the native result.
-4. If replacement or verification fails after removal, attempt one replay of the captured supported representation; report both the primary and recovery outcome without claiming a transaction.
-5. Preserve `--check` as read-only and update the binding standard only for the evidence-backed recovery boundary.
+1. [x] Characterize and parse the native JSON representation needed to replay only renderer-supported stdio and URL servers, without printing secret values.
+2. [x] Add a narrow native-command seam so focused tests can model `get`, `remove`, `add`, and post-write verification without running the real CLI.
+3. [x] Before replacing a managed server, reject an unsupported or unreplayable prior representation; otherwise capture it, remove, add the desired canonical entry, and verify the native result.
+4. [x] If replacement or verification fails after removal, attempt one replay of the captured supported representation; report both the primary and recovery outcome without claiming a transaction.
+5. [x] Preserve `--check` as read-only and update the binding standard only for the evidence-backed recovery boundary.
 
 ## Files touched
 
@@ -78,6 +78,35 @@ The local CLI exposes `mcp get <name> --json`, `mcp add`, and `mcp remove`, but 
 This item is independent.
 
 It stops if the native JSON shape cannot replay a renderer-supported prior server without revealing or discarding configuration.
+
+## Acceptance
+
+### Delivered
+
+Added safe recovery for fully replayable Codex MCP replacements.
+
+### Summary of changes
+
+The renderer now performs `get → remove → add → get` for a supported prior native server and attempts one captured replay only after a confirmed removal and failed replacement or verification.
+
+It stops before removal for disabled or unsupported native state, including cwd, environment indirection, headers, bearer configuration, timeouts, tool state, and unknown fields.
+
+Tests use a fake native-command seam; no live user configuration was read or changed.
+
+### Verification
+
+- Focused renderer tests: 10 pass, covering supported stdio and URL replacement, `--check`, replacement failure, restore failure, verification failure, unreplayable state, and secret redaction.
+- `bunx tsc --noEmit`
+- `ki repo audit --skill ki-skills --repo .`
+- `ki repo audit --skill ki-authoring --repo .`
+
+### Outstanding concerns
+
+Native recovery remains deliberately non-transactional and supports only the explicit replayable subset.
+
+### Mini recap
+
+The renderer now restores a known-safe prior record when it can, and refuses mutation when it cannot prove that recovery is faithful.
 
 ## Discussion
 
