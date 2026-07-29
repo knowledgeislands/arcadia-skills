@@ -12,7 +12,7 @@ test('the catalogue preserves every ordered ki-tools criterion', () => {
   expect(catalogue.contract).toBe(1)
   expect(catalogue.name).toBe('ki-tools')
   expect(catalogue.createSession).toBeFunction()
-  expect(catalogue.families.map((family) => family.code)).toEqual(['RUBRIC', 'TOOL', 'SHELL', 'LANG', 'CONFIG'])
+  expect(catalogue.families.map((family) => family.code)).toEqual(['RUBRIC', 'TOOL', 'SHELL', 'LANG', 'MAN', 'CONFIG'])
   expect(items.map((item) => item.code)).toEqual([
     'TOOL-BIN',
     'TOOL-EXEC',
@@ -33,6 +33,7 @@ test('the catalogue preserves every ordered ki-tools criterion', () => {
     'SHELL-LINT',
     'SHELL-TEST',
     'LANG-DEFER',
+    'MAN-LINT',
     'CONFIG-1'
   ])
   expect(new Set(items.map((item) => item.code)).size).toBe(items.length)
@@ -47,6 +48,7 @@ test('the catalogue preserves every ordered ki-tools criterion', () => {
     'SHELL-LINT': 'WARN',
     'SHELL-TEST': 'WARN',
     'LANG-DEFER': 'WARN',
+    'MAN-LINT': 'WARN',
     'CONFIG-1': 'WARN'
   })
   expect(items.filter((item) => item.judgment)).toHaveLength(9)
@@ -55,7 +57,7 @@ test('the catalogue preserves every ordered ki-tools criterion', () => {
 test('the catalogue and family modules expose only the final public surfaces', async () => {
   const entrypoint = (await import('./index.ts')) as Record<string, unknown>
   expect(Object.keys(entrypoint)).toEqual(['default'])
-  expect(familyModules).toHaveLength(5)
+  expect(familyModules).toHaveLength(6)
   for (const file of familyModules) {
     const module = (await import(`./${file}`)) as Record<string, unknown>
     expect(Object.keys(module)).toHaveLength(1)

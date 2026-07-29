@@ -4,6 +4,7 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import type { RubricContextOptions } from '../../shared/rubric.ts'
 import { CONFIG } from '../items/config.ts'
+import { MAN } from '../items/manual.ts'
 import { TOOL } from '../items/tool.ts'
 import { createToolsSession } from './tools.ts'
 
@@ -54,6 +55,12 @@ const toolItem = (code: string) => {
 const configItem = () => {
   const candidate = CONFIG.items.find((entry) => entry.code === 'CONFIG-1')
   if (!candidate?.mechanical) throw new Error('CONFIG-1 mechanical item is missing')
+  return candidate.mechanical
+}
+
+const manualItem = () => {
+  const candidate = MAN.items.find((entry) => entry.code === 'MAN-LINT')
+  if (!candidate?.mechanical) throw new Error('MAN-LINT mechanical item is missing')
   return candidate.mechanical
 }
 
@@ -134,6 +141,23 @@ test('version evidence reports an executable that rejects --version', () => {
 
   expect(context.tool.version).toBe('failed')
   expect(toolItem('TOOL-VERSION').audit.run(TOOL.selectContext(context))[0]?.status).toBe('VIOLATION')
+})
+
+test('a physical manual page requires a mandoc lint workflow gate', () => {
+  const { repository } = fixture()
+  const beforeManual = createToolsSession(options(repository, 'audit')).subjects[0]?.context()
+  if (!beforeManual) throw new Error('ki-tools session has no repository context')
+  mkdirSync(join(repository, 'man'))
+  writeFileSync(join(repository, beforeManual.manual.manualPath), '.TH demo 1\n')
+
+  const missingGate = createToolsSession(options(repository, 'audit')).subjects[0]?.context()
+  if (!missingGate) throw new Error('ki-tools session has no repository context')
+  expect(manualItem().audit.run(MAN.selectContext(missingGate))[0]?.status).toBe('VIOLATION')
+
+  writeFileSync(join(repository, '.github', 'workflows', 'ci.yml'), `run: mandoc -T lint ${beforeManual.manual.manualPath}\n`)
+  const gated = createToolsSession(options(repository, 'audit')).subjects[0]?.context()
+  if (!gated) throw new Error('ki-tools session has no repository context')
+  expect(manualItem().audit.run(MAN.selectContext(gated))[0]?.status).toBe('PASS')
 })
 
 test('symlinked governed paths remain report-only and are never traversed', () => {

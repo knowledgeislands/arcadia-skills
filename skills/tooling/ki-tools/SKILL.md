@@ -3,7 +3,7 @@ name: ki-tools
 ki-depends-on: []
 ki-shared-dependencies: [ki-skills:rubric]
 description: >
-  Audit, conform, or scaffold a Knowledge Islands `tools-*` repo — ONE standalone command-line tool per repo, distributed by a `curl | bash` installer AND a companion Homebrew tap formula. Governs the container SHAPE language-agnostically (bash today, a future Python/Go tool fits): the `bin/<tool>` executable + its exec bit, `install.sh`, versioning + `--version` + `vX.Y.Z` tags, `CHANGELOG.md`, a CI workflow, and capability conditionals (a shell entrypoint needs shellcheck + a bats suite; a `package.json` defers to `ki-engineering`). Triggers: "audit this tool repo", "scaffold a CLI tool", "release a command-line tool", "does this tools- repo follow our standard", "check my tools- repo". Off-ramps: the Homebrew tap + its formula → `ki-homebrew-tap`; GitHub settings and standard files (README, LICENSE) → `ki-repo`; a TS/Bun toolchain (`package.json`) → `ki-engineering`. Container, not contents — it does not judge the tool's internal code quality.
+  Audit, conform, or scaffold a Knowledge Islands `tools-*` repo — ONE standalone command-line tool per repo, distributed by a `curl | bash` installer AND a companion Homebrew tap formula. Governs the container SHAPE language-agnostically (bash today, a future Python/Go tool fits): the `bin/<tool>` executable + its exec bit, `install.sh`, versioning + `--version` + `vX.Y.Z` tags, `CHANGELOG.md`, a CI workflow, and capability conditionals (a shell entrypoint needs shellcheck + a bats suite; a physical `man/<tool>.1` needs a `mandoc -T lint` CI gate; a `package.json` defers to `ki-engineering`). Triggers: "audit this tool repo", "scaffold a CLI tool", "release a command-line tool", "does this tools- repo follow our standard", "check my tools- repo". Off-ramps: the Homebrew tap + its formula → `ki-homebrew-tap`; GitHub settings and standard files (README, LICENSE) → `ki-repo`; a TS/Bun toolchain (`package.json`) → `ki-engineering`. Container, not contents — it does not judge the tool's internal code quality.
 argument-hint: 'audit <repo> | conform <repo> | help | educate <repo> | refresh'
 ---
 
@@ -31,6 +31,7 @@ tools-<name>/
 │                           #   verifies the download, idempotent. The `curl | bash` contract.
 ├── tests/ or src/tests/    # executable test suite (a *.bats suite under tests/ for a shell tool). Expected.
 ├── .github/workflows/*.yml # CI: lint + test on every push. Expected.
+├── man/<name>.1            # Optional manual source; when present, CI runs mandoc -T lint.
 ├── CHANGELOG.md            # keep-a-changelog + semver. Releases are vX.Y.Z git tags + a GitHub release each.
 ├── README.md · LICENSE     # ki-repo's job — not governed here.
 └── .ki-config.toml         # carries qualified ki-repo + ki-tools declarations (the opt-in marker).
@@ -44,6 +45,7 @@ Mirrors `ki-engineering`'s capability-conditional pattern: what the repo _is_ de
 
 - **Shell entrypoint** (the primary `bin/` file has a `bash`/`sh` shebang): it MUST be shellcheck-clean in CI (a workflow references `shellcheck`) and ship a `bats` suite that CI runs (a `*.bats` file under `tests/` and a workflow that references `bats`).
 - **A `package.json` appears** (a TS/Bun tool): the repo defers lint/test to `ki-engineering` and MUST also declare `["knowledgeislands/ki-agentic-harness:ki-engineering"]` in its `.ki-config.toml`. The shell checks don't apply.
+- **A physical `man/<tool>.1` page appears**: a CI workflow MUST run `mandoc -T lint man/<tool>.1`.
 - **Another language** (Python, Go, …): defer to that language's own toolchain; the container checks (bin, install.sh, versioning, changelog, CI, tests) still apply.
 
 ## The qualified `ki-tools` marker

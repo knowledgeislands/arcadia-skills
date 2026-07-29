@@ -29,6 +29,7 @@ tools-<name>/
 ├── install.sh              # curl installer (the `curl | bash` contract). Expected.
 ├── tests/ or src/tests/    # executable test suite (a *.bats suite under tests/ for a shell tool). Expected.
 ├── .github/workflows/*.yml # CI: lint + test on every push. Expected.
+├── man/<name>.1            # Optional manual source; when present, mandoc -T lint runs in CI.
 ├── CHANGELOG.md            # keep-a-changelog + semver. Expected.
 ├── README.md · LICENSE     # ki-repo's job.
 └── .ki-config.toml         # qualified ki-repo + ki-tools declarations.
@@ -70,6 +71,7 @@ What the repo _is_ decides which checks apply — the same standard covers a bas
 | --- | --- |
 | Primary bin has a `bash`/`sh` shebang (SHELL) | A CI workflow references **shellcheck** (the tool is shellcheck-clean); `tests/` holds a **`*.bats`** suite CI runs (references `bats`). |
 | A `package.json` appears (TS/Bun tool) | The repo defers lint/test to **`ki-engineering`** and MUST also declare `["knowledgeislands/ki-agentic-harness:ki-engineering"]` in `.ki-config.toml`. Shell checks don't apply. |
+| A physical `man/<tool>.1` page appears | A CI workflow runs **`mandoc -T lint man/<tool>.1`**. |
 | Another language (Python, Go, …) | Defer to that language's own toolchain. The container checks (bin, install.sh, versioning, changelog, CI, tests) still apply. |
 
 There is deliberately **no `ki-shell` skill**: shell is the reference language, and its two tool-specific gates (shellcheck, bats) live here as capability conditionals rather than a separate skill (YAGNI at n=1). If a second shell-specific concern emerges, revisit.

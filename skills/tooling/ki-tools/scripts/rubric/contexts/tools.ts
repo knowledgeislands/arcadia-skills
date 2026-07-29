@@ -57,6 +57,15 @@ export type LanguageToolsContext = {
   readonly packageJson: FileState
 }
 
+export type ManualToolsContext = {
+  readonly applicable: boolean
+  readonly manual: FileState
+  readonly manualPath: string
+  readonly workflows: DirectoryState
+  readonly workflowText: string
+  readonly unsafeWorkflowEntries: readonly string[]
+}
+
 export type ToolsConfigContext = {
   readonly rootState: RootState
   readonly applicable: boolean
@@ -70,6 +79,7 @@ export type ToolsRubricContext = {
   readonly tool: ToolRepositoryContext
   readonly shell: ShellToolsContext
   readonly language: LanguageToolsContext
+  readonly manual: ManualToolsContext
   readonly config: ToolsConfigContext
 }
 
@@ -166,6 +176,7 @@ export const createToolsSession = ({ mode, repository, publication }: RubricCont
   const inspectedBins = rootState === 'physical' ? inspectDirectory(binPath, root, () => true) : { state: 'missing' as const, files: [], unsafe: [] }
   const bins = inspectedBins.files.map((name) => ({ name, executable: executable(join(binPath, name)) }))
   const expected = basename(root).replace(/^tools-/, '')
+  const manualPath = `man/${expected}.1`
   const primary = bins.find(({ name }) => name === expected)?.name ?? bins[0]?.name ?? null
   const primaryPath = primary ? join(binPath, primary) : null
   const primaryText = primaryPath ? (readableText(primaryPath) ?? '') : ''
@@ -214,6 +225,10 @@ export const createToolsSession = ({ mode, repository, publication }: RubricCont
 
   const packageKind = rootState === 'physical' ? nodeKind(join(root, 'package.json')) : 'missing'
   const packageJson: FileState = packageKind === 'missing' ? 'missing' : packageKind === 'file' ? 'physical' : 'unsafe'
+
+  const manualDirectoryKind = rootState === 'physical' ? nodeKind(join(root, 'man')) : 'missing'
+  const manualKind = manualDirectoryKind === 'directory' ? nodeKind(join(root, manualPath)) : manualDirectoryKind
+  const manual: FileState = manualKind === 'missing' ? 'missing' : manualKind === 'file' ? 'physical' : 'unsafe'
 
   const configPath = join(root, '.ki-config.toml')
   const configEvidence = rootState === 'physical' ? inspectConfig(configPath, nodeKind(configPath)) : { state: 'missing' as const, keys: [], content: null }
@@ -269,6 +284,7 @@ export const createToolsSession = ({ mode, repository, publication }: RubricCont
       unsafeTestEntries: inspectedTests.unsafe
     },
     language: { applicable, packageJson },
+    manual: { applicable, manual, manualPath, workflows: inspectedWorkflows.state, workflowText, unsafeWorkflowEntries },
     config: {
       rootState,
       applicable,
@@ -287,7 +303,7 @@ export const createToolsSession = ({ mode, repository, publication }: RubricCont
   return {
     subjects: [
       { families: ['RUBRIC'], context: () => context },
-      { families: ['TOOL', 'SHELL', 'LANG', 'CONFIG'], context: () => context, subject: root }
+      { families: ['TOOL', 'SHELL', 'LANG', 'MAN', 'CONFIG'], context: () => context, subject: root }
     ],
     proposal: () => {
       const commands = [...requestedExecutables].sort().map((path): ConformCommand => ({ program: 'chmod', arguments: ['+x', path] }))

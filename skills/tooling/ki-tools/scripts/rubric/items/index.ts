@@ -2,6 +2,7 @@ import type { SkillRubricDefinition } from '../../shared/rubric.ts'
 import { createToolsSession, type ToolsRubricContext } from '../contexts/tools.ts'
 import { CONFIG } from './config.ts'
 import { LANG } from './language.ts'
+import { MAN } from './manual.ts'
 import { RUBRIC } from './publication.ts'
 import { SHELL } from './shell.ts'
 import { TOOL } from './tool.ts'
@@ -11,5 +12,5 @@ export default {
   name: 'ki-tools',
   concern: 'command-line tool repository structure',
   createSession: createToolsSession,
-  families: [RUBRIC, TOOL, SHELL, LANG, CONFIG]
+  families: [RUBRIC, TOOL, SHELL, LANG, MAN, CONFIG]
 } satisfies SkillRubricDefinition<ToolsRubricContext>

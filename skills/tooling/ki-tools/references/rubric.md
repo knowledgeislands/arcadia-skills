@@ -12,6 +12,7 @@ Line-by-line criteria for auditing ki-tools. Classifications are derived from it
 - [TOOL — tool repository](#tool--tool-repository)
 - [SHELL — shell capabilities](#shell--shell-capabilities)
 - [LANG — language capabilities](#lang--language-capabilities)
+- [MAN — manual capabilities](#man--manual-capabilities)
 - [CONFIG — configuration](#config--configuration)
 
 ## RUBRIC — Generated rubric publication
@@ -70,6 +71,14 @@ Shell-specific CI requirements.
 Language toolchain deferral.
 
 - **LANG-DEFER [M] — JavaScript toolchain deferral** — A package.json-bearing tool defers lint and test to ki-engineering. (standards-tool-repositories.md)
+
+## MAN — manual capabilities
+
+→ [standard](standards-tool-repositories.md)
+
+Man-page linting requirements.
+
+- **MAN-LINT [M] — Manual lint CI** — A physical man/<tool>.1 page has a CI workflow that runs mandoc -T lint. (standards-tool-repositories.md)
 
 ## CONFIG — configuration
 
