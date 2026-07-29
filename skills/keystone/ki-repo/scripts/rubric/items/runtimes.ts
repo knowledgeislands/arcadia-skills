@@ -25,6 +25,17 @@ const RUNTIMES_2: RubricItem<RuntimesRubricContext> = {
   }
 }
 
+const RUNTIMES_3: RubricItem<RuntimesRubricContext> = {
+  code: 'RUNTIMES-3',
+  title: 'Repository-local ki-self projection',
+  description: 'An optional repository-local ki-self has one canonical .agents source and a relative Claude projection exactly when Claude Code is supported.',
+  sources: [SOURCE],
+  mechanical: {
+    level: 'FAIL',
+    audit: { phase: 'INSPECT', run: (context) => auditEvidence(context.runtimes3, 'FAIL') }
+  }
+}
+
 const RUNTIMES_J1: RubricItem<RuntimesRubricContext> = {
   code: 'RUNTIMES-J1',
   title: 'Runtime orientation split',
@@ -41,5 +52,5 @@ export const RUNTIMES: RubricFamily<RepoRubricContext, RuntimesRubricContext> = 
   description: 'Declared agent-runtime support and orientation.',
   standard: SOURCE,
   selectContext: (context) => context.runtimes,
-  items: [RUNTIMES_1, RUNTIMES_2, RUNTIMES_J1]
+  items: [RUNTIMES_1, RUNTIMES_2, RUNTIMES_3, RUNTIMES_J1]
 }

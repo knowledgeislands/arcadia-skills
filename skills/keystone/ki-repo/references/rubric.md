@@ -172,6 +172,7 @@ Declared agent-runtime support and orientation.
 
 - **RUNTIMES-1 [M] — Supported runtime declaration** — ki-repo declares a non-empty, duplicate-free list containing only supported runtimes. (standards-repository.md)
 - **RUNTIMES-2 [M] — Runtime environment coverage** — Every repository declares portable tokenomics and the real housekeeping and tokenomics capabilities required by its supported runtimes. (standards-repository.md)
+- **RUNTIMES-3 [M] — Repository-local ki-self projection** — An optional repository-local ki-self has one canonical .agents source and a relative Claude projection exactly when Claude Code is supported. (standards-repository.md)
 - **RUNTIMES-J1 [J] — Runtime orientation split** — Multi-runtime repositories use a shared AGENTS.md orientation with a thin Claude import unless a justified exception applies. (standards-repository.md)
   - _Review prompt:_ Review whether orientation is shared cleanly across the declared runtimes without duplicated or Claude-only instructions.
 

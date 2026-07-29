@@ -41,8 +41,8 @@
  * outcome validation, finding conversion, progress, and reporting.
  */
 import { execFileSync } from 'node:child_process'
-import { existsSync, readdirSync, readFileSync } from 'node:fs'
-import { join, resolve } from 'node:path'
+import { existsSync, lstatSync, readdirSync, readFileSync, readlinkSync, realpathSync } from 'node:fs'
+import { isAbsolute, join, resolve } from 'node:path'
 
 // ── the standard (keep in sync with references/standards-repository.md) ──────
 const DEFAULT_BRANCH = 'main'
@@ -701,6 +701,8 @@ function auditRepo(r: Repo, files: Set<string>, ki: KiConfig | null, kiText: str
 // declare a subset in `["knowledgeislands/ki-agentic-harness:ki-repo"] supported_runtimes`; anything outside this set has no
 // discovery path, so the linker would silently do nothing for it (RUNTIMES-1).
 const KNOWN_RUNTIMES = ['claude-code', 'codex']
+const LOCAL_SELF_SOURCE = '.agents/skills/ki-self'
+const CLAUDE_SELF_PROJECTION = '.claude/skills/ki-self'
 
 // Parse `supported_runtimes = ["a", "b"]` from the ["knowledgeislands/ki-agentic-harness:ki-repo"] table only (the documented
 // home of the key — table-aware, unlike the bootstrap resolver's tolerant match).
@@ -726,6 +728,59 @@ function parseSupportedRuntimes(text: string): { runtimes: string[]; rootTables:
   const list = runtimes as string[]
   if (new Set(list).size !== list.length) return { runtimes: [], rootTables, issue: 'must not repeat a runtime' }
   return { runtimes: list, rootTables }
+}
+
+const localState = (path: string): ReturnType<typeof lstatSync> | undefined => {
+  try {
+    return lstatSync(path)
+  } catch {
+    return undefined
+  }
+}
+
+const localKiSelfFindings = (dir: string, runtimes: readonly string[]): Finding[] => {
+  const { f, fail } = mk()
+  const source = join(dir, LOCAL_SELF_SOURCE)
+  const projection = join(dir, CLAUDE_SELF_PROJECTION)
+  const sourceState = localState(source)
+  const projectionState = localState(projection)
+
+  // A repository-local ki-self is optional. Once either the canonical source or
+  // runtime projection exists, however, its ownership and runtime shape are fixed.
+  if (!sourceState && !projectionState) return f
+
+  const sourceSkill = join(source, 'SKILL.md')
+  const sourceIsCanonical = Boolean(sourceState?.isDirectory() && !sourceState.isSymbolicLink() && localState(sourceSkill)?.isFile())
+  if (!sourceIsCanonical) {
+    fail('RUNTIMES-3', `${LOCAL_SELF_SOURCE}/ must be a physical directory containing SKILL.md`, LOCAL_SELF_SOURCE)
+    return f
+  }
+
+  if (runtimes.includes('claude-code')) {
+    if (!projectionState) {
+      fail('RUNTIMES-3', `declares claude-code but lacks the ${CLAUDE_SELF_PROJECTION} projection`, CLAUDE_SELF_PROJECTION)
+      return f
+    }
+    if (!projectionState.isSymbolicLink()) {
+      fail('RUNTIMES-3', `${CLAUDE_SELF_PROJECTION} must be a relative symbolic link to ${LOCAL_SELF_SOURCE}`, CLAUDE_SELF_PROJECTION)
+      return f
+    }
+    const target = readlinkSync(projection)
+    if (isAbsolute(target)) {
+      fail('RUNTIMES-3', `${CLAUDE_SELF_PROJECTION} must use a relative symbolic link to ${LOCAL_SELF_SOURCE}`, CLAUDE_SELF_PROJECTION)
+      return f
+    }
+    try {
+      if (realpathSync(projection) !== realpathSync(source))
+        fail('RUNTIMES-3', `${CLAUDE_SELF_PROJECTION} must resolve to ${LOCAL_SELF_SOURCE}`, CLAUDE_SELF_PROJECTION)
+    } catch {
+      fail('RUNTIMES-3', `${CLAUDE_SELF_PROJECTION} must be a non-broken relative symbolic link to ${LOCAL_SELF_SOURCE}`, CLAUDE_SELF_PROJECTION)
+    }
+  } else if (projectionState) {
+    fail('RUNTIMES-3', `${CLAUDE_SELF_PROJECTION} is present but claude-code is not declared in supported_runtimes`, CLAUDE_SELF_PROJECTION)
+  }
+
+  return f
 }
 
 // RUNTIMES-1: validate the required `["knowledgeislands/ki-agentic-harness:ki-repo"] supported_runtimes` declaration. A pure
@@ -754,6 +809,7 @@ function localConfigFindings(dir: string): Finding[] {
   const declared = new Set(parsed.rootTables)
   const missing = [...required].filter((skill) => !declared.has(skill)).sort()
   if (missing.length) fail('RUNTIMES-2', `supported runtime coverage requires missing table(s): ${missing.map((skill) => `[${skill}]`).join(', ')}`, KI_CONFIG)
+  f.push(...localKiSelfFindings(dir, parsed.runtimes))
   return f
 }
 

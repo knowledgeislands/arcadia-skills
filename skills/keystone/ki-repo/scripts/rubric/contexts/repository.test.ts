@@ -156,7 +156,7 @@ describe('runtime environment coverage', () => {
   const runtimeFindings = (configuration: string) => {
     const root = repository()
     writeFileSync(join(root, '.ki-config.toml'), configuration)
-    return collectAuditFindings([root]).findings.filter(({ code }) => code === 'RUNTIMES-1' || code === 'RUNTIMES-2')
+    return collectAuditFindings([root]).findings.filter(({ code }) => code === 'RUNTIMES-1' || code === 'RUNTIMES-2' || code === 'RUNTIMES-3')
   }
 
   test('requires the portable and runtime-specific environment tables', () => {
@@ -185,6 +185,50 @@ supported_runtimes = ["claude-code", "codex"]
 ["knowledgeislands/ki-agentic-harness:ki-tokenomics-codex"]
 `)
     ).toEqual([])
+  })
+
+  test('accepts a canonical ki-self with the Claude projection for declared runtimes', () => {
+    const root = repository()
+    mkdirSync(join(root, '.agents', 'skills', 'ki-self'), { recursive: true })
+    writeFileSync(join(root, '.agents', 'skills', 'ki-self', 'SKILL.md'), '# KI Self\n')
+    mkdirSync(join(root, '.claude', 'skills'), { recursive: true })
+    symlinkSync('../../.agents/skills/ki-self', join(root, '.claude', 'skills', 'ki-self'), 'dir')
+    writeFileSync(join(root, '.ki-config.toml'), '["knowledgeislands/ki-agentic-harness:ki-repo"]\nsupported_runtimes = ["claude-code", "codex"]\n')
+
+    expect(collectAuditFindings([root]).findings.filter(({ code }) => code === 'RUNTIMES-3')).toEqual([])
+  })
+
+  test('requires a Claude projection only when Claude Code is declared', () => {
+    const root = repository()
+    mkdirSync(join(root, '.agents', 'skills', 'ki-self'), { recursive: true })
+    writeFileSync(join(root, '.agents', 'skills', 'ki-self', 'SKILL.md'), '# KI Self\n')
+    writeFileSync(join(root, '.ki-config.toml'), '["knowledgeislands/ki-agentic-harness:ki-repo"]\nsupported_runtimes = ["claude-code"]\n')
+
+    expect(collectAuditFindings([root]).findings).toContainEqual(
+      expect.objectContaining({ code: 'RUNTIMES-3', message: expect.stringContaining('declares claude-code but lacks') })
+    )
+  })
+
+  test('rejects copied and undeclared Claude projections', () => {
+    const root = repository()
+    mkdirSync(join(root, '.agents', 'skills', 'ki-self'), { recursive: true })
+    mkdirSync(join(root, '.claude', 'skills', 'ki-self'), { recursive: true })
+    writeFileSync(join(root, '.agents', 'skills', 'ki-self', 'SKILL.md'), '# KI Self\n')
+    writeFileSync(join(root, '.claude', 'skills', 'ki-self', 'SKILL.md'), '# KI Self\n')
+    writeFileSync(join(root, '.ki-config.toml'), '["knowledgeislands/ki-agentic-harness:ki-repo"]\nsupported_runtimes = ["claude-code"]\n')
+
+    expect(collectAuditFindings([root]).findings).toContainEqual(
+      expect.objectContaining({ code: 'RUNTIMES-3', message: expect.stringContaining('must be a relative symbolic link') })
+    )
+
+    rmSync(join(root, '.claude'), { recursive: true, force: true })
+    mkdirSync(join(root, '.claude', 'skills'), { recursive: true })
+    symlinkSync('../../.agents/skills/ki-self', join(root, '.claude', 'skills', 'ki-self'), 'dir')
+    writeFileSync(join(root, '.ki-config.toml'), '["knowledgeislands/ki-agentic-harness:ki-repo"]\nsupported_runtimes = ["codex"]\n')
+
+    expect(collectAuditFindings([root]).findings).toContainEqual(
+      expect.objectContaining({ code: 'RUNTIMES-3', message: expect.stringContaining('claude-code is not declared') })
+    )
   })
 })
 
