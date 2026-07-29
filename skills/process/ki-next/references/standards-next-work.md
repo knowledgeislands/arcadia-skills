@@ -72,9 +72,9 @@ Invoke `ki-plan` only after a non-KB item is Blocking or Next.
 
 It shapes the same item through the stage-detail contract and stops for review before marking it Ready.
 
-The planned `ki-batch` process may repeat this selection-and-shaping procedure only within an approved preparation boundary.
+`ki-batch` may repeat this selection-and-shaping procedure only within an approved preparation boundary.
 
-That future orchestration does not permit `ki-next` to infer selection authority.
+That orchestration does not permit `ki-next` to infer selection authority.
 
 ## 7. Finish
 

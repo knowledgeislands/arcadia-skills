@@ -41,7 +41,7 @@ ki-kb-streams governs KB Focus and proposal enactment.
 
 `ki-next` works without it and never mines historical transcripts.
 
-The planned `ki-batch` process will apply repeated, explicitly authorised selection and shaping passes before coordinating repeated `ki-implement` cycles.
+`ki-batch` applies repeated, explicitly authorised selection and shaping passes before coordinating repeated `ki-implement` cycles.
 
 It does not change `ki-next` ownership of an individual selection decision.
 

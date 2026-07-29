@@ -47,8 +47,6 @@ ki-next
 
 Those responsibilities move cleanly to the dedicated process skills; `ki-plan` carries no compatibility verbs or fallback path for them.
 
-Until those skills ship, the relationship map states the target contract rather than claiming their invocation surfaces are available.
-
 ## Planning is repo-first
 
 In a KI code repository the canonical record is `docs/roadmap/<REPO>-<THEME>-<NNN>-<slug>.md`, authored through this skill—not a runtime-native Plan Mode scratch file.

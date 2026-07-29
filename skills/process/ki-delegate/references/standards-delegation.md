@@ -76,7 +76,7 @@ For a repository-wide audit, run `ki repo audit --repo <repo>` first and treat t
    next: <checkpoint>; blocker/change: <none or concise detail>
    ```
 
-9. **Mark verified implementation complete.** Once the work has passed its stated verification gate and reaches manual acceptance (or is recorded Done where no acceptance gate applies), end the caller-facing completion update with this compact banner. It means the implementation is complete and the next step is acceptance, not that the plan has already been closed. `ki-plan accept` emits the same banner for directly executed plan work. Use it once per completed unit, never for an intermediate round, an unverified diff, or a task merely handed to another agent.
+9. **Mark verified implementation complete.** Once the work has passed its stated verification gate and reaches manual acceptance (or is recorded Done where no acceptance gate applies), end the caller-facing completion update with this compact banner. It means the implementation is complete and the next step is acceptance, not that the work item has already been closed. Use it once per completed unit, never for an intermediate round, an unverified diff, or a task merely handed to another agent.
 
    ```text
    +------------------------------+

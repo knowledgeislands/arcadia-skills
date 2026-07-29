@@ -21,7 +21,7 @@ Present the exact item, its evidence, known concerns, and proposed terminal stat
 
 Require explicit human approval before writing `done`.
 
-The sole exception is a future batch authorisation that explicitly grants batched acceptance for this named item or exact named set.
+The sole exception is a batch authorisation that explicitly grants batched acceptance for this named item or exact named set.
 
 An authorisation that merely permits execution, delegation, or reporting is not acceptance authority.
 

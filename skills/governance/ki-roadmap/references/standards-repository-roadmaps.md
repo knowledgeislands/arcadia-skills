@@ -122,11 +122,11 @@ It never creates a duplicate plan file.
 
 `ready`, `in-progress`, `acceptance`, and `done` must remain in Blocking or Next.
 
-The future `ki-implement` process owns `ready` → `in-progress` → `acceptance`.
+`ki-implement` owns `ready` → `in-progress` → `acceptance`.
 
 Its start transition records the immutable full `HEAD` commit in `baseline-ref`; its completion writes the acceptance evidence packet.
 
-The future `ki-accept` process owns explicit `acceptance` → `done` and confirmed pruning.
+`ki-accept` owns explicit `acceptance` → `done` and confirmed pruning.
 
 `ki-recap` and `ki-next` may identify or recommend eligible pruning, but they never delete a work-item record.
 
