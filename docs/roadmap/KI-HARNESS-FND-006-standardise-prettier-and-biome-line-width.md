@@ -3,7 +3,7 @@ id: KI-HARNESS-FND-006
 title: Standardise Prettier and Biome line width
 theme: foundation-tooling
 horizon: next
-status: in-progress
+status: acceptance
 blocks: []
 blocked-by: []
 baseline-ref: 02df2024e850dc64ce5c757bfc54ee870ecaaadd
@@ -27,10 +27,10 @@ The shared engineering standard already records both values and their separate f
 
 ## Steps
 
-1. Re-check every governed TypeScript/Bun repository's Prettier and Biome configuration against the recorded values.
-2. Confirm the separate Markdown and code-formatter ownership boundaries are still accurate in `ki-authoring` and `ki-engineering`.
-3. Change a shared scaffold and every affected governed repository only if the inventory identifies actual drift; otherwise retain the intentional split without a no-op configuration rewrite.
-4. Record the evidence and present the conclusion for acceptance.
+1. [x] Re-check every governed TypeScript/Bun repository's Prettier and Biome configuration against the recorded values.
+2. [x] Confirm the separate Markdown and code-formatter ownership boundaries are still accurate in `ki-authoring` and `ki-engineering`.
+3. [x] Change a shared scaffold and every affected governed repository only if the inventory identifies actual drift; otherwise retain the intentional split without a no-op configuration rewrite.
+4. [x] Record the evidence and present the conclusion for acceptance.
 
 ## Files touched
 
@@ -56,6 +56,33 @@ This item is independent.
 One bounded mechanical inventory pass may re-check the governed repository configuration files.
 
 The orchestrator reviews the inventory against the two owning standards and decides whether any observed difference is drift or an intentional file-scope boundary.
+
+## Acceptance
+
+### Delivered
+
+Re-checked the complete governed TypeScript/Bun fleet and confirmed the intended scoped formatter split.
+
+### Summary of changes
+
+All 10 governed repositories have Prettier `printWidth: 160` and Biome `lineWidth: 140`.
+
+No configuration or shared-standard change was needed: Prettier formats Markdown with `proseWrap: "never"`, while Biome formats code, and the standards already explain the separate scopes.
+
+### Verification
+
+- Enumerated every repository declaring `ki-engineering`; all 10 reported `prettier=160` and `biome=140`.
+- `ki repo audit --skill ki-engineering --repo .`
+- `ki repo audit --skill ki-authoring --repo .`
+- `ki repo audit --skill ki-roadmap --repo .`
+
+### Outstanding concerns
+
+None within this boundary.
+
+### Mini recap
+
+The apparent width mismatch is an intentional formatter and file-scope distinction, not fleet drift.
 
 ## Discussion
 
