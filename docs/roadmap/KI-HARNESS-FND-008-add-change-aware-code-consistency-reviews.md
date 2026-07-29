@@ -2,9 +2,8 @@
 id: KI-HARNESS-FND-008
 title: Add change-aware code consistency reviews
 theme: foundation-tooling
-horizon: future
+horizon: soon
 status: open
-candidate: true
 blocks: []
 blocked-by: []
 baseline-ref: null
@@ -17,6 +16,26 @@ Mechanical engineering checks establish formatting, types, tests, and configured
 ## Boundary
 
 Do not introduce a calendar cadence, a numeric quality score, a mandatory CI gate, automatic code rewrites, or a claim that Git history can judge consistency. The eventual review remains judgmental and advisory.
+
+## Shaping
+
+### Intended approach
+
+Add a concise change-aware consistency-review practice to `ki-engineering`, then expose it as an explicit judgmental rubric prompt rather than a mechanical pass/fail check. The review starts from an explicit Git boundary, uses the intervening commits and changed paths as its evidence scope, and asks whether the implementation remains coherent in structure, naming, ownership, duplication, and public-surface treatment.
+
+Record the completed review in one durable, repository-owned place with the boundary revision, scope examined, reviewer outcome, and any follow-up work. Reuse existing durable project records where they fit; do not create a generated ledger or a CI-maintained score.
+
+### Known dependencies
+
+`ki-engineering` owns the portable principle and rubric prompt. `ki-git` continues to own commit hygiene. FND-007 may provide useful wording and evidence conventions, but this review must work from ordinary Git history even when no recap transcript exists.
+
+### Decision still needed
+
+Choose the canonical review-record location and the minimum evidence shape. The record must be durable enough to name the last reviewed boundary, but unobtrusive enough that a low-change repository does not accumulate routine activity logs.
+
+### Promotion conditions
+
+Promote when the record location, exact judgment prompt, review outcome vocabulary, and a representative example of "review now" versus "not yet warranted" are agreed.
 
 ## Discussion
 
@@ -35,3 +54,7 @@ The design needs a lightweight durable review record naming the reviewed Git bou
 ### Relationship to recap grounding
 
 [FND-007](KI-HARNESS-FND-007-detect-change-since-recap-transcript.md) establishes how to measure whether a transcript remains representative. This item applies the same change-evidence idea to a different decision: whether a judgmental engineering review is worthwhile.
+
+### Review boundary
+
+The boundary is evidence for a reviewer, not a trigger that turns a review into automation. A public API change, a cross-cutting rewrite, or repeated local work can justify review; a small isolated edit may not. The record makes that judgment legible for the next reviewer without presenting it as an objective quality measure.
