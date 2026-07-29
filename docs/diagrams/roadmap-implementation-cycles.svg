@@ -21,8 +21,8 @@
 </g>
 <g id="clust2" class="cluster">
 <title>cluster_implementation</title>
-<path fill="#fbfcfe" stroke="#a8cfbd" d="M174.34,-431.96C174.34,-431.96 450.33,-431.96 450.33,-431.96 456.33,-431.96 462.34,-437.96 462.34,-443.96 462.34,-443.96 462.34,-714.6 462.34,-714.6 462.34,-720.6 456.34,-726.6 450.34,-726.6 450.34,-726.6 174.34,-726.6 174.34,-726.6 168.34,-726.6 162.34,-720.6 162.34,-714.6 162.34,-714.6 162.34,-443.96 162.34,-443.96 162.34,-437.96 168.34,-431.96 174.34,-431.96"/>
-<text xml:space="preserve" text-anchor="middle" x="312.34" y="-709.3" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#24543d">Implementation cycle — deliver one ready item</text>
+<path fill="#fbfcfe" stroke="#a8cfbd" d="M168.34,-431.96C168.34,-431.96 450.34,-431.96 450.34,-431.96 456.33,-431.96 462.34,-437.96 462.34,-443.96 462.34,-443.96 462.34,-714.6 462.34,-714.6 462.34,-720.6 456.34,-726.6 450.34,-726.6 450.34,-726.6 168.34,-726.6 168.34,-726.6 162.34,-726.6 156.34,-720.6 156.34,-714.6 156.34,-714.6 156.34,-443.96 156.34,-443.96 156.34,-437.96 162.34,-431.96 168.34,-431.96"/>
+<text xml:space="preserve" text-anchor="middle" x="309.34" y="-709.3" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#24543d">Implementation cycle — deliver one ready item</text>
 </g>
 <g id="clust4" class="cluster">
 <title>cluster_acceptance</title>
@@ -32,7 +32,7 @@
 <g id="clust5" class="cluster">
 <title>cluster_batch</title>
 <path fill="#fbfcfe" stroke="#c4b3de" stroke-dasharray="5,2" d="M434.34,-1006.24C434.34,-1006.24 818.34,-1006.24 818.34,-1006.24 824.34,-1006.24 830.34,-1012.24 830.34,-1018.24 830.34,-1018.24 830.34,-1381.2 830.34,-1381.2 830.34,-1387.2 824.34,-1393.2 818.34,-1393.2 818.34,-1393.2 434.34,-1393.2 434.34,-1393.2 428.34,-1393.2 422.34,-1387.2 422.34,-1381.2 422.34,-1381.2 422.34,-1018.24 422.34,-1018.24 422.34,-1012.24 428.34,-1006.24 434.34,-1006.24"/>
-<text xml:space="preserve" text-anchor="middle" x="626.34" y="-1375.9" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#503d78">Authorised batch — coordinate repeated cycles</text>
+<text xml:space="preserve" text-anchor="middle" x="626.34" y="-1375.9" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#503d78">Authorised batch — prepare, then repeat bounded delivery</text>
 </g>
 <!-- recap -->
 <g id="node1" class="node">
@@ -122,18 +122,18 @@
 <!-- batch_prepare -->
 <g id="node19" class="node">
 <title>batch_prepare</title>
-<path fill="#f0ebfa" stroke="#8291a6" stroke-width="1.25" d="M709.42,-1370.2C709.42,-1370.2 543.25,-1370.2 543.25,-1370.2 537.25,-1370.2 531.25,-1364.2 531.25,-1358.2 531.25,-1358.2 531.25,-1336.04 531.25,-1336.04 531.25,-1330.04 537.25,-1324.04 543.25,-1324.04 543.25,-1324.04 709.42,-1324.04 709.42,-1324.04 715.42,-1324.04 721.42,-1330.04 721.42,-1336.04 721.42,-1336.04 721.42,-1358.2 721.42,-1358.2 721.42,-1364.2 715.42,-1370.2 709.42,-1370.2"/>
+<path fill="#f0ebfa" stroke="#8291a6" stroke-width="1.25" d="M705.67,-1370.2C705.67,-1370.2 547,-1370.2 547,-1370.2 541,-1370.2 535,-1364.2 535,-1358.2 535,-1358.2 535,-1336.04 535,-1336.04 535,-1330.04 541,-1324.04 547,-1324.04 547,-1324.04 705.67,-1324.04 705.67,-1324.04 711.67,-1324.04 717.67,-1330.04 717.67,-1336.04 717.67,-1336.04 717.67,-1358.2 717.67,-1358.2 717.67,-1364.2 711.67,-1370.2 705.67,-1370.2"/>
 <text xml:space="preserve" text-anchor="start" x="559.59" y="-1348.77" font-family="Helvetica,sans-Serif" font-size="13.00" fill="#172033"> </text>
 <text xml:space="preserve" text-anchor="start" x="563.34" y="-1348.77" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="13.00" fill="#172033">ki&#45;batch preparation</text>
-<text xml:space="preserve" text-anchor="start" x="544.21" y="-1335.77" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#172033">pre&#45;handle selected next + plan work</text>
-<text xml:space="preserve" text-anchor="start" x="704.71" y="-1335.77" font-family="Helvetica,sans-Serif" font-size="13.00" fill="#172033"> </text>
+<text xml:space="preserve" text-anchor="start" x="547.96" y="-1335.77" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#172033">coordinate named next + plan work</text>
+<text xml:space="preserve" text-anchor="start" x="700.96" y="-1335.77" font-family="Helvetica,sans-Serif" font-size="13.00" fill="#172033"> </text>
 </g>
 <!-- planned&#45;&gt;batch_prepare -->
 <g id="edge20" class="edge">
 <title>planned&#45;&gt;batch_prepare</title>
-<path fill="none" stroke="#5f7087" stroke-width="1.15" stroke-dasharray="5,2" d="M297.86,-1022C347.6,-1022 407.95,-1022 407.95,-1022 407.95,-1022 407.95,-1347 407.95,-1347 407.95,-1347 521.62,-1347 521.62,-1347"/>
-<polygon fill="#5f7087" stroke="#5f7087" stroke-width="1.15" points="521.62,-1349.63 529.12,-1347 521.62,-1344.38 521.62,-1349.63"/>
-<text xml:space="preserve" text-anchor="middle" x="357.32" y="-1176.8" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#41546d">approved candidate set</text>
+<path fill="none" stroke="#5f7087" stroke-width="1.15" stroke-dasharray="5,2" d="M297.86,-1022C347.6,-1022 407.95,-1022 407.95,-1022 407.95,-1022 407.95,-1347 407.95,-1347 407.95,-1347 525.43,-1347 525.43,-1347"/>
+<polygon fill="#5f7087" stroke="#5f7087" stroke-width="1.15" points="525.43,-1349.63 532.93,-1347 525.43,-1344.38 525.43,-1349.63"/>
+<text xml:space="preserve" text-anchor="middle" x="357.32" y="-1189.95" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#41546d">approved candidate set</text>
 </g>
 <!-- ready_gate -->
 <g id="node7" class="node">
@@ -169,17 +169,17 @@
 <!-- implement -->
 <g id="node9" class="node">
 <title>implement</title>
-<path fill="#e8edf3" stroke="#8291a6" stroke-width="1.25" d="M281.92,-703.6C281.92,-703.6 184.75,-703.6 184.75,-703.6 178.75,-703.6 172.75,-697.6 172.75,-691.6 172.75,-691.6 172.75,-669.44 172.75,-669.44 172.75,-663.44 178.75,-657.44 184.75,-657.44 184.75,-657.44 281.92,-657.44 281.92,-657.44 287.92,-657.44 293.92,-663.44 293.92,-669.44 293.92,-669.44 293.92,-691.6 293.92,-691.6 293.92,-697.6 287.92,-703.6 281.92,-703.6"/>
+<path fill="#e8edf3" stroke="#8291a6" stroke-width="1.25" d="M298.05,-703.6C298.05,-703.6 168.62,-703.6 168.62,-703.6 162.62,-703.6 156.62,-697.6 156.62,-691.6 156.62,-691.6 156.62,-669.44 156.62,-669.44 156.62,-663.44 162.62,-657.44 168.62,-657.44 168.62,-657.44 298.05,-657.44 298.05,-657.44 304.05,-657.44 310.05,-663.44 310.05,-669.44 310.05,-669.44 310.05,-691.6 310.05,-691.6 310.05,-697.6 304.05,-703.6 298.05,-703.6"/>
 <text xml:space="preserve" text-anchor="start" x="190.59" y="-682.17" font-family="Helvetica,sans-Serif" font-size="13.00" fill="#172033"> </text>
 <text xml:space="preserve" text-anchor="start" x="194.34" y="-682.17" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="13.00" fill="#172033">ki&#45;implement</text>
-<text xml:space="preserve" text-anchor="start" x="185.71" y="-669.17" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#172033">planned process skill</text>
-<text xml:space="preserve" text-anchor="start" x="277.21" y="-669.17" font-family="Helvetica,sans-Serif" font-size="13.00" fill="#172033"> </text>
+<text xml:space="preserve" text-anchor="start" x="169.59" y="-669.17" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#172033">bounded single&#45;item delivery</text>
+<text xml:space="preserve" text-anchor="start" x="293.34" y="-669.17" font-family="Helvetica,sans-Serif" font-size="13.00" fill="#172033"> </text>
 </g>
 <!-- ready&#45;&gt;implement -->
 <g id="edge8" class="edge">
 <title>ready&#45;&gt;implement</title>
-<path fill="none" stroke="#5f7087" stroke-width="1.15" d="M213.26,-734.11C213.26,-734.11 213.26,-713.45 213.26,-713.45"/>
-<polygon fill="#5f7087" stroke="#5f7087" stroke-width="1.15" points="215.89,-713.45 213.27,-705.95 210.64,-713.45 215.89,-713.45"/>
+<path fill="none" stroke="#5f7087" stroke-width="1.15" d="M233.34,-734.11C233.34,-734.11 233.34,-713.45 233.34,-713.45"/>
+<polygon fill="#5f7087" stroke="#5f7087" stroke-width="1.15" points="235.96,-713.45 233.34,-705.95 230.71,-713.45 235.96,-713.45"/>
 </g>
 <!-- progress -->
 <g id="node10" class="node">
@@ -199,18 +199,18 @@
 <!-- delegate -->
 <g id="node13" class="node">
 <title>delegate</title>
-<path fill="#e8edf3" stroke="#8291a6" stroke-width="1.25" d="M443.92,-703.6C443.92,-703.6 340.75,-703.6 340.75,-703.6 334.75,-703.6 328.75,-697.6 328.75,-691.6 328.75,-691.6 328.75,-669.44 328.75,-669.44 328.75,-663.44 334.75,-657.44 340.75,-657.44 340.75,-657.44 443.92,-657.44 443.92,-657.44 449.92,-657.44 455.92,-663.44 455.92,-669.44 455.92,-669.44 455.92,-691.6 455.92,-691.6 455.92,-697.6 449.92,-703.6 443.92,-703.6"/>
-<text xml:space="preserve" text-anchor="start" x="355.21" y="-682.17" font-family="Helvetica,sans-Serif" font-size="13.00" fill="#172033"> </text>
-<text xml:space="preserve" text-anchor="start" x="358.96" y="-682.17" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="13.00" fill="#172033">ki&#45;delegate</text>
-<text xml:space="preserve" text-anchor="start" x="341.71" y="-669.17" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#172033">optional bounded work</text>
-<text xml:space="preserve" text-anchor="start" x="439.21" y="-669.17" font-family="Helvetica,sans-Serif" font-size="13.00" fill="#172033"> </text>
+<path fill="#e8edf3" stroke="#8291a6" stroke-width="1.25" d="M449.92,-703.6C449.92,-703.6 346.75,-703.6 346.75,-703.6 340.75,-703.6 334.75,-697.6 334.75,-691.6 334.75,-691.6 334.75,-669.44 334.75,-669.44 334.75,-663.44 340.75,-657.44 346.75,-657.44 346.75,-657.44 449.92,-657.44 449.92,-657.44 455.92,-657.44 461.92,-663.44 461.92,-669.44 461.92,-669.44 461.92,-691.6 461.92,-691.6 461.92,-697.6 455.92,-703.6 449.92,-703.6"/>
+<text xml:space="preserve" text-anchor="start" x="361.21" y="-682.17" font-family="Helvetica,sans-Serif" font-size="13.00" fill="#172033"> </text>
+<text xml:space="preserve" text-anchor="start" x="364.96" y="-682.17" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="13.00" fill="#172033">ki&#45;delegate</text>
+<text xml:space="preserve" text-anchor="start" x="347.71" y="-669.17" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#172033">optional bounded work</text>
+<text xml:space="preserve" text-anchor="start" x="445.21" y="-669.17" font-family="Helvetica,sans-Serif" font-size="13.00" fill="#172033"> </text>
 </g>
 <!-- implement&#45;&gt;delegate -->
 <g id="edge12" class="edge">
 <title>implement&#45;&gt;delegate</title>
-<path fill="none" stroke="#5f7087" stroke-width="1.15" stroke-dasharray="5,2" d="M294.35,-681C294.35,-681 319.07,-681 319.07,-681"/>
-<polygon fill="#5f7087" stroke="#5f7087" stroke-width="1.15" points="319.07,-683.63 326.57,-681 319.07,-678.38 319.07,-683.63"/>
-<text xml:space="preserve" text-anchor="middle" x="293.59" y="-671.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#41546d">when useful</text>
+<path fill="none" stroke="#5f7087" stroke-width="1.15" stroke-dasharray="5,2" d="M310.52,-681C310.52,-681 325.33,-681 325.33,-681"/>
+<polygon fill="#5f7087" stroke="#5f7087" stroke-width="1.15" points="325.33,-683.63 332.83,-681 325.33,-678.38 325.33,-683.63"/>
+<text xml:space="preserve" text-anchor="middle" x="304.8" y="-671.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#41546d">when useful</text>
 </g>
 <!-- verification -->
 <g id="node11" class="node">
@@ -260,18 +260,18 @@
 <!-- delegate&#45;&gt;progress -->
 <g id="edge13" class="edge">
 <title>delegate&#45;&gt;progress</title>
-<path fill="none" stroke="#5f7087" stroke-width="1.15" stroke-dasharray="5,2" d="M357.38,-657.04C357.38,-634.87 357.38,-605 357.38,-605 357.38,-605 296.26,-605 296.26,-605"/>
-<polygon fill="#5f7087" stroke="#5f7087" stroke-width="1.15" points="296.26,-602.38 288.76,-605 296.26,-607.63 296.26,-602.38"/>
-<text xml:space="preserve" text-anchor="middle" x="386.96" y="-606.75" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#41546d">integrate + gate</text>
+<path fill="none" stroke="#5f7087" stroke-width="1.15" stroke-dasharray="5,2" d="M360.38,-657.04C360.38,-634.87 360.38,-605 360.38,-605 360.38,-605 296.08,-605 296.08,-605"/>
+<polygon fill="#5f7087" stroke="#5f7087" stroke-width="1.15" points="296.08,-602.38 288.58,-605 296.08,-607.63 296.08,-602.38"/>
+<text xml:space="preserve" text-anchor="middle" x="320.13" y="-606.75" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#41546d">integrate + gate</text>
 </g>
 <!-- accept -->
 <g id="node15" class="node">
 <title>accept</title>
-<path fill="#e8edf3" stroke="#8291a6" stroke-width="1.25" d="M281.92,-279.64C281.92,-279.64 184.75,-279.64 184.75,-279.64 178.75,-279.64 172.75,-273.64 172.75,-267.64 172.75,-267.64 172.75,-245.48 172.75,-245.48 172.75,-239.48 178.75,-233.48 184.75,-233.48 184.75,-233.48 281.92,-233.48 281.92,-233.48 287.92,-233.48 293.92,-239.48 293.92,-245.48 293.92,-245.48 293.92,-267.64 293.92,-267.64 293.92,-273.64 287.92,-279.64 281.92,-279.64"/>
+<path fill="#e8edf3" stroke="#8291a6" stroke-width="1.25" d="M311.55,-279.64C311.55,-279.64 155.12,-279.64 155.12,-279.64 149.12,-279.64 143.12,-273.64 143.12,-267.64 143.12,-267.64 143.12,-245.48 143.12,-245.48 143.12,-239.48 149.12,-233.48 155.12,-233.48 155.12,-233.48 311.55,-233.48 311.55,-233.48 317.55,-233.48 323.55,-239.48 323.55,-245.48 323.55,-245.48 323.55,-267.64 323.55,-267.64 323.55,-273.64 317.55,-279.64 311.55,-279.64"/>
 <text xml:space="preserve" text-anchor="start" x="202.21" y="-258.21" font-family="Helvetica,sans-Serif" font-size="13.00" fill="#172033"> </text>
 <text xml:space="preserve" text-anchor="start" x="205.96" y="-258.21" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="13.00" fill="#172033">ki&#45;accept</text>
-<text xml:space="preserve" text-anchor="start" x="185.71" y="-245.21" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#172033">planned process skill</text>
-<text xml:space="preserve" text-anchor="start" x="277.21" y="-245.21" font-family="Helvetica,sans-Serif" font-size="13.00" fill="#172033"> </text>
+<text xml:space="preserve" text-anchor="start" x="156.09" y="-245.21" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#172033">approval · closure · retained record</text>
+<text xml:space="preserve" text-anchor="start" x="306.84" y="-245.21" font-family="Helvetica,sans-Serif" font-size="13.00" fill="#172033"> </text>
 </g>
 <!-- acceptance_gate&#45;&gt;accept -->
 <g id="edge15" class="edge">
@@ -352,11 +352,11 @@
 <!-- batch_run -->
 <g id="node21" class="node">
 <title>batch_run</title>
-<path fill="#f0ebfa" stroke="#8291a6" stroke-width="1.25" d="M706.05,-1150.64C706.05,-1150.64 546.62,-1150.64 546.62,-1150.64 540.62,-1150.64 534.62,-1144.64 534.62,-1138.64 534.62,-1138.64 534.62,-1116.48 534.62,-1116.48 534.62,-1110.48 540.62,-1104.48 546.62,-1104.48 546.62,-1104.48 706.05,-1104.48 706.05,-1104.48 712.05,-1104.48 718.05,-1110.48 718.05,-1116.48 718.05,-1116.48 718.05,-1138.64 718.05,-1138.64 718.05,-1144.64 712.05,-1150.64 706.05,-1150.64"/>
+<path fill="#f0ebfa" stroke="#8291a6" stroke-width="1.25" d="M727.42,-1150.64C727.42,-1150.64 525.25,-1150.64 525.25,-1150.64 519.25,-1150.64 513.25,-1144.64 513.25,-1138.64 513.25,-1138.64 513.25,-1116.48 513.25,-1116.48 513.25,-1110.48 519.25,-1104.48 525.25,-1104.48 525.25,-1104.48 727.42,-1104.48 727.42,-1104.48 733.42,-1104.48 739.42,-1110.48 739.42,-1116.48 739.42,-1116.48 739.42,-1138.64 739.42,-1138.64 739.42,-1144.64 733.42,-1150.64 727.42,-1150.64"/>
 <text xml:space="preserve" text-anchor="start" x="547.59" y="-1129.21" font-family="Helvetica,sans-Serif" font-size="13.00" fill="#172033"> </text>
 <text xml:space="preserve" text-anchor="start" x="551.34" y="-1129.21" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="13.00" fill="#172033">ki&#45;batch implementation</text>
-<text xml:space="preserve" text-anchor="start" x="549.09" y="-1116.21" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#172033">repeat independent delivery cycles</text>
-<text xml:space="preserve" text-anchor="start" x="699.84" y="-1116.21" font-family="Helvetica,sans-Serif" font-size="13.00" fill="#172033"> </text>
+<text xml:space="preserve" text-anchor="start" x="526.21" y="-1116.21" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#172033">repeat delivery · normally stop at Acceptance</text>
+<text xml:space="preserve" text-anchor="start" x="722.71" y="-1116.21" font-family="Helvetica,sans-Serif" font-size="13.00" fill="#172033"> </text>
 </g>
 <!-- batch_gate&#45;&gt;batch_run -->
 <g id="edge22" class="edge">
@@ -368,16 +368,15 @@
 <!-- batch_run&#45;&gt;implement -->
 <g id="edge23" class="edge">
 <title>batch_run&#45;&gt;implement</title>
-<path fill="none" stroke="#5f7087" stroke-width="1.15" stroke-dasharray="5,2" d="M541,-1104.13C541,-1017.31 541,-719 541,-719 541,-719 253.41,-719 253.41,-719 253.41,-719 253.41,-713.03 253.41,-713.03"/>
-<polygon fill="#5f7087" stroke="#5f7087" stroke-width="1.15" points="256.03,-713.03 253.41,-705.53 250.78,-713.03 256.03,-713.03"/>
-<text xml:space="preserve" text-anchor="middle" x="488.12" y="-766.53" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#41546d">one ready item at a time</text>
+<path fill="none" stroke="#5f7087" stroke-width="1.15" stroke-dasharray="5,2" d="M526.75,-1103.91C526.75,-1027.93 526.75,-795 526.75,-795 526.75,-795 301.8,-795 301.8,-795 301.8,-795 301.8,-713.2 301.8,-713.2"/>
+<polygon fill="#5f7087" stroke="#5f7087" stroke-width="1.15" points="304.42,-713.2 301.8,-705.7 299.17,-713.2 304.42,-713.2"/>
+<text xml:space="preserve" text-anchor="middle" x="473.88" y="-797.83" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#41546d">one ready item at a time</text>
 </g>
 <!-- batch_run&#45;&gt;acceptance_gate -->
 <g id="edge26" class="edge">
 <title>batch_run&#45;&gt;acceptance_gate</title>
-<path fill="none" stroke="#5f7087" stroke-width="1.15" stroke-dasharray="5,2" d="M547.38,-1104.02C547.38,-974.54 547.38,-355 547.38,-355 547.38,-355 396.38,-355 396.38,-355"/>
-<polygon fill="#5f7087" stroke="#5f7087" stroke-width="1.15" points="396.38,-352.38 388.88,-355 396.38,-357.63 396.38,-352.38"/>
-<text xml:space="preserve" text-anchor="middle" x="496.38" y="-644.51" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#41546d">only if authority permits</text>
+<path fill="none" stroke="#5f7087" stroke-width="1.15" stroke-dasharray="5,2" d="M540.25,-1104.02C540.25,-974.54 540.25,-355 540.25,-355 540.25,-355 396.48,-355 396.48,-355"/>
+<polygon fill="#5f7087" stroke="#5f7087" stroke-width="1.15" points="396.48,-352.38 388.98,-355 396.48,-357.63 396.48,-352.38"/>
 </g>
 <!-- park -->
 <g id="node22" class="node">
@@ -400,7 +399,7 @@
 <title>park&#45;&gt;recap</title>
 <path fill="none" stroke="#5f7087" stroke-width="1.15" stroke-dasharray="5,2" d="M553.13,-1037C485.02,-1037 393.98,-1037 393.98,-1037 393.98,-1037 393.98,-1284 393.98,-1284 393.98,-1284 212.7,-1284 212.7,-1284 212.7,-1284 212.7,-1314.38 212.7,-1314.38"/>
 <polygon fill="#5f7087" stroke="#5f7087" stroke-width="1.15" points="210.07,-1314.38 212.7,-1321.88 215.32,-1314.38 210.07,-1314.38"/>
-<text xml:space="preserve" text-anchor="middle" x="362.1" y="-1188.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#41546d">record + return</text>
+<text xml:space="preserve" text-anchor="middle" x="362.1" y="-1177.25" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#41546d">record + return</text>
 </g>
 </g>
 </svg>

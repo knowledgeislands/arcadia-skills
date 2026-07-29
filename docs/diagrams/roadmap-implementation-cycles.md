@@ -4,7 +4,7 @@ The roadmap cycle makes work ready; the implementation cycle delivers one ready 
 
 Gold diamonds are manual authority gates.
 
-`ki-batch` is planned to reduce repeated preparation and coordinate repeated `ki-implement` cycles, but it does not bypass the selection, ready, acceptance, or destructive-cleanup gates unless a batch authorisation explicitly grants the relevant authority.
+`ki-batch` reduces repeated preparation and coordinates repeated bounded `ki-implement` cycles. Preparation uses the normal `ki-next` and `ki-plan` boundaries over named candidates; implementation runs only an approved batch authorisation. Each item normally stops at Acceptance. Only explicit named acceptance authority may continue through `ki-accept`, and pruning always requires separate confirmation.
 
 ![Roadmap and implementation cycles](roadmap-implementation-cycles.svg)
 

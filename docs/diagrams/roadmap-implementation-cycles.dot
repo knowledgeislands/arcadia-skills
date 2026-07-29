@@ -75,7 +75,7 @@ digraph roadmap_implementation_cycles {
     label="Implementation cycle — deliver one ready item"
     style="rounded"
 
-    implement [fillcolor="#e8edf3", label=< <b>ki-implement</b><br/><font point-size="10">planned process skill</font> >]
+    implement [fillcolor="#e8edf3", label=< <b>ki-implement</b><br/><font point-size="10">bounded single-item delivery</font> >]
     progress [fillcolor="#d9f0e2", label=< <b>In progress</b><br/><font point-size="10">baseline recorded</font> >]
     verification [fillcolor="#d9f0e2", label=< <b>Verified delivery</b><br/><font point-size="10">required checks pass</font> >]
     acceptance [fillcolor="#d9f0e2", label=< <b>Acceptance</b><br/><font point-size="10">evidence packet ready</font> >]
@@ -100,7 +100,7 @@ digraph roadmap_implementation_cycles {
     style="rounded"
 
     acceptance_gate [fillcolor="#fff0b8", label=< <b>Manual acceptance</b><br/><font point-size="10">review evidence + concerns</font> >, shape=diamond]
-    accept [fillcolor="#e8edf3", label=< <b>ki-accept</b><br/><font point-size="10">planned process skill</font> >]
+    accept [fillcolor="#e8edf3", label=< <b>ki-accept</b><br/><font point-size="10">approval · closure · retained record</font> >]
     done [fillcolor="#efe5c4", label=< <b>Done</b><br/><font point-size="10">retained completion record</font> >]
     prune [fillcolor="#efe5c4", label=< <b>ki-accept prune</b><br/><font point-size="10">explicit confirmed cleanup</font> >]
     pruned [fillcolor="#f1f3f5", label=< <b>Pruned</b><br/><font point-size="10">removed after retention</font> >]
@@ -118,12 +118,12 @@ digraph roadmap_implementation_cycles {
     fontcolor="#503d78"
     fontname="Helvetica"
     fontsize=14
-    label="Authorised batch — coordinate repeated cycles"
+    label="Authorised batch — prepare, then repeat bounded delivery"
     style="rounded,dashed"
 
-    batch_prepare [fillcolor="#f0ebfa", label=< <b>ki-batch preparation</b><br/><font point-size="10">pre-handle selected next + plan work</font> >]
+    batch_prepare [fillcolor="#f0ebfa", label=< <b>ki-batch preparation</b><br/><font point-size="10">coordinate named next + plan work</font> >]
     batch_gate [fillcolor="#fff0b8", label=< <b>Manual batch authorisation</b><br/><font point-size="10">named items · authority · stops</font> >, shape=diamond]
-    batch_run [fillcolor="#f0ebfa", label=< <b>ki-batch implementation</b><br/><font point-size="10">repeat independent delivery cycles</font> >]
+    batch_run [fillcolor="#f0ebfa", label=< <b>ki-batch implementation</b><br/><font point-size="10">repeat delivery · normally stop at Acceptance</font> >]
     park [fillcolor="#f6d9d9", label=< <b>Park</b><br/><font point-size="10">ambiguity or authority stop</font> >]
 
     planned -> batch_prepare [style=dashed, constraint=false, xlabel="approved candidate set"]
@@ -132,6 +132,6 @@ digraph roadmap_implementation_cycles {
     batch_run -> implement [style=dashed, constraint=false, xlabel="one ready item at a time"]
     batch_run -> park [xlabel="stop / escalate"]
     park -> recap [style=dashed, constraint=false, xlabel="record + return"]
-    batch_run -> acceptance_gate [style=dashed, constraint=false, xlabel="only if authority permits"]
+    batch_run -> acceptance_gate [style=dashed, constraint=false]
   }
 }
