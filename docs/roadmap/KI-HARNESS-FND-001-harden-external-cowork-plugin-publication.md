@@ -21,26 +21,36 @@ Preserve its output-root and symlink guards and unrelated scaffold; assess a dry
 
 ### Intended approach
 
-Inspect the existing plugin builder and a named `ki-plugins` checkout without mutating either publication output.
+Inspect the existing plugin builder and the named `ki-plugins` checkout without mutating either publication output.
 
-Determine whether the builder can present a complete dry-run manifest and stage a replacement under the target repository's safe output root before one atomic publish step, while preserving unrelated scaffold and current symlink protections.
+Derive the full marketplace manifest, plugin manifest, skill set, and agent set before writing. A dry run should present that complete intended projection and the exact generated paths it would replace.
+
+Stage the replacement beneath the verified target repository on the same filesystem. The publication has two generated paths — `.claude-plugin/` and `knowledge-islands/` — so it cannot be represented honestly as one directory rename. Design a reversible swap: preserve both existing generated paths as bounded backups, publish both staged replacements, verify their resulting relationship, then remove the backups. A failure after the first replacement restores the captured generated paths and never alters repository-owned scaffold.
 
 ### Known dependencies
 
-The generated marketplace lives in the separate `knowledgeislands/ki-plugins` repository.
+The generated marketplace lives in the separate `knowledgeislands/ki-plugins` repository. Its repository-owned scaffold is `README.md`, `LICENSE`, `.gitignore`, `.editorconfig`, `CLAUDE.md`, and `.ki-config.toml`; the generator may replace only `.claude-plugin/` and `knowledge-islands/`.
 
-Its owner and checkout scope must be explicit before any staged replacement or publication test runs.
+Its owner and checkout scope must be explicit before any staged replacement or publication test runs. The final target may be dirty only when its generated paths and intended ownership boundary have been reviewed; the generator must not use a broad clean/reset operation.
 
 ### Decision still needed
 
-Decide whether a staged replacement can preserve the target repository's ownership boundary without introducing a second publication path or a cross-device non-atomic fallback.
+Decide the rollback contract when the first generated path has been replaced but the second publication or verification fails. Do not describe two sequential renames as atomic, introduce a second publication tree, or add a cross-device fallback.
 
 ### Promotion conditions
 
-Promote when the named target checkout, dry-run evidence shape, safe staging boundary, failure cleanup, and focused builder verification are concrete.
+Promote when the named target checkout, dry-run output, same-filesystem staging location, two-path backup-and-restore protocol, failure evidence, and focused builder verification are concrete.
 
 ## Discussion
 
 ### Recovery boundary
 
-The shaping pass needs to determine whether staged replacement can preserve the current external-repository ownership boundary without introducing a second publication path.
+The current builder removes `.claude-plugin/` and the plugin directory before it writes either replacement. A failure between those operations can leave a partial projection. The revised design must make both replacement order and restoration evidence visible.
+
+### Dry-run evidence
+
+`--json` currently reports only the completed projection summary. A dry run should instead expose the pre-write manifest: target root, generated paths, plugin identity and version, sorted projected skills and agents, and the exact path relationship it will verify after publication. It must not create staging directories or mutate the target.
+
+### Target safety
+
+All output-root and symlink protections remain mandatory. Backups and staging paths must be direct children of the verified output root, be regular directories when they already exist, and be cleaned only after successful verification or a successful restoration. The generator must refuse an unfamiliar, linked, or concurrently changed generated path rather than guessing ownership.
