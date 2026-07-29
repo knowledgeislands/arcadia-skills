@@ -237,6 +237,14 @@ ki repo audit --repo ~/kis/knowledgeislands/example
 
 The native command resolves declared operations and checks every applicable layer.
 
+### What is read locally and what is read from GitHub
+
+Evidence comes from two places, and knowing which decides how a finding is interpreted. Live GitHub settings — visibility, default branch, merge and toggle configuration, topics, branch protection, required checks, security and Actions policy — exist only on the remote and have no working-tree equivalent, so they are necessarily read there. Committed file evidence is also read from the default branch: not only the presence of the Layer 1 files, but the **content** of `.ki-config.toml` that the declaration and coverage-cascade criteria depend on. Only bounded local configuration evidence is read from a checkout.
+
+The consequence to expect is that **a repository fixed locally still audits as failing until the fix is pushed**, and the failure text describes the corrected state as absent because the default branch has not yet changed. Declaring a table in `.ki-config.toml` and re-running the audit in the same breath will report it undeclared. This is not staleness in the checker and not a caching artefact — the criterion is a statement about the published repository, which is what the standard asserts. When a finding contradicts a file you are looking at, check `git log origin/main..HEAD` before investigating anything else.
+
+The bias toward the remote also reflects where these criteria have to work: `--org` mode audits repositories that are not cloned at all, so a checkout cannot be assumed. In a cloud or CI context the same skills operate against the repository and its default branch on GitHub with no local tree, and reading committed state remotely is then the only available path. Local-tree mode is a convenience for choosing _which_ repositories to audit, not a switch to auditing the working tree.
+
 ## Conformance
 
 Conformance means the native command resolves every declared operation, the local proposal is bounded and reviewable, and every live GitHub change is shown and explicitly confirmed before execution. Legacy vendored-runner status is not conformance to ADR-KI-HARNESS-012.

@@ -94,6 +94,12 @@ Installed verified payloads remain authoritative during ordinary use.
 
 A nearby checkout is never selected implicitly.
 
+While `ki dev on` is active the selected checkout is live, so every `ki` invocation on the machine resolves governance through its **working tree**, uncommitted edits included. Governance is then no longer a fixed input: editing the harness changes how `ki repo audit` and `ki repo conform` behave everywhere, immediately, including in sessions that did not make the edit. A rubric criterion can appear, change level, or acquire a new dependency underneath work already in progress, and a repository's audit result can move with no change to that repository at all.
+
+The exposure is widest where harness edits and harness-dependent verification overlap in time, which is most likely when either is delegated: a worker editing the harness and a worker auditing repositories against it are, in development mode, sharing one mutable input. Separating them in time removes the interaction, and `ki dev off` removes it entirely by resolving the run against the verified canonical archive, which is what makes a result reproducible or comparable across sessions.
+
+`ki diag` distinguishes the two cases after the fact. `Installation` and `Local source` say whether governance came from a mutable tree, so an audit or conform result that moved while the target repository did not is explained there rather than in the repository.
+
 ## Guide-led legacy retirement
 
 Vendored repository execution is retired.
