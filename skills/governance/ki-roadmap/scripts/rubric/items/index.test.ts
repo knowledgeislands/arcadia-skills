@@ -22,7 +22,10 @@ const createFixture = (): string => {
   const repository = mkdtempSync(join(tmpdir(), 'ki-roadmap-flat-'))
   temporaryDirectories.push(repository)
   mkdirSync(join(repository, 'docs', 'roadmap'), { recursive: true })
-  writeFileSync(join(repository, '.ki-config.toml'), '["knowledgeislands/ki-agentic-harness:ki-roadmap"]\nrepo_code = "TEST"\n')
+  writeFileSync(
+    join(repository, '.ki-config.toml'),
+    '["knowledgeislands/ki-agentic-harness:ki-roadmap"]\nrepo_code = "TEST"\n\n["knowledgeislands/ki-agentic-harness:ki-roadmap".themes]\nFND = "foundation-tooling"\n'
+  )
   writeFileSync(
     join(repository, 'docs', 'roadmap', 'TEST-FND-001-build-the-foundation.md'),
     `---
@@ -111,5 +114,14 @@ test('dependency links must be reciprocal', () => {
   writeFileSync(item, readFileSync(item, 'utf8').replace('blocks: []', 'blocks: [TEST-FND-002]'))
   expect(inspectRoadmap(repository)).toContainEqual(
     expect.objectContaining({ area: 'ITEM-4', msg: "dependency 'TEST-FND-002' does not exist" })
+  )
+})
+
+test('item theme codes must be declared by the repository roadmap configuration', () => {
+  const repository = createFixture()
+  const item = join(repository, 'docs', 'roadmap', 'TEST-FND-001-build-the-foundation.md')
+  writeFileSync(item, readFileSync(item, 'utf8').replace('theme: foundation-tooling', 'theme: other-theme'))
+  expect(inspectRoadmap(repository)).toContainEqual(
+    expect.objectContaining({ area: 'ITEM-2', msg: 'item identifier theme code must map to its configured theme' })
   )
 })

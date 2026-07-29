@@ -19,6 +19,7 @@ export type WorkItem = {
   readonly file: string
   readonly body: string
 }
+type RoadmapConfiguration = { readonly repoCode: string; readonly themes: ReadonlyMap<string, string> }
 
 export const HORIZONS = ['blocking', 'next', 'soon', 'waiting-for', 'parked', 'future'] as const
 export const HORIZON_BLURBS: Record<Horizon, string> = {
@@ -102,7 +103,7 @@ const isKb = (repository: string): boolean => {
   }
 }
 
-const repositoryCode = (repository: string): string | undefined => {
+const roadmapConfiguration = (repository: string): RoadmapConfiguration | undefined => {
   const config = join(repository, '.ki-config.toml')
   if (!existsSync(config)) {
     add('FAIL', 'ROAD-6', 'missing .ki-config.toml ki-roadmap repo_code', STANDARD, '.ki-config.toml')
@@ -111,12 +112,34 @@ const repositoryCode = (repository: string): string | undefined => {
   try {
     const parsed = TOML.parse(readFileSync(config, 'utf8')) as Record<string, unknown>
     const table = parsed[ROADMAP_CONFIG]
-    const code = typeof table === 'object' && table !== null ? (table as Record<string, unknown>).repo_code : undefined
+    const values = typeof table === 'object' && table !== null && !Array.isArray(table) ? (table as Record<string, unknown>) : undefined
+    const code = values?.repo_code
     if (typeof code !== 'string' || !/^[A-Z][A-Z0-9-]{1,23}$/.test(code)) {
       add('FAIL', 'ROAD-6', 'ki-roadmap repo_code must be a stable uppercase identifier', STANDARD, '.ki-config.toml')
       return undefined
     }
-    return code
+    const configuredThemes = values?.themes
+    if (typeof configuredThemes !== 'object' || configuredThemes === null || Array.isArray(configuredThemes)) {
+      add('FAIL', 'ROAD-6', 'ki-roadmap themes must be a non-empty code-to-theme table', STANDARD, '.ki-config.toml')
+      return undefined
+    }
+    const themes = new Map<string, string>()
+    for (const [themeCode, theme] of Object.entries(configuredThemes)) {
+      if (!/^[A-Z][A-Z0-9]{1,7}$/.test(themeCode) || typeof theme !== 'string' || !THEME_RE.test(theme)) {
+        add('FAIL', 'ROAD-6', 'ki-roadmap themes must map uppercase codes to lowercase kebab-case names', STANDARD, '.ki-config.toml')
+        return undefined
+      }
+      if ([...themes.values()].includes(theme)) {
+        add('FAIL', 'ROAD-6', `ki-roadmap theme '${theme}' is configured more than once`, STANDARD, '.ki-config.toml')
+        return undefined
+      }
+      themes.set(themeCode, theme)
+    }
+    if (themes.size === 0) {
+      add('FAIL', 'ROAD-6', 'ki-roadmap themes must declare at least one theme', STANDARD, '.ki-config.toml')
+      return undefined
+    }
+    return { repoCode: code, themes }
   } catch {
     add('FAIL', 'ROAD-6', 'cannot parse .ki-config.toml', STANDARD, '.ki-config.toml')
     return undefined
@@ -142,7 +165,7 @@ const validateBody = (item: WorkItem): void => {
   if (item.status === 'done' && !present.includes('Done')) add('FAIL', 'ITEM-3', 'done item must include ## Done', FORMAT, item.file)
 }
 
-const parseItem = (repository: string, name: string): WorkItem | undefined => {
+const parseItem = (repository: string, name: string, configuration?: RoadmapConfiguration): WorkItem | undefined => {
   const directory = join(repository, 'docs', 'roadmap')
   const absolute = join(directory, name)
   const display = relative(repository, absolute)
@@ -178,6 +201,12 @@ const parseItem = (repository: string, name: string): WorkItem | undefined => {
   if (!id || id !== file[1] || !ID_RE.test(id)) add('FAIL', 'ITEM-1', 'frontmatter id must match the filename identifier', FORMAT, display)
   if (!title?.trim()) add('FAIL', 'ITEM-1', 'title must be non-empty', FORMAT, display)
   if (!theme || !THEME_RE.test(theme)) add('FAIL', 'ITEM-2', 'theme must be lowercase kebab-case', FORMAT, display)
+  const idTheme =
+    configuration && id?.startsWith(`${configuration.repoCode}-`)
+      ? id.slice(configuration.repoCode.length + 1).match(/^([A-Z][A-Z0-9]{1,7})-\d+$/)?.[1]
+      : undefined
+  if (!configuration || !idTheme || configuration.themes.get(idTheme) !== theme)
+    add('FAIL', 'ITEM-2', 'item identifier theme code must map to its configured theme', FORMAT, display)
   if (!horizon || !HORIZONS.includes(horizon)) add('FAIL', 'ITEM-2', 'horizon must be one canonical value', FORMAT, display)
   if (!status || !STATUS.has(status)) add('FAIL', 'ITEM-2', 'status must be one lifecycle value', FORMAT, display)
   if (!blocks || !blockedBy) add('FAIL', 'ITEM-2', 'blocks and blocked-by must be arrays', FORMAT, display)
@@ -208,14 +237,14 @@ const parseItem = (repository: string, name: string): WorkItem | undefined => {
   return item
 }
 
-export const workItemsFor = (repository: string): readonly WorkItem[] => {
+export const workItemsFor = (repository: string, configuration?: RoadmapConfiguration): readonly WorkItem[] => {
   const root = resolve(repository)
   const directory = join(root, 'docs', 'roadmap')
   if (!existsSync(directory) || !lstatSync(directory).isDirectory()) return []
   return readdirSync(directory, { withFileTypes: true })
     .filter((entry) => entry.isFile() && entry.name.endsWith('.md'))
     .sort((left, right) => left.name.localeCompare(right.name))
-    .flatMap((entry) => [parseItem(root, entry.name)].filter((item): item is WorkItem => Boolean(item)))
+    .flatMap((entry) => [parseItem(root, entry.name, configuration)].filter((item): item is WorkItem => Boolean(item)))
 }
 
 const validateDependencies = (items: readonly WorkItem[]): void => {
@@ -246,7 +275,7 @@ export const inspectRoadmap = (repository: string): readonly Finding[] => {
     else add('NA', 'SCOPE-1', 'KB repository: repository-roadmap standard does not apply', STANDARD)
     return findings
   }
-  repositoryCode(root)
+  const configuration = roadmapConfiguration(root)
   if (!existsSync(roadmap) || !lstatSync(roadmap).isDirectory()) {
     add('FAIL', 'PROFILE-1', 'non-KB repository requires docs/roadmap/ as a directory', STANDARD)
     return findings
@@ -258,7 +287,7 @@ export const inspectRoadmap = (repository: string): readonly Finding[] => {
       add('FAIL', 'PROFILE-1', 'docs/roadmap contains only regular work-item files', STANDARD, display)
     }
   }
-  const items = workItemsFor(root)
+  const items = workItemsFor(root, configuration)
   const ids = new Set<string>()
   for (const item of items) {
     if (ids.has(item.id)) add('FAIL', 'ITEM-1', `duplicate work-item id '${item.id}'`, FORMAT, item.file)

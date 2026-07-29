@@ -47,7 +47,7 @@ Canonical generated-index structure, placement, and readiness.
 - **ROAD-4 [M] — horizon vocabulary** — Every work item uses the canonical horizon vocabulary; the root orientation carries no parallel horizon list. (standards-repository-roadmaps.md)
 - **ROAD-5 [J] — horizon transitions and readiness** — Horizon promotion and deferral meet the readiness contract; execution state remains honest and CONFORM never chooses a move. (standards-repository-roadmaps.md)
   - _Review prompt:_ Review each promotion or deferral against its readiness contract and plan state.
-- **ROAD-6 [M] — repository work-item code** — The ki-roadmap table declares a valid stable repository code. (standards-repository-roadmaps.md)
+- **ROAD-6 [M] — repository work-item code** — The ki-roadmap table declares a valid stable repository code and a complete uppercase-code-to-theme mapping. (standards-repository-roadmaps.md)
 
 ## ITEM — items
 

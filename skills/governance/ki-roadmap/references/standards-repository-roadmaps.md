@@ -37,7 +37,7 @@ The item identifier is globally unique within its repository: `<REPO>-<THEME>-<N
 
 `<REPO>` is the stable uppercase `repo_code` in the `ki-roadmap` table.
 
-`<THEME>` is an uppercase semantic code kept in the item identifier.
+`<THEME>` is an uppercase semantic code declared in the `ki-roadmap` table’s `themes` mapping.
 
 `<NNN>` is a zero-padded serial allocated within that repository/theme pair from `001`.
 
@@ -45,7 +45,18 @@ The filename repeats the identifier followed by a lowercase kebab-case slug.
 
 The `theme` frontmatter field is a human-readable kebab-case grouping such as `foundation-tooling`.
 
-It is deliberately retained after flattening: items in one theme may be selected, shaped, and executed together without becoming a physical directory hierarchy.
+It is deliberately retained after flattening: items in one theme may be selected, shaped, and executed together without becoming a physical directory hierarchy. Its identifier code and name must be declared together in `.ki-config.toml`:
+
+```toml
+["knowledgeislands/ki-agentic-harness:ki-roadmap"]
+repo_code = "KI-HARNESS"
+
+["knowledgeislands/ki-agentic-harness:ki-roadmap".themes]
+FND = "foundation-tooling"
+GOV = "governance-consistency"
+```
+
+The mapping is the complete allowed theme vocabulary for the repository. Every item’s `<THEME>` identifier segment must map to its `theme` frontmatter value. It may declare a theme before that theme has an item. Keep horizons, lifecycle values, work-item location, and reporting behaviour universal rather than per-repository configuration.
 
 ## Horizons
 

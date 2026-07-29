@@ -16,7 +16,7 @@ Read [the repository-roadmap standard](references/standards-repository-roadmaps.
 
 ## Shared model
 
-`ROADMAP.md` is a concise orientation: it points to `docs/roadmap/` and deliberately repeats no queue information. Each canonical item is a single file at `docs/roadmap/<REPO>-<THEME>-<NNN>-<slug>.md`. The item’s `theme` field groups related work for CLI reporting; the item’s `horizon` field establishes priority; and `status` records its independent lifecycle. A concise item becomes an execution plan by gaining plan sections in the same file. The `ki-roadmap` table declares the stable uppercase `repo_code`; `<THEME>` is a stable semantic code; and the serial begins at `001` for each repository/theme pair. The globally unique identifier is also used by dependencies.
+`ROADMAP.md` is a concise orientation: it points to `docs/roadmap/` and deliberately repeats no queue information. Each canonical item is a single file at `docs/roadmap/<REPO>-<THEME>-<NNN>-<slug>.md`. The item’s `theme` field groups related work for CLI reporting; the item’s `horizon` field establishes priority; and `status` records its independent lifecycle. A concise item becomes an execution plan by gaining plan sections in the same file. The `ki-roadmap` table declares the stable uppercase `repo_code` and its `themes` mapping declares every allowed uppercase `<THEME>` code and canonical theme name; the serial begins at `001` for each repository/theme pair. The globally unique identifier is also used by dependencies.
 
 ## Operating modes
 
@@ -24,7 +24,7 @@ Carries the universal **AUDIT · CONFORM · EDUCATE · REFRESH** modes. Invoked 
 
 ### Mode AUDIT
 
-Run `ki repo audit --skill ki-roadmap --repo <repo>`. The catalogue applies the mechanical criteria in [the generated rubric](references/rubric.md): concise root orientation; work-item placement, frontmatter, identity, theme grouping, lifecycle, and dependency integrity. It reports KB scope as not applicable, or FAIL when a KB carries repository-roadmap artifacts, and makes no changes.
+Run `ki repo audit --skill ki-roadmap --repo <repo>`. The catalogue applies the mechanical criteria in [the generated rubric](references/rubric.md): concise root orientation; configured theme vocabulary; work-item placement, frontmatter, identity, theme grouping, lifecycle, and dependency integrity. It reports KB scope as not applicable, or FAIL when a KB carries repository-roadmap artifacts, and makes no changes.
 
 Then apply the rubric's judgment criteria by reading: item quality, horizon placement and transition readiness, execution detail where present, honest lifecycle state, and theme coherence. Where `+/_HANDOFFS/` exists, identify material that needs a local adoption decision; where `-/_HANDOFFS/` exists, identify known receiving-repository progress that needs a local follow-up or closure decision. Report proposed roadmap action only: never infer remote acceptance, move working material, or edit another repository's roadmap. Iterate until mechanical findings are clean and judgment findings are resolved.
 

@@ -54,7 +54,7 @@ const ROAD_5: RubricItem<RoadmapAuditContext> = {
 const ROAD_6: RubricItem<RoadmapAuditContext> = {
   code: 'ROAD-6',
   title: 'repository work-item code',
-  description: 'The ki-roadmap table declares a valid stable repository code.',
+  description: 'The ki-roadmap table declares a valid stable repository code and a complete uppercase-code-to-theme mapping.',
   sources: [SOURCE],
   mechanical: {
     level: 'FAIL',
