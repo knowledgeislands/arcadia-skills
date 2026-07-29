@@ -3,7 +3,7 @@ id: KI-HARNESS-GOV-005
 title: Review language-model evaluation frameworks
 theme: governance-consistency
 horizon: next
-status: acceptance
+status: done
 blocks: []
 blocked-by: []
 baseline-ref: 02df2024e850dc64ce5c757bfc54ee870ecaaadd
@@ -96,6 +96,10 @@ Any real-agent trace or fixture work needs a separately authorised portable eval
 ### Mini recap
 
 The current harness already captures the useful separation between intent, deterministic checks, advisory judgment, and reproducible evidence.
+
+## Done
+
+Accepted by the user on 2026-07-29 with the local close-out batch.
 
 ## Discussion
 

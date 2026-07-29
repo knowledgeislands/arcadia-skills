@@ -3,7 +3,7 @@ id: KI-HARNESS-GOV-004
 title: Review interpretable context methodology and agentic practice
 theme: governance-consistency
 horizon: next
-status: acceptance
+status: done
 blocks: []
 blocked-by: []
 baseline-ref: 02df2024e850dc64ce5c757bfc54ee870ecaaadd
@@ -96,6 +96,10 @@ The possible worker-brief source-artifact locator is a separately scoped `ki-del
 ### Mini recap
 
 ICM reinforces KI's file-backed evidence and explicit gates without replacing its lifecycle model.
+
+## Done
+
+Accepted by the user on 2026-07-29 with the local close-out batch.
 
 ## Discussion
 

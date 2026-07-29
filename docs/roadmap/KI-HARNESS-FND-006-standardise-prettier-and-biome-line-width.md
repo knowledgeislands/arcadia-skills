@@ -3,7 +3,7 @@ id: KI-HARNESS-FND-006
 title: Standardise Prettier and Biome line width
 theme: foundation-tooling
 horizon: next
-status: acceptance
+status: done
 blocks: []
 blocked-by: []
 baseline-ref: 02df2024e850dc64ce5c757bfc54ee870ecaaadd
@@ -86,6 +86,10 @@ The focused engineering audit of `ki-arcadia-principal` still reports its pre-ex
 ### Mini recap
 
 The earlier 160/140 formatter split has been replaced with one 160-column standard across the organisation.
+
+## Done
+
+Accepted by the user on 2026-07-29 after the organisation-wide formatter convergence.
 
 ## Discussion
 

@@ -3,7 +3,7 @@ id: KI-HARNESS-GOV-001
 title: Separate Knowledge Islands policy from portable governance
 theme: governance-consistency
 horizon: next
-status: acceptance
+status: done
 blocks: []
 blocked-by: []
 baseline-ref: 02df2024e850dc64ce5c757bfc54ee870ecaaadd
@@ -95,6 +95,10 @@ None identified within the documentary boundary.
 ### Mini recap
 
 Intentional links, dependencies, implementation evidence, and projections are not ownership conflicts; duplicate authoritative rules or write targets are.
+
+## Done
+
+Accepted by the user on 2026-07-29 with the local close-out batch.
 
 ## Discussion
 

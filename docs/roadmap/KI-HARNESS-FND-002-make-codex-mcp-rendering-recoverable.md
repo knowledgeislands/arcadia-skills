@@ -3,7 +3,7 @@ id: KI-HARNESS-FND-002
 title: Make Codex MCP rendering recoverable
 theme: foundation-tooling
 horizon: next
-status: acceptance
+status: done
 blocks: []
 blocked-by: []
 baseline-ref: 02df2024e850dc64ce5c757bfc54ee870ecaaadd
@@ -107,6 +107,10 @@ Native recovery remains deliberately non-transactional and supports only the exp
 ### Mini recap
 
 The renderer now restores a known-safe prior record when it can, and refuses mutation when it cannot prove that recovery is faithful.
+
+## Done
+
+Accepted by the user on 2026-07-29 with the local close-out batch.
 
 ## Discussion
 

@@ -3,7 +3,7 @@ id: KI-HARNESS-GOV-007
 title: Run local CLI and process close-out batch
 theme: governance-consistency
 horizon: next
-status: acceptance
+status: done
 blocks: []
 blocked-by: []
 baseline-ref: 02df2024e850dc64ce5c757bfc54ee870ecaaadd
@@ -129,6 +129,10 @@ FND-001 and GOV-002 remain outside this local batch because they require separat
 ### Mini recap
 
 The batch exercised six independent local items without crossing a user, runtime, repository, release, or closure boundary.
+
+## Done
+
+Accepted by the user on 2026-07-29 after reviewing the complete batch ledger and named item packets.
 
 ## Discussion
 

@@ -3,7 +3,7 @@ id: KI-HARNESS-GOV-003
 title: Add engineering change value profiles to the verb map
 theme: governance-consistency
 horizon: next
-status: acceptance
+status: done
 blocks: []
 blocked-by: []
 baseline-ref: 02df2024e850dc64ce5c757bfc54ee870ecaaadd
@@ -99,6 +99,10 @@ None identified within the process boundary.
 ### Mini recap
 
 The profile makes material trade-offs inspectable without automating or disguising the human selection decision.
+
+## Done
+
+Accepted by the user on 2026-07-29 with the local close-out batch.
 
 ## Discussion
 
