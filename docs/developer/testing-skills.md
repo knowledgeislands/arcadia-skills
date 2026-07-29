@@ -1,6 +1,6 @@
 # Testing skills
 
-Use the native repository host while developing skills. It loads the staged capability contract used by governed repositories rather than invoking a skill-owned wrapper.
+Use the native repository host while developing skills. It loads the staged capability contract used by governed repositories instead of invoking a skill-owned wrapper.
 
 From the harness repository root, run the complete mechanical `ki-skills` audit:
 

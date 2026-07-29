@@ -2,11 +2,11 @@
 
 **This is the common, runtime-neutral orientation** for any agent working in this repo — the [open agents.md standard](https://agents.md/), read directly by Codex and imported by `CLAUDE.md` for Claude Code. Put shared guidance here; keep only genuinely runtime-specific notes in per-runtime files.
 
-The README is the entry point; [the overview](docs/guides/user/overview.md), [skills map](docs/guides/user/skills.md), and [roadmap](ROADMAP.md) supply detail. This file is the short anchor.
+The README is the entry point; [the overview](https://knowledgeislands.info/guidance/using-ki/), [skills map](https://knowledgeislands.info/guidance/skills/), and [roadmap](ROADMAP.md) supply detail. This file is the short anchor.
 
 ## What this repo is
 
-The canonical home for Knowledge Islands [Agent Skills](https://agentskills.io/). Governance skills hold a standard, universal **EDUCATE / AUDIT / CONFORM / REFRESH** modes, and a checker; lightweight process skills drive a lifecycle. The [skills map](docs/guides/user/skills.md) is the authoritative taxonomy and composition graph.
+The canonical home for Knowledge Islands [Agent Skills](https://agentskills.io/). Governance skills hold a standard, universal **EDUCATE / AUDIT / CONFORM / REFRESH** modes, and a checker; lightweight process skills drive a lifecycle. The [skills map](https://knowledgeislands.info/guidance/skills/) is the authoritative taxonomy and composition graph.
 
 ## Five-part bundle status
 

@@ -1,6 +1,6 @@
 # Managed write boundaries
 
-Knowledge Islands keeps authored harness source, installed harness payloads, runtime discovery links, and repository declarations separate.
+The harness keeps authored source, installed harness payloads, runtime discovery links, and repository declarations separate.
 
 The boundary matters because each surface has a different owner and recovery path. Do not repair one surface by copying or deleting files from another.
 

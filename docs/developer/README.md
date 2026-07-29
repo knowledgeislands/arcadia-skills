@@ -1,4 +1,4 @@
-# Developer guides
+# Harness developer guides
 
 - [Knowledge acquisition pilot](knowledge-acquisition-pilot.md) — safely capture one selected ChatGPT conversation or project into a KEP-shaped evidence set while the KAF tooling is being specified.
 

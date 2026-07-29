@@ -1,6 +1,6 @@
 # Retire repository-vendored KI
 
-Use this maintainer guide to move one existing Knowledge Islands repository from a generated `.ki/` or `.ki-meta/` executor and copied runtime skills to verified installed-harness, managed discovery links, and native `ki` operations.
+Use this repository-local maintainer guide to move one existing Knowledge Islands repository from a generated `.ki/` or `.ki-meta/` executor and copied runtime skills to verified installed-harness, managed discovery links, and native `ki` operations.
 
 This is deliberately a guide, not a `ki` migration command.
 

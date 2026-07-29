@@ -10,8 +10,8 @@ The [KI Website](https://github.com/knowledgeislands/ki-website) may vendor sour
 
 A harness is **five parts** — the things an agent is given to work with:
 
-- **Skills** ([`skills/`](skills)) — reusable [Agent Skills](https://agentskills.io/specification): the most-built-out part of the harness today, all governance skills — including `ki-harness`, which governs this five-part container itself, and `ki-bootstrap`, which explains first-time activation through the CLI. What a skill is and the map of the set are in [Skills](docs/guides/user/skills.md); the per-skill catalogue is in [Skill catalogue](docs/guides/user/skill-catalogue.md).
-- **Agents** ([`subagents/`](subagents)) — Knowledge Islands [Claude Code subagents](https://code.claude.com/docs/en/sub-agents), one per file. Governance agents live under `subagents/governance/`, governed by the `ki-subagents` skill. See [`subagents/README.md`](agents/README.md).
+- **Skills** ([`skills/`](skills)) — reusable [Agent Skills](https://agentskills.io/specification): the most-built-out part of the harness today, all governance skills — including `ki-harness`, which governs this five-part container itself, and `ki-bootstrap`, which explains first-time activation through the CLI. What a skill is and the map of the set are in [Skills](https://knowledgeislands.info/guidance/skills/); the per-skill catalogue is in the [Skill catalogue](https://knowledgeislands.info/guidance/skills/catalogue/).
+- **Agents** ([`subagents/`](subagents)) — Knowledge Islands [Claude Code subagents](https://code.claude.com/docs/en/sub-agents), one per file. Governance agents live under `subagents/governance/`, governed by the `ki-subagents` skill. See [`subagents/README.md`](subagents/README.md).
 - **MCP servers** ([`mcp/`](mcp)) — where KI's MCP servers would consolidate as workspace packages. An empty **shelf** today; they currently live as separate `mcp-*` repos, governed by the `ki-mcp` skill. See [`mcp/README.md`](mcp/README.md).
 - **Evals** ([`evals/`](evals)) — a behavioural test suite that checks a skill actually _changes what the model does_, not just that its `SKILL.md` is well-formed. A rough signal, not a gate. See [`evals/README.md`](evals/README.md).
 - **Hooks** ([`hooks/`](hooks)) — durable global Claude Code hook payloads for Plan Mode lifecycle and stale Git-lock recovery; a user-environment manager binds them into settings separately. See [`hooks/README.md`](hooks/README.md).
@@ -25,22 +25,22 @@ brew install knowledgeislands/tap/ki
 ki bootstrap
 ```
 
-`ki bootstrap` configures detected agent runtimes, installs the verified canonical harness, and activates the core user skills. Repository governance remains explicit through `.ki-config.toml`, `ki skill repo`, and the native `ki repo` operations. [Install and get started](docs/guides/user/getting-started.md) covers the complete flow; [Use skills](docs/guides/user/using-skills.md) explains how to work with the resulting skills. Harness contributors should see [local skill linking](docs/guides/developer/linking-skills.md).
+`ki bootstrap` configures detected agent runtimes, installs the verified canonical harness, and activates the core user skills. Repository governance remains explicit through `.ki-config.toml`, `ki skill repo`, and the native `ki repo` operations. [Install and get started](https://knowledgeislands.info/guidance/using-ki/getting-started/) covers the complete flow; [Use skills](https://knowledgeislands.info/guidance/using-ki/using-skills/) explains how to work with the resulting skills. Harness contributors should see [local skill linking](docs/developer/linking-skills.md).
 
 ## Documentation
 
-- [Overview](docs/guides/user/overview.md) — a short account of what the harness is, what it does for its owner, and how the parts fit.
-- [Install and get started](docs/guides/user/getting-started.md) — install `ki`, bootstrap the user environment, activate skills, and govern a repository.
-- [Use skills](docs/guides/user/using-skills.md) — how a skill fires from a plain-language request or slash command.
-- [Skills](docs/guides/user/skills.md) — what a skill is, the domain map of the set and its interdependencies, and the shared governance-skill shape.
-- [Skill catalogue](docs/guides/user/skill-catalogue.md) — every skill, one by one, grouped by domain: what each governs and when to reach for it.
-- [Onboarding reference](docs/guides/user/onboarding.md) — the detailed installed-harness, activation, native-governance, and legacy-retirement boundaries.
-- [Command-line interface](docs/guides/user/command-line-interface.md) — the current end-user `ki` command surface and scope boundaries.
-- [Recommended tools](docs/guides/user/recommended-tools.md) — optional user and system tools: chezmoi, headroom-ai, Codex skill discovery, mcporter, and claude.ai connectors.
-- [Developer linking](docs/guides/developer/linking-skills.md) — the current local live-link workflow for harness contributors.
-- [Prompting guides](docs/guides/prompting/README.md) — how to prompt the models we run: one guide per model (Fable 5, Opus 4.8, Sonnet 5), each with a Sources section for refresh.
+- [Overview](https://knowledgeislands.info/guidance/using-ki/) — a short account of what the harness is, what it does for its owner, and how the parts fit.
+- [Install and get started](https://knowledgeislands.info/guidance/using-ki/getting-started/) — install `ki`, bootstrap the user environment, activate skills, and govern a repository.
+- [Use skills](https://knowledgeislands.info/guidance/using-ki/using-skills/) — how a skill fires from a plain-language request or slash command.
+- [Skills](https://knowledgeislands.info/guidance/skills/) — what a skill is, the domain map of the set and its interdependencies, and the shared governance-skill shape.
+- [Skill catalogue](https://knowledgeislands.info/guidance/skills/catalogue/) — every skill, one by one, grouped by domain: what each governs and when to reach for it.
+- [Onboarding reference](https://knowledgeislands.info/guidance/using-ki/onboarding/) — the detailed installed-harness, activation, native-governance, and legacy-retirement boundaries.
+- [Command-line interface](https://knowledgeislands.info/guidance/using-ki/command-line-interface/) — the current end-user `ki` command surface and scope boundaries.
+- [Optional tools](https://knowledgeislands.info/guidance/using-ki/recommended-tools/) — optional user and system tools: chezmoi, headroom-ai, Codex skill discovery, mcporter, and claude.ai connectors.
+- [Developer linking](docs/developer/linking-skills.md) — the current local live-link workflow for harness contributors.
+- [Prompting guides](https://knowledgeislands.info/guidance/prompting/) — how to prompt the models we run, with one source-backed guide per model.
 
-The user guide is self-contained. For how it relates to the decisions, feature definitions, plans, and skill code underneath it — and to the Knowledge Islands concept — see [docs/docs.md](docs/docs.md).
+The public website guidance is self-contained. For how it relates to the decisions, feature definitions, roadmap items, and skill code underneath it — and to the Knowledge Islands concept — see [docs/docs.md](docs/docs.md).
 
 ## Roadmap
 

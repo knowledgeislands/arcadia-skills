@@ -1,4 +1,4 @@
-# Knowledge acquisition pilot
+# Knowledge acquisition pilot for harness maintainers
 
 This developer procedure captures one user-selected ChatGPT conversation or project into a **KEP-shaped evidence set** while KAF tooling is being specified. It is not a replacement for the future `ki acquire` command and does not perform knowledge extraction or Knowledge Base ingress.
 
