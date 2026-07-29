@@ -12,7 +12,7 @@ _On-demand procedure for `ki-recap`. The kind, scope, and leg summary live in [`
   - [4. Harvest the learnings, and route each](#4-harvest-the-learnings-and-route-each)
   - [5. Specific actions](#5-specific-actions)
   - [6. Optional handoff to `ki-next`](#6-optional-handoff-to-ki-next)
-  - [7. Compress (only when `--compress` is passed)](#7-compress-only-when---compress-is-passed)
+  - [7. Preserve the handoff and compact when needed](#7-preserve-the-handoff-and-compact-when-needed)
 
 **Ground every claim in reality, not memory.** Warm in-session context, compaction summaries, and recalled memory entries are hypotheses about state, not evidence of it — concurrent sessions, background processes, and elapsed time all make them stale. Before the recap asserts a checkable fact — a commit landed, a gate passed, a file contains something, a plan is open — check it now (`git log`, re-run the read-only gate, read the file). What cannot be cheaply re-checked, state as recollection ("as of when it ran"), not as fact.
 
@@ -101,7 +101,19 @@ Apply these scenario checks when offering it:
 | Generated-footprint rollout has unrelated consumer drift | Report the rollout evidence and the unrelated drift separately; do not let either prove the other. |
 | User confirms multi-step next work | `ki-next` re-audits, confirms the exact roadmap transition, calls `ki-plan`, then stops for plan review. |
 
-## 7. Compress (only when `--compress` is passed)
+## 7. Preserve the handoff and compact when needed
+
+At the end of a recap, decide whether the next request will begin a distinct work cycle after a long, now-resolved span.
+
+Use the runtime's context signal where one is exposed; do not invent a portable token count or threshold where none exists.
+
+When the runtime reports high context use or low remaining headroom, preserve the digest below and then invoke the current runtime's native compaction control before beginning `ki-next`, planning, or implementation work.
+
+Do not compact in the middle of an active implementation unit, a pending user decision, an unfinished tool operation, or uncommitted work whose recovery information is not yet recorded.
+
+If compaction is unavailable in the current runtime, state that plainly and continue with the digest as the bounded handoff; it is not a substitute for reducing the live context.
+
+`--compress` requests the same digest even when the runtime does not currently signal pressure.
 
 Write a carry-forward digest of the recapped span:
 
@@ -131,4 +143,4 @@ Write a carry-forward digest of the recapped span:
 <comma-separated terms for future retrieval>
 ```
 
-State plainly that this digest is a **carry-forward artefact**, not a context-window reduction — the live window is unchanged. True in-context compression is native compaction or a `PreCompact` hook (`ki-tokenomics`'s domain); this skill does not attempt either.
+State plainly that this digest is a **carry-forward artefact**, not a context-window reduction. Native compaction or a `PreCompact` hook remains `ki-tokenomics`'s runtime boundary; this procedure uses that native control only at the safe recap-to-new-work boundary.

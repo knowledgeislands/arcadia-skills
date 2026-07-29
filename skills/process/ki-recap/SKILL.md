@@ -2,7 +2,7 @@
 name: ki-recap
 ki-depends-on: []
 description: >
-  Recaps a live session in three legs — summarise what happened (changes, decisions, files touched), surface what is outstanding (unfinished threads, deferred fixes, work that belongs in the repository's roadmap-and-plan or Streams-and-proposal structure), and harvest the learnings (dead-ends, workarounds, conventions), routing each to its proper home. Optionally compresses the recapped span into a compact carry-forward digest. A process skill (kind: process, ADR-KI-HARNESS-SKILLS-006): it drives an action, it does not hold a standard. Installable globally, cross-repo — usable in any repo on the machine, not just this one. Triggers: "recap this session", "summarise what happened", "what's outstanding", "harvest what we learned", "/ki-recap". Not the offline, mechanical mining of historical transcripts after the fact — that is a separate ROADMAP candidate sharing this skill's grounding substrate.
+  Recaps a live session in three legs — summarise what happened (changes, decisions, files touched), surface what is outstanding (unfinished threads, deferred fixes, work that belongs in the repository's roadmap-and-plan or Streams-and-proposal structure), and harvest the learnings (dead-ends, workarounds, conventions), routing each to its proper home. At a safe high-context boundary, preserves a compact carry-forward digest and invokes the current runtime's native compaction when available before new work begins. A process skill (kind: process, ADR-KI-HARNESS-SKILLS-006): it drives an action, it does not hold a standard. Installable globally, cross-repo — usable in any repo on the machine, not just this one. Triggers: "recap this session", "summarise what happened", "what's outstanding", "harvest what we learned", "/ki-recap". Not the offline, mechanical mining of historical transcripts after the fact — that is a separate ROADMAP candidate sharing this skill's grounding substrate.
 argument-hint: 'recap [--compress] [--runtime detect|claude|codex] [--transcript <session-file>] | help'
 ---
 
@@ -24,7 +24,7 @@ When `ki-accept` asks for a work-item mini recap, use the same grounding and lea
 
 When a grounded Specific action needs a portfolio decision, recap may offer `CHOOSE-NEXT-WORK` as an optional handoff to `ki-next`. It carries only this current-session context: grounded outstanding work, learning routes with their approval status, and the action labels. It does not invoke `ki-next`, write a transcript or memory entry, promote a roadmap item, or turn a proposal into approval.
 
-Optionally, with `--compress`, add a further leg: write a carry-forward digest of the recapped span (Context / Decisions / Files Touched / Outstanding / Learnings-routed / Keywords). This is honestly scoped — a skill cannot rewrite its own context window; true in-context compression is the native or `PreCompact`-hook path (`ki-tokenomics`). The digest is a carry-forward artefact, not a context reduction.
+At a safe boundary before a new work cycle, assess context pressure. When the current runtime exposes high usage or low remaining headroom, preserve a carry-forward digest and invoke its native compaction control when available. Do this only after the recap has recorded the durable outcome, not in the middle of an active change, unresolved tool operation, or uncommitted implementation unit. If the runtime exposes no compaction control, say so plainly; the digest remains useful handoff material but is not a context reduction.
 
 The recap grounds every checkable claim in current reality, not in warm context or recalled memory: before asserting a commit landed, a gate passed, or a file's state, it re-checks (`git log`, the read-only gate, a fresh read) — stale context otherwise reads as fact.
 
@@ -32,7 +32,7 @@ A mechanical **grounding helper**, [`scripts/recap-grounding.ts`](scripts/recap-
 
 ## Invocation
 
-`help` / `-h` / `?` explains this skill and stops, taking no action. With no argument, run the three-leg procedure over the current session. `--compress` adds the fourth leg. Grounding uses `--runtime detect` by default, selecting the newest repository-matching Claude or Codex transcript; use `--runtime claude` or `--runtime codex` to force one runtime. `--transcript <session-file>` selects one eligible candidate by basename only when concurrent sessions make modification time ambiguous.
+`help` / `-h` / `?` explains this skill and stops, taking no action. With no argument, run the three-leg procedure over the current session. `--compress` explicitly writes the carry-forward digest; high context pressure also requires it before native compaction. Grounding uses `--runtime detect` by default, selecting the newest repository-matching Claude or Codex transcript; use `--runtime claude` or `--runtime codex` to force one runtime. `--transcript <session-file>` selects one eligible candidate by basename only when concurrent sessions make modification time ambiguous.
 
 ## Notes
 

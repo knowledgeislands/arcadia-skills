@@ -41,6 +41,8 @@ ki-kb-streams governs KB Focus and proposal enactment.
 
 `ki-next` works without it and never mines historical transcripts.
 
+When a preceding recap records context pressure, `ki-next` begins only after that recap has preserved its bounded handoff and the runtime has compacted where it can. It then re-grounds the repository rather than trusting the carry-forward digest as current state.
+
 `ki-batch` applies repeated, explicitly authorised selection and shaping passes before coordinating repeated `ki-implement` cycles.
 
 It does not change `ki-next` ownership of an individual selection decision.
