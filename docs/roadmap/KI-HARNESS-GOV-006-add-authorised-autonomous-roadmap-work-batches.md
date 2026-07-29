@@ -2,9 +2,8 @@
 id: KI-HARNESS-GOV-006
 title: Add authorised autonomous roadmap-work batches
 theme: governance-consistency
-horizon: future
+horizon: next
 status: open
-candidate: true
 blocks: []
 blocked-by: []
 baseline-ref: null
@@ -12,32 +11,114 @@ baseline-ref: null
 
 ## Context
 
-Create `ki-batch`, a process skill for human-approved autonomous batches of governed roadmap-plan work.
+Create `ki-batch`, a process skill for preparing and running human-approved autonomous batches of governed roadmap work.
 
 The aim is not simply to let an agent continue unattended. It is to make a reviewed set of ready work safely executable while the human is away: each admitted plan has explicit authority, verification, and an accountable outcome.
 
-The durable control surface is a **batch authorisation**. It records the batch identifier and purpose; named plan IDs in dependency order; repositories and file boundaries; timebox; required verification; permitted agent decisions; permitted use of delegation; stop conditions; and whether each plan may reach acceptance or done without another human decision.
+The process joins two cycles without erasing their ownership boundaries:
 
-The batch pre-gate must reject incomplete or ambiguous authorisations and plans that are not sufficiently specified, ordered, scoped, dependency-clean, or verifiable. It should say why a plan is ineligible rather than quietly omitting it.
+```text
+roadmap preparation
+  ki-recap → ki-next → ki-plan → Ready
+
+implementation
+  ki-implement → Acceptance → ki-accept → Done
+```
+
+`ki-batch` applies the preparation cycle across a selected set, stops for a manual authorisation gate, then coordinates repeated `ki-implement` cycles.
 
 ## Boundary
 
-`ki-batch` orchestrates `ki-next`, `ki-plan`, `ki-delegate`, and `ki-recap`; it does not replace their responsibilities or add a KI CLI command.
+`ki-batch` orchestrates `ki-next`, `ki-plan`, `ki-implement`, `ki-accept`, `ki-delegate`, and `ki-recap`; it does not replace their responsibilities or add a KI CLI command.
 
 It must not introduce a tracker, plugin, worktree scheme, runtime-specific machinery, automatic push or release, or an open-ended "agent may decide" authority. A batch authorisation is bounded to the named work and expires at its declared completion target or timebox.
 
-## Operating model
+The first delivery is the process skill and examples only. CLI support is a later decision after the process has been exercised.
 
-1. **Authorise** — a human prepares and explicitly approves the batch authorisation after reviewing the plans.
-2. **Preflight** — `ki-batch` verifies readiness, dependency order, permitted scope, required checks, and the stop conditions before it changes a file.
-3. **Execute** — it processes plans in dependency order, delegates only work permitted by the authorisation, and commits independently verified coherent units.
-4. **Park** — it stops the affected plan when it reaches ambiguity or a stop condition. It records the reason, evidence, and required human decision; it may continue only plans proven independent of the parked plan.
-5. **Review and verify** — implementation evidence is distinct from the batch's final review and required verification. A plan is never self-certified merely because an implementor reported success.
-6. **Close** — the post-gate writes a per-plan run ledger and concise recap: commits, checks, decisions, skipped or deferred work, parks, failures, and the resulting lifecycle state.
+## Preparation cycle
+
+Batch preparation starts from a human-confirmed candidate set and scope boundary.
+
+It repeats the existing roadmap responsibilities rather than creating a parallel planner:
+
+1. `ki-recap` grounds current session state when useful.
+2. `ki-next` evaluates dependencies, confirms selection and horizon placement, and hands each immediate item to planning.
+3. `ki-plan` shapes each selected item in place and marks it Ready only after its own review gate.
+4. `ki-batch` orders the resulting Ready items, identifies work that can proceed independently, and drafts the batch authorisation.
+
+Preparation may repair deterministic documentation and plan alignment within its confirmed scope.
+
+It does not authorise implementation.
+
+If an item cannot become Ready, preparation records the missing decision or evidence and excludes it explicitly; it never quietly drops work.
+
+## Batch authorisation
+
+The durable control surface for implementation is a human-approved **batch authorisation**.
+
+It records:
+
+- a batch identifier, purpose, timebox, and completion target;
+- the exact work-item IDs in dependency order;
+- repositories and file or capability boundaries;
+- required verification for each item and for the batch as a whole;
+- permitted agent decisions and deterministic repairs;
+- permitted use of `ki-delegate`, including worker boundaries and review gates;
+- mandatory and item-specific stop conditions;
+- whether independent work may continue after another item is parked;
+- whether the batch stops at Acceptance or may invoke `ki-accept` to reach Done.
+
+The normal completion target is Acceptance.
+
+Authority to accept delivery, mark Done, or prune must be explicit rather than inferred from implementation authority.
+
+The authorisation gate is manual and occurs only after the human can review the Ready items and the proposed execution order.
+
+## Implementation cycle
+
+After authorisation, `ki-batch` preflights the complete set before changing implementation files.
+
+The pre-gate rejects an incomplete or ambiguous authorisation and any item that is no longer Ready, correctly ordered, in scope, dependency-clean, or verifiable.
+
+For every admitted item, `ki-batch`:
+
+1. invokes `ki-implement` for Ready → In progress → Acceptance;
+2. permits delegation only within the authorisation and retains orchestrator review;
+3. commits independently verified coherent units;
+4. keeps implementation evidence distinct from final review and required verification;
+5. records the resulting lifecycle state before starting a dependent item.
+
+A plan is never self-certified merely because an implementor reports success.
+
+## Parking and continuation
+
+When an item reaches ambiguity or a stop condition, park that item with the reason, evidence, affected dependencies, and exact human decision required.
+
+Continue only with items proven independent of the parked item and only when the authorisation permits that continuation.
+
+A park is an accountable batch result, not an omitted or failed-to-report item.
 
 ## Mandatory stops
 
 Stop rather than infer authority for a public-contract change outside the approved plan, material scope expansion, destructive or irreversible action, a new external dependency or coordination, required-verification failure, release or push, or any decision the authorisation does not expressly permit.
+
+## Post-gate
+
+The post-gate records a per-item and batch-level run ledger:
+
+- admitted, excluded, completed, parked, skipped, and deferred work;
+- lifecycle state before and after the run;
+- commits and checks;
+- decisions exercised under the authorisation;
+- failures, stops, and the human action needed next;
+- independent review and verification evidence;
+- a concise `ki-recap` result.
+
+When the completion target is Acceptance, stop for the normal human `ki-accept` decision.
+
+When Done authority was expressly granted, record how the acceptance criteria were satisfied before invoking `ki-accept`.
+
+Pruning remains a separate confirmed cleanup action and is never implied by batch completion.
 
 ## Reference analysis
 
@@ -47,6 +128,86 @@ Stop rather than infer authority for a public-contract change outside the approv
 
 The KI-specific contribution is therefore an auditable authority boundary tied to roadmap items and their lifecycle evidence: the batch may progress approved work autonomously, but cannot silently broaden, ship, or declare an unapproved result complete.
 
-## First deliverable
+## Current state
+
+The two-cycle model and manual gates are documented in the harness diagram, and `ki-next`, `ki-plan`, `ki-delegate`, and `ki-recap` already provide the constituent responsibilities.
+
+`ki-plan` now ends at Ready, `ki-implement` owns Ready → Acceptance, and `ki-accept` owns explicit closure and pruning.
+
+The remaining proof is an exercised bounded batch and its judgment review; no CLI command is required for this first delivery.
+
+## Steps
+
+1. [x] Finalise and verify the roadmap stage-detail contract and the planning, implementation, and acceptance ownership split.
+2. [x] Add `ki-implement` and `ki-accept` as focused process skills and verify their lifecycle handoffs independently.
+3. [x] Add `ki-batch` with distinct preparation, manual authorisation, implementation, parking, and post-gate procedures.
+4. [x] Add a complete batch-authorisation exemplar, including dependency order, authority, verification, stops, and completion target.
+5. [x] Add a parked-item exemplar and a post-gate acceptance packet that accounts for every admitted item.
+6. [ ] Exercise the process against a bounded set of ready harness work without adding CLI support.
+7. [ ] Apply the judgment portions of the relevant skill and roadmap rubrics, then present the result for acceptance.
+
+## Files touched
+
+- `skills/process/ki-implement/`
+- `skills/process/ki-accept/`
+- `skills/process/ki-batch/`
+- `skills/process/ki-plan/`
+- `skills/process/ki-next/`
+- `skills/process/ki-recap/`
+- `skills/process/ki-delegate/`
+- `skills/governance/ki-roadmap/`
+- the process-family and user-facing composition documentation
+
+## Verify
+
+- Each process skill has one non-overlapping responsibility and names its exact incoming and outgoing lifecycle state.
+- Every example is internally consistent with the work-item stage-detail contract.
+- A dry rehearsal demonstrates that ambiguous or out-of-authority work is parked and accounted for while authorised independent work may continue.
+- Normal batch execution stops at Acceptance; reaching Done requires explicit acceptance authority.
+- No process step can push, release, prune, broaden scope, or introduce external coordination without explicit authority.
+- `ki repo audit --skill ki-skills --repo .`
+- `ki repo audit --skill ki-roadmap --repo .`
+- `bun run test`
+- `bunx tsc --noEmit`
+
+## Dependencies / blocks
+
+The process depends logically on the clean lifecycle split landing first: `ki-plan` must stop at Ready, `ki-implement` must own delivery to Acceptance, and `ki-accept` must own Done and pruning.
+
+The work does not require CLI support.
+
+CLI reporting or execution may be considered later from exercised process evidence.
+
+## Delegation
+
+Use bounded rounds with separate file ownership:
+
+- one round for each new process skill and its examples;
+- one cross-skill alignment round for relationships and public composition documentation;
+- one independent review round for authority leaks, lifecycle overlap, and unaccounted batch outcomes.
+
+The orchestrator owns integration, generated publications, full verification, and the final review against this item.
+
+## Discussion
+
+### First deliverable
 
 Start with the `ki-batch` process skill, a batch-authorisation example, a parked-plan example, and a reviewable plan/acceptance packet. Do not add KI CLI commands until the process has been exercised and accepted.
+
+### Preparation authority
+
+Preparation still needs a bounded human-confirmed candidate set, but it should remain lighter than implementation authorisation.
+
+The exemplar should show whether that boundary is best recorded as a short preparation brief or as the draft portion of the eventual batch authorisation.
+
+### Acceptance authority
+
+The default batch target is Acceptance because implementation success is not the same as human acceptance.
+
+An explicitly authorised Done target is useful for deterministic, low-risk work, but its exemplar must make the additional authority and acceptance criteria unmistakable.
+
+### Multi-repository batches
+
+The authorisation shape allows multiple repositories, but the first rehearsal should remain within this repository.
+
+Cross-repository execution adds independent Git state, verification, and commit accounting and should be exercised only after the single-repository process is accepted.
