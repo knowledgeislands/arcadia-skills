@@ -6,30 +6,18 @@ export type RoadmapAuditContext = {
   readonly findings: readonly Finding[]
 }
 
-export type RoadmapBlurbsContext = RoadmapAuditContext & {
-  readonly normaliseHorizonBlurbs?: () => void
-  readonly ensureRepositoryCode?: () => void
-}
-
-export type RoadmapPlanContext = RoadmapAuditContext & {
-  readonly syncPlanReferences?: () => void
-}
-
-export type RoadmapProjectionContext = RoadmapAuditContext & {
-  readonly rebuildProjection?: () => void
+export type RoadmapIndexContext = RoadmapAuditContext & {
+  readonly rebuildIndex?: () => void
 }
 
 export type RoadmapRubricContext = {
   readonly rubric: RubricPublicationContext
   readonly scope: RoadmapAuditContext
-  readonly profile: RoadmapAuditContext
-  readonly roadmaps: RoadmapBlurbsContext
-  readonly themes: RoadmapAuditContext
+  readonly roadmaps: RoadmapAuditContext
   readonly items: RoadmapAuditContext
-  readonly projection: RoadmapProjectionContext
-  readonly plans: RoadmapPlanContext
+  readonly index: RoadmapIndexContext
+  readonly execution: RoadmapAuditContext
   readonly safety: RoadmapAuditContext
-  readonly expansion: RoadmapAuditContext
   readonly handoffs: RoadmapAuditContext
 }
 
@@ -58,17 +46,11 @@ export const createRoadmapSession = ({ mode, repository, publication }: RubricCo
   const context: RoadmapRubricContext = {
     rubric: { publication },
     scope: audit,
-    profile: audit,
-    roadmaps: {
-      ...audit,
-      ...(draft ? { normaliseHorizonBlurbs: draft.normaliseHorizonBlurbs, ensureRepositoryCode: draft.ensureRepositoryCode } : {})
-    },
-    themes: audit,
+    roadmaps: audit,
     items: audit,
-    projection: { ...audit, ...(draft ? { rebuildProjection: draft.rebuildProjection } : {}) },
-    plans: { ...audit, ...(draft ? { syncPlanReferences: draft.syncPlanReferences } : {}) },
+    index: { ...audit, ...(draft ? { rebuildIndex: draft.rebuildIndex } : {}) },
+    execution: audit,
     safety: audit,
-    expansion: audit,
     handoffs: audit
   }
 
@@ -76,7 +58,7 @@ export const createRoadmapSession = ({ mode, repository, publication }: RubricCo
     subjects: [
       { families: ['RUBRIC'], context: () => context },
       {
-        families: ['SCOPE', 'PROFILE', 'ROAD', 'THEME', 'ITEM', 'PROJ', 'PLAN', 'SAFE', 'EXPAND', 'HANDOFF'],
+        families: ['SCOPE', 'ROAD', 'ITEM', 'INDEX', 'EXEC', 'SAFE', 'HANDOFF'],
         context: () => context
       }
     ],

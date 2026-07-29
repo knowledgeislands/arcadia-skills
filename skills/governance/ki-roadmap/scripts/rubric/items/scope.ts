@@ -17,7 +17,7 @@ const SCOPE_1: RubricItem<RoadmapAuditContext> = {
 export const SCOPE: RubricFamily<RoadmapRubricContext, RoadmapAuditContext> = {
   code: 'SCOPE',
   title: 'scope',
-  description: 'Repository-roadmap profile applicability.',
+  description: 'Repository-roadmap applicability.',
   standard: SOURCE,
   selectContext: (context) => context.scope,
   items: [SCOPE_1]

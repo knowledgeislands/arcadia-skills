@@ -10,14 +10,11 @@ Line-by-line criteria for auditing ki-roadmap. Classifications are derived from 
 
 - [RUBRIC — Generated rubric publication](#rubric--generated-rubric-publication)
 - [SCOPE — scope](#scope--scope)
-- [PROFILE — profile](#profile--profile)
 - [ROAD — roadmaps](#road--roadmaps)
-- [THEME — themes](#theme--themes)
 - [ITEM — items](#item--items)
-- [PROJ — portfolio projection](#proj--portfolio-projection)
-- [PLAN — plans](#plan--plans)
+- [INDEX — generated index](#index--generated-index)
+- [EXEC — execution](#exec--execution)
 - [SAFE — safe mechanics](#safe--safe-mechanics)
-- [EXPAND — expansion](#expand--expansion)
 - [HANDOFF — handoff review](#handoff--handoff-review)
 
 ## RUBRIC — Generated rubric publication
@@ -32,77 +29,56 @@ The tracked readable rubric is the exact publication of the structured catalogue
 
 → [standard](standards-repository-roadmaps.md)
 
-Repository-roadmap profile applicability.
+Repository-roadmap applicability.
 
 - **SCOPE-1 [M] — KB scope** — KB repositories use `ki-kb-streams`; repository-roadmap artifacts in a KB fail, while a KB without them is not applicable. (standards-repository-roadmaps.md)
-
-## PROFILE — profile
-
-→ [standard](standards-repository-roadmaps.md)
-
-Simple and thematic roadmap profile structure.
-
-- **PROFILE-1 [M] — profile structure** — A non-KB repository has a root `ROADMAP.md`; `docs/roadmap/` selects the thematic profile, otherwise simple. Missing roots or incomplete thematic structure fail. (standards-repository-roadmaps.md)
-- **PROFILE-2 [J] — simple-profile suitability** — Simple remains appropriate only while the work is understandable without theme isolation or execution plans. (standards-repository-roadmaps.md)
-  - _Review prompt:_ Review whether the simple profile remains appropriate for the repository work.
 
 ## ROAD — roadmaps
 
 → [standard](standards-repository-roadmaps.md)
 
-Canonical horizon structure, placement, and readiness.
+Canonical generated-index structure, placement, and readiness.
 
-- **ROAD-1 [M] — roadmap structure** — Every authored roadmap has one H1 and the six horizons exactly once, in canonical order. (standards-repository-roadmaps.md)
-- **ROAD-2 [J] — honest horizon placement** — Items sit in honest horizons; Waiting-for items name their external condition; speculative Future work says `_(candidate)_`. (standards-repository-roadmaps.md)
+- **ROAD-1 [M] — roadmap structure** — The generated root index has one H1 and the six horizons exactly once, in canonical order. (standards-repository-roadmaps.md)
+- **ROAD-2 [J] — honest horizon placement** — Items sit in honest horizons; Waiting-for items name their external condition; speculative Future work carries `candidate: true`. (standards-repository-roadmaps.md)
   - _Review prompt:_ Review horizon placement, waiting conditions, and Future candidate marking.
-- **ROAD-3 [J] — open finite work** — Roadmaps are open-only and contain finite work rather than continuous practice. (standards-repository-roadmaps.md)
+- **ROAD-3 [J] — open finite work** — Work-item indexes are open-only and contain finite work rather than continuous practice. (standards-repository-roadmaps.md)
   - _Review prompt:_ Review that roadmap items are finite open work, not completed work or ongoing practice.
-- **ROAD-4 [M] — canonical horizon blurbs** — Every horizon heading is followed immediately by its exact canonical blurb; CONFORM inserts a missing blurb without removing existing authored content. (standards-repository-roadmaps.md)
-- **ROAD-5 [J] — horizon transitions and readiness** — Horizon promotion and deferral meet the readiness contract; ordinary plans prevent later-horizon moves until their lifecycle is explicitly resolved, while an open plan with a non-empty transferred-from origin may preserve detail at another honest horizon without implying readiness. CONFORM never chooses a move. (standards-repository-roadmaps.md)
+- **ROAD-4 [M] — canonical horizon blurbs** — Every generated horizon heading is followed immediately by its exact canonical blurb. (standards-repository-roadmaps.md)
+- **ROAD-5 [J] — horizon transitions and readiness** — Horizon promotion and deferral meet the readiness contract; execution state remains honest and CONFORM never chooses a move. (standards-repository-roadmaps.md)
   - _Review prompt:_ Review each promotion or deferral against its readiness contract and plan state.
-- **ROAD-6 [M] — repository plan code** — The ki-roadmap table declares a valid repository code; CONFORM derives it from the repository directory when absent. (standards-repository-roadmaps.md)
-
-## THEME — themes
-
-→ [standard](standards-repository-roadmaps.md)
-
-Thematic roadmap identity, layout, and coherence.
-
-- **THEME-1 [M] — theme layout** — Theme directories are lowercase kebab-case, contain `ROADMAP.md`, and thematic items are `###` headings under a horizon. (standards-repository-roadmaps.md)
-- **THEME-2 [M] — stable theme code** — Every theme roadmap declares exactly one unquoted uppercase `code`, unique across the repository; plan IDs in that theme begin with that stable code. (standards-repository-roadmaps.md)
-- **THEME-3 [M] — non-empty themes** — A theme roadmap contains at least one item; an empty theme must be pruned deliberately after confirming it holds no authored content or plans. (standards-repository-roadmaps.md)
-- **THEME-4 [J] — coherent themes** — Themes are coherent workstreams, neither catch-alls nor one-item bureaucracy. (standards-repository-roadmaps.md)
-  - _Review prompt:_ Review theme boundaries and granularity.
+- **ROAD-6 [M] — repository work-item code** — The ki-roadmap table declares a valid stable repository code. (standards-repository-roadmaps.md)
 
 ## ITEM — items
 
 → [standard](standards-repository-roadmaps.md)
 
-Stable thematic roadmap-item identity.
+Flat work-item identity, grouping, lifecycle, and dependencies.
 
-- **ITEM-1 [M] — unique qualified item locator** — Each thematic item has one unique qualified `<theme>/<item-slug>` locator. Duplicate derived locators fail. (standards-repository-roadmaps.md)
+- **ITEM-1 [M] — flat work-item identity** — Each canonical item lives directly under docs/roadmap with a unique stable identifier and matching filename. (standards-repository-roadmaps.md)
+- **ITEM-2 [M] — item state and theme grouping** — Each item has valid theme, horizon, candidate, status, baseline, and dependency fields. (standards-repository-roadmaps.md)
+- **ITEM-3 [M] — item body shape** — Every item has concise issue sections; execution and terminal statuses carry the required lifecycle sections. (standards-repository-roadmaps.md)
+- **ITEM-4 [M] — item dependencies** — Dependencies name existing work items, are reverse-consistent and acyclic, and do not permit active blocked work. (standards-repository-roadmaps.md)
 
-## PROJ — portfolio projection
+## INDEX — generated index
 
 → [standard](standards-repository-roadmaps.md)
 
-The exact generated root portfolio for a thematic roadmap.
+The exact generated root index for flat work items.
 
-- **PROJ-1 [M] — root portfolio projection** — The thematic root `ROADMAP.md` exactly matches the generated linked portfolio and repeats no item prose. (standards-repository-roadmaps.md)
+- **INDEX-1 [M] — generated root index** — Root `ROADMAP.md` exactly matches the linked index generated from flat canonical work items. (standards-repository-roadmaps.md)
 
-## PLAN — plans
+## EXEC — execution
 
-→ [standard](standards-plan-format.md)
+→ [standard](standards-work-item-format.md)
 
-Plan identity, linkage, dependencies, and lifecycle integrity.
+In-place execution shape and lifecycle integrity.
 
-- **PLAN-1 [M] — plan placement and shape** — Plans use the canonical thematic path, stable theme code and serial, required frontmatter, an optional non-empty transferred-from origin, matching filename and ID, and an immutable execution baseline commit. (standards-plan-format.md)
-- **PLAN-2 [M] — plan roadmap linkage** — `roadmap:` is a qualified locator in the same theme and resolves to a Blocking or Next item, except that an open plan with a non-empty transferred-from origin may preserve detail at another honest horizon; the item carries exactly one matching local plan reference. (standards-plan-format.md)
-- **PLAN-3 [M] — plan dependencies** — Dependencies use canonical plan identifiers, exist, are reverse-consistent, and acyclic; a ready, in-progress, or acceptance plan has no non-done blocker. (standards-plan-format.md)
-- **PLAN-4 [J] — ready plan content** — Ready, in-progress, and acceptance plans have concrete Steps, checkable Verify, honest Current state, and minimal Files touched. (standards-plan-format.md)
-  - _Review prompt:_ Review active plan content for concrete, checkable execution detail.
-- **PLAN-5 [J] — honest plan status** — Open awaits readiness approval or preserves transferred detail without implying readiness; ready awaits execution; in-progress reflects live work; acceptance awaits explicit user acceptance; done is a retained closure record. Every non-open plan resolves to Blocking or Next. (standards-plan-format.md)
-  - _Review prompt:_ Review whether the plan status honestly reflects its lifecycle gate or retained completion record.
+- **EXEC-1 [M] — in-place execution record** — A work item entering execution retains its concise issue context and adds the required execution sections in the same file. (standards-work-item-format.md)
+- **EXEC-2 [J] — ready execution content** — Ready, in-progress, and acceptance items have concrete Steps, checkable Verify, honest Current state, and minimal Files touched. (standards-work-item-format.md)
+  - _Review prompt:_ Review active work-item execution detail for concreteness and checkability.
+- **EXEC-3 [J] — honest execution status** — Open awaits readiness approval; ready awaits execution; in-progress reflects live work; acceptance awaits explicit user acceptance; done is a retained closure record. Every non-open item is Blocking or Next. (standards-work-item-format.md)
+  - _Review prompt:_ Review whether work-item status honestly reflects its lifecycle gate or retained completion record.
 
 ## SAFE — safe mechanics
 
@@ -111,15 +87,6 @@ Plan identity, linkage, dependencies, and lifecycle integrity.
 Regular-file boundaries and host-owned transactional publication.
 
 - **SAFE-1 [M] — safe mechanics** — Governed roadmap inputs and outputs are regular local files; CONFORM changes session-owned drafts and leaves dry-run, validation, atomic publication, and rollback to the host. (standards-repository-roadmaps.md)
-
-## EXPAND — expansion
-
-→ [standard](standards-repository-roadmaps.md)
-
-Judgment-led migration from the simple profile to coherent themes.
-
-- **EXPAND-1 [J] — conservative expansion** — EXPAND conserves every open item exactly once and preserves its horizon and prose. (standards-repository-roadmaps.md)
-  - _Review prompt:_ Review expansion conservation against the source roadmap.
 
 ## HANDOFF — handoff review
 

@@ -1,6 +1,6 @@
 # Repository roadmap
 
-This portfolio view is generated from the canonical theme roadmaps under `docs/roadmap/`. Edit those files, then run `ki-roadmap` CONFORM.
+This index is generated from canonical work items under `docs/roadmap/`. Edit those files, then run `ki repo conform --skill ki-roadmap`.
 
 ## Blocking
 
@@ -18,10 +18,15 @@ Understood and roughly scoped but not yet started — worth doing once the **Nex
 
 Worth doing, but presently blocked on an external dependency or decision. Revisit when its named condition changes; do not use this horizon for intentionally paused work.
 
-- [Operations: Complete the approved Claude-state cleanup](docs/roadmap/operations/ROADMAP.md#complete-the-approved-claude-state-cleanup)
-- [Operations: Reconcile the three memory-store defects](docs/roadmap/operations/ROADMAP.md#reconcile-the-three-memory-store-defects)
-- [Runtime Portability: Add Codex housekeeping when a safe contract exists](docs/roadmap/runtime-portability/ROADMAP.md#add-codex-housekeeping-when-a-safe-contract-exists)
-- [Runtime Portability: Make KI MCP servers reachable from Cowork](docs/roadmap/runtime-portability/ROADMAP.md#make-ki-mcp-servers-reachable-from-cowork)
+### Operations
+
+- [KI-HARNESS-OPS-001 — Complete the approved Claude-state cleanup](docs/roadmap/KI-HARNESS-OPS-001-complete-approved-claude-state-cleanup.md)
+- [KI-HARNESS-OPS-002 — Reconcile the three memory-store defects](docs/roadmap/KI-HARNESS-OPS-002-reconcile-memory-store-defects.md)
+
+### Runtime Portability
+
+- [KI-HARNESS-RTP-001 — Add Codex housekeeping when a safe contract exists](docs/roadmap/KI-HARNESS-RTP-001-add-codex-housekeeping.md)
+- [KI-HARNESS-RTP-002 — Make KI MCP servers reachable from Cowork](docs/roadmap/KI-HARNESS-RTP-002-make-ki-mcp-servers-reachable-from-cowork.md)
 
 ## Parked
 
@@ -29,19 +34,30 @@ Intentionally paused work with no current attention. Revisit only when its prior
 
 ## Future
 
-Speculative or not yet scoped — items marked _(candidate)_ need a scoping pass (or a decision to drop them) before they're actionable.
+Speculative or not yet scoped — candidate items need a scoping pass (or a decision to drop them) before they are actionable.
 
-- [Foundation Tooling: Codify context-aware delegation policy _(candidate)_](docs/roadmap/foundation-tooling/ROADMAP.md#codify-context-aware-delegation-policy-candidate)
-- [Foundation Tooling: Document per-skill `.ki-config.toml` ownership _(candidate)_](docs/roadmap/foundation-tooling/ROADMAP.md#document-per-skill-ki-configtoml-ownership-candidate)
-- [Foundation Tooling: Harden external Cowork plugin publication _(candidate)_](docs/roadmap/foundation-tooling/ROADMAP.md#harden-external-cowork-plugin-publication-candidate)
-- [Foundation Tooling: Make Codex MCP rendering recoverable _(candidate)_](docs/roadmap/foundation-tooling/ROADMAP.md#make-codex-mcp-rendering-recoverable-candidate)
-- [Foundation Tooling: Review the Cloudflare agent-setup prompt for the Cloudflare skill _(candidate)_](docs/roadmap/foundation-tooling/ROADMAP.md#review-the-cloudflare-agent-setup-prompt-for-the-cloudflare-skill-candidate)
-- [Foundation Tooling: Standardise Prettier and Biome line width across repositories _(candidate)_](docs/roadmap/foundation-tooling/ROADMAP.md#standardise-prettier-and-biome-line-width-across-repositories-candidate)
-- [Governance Consistency: Add engineering change value profiles to the verb map _(candidate)_](docs/roadmap/governance-consistency/ROADMAP.md#add-engineering-change-value-profiles-to-the-verb-map-candidate)
-- [Governance Consistency: Review interpretable context methodology and current agentic practice _(candidate)_](docs/roadmap/governance-consistency/ROADMAP.md#review-interpretable-context-methodology-and-current-agentic-practice-candidate)
-- [Governance Consistency: Review language-model evaluation frameworks _(candidate)_](docs/roadmap/governance-consistency/ROADMAP.md#review-language-model-evaluation-frameworks-candidate)
-- [Governance Consistency: Roll Feature Definitions out across the repository fleet _(candidate)_](docs/roadmap/governance-consistency/ROADMAP.md#roll-feature-definitions-out-across-the-repository-fleet-candidate)
-- [Governance Consistency: Separate Knowledge Islands policy from portable governance _(candidate)_](docs/roadmap/governance-consistency/ROADMAP.md#separate-knowledge-islands-policy-from-portable-governance-candidate)
-- [Operations: Define opt-in repository observability via OTLP _(candidate)_](docs/roadmap/operations/ROADMAP.md#define-opt-in-repository-observability-via-otlp-candidate)
-- [Runtime Portability: Evaluate agent-native developer environments and remote session workflows _(candidate)_](docs/roadmap/runtime-portability/ROADMAP.md#evaluate-agent-native-developer-environments-and-remote-session-workflows-candidate)
-- [Runtime Portability: Route multi-machine harness state through durable homes](docs/roadmap/runtime-portability/ROADMAP.md#route-multi-machine-harness-state-through-durable-homes)
+### Foundation Tooling
+
+- [KI-HARNESS-FND-001 — Harden external Cowork plugin publication](docs/roadmap/KI-HARNESS-FND-001-harden-external-cowork-plugin-publication.md)
+- [KI-HARNESS-FND-002 — Make Codex MCP rendering recoverable](docs/roadmap/KI-HARNESS-FND-002-make-codex-mcp-rendering-recoverable.md)
+- [KI-HARNESS-FND-003 — Codify context-aware delegation policy](docs/roadmap/KI-HARNESS-FND-003-codify-context-aware-delegation-policy.md)
+- [KI-HARNESS-FND-004 — Document per-skill ki-config ownership](docs/roadmap/KI-HARNESS-FND-004-document-per-skill-ki-config-ownership.md)
+- [KI-HARNESS-FND-005 — Review the Cloudflare agent-setup prompt](docs/roadmap/KI-HARNESS-FND-005-review-cloudflare-agent-setup-prompt.md)
+- [KI-HARNESS-FND-006 — Standardise Prettier and Biome line width](docs/roadmap/KI-HARNESS-FND-006-standardise-prettier-and-biome-line-width.md)
+
+### Governance Consistency
+
+- [KI-HARNESS-GOV-001 — Separate Knowledge Islands policy from portable governance](docs/roadmap/KI-HARNESS-GOV-001-separate-ki-policy-from-portable-governance.md)
+- [KI-HARNESS-GOV-002 — Roll Feature Definitions out across the repository fleet](docs/roadmap/KI-HARNESS-GOV-002-roll-feature-definitions-fleet.md)
+- [KI-HARNESS-GOV-003 — Add engineering change value profiles to the verb map](docs/roadmap/KI-HARNESS-GOV-003-add-engineering-change-value-profiles.md)
+- [KI-HARNESS-GOV-004 — Review interpretable context methodology and agentic practice](docs/roadmap/KI-HARNESS-GOV-004-review-interpretable-context-methodology.md)
+- [KI-HARNESS-GOV-005 — Review language-model evaluation frameworks](docs/roadmap/KI-HARNESS-GOV-005-review-language-model-evaluation-frameworks.md)
+
+### Operations
+
+- [KI-HARNESS-OPS-003 — Define opt-in repository observability via OTLP](docs/roadmap/KI-HARNESS-OPS-003-define-opt-in-repository-observability.md)
+
+### Runtime Portability
+
+- [KI-HARNESS-RTP-003 — Route multi-machine harness state through durable homes](docs/roadmap/KI-HARNESS-RTP-003-route-multi-machine-harness-state.md)
+- [KI-HARNESS-RTP-004 — Evaluate agent-native developer environments and remote session workflows](docs/roadmap/KI-HARNESS-RTP-004-evaluate-agent-native-developer-environments.md)

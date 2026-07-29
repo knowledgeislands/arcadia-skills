@@ -5,20 +5,55 @@ const SOURCE = 'standards-repository-roadmaps.md'
 
 const ITEM_1: RubricItem<RoadmapAuditContext> = {
   code: 'ITEM-1',
-  title: 'unique qualified item locator',
-  description: 'Each thematic item has one unique qualified `<theme>/<item-slug>` locator. Duplicate derived locators fail.',
+  title: 'flat work-item identity',
+  description: 'Each canonical item lives directly under docs/roadmap with a unique stable identifier and matching filename.',
   sources: [SOURCE],
   mechanical: {
     level: 'FAIL',
-    audit: { phase: 'INSPECT', run: (context) => outcomesFor(context, 'ITEM-1', 'Every thematic item has a unique locator.') }
+    audit: {
+      phase: 'INSPECT',
+      run: (context) => outcomesFor(context, 'ITEM-1', 'Every work item has a canonical identity and frontmatter.')
+    }
   }
 }
 
 export const ITEM: RubricFamily<RoadmapRubricContext, RoadmapAuditContext> = {
   code: 'ITEM',
   title: 'items',
-  description: 'Stable thematic roadmap-item identity.',
+  description: 'Flat work-item identity, grouping, lifecycle, and dependencies.',
   standard: SOURCE,
   selectContext: (context) => context.items,
-  items: [ITEM_1]
+  items: [
+    ITEM_1,
+    {
+      code: 'ITEM-2',
+      title: 'item state and theme grouping',
+      description: 'Each item has valid theme, horizon, candidate, status, baseline, and dependency fields.',
+      sources: [SOURCE],
+      mechanical: {
+        level: 'FAIL',
+        audit: { phase: 'INSPECT', run: (context) => outcomesFor(context, 'ITEM-2', 'Every item has valid state fields.') }
+      }
+    },
+    {
+      code: 'ITEM-3',
+      title: 'item body shape',
+      description: 'Every item has concise issue sections; execution and terminal statuses carry the required lifecycle sections.',
+      sources: [SOURCE],
+      mechanical: {
+        level: 'FAIL',
+        audit: { phase: 'INSPECT', run: (context) => outcomesFor(context, 'ITEM-3', 'Every item body matches its lifecycle state.') }
+      }
+    },
+    {
+      code: 'ITEM-4',
+      title: 'item dependencies',
+      description: 'Dependencies name existing work items, are reverse-consistent and acyclic, and do not permit active blocked work.',
+      sources: [SOURCE],
+      mechanical: {
+        level: 'FAIL',
+        audit: { phase: 'INSPECT', run: (context) => outcomesFor(context, 'ITEM-4', 'Every item dependency is valid and reciprocal.') }
+      }
+    }
+  ]
 }

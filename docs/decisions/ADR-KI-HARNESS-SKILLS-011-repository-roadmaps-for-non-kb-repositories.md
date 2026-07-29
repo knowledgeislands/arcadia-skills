@@ -12,30 +12,39 @@ decision_type: architecture
 
 ## Context
 
-Non-KB repositories vary in how much forward-work structure they need. A small repository can keep a useful open-only forward view in one root `ROADMAP.md`, while a larger repository benefits from separating canonical detail by theme and attaching execution plans to the nearest work. Treating plan files as the primary instrument makes the larger layout the default and leaves the roadmap itself outside the named standard. Knowledge Base repositories already have a separate thematic model: `ki-kb-streams` governs Streams, Focus state, proposals, proposal checklists, and the Enactment Process.
+Non-KB repositories need one durable forward-work model without separate issue, plan, theme-roadmap, and projection records describing the same work.
+
+Knowledge Bases already use their own Streams, Focus, proposals, and Checklist model through `ki-kb-streams`.
 
 ## Decision
 
-The general-governance skill for non-KB forward work is **`ki-roadmap`**, replacing `ki-plans`. It governs two automatically detected profiles:
+`ki-roadmap` governs one non-KB shape: flat canonical work items directly below `docs/roadmap/` and an exact generated root `ROADMAP.md` index.
 
-- **Simple:** the root `ROADMAP.md` is the complete and only roadmap artifact. It carries the open work and has no plan collection.
-- **Thematic:** each theme owns its canonical open work in `docs/roadmap/<theme>/ROADMAP.md`, with executable plans at `docs/roadmap/<theme>/plans/<THEME>-<NNN>-<slug>.md`. The root `ROADMAP.md` is an exact generated portfolio linking to the theme roadmaps rather than a second home for their prose. Plan frontmatter and canonical local references supply lifecycle state and dependencies directly; no global plan index is retained.
+Each item has a stable `<REPO>-<THEME>-<NNN>` identifier, a human-readable `theme`, horizon, lifecycle status, and dependency fields.
 
-Each thematic roadmap item has a stable qualified locator, `<theme>/<item-slug>`. Every theme declares a stable uppercase code, and plan ids pair it with a serial starting at `001`; the canonical plan identifier is `<THEME>-<NNN>`, which dependencies use across the repository. An item has exactly one authoritative home. Work requiring an executable plan expands into the thematic profile before the plan is created.
+Theme remains an explicit grouping for related work, selection, and presentation; it does not create a directory hierarchy.
 
-`ki-plan` remains the process skill that drives individual plan lifecycles using the format and methodology owned by `ki-roadmap`; this process ownership boundary is not an executable dependency edge. A Knowledge Base does not use either repository-roadmap profile or its artifacts: `ki-kb-streams` wholly owns its thematic forward view and execution checklists.
+An item starts concise and is enriched in place with execution steps, verification, delegation, acceptance, and done evidence when needed.
 
-The replacement is direct. There is no `ki-plans` alias, configuration or script alias, resolver rename, dual-write period, `docs/plans/` fallback, or compatibility bridge.
+`ki-plan` drives that lifecycle and never creates a second plan file.
+
+The root index groups linked items by horizon and then theme; it is generated and not a second prose home.
+
+The replacement is direct.
+
+There is no simple-profile exception, thematic profile, `plans/` directory, item locator, compatibility path, dual-write period, or fallback runner.
+
+A Knowledge Base uses `ki-kb-streams`, not repository roadmap artefacts.
 
 ## Consequences
 
-- Small non-KB repositories pay only for a root roadmap; larger ones can load and govern one theme at a time without duplicating canonical work descriptions.
-- The generated root portfolio gives a repository-wide view while theme roadmaps remain the sources of truth, so projection drift becomes mechanically detectable.
-- Theme-local plan ids keep each workstream legible from `001`, while qualified plan references preserve unambiguous cross-theme dependencies and qualified item locators remove title-only ambiguity.
-- Knowledge Base planning remains one coherent Streams model rather than acquiring parallel repository-roadmap artifacts.
-- Existing `ki-plans` declarations, scripts, vendored units, and `docs/plans/` layouts must migrate atomically to the new name and thematic paths; mixed old and new layouts are invalid.
+- Every non-KB work item has one durable file and one stable identifier.
+- Planning adds detail rather than a parallel document, making lifecycle state and context easy to read together.
+- Theme retains useful project grouping without tying organisation to the filesystem.
+- The generated root index provides an exact portfolio view with mechanically detectable drift.
+- Existing non-KB roadmap trees are cut over atomically; Git history remains the recovery mechanism.
 
 ## References
 
-- [ADR-KI-HARNESS-SKILLS-003](ADR-KI-HARNESS-SKILLS-003-dependency-order-for-multi-skill-composition.md) — the skill naming grammar and dependency-order model this name participates in.
-- [ADR-KI-HARNESS-SKILLS-006](ADR-KI-HARNESS-SKILLS-006-six-cluster-skill-taxonomy-and-the-implication-graph.md) — the governance/process distinction and cluster taxonomy that place ki-roadmap beside ki-plan.
+- [ADR-KI-HARNESS-SKILLS-003](ADR-KI-HARNESS-SKILLS-003-dependency-order-for-multi-skill-composition.md)
+- [ADR-KI-HARNESS-SKILLS-006](ADR-KI-HARNESS-SKILLS-006-six-cluster-skill-taxonomy-and-the-implication-graph.md)

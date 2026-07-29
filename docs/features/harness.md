@@ -52,7 +52,7 @@ _Verify:_ `audit-harness.ts` SKILLS-1 FAILs on any directory-name/`name:` mismat
 
 ### HARN-007 — Repository roadmaps hold only open work in one authoritative home
 
-The repository roadmap MUST list only open work — no completed items, no ticked checkboxes, no `~~struck~~` entries — items being removed when done rather than checked off. In the thematic profile, each item's prose MUST live only in its canonical `docs/roadmap/<theme>/ROADMAP.md`, while the root `ROADMAP.md` MUST be the exact generated linked portfolio.
+The repository roadmap MUST list only open work — no completed items, no ticked checkboxes, no `~~struck~~` entries — items being removed when done rather than checked off. Each item's prose MUST live only in its canonical flat `docs/roadmap/<REPO>-<THEME>-<NNN>-<slug>.md` record, while the root `ROADMAP.md` MUST be the exact generated linked index.
 
 _Verify:_ `ki-roadmap`'s [repository-roadmap standard](../../skills/governance/ki-roadmap/references/standards-repository-roadmaps.md), plus its mechanical audit of the exact root projection.
 

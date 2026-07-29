@@ -1,128 +1,73 @@
 # Next-work procedure
 
-_On-demand procedure for `ki-next`. The kind, scope, and relationship map live in [`SKILL.md`](../SKILL.md) and are already loaded; this file is the executable decision procedure._
+`ki-next` applies the transition rules owned by `ki-roadmap` or `ki-kb-streams`.
 
-## Contents
+It never treats a recap, handoff, or historic transcript as authority to write.
 
-- [1. Preflight and grounding](#1-preflight-and-grounding)
-- [2. Inbound handoff triage](#2-inbound-handoff-triage)
-- [3. Optional relevance review](#3-optional-relevance-review)
-- [4. Staged candidate loop](#4-staged-candidate-loop)
-- [5. Explicit deferral](#5-explicit-deferral)
-- [6. Rank and confirm](#6-rank-and-confirm)
-- [7. Scenario checks](#7-scenario-checks)
-- [8. Finish](#8-finish)
+## 1. Ground
 
-## 1. Preflight and grounding
+1. Resolve the current git repository physically and read `.ki-config.toml`.
+2. In a non-KB repository, run `ki repo audit --skill ki-roadmap --repo <git-root>` and stop on any FAIL or WARN. Read the generated `ROADMAP.md` and every canonical item directly below `docs/roadmap/`; derive lifecycle status and dependencies from frontmatter.
+3. In a Knowledge Base, run `ki repo audit --skill ki-kb-streams --repo <git-root>` and read the Focus and proposal indexes fresh.
+4. Inspect `+/_HANDOFFS/` after the clean governing-skill audit. Its `README.md` is orientation, not a handoff.
 
-1. Resolve the current git repository physically and read its `.ki-config.toml` when present.
-2. In a non-KB repository, ask `ki-roadmap` to identify the simple or thematic profile. Run `ki repo audit --skill ki-roadmap --repo <git-root>`. Stop on any FAIL or WARN; name the repair route, but do not run CONFORM or repair unrelated state. Read root `ROADMAP.md` for the simple profile; for the thematic profile read each `docs/roadmap/<theme>/ROADMAP.md`, its plans, and the generated root projection. Derive active plans and dependencies from frontmatter before ranking items.
-3. In a Knowledge Base, run `ki repo audit --skill ki-kb-streams --repo <git-root>`. Stop on any FAIL or WARN. Read the Streams index, each Focus index, and the selected proposal documents fresh; derive proposal status and dependencies before ranking items.
-4. Inspect `+/_HANDOFFS/` after the clean governing-skill audit. If it is absent, continue without a handoff step. Do not treat a directory, symlink, or `README` as a handoff. The required `README.md` is orientation, not a placeholder: if it is the only file, record an empty inbox and continue normally.
-5. If the user continues from a current `ki-recap`, use only its grounded outstanding work, learning routes with their approval status, and Specific actions as context. Re-check every dynamic forward-work claim now; an unapproved route remains a proposal, and an item parked during recap is not automatically a candidate. Do not scan stored or historical transcripts. A recap is optional: without one, ground the same facts directly.
+## 2. Triage inbound handoffs
 
-## 2. Inbound handoff triage
+Review every unreviewed regular handoff file other than `README.md`.
 
-Every normal `ki-next` grounding performs this inbox pass; it is not a separate invocation. The clean roadmap audit is the precondition, and normal selection continues once the pass has no pending disposition.
+Present its origin, scope, constraints, existing disposition, and the available dispositions: **adopt**, **park**, **clarify**, **decline**, or **supersede**.
 
-1. Review every unreviewed regular handoff file in `+/_HANDOFFS/` except `README`. For a retained `park` or `clarify` handoff, re-check its named review trigger against current evidence. Present it only when that trigger has fired. A trigger without evidence remains unfired: acknowledge the retained handoff and skip it without asking for another disposition.
-2. For every handoff that needs review, present its origin, scope, constraints, prior disposition if any, and the available dispositions: **adopt**, **park**, **clarify**, **decline**, and **supersede**. Require explicit confirmation of the exact file, selected disposition, wording, horizon, and resulting writes or deletion before changing anything.
-3. **Adopt** creates the receiving repository's own forward-work record at its honest horizon or Focus; it does not promote priority or infer readiness. In a non-KB thematic profile, when the transferred detail merits preservation, create an open plan with a non-empty `transferred-from` origin. A non-KB simple profile may adopt the roadmap item, but must run `ki-roadmap` EXPAND before preserving detailed transferred work in a plan. A Knowledge Base adopts detail into the relevant proposal Checklist. Do not discard a detail-bearing inbound brief until that preservation is confirmed.
-4. **Park** or **clarify** retains the inbound file only with a recorded receiving owner, its disposition, a reason for parking or a concrete clarification request, and a named review trigger. The review trigger is the event or evidence that will make the item eligible for presentation again; it cannot be an indefinite archive label.
-5. **Decline** or **supersede** resolves the handoff without local forward-work. Delete its inbound copy after confirmation. For an adoption, delete the inbound copy only after its approved record and any required plan or proposal preservation are durable. After any resolved disposition, prompt the sender to remove its corresponding outbound copy. When no inbound handoff remains, retain `+/_HANDOFFS/README.md` and the empty directory as the required working-area orientation.
-6. After an adoption changes the local forward-work structure, regenerate any derived views, re-run the governing-skill audit, and ground the affected state again before continuing. Do not turn a newly adopted item into the selected next work without the ordinary staged candidate loop and its separate confirmation.
+Require confirmation of the exact file, disposition, wording, horizon, and resulting writes or deletion.
 
-## 3. Optional relevance review
+An adoption creates a local work item at an honest horizon; detailed execution material is retained by enriching that item, never a separate plan file.
 
-Run this pass when `--review` is supplied, or briefly when the grounded view shows a material concern. Identify only evidence-backed proposals:
+After a resolved disposition, prompt the sender to remove its corresponding outbound copy.
 
-- stale or obsolete work;
-- duplicates or work already covered by an active plan;
-- a Waiting condition that has changed;
-- changed dependencies or an item placed in the wrong horizon or Focus.
+## 3. Review relevance
 
-State the evidence, the proposed wording or placement, and the effect on selection. Do not remove, move, or rewrite anything until the user confirms the exact authored change. A relevance proposal can be declined without ending the selection process.
+Run this pass for `--review`, or briefly when grounded evidence shows a material concern.
 
-## 4. Staged candidate loop
+Identify only evidence-backed proposals: stale or obsolete work, duplicates, changed Waiting conditions, changed dependencies, or an item at the wrong horizon.
 
-Apply the readiness rules in `ki-roadmap` or `ki-kb-streams`, according to the repository structure; do not invent a local substitute.
+Do not change content until the user confirms exact wording and placement.
+
+## 4. Select candidates
 
 ### Non-KB repositories
 
-1. **Blocking and Next.** Gather items that are ready to start and not blocked by an active plan dependency. Reuse a valid existing plan rather than creating a duplicate. If more than one is independently ready, recommend a small compatible batch only when the items have no unresolved dependencies on one another and each can retain its own plan relationship. Rank the batch in its proposed execution order; do not inspect later horizons for planning candidates.
-2. **Soon.** Only when no eligible Blocking or Next item exists, assess Soon items against the governance-owned Next entry rule: actionable scope, understood dependencies, and readiness to start. Present the viable options. After the user confirms an item, wording, and order, move it to Next as an authored roadmap edit, regenerate derived views, re-run AUDIT, and restart from Blocking and Next. Never create a plan while the item remains Soon.
-3. **Future.** Only when Soon is empty or has no viable candidate, inspect Future items. For a selected candidate, first assess the complete Next entry rule: intended outcome and boundary, actionable scope, understood dependencies, and readiness to start. When it meets that rule, present the exact wording and direct Future-to-Next move, including why Soon adds no useful shaping stage. After confirmation, make the authored edit, regenerate and audit, then restart in Blocking and Next for a fresh destination evaluation. When it has the Future minimum but needs more shaping before it is ready, present a Future-to-Soon move instead; after confirmation, regenerate and audit, then restart in Soon. If no candidate can meet either threshold, report that no eligible work exists; do not manufacture an item.
-4. **Waiting for.** It never becomes a candidate merely because the immediate queue is empty. Reconsider it only when its named external condition has changed, then present the proposed re-entry horizon and the evidence for confirmation.
-
-5. **Parked.** It never becomes a candidate merely because the immediate queue is empty. Reconsider it only when its named return trigger or priority has changed, then present the proposed re-entry horizon and evidence for confirmation.
+1. Gather dependency-ready `blocking` and `next` items. Reuse their canonical item record; if several are independently ready, recommend a small ranked batch only when each retains its own execution lifecycle.
+2. Only when none is eligible, assess `soon` items against the Next entry rule. After confirmation, change `horizon` to `next`, run CONFORM and AUDIT, then re-evaluate it at the destination.
+3. Only when Soon has no viable item, assess Future candidates. Move directly to Next only when the full Next rule is met and Soon adds no value; otherwise move to Soon once the intended outcome and boundary are known. Re-evaluate after every confirmed move.
+4. Reconsider Waiting-for or Parked items only when their named external condition or return trigger changed.
 
 ### Knowledge Bases
 
-1. **Blocking and Active.** Gather streams that are ready for current attention and whose proposal dependencies are satisfied. Reuse the existing proposal Checklist; do not create a repository plan. If more than one is independently ready, recommend a small compatible batch only when the streams have no unresolved dependencies on one another and each retains its own proposal Checklist. Rank the batch in its proposed execution order.
-2. **Background.** Only when no immediate stream qualifies, assess Background streams. After confirmation, move one to Active only when its scope is actionable and its dependencies are understood.
-3. **Waiting for.** It never becomes a candidate merely because immediate work is empty. Reconsider it only when its named dependency or external condition has changed; then present the proposed move to Active or Background.
-4. **Dormant.** It never becomes a candidate merely because immediate work is empty. Reconsider it only when its named return trigger or priority has changed, then present its honest re-entry Focus.
-5. **Future.** Only when Background has no viable stream, scope a Future stream enough to move it to Background. After confirmation, re-evaluate it there before any later promotion.
+Use the native Focus and proposal procedure in `ki-kb-streams`.
 
-After every confirmed transition, return to the destination horizon or Focus evaluation rather than assuming that an earlier assessment is still valid.
+## 5. Defer
 
-## 5. Explicit deferral
+`defer <item> <horizon-or-focus>` is an explicit user-confirmed move.
 
-`defer <item> <horizon-or-focus>` is an explicit, user-confirmed move to a later horizon or Focus. It is distinct from `ki-plan promote`, which is a runtime-plan conversion rather than a forward-work move.
+Resolve the exact record and identify linked dependencies before proposing it.
 
-1. Resolve the exact canonical item or stream and identify every linked plan or proposal before proposing a move. In a non-KB repository, an ordinary plan with `ready`, `in-progress`, `acceptance`, or `done` status prevents deferral: stop and require the user to resolve its lifecycle through `ki-plan` before changing the item's horizon. In a Knowledge Base, preserve the proposal and its status while moving only its Focus. Do not silently delete, reopen, or detach governed work.
-2. Present one honest destination with the resulting wording. In a non-KB repository, use **Soon** only when the work remains understood but is no longer immediate; use **Waiting for** only when a named external condition blocks it; use **Parked** only for an intentional pause with a named return trigger; use **Future** only when it needs re-scoping, adding `_(candidate)_` to the item. In a Knowledge Base, use **Background**, **Waiting for**, **Dormant**, or **Future** by the equivalent Focus meaning. Do not create a persistent `(defer)` marker.
-3. Require confirmation of the exact item, destination, wording, order, dependency consequences, and any required plan or proposal handling. Write only that confirmed authored move, regenerate derived views, run the governing-skill audit, and report the result. A rejected proposal leaves every artifact untouched.
+Use Soon only for understood but non-immediate work; Waiting for only with a named external condition; Parked only with an intentional pause and named return trigger; Future only when re-scoping is needed, adding `candidate: true`.
+
+Never silently delete, reopen, or detach a canonical execution record.
 
 ## 6. Rank and confirm
 
-For each viable option, give a compact evidence-backed comparison covering expected benefit, leverage, risk reduction, delivery cost, reversibility, readiness, and dependency availability. Do not collapse these into a misleading single score. Preserve any order the user supplies.
+For each viable option, provide an evidence-backed comparison of expected benefit, leverage, risk reduction, delivery cost, reversibility, readiness, and dependency availability.
 
-Recommend a small batch only when more than one item is immediately eligible, the items are independently ready, and grouping them makes the next queue clearer. A batch is a ranked recommendation, not a merged work item: it does not relax a plan or proposal's ownership, lifecycle, or review boundary. Do not batch a later-horizon promotion; every staged transition remains separately confirmed and re-evaluated at its destination.
+Do not collapse this to one score.
 
-Before writing, show:
+Before a write, show selected items, exact frontmatter or wording changes, order, and dependency effects.
 
-- each selected item and its plan or proposal;
-- proposed horizon or Focus transition and exact wording changes;
-- the proposed order and dependency implications;
-- existing-plan reuse or the new `<theme>/<id>` plan location.
+Require explicit confirmation, then run CONFORM and AUDIT.
 
-Require explicit confirmation for the exact set and order. Write only the approved authored transitions, then regenerate and audit projections where the local structure has them. Invoke `ki-plan` only once each confirmed item is in an immediate state: Blocking or Next in a non-KB repository, Blocking or Active in a Knowledge Base. `ki-plan` creates or revises the corresponding distinct plan or proposal Checklist under its own lifecycle contract; `ki-next` then stops for review rather than beginning implementation.
+Invoke `ki-plan` only after a non-KB item is Blocking or Next; it enriches the same item and stops for review.
 
-## 7. Scenario checks
+## 7. Finish
 
-Apply these behavioural checks whenever the process changes:
+Report each confirmed handoff disposition, files changed, selected work, and audit result.
 
-| Scenario | Required result |
-| --- | --- |
-| Eligible Blocking or Next work exists | Evaluate it before every later horizon; do not promote later work. |
-| No immediate candidate, but a Soon item is ready | Confirm and move it to Next, regenerate/audit, then re-evaluate it there before planning. |
-| No Soon candidate, but a Future candidate meets the complete Next entry rule | Confirm the direct Future-to-Next wording and why Soon adds no value; re-evaluate in Next before planning. |
-| No Soon candidate, but a Future candidate can be scoped but is not ready | Confirm Future-to-Soon wording and move; re-evaluate in Soon, then separately confirm any Next move. |
-| Future candidate cannot meet the Soon or Next entry rule | Leave it in Future and report no eligible work. |
-| Waiting condition changed | Present the evidence and proposed re-entry; do not move it automatically. |
-| Existing valid plan covers selected work | Reuse it and respect its cross-theme dependency edges. |
-| Several independently ready immediate items form a useful queue | Present a small ranked batch; preserve a separate plan or proposal Checklist for every item and require confirmation of the exact set and order. |
-| Candidate item depends on another proposed batch item | Do not batch it: it is not independently ready. |
-| Later-horizon items look related | Keep their staged promotions separate; confirm and re-evaluate each item at its destination before it can join an immediate batch. |
-| No regular inbound handoff exists | Continue normal selection without presenting an inbox step. |
-| Only `+/_HANDOFFS/README.md` remains | Treat it as the required empty-inbox orientation and continue normally. |
-| Unreviewed inbound handoff exists | Present its exact proposed disposition and require confirmation before any write or deletion. |
-| Parked or clarified handoff's trigger has not fired | Acknowledge it and skip it; do not re-present or alter it. |
-| Parked or clarified handoff's trigger has fired | Present it for a newly confirmed disposition. |
-| Adopted detailed handoff in a thematic profile | Create its honest-horizon item and, when its detail merits retention, an open plan with non-empty `transferred-from`. |
-| Adopted detailed handoff in a simple profile | Adopt the item, then require EXPAND before a detail-preserving plan; retain the inbound brief until that plan is confirmed. |
-| Declined or superseded handoff | Delete the confirmed inbound copy and prompt the sender to remove its outbound copy. |
-| Explicit deferral to Soon | Confirm that the work remains understood but is not immediate, then move it without a marker. |
-| Explicit deferral to Waiting for | Require and retain the named external condition before the confirmed move. |
-| Explicit deferral to Parked / Dormant | Confirm the intentional pause and named return trigger before the move. |
-| Explicit deferral to Future | Confirm that re-scoping is needed and add `_(candidate)_` to a non-KB roadmap item. |
-| Deferral with an ordinary active or retained plan | Stop until its lifecycle is explicitly resolved through `ki-plan`; never silently detach or alter the plan. |
-| Current recap offers a handoff | Re-audit the roadmap; use only grounded action labels and approval state as context, never as authority to write. |
-| Recap contains an unapproved learning route | Keep it a proposal; do not write it while selecting or planning work. |
-| User rejects a proposal | Leave the local forward-work structure untouched. |
-| KB repository | Audit Streams, rank Blocking and Active first, and use the existing proposal Checklist rather than a repository plan. |
-
-## 8. Finish
-
-Report each confirmed handoff disposition, exact inbound files removed or retained, any sender-removal prompt, the forward-work files changed, and the audit result. If a plan or proposal Checklist was created or revised, ask for its review; do not begin execution. If no work is eligible, say so plainly and identify the required external condition or scoping decision.
+If no work is eligible, identify the missing condition or scoping decision plainly.

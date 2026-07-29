@@ -1,29 +1,60 @@
-# Repo roadmap standard
+# Repository roadmap standard
 
 ## Scope
 
-This standard applies only to non-KB repositories. A repository whose `.ki-config.toml` declares `repo_type = "kb"` uses `ki-kb-streams`; it must not add a parallel project `ROADMAP.md` or `docs/roadmap/` tree.
+This standard applies to non-KB repositories.
+
+A repository whose `.ki-config.toml` declares `repo_type = "kb"` uses `ki-kb-streams` and must not add a parallel project `ROADMAP.md` or `docs/roadmap/` tree.
 
 ## Contents
 
+- [Canonical shape](#canonical-shape)
 - [Horizons](#horizons)
 - [Horizon transitions and readiness](#horizon-transitions-and-readiness)
+- [Work-item discipline](#work-item-discipline)
 - [Handoff review](#handoff-review)
-- [Simple profile](#simple-profile)
-- [Thematic profile](#thematic-profile)
-- [Expansion boundary](#expansion-boundary)
-- [Plan discipline](#plan-discipline)
+- [Conform and educate](#conform-and-educate)
+
+## Canonical shape
+
+Every non-KB repository uses one shape.
+
+```text
+ROADMAP.md                              # generated index
+docs/roadmap/
+  <REPO>-<THEME>-<NNN>-<slug>.md        # one durable work item
+```
+
+`ROADMAP.md` is an exact generated index, grouped first by horizon and then by theme.
+
+Each work-item file is canonical and owns its full authored detail.
+
+There are no simple or thematic profiles, theme `ROADMAP.md` files, `plans/` directories, item locators, or standalone plan records.
+
+The item identifier is globally unique within its repository: `<REPO>-<THEME>-<NNN>`.
+
+`<REPO>` is the stable uppercase `repo_code` in the `ki-roadmap` table.
+
+`<THEME>` is an uppercase semantic code kept in the item identifier.
+
+`<NNN>` is a zero-padded serial allocated within that repository/theme pair from `001`.
+
+The filename repeats the identifier followed by a lowercase kebab-case slug.
+
+The `theme` frontmatter field is a human-readable kebab-case grouping such as `foundation-tooling`.
+
+It is deliberately retained after flattening: items in one theme may be selected, shaped, and executed together without becoming a physical directory hierarchy.
 
 ## Horizons
 
-Every roadmap carries these six `##` horizons exactly once and in this order:
+Every generated `ROADMAP.md` carries these six `##` horizons exactly once and in this order:
 
 1. `Blocking` — actively broken or preventing `Next`; plans permitted.
 2. `Next` — scoped and ready for immediate work; plans permitted.
-3. `Soon` — understood but not yet started; no ordinary plans.
-4. `Waiting for` — blocked by a named external condition; no ordinary plans.
-5. `Parked` — intentionally paused with no current attention; no ordinary plans.
-6. `Future` — speculative or unscoped; no ordinary plans, with `_(candidate)_` on uncommitted work.
+3. `Soon` — understood but not yet started.
+4. `Waiting for` — blocked by a named external condition.
+5. `Parked` — intentionally paused with a named return trigger.
+6. `Future` — speculative or unscoped; `candidate: true` marks uncommitted work.
 
 Each horizon heading is followed by one blank line, its exact canonical blurb, and one blank line before any item or the next horizon:
 
@@ -32,81 +63,78 @@ Each horizon heading is followed by one blank line, its exact canonical blurb, a
 - **Soon:** Understood and roughly scoped but not yet started — worth doing once the **Next** queue clears, ahead of anything still speculative.
 - **Waiting for:** Worth doing, but presently blocked on an external dependency or decision. Revisit when its named condition changes; do not use this horizon for intentionally paused work.
 - **Parked:** Intentionally paused work with no current attention. Revisit only when its priority or named return trigger changes.
-- **Future:** Speculative or not yet scoped — items marked _(candidate)_ need a scoping pass (or a decision to drop them) before they're actionable.
+- **Future:** Speculative or not yet scoped — candidate items need a scoping pass (or a decision to drop them) before they are actionable.
 
-The blurb is the empty-horizon explanation; do not add a separate `Nothing queued.` placeholder. CONFORM may insert a missing canonical blurb because its wording and position are mechanically derivable. It preserves any existing prose after the insertion rather than guessing whether that prose was an altered blurb or authored context.
+Roadmaps are open-only.
 
-Roadmaps are open-only: completed work is removed. Continuous practices belong in a standard or orientation file, not among finite work items.
+Completed work is removed by an explicit prune after its accepted item record has been committed.
+
+Continuous practices belong in a standard or orientation file, not among finite work items.
 
 ## Horizon transitions and readiness
 
-Horizon moves are authored, judgment-led decisions. CONFORM never makes them: it may repair only mechanical blurbs and generated projections.
+Horizon moves are authored, judgment-led decisions.
 
-- **Future → Soon** requires enough scope to state the intended outcome and boundary, but not yet the actionable scope, understood dependencies, and readiness to start required for Next. It remains Future when that minimum is not known.
-- **Future → Next** is permitted when a single review establishes both the Future minimum and the full Next entry rule: actionable scope, understood dependencies, and readiness to start. The proposal must state why Soon adds no useful shaping stage; after explicit confirmation, re-evaluate the item at Next before planning.
-- **Soon → Next** requires actionable scope, understood dependencies, and readiness to start. It is not a planning shortcut: the item must first be moved to Next, then evaluated there.
-- **Waiting for → another horizon** requires evidence that its named external condition has changed and a fresh placement judgment.
-- **Parked → another horizon** requires evidence that its priority or named return trigger has changed and a fresh placement judgment.
-- **Blocking or Next → Soon** is an explicit deferral only when work remains understood but is no longer immediate. **Blocking, Next, or Soon → Waiting for** requires a named external condition. **Blocking, Next, Soon, or Waiting for → Parked** requires an intentional pause with a named return trigger. **Blocking, Next, Soon, Waiting for, or Parked → Future** requires re-scoping and marks the item `_(candidate)_`.
-- **Blocking / Next** are the only horizons that may carry an ordinary plan. A plan is created only after the item is there and the user has confirmed it.
-- An open plan with a non-empty `transferred-from` origin may instead remain linked to an item in any other honest horizon. This narrow exception preserves useful transferred execution detail without asserting that the item is ready or changing its priority. It is not eligible for readiness or execution until the item moves to Blocking or Next.
-- An ordinary plan prevents a later-horizon move until its lifecycle is explicitly resolved. A roadmap process must never silently delete, reopen, or detach it to make a deferral fit.
+CONFORM never chooses a move; it only rebuilds the generated root index.
 
-When the immediate queue has no eligible work, a human-led process such as `ki-next` evaluates Blocking and Next first, then Soon, then Future. A Future candidate moves to Soon when it needs an intermediate shaping stage, or directly to Next when the same review establishes the complete Next entry rule. The same process may apply a user-confirmed deferral to an honest later horizon. Each confirmed move is re-evaluated at its destination because the readiness contract changes. The process presents proposals and obtains confirmation before every authored move; this governance skill does not depend on that process.
+- **Future → Soon** requires enough scope to state the intended outcome and boundary.
+- **Future → Next** is permitted when one review establishes the Future minimum plus actionable scope, understood dependencies, and readiness to start; state why Soon adds no useful shaping stage and re-evaluate at Next.
+- **Soon → Next** requires actionable scope, understood dependencies, and readiness to start.
+- **Waiting for → another horizon** requires evidence that its named external condition changed.
+- **Parked → another horizon** requires evidence that its named return trigger or priority changed.
+- A move back to **Soon**, **Waiting for**, **Parked**, or **Future** must preserve honest wording and any linked item lifecycle state.
+
+`Blocking` and `Next` are the only horizons that may enter execution.
+
+An item may be expanded with executable steps only after it reaches one of those horizons and the user confirms the work.
+
+When no immediate work is eligible, `ki-next` evaluates Blocking and Next first, then Soon, then Future.
+
+Every confirmed move is re-evaluated at its destination.
+
+## Work-item discipline
+
+Every item conforms to [the work-item format](standards-work-item-format.md).
+
+An item begins as a concise issue: outcome, boundary, and current context.
+
+When multi-file or multi-step execution is needed, `ki-plan` enriches that same file in place with steps, files, verification, delegation where appropriate, acceptance, and done evidence.
+
+It never creates a duplicate plan file.
+
+`status` records the lifecycle independently of `horizon`:
+
+`open` → `ready` → `in-progress` → `acceptance` → `done`.
+
+`open` is the normal state for unplanned future work.
+
+`ready`, `in-progress`, `acceptance`, and `done` must remain in Blocking or Next.
+
+The first `execute` transition records the immutable full `HEAD` commit in `baseline-ref`.
+
+`blocks` and `blocked-by` use work-item identifiers, must be reverse-consistent and acyclic, and cannot permit execution while a blocker is not done.
+
+An explicit later prune removes a selected accepted `done` item and its row from the generated index.
 
 ## Handoff review
 
-When a repository uses the optional `+/_HANDOFFS/` or `-/_HANDOFFS/` working areas defined by `ki-repo`, include their review in the judgment portion of a roadmap audit.
+Where `+/_HANDOFFS/` or `-/_HANDOFFS/` exists, include their review in the judgment portion of a roadmap audit.
 
-- **Inbound:** identify each received handoff that needs a local adoption, clarification, decline, or archive decision. An adopted handoff becomes this repository's own roadmap item and, when appropriate, plan.
-- **Outbound:** identify known receiving-repository progress that needs an originating follow-up or closure decision. The receiving repository remains the owner of its priority, plan, implementation, and delivery.
+- **Inbound:** identify each received handoff that needs local adoption, clarification, decline, or archive. An adopted handoff becomes this repository's own work item at an honest horizon.
+- **Outbound:** identify known recipient progress that needs an originating follow-up or closure decision. The receiving repository owns its priority and execution.
 
-The review reports proposed local action only. It does not inspect a remote repository by default, infer acceptance from silence, move working files, create or alter a roadmap item, or change either repository's state. Missing local access to a receiving repository is ordinary and not a finding.
+The review reports proposed local action only.
 
-## Simple profile
+It does not inspect a remote repository by default, infer acceptance from silence, move working files, or change another repository's state.
 
-The root `ROADMAP.md` is the sole roadmap artifact. It has one H1 and the six horizons. It can use lower headings to organise its open work, but it carries no `docs/roadmap/` directory or plan files. Requiring an execution plan is the signal to run EXPAND first.
+## Conform and educate
 
-## Thematic profile
+`ki repo conform --skill ki-roadmap --repo <repo> --dry-run` shows the exact generated root-index replacement.
 
-The canonical authored files are:
+CONFORM rebuilds that index only when every canonical item is valid.
 
-```text
-docs/roadmap/
-  <theme>/
-    ROADMAP.md             # frontmatter: code: <THEME>
-    plans/                  # present while the theme has active plans or retained done records
-      <REPO>-<THEME>-<NNN>-<slug>.md
-```
+It never invents an item, changes a horizon, changes lifecycle status, removes authored prose, reallocates an identifier, or edits an item body.
 
-Theme names are unique lowercase kebab-case names. Every theme roadmap begins with one `code: <THEME>` YAML frontmatter field: an unquoted, uppercase semantic identifier that is stable and unique across the repository. A theme roadmap has one H1, all six horizons, and each item is a `###` heading beneath exactly one horizon. Item prose follows its heading until the next item or horizon. A locator is `<theme>/<item-slug>`; the slug is the normalised item heading. Locators must be unique.
+`ki repo educate --skill ki-roadmap --repo <repo>` scaffolds the generated root index only when the repository has no roadmap artefacts.
 
-A theme directory exists only while its roadmap has at least one item. An empty scaffold-only theme roadmap is drift. Remove it deliberately only after confirming that it holds no authored prose, plans, or unexpected content; replacement-only CONFORM actions do not delete directories. The thematic profile may have zero remaining themes after pruning.
-
-Root `ROADMAP.md` is generated in this profile. It links every canonical item under its horizon but repeats none of its prose. Plan state and dependencies are derived directly from plan frontmatter and canonical local plan references; there is no generated global plan index. `docs/roadmap/README.md` is a retired artifact and must be deleted during migration. Edit canonical theme roadmaps or plan files, then run CONFORM; never hand-edit the root projection.
-
-## Expansion boundary
-
-EXPAND changes authorship, so it requires judgment. It moves complete items from the simple root into coherent themes, preserving their horizons and prose, then generates the projections. It must prove conservation: every original open item appears once after expansion, with none duplicated.
-
-CONFORM is narrower. It may insert a missing canonical horizon blurb and rebuild derivable local plan references and projections, but it must never choose a theme, move an item, change a horizon, invent a locator, delete a theme, remove authored content, or rewrite existing prose.
-
-## Plan discipline
-
-Plans are recoverable execution documents for multi-file or multi-step changes. Ordinary plans exist only for `Blocking` and `Next` items and use the [plan-format standard](standards-plan-format.md). An open plan with a non-empty `transferred-from` origin may preserve transferred detail beside an item in another honest horizon, but it does not imply readiness and cannot advance there. The `ki-roadmap` table's stable `repo_code` prefixes every theme's separate zero-padded serial sequence beginning at `001`, so a canonical plan identifier is `<REPO>-<THEME>-<NNN>`. Dependencies use those globally unique identifiers and are bidirectional, existent, and acyclic. Every `ready`, `in-progress`, `acceptance`, or `done` plan resolves to Blocking or Next, and no plan moves to `ready`, `in-progress`, or `acceptance` while a listed blocker is not `done`.
-
-A ready plan has concrete Steps, a checkable Verify section, an honest Current state, and a minimal Files touched list. The lifecycle is `open` → `ready` → `in-progress` → `acceptance` → `done`: `open` awaits an explicit start decision, `ready` records that approved and unblocked decision, and the initial execution transition records the full immutable `HEAD` commit ID as the plan's `baseline-ref`. Acceptance records a compact review packet and waits for explicit user approval; it does not silently route a learning into another durable artifact. `done` retains a committed outcome record beside its still-visible canonical item. An explicit later prune, not the done transition, removes a selected completed batch and its canonical items.
-
-`ready` and the initial `execute` transition may operate on one or more explicitly named plans. A batch uses one explicit approval or coordinated start, validates every selected plan and dependency before any write, then publishes all selected status changes atomically in one commit. A failed eligibility, snapshot, or publication leaves the batch unchanged; single-plan transitions are the batch-of-one case. `ki-plan` owns the detailed procedure.
-
-One explicit-path commit may include any coherent batch of related plan changes, including status transitions, the same correction applied to several plans, or a selected prune batch. Split unrelated plan work into separate commits so each history entry remains reviewable and recoverable.
-
-### Local plan references
-
-An active or retained done plan has one inverse reference in the canonical item named by its `roadmap:` locator. The reference is the final, standalone line in that item's content, immediately before the next item or horizon:
-
-```markdown
-**Plan:** [KI-HARNESS-HOK-004](plans/KI-HARNESS-HOK-004-short-description.md)
-```
-
-The identifier and relative path must resolve to that plan file. The line is derived state, not authored item prose: `ki-roadmap` CONFORM repairs it from the plan-record set, and `ki-plan` creates, maintains, or removes it in the same transaction as the plan. An item with no active or retained done plan has no such line. No other `**Plan:**` line is permitted in a canonical theme roadmap.
+It does not create speculative work-item files.

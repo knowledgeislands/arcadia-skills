@@ -1,0 +1,18 @@
+---
+id: KI-HARNESS-OPS-001
+title: Complete the approved Claude-state cleanup
+theme: operations
+horizon: waiting-for
+status: open
+blocks: []
+blocked-by: []
+baseline-ref: null
+---
+
+## Context
+
+When destructive housekeeping access is available, refresh the live inventory, review candidates, and prune only the approved stored sessions and telemetry.
+
+## Boundary
+
+Do not preserve stale counts as a target or broaden cleanup beyond the reviewed set.
