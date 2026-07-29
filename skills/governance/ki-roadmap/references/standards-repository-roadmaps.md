@@ -126,13 +126,13 @@ It never creates a duplicate plan file.
 
 Its start transition records the immutable full `HEAD` commit in `baseline-ref`; its completion writes the acceptance evidence packet.
 
-`ki-accept` owns explicit `acceptance` → `done` and confirmed pruning.
+`ki-accept` owns explicit `acceptance` → `done` and pruning selected by an explicit roadmap-item path or glob.
 
 `ki-recap` and `ki-next` may identify or recommend eligible pruning, but they never delete a work-item record.
 
 `blocks` and `blocked-by` use work-item identifiers, must be reverse-consistent and acyclic, and cannot permit execution while a blocker is not done.
 
-An explicit later prune removes only the selected accepted `done` items.
+An explicit later prune path or glob removes only the resolved `done` items; the selection itself is the deletion authority and does not need a second confirmation.
 
 ## Handoff review
 

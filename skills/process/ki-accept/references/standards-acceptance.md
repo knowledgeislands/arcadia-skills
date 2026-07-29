@@ -33,17 +33,17 @@ Retain the completed record as recoverable history.
 
 Do not delete it as part of acceptance.
 
-## 4. Prune exact completed records
+## 4. Prune explicitly selected completed records
 
-1. Resolve only the exact user-named canonical records.
-2. Confirm that every target is `done`.
-3. Present the complete deletion set and require a separate explicit confirmation.
-4. Delete only the confirmed regular files, then run the applicable repository gates and record the cleanup coherently.
+1. Accept one or more explicit canonical work-item paths or filename globs. Resolve globs only beneath `docs/roadmap/`; reject absolute paths, parent traversal, an empty match, symlinks, directories, and files outside the canonical work-item shape. The caller should quote a shell glob so the procedure receives it.
+2. Resolve the full matching set before deleting anything and confirm from each record that its status is `done`.
+3. The explicit paths or globs are the deletion authority. Do not ask for a second confirmation merely because the resolved set contains more than one `done` item.
+4. Delete only the resolved regular `done` files, then run the applicable repository gates and record the cleanup coherently.
 
-Do not infer a wildcard, prune an accepted-but-not-done item, follow a symlink, or delete a record because it looks old.
+Do not broaden a supplied glob, prune an accepted-but-not-done item, follow a symlink, or delete a record because it looks old.
 
 ## Batch authority
 
 `ki-batch` may request batched acceptance only when its authorisation explicitly names the accepted items and grants that closure authority.
 
-Pruning remains a separate destructive confirmation unless the authorisation explicitly grants the exact deletion set as well.
+Pruning remains separate from batch execution and acceptance. An explicit path or glob selection is required even when the batch authorisation names the completed items.

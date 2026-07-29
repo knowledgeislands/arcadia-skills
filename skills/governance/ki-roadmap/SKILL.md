@@ -51,6 +51,6 @@ On the cadence in [the source list](references/sources.md), compare actual repos
 - A plan answers “how”; a Decision Record answers “why”. Use `ki-decision-records` for the latter.
 - The `ki-next` process skill selects and promotes work through the readiness contract defined here.
 - The `ki-plan` process skill creates, shapes, and marks an immediate work item ready.
-- `ki-implement` owns Ready → In progress → Acceptance; `ki-accept` owns Acceptance → Done and confirmed pruning.
+- `ki-implement` owns Ready → In progress → Acceptance; `ki-accept` owns Acceptance → Done and pruning by explicit roadmap-item path or glob.
 - `ki-recap` and `ki-next` may recommend pruning; they never delete canonical work-item records.
 - The local `scripts/shared/rubric.ts` is the materialised compile-time contract from `ki-skills`; generic execution, findings, progress, transaction safety, rollback, and reporting belong to `ki`.
