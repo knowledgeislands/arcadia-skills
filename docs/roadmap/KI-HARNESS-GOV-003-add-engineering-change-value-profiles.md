@@ -3,7 +3,7 @@ id: KI-HARNESS-GOV-003
 title: Add engineering change value profiles to the verb map
 theme: governance-consistency
 horizon: next
-status: in-progress
+status: acceptance
 blocks: []
 blocked-by: []
 baseline-ref: 02df2024e850dc64ce5c757bfc54ee870ecaaadd
@@ -51,10 +51,10 @@ It does not name the comparison as a reusable profile or include comprehensibili
 
 ## Steps
 
-1. Make `ki-next` the sole owner of a concise change-value profile used only when ranking viable material candidates or when a human requests a material comparison.
-2. State the visible dimensions: capability, comprehensibility, maintenance reduction, reliability, leverage, delivery cost, reversibility, readiness, and dependency availability.
-3. Require short evidence for relevant dimensions and prohibit a composite score, stored per-item metadata, or a new tracker.
-4. Add one worked comparison illustrating a trade-off without pretending that the profile chooses work automatically.
+1. [x] Make `ki-next` the sole owner of a concise change-value profile used only when ranking viable material candidates or when a human requests a material comparison.
+2. [x] State the visible dimensions: capability, comprehensibility, maintenance reduction, reliability, leverage, delivery cost, reversibility, readiness, and dependency availability.
+3. [x] Require short evidence for relevant dimensions and prohibit a composite score, stored per-item metadata, or a new tracker.
+4. [x] Add one worked comparison illustrating a trade-off without pretending that the profile chooses work automatically.
 
 ## Files touched
 
@@ -73,6 +73,32 @@ It does not name the comparison as a reusable profile or include comprehensibili
 ## Dependencies / blocks
 
 This item is independent.
+
+## Acceptance
+
+### Delivered
+
+Made `ki-next` the sole owner of a concise evidence-based change-value profile.
+
+### Summary of changes
+
+The procedure names nine visible dimensions, preserves focused-fix selection without ceremony, prohibits scores and profile metadata, and gives one trade-off example.
+
+No independent verb map or tracking artefact was created.
+
+### Verification
+
+- Reviewed the updated `ki-next` skill and next-work procedure.
+- `ki repo audit --skill ki-skills --repo .`
+- `ki repo audit --skill ki-authoring --repo .`
+
+### Outstanding concerns
+
+None identified within the process boundary.
+
+### Mini recap
+
+The profile makes material trade-offs inspectable without automating or disguising the human selection decision.
 
 ## Discussion
 

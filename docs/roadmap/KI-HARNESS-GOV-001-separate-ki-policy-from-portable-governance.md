@@ -3,7 +3,7 @@ id: KI-HARNESS-GOV-001
 title: Separate Knowledge Islands policy from portable governance
 theme: governance-consistency
 horizon: next
-status: in-progress
+status: acceptance
 blocks: []
 blocked-by: []
 baseline-ref: 02df2024e850dc64ce5c757bfc54ee870ecaaadd
@@ -47,10 +47,10 @@ No compact comparison makes the portable-contract, estate-policy, harness-mechan
 
 ## Steps
 
-1. Collect the existing canonical evidence for the four boundary classes without restating each source standard.
-2. Publish one compact matrix in `docs/decisions/references/` that names the class, owner, representative surface, and boundary test.
-3. Identify any genuine duplicate or conflicting ownership; route each to a specifically named owner or follow-up item rather than splitting a standard in this item.
-4. Link the matrix from its nearest existing architecture orientation only if that orientation currently lacks a route to the boundary evidence.
+1. [x] Collect the existing canonical evidence for the four boundary classes without restating each source standard.
+2. [x] Publish one compact matrix in `docs/decisions/references/` that names the class, owner, representative surface, and boundary test.
+3. [x] Identify any genuine duplicate or conflicting ownership; route each to a specifically named owner or follow-up item rather than splitting a standard in this item.
+4. [x] Link the matrix from its nearest existing architecture orientation only if that orientation currently lacks a route to the boundary evidence.
 
 ## Files touched
 
@@ -69,6 +69,32 @@ No compact comparison makes the portable-contract, estate-policy, harness-mechan
 ## Dependencies / blocks
 
 This item is independent.
+
+## Acceptance
+
+### Delivered
+
+Published the [governance boundary matrix](../decisions/references/governance-boundary-matrix.md) as a compact inspection aid.
+
+### Summary of changes
+
+The matrix distinguishes portable contract, Knowledge Islands estate policy, reusable harness mechanics, and runtime-specific binding by canonical owner, representative surface, and boundary test.
+
+It identifies no ownership conflict requiring a standard split or new policy layer.
+
+### Verification
+
+- Reviewed the cited architecture decisions, skill taxonomy, runtime-parity material, and binding standards.
+- `ki repo audit --skill ki-authoring --repo .`
+- `ki repo audit --skill ki-roadmap --repo .`
+
+### Outstanding concerns
+
+None identified within the documentary boundary.
+
+### Mini recap
+
+Intentional links, dependencies, implementation evidence, and projections are not ownership conflicts; duplicate authoritative rules or write targets are.
 
 ## Discussion
 

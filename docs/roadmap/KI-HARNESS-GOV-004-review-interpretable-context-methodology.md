@@ -3,7 +3,7 @@ id: KI-HARNESS-GOV-004
 title: Review interpretable context methodology and agentic practice
 theme: governance-consistency
 horizon: next
-status: in-progress
+status: acceptance
 blocks: []
 blocked-by: []
 baseline-ref: 02df2024e850dc64ce5c757bfc54ee870ecaaadd
@@ -47,10 +47,10 @@ The primary ICM paper frames filesystem structure and staged Markdown context as
 
 ## Steps
 
-1. Review the primary ICM paper and canonical project material alongside the current KI lifecycle, delegation, recap, batch, and runtime-portability sources.
-2. Publish a concise comparison of durable file structure, scoped context, stage contracts and human gates, orchestration mechanics, and deliberate KI differences.
-3. Identify only evidence-backed improvements, routing each to its owning skill or a named follow-up work item; retain no recommendation that requires a new runtime framework or filesystem workflow architecture.
-4. Record the source review date and outcome in the durable comparison reference.
+1. [x] Review the primary ICM paper and canonical project material alongside the current KI lifecycle, delegation, recap, batch, and runtime-portability sources.
+2. [x] Publish a concise comparison of durable file structure, scoped context, stage contracts and human gates, orchestration mechanics, and deliberate KI differences.
+3. [x] Identify only evidence-backed improvements, routing each to its owning skill or a named follow-up work item; retain no recommendation that requires a new runtime framework or filesystem workflow architecture.
+4. [x] Record the source review date and outcome in the durable comparison reference.
 
 ## Files touched
 
@@ -69,6 +69,33 @@ The primary ICM paper frames filesystem structure and staged Markdown context as
 ## Dependencies / blocks
 
 This item is independent.
+
+## Acceptance
+
+### Delivered
+
+Published the [ICM review](../decisions/references/interpretable-context-methodology-review.md) against current KI contracts.
+
+### Summary of changes
+
+The review identifies alignment around durable files, scoped context, human gates, and deterministic work, while retaining KI's flat work-item lifecycle and runtime-neutral process boundary.
+
+It does not adopt numbered-stage directories, an ICM runner, or a filesystem workflow architecture.
+
+### Verification
+
+- Reviewed the primary ICM paper and canonical Model Workspace Protocol material.
+- Traced every comparison to a current KI surface or an explicitly labelled inference.
+- `ki repo audit --skill ki-authoring --repo .`
+- `ki repo audit --skill ki-roadmap --repo .`
+
+### Outstanding concerns
+
+The possible worker-brief source-artifact locator is a separately scoped `ki-delegate` decision, not an implied change.
+
+### Mini recap
+
+ICM reinforces KI's file-backed evidence and explicit gates without replacing its lifecycle model.
 
 ## Discussion
 

@@ -3,7 +3,7 @@ id: KI-HARNESS-GOV-005
 title: Review language-model evaluation frameworks
 theme: governance-consistency
 horizon: next
-status: in-progress
+status: acceptance
 blocks: []
 blocked-by: []
 baseline-ref: 02df2024e850dc64ce5c757bfc54ee870ecaaadd
@@ -47,10 +47,10 @@ EuroEval is a primary benchmark-framework source; its repository provides a conc
 
 ## Steps
 
-1. Review EuroEval's primary documentation and one bounded agent- or harness-evaluation source against the current `evals/` structure and verification model.
-2. Publish a concise comparison of task definition, fixtures, scoring, reproducibility, result evidence, and benchmark-specific assumptions.
-3. Identify only transferable evaluation practices and route each to the owning harness evaluation surface or a named follow-up item.
-4. Record the source review date and non-adoption rationale for any datasets, framework dependency, or benchmark infrastructure outside the harness boundary.
+1. [x] Review EuroEval's primary documentation and one bounded agent- or harness-evaluation source against the current `evals/` structure and verification model.
+2. [x] Publish a concise comparison of task definition, fixtures, scoring, reproducibility, result evidence, and benchmark-specific assumptions.
+3. [x] Identify only transferable evaluation practices and route each to the owning harness evaluation surface or a named follow-up item.
+4. [x] Record the source review date and non-adoption rationale for any datasets, framework dependency, or benchmark infrastructure outside the harness boundary.
 
 ## Files touched
 
@@ -69,6 +69,33 @@ EuroEval is a primary benchmark-framework source; its repository provides a conc
 ## Dependencies / blocks
 
 This item is independent.
+
+## Acceptance
+
+### Delivered
+
+Published the [evaluation-frameworks review](../decisions/references/evaluation-frameworks-review.md).
+
+### Summary of changes
+
+The review retains explicit task intent, self-contained fixtures, deterministic checks, advisory model judgment, and reproducible source evidence as the transferable practice.
+
+It does not adopt EuroEval datasets or metrics, an external runner, trace infrastructure, or an OpenAI-specific runtime facility.
+
+### Verification
+
+- Reviewed EuroEval, its source repository, OpenAI trace-grading material, and the current local `evals/` implementation.
+- Traced every conclusion to source evidence or an explicitly labelled KI inference.
+- `ki repo audit --skill ki-authoring --repo .`
+- `ki repo audit --skill ki-roadmap --repo .`
+
+### Outstanding concerns
+
+Any real-agent trace or fixture work needs a separately authorised portable evaluation-artifact design.
+
+### Mini recap
+
+The current harness already captures the useful separation between intent, deterministic checks, advisory judgment, and reproducible evidence.
 
 ## Discussion
 
