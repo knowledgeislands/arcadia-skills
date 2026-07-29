@@ -3,7 +3,7 @@ id: KI-HARNESS-GOV-006
 title: Add authorised autonomous roadmap-work batches
 theme: governance-consistency
 horizon: next
-status: acceptance
+status: done
 blocks: []
 blocked-by: []
 baseline-ref: 31cc6e4ba6d1454175626c8d3b27a4667a198fca
@@ -271,6 +271,10 @@ This item awaits review of the first exercised batch before any CLI support or b
 ### Mini recap
 
 The rehearsal shows that a tightly scoped, human-authorised batch can deliver independent Ready work to Acceptance while preserving item ownership, explicit stop conditions, and the human closure gate.
+
+## Done
+
+Accepted by the user on 2026-07-29 after review of the first exercised batch and its recorded post-gate evidence.
 
 ## Discussion
 

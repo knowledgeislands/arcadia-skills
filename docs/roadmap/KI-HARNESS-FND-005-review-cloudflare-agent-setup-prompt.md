@@ -3,7 +3,7 @@ id: KI-HARNESS-FND-005
 title: Review the Cloudflare agent-setup prompt
 theme: foundation-tooling
 horizon: next
-status: acceptance
+status: done
 blocks: []
 blocked-by: []
 baseline-ref: 31cc6e4ba6d1454175626c8d3b27a4667a198fca
@@ -97,6 +97,10 @@ Any future Cloudflare skill or MCP adoption needs a separate explicit user-scope
 The prompt’s instruction to self-execute, third-party global skill installation, remote MCP registration, OAuth/login, runtime restart, and completion box are all non-adopted.
 
 No setup action occurred.
+
+## Done
+
+Accepted by the user on 2026-07-29 after review of the recorded acceptance packet.
 
 ## Discussion
 
