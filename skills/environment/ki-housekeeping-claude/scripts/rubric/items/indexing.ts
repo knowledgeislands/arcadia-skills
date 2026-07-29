@@ -30,8 +30,7 @@ const IDX_2: RubricItem<HousekeepingIndexContext> = {
 const IDX_3: RubricItem<HousekeepingIndexContext> = {
   code: 'IDX-3',
   title: 'Memory files are indexed',
-  description:
-    'Every `memory/*.md` file other than `MEMORY.md` appears in the index. An unindexed file is a WARN because it is invisible to future recall.',
+  description: 'Every `memory/*.md` file other than `MEMORY.md` appears in the index. An unindexed file is a WARN because it is invisible to future recall.',
   sources: [SOURCE],
   mechanical: {
     level: 'WARN',

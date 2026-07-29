@@ -15,8 +15,7 @@ const result = (condition: boolean, pass: string, violation: string, subject?: s
   { status: condition ? 'PASS' : 'VIOLATION', message: condition ? pass : violation, ...(subject ? { subject } : {}) }
 ]
 
-const active = (context: PluginsContext, inspect: () => readonly AuditOutcome[]): readonly AuditOutcome[] =>
-  unavailable(context) ?? inspect()
+const active = (context: PluginsContext, inspect: () => readonly AuditOutcome[]): readonly AuditOutcome[] => unavailable(context) ?? inspect()
 
 const mechanical = (
   code: string,
@@ -43,8 +42,7 @@ const judgment = (code: string, title: string, description: string, prompt: stri
   judgment: { prompt }
 })
 
-const formatted = (raw: string, value: Record<string, unknown> | null): boolean =>
-  Boolean(value) && raw === `${JSON.stringify(value, null, 2)}\n`
+const formatted = (raw: string, value: Record<string, unknown> | null): boolean => Boolean(value) && raw === `${JSON.stringify(value, null, 2)}\n`
 
 const PLUG_1 = mechanical('PLUG-1', 'Marketplace manifest', '`.claude-plugin/marketplace.json` exists and parses.', 'FAIL', (context) =>
   active(context, () =>
@@ -57,21 +55,16 @@ const PLUG_1 = mechanical('PLUG-1', 'Marketplace manifest', '`.claude-plugin/mar
   )
 )
 
-const PLUG_2 = mechanical(
-  'PLUG-2',
-  'Marketplace ownership',
-  '`owner.name` is `Knowledge Islands`; `plugins` lists exactly one entry.',
-  'FAIL',
-  (context) =>
-    active(context, () => {
-      const entries = Array.isArray(context.marketplace.value?.plugins) ? context.marketplace.value.plugins : []
-      return result(
-        (context.marketplace.value?.owner as { name?: unknown } | undefined)?.name === ORG && entries.length === 1,
-        'marketplace ownership and single-plugin shape are canonical',
-        'marketplace owner or plugin count is invalid',
-        context.marketplaceFile
-      )
-    })
+const PLUG_2 = mechanical('PLUG-2', 'Marketplace ownership', '`owner.name` is `Knowledge Islands`; `plugins` lists exactly one entry.', 'FAIL', (context) =>
+  active(context, () => {
+    const entries = Array.isArray(context.marketplace.value?.plugins) ? context.marketplace.value.plugins : []
+    return result(
+      (context.marketplace.value?.owner as { name?: unknown } | undefined)?.name === ORG && entries.length === 1,
+      'marketplace ownership and single-plugin shape are canonical',
+      'marketplace owner or plugin count is invalid',
+      context.marketplaceFile
+    )
+  })
 )
 
 const PLUG_3 = mechanical(
@@ -81,18 +74,10 @@ const PLUG_3 = mechanical(
   'FAIL',
   (context) =>
     active(context, () => {
-      const entries = Array.isArray(context.marketplace.value?.plugins)
-        ? (context.marketplace.value.plugins as Record<string, unknown>[])
-        : []
+      const entries = Array.isArray(context.marketplace.value?.plugins) ? (context.marketplace.value.plugins as Record<string, unknown>[]) : []
       const entry = entries.length === 1 ? entries[0] : null
       return result(
-        Boolean(
-          entry &&
-            context.pluginName &&
-            entry.source === `./${context.pluginName}` &&
-            context.pluginDescription &&
-            context.isDir(context.pluginName)
-        ),
+        Boolean(entry && context.pluginName && entry.source === `./${context.pluginName}` && context.pluginDescription && context.isDir(context.pluginName)),
         'plugin entry and source directory agree',
         'plugin entry is incomplete or its physical source directory is absent',
         context.marketplaceFile
@@ -100,27 +85,15 @@ const PLUG_3 = mechanical(
     })
 )
 
-const PLUG_4 = mechanical(
-  'PLUG-4',
-  'Manifest formatting',
-  'Plugin JSON manifests use two spaces and a trailing newline.',
-  'WARN',
-  (context) =>
-    active(context, () => {
-      const documents = [
-        [context.marketplaceFile, context.marketplace],
-        [context.pluginFile, context.plugin]
-      ] as const
-      const invalid = documents
-        .filter(([file, document]) => file && document.raw && !formatted(document.raw, document.value))
-        .map(([file]) => file)
-      return result(
-        invalid.length === 0,
-        'plugin manifests use canonical JSON formatting',
-        `non-canonical JSON formatting: ${invalid.join(', ')}`,
-        invalid[0]
-      )
-    })
+const PLUG_4 = mechanical('PLUG-4', 'Manifest formatting', 'Plugin JSON manifests use two spaces and a trailing newline.', 'WARN', (context) =>
+  active(context, () => {
+    const documents = [
+      [context.marketplaceFile, context.marketplace],
+      [context.pluginFile, context.plugin]
+    ] as const
+    const invalid = documents.filter(([file, document]) => file && document.raw && !formatted(document.raw, document.value)).map(([file]) => file)
+    return result(invalid.length === 0, 'plugin manifests use canonical JSON formatting', `non-canonical JSON formatting: ${invalid.join(', ')}`, invalid[0])
+  })
 )
 
 const PLUG_5 = mechanical(
@@ -186,18 +159,14 @@ const PLUG_9 = mechanical('PLUG-9', 'Flattened agents', '`<plugin>/agents/*.md` 
     result(
       context.agentCount > 0 && context.nestedAgentDirectories.length === 0,
       `${context.agentCount} flattened agents present`,
-      context.nestedAgentDirectories.length
-        ? `nested agent directories: ${context.nestedAgentDirectories.join(', ')}`
-        : 'projected agents are absent',
+      context.nestedAgentDirectories.length ? `nested agent directories: ${context.nestedAgentDirectories.join(', ')}` : 'projected agents are absent',
       context.pluginName ? `${context.pluginName}/agents` : undefined
     )
   )
 )
 
 const PLUG_10 = mechanical('PLUG-10', 'MCP deferral', 'No `.mcp.json` appears in the plugin.', 'WARN', (context) =>
-  active(context, () =>
-    result(context.mcpFiles.length === 0, 'MCP payload remains deferred', `unexpected MCP payloads: ${context.mcpFiles.join(', ')}`)
-  )
+  active(context, () => result(context.mcpFiles.length === 0, 'MCP payload remains deferred', `unexpected MCP payloads: ${context.mcpFiles.join(', ')}`))
 )
 
 const PLUG_11 = judgment(
@@ -214,38 +183,23 @@ const PLUG_12 = judgment(
   'Is the complete projection byte-for-byte reproducible from the current harness?'
 )
 
-const PLUG_13 = mechanical(
-  'PLUG-13',
-  'Repository scaffold',
-  '`LICENSE`, `README.md`, `.gitignore`, and `CLAUDE.md` are physical files.',
-  'FAIL',
-  (context) =>
-    active(context, () => {
-      const missing = ['LICENSE', 'README.md', '.gitignore', 'CLAUDE.md'].filter((file) => !context.has(file))
-      return result(
-        missing.length === 0,
-        'repository scaffold is complete',
-        `missing or unsafe scaffold files: ${missing.join(', ')}`,
-        missing[0]
-      )
-    })
+const PLUG_13 = mechanical('PLUG-13', 'Repository scaffold', '`LICENSE`, `README.md`, `.gitignore`, and `CLAUDE.md` are physical files.', 'FAIL', (context) =>
+  active(context, () => {
+    const missing = ['LICENSE', 'README.md', '.gitignore', 'CLAUDE.md'].filter((file) => !context.has(file))
+    return result(missing.length === 0, 'repository scaffold is complete', `missing or unsafe scaffold files: ${missing.join(', ')}`, missing[0])
+  })
 )
 
-const PLUG_14 = mechanical(
-  'PLUG-14',
-  'Generated-content warning',
-  '`CLAUDE.md` states the generated-not-hand-edited invariant.',
-  'WARN',
-  (context) =>
-    active(context, () => {
-      const content = context.read('CLAUDE.md')
-      return result(
-        /generated/i.test(content) && /hand-?edit|hand-?maintain/i.test(content),
-        'CLAUDE.md states the generated-content invariant',
-        'CLAUDE.md does not clearly forbid hand-editing generated content',
-        'CLAUDE.md'
-      )
-    })
+const PLUG_14 = mechanical('PLUG-14', 'Generated-content warning', '`CLAUDE.md` states the generated-not-hand-edited invariant.', 'WARN', (context) =>
+  active(context, () => {
+    const content = context.read('CLAUDE.md')
+    return result(
+      /generated/i.test(content) && /hand-?edit|hand-?maintain/i.test(content),
+      'CLAUDE.md states the generated-content invariant',
+      'CLAUDE.md does not clearly forbid hand-editing generated content',
+      'CLAUDE.md'
+    )
+  })
 )
 
 const PLUG_15 = mechanical(
@@ -281,22 +235,5 @@ export const PLUG: RubricFamily<PluginsContext, PluginsContext> = {
   description: 'The marketplace manifest, generated plugin projection, and repository scaffold.',
   standard: SOURCE,
   selectContext: (context) => context,
-  items: [
-    PLUG_1,
-    PLUG_2,
-    PLUG_3,
-    PLUG_4,
-    PLUG_5,
-    PLUG_6,
-    PLUG_7,
-    PLUG_8,
-    PLUG_9,
-    PLUG_10,
-    PLUG_11,
-    PLUG_12,
-    PLUG_13,
-    PLUG_14,
-    PLUG_15,
-    PLUG_16
-  ]
+  items: [PLUG_1, PLUG_2, PLUG_3, PLUG_4, PLUG_5, PLUG_6, PLUG_7, PLUG_8, PLUG_9, PLUG_10, PLUG_11, PLUG_12, PLUG_13, PLUG_14, PLUG_15, PLUG_16]
 }

@@ -7,10 +7,7 @@ import { type KbRubricContext, ZONES } from '../contexts/kb.ts'
 import catalogue from './index.ts'
 
 const temporaryDirectories: string[] = []
-const families = catalogue.families.filter((family) => family.code !== 'RUBRIC') as unknown as readonly RubricFamily<
-  KbRubricContext,
-  unknown
->[]
+const families = catalogue.families.filter((family) => family.code !== 'RUBRIC') as unknown as readonly RubricFamily<KbRubricContext, unknown>[]
 const items = families.flatMap((family) => family.items) as readonly RubricItem<unknown>[]
 const familyModules = readdirSync(import.meta.dir)
   .filter((file) => file.endsWith('.ts') && file !== 'index.ts' && !file.endsWith('.test.ts'))
@@ -135,13 +132,9 @@ test('a zone alias cannot propose a create through an intermediate symlink', () 
   symlinkSync(outside, join(repository, 'linked'))
   writeFileSync(
     join(repository, '.ki-config.toml'),
-    [
-      '["knowledgeislands/ki-agentic-harness:ki-kb"]',
-      '',
-      '["knowledgeislands/ki-agentic-harness:ki-kb".zones]',
-      'Resources = "linked/Resources"',
-      ''
-    ].join('\n')
+    ['["knowledgeislands/ki-agentic-harness:ki-kb"]', '', '["knowledgeislands/ki-agentic-harness:ki-kb".zones]', 'Resources = "linked/Resources"', ''].join(
+      '\n'
+    )
   )
   const session = catalogue.createSession({ mode: 'conform', repository, userHome: tmpdir(), configuration: {} })
   const context = session.subjects[1]?.context() as KbRubricContext

@@ -7,8 +7,7 @@ const SOURCE = [STANDARD] as const
 const CONFIG_1: RubricItem<TapConfigContext> = {
   code: 'CONFIG-1',
   title: 'identity marker',
-  description:
-    '`.ki-config.toml` contains a keyless `["knowledgeislands/ki-agentic-harness:ki-homebrew-tap"]` marker with no unknown keys.',
+  description: '`.ki-config.toml` contains a keyless `["knowledgeislands/ki-agentic-harness:ki-homebrew-tap"]` marker with no unknown keys.',
   sources: SOURCE,
   mechanical: {
     level: 'WARN',
@@ -17,8 +16,7 @@ const CONFIG_1: RubricItem<TapConfigContext> = {
       phase: 'INSPECT',
       run: (context) => {
         if (!context.targetExists) return [{ status: 'VIOLATION', level: 'FAIL', message: 'Audit target must be an existing directory.' }]
-        if (!context.applicable)
-          return [{ status: 'NOT_APPLICABLE', message: 'No tap declaration or Formula/ structural marker is present.' }]
+        if (!context.applicable) return [{ status: 'NOT_APPLICABLE', message: 'No tap declaration or Formula/ structural marker is present.' }]
         if (context.config === 'unsafe')
           return [
             {
@@ -27,8 +25,7 @@ const CONFIG_1: RubricItem<TapConfigContext> = {
               subject: '.ki-config.toml'
             }
           ]
-        if (context.config === 'malformed')
-          return [{ status: 'VIOLATION', message: '.ki-config.toml is malformed.', subject: '.ki-config.toml' }]
+        if (context.config === 'malformed') return [{ status: 'VIOLATION', message: '.ki-config.toml is malformed.', subject: '.ki-config.toml' }]
         if (context.config !== 'present')
           return [
             {

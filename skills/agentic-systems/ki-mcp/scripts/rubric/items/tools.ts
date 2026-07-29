@@ -35,10 +35,7 @@ const TOOL_1: RubricItem<McpToolsContext> = {
           })
           checks.push({
             status: invalid.length > 0 ? 'VIOLATION' : 'PASS',
-            message:
-              invalid.length > 0
-                ? `Names not matching the documented form: ${invalid.join(', ')}.`
-                : 'All tool names use the documented form.',
+            message: invalid.length > 0 ? `Names not matching the documented form: ${invalid.join(', ')}.` : 'All tool names use the documented form.',
             subject: 'src/tools'
           })
         }
@@ -49,13 +46,10 @@ const TOOL_1: RubricItem<McpToolsContext> = {
         if (structured)
           checks.push({
             status: schema ? 'PASS' : 'VIOLATION',
-            message: schema
-              ? 'structuredContent is paired with outputSchema.'
-              : 'Tools return structuredContent but declare no outputSchema.',
+            message: schema ? 'structuredContent is paired with outputSchema.' : 'Tools return structuredContent but declare no outputSchema.',
             subject: 'src/tools'
           })
-        if (json && !schema)
-          checks.push({ status: 'VIOLATION', message: 'Tools use jsonResult but declare no outputSchema.', subject: 'src/tools' })
+        if (json && !schema) checks.push({ status: 'VIOLATION', message: 'Tools use jsonResult but declare no outputSchema.', subject: 'src/tools' })
         for (const file of context.files.filter((candidate) => /^src\/tools\/[^/]+\/index\.ts$/.test(candidate.path))) {
           const group = [...file.content.matchAll(/server\.registerTool\(\s*['"]([^'"]+)['"]/g)].map((match) => match[1] as string)
           if (group.length <= 1) continue

@@ -11,8 +11,7 @@ export const BUN: RubricFamily<EngineeringRubricContext, BunRubricContext> = {
     {
       code: 'BUN-1',
       title: 'Node environment-loading parity',
-      description:
-        'Where the repo loads `.env`, `loadConfig` (or equivalent) calls `process.loadEnvFile()` in a try/catch for Node parity.',
+      description: 'Where the repo loads `.env`, `loadConfig` (or equivalent) calls `process.loadEnvFile()` in a try/catch for Node parity.',
       sources: ['standards-engineering.md'],
       judgment: { prompt: 'Where `.env` is loaded, does the loader call `process.loadEnvFile()` safely?' }
     }

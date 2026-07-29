@@ -45,8 +45,7 @@ const FM_3: RubricItem<HousekeepingFrontmatterContext> = {
 const FM_4: RubricItem<HousekeepingFrontmatterContext> = {
   code: 'FM-4',
   title: 'Frontmatter type is valid',
-  description:
-    '`metadata.type` is present and is exactly one of `user`, `feedback`, `project`, or `reference`. Missing or invalid is a FAIL.',
+  description: '`metadata.type` is present and is exactly one of `user`, `feedback`, `project`, or `reference`. Missing or invalid is a FAIL.',
   sources: [SOURCE],
   mechanical: {
     level: 'FAIL',

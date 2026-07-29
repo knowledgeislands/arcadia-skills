@@ -107,11 +107,7 @@ const addRendersDeclaration = (text: string): string => {
   return lines.join('\n')
 }
 
-export const createLiveArtifactsSession = ({
-  mode,
-  repository,
-  publication
-}: RubricContextOptions): RubricSession<LiveArtifactsRubricContext> => {
+export const createLiveArtifactsSession = ({ mode, repository, publication }: RubricContextOptions): RubricSession<LiveArtifactsRubricContext> => {
   const root = resolve(repository)
   const configuration = parseConfiguration(root)
   const artifactsDirectory = join(root, configuration.artifactsDirectory)
@@ -138,9 +134,7 @@ export const createLiveArtifactsSession = ({
       }
     })
     .sort((left, right) => left.relativePath.localeCompare(right.relativePath))
-  const htmlPaths = new Set(
-    names.filter((entry) => entry.isFile() && extname(entry.name) === '.html').map((entry) => join(artifactsDirectory, entry.name))
-  )
+  const htmlPaths = new Set(names.filter((entry) => entry.isFile() && extname(entry.name) === '.html').map((entry) => join(artifactsDirectory, entry.name)))
   const absent = !directoryExists
   const noSources = directoryExists && sources.length === 0
   const unavailable = absent
@@ -149,9 +143,7 @@ export const createLiveArtifactsSession = ({
       ? 'No artifact sources exist.'
       : undefined
   const missingIndexSources =
-    indexText === null
-      ? []
-      : sources.filter((source) => !indexText.includes(basename(source.relativePath)) && !indexText.includes(source.stem))
+    indexText === null ? [] : sources.filter((source) => !indexText.includes(basename(source.relativePath)) && !indexText.includes(source.stem))
   const missingRenders = sources.filter((source) => source.frontmatter !== null && !Object.hasOwn(source.frontmatter, 'renders'))
   const originals = new Map<string, string | null>([
     [indexRelativePath, indexText],
@@ -282,8 +274,7 @@ export const createLiveArtifactsSession = ({
       ...(mutable && directoryExists && sources.length > 0 && indexSafe
         ? {
             ensureIndex: () => {
-              const entry = (source: ArtifactSource): string =>
-                `- [${source.stem}](${basename(source.relativePath)}) — _(description — see manual TODO)_`
+              const entry = (source: ArtifactSource): string => `- [${source.stem}](${basename(source.relativePath)}) — _(description — see manual TODO)_`
               const current = drafts.get(indexRelativePath)
               if (current === null) {
                 drafts.set(

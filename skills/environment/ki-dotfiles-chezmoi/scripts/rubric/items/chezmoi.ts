@@ -14,10 +14,8 @@ const CHEZMOI_1: RubricItem<ChezmoiShapeContext> = {
       phase: 'INSPECT',
       run: ({ repository, repositoryState, ignoreState }) => {
         if (repositoryState === 'absent') return [{ status: 'VIOLATION', message: 'The audit target does not exist.', subject: repository }]
-        if (repositoryState === 'unsafe')
-          return [{ status: 'VIOLATION', message: 'The audit target is not a physical directory.', subject: repository }]
-        if (ignoreState === 'physical')
-          return [{ status: 'PASS', message: 'The managed ignore file is present.', subject: '.chezmoiignore' }]
+        if (repositoryState === 'unsafe') return [{ status: 'VIOLATION', message: 'The audit target is not a physical directory.', subject: repository }]
+        if (ignoreState === 'physical') return [{ status: 'PASS', message: 'The managed ignore file is present.', subject: '.chezmoiignore' }]
         if (ignoreState === 'unsafe')
           return [
             {
@@ -54,10 +52,8 @@ const CHEZMOI_2: RubricItem<ChezmoiShapeContext> = {
     audit: {
       phase: 'INSPECT',
       run: ({ repositoryState, hasTemplateFiles, hasTemplateSupport }) => {
-        if (repositoryState !== 'physical')
-          return [{ status: 'NOT_APPLICABLE', message: 'The target repository is not safely inspectable.' }]
-        if (!hasTemplateFiles)
-          return [{ status: 'NOT_APPLICABLE', message: 'No template files exist, so support directories are not required.' }]
+        if (repositoryState !== 'physical') return [{ status: 'NOT_APPLICABLE', message: 'The target repository is not safely inspectable.' }]
+        if (!hasTemplateFiles) return [{ status: 'NOT_APPLICABLE', message: 'No template files exist, so support directories are not required.' }]
         return hasTemplateSupport
           ? [{ status: 'PASS', message: 'Template support is present alongside template files.' }]
           : [

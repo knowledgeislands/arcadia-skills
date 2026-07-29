@@ -1,13 +1,6 @@
 import { existsSync, lstatSync, readFileSync } from 'node:fs'
 import { join, resolve } from 'node:path'
-import type {
-  AuditOutcome,
-  ConformWrite,
-  RubricContextOptions,
-  RubricPublicationContext,
-  RubricSession,
-  ViolationLevel
-} from '../../shared/rubric.ts'
+import type { AuditOutcome, ConformWrite, RubricContextOptions, RubricPublicationContext, RubricSession, ViolationLevel } from '../../shared/rubric.ts'
 import { collectAuditFindings, declaresRootTable, type RepoAuditCollection, type RepoEvidenceFinding } from './audit.ts'
 
 const HARNESS_ID = 'knowledgeislands/ki-agentic-harness'
@@ -251,8 +244,7 @@ const findingsByCode = (findings: readonly RepoEvidenceFinding[]) => {
   return (code: string): readonly RepoEvidenceFinding[] => {
     const matched = grouped.get(code)
     if (matched?.length) return matched
-    if (githubUnavailable && GITHUB_CODES.has(code))
-      return [{ level: 'NOT_APPLICABLE', code, message: 'GitHub evidence was unavailable for this run' }]
+    if (githubUnavailable && GITHUB_CODES.has(code)) return [{ level: 'NOT_APPLICABLE', code, message: 'GitHub evidence was unavailable for this run' }]
     return [{ level: 'PASS', code, message: 'criterion satisfied' }]
   }
 }

@@ -162,12 +162,7 @@ test('reports a failed restore without exposing native command details', () => {
 command = "node"
 args = ["old.js"]
 `)
-  const { native } = scriptedNative([
-    stdioRecord(['old.js'], { TOKEN: 'top-secret' }),
-    '',
-    new Error('add failed'),
-    new Error('restore failed')
-  ])
+  const { native } = scriptedNative([stdioRecord(['old.js'], { TOKEN: 'top-secret' }), '', new Error('add failed'), new Error('restore failed')])
   const { result, output } = capture(() => runRenderCodex(options(home, source, native)))
   expect(result).toBe(1)
   expect(output).toContain('could not be restored')

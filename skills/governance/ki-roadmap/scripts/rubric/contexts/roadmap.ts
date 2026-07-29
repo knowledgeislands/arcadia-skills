@@ -23,13 +23,7 @@ export type RoadmapRubricContext = {
 
 const auditOutcome = (finding: Finding): AuditOutcome => ({
   status:
-    finding.level === 'FAIL' || finding.level === 'WARN'
-      ? 'VIOLATION'
-      : finding.level === 'NA'
-        ? 'NOT_APPLICABLE'
-        : finding.level === 'INFO'
-          ? 'INFO'
-          : 'PASS',
+    finding.level === 'FAIL' || finding.level === 'WARN' ? 'VIOLATION' : finding.level === 'NA' ? 'NOT_APPLICABLE' : finding.level === 'INFO' ? 'INFO' : 'PASS',
   message: finding.msg,
   ...(finding.file ? { subject: finding.file } : {})
 })

@@ -4,8 +4,7 @@ import type { HarnessLayoutContext, HarnessRubricContext } from '../contexts/har
 const STANDARD = ['standards-compatible-harness.md'] as const
 
 const rootUnavailable = (context: HarnessLayoutContext): readonly AuditOutcome[] | null => {
-  if (context.repositoryState === 'absent')
-    return [{ status: 'VIOLATION', message: 'The harness root does not exist.', subject: context.repository }]
+  if (context.repositoryState === 'absent') return [{ status: 'VIOLATION', message: 'The harness root does not exist.', subject: context.repository }]
   if (context.repositoryState === 'unsafe')
     return [{ status: 'VIOLATION', message: 'The harness root is not a physical directory.', subject: context.repository }]
   return null
@@ -25,9 +24,7 @@ const LAY_1: RubricItem<HarnessLayoutContext> = {
         context.parts.map(({ name, state }) => ({
           status: state === 'directory' ? ('PASS' as const) : ('VIOLATION' as const),
           message:
-            state === 'directory'
-              ? 'Required source-harness directory is present.'
-              : 'Required source-harness path is absent or not a physical directory.',
+            state === 'directory' ? 'Required source-harness directory is present.' : 'Required source-harness path is absent or not a physical directory.',
           subject: `${name}/`
         }))
     }

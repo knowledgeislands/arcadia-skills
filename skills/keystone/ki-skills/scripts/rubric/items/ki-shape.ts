@@ -137,8 +137,7 @@ const KI_SHAPE_9: RubricItem<KiShapeRubricContext> = {
     audit: {
       phase: 'INSPECT',
       run: ({ skill }) => {
-        if (!skill || skill.mechanicalRubricCount === 0)
-          return [{ status: 'NOT_APPLICABLE', message: 'the skill declares no mechanical rubric criteria' }]
+        if (!skill || skill.mechanicalRubricCount === 0) return [{ status: 'NOT_APPLICABLE', message: 'the skill declares no mechanical rubric criteria' }]
         return skill.hasMechanicalImplementation || skill.documentsMechanicalDelegation
           ? [{ status: 'PASS', message: 'mechanical work belongs in the structured rubric' }]
           : [
@@ -279,9 +278,7 @@ const KI_SHAPE_14: RubricItem<KiShapeRubricContext> = {
       run: ({ skill }) => {
         if (!skill?.governanceSkill || !skill.refreshText)
           return [{ status: 'NOT_APPLICABLE', message: 'the target has no governance REFRESH procedure to inspect' }]
-        const namesOwner = skill.localGovernanceSource
-          ? /\.agents\/skills\/ki-self/.test(skill.refreshText)
-          : /ki-agentic-harness/.test(skill.refreshText)
+        const namesOwner = skill.localGovernanceSource ? /\.agents\/skills\/ki-self/.test(skill.refreshText) : /ki-agentic-harness/.test(skill.refreshText)
         const stopsAndRedirects = skill.localGovernanceSource
           ? /\bstop(s)?\b[\s\S]{0,160}\bpromot\w*/i.test(skill.refreshText)
           : /\bstop(s)?\b[\s\S]{0,160}\b(redirect|names?|route)/i.test(skill.refreshText)
@@ -308,8 +305,7 @@ const KI_SHAPE_14: RubricItem<KiShapeRubricContext> = {
 }
 
 const auditKiShape15 = ({ skill }: KiShapeRubricContext): RubricOutcomes<AuditOutcome> => {
-  if (!skill?.governanceSkill || skill.localGovernanceSource)
-    return [{ status: 'NOT_APPLICABLE', message: 'the target is not a direct governance capability' }]
+  if (!skill?.governanceSkill || skill.localGovernanceSource) return [{ status: 'NOT_APPLICABLE', message: 'the target is not a direct governance capability' }]
   const violations: AuditOutcome[] = []
   for (const script of ['govern.ts', 'educate.ts', 'audit.ts', 'conform.ts'])
     if (skill.scriptNames.includes(script))
@@ -345,8 +341,7 @@ const KI_SHAPE_16: RubricItem<KiShapeRubricContext> = {
     audit: {
       phase: 'INSPECT',
       run: ({ skill, ownershipCollisions }) => {
-        if (!skill && ownershipCollisions.length === 0)
-          return [{ status: 'NOT_APPLICABLE', message: 'skill and ownership-collision evidence are unavailable' }]
+        if (!skill && ownershipCollisions.length === 0) return [{ status: 'NOT_APPLICABLE', message: 'skill and ownership-collision evidence are unavailable' }]
         const violations: AuditOutcome[] = []
         if (skill) {
           if (skill.implementationSource !== null)
@@ -387,8 +382,7 @@ const KI_SHAPE_17: RubricItem<KiShapeRubricContext> = {
           return [
             {
               status: 'VIOLATION',
-              message:
-                'frontmatter carries no `ki-depends-on:` declaration — declare `ki-depends-on: []` when the skill has no governance dependencies'
+              message: 'frontmatter carries no `ki-depends-on:` declaration — declare `ki-depends-on: []` when the skill has no governance dependencies'
             }
           ]
         return /^\[[^\]]*\]$/.test(skill.dependsOn)
@@ -431,8 +425,7 @@ const KI_SHAPE_18: RubricItem<KiShapeRubricContext> = {
           .filter(Boolean)
         const recognised = new Set(['claude-code', 'codex'])
         const unknown = runtimes.filter((runtime) => !recognised.has(runtime))
-        if (new Set(runtimes).size !== runtimes.length)
-          return [{ status: 'VIOLATION', message: '`ki-supported-runtimes:` must not repeat a runtime' }]
+        if (new Set(runtimes).size !== runtimes.length) return [{ status: 'VIOLATION', message: '`ki-supported-runtimes:` must not repeat a runtime' }]
         if (unknown.length > 0)
           return [
             {

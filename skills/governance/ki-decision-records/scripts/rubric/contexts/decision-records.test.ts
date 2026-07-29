@@ -115,10 +115,7 @@ const rootFixture = ({
       return `${index + 1}. [${id}](${file?.file ?? `${id}.md`}) — ${file?.title ?? 'unknown'}.`
     })
     .join('\n')
-  writeFileSync(
-    join(directory, 'README.md'),
-    `# Decisions\n\n${marker ? '<!-- ki-decision-records: adoption-root -->\n\n' : ''}${entries}\n`
-  )
+  writeFileSync(join(directory, 'README.md'), `# Decisions\n\n${marker ? '<!-- ki-decision-records: adoption-root -->\n\n' : ''}${entries}\n`)
   return createDecisionRecordsSession({ mode: 'audit', repository: root, userHome: tmpdir(), configuration: {} }).subjects[0]?.context()
 }
 

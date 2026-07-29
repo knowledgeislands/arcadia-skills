@@ -109,12 +109,7 @@ const indexEntry = (note: ActivityNote): string => {
   return `- [${note.title}](${target})`
 }
 
-export const createActivitiesSession = ({
-  mode,
-  repository,
-  configuration,
-  publication
-}: RubricContextOptions): RubricSession<ActivitiesRubricContext> => {
+export const createActivitiesSession = ({ mode, repository, configuration, publication }: RubricContextOptions): RubricSession<ActivitiesRubricContext> => {
   const root = resolve(repository)
   const repositoryAvailable = isDirectory(root)
   const activitiesDirectory = configuredString(configuration, 'activities_dir') ?? DEFAULT_ACTIVITIES_DIRECTORY

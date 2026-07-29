@@ -12,9 +12,7 @@ if (!item?.mechanical) throw new Error('RUBRIC-1 must expose its mechanical poli
 
 describe('RUBRIC-1 generated publication policy', () => {
   test('maps host evidence to exact, missing, stale, and absent outcomes', () => {
-    expect(item.mechanical?.audit.run(publication('in-sync'))).toEqual([
-      { status: 'PASS', message: 'the structured catalogue publication is exact' }
-    ])
+    expect(item.mechanical?.audit.run(publication('in-sync'))).toEqual([{ status: 'PASS', message: 'the structured catalogue publication is exact' }])
     expect(item.mechanical?.audit.run(publication('missing'))).toEqual([
       { status: 'VIOLATION', message: '`references/rubric.md` is missing from the structured catalogue' }
     ])

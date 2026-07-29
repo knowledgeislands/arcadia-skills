@@ -1,10 +1,5 @@
 import type { RubricFamily, RubricItem, ViolationLevel } from '../../shared/rubric.ts'
-import {
-  auditEvidence,
-  type EngineeringEvidence,
-  type EngineeringRubricContext,
-  type PackageRubricContext
-} from '../contexts/engineering.ts'
+import { auditEvidence, type EngineeringEvidence, type EngineeringRubricContext, type PackageRubricContext } from '../contexts/engineering.ts'
 
 const mechanical = (
   code: string,
@@ -38,16 +33,9 @@ export const PACKAGE: RubricFamily<EngineeringRubricContext, PackageRubricContex
     mechanical('PKG-1', 'Module package type', '`"type": "module"`.', 'WARN', (context) => context.pkg1, {
       conform: synchronise
     }),
-    mechanical(
-      'PKG-2',
-      'Bun package-manager pin',
-      '`"packageManager"` starts with `bun@` (pinned patch).',
-      'WARN',
-      (context) => context.pkg2,
-      {
-        conform: synchronise
-      }
-    ),
+    mechanical('PKG-2', 'Bun package-manager pin', '`"packageManager"` starts with `bun@` (pinned patch).', 'WARN', (context) => context.pkg2, {
+      conform: synchronise
+    }),
     mechanical('PKG-3', 'Node engine floor', '`"engines.node"` floor is `>= 22`.', 'WARN', (context) => context.pkg3, {
       conform: synchronise
     }),

@@ -103,10 +103,7 @@ const entries = (directory: string): readonly Dirent[] | null => {
 
 const executable = (path: string): boolean => (lstatSync(path).mode & 0o111) !== 0
 
-const inspectConfig = (
-  path: string,
-  kind: NodeKind
-): { readonly state: ConfigState; readonly keys: readonly string[]; readonly content: string | null } => {
+const inspectConfig = (path: string, kind: NodeKind): { readonly state: ConfigState; readonly keys: readonly string[]; readonly content: string | null } => {
   if (kind === 'missing') return { state: 'missing', keys: [], content: null }
   if (kind !== 'file') return { state: 'unsafe', keys: [], content: null }
   const content = readableText(path)
@@ -166,8 +163,7 @@ export const createToolsSession = ({ mode, repository, publication }: RubricCont
   const rootState: RootState = rootKind === 'missing' ? 'absent' : rootKind === 'directory' ? 'physical' : 'unsafe'
 
   const binPath = join(root, 'bin')
-  const inspectedBins =
-    rootState === 'physical' ? inspectDirectory(binPath, root, () => true) : { state: 'missing' as const, files: [], unsafe: [] }
+  const inspectedBins = rootState === 'physical' ? inspectDirectory(binPath, root, () => true) : { state: 'missing' as const, files: [], unsafe: [] }
   const bins = inspectedBins.files.map((name) => ({ name, executable: executable(join(binPath, name)) }))
   const expected = basename(root).replace(/^tools-/, '')
   const primary = bins.find(({ name }) => name === expected)?.name ?? bins[0]?.name ?? null
@@ -201,8 +197,7 @@ export const createToolsSession = ({ mode, repository, publication }: RubricCont
 
   const testsPath = join(root, 'tests')
   const sourceTestsPath = join(root, 'src', 'tests')
-  const inspectedTests =
-    rootState === 'physical' ? inspectDirectory(testsPath, root, () => true) : { state: 'missing' as const, files: [], unsafe: [] }
+  const inspectedTests = rootState === 'physical' ? inspectDirectory(testsPath, root, () => true) : { state: 'missing' as const, files: [], unsafe: [] }
   const inspectedSourceTests =
     rootState === 'physical' ? inspectDirectory(sourceTestsPath, root, () => true) : { state: 'missing' as const, files: [], unsafe: [] }
   const testInspections = [
@@ -221,13 +216,9 @@ export const createToolsSession = ({ mode, repository, publication }: RubricCont
   const packageJson: FileState = packageKind === 'missing' ? 'missing' : packageKind === 'file' ? 'physical' : 'unsafe'
 
   const configPath = join(root, '.ki-config.toml')
-  const configEvidence =
-    rootState === 'physical' ? inspectConfig(configPath, nodeKind(configPath)) : { state: 'missing' as const, keys: [], content: null }
+  const configEvidence = rootState === 'physical' ? inspectConfig(configPath, nodeKind(configPath)) : { state: 'missing' as const, keys: [], content: null }
   const applicable =
-    configEvidence.state === 'present' ||
-    configEvidence.state === 'malformed' ||
-    configEvidence.state === 'unsafe' ||
-    inspectedBins.state !== 'missing'
+    configEvidence.state === 'present' || configEvidence.state === 'malformed' || configEvidence.state === 'unsafe' || inspectedBins.state !== 'missing'
 
   const requestedExecutables = new Set<string>()
   let markerRequested = false

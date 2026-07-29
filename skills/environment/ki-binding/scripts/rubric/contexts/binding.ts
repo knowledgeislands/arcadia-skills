@@ -32,9 +32,7 @@ const readSource = (path: string): SourceState => {
         const value = entry as Record<string, unknown>
         return {
           ...(typeof value.name === 'string' ? { name: value.name } : {}),
-          ...(Array.isArray(value.clients)
-            ? { clients: value.clients.filter((client): client is string => typeof client === 'string') }
-            : {}),
+          ...(Array.isArray(value.clients) ? { clients: value.clients.filter((client): client is string => typeof client === 'string') } : {}),
           ...(typeof value.url === 'string' ? { url: value.url } : {}),
           ...(typeof value.command === 'string' ? { command: value.command } : {})
         }
@@ -49,9 +47,7 @@ const mcporterKeys = (path: string): ReadonlySet<string> | null => {
   if (!physicalFile(path)) return null
   try {
     const parsed = JSON.parse(readFileSync(path, 'utf8')) as { mcpServers?: unknown }
-    return parsed.mcpServers && typeof parsed.mcpServers === 'object'
-      ? new Set(Object.keys(parsed.mcpServers as Record<string, unknown>))
-      : new Set()
+    return parsed.mcpServers && typeof parsed.mcpServers === 'object' ? new Set(Object.keys(parsed.mcpServers as Record<string, unknown>)) : new Set()
   } catch {
     return null
   }

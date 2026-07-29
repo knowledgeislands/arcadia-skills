@@ -53,8 +53,7 @@ const LAY_3: RubricItem<LayoutRubricContext> = {
     audit: {
       phase: 'INSPECT',
       run: ({ supportDirectories }) => {
-        if (supportDirectories === undefined)
-          return [{ status: 'NOT_APPLICABLE', message: 'support directories were not inspected for this subject' }]
+        if (supportDirectories === undefined) return [{ status: 'NOT_APPLICABLE', message: 'support directories were not inspected for this subject' }]
         const violations = supportDirectories
           .filter((directory) => !['references', 'scripts', 'assets', '.ki-meta'].includes(directory))
           .map((directory) => ({

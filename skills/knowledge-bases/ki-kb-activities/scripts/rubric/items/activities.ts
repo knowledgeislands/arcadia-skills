@@ -20,8 +20,7 @@ const unavailable = (context: ActivitiesContext): RubricOutcomes<AuditOutcome> |
           ]
         : null
 
-const notesWithFrontmatter = (context: ActivitiesContext): readonly ActivityNote[] =>
-  context.notes.filter((note) => note.frontmatter !== null)
+const notesWithFrontmatter = (context: ActivitiesContext): readonly ActivityNote[] => context.notes.filter((note) => note.frontmatter !== null)
 
 const oneOrMore = <Outcome>(values: readonly Outcome[]): RubricOutcomes<Outcome> => {
   if (values.length === 0) throw new Error('expected one or more rubric outcomes')
@@ -40,8 +39,7 @@ const ACT_S_1: RubricItem<ActivitiesContext> = {
       run: (context) => {
         const stop = unavailable(context)
         if (stop) return stop
-        if (context.notes.length === 0)
-          return [{ status: 'NOT_APPLICABLE', message: 'no activity notes found — index check not applicable' }]
+        if (context.notes.length === 0) return [{ status: 'NOT_APPLICABLE', message: 'no activity notes found — index check not applicable' }]
         if (context.index.unsafeEntry)
           return [
             {
@@ -177,8 +175,7 @@ const ACT_F_1: RubricItem<ActivitiesContext> = {
         if (stop) return stop
         const outcomes: AuditOutcome[] = []
         for (const note of context.notes) {
-          if (!note.frontmatter)
-            outcomes.push({ status: 'INFO', message: 'no frontmatter block — judgment check only', subject: note.relative })
+          if (!note.frontmatter) outcomes.push({ status: 'INFO', message: 'no frontmatter block — judgment check only', subject: note.relative })
           else if (!note.frontmatter.status)
             outcomes.push({
               status: 'VIOLATION',
@@ -218,9 +215,7 @@ const ACT_F_2: RubricItem<ActivitiesContext> = {
               ? { status: 'PASS', message: `realization '${note.frontmatter.realization}' declared`, subject: note.relative }
               : { status: 'VIOLATION', message: "missing required field 'realization'", subject: note.relative }
           )
-        return outcomes.length
-          ? oneOrMore(outcomes)
-          : [{ status: 'NOT_APPLICABLE', message: 'no frontmatter-bearing activity notes found' }]
+        return outcomes.length ? oneOrMore(outcomes) : [{ status: 'NOT_APPLICABLE', message: 'no frontmatter-bearing activity notes found' }]
       }
     }
   }
@@ -272,9 +267,7 @@ const ACT_F_4: RubricItem<ActivitiesContext> = {
             ? { status: 'PASS' as const, message: `author '${note.frontmatter.author}' declared`, subject: note.relative }
             : { status: 'VIOLATION' as const, message: "missing required field 'author'", subject: note.relative }
         )
-        return outcomes.length
-          ? oneOrMore(outcomes)
-          : [{ status: 'NOT_APPLICABLE', message: 'no frontmatter-bearing activity notes found' }]
+        return outcomes.length ? oneOrMore(outcomes) : [{ status: 'NOT_APPLICABLE', message: 'no frontmatter-bearing activity notes found' }]
       }
     }
   }
@@ -322,9 +315,7 @@ const ACT_R_2: RubricItem<ActivitiesContext> = {
       run: (context) => {
         const stop = unavailable(context)
         if (stop) return stop
-        const notes = notesWithFrontmatter(context).filter(
-          (note) => note.frontmatter?.realization === 'slash-command' && note.frontmatter.skill
-        )
+        const notes = notesWithFrontmatter(context).filter((note) => note.frontmatter?.realization === 'slash-command' && note.frontmatter.skill)
         if (notes.length === 0) return [{ status: 'NOT_APPLICABLE', message: 'no declared slash-command skills found' }]
         if (!context.harness)
           return oneOrMore(
@@ -388,9 +379,7 @@ const ACT_R_4: RubricItem<ActivitiesContext> = {
       run: (context) => {
         const stop = unavailable(context)
         if (stop) return stop
-        const notes = notesWithFrontmatter(context).filter(
-          (note) => note.frontmatter?.realization === 'scheduled-task' && note.frontmatter.schedule_name
-        )
+        const notes = notesWithFrontmatter(context).filter((note) => note.frontmatter?.realization === 'scheduled-task' && note.frontmatter.schedule_name)
         if (notes.length === 0) return [{ status: 'NOT_APPLICABLE', message: 'no named scheduled-task activities found' }]
         return oneOrMore(
           notes.map((note) => ({
@@ -450,22 +439,5 @@ export const ACT: RubricFamily<ActivitiesRubricContext, ActivitiesContext> = {
   description: 'Activity note structure, frontmatter, realization-specific declarations, and safe index maintenance.',
   standard: SOURCE,
   selectContext: (context) => context.activities,
-  items: [
-    ACT_S_1,
-    ACT_S_2,
-    ACT_S_3,
-    ACT_F_1,
-    ACT_F_2,
-    ACT_F_3,
-    ACT_F_4,
-    ACT_R_1,
-    ACT_R_2,
-    ACT_R_3,
-    ACT_R_4,
-    ACT_J_1,
-    ACT_J_2,
-    ACT_J_3,
-    ACT_J_4,
-    ACT_J_5
-  ]
+  items: [ACT_S_1, ACT_S_2, ACT_S_3, ACT_F_1, ACT_F_2, ACT_F_3, ACT_F_4, ACT_R_1, ACT_R_2, ACT_R_3, ACT_R_4, ACT_J_1, ACT_J_2, ACT_J_3, ACT_J_4, ACT_J_5]
 }

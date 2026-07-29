@@ -25,12 +25,7 @@ const ADMIN_1 = mechanical(
   'When Governance/ or Operations/ is active, it has its same-name index; absent subdivisions warn only.',
   (context) => context.subdivisions
 )
-const ADMIN_2 = mechanical(
-  'ADMIN-2',
-  'governance charter',
-  'An active Admin/Governance/ directory carries Charter.md.',
-  (context) => context.charter
-)
+const ADMIN_2 = mechanical('ADMIN-2', 'governance charter', 'An active Admin/Governance/ directory carries Charter.md.', (context) => context.charter)
 const ADMIN_3 = mechanical(
   'ADMIN-3',
   'governance conformance record',

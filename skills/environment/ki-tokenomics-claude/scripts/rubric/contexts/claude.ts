@@ -83,10 +83,7 @@ export const createClaudeSession = ({ repository, userHome, publication }: Rubri
       ],
       models: [
         result('INFO', defaultModel ? `Configured user default model: ${defaultModel}.` : 'No configured user default model.'),
-        result(
-          'INFO',
-          effectiveModel ? `Effective selected-repository model: ${effectiveModel}.` : 'Effective selected-repository model is unavailable.'
-        )
+        result('INFO', effectiveModel ? `Effective selected-repository model: ${effectiveModel}.` : 'Effective selected-repository model is unavailable.')
       ],
       headroom: [
         result(

@@ -12,8 +12,7 @@ const claudeToolUse = (name: string, input: unknown) => JSON.stringify({ message
 const codexMeta = (cwd: string) => JSON.stringify({ type: 'session_meta', payload: { cwd } })
 const codexFunction = (name: string, arguments_: unknown) =>
   JSON.stringify({ type: 'response_item', payload: { type: 'function_call', name, arguments: JSON.stringify(arguments_) } })
-const codexCustom = (name: string, input: unknown) =>
-  JSON.stringify({ type: 'response_item', payload: { type: 'custom_tool_call', name, input } })
+const codexCustom = (name: string, input: unknown) => JSON.stringify({ type: 'response_item', payload: { type: 'custom_tool_call', name, input } })
 
 const run = (repo: string, transcripts: string, args: readonly string[] = []) => {
   const result = spawnSync('bun', [helper, repo, '--json', '--transcripts-dir', transcripts, ...args], { encoding: 'utf8' })

@@ -83,13 +83,7 @@ const parseFrontmatter = (content: string): AgentFrontmatter => {
     const key = keyValue[1] as string
     const remainder = (keyValue[2] as string).trim()
     present.add(key)
-    if (
-      remainder === '>' ||
-      remainder === '|' ||
-      remainder.startsWith('> ') ||
-      remainder.startsWith('| ') ||
-      /^[>|][-+]?\d*\s*$/.test(remainder)
-    ) {
+    if (remainder === '>' || remainder === '|' || remainder.startsWith('> ') || remainder.startsWith('| ') || /^[>|][-+]?\d*\s*$/.test(remainder)) {
       const folded = remainder[0] === '>'
       const collected: string[] = []
       index++
@@ -114,8 +108,7 @@ const parseFrontmatter = (content: string): AgentFrontmatter => {
   return { keys, present, raw: block }
 }
 
-const bodyAfterFrontmatter = (content: string): string =>
-  content.slice((content.match(/^---\r?\n[\s\S]*?\r?\n---\r?\n?/) ?? [''])[0].length)
+const bodyAfterFrontmatter = (content: string): string => content.slice((content.match(/^---\r?\n[\s\S]*?\r?\n---\r?\n?/) ?? [''])[0].length)
 
 const readAgent = (file: string): AgentDefinition => {
   const content = readFileSync(file, 'utf8')
@@ -256,9 +249,7 @@ export const createAgentsSession = ({ mode, repository, publication }: RubricCon
       { families: ['RUBRIC'], context: () => collectionContext, subject: root }
     ],
     proposal: () => ({
-      writes: [...requestedDrafts.entries()]
-        .sort(([left], [right]) => left.localeCompare(right))
-        .map(([path, content]): ConformWrite => ({ path, content }))
+      writes: [...requestedDrafts.entries()].sort(([left], [right]) => left.localeCompare(right)).map(([path, content]): ConformWrite => ({ path, content }))
     })
   }
 }

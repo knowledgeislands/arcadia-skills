@@ -71,10 +71,7 @@ test('the session keeps stable focused context and coalesces package drafts', ()
   const root = session.subjects[1]?.context()
   expect(session.subjects[1]?.context()).toBe(root)
 
-  const family = catalogue.families.find((candidate) => candidate.code === 'PKG') as RubricFamily<
-    EngineeringRubricContext,
-    PackageRubricContext
-  >
+  const family = catalogue.families.find((candidate) => candidate.code === 'PKG') as RubricFamily<EngineeringRubricContext, PackageRubricContext>
   const context = family.selectContext(root as EngineeringRubricContext)
   expect(family.items[0]?.mechanical?.audit.run(context)[0]?.status).toBe('VIOLATION')
   family.items[0]?.mechanical?.conform?.run(context)
@@ -95,10 +92,7 @@ test('formatter commands are bounded arrays and coalesced', () => {
     { level: 'FAIL', code: 'BIO-1', message: 'formatting drift' }
   ])
   const root = session.subjects[1]?.context() as EngineeringRubricContext
-  const family = catalogue.families.find((candidate) => candidate.code === 'BIO') as RubricFamily<
-    EngineeringRubricContext,
-    BiomeRubricContext
-  >
+  const family = catalogue.families.find((candidate) => candidate.code === 'BIO') as RubricFamily<EngineeringRubricContext, BiomeRubricContext>
   const context = family.selectContext(root)
   family.items[0]?.mechanical?.conform?.run(context)
   family.items[0]?.mechanical?.conform?.run(context)
@@ -132,10 +126,7 @@ test('knip export coverage is audited without offering a repair', () => {
     { level: 'FAIL', code: 'KNIP-3', message: 'export "./cli" is unreachable', subject: 'knip.json' }
   ])
   const root = session.subjects[1]?.context() as EngineeringRubricContext
-  const family = catalogue.families.find((candidate) => candidate.code === 'KNIP') as RubricFamily<
-    EngineeringRubricContext,
-    KnipRubricContext
-  >
+  const family = catalogue.families.find((candidate) => candidate.code === 'KNIP') as RubricFamily<EngineeringRubricContext, KnipRubricContext>
   const item = family.items.find((candidate) => candidate.code === 'KNIP-3')
 
   // Choosing which entry glob to add is a judgment call, so KNIP-3 never proposes a

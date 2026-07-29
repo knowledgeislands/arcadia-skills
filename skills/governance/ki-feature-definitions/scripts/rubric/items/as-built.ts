@@ -9,8 +9,7 @@ const AS_BUILT_1: RubricItem<FeatureJudgmentContext> = {
   description: 'Numbered requirements are true of the system today; aspirational behaviour belongs in `## Gaps`.',
   sources: [SOURCE],
   judgment: {
-    prompt:
-      'Assess whether each numbered requirement is true of the system today and move aspirational or not-yet-built behaviour to `## Gaps`.'
+    prompt: 'Assess whether each numbered requirement is true of the system today and move aspirational or not-yet-built behaviour to `## Gaps`.'
   }
 }
 

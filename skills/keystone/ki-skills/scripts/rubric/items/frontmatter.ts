@@ -4,8 +4,7 @@ import { type FrontmatterRubricContext, type KiSkillsRubricContext, selectKiSkil
 const FM_1: RubricItem<FrontmatterRubricContext> = {
   code: 'FM-1',
   title: 'SKILL.md begins with a valid YAML frontmatter mapping',
-  description:
-    '`SKILL.md` begins with a fenced YAML frontmatter block that parses to a mapping. Without it, dependent frontmatter checks do not run.',
+  description: '`SKILL.md` begins with a fenced YAML frontmatter block that parses to a mapping. Without it, dependent frontmatter checks do not run.',
   sources: ['SPEC', 'CC'],
   mechanical: {
     level: 'FAIL',

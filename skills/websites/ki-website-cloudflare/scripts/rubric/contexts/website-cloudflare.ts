@@ -88,8 +88,7 @@ const inspectWranglerConfig = (root: string, path: string): WranglerConfigEviden
     hasName: /"name"\s*:\s*"[^"]+"|^\s*name\s*=\s*"[^"]+"/m.test(source),
     hasCompatibilityDate: /"compatibility_date"\s*:\s*"\d{4}-\d{2}-\d{2}"|^\s*compatibility_date\s*=\s*"\d{4}-\d{2}-\d{2}"/m.test(source),
     observabilityEnabled:
-      /"observability"\s*:\s*\{[\s\S]*?"enabled"\s*:\s*true/.test(source) ||
-      /\[observability\][\s\S]*?^\s*enabled\s*=\s*true/m.test(source),
+      /"observability"\s*:\s*\{[\s\S]*?"enabled"\s*:\s*true/.test(source) || /\[observability\][\s\S]*?^\s*enabled\s*=\s*true/m.test(source),
     hasCustomDomain: /"custom_domain"\s*:\s*true|^\s*custom_domain\s*=\s*true/m.test(source)
   }
 }
@@ -171,26 +170,17 @@ const inspectText = (path: string): { readonly state: TextState; readonly text: 
   return text === null ? { state: 'unsafe', text: '' } : { state: 'present', text }
 }
 
-export const createWebsiteCloudflareSession = ({
-  repository,
-  publication
-}: RubricContextOptions): RubricSession<WebsiteCloudflareRubricContext> => {
+export const createWebsiteCloudflareSession = ({ repository, publication }: RubricContextOptions): RubricSession<WebsiteCloudflareRubricContext> => {
   const target = resolve(repository)
   const targetExists = nodeKind(target) === 'directory'
   const configs = targetExists ? collectWranglerConfigs(target) : []
-  const configuration = targetExists
-    ? inspectConfiguration(join(target, CONFIG_FILE))
-    : { state: 'missing' as const, keys: [], siteRoot: null }
+  const configuration = targetExists ? inspectConfiguration(join(target, CONFIG_FILE)) : { state: 'missing' as const, keys: [], siteRoot: null }
   const siteConfigs = configs.filter((config) => config.state === 'present' && config.hasAssets)
   const companionConfigs = configs.filter((config) => config.state === 'present' && !config.hasAssets && config.hasMain)
   const hosting: WebsiteCloudflareContext = {
     targetExists,
     applicable:
-      !targetExists ||
-      configs.length > 0 ||
-      configuration.state === 'present' ||
-      configuration.state === 'malformed' ||
-      configuration.state === 'unsafe',
+      !targetExists || configs.length > 0 || configuration.state === 'present' || configuration.state === 'malformed' || configuration.state === 'unsafe',
     configs,
     siteConfigs,
     companionConfigs,

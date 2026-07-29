@@ -154,9 +154,7 @@ const sample = (values: readonly string[]): string => values.slice(0, 10).join('
 const escapeRegularExpression = (value: string): string => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
 
 const bareToken = (value: string, vocabulary: readonly string[]): string | undefined =>
-  vocabulary.includes(value)
-    ? undefined
-    : vocabulary.find((token) => value.startsWith(token) && /[\s,;.()-]/.test(value.charAt(token.length)))
+  vocabulary.includes(value) ? undefined : vocabulary.find((token) => value.startsWith(token) && /[\s,;.()-]/.test(value.charAt(token.length)))
 
 const proposalDocument = (document: MarkdownDocument): boolean => {
   const values = document.frontmatter?.values
@@ -293,12 +291,9 @@ export const createStreamsSession = ({ mode, repository, publication }: RubricCo
       malformed.push(document.relativePath)
       continue
     }
-    for (const key of ['status', 'priority', 'dependencies'])
-      if (!(key in frontmatter.values)) missing.push(`${document.relativePath} (${key})`)
-    if (frontmatter.values.status && !STATUS.includes(frontmatter.values.status as (typeof STATUS)[number]))
-      badStatus.push(document.relativePath)
-    if (frontmatter.values.priority && !PRIORITY.includes(frontmatter.values.priority as (typeof PRIORITY)[number]))
-      badPriority.push(document.relativePath)
+    for (const key of ['status', 'priority', 'dependencies']) if (!(key in frontmatter.values)) missing.push(`${document.relativePath} (${key})`)
+    if (frontmatter.values.status && !STATUS.includes(frontmatter.values.status as (typeof STATUS)[number])) badStatus.push(document.relativePath)
+    if (frontmatter.values.priority && !PRIORITY.includes(frontmatter.values.priority as (typeof PRIORITY)[number])) badPriority.push(document.relativePath)
   }
   const proposalFrontmatter: StreamsEvidence[] = [
     {
@@ -344,9 +339,7 @@ export const createStreamsSession = ({ mode, repository, publication }: RubricCo
   const knownKeys: StreamsEvidence[] = [
     {
       level: unknownKeys.length ? 'WARN' : 'PASS',
-      message: unknownKeys.length
-        ? `Unrecognised ki-kb-streams key(s): ${unknownKeys.join(', ')}.`
-        : 'Only recognised ki-kb-streams keys are present.',
+      message: unknownKeys.length ? `Unrecognised ki-kb-streams key(s): ${unknownKeys.join(', ')}.` : 'Only recognised ki-kb-streams keys are present.',
       subject: '.ki-config.toml'
     }
   ]
@@ -354,8 +347,7 @@ export const createStreamsSession = ({ mode, repository, publication }: RubricCo
   const noteTypeScheme: StreamsEvidence[] = [
     {
       level: scheme && !['type', 'tags'].includes(scheme) ? 'WARN' : 'PASS',
-      message:
-        scheme && !['type', 'tags'].includes(scheme) ? `Invalid note_type_scheme: ${scheme}.` : 'Note type scheme is canonical or absent.',
+      message: scheme && !['type', 'tags'].includes(scheme) ? `Invalid note_type_scheme: ${scheme}.` : 'Note type scheme is canonical or absent.',
       subject: '.ki-config.toml'
     }
   ]

@@ -11,8 +11,7 @@ const BIN_1: RubricItem<BinContext> = {
     audit: {
       phase: 'INSPECT',
       run: ({ repositoryState, entries }) => {
-        if (repositoryState !== 'physical')
-          return [{ status: 'NOT_APPLICABLE', message: 'The target repository is not safely inspectable.' }]
+        if (repositoryState !== 'physical') return [{ status: 'NOT_APPLICABLE', message: 'The target repository is not safely inspectable.' }]
         if (entries === null) return [{ status: 'NOT_APPLICABLE', message: 'No bin/ directory exists in the source tree.' }]
         if (!entries.length) return [{ status: 'NOT_APPLICABLE', message: 'The bin/ directory contains no direct files.' }]
         const outcomes: AuditOutcome[] = entries.map((entry) => {

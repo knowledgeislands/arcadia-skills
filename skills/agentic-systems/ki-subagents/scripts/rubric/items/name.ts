@@ -5,10 +5,7 @@ const STANDARD = 'standards-subagent-definitions.md'
 const NAME_MAX = 64
 const RESERVED_NAMES = ['anthropic', 'claude'] as const
 
-const inspect = (
-  context: AgentFileContext,
-  run: (agent: NonNullable<AgentFileContext['agent']>) => readonly AuditOutcome[]
-): readonly AuditOutcome[] =>
+const inspect = (context: AgentFileContext, run: (agent: NonNullable<AgentFileContext['agent']>) => readonly AuditOutcome[]): readonly AuditOutcome[] =>
   context.agent ? run(context.agent) : [{ status: 'NOT_APPLICABLE', message: 'No physical agent definition is available.' }]
 
 const NAME_1: RubricItem<AgentFileContext> = {
@@ -55,9 +52,7 @@ const NAME_2: RubricItem<AgentFileContext> = {
               message: `name "${agent.name}" must use lowercase letters, digits, and hyphens only.`,
               subject: agent.file
             })
-          return violations.length
-            ? violations
-            : [{ status: 'PASS', message: 'name characters and length are valid.', subject: agent.file }]
+          return violations.length ? violations : [{ status: 'PASS', message: 'name characters and length are valid.', subject: agent.file }]
         })
     }
   }
@@ -99,14 +94,11 @@ const NAME_4: RubricItem<AgentFileContext> = {
         inspect(context, (agent) => {
           if (!agent.name) return [{ status: 'NOT_APPLICABLE', message: 'name is absent.', subject: agent.file }]
           const violations: AuditOutcome[] = []
-          if (/<\/?[a-zA-Z][^>]*>/.test(agent.name))
-            violations.push({ status: 'VIOLATION', message: 'name contains an XML tag.', subject: agent.file })
+          if (/<\/?[a-zA-Z][^>]*>/.test(agent.name)) violations.push({ status: 'VIOLATION', message: 'name contains an XML tag.', subject: agent.file })
           for (const reserved of RESERVED_NAMES)
             if (agent.name.includes(reserved))
               violations.push({ status: 'VIOLATION', message: `name contains the reserved word "${reserved}".`, subject: agent.file })
-          return violations.length
-            ? violations
-            : [{ status: 'PASS', message: 'name contains no XML tags or reserved words.', subject: agent.file }]
+          return violations.length ? violations : [{ status: 'PASS', message: 'name contains no XML tags or reserved words.', subject: agent.file }]
         })
     }
   }

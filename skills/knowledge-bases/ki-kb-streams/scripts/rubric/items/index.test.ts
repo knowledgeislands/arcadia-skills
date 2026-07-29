@@ -6,9 +6,7 @@ describe('ki-kb-streams rubric catalogue', () => {
     expect(definition.contract).toBe(1)
     expect(definition.name).toBe('ki-kb-streams')
     expect(definition.families.map((family) => family.code)).toEqual(['RUBRIC', 'STREAM', 'ENACT', 'GATE', 'CONFIG'])
-    const codes = definition.families
-      .filter((family) => family.code !== 'RUBRIC')
-      .flatMap((family) => family.items.map((item) => item.code))
+    const codes = definition.families.filter((family) => family.code !== 'RUBRIC').flatMap((family) => family.items.map((item) => item.code))
     expect(new Set(codes).size).toBe(codes.length)
   })
 

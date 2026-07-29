@@ -42,13 +42,7 @@ export const TEST: RubricFamily<EngineeringRubricContext, TestRubricContext> = {
       'FAIL',
       (context) => context.test2
     ),
-    mechanical(
-      'TEST-3',
-      'Vitest test-source exclusion',
-      'Under the Vitest profile, coverage excludes `src/**/*.test.ts`.',
-      'WARN',
-      (context) => context.test3
-    ),
+    mechanical('TEST-3', 'Vitest test-source exclusion', 'Under the Vitest profile, coverage excludes `src/**/*.test.ts`.', 'WARN', (context) => context.test3),
     mechanical(
       'TEST-4',
       'Vitest monorepo scoping',

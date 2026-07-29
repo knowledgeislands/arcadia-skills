@@ -15,8 +15,7 @@ const CFG_1: RubricItem<McpConfigurationContext> = {
       phase: 'INSPECT',
       run: (context) => {
         const checks: AuditOutcome[] = []
-        if (!context.source)
-          checks.push({ status: 'VIOLATION', message: 'src/config/index.ts is missing or unsafe.', subject: 'src/config/index.ts' })
+        if (!context.source) checks.push({ status: 'VIOLATION', message: 'src/config/index.ts is missing or unsafe.', subject: 'src/config/index.ts' })
         else {
           checks.push({
             status: /export\s+(async\s+)?function\s+loadConfig|export\s+const\s+loadConfig/.test(context.source) ? 'PASS' : 'VIOLATION',

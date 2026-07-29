@@ -39,11 +39,7 @@ const CI_2: RubricItem<McpCiContext> = {
       run: (context) =>
         !context.scripts['ki:test:smoke']
           ? outcome('NOT_APPLICABLE', 'No MCP smoke script is defined.')
-          : outcome(
-              'INFO',
-              'Run `bun run ki:test:smoke` explicitly; hosted rubric execution does not launch repository scripts.',
-              'package.json'
-            )
+          : outcome('INFO', 'Run `bun run ki:test:smoke` explicitly; hosted rubric execution does not launch repository scripts.', 'package.json')
     }
   }
 }

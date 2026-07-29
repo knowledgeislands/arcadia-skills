@@ -71,10 +71,8 @@ export const createWebsiteSession = ({ mode, repository, publication }: RubricCo
   const root = resolve(repository)
   const available = physicalDirectory(root)
   const at = (...parts: string[]) => join(root, ...parts)
-  const has = (...parts: string[]) =>
-    available && (containedPhysical(root, at(...parts), 'file') || containedPhysical(root, at(...parts), 'directory'))
-  const read = (...parts: string[]) =>
-    available && containedPhysical(root, at(...parts), 'file') ? readFileSync(at(...parts), 'utf8') : ''
+  const has = (...parts: string[]) => available && (containedPhysical(root, at(...parts), 'file') || containedPhysical(root, at(...parts), 'directory'))
+  const read = (...parts: string[]) => (available && containedPhysical(root, at(...parts), 'file') ? readFileSync(at(...parts), 'utf8') : '')
   const isDir = (...parts: string[]) => available && containedPhysical(root, at(...parts), 'directory')
 
   const flatCfg = CONFIG_NAMES.find((name) => containedPhysical(root, at(name), 'file'))
@@ -184,9 +182,7 @@ export const createWebsiteSession = ({ mode, repository, publication }: RubricCo
     ],
     proposal: () => ({
       writes: [...drafts.values()].flatMap((draft): ConformWrite[] =>
-        draft.content === (draft.original ?? '')
-          ? []
-          : [{ path: draft.path, content: draft.content, ...(draft.original === null ? { create: true } : {}) }]
+        draft.content === (draft.original ?? '') ? [] : [{ path: draft.path, content: draft.content, ...(draft.original === null ? { create: true } : {}) }]
       )
     })
   }

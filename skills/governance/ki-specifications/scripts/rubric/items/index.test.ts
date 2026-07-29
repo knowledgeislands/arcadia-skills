@@ -6,9 +6,7 @@ import type { RubricItem } from '../../shared/rubric.ts'
 import catalogue from './index.ts'
 
 const temporaryDirectories: string[] = []
-const items = catalogue.families
-  .filter((family) => family.code !== 'RUBRIC')
-  .flatMap((family) => family.items as readonly RubricItem<unknown>[])
+const items = catalogue.families.filter((family) => family.code !== 'RUBRIC').flatMap((family) => family.items as readonly RubricItem<unknown>[])
 const familyModules = readdirSync(import.meta.dir)
   .filter((file) => file.endsWith('.ts') && file !== 'index.ts' && !file.endsWith('.test.ts'))
   .sort()

@@ -4,8 +4,7 @@ import type { ChezmoiRubricContext, ReviewContext } from '../contexts/chezmoi.ts
 const CONFIG_J1: RubricItem<ReviewContext> = {
   code: 'CONFIG-J1',
   title: 'Format-preserving editor selection',
-  description:
-    'Every Pattern A or Pattern C writer uses an appropriate format-preserving edit API with safe absent-file and invalid-input behaviour.',
+  description: 'Every Pattern A or Pattern C writer uses an appropriate format-preserving edit API with safe absent-file and invalid-input behaviour.',
   sources: ['standards-chezmoi-dotfiles.md'],
   judgment: {
     prompt:

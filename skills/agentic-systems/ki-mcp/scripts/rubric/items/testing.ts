@@ -9,8 +9,7 @@ const outcome = (status: AuditOutcome['status'], message: string, subject?: stri
 const TEST_1: RubricItem<McpTestingContext> = {
   code: 'TEST-1',
   title: 'MCP coverage exclusions',
-  description:
-    'When a Vitest config exists, coverage excludes mcp-server/index.ts, tools wiring, utils/annotations.ts, and src/generated/.',
+  description: 'When a Vitest config exists, coverage excludes mcp-server/index.ts, tools wiring, utils/annotations.ts, and src/generated/.',
   sources: [STANDARD],
   mechanical: {
     level: 'WARN',

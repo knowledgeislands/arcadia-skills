@@ -20,10 +20,7 @@ const DOC_1: RubricItem<McpDocumentationContext> = {
         for (const file of ['CONTRIBUTING.md', 'SECURITY.md'] as const)
           documents.push({
             status: context.documents[file] !== null ? 'PASS' : 'VIOLATION',
-            message:
-              context.documents[file] !== null
-                ? 'Required MCP root document is present.'
-                : 'Required MCP root document is missing or unsafe.',
+            message: context.documents[file] !== null ? 'Required MCP root document is present.' : 'Required MCP root document is missing or unsafe.',
             subject: file
           })
         const changelog = context.documents['CHANGELOG.md']

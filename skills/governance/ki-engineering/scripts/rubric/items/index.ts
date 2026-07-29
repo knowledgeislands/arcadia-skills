@@ -22,22 +22,5 @@ export default {
   name: 'ki-engineering',
   concern: 'Knowledge Islands engineering standards',
   createSession: createEngineeringSession,
-  families: [
-    RUBRIC,
-    PACKAGE,
-    MISE,
-    CI,
-    SCRIPTS,
-    BUN,
-    TYPESCRIPT,
-    BIOME,
-    KNIP,
-    SYNC,
-    DEPENDENCIES,
-    GENERATED,
-    TEST,
-    BUILD,
-    ENVIRONMENT,
-    TOML
-  ]
+  families: [RUBRIC, PACKAGE, MISE, CI, SCRIPTS, BUN, TYPESCRIPT, BIOME, KNIP, SYNC, DEPENDENCIES, GENERATED, TEST, BUILD, ENVIRONMENT, TOML]
 } satisfies SkillRubricDefinition<EngineeringRubricContext>

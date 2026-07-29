@@ -1,10 +1,5 @@
 import type { RubricFamily, RubricItem, ViolationLevel } from '../../shared/rubric.ts'
-import {
-  auditEvidence,
-  type EngineeringEvidence,
-  type EngineeringRubricContext,
-  type ScriptsRubricContext
-} from '../contexts/engineering.ts'
+import { auditEvidence, type EngineeringEvidence, type EngineeringRubricContext, type ScriptsRubricContext } from '../contexts/engineering.ts'
 
 const mechanical = (
   code: string,

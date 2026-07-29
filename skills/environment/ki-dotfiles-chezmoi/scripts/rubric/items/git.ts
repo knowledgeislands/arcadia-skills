@@ -11,8 +11,7 @@ const GIT_1: RubricItem<GitContext> = {
     audit: {
       phase: 'INSPECT',
       run: ({ repositoryState, locks }) => {
-        if (repositoryState !== 'physical')
-          return [{ status: 'NOT_APPLICABLE', message: 'The target repository is not safely inspectable.' }]
+        if (repositoryState !== 'physical') return [{ status: 'NOT_APPLICABLE', message: 'The target repository is not safely inspectable.' }]
         if (locks === null) return [{ status: 'NOT_APPLICABLE', message: 'No physical .git directory exists.' }]
         return locks.length
           ? locks.map((lock) => ({

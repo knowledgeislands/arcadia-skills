@@ -124,11 +124,9 @@ const FM_6: RubricItem<RecordsRubricContext> = {
               return [{ status: 'VIOLATION', message: '`id` must exactly match the H1 identifier.', subject: record.file }]
             const expectedTitle = record.headingTitle ?? ''
             if (!record.title) return [{ status: 'VIOLATION', message: '`title` is absent.', subject: record.file }]
-            if (record.title !== expectedTitle)
-              return [{ status: 'VIOLATION', message: '`title` must exactly match the H1 title.', subject: record.file }]
+            if (record.title !== expectedTitle) return [{ status: 'VIOLATION', message: '`title` must exactly match the H1 title.', subject: record.file }]
             if (!record.date) return [{ status: 'VIOLATION', message: '`date` is absent.', subject: record.file }]
-            if (!/^\d{4}-\d{2}-\d{2}$/.test(record.date))
-              return [{ status: 'VIOLATION', message: '`date` must use YYYY-MM-DD.', subject: record.file }]
+            if (!/^\d{4}-\d{2}-\d{2}$/.test(record.date)) return [{ status: 'VIOLATION', message: '`date` must use YYYY-MM-DD.', subject: record.file }]
             if (!record.status) return [{ status: 'VIOLATION', message: '`status` is absent.', subject: record.file }]
             if (record.typeUrl !== record.expectedTypeUrl)
               return [

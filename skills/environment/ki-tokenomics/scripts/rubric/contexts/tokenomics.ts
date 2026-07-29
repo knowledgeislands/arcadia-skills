@@ -26,13 +26,9 @@ export const createTokenomicsSession = ({ configuration, publication }: RubricCo
   )
   const invalid: string[] = []
   if (table?.headroom !== undefined && !['required', 'recommended', 'off'].includes(String(table.headroom))) invalid.push('headroom')
-  if (
-    table?.context_window_tokens !== undefined &&
-    (!Number.isInteger(table.context_window_tokens) || Number(table.context_window_tokens) <= 0)
-  )
+  if (table?.context_window_tokens !== undefined && (!Number.isInteger(table.context_window_tokens) || Number(table.context_window_tokens) <= 0))
     invalid.push('context_window_tokens')
-  if (table?.preferred_model_type !== undefined && !MODEL_TYPES.has(String(table.preferred_model_type)))
-    invalid.push('preferred_model_type')
+  if (table?.preferred_model_type !== undefined && !MODEL_TYPES.has(String(table.preferred_model_type))) invalid.push('preferred_model_type')
   for (const [key, value] of Object.entries(object(table?.budgets) ?? {}))
     if (!BUDGETS.has(key) || typeof value !== 'number' || value <= 0) invalid.push(`budgets.${key}`)
   for (const [key, value] of Object.entries(object(table?.model_tier_bindings) ?? {}))
@@ -41,9 +37,7 @@ export const createTokenomicsSession = ({ configuration, publication }: RubricCo
     rubric: { publication },
     config: {
       validates: invalid.length
-        ? one(
-            outcome('VIOLATION', `Malformed ["knowledgeislands/ki-agentic-harness:ki-tokenomics"] value(s): ${invalid.join(', ')}`, 'FAIL')
-          )
+        ? one(outcome('VIOLATION', `Malformed ["knowledgeislands/ki-agentic-harness:ki-tokenomics"] value(s): ${invalid.join(', ')}`, 'FAIL'))
         : unknown.length
           ? one(outcome('VIOLATION', `Unknown ["knowledgeislands/ki-agentic-harness:ki-tokenomics"] key(s): ${unknown.join(', ')}`, 'WARN'))
           : one(outcome('PASS', 'Selected repository ["knowledgeislands/ki-agentic-harness:ki-tokenomics"] configuration validates down.')),

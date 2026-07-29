@@ -50,10 +50,7 @@ const nodeKind = (path: string): NodeKind => {
   }
 }
 
-const inspectConfig = (
-  path: string,
-  kind: NodeKind
-): { readonly state: ConfigState; readonly keys: readonly string[]; readonly content: string | null } => {
+const inspectConfig = (path: string, kind: NodeKind): { readonly state: ConfigState; readonly keys: readonly string[]; readonly content: string | null } => {
   if (kind === 'missing') return { state: 'missing', keys: [], content: null }
   if (kind !== 'file') return { state: 'unsafe', keys: [], content: null }
   const content = readFileSync(path, 'utf8')
@@ -68,11 +65,7 @@ const inspectConfig = (
   }
 }
 
-export const createHomebrewTapSession = ({
-  mode,
-  repository,
-  publication
-}: RubricContextOptions): RubricSession<HomebrewTapRubricContext> => {
+export const createHomebrewTapSession = ({ mode, repository, publication }: RubricContextOptions): RubricSession<HomebrewTapRubricContext> => {
   const target = resolve(repository)
   const targetExists = nodeKind(target) === 'directory'
   const formulaPath = join(target, FORMULA_DIRECTORY)
@@ -91,14 +84,9 @@ export const createHomebrewTapSession = ({
           }))
       : []
   const configPath = join(target, CONFIG_FILE)
-  const configEvidence = targetExists
-    ? inspectConfig(configPath, nodeKind(configPath))
-    : { state: 'missing' as const, keys: [], content: null }
+  const configEvidence = targetExists ? inspectConfig(configPath, nodeKind(configPath)) : { state: 'missing' as const, keys: [], content: null }
   const applicable =
-    configEvidence.state === 'present' ||
-    configEvidence.state === 'malformed' ||
-    configEvidence.state === 'unsafe' ||
-    formulaDirectory !== 'missing'
+    configEvidence.state === 'present' || configEvidence.state === 'malformed' || configEvidence.state === 'unsafe' || formulaDirectory !== 'missing'
   const readmePath = join(target, 'README.md')
   const readme = targetExists && nodeKind(readmePath) === 'file' ? readFileSync(readmePath, 'utf8') : null
   const originalConfig = configEvidence.content
@@ -136,9 +124,7 @@ export const createHomebrewTapSession = ({
     ],
     proposal: () => {
       const writes: ConformWrite[] =
-        configDraft !== null && originalConfig !== null && configDraft !== originalConfig
-          ? [{ path: CONFIG_FILE, content: configDraft }]
-          : []
+        configDraft !== null && originalConfig !== null && configDraft !== originalConfig ? [{ path: CONFIG_FILE, content: configDraft }] : []
       return { writes }
     }
   }

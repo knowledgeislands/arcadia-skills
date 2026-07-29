@@ -95,9 +95,7 @@ const isKb = (repository: string): boolean => {
   try {
     const parsed = TOML.parse(readFileSync(config, 'utf8')) as Record<string, unknown>
     const table = parsed['knowledgeislands/ki-agentic-harness:ki-repo']
-    return (
-      parsed.repo_type === 'kb' || (typeof table === 'object' && table !== null && (table as Record<string, unknown>).repo_type === 'kb')
-    )
+    return parsed.repo_type === 'kb' || (typeof table === 'object' && table !== null && (table as Record<string, unknown>).repo_type === 'kb')
   } catch {
     return false
   }
@@ -164,8 +162,7 @@ const validateBody = (item: WorkItem): void => {
   const present = headings(item.body)
   const required = requiredSections(item)
   const sequence = present.filter((heading) => required.includes(heading))
-  if (JSON.stringify(sequence) !== JSON.stringify(required))
-    add('FAIL', 'ITEM-3', `body must contain ${required.join(' → ')} in order`, FORMAT, item.file)
+  if (JSON.stringify(sequence) !== JSON.stringify(required)) add('FAIL', 'ITEM-3', `body must contain ${required.join(' → ')} in order`, FORMAT, item.file)
   if (present.at(-1) !== 'Discussion') add('FAIL', 'ITEM-3', '## Discussion must be the final top-level section', FORMAT, item.file)
 }
 
@@ -198,8 +195,7 @@ const parseItem = (repository: string, name: string, configuration?: RoadmapConf
     if (!(key in parsed.values)) add('FAIL', 'ITEM-1', `frontmatter is missing '${key}'`, FORMAT, display)
   }
   const unexpected = Object.keys(parsed.values).filter(
-    (key) =>
-      !['id', 'title', 'theme', 'horizon', 'status', 'candidate', 'blocks', 'blocked-by', 'baseline-ref', 'transferred-from'].includes(key)
+    (key) => !['id', 'title', 'theme', 'horizon', 'status', 'candidate', 'blocks', 'blocked-by', 'baseline-ref', 'transferred-from'].includes(key)
   )
   if (unexpected.length) add('FAIL', 'ITEM-1', `frontmatter has unexpected field(s): ${unexpected.join(', ')}`, FORMAT, display)
   if (!id || id !== file[1] || !ID_RE.test(id)) add('FAIL', 'ITEM-1', 'frontmatter id must match the filename identifier', FORMAT, display)
@@ -218,8 +214,7 @@ const parseItem = (repository: string, name: string, configuration?: RoadmapConf
     add('FAIL', 'ITEM-2', 'baseline-ref must be null or a full lowercase commit ID', FORMAT, display)
   if (horizon === 'future' ? !candidate : 'candidate' in parsed.values)
     add('FAIL', 'ITEM-2', 'candidate: true is required only for Future items', FORMAT, display)
-  if (status && status !== 'open' && horizon && !IMMEDIATE.has(horizon))
-    add('FAIL', 'ITEM-2', 'non-open item must be in blocking or next', FORMAT, display)
+  if (status && status !== 'open' && horizon && !IMMEDIATE.has(horizon)) add('FAIL', 'ITEM-2', 'non-open item must be in blocking or next', FORMAT, display)
   if (status === 'open' && baselineRef !== null) add('FAIL', 'ITEM-2', 'open item baseline-ref must be null', FORMAT, display)
   if (status && ['in-progress', 'acceptance', 'done'].includes(status) && (typeof baselineRef !== 'string' || !COMMIT_RE.test(baselineRef)))
     add('FAIL', 'ITEM-2', 'executing or completed item needs an immutable baseline-ref', FORMAT, display)
@@ -254,10 +249,8 @@ export const workItemsFor = (repository: string, configuration?: RoadmapConfigur
 const validateDependencies = (items: readonly WorkItem[]): void => {
   const byId = new Map(items.map((item) => [item.id, item]))
   for (const item of items) {
-    for (const id of [...item.blocks, ...item.blockedBy])
-      if (!byId.has(id)) add('FAIL', 'ITEM-4', `dependency '${id}' does not exist`, FORMAT, item.file)
-    for (const id of item.blocks)
-      if (!byId.get(id)?.blockedBy.includes(item.id)) add('FAIL', 'ITEM-4', `blocks '${id}' is not reciprocal`, FORMAT, item.file)
+    for (const id of [...item.blocks, ...item.blockedBy]) if (!byId.has(id)) add('FAIL', 'ITEM-4', `dependency '${id}' does not exist`, FORMAT, item.file)
+    for (const id of item.blocks) if (!byId.get(id)?.blockedBy.includes(item.id)) add('FAIL', 'ITEM-4', `blocks '${id}' is not reciprocal`, FORMAT, item.file)
     for (const id of item.blockedBy)
       if (!byId.get(id)?.blocks.includes(item.id)) add('FAIL', 'ITEM-4', `blocked-by '${id}' is not reciprocal`, FORMAT, item.file)
     if (['ready', 'in-progress', 'acceptance'].includes(item.status) && item.blockedBy.some((id) => byId.get(id)?.status !== 'done'))

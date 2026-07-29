@@ -29,8 +29,7 @@ const SPEC_1: RubricItem<SpecificationsContext> = {
               message: 'ki-specifications is not applicable: no declaration or core structural marker is present.'
             }
           ]
-        if (context.malformed)
-          return [{ status: 'VIOLATION', message: '.ki-config.toml is malformed or unsafe.', subject: '.ki-config.toml' }]
+        if (context.malformed) return [{ status: 'VIOLATION', message: '.ki-config.toml is malformed or unsafe.', subject: '.ki-config.toml' }]
         if (!context.table)
           return [
             {
@@ -68,13 +67,10 @@ const SPEC_2: RubricItem<SpecificationsContext> = {
     audit: {
       phase: 'INSPECT',
       run: (context): readonly AuditOutcome[] => {
-        if (!context.targetExists)
-          return [{ status: 'VIOLATION', message: `Audit target must be an existing physical directory: ${context.target}.` }]
+        if (!context.targetExists) return [{ status: 'VIOLATION', message: `Audit target must be an existing physical directory: ${context.target}.` }]
         if (!context.applicable) return [{ status: 'NOT_APPLICABLE', message: 'ki-specifications is not applicable.' }]
         return context.core.map(({ path, exists }) =>
-          exists
-            ? { status: 'PASS', message: `${path}/ is present.`, subject: path }
-            : { status: 'VIOLATION', message: `${path}/ is absent.`, subject: path }
+          exists ? { status: 'PASS', message: `${path}/ is present.`, subject: path } : { status: 'VIOLATION', message: `${path}/ is absent.`, subject: path }
         )
       }
     }
@@ -93,9 +89,7 @@ const SPEC_3: RubricItem<SpecificationsContext> = {
       run: (context): readonly AuditOutcome[] => {
         if (!context.applicable) return [{ status: 'NOT_APPLICABLE', message: 'ki-specifications is not applicable.' }]
         return context.supporting.map(({ path, exists }) =>
-          exists
-            ? { status: 'PASS', message: `${path}/ is present.`, subject: path }
-            : { status: 'VIOLATION', message: `${path}/ is absent.`, subject: path }
+          exists ? { status: 'PASS', message: `${path}/ is present.`, subject: path } : { status: 'VIOLATION', message: `${path}/ is absent.`, subject: path }
         )
       }
     }

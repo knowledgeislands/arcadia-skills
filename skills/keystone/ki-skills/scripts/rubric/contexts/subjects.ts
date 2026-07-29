@@ -9,17 +9,7 @@ import { createSkillRubricContext, frontmatterList } from './skill.ts'
 import { discoverSkillDirs, listMarkdownFiles } from './skill-files.ts'
 import { stripCode } from './text.ts'
 
-type KiSkillsSubjectScope =
-  | 'target'
-  | 'invalidSkill'
-  | 'skill'
-  | 'rubric'
-  | 'markdown'
-  | 'reference'
-  | 'portability'
-  | 'longevity'
-  | 'collision'
-  | 'ownership'
+type KiSkillsSubjectScope = 'target' | 'invalidSkill' | 'skill' | 'rubric' | 'markdown' | 'reference' | 'portability' | 'longevity' | 'collision' | 'ownership'
 
 type KiSkillsSubject = RubricSubject<KiSkillsRubricContext> & {
   scope: KiSkillsSubjectScope
@@ -46,15 +36,7 @@ const rubricSubject = (scope: KiSkillsSubjectScope, context: KiSkillsRubricConte
   ...(subject ? { subject } : {})
 })
 
-const markdownSubject = ({
-  file,
-  reportTarget,
-  document
-}: {
-  file: string
-  reportTarget: string
-  document?: ConformDocumentState
-}): KiSkillsSubject => {
+const markdownSubject = ({ file, reportTarget, document }: { file: string; reportTarget: string; document?: ConformDocumentState }): KiSkillsSubject => {
   const isSkill = basename(file) === 'SKILL.md'
   const subject = relative(reportTarget, file)
   const scope = isSkill ? 'markdown' : 'reference'
@@ -130,11 +112,7 @@ export const createKiSkillsSession = ({ mode, repository, publication }: RubricC
 
     for (const file of listMarkdownFiles(skillDirectory)) {
       const document =
-        mode === 'conform'
-          ? file === join(skillDirectory, 'SKILL.md')
-            ? conform?.document
-            : createConformDocumentState(file, reportTarget)
-          : undefined
+        mode === 'conform' ? (file === join(skillDirectory, 'SKILL.md') ? conform?.document : createConformDocumentState(file, reportTarget)) : undefined
       if (document && document !== conform?.document) documents.push(document)
       subjects.push(markdownSubject({ file, reportTarget, document }))
       const subject = relative(reportTarget, file)

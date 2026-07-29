@@ -11,38 +11,38 @@ baseline-ref: 02df2024e850dc64ce5c757bfc54ee870ecaaadd
 
 ## Context
 
-Every KI repository uses Prettier `printWidth: 160` and Biome `lineWidth: 140`, split by file scope rather than a single chosen value.
+Every Knowledge Islands repository that carries formatter configuration should use 160 columns for both Prettier and Biome.
 
 ## Boundary
 
-Decide whether to converge or record why the split is intentional; update shared scaffolds and existing repositories together rather than leaving mismatch undocumented.
+Converge the shared standard and every repository configuration on 160 columns; do not leave a formatter mismatch undocumented.
 
 ## Current state
 
-The current 10 governed TypeScript/Bun repositories each use Prettier `printWidth: 160` and Biome `lineWidth: 140`.
+At the start of this work, the 10 governed TypeScript/Bun repositories used Prettier `printWidth: 160` and Biome `lineWidth: 140`; this change converges both values at 160.
 
-`ki-authoring` owns the Prettier Markdown surface, whose `proseWrap: "never"` preserves one paragraph per line, while `ki-engineering` owns Biome's code formatter at 140 columns.
+`ki-authoring` owns the Prettier Markdown surface, whose `proseWrap: "never"` preserves one paragraph per line, while `ki-engineering` owns Biome's code formatter.
 
-The shared engineering standard already records both values and their separate file scopes.
+The shared engineering standard and checker currently record Biome at 140, so they must move with the fleet configurations.
 
 ## Steps
 
 1. [x] Re-check every governed TypeScript/Bun repository's Prettier and Biome configuration against the recorded values.
 2. [x] Confirm the separate Markdown and code-formatter ownership boundaries are still accurate in `ki-authoring` and `ki-engineering`.
-3. [x] Change a shared scaffold and every affected governed repository only if the inventory identifies actual drift; otherwise retain the intentional split without a no-op configuration rewrite.
-4. [x] Record the evidence and present the conclusion for acceptance.
+3. [x] Update the shared Biome template, checker, and every repository carrying Biome configuration to `lineWidth: 160`.
+4. [x] Record the convergence evidence and present the revised conclusion for acceptance.
 
 ## Files touched
 
 - this work-item record
 - `skills/governance/ki-authoring/` only if Markdown formatter ownership or configuration is inaccurate
 - `skills/governance/ki-engineering/` only if the code formatter standard is inaccurate
-- affected repository formatter configuration only if the inventory finds drift
+- every Knowledge Islands repository carrying formatter configuration
 
 ## Verify
 
-- Every governed TypeScript/Bun repository has Prettier `printWidth: 160` and Biome `lineWidth: 140`, or every evidenced exception is explicitly routed.
-- The shared standards explain the different values by formatter and file scope rather than treating them as a mismatch.
+- Every Knowledge Islands repository carrying Prettier and/or Biome configuration has the applicable width set to 160.
+- The shared engineering checker and template enforce the same 160-column budget.
 - `ki repo audit --skill ki-authoring --repo .`
 - `ki repo audit --skill ki-engineering --repo .`
 - `ki repo audit --skill ki-roadmap --repo .`
@@ -61,37 +61,34 @@ The orchestrator reviews the inventory against the two owning standards and deci
 
 ### Delivered
 
-Re-checked the complete governed TypeScript/Bun fleet and confirmed the intended scoped formatter split.
+Converged every formatter configuration under `knowledgeislands/` on 160 columns and reformatted every repository carrying `biome.json`.
 
 ### Summary of changes
 
-All 10 governed repositories have Prettier `printWidth: 160` and Biome `lineWidth: 140`.
-
-No configuration or shared-standard change was needed: Prettier formats Markdown with `proseWrap: "never"`, while Biome formats code, and the standards already explain the separate scopes.
+- Every `.prettierrc.json` under `knowledgeislands/` has `printWidth: 160`.
+- Every `biome.json` under `knowledgeislands/` has `formatter.lineWidth: 160`.
+- The canonical `ki-engineering` template, audit evidence, standard, and exemplar now require 160.
+- The vendored `ki-engineering` copy in `ki-plugins` now requires 160 too.
+- The ten Biome repositories were mechanically reformatted so the new read-only gate is clean.
 
 ### Verification
 
-- Enumerated every repository declaring `ki-engineering`; all 10 reported `prettier=160` and `biome=140`.
-- `ki repo audit --skill ki-engineering --repo .`
-- `ki repo audit --skill ki-authoring --repo .`
-- `ki repo audit --skill ki-roadmap --repo .`
+- Enumerated all 14 Git repositories under `knowledgeislands/`: every present Prettier or Biome width is 160.
+- `bunx biome format .` passed in all ten repositories carrying `biome.json` after the change.
+- `bun run test` passed in `ki-agentic-harness` (218 pass, 0 fail).
+- `bunx tsc --noEmit` passed in `ki-agentic-harness`.
+- `ki repo audit --skill ki-engineering --repo .` passed in `ki-agentic-harness`.
 
 ### Outstanding concerns
 
-None within this boundary.
+The focused engineering audit of `ki-arcadia-principal` still reports its pre-existing `GEN-1` generated-discovery exclusion mismatch. It is unrelated to formatter width and remains outside this work item.
 
 ### Mini recap
 
-The apparent width mismatch is an intentional formatter and file-scope distinction, not fleet drift.
+The earlier 160/140 formatter split has been replaced with one 160-column standard across the organisation.
 
 ## Discussion
 
 ### Convergence decision
 
-The shaping pass must compare formatter ownership and actual file scopes before deciding whether one width is clearer than an explicitly documented split.
-
-### Inventory evidence
-
-The current inventory already shows the intended values across all 10 governed TypeScript/Bun repositories.
-
-The expected result is an evidence-only closure unless a fresh check finds drift.
+The owner selected one 160-column budget for code and Markdown. The formatter ownership split remains: `ki-authoring` owns Prettier's Markdown configuration and `ki-engineering` owns Biome's code configuration.

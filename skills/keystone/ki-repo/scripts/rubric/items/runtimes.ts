@@ -17,8 +17,7 @@ const RUNTIMES_1: RubricItem<RuntimesRubricContext> = {
 const RUNTIMES_2: RubricItem<RuntimesRubricContext> = {
   code: 'RUNTIMES-2',
   title: 'Runtime environment coverage',
-  description:
-    'Every repository declares portable tokenomics and the real housekeeping and tokenomics capabilities required by its supported runtimes.',
+  description: 'Every repository declares portable tokenomics and the real housekeeping and tokenomics capabilities required by its supported runtimes.',
   sources: [SOURCE],
   mechanical: {
     level: 'FAIL',
@@ -29,8 +28,7 @@ const RUNTIMES_2: RubricItem<RuntimesRubricContext> = {
 const RUNTIMES_J1: RubricItem<RuntimesRubricContext> = {
   code: 'RUNTIMES-J1',
   title: 'Runtime orientation split',
-  description:
-    'Multi-runtime repositories use a shared AGENTS.md orientation with a thin Claude import unless a justified exception applies.',
+  description: 'Multi-runtime repositories use a shared AGENTS.md orientation with a thin Claude import unless a justified exception applies.',
   sources: [SOURCE],
   judgment: {
     prompt: 'Review whether orientation is shared cleanly across the declared runtimes without duplicated or Claude-only instructions.'

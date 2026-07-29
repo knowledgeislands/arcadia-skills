@@ -34,11 +34,7 @@ export type SpecificationsContext = {
   readonly addMarker?: () => void
 }
 
-export const createSpecificationsSession = ({
-  mode,
-  repository,
-  publication
-}: RubricContextOptions): RubricSession<SpecificationsContext> => {
+export const createSpecificationsSession = ({ mode, repository, publication }: RubricContextOptions): RubricSession<SpecificationsContext> => {
   const target = resolve(repository)
   const targetExists = isPhysicalDirectory(target)
   const configPath = join(target, '.ki-config.toml')
@@ -89,10 +85,7 @@ export const createSpecificationsSession = ({
       { families: ['SPEC', 'SYNC'], subject: target, context: () => context }
     ],
     proposal: () => ({
-      writes:
-        draft === undefined || draft === configSource
-          ? []
-          : ([{ path: '.ki-config.toml', content: draft }] satisfies readonly ConformWrite[])
+      writes: draft === undefined || draft === configSource ? [] : ([{ path: '.ki-config.toml', content: draft }] satisfies readonly ConformWrite[])
     })
   }
 }

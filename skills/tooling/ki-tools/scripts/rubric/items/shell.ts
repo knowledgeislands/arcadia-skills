@@ -6,9 +6,7 @@ const SOURCE = [STANDARD] as const
 const one = (outcome: AuditOutcome): readonly AuditOutcome[] => [outcome]
 
 const unavailable = (context: ShellToolsContext): readonly AuditOutcome[] | null =>
-  context.applicable
-    ? null
-    : one({ status: 'NOT_APPLICABLE', message: 'No qualified ki-tools declaration or bin/ structural marker is present.' })
+  context.applicable ? null : one({ status: 'NOT_APPLICABLE', message: 'No qualified ki-tools declaration or bin/ structural marker is present.' })
 
 const SHELL_LINT: RubricItem<ShellToolsContext> = {
   code: 'SHELL-LINT',
@@ -22,8 +20,7 @@ const SHELL_LINT: RubricItem<ShellToolsContext> = {
       run: (context) => {
         const skipped = unavailable(context)
         if (skipped) return skipped
-        if (!context.primary || !context.shell)
-          return one({ status: 'NOT_APPLICABLE', message: 'Primary executable is not a shell entrypoint.' })
+        if (!context.primary || !context.shell) return one({ status: 'NOT_APPLICABLE', message: 'Primary executable is not a shell entrypoint.' })
         if (context.workflows === 'unsafe' || context.unsafeWorkflowEntries.length > 0)
           return one({ status: 'VIOLATION', message: 'CI workflow evidence is unsafe or unreadable.', subject: '.github/workflows/' })
         return /shellcheck/i.test(context.workflowText)
@@ -46,8 +43,7 @@ const SHELL_TEST: RubricItem<ShellToolsContext> = {
       run: (context) => {
         const skipped = unavailable(context)
         if (skipped) return skipped
-        if (!context.primary || !context.shell)
-          return one({ status: 'NOT_APPLICABLE', message: 'Primary executable is not a shell entrypoint.' })
+        if (!context.primary || !context.shell) return one({ status: 'NOT_APPLICABLE', message: 'Primary executable is not a shell entrypoint.' })
         if (context.tests === 'unsafe' || context.unsafeTestEntries.length > 0)
           return one({ status: 'VIOLATION', message: 'Bats test evidence is unsafe or unreadable.', subject: 'tests/' })
         if (!context.bats) return one({ status: 'VIOLATION', message: 'Shell entrypoint has no physical *.bats suite.', subject: 'tests/' })

@@ -37,8 +37,8 @@ export const createCodexSession = ({ repository, userHome, publication }: Rubric
         result('NOT_APPLICABLE', 'No documented selected-repository Codex persistent-memory directory is asserted by this contract.'),
         presence('Selected repository subagent surface', join(repo, '.agents', 'agents'))
       ],
-      unavailableMetrics: ['Actual billing metrics', 'Tool-schema token weights', 'Compaction metrics', 'Transcript metrics'].map(
-        (metric) => result('NOT_APPLICABLE', `${metric} are not available from documented safe Codex filesystem evidence.`)
+      unavailableMetrics: ['Actual billing metrics', 'Tool-schema token weights', 'Compaction metrics', 'Transcript metrics'].map((metric) =>
+        result('NOT_APPLICABLE', `${metric} are not available from documented safe Codex filesystem evidence.`)
       )
     }
   }

@@ -50,8 +50,7 @@ const FILES_J1: RubricItem<FilesRubricContext> = {
 export const FILES: RubricFamily<RepoRubricContext, FilesRubricContext> = {
   code: 'FILES',
   title: 'Repository files',
-  description:
-    'Required repository files and document quality, using a local checkout when available or GitHub default-branch evidence for remote-only runs.',
+  description: 'Required repository files and document quality, using a local checkout when available or GitHub default-branch evidence for remote-only runs.',
   standard: SOURCE,
   selectContext: (context) => context.files,
   items: [FILES_1, FILES_3, FILES_J1]

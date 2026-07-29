@@ -5,8 +5,7 @@ const SOURCE = 'standards-claude-tokenomics.md'
 const RUN_1: RubricItem<ClaudeContext> = {
   code: 'CLAUDE-RUN-1',
   title: 'Default and effective models are distinct',
-  description:
-    'The configured user default and selected-repository effective model are reported separately where documented settings expose them.',
+  description: 'The configured user default and selected-repository effective model are reported separately where documented settings expose them.',
   sources: [SOURCE],
   mechanical: { level: 'WARN', audit: { phase: 'INSPECT', run: (context) => context.models } }
 }

@@ -137,11 +137,7 @@ const featuresDirectory = (target: string): string => {
   return nested
 }
 
-export const createFeatureDefinitionsSession = ({
-  mode,
-  repository,
-  publication
-}: RubricContextOptions): RubricSession<FeatureDefinitionsRubricContext> => {
+export const createFeatureDefinitionsSession = ({ mode, repository, publication }: RubricContextOptions): RubricSession<FeatureDefinitionsRubricContext> => {
   const root = resolve(repository)
   const directory = featuresDirectory(root)
   const directorySafe = containedPath(root, directory) ? safeDirectory(root, directory) : directory === root && isDirectory(root)
@@ -155,9 +151,7 @@ export const createFeatureDefinitionsSession = ({
     .map((entry) => entry.name)
     .sort()
   const registeredFiles = new Set(prefixToFile.values())
-  const registeredMissingFiles = [...prefixToFile]
-    .filter(([, file]) => !areaFiles.includes(file))
-    .map(([prefix, file]) => ({ prefix, file }))
+  const registeredMissingFiles = [...prefixToFile].filter(([, file]) => !areaFiles.includes(file)).map(([prefix, file]) => ({ prefix, file }))
   const unregisteredFiles = areaFiles.filter((file) => !registeredFiles.has(file))
   const headingIssues: FeatureHeadingIssue[] = []
   const requirements: FeatureRequirement[] = []

@@ -72,8 +72,7 @@ const LONG_4: RubricItem<LongevityRubricContext> = {
           context.refreshClass === 'external-spec' && context.cadence === 'on-change'
             ? {
                 status: 'VIOLATION',
-                message:
-                  '`**Refresh:**` marks this external-spec but cadence is `on-change` — an external-spec tracker needs a clock cadence (LONG-4b)'
+                message: '`**Refresh:**` marks this external-spec but cadence is `on-change` — an external-spec tracker needs a clock cadence (LONG-4b)'
               }
             : { status: 'PASS', message: 'the refresh marker is present and coherent' }
         ]

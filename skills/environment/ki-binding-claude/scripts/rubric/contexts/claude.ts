@@ -28,9 +28,7 @@ const servers = (path: string): ReadonlySet<string> | null => {
   if (!physicalFile(path)) return null
   try {
     const json = JSON.parse(readFileSync(path, 'utf8')) as { mcpServers?: unknown }
-    return json.mcpServers && typeof json.mcpServers === 'object'
-      ? new Set(Object.keys(json.mcpServers as Record<string, unknown>))
-      : new Set()
+    return json.mcpServers && typeof json.mcpServers === 'object' ? new Set(Object.keys(json.mcpServers as Record<string, unknown>)) : new Set()
   } catch {
     return null
   }
@@ -93,12 +91,7 @@ const find = (directory: string, depth = 0): string[] =>
         const path = join(directory, entry.name)
         return entry.name === 'cowork_settings.json' ? [path] : entry.isDirectory() && !entry.isSymbolicLink() ? find(path, depth + 1) : []
       })
-export const createClaudeBindingSession = ({
-  mode,
-  repository,
-  userHome,
-  publication
-}: RubricContextOptions): RubricSession<ClaudeBindingContext> => {
+export const createClaudeBindingSession = ({ mode, repository, userHome, publication }: RubricContextOptions): RubricSession<ClaudeBindingContext> => {
   const home = resolve(userHome),
     base = join(home, 'Library', 'Application Support', 'Claude', 'local-agent-mode-sessions')
   const source = process.env.KI_MCP_SOURCE ? resolve(process.env.KI_MCP_SOURCE) : join(home, '.config', 'ki', 'mcp-servers.yaml')

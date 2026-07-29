@@ -17,8 +17,7 @@ const ROAD_1: RubricItem<RoadmapAuditContext> = {
 const ROAD_2: RubricItem<RoadmapAuditContext> = {
   code: 'ROAD-2',
   title: 'honest horizon placement',
-  description:
-    'Items sit in honest horizons; Waiting-for items name their external condition; speculative Future work carries `candidate: true`.',
+  description: 'Items sit in honest horizons; Waiting-for items name their external condition; speculative Future work carries `candidate: true`.',
   sources: [SOURCE],
   judgment: { prompt: 'Review horizon placement, waiting conditions, and Future candidate marking.' }
 }
@@ -45,8 +44,7 @@ const ROAD_4: RubricItem<RoadmapAuditContext> = {
 const ROAD_5: RubricItem<RoadmapAuditContext> = {
   code: 'ROAD-5',
   title: 'horizon transitions and readiness',
-  description:
-    'Horizon promotion and deferral meet the readiness contract; execution state remains honest and CONFORM never chooses a move.',
+  description: 'Horizon promotion and deferral meet the readiness contract; execution state remains honest and CONFORM never chooses a move.',
   sources: [SOURCE],
   judgment: { prompt: 'Review each promotion or deferral against its readiness contract and plan state.' }
 }

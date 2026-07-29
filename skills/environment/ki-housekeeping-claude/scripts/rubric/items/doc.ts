@@ -6,12 +6,10 @@ const SOURCE = 'standards-auto-memory.md'
 const DOC_1: RubricItem<HousekeepingDocContext> = {
   code: 'DOC-1',
   title: 'Content doctrine',
-  description:
-    '`feedback` and `project` memories carry the rule/fact, then a **Why:** line and a **How to apply:** line — not just a bare assertion.',
+  description: '`feedback` and `project` memories carry the rule/fact, then a **Why:** line and a **How to apply:** line — not just a bare assertion.',
   sources: [SOURCE],
   judgment: {
-    prompt:
-      '`feedback` and `project` memories carry the rule/fact, then a **Why:** line and a **How to apply:** line — not just a bare assertion.'
+    prompt: '`feedback` and `project` memories carry the rule/fact, then a **Why:** line and a **How to apply:** line — not just a bare assertion.'
   }
 }
 
@@ -40,8 +38,7 @@ const DOC_3: RubricItem<HousekeepingDocContext> = {
 const DOC_4: RubricItem<HousekeepingDocContext> = {
   code: 'DOC-4',
   title: 'Content doctrine',
-  description:
-    '`user`-type memories describe role/preferences/knowledge neutrally — no content that reads as a negative judgment of the user.',
+  description: '`user`-type memories describe role/preferences/knowledge neutrally — no content that reads as a negative judgment of the user.',
   sources: [SOURCE],
   judgment: {
     prompt: '`user`-type memories describe role/preferences/knowledge neutrally — no content that reads as a negative judgment of the user.'

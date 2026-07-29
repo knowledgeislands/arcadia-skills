@@ -69,14 +69,7 @@ export const MARKDOWNLINT_DEFAULT = `{
 }
 `
 
-const MARKDOWN_PATHS = [
-  '**/*.md',
-  '!src/generated/**',
-  '!.claude/commands/**',
-  '!.claude/skills/**',
-  '!.claude/agents/**',
-  '!.agents/skills/**'
-] as const
+const MARKDOWN_PATHS = ['**/*.md', '!src/generated/**', '!.claude/commands/**', '!.claude/skills/**', '!.claude/agents/**', '!.agents/skills/**'] as const
 
 const MARKDOWN_AUDIT_COMMANDS: readonly ConformCommand[] = [
   { program: 'bunx', arguments: ['prettier', '--check', ...MARKDOWN_PATHS, '--ignore-path', '.gitignore'] },

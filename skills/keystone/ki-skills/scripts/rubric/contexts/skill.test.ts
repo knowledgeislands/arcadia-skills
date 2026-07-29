@@ -47,10 +47,7 @@ const createSkill = (relativeDirectory: string, frontmatter = ''): string => {
   temporaryDirectories.push(root)
   const directory = join(root, relativeDirectory)
   mkdirSync(directory, { recursive: true })
-  writeFileSync(
-    join(directory, 'SKILL.md'),
-    frontmatter ? validLocalSkill.replace('ki-depends-on: []', `ki-depends-on: []\n${frontmatter}`) : validLocalSkill
-  )
+  writeFileSync(join(directory, 'SKILL.md'), frontmatter ? validLocalSkill.replace('ki-depends-on: []', `ki-depends-on: []\n${frontmatter}`) : validLocalSkill)
   return directory
 }
 

@@ -118,8 +118,7 @@ const FRONTMATTER_ITEMS = [
           const agent = context.agent
           if (!agent) return [{ status: 'NOT_APPLICABLE' as const, message: 'No physical agent definition is available.' }]
           const model = agent.frontmatter.keys.get('model')
-          if (model === undefined || model === '' || model === 'inherit')
-            return [{ status: 'PASS', message: 'model is tier-agnostic.', subject: agent.file }]
+          if (model === undefined || model === '' || model === 'inherit') return [{ status: 'PASS', message: 'model is tier-agnostic.', subject: agent.file }]
           if (MODEL_ALIASES.includes(model as (typeof MODEL_ALIASES)[number]))
             return [
               {

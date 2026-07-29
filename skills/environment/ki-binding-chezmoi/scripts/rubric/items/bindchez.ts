@@ -70,8 +70,7 @@ const BINDCHEZ_3: RubricItem<BindingChezMoiContext> = {
     audit: {
       phase: 'INSPECT',
       run: ({ repositoryState, data }) => {
-        if (repositoryState !== 'physical')
-          return [{ status: 'NOT_APPLICABLE', message: 'The chezmoi source repository is not safely inspectable.' }]
+        if (repositoryState !== 'physical') return [{ status: 'NOT_APPLICABLE', message: 'The chezmoi source repository is not safely inspectable.' }]
         if (!data.length)
           return [
             {
@@ -99,8 +98,7 @@ const BINDCHEZ_4: RubricItem<BindingChezMoiContext> = {
     audit: {
       phase: 'INSPECT',
       run: ({ repositoryState, templates }) => {
-        if (repositoryState !== 'physical')
-          return [{ status: 'NOT_APPLICABLE', message: 'The chezmoi source repository is not safely inspectable.' }]
+        if (repositoryState !== 'physical') return [{ status: 'NOT_APPLICABLE', message: 'The chezmoi source repository is not safely inspectable.' }]
         return templates.length
           ? templates.map((path) => ({ status: 'PASS' as const, message: 'The render template is present.', subject: path }))
           : [{ status: 'VIOLATION', message: 'No mcp-servers-json render template was found.' }]
@@ -119,8 +117,7 @@ const BINDCHEZ_5: RubricItem<BindingChezMoiContext> = {
     audit: {
       phase: 'DERIVED',
       run: ({ repositoryState, wiredTargets }) => {
-        if (repositoryState !== 'physical')
-          return [{ status: 'NOT_APPLICABLE', message: 'The chezmoi source repository is not safely inspectable.' }]
+        if (repositoryState !== 'physical') return [{ status: 'NOT_APPLICABLE', message: 'The chezmoi source repository is not safely inspectable.' }]
         return wiredTargets.length
           ? wiredTargets.map((path) => ({
               status: 'PASS' as const,
@@ -147,8 +144,7 @@ const BINDCHEZ_7: RubricItem<BindingChezMoiContext> = {
   description: 'The render standard, structured rubric, provenance, and sibling ownership boundaries remain coherent.',
   sources: STANDARD,
   judgment: {
-    prompt:
-      'Do the standard, rubric, sources, and composition instructions describe the same render contract without duplicating sibling policy?'
+    prompt: 'Do the standard, rubric, sources, and composition instructions describe the same render contract without duplicating sibling policy?'
   }
 }
 

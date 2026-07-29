@@ -29,10 +29,7 @@ const fixture = (): { repository: string; area: string; original: string } => {
   const repository = temporaryDirectory('ki-feature-definitions-')
   const directory = join(repository, 'docs', 'features')
   mkdirSync(directory, { recursive: true })
-  writeFileSync(
-    join(directory, 'index.md'),
-    ['# Feature Definitions', '', '| File | Prefix |', '| --- | --- |', '| authentication.md | AUTH |', ''].join('\n')
-  )
+  writeFileSync(join(directory, 'index.md'), ['# Feature Definitions', '', '| File | Prefix |', '| --- | --- |', '| authentication.md | AUTH |', ''].join('\n'))
   const area = join(directory, 'authentication.md')
   const original = [
     '# Authentication — AUTH',
@@ -110,10 +107,7 @@ test('a symlinked area file is not read or proposed for replacement', () => {
   const repository = temporaryDirectory('ki-feature-definitions-root-')
   const directory = join(repository, 'docs', 'features')
   mkdirSync(directory, { recursive: true })
-  writeFileSync(
-    join(directory, 'index.md'),
-    ['# Feature Definitions', '', '| File | Prefix |', '| --- | --- |', '| authentication.md | AUTH |', ''].join('\n')
-  )
+  writeFileSync(join(directory, 'index.md'), ['# Feature Definitions', '', '| File | Prefix |', '| --- | --- |', '| authentication.md | AUTH |', ''].join('\n'))
   const outside = join(temporaryDirectory('ki-feature-definitions-outside-'), 'outside.md')
   writeFileSync(outside, '### AUTH-001 - Outside\n')
   symlinkSync(outside, join(directory, 'authentication.md'))

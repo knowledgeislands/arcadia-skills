@@ -7,8 +7,7 @@ const unavailable = (context: HarnessSkillsContext): readonly AuditOutcome[] | n
   if (context.repositoryState !== 'physical')
     return [{ status: 'NOT_APPLICABLE', message: 'The source harness is not safely inspectable.', subject: context.repository }]
   if (context.skillsState === 'missing') return [{ status: 'NOT_APPLICABLE', message: 'The skills/ shelf is absent.', subject: 'skills/' }]
-  if (context.skillsState !== 'directory')
-    return [{ status: 'VIOLATION', message: 'The skills/ shelf is not a physical directory.', subject: 'skills/' }]
+  if (context.skillsState !== 'directory') return [{ status: 'VIOLATION', message: 'The skills/ shelf is not a physical directory.', subject: 'skills/' }]
   if (context.unsafePaths.length)
     return context.unsafePaths.map((path) => ({
       status: 'VIOLATION',

@@ -118,11 +118,7 @@ test('each family module exports one complete family', async () => {
 
 test('the session creates stable per-agent subjects and one set subject', () => {
   const session = catalogue.createSession({ mode: 'audit', repository: fixture(), userHome: tmpdir(), configuration: {} })
-  expect(session.subjects.slice(0, 3).map((subject) => subject.subject)).toEqual([
-    'subagents/governance/reviewer.md',
-    'subagents/writer.md',
-    'subagents'
-  ])
+  expect(session.subjects.slice(0, 3).map((subject) => subject.subject)).toEqual(['subagents/governance/reviewer.md', 'subagents/writer.md', 'subagents'])
   for (const subject of session.subjects) expect(subject.context()).toBe(subject.context())
   expect(session.subjects.at(-2)?.families).toEqual(['COLL'])
   expect(session.subjects.at(-1)?.families).toEqual(['RUBRIC'])
@@ -134,9 +130,7 @@ test('filename alignment is item-owned, coalesced, and preserves surrounding byt
   const session = catalogue.createSession({ mode: 'conform', repository, userHome: tmpdir(), configuration: {} })
   const subject = session.subjects[0]
   const root = subject?.context() as AgentsRubricContext
-  const family = catalogue.families.find((candidate) => candidate.code === 'LAY') as
-    | RubricFamily<AgentsRubricContext, AgentFileContext>
-    | undefined
+  const family = catalogue.families.find((candidate) => candidate.code === 'LAY') as RubricFamily<AgentsRubricContext, AgentFileContext> | undefined
   const item = family?.items.find((candidate) => candidate.code === 'LAY-3')
   if (!family || !item) throw new Error('LAY-3 is missing')
   const context = family.selectContext(root)
@@ -146,8 +140,7 @@ test('filename alignment is item-owned, coalesced, and preserves surrounding byt
   expect(session.proposal().writes).toEqual([
     {
       path: 'subagents/governance/reviewer.md',
-      content:
-        '---\r\nname: reviewer\r\ndescription: "Reviews code" when review is requested.\r\nmodel: inherit\r\n---\r\n\r\nReview carefully.\r\n'
+      content: '---\r\nname: reviewer\r\ndescription: "Reviews code" when review is requested.\r\nmodel: inherit\r\n---\r\n\r\nReview carefully.\r\n'
     }
   ])
 })
@@ -164,8 +157,6 @@ test('symlinked agent paths are refused without traversal or conform capability'
   const context = unsafe?.context() as AgentsRubricContext
   expect(context.file.agent).toBeNull()
   expect(context.file.requestNameAlignment).toBeUndefined()
-  expect(
-    session.subjects.some((subject) => subject.subject?.includes('outside.md') && subject.context().file.agent?.name === 'outside')
-  ).toBe(false)
+  expect(session.subjects.some((subject) => subject.subject?.includes('outside.md') && subject.context().file.agent?.name === 'outside')).toBe(false)
   expect(session.proposal().writes).toEqual([])
 })

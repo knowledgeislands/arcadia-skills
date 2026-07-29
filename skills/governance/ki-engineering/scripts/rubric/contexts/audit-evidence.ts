@@ -185,13 +185,7 @@ export const collectAuditEvidence = (repo: string): readonly EngineeringEvidence
     const stagedMarkdownOnly = ls.includes('markdownlint-cli2 --no-globs')
     fanOut && stagedMarkdownOnly
       ? add('PASS', 'PKG-6', 'lint-staged fans out to biome and staged-only prettier/markdownlint', STD, 'package.json')
-      : add(
-          'WARN',
-          'PKG-6',
-          'lint-staged should run biome on code and prettier + markdownlint-cli2 --no-globs on staged Markdown only',
-          STD,
-          'package.json'
-        )
+      : add('WARN', 'PKG-6', 'lint-staged should run biome on code and prettier + markdownlint-cli2 --no-globs on staged Markdown only', STD, 'package.json')
   }
 
   // ── core: mise.toml toolchain pin ─────────────────────────────────────────────
@@ -217,12 +211,7 @@ export const collectAuditEvidence = (repo: string): readonly EngineeringEvidence
   // legacy single-tool pin files shadow mise.toml — warn (redundant, can diverge)
   const strayPins = ['.node-version', '.nvmrc', '.bun-version'].filter((f) => has(f))
   strayPins.length
-    ? add(
-        'WARN',
-        'MISE-3',
-        `legacy pin file(s) beside mise.toml: ${strayPins.join(', ')} — remove; mise.toml is the single toolchain pin`,
-        STD
-      )
+    ? add('WARN', 'MISE-3', `legacy pin file(s) beside mise.toml: ${strayPins.join(', ')} — remove; mise.toml is the single toolchain pin`, STD)
     : add('PASS', 'MISE-3', 'no legacy pin files (.node-version / .nvmrc / .bun-version)', STD)
 
   // ── core (when the repo has CI): the common CI shape ──────────────────────────
@@ -247,14 +236,7 @@ export const collectAuditEvidence = (repo: string): readonly EngineeringEvidence
       ? add('PASS', 'CI-1', 'ci.yml installs the toolchain via jdx/mise-action', STD, '.github/workflows/ci.yml')
       : add('FAIL', 'CI-1', 'ci.yml must install the toolchain via jdx/mise-action (reads mise.toml)', STD, '.github/workflows/ci.yml')
     const hard = ci.match(/\b(bun|node)-version\s*:/)
-    if (hard)
-      add(
-        'FAIL',
-        'CI-1',
-        `ci.yml hardcodes ${hard[1]}-version — remove it; the version comes from mise.toml`,
-        STD,
-        '.github/workflows/ci.yml'
-      )
+    if (hard) add('FAIL', 'CI-1', `ci.yml hardcodes ${hard[1]}-version — remove it; the version comes from mise.toml`, STD, '.github/workflows/ci.yml')
     // CI names its target explicitly. The bare form remains a valid local CLI
     // invocation, but a workflow must prove which checkout it governs.
     const auditIndex = ci.search(
@@ -303,8 +285,7 @@ export const collectAuditEvidence = (repo: string): readonly EngineeringEvidence
   if (workspaces.length) {
     const noTsconfig = workspaces.filter((p) => !read(`${p}/tsconfig.json`))
     if (noTsconfig.length) add('FAIL', 'TSC-1', `workspaces names dir(s) without a tsconfig.json: ${noTsconfig.join(', ')}`, STD)
-    for (const ws of workspaces.filter((p) => read(`${p}/tsconfig.json`)))
-      runCheck('TSC-1', `tsc ${ws}`, `tsc --noEmit -p ${ws}/tsconfig.json`, STD)
+    for (const ws of workspaces.filter((p) => read(`${p}/tsconfig.json`))) runCheck('TSC-1', `tsc ${ws}`, `tsc --noEmit -p ${ws}/tsconfig.json`, STD)
   } else {
     runCheck('TSC-1', 'tsc --noEmit', 'tsc --noEmit', STD)
   }
@@ -331,22 +312,14 @@ export const collectAuditEvidence = (repo: string): readonly EngineeringEvidence
       ['ki:audit', 'ki:conform', 'ki:educate', 'ki:help'].includes(key)
   )
   retired.length
-    ? add(
-        'FAIL',
-        'SCR-3',
-        `retired script key(s): ${retired.join(', ')} — repository governance runs through the installed ki CLI`,
-        STD,
-        'package.json'
-      )
+    ? add('FAIL', 'SCR-3', `retired script key(s): ${retired.join(', ')} — repository governance runs through the installed ki CLI`, STD, 'package.json')
     : add('PASS', 'SCR-3', 'no retired aggregate or tool-level governance aliases', STD, 'package.json')
 
   // ── core: per-skill wrapper aliases are retired ──────────────────────────────
   const skillModeAliases = Object.keys(scripts).filter((key) => /^ki:[a-z-]+:(audit|conform|educate|help)$/.test(key))
   const runtimeAliases = Object.entries(scripts)
     .filter(([, value]) =>
-      /(?:^|[ /])\.ki\/(?:bin|bootstrap)(?:[ /]|$)|scripts\/(?:govern|educate)\.ts|scripts\/rubric\/index\.ts|scripts\/vendored\//.test(
-        value
-      )
+      /(?:^|[ /])\.ki\/(?:bin|bootstrap)(?:[ /]|$)|scripts\/(?:govern|educate)\.ts|scripts\/rubric\/index\.ts|scripts\/vendored\//.test(value)
     )
     .map(([key]) => key)
   const legacyAliases = [...new Set([...skillModeAliases, ...runtimeAliases])]
@@ -385,12 +358,7 @@ export const collectAuditEvidence = (repo: string): readonly EngineeringEvidence
     if (pkgRows.length === 0) {
       add('PASS', 'DEPS-1', 'all packages up to date (bun outdated)', STD)
     } else {
-      add(
-        'INFO',
-        'DEPS-1',
-        `${pkgRows.length} package${pkgRows.length === 1 ? '' : 's'} have updates available — run \`ki repo conform\`:\n  ${out}`,
-        STD
-      )
+      add('INFO', 'DEPS-1', `${pkgRows.length} package${pkgRows.length === 1 ? '' : 's'} have updates available — run \`ki repo conform\`:\n  ${out}`, STD)
     }
   } catch {
     add('NOT_APPLICABLE', 'DEPS-1', 'bun outdated unavailable — upgrade Bun to check dependency freshness', STD)
@@ -401,13 +369,7 @@ export const collectAuditEvidence = (repo: string): readonly EngineeringEvidence
   // script must delegate through `bun run test`, rather than bypassing that policy.
   const bunTest = Object.entries(scripts).filter(([name, value]) => name !== 'test' && /\bbun test\b/.test(value))
   bunTest.length
-    ? add(
-        'FAIL',
-        'SCR-6',
-        `bypasses the governed test entrypoint with "bun test" in: ${bunTest.map(([name]) => name).join(', ')}`,
-        STD,
-        'package.json'
-      )
+    ? add('FAIL', 'SCR-6', `bypasses the governed test entrypoint with "bun test" in: ${bunTest.map(([name]) => name).join(', ')}`, STD, 'package.json')
     : add('PASS', 'SCR-6', 'no non-test script bypasses the governed test entrypoint', STD, 'package.json')
 
   // ── core: tsconfig.json (universal invariants only; richer base is profiled) ──
@@ -438,7 +400,7 @@ export const collectAuditEvidence = (repo: string): readonly EngineeringEvidence
   if (!biome) add('FAIL', 'BIO-2', 'biome.json missing', STD, 'biome.json')
   else {
     const fields: [string, RegExp][] = [
-      ['formatter lineWidth 140', /"lineWidth"\s*:\s*140/],
+      ['formatter lineWidth 160', /"lineWidth"\s*:\s*160/],
       ['formatter indentWidth 2', /"indentWidth"\s*:\s*2/],
       ['js quoteStyle single', /"quoteStyle"\s*:\s*"single"/],
       ['js semicolons asNeeded', /"semicolons"\s*:\s*"asNeeded"/],
@@ -448,9 +410,7 @@ export const collectAuditEvidence = (repo: string): readonly EngineeringEvidence
       ['organizeImports on', /"organizeImports"\s*:\s*"on"/]
     ]
     for (const [label, re] of fields)
-      re.test(biome)
-        ? add('PASS', 'BIO-2', label, STD, 'biome.json')
-        : add('WARN', 'BIO-2', `biome.json: expected ${label}`, STD, 'biome.json')
+      re.test(biome) ? add('PASS', 'BIO-2', label, STD, 'biome.json') : add('WARN', 'BIO-2', `biome.json: expected ${label}`, STD, 'biome.json')
   }
 
   // ── core: knip.json (backs the native ki-engineering check) ──────────────────
@@ -694,26 +654,16 @@ export const collectAuditEvidence = (repo: string): readonly EngineeringEvidence
     }
     missing.length
       ? add('FAIL', 'GEN-1', `managed surfaces need matching Biome, knip, and Markdown exclusions: ${missing.join('; ')}`, STD)
-      : add(
-          'PASS',
-          'GEN-1',
-          `managed surfaces excluded across Biome, knip, and Markdown: ${activeGeneratedSurfaces.map((s) => s.label).join(', ')}`,
-          STD
-        )
+      : add('PASS', 'GEN-1', `managed surfaces excluded across Biome, knip, and Markdown: ${activeGeneratedSurfaces.map((s) => s.label).join(', ')}`, STD)
   }
 
   // .prettierrc.json content is owned and audited by ki-authoring (it backs that
   // skill's own Markdown conform pass) — not checked here (SHAPE-16 ownership split).
 
   // ── capability detection ──────────────────────────────────────────────────────
-  const vitestFile = [
-    'vitest.config.ts',
-    'vitest.config.js',
-    'vitest.config.mts',
-    'vitest.config.cts',
-    'vitest.config.mjs',
-    'vitest.config.cjs'
-  ].find((f) => has(f))
+  const vitestFile = ['vitest.config.ts', 'vitest.config.js', 'vitest.config.mts', 'vitest.config.cts', 'vitest.config.mjs', 'vitest.config.cjs'].find((f) =>
+    has(f)
+  )
   const hasTests = Boolean(vitestFile) || Boolean(scripts.test)
   const buildScript = scripts.build ?? ''
   const hasBuild = has('tsconfig.build.json') || /\btsc\b/.test(buildScript)
@@ -728,8 +678,7 @@ export const collectAuditEvidence = (repo: string): readonly EngineeringEvidence
   // ── core: capability tails + the bare test idiom (§2) ─────────────────────────
   // A repo with tests exposes the bare `test` idiom (the whole *.test.ts suite), run in CI
   // after `ki repo audit`. Compiled builds remain the separate bare `build` lifecycle command.
-  if (hasTests && !scripts.test)
-    add('FAIL', 'SCR-7', 'repo has tests but no bare "test" script (the whole suite, run after native audit)', STD, 'package.json')
+  if (hasTests && !scripts.test) add('FAIL', 'SCR-7', 'repo has tests but no bare "test" script (the whole suite, run after native audit)', STD, 'package.json')
   else if (hasTests) add('PASS', 'SCR-7', 'bare "test" idiom present', STD, 'package.json')
 
   // ── capability: tests ─────────────────────────────────────────────────────────
@@ -858,11 +807,7 @@ export const collectAuditEvidence = (repo: string): readonly EngineeringEvidence
         if (!start) return undefined
         return objectAt(source, start.index + start[0].lastIndexOf('{'))
       }
-      const directPropertyMatch = (
-        source: string,
-        property: string,
-        valuePattern: string
-      ): { index: number; match: RegExpExecArray } | undefined => {
+      const directPropertyMatch = (source: string, property: string, valuePattern: string): { index: number; match: RegExpExecArray } | undefined => {
         if (!source.startsWith('{')) return undefined
         const escaped = property.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
         const propertyStart = new RegExp(`^(?:["']${escaped}["']|${escaped})\\s*:\\s*${valuePattern}`)
@@ -940,9 +885,7 @@ export const collectAuditEvidence = (repo: string): readonly EngineeringEvidence
       add(
         covOk ? 'PASS' : 'FAIL',
         'TEST-2',
-        covOk
-          ? 'coverage thresholds 100% on all four metrics'
-          : 'coverage thresholds must be 100/100/100/100 (lines/functions/branches/statements)',
+        covOk ? 'coverage thresholds 100% on all four metrics' : 'coverage thresholds must be 100/100/100/100 (lines/functions/branches/statements)',
         STD,
         vitestFile
       )
@@ -950,9 +893,7 @@ export const collectAuditEvidence = (repo: string): readonly EngineeringEvidence
       add(
         excludesTest ? 'PASS' : 'WARN',
         'TEST-3',
-        excludesTest
-          ? 'coverage excludes src/**/*.test.ts'
-          : 'coverage should exclude src/**/*.test.ts (other excludes are artifact-specific)',
+        excludesTest ? 'coverage excludes src/**/*.test.ts' : 'coverage should exclude src/**/*.test.ts (other excludes are artifact-specific)',
         STD,
         vitestFile
       )
@@ -971,9 +912,7 @@ export const collectAuditEvidence = (repo: string): readonly EngineeringEvidence
           STD,
           vitestFile
         )
-        const globs = [...vc.matchAll(/include\s*:\s*\[([^\]]*)\]/g)].flatMap((m) =>
-          [...m[1].matchAll(/['"]([^'"]+)['"]/g)].map((x) => x[1])
-        )
+        const globs = [...vc.matchAll(/include\s*:\s*\[([^\]]*)\]/g)].flatMap((m) => [...m[1].matchAll(/['"]([^'"]+)['"]/g)].map((x) => x[1]))
         const escaped = globs.filter((g) => !underWs(g))
         if (escaped.length)
           add(
@@ -987,13 +926,7 @@ export const collectAuditEvidence = (repo: string): readonly EngineeringEvidence
     }
     if (scripts['test:coverage']) runCheck('TEST-5', 'test:coverage', 'bun run test:coverage', STD)
   } else if (scripts.test) {
-    add(
-      'INFO',
-      'TEST-1',
-      'non-vitest test runner (bare `test` idiom) — the vitest key-shape + coverage rules do not apply',
-      STD,
-      'package.json'
-    )
+    add('INFO', 'TEST-1', 'non-vitest test runner (bare `test` idiom) — the vitest key-shape + coverage rules do not apply', STD, 'package.json')
   } else {
     add('NOT_APPLICABLE', 'TEST-1', 'no test capability (no vitest.config / test script) — not applicable', STD)
   }
@@ -1002,13 +935,7 @@ export const collectAuditEvidence = (repo: string): readonly EngineeringEvidence
   if (hasBuild) {
     buildScript.startsWith('tsc -p tsconfig.build.json')
       ? add('PASS', 'BUILD-1', 'build = tsc -p tsconfig.build.json', STD, 'package.json')
-      : add(
-          'FAIL',
-          'BUILD-1',
-          `build should start with "tsc -p tsconfig.build.json", got ${JSON.stringify(buildScript)}`,
-          STD,
-          'package.json'
-        )
+      : add('FAIL', 'BUILD-1', `build should start with "tsc -p tsconfig.build.json", got ${JSON.stringify(buildScript)}`, STD, 'package.json')
     Array.isArray(pkg.files) && (pkg.files as string[]).includes('dist')
       ? add('PASS', 'BUILD-1', 'files includes "dist"', STD, 'package.json')
       : add('FAIL', 'BUILD-1', 'files should include "dist"', STD, 'package.json')
@@ -1054,13 +981,7 @@ export const collectAuditEvidence = (repo: string): readonly EngineeringEvidence
       )
     if (missing.length) add('WARN', 'BUILD-4', `src/cli/ exists but build does not chmod +x ${missing.join(', ')}`, STD, 'package.json')
     if (!unexpected.length && !missing.length)
-      add(
-        'PASS',
-        'BUILD-4',
-        hasCli ? 'build chmods exactly dist/cli/cli.js' : 'build chmods nothing (no src/cli/) — correct',
-        STD,
-        'package.json'
-      )
+      add('PASS', 'BUILD-4', hasCli ? 'build chmods exactly dist/cli/cli.js' : 'build chmods nothing (no src/cli/) — correct', STD, 'package.json')
   } else {
     add('NOT_APPLICABLE', 'BUILD-1', 'no compiled-tsc build capability — not applicable', STD)
   }
@@ -1085,13 +1006,7 @@ export const collectAuditEvidence = (repo: string): readonly EngineeringEvidence
   const engineeringHeader = '["knowledgeislands/ki-agentic-harness:ki-engineering"]'
   if (!ki) add('WARN', 'TOML-1', '.ki-config.toml missing (ki-repo owns the contract)', STD, '.ki-config.toml')
   else if (!/^\["knowledgeislands\/ki-agentic-harness:ki-engineering"\]/m.test(ki)) {
-    add(
-      'WARN',
-      'TOML-1',
-      `no ${engineeringHeader} table — add it to mark this repo as governed by the engineering standard`,
-      STD,
-      '.ki-config.toml'
-    )
+    add('WARN', 'TOML-1', `no ${engineeringHeader} table — add it to mark this repo as governed by the engineering standard`, STD, '.ki-config.toml')
   } else {
     add('PASS', 'TOML-1', `${engineeringHeader} table present`, STD, '.ki-config.toml')
     // validate-down: the table is a conformance marker only — it carries no keys. Repo

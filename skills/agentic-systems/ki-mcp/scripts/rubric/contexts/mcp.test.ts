@@ -35,8 +35,7 @@ const fixture = (): {
   readonly packageContent: string
 } => {
   const repository = temporaryDirectory('ki-mcp-')
-  for (const directory of ['config', 'mcp-server', 'tools/example', 'main', 'utils'])
-    mkdirSync(join(repository, 'src', directory), { recursive: true })
+  for (const directory of ['config', 'mcp-server', 'tools/example', 'main', 'utils']) mkdirSync(join(repository, 'src', directory), { recursive: true })
   writeFileSync(
     join(repository, 'src', 'config', 'index.ts'),
     'export const loadConfig = () => process.loadEnvFile()\nconst values = [ACCESS_LEVELS, ACCESS_LEVEL_RANK, AuditLogMode]\n'

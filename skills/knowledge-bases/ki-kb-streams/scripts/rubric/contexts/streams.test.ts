@@ -42,10 +42,7 @@ const streamsFixture = (): { root: string; files: string[] } => {
   mkdirSync(join(root, 'Streams', 'Future', 'Beta Proposal'), { recursive: true })
   writeFileSync(join(root, 'Streams', 'Active', 'Active.md'), '# Active\n')
   writeFileSync(join(root, 'Streams', 'Future', 'Future.md'), '# Future\n')
-  const files = [
-    join(root, 'Streams', 'Active', 'Alpha Proposal', 'Alpha Proposal.md'),
-    join(root, 'Streams', 'Future', 'Beta Proposal', 'Beta Proposal.md')
-  ]
+  const files = [join(root, 'Streams', 'Active', 'Alpha Proposal', 'Alpha Proposal.md'), join(root, 'Streams', 'Future', 'Beta Proposal', 'Beta Proposal.md')]
   writeFileSync(files[0] as string, proposal('Alpha Proposal'))
   writeFileSync(files[1] as string, proposal('Beta Proposal'))
   writeFileSync(join(root, 'AGENTS.md'), 'Canonical changes use a proposal governed by ki-kb-streams.\n')
@@ -68,10 +65,7 @@ describe('ki-kb-streams session', () => {
     lifecycle?.mechanical?.conform?.run(context)
 
     const writes = session.proposal().writes
-    expect(writes.map((write) => write.path)).toEqual([
-      'Streams/Active/Alpha Proposal/Alpha Proposal.md',
-      'Streams/Future/Beta Proposal/Beta Proposal.md'
-    ])
+    expect(writes.map((write) => write.path)).toEqual(['Streams/Active/Alpha Proposal/Alpha Proposal.md', 'Streams/Future/Beta Proposal/Beta Proposal.md'])
     expect(writes.every((write) => write.content.includes('status: draft\npriority: high\n'))).toBe(true)
     expect(files.map((file) => readFileSync(file, 'utf8'))).toEqual(originals)
     expect(session.proposal()).toEqual({ writes })
@@ -107,8 +101,6 @@ describe('ki-kb-streams session', () => {
     const context = STREAM.selectContext(rootContext(session))
 
     expect(context.focusFolders).toEqual([{ level: 'PASS', message: 'All direct folders are Focus folders.', subject: 'Streams' }])
-    expect(context.focusIndexes).toEqual(
-      foci.map((focus) => ({ level: 'PASS', message: 'Focus index is present.', subject: `Streams/${focus}/${focus}.md` }))
-    )
+    expect(context.focusIndexes).toEqual(foci.map((focus) => ({ level: 'PASS', message: 'Focus index is present.', subject: `Streams/${focus}/${focus}.md` })))
   })
 })

@@ -5,13 +5,9 @@ const STANDARD = 'standards-subagent-definitions.md'
 
 const unavailable = (context: AgentFileContext): readonly AuditOutcome[] | null => {
   if (context.unsafePath)
-    return [
-      { status: 'VIOLATION', message: 'The agent path is unreadable, non-physical, or a symbolic link.', subject: context.unsafePath }
-    ]
-  if (context.scopeState === 'absent')
-    return [{ status: 'VIOLATION', message: 'The subagents/ scope does not exist.', subject: 'subagents/' }]
-  if (context.scopeState === 'unsafe')
-    return [{ status: 'VIOLATION', message: 'The subagents/ scope is not a physical directory.', subject: 'subagents/' }]
+    return [{ status: 'VIOLATION', message: 'The agent path is unreadable, non-physical, or a symbolic link.', subject: context.unsafePath }]
+  if (context.scopeState === 'absent') return [{ status: 'VIOLATION', message: 'The subagents/ scope does not exist.', subject: 'subagents/' }]
+  if (context.scopeState === 'unsafe') return [{ status: 'VIOLATION', message: 'The subagents/ scope is not a physical directory.', subject: 'subagents/' }]
   if (!context.agent) return [{ status: 'NOT_APPLICABLE', message: 'No agent definitions were found.', subject: 'subagents/' }]
   return null
 }
@@ -63,11 +59,9 @@ const LAY_3: RubricItem<AgentFileContext> = {
     audit: {
       phase: 'INSPECT',
       run: (context) => {
-        if (!context.agent)
-          return [{ status: 'NOT_APPLICABLE', message: 'No physical agent definition is available for filename alignment.' }]
+        if (!context.agent) return [{ status: 'NOT_APPLICABLE', message: 'No physical agent definition is available for filename alignment.' }]
         const agent = context.agent
-        if (!agent.name)
-          return [{ status: 'NOT_APPLICABLE', message: 'No name field is available for filename alignment.', subject: agent.file }]
+        if (!agent.name) return [{ status: 'NOT_APPLICABLE', message: 'No name field is available for filename alignment.', subject: agent.file }]
         return [
           {
             status: agent.name === agent.stem ? 'PASS' : 'VIOLATION',

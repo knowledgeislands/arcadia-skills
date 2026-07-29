@@ -170,10 +170,7 @@ export const createKiShapeFrontmatterEvidence = ({
   description: string
   scriptNames: readonly string[]
   localGovernanceSource?: boolean
-}): Pick<
-  KiShapeSkillContext,
-  'knowledgeIslandsSkill' | 'governanceSkill' | 'localGovernanceSource' | 'argumentHint' | 'hintVerbs' | 'scriptNames'
-> => {
+}): Pick<KiShapeSkillContext, 'knowledgeIslandsSkill' | 'governanceSkill' | 'localGovernanceSource' | 'argumentHint' | 'hintVerbs' | 'scriptNames'> => {
   const argumentHint = frontmatter.keys.get('argument-hint')
   return {
     knowledgeIslandsSkill: (frontmatter.keys.get('name') ?? '').startsWith('ki-'),
@@ -253,10 +250,7 @@ type KiSkillsRubricFacets = {
 export type KiSkillsRubricContext = Partial<KiSkillsRubricFacets>
 
 /** Fail closed when subject routing does not supply a family's required evidence. */
-export const selectKiSkillsContext = <Facet extends keyof KiSkillsRubricFacets>(
-  context: KiSkillsRubricContext,
-  facet: Facet
-): KiSkillsRubricFacets[Facet] => {
+export const selectKiSkillsContext = <Facet extends keyof KiSkillsRubricFacets>(context: KiSkillsRubricContext, facet: Facet): KiSkillsRubricFacets[Facet] => {
   const selected = context[facet]
   if (selected === undefined) throw new Error(`ki-skills subject does not provide ${facet} evidence`)
   return selected

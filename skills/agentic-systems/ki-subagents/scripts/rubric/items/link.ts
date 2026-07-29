@@ -48,8 +48,7 @@ const LINK_ITEMS = [
     description: 'Wikilinks to knowledge-base notes are allowed in grounded agent prompts.',
     sources: [`${STANDARD}#10-linking`, 'HOUSE'],
     judgment: {
-      prompt:
-        '`[[wikilinks]]` to KB notes are allowed here (a grounded agent cites its notes) and are not a defect, unlike in a `SKILL.md`.'
+      prompt: '`[[wikilinks]]` to KB notes are allowed here (a grounded agent cites its notes) and are not a defect, unlike in a `SKILL.md`.'
     }
   },
   {

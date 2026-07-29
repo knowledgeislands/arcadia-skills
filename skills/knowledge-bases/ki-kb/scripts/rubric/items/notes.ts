@@ -7,8 +7,7 @@ const KB = 'standards-knowledge-base.md'
 const NOTE_1: RubricItem<KbNoteContext> = {
   code: 'NOTE-1',
   title: 'declared required frontmatter',
-  description:
-    'When required_frontmatter is declared, each note with frontmatter carries those keys; otherwise key requirements remain a judgment call.',
+  description: 'When required_frontmatter is declared, each note with frontmatter carries those keys; otherwise key requirements remain a judgment call.',
   sources: [FRONTMATTER, KB],
   mechanical: {
     level: 'FAIL',

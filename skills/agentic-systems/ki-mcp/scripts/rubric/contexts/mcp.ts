@@ -119,10 +119,7 @@ const sourceFilesBelow = (root: string, directory: string): SourceFile[] => {
   return files.sort((left, right) => left.path.localeCompare(right.path))
 }
 
-const inspectConfig = (
-  path: string,
-  kind: NodeKind
-): { readonly state: ConfigState; readonly keys: readonly string[]; readonly content: string | null } => {
+const inspectConfig = (path: string, kind: NodeKind): { readonly state: ConfigState; readonly keys: readonly string[]; readonly content: string | null } => {
   if (kind === 'missing') return { state: 'missing', keys: [], content: null }
   if (kind !== 'file') return { state: 'unsafe', keys: [], content: null }
   const content = readFileSync(path, 'utf8')
@@ -208,16 +205,11 @@ export const createMcpSession = ({ mode, repository, publication }: RubricContex
   const sourceFiles = rootExists ? sourceFilesBelow(root, at('src')) : []
   const sourceByPath = new Map(sourceFiles.map((file) => [file.path, file.content]))
   const configPath = at(CONFIG_FILE)
-  const configEvidence = rootExists
-    ? inspectConfig(configPath, nodeKind(configPath))
-    : { state: 'missing' as const, keys: [], content: null }
+  const configEvidence = rootExists ? inspectConfig(configPath, nodeKind(configPath)) : { state: 'missing' as const, keys: [], content: null }
   const mcpServerState = rootExists ? nodeKind(at('src', 'mcp-server')) : 'missing'
   const applicable =
     rootExists &&
-    (configEvidence.state === 'present' ||
-      configEvidence.state === 'malformed' ||
-      configEvidence.state === 'unsafe' ||
-      mcpServerState !== 'missing')
+    (configEvidence.state === 'present' || configEvidence.state === 'malformed' || configEvidence.state === 'unsafe' || mcpServerState !== 'missing')
   const packagePath = at(PACKAGE_FILE)
   const packageEvidence = rootExists ? inspectPackage(packagePath, nodeKind(packagePath)) : { value: null, malformed: false, content: null }
   const scripts = packageScripts(packageEvidence.value)
@@ -278,10 +270,7 @@ export const createMcpSession = ({ mode, repository, publication }: RubricContex
       ambientProcessEnvOffenders: sourceFiles
         .filter(
           (file) =>
-            !file.path.startsWith('src/config/') &&
-            !file.path.endsWith('.test.ts') &&
-            file.path !== 'src/mcp-server/index.ts' &&
-            file.path !== 'src/cli/cli.ts'
+            !file.path.startsWith('src/config/') && !file.path.endsWith('.test.ts') && file.path !== 'src/mcp-server/index.ts' && file.path !== 'src/cli/cli.ts'
         )
         .filter((file) => {
           const state = { inBlock: false }
@@ -319,8 +308,7 @@ export const createMcpSession = ({ mode, repository, publication }: RubricContex
               }
               if (!Object.values(bin).includes(MCP_MAIN)) {
                 const names = Object.keys(bin)
-                bin[names.length === 1 ? (names[0] as string) : String(packageDraft.name ?? 'mcp-server').replace(/^@[^/]+\//, '')] =
-                  MCP_MAIN
+                bin[names.length === 1 ? (names[0] as string) : String(packageDraft.name ?? 'mcp-server').replace(/^@[^/]+\//, '')] = MCP_MAIN
                 packageDraft.bin = bin
                 packageChanged = true
               }
@@ -345,8 +333,7 @@ export const createMcpSession = ({ mode, repository, publication }: RubricContex
     },
     ci: {
       scripts,
-      workflow:
-        nodeKind(at('.github', 'workflows', 'ci.yml')) === 'file' ? readFileSync(at('.github', 'workflows', 'ci.yml'), 'utf8') : null
+      workflow: nodeKind(at('.github', 'workflows', 'ci.yml')) === 'file' ? readFileSync(at('.github', 'workflows', 'ci.yml'), 'utf8') : null
     }
   }
 
@@ -357,8 +344,7 @@ export const createMcpSession = ({ mode, repository, publication }: RubricContex
     ],
     proposal: () => {
       const writes: ConformWrite[] = []
-      if (configDraft !== null && originalConfig !== null && configDraft !== originalConfig)
-        writes.push({ path: CONFIG_FILE, content: configDraft })
+      if (configDraft !== null && originalConfig !== null && configDraft !== originalConfig) writes.push({ path: CONFIG_FILE, content: configDraft })
       if (packageChanged && packageDraft && packageEvidence.content !== null)
         writes.push({ path: PACKAGE_FILE, content: `${JSON.stringify(packageDraft, null, 2)}\n` })
       return { writes }

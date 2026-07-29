@@ -16,14 +16,11 @@ const TAP_1: RubricItem<TapContext> = {
       phase: 'INSPECT',
       run: (context) => {
         if (!context.targetExists) return [{ status: 'VIOLATION', message: 'Audit target must be an existing directory.' }]
-        if (!context.applicable)
-          return [{ status: 'NOT_APPLICABLE', message: 'No tap declaration or Formula/ structural marker is present.' }]
-        if (context.formulaDirectory === 'unsafe')
-          return [{ status: 'VIOLATION', message: 'Formula/ is not a regular directory.', subject: 'Formula/' }]
+        if (!context.applicable) return [{ status: 'NOT_APPLICABLE', message: 'No tap declaration or Formula/ structural marker is present.' }]
+        if (context.formulaDirectory === 'unsafe') return [{ status: 'VIOLATION', message: 'Formula/ is not a regular directory.', subject: 'Formula/' }]
         if (context.formulaDirectory !== 'present')
           return [{ status: 'VIOLATION', message: 'Formula/ is absent; this is not a Homebrew tap.', subject: 'Formula/' }]
-        if (context.formulae.length === 0)
-          return [{ status: 'VIOLATION', message: 'Formula/ contains no Ruby formulae.', subject: 'Formula/' }]
+        if (context.formulae.length === 0) return [{ status: 'VIOLATION', message: 'Formula/ contains no Ruby formulae.', subject: 'Formula/' }]
         return [{ status: 'PASS', message: `${context.formulae.length} formulae found.`, subject: 'Formula/' }]
       }
     }
@@ -105,8 +102,7 @@ const TAP_4: RubricItem<TapContext> = {
       phase: 'INSPECT',
       run: (context) => {
         if (!context.applicable) return [{ status: 'NOT_APPLICABLE', message: 'ki-homebrew-tap is not applicable.' }]
-        if (context.formulae.length === 0)
-          return [{ status: 'NOT_APPLICABLE', message: 'No formulae are available for description checks.' }]
+        if (context.formulae.length === 0) return [{ status: 'NOT_APPLICABLE', message: 'No formulae are available for description checks.' }]
         const outcomes = context.formulae.flatMap((formula) => {
           const description = formula.text.match(/^\s*desc\s+"([^"]*)"/m)?.[1]
           if (!description) return []
@@ -121,9 +117,7 @@ const TAP_4: RubricItem<TapContext> = {
                   }
                 ]
               : []),
-            ...(/^(A|An|The)\s/.test(description)
-              ? [{ status: 'VIOLATION' as const, message: 'Description begins with an article.', subject }]
-              : [])
+            ...(/^(A|An|The)\s/.test(description) ? [{ status: 'VIOLATION' as const, message: 'Description begins with an article.', subject }] : [])
           ]
         })
         return outcomes.length > 0 ? many(outcomes) : [{ status: 'PASS', message: 'Formula descriptions follow Homebrew style.' }]
@@ -169,9 +163,7 @@ const TAP_6: RubricItem<TapContext> = {
         if (!context.applicable) return [{ status: 'NOT_APPLICABLE', message: 'ki-homebrew-tap is not applicable.' }]
         if (context.formulae.length === 0) return [{ status: 'NOT_APPLICABLE', message: 'No formulae are available for README checks.' }]
         if (context.readme === null)
-          return [
-            { status: 'VIOLATION', message: 'README.md is absent; formula discoverability cannot be verified.', subject: 'README.md' }
-          ]
+          return [{ status: 'VIOLATION', message: 'README.md is absent; formula discoverability cannot be verified.', subject: 'README.md' }]
         const outcomes = context.formulae
           .filter((formula) => !context.readme?.includes(formula.name))
           .map((formula) => ({

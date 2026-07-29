@@ -83,8 +83,7 @@ const KI_CHECKER_4: RubricItem<KiCheckerRubricContext> = {
     audit: {
       phase: 'INSPECT',
       run: ({ structuredRubricRequired, itemsIndexExists, itemsIndexDefinesRules, familyModules }) => {
-        if (!structuredRubricRequired)
-          return [{ status: 'NOT_APPLICABLE', message: 'the skill does not publish a structured rubric catalogue' }]
+        if (!structuredRubricRequired) return [{ status: 'NOT_APPLICABLE', message: 'the skill does not publish a structured rubric catalogue' }]
         const violations = []
         if (!itemsIndexExists) violations.push({ status: 'VIOLATION' as const, message: '`scripts/rubric/items/index.ts` is missing' })
         if (itemsIndexDefinesRules)
@@ -132,11 +131,8 @@ const KI_CHECKER_5: RubricItem<KiCheckerRubricContext> = {
       phase: 'INSPECT',
       run: ({ declaredSharedModules, legacyLibPresent, presentSharedModules, sharedDependencies }) => {
         const violations = []
-        if (legacyLibPresent)
-          violations.push({ status: 'VIOLATION' as const, message: 'classify `scripts/lib/` contents as shared or internal' })
-        const dependencyModules = sharedDependencies
-          .map((dependency) => dependency.split(':').at(-1))
-          .filter((module): module is string => Boolean(module))
+        if (legacyLibPresent) violations.push({ status: 'VIOLATION' as const, message: 'classify `scripts/lib/` contents as shared or internal' })
+        const dependencyModules = sharedDependencies.map((dependency) => dependency.split(':').at(-1)).filter((module): module is string => Boolean(module))
         const declared = [...new Set([...declaredSharedModules, ...dependencyModules])].sort()
         const present = [...new Set(presentSharedModules)].sort()
         if (declared.join('\n') !== present.join('\n'))

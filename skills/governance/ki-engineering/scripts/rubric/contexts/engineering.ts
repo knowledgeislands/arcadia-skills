@@ -112,12 +112,10 @@ export const auditEvidence = (
   overrideLevels?: readonly ViolationLevel[]
 ): readonly AuditOutcome[] => {
   const outcomes = evidence.map((finding): AuditOutcome => {
-    if (finding.level === 'PASS')
-      return { status: 'PASS', message: finding.message, ...(finding.subject ? { subject: finding.subject } : {}) }
+    if (finding.level === 'PASS') return { status: 'PASS', message: finding.message, ...(finding.subject ? { subject: finding.subject } : {}) }
     if (finding.level === 'NOT_APPLICABLE')
       return { status: 'NOT_APPLICABLE', message: finding.message, ...(finding.subject ? { subject: finding.subject } : {}) }
-    if (finding.level === 'INFO')
-      return { status: 'INFO', message: finding.message, ...(finding.subject ? { subject: finding.subject } : {}) }
+    if (finding.level === 'INFO') return { status: 'INFO', message: finding.message, ...(finding.subject ? { subject: finding.subject } : {}) }
     const level = finding.level as ViolationLevel
     return {
       status: 'VIOLATION',
@@ -177,7 +175,7 @@ const defaults = {
   "formatter": {
     "enabled": true,
     "indentStyle": "space",
-    "lineWidth": 140,
+    "lineWidth": 160,
     "indentWidth": 2
   },
   "javascript": {
@@ -211,18 +209,14 @@ const defaults = {
 `
 } as const
 
-const legacyAggregateScript = (key: string): boolean =>
-  key === 'ki:audit' || key === 'ki:conform' || key === 'ki:educate' || key === 'ki:help'
+const legacyAggregateScript = (key: string): boolean => key === 'ki:audit' || key === 'ki:conform' || key === 'ki:educate' || key === 'ki:help'
 
-const legacyToolScript = (key: string): boolean =>
-  /^ki:(lint|deps):/.test(key) || key === 'ki:knip' || key === 'ki:verify' || /^ki:[a-z-]+:lint$/.test(key)
+const legacyToolScript = (key: string): boolean => /^ki:(lint|deps):/.test(key) || key === 'ki:knip' || key === 'ki:verify' || /^ki:[a-z-]+:lint$/.test(key)
 
 const legacySkillModeScript = (key: string): boolean => /^ki:[a-z-]+:(audit|conform|educate|help)$/.test(key)
 
 const legacyRuntimeOnlyScript = (value: string): boolean =>
-  /^\s*(?:bun|node)\s+\S*(?:\.ki\/(?:bin|bootstrap)\/|scripts\/(?:govern|educate)\.ts|scripts\/rubric\/index\.ts|scripts\/vendored\/).*$/.test(
-    value
-  )
+  /^\s*(?:bun|node)\s+\S*(?:\.ki\/(?:bin|bootstrap)\/|scripts\/(?:govern|educate)\.ts|scripts\/rubric\/index\.ts|scripts\/vendored\/).*$/.test(value)
 
 const isSafeRegularFile = (path: string): boolean => {
   if (!existsSync(path)) return false
@@ -247,8 +241,7 @@ const packageContent = (source: string): string | undefined => {
   packageJson['lint-staged'] = lintStaged
   const scripts = { ...((packageJson.scripts as Record<string, string> | undefined) ?? {}) }
   for (const key of Object.keys(scripts)) {
-    if (legacyAggregateScript(key) || legacyToolScript(key) || legacySkillModeScript(key) || legacyRuntimeOnlyScript(scripts[key] ?? ''))
-      delete scripts[key]
+    if (legacyAggregateScript(key) || legacyToolScript(key) || legacySkillModeScript(key) || legacyRuntimeOnlyScript(scripts[key] ?? '')) delete scripts[key]
   }
   scripts.clean = scripts.clean?.includes('node_modules') ? scripts.clean : 'rm -rf dist node_modules'
   scripts.prepare = 'husky'

@@ -4,8 +4,7 @@ import type { AuthoringRubricContext, TomlRubricContext } from '../contexts/auth
 const TOML_KEYS: RubricItem<TomlRubricContext> = {
   code: 'TOML-keys',
   title: 'TOML keys are concise lowercase nouns',
-  description:
-    'Keys are lowercase, use `snake_case` for multiple words, and name the noun their value holds (`visibility`, not `repo_visibility_setting`).',
+  description: 'Keys are lowercase, use `snake_case` for multiple words, and name the noun their value holds (`visibility`, not `repo_visibility_setting`).',
   sources: ['standards-toml.md#keys-and-values'],
   judgment: { prompt: 'Are TOML keys concise lowercase nouns, using snake_case for multiple words?' }
 }

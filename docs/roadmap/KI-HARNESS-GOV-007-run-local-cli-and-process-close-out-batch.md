@@ -83,7 +83,7 @@ An affected parked item does not stop another named item unless the evidence est
 
 ### Run ledger
 
-`KI-HARNESS-FND-006` reached Acceptance through verified fleet evidence with no configuration change (`ed3d4c7b`).
+`KI-HARNESS-FND-006` initially reached Acceptance through verified fleet evidence with no configuration change (`ed3d4c7b`). The user subsequently selected organisation-wide 160-column convergence; its revised acceptance evidence is recorded in the FND-006 item, outside this completed batch.
 
 `KI-HARNESS-FND-002` reached Acceptance after the supported native recovery implementation (`2c669a1d`) and its item evidence packet (`c3e5c712`).
 

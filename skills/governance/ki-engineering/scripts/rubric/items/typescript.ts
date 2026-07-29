@@ -11,8 +11,7 @@ export const TYPESCRIPT: RubricFamily<EngineeringRubricContext, TypescriptRubric
     {
       code: 'TSC-1',
       title: 'Type-check passes',
-      description:
-        '`tsc --noEmit` exits clean at the root, or each declared workspace has a clean `tsc --noEmit -p <workspace>/tsconfig.json`.',
+      description: '`tsc --noEmit` exits clean at the root, or each declared workspace has a clean `tsc --noEmit -p <workspace>/tsconfig.json`.',
       sources: ['standards-engineering.md'],
       mechanical: {
         level: 'FAIL',

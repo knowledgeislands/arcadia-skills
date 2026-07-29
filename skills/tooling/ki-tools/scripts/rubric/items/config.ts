@@ -16,18 +16,13 @@ const CONFIG_1: RubricItem<ToolsConfigContext> = {
       phase: 'INSPECT',
       run: (context) => {
         if (context.rootState === 'absent') return [{ status: 'VIOLATION', level: 'FAIL', message: 'Audit target does not exist.' }]
-        if (context.rootState === 'unsafe')
-          return [{ status: 'VIOLATION', level: 'FAIL', message: 'Audit target is not a physical directory.' }]
-        if (!context.applicable)
-          return [{ status: 'NOT_APPLICABLE', message: `No ["${TABLE}"] declaration or bin/ structural marker is present.` }]
+        if (context.rootState === 'unsafe') return [{ status: 'VIOLATION', level: 'FAIL', message: 'Audit target is not a physical directory.' }]
+        if (!context.applicable) return [{ status: 'NOT_APPLICABLE', message: `No ["${TABLE}"] declaration or bin/ structural marker is present.` }]
         if (context.config === 'unsafe')
           return [{ status: 'VIOLATION', message: '.ki-config.toml is not a physical regular file.', subject: '.ki-config.toml' }]
-        if (context.config === 'missing')
-          return [{ status: 'VIOLATION', message: '.ki-config.toml is absent.', subject: '.ki-config.toml' }]
-        if (context.config === 'malformed')
-          return [{ status: 'VIOLATION', message: '.ki-config.toml is malformed.', subject: '.ki-config.toml' }]
-        if (context.config === 'absent')
-          return [{ status: 'VIOLATION', message: `["${TABLE}"] is absent from .ki-config.toml.`, subject: '.ki-config.toml' }]
+        if (context.config === 'missing') return [{ status: 'VIOLATION', message: '.ki-config.toml is absent.', subject: '.ki-config.toml' }]
+        if (context.config === 'malformed') return [{ status: 'VIOLATION', message: '.ki-config.toml is malformed.', subject: '.ki-config.toml' }]
+        if (context.config === 'absent') return [{ status: 'VIOLATION', message: `["${TABLE}"] is absent from .ki-config.toml.`, subject: '.ki-config.toml' }]
         return [
           context.configKeys.length === 0
             ? { status: 'PASS', message: `The keyless ["${TABLE}"] marker is present.`, subject: '.ki-config.toml' }

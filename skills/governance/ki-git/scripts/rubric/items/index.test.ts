@@ -7,9 +7,12 @@ test('the Git catalogue exposes the complete judgment-only session contract', ()
   expect(catalogue.name).toBe('ki-git')
   expect(catalogue.createSession).toBeFunction()
   expect(catalogue.families.map((family) => family.code)).toEqual(['RUBRIC', 'COMMIT', 'BRANCH', 'HYGIENE', 'LOCK'])
-  expect(
-    catalogue.families.filter((family) => family.code !== 'RUBRIC').flatMap((family) => family.items.map((item) => item.code))
-  ).toEqual(['COMMIT-1', 'BRANCH-1', 'HYGIENE-1', 'LOCK-1'])
+  expect(catalogue.families.filter((family) => family.code !== 'RUBRIC').flatMap((family) => family.items.map((item) => item.code))).toEqual([
+    'COMMIT-1',
+    'BRANCH-1',
+    'HYGIENE-1',
+    'LOCK-1'
+  ])
   const semanticItems = (
     catalogue.families.filter((family) => family.code !== 'RUBRIC') as unknown as readonly {
       items: readonly { mechanical?: unknown }[]

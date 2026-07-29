@@ -4,8 +4,7 @@ import type { CodexBindingContext } from '../contexts/codex.ts'
 const CODEXBIND_1: RubricItem<CodexBindingContext> = {
   code: 'CODEXBIND-1',
   title: 'Codex TOML agrees with targeted source',
-  description:
-    'The native Codex TOML MCP section contains canonical Codex-targeted servers without touching unrelated application entries.',
+  description: 'The native Codex TOML MCP section contains canonical Codex-targeted servers without touching unrelated application entries.',
   sources: ['standards-codex-binding.md'],
   mechanical: {
     level: 'WARN',

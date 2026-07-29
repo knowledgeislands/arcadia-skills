@@ -8,10 +8,7 @@ import { inspectRoadmap, rootRoadmap } from '../contexts/roadmap-evidence.ts'
 import catalogue from './index.ts'
 
 const temporaryDirectories: string[] = []
-const families = catalogue.families.filter((family) => family.code !== 'RUBRIC') as unknown as readonly RubricFamily<
-  RoadmapRubricContext,
-  unknown
->[]
+const families = catalogue.families.filter((family) => family.code !== 'RUBRIC') as unknown as readonly RubricFamily<RoadmapRubricContext, unknown>[]
 const items = families.flatMap((family) => family.items) as readonly RubricItem<unknown>[]
 
 afterEach(() => {
@@ -129,9 +126,7 @@ test('every item ends with Discussion', () => {
   const repository = createFixture()
   const item = join(repository, 'docs', 'roadmap', 'TEST-FND-001-build-the-foundation.md')
   writeFileSync(item, readFileSync(item, 'utf8').replace('\n## Discussion\n', '\n## Discussion moved\n'))
-  expect(inspectRoadmap(repository)).toContainEqual(
-    expect.objectContaining({ area: 'ITEM-3', msg: '## Discussion must be the final top-level section' })
-  )
+  expect(inspectRoadmap(repository)).toContainEqual(expect.objectContaining({ area: 'ITEM-3', msg: '## Discussion must be the final top-level section' }))
 })
 
 test('Soon work carries shaping detail', () => {
@@ -169,9 +164,7 @@ test('dependency links must be reciprocal', () => {
   const repository = createFixture()
   const item = join(repository, 'docs', 'roadmap', 'TEST-FND-001-build-the-foundation.md')
   writeFileSync(item, readFileSync(item, 'utf8').replace('blocks: []', 'blocks: [TEST-FND-002]'))
-  expect(inspectRoadmap(repository)).toContainEqual(
-    expect.objectContaining({ area: 'ITEM-4', msg: "dependency 'TEST-FND-002' does not exist" })
-  )
+  expect(inspectRoadmap(repository)).toContainEqual(expect.objectContaining({ area: 'ITEM-4', msg: "dependency 'TEST-FND-002' does not exist" }))
 })
 
 test('item theme codes must be declared by the repository roadmap configuration', () => {

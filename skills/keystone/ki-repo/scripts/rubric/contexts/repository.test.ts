@@ -119,9 +119,7 @@ describe('ki-repo session', () => {
     applyWrites(root, writes)
     const audit = createRepoSession(options(root, 'audit'), inspect)
     const [item] = WORK.items
-    expect(item?.mechanical?.audit.run(workingAreasContext(audit))).toEqual([
-      { status: 'PASS', message: 'working-area scaffold is present and conformed' }
-    ])
+    expect(item?.mechanical?.audit.run(workingAreasContext(audit))).toEqual([{ status: 'PASS', message: 'working-area scaffold is present and conformed' }])
   })
 
   test('repairs a drifted working-area README without recreating it', () => {

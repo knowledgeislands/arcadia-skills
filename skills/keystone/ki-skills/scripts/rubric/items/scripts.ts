@@ -74,12 +74,7 @@ const SCRIPT_8: RubricItem<ScriptsRubricContext> = {
         const violations = helpEvidence
           .filter(
             ({ declaresPurpose, declaresCanonicalRun, declaresBoundary, declaresShortHelp, declaresLongHelp, declaresUsageText }) =>
-              !declaresPurpose ||
-              !declaresCanonicalRun ||
-              !declaresBoundary ||
-              !declaresShortHelp ||
-              !declaresLongHelp ||
-              !declaresUsageText
+              !declaresPurpose || !declaresCanonicalRun || !declaresBoundary || !declaresShortHelp || !declaresLongHelp || !declaresUsageText
           )
           .map(({ subject }) => ({
             status: 'VIOLATION' as const,

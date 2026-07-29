@@ -28,9 +28,7 @@ test('the default export is the sole catalogue entrypoint and families are compl
   expect(Object.keys(tomlModule)).toEqual(['TOML'])
   expect(Object.keys(synchronisationModule)).toEqual(['SYNCHRONISATION'])
   expect(catalogue.families.map((family) => family.code)).toEqual(['RUBRIC', 'MD', 'OWN', 'TOML', 'SYNC'])
-  expect(
-    catalogue.families.filter((family) => family.code !== 'RUBRIC').flatMap((family) => family.items.map((item) => item.code))
-  ).toEqual([
+  expect(catalogue.families.filter((family) => family.code !== 'RUBRIC').flatMap((family) => family.items.map((item) => item.code))).toEqual([
     'MD-mech',
     'MD-table',
     'MD-footnote',

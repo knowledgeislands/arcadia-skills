@@ -153,8 +153,7 @@ const resolveDirectory = (target: string, kbMode: boolean): string => {
   }
   if (
     isDirectory(absolute) &&
-    (['README.md', 'Decisions.md'].some((name) => existsSync(join(absolute, name))) ||
-      readdirSync(absolute).some((name) => name.endsWith('.md')))
+    (['README.md', 'Decisions.md'].some((name) => existsSync(join(absolute, name))) || readdirSync(absolute).some((name) => name.endsWith('.md')))
   )
     return absolute
   return join(absolute, kbMode ? KB_DIR : CODE_DIR)
@@ -269,11 +268,7 @@ const createIndexDraft = (repository: string, path: string, original: string): I
   }
 }
 
-export const createDecisionRecordsSession = ({
-  mode,
-  repository,
-  publication
-}: RubricContextOptions): RubricSession<DecisionRecordsRubricContext> => {
+export const createDecisionRecordsSession = ({ mode, repository, publication }: RubricContextOptions): RubricSession<DecisionRecordsRubricContext> => {
   const kbMode = isKb(repository)
   const directory = resolveDirectory(repository, kbMode)
   const exists = isDirectory(directory)

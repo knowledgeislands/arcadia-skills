@@ -18,11 +18,7 @@ const temporaryDirectory = (prefix: string): string => {
   return directory
 }
 
-const options = (
-  repository: string,
-  mode: 'audit' | 'conform',
-  configuration: Readonly<Record<string, unknown>> = {}
-): RubricContextOptions => ({
+const options = (repository: string, mode: 'audit' | 'conform', configuration: Readonly<Record<string, unknown>> = {}): RubricContextOptions => ({
   mode,
   repository,
   userHome: tmpdir(),
@@ -35,16 +31,7 @@ const activityBase = (): string => {
   mkdirSync(activities, { recursive: true })
   writeFileSync(
     join(activities, 'Morning Briefing.md'),
-    [
-      '---',
-      'status: active',
-      'realization: scheduled-task',
-      'schedule_name: Morning Briefing',
-      'author: Test',
-      '---',
-      '# Morning Briefing',
-      ''
-    ].join('\n')
+    ['---', 'status: active', 'realization: scheduled-task', 'schedule_name: Morning Briefing', 'author: Test', '---', '# Morning Briefing', ''].join('\n')
   )
   return repository
 }

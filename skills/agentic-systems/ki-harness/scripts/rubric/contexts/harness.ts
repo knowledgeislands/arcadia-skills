@@ -77,10 +77,7 @@ const parseFrontmatterName = (content: string): string | null => {
   return nameMatch?.[1]?.trim() ?? null
 }
 
-const inspectSkills = (
-  repository: string,
-  state: RepositoryState
-): Pick<HarnessSkillsContext, 'skillsState' | 'skills' | 'unsafePaths'> => {
+const inspectSkills = (repository: string, state: RepositoryState): Pick<HarnessSkillsContext, 'skillsState' | 'skills' | 'unsafePaths'> => {
   const root = join(repository, 'skills')
   const skillsState = state === 'physical' ? pathState(root) : 'missing'
   if (skillsState !== 'directory') return { skillsState, skills: [], unsafePaths: [] }
@@ -138,8 +135,7 @@ export const createHarnessSession = ({ mode, repository, publication }: RubricCo
   const configPath = join(root, '.ki-config.toml')
   const rawConfigState = state === 'physical' ? pathState(configPath) : 'missing'
   let configContent: string | null = null
-  let configState: HarnessConfigContext['state'] =
-    rawConfigState === 'missing' ? 'missing' : rawConfigState === 'file' ? 'physical' : 'unsafe'
+  let configState: HarnessConfigContext['state'] = rawConfigState === 'missing' ? 'missing' : rawConfigState === 'file' ? 'physical' : 'unsafe'
   if (configState === 'physical') {
     try {
       configContent = readFileSync(configPath, 'utf8')

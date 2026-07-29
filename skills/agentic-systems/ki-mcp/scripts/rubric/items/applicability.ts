@@ -18,16 +18,14 @@ const KI_CONFIG: RubricItem<McpApplicabilityContext> = {
     audit: {
       phase: 'INSPECT',
       run: (context) => {
-        if (!context.rootExists)
-          return outcome('VIOLATION', `Audit target must be an existing regular directory: ${context.root}.`, context.root)
+        if (!context.rootExists) return outcome('VIOLATION', `Audit target must be an existing regular directory: ${context.root}.`, context.root)
         if (!context.applicable)
           return outcome(
             'NOT_APPLICABLE',
             'ki-mcp not applicable: no ["knowledgeislands/ki-agentic-harness:ki-mcp"] declaration or src/mcp-server/ structural marker.',
             context.root
           )
-        if (context.config === 'missing')
-          return outcome('VIOLATION', 'Shared configuration file is missing; ki-repo owns its creation.', '.ki-config.toml')
+        if (context.config === 'missing') return outcome('VIOLATION', 'Shared configuration file is missing; ki-repo owns its creation.', '.ki-config.toml')
         if (context.config === 'unsafe')
           return outcome('VIOLATION', '.ki-config.toml is not a regular file; marker repair remains report-only.', '.ki-config.toml')
         if (context.config === 'malformed')
@@ -37,11 +35,7 @@ const KI_CONFIG: RubricItem<McpApplicabilityContext> = {
             '.ki-config.toml'
           )
         if (context.config === 'absent')
-          return outcome(
-            'VIOLATION',
-            'No ["knowledgeislands/ki-agentic-harness:ki-mcp"] table; add it to mark this repository as governed.',
-            '.ki-config.toml'
-          )
+          return outcome('VIOLATION', 'No ["knowledgeislands/ki-agentic-harness:ki-mcp"] table; add it to mark this repository as governed.', '.ki-config.toml')
         return context.configKeys.length > 0
           ? outcome(
               'VIOLATION',

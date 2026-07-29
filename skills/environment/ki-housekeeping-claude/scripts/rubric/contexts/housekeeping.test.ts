@@ -97,9 +97,7 @@ describe('ki-housekeeping-claude session', () => {
     const context = memoryContext(session)
 
     expect(context.index.exists[0]?.status).toBe('NOT_APPLICABLE')
-    expect(session.subjects.find(({ families }) => families.includes('IDX'))?.subject).toBe(
-      `.claude/projects/${repositorySlug(home)}/memory`
-    )
+    expect(session.subjects.find(({ families }) => families.includes('IDX'))?.subject).toBe(`.claude/projects/${repositorySlug(home)}/memory`)
   })
 
   test('does not traverse a symlinked project memory directory', () => {
@@ -111,9 +109,7 @@ describe('ki-housekeeping-claude session', () => {
     symlinkSync(outside, selectedMemoryDirectory(home))
     const session = createHousekeepingSession(options(home, 'conform'))
 
-    expect(session.subjects.find(({ families }) => families.includes('IDX'))?.subject).toBe(
-      `.claude/projects/${repositorySlug(home)}/memory`
-    )
+    expect(session.subjects.find(({ families }) => families.includes('IDX'))?.subject).toBe(`.claude/projects/${repositorySlug(home)}/memory`)
     expect(session.proposal()).toEqual({ writes: [] })
   })
 
@@ -125,9 +121,7 @@ describe('ki-housekeeping-claude session', () => {
     symlinkSync(outside, join(home, '.claude'))
     const session = createHousekeepingSession(options(home, 'conform'))
 
-    expect(session.subjects.find(({ families }) => families.includes('IDX'))?.subject).toBe(
-      `.claude/projects/${repositorySlug(home)}/memory`
-    )
+    expect(session.subjects.find(({ families }) => families.includes('IDX'))?.subject).toBe(`.claude/projects/${repositorySlug(home)}/memory`)
     expect(session.proposal()).toEqual({ writes: [] })
   })
 
@@ -192,10 +186,7 @@ describe('ki-housekeeping-claude session', () => {
     const slug = repository.replace(/[/.]/g, '-')
     const directory = join(home, '.claude', 'projects', slug, 'memory')
     mkdirSync(directory, { recursive: true })
-    writeFileSync(
-      join(directory, 'MEMORY.md'),
-      '<!-- headroom:learn:start -->\nknowledgeislands/other-repository\n<!-- headroom:learn:end -->\n'
-    )
+    writeFileSync(join(directory, 'MEMORY.md'), '<!-- headroom:learn:start -->\nknowledgeislands/other-repository\n<!-- headroom:learn:end -->\n')
 
     const session = createHousekeepingSession(options(home, 'audit'))
     const context = memoryContext(session)

@@ -34,12 +34,10 @@ const VERIFY_1: RubricItem<FeatureVerificationContext> = {
 const VERIFY_2: RubricItem<FeatureVerificationContext> = {
   code: 'VERIFY-2',
   title: 'Verify hooks are concrete and checkable',
-  description:
-    'The `_Verify:_` hook names a concrete built-output assertion, test, or source symbol rather than restating the requirement.',
+  description: 'The `_Verify:_` hook names a concrete built-output assertion, test, or source symbol rather than restating the requirement.',
   sources: [SOURCE],
   judgment: {
-    prompt:
-      'Assess whether each `_Verify:_` hook names a concrete built-output assertion, test, or source symbol rather than restating the requirement.'
+    prompt: 'Assess whether each `_Verify:_` hook names a concrete built-output assertion, test, or source symbol rather than restating the requirement.'
   }
 }
 

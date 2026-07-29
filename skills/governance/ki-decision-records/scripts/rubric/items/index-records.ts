@@ -37,8 +37,7 @@ const INDEX_2: RubricItem<IndexRubricContext> = {
     audit: {
       phase: 'DERIVED',
       run: (context: IndexRubricContext) => {
-        if (!context.indexExists)
-          return [{ status: 'NOT_APPLICABLE', message: 'The index is absent.', subject: context.indexFile }] as const
+        if (!context.indexExists) return [{ status: 'NOT_APPLICABLE', message: 'The index is absent.', subject: context.indexFile }] as const
         return outcomes(
           context.records
             .filter((record) => (context.indexCounts.get(record.id) ?? 0) !== 1)
@@ -72,8 +71,7 @@ const INDEX_3: RubricItem<IndexRubricContext> = {
     audit: {
       phase: 'DERIVED',
       run: (context: IndexRubricContext) => {
-        if (!context.indexExists)
-          return [{ status: 'NOT_APPLICABLE', message: 'The index is absent.', subject: context.indexFile }] as const
+        if (!context.indexExists) return [{ status: 'NOT_APPLICABLE', message: 'The index is absent.', subject: context.indexFile }] as const
         const ids = new Set(context.records.map((record) => record.id))
         return outcomes(
           context.indexIds
@@ -95,8 +93,7 @@ const INDEX_3: RubricItem<IndexRubricContext> = {
 const INDEX_6: RubricItem<IndexRubricContext> = {
   code: 'INDEX-6',
   title: 'Reveal order',
-  description:
-    'Entries are in a sensible reveal order: a from-scratch build narrative with roots first, then dependents, weaving sub-scopes in.',
+  description: 'Entries are in a sensible reveal order: a from-scratch build narrative with roots first, then dependents, weaving sub-scopes in.',
   sources: [SOURCE],
   judgment: { prompt: 'Assess whether index entries form a sensible from-scratch reveal order with roots before dependents.' }
 }

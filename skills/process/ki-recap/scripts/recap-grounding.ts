@@ -128,11 +128,7 @@ const candidateDirectories = ({ repo, transcriptsDir }: Pick<Arguments, 'transcr
   codex: transcriptsDir ? resolve(transcriptsDir) : resolveCodexSessionsDir()
 })
 
-const discoverCandidates = ({
-  runtime,
-  repo,
-  transcriptsDir
-}: Pick<Arguments, 'runtime' | 'transcriptsDir'> & { repo: string }): TranscriptCandidate[] => {
+const discoverCandidates = ({ runtime, repo, transcriptsDir }: Pick<Arguments, 'runtime' | 'transcriptsDir'> & { repo: string }): TranscriptCandidate[] => {
   const directories = candidateDirectories({ repo, transcriptsDir })
   if (runtime === 'claude') return claudeCandidates(directories.claude)
   if (runtime === 'codex') return codexCandidates(directories.codex, repo)
@@ -141,13 +137,7 @@ const discoverCandidates = ({
 
 const selectTranscript = (candidates: readonly TranscriptCandidate[], selector: string | undefined): TranscriptCandidate | null => {
   if (!selector) return [...candidates].sort((left, right) => right.mtime - left.mtime)[0] ?? null
-  if (
-    selector.length <= '.jsonl'.length ||
-    !selector.endsWith('.jsonl') ||
-    isAbsolute(selector) ||
-    basename(selector) !== selector ||
-    selector.includes('\\')
-  )
+  if (selector.length <= '.jsonl'.length || !selector.endsWith('.jsonl') || isAbsolute(selector) || basename(selector) !== selector || selector.includes('\\'))
     throw new Error('`--transcript` must be a basename ending in .jsonl from the eligible transcript candidates')
 
   const matches = candidates.filter((candidate_) => basename(candidate_.path) === selector)

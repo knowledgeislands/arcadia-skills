@@ -39,9 +39,7 @@ const COLL_1: RubricItem<CollisionRubricContext> = {
           }))
           .sort((left, right) => left.message.localeCompare(right.message))
         const [firstViolation, ...remainingViolations] = violations
-        return firstViolation
-          ? [firstViolation, ...remainingViolations]
-          : [{ status: 'PASS', message: 'no quoted trigger phrases are shared across skills' }]
+        return firstViolation ? [firstViolation, ...remainingViolations] : [{ status: 'PASS', message: 'no quoted trigger phrases are shared across skills' }]
       }
     }
   }

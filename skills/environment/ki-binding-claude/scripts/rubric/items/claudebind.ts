@@ -46,10 +46,7 @@ const CLAUDEBIND_2: RubricItem<ClaudeBindingContext> = {
                 ? { status: 'PASS' as const, message: 'The KI plugin is registered and enabled.', subject: file.subject }
                 : {
                     status: 'VIOLATION' as const,
-                    message:
-                      file.status === 'pending'
-                        ? 'The KI plugin is not registered and enabled.'
-                        : 'Cowork settings are unsafe or unreadable.',
+                    message: file.status === 'pending' ? 'The KI plugin is not registered and enabled.' : 'Cowork settings are unsafe or unreadable.',
                     subject: file.subject
                   }
             )

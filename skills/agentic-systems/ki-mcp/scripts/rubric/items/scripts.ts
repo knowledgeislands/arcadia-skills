@@ -15,8 +15,7 @@ const SCR_1: RubricItem<McpScriptsContext> = {
     audit: {
       phase: 'INSPECT',
       run: (context) => {
-        if (!context.packageJson)
-          return [{ status: 'VIOLATION', message: 'Package manifest is missing or unparseable.', subject: 'package.json' }]
+        if (!context.packageJson) return [{ status: 'VIOLATION', message: 'Package manifest is missing or unparseable.', subject: 'package.json' }]
         const checks: AuditOutcome[] = ['ki:server:mcp:dev', 'ki:server:mcp:inspect', 'ki:server:mcp:start'].map((name) =>
           context.scripts[name]
             ? ({ status: 'PASS', message: `${name} is present.`, subject: 'package.json' } as AuditOutcome)

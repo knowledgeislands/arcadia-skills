@@ -60,8 +60,7 @@ const OPT_3: RubricItem<OptionalRubricContext> = {
     audit: {
       phase: 'INSPECT',
       run: ({ allowedToolsPresent, allowedTools, disallowedToolsPresent, disallowedTools }) => {
-        if (!allowedToolsPresent && !disallowedToolsPresent)
-          return [{ status: 'NOT_APPLICABLE', message: 'tool declarations are not present' }]
+        if (!allowedToolsPresent && !disallowedToolsPresent) return [{ status: 'NOT_APPLICABLE', message: 'tool declarations are not present' }]
         const violations = [
           ...(allowedToolsPresent ? toolDeclarationFindings('allowed-tools', allowedTools) : []),
           ...(disallowedToolsPresent ? toolDeclarationFindings('disallowed-tools', disallowedTools) : [])

@@ -11,16 +11,11 @@ const BIND_1: RubricItem<BindingRubricContext> = {
     audit: {
       phase: 'INSPECT',
       run: ({ sourceState, mcporterPath, mcporterServerKeys }) => {
-        if (sourceState.kind !== 'valid')
-          return [{ status: 'NOT_APPLICABLE', message: 'The source could not be read, so mcporter was not compared.' }]
+        if (sourceState.kind !== 'valid') return [{ status: 'NOT_APPLICABLE', message: 'The source could not be read, so mcporter was not compared.' }]
         if (mcporterServerKeys === null)
-          return [
-            { status: 'INFO', message: 'The mcporter configuration is absent or unreadable; it was not compared.', subject: mcporterPath }
-          ]
+          return [{ status: 'INFO', message: 'The mcporter configuration is absent or unreadable; it was not compared.', subject: mcporterPath }]
         const universe = new Set(sourceState.entries.flatMap((entry) => (entry.name ? [entry.name] : [])))
-        const expected = new Set(
-          sourceState.entries.flatMap((entry) => (entry.name && entry.clients?.includes('mcporter') ? [entry.name] : []))
-        )
+        const expected = new Set(sourceState.entries.flatMap((entry) => (entry.name && entry.clients?.includes('mcporter') ? [entry.name] : [])))
         const present = new Set([...mcporterServerKeys].filter((name) => universe.has(name)))
         const missing = [...expected].filter((name) => !present.has(name)).sort()
         const stray = [...present].filter((name) => !expected.has(name)).sort()
@@ -63,12 +58,8 @@ const BIND_2: RubricItem<BindingRubricContext> = {
           const duplicate = entry.name ? names.has(entry.name) : false
           if (entry.name) names.add(entry.name)
           return [
-            ...(!entry.name
-              ? [{ status: 'VIOLATION' as const, level: 'WARN' as const, message: `${label} has no name.`, subject: source }]
-              : []),
-            ...(duplicate
-              ? [{ status: 'VIOLATION' as const, level: 'WARN' as const, message: `${label} repeats an existing name.`, subject: source }]
-              : []),
+            ...(!entry.name ? [{ status: 'VIOLATION' as const, level: 'WARN' as const, message: `${label} has no name.`, subject: source }] : []),
+            ...(duplicate ? [{ status: 'VIOLATION' as const, level: 'WARN' as const, message: `${label} repeats an existing name.`, subject: source }] : []),
             ...((entry.clients ?? []).length === 0
               ? [{ status: 'VIOLATION' as const, level: 'WARN' as const, message: `${label} targets no client.`, subject: source }]
               : []),

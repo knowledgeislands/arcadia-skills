@@ -23,8 +23,7 @@ const LAY_1: RubricItem<McpLayoutContext> = {
                 : `Required directory is missing: ${path}/.`,
           subject: path
         }))
-        if (context.cli.state === 'unsafe')
-          required.push({ status: 'VIOLATION', message: 'Optional src/cli/ is not a regular directory.', subject: 'src/cli' })
+        if (context.cli.state === 'unsafe') required.push({ status: 'VIOLATION', message: 'Optional src/cli/ is not a regular directory.', subject: 'src/cli' })
         if (context.cli.state === 'directory')
           required.push(
             ...context.cli.files.map(({ path, state }) => ({

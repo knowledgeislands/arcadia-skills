@@ -282,8 +282,7 @@ const WCF_13: RubricItem<WebsiteCloudflareContext> = {
     }
   },
   judgment: {
-    prompt:
-      'Confirm the real deployment path builds a current dist before invoking wrangler deploy; do not execute deployment during audit or conform.'
+    prompt: 'Confirm the real deployment path builds a current dist before invoking wrangler deploy; do not execute deployment during audit or conform.'
   }
 }
 
@@ -337,8 +336,7 @@ const WCF_19: RubricItem<WebsiteCloudflareContext> = {
     }
   },
   judgment: {
-    prompt:
-      'Confirm configs classified as companions have main without assets and route their bindings, secrets, and runtime concerns to cloudflare/wrangler.'
+    prompt: 'Confirm configs classified as companions have main without assets and route their bindings, secrets, and runtime concerns to cloudflare/wrangler.'
   }
 }
 
@@ -380,8 +378,7 @@ const WCF_20: RubricItem<WebsiteCloudflareContext> = {
   }
 }
 
-const safeSiteRoot = (value: string): boolean =>
-  value === '.' || (!value.startsWith('/') && !value.split(/[\\/]/).includes('..') && !value.includes('\\'))
+const safeSiteRoot = (value: string): boolean => value === '.' || (!value.startsWith('/') && !value.split(/[\\/]/).includes('..') && !value.includes('\\'))
 
 const WCF_21: RubricItem<WebsiteCloudflareContext> = {
   code: 'WCF-21',

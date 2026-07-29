@@ -69,10 +69,8 @@ export const createPluginsSession = ({ repository, publication }: RubricContextO
   const root = resolve(repository)
   const available = physicalDirectory(root)
   const at = (...parts: string[]) => join(root, ...parts)
-  const has = (...parts: string[]) =>
-    available && (containedPhysical(root, at(...parts), 'file') || containedPhysical(root, at(...parts), 'directory'))
-  const read = (...parts: string[]) =>
-    available && containedPhysical(root, at(...parts), 'file') ? readFileSync(at(...parts), 'utf8') : ''
+  const has = (...parts: string[]) => available && (containedPhysical(root, at(...parts), 'file') || containedPhysical(root, at(...parts), 'directory'))
+  const read = (...parts: string[]) => (available && containedPhysical(root, at(...parts), 'file') ? readFileSync(at(...parts), 'utf8') : '')
   const isDir = (...parts: string[]) => available && containedPhysical(root, at(...parts), 'directory')
 
   const configRaw = read('.ki-config.toml')
@@ -98,13 +96,9 @@ export const createPluginsSession = ({ repository, publication }: RubricContextO
   const skillRoot = pluginName ? at(pluginName, 'skills') : ''
   const projectedSkills =
     skillRoot && isDir(pluginName, 'skills')
-      ? readdirSync(skillRoot, { withFileTypes: true }).filter(
-          (skill) => skill.isDirectory() && !skill.isSymbolicLink() && !skill.name.startsWith('.')
-        )
+      ? readdirSync(skillRoot, { withFileTypes: true }).filter((skill) => skill.isDirectory() && !skill.isSymbolicLink() && !skill.name.startsWith('.'))
       : []
-  const projectedSkillsWithoutManifest = projectedSkills
-    .filter((skill) => !has(pluginName, 'skills', skill.name, 'SKILL.md'))
-    .map((skill) => skill.name)
+  const projectedSkillsWithoutManifest = projectedSkills.filter((skill) => !has(pluginName, 'skills', skill.name, 'SKILL.md')).map((skill) => skill.name)
 
   const agentRoot = pluginName ? at(pluginName, 'agents') : ''
   const agentEntries =

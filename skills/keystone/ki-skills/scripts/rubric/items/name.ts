@@ -14,8 +14,7 @@ const NAME_1: RubricItem<NameRubricContext> = {
     level: 'FAIL',
     audit: {
       phase: 'INSPECT',
-      run: ({ name }) =>
-        !name ? [{ status: 'VIOLATION', message: '`name` is missing from frontmatter' }] : [{ status: 'PASS', message: 'name is present' }]
+      run: ({ name }) => (!name ? [{ status: 'VIOLATION', message: '`name` is missing from frontmatter' }] : [{ status: 'PASS', message: 'name is present' }])
     }
   }
 }

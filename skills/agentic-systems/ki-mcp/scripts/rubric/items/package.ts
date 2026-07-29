@@ -28,10 +28,7 @@ const PKG_1: RubricItem<McpPackageContext> = {
         return [
           {
             status: pkg.main === MAIN ? ('PASS' as const) : ('VIOLATION' as const),
-            message:
-              pkg.main === MAIN
-                ? `main = ${JSON.stringify(MAIN)}.`
-                : `main should be ${JSON.stringify(MAIN)}, got ${JSON.stringify(pkg.main)}.`,
+            message: pkg.main === MAIN ? `main = ${JSON.stringify(MAIN)}.` : `main should be ${JSON.stringify(MAIN)}, got ${JSON.stringify(pkg.main)}.`,
             subject: 'package.json'
           },
           {

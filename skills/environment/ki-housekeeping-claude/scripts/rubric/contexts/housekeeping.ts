@@ -184,9 +184,7 @@ const projectContext = (
         const valid = Boolean(type && VALID_TYPES.has(type))
         return {
           status: valid ? ('PASS' as const) : ('VIOLATION' as const),
-          message: valid
-            ? 'metadata.type is valid'
-            : `metadata.type is '${type ?? '(missing)'}', must be one of ${[...VALID_TYPES].join(', ')}`,
+          message: valid ? 'metadata.type is valid' : `metadata.type is '${type ?? '(missing)'}', must be one of ${[...VALID_TYPES].join(', ')}`,
           subject: memory.relativePath
         }
       })
@@ -253,9 +251,7 @@ const projectContext = (
                   }
             )
           })()
-  const knownNames = new Set(
-    memoryFiles.map((memory) => memory.frontmatter?.name).filter((name): name is string => typeof name === 'string')
-  )
+  const knownNames = new Set(memoryFiles.map((memory) => memory.frontmatter?.name).filter((name): name is string => typeof name === 'string'))
   let dangling = 0
   for (const memory of memoryFiles) {
     for (const link of memory.content.match(/\[\[([a-z0-9-]+)\]\]/g) ?? []) {
@@ -362,12 +358,7 @@ const projectContext = (
   }
 }
 
-export const createHousekeepingSession = ({
-  mode,
-  repository,
-  userHome,
-  publication
-}: RubricContextOptions): RubricSession<HousekeepingRubricContext> => {
+export const createHousekeepingSession = ({ mode, repository, userHome, publication }: RubricContextOptions): RubricSession<HousekeepingRubricContext> => {
   const home = resolve(userHome)
   const repositoryRoot = resolve(repository)
   const repositoryName = basename(repositoryRoot)

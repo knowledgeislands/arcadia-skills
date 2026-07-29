@@ -19,8 +19,7 @@ const BODY_1: RubricItem<RecordsRubricContext> = {
       run: (context: RecordsRubricContext) =>
         outcomes(
           context.records.flatMap((record): AuditOutcome[] => {
-            if (!record.headingId)
-              return [{ status: 'VIOLATION', message: 'Canonical decision-record heading is absent.', subject: record.file }]
+            if (!record.headingId) return [{ status: 'VIOLATION', message: 'Canonical decision-record heading is absent.', subject: record.file }]
             if (record.headingId !== record.id)
               return [
                 {
@@ -137,8 +136,7 @@ const BODY_10: RubricItem<RecordsRubricContext> = {
     'The record is written as now and carries no historic, superseding, or forward-looking narration. Such content belongs in the ROADMAP or a KB stream, not in a present-state record.',
   sources: [SOURCE],
   judgment: {
-    prompt:
-      'Assess whether the record states the present decision without historic, superseding, forward-looking, parked, or not-yet-started narration.'
+    prompt: 'Assess whether the record states the present decision without historic, superseding, forward-looking, parked, or not-yet-started narration.'
   }
 }
 

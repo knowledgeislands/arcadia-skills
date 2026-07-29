@@ -3,9 +3,5 @@ import definition from './index.ts'
 
 describe('Codex tokenomics catalogue', () => {
   test('owns only Codex evidence and explicit unavailable metrics', () =>
-    expect(definition.families.flatMap((family) => family.items.map((item) => item.code))).toEqual([
-      'CODEX-SURF-1',
-      'CODEX-NA-1',
-      'RUBRIC-1'
-    ]))
+    expect(definition.families.flatMap((family) => family.items.map((item) => item.code))).toEqual(['CODEX-SURF-1', 'CODEX-NA-1', 'RUBRIC-1']))
 })

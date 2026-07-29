@@ -38,8 +38,7 @@ export const ENVIRONMENT: RubricFamily<EngineeringRubricContext, EnvironmentRubr
     {
       code: 'ENV-4',
       title: 'XDG paths are honoured',
-      description:
-        'Config, data, cache, and state paths honour the matching `$XDG_*` variable before falling back to the specification default.',
+      description: 'Config, data, cache, and state paths honour the matching `$XDG_*` variable before falling back to the specification default.',
       sources: ['standards-engineering.md'],
       judgment: { prompt: 'Do config, data, cache, and state paths honour the appropriate XDG environment variable?' }
     }

@@ -1,15 +1,7 @@
 #!/usr/bin/env bun
 /** Focused contract tests for the generic structured-rubric model and catalogue. */
 import { describe, expect, test } from 'bun:test'
-import {
-  defineRubricFamily,
-  OUTCOME_STATUSES,
-  RUBRIC_PHASES,
-  type RubricDefinition,
-  type RubricItem,
-  rubricTypes,
-  VIOLATION_LEVELS
-} from './rubric.ts'
+import { defineRubricFamily, OUTCOME_STATUSES, RUBRIC_PHASES, type RubricDefinition, type RubricItem, rubricTypes, VIOLATION_LEVELS } from './rubric.ts'
 
 type RootContext = {
   document: { present: boolean }

@@ -15,8 +15,7 @@ const PATTERN_J1: RubricItem<ReviewContext> = {
 const PATTERN_J2: RubricItem<ReviewContext> = {
   code: 'PATTERN-J2',
   title: 'Native fragment-binding boundary',
-  description:
-    'Every Pattern C binding declares its ownership, removal, and adoption boundaries without importing secrets or undeclared application state.',
+  description: 'Every Pattern C binding declares its ownership, removal, and adoption boundaries without importing secrets or undeclared application state.',
   sources: ['standards-chezmoi-dotfiles.md'],
   judgment: {
     prompt:

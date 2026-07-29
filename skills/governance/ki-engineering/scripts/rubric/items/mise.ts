@@ -26,24 +26,8 @@ export const MISE: RubricFamily<EngineeringRubricContext, MiseRubricContext> = {
   standard: 'standards-engineering.md',
   selectContext: (context) => context.mise,
   items: [
-    item(
-      'MISE-1',
-      'Root toolchain pin',
-      'A root `mise.toml` pins both `node` and `bun` under `[tools]`.',
-      (context) => context.mise1,
-      true
-    ),
-    item(
-      'MISE-2',
-      'Bun pin drift pair',
-      'The `mise.toml` Bun version equals the `packageManager` Bun version.',
-      (context) => context.mise2
-    ),
-    item(
-      'MISE-3',
-      'No legacy tool pins',
-      'No legacy `.node-version`, `.nvmrc`, or `.bun-version` file lingers beside `mise.toml`.',
-      (context) => context.mise3
-    )
+    item('MISE-1', 'Root toolchain pin', 'A root `mise.toml` pins both `node` and `bun` under `[tools]`.', (context) => context.mise1, true),
+    item('MISE-2', 'Bun pin drift pair', 'The `mise.toml` Bun version equals the `packageManager` Bun version.', (context) => context.mise2),
+    item('MISE-3', 'No legacy tool pins', 'No legacy `.node-version`, `.nvmrc`, or `.bun-version` file lingers beside `mise.toml`.', (context) => context.mise3)
   ]
 }

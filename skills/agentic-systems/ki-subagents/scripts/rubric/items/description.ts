@@ -4,10 +4,7 @@ import type { AgentFileContext, AgentsRubricContext } from '../contexts/agents.t
 const STANDARD = 'standards-subagent-definitions.md'
 const DESCRIPTION_MAX = 1024
 const stripCode = (markdown: string): string => markdown.replace(/```[\s\S]*?```/g, '').replace(/`[^`\n]*`/g, '')
-const inspect = (
-  context: AgentFileContext,
-  run: (agent: NonNullable<AgentFileContext['agent']>) => readonly AuditOutcome[]
-): readonly AuditOutcome[] =>
+const inspect = (context: AgentFileContext, run: (agent: NonNullable<AgentFileContext['agent']>) => readonly AuditOutcome[]): readonly AuditOutcome[] =>
   context.agent ? run(context.agent) : [{ status: 'NOT_APPLICABLE', message: 'No physical agent definition is available.' }]
 
 const DESC_1: RubricItem<AgentFileContext> = {
