@@ -40,7 +40,7 @@ ki-next
             └─> ki-implement
                   Ready → In progress → Acceptance
                     └─> ki-accept
-                          Acceptance → Done and confirmed prune
+                          Acceptance → Done and explicit prune selection
 ```
 
 `ki-plan` does not implement work, assemble acceptance evidence, accept delivery, mark an item Done, or prune retained records.

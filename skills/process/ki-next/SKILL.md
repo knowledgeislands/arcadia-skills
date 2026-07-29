@@ -64,5 +64,5 @@ With no argument or `next`, run the full procedure.
 - This is a process skill, not a universal AUDIT / CONFORM / EDUCATE / REFRESH checker.
 - No roadmap or work-item write occurs until the user explicitly confirms the selected item or batch, order, wording, and horizon or Focus transition.
 - `ki-roadmap` or `ki-kb-streams` owns transition rules; `ki-next` applies them consistently.
-- `ki-next` may recommend exact `status: done` records for pruning, but only `ki-accept` may perform the confirmed deletion.
+- `ki-next` may recommend `status: done` records for pruning, but only `ki-accept` may delete an explicitly selected path or glob.
 - Installed as a core user skill by `ki bootstrap`; it is not a repository-governance root.

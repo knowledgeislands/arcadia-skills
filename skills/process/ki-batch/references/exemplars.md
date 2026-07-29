@@ -54,7 +54,7 @@ The approval must be explicit and must cover this exact record.
 
 If acceptance authority is intended, name the exact items and state it separately under **Allowed decisions and delegation**.
 
-Pruning needs its own exact destructive confirmation even when batch acceptance is authorised.
+Pruning needs its own explicit roadmap-item path or glob selection even when batch acceptance is authorised.
 
 ## Parked-item and post-gate example
 
