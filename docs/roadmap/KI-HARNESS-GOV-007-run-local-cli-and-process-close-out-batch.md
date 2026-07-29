@@ -3,7 +3,7 @@ id: KI-HARNESS-GOV-007
 title: Run local CLI and process close-out batch
 theme: governance-consistency
 horizon: next
-status: in-progress
+status: acceptance
 blocks: []
 blocked-by: []
 baseline-ref: 02df2024e850dc64ce5c757bfc54ee870ecaaadd
@@ -27,10 +27,10 @@ FND-002 is the sole source-code change; FND-006 is expected to close from curren
 
 ## Steps
 
-1. Revalidate the named Ready items and record the immutable common baseline before starting any implementation.
-2. Execute each named item only within its plan boundary, reviewing every result before the next dependent decision.
-3. Park only an affected item when its stated stop condition occurs; continue the remaining independent items only within this authorisation.
-4. Run the batch gates, record every result and decision, and stop all completed items at Acceptance for human review.
+1. [x] Revalidate the named Ready items and record the immutable common baseline before starting any implementation.
+2. [x] Execute each named item only within its plan boundary, reviewing every result before the next dependent decision.
+3. [x] Park only an affected item when its stated stop condition occurs; continue the remaining independent items only within this authorisation.
+4. [x] Run the batch gates, record every result and decision, and stop all completed items at Acceptance for human review.
 
 ## Files touched
 
@@ -80,6 +80,55 @@ The completion target is Acceptance; batch acceptance, Done transitions, and pru
 Mandatory stops are a public-contract change outside a named plan, material scope expansion, destructive or irreversible work, a new external dependency or coordination need, failure of a required verification, user-level configuration change, push, release, or an unapproved decision.
 
 An affected parked item does not stop another named item unless the evidence establishes a dependency.
+
+### Run ledger
+
+`KI-HARNESS-FND-006` reached Acceptance through verified fleet evidence with no configuration change (`ed3d4c7b`).
+
+`KI-HARNESS-FND-002` reached Acceptance after the supported native recovery implementation (`2c669a1d`) and its item evidence packet (`c3e5c712`).
+
+`KI-HARNESS-GOV-001` and `KI-HARNESS-GOV-003` reached Acceptance through the governance-boundary matrix and `ki-next` change-value profile (`f5edf778`, `c5784b65`).
+
+`KI-HARNESS-GOV-004` and `KI-HARNESS-GOV-005` reached Acceptance through their durable source-led reviews (`0764c80b`, `c5784b65`).
+
+All six items passed their stated focused verification and the batch gates: `bun run test` (218 pass), `bunx tsc --noEmit`, and clean `ki-skills`, `ki-authoring`, and `ki-roadmap` audits.
+
+No item was parked, skipped, or deferred; no stop condition occurred; no user-level configuration, external repository, dependency, push, release, acceptance, Done transition, or pruning action occurred.
+
+During the run, separately owned MCP roadmap commits landed on `main`; they were not admitted to this batch and are excluded from this delivery ledger.
+
+The next required human action is normal `ki-accept` review for this item and each named item.
+
+## Acceptance
+
+### Delivered
+
+Executed the approved local CLI and process close-out batch to its normal Acceptance target.
+
+### Summary of changes
+
+All six independent items reached Acceptance with individual evidence packets and a complete batch ledger.
+
+The sole source-code change adds narrowly supported native Codex MCP replacement recovery; the remaining work records formatter evidence, governance/process clarification, and evidence-led methodology reviews.
+
+### Verification
+
+- Revalidated every named item before implementation from the common baseline `02df2024e850dc64ce5c757bfc54ee870ecaaadd`.
+- `bun run test` — 218 pass, 0 fail.
+- `bunx tsc --noEmit`
+- `ki repo audit --skill ki-skills --repo .`
+- `ki repo audit --skill ki-authoring --repo .`
+- `ki repo audit --skill ki-roadmap --repo .`
+
+### Outstanding concerns
+
+Every admitted item awaits normal human acceptance.
+
+FND-001 and GOV-002 remain outside this local batch because they require separate cross-repository authority.
+
+### Mini recap
+
+The batch exercised six independent local items without crossing a user, runtime, repository, release, or closure boundary.
 
 ## Discussion
 
