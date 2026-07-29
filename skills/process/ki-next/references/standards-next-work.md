@@ -82,6 +82,6 @@ That orchestration does not permit `ki-next` to infer selection authority.
 
 Report each confirmed handoff disposition, files changed, selected work, and audit result.
 
-Identify exact accepted done records that are eligible for pruning when useful, but do not delete them; confirmed pruning belongs to `ki-accept`.
+Identify `done` records that are eligible for pruning when useful, but do not delete them; path- or glob-selected pruning belongs to `ki-accept`.
 
 If no work is eligible, identify the missing condition or scoping decision plainly.

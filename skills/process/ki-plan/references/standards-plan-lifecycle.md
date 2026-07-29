@@ -45,7 +45,7 @@ With a kebab-case theme, filter by the item `theme` field.
 
 `ki-implement` owns `ready` → `in-progress` → `acceptance`, including the immutable baseline, checked implementation steps, verification, material execution decisions, and acceptance evidence packet.
 
-`ki-accept` owns explicit `acceptance` → `done` and confirmed pruning.
+`ki-accept` owns explicit `acceptance` → `done` and pruning by explicit roadmap-item path or glob.
 
 `ki-recap` and `ki-next` may recommend retained done records for cleanup but never delete them.
 

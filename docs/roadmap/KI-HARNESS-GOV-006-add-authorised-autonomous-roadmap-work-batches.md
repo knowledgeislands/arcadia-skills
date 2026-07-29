@@ -118,7 +118,7 @@ When the completion target is Acceptance, stop for the normal human `ki-accept` 
 
 When Done authority was expressly granted, record how the acceptance criteria were satisfied before invoking `ki-accept`.
 
-Pruning remains a separate confirmed cleanup action and is never implied by batch completion.
+Pruning remains a separate cleanup action selected by an explicit roadmap-item path or glob and is never implied by batch completion.
 
 ## Reference analysis
 

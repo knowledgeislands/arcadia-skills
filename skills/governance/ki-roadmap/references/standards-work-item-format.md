@@ -153,7 +153,7 @@ This is the evidence packet for an explicit acceptance decision.
 
 After explicit acceptance, insert terminal `## Done` immediately before `Discussion` and set `status: done`.
 
-Retain the accepted record until a separately confirmed prune.
+Retain the accepted record until an explicitly selected prune path or glob.
 
 At every stage, `Discussion` remains the final top-level section.
 
