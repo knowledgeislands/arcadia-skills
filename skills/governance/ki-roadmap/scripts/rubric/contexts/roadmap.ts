@@ -7,7 +7,7 @@ export type RoadmapAuditContext = {
 }
 
 export type RoadmapIndexContext = RoadmapAuditContext & {
-  readonly rebuildIndex?: () => void
+  readonly normaliseRoot?: () => void
 }
 
 export type RoadmapRubricContext = {
@@ -48,7 +48,7 @@ export const createRoadmapSession = ({ mode, repository, publication }: RubricCo
     scope: audit,
     roadmaps: audit,
     items: audit,
-    index: { ...audit, ...(draft ? { rebuildIndex: draft.rebuildIndex } : {}) },
+    index: { ...audit, ...(draft ? { normaliseRoot: draft.normaliseRoot } : {}) },
     execution: audit,
     safety: audit,
     handoffs: audit

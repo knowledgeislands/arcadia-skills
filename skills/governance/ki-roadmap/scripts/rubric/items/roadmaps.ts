@@ -5,8 +5,8 @@ const SOURCE = 'standards-repository-roadmaps.md'
 
 const ROAD_1: RubricItem<RoadmapAuditContext> = {
   code: 'ROAD-1',
-  title: 'roadmap structure',
-  description: 'The generated root index has one H1 and the six horizons exactly once, in canonical order.',
+  title: 'root orientation',
+  description: 'Root ROADMAP.md is a concise orientation that points to canonical work items rather than duplicating their queue.',
   sources: [SOURCE],
   mechanical: {
     level: 'FAIL',
@@ -33,8 +33,8 @@ const ROAD_3: RubricItem<RoadmapAuditContext> = {
 
 const ROAD_4: RubricItem<RoadmapAuditContext> = {
   code: 'ROAD-4',
-  title: 'canonical horizon blurbs',
-  description: 'Every generated horizon heading is followed immediately by its exact canonical blurb.',
+  title: 'horizon vocabulary',
+  description: 'Every work item uses the canonical horizon vocabulary; the root orientation carries no parallel horizon list.',
   sources: [SOURCE],
   mechanical: {
     level: 'FAIL',

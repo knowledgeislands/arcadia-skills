@@ -4,7 +4,7 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import type { RubricFamily, RubricItem } from '../../shared/rubric.ts'
 import type { RoadmapRubricContext } from '../contexts/roadmap.ts'
-import { inspectRoadmap, rootIndex, workItemsFor } from '../contexts/roadmap-evidence.ts'
+import { inspectRoadmap, rootRoadmap } from '../contexts/roadmap-evidence.ts'
 import catalogue from './index.ts'
 
 const temporaryDirectories: string[] = []
@@ -45,7 +45,7 @@ The foundation needs implementation.
 Do not broaden the work beyond the first slice.
 `
   )
-  writeFileSync(join(repository, 'ROADMAP.md'), rootIndex(workItemsFor(repository)))
+  writeFileSync(join(repository, 'ROADMAP.md'), rootRoadmap())
   return repository
 }
 
@@ -66,7 +66,7 @@ test('the structured catalogue represents the flat work-item standard', () => {
     'ITEM-2',
     'ITEM-3',
     'ITEM-4',
-    'INDEX-1',
+    'ROOT-1',
     'EXEC-1',
     'EXEC-2',
     'EXEC-3',
@@ -75,11 +75,11 @@ test('the structured catalogue represents the flat work-item standard', () => {
   ])
 })
 
-test('a flat future work item and generated root index conform', () => {
+test('a flat work item and concise root orientation conform', () => {
   const repository = createFixture()
   expect(inspectRoadmap(repository).filter((finding) => finding.level === 'FAIL')).toEqual([])
-  expect(readFileSync(join(repository, 'ROADMAP.md'), 'utf8')).toContain('### Foundation Tooling')
-  expect(readFileSync(join(repository, 'ROADMAP.md'), 'utf8')).toContain('[TEST-FND-001 — Build the foundation]')
+  expect(readFileSync(join(repository, 'ROADMAP.md'), 'utf8')).toContain('canonical structured Markdown work items')
+  expect(readFileSync(join(repository, 'ROADMAP.md'), 'utf8')).not.toContain('TEST-FND-001')
 })
 
 test('invalid lifecycle placement and missing execution sections fail', () => {
@@ -94,7 +94,7 @@ test('invalid lifecycle placement and missing execution sections fail', () => {
   expect(failures).toContainEqual(expect.objectContaining({ area: 'ITEM-3' }))
 })
 
-test('conform rebuilds only a stale generated root index', () => {
+test('conform repairs only a stale root orientation', () => {
   const repository = createFixture()
   writeFileSync(join(repository, 'ROADMAP.md'), '# stale\n')
   const session = catalogue.createSession({ mode: 'conform', repository, userHome: '/tmp', configuration: {} })
@@ -102,7 +102,7 @@ test('conform rebuilds only a stale generated root index', () => {
   const family = catalogue.families.find((candidate) => candidate.code === 'INDEX')
   const item = family?.items[0] as unknown as RubricItem<typeof context.index> | undefined
   item?.mechanical?.conform?.run(context.index)
-  expect(session.proposal().writes).toEqual([{ path: 'ROADMAP.md', content: rootIndex(workItemsFor(repository)) }])
+  expect(session.proposal().writes).toEqual([{ path: 'ROADMAP.md', content: rootRoadmap() }])
 })
 
 test('dependency links must be reciprocal', () => {

@@ -18,7 +18,7 @@ Knowledge Bases already use their own Streams, Focus, proposals, and Checklist m
 
 ## Decision
 
-`ki-roadmap` governs one non-KB shape: flat canonical work items directly below `docs/roadmap/` and an exact generated root `ROADMAP.md` index.
+`ki-roadmap` governs one non-KB shape: flat canonical work items directly below `docs/roadmap/` and a concise root `ROADMAP.md` orientation.
 
 Each item has a stable `<REPO>-<THEME>-<NNN>` identifier, a human-readable `theme`, horizon, lifecycle status, and dependency fields.
 
@@ -28,7 +28,7 @@ An item starts concise and is enriched in place with execution steps, verificati
 
 `ki-plan` drives that lifecycle and never creates a second plan file.
 
-The root index groups linked items by horizon and then theme; it is generated and not a second prose home.
+The root orientation points to the canonical work-item directory and is not a second prose home or a duplicated queue; CLI tooling reports the items.
 
 The replacement is direct.
 
@@ -41,7 +41,7 @@ A Knowledge Base uses `ki-kb-streams`, not repository roadmap artefacts.
 - Every non-KB work item has one durable file and one stable identifier.
 - Planning adds detail rather than a parallel document, making lifecycle state and context easy to read together.
 - Theme retains useful project grouping without tying organisation to the filesystem.
-- The generated root index provides an exact portfolio view with mechanically detectable drift.
+- The concise root orientation keeps repository entry points clear while CLI reporting presents the live portfolio.
 - Existing non-KB roadmap trees are cut over atomically; Git history remains the recovery mechanism.
 
 ## References

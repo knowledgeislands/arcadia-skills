@@ -34,11 +34,11 @@ export const scenarios: Scenario[] = [
     assertions: [
       { name: 'one authoritative item home', re: /one|single|authoritative|canonical|duplicate/i },
       { name: 'flat item directory owns prose', re: /docs\/roadmap\//i },
-      { name: 'root is generated index', re: /generated|index|exact/i },
+      { name: 'root is concise orientation', re: /orientation|does not duplicate|canonical/i },
       { name: 'rejects hand editing', re: /not|mustn.t|cannot|regenerate|invalid|drift/i }
     ],
     rubric:
-      'House fact: each item has one authoritative flat Markdown file. Root ROADMAP.md is an exact generated linked index, never a second prose home and never hand-edited.'
+      'House fact: each item has one authoritative flat Markdown file. Root ROADMAP.md is a concise orientation, never a second prose home or a duplicated queue.'
   },
   {
     skill: 'ki-roadmap',

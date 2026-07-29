@@ -12,7 +12,7 @@ Line-by-line criteria for auditing ki-roadmap. Classifications are derived from 
 - [SCOPE — scope](#scope--scope)
 - [ROAD — roadmaps](#road--roadmaps)
 - [ITEM — items](#item--items)
-- [INDEX — generated index](#index--generated-index)
+- [INDEX — root orientation](#index--root-orientation)
 - [EXEC — execution](#exec--execution)
 - [SAFE — safe mechanics](#safe--safe-mechanics)
 - [HANDOFF — handoff review](#handoff--handoff-review)
@@ -39,12 +39,12 @@ Repository-roadmap applicability.
 
 Canonical generated-index structure, placement, and readiness.
 
-- **ROAD-1 [M] — roadmap structure** — The generated root index has one H1 and the six horizons exactly once, in canonical order. (standards-repository-roadmaps.md)
+- **ROAD-1 [M] — root orientation** — Root ROADMAP.md is a concise orientation that points to canonical work items rather than duplicating their queue. (standards-repository-roadmaps.md)
 - **ROAD-2 [J] — honest horizon placement** — Items sit in honest horizons; Waiting-for items name their external condition; speculative Future work carries `candidate: true`. (standards-repository-roadmaps.md)
   - _Review prompt:_ Review horizon placement, waiting conditions, and Future candidate marking.
 - **ROAD-3 [J] — open finite work** — Work-item indexes are open-only and contain finite work rather than continuous practice. (standards-repository-roadmaps.md)
   - _Review prompt:_ Review that roadmap items are finite open work, not completed work or ongoing practice.
-- **ROAD-4 [M] — canonical horizon blurbs** — Every generated horizon heading is followed immediately by its exact canonical blurb. (standards-repository-roadmaps.md)
+- **ROAD-4 [M] — horizon vocabulary** — Every work item uses the canonical horizon vocabulary; the root orientation carries no parallel horizon list. (standards-repository-roadmaps.md)
 - **ROAD-5 [J] — horizon transitions and readiness** — Horizon promotion and deferral meet the readiness contract; execution state remains honest and CONFORM never chooses a move. (standards-repository-roadmaps.md)
   - _Review prompt:_ Review each promotion or deferral against its readiness contract and plan state.
 - **ROAD-6 [M] — repository work-item code** — The ki-roadmap table declares a valid stable repository code. (standards-repository-roadmaps.md)
@@ -60,13 +60,13 @@ Flat work-item identity, grouping, lifecycle, and dependencies.
 - **ITEM-3 [M] — item body shape** — Every item has concise issue sections; execution and terminal statuses carry the required lifecycle sections. (standards-repository-roadmaps.md)
 - **ITEM-4 [M] — item dependencies** — Dependencies name existing work items, are reverse-consistent and acyclic, and do not permit active blocked work. (standards-repository-roadmaps.md)
 
-## INDEX — generated index
+## INDEX — root orientation
 
 → [standard](standards-repository-roadmaps.md)
 
-The exact generated root index for flat work items.
+The exact concise root orientation for flat work items.
 
-- **INDEX-1 [M] — generated root index** — Root `ROADMAP.md` exactly matches the linked index generated from flat canonical work items. (standards-repository-roadmaps.md)
+- **ROOT-1 [M] — root work-item orientation** — Root `ROADMAP.md` is the canonical concise orientation and does not duplicate the work-item queue. (standards-repository-roadmaps.md)
 
 ## EXEC — execution
 

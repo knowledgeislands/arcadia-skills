@@ -33,7 +33,7 @@ This is the map of `docs/` and the guiding principles that govern everything in 
 
 ### Repository roadmaps — the _when_
 
-[`roadmap/`](roadmap) holds this non-KB repository's canonical flat work items. The root [`ROADMAP.md`](../ROADMAP.md) is their generated index; `ki-roadmap` governs both layers. Knowledge Bases use `ki-kb-streams` instead of this repository-roadmap layout.
+[`roadmap/`](roadmap) holds this non-KB repository's canonical flat work items. The root [`ROADMAP.md`](../ROADMAP.md) is their concise orientation; `ki-roadmap` governs both layers. Knowledge Bases use `ki-kb-streams` instead of this repository-roadmap layout.
 
 ## Temporary working documents
 

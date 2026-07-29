@@ -20,12 +20,14 @@ A repository whose `.ki-config.toml` declares `repo_type = "kb"` uses `ki-kb-str
 Every non-KB repository uses one shape.
 
 ```text
-ROADMAP.md                              # generated index
+ROADMAP.md                              # concise orientation
 docs/roadmap/
   <REPO>-<THEME>-<NNN>-<slug>.md        # one durable work item
 ```
 
-`ROADMAP.md` is an exact generated index, grouped first by horizon and then by theme.
+`ROADMAP.md` is a concise stable orientation that points to `docs/roadmap/` and explicitly does not duplicate the work-item queue.
+
+CLI tooling reports and filters the canonical items.
 
 Each work-item file is canonical and owns its full authored detail.
 
@@ -47,7 +49,7 @@ It is deliberately retained after flattening: items in one theme may be selected
 
 ## Horizons
 
-Every generated `ROADMAP.md` carries these six `##` horizons exactly once and in this order:
+Every work item carries one of these six `horizon` values:
 
 1. `Blocking` — actively broken or preventing `Next`; plans permitted.
 2. `Next` — scoped and ready for immediate work; plans permitted.
@@ -56,16 +58,9 @@ Every generated `ROADMAP.md` carries these six `##` horizons exactly once and in
 5. `Parked` — intentionally paused with a named return trigger.
 6. `Future` — speculative or unscoped; `candidate: true` marks uncommitted work.
 
-Each horizon heading is followed by one blank line, its exact canonical blurb, and one blank line before any item or the next horizon:
+The root orientation holds no horizon headings or item list.
 
-- **Blocking:** Actively broken, or blocking the `Next` horizon: takes priority over everything else and must clear before `Next` work proceeds. Empty means nothing is on fire.
-- **Next:** Scoped and ready to start — the immediate queue, picked up before anything in **Soon** or **Future**.
-- **Soon:** Understood and roughly scoped but not yet started — worth doing once the **Next** queue clears, ahead of anything still speculative.
-- **Waiting for:** Worth doing, but presently blocked on an external dependency or decision. Revisit when its named condition changes; do not use this horizon for intentionally paused work.
-- **Parked:** Intentionally paused work with no current attention. Revisit only when its priority or named return trigger changes.
-- **Future:** Speculative or not yet scoped — candidate items need a scoping pass (or a decision to drop them) before they are actionable.
-
-Roadmaps are open-only.
+Work items are open-only.
 
 Completed work is removed by an explicit prune after its accepted item record has been committed.
 
@@ -75,7 +70,7 @@ Continuous practices belong in a standard or orientation file, not among finite 
 
 Horizon moves are authored, judgment-led decisions.
 
-CONFORM never chooses a move; it only rebuilds the generated root index.
+CONFORM never chooses a move; it only repairs the concise root orientation.
 
 - **Future → Soon** requires enough scope to state the intended outcome and boundary.
 - **Future → Next** is permitted when one review establishes the Future minimum plus actionable scope, understood dependencies, and readiness to start; state why Soon adds no useful shaping stage and re-evaluate at Next.
@@ -114,7 +109,7 @@ The first `execute` transition records the immutable full `HEAD` commit in `base
 
 `blocks` and `blocked-by` use work-item identifiers, must be reverse-consistent and acyclic, and cannot permit execution while a blocker is not done.
 
-An explicit later prune removes a selected accepted `done` item and its row from the generated index.
+An explicit later prune removes a selected accepted `done` item.
 
 ## Handoff review
 
@@ -129,12 +124,12 @@ It does not inspect a remote repository by default, infer acceptance from silenc
 
 ## Conform and educate
 
-`ki repo conform --skill ki-roadmap --repo <repo> --dry-run` shows the exact generated root-index replacement.
+`ki repo conform --skill ki-roadmap --repo <repo> --dry-run` shows the exact root-orientation replacement.
 
-CONFORM rebuilds that index only when every canonical item is valid.
+CONFORM repairs that orientation only when every canonical item is valid.
 
 It never invents an item, changes a horizon, changes lifecycle status, removes authored prose, reallocates an identifier, or edits an item body.
 
-`ki repo educate --skill ki-roadmap --repo <repo>` scaffolds the generated root index only when the repository has no roadmap artefacts.
+`ki repo educate --skill ki-roadmap --repo <repo>` scaffolds the root orientation only when the repository has no roadmap artefacts.
 
 It does not create speculative work-item files.

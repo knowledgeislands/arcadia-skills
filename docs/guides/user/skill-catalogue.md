@@ -82,7 +82,7 @@ Governs portable Knowledge Islands Git working and commit conventions: the Conve
 
 ### `ki-roadmap`
 
-Governs **forward work in non-KB repositories** through flat canonical work items directly under `docs/roadmap/` and an exact generated root `ROADMAP.md` index. Each item has a stable `<REPO>-<THEME>-<NNN>` identifier, explicit theme grouping, horizon, lifecycle state, and dependencies. A concise item is enriched in place with execution detail when work is planned; it never gains a duplicate plan file. It owns readiness rules for authored horizon transitions; `ki-next` applies those rules to select and promote work, while `ki-plan` drives individual work-item lifecycles. Knowledge Bases use `ki-kb-streams` instead; repository-roadmap artefacts do not apply there.
+Governs **forward work in non-KB repositories** through flat canonical work items directly under `docs/roadmap/` and a concise root `ROADMAP.md` orientation. Each item has a stable `<REPO>-<THEME>-<NNN>` identifier, explicit theme grouping, horizon, lifecycle state, and dependencies. A concise item is enriched in place with execution detail when work is planned; it never gains a duplicate plan file. The CLI reports the canonical items; the root file deliberately does not repeat their queue. It owns readiness rules for authored horizon transitions; `ki-next` applies those rules to select and promote work, while `ki-plan` drives individual work-item lifecycles. Knowledge Bases use `ki-kb-streams` instead; repository-roadmap artefacts do not apply there.
 
 ### `ki-specifications`
 

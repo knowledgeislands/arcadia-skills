@@ -21,14 +21,6 @@ export type WorkItem = {
 }
 
 export const HORIZONS = ['blocking', 'next', 'soon', 'waiting-for', 'parked', 'future'] as const
-const HORIZON_HEADINGS: Record<Horizon, string> = {
-  blocking: 'Blocking',
-  next: 'Next',
-  soon: 'Soon',
-  'waiting-for': 'Waiting for',
-  parked: 'Parked',
-  future: 'Future'
-}
 export const HORIZON_BLURBS: Record<Horizon, string> = {
   blocking:
     'Actively broken, or blocking the `Next` horizon: takes priority over everything else and must clear before `Next` work proceeds. Empty means nothing is on fire.',
@@ -240,36 +232,8 @@ const validateDependencies = (items: readonly WorkItem[]): void => {
   }
 }
 
-export const rootIndex = (items: readonly WorkItem[]): string => {
-  const lines = [
-    '# Repository roadmap',
-    '',
-    'This index is generated from canonical work items under `docs/roadmap/`. Edit those files, then run `ki repo conform --skill ki-roadmap`.',
-    ''
-  ]
-  for (const horizon of HORIZONS) {
-    lines.push(`## ${HORIZON_HEADINGS[horizon]}`, '', HORIZON_BLURBS[horizon], '')
-    const grouped = new Map<string, WorkItem[]>()
-    for (const item of items
-      .filter((item) => item.horizon === horizon)
-      .sort((a, b) => a.theme.localeCompare(b.theme) || a.id.localeCompare(b.id))) {
-      grouped.set(item.theme, [...(grouped.get(item.theme) ?? []), item])
-    }
-    for (const [theme, themedItems] of grouped) {
-      lines.push(
-        `### ${theme
-          .split('-')
-          .map((word) => `${word[0]?.toUpperCase() ?? ''}${word.slice(1)}`)
-          .join(' ')}`,
-        ''
-      )
-      for (const item of themedItems)
-        lines.push(`- [${item.id} — ${item.title}](${item.file.replace(/^docs\/roadmap\//, 'docs/roadmap/')})`)
-      lines.push('')
-    }
-  }
-  return `${lines.join('\n').trimEnd()}\n`
-}
+export const rootRoadmap = (): string =>
+  '# Repository roadmap\n\nThis repository manages forward work as canonical structured Markdown work items under [`docs/roadmap/`](docs/roadmap/).\n\nUse `ki` to audit and report these items; `ROADMAP.md` deliberately does not duplicate their queue.\n'
 
 export const inspectRoadmap = (repository: string): readonly Finding[] => {
   findings = []
@@ -302,8 +266,8 @@ export const inspectRoadmap = (repository: string): readonly Finding[] => {
   }
   validateDependencies(items)
   if (!existsSync(rootIndexPath) || lstatSync(rootIndexPath).isSymbolicLink())
-    add('FAIL', 'INDEX-1', 'root ROADMAP.md must be a regular generated index', STANDARD, 'ROADMAP.md')
-  else if (readFileSync(rootIndexPath, 'utf8') !== rootIndex(items))
-    add('FAIL', 'INDEX-1', 'root ROADMAP.md does not match the generated work-item index', STANDARD, 'ROADMAP.md')
+    add('FAIL', 'ROOT-1', 'root ROADMAP.md must be a regular work-item orientation', STANDARD, 'ROADMAP.md')
+  else if (readFileSync(rootIndexPath, 'utf8') !== rootRoadmap())
+    add('FAIL', 'ROOT-1', 'root ROADMAP.md must be the canonical work-item orientation', STANDARD, 'ROADMAP.md')
   return findings
 }

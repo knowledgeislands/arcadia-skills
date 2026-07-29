@@ -36,7 +36,7 @@ This procedure operates only canonical non-KB work-item files.
 ## `prune [theme]`
 
 1. List only selected `status: done` items and require explicit confirmation of the exact batch.
-2. Delete those canonical files, rebuild the root index, audit, and commit the selected batch.
+2. Delete those canonical files, audit, and commit the selected batch.
 
 ## `promote`
 
@@ -46,7 +46,7 @@ It creates or enriches one canonical item through `new`, preserving durable mate
 
 ## `status [theme]`
 
-Read the generated root index and all canonical work-item frontmatter.
+Read the root orientation and all canonical work-item frontmatter.
 
 Without a theme, report active and retained items plus dependency edges.
 

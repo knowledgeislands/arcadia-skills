@@ -4,21 +4,21 @@ import { outcomesFor, type RoadmapIndexContext, type RoadmapRubricContext } from
 const SOURCE = 'standards-repository-roadmaps.md'
 
 const INDEX_1: RubricItem<RoadmapIndexContext> = {
-  code: 'INDEX-1',
-  title: 'generated root index',
-  description: 'Root `ROADMAP.md` exactly matches the linked index generated from flat canonical work items.',
+  code: 'ROOT-1',
+  title: 'root work-item orientation',
+  description: 'Root `ROADMAP.md` is the canonical concise orientation and does not duplicate the work-item queue.',
   sources: [SOURCE],
   mechanical: {
     level: 'FAIL',
-    audit: { phase: 'INSPECT', run: (context) => outcomesFor(context, 'INDEX-1', 'The root work-item index is current.') },
-    conform: { phase: 'DERIVED', run: (context) => context.rebuildIndex?.() }
+    audit: { phase: 'INSPECT', run: (context) => outcomesFor(context, 'ROOT-1', 'The root work-item orientation is current.') },
+    conform: { phase: 'DERIVED', run: (context) => context.normaliseRoot?.() }
   }
 }
 
 export const INDEX: RubricFamily<RoadmapRubricContext, RoadmapIndexContext> = {
   code: 'INDEX',
-  title: 'generated index',
-  description: 'The exact generated root index for flat work items.',
+  title: 'root orientation',
+  description: 'The exact concise root orientation for flat work items.',
   standard: SOURCE,
   selectContext: (context) => context.index,
   items: [INDEX_1]
