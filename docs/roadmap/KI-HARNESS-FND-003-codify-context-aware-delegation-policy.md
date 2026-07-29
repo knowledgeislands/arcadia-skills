@@ -3,7 +3,7 @@ id: KI-HARNESS-FND-003
 title: Codify context-aware delegation policy
 theme: foundation-tooling
 horizon: next
-status: in-progress
+status: acceptance
 blocks: []
 blocked-by: []
 baseline-ref: 31cc6e4ba6d1454175626c8d3b27a4667a198fca
@@ -29,12 +29,12 @@ The compact-context rule now reinforces this distinction: a recap is a safe boun
 
 ## Steps
 
-1. Define one concise dispatch decision in `ki-delegate`: retain work with the originating agent when essential reasoning cannot be made durable; use a fresh worker when the cold-agent test passes; select stronger reasoning only when the decision risk requires it.
-2. Make the decision use the existing brief, task classification, minimum-viable-model, and escalation vocabulary rather than introducing a parallel score or context metric.
-3. State the compaction boundary: preserve and verify the brief before a fresh worker or native context compaction; never treat a context fork or compacted summary as evidence by itself.
-4. Add worked before/after examples for one retained-origin judgment task and one cold-ready mechanical or research task.
-5. Align `ki-batch` and the public process guidance only where their existing delegation language would otherwise contradict the clarified dispatch decision.
-6. Run the skill and authoring audits, then present the policy for acceptance.
+1. [x] Define one concise dispatch decision in `ki-delegate`: retain work with the originating agent when essential reasoning cannot be made durable; use a fresh worker when the cold-agent test passes; select stronger reasoning only when the decision risk requires it.
+2. [x] Make the decision use the existing brief, task classification, minimum-viable-model, and escalation vocabulary rather than introducing a parallel score or context metric.
+3. [x] State the compaction boundary: preserve and verify the brief before a fresh worker or native context compaction; never treat a context fork or compacted summary as evidence by itself.
+4. [x] Add worked before/after examples for one retained-origin judgment task and one cold-ready mechanical or research task.
+5. [x] Align `ki-batch` and the public process guidance only where their existing delegation language would otherwise contradict the clarified dispatch decision.
+6. [x] Run the skill and authoring audits, then present the policy for acceptance.
 
 ## Files touched
 
@@ -64,6 +64,38 @@ It may use the established `ki-recap` context-pressure boundary as evidence, but
 Use one judgment-focused review of the dispatch vocabulary and one independent mechanical pass for examples and cross-skill wording.
 
 The orchestrator decides any policy trade-off, reviews the combined diff, and runs the final audits.
+
+## Acceptance
+
+### Delivered
+
+Added one explicit dispatch decision to `ki-delegate` and its procedure.
+
+### Summary of changes
+
+The procedure now has five legs: decide dispatch, classify, assign, sequence, and gate.
+
+The new first leg has three outcomes: retain origin only while essential reasoning cannot be made durable; use a fresh worker when the cold-agent readiness test passes; and use stronger reasoning only for decision risk.
+
+It requires a durable brief before fresh dispatch or compaction, drains and gates workers before compaction, and supplies retained-origin and fresh-worker examples.
+
+No runtime-specific spawning mechanism, agent type, model default, `ki-batch`, or public-process guidance changed because the existing wording does not conflict.
+
+### Verification
+
+- Reviewed the bounded source change at [`8fe77940`](../../commit/8fe77940).
+- `bunx prettier --check skills/process/ki-delegate/SKILL.md skills/process/ki-delegate/references/standards-delegation.md`
+- `bunx markdownlint-cli2 skills/process/ki-delegate/SKILL.md skills/process/ki-delegate/references/standards-delegation.md`
+- `ki repo audit --skill ki-skills --repo .`
+- `ki repo audit --skill ki-authoring --repo .`
+
+### Outstanding concerns
+
+None identified within the approved boundary.
+
+### Mini recap
+
+The policy makes durable briefing the transferable unit of delegation and treats retained origin context as a narrow, reviewable exception.
 
 ## Discussion
 
