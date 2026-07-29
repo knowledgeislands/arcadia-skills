@@ -9,5 +9,5 @@ The realization type list and required frontmatter in the [Activity standard](st
 1. **Read [`sources.md`](sources.md)** — the reference implementation (ki-arcadia-principal Activities/) and adjacent governing skills, each with a `last reviewed` date.
 2. **Re-anchor against reality.** Sample the live bases' activity notes for realization types in actual use. Check whether any new `realization` values appear that should be promoted to the known list, or whether any known type is obsolete.
 3. **Check the harness.** Confirm the `slash-command` resolution path (`skills/<name>/SKILL.md`) still matches the harness layout.
-4. **Propose a diff** to the Activity standard and structured rubric, confirm before writing, then regenerate `rubric.md` with `ki skill rubric ki-kb-activities --write`.
+4. **Propose a diff** to the Activity standard and structured rubric, confirm before writing, then regenerate `rubric.md` with `ki dev skill rubric ki-kb-activities --write`.
 5. **Update [`sources.md`](sources.md)** — bump each `last reviewed` date. The record of what changed is the commit itself.

@@ -134,6 +134,6 @@ The memory cascade and the canonical-zone Enactment gate are part of the shared 
 - This skill assumes the Knowledge Islands structure. If a base does not follow it, or a binding cannot be resolved and no default fits, ask the user rather than guess.
 - A base supplies its specifics by **declaration**, not a coupled skill: structured data (zone aliases, required frontmatter, pre-flight reads) in its `.ki-config.toml` `["knowledgeislands/ki-agentic-harness:ki-kb"]` table, narrative bindings (store alias, scope, writing standards) in its `CLAUDE.md`. There is no `<base>-kb` extension skill; relationships to sibling skills are composition (e.g. the `Streams` zone delegates to `ki-kb-streams`).
 
-Normative detail: [the Knowledge Islands knowledge-base standard](references/standards-knowledge-base.md). Checkable criteria: [the generated rubric](references/rubric.md), enforced mechanically by `ki repo audit --skill ki-kb`. After changing the catalogue under `scripts/rubric/items/`, regenerate the published catalogue with `ki skill rubric ki-kb --write`.
+Normative detail: [the Knowledge Islands knowledge-base standard](references/standards-knowledge-base.md). Checkable criteria: [the generated rubric](references/rubric.md), enforced mechanically by `ki repo audit --skill ki-kb`. After changing the catalogue under `scripts/rubric/items/`, regenerate the published catalogue with `ki dev skill rubric ki-kb --write`.
 
 KI-wide frontmatter standard (universal fields and the `type` taxonomy): [the frontmatter standard](references/standards-frontmatter.md).

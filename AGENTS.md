@@ -28,7 +28,7 @@ Skills compose rather than extend: a skill runs a sibling's mode in sequence and
 
 - **Cross-repository choreography** — Arcadia Principal, the harness, `tools-ki`, KI Specifications, and the KI Website may add a concrete handoff item to one another's Stream or roadmap. The receiving repository owns its priority, plan, and execution. Record the originating item and whether the handoff `blocks` or is `blocked by` the local item; prefer independently executable work over a blocking dependency.
 - **Writing or editing a `SKILL.md`** → follow the `ki-skills` rubric: run `ki repo audit --skill ki-skills` for the mechanical half and apply the judgment half by reading. The directory name **is** the `name:` frontmatter.
-- **Adding a `ki-skills` rubric criterion** → pick the next code number by scanning the complete family under `skills/keystone/ki-skills/scripts/rubric/items/`. The structured catalogue is authoritative; `references/rubric.md` is its generated publication. Keep the item private to its family module and regenerate the publication with `ki skill rubric ki-skills --write`.
+- **Adding a `ki-skills` rubric criterion** → pick the next code number by scanning the complete family under `skills/keystone/ki-skills/scripts/rubric/items/`. The structured catalogue is authoritative; `references/rubric.md` is its generated publication. Keep the item private to its family module and regenerate the publication with `ki dev skill rubric ki-skills --write`.
 - **Markdown / TOML style** → the `ki-authoring` conventions. Until its catalogue reaches the final session contract, run Prettier and markdownlint directly for Markdown; TOML remains judgment-only. Wide tables → footnotes; relative Markdown links, never wikilinks; refer to another skill by its `name`, never a file path.
 - **The toolchain** (package.json scripts, `tsconfig`, Biome) → the `ki-engineering` standard. Until its catalogue reaches the final session contract, use the direct tools (`biome`, `tsc`, `knip`, and `syncpack`) rather than restoring package aliases.
 - A change touching a standard another skill cites is **cross-skill** — keep the set internally consistent (the skills linter's cross-skill pass flags collisions).
@@ -48,7 +48,7 @@ The repository executor is `ki`; the retired `.ki` aggregate and package aliases
 ```bash
 ki repo audit --skill ki-skills             # current proven skill-quality audit
 ki repo conform --skill ki-skills --dry-run # validate and report safe proposals
-ki skill rubric ki-skills                   # verify generated rubric publication
+ki dev skill rubric ki-skills               # verify generated rubric publication
 bun run test                                # harness source tests
 bunx tsc --noEmit                           # TypeScript gate
 ```

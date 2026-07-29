@@ -63,7 +63,7 @@ Explain the skill's purpose, modes, invocation, and boundaries without changing 
 
 1. Read [the source list](references/sources.md) and inspect the live KI Specifications repository.
 2. Promote only stable, repeated structural constraints; leave changing specification-process detail in that repository.
-3. Update the standard, structured catalogue, tests, and source review together, then regenerate the rubric publication with `ki skill rubric ki-specifications --write`.
+3. Update the standard, structured catalogue, tests, and source review together, then regenerate the rubric publication with `ki dev skill rubric ki-specifications --write`.
 
 ## Boundaries
 

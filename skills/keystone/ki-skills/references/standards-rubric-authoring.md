@@ -451,7 +451,7 @@ The renderer uses family metadata and ordered item metadata to reproduce:
 
 The generated file carries a clear generated marker.
 
-`ki skill rubric <skill>` verifies the tracked publication against the catalogue; `ki skill rubric <skill> --write` writes it. The exemplar also exposes that exact parity through `ki repo audit --skill ki-skills`; `ki repo conform --skill ki-skills` schedules the same host-owned publication write when drift is found.
+`ki dev skill rubric <skill>` verifies the tracked publication against the catalogue; `ki dev skill rubric <skill> --write` writes it. The exemplar also exposes that exact parity through `ki repo audit --skill ki-skills`; `ki repo conform --skill ki-skills` schedules the same host-owned publication write when drift is found.
 
 Runtime code never parses the generated Markdown back into policy.
 

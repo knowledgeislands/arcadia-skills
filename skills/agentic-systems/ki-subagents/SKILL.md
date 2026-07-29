@@ -66,7 +66,7 @@ Keep the rubric current — the subagents spec and house practice move, and this
 1. **Read [the source list](references/sources.md)** — the tracked sources (the Claude Code subagents docs and the house agent conventions), each with a `last reviewed` date.
 2. **Re-fetch each source** (WebFetch/WebSearch) and **diff against the current [standard](references/standards-subagent-definitions.md) and canonical TypeScript rubric items**: new/changed frontmatter fields (`model`, `tools`, `color`, invocation control), new constraints, deprecations. Note where sources disagree.
 3. **Scan the live agents** in the harness for emergent patterns that work but aren't yet codified — promote the good ones; flag drift.
-4. **Propose a diff** to [the standard](references/standards-subagent-definitions.md) and the canonical TypeScript items under `scripts/rubric/items/`. Confirm before writing, then regenerate [the published rubric](references/rubric.md) with `ki skill rubric ki-subagents --write`.
+4. **Propose a diff** to [the standard](references/standards-subagent-definitions.md) and the canonical TypeScript items under `scripts/rubric/items/`. Confirm before writing, then regenerate [the published rubric](references/rubric.md) with `ki dev skill rubric ki-subagents --write`.
 5. **Update [the source list](references/sources.md)** — bump each `last reviewed` date, add/retire sources, and refresh the `## Last review` block. The record of _what changed_ is the commit itself — history lives in git, not a changelog.
 
 ### Mode HELP — orient without changing anything

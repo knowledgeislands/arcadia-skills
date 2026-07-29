@@ -88,4 +88,4 @@ Declare in the base's `.ki-config.toml` `["knowledgeislands/ki-agentic-harness:k
 
 ## Audit rubric
 
-See [references/rubric.md](references/rubric.md) for the full rubric (mechanical + judgment), enforced mechanically by `ki repo audit --skill ki-kb-live-artifacts`. After changing the family definitions under `scripts/rubric/items/`, regenerate the published catalogue with `ki skill rubric ki-kb-live-artifacts --write`.
+See [references/rubric.md](references/rubric.md) for the full rubric (mechanical + judgment), enforced mechanically by `ki repo audit --skill ki-kb-live-artifacts`. After changing the family definitions under `scripts/rubric/items/`, regenerate the published catalogue with `ki dev skill rubric ki-kb-live-artifacts --write`.

@@ -8,6 +8,6 @@ Refresh this skill's Cloudflare-facing facts and house convention.
 2. Re-fetch each authoritative source and compare it with the [Cloudflare hosting standard](standards-cloudflare-hosting.md), structured catalogue, and [worked exemplars](exemplars.md). Recheck the Static Assets keys, compatibility-date guidance, Wrangler major version, and Pages-to-Workers guidance.
 3. Inspect the canonical deployed site for reusable hosting patterns without treating one repository's data as universal policy.
 4. Propose the standard and catalogue changes before writing them. Keep account, domain, Wrangler, and deployment operations outside the refresh process.
-5. After confirmation, update the standard and item-owned rubric policy, regenerate `rubric.md` with `ki skill rubric ki-website-cloudflare --write`, and update every reviewed date plus the `## Last review` block in `sources.md`.
+5. After confirmation, update the standard and item-owned rubric policy, regenerate `rubric.md` with `ki dev skill rubric ki-website-cloudflare --write`, and update every reviewed date plus the `## Last review` block in `sources.md`.
 
 The commit records what changed; do not add a parallel changelog.

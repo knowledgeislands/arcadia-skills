@@ -43,7 +43,7 @@ Run `ki repo educate --skill ki-harness --repo <path>` to explain the source lay
 1. Read [the source list](references/sources.md) and its review cadence.
 2. Re-check the Agent Skills and agent-definition sources for changes affecting capability source shape.
 3. Reconcile [the compatible harness standard](references/standards-compatible-harness.md) with the repository's current source shelves and the installed-payload contract.
-4. Update the structured rubric, regenerate it with `ki skill rubric ki-harness --write`, and update source review dates after confirmation.
+4. Update the structured rubric, regenerate it with `ki dev skill rubric ki-harness --write`, and update source review dates after confirmation.
 
 ### Mode HELP — orient without changing anything
 
