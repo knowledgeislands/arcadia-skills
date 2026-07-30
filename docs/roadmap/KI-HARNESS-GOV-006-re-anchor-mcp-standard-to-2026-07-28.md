@@ -2,7 +2,7 @@
 id: KI-HARNESS-GOV-006
 title: Re-anchor the MCP standard to specification 2026-07-28
 theme: governance-consistency
-horizon: waiting-for
+horizon: soon
 status: open
 blocks: []
 blocked-by: []
@@ -15,23 +15,41 @@ MCP specification revision 2026-07-28 was published on 2026-07-28 and the live s
 
 Two changes reach into house rules rather than the transport. Every result now carries a required `resultType`, which is the envelope shape the `jsonResult` and `errorResult` helpers produce in each server's `utils/`. A new `server/discover` RPC is a per-server MUST, advertising supported protocol versions, capabilities, and identity. The remainder is absorbed by the SDK: a stateless core with the initialize handshake removed, protocol sessions and `Mcp-Session-Id` removed, Multi Round-Trip Requests replacing server-initiated sampling and elicitation, tasks moved to an official extension, SSE resumability removed, an `extensions` capability field, and cacheable list results.
 
-The work is blocked on the TypeScript SDK, not on scheduling. `@modelcontextprotocol/sdk` reports `LATEST_PROTOCOL_VERSION = '2025-11-25'` in both 1.29.0 and 1.30.0, and the string `2026-07-28` appears nowhere in its published `types.js`. Version 1.30.0 was published on 2026-07-27, one day before the specification, so it predates the revision it would need to implement. No prerelease implements it. Every `mcp-*` server therefore already targets the newest revision its SDK supports, and re-anchoring the standard before the SDK ships would make the audit assert conformance no server could reach.
-
-The named condition for revisiting is that `LATEST_PROTOCOL_VERSION` in the published SDK changes. That constant, not the specification's publication date, is the gate.
+The external SDK condition is now met. The TypeScript SDK published its v2 package family with 2026-07-28 support on 2026-07-27, including a migration path for v1 consumers. All six sibling `mcp-*` repositories still declare `@modelcontextprotocol/sdk` 1.x, so the decision is now whether and how to move the workspace to the v2 package family before the `ki-mcp` standard makes the new protocol requirements universal.
 
 ## Boundary
 
 This item covers re-anchoring the `ki-mcp` standard and its rubric to the released revision, and updating the source list. It does not implement the resulting conformance changes in the six `mcp-*` servers; those become separate work in each repository once the standard states the target. It does not adopt the specification's remote-transport features for servers that remain local stdio.
 
+## Shaping
+
+### Intended approach
+
+Compare the v1-to-v2 migration requirements against one representative stdio sibling before changing the portable standard. Decide whether the standard should require dual-era operation, target 2026-07-28 only for new or migrated servers, or retain a 2025-11-25 profile until every sibling accepts a local migration item.
+
+Update the source list to record that SDK support is available while the deployed sibling fleet remains on v1. The standard must describe the selected delivery contract accurately; it must not claim that the SDK is unavailable or make every current sibling fail before it has a migration path.
+
+### Known dependencies
+
+All six sibling repositories declare `@modelcontextprotocol/sdk` 1.x. The TypeScript v2 package family changes imports and stdio serving mechanics, so each repository needs its own bounded migration item once the standard and rollout profile are agreed.
+
+### Decision still needed
+
+Choose the rollout profile and the pilot repository. In particular, decide whether `server/discover` and required `resultType` become universal house requirements only after every sibling migrates, or whether the standard carries explicit protocol-era applicability while the fleet transitions.
+
+### Promotion conditions
+
+Promote when the v2 migration delta has been proven in a named stdio pilot, the standard's protocol-era applicability is exact, each sibling's local follow-up is identified, and the rubric can verify the chosen profile without false failures.
+
 ## Discussion
 
-### Why this is not simply overdue
+### SDK availability changes the decision
 
-The 2026-07-04 review staged this re-anchor as a watch-item expecting the release, and the release landed on target. The reason it did not proceed is specific and verifiable rather than a matter of priority: the reference implementation has not caught up with the text. Recording the SDK constant as the trigger keeps a future review from re-deriving that judgement, and makes the check two commands rather than an assessment.
+The earlier waiting condition was correct for the v1 package but is no longer correct for the SDK family. The remaining issue is a deliberate compatibility and rollout decision: adopting the new revision changes the package family and the stdio server entry point, so a standard-only update would make every existing sibling non-conformant without a verified migration route.
 
-### Where the trigger lives
+### Where the evidence lives
 
-The condition is currently recorded as a watch-item in the `ki-mcp` source list, which is the skill's memory of where its standard comes from. That remains the right place for the provenance. This item exists because the follow-on is unfinished work needing execution rather than recall, and a source list is not a delivery queue.
+The `ki-mcp` source list records the released protocol and the published v2 SDK evidence. This roadmap item owns the unfinished selection, standard re-anchor, and migration choreography; a source list remains evidence rather than a delivery queue.
 
 ### Scope of the eventual repository work
 

@@ -14,6 +14,7 @@ The spec is versioned by date. Track the **latest released** version and note th
 | --------- | -------------------------------------- | ------- | ------------- |
 | SPEC      | [MCP spec — versioning / latest][spec] | ※       | 2026-07-29    |
 | CHANGELOG | [2026-07-28 changelog][changelog]      | †       | 2026-07-29    |
+| SDK       | [TypeScript SDK releases][sdk]         | ※       | 2026-07-30    |
 | TOOLS     | [Server → Tools][tools]                | ‡       | 2026-06-21    |
 | SEC       | [Security Best Practices][sec]         | §       | 2026-06-21    |
 | AUTH      | [Authorization][auth]                  | ¶       | 2026-06-21    |
@@ -26,7 +27,7 @@ The spec is versioned by date. Track the **latest released** version and note th
 
 ¶ OAuth 2.1 framework, token audience, PKCE, dynamic client registration — relevant to the gmail / m365 auth-servers.
 
-※ Which dated revision is current (latest released: **2026-07-28**; implementation target **2025-11-25**, the newest the TypeScript SDK supports).
+※ Which dated revision is current and whether a released SDK supports it. The six sibling repositories remain on the 1.x package and therefore still deliver 2025-11-25 while their v2 migration is planned.
 
 ## Community
 
@@ -56,19 +57,19 @@ The standard is defined as the **majority shape** across the six sibling repos u
 
 ## Last review
 
-REFRESH last run **2026-07-29**. Latest released spec revision: **2026-07-28** (published 2026-07-28, confirmed live). Implementation target: **2025-11-25** — the newest revision the TypeScript SDK supports.
+REFRESH last ran **2026-07-29**. SDK availability was rechecked on **2026-07-30**. Latest released spec revision: **2026-07-28** (published 2026-07-28, confirmed live). The TypeScript SDK's released v2 package family supports that revision; the six sibling repositories remain on the 1.x package and therefore still deliver 2025-11-25 pending a governed migration decision.
 
 **The staged re-anchor fired.** The live spec index (SPEC) now names **2026-07-28** as `(latest)`, so the watch-item carried since 2026-07-04 is resolved and retired. The RC shipped on its target date.
 
 **Confirmed changed** — the 2026-07-28 changelog (CHANGELOG) lands the staged set and more: MCP becomes stateless (the `initialize` / `notifications/initialized` handshake removed, SEP-2575); protocol sessions and `Mcp-Session-Id` removed from Streamable HTTP (SEP-2567); a new `server/discover` RPC that servers **MUST** implement to advertise protocol versions, capabilities, and identity; **every result now carries a required `resultType`** (`"complete"`, or `"input_required"` for Multi Round-Trip interim results, SEP-2322), which replaces server-initiated `roots/list` / `sampling/createMessage` / `elicitation/create`; `ping`, `logging/setLevel`, and `notifications/roots/list_changed` removed; Tasks moved out of core into an official extension (SEP-2663); SSE resumability and message redelivery removed; an `extensions` field on client and server capabilities; and cacheable list/read results.
 
-**Why the standard does not re-anchor §12–13 to it yet** — the TypeScript SDK has not shipped 2026-07-28 support. Verified directly against the published artifacts rather than release notes: `LATEST_PROTOCOL_VERSION` is `'2025-11-25'` in both `@modelcontextprotocol/sdk` **1.29.0** (what the repos declare) and **1.30.0** (current `latest`), and the registry exposes no prerelease implementing the new revision — `dist-tags` is `latest: 1.30.0` alone, its only prerelease an unrelated `1.23.0-beta.0`. The 2026-07-04 note that TypeScript beta SDKs for the RC were published is therefore **not confirmed** on this package. Every sibling server correctly targets the newest revision its SDK supports, so §12–13 stay anchored to 2025-11-25 and the conformance work below is blocked upstream, not merely unscheduled. The release also brings a 12-month deprecation-lifecycle policy (SEP-2596), so nothing is switched off in the interim.
+**Why the standard does not re-anchor §12–13 to it yet** — the TypeScript SDK now ships v2 packages with 2026-07-28 support, including explicit migration guidance from `@modelcontextprotocol/sdk` v1.x. The six sibling repositories still declare `@modelcontextprotocol/sdk` 1.x and serve stdio through the legacy entry point. The new standard is therefore available but not yet selected: re-anchoring before a pilot proves the v2 migration would make the existing fleet fail without a delivery path. The active GOV-006 item owns that rollout decision; the source list records the evidence, not a false upstream block.
 
-TOOLS/SEC/AUTH and the Community/In-house rows were not re-fetched this pass (fixed dated artifacts, verbatim-confirmed 2026-06-21); their `last reviewed` cells are unchanged. Only SPEC and CHANGELOG were re-verified live and bumped to 2026-07-29.
+TOOLS/SEC/AUTH and the Community/In-house rows were not re-fetched this pass (fixed dated artifacts, verbatim-confirmed 2026-06-21); their `last reviewed` cells are unchanged. SPEC and CHANGELOG remain current from 2026-07-29; the SDK release surface was verified on 2026-07-30.
 
 **Open watch-items:**
 
-- **Re-anchor §12–13 + §4 to 2026-07-28 when the TypeScript SDK ships support.** Re-check `LATEST_PROTOCOL_VERSION` in the published package each pass; that constant, not the spec date, gates the work. Two changes reach into the house standard when it lands: the required `resultType` on every result touches the shared `jsonResult` / `errorResult` envelope helpers in each repo's `utils/`, and `server/discover` is a new per-server MUST. For the auth repos, RFC 9207 `iss` + DCR `application_type`.
+- **Re-anchor §12–13 + §4 to 2026-07-28 through a v2 migration pilot.** SDK support is available; select the rollout profile before making the new protocol requirements universal. The required `resultType` touches each repo's shared `jsonResult` / `errorResult` envelope helpers, and `server/discover` changes the stdio entry point. For the auth repos, assess RFC 9207 `iss` + DCR `application_type` under the selected profile.
 - Rate-limiting is a spec MUST kept lower-priority for local stdio servers (revisit if one goes remote).
 - **Structured output is now partly adopted, unevenly.** `mcp-git-audit`, `mcp-gsuite`, `mcp-m365`, `mcp-ki-kb-notion-mirror`, and `mcp-claude-housekeeping` declare `outputSchema`; **`mcp-ki-kb-fs` declares none while its shared `jsonResult` emits `structuredContent` for every tool**, which is the WARN condition in §12. (Supersedes the retired "no repo yet declares `outputSchema`" item.)
 - Five proposed annotation SEPs (`unsafeOutputHint`, `secretHint`, `trustedHint`, trust/sensitivity, governance/UX) still Draft — gate's four-hint vocabulary stable, no action; watch for any landing in a released spec.
@@ -77,6 +78,7 @@ TOOLS/SEC/AUTH and the Community/In-house rows were not re-fetched this pass (fi
 
 [spec]: https://modelcontextprotocol.io/specification
 [changelog]: https://modelcontextprotocol.io/specification/2026-07-28/changelog
+[sdk]: https://github.com/modelcontextprotocol/typescript-sdk/releases
 [tools]: https://modelcontextprotocol.io/specification/2025-11-25/server/tools
 [sec]: https://modelcontextprotocol.io/specification/2025-11-25/basic/security_best_practices
 [auth]: https://modelcontextprotocol.io/specification/2025-11-25/basic/authorization

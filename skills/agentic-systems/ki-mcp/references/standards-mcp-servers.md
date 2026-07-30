@@ -22,7 +22,7 @@ The standard applies when a repository either declares `["knowledgeislands/ki-ag
 12. [Spec conformance: tool results, errors & metadata](#12-spec-conformance-tool-results-errors--metadata)
 13. [OAuth security (auth-server repos)](#13-oauth-security-auth-server-repos)
 
-> **Spec vs house style.** Sections 1–11 are the in-house **workspace convention**; §12–13 trace directly to the official MCP specification (latest released: **2026-07-28**; **implementation target remains 2025-11-25**, the newest revision the TypeScript SDK supports) tracked in [the source list](sources.md). When citing a rule, know which layer it comes from — never present a workspace preference as a protocol "MUST". Mode REFRESH in the [SKILL](../SKILL.md) re-anchors §12–13 (and the annotation semantics in §4) to the current spec.
+> **Spec vs house style.** Sections 1–11 are the in-house **workspace convention**; §12–13 trace directly to the official MCP specification (latest released: **2026-07-28**; current sibling delivery target: **2025-11-25** while their 1.x SDK dependencies remain in place) tracked in [the source list](sources.md). The TypeScript v2 package family supports 2026-07-28, but adopting it is governed by the active re-anchor item rather than assumed by this standard. When citing a rule, know which layer it comes from — never present a workspace preference as a protocol "MUST". Mode REFRESH in the [SKILL](../SKILL.md) re-anchors §12–13 (and the annotation semantics in §4) to the current spec.
 
 ## 1. Project layout
 
