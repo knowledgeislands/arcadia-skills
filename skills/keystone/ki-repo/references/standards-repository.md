@@ -46,7 +46,7 @@ Every repo carries these at the root. A local audit reads the selected checkout'
 
 Under ADR-KI-HARNESS-012, `.ki/` is not a governance working-artifacts area or an execution surface. The former vendored checker tree, aggregate runner, wrapper, and manifest are retired without a compatibility path; `ki repo` must never invoke `.ki/bin`, a manifest payload, or a nearby checkout. Existing `.ki` runner and manifest material is examined only by an explicit, fail-closed migration operation and is never removed without complete ownership proof.
 
-No document may represent a legacy `.ki/bin` runner as the current self-check contract or as a fallback. Repository activation belongs to `ki skill repo add`, which creates only managed runtime discovery links after containment, ownership, idempotence, and dry-run checks.
+No document may represent a legacy `.ki/bin` runner as the current self-check contract or as a fallback. Repository activation belongs to `ki repo skill add`, which creates only managed runtime discovery links after containment, ownership, idempotence, and dry-run checks.
 
 ## Working areas
 
