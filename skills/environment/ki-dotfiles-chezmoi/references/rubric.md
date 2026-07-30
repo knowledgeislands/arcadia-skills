@@ -14,6 +14,7 @@ Line-by-line criteria for auditing ki-dotfiles-chezmoi. Classifications are deri
 - [PATTERN — App-mutated configuration](#pattern--app-mutated-configuration)
 - [CONFIG — Configuration editing](#config--configuration-editing)
 - [LAYER — Instruction layering](#layer--instruction-layering)
+- [SHELL — Shell paths and completions](#shell--shell-paths-and-completions)
 - [ETIQ — Audit etiquette](#etiq--audit-etiquette)
 - [SYNC — Standard synchronisation](#sync--standard-synchronisation)
 - [RUBRIC — Generated rubric publication](#rubric--generated-rubric-publication)
@@ -73,6 +74,15 @@ Judgment criteria for repository, user, and memory guidance.
 
 - **LAYER-J1 [J] — Agent-instruction layering** — Agent guidance is placed at the correct repository, user, or persistent-memory layer. (standards-chezmoi-dotfiles.md)
   - _Review prompt:_ Does each piece of agent guidance sit at the correct repository-local, user-level, or persistent-memory layer?
+
+## SHELL — Shell paths and completions
+
+→ [standard](standards-chezmoi-dotfiles.md)
+
+Judgment criteria for executable, manual, and completion-path handling.
+
+- **SHELL-J1 [J] — Shell paths and completions** — Shell paths are intentional, idempotent, and optional-tool-safe; tracked completions are regenerated from their owning CLIs. (standards-chezmoi-dotfiles.md)
+  - _Review prompt:_ Are PATH, MANPATH, and completion search-path entries idempotent and ordered as documented; are optional integrations guarded; and do tracked completions come from repeatable upstream CLI generators?
 
 ## ETIQ — Audit etiquette
 

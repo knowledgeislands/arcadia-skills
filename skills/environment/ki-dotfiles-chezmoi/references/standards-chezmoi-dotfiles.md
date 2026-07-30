@@ -7,6 +7,7 @@ The rationale behind [the generated rubric](rubric.md) and its structured catalo
 - [Repo layout & naming](#repo-layout--naming)
 - [Edit discipline](#edit-discipline)
 - [Shell configuration: loader, not rc](#shell-configuration-loader-not-rc)
+  - [Paths and completions](#paths-and-completions)
 - [bin/ dispatcher pattern](#bin-dispatcher-pattern)
 - [App-mutated config handling](#app-mutated-config-handling)
   - [Native fragment-binding contract](#native-fragment-binding-contract)
@@ -49,6 +50,12 @@ for f in ~/.allsh/* ~/.shellname/*; do source "$f"; done
 ```
 
 New configuration becomes a new file dropped into the right directory — never an append to the rc itself. A numeric load-order prefix on each file's name (e.g. `00_` earliest — PATH/completion setup, `50_` mid — tool activation, `90_` late — per-tool completions/aliases, `99_` last — prompt) makes load order explicit and greppable; pick a prefix matching when the snippet needs to run, and name the rest of the filename after what it does.
+
+### Paths and completions
+
+Treat `PATH`, `MANPATH`, and shell completion search paths as ordered, user-visible interfaces rather than incidental environment variables. Make every contribution idempotent, document the repository's intended precedence, and guard optional tools and package managers so a fresh machine or an uninstalled integration still starts a shell successfully. Keep manual-page precedence compatible with executable precedence wherever a tool supplies its own manuals.
+
+Generate a tracked CLI completion from that CLI's supported completion command, such as `<tool> completion <shell>`, instead of maintaining a hand-written copy. Keep the generator in the source tree, make regeneration repeatable, and condition both generation and shell loading on the required tool or completion file being available. Exact tool choices and precedence belong in the consuming repository's local guidance, not in this standard.
 
 ## bin/ dispatcher pattern
 

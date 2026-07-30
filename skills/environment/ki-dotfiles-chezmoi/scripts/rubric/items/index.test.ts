@@ -32,7 +32,7 @@ test('the catalogue preserves every chezmoi criterion in family order', () => {
   expect(catalogue.contract).toBe(1)
   expect(catalogue.name).toBe('ki-dotfiles-chezmoi')
   expect(catalogue.createSession).toBeFunction()
-  expect(catalogue.families.map((family) => family.code)).toEqual(['CHEZMOI', 'BIN', 'GIT', 'PATTERN', 'CONFIG', 'LAYER', 'ETIQ', 'SYNC', 'RUBRIC'])
+  expect(catalogue.families.map((family) => family.code)).toEqual(['CHEZMOI', 'BIN', 'GIT', 'PATTERN', 'CONFIG', 'LAYER', 'SHELL', 'ETIQ', 'SYNC', 'RUBRIC'])
   const codes = catalogue.families.flatMap((family) => family.items.map((item) => item.code))
   expect(codes).toEqual([
     'CHEZMOI-1',
@@ -44,6 +44,7 @@ test('the catalogue preserves every chezmoi criterion in family order', () => {
     'PATTERN-J2',
     'CONFIG-J1',
     'LAYER-J1',
+    'SHELL-J1',
     'ETIQ-J1',
     'SYNC-1',
     'RUBRIC-1'
