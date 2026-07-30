@@ -1,4 +1,7 @@
 ["knowledgeislands/ki-agentic-harness:ki-repo"]
+title = "ki-agentic-harness"
+description = "Knowledge Islands agentic harness — canonical home for Agent Skills, Agents, MCP servers, and Evals across the Knowledge Islands ecosystem."
+repo_code = "KI-HARNESS"
 visibility = "public"
 license = "MIT"
 supported_runtimes = ["claude-code", "codex"]
@@ -22,8 +25,6 @@ supported_runtimes = ["claude-code", "codex"]
 ["knowledgeislands/ki-agentic-harness:ki-housekeeping-claude"]
 
 ["knowledgeislands/ki-agentic-harness:ki-roadmap"]
-repo_code = "KI-HARNESS"
-
 ["knowledgeislands/ki-agentic-harness:ki-roadmap".themes]
 FND = "foundation-tooling"
 GOV = "governance-consistency"

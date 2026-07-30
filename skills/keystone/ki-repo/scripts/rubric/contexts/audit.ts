@@ -231,6 +231,8 @@ const HARNESS_ID = 'knowledgeislands/ki-agentic-harness'
 const skillTable = (name: string): string => `${HARNESS_ID}:${name}`
 const KI_SECTION = skillTable('ki-repo')
 const KI_REPO_DEFAULT = `["${KI_SECTION}"]
+title = ""              # required — exact README.md H1
+description = ""        # required — exact GitHub and package.json description where present
 visibility = "private"   # "public" | "private" — must match the repo's actual GitHub visibility
 license = "MIT"          # SPDX id the LICENSE, package.json, and GitHub must match; default MIT. Use "UNLICENSED" for proprietary. Pick one at https://choosealicense.com/
 supported_runtimes = ["claude-code", "codex"] # required agent-runtime support surface
@@ -251,7 +253,7 @@ const KI_DEFAULT = `${KI_REPO_DEFAULT}\n${KI_AUTHORING_DEFAULT}`
 // Parse the owned table with Bun's TOML parser so quoted table keys, comments,
 // and multiline strings cannot be mistaken for schema. Returns null when the
 // document is invalid or has no object-valued ["knowledgeislands/ki-agentic-harness:ki-repo"] table.
-type KiConfig = { visibility?: string; license?: string; checks: Record<string, boolean> }
+type KiConfig = { title?: string; description?: string; repoCode?: string; visibility?: string; license?: string; checks: Record<string, boolean> }
 const CHECKS_SECTION = `${KI_SECTION}.checks`
 const TOML = (globalThis as unknown as { Bun: { TOML: { parse(text: string): unknown } } }).Bun.TOML
 function parseKiConfig(text: string): KiConfig | null {
@@ -265,6 +267,9 @@ function parseKiConfig(text: string): KiConfig | null {
   if (!value || typeof value !== 'object' || Array.isArray(value)) return null
   const table = value as Record<string, unknown>
   const out: KiConfig = { checks: {} }
+  if (typeof table.title === 'string') out.title = table.title
+  if (typeof table.description === 'string') out.description = table.description
+  if (typeof table.repo_code === 'string') out.repoCode = table.repo_code
   if (typeof table.visibility === 'string') out.visibility = table.visibility
   if (typeof table.license === 'string') out.license = table.license
   if (table.checks && typeof table.checks === 'object' && !Array.isArray(table.checks)) {
@@ -307,7 +312,7 @@ const WRANGLER = ['wrangler.jsonc', 'wrangler.json', 'wrangler.toml']
 const ELEVENTY = ['eleventy.config.ts', 'eleventy.config.js', 'eleventy.config.cjs', 'eleventy.config.mjs']
 type Signals = { root: Set<string>; tree: Set<string>; pkg: Pkg | null }
 type ContentSource = 'local checkout' | 'GitHub default branch'
-type ContentEvidence = { files: Set<string>; kiText: string | null; ki: KiConfig | null; signals: Signals; source: ContentSource }
+type ContentEvidence = { files: Set<string>; kiText: string | null; ki: KiConfig | null; readme: string | null; signals: Signals; source: ContentSource }
 
 function localContentEvidence(dir: string): ContentEvidence {
   const tree = localTreePaths(dir)
@@ -317,6 +322,7 @@ function localContentEvidence(dir: string): ContentEvidence {
     files,
     kiText,
     ki: kiText == null ? null : parseKiConfig(kiText),
+    readme: files.has('README.md') ? localRaw(dir, 'README.md') : null,
     signals: { root: files, tree, pkg: files.has('package.json') ? parsePkg(localRaw(dir, 'package.json')) : null },
     source: 'local checkout'
   }
@@ -329,6 +335,7 @@ function remoteContentEvidence(nwo: string, branch: string): ContentEvidence {
     files,
     kiText,
     ki: kiText == null ? null : parseKiConfig(kiText),
+    readme: files.has('README.md') ? ghRaw(nwo, 'README.md') : null,
     signals: { root: files, tree: treePaths(nwo, branch), pkg: readRemotePkg(nwo, files) },
     source: 'GitHub default branch'
   }
@@ -465,7 +472,9 @@ function declaredTables(text: string): Array<{ root: string; exact: boolean }> {
 const declaresTable = (kiText: string, table: string): boolean => declaredTables(kiText).some(({ root }) => root === table)
 export const declaresRootTable = (kiText: string, table: string): boolean => declaredTables(kiText).some(({ root, exact }) => root === table && exact)
 
-function auditRepo(r: Repo, files: Set<string>, ki: KiConfig | null, kiText: string | null, signals: Signals): Finding[] {
+const readmeTitle = (text: string | null): string | null => text?.match(/^#\s+(.+?)(?:\s+#+)?\s*$/m)?.[1]?.trim() || null
+
+function auditRepo(r: Repo, files: Set<string>, ki: KiConfig | null, kiText: string | null, readme: string | null, signals: Signals): Finding[] {
   const { f, fail, warn, note } = mk()
   const pkgDesc = pkgDescription(signals.pkg)
   if (r.isArchived) {
@@ -487,6 +496,15 @@ function auditRepo(r: Repo, files: Set<string>, ki: KiConfig | null, kiText: str
         `${KI_CONFIG} does not declare ["knowledgeislands/ki-agentic-harness:ki-authoring"] — the authoring standard is baseline (run --educate)`,
         KI_CONFIG
       )
+  }
+  // ── layer 1: declared repository identity ── FILES-2
+  if (!ki) fail('FILES-2', `${KI_CONFIG} has no [${KI_SECTION}] table`, KI_CONFIG)
+  else {
+    if (!ki.title?.trim()) fail('FILES-2', `${KI_CONFIG} must declare a non-empty \`title\``, KI_CONFIG)
+    else if (readmeTitle(readme) !== ki.title.trim()) fail('FILES-2', `README.md H1 must equal ${KI_CONFIG} title`, 'README.md')
+    if (!ki.description?.trim()) fail('FILES-2', `${KI_CONFIG} must declare a non-empty \`description\``, KI_CONFIG)
+    if (declaresRootTable(kiText ?? '', skillTable('ki-roadmap')) && !/^[A-Z][A-Z0-9-]{1,23}$/.test(ki.repoCode ?? ''))
+      fail('FILES-2', `${KI_CONFIG} ki-repo repo_code must be a stable uppercase identifier when ki-roadmap is declared`, KI_CONFIG)
   }
 
   // ── layer 2: core GitHub ── GH-1
@@ -533,16 +551,21 @@ function auditRepo(r: Repo, files: Set<string>, ki: KiConfig | null, kiText: str
     if (!isStr(p.homepage)) warn('PKG-1', 'package.json "homepage" missing', 'package.json')
     if (!Array.isArray(p.keywords) || p.keywords.length === 0) warn('PKG-1', 'package.json "keywords" should be a non-empty array', 'package.json')
   }
-  // GH-3: description present + synced with package.json
-  if (!r.description?.trim()) fail('GH-3', 'description is empty')
-  // description-sync: the GitHub description must equal the repo's package.json
-  // description (the in-repo source of truth). Only checked when both exist — a
-  // repo with no package.json description is exempt. (Whether the text matches the
-  // repo's PURPOSE is still judgment — the skill's AUDIT mode, DESCFIT-1.)
-  else if (pkgDesc != null && pkgDesc !== r.description.trim())
+  // GH-3: description is declared in the ki-repo table, then synchronised with
+  // GitHub and package.json when each surface exists.
+  const declaredDescription = ki?.description?.trim()
+  if (!declaredDescription) fail('GH-3', `${KI_CONFIG} must declare a non-empty \`description\``)
+  else if (!r.description?.trim()) fail('GH-3', 'GitHub description is empty')
+  else if (r.description.trim() !== declaredDescription)
     fail(
       'GH-3',
-      `GitHub description ≠ package.json description\n      github: ${JSON.stringify(r.description.trim())}\n      package.json: ${JSON.stringify(pkgDesc)}`
+      `GitHub description ≠ ${KI_CONFIG} description\n      github: ${JSON.stringify(r.description.trim())}\n      config: ${JSON.stringify(declaredDescription)}`
+    )
+  else if (pkgDesc != null && pkgDesc !== declaredDescription)
+    fail(
+      'GH-3',
+      `package.json description ≠ ${KI_CONFIG} description\n      package.json: ${JSON.stringify(pkgDesc)}\n      config: ${JSON.stringify(declaredDescription)}`,
+      'package.json'
     )
   // MERGE-1: squash-only + auto-delete-branch.
   if (r.mergeCommitAllowed || r.rebaseMergeAllowed || !r.squashMergeAllowed)
@@ -856,7 +879,7 @@ const evidenceLevel = (level: Level): RepoEvidenceLevel => level
 
 const LIVE_GITHUB_AREAS = new Set(['ACCESS-1', 'GH-1', 'MERGE-1', 'TOGGLE-1', 'VIS-1', 'TOPICS-1', 'BP-1', 'DEP-1', 'SEC-1', 'ACT-1'])
 const MIXED_EVIDENCE_AREAS = new Set(['GH-2', 'GH-3', 'PKG-1'])
-const CONTENT_AREAS = new Set(['FILES-1', 'FILES-3', 'GH-2', 'PKG-1', 'CHECKS-1', 'COV-1', 'STRUCT-1', 'STRUCT-2'])
+const CONTENT_AREAS = new Set(['FILES-1', 'FILES-2', 'FILES-3', 'GH-2', 'GH-3', 'PKG-1', 'CHECKS-1', 'COV-1', 'STRUCT-1', 'STRUCT-2'])
 
 const findingSource = (area: string, content: ContentSource, live = true): string => {
   if (!live) return content
@@ -871,7 +894,7 @@ const scoped = (nwo: string, finding: Finding, content: ContentSource, live = tr
 const auditLocalContent = (nwo: string, content: ContentEvidence): Finding[] => {
   const visibility = content.ki?.visibility?.toUpperCase() === 'PUBLIC' ? 'PUBLIC' : 'PRIVATE'
   const license = content.ki?.license?.toLowerCase() ?? DEFAULT_LICENSE.toLowerCase()
-  const description = pkgDescription(content.signals.pkg) ?? ''
+  const description = content.ki?.description?.trim() ?? ''
   const virtualRepo: Repo = {
     nameWithOwner: nwo,
     visibility,
@@ -888,7 +911,7 @@ const auditLocalContent = (nwo: string, content: ContentEvidence): Finding[] => 
     licenseInfo: { key: license },
     description
   }
-  return auditRepo(virtualRepo, content.files, content.ki, content.kiText, content.signals).filter((finding) => CONTENT_AREAS.has(finding.area))
+  return auditRepo(virtualRepo, content.files, content.ki, content.kiText, content.readme, content.signals).filter((finding) => CONTENT_AREAS.has(finding.area))
 }
 
 // ── evidence collection ───────────────────────────────────────────────────
@@ -978,7 +1001,7 @@ export const collectAuditFindings = (argv: readonly string[]): RepoAuditCollecti
       const content = localContent ?? remoteContentEvidence(t.nameWithOwner, branch)
       // overrides are applied inside auditRepo: a not-enforced check simply does not fail
       // and is reported as INFO. No post-filtering here.
-      findings = [...auditRepo(r, content.files, content.ki, content.kiText, content.signals), ...localFindings]
+      findings = [...auditRepo(r, content.files, content.ki, content.kiText, content.readme, content.signals), ...localFindings]
       for (const x of findings) all.push({ level: x.level, area: x.area, msg: x.msg, ref: x.ref, file: scoped(t.nameWithOwner, x, content.source) })
     } catch {
       findings = [

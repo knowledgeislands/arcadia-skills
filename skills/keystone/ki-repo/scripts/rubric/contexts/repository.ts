@@ -7,6 +7,8 @@ const HARNESS_ID = 'knowledgeislands/ki-agentic-harness'
 const KI_REPO_TABLE = `${HARNESS_ID}:ki-repo`
 const KI_AUTHORING_TABLE = `${HARNESS_ID}:ki-authoring`
 const KI_REPO_DEFAULT = `["${KI_REPO_TABLE}"]
+title = ""              # required — exact README.md H1
+description = ""        # required — exact GitHub and package.json description where present
 visibility = "private"   # "public" | "private" — must match the repo's actual GitHub visibility
 license = "MIT"          # SPDX id the LICENSE, package.json, and GitHub must match; default MIT. Use "UNLICENSED" for proprietary. Pick one at https://choosealicense.com/
 supported_runtimes = ["claude-code", "codex"] # required agent-runtime support surface
@@ -27,6 +29,7 @@ const GITIGNORE_DEFAULT = 'node_modules/\n.DS_Store\n'
 
 const GITHUB_CODES = new Set([
   'FILES-1',
+  'FILES-2',
   'FILES-3',
   'GH-1',
   'GH-2',
@@ -52,6 +55,7 @@ export type EvidenceRubricContext = {
 
 export type FilesRubricContext = {
   files1: readonly RepoEvidenceFinding[]
+  files2: readonly RepoEvidenceFinding[]
   files3: readonly RepoEvidenceFinding[]
   ensureGitignore?: () => void
   ensureRepoConfiguration?: () => void
@@ -274,6 +278,7 @@ export const createRepoSession = (
     rubric: { publication },
     files: {
       files1: evidence('FILES-1'),
+      files2: evidence('FILES-2'),
       files3: evidence('FILES-3'),
       ...(mutable && gitignoreSafe && !gitignoreExists
         ? {

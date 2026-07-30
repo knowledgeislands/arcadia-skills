@@ -35,7 +35,7 @@ There are no simple or thematic profiles, theme `ROADMAP.md` files, `plans/` dir
 
 The item identifier is globally unique within its repository: `<REPO>-<THEME>-<NNN>`.
 
-`<REPO>` is the stable uppercase `repo_code` in the `ki-roadmap` table.
+`<REPO>` is the stable uppercase `repo_code` in the `ki-repo` table.
 
 `<THEME>` is an uppercase semantic code declared in the `ki-roadmap` table’s `themes` mapping.
 
@@ -48,9 +48,10 @@ The `theme` frontmatter field is a human-readable kebab-case grouping such as `f
 It is deliberately retained after flattening: items in one theme may be selected, shaped, and executed together without becoming a physical directory hierarchy. Its identifier code and name must be declared together in `.ki-config.toml`:
 
 ```toml
-["knowledgeislands/ki-agentic-harness:ki-roadmap"]
+["knowledgeislands/ki-agentic-harness:ki-repo"]
 repo_code = "KI-HARNESS"
 
+["knowledgeislands/ki-agentic-harness:ki-roadmap"]
 ["knowledgeislands/ki-agentic-harness:ki-roadmap".themes]
 FND = "foundation-tooling"
 GOV = "governance-consistency"

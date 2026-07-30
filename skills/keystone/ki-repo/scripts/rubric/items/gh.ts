@@ -28,7 +28,7 @@ export const GH: RubricFamily<RepoRubricContext, GhRubricContext> = {
     item(
       'GH-3',
       'Description presence and synchronisation',
-      'The GitHub description is non-empty and matches package.json when that source exists.',
+      'The declared ki-repo description is non-empty and matches GitHub and package.json when those surfaces exist.',
       (context) => context.gh3
     )
   ]

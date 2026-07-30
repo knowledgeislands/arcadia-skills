@@ -21,7 +21,7 @@ const createFixture = (): string => {
   mkdirSync(join(repository, 'docs', 'roadmap'), { recursive: true })
   writeFileSync(
     join(repository, '.ki-config.toml'),
-    '["knowledgeislands/ki-agentic-harness:ki-roadmap"]\nrepo_code = "TEST"\n\n["knowledgeislands/ki-agentic-harness:ki-roadmap".themes]\nFND = "foundation-tooling"\n'
+    '["knowledgeislands/ki-agentic-harness:ki-repo"]\nrepo_code = "TEST"\n\n["knowledgeislands/ki-agentic-harness:ki-roadmap"]\n\n["knowledgeislands/ki-agentic-harness:ki-roadmap".themes]\nFND = "foundation-tooling"\n'
   )
   writeFileSync(
     join(repository, 'docs', 'roadmap', 'TEST-FND-001-build-the-foundation.md'),

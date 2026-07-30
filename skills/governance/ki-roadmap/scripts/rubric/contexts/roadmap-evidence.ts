@@ -43,6 +43,7 @@ const STANDARD = 'references/standards-repository-roadmaps.md'
 const FORMAT = 'references/standards-work-item-format.md'
 const RUBRIC = 'references/rubric.md'
 const ROADMAP_CONFIG = 'knowledgeislands/ki-agentic-harness:ki-roadmap'
+const REPO_CONFIG = 'knowledgeislands/ki-agentic-harness:ki-repo'
 const TOML = (globalThis as unknown as { Bun: { TOML: { parse(text: string): unknown } } }).Bun.TOML
 
 let findings: Finding[] = []
@@ -109,13 +110,15 @@ const roadmapConfiguration = (repository: string): RoadmapConfiguration | undefi
   }
   try {
     const parsed = TOML.parse(readFileSync(config, 'utf8')) as Record<string, unknown>
-    const table = parsed[ROADMAP_CONFIG]
-    const values = typeof table === 'object' && table !== null && !Array.isArray(table) ? (table as Record<string, unknown>) : undefined
-    const code = values?.repo_code
+    const repoTable = parsed[REPO_CONFIG]
+    const repoValues = typeof repoTable === 'object' && repoTable !== null && !Array.isArray(repoTable) ? (repoTable as Record<string, unknown>) : undefined
+    const code = repoValues?.repo_code
     if (typeof code !== 'string' || !/^[A-Z][A-Z0-9-]{1,23}$/.test(code)) {
-      add('FAIL', 'ROAD-6', 'ki-roadmap repo_code must be a stable uppercase identifier', STANDARD, '.ki-config.toml')
+      add('FAIL', 'ROAD-6', 'ki-repo repo_code must be a stable uppercase identifier for a repository declaring ki-roadmap', STANDARD, '.ki-config.toml')
       return undefined
     }
+    const table = parsed[ROADMAP_CONFIG]
+    const values = typeof table === 'object' && table !== null && !Array.isArray(table) ? (table as Record<string, unknown>) : undefined
     const configuredThemes = values?.themes
     if (typeof configuredThemes !== 'object' || configuredThemes === null || Array.isArray(configuredThemes)) {
       add('FAIL', 'ROAD-6', 'ki-roadmap themes must be a non-empty code-to-theme table', STANDARD, '.ki-config.toml')

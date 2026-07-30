@@ -39,6 +39,17 @@ const FILES_3: RubricItem<FilesRubricContext> = {
   }
 }
 
+const FILES_2: RubricItem<FilesRubricContext> = {
+  code: 'FILES-2',
+  title: 'Declared repository identity',
+  description: 'The ki-repo table declares title and description; its title matches the README H1, and a roadmap repository declares repo_code there.',
+  sources: [SOURCE],
+  mechanical: {
+    level: 'FAIL',
+    audit: { phase: 'INSPECT', run: (context) => auditEvidence(context.files2, 'FAIL') }
+  }
+}
+
 const FILES_J1: RubricItem<FilesRubricContext> = {
   code: 'FILES-J1',
   title: 'Repository document content',
@@ -53,5 +64,5 @@ export const FILES: RubricFamily<RepoRubricContext, FilesRubricContext> = {
   description: 'Required repository files and document quality, using a local checkout when available or GitHub default-branch evidence for remote-only runs.',
   standard: SOURCE,
   selectContext: (context) => context.files,
-  items: [FILES_1, FILES_3, FILES_J1]
+  items: [FILES_1, FILES_2, FILES_3, FILES_J1]
 }

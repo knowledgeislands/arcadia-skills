@@ -33,6 +33,7 @@ const inspect = (root: string) => ({
   target: root,
   findings: [
     { level: 'FAIL' as const, code: 'FILES-1', message: 'required files are absent' },
+    { level: 'FAIL' as const, code: 'FILES-2', message: 'repository identity is absent' },
     { level: 'FAIL' as const, code: 'FILES-3', message: 'authoring marker is absent' }
   ]
 })
@@ -251,6 +252,19 @@ describe('local repository evidence', () => {
 
     const findings = collectAuditFindings([root]).findings
     expect(findings.find((finding) => finding.code === 'FILES-1')?.subject).toContain('[local checkout]')
+  })
+
+  test('requires declared identity and keeps roadmap repo_code in the ki-repo table', () => {
+    const root = repository()
+    writeFileSync(join(root, 'README.md'), '# Actual title\n')
+    writeFileSync(
+      join(root, '.ki-config.toml'),
+      '["knowledgeislands/ki-agentic-harness:ki-repo"]\ntitle = "Configured title"\ndescription = "Configured description."\n\n["knowledgeislands/ki-agentic-harness:ki-roadmap"]\n'
+    )
+
+    const findings = collectAuditFindings([root]).findings.filter((finding) => finding.code === 'FILES-2')
+    expect(findings).toContainEqual(expect.objectContaining({ message: expect.stringContaining('README.md H1 must equal') }))
+    expect(findings).toContainEqual(expect.objectContaining({ message: expect.stringContaining('repo_code must be a stable uppercase identifier') }))
   })
 
   test('fails a selected local target rather than falling back to GitHub content', () => {

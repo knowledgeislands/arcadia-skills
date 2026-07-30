@@ -45,6 +45,7 @@ The tracked readable rubric is the exact publication of the structured catalogue
 Required repository files and document quality, using a local checkout when available or GitHub default-branch evidence for remote-only runs.
 
 - **FILES-1 [M] — Required repository files** — README, license, gitignore, editor configuration, Claude orientation, and the exact ki-repo config marker are present in the selected evidence source. (standards-repository.md)
+- **FILES-2 [M] — Declared repository identity** — The ki-repo table declares title and description; its title matches the README H1, and a roadmap repository declares repo_code there. (standards-repository.md)
 - **FILES-3 [M] — Authoring baseline** — A governed repository declares ki-authoring explicitly. (standards-repository.md)
 - **FILES-J1 [J] — Repository document content** — README and license content is accurate and current. (standards-repository.md)
   - _Review prompt:_ Read the README and license and assess whether they accurately describe and license this repository.
@@ -57,7 +58,7 @@ Default branch, licensing, and repository description.
 
 - **GH-1 [M] — Default branch** — The default branch is main. (standards-repository.md)
 - **GH-2 [M] — Declared license alignment** — The declared license agrees with GitHub and package.json. (standards-repository.md)
-- **GH-3 [M] — Description presence and synchronisation** — The GitHub description is non-empty and matches package.json when that source exists. (standards-repository.md)
+- **GH-3 [M] — Description presence and synchronisation** — The declared ki-repo description is non-empty and matches GitHub and package.json when those surfaces exist. (standards-repository.md)
 
 ## PKG — Package metadata
 

@@ -28,7 +28,7 @@ Every repo carries these at the root. A local audit reads the selected checkout'
 | `CLAUDE.md`       | Agent instructions — the always-loaded anchor for any repo-specific gate or convention (skills rubric SHAPE-7). |
 | `.ki-config.toml` | Declares this repo's expected config under `["knowledgeislands/ki-agentic-harness:ki-repo"]`. †                 |
 
-† The values it carries: `visibility`, the declared `license` (SPDX id, default MIT), and any per-repo check overrides.
+† The values it carries: mandatory `title` and `description`, `visibility`, the declared `license` (SPDX id, default MIT), and any per-repo check overrides. A repository that declares `ki-roadmap` also carries its stable `repo_code` here.
 
 **Baseline governance is declared, not assumed.** Every Knowledge Islands repo is governed by `ki-repo` **and** `ki-authoring`; both are required declarations — a `.ki-config.toml` missing `["knowledgeislands/ki-agentic-harness:ki-authoring"]` is a FAIL (`authoring-baseline`). Authoring is no longer an implicit universal hidden in the tooling ([ADR-KI-HARNESS-005](../../../../docs/decisions/ADR-KI-HARNESS-005-validate-down-ki-config-toml-contract.md)); the config shows the full governance set. Portable tokenomics and the real environment capabilities mapped from `["knowledgeislands/ki-agentic-harness:ki-repo"].supported_runtimes` are likewise explicit required tables; `ki-repo` checks their presence without reading their contents.
 
@@ -78,18 +78,18 @@ Knowledge Bases retain their own fixed `+/` and `-/` staging model under `ki-kb`
 
 For every repo on github.com:
 
-| Setting            | Value                                                                            | Why                                      |
-| ------------------ | -------------------------------------------------------------------------------- | ---------------------------------------- |
-| Default branch     | `main`                                                                           | Uniform; what tooling and docs assume.   |
-| License            | Live GitHub license matches the declared `license` SPDX id (default MIT)         | Decoupled from visibility.               |
-| Package license    | `package.json` `"license"` matches the declared id (`UNLICENSED` if proprietary) | Matches the declared license.            |
-| Description        | Present, one sentence; synced with `package.json` where one exists               | One-line identity on GitHub.             |
-| Merge methods      | **Squash only** — merge-commit off, rebase off                                   | One commit per PR; clean, linear `main`. |
-| Auto-delete branch | On                                                                               | No stale merged branches.                |
-| Issues             | On                                                                               | The tracker.                             |
-| Wiki               | Off                                                                              | Docs live in-repo.                       |
-| Projects           | Off                                                                              | Unused.                                  |
-| Discussions        | Off                                                                              | Unused.                                  |
+| Setting            | Value                                                                             | Why                                      |
+| ------------------ | --------------------------------------------------------------------------------- | ---------------------------------------- |
+| Default branch     | `main`                                                                            | Uniform; what tooling and docs assume.   |
+| License            | Live GitHub license matches the declared `license` SPDX id (default MIT)          | Decoupled from visibility.               |
+| Package license    | `package.json` `"license"` matches the declared id (`UNLICENSED` if proprietary)  | Matches the declared license.            |
+| Description        | Equals declared `ki-repo` `description`; synced with `package.json` where present | One-line identity on GitHub.             |
+| Merge methods      | **Squash only** — merge-commit off, rebase off                                    | One commit per PR; clean, linear `main`. |
+| Auto-delete branch | On                                                                                | No stale merged branches.                |
+| Issues             | On                                                                                | The tracker.                             |
+| Wiki               | Off                                                                               | Docs live in-repo.                       |
+| Projects           | Off                                                                               | Unused.                                  |
+| Discussions        | Off                                                                               | Unused.                                  |
 
 Public repos (`mcp-*`) additionally:
 
@@ -136,6 +136,8 @@ Each repo **declares** its expected visibility in `.ki-config.toml` (`visibility
 ```toml
 # .ki-config.toml — one [table] per skill that needs per-repo options
 ["knowledgeislands/ki-agentic-harness:ki-repo"]
+title = "Example repository" # exact README.md H1
+description = "One sentence describing the repository." # exact GitHub and package.json description where present
 visibility = "public"   # "public" | "private"
 license = "MIT"         # SPDX id; use "UNLICENSED" for proprietary
 
@@ -147,6 +149,8 @@ branch-protection = true   # default off — protect `main` on this repo
 # Required foundation marker — declared, never injected.
 ["knowledgeislands/ki-agentic-harness:ki-authoring"]
 ```
+
+`title` and `description` are mandatory repository identity. The title is exactly the README H1. The description is exactly the GitHub description and, where present, package.json `description`. A repository that declares `ki-roadmap` also declares its stable uppercase `repo_code` in this same table; `ki-roadmap` consumes that code and owns only its theme mapping.
 
 ## Per-repo overrides
 
