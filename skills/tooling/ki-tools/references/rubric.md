@@ -87,8 +87,8 @@ Man-page linting requirements.
   - _Review prompt:_ A shipped physical man page is installed by the release installer and linked with the executable by its --link mode.
 - **MAN-SURFACE [J] — Manual command surface** — A physical manual stays aligned with CLI help and uses the tool’s command-group vocabulary in its SYNOPSIS. (standards-tool-repositories.md)
   - _Review prompt:_ A physical manual stays aligned with CLI help and uses the tool’s command-group vocabulary in its SYNOPSIS.
-- **MAN-STYLE [J] — Manual source and layout** — A physical manual uses portable roff macros, a literal \& after each .SH / .SS, and a rendered-spacing inspection after mandoc lint. (standards-tool-repositories.md)
-  - _Review prompt:_ A physical manual uses portable roff macros, a literal \& after each .SH / .SS, and a rendered-spacing inspection after mandoc lint.
+- **MAN-STYLE [J] — Manual source and layout** — A physical manual uses portable roff macros, documents each configuration format canonically in FILES, uses a literal \& after each .SH / .SS followed by .PP before prose or a structural macro, and receives a rendered-spacing inspection after mandoc lint. (standards-tool-repositories.md)
+  - _Review prompt:_ A physical manual uses portable roff macros, documents each configuration format canonically in FILES, uses a literal \& after each .SH / .SS followed by .PP before prose or a structural macro, and receives a rendered-spacing inspection after mandoc lint.
 
 ## CONFIG — configuration
 

@@ -50,9 +50,13 @@ const MAN_SURFACE = {
 const MAN_STYLE = {
   code: 'MAN-STYLE',
   title: 'Manual source and layout',
-  description: 'A physical manual uses portable roff macros, a literal \\& after each .SH / .SS, and a rendered-spacing inspection after mandoc lint.',
+  description:
+    'A physical manual uses portable roff macros, documents each configuration format canonically in FILES, uses a literal \\& after each .SH / .SS followed by .PP before prose or a structural macro, and receives a rendered-spacing inspection after mandoc lint.',
   sources: [STANDARD],
-  judgment: { prompt: 'A physical manual uses portable roff macros, a literal \\& after each .SH / .SS, and a rendered-spacing inspection after mandoc lint.' }
+  judgment: {
+    prompt:
+      'A physical manual uses portable roff macros, documents each configuration format canonically in FILES, uses a literal \\& after each .SH / .SS followed by .PP before prose or a structural macro, and receives a rendered-spacing inspection after mandoc lint.'
+  }
 } satisfies RubricItem<ManualToolsContext>
 
 export const MAN: RubricFamily<ToolsRubricContext, ManualToolsContext> = {
