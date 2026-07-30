@@ -18,7 +18,8 @@ Bootstrap installs the verified canonical harness and the core user skills. It d
 From any directory, point `ki` at the physical harness checkout:
 
 ```bash
-ki dev on /path/to/ki-agentic-harness
+ki dev local set /path/to/ki-agentic-harness
+ki dev local on
 ```
 
 The command validates the required `skills/`, `subagents/`, and `hooks/` roots before replacing the installed canonical payload with managed links to the checkout. It also refreshes configured user skills so the next agent session sees the local sources.
