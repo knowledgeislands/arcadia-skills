@@ -27,10 +27,11 @@ The opinionated shape is fixed by the reference tool repo under `knowledgeisland
 
 ## Last review
 
-REFRESH last run **2026-07-30**. The standard now reflects `tools-mgit` and `tools-ki`: semantic-version release baselines, singular completion, owned-syntax diagnostics, installed/linkable manuals, and versioned persisted manifests only where their structure evolves. No open watch-items yet.
+REFRESH last run **2026-07-30**. The standard now reflects `tools-mgit` and `tools-ki`: semantic-version release baselines, singular completion, owned-syntax diagnostics, installed/linkable manuals, and independent schema-one workspace manifests only where their structure evolves.
 
 **Open watch-items:**
 
+- `tools-mgit` has a physical manual but its current CI does not run `mandoc -T lint man/mgit.1` (MAN-LINT). Restore that source-repository gate; do not weaken the manual capability conditional.
 - Homebrew's own audit surface (`brew audit` / `brew style`, the Formula Cookbook) is tracked by the sibling `ki-homebrew-tap` skill, not here — reconcile the tap-facing half there.
 - If a second shell-specific concern emerges beyond shellcheck + bats, reconsider a dedicated `ki-shell` skill (deliberately not created at n=1).
 
