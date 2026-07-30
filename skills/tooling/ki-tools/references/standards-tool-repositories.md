@@ -74,7 +74,7 @@ Use a schema only for an on-disk manifest whose **structure is expected to evolv
 - Put `schema = <integer>` at the start of a versioned manifest and accept only the versions the tool implements. An absent, malformed, or unsupported value fails clearly; never guess how to interpret it.
 - Increment the schema only for an incompatible structural change. The implementation must either migrate an older supported form deliberately or reject it with the required remediation. A newer unknown version is always rejected rather than silently downgraded.
 - Keep schema parsing and writing in one owned implementation with coverage for each accepted form and each rejection path. Generated or registered manifests write the current schema explicitly.
-- Do **not** add a schema to small, stable leaf metadata with no evolving structural contract. For example, mGit's `.mgit-workspace.toml` is a schema-1 manifest, while its leaf-only `.mgit-config.toml` deliberately remains unschematized metadata. KI's more expressive `.ki-workspace.toml` is independently at schema 2; schema numbers are local to their formats and need not agree across tools.
+- Do **not** add a schema to small, stable leaf metadata with no evolving structural contract. Both mGit's `.mgit-workspace.toml` and KI's more expressive `.ki-workspace.toml` currently use schema 1, while mGit's leaf-only `.mgit-config.toml` deliberately remains unschematized metadata. Matching numbers do not make the formats interchangeable: each tool owns and validates its own contract.
 
 ## Capability conditionals
 
