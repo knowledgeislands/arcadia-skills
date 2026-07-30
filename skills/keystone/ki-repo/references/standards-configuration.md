@@ -12,6 +12,7 @@ The cross-cutting contract for the shared **`.ki-config.toml`** file every Knowl
 - [Overridable vs fixed](#overridable-vs-fixed)
 - [Coverage enforcement](#coverage-enforcement)
 - [Scaffolding & ownership](#scaffolding--ownership)
+- [Local registry](#local-registry)
 
 ## The shared file & the compliance marker
 
@@ -119,4 +120,8 @@ The **schema and conformer** inside a table belong to the skill that owns it: th
 
 The native configuration and activation flow runs this owner leg without embedding a TOML template or writing another skill's table. It re-reads the result before resolving the declared operations from the verified installed collection; it does not vendor an executor. No-seed/no-config activation remains an empty-set operation, so this flow does not recreate an injected baseline.
 
-The native resolver validates declaration names. Exact and dotted `[ki-*]` headers both resolve to their root owner; bare and simply quoted TOML keys are equivalent, header-looking text inside multiline strings is ignored, and noncanonical ki-like roots remain visible so they fail rather than disappear. Repeated roots collapse. If any declared root is unresolvable, native audit, conform, activation, and dry-run fail before mutation and report each name once in sorted order. Rename reconciliation stays human because no mechanical mapping can establish intent.
+The native resolver validates declaration names. Exact and dotted `[ki-*]` headers both resolve to their root owner; bare and simply quoted TOML keys are equivalent, header-looking text inside multiline strings is ignored, and noncanonical ki-like roots remain visible so they fail rather than disappear. Repeated roots collapse. If any declared root is unresolvable, native audit, activation, dry-run, and the repository-mutating portion of CONFORM fail and report each name once in sorted order. Rename reconciliation stays human because no mechanical mapping can establish intent.
+
+## Local registry
+
+The local user configuration separately records physical roots that have been addressed as KI repositories. It is an inventory for audit, repair, and future bulk operations — not a record of successful conformance. `ki repo register` adds explicitly selected physical roots without resolving declarations or applying repository repairs. A local non-dry-run `ki repo conform` does the same before reading declarations or evaluating findings, so a malformed or failing `.ki-config.toml` remains discoverable. Registration preserves existing entries, never removes an entry, and does not search the filesystem beyond the caller's explicit target selection. Without a bootstrapped local user configuration, CONFORM remains portable and does not create one; the standalone registration command requires it. Cloud-account registry and reconciliation are outside this local contract.

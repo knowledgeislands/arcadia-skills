@@ -46,14 +46,14 @@ When the command runs in a local KI installation, AUDIT also checks that the res
 
 Outward-facing: it changes live GitHub settings and may open PRs. Show the diff and confirm before mutating.
 
-`ki repo conform --repo <repo>` first resolves the declared, verified installed collection as AUDIT does, then proposes the local `.gitignore` and required config root-marker repairs. A missing config receives the canonical `["knowledgeislands/ki-agentic-harness:ki-repo"]` defaults plus bare `["knowledgeislands/ki-agentic-harness:ki-authoring"]`; a partial config receives only its missing exact root marker; existing bytes remain an exact prefix; repeat runs are byte-identical; and `--dry-run` writes nothing. Missing, incompatible, undeclared, or untrusted skills fail before any write.
+`ki repo conform --repo <repo>` records the selected physical local KI root in the user's registry, then resolves the declared, verified installed collection and proposes the local `.gitignore` and required config root-marker repairs. A missing config receives the canonical `["knowledgeislands/ki-agentic-harness:ki-repo"]` defaults plus bare `["knowledgeislands/ki-agentic-harness:ki-authoring"]`; a partial config receives only its missing exact root marker; existing bytes remain an exact prefix; repeat runs are byte-identical; and `--dry-run` writes nothing. Missing, incompatible, undeclared, or untrusted skills fail before any repository write.
 
 1. Run **AUDIT** first, so you change against a known gap list.
 2. Run `ki repo conform --repo <repo>` for the bounded local mechanical layer. Live GitHub settings remain outside the session proposal: inspect the commands in [the repository standard](references/standards-repository.md#applying-it), show the exact diff, and obtain explicit confirmation before applying them.
 3. Resolve the judgment items yourself — document content, description fit, runtime orientation, override rationale, and standard synchronisation.
 4. **Re-audit** to confirm convergence.
 
-For a local KI installation, CONFORM also adds the resolved physical repository root to the user's XDG registry after the repository's own conform and re-audit succeed. It adds only the selected root, preserves other user configuration, and never removes or scans registry entries. Cloud-account registration is outside this mode.
+For a bootstrapped local KI installation, `ki repo register` records selected physical repository roots in the user's XDG registry without resolving declarations or applying repairs. CONFORM performs the same registration before resolving declarations or evaluating conformance. The registry is an inventory of locally addressed KI repositories, not a compliance verdict: a malformed or failing repository must remain discoverable for later audit, repair, and bulk work. Registration adds only explicitly selected roots, preserves other user configuration, and never removes or scans registry entries. Without a local user configuration, CONFORM remains portable and does not create one. Cloud-account registration is outside this mode.
 
 ### Mode EDUCATE — make a repo Knowledge Islands–compliant
 
