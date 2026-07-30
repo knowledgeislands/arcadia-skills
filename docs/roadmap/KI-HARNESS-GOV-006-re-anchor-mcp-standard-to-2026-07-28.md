@@ -2,7 +2,7 @@
 id: KI-HARNESS-GOV-006
 title: Re-anchor the MCP standard to specification 2026-07-28
 theme: governance-consistency
-horizon: soon
+horizon: next
 status: open
 blocks: []
 blocked-by: []
@@ -40,6 +40,37 @@ Choose the rollout profile and the pilot repository. In particular, decide wheth
 ### Promotion conditions
 
 Promote when the v2 migration delta has been proven in a named stdio pilot, the standard's protocol-era applicability is exact, each sibling's local follow-up is identified, and the rubric can verify the chosen profile without false failures.
+
+## Current state
+
+The `ki-mcp` source list is already anchored to the released 2026-07-28 specification and TypeScript SDK v2 availability, while all six sibling servers still declare SDK 1.x and implement the older profile.
+
+`mcp-git-audit` is the proposed named stdio pilot because its scope is local and its migration can be evaluated before a fleet-wide standard change.
+
+## Steps
+
+1. Ask the `mcp-git-audit` owner to accept a bounded v2 migration pilot with its own local work item and verification boundary.
+2. Compare the pilot's SDK-v2 migration delta, result-envelope change, `server/discover` surface, and stdio entry point against its current v1 implementation.
+3. Select and document one rollout profile: retain the older profile until every sibling migrates, or introduce explicit protocol-era applicability that keeps unmigrated servers conformant.
+4. Re-anchor the portable `ki-mcp` standard, sources, and rubric only after the pilot proves the selected profile can be checked without false fleet failures.
+5. Create one receiving migration item per affected sibling; no sibling implementation is included in this harness item.
+
+## Files touched
+
+- `skills/agentic-systems/ki-mcp/` standard, source, rubric, and catalogue files after pilot evidence
+- This work item
+- Receiving pilot and sibling migration items in their owning repositories
+
+## Verify
+
+- The accepted pilot's focused SDK-v2, tool-result, discovery, and stdio tests
+- `ki repo audit --skill ki-mcp --repo <pilot>`
+- Harness `ki-mcp` rubric tests and `ki dev skill rubric ki-mcp --write`
+- A fleet audit that demonstrates the selected protocol-era profile does not create false failures.
+
+## Dependencies / blocks
+
+This item cannot become Ready until `mcp-git-audit` accepts the pilot and the owner selects the fleet rollout profile.
 
 ## Discussion
 

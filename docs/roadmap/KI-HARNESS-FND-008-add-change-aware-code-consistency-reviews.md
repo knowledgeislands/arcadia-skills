@@ -2,7 +2,7 @@
 id: KI-HARNESS-FND-008
 title: Add change-aware code consistency reviews
 theme: foundation-tooling
-horizon: soon
+horizon: next
 status: open
 blocks: []
 blocked-by: []
@@ -36,6 +36,37 @@ Choose the canonical review-record location and the minimum evidence shape. The 
 ### Promotion conditions
 
 Promote when the record location, exact judgment prompt, review outcome vocabulary, and a representative example of "review now" versus "not yet warranted" are agreed.
+
+## Current state
+
+`ki-engineering` contains judgment prompts for individual rubric concerns, but no portable prompt or durable evidence convention for a whole-change consistency review.
+
+## Steps
+
+1. Compare repository-native recording options, beginning with review evidence in an ordinary change commit, against a dedicated durable review record; reject any option that creates a routine activity log or a CI-maintained score.
+2. Specify the minimum review evidence: Git boundary, examined range and paths, reviewer outcome, and any follow-up identifier.
+3. Add one advisory `ki-engineering` judgment prompt that asks whether change scope warrants review and, when it does, applies the structural questions to the bounded range.
+4. Document outcome vocabulary and one representative "review now" and "not yet warranted" example without turning either into an automatic threshold.
+5. Add focused catalogue and documentation verification for the new prompt and its record convention.
+
+## Files touched
+
+- `skills/governance/ki-engineering/SKILL.md`
+- `skills/governance/ki-engineering/references/standards-engineering.md`
+- `skills/governance/ki-engineering/references/rubric.md`
+- `skills/governance/ki-engineering/scripts/rubric/items/`
+- Matching colocated rubric tests
+
+## Verify
+
+- Focused `ki-engineering` rubric tests
+- `ki dev skill rubric ki-engineering --write`
+- `ki repo audit --skill ki-engineering --repo .`
+- `bun run test`
+
+## Dependencies / blocks
+
+The durable record model remains an explicit design decision. Do not mark this item Ready or add a generic review ledger until that model is approved.
 
 ## Discussion
 

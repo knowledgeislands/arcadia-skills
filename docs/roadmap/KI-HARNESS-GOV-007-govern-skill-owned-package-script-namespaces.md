@@ -2,7 +2,7 @@
 id: KI-HARNESS-GOV-007
 title: Govern skill-owned package-script namespaces
 theme: governance-consistency
-horizon: soon
+horizon: next
 status: open
 blocks: []
 blocked-by: []
@@ -40,6 +40,37 @@ Choose the registry's concrete `.ki-config.toml` shape and its relationship to c
 ### Promotion conditions
 
 Promote when the registry syntax, validation ownership split, complete core-repository inventory, clean-cut migration map, and focused harness verification are reviewable.
+
+## Current state
+
+The core inventory already distinguishes a clear `ki:tools:*` owner in `tools-ki` and `ki:site:*` owner in `ki-website`, while the harness has `ki:binding:build-plugin` and the ambiguous `ki:eval` key.
+
+No repository-local declaration currently maps every non-lifecycle `ki:*` key to a selected governing skill.
+
+## Steps
+
+1. Define a declarative `ki-engineering` configuration table that maps each non-lifecycle `ki:*` script key to one declared owning skill.
+2. Add a mechanical `ki-engineering` criterion that validates key grammar, registry membership, and the selected owner without taking artifact-command semantics from the owner skill.
+3. Give the harness evaluation command the final `ki:harness:*` name and record `ki-binding-claude` as the builder's owner; remove the ambiguous legacy key without an alias.
+4. Add each accepted core repository's registry entries, using its existing selected capability as the owner and routing any unowned key to a local decision rather than grandfathering it.
+5. Update CI and documented invocations in the same cut, then add focused catalogue fixtures for valid ownership, absent owners, invalid owners, and legacy-key removal.
+
+## Files touched
+
+- `skills/governance/ki-engineering/` standard, rubric, catalogue, and tests
+- `.ki-config.toml`, `package.json`, CI, and relevant documentation in the harness
+- Accepted receiving changes in `tools-ki` and `ki-website`
+
+## Verify
+
+- Focused `ki-engineering` rubric tests
+- `ki repo audit --skill ki-engineering --repo .`
+- Equivalent audits in each accepted receiving repository
+- `bun run test` and `bunx tsc --noEmit` in each changed TypeScript repository
+
+## Dependencies / blocks
+
+The configuration syntax and owner/command validation split remain an explicit architecture decision. Do not mark this item Ready or modify receiving repositories until that decision is reviewed.
 
 ## Discussion
 

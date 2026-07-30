@@ -2,7 +2,7 @@
 id: KI-HARNESS-FND-001
 title: Harden external Cowork plugin publication
 theme: foundation-tooling
-horizon: soon
+horizon: next
 status: open
 blocks: []
 blocked-by: []
@@ -40,6 +40,35 @@ Decide the rollback contract when the first generated path has been replaced but
 ### Promotion conditions
 
 Promote when the named target checkout, dry-run output, same-filesystem staging location, two-path backup-and-restore protocol, failure evidence, and focused builder verification are concrete.
+
+## Current state
+
+`build-plugin.ts` validates its output root and generated-path symlinks, but deletes `.claude-plugin/` and the plugin directory before it constructs either replacement.
+
+The named `ki-plugins` checkout contains both generated paths and remains the only supported publication target.
+
+## Steps
+
+1. Refactor projection discovery into one deterministic manifest that names the marketplace metadata, plugin metadata, generated paths, and sorted Claude-compatible skills and agents.
+2. Add a dry-run mode that emits that manifest and intended replacement paths without creating a staging directory or mutating the target.
+3. Stage both generated paths as direct children of the verified output root, verify the staged projection, and capture existing generated paths as bounded same-filesystem backups before any replacement.
+4. Publish the two staged paths with a reversible swap, verify the resulting projection, and restore every captured path if either replacement or verification fails.
+5. Remove only verified backups after successful publication; preserve repository-owned scaffold throughout.
+
+## Files touched
+
+- `skills/environment/ki-binding-claude/scripts/build-plugin.ts`
+- `skills/environment/ki-binding-claude/scripts/build-plugin.test.ts`
+
+## Verify
+
+- `bun test skills/environment/ki-binding-claude/scripts/build-plugin.test.ts`
+- `bun run test`
+- A temporary target proves dry-run non-mutation, successful two-path replacement, restoration after each injected failure point, and refusal of unsafe paths.
+
+## Dependencies / blocks
+
+The harness test suite currently has a separate `ki-binding` fixture failure; it is a mandatory stop for a full-suite-clean acceptance, not a reason to widen this item into unrelated binding repair.
 
 ## Discussion
 
