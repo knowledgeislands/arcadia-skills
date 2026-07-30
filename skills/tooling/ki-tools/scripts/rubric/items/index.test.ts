@@ -18,6 +18,7 @@ test('the catalogue preserves every ordered ki-tools criterion', () => {
     'TOOL-EXEC',
     'TOOL-SCOPE',
     'TOOL-XDG',
+    'TOOL-SCHEMA',
     'TOOL-INSTALL',
     'TOOL-INSTALL-QUALITY',
     'TOOL-VERSION',
@@ -55,7 +56,7 @@ test('the catalogue preserves every ordered ki-tools criterion', () => {
     'MAN-LINT': 'WARN',
     'CONFIG-1': 'WARN'
   })
-  expect(items.filter((item) => item.judgment)).toHaveLength(13)
+  expect(items.filter((item) => item.judgment)).toHaveLength(14)
 })
 
 test('the catalogue and family modules expose only the final public surfaces', async () => {

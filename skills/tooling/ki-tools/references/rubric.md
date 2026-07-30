@@ -35,6 +35,8 @@ Layout, executable, distribution, versioning, and judgment criteria.
   - _Review prompt:_ The repository contains genuinely one tool rather than distinct commands.
 - **TOOL-XDG [J] — XDG storage** — The tool follows the XDG Base Directory specification for config, state, and cache. (standards-tool-repositories.md)
   - _Review prompt:_ The tool follows the XDG Base Directory specification for config, state, and cache.
+- **TOOL-SCHEMA [J] — Persisted manifest schema** — Each evolving persisted structural format declares and strictly validates its own integer schema, provides migration or clear rejection for incompatible forms, and does not add a ceremonial schema to stable leaf metadata. (standards-tool-repositories.md)
+  - _Review prompt:_ Each evolving persisted structural format declares and strictly validates its own integer schema, provides migration or clear rejection for incompatible forms, and does not add a ceremonial schema to stable leaf metadata.
 - **TOOL-INSTALL [M] — Installer executable** — `install.sh` is a physical executable file. (standards-tool-repositories.md)
 - **TOOL-INSTALL-QUALITY [J] — Installer quality** — The installer is POSIX-ish, honours overrides, verifies downloads, and is idempotent. (standards-tool-repositories.md)
   - _Review prompt:_ The installer is POSIX-ish, honours overrides, verifies downloads, and is idempotent.

@@ -27,7 +27,7 @@ The opinionated shape is fixed by the reference tool repo under `knowledgeisland
 
 ## Last review
 
-REFRESH last run **2026-07-30**. The standard now reflects `tools-mgit` and `tools-ki`: semantic-version release baselines, singular completion, owned-syntax diagnostics, and installed/linkable manuals. No open watch-items yet.
+REFRESH last run **2026-07-30**. The standard now reflects `tools-mgit` and `tools-ki`: semantic-version release baselines, singular completion, owned-syntax diagnostics, installed/linkable manuals, and versioned persisted manifests only where their structure evolves. No open watch-items yet.
 
 **Open watch-items:**
 

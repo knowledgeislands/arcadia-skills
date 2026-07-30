@@ -85,6 +85,11 @@ const TOOL_EXEC: RubricItem<ToolRepositoryContext> = {
 
 const TOOL_SCOPE = judgment('TOOL-SCOPE', 'One command', 'The repository contains genuinely one tool rather than distinct commands.')
 const TOOL_XDG = judgment('TOOL-XDG', 'XDG storage', 'The tool follows the XDG Base Directory specification for config, state, and cache.')
+const TOOL_SCHEMA = judgment(
+  'TOOL-SCHEMA',
+  'Persisted manifest schema',
+  'Each evolving persisted structural format declares and strictly validates its own integer schema, provides migration or clear rejection for incompatible forms, and does not add a ceremonial schema to stable leaf metadata.'
+)
 
 const TOOL_INSTALL: RubricItem<ToolRepositoryContext> = {
   code: 'TOOL-INSTALL',
@@ -208,6 +213,7 @@ export const TOOL: RubricFamily<ToolsRubricContext, ToolRepositoryContext> = {
     TOOL_EXEC,
     TOOL_SCOPE,
     TOOL_XDG,
+    TOOL_SCHEMA,
     TOOL_INSTALL,
     TOOL_INSTALL_QUALITY,
     TOOL_VERSION,

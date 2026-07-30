@@ -9,6 +9,7 @@ The full, quotable standard behind the `ki-tools` skill. A `tools-*` repo holds 
 - [The executable — `bin/<tool>`](#the-executable--bintool)
 - [Versioning & releases](#versioning--releases)
 - [The distribution contract](#the-distribution-contract)
+- [Persisted configuration formats](#persisted-configuration-formats)
 - [Capability conditionals](#capability-conditionals)
 - [Shared CLI conventions](#shared-cli-conventions)
 - [Manual authoring](#manual-authoring)
@@ -65,6 +66,15 @@ Two delivery channels, both required for a shipped tool:
    - Executable itself (`chmod +x install.sh`).
    - When a physical `man/<tool>.1` exists, honours a matching manual-target override (for example `MGIT_MAN_INSTALL_DIR`), installs the manual with a release, and makes `--link` link the manual source with the local executable.
 2. **A companion Homebrew formula** — `Formula/<name>.rb` in the tap repo (`homebrew-<x>`), installable via `brew tap` + `brew install`. The **tap** and its formula are governed by the sibling `ki-homebrew-tap` skill, not here — this standard only requires that a tap formula exists as the second channel; it does not reproduce the formula rules.
+
+## Persisted configuration formats
+
+Use a schema only for an on-disk manifest whose **structure is expected to evolve**. It is a compatibility boundary for persisted data, not another spelling of the tool's release version.
+
+- Put `schema = <integer>` at the start of a versioned manifest and accept only the versions the tool implements. An absent, malformed, or unsupported value fails clearly; never guess how to interpret it.
+- Increment the schema only for an incompatible structural change. The implementation must either migrate an older supported form deliberately or reject it with the required remediation. A newer unknown version is always rejected rather than silently downgraded.
+- Keep schema parsing and writing in one owned implementation with coverage for each accepted form and each rejection path. Generated or registered manifests write the current schema explicitly.
+- Do **not** add a schema to small, stable leaf metadata with no evolving structural contract. For example, mGit's `.mgit-workspace.toml` is a schema-1 manifest, while its leaf-only `.mgit-config.toml` deliberately remains unschematized metadata. KI's more expressive `.ki-workspace.toml` is independently at schema 2; schema numbers are local to their formats and need not agree across tools.
 
 ## Capability conditionals
 

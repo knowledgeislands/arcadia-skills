@@ -8,6 +8,7 @@ _On-demand procedure for `ki-tools` AUDIT. The canonical shape, the container-no
 4. **Do the judgment pass the script can't** — walk [rubric.md](rubric.md)'s **[J]** items:
    - **`install.sh` robustness**: read it — POSIX-ish, honours the target-dir + version env overrides, verifies the download, idempotent on re-run.
    - **Versioning coherence**: the single version marker, the latest `vX.Y.Z` tag, and the top `CHANGELOG.md` entry all agree (`git tag`, `gh release list`).
+   - **Persisted manifests**: each evolving structural format declares and strictly validates its own integer schema; migrations or rejection guidance are explicit; stable leaf metadata does not gain a ceremonial schema.
    - **CHANGELOG shape**: semantic-versioned current release, either Keep a Changelog entries or a declared current-release command baseline.
    - **Shared CLI surface**: `--help` succeeds and matches the shipped surface; successful commands, operational errors, and invalid owned syntax use statuses 0, 1, and 2 respectively; completion is singular; owned syntax fails as a namespaced error with usage before `--help`.
    - **Manual authoring**: a physical manual's command groups match help; its roff uses the portable macros, a `\&` line follows each `.SH` / `.SS`, and `mandoc -Tutf8 … | col -b` renders the intended spacing.
