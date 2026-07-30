@@ -24,6 +24,7 @@ test('the catalogue preserves every ordered ki-tools criterion', () => {
     'TOOL-VERSION-SOURCE',
     'TOOL-CHANGELOG',
     'TOOL-CHANGELOG-FORMAT',
+    'TOOL-CLI',
     'TOOL-CI',
     'TOOL-TAP',
     'TOOL-TESTS',
@@ -33,8 +34,10 @@ test('the catalogue preserves every ordered ki-tools criterion', () => {
     'SHELL-LINT',
     'SHELL-TEST',
     'LANG-DEFER',
-    'MAN-SCRIPT',
     'MAN-LINT',
+    'MAN-INSTALL',
+    'MAN-SURFACE',
+    'MAN-STYLE',
     'CONFIG-1'
   ])
   expect(new Set(items.map((item) => item.code)).size).toBe(items.length)
@@ -49,11 +52,10 @@ test('the catalogue preserves every ordered ki-tools criterion', () => {
     'SHELL-LINT': 'WARN',
     'SHELL-TEST': 'WARN',
     'LANG-DEFER': 'WARN',
-    'MAN-SCRIPT': 'WARN',
     'MAN-LINT': 'WARN',
     'CONFIG-1': 'WARN'
   })
-  expect(items.filter((item) => item.judgment)).toHaveLength(9)
+  expect(items.filter((item) => item.judgment)).toHaveLength(13)
 })
 
 test('the catalogue and family modules expose only the final public surfaces', async () => {

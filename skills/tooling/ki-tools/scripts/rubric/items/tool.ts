@@ -152,7 +152,17 @@ const TOOL_CHANGELOG = mechanical('TOOL-CHANGELOG', 'Changelog presence', '`CHAN
     : one({ status: 'VIOLATION', message: 'Release history file is absent.', subject: 'CHANGELOG.md' })
 })
 
-const TOOL_CHANGELOG_FORMAT = judgment('TOOL-CHANGELOG-FORMAT', 'Changelog format', 'The changelog follows Keep a Changelog and semantic versioning.')
+const TOOL_CHANGELOG_FORMAT = judgment(
+  'TOOL-CHANGELOG-FORMAT',
+  'Changelog format',
+  'The changelog identifies the current semantic-versioned release through either Keep a Changelog entries or a declared current-release baseline.'
+)
+
+const TOOL_CLI = judgment(
+  'TOOL-CLI',
+  'Shared CLI conventions',
+  'The CLI keeps help, completion, errors, exit status, README, and changelog aligned: help succeeds; success, operational errors, and invalid owned syntax use 0, 1, and 2; completion is singular; invalid owned syntax reports a namespaced error with usage before help.'
+)
 
 const TOOL_CI = mechanical('TOOL-CI', 'CI workflow', 'At least one physical workflow YAML file is present.', 'WARN', (context) => {
   const skipped = notApplicable(context)
@@ -204,6 +214,7 @@ export const TOOL: RubricFamily<ToolsRubricContext, ToolRepositoryContext> = {
     TOOL_VERSION_SOURCE,
     TOOL_CHANGELOG,
     TOOL_CHANGELOG_FORMAT,
+    TOOL_CLI,
     TOOL_CI,
     TOOL_TAP,
     TOOL_TESTS,

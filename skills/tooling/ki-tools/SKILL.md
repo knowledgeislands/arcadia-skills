@@ -3,13 +3,13 @@ name: ki-tools
 ki-depends-on: []
 ki-shared-dependencies: [ki-skills:rubric]
 description: >
-  Audit, conform, or scaffold a Knowledge Islands `tools-*` repo — ONE standalone command-line tool per repo, distributed by a `curl | bash` installer AND a companion Homebrew tap formula. Governs the container SHAPE language-agnostically (bash today, a future Python/Go tool fits): the `bin/<tool>` executable + its exec bit, `install.sh`, versioning + `--version` + `vX.Y.Z` tags, `CHANGELOG.md`, a CI workflow, and capability conditionals (a shell entrypoint needs shellcheck + a bats suite; a physical `man/<tool>.1` needs the `ki:tools:lint-man` CI gate; a `package.json` defers to `ki-engineering`). Triggers: "audit this tool repo", "scaffold a CLI tool", "release a command-line tool", "does this tools- repo follow our standard", "check my tools- repo". Off-ramps: the Homebrew tap + its formula → `ki-homebrew-tap`; GitHub settings and standard files (README, LICENSE) → `ki-repo`; a TS/Bun toolchain (`package.json`) → `ki-engineering`. Container, not contents — it does not judge the tool's internal code quality.
+  Audit, conform, or scaffold a Knowledge Islands `tools-*` repo — ONE standalone CLI per repo, distributed by a `curl | bash` installer and companion Homebrew formula. Governs shared shape and public conventions language-agnostically: executable + bit, installer, version/release, changelog, CI, help/errors/status, singular `completion <shell>`, and optionally installed/linkable portable-roff `man/<tool>.1`. Conditionals: shell → shellcheck + bats; physical manual → mandoc CI; package.json → `ki-engineering`. Triggers: "audit this tool repo", "scaffold a CLI tool", "release a command-line tool", "does this tools- repo follow our standard", "check my tools- repo". Off-ramps: tap/formula → `ki-homebrew-tap`; README/LICENSE/GitHub settings → `ki-repo`; TS/Bun toolchain → `ki-engineering`. Not individual tool behaviour.
 argument-hint: 'audit <repo> | conform <repo> | help | educate <repo> | refresh'
 ---
 
 # Knowledge Islands tool-repo standard
 
-You are helping audit, conform, or scaffold a **`tools-*` repo** — a repo holding exactly **one** standalone command-line tool, distributed two ways: a `curl | bash` installer at the repo root, and a companion Homebrew formula that lives in the tap. The reference implementation is [`tools-mgit`](https://github.com/knowledgeislands/tools-mgit), a bash CLI (`bin/mgit`), but the standard governs the **shape**, not the language — a future Python or Go tool fits the same container.
+You are helping audit, conform, or scaffold a **`tools-*` repo** — a repo holding exactly **one** standalone command-line tool, distributed two ways: a `curl | bash` installer at the repo root, and a companion Homebrew formula that lives in the tap. [`tools-mgit`](https://github.com/knowledgeislands/tools-mgit) (Bash) and [`tools-ki`](https://github.com/knowledgeislands/tools-ki) (TypeScript/Bun) are the reference implementations. The standard governs shared shape and public interface conventions, not a language or the tools' individual behaviour.
 
 This skill rides on `ki-repo` (local files, GitHub settings) but **not** `ki-engineering` — a bash tool has no TypeScript/Bun toolchain to govern, so no `ki-engineering` declaration is assumed (the same pattern `ki-kb` follows). If the tool grows a `package.json`, that changes: it then declares `["knowledgeislands/ki-agentic-harness:ki-engineering"]` too and defers its lint/test there (see the capability rule below).
 
@@ -17,22 +17,22 @@ The full, quotable standard lives in [the tool-repository standard](references/s
 
 ## Container, not contents
 
-This skill judges the **container** — the repo's shape — not the **contents**, the quality of the tool's own code:
+This skill judges the **container** and a small shared public interface — not the quality of the tool's own implementation:
 
-- **In scope:** the `bin/<tool>` layout and its exec bit, `install.sh`, versioning + `--version`, `CHANGELOG.md`, the CI workflow, the test suite's presence, and the capability conditionals below.
-- **Out of scope:** whether the tool's logic is correct, well-factored, or fast. That is the tool author's concern (and, for a shell tool, shellcheck + bats — which this skill checks are _wired_, not what they _find_). The Homebrew tap and its formula are `ki-homebrew-tap`'s; the repo's README, LICENSE, and GitHub settings are `ki-repo`'s.
+- **In scope:** the `bin/<tool>` layout and its exec bit, `install.sh`, versioning + `--version`, `CHANGELOG.md`, CI, test-suite presence, help/error/exit-status behaviour, completion, manual authoring and distribution, and the capability conditionals below.
+- **Out of scope:** whether tool-specific operations are correct, well-factored, or fast. That is the tool author's concern (and, for a shell tool, shellcheck + bats — which this skill checks are _wired_, not what they _find_). The Homebrew tap and its formula are `ki-homebrew-tap`'s; the repo's README, LICENSE, and GitHub settings are `ki-repo`'s.
 
 ## The canonical shape at a glance
 
 ```text
 tools-<name>/
 ├── bin/<name>              # THE executable — chmod +x (git tracks the exec bit). Answers --version.
-├── install.sh              # curl installer: POSIX-ish, honours env overrides (target dir + version),
-│                           #   verifies the download, idempotent. The `curl | bash` contract.
+├── install.sh              # curl installer: honours env overrides (target dir + version), verifies the
+│                           #   download, is idempotent, and publishes/links a manual when one exists.
 ├── tests/ or src/tests/    # executable test suite (a *.bats suite under tests/ for a shell tool). Expected.
 ├── .github/workflows/*.yml # CI: lint + test on every push. Expected.
-├── man/<name>.1            # Optional manual source; when present, CI runs ki:tools:lint-man.
-├── CHANGELOG.md            # keep-a-changelog + semver. Releases are vX.Y.Z git tags + a GitHub release each.
+├── man/<name>.1            # Optional manual source; when present, CI runs mandoc -T lint.
+├── CHANGELOG.md            # semver release history or a declared current-release baseline.
 ├── README.md · LICENSE     # ki-repo's job — not governed here.
 └── .ki-config.toml         # carries qualified ki-repo + ki-tools declarations (the opt-in marker).
 ```
@@ -45,7 +45,7 @@ Mirrors `ki-engineering`'s capability-conditional pattern: what the repo _is_ de
 
 - **Shell entrypoint** (the primary `bin/` file has a `bash`/`sh` shebang): it MUST be shellcheck-clean in CI (a workflow references `shellcheck`) and ship a `bats` suite that CI runs (a `*.bats` file under `tests/` and a workflow that references `bats`).
 - **A `package.json` appears** (a TS/Bun tool): the repo defers lint/test to `ki-engineering` and MUST also declare `["knowledgeislands/ki-agentic-harness:ki-engineering"]` in its `.ki-config.toml`. The shell checks don't apply.
-- **A physical `man/<tool>.1` page appears**: `ki:tools:lint-man` MUST exactly run `mandoc -T lint man/<tool>.1`, and CI MUST invoke that command.
+- **A physical `man/<tool>.1` page appears**: CI MUST run `mandoc -T lint man/<tool>.1`, directly or through the repository's native task runner. The release installer and its `--link` mode publish or link that manual alongside the executable.
 - **Another language** (Python, Go, …): defer to that language's own toolchain; the container checks (bin, install.sh, versioning, changelog, CI, tests) still apply.
 
 ## The qualified `ki-tools` marker
@@ -80,7 +80,7 @@ Invoked as `help`, `-h`, or `?`, explain the skill, invocation, modes, capabilit
 
 ## Notes
 
-- The standard is anchored to `tools-mgit` as the reference shape and to external specs (shellcheck, bats, keep-a-changelog, semver, XDG) — the tracked [source list](references/sources.md) records them; Mode REFRESH re-fetches on the declared cadence.
+- The standard is anchored to `tools-mgit` and `tools-ki`, plus external specs (shellcheck, bats, keep-a-changelog, semver, XDG) — the tracked [source list](references/sources.md) records them; Mode REFRESH re-fetches on the declared cadence.
 - Refer to another skill by its `name` (`ki-repo`, `ki-engineering`, `ki-homebrew-tap`), never a file path — skills are relocatable.
 - Hosted execution carries no private checker, reporter, or compatibility wrapper. The skill intentionally has no top-level public script; its executable governance surface is `scripts/rubric/items/index.ts`, loaded directly by `ki`.
 - No `exemplars.md` is bundled: the canonical tree and capability table above, plus the complete installer and release guidance in the standard, already illustrate the reusable shapes; a separate exemplar would duplicate them.

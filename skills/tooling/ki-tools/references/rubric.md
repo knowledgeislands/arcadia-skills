@@ -42,8 +42,10 @@ Layout, executable, distribution, versioning, and judgment criteria.
 - **TOOL-VERSION-SOURCE [J] — Version source** — The version marker has one source of truth aligned with the latest tag and changelog. (standards-tool-repositories.md)
   - _Review prompt:_ The version marker has one source of truth aligned with the latest tag and changelog.
 - **TOOL-CHANGELOG [M] — Changelog presence** — `CHANGELOG.md` is a physical regular file. (standards-tool-repositories.md)
-- **TOOL-CHANGELOG-FORMAT [J] — Changelog format** — The changelog follows Keep a Changelog and semantic versioning. (standards-tool-repositories.md)
-  - _Review prompt:_ The changelog follows Keep a Changelog and semantic versioning.
+- **TOOL-CHANGELOG-FORMAT [J] — Changelog format** — The changelog identifies the current semantic-versioned release through either Keep a Changelog entries or a declared current-release baseline. (standards-tool-repositories.md)
+  - _Review prompt:_ The changelog identifies the current semantic-versioned release through either Keep a Changelog entries or a declared current-release baseline.
+- **TOOL-CLI [J] — Shared CLI conventions** — The CLI keeps help, completion, errors, exit status, README, and changelog aligned: help succeeds; success, operational errors, and invalid owned syntax use 0, 1, and 2; completion is singular; invalid owned syntax reports a namespaced error with usage before help. (standards-tool-repositories.md)
+  - _Review prompt:_ The CLI keeps help, completion, errors, exit status, README, and changelog aligned: help succeeds; success, operational errors, and invalid owned syntax use 0, 1, and 2; completion is singular; invalid owned syntax reports a namespaced error with usage before help.
 - **TOOL-CI [M] — CI workflow** — At least one physical workflow YAML file is present. (standards-tool-repositories.md)
 - **TOOL-TAP [J] — Companion formula** — A companion Homebrew formula exists in the governed tap. (standards-tool-repositories.md)
   - _Review prompt:_ A companion Homebrew formula exists in the governed tap.
@@ -78,8 +80,13 @@ Language toolchain deferral.
 
 Man-page linting requirements.
 
-- **MAN-SCRIPT [M] — Manual lint command** — A physical man/<tool>.1 page has a ki:tools:lint-man command that runs mandoc -T lint. (standards-tool-repositories.md)
-- **MAN-LINT [M] — Manual lint CI** — A physical man/<tool>.1 page has CI that invokes ki:tools:lint-man. (standards-tool-repositories.md)
+- **MAN-LINT [M] — Manual lint CI** — A physical man/<tool>.1 page has CI that runs mandoc -T lint, directly or through the native task runner. (standards-tool-repositories.md)
+- **MAN-INSTALL [J] — Manual distribution** — A shipped physical man page is installed by the release installer and linked with the executable by its --link mode. (standards-tool-repositories.md)
+  - _Review prompt:_ A shipped physical man page is installed by the release installer and linked with the executable by its --link mode.
+- **MAN-SURFACE [J] — Manual command surface** — A physical manual stays aligned with CLI help and uses the tool’s command-group vocabulary in its SYNOPSIS. (standards-tool-repositories.md)
+  - _Review prompt:_ A physical manual stays aligned with CLI help and uses the tool’s command-group vocabulary in its SYNOPSIS.
+- **MAN-STYLE [J] — Manual source and layout** — A physical manual uses portable roff macros, a literal \& after each .SH / .SS, and a rendered-spacing inspection after mandoc lint. (standards-tool-repositories.md)
+  - _Review prompt:_ A physical manual uses portable roff macros, a literal \& after each .SH / .SS, and a rendered-spacing inspection after mandoc lint.
 
 ## CONFIG — configuration
 

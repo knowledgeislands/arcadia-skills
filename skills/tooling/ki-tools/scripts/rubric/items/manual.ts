@@ -2,38 +2,12 @@ import type { AuditOutcome, RubricFamily, RubricItem } from '../../shared/rubric
 import type { ManualToolsContext, ToolsRubricContext } from '../contexts/tools.ts'
 
 const STANDARD = 'standards-tool-repositories.md'
-const SCRIPT = 'ki:tools:lint-man'
 const one = (outcome: AuditOutcome): readonly AuditOutcome[] => [outcome]
-
-const MAN_SCRIPT: RubricItem<ManualToolsContext> = {
-  code: 'MAN-SCRIPT',
-  title: 'Manual lint command',
-  description: 'A physical man/<tool>.1 page has a ki:tools:lint-man command that runs mandoc -T lint.',
-  sources: [STANDARD],
-  mechanical: {
-    level: 'WARN',
-    audit: {
-      phase: 'INSPECT',
-      run: (context) => {
-        if (!context.applicable) return one({ status: 'NOT_APPLICABLE', message: 'No qualified ki-tools declaration or bin/ structural marker is present.' })
-        if (context.manual === 'missing') return one({ status: 'NOT_APPLICABLE', message: `No ${context.manualPath} source page is present.` })
-        if (context.manual === 'unsafe')
-          return one({ status: 'VIOLATION', message: `${context.manualPath} is not a physical regular file.`, subject: context.manualPath })
-        if (context.packageJson === 'unsafe')
-          return one({ status: 'VIOLATION', message: 'package.json is not a physical regular file.', subject: 'package.json' })
-        const expected = `mandoc -T lint ${context.manualPath}`
-        return context.manualCommand === expected
-          ? one({ status: 'PASS', message: `${SCRIPT} runs ${expected}.`, subject: 'package.json' })
-          : one({ status: 'VIOLATION', message: `${context.manualPath} requires ${SCRIPT} = ${JSON.stringify(expected)}.`, subject: 'package.json' })
-      }
-    }
-  }
-}
 
 const MAN_LINT: RubricItem<ManualToolsContext> = {
   code: 'MAN-LINT',
   title: 'Manual lint CI',
-  description: 'A physical man/<tool>.1 page has CI that invokes ki:tools:lint-man.',
+  description: 'A physical man/<tool>.1 page has CI that runs mandoc -T lint, directly or through the native task runner.',
   sources: [STANDARD],
   mechanical: {
     level: 'WARN',
@@ -46,13 +20,40 @@ const MAN_LINT: RubricItem<ManualToolsContext> = {
           return one({ status: 'VIOLATION', message: `${context.manualPath} is not a physical regular file.`, subject: context.manualPath })
         if (context.workflows === 'unsafe' || context.unsafeWorkflowEntries.length > 0)
           return one({ status: 'VIOLATION', message: 'CI workflow evidence is unsafe or unreadable.', subject: '.github/workflows/' })
-        return /\bbun\s+run\s+ki:tools:lint-man\b/.test(context.workflowText)
-          ? one({ status: 'PASS', message: `A CI workflow invokes ${SCRIPT} for ${context.manualPath}.`, subject: context.manualPath })
-          : one({ status: 'VIOLATION', message: `${context.manualPath} has no CI ${SCRIPT} gate.`, subject: context.manualPath })
+        const expected = `mandoc -T lint ${context.manualPath}`
+        const direct = context.workflowText.includes(expected)
+        const scripted = context.manualCommand === expected && /\bbun\s+run\s+ki:tools:lint-man\b/.test(context.workflowText)
+        return direct || scripted
+          ? one({ status: 'PASS', message: `A CI workflow runs ${expected}.`, subject: context.manualPath })
+          : one({ status: 'VIOLATION', message: `${context.manualPath} has no CI gate that runs ${expected}.`, subject: context.manualPath })
       }
     }
   }
 }
+
+const MAN_INSTALL = {
+  code: 'MAN-INSTALL',
+  title: 'Manual distribution',
+  description: 'A shipped physical man page is installed by the release installer and linked with the executable by its --link mode.',
+  sources: [STANDARD],
+  judgment: { prompt: 'A shipped physical man page is installed by the release installer and linked with the executable by its --link mode.' }
+} satisfies RubricItem<ManualToolsContext>
+
+const MAN_SURFACE = {
+  code: 'MAN-SURFACE',
+  title: 'Manual command surface',
+  description: 'A physical manual stays aligned with CLI help and uses the tool’s command-group vocabulary in its SYNOPSIS.',
+  sources: [STANDARD],
+  judgment: { prompt: 'A physical manual stays aligned with CLI help and uses the tool’s command-group vocabulary in its SYNOPSIS.' }
+} satisfies RubricItem<ManualToolsContext>
+
+const MAN_STYLE = {
+  code: 'MAN-STYLE',
+  title: 'Manual source and layout',
+  description: 'A physical manual uses portable roff macros, a literal \\& after each .SH / .SS, and a rendered-spacing inspection after mandoc lint.',
+  sources: [STANDARD],
+  judgment: { prompt: 'A physical manual uses portable roff macros, a literal \\& after each .SH / .SS, and a rendered-spacing inspection after mandoc lint.' }
+} satisfies RubricItem<ManualToolsContext>
 
 export const MAN: RubricFamily<ToolsRubricContext, ManualToolsContext> = {
   code: 'MAN',
@@ -60,5 +61,5 @@ export const MAN: RubricFamily<ToolsRubricContext, ManualToolsContext> = {
   description: 'Man-page linting requirements.',
   standard: STANDARD,
   selectContext: (context) => context.manual,
-  items: [MAN_SCRIPT, MAN_LINT]
+  items: [MAN_LINT, MAN_INSTALL, MAN_SURFACE, MAN_STYLE]
 }
