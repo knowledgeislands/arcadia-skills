@@ -3,7 +3,7 @@ id: KI-HARNESS-RTP-005
 title: Align the Codex runtime identifier with ChatGPT Codex
 theme: runtime-portability
 horizon: blocking
-status: open
+status: ready
 blocks: []
 blocked-by: []
 baseline-ref: null
@@ -54,7 +54,7 @@ There is no known internal prerequisite.
 
 The cross-repository `tools-ki` change must be coordinated before the corrected contract can be released; the receiving repository owns its implementation record and acceptance evidence.
 
-`tools-ki` has adopted the bounded CLI-owned work as [KI-TOOL-CLI-012](../../tools-ki/docs/roadmap/KI-TOOL-CLI-012-align-runtime-identifier-with-chatgpt-codex.md). Its implementation and acceptance evidence are the prerequisite for this item's standard and fleet migration.
+`tools-ki` has adopted the bounded CLI-owned work as [KI-TOOL-CLI-012](../../tools-ki/docs/roadmap/KI-TOOL-CLI-012-align-runtime-identifier-with-chatgpt-codex.md). Its implementation and acceptance evidence at `535335c297c5ac2fdc539671cf480af66b437752` satisfy the prerequisite for this item's standard and fleet migration.
 
 ## Discussion
 
