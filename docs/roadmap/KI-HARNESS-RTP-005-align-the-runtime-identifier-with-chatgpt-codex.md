@@ -35,12 +35,13 @@ The harness and existing repository declarations repeat `codex` in `supported_ru
 2. Update the canonical runtime contract to `chatgpt-codex`, including `tools-ki` validation, repository initialisation, managed-link selection, harness frontmatter, and repository configuration examples.
 3. Migrate existing KI-managed user and repository declarations through a safe, explicit path; reject legacy `codex` declarations with targeted recovery guidance once migration is complete.
 4. Update affected tests, fixtures, diagnostics, and runtime-specific documentation without renaming unrelated Codex product concepts.
-5. Coordinate the corresponding `tools-ki` implementation and verify the two repositories publish one consistent contract.
+5. Hand off the CLI-owned migration to `tools-ki`, then coordinate its adopted implementation record and verify the two repositories publish one consistent contract.
 
 ## Files touched
 
 - `ki-agentic-harness/.ki-config.toml`, runtime-bound skill metadata, documentation, and fixtures that declare the runtime contract.
-- `tools-ki` runtime validation, agent-to-runtime mapping, repository initialisation, tests, and documentation.
+- `-/_HANDOFFS/tools-ki/KI-HARNESS-RTP-005-chatgpt-codex-runtime-identifier.md`
+- `tools-ki` runtime validation, agent-to-runtime mapping, repository initialisation, tests, and documentation, through that repository's adopted work item.
 
 ## Verify
 
@@ -53,6 +54,8 @@ The harness and existing repository declarations repeat `codex` in `supported_ru
 There is no known internal prerequisite.
 
 The cross-repository `tools-ki` change must be coordinated before the corrected contract can be released; the receiving repository owns its implementation record and acceptance evidence.
+
+The outbound handoff records the bounded CLI-owned work. Once `tools-ki` adopts it into a canonical item, record the resulting identifiers and reciprocal dependency before either repository marks its item Ready.
 
 ## Discussion
 
@@ -71,3 +74,11 @@ The migration must either rewrite each managed footprint safely or fail with tar
 ### Verification
 
 Prove that `chatgpt-codex` activates the correct repository and user skills, that `claude-code` remains unaffected, and that no supported configuration or generated diagnostic still emits `codex` as a runtime identifier.
+
+### Cross-repository ownership
+
+The harness owns the portable standard, its configuration/rubric consequences, and the fleet migration that follows the corrected CLI contract.
+
+`tools-ki` owns the executable vocabulary, agent-to-runtime mapping, repository initialisation, managed activation, CLI-facing diagnostics, and their contract tests.
+
+The outbound brief at [`-/_HANDOFFS/tools-ki/KI-HARNESS-RTP-005-chatgpt-codex-runtime-identifier.md`](../../-/_HANDOFFS/tools-ki/KI-HARNESS-RTP-005-chatgpt-codex-runtime-identifier.md) requests its independent adoption; it is not an instruction to implement on the harness item's priority alone.
