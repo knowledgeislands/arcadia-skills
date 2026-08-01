@@ -423,9 +423,12 @@ const KI_SHAPE_18: RubricItem<KiShapeRubricContext> = {
           .split(',')
           .map((runtime) => runtime.trim())
           .filter(Boolean)
-        const recognised = new Set(['claude-code', 'codex'])
-        const unknown = runtimes.filter((runtime) => !recognised.has(runtime))
         if (new Set(runtimes).size !== runtimes.length) return [{ status: 'VIOLATION', message: '`ki-supported-runtimes:` must not repeat a runtime' }]
+        const retired = runtimes.filter((runtime) => runtime === 'codex')
+        if (retired.length > 0)
+          return [{ status: 'VIOLATION', message: `\`ki-supported-runtimes:\` names retired runtime(s): ${retired.join(', ')}; use chatgpt-codex` }]
+        const recognised = new Set(['claude-code', 'chatgpt-codex'])
+        const unknown = runtimes.filter((runtime) => !recognised.has(runtime))
         if (unknown.length > 0)
           return [
             {

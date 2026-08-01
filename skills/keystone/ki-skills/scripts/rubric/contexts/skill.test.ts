@@ -109,15 +109,19 @@ describe('runtime compatibility metadata', () => {
       message: '`ki-supported-runtimes:` must be a non-empty single-line flow list'
     },
     {
-      frontmatter: 'ki-runtime-binding: true\nki-supported-runtimes: [codex, codex]',
+      frontmatter: 'ki-runtime-binding: true\nki-supported-runtimes: [chatgpt-codex, chatgpt-codex]',
       message: '`ki-supported-runtimes:` must not repeat a runtime'
+    },
+    {
+      frontmatter: 'ki-runtime-binding: true\nki-supported-runtimes: [codex]',
+      message: '`ki-supported-runtimes:` names retired runtime(s): codex; use chatgpt-codex'
     },
     {
       frontmatter: 'ki-runtime-binding: true\nki-supported-runtimes: [unknown]',
       message: '`ki-supported-runtimes:` names unknown runtime(s): unknown'
     },
     {
-      frontmatter: 'ki-supported-runtimes: [codex]',
+      frontmatter: 'ki-supported-runtimes: [chatgpt-codex]',
       message: 'a runtime-restricted skill must also declare `ki-runtime-binding: true`'
     }
   ])('rejects invalid runtime metadata', ({ frontmatter, message }) => {

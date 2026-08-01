@@ -235,7 +235,7 @@ title = ""              # required — exact README.md H1
 description = ""        # required — exact GitHub and package.json description where present
 visibility = "private"   # "public" | "private" — must match the repo's actual GitHub visibility
 license = "MIT"          # SPDX id the LICENSE, package.json, and GitHub must match; default MIT. Use "UNLICENSED" for proprietary. Pick one at https://choosealicense.com/
-supported_runtimes = ["claude-code", "codex"] # required agent-runtime support surface
+supported_runtimes = ["claude-code", "chatgpt-codex"] # required agent-runtime support surface
 
 # Per-repo check overrides — true = enforce, false = don't. Omit any check to take
 # the org default; a repo that fully conforms needs nothing here.
@@ -723,7 +723,7 @@ function auditRepo(r: Repo, files: Set<string>, ki: KiConfig | null, kiText: str
 // The agent runtimes the bootstrap linkers know how to install for. A repo may
 // declare a subset in `["knowledgeislands/ki-agentic-harness:ki-repo"] supported_runtimes`; anything outside this set has no
 // discovery path, so the linker would silently do nothing for it (RUNTIMES-1).
-const KNOWN_RUNTIMES = ['claude-code', 'codex']
+const KNOWN_RUNTIMES = ['claude-code', 'chatgpt-codex']
 const LOCAL_SELF_SOURCE = '.agents/skills/ki-self'
 const CLAUDE_SELF_PROJECTION = '.claude/skills/ki-self'
 
@@ -818,6 +818,9 @@ function localConfigFindings(dir: string): Finding[] {
     fail('RUNTIMES-1', `[${KI_SECTION}] supported_runtimes ${parsed.issue}`, KI_CONFIG)
     return f
   }
+  const retired = parsed.runtimes.filter((rt) => rt === 'codex')
+  if (retired.length) fail('RUNTIMES-1', `[${KI_SECTION}] supported_runtimes uses retired runtime(s): ${retired.join(', ')}; use chatgpt-codex`, KI_CONFIG)
+  if (retired.length) return f
   const unknown = parsed.runtimes.filter((rt) => !KNOWN_RUNTIMES.includes(rt))
   if (unknown.length)
     fail('RUNTIMES-1', `[${KI_SECTION}] supported_runtimes names unknown runtime(s): ${unknown.join(', ')} (known: ${KNOWN_RUNTIMES.join(', ')})`, KI_CONFIG)
@@ -828,7 +831,7 @@ function localConfigFindings(dir: string): Finding[] {
     required.add(skillTable('ki-housekeeping-claude'))
     required.add(skillTable('ki-tokenomics-claude'))
   }
-  if (parsed.runtimes.includes('codex')) required.add(skillTable('ki-tokenomics-codex'))
+  if (parsed.runtimes.includes('chatgpt-codex')) required.add(skillTable('ki-tokenomics-codex'))
   const declared = new Set(parsed.rootTables)
   const missing = [...required].filter((skill) => !declared.has(skill)).sort()
   if (missing.length) fail('RUNTIMES-2', `supported runtime coverage requires missing table(s): ${missing.map((skill) => `[${skill}]`).join(', ')}`, KI_CONFIG)

@@ -2,7 +2,7 @@
 name: ki-binding-codex
 ki-depends-on: [ki-binding]
 ki-runtime-binding: true
-ki-supported-runtimes: [codex]
+ki-supported-runtimes: [chatgpt-codex]
 ki-shared-dependencies: [ki-skills:rubric]
 description: >
   Codify, audit, and safely render the native Codex MCP binding: compare the `[mcp_servers]` TOML surface and merge KI-targeted servers through Codex's native `codex mcp` writer without taking ownership of unrelated app configuration. Use when Codex MCP entries drift or need a safe render. The portable source belongs to `ki-binding`; Claude belongs to `ki-binding-claude`.

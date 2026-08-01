@@ -4,7 +4,7 @@ description = "Knowledge Islands agentic harness — canonical home for Agent Sk
 repo_code = "KI-HARNESS"
 visibility = "public"
 license = "MIT"
-supported_runtimes = ["claude-code", "codex"]
+supported_runtimes = ["claude-code", "chatgpt-codex"]
 
 ["knowledgeislands/ki-agentic-harness:ki-authoring"]
 

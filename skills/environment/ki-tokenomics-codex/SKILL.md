@@ -2,7 +2,7 @@
 name: ki-tokenomics-codex
 ki-depends-on: [ki-tokenomics]
 ki-runtime-binding: true
-ki-supported-runtimes: [codex]
+ki-supported-runtimes: [chatgpt-codex]
 ki-shared-dependencies: [ki-skills:rubric]
 description: >
   Audit documented Codex context-cost evidence for the selected repository and bounded user configuration: instructions, skills, MCP declarations, memory and subagent surfaces, without exposing secret values. Use when a Codex repository needs runtime evidence for portable `ki-tokenomics` policy. Triggers: "audit Codex context", "check Codex tokenomics", "why is Codex context big". For portable budgets and model purpose use `ki-tokenomics`; for Claude Code use `ki-tokenomics-claude`.

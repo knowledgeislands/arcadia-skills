@@ -11,7 +11,7 @@ title = ""              # required — exact README.md H1
 description = ""        # required — exact GitHub and package.json description where present
 visibility = "private"   # "public" | "private" — must match the repo's actual GitHub visibility
 license = "MIT"          # SPDX id the LICENSE, package.json, and GitHub must match; default MIT. Use "UNLICENSED" for proprietary. Pick one at https://choosealicense.com/
-supported_runtimes = ["claude-code", "codex"] # required agent-runtime support surface
+supported_runtimes = ["claude-code", "chatgpt-codex"] # required agent-runtime support surface
 
 # Per-repo check overrides — true = enforce, false = don't. Omit any check to take
 # the org default; a repo that fully conforms needs nothing here.
