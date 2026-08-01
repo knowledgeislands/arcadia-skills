@@ -3,10 +3,10 @@ id: KI-HARNESS-RTP-005
 title: Align the Codex runtime identifier with ChatGPT Codex
 theme: runtime-portability
 horizon: blocking
-status: ready
+status: in-progress
 blocks: []
 blocked-by: []
-baseline-ref: null
+baseline-ref: 20b134022b361b09d9a75a4f166dd6e5ad3eb198
 ---
 
 ## Context
