@@ -8,7 +8,8 @@ import {
   createEngineeringSession,
   type EngineeringRubricContext,
   type KnipRubricContext,
-  type PackageRubricContext
+  type PackageRubricContext,
+  type ScriptsRubricContext
 } from '../contexts/engineering.ts'
 import catalogue from './index.ts'
 
@@ -63,7 +64,10 @@ test('each family module exports one complete family', async () => {
 test('the session keeps stable focused context and coalesces package drafts', () => {
   const repository = mkdtempSync(join(tmpdir(), 'ki-engineering-'))
   temporaryDirectories.push(repository)
-  writeFileSync(join(repository, 'package.json'), '{"name":"example","scripts":{"ki:audit":"ki repo audit"}}\n')
+  writeFileSync(
+    join(repository, 'package.json'),
+    '{"name":"example","scripts":{"ki:all":"ki repo audit","ki:engineering:check":"ki repo audit --skill ki-engineering","ki:authoring:fix":"ki repo conform --skill ki-authoring","ki:eval":"bun evals/harness.ts"}}\n'
+  )
   const session = createEngineeringSession({ mode: 'conform', repository, userHome: tmpdir(), configuration: {} }, () => [
     { level: 'FAIL', code: 'PKG-1', message: 'type missing', subject: 'package.json' },
     { level: 'FAIL', code: 'PKG-2', message: 'package manager missing', subject: 'package.json' }
@@ -80,8 +84,28 @@ test('the session keeps stable focused context and coalesces package drafts', ()
   const writes = session.proposal().writes
   expect(writes).toHaveLength(1)
   expect(writes[0]?.path).toBe('package.json')
-  expect(writes[0]?.content).not.toContain('ki:audit')
+  expect(writes[0]?.content).not.toContain('ki repo audit')
+  expect(writes[0]?.content).not.toContain('ki repo conform')
+  expect(JSON.parse(writes[0]?.content ?? '{}').scripts['ki:eval']).toBe('bun evals/harness.ts')
   expect(JSON.parse(writes[0]?.content ?? '{}').type).toBe('module')
+})
+
+test('SCR-2 proposes removal for any whole-repository or focused native governance wrapper', () => {
+  const repository = mkdtempSync(join(tmpdir(), 'ki-engineering-'))
+  temporaryDirectories.push(repository)
+  writeFileSync(
+    join(repository, 'package.json'),
+    '{"scripts":{"ki:all":"ki repo audit","ki:engineering:check":"ki repo audit --skill ki-engineering","ki:authoring:fix":"ki repo conform --skill ki-authoring","ki:eval":"bun evals/harness.ts"}}\n'
+  )
+  const session = createEngineeringSession({ mode: 'conform', repository, userHome: tmpdir(), configuration: {} }, () => [
+    { level: 'FAIL', code: 'SCR-2', message: 'native governance wrappers present', subject: 'package.json' }
+  ])
+  const root = session.subjects[1]?.context() as EngineeringRubricContext
+  const family = catalogue.families.find((candidate) => candidate.code === 'SCR') as RubricFamily<EngineeringRubricContext, ScriptsRubricContext>
+  family.items.find((candidate) => candidate.code === 'SCR-2')?.mechanical?.conform?.run(family.selectContext(root))
+
+  const scripts = JSON.parse(session.proposal().writes[0]?.content ?? '{}').scripts
+  expect(scripts).toEqual({ 'ki:eval': 'bun evals/harness.ts', clean: 'rm -rf dist node_modules', prepare: 'husky' })
 })
 
 test('formatter commands are bounded arrays and coalesced', () => {

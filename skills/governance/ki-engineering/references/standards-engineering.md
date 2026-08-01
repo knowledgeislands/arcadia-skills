@@ -99,7 +99,7 @@ Every entry in `scripts` is **either** one of the six universal lifecycle idioms
 
 ### Native governance commands
 
-`ki:audit`, `ki:conform`, and derived skill-scoped package scripts are retired: a repository must not alias its governance commands to a local runner, vendored payload, or harness checkout. The native surface is direct and collection-backed:
+`package.json` must contain no script that invokes `ki repo audit`, `ki repo conform`, or `ki repo educate` — neither for the whole repository nor with `--skill <name>`. This prohibition is command-based, not name-based: `ki:audit`, `ki:engineering:audit`, and an otherwise innocuous `ki:quality` key are all drift when their command delegates to native governance. Repositories invoke the collection-backed native surface directly:
 
 ```text
 ki repo audit

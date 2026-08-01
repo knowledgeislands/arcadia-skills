@@ -293,16 +293,18 @@ export const collectAuditEvidence = (repo: string): readonly EngineeringEvidence
   runCheck('KNIP-2', 'knip', 'bunx knip --no-config-hints', STD)
 
   // ── core: native CLI ownership + retired-key drift ────────────────────────────
-  const aggregateAliases = ['ki:audit', 'ki:conform', 'ki:educate', 'ki:help'].filter((key) => key in scripts)
-  aggregateAliases.length
+  const nativeGovernanceAliases = Object.entries(scripts)
+    .filter(([, value]) => /\bki\s+repo\s+(?:audit|conform|educate)\b/.test(value))
+    .map(([key]) => key)
+  nativeGovernanceAliases.length
     ? add(
         'FAIL',
         'SCR-2',
-        `repository maintenance must use the installed CLI directly; remove package-script alias(es): ${aggregateAliases.join(', ')}`,
+        `repository maintenance must use the installed CLI directly; remove package script(s) that invoke native governance: ${nativeGovernanceAliases.join(', ')}`,
         STD,
         'package.json'
       )
-    : add('PASS', 'SCR-2', 'repository maintenance has no package-script aliases', STD, 'package.json')
+    : add('PASS', 'SCR-2', 'repository maintenance has no package scripts that invoke native governance', STD, 'package.json')
   const retired = Object.keys(scripts).filter(
     (key) =>
       /^ki:(lint|deps):/.test(key) ||

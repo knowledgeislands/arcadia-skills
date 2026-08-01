@@ -211,6 +211,8 @@ const defaults = {
 
 const legacyAggregateScript = (key: string): boolean => key === 'ki:audit' || key === 'ki:conform' || key === 'ki:educate' || key === 'ki:help'
 
+const nativeGovernanceScript = (value: string): boolean => /\bki\s+repo\s+(?:audit|conform|educate)\b/.test(value)
+
 const legacyToolScript = (key: string): boolean => /^ki:(lint|deps):/.test(key) || key === 'ki:knip' || key === 'ki:verify' || /^ki:[a-z-]+:lint$/.test(key)
 
 const legacySkillModeScript = (key: string): boolean => /^ki:[a-z-]+:(audit|conform|educate|help)$/.test(key)
@@ -241,7 +243,14 @@ const packageContent = (source: string): string | undefined => {
   packageJson['lint-staged'] = lintStaged
   const scripts = { ...((packageJson.scripts as Record<string, string> | undefined) ?? {}) }
   for (const key of Object.keys(scripts)) {
-    if (legacyAggregateScript(key) || legacyToolScript(key) || legacySkillModeScript(key) || legacyRuntimeOnlyScript(scripts[key] ?? '')) delete scripts[key]
+    if (
+      legacyAggregateScript(key) ||
+      nativeGovernanceScript(scripts[key] ?? '') ||
+      legacyToolScript(key) ||
+      legacySkillModeScript(key) ||
+      legacyRuntimeOnlyScript(scripts[key] ?? '')
+    )
+      delete scripts[key]
   }
   scripts.clean = scripts.clean?.includes('node_modules') ? scripts.clean : 'rm -rf dist node_modules'
   scripts.prepare = 'husky'
