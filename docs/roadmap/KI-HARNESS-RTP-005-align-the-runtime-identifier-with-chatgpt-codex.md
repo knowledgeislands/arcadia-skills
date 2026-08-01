@@ -40,8 +40,7 @@ The harness and existing repository declarations repeat `codex` in `supported_ru
 ## Files touched
 
 - `ki-agentic-harness/.ki-config.toml`, runtime-bound skill metadata, documentation, and fixtures that declare the runtime contract.
-- `-/_HANDOFFS/tools-ki/KI-HARNESS-RTP-005-chatgpt-codex-runtime-identifier.md`
-- `tools-ki` runtime validation, agent-to-runtime mapping, repository initialisation, tests, and documentation, through that repository's adopted work item.
+- `tools-ki` runtime validation, agent-to-runtime mapping, repository initialisation, tests, and documentation, through [KI-TOOL-CLI-012](../../tools-ki/docs/roadmap/KI-TOOL-CLI-012-align-runtime-identifier-with-chatgpt-codex.md).
 
 ## Verify
 
@@ -55,7 +54,7 @@ There is no known internal prerequisite.
 
 The cross-repository `tools-ki` change must be coordinated before the corrected contract can be released; the receiving repository owns its implementation record and acceptance evidence.
 
-The outbound handoff records the bounded CLI-owned work. Once `tools-ki` adopts it into a canonical item, record the resulting identifiers and reciprocal dependency before either repository marks its item Ready.
+`tools-ki` has adopted the bounded CLI-owned work as [KI-TOOL-CLI-012](../../tools-ki/docs/roadmap/KI-TOOL-CLI-012-align-runtime-identifier-with-chatgpt-codex.md). Its implementation and acceptance evidence are the prerequisite for this item's standard and fleet migration.
 
 ## Discussion
 
@@ -81,4 +80,4 @@ The harness owns the portable standard, its configuration/rubric consequences, a
 
 `tools-ki` owns the executable vocabulary, agent-to-runtime mapping, repository initialisation, managed activation, CLI-facing diagnostics, and their contract tests.
 
-The outbound brief at [`-/_HANDOFFS/tools-ki/KI-HARNESS-RTP-005-chatgpt-codex-runtime-identifier.md`](../../-/_HANDOFFS/tools-ki/KI-HARNESS-RTP-005-chatgpt-codex-runtime-identifier.md) requests its independent adoption; it is not an instruction to implement on the harness item's priority alone.
+`tools-ki` adopted this work as [KI-TOOL-CLI-012](../../tools-ki/docs/roadmap/KI-TOOL-CLI-012-align-runtime-identifier-with-chatgpt-codex.md), which remains independently prioritised and owns the executable's acceptance evidence.
