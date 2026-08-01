@@ -3,7 +3,7 @@ id: KI-HARNESS-RTP-005
 title: Align the Codex runtime identifier with ChatGPT Codex
 theme: runtime-portability
 horizon: blocking
-status: in-progress
+status: acceptance
 blocks: []
 blocked-by: []
 baseline-ref: 20b134022b361b09d9a75a4f166dd6e5ad3eb198
@@ -25,17 +25,17 @@ Product references to Codex, such as its configuration paths and the `ki-tokenom
 
 ## Current state
 
-`tools-ki` defines its supported runtime vocabulary as `claude-code` and `codex`, then maps the detected `chatgpt-codex` agent to the latter.
+`tools-ki` previously defined its supported runtime vocabulary as `claude-code` and `codex`, then mapped the detected `chatgpt-codex` agent to the latter.
 
-The harness and existing repository declarations repeat `codex` in `supported_runtimes` and `ki-supported-runtimes`, requiring users to translate between the configured runtime and the agent KI actually detects and links.
+The harness and existing repository declarations repeated `codex` in `supported_runtimes` and `ki-supported-runtimes`, requiring users to translate between the configured runtime and the agent KI actually detects and links. The CLI, harness, and fleet declarations now use the detected identifier directly.
 
 ## Steps
 
-1. Inventory uses of `codex` and classify each as a runtime identifier, a detected-agent identifier, a product reference, or a path/schema key.
-2. Update the canonical runtime contract to `chatgpt-codex`, including `tools-ki` validation, repository initialisation, managed-link selection, harness frontmatter, and repository configuration examples.
-3. Migrate existing KI-managed user and repository declarations through a safe, explicit path; reject legacy `codex` declarations with targeted recovery guidance once migration is complete.
-4. Update affected tests, fixtures, diagnostics, and runtime-specific documentation without renaming unrelated Codex product concepts.
-5. Hand off the CLI-owned migration to `tools-ki`, then coordinate its adopted implementation record and verify the two repositories publish one consistent contract.
+1. [x] Inventory uses of `codex` and classify each as a runtime identifier, a detected-agent identifier, a product reference, or a path/schema key.
+2. [x] Update the canonical runtime contract to `chatgpt-codex`, including `tools-ki` validation, repository initialisation, managed-link selection, harness frontmatter, and repository configuration examples.
+3. [x] Migrate existing KI-managed user and repository declarations through a safe, explicit path; reject legacy `codex` declarations with targeted recovery guidance once migration is complete.
+4. [x] Update affected tests, fixtures, diagnostics, and runtime-specific documentation without renaming unrelated Codex product concepts.
+5. [x] Hand off the CLI-owned migration to `tools-ki`, then coordinate its adopted implementation record and verify the two repositories publish one consistent contract.
 
 ## Files touched
 
@@ -55,6 +55,45 @@ There is no known internal prerequisite.
 The cross-repository `tools-ki` change must be coordinated before the corrected contract can be released; the receiving repository owns its implementation record and acceptance evidence.
 
 `tools-ki` has adopted the bounded CLI-owned work as [KI-TOOL-CLI-012](../../tools-ki/docs/roadmap/KI-TOOL-CLI-012-align-runtime-identifier-with-chatgpt-codex.md). Its implementation and acceptance evidence at `535335c297c5ac2fdc539671cf480af66b437752` satisfy the prerequisite for this item's standard and fleet migration.
+
+## Acceptance
+
+### Delivered
+
+The canonical KI runtime identifiers are now `claude-code` and `chatgpt-codex`.
+
+`tools-ki` accepts, writes, and activates `chatgpt-codex`, while its targeted diagnostics reject legacy `codex` with a direct replacement instruction.
+
+The harness validates the same vocabulary in repository declarations and runtime-bound skill metadata, with the old identifier expressly rejected rather than retained as a compatibility path.
+
+### Summary of changes
+
+KI-TOOL-CLI-012 delivered the executable contract at `535335c297c5ac2fdc539671cf480af66b437752` and recorded its acceptance evidence at `0422e85`.
+
+The harness contract changed at `92eea5a7`: its own declaration, runtime-bound skills, `ki-repo` default and coverage checker, `ki-skills` metadata checker, standards, exemplars, and focused test cases now agree on `chatgpt-codex`.
+
+The exact legacy declaration was migrated and pushed in twelve repositories: `homebrew-tap`, `ki-arcadia-principal`, `ki-plugins`, `ki-specifications`, `ki-website`, `mcp-claude-housekeeping`, `mcp-git-audit`, `mcp-gsuite`, `mcp-ki-kb-fs`, `mcp-ki-kb-notion-mirror`, `mcp-m365`, and `tools-mgit`.
+
+### Verification
+
+- `tools-ki`: 448 CLI tests, `bunx tsc --noEmit`, and `bunx biome check src README.md` passed.
+- `ki-agentic-harness`: 234 tests and `bunx tsc --noEmit` passed.
+- `ki repo audit --skill ki-skills` and `ki repo audit --skill ki-repo` passed in the harness.
+- `ki repo audit --skill ki-repo` passed in `tools-ki` when evaluated through the current local launcher.
+- All twelve migrated repositories passed the `ki-repo` audit after their declaration update.
+- A workspace-wide scan found no exact `"codex"` entry in any Knowledge Islands `.ki-config.toml`.
+
+### Outstanding concerns
+
+The source change is published, but the default `ki` command in the `tools-ki` shell still resolves Homebrew's 0.2.13 release, whose parser accepts only the old vocabulary.
+
+Release or upgrade that installed CLI before expecting ordinary system `ki` invocations to consume `chatgpt-codex`; this item does not authorise a release, Homebrew formula update, or production deployment.
+
+### Mini recap
+
+The migration reaches the source contract, CLI, tests, and every available Knowledge Islands repository declaration without a legacy alias.
+
+It stops at acceptance pending the normal review decision and a separately authorised CLI release path.
 
 ## Discussion
 
