@@ -9,6 +9,10 @@ blocked-by: []
 baseline-ref: null
 ---
 
+## Goal
+
+Prove that Feature Definitions help one real repository before asking the wider fleet to adopt them.
+
 ## Context
 
 Select one named repository with externally visible behaviour and an owner, then pilot the Feature Definition format there.

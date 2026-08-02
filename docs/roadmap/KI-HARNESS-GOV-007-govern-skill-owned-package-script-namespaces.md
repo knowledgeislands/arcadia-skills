@@ -9,6 +9,10 @@ blocked-by: []
 baseline-ref: null
 ---
 
+## Goal
+
+Ensure every supported `ki:` package script has a clear governing skill and no ambiguous ownership.
+
 ## Context
 
 `ki-engineering` currently verifies that every non-lifecycle package script begins with `ki:`, but that prefix alone does not establish an accountable owner. The `ki-tools` manual gate exposed the gap: `ki:lint-man` passed the prefix check despite being an ambiguous tool alias, whereas `ki:tools:lint-man` makes its governing skill explicit and is now verified by the `ki-tools` rubric.

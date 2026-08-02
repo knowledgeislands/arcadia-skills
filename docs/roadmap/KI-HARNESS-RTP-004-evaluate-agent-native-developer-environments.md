@@ -10,6 +10,10 @@ blocked-by: []
 baseline-ref: null
 ---
 
+## Goal
+
+Decide which agent-native developer environments or remote-session workflows genuinely improve KI work.
+
 ## Context
 
 Evaluate Zed, Herdr, and Pi as potential runtime or session-integration surfaces, with Mosh as remote-terminal context.

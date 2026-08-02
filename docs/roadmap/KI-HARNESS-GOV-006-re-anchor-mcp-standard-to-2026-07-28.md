@@ -9,6 +9,10 @@ blocked-by: []
 baseline-ref: null
 ---
 
+## Goal
+
+Bring the MCP standard up to date with the current specification through a safe, evidence-backed rollout.
+
 ## Context
 
 MCP specification revision 2026-07-28 was published on 2026-07-28 and the live specification index now names it as the latest release. The `ki-mcp` standard is anchored to 2025-11-25, so sections 12 and 13 and the annotation semantics in section 4 describe a superseded revision.

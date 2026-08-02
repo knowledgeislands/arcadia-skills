@@ -9,6 +9,10 @@ blocked-by: []
 baseline-ref: null
 ---
 
+## Goal
+
+Give maintainers a lightweight way to decide when accumulated code changes deserve a focused consistency review.
+
 ## Context
 
 Mechanical engineering checks establish formatting, types, tests, and configured toolchain consistency, but they do not replace a human or model review of evolving code structure. The useful review trigger is not elapsed time: it is how much relevant code has changed since the last explicit consistency review.

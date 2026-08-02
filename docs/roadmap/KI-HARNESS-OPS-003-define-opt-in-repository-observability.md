@@ -10,6 +10,10 @@ blocked-by: []
 baseline-ref: null
 ---
 
+## Goal
+
+Define optional repository observability that is useful when enabled and completely quiet when disabled.
+
 ## Context
 
 Define an off-by-default `ki-observability` capability for reporting repository and skill activity to a configured OTLP-compatible endpoint.

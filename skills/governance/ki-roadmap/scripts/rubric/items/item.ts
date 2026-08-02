@@ -39,7 +39,7 @@ export const ITEM: RubricFamily<RoadmapRubricContext, RoadmapAuditContext> = {
     {
       code: 'ITEM-3',
       title: 'item body shape',
-      description: 'Every item ends with Discussion and carries the deterministic sections required by its horizon and lifecycle state.',
+      description: 'Every item has a non-empty Goal, ends with Discussion, and carries the deterministic sections required by its horizon and lifecycle state.',
       sources: [FORMAT],
       mechanical: {
         level: 'FAIL',
@@ -48,6 +48,16 @@ export const ITEM: RubricFamily<RoadmapRubricContext, RoadmapAuditContext> = {
     },
     {
       code: 'ITEM-4',
+      title: 'plain-language goal',
+      description: 'Each work item states a concise user or system outcome before its technical context.',
+      sources: [FORMAT],
+      judgment: {
+        prompt:
+          'Review that Goal explains the intended user or system outcome in plain language, while Context holds the supporting evidence and technical rationale.'
+      }
+    },
+    {
+      code: 'ITEM-5',
       title: 'item dependencies',
       description: 'Dependencies name existing work items, are reverse-consistent and acyclic, and do not permit active blocked work.',
       sources: [SOURCE],

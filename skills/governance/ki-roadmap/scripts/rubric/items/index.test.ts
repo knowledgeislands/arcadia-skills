@@ -36,6 +36,10 @@ blocked-by: []
 baseline-ref: null
 ---
 
+## Goal
+
+Give users a working foundation.
+
 ## Context
 
 The foundation needs implementation.
@@ -92,6 +96,7 @@ test('the structured catalogue represents the flat work-item standard', () => {
     'ITEM-2',
     'ITEM-3',
     'ITEM-4',
+    'ITEM-5',
     'ROOT-1',
     'EXEC-1',
     'EXEC-2',
@@ -144,9 +149,16 @@ test('Soon work carries shaping detail', () => {
   expect(inspectRoadmap(repository)).toContainEqual(
     expect.objectContaining({
       area: 'ITEM-3',
-      msg: 'body must contain Context → Boundary → Shaping → Discussion in order'
+      msg: 'body must contain Goal → Context → Boundary → Shaping → Discussion in order'
     })
   )
+})
+
+test('a Goal is mandatory and non-empty', () => {
+  const repository = createFixture()
+  const item = join(repository, 'docs', 'roadmap', 'TEST-FND-001-build-the-foundation.md')
+  writeFileSync(item, readFileSync(item, 'utf8').replace('Give users a working foundation.', ''))
+  expect(inspectRoadmap(repository)).toContainEqual(expect.objectContaining({ area: 'ITEM-3', msg: '## Goal must be non-empty' }))
 })
 
 test('conform repairs only a stale root orientation', () => {

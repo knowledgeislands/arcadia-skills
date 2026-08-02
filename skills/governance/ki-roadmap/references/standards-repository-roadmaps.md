@@ -107,7 +107,7 @@ Every confirmed move is re-evaluated at its destination.
 
 Every item conforms to [the work-item format](standards-work-item-format.md), including the final topic-oriented `Discussion` section and the detail required at its current horizon and lifecycle state.
 
-An item begins as a concise issue: outcome, boundary, current context, and enough discussion to preserve decision-useful reasoning.
+An item begins with a mandatory plain-language Goal, then its outcome evidence, boundary, current context, and enough discussion to preserve decision-useful reasoning.
 
 At Soon, shaping records the intended approach, known dependencies, open decisions, and promotion conditions.
 

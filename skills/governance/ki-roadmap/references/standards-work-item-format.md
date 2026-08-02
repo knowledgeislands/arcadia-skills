@@ -56,9 +56,13 @@ An optional non-empty `transferred-from` records a durable handoff origin.
 Every item begins with these sections in order and ends with `## Discussion`:
 
 ```markdown
+## Goal
+
+The plain-language user or system outcome this work should achieve.
+
 ## Context
 
-Why the work exists and the intended outcome.
+Why the work exists now, including current evidence and technical background.
 
 ## Boundary
 
@@ -72,6 +76,8 @@ Decision-useful reasoning, alternatives, or unresolved questions.
 ```
 
 `Discussion` is topic-oriented rather than chronological.
+
+`Goal` is mandatory and non-empty. State the outcome in one to three plain-language sentences that a reader can understand without implementation detail. It names the change in the world, not a file, command, or internal mechanism. `Context` supplies the supporting evidence and technical rationale; it does not substitute for the Goal.
 
 Use descriptive `###` headings such as `### Authority model`, `### Source analysis`, `### Alternatives`, or `### Open questions`.
 
@@ -93,9 +99,9 @@ The roadmap item is the durable handoff record until its work is planned; extern
 
 ### Future / open
 
-`Context`, `Boundary`, and final `Discussion` are sufficient.
+`Goal`, `Context`, `Boundary`, and final `Discussion` are sufficient.
 
-They preserve why the item exists, its deliberate exclusion, and the reasoning needed to shape it later without pretending that it is planned.
+They preserve the intended outcome, why the item exists, its deliberate exclusion, and the reasoning needed to shape it later without pretending that it is planned.
 
 ### Soon / open
 

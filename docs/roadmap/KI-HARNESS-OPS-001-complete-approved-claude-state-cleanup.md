@@ -9,6 +9,10 @@ blocked-by: []
 baseline-ref: null
 ---
 
+## Goal
+
+Safely remove the exact approved stale Claude state once the required housekeeping access is available.
+
 ## Context
 
 When destructive housekeeping access is available, refresh the live inventory, review candidates, and prune only the approved stored sessions and telemetry.

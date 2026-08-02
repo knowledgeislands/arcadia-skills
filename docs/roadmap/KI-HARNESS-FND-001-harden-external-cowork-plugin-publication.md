@@ -9,6 +9,10 @@ blocked-by: []
 baseline-ref: null
 ---
 
+## Goal
+
+Publish the external Cowork plugin safely, so a failed update never leaves its generated marketplace half replaced.
+
 ## Context
 
 Make `ki-binding-claude`'s `build-plugin` publication inspectable before mutation and recoverable across replacement of generated output.

@@ -150,7 +150,7 @@ const roadmapConfiguration = (repository: string): RoadmapConfiguration | undefi
 const EXECUTION_SECTIONS = ['Current state', 'Steps', 'Files touched', 'Verify', 'Dependencies / blocks'] as const
 
 const requiredSections = (item: WorkItem): readonly string[] => {
-  const sections: string[] = ['Context', 'Boundary']
+  const sections: string[] = ['Goal', 'Context', 'Boundary']
   if (item.status === 'open' && item.horizon === 'soon') sections.push('Shaping')
   if (item.status !== 'open' || IMMEDIATE.has(item.horizon)) sections.push(...EXECUTION_SECTIONS)
   if (item.status === 'acceptance' || item.status === 'done') sections.push('Acceptance')
@@ -161,11 +161,23 @@ const requiredSections = (item: WorkItem): readonly string[] => {
 
 const headings = (body: string): readonly string[] => body.split(/\r?\n/).flatMap((line) => line.match(/^##\s+(.+?)\s*#*\s*$/)?.[1] ?? [])
 
+const sectionContent = (body: string, heading: string): string | undefined => {
+  const lines = body.split(/\r?\n/)
+  const start = lines.findIndex((line) => line.match(new RegExp(`^##\\s+${heading}\\s*#*\\s*$`)))
+  if (start === -1) return undefined
+  const end = lines.findIndex((line, index) => index > start && /^##\s+/.test(line))
+  return lines
+    .slice(start + 1, end === -1 ? undefined : end)
+    .join('\n')
+    .trim()
+}
+
 const validateBody = (item: WorkItem): void => {
   const present = headings(item.body)
   const required = requiredSections(item)
   const sequence = present.filter((heading) => required.includes(heading))
   if (JSON.stringify(sequence) !== JSON.stringify(required)) add('FAIL', 'ITEM-3', `body must contain ${required.join(' → ')} in order`, FORMAT, item.file)
+  if (!sectionContent(item.body, 'Goal')) add('FAIL', 'ITEM-3', '## Goal must be non-empty', FORMAT, item.file)
   if (present.at(-1) !== 'Discussion') add('FAIL', 'ITEM-3', '## Discussion must be the final top-level section', FORMAT, item.file)
 }
 

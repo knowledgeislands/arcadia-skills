@@ -9,6 +9,10 @@ blocked-by: []
 baseline-ref: 20b134022b361b09d9a75a4f166dd6e5ad3eb198
 ---
 
+## Goal
+
+Use one clear runtime identifier, `chatgpt-codex`, everywhere KI describes this Codex integration.
+
 ## Context
 
 The KI contract currently calls the runtime `codex`, while the detected local agent integration is `chatgpt-codex`.

@@ -9,6 +9,10 @@ blocked-by: []
 baseline-ref: null
 ---
 
+## Goal
+
+Add Codex housekeeping only when an official contract makes it safe and supportable.
+
 ## Context
 
 Create `ki-housekeeping-codex` only after Codex exposes an official selected-repository identity together with supported retention, cleanup, and safe-conform boundaries.
