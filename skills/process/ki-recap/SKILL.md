@@ -28,7 +28,7 @@ At the safe boundary after every recap and before a new work cycle, determine au
 
 The recap grounds every checkable claim in current reality, not in warm context or recalled memory: before asserting a commit landed, a gate passed, or a file's state, it re-checks (`git log`, the read-only gate, a fresh read) — stale context otherwise reads as fact.
 
-A mechanical **grounding helper**, [`scripts/recap-grounding.ts`](scripts/recap-grounding.ts), resolves the newest matching Claude or Codex session transcript and emits files-touched / tool-tally / high-cost-candidate data — it grounds the summarise and harvest legs, it does not replace judgment over them.
+A mechanical **grounding helper**, [`scripts/recap-grounding.ts`](scripts/recap-grounding.ts), resolves the newest matching Claude or Codex session transcript and emits files-touched, tool-tally, high-cost-candidate, and versioned repository-evidence data. On a later recap it compares a compatible prior evidence marker and reports `unchanged`, `changed`, or `unavailable`; current Git state remains authoritative. It grounds the summarise and harvest legs, it does not replace judgment over them.
 
 ## Invocation
 

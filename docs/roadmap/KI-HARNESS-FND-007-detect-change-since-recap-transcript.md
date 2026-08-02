@@ -3,7 +3,7 @@ id: KI-HARNESS-FND-007
 title: Detect repository change since the recap transcript
 theme: foundation-tooling
 horizon: next
-status: in-progress
+status: acceptance
 blocks: []
 blocked-by: []
 baseline-ref: 8d1342895cb8996881abca88187b5ee4e45614ec
@@ -51,12 +51,12 @@ Promote when the exact evidence payload, compatible-record selection rule, unava
 
 ## Steps
 
-- [ ] Define the `ki-recap-repository-evidence/v1` payload and emit it with the helper's live repository evidence.
-- [ ] Decode only exact, type-valid helper-output markers from Claude tool-result and Codex `custom_tool_call_output` records; reject malformed and foreign-repository markers.
-- [ ] Select the newest compatible marker and compare its `head` with current Git state, reporting `unchanged`, `changed`, or `unavailable`; include a commit range and changed tracked paths only when both revisions resolve.
-- [ ] Keep comparison evidence factual and advisory: qualify transcript-derived tool tallies and high-cost candidates without replacing fresh Git checks or altering transcript selection.
-- [ ] Add synthetic Claude and Codex fixtures for unchanged, changed, missing, malformed, foreign-repository, unavailable-head, and unavailable-baseline cases.
-- [ ] Update the recap procedure and output documentation with the marker, evidence statuses, and the rule that current Git state remains authoritative.
+- [x] Define the `ki-recap-repository-evidence/v1` payload and emit it with the helper's live repository evidence.
+- [x] Decode only exact, type-valid helper-output markers from Claude tool-result and Codex `custom_tool_call_output` records; reject malformed and foreign-repository markers.
+- [x] Select the newest compatible marker and compare its `head` with current Git state, reporting `unchanged`, `changed`, or `unavailable`; include a commit range and changed tracked paths only when both revisions resolve.
+- [x] Keep comparison evidence factual and advisory: qualify transcript-derived tool tallies and high-cost candidates without replacing fresh Git checks or altering transcript selection.
+- [x] Add synthetic Claude and Codex fixtures for unchanged, changed, missing, malformed, foreign-repository, unavailable-head, and unavailable-baseline cases.
+- [x] Update the recap procedure and output documentation with the marker, evidence statuses, and the rule that current Git state remains authoritative.
 
 ## Files touched
 
@@ -75,6 +75,34 @@ Promote when the exact evidence payload, compatible-record selection rule, unava
 ## Dependencies / blocks
 
 The marker must be represented in fixtures for both runtime transcript formats before it becomes part of the portable recap procedure.
+
+## Acceptance
+
+### Delivered
+
+The grounding helper now emits and recovers `ki-recap-repository-evidence/v1` for both supported transcript runtimes, reports its comparison status, and retains fresh Git state as the authority.
+
+### Summary of changes
+
+Added exact marker validation, compatible-record selection, conservative `unchanged` / `changed` / `unavailable` comparison, and commit-range/path evidence where Git can resolve both revisions.
+
+Added Claude and Codex fixtures for representative, divergent, malformed, foreign, and ungrounded transcript evidence. Updated the recap procedure and reference standard to explain the status and its advisory role.
+
+### Verification
+
+- `bun test skills/process/ki-recap/scripts/recap-grounding.test.ts` — 7 passing, 0 failing.
+- `bun run test` — 242 passing, 0 failing.
+- `bunx tsc --noEmit` — passed.
+- `ki repo audit --skill ki-roadmap --repo .`, `ki repo audit --skill ki-skills --repo .`, and `ki repo audit --skill ki-authoring --repo .` — passed.
+- Manual Codex JSON output emitted the exact marker and reported `unavailable` for a transcript without a compatible baseline while correctly retaining live dirty-worktree evidence.
+
+### Outstanding concerns
+
+Transcript evidence is deliberately unavailable when a runtime does not retain a complete helper output or Git cannot establish a comparable baseline. That is a conservative limitation, not a false freshness claim.
+
+### Mini recap
+
+Transcript evidence now qualifies historical recap signals; it does not replace live Git checks or automatically decide whether work is material.
 
 ## Discussion
 

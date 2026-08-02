@@ -14,8 +14,8 @@
  * The helper selects the newest eligible transcript for the resolved repository. Claude
  * candidates live directly in its derived project directory; Codex candidates are regular
  * JSONL files discovered recursively below its sessions directory whose session metadata
- * names the same working directory. It emits files touched, a tool-call tally, and
- * high-cost candidates for the warm recap procedure to interpret.
+ * names the same working directory. It emits files touched, a tool-call tally,
+ * high-cost candidates, and repository evidence for the warm recap procedure to interpret.
  */
 
 import { execFileSync } from 'node:child_process'
@@ -29,6 +29,22 @@ type RuntimeSelector = Runtime | 'detect'
 type ToolCall = {
   name: string
   input: unknown
+}
+
+type WorktreeState = 'clean' | 'dirty'
+
+type RepositoryEvidence = {
+  repo: string
+  head: string | null
+  worktree: WorktreeState
+}
+
+type TranscriptEvidence = {
+  status: 'unchanged' | 'changed' | 'unavailable'
+  baseline: RepositoryEvidence | null
+  current: RepositoryEvidence
+  commitRange?: string
+  changedPaths?: string[]
 }
 
 type TranscriptCandidate = {
@@ -45,6 +61,8 @@ type Grounding = {
   diffStat: string
   toolTally: Record<string, number>
   highCostCandidates: string[]
+  'ki-recap-repository-evidence/v1': RepositoryEvidence
+  transcriptEvidence: TranscriptEvidence
 }
 
 type Arguments = {
@@ -60,6 +78,8 @@ const slugifyRepoPath = (absolutePath: string): string => absolutePath.replace(/
 const resolveClaudeProjectDir = (repo: string): string => join(homedir(), '.claude', 'projects', slugifyRepoPath(repo))
 
 const resolveCodexSessionsDir = (): string => join(homedir(), '.codex', 'sessions')
+const REPOSITORY_EVIDENCE_MARKER = 'ki-recap-repository-evidence/v1'
+const COMMIT = /^(?:[0-9a-f]{40}|[0-9a-f]{64})$/
 
 const readJsonl = (path: string): unknown[] => {
   let text: string
@@ -203,6 +223,62 @@ const toolInput = (value: unknown): unknown => {
   }
 }
 
+const textValues = (value: unknown): string[] => {
+  if (typeof value === 'string') return [value]
+  if (Array.isArray(value)) return value.flatMap((entry) => textValues(entry))
+  const record = asRecord(value)
+  return typeof record?.text === 'string' ? [record.text] : []
+}
+
+const repositoryEvidence = (value: unknown, repository: string): RepositoryEvidence | null => {
+  const record = asRecord(value)
+  const marker = asRecord(record?.[REPOSITORY_EVIDENCE_MARKER])
+  if (!marker || marker.repo !== repository || (marker.head !== null && (typeof marker.head !== 'string' || !COMMIT.test(marker.head)))) return null
+  if (marker.worktree !== 'clean' && marker.worktree !== 'dirty') return null
+  return { repo: repository, head: marker.head as string | null, worktree: marker.worktree }
+}
+
+const helperOutputEvidence = (text: string, repository: string): RepositoryEvidence | null => {
+  try {
+    return repositoryEvidence(JSON.parse(text) as unknown, repository)
+  } catch {
+    return null
+  }
+}
+
+const transcriptOutputTexts = (transcriptPath: string, runtime: Runtime): string[] => {
+  const texts: string[] = []
+  for (const record of readJsonl(transcriptPath)) {
+    const event = asRecord(record)
+    if (!event) continue
+    if (runtime === 'claude') {
+      const message = asRecord(event.message)
+      const content = message?.content
+      if (!Array.isArray(content)) continue
+      for (const block of content) {
+        const result = asRecord(block)
+        if (result?.type === 'tool_result') texts.push(...textValues(result.content))
+      }
+      continue
+    }
+    if (event.type !== 'response_item') continue
+    const item = asRecord(event.payload)
+    const payload = asRecord(item?.item) ?? item
+    if (payload?.type === 'custom_tool_call_output') texts.push(...textValues(payload.output))
+  }
+  return texts
+}
+
+const latestTranscriptEvidence = (selected: TranscriptCandidate | null, repository: string): RepositoryEvidence | null => {
+  if (!selected) return null
+  return (
+    transcriptOutputTexts(selected.path, selected.runtime)
+      .map((text) => helperOutputEvidence(text, repository))
+      .filter((evidence): evidence is RepositoryEvidence => evidence !== null)
+      .at(-1) ?? null
+  )
+}
+
 const readToolCalls = (transcriptPath: string, runtime: Runtime): ToolCall[] => {
   const calls: ToolCall[] = []
   for (const record of readJsonl(transcriptPath)) {
@@ -235,6 +311,27 @@ const gitOutput = (repo: string, args: string[]): string => {
   } catch {
     return ''
   }
+}
+
+const evidenceFor = (repo: string, status: string): RepositoryEvidence => ({
+  repo,
+  head: gitOutput(repo, ['rev-parse', 'HEAD']) || null,
+  worktree: status ? 'dirty' : 'clean'
+})
+
+const compareEvidence = (repo: string, baseline: RepositoryEvidence | null, current: RepositoryEvidence): TranscriptEvidence => {
+  if (!baseline || !baseline.head || !current.head) return { status: 'unavailable', baseline, current }
+  if (!gitOutput(repo, ['rev-parse', '--verify', `${baseline.head}^{commit}`]) || !gitOutput(repo, ['rev-parse', '--verify', `${current.head}^{commit}`]))
+    return { status: 'unavailable', baseline, current }
+  if (baseline.head === current.head && baseline.worktree === 'clean' && current.worktree === 'clean') return { status: 'unchanged', baseline, current }
+
+  const changed = baseline.head !== current.head || baseline.worktree !== current.worktree
+  if (!changed) return { status: 'unavailable', baseline, current }
+  if (baseline.head === current.head) return { status: 'changed', baseline, current }
+
+  const commitRange = `${baseline.head}..${current.head}`
+  const changedPaths = gitOutput(repo, ['diff', '--name-only', commitRange]).split('\n').filter(Boolean)
+  return { status: 'changed', baseline, current, commitRange, changedPaths }
 }
 
 const findHighCostCandidates = (calls: readonly ToolCall[]): string[] => {
@@ -270,6 +367,12 @@ const main = (): void => {
   const repo = resolve(repoArg ?? process.cwd())
   const selected = selectTranscript(discoverCandidates({ runtime, repo, transcriptsDir }), transcriptSelector)
   const calls = selected ? readToolCalls(selected.path, selected.runtime) : []
+  const filesTouched = gitOutput(repo, ['status', '--porcelain'])
+    .split('\n')
+    .filter(Boolean)
+    .map((line) => line.trim())
+  const currentEvidence = evidenceFor(repo, filesTouched.join('\n'))
+  const baseline = latestTranscriptEvidence(selected, repo)
   const toolTally: Record<string, number> = {}
   for (const call of calls) toolTally[call.name] = (toolTally[call.name] ?? 0) + 1
 
@@ -277,13 +380,12 @@ const main = (): void => {
     repo,
     runtime: selected?.runtime ?? null,
     transcript: selected?.path ?? null,
-    filesTouched: gitOutput(repo, ['status', '--porcelain'])
-      .split('\n')
-      .filter(Boolean)
-      .map((line) => line.trim()),
+    filesTouched,
     diffStat: gitOutput(repo, ['diff', '--stat']),
     toolTally,
-    highCostCandidates: findHighCostCandidates(calls)
+    highCostCandidates: findHighCostCandidates(calls),
+    [REPOSITORY_EVIDENCE_MARKER]: currentEvidence,
+    transcriptEvidence: compareEvidence(repo, baseline, currentEvidence)
   }
 
   if (jsonMode) {
@@ -297,6 +399,7 @@ const main = (): void => {
   console.log(`files touched: ${grounding.filesTouched.length}`)
   console.log(grounding.diffStat || '(no diff)')
   console.log(`tool tally: ${JSON.stringify(grounding.toolTally)}`)
+  console.log(`transcript evidence: ${grounding.transcriptEvidence.status}`)
   if (grounding.highCostCandidates.length > 0) {
     console.log('high-cost candidates:')
     for (const candidate_ of grounding.highCostCandidates) console.log(`  - ${candidate_}`)
