@@ -25,9 +25,20 @@ Do not add package-script aliases for native `ki repo audit` or `ki repo conform
 
 ## Shaping
 
-### Intended approach
+### Selected registry contract
 
-Define one explicit, repository-local registry that maps every non-lifecycle `ki:*` package-script key to the skill that owns its contract. Keep the registry declarative and exact: the owning skill declares the permitted keys or namespace, while `ki-engineering` reads the registry to reject keys with no owner or an invalid shape.
+Each repository declares one exact-key registry in its existing `ki-engineering` configuration table:
+
+```toml
+["knowledgeislands/ki-agentic-harness:ki-engineering".script_owners]
+"ki:deps:update" = "ki-engineering"
+"ki:harness:eval" = "ki-harness"
+"ki:binding:build-plugin" = "ki-binding-claude"
+```
+
+Every non-lifecycle `ki:*` script key must appear once in `script_owners`; every owner value must name a declared, resolved capability in the same repository; and the registry may name no missing script. The key is exact, not a wildcard or a namespace prefix, so every supported script is expressly admitted by its owning skill. `ki-engineering` owns the required `ki:deps:update` entry. A repository-local `ki:self:*` entry is permitted only when `ki-self` is declared and resolved.
+
+`ki-engineering` validates registry grammar, exact key coverage, duplicate-free TOML shape, and owner selection. The named owner skill remains responsible for the command's semantics, its artefact boundary, and any CI requirement. This removes the current hard-coded `scriptOwner()` family map without turning a colon-shaped key into implicit authority.
 
 Inventory the harness and core public repositories before writing the rule. For each existing key, either identify the owning skill and its artifact-level check, or retire the script. Migrate ambiguous keys directly to their final owned form and update CI and documented invocations in the same cut.
 
@@ -37,25 +48,25 @@ The harness contains both a capability-specific build script and an evaluation s
 
 `ki-engineering` owns universal registry membership and grammar. The owner skill validates command semantics and CI only where those concern its artifact. This change affects the harness first and can then be rolled through the other primary public repositories under their own work items.
 
-### Decision still needed
+### Clean-cut migration rule
 
-Choose the registry's concrete `.ki-config.toml` shape and its relationship to capability declaration. In particular, decide how a repository records ownership for a script whose owning harness skill is not otherwise selected for that repository's audit coverage.
+An owner must be selected before its script is retained. If a repository cannot declare and resolve the proposed owner, it removes the script rather than registering a placeholder, relying on a prefix convention, or keeping a compatibility alias. The harness replaces `ki:eval` with `ki:harness:eval` in the same change; no legacy key remains.
 
 ### Promotion conditions
 
-Promote when the registry syntax, validation ownership split, complete core-repository inventory, clean-cut migration map, and focused harness verification are reviewable.
+Promote when the registry fixture contract, complete core-repository inventory, clean-cut migration map, and focused harness verification are reviewable.
 
 ## Current state
 
-The core inventory already distinguishes a clear `ki:tools:*` owner in `tools-ki` and `ki:site:*` owner in `ki-website`, while the harness has `ki:binding:build-plugin` and the ambiguous `ki:eval` key.
+The core inventory already distinguishes a clear `ki:tools:*` owner in `tools-ki` and `ki:site:*` owner in `ki-website`, while the harness has `ki:binding:build-plugin` and the ambiguous `ki:eval` key. The selected exact-key registry replaces that implicit mapping.
 
 No repository-local declaration currently maps every non-lifecycle `ki:*` key to a selected governing skill.
 
 ## Steps
 
-- [ ] Define a declarative `ki-engineering` configuration table that maps each non-lifecycle `ki:*` script key to one declared owning skill.
-- [ ] Add a mechanical `ki-engineering` criterion that validates key grammar, registry membership, and the selected owner without taking artifact-command semantics from the owner skill.
-- [ ] Give the harness evaluation command the final `ki:harness:*` name and record `ki-binding-claude` as the builder's owner; remove the ambiguous legacy key without an alias.
+- [ ] Add the exact-key `script_owners` table to the `ki-engineering` configuration contract and parse it without inspecting other skills' tables.
+- [ ] Add a mechanical `ki-engineering` criterion that validates registry membership, no stale entries, and a declared resolved owner without taking artifact-command semantics from the owner skill.
+- [ ] Replace the hard-coded owner-family map with registry evidence; rename the harness evaluation command to `ki:harness:eval`, record `ki-binding-claude` as the builder's owner, and remove `ki:eval` without an alias.
 - [ ] Add each accepted core repository's registry entries, using its existing selected capability as the owner and routing any unowned key to a local decision rather than grandfathering it.
 - [ ] Update CI and documented invocations in the same cut, then add focused catalogue fixtures for valid ownership, absent owners, invalid owners, and legacy-key removal.
 
@@ -80,7 +91,7 @@ The configuration syntax and owner/command validation split remain an explicit a
 
 ### Ownership registry
 
-Shape a portable way for an owning skill to declare its allowed package-script namespace or exact keys, together with the conditions under which each is valid. The declaration must let `ki-engineering` reject malformed or unowned `ki:` keys while leaving artifact-specific command semantics with the owning skill.
+The registry uses exact keys because namespaces are a readability aid, not authority. A key is supported only when the repository explicitly maps it to one selected owner; the mapping preserves declarative repository control while letting the owner skill enforce its own command contract.
 
 ### Mechanical layers
 

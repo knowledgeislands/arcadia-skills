@@ -2,7 +2,7 @@
 id: KI-HARNESS-GOV-006
 title: Re-anchor the MCP standard to specification 2026-07-28
 theme: governance-consistency
-horizon: next
+horizon: soon
 status: open
 blocks: []
 blocked-by: []
@@ -48,6 +48,8 @@ Promote when the v2 migration delta has been proven in a named stdio pilot, the 
 ## Current state
 
 The `ki-mcp` source list is already anchored to the released 2026-07-28 specification and TypeScript SDK v2 availability, while all six sibling servers still declare SDK 1.x and implement the older profile.
+
+This item is deferred from the current planning batch. It is the first candidate for the following batch once the `mcp-git-audit` owner can accept the pilot and the rollout-profile decision can be reviewed together; neither condition is inferred from SDK availability alone.
 
 `mcp-git-audit` is the proposed named stdio pilot because its scope is local and its migration can be evaluated before a fleet-wide standard change.
 

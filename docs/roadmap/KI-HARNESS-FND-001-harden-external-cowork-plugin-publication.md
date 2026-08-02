@@ -37,13 +37,23 @@ The generated marketplace lives in the separate `knowledgeislands/ki-plugins` re
 
 Its owner and checkout scope must be explicit before any staged replacement or publication test runs. The final target may be dirty only when its generated paths and intended ownership boundary have been reviewed; the generator must not use a broad clean/reset operation.
 
-### Decision still needed
+### Selected recovery contract
 
-Decide the rollback contract when the first generated path has been replaced but the second publication or verification fails. Do not describe two sequential renames as atomic, introduce a second publication tree, or add a cross-device fallback.
+Treat publication as a **two-path reversible swap**, not an atomic replacement. After a read-only preflight has produced the complete projection manifest, create both staged generated paths as direct children of the verified output root. The output root must be a physical directory; the existing generated paths may be absent or physical directories, never symlinks or another file type.
+
+Create one unique run token. Before publishing either staged path, rename each existing generated path to its token-scoped direct-child backup path and record whether it existed. Then rename the staged marketplace path and staged plugin path into their final locations, verify the resulting pair against the same manifest, and remove only the two verified backups.
+
+If either final rename or post-publish verification fails, remove only the final paths published by this run, restore every captured backup in reverse order, and verify restoration before reporting failure. A path absent before the run is restored by removing this run's published replacement rather than inventing an empty substitute. Every staging and backup path remains a direct child of the output root, so same-filesystem `rename` is the only supported move; no cross-device fallback, second publication tree, or broad cleanup is permitted.
+
+### Target-owner scope
+
+The supported real publication target is the `knowledgeislands/ki-plugins` checkout. Its owner must approve the exact resolved checkout and the two generated paths — `.claude-plugin/` and `knowledge-islands/` — as builder-owned before a real publication run. The builder remains reusable against a temporary root in focused tests, but it must not infer ownership of any other live repository.
+
+Preflight records the resolved target root, its current Git revision and worktree state, and the ownership state of both generated paths. A dirty target is a reportable review condition, not a license for a broad clean or reset; the owner decides whether the reviewed generated-path replacement may proceed while preserving every other path.
 
 ### Promotion conditions
 
-Promote when the named target checkout, dry-run output, same-filesystem staging location, two-path backup-and-restore protocol, failure evidence, and focused builder verification are concrete.
+Promote when the named target checkout, complete dry-run manifest, same-filesystem staging location, selected two-path backup-and-restore protocol, injected failure evidence, and focused builder verification are concrete.
 
 ## Current state
 
@@ -53,22 +63,25 @@ The named `ki-plugins` checkout contains both generated paths and remains the on
 
 ## Steps
 
-- [ ] Refactor projection discovery into one deterministic manifest that names the marketplace metadata, plugin metadata, generated paths, and sorted Claude-compatible skills and agents.
-- [ ] Add a dry-run mode that emits that manifest and intended replacement paths without creating a staging directory or mutating the target.
-- [ ] Stage both generated paths as direct children of the verified output root, verify the staged projection, and capture existing generated paths as bounded same-filesystem backups before any replacement.
-- [ ] Publish the two staged paths with a reversible swap, verify the resulting projection, and restore every captured path if either replacement or verification fails.
-- [ ] Remove only verified backups after successful publication; preserve repository-owned scaffold throughout.
+- [ ] Refactor projection discovery into one deterministic manifest that contains marketplace and plugin metadata, the two final generated paths, and sorted Claude-compatible skills and agents. Derive both dry-run output and staged files from that one manifest.
+- [ ] Add `--dry-run`, with `--json` rendering the complete machine-readable manifest. It must validate the named output boundary but create no staging or backup path and mutate neither generated path nor repository-owned scaffold.
+- [ ] Validate the physical output root and both generated-path states before every write. Create one token-scoped staging root directly below the output root and construct both replacement paths there; verify their manifests before touching either final path.
+- [ ] Capture each existing generated directory by same-filesystem rename to its direct-child token-scoped backup, recording absent versus captured state. Rename both verified staged paths to their final locations, then verify the final marketplace-to-plugin relationship against the original manifest.
+- [ ] On a final rename or verification failure, remove only paths published by the current run, restore captured backups in reverse order, verify restoration, and retain the primary failure plus any restoration failure in an actionable error. Remove staging and backups only after a verified successful publication or restoration.
+- [ ] Extend focused tests for a non-mutating dry run, successful two-path replacement, failure after each final rename, post-publish verification failure, absent prior generated paths, unsafe root/path rejection, and repository-scaffold preservation.
 
 ## Files touched
 
 - `skills/environment/ki-binding-claude/scripts/build-plugin.ts`
 - `skills/environment/ki-binding-claude/scripts/build-plugin.test.ts`
+- The reviewed `knowledgeislands/ki-plugins` checkout and its two generated paths before any non-test publication
 
 ## Verify
 
 - `bun test skills/environment/ki-binding-claude/scripts/build-plugin.test.ts`
 - `bun run test`
-- A temporary target proves dry-run non-mutation, successful two-path replacement, restoration after each injected failure point, and refusal of unsafe paths.
+- A temporary target proves dry-run non-mutation, successful two-path replacement, restoration after each injected final-rename and verification failure, correct handling of initially absent generated paths, and refusal of unsafe roots or paths.
+- The complete dry-run manifest and the final staged projection agree on marketplace metadata, plugin metadata, generated paths, and sorted Claude-compatible skills and agents.
 
 ## Dependencies / blocks
 
@@ -80,10 +93,18 @@ The harness test suite currently has a separate `ki-binding` fixture failure; it
 
 The current builder removes `.claude-plugin/` and the plugin directory before it writes either replacement. A failure between those operations can leave a partial projection. The revised design must make both replacement order and restoration evidence visible.
 
+### Chosen swap model
+
+The two generated directories cannot be atomically swapped together. The recoverable substitute is to make every individual rename same-filesystem and reversible, retain both old directories until the complete new pair verifies, and restore the exact pre-run state on failure. The run token distinguishes only this invocation's staging, backups, and published paths from repository-owned scaffold and any unrelated filesystem state.
+
 ### Dry-run evidence
 
 `--json` currently reports only the completed projection summary. A dry run should instead expose the pre-write manifest: target root, generated paths, plugin identity and version, sorted projected skills and agents, and the exact path relationship it will verify after publication. It must not create staging directories or mutate the target.
 
+The manifest is the sole projection source for both dry run and write mode. That prevents a successful preview from describing a different plugin, skill set, or generated-path pair than the subsequent publication.
+
 ### Target safety
 
 All output-root and symlink protections remain mandatory. Backups and staging paths must be direct children of the verified output root, be regular directories when they already exist, and be cleaned only after successful verification or a successful restoration. The generator must refuse an unfamiliar, linked, or concurrently changed generated path rather than guessing ownership.
+
+The production target is a separately owned checkout, so preflight must make its resolved identity, revision, worktree state, and two generated-path ownership boundary reviewable. It may never repair, reset, or otherwise alter the target's scaffold to make publication easier.

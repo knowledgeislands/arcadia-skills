@@ -33,13 +33,21 @@ Record the completed review in one durable, repository-owned place with the boun
 
 `ki-engineering` owns the portable principle and rubric prompt. `ki-git` continues to own commit hygiene. FND-007 may provide useful wording and evidence conventions, but this review must work from ordinary Git history even when no recap transcript exists.
 
-### Decision still needed
+### Selected record model
 
-Choose the canonical review-record location and the minimum evidence shape. The record must be durable enough to name the last reviewed boundary, but unobtrusive enough that a low-change repository does not accumulate routine activity logs.
+Record a completed change-aware review in the Git commit that publishes its outcome, using one standard trailer block rather than a generated ledger or routine documentation log:
+
+```text
+KI-Consistency-Review-Base: <full-40-character commit>
+KI-Consistency-Review-Scope: <repository | pathspec list>
+KI-Consistency-Review-Outcome: consistent | follow-up:<work-item-id>
+```
+
+The reviewed result is the commit carrying the trailers; the base names the exclusive lower bound of the examined range. `Scope` states the paths actually considered, and `Outcome` is either `consistent` or one canonical follow-up work-item identifier. A review that is not warranted emits no record. A follow-up remains an ordinary roadmap item, so the trailers document judgment without becoming a second planning system.
 
 ### Promotion conditions
 
-Promote when the record location, exact judgment prompt, review outcome vocabulary, and a representative example of "review now" versus "not yet warranted" are agreed.
+Promote when the trailer parser and record-selection rule, exact judgment prompt, review outcome vocabulary, and a representative example of "review now" versus "not yet warranted" are agreed.
 
 ## Current state
 
@@ -47,11 +55,11 @@ Promote when the record location, exact judgment prompt, review outcome vocabula
 
 ## Steps
 
-- [ ] Compare repository-native recording options, beginning with review evidence in an ordinary change commit, against a dedicated durable review record; reject any option that creates a routine activity log or a CI-maintained score.
-- [ ] Specify the minimum review evidence: Git boundary, examined range and paths, reviewer outcome, and any follow-up identifier.
-- [ ] Add one advisory `ki-engineering` judgment prompt that asks whether change scope warrants review and, when it does, applies the structural questions to the bounded range.
-- [ ] Document outcome vocabulary and one representative "review now" and "not yet warranted" example without turning either into an automatic threshold.
-- [ ] Add focused catalogue and documentation verification for the new prompt and its record convention.
+- [ ] Define and parse the `KI-Consistency-Review-Base`, `-Scope`, and `-Outcome` trailer block; select the newest valid record whose base remains resolvable, and report unavailable evidence rather than guessing from an arbitrary commit.
+- [ ] Add one advisory `ki-engineering` judgment prompt that first asks whether the change since the selected boundary warrants review and, when it does, applies structural questions to the explicit range and scope.
+- [ ] Document the two outcomes — `consistent` and `follow-up:<work-item-id>` — plus representative "review now" and "not yet warranted" cases without turning either into an automatic threshold.
+- [ ] Confirm the convention with `ki-git` so the trailer shape remains portable commit metadata rather than a competing Git-hygiene policy.
+- [ ] Add focused catalogue and documentation verification for valid trailers, malformed or unresolved evidence, review selection, and the advisory prompt.
 
 ## Files touched
 
@@ -67,6 +75,7 @@ Promote when the record location, exact judgment prompt, review outcome vocabula
 - `ki dev skill rubric ki-engineering --write`
 - `ki repo audit --skill ki-engineering --repo .`
 - `bun run test`
+- Fixture-backed Git history selects the newest valid review boundary and never treats an absent, malformed, or unreachable trailer as a completed review.
 
 ## Dependencies / blocks
 
@@ -84,7 +93,9 @@ Shape a minimal, inspectable way to compare the current code with the last expli
 
 ### Review record
 
-The design needs a lightweight durable review record naming the reviewed Git boundary, scope, findings, and outcome. Prefer evidence already native to repository history where it is sufficient; add no state file unless Git history cannot represent the boundary unambiguously.
+The review record is one explicit Git trailer block on the outcome commit. It names the reviewed lower boundary, scope, and outcome without a generated ledger, a documentation activity log, or a separate no-change commit. The commit itself is the upper boundary and durable evidence of the reviewer's conclusion.
+
+Malformed, foreign, or unreachable trailer evidence is unavailable rather than a freshness signal. The reviewer may inspect Git history again, but the audit must not pretend that it can recover a last-reviewed boundary from commit time, ordinary commit prose, or a changed-path heuristic.
 
 ### Relationship to recap grounding
 
