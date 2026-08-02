@@ -3,10 +3,10 @@ id: KI-HARNESS-FND-009
 title: Define cross-repository handoff submissions
 theme: foundation-tooling
 horizon: next
-status: ready
+status: in-progress
 blocks: []
 blocked-by: []
-baseline-ref: null
+baseline-ref: c6667651580d6cfdfb39802fd5e3657cdbdb6e37
 ---
 
 ## Goal
