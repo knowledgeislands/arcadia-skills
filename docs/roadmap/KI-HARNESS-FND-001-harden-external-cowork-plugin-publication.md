@@ -3,7 +3,7 @@ id: KI-HARNESS-FND-001
 title: Harden external Cowork plugin publication
 theme: foundation-tooling
 horizon: next
-status: open
+status: ready
 blocks: []
 blocked-by: []
 baseline-ref: null
@@ -85,7 +85,7 @@ The named `ki-plugins` checkout contains both generated paths and remains the on
 
 ## Dependencies / blocks
 
-The harness test suite currently has a separate `ki-binding` fixture failure; it is a mandatory stop for a full-suite-clean acceptance, not a reason to widen this item into unrelated binding repair.
+Planning and local implementation are unblocked. Before any non-test publication, the `ki-plugins` owner must approve the exact resolved checkout and its `.claude-plugin/` and `knowledge-islands/` generated paths. The harness test suite is currently clean (246 passing); full-suite cleanliness remains an acceptance requirement.
 
 ## Discussion
 
