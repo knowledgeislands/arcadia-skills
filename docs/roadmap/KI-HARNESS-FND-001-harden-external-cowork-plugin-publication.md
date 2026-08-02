@@ -3,10 +3,10 @@ id: KI-HARNESS-FND-001
 title: Harden external Cowork plugin publication
 theme: foundation-tooling
 horizon: next
-status: ready
+status: in-progress
 blocks: []
 blocked-by: []
-baseline-ref: null
+baseline-ref: 3621af09436a0977e73388f116063309d20ce4f4
 ---
 
 ## Goal
