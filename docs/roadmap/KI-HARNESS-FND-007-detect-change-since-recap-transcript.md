@@ -35,13 +35,15 @@ Keep the result separate from judgment. `ki-recap` continues to re-check live Gi
 
 The implementation is local to `ki-recap`: its grounding helper, its synthetic Claude/Codex transcript fixtures, and the recap procedure. It must recognise a record carried by both runtime transcript formats without treating arbitrary tool output, timestamps, or hash-like text as a baseline.
 
-### Decision still needed
+### Selected format
 
-Choose the smallest stable marker and payload format that a later helper can recover from both transcript formats without coupling the record to a particular host's event schema. The record must be observable in the recap output and testable through synthetic transcript fixtures.
+Emit one exact JSON member from the grounding helper: `"ki-recap-repository-evidence/v1"`. Its value is an object containing only `repo` (the resolved repository root), `head` (the full current `HEAD` or `null`), and `worktree` (`clean` or `dirty`).
+
+On a later run, recover only an exact, type-valid marker from a prior helper-output record in the selected transcript, reject a marker for another repository, and use the most recent compatible marker. The decoder has one small runtime adapter for Claude tool-result blocks and one for Codex `custom_tool_call_output` blocks; both yield the same marker object without making either event schema portable.
 
 ### Promotion conditions
 
-Promote when the exact evidence payload, compatible-record selection rule, unavailable behaviour, and fixture cases for unchanged, divergent, and ungrounded transcripts are specified.
+Promote when the exact evidence payload, compatible-record selection rule, unavailable behaviour, and fixture cases for unchanged, divergent, and ungrounded transcripts are specified. The user reviews this selected format before Ready.
 
 ## Current state
 
@@ -49,11 +51,12 @@ Promote when the exact evidence payload, compatible-record selection rule, unava
 
 ## Steps
 
-- [ ] Define a versioned, explicitly labelled repository-evidence payload containing only the resolved repository root, full `HEAD` when available, and observed clean or dirty worktree state.
-- [ ] Emit that payload in the recap's grounded output and recognise only that marker from the selected eligible transcript; never infer a baseline from timestamps, arbitrary JSON, or hash-like text.
-- [ ] Compare a compatible recovered baseline with current Git state and report `unchanged`, `changed`, or `unavailable`, including the resolvable commit range and changed tracked paths only when both revisions are valid.
-- [ ] Keep the comparison factual and advisory: qualify transcript-derived tool tallies and high-cost candidates without replacing fresh Git checks or altering transcript selection.
-- [ ] Add synthetic Claude and Codex fixtures for unchanged, changed, missing, malformed, foreign-repository, and unavailable-baseline cases.
+- [ ] Define the `ki-recap-repository-evidence/v1` payload and emit it with the helper's live repository evidence.
+- [ ] Decode only exact, type-valid helper-output markers from Claude tool-result and Codex `custom_tool_call_output` records; reject malformed and foreign-repository markers.
+- [ ] Select the newest compatible marker and compare its `head` with current Git state, reporting `unchanged`, `changed`, or `unavailable`; include a commit range and changed tracked paths only when both revisions resolve.
+- [ ] Keep comparison evidence factual and advisory: qualify transcript-derived tool tallies and high-cost candidates without replacing fresh Git checks or altering transcript selection.
+- [ ] Add synthetic Claude and Codex fixtures for unchanged, changed, missing, malformed, foreign-repository, unavailable-head, and unavailable-baseline cases.
+- [ ] Update the recap procedure and output documentation with the marker, evidence statuses, and the rule that current Git state remains authoritative.
 
 ## Files touched
 
@@ -66,7 +69,8 @@ Promote when the exact evidence payload, compatible-record selection rule, unava
 
 - `bun test skills/process/ki-recap/scripts/recap-grounding.test.ts`
 - `bun run test`
-- Manual JSON output confirms that a missing or incompatible baseline reports `unavailable` rather than a guessed comparison.
+- Fixture-backed JSON output proves each evidence status and that a missing, malformed, or incompatible baseline reports `unavailable` rather than a guessed comparison.
+- Manual JSON output confirms the selected transcript's comparison evidence is advisory and fresh Git state remains the authority.
 
 ## Dependencies / blocks
 
