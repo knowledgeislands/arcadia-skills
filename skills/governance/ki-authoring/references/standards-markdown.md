@@ -5,6 +5,7 @@ The **judgment-layer** rules for the Markdown written across Knowledge Islands r
 ## Contents
 
 - [What to leave to the linter](#what-to-leave-to-the-linter)
+- [Migration safety](#migration-safety)
 - [Tables and footnotes](#tables-and-footnotes)
 - [Links](#links)
 - [Callouts](#callouts)
@@ -19,6 +20,12 @@ Don't hand-apply or document any of these — the toolchain owns them, and resta
 - **Heading hierarchy, single H1, duplicate-heading and list rules** — markdownlint-cli2 flags these.
 
 The one place column width _is_ your job is **tables** — Prettier aligns table columns but will not reflow a row's content. Crucially, Prettier only pads columns when the result fits within `printWidth`; if the widest row would exceed 160 chars, Prettier leaves the table in compact (unpadded) format. So an over-long row blocks column alignment too — that's the first convention below.
+
+## Migration safety
+
+Treat Markdown-linter findings as evidence, not permission for a bulk rewrite when the syntax has more than one valid meaning.
+
+In particular, a setext-style heading uses an underline of `---`, but the same line can be a horizontal rule after an image or other block. Before converting a setext-heading finding to an ATX heading, classify its local structure and intended meaning; where that remains uncertain, preserve the source and obtain the author's confirmation. Do not apply a global `---` → `##` transform.
 
 ## Tables and footnotes
 
