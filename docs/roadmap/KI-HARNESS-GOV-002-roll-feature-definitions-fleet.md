@@ -51,11 +51,11 @@ Only the harness currently declares `ki-feature-definitions` and carries a Featu
 
 ## Steps
 
-1. Ask the `tools-ki` owner to accept a local pilot item that names the CLI behaviours and the review window.
-2. In the accepted pilot, declare `ki-feature-definitions`, create the flat `docs/features/` index and CLI area, and state only as-built command behaviour with verification hooks.
-3. Audit the pilot mechanically and review whether the corpus makes a concrete maintenance task easier to understand or verify.
-4. Record the pilot outcome in this item and create receiving-repository handoffs only for repositories that accept a follow-up.
-5. Decide whether a fleet rollout is warranted from the pilot evidence; do not treat pilot adoption as a fleet-wide mandate.
+- [ ] Ask the `tools-ki` owner to accept a local pilot item that names the CLI behaviours and the review window.
+- [ ] In the accepted pilot, declare `ki-feature-definitions`, create the flat `docs/features/` index and CLI area, and state only as-built command behaviour with verification hooks.
+- [ ] Audit the pilot mechanically and review whether the corpus makes a concrete maintenance task easier to understand or verify.
+- [ ] Record the pilot outcome in this item and create receiving-repository handoffs only for repositories that accept a follow-up.
+- [ ] Decide whether a fleet rollout is warranted from the pilot evidence; do not treat pilot adoption as a fleet-wide mandate.
 
 ## Files touched
 

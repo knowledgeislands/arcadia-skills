@@ -39,7 +39,8 @@ export const ITEM: RubricFamily<RoadmapRubricContext, RoadmapAuditContext> = {
     {
       code: 'ITEM-3',
       title: 'item body shape',
-      description: 'Every item has a non-empty Goal, ends with Discussion, and carries the deterministic sections required by its horizon and lifecycle state.',
+      description:
+        'Every item has a non-empty Goal, ends with Discussion, carries the deterministic sections required by its horizon and lifecycle state, and uses task-list Steps.',
       sources: [FORMAT],
       mechanical: {
         level: 'FAIL',

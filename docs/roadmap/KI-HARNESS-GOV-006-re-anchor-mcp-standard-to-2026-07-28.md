@@ -53,11 +53,11 @@ The `ki-mcp` source list is already anchored to the released 2026-07-28 specific
 
 ## Steps
 
-1. Ask the `mcp-git-audit` owner to accept a bounded v2 migration pilot with its own local work item and verification boundary.
-2. Compare the pilot's SDK-v2 migration delta, result-envelope change, `server/discover` surface, and stdio entry point against its current v1 implementation.
-3. Select and document one rollout profile: retain the older profile until every sibling migrates, or introduce explicit protocol-era applicability that keeps unmigrated servers conformant.
-4. Re-anchor the portable `ki-mcp` standard, sources, and rubric only after the pilot proves the selected profile can be checked without false fleet failures.
-5. Create one receiving migration item per affected sibling; no sibling implementation is included in this harness item.
+- [ ] Ask the `mcp-git-audit` owner to accept a bounded v2 migration pilot with its own local work item and verification boundary.
+- [ ] Compare the pilot's SDK-v2 migration delta, result-envelope change, `server/discover` surface, and stdio entry point against its current v1 implementation.
+- [ ] Select and document one rollout profile: retain the older profile until every sibling migrates, or introduce explicit protocol-era applicability that keeps unmigrated servers conformant.
+- [ ] Re-anchor the portable `ki-mcp` standard, sources, and rubric only after the pilot proves the selected profile can be checked without false fleet failures.
+- [ ] Create one receiving migration item per affected sibling; no sibling implementation is included in this harness item.
 
 ## Files touched
 

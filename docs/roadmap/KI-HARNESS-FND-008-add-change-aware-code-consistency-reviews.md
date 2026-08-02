@@ -47,11 +47,11 @@ Promote when the record location, exact judgment prompt, review outcome vocabula
 
 ## Steps
 
-1. Compare repository-native recording options, beginning with review evidence in an ordinary change commit, against a dedicated durable review record; reject any option that creates a routine activity log or a CI-maintained score.
-2. Specify the minimum review evidence: Git boundary, examined range and paths, reviewer outcome, and any follow-up identifier.
-3. Add one advisory `ki-engineering` judgment prompt that asks whether change scope warrants review and, when it does, applies the structural questions to the bounded range.
-4. Document outcome vocabulary and one representative "review now" and "not yet warranted" example without turning either into an automatic threshold.
-5. Add focused catalogue and documentation verification for the new prompt and its record convention.
+- [ ] Compare repository-native recording options, beginning with review evidence in an ordinary change commit, against a dedicated durable review record; reject any option that creates a routine activity log or a CI-maintained score.
+- [ ] Specify the minimum review evidence: Git boundary, examined range and paths, reviewer outcome, and any follow-up identifier.
+- [ ] Add one advisory `ki-engineering` judgment prompt that asks whether change scope warrants review and, when it does, applies the structural questions to the bounded range.
+- [ ] Document outcome vocabulary and one representative "review now" and "not yet warranted" example without turning either into an automatic threshold.
+- [ ] Add focused catalogue and documentation verification for the new prompt and its record convention.
 
 ## Files touched
 

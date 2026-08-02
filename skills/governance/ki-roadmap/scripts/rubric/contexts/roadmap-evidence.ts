@@ -172,6 +172,21 @@ const sectionContent = (body: string, heading: string): string | undefined => {
     .trim()
 }
 
+const validateSteps = (item: WorkItem): void => {
+  const content = sectionContent(item.body, 'Steps')
+  if (content === undefined) return
+  const steps = content.split(/\r?\n/).filter((line) => line.trim())
+  if (!steps.length || steps.some((step) => !/^- \[(?: |x)\] \S/.test(step))) {
+    add('FAIL', 'ITEM-3', '## Steps must contain only task-list entries using - [ ] or - [x]', FORMAT, item.file)
+    return
+  }
+  const hasUnchecked = steps.some((step) => step.startsWith('- [ ]'))
+  if (['acceptance', 'done'].includes(item.status) && hasUnchecked)
+    add('FAIL', 'ITEM-3', 'acceptance and done items must mark every Step as - [x]', FORMAT, item.file)
+  if (['open', 'ready'].includes(item.status) && !hasUnchecked)
+    add('FAIL', 'ITEM-3', 'open and ready items must retain at least one - [ ] Step', FORMAT, item.file)
+}
+
 const validateBody = (item: WorkItem): void => {
   const present = headings(item.body)
   const required = requiredSections(item)
@@ -179,6 +194,7 @@ const validateBody = (item: WorkItem): void => {
   if (JSON.stringify(sequence) !== JSON.stringify(required)) add('FAIL', 'ITEM-3', `body must contain ${required.join(' → ')} in order`, FORMAT, item.file)
   if (!sectionContent(item.body, 'Goal')) add('FAIL', 'ITEM-3', '## Goal must be non-empty', FORMAT, item.file)
   if (present.at(-1) !== 'Discussion') add('FAIL', 'ITEM-3', '## Discussion must be the final top-level section', FORMAT, item.file)
+  if (required.includes('Steps')) validateSteps(item)
 }
 
 const parseItem = (repository: string, name: string, configuration?: RoadmapConfiguration): WorkItem | undefined => {

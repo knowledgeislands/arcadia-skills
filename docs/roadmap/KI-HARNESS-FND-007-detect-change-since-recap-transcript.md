@@ -49,11 +49,11 @@ Promote when the exact evidence payload, compatible-record selection rule, unava
 
 ## Steps
 
-1. Define a versioned, explicitly labelled repository-evidence payload containing only the resolved repository root, full `HEAD` when available, and observed clean or dirty worktree state.
-2. Emit that payload in the recap's grounded output and recognise only that marker from the selected eligible transcript; never infer a baseline from timestamps, arbitrary JSON, or hash-like text.
-3. Compare a compatible recovered baseline with current Git state and report `unchanged`, `changed`, or `unavailable`, including the resolvable commit range and changed tracked paths only when both revisions are valid.
-4. Keep the comparison factual and advisory: qualify transcript-derived tool tallies and high-cost candidates without replacing fresh Git checks or altering transcript selection.
-5. Add synthetic Claude and Codex fixtures for unchanged, changed, missing, malformed, foreign-repository, and unavailable-baseline cases.
+- [ ] Define a versioned, explicitly labelled repository-evidence payload containing only the resolved repository root, full `HEAD` when available, and observed clean or dirty worktree state.
+- [ ] Emit that payload in the recap's grounded output and recognise only that marker from the selected eligible transcript; never infer a baseline from timestamps, arbitrary JSON, or hash-like text.
+- [ ] Compare a compatible recovered baseline with current Git state and report `unchanged`, `changed`, or `unavailable`, including the resolvable commit range and changed tracked paths only when both revisions are valid.
+- [ ] Keep the comparison factual and advisory: qualify transcript-derived tool tallies and high-cost candidates without replacing fresh Git checks or altering transcript selection.
+- [ ] Add synthetic Claude and Codex fixtures for unchanged, changed, missing, malformed, foreign-repository, and unavailable-baseline cases.
 
 ## Files touched
 

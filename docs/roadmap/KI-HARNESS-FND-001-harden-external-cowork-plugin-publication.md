@@ -53,11 +53,11 @@ The named `ki-plugins` checkout contains both generated paths and remains the on
 
 ## Steps
 
-1. Refactor projection discovery into one deterministic manifest that names the marketplace metadata, plugin metadata, generated paths, and sorted Claude-compatible skills and agents.
-2. Add a dry-run mode that emits that manifest and intended replacement paths without creating a staging directory or mutating the target.
-3. Stage both generated paths as direct children of the verified output root, verify the staged projection, and capture existing generated paths as bounded same-filesystem backups before any replacement.
-4. Publish the two staged paths with a reversible swap, verify the resulting projection, and restore every captured path if either replacement or verification fails.
-5. Remove only verified backups after successful publication; preserve repository-owned scaffold throughout.
+- [ ] Refactor projection discovery into one deterministic manifest that names the marketplace metadata, plugin metadata, generated paths, and sorted Claude-compatible skills and agents.
+- [ ] Add a dry-run mode that emits that manifest and intended replacement paths without creating a staging directory or mutating the target.
+- [ ] Stage both generated paths as direct children of the verified output root, verify the staged projection, and capture existing generated paths as bounded same-filesystem backups before any replacement.
+- [ ] Publish the two staged paths with a reversible swap, verify the resulting projection, and restore every captured path if either replacement or verification fails.
+- [ ] Remove only verified backups after successful publication; preserve repository-owned scaffold throughout.
 
 ## Files touched
 

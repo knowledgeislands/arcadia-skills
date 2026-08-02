@@ -35,11 +35,11 @@ The harness and existing repository declarations repeated `codex` in `supported_
 
 ## Steps
 
-1. [x] Inventory uses of `codex` and classify each as a runtime identifier, a detected-agent identifier, a product reference, or a path/schema key.
-2. [x] Update the canonical runtime contract to `chatgpt-codex`, including `tools-ki` validation, repository initialisation, managed-link selection, harness frontmatter, and repository configuration examples.
-3. [x] Migrate existing KI-managed user and repository declarations through a safe, explicit path; reject legacy `codex` declarations with targeted recovery guidance once migration is complete.
-4. [x] Update affected tests, fixtures, diagnostics, and runtime-specific documentation without renaming unrelated Codex product concepts.
-5. [x] Hand off the CLI-owned migration to `tools-ki`, then coordinate its adopted implementation record and verify the two repositories publish one consistent contract.
+- [x] Inventory uses of `codex` and classify each as a runtime identifier, a detected-agent identifier, a product reference, or a path/schema key.
+- [x] Update the canonical runtime contract to `chatgpt-codex`, including `tools-ki` validation, repository initialisation, managed-link selection, harness frontmatter, and repository configuration examples.
+- [x] Migrate existing KI-managed user and repository declarations through a safe, explicit path; reject legacy `codex` declarations with targeted recovery guidance once migration is complete.
+- [x] Update affected tests, fixtures, diagnostics, and runtime-specific documentation without renaming unrelated Codex product concepts.
+- [x] Hand off the CLI-owned migration to `tools-ki`, then coordinate its adopted implementation record and verify the two repositories publish one consistent contract.
 
 ## Files touched
 

@@ -53,11 +53,11 @@ No repository-local declaration currently maps every non-lifecycle `ki:*` key to
 
 ## Steps
 
-1. Define a declarative `ki-engineering` configuration table that maps each non-lifecycle `ki:*` script key to one declared owning skill.
-2. Add a mechanical `ki-engineering` criterion that validates key grammar, registry membership, and the selected owner without taking artifact-command semantics from the owner skill.
-3. Give the harness evaluation command the final `ki:harness:*` name and record `ki-binding-claude` as the builder's owner; remove the ambiguous legacy key without an alias.
-4. Add each accepted core repository's registry entries, using its existing selected capability as the owner and routing any unowned key to a local decision rather than grandfathering it.
-5. Update CI and documented invocations in the same cut, then add focused catalogue fixtures for valid ownership, absent owners, invalid owners, and legacy-key removal.
+- [ ] Define a declarative `ki-engineering` configuration table that maps each non-lifecycle `ki:*` script key to one declared owning skill.
+- [ ] Add a mechanical `ki-engineering` criterion that validates key grammar, registry membership, and the selected owner without taking artifact-command semantics from the owner skill.
+- [ ] Give the harness evaluation command the final `ki:harness:*` name and record `ki-binding-claude` as the builder's owner; remove the ambiguous legacy key without an alias.
+- [ ] Add each accepted core repository's registry entries, using its existing selected capability as the owner and routing any unowned key to a local decision rather than grandfathering it.
+- [ ] Update CI and documented invocations in the same cut, then add focused catalogue fixtures for valid ownership, absent owners, invalid owners, and legacy-key removal.
 
 ## Files touched
 

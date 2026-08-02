@@ -120,7 +120,7 @@ The honest baseline, including gaps.
 
 ## Steps
 
-1. Concrete, inspectable action.
+- [ ] Concrete, inspectable action.
 
 ## Files touched
 
@@ -143,9 +143,11 @@ An immediate item may remain `status: open` while `ki-plan` shapes these section
 
 It becomes `status: ready` only after the sections are concrete, dependencies are satisfied, verification is checkable, and the user approves the plan.
 
+Every Step is a Markdown task-list item. New and Ready plans use `- [ ]`; implementation marks completed work as `- [x]`. In-progress items may contain both states, while Acceptance and Done items require every Step to be `- [x]`.
+
 ### In progress
 
-The implementation process records the immutable full `HEAD` commit in `baseline-ref`, sets `status: in-progress`, and checks completed steps without deleting them.
+The implementation process records the immutable full `HEAD` commit in `baseline-ref`, sets `status: in-progress`, and marks completed Steps `- [x]` without deleting them.
 
 Record material departures, decisions, and newly discovered constraints under the relevant topic in the final `Discussion`; do not record routine activity.
 
@@ -163,4 +165,4 @@ Retain the accepted record until an explicitly selected prune path or glob.
 
 At every stage, `Discussion` remains the final top-level section.
 
-Completed steps remain checked rather than being removed.
+Completed Steps remain `- [x]` rather than being removed.

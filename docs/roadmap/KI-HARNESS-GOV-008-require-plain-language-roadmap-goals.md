@@ -27,10 +27,10 @@ The work-item format and its mechanical checker require Context as the first sec
 
 ## Steps
 
-1. [x] Define Goal as the first required body section and distinguish it from Context.
-2. [x] Require a non-empty Goal mechanically and add a plain-language review prompt.
-3. [x] Backfill every current harness work item with a concise Goal.
-4. [x] Regenerate the rubric and verify the standard, checker, fixtures, and migrated items.
+- [x] Define Goal as the first required body section and distinguish it from Context.
+- [x] Require a non-empty Goal mechanically and add a plain-language review prompt.
+- [x] Backfill every current harness work item with a concise Goal.
+- [x] Regenerate the rubric and verify the standard, checker, fixtures, and migrated items.
 
 ## Files touched
 

@@ -54,7 +54,7 @@ The first slice is not implemented.
 
 ## Steps
 
-1. [ ] Implement the first slice.
+- [ ] Implement the first slice.
 
 ## Files touched
 
@@ -142,7 +142,7 @@ test('Soon work carries shaping detail', () => {
     readFileSync(item, 'utf8')
       .replace('horizon: next', 'horizon: soon')
       .replace(
-        '\n## Current state\n\nThe first slice is not implemented.\n\n## Steps\n\n1. [ ] Implement the first slice.\n\n## Files touched\n\n- `src/foundation.ts`\n\n## Verify\n\n- `bun test`\n\n## Dependencies / blocks\n\nNo dependencies.\n',
+        '\n## Current state\n\nThe first slice is not implemented.\n\n## Steps\n\n- [ ] Implement the first slice.\n\n## Files touched\n\n- `src/foundation.ts`\n\n## Verify\n\n- `bun test`\n\n## Dependencies / blocks\n\nNo dependencies.\n',
         ''
       )
   )
@@ -159,6 +159,34 @@ test('a Goal is mandatory and non-empty', () => {
   const item = join(repository, 'docs', 'roadmap', 'TEST-FND-001-build-the-foundation.md')
   writeFileSync(item, readFileSync(item, 'utf8').replace('Give users a working foundation.', ''))
   expect(inspectRoadmap(repository)).toContainEqual(expect.objectContaining({ area: 'ITEM-3', msg: '## Goal must be non-empty' }))
+})
+
+test('execution Steps use lifecycle-appropriate task lists', () => {
+  const repository = createFixture()
+  const item = join(repository, 'docs', 'roadmap', 'TEST-FND-001-build-the-foundation.md')
+  writeFileSync(item, readFileSync(item, 'utf8').replace('- [ ] Implement the first slice.', '1. [ ] Implement the first slice.'))
+  expect(inspectRoadmap(repository)).toContainEqual(
+    expect.objectContaining({ area: 'ITEM-3', msg: '## Steps must contain only task-list entries using - [ ] or - [x]' })
+  )
+})
+
+test('acceptance Steps are all checked', () => {
+  const repository = createFixture()
+  const item = join(repository, 'docs', 'roadmap', 'TEST-FND-001-build-the-foundation.md')
+  writeFileSync(
+    item,
+    readFileSync(item, 'utf8')
+      .replace('status: open', 'status: acceptance')
+      .replace('baseline-ref: null', 'baseline-ref: 0123456789abcdef0123456789abcdef01234567')
+      .replace('- [ ] Implement the first slice.', '- [x] Implement the first slice.')
+      .replace(
+        '## Discussion',
+        '## Acceptance\n\n### Delivered\n\nThe first slice is delivered.\n\n### Summary of changes\n\nOne change.\n\n### Verification\n\n`bun test` passes.\n\n### Outstanding concerns\n\nNone.\n\n### Mini recap\n\nNo learning route proposed.\n\n## Discussion'
+      )
+  )
+  expect(inspectRoadmap(repository).filter((finding) => finding.area === 'ITEM-3')).toEqual([])
+  writeFileSync(item, readFileSync(item, 'utf8').replace('- [x] Implement the first slice.', '- [ ] Implement the first slice.'))
+  expect(inspectRoadmap(repository)).toContainEqual(expect.objectContaining({ area: 'ITEM-3', msg: 'acceptance and done items must mark every Step as - [x]' }))
 })
 
 test('conform repairs only a stale root orientation', () => {
