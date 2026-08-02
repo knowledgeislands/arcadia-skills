@@ -73,7 +73,7 @@ The direct CLI boundary, lifecycle idioms, and clean cutover discipline.
 
 - **SCR-1 [M] — KI script naming law** — Every script is a permitted bare lifecycle idiom or carries the `ki:` prefix; a bare non-idiom name is drift. (standards-engineering.md)
 - **SCR-2 [M] — Repository maintenance stays CLI-owned** — Package scripts do not invoke `ki repo audit`, `ki repo conform`, or `ki repo educate`, whether for the whole repository or a focused skill; repositories invoke the installed CLI directly. (standards-engineering.md)
-- **SCR-3 [M] — Retired script families absent** — Retired `ki:lint:*`, `ki:deps:*`, `ki:knip`, `ki:verify`, and aggregate governance aliases are absent. (standards-engineering.md)
+- **SCR-3 [M] — Retired script families absent** — Every `ki:` script belongs to a declared owning capability and `ki:deps:update` is present; retired tool families and aggregate governance aliases are absent. (standards-engineering.md)
 - **SCR-4 [M] — Per-skill wrapper aliases absent** — Package scripts contain no derived `ki:<skill>:<mode>` aliases and no command that invokes `.ki`, `govern.ts`, `educate.ts`, an adapter, or a vendored runtime. (standards-engineering.md)
 - **SCR-5 [M] — Lifecycle clean and prepare scripts** — `clean` removes `node_modules` (and `dist` where built), and `prepare` is `husky`. (standards-engineering.md)
 - **SCR-6 [M] — No test-entrypoint bypass** — Only the bare `test` script may use `bun test`; every other script uses `bun run test` to invoke the governed entrypoint. (standards-engineering.md)

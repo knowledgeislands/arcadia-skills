@@ -105,7 +105,7 @@ test('SCR-2 proposes removal for any whole-repository or focused native governan
   family.items.find((candidate) => candidate.code === 'SCR-2')?.mechanical?.conform?.run(family.selectContext(root))
 
   const scripts = JSON.parse(session.proposal().writes[0]?.content ?? '{}').scripts
-  expect(scripts).toEqual({ 'ki:eval': 'bun evals/harness.ts', clean: 'rm -rf dist node_modules', prepare: 'husky' })
+  expect(scripts).toEqual({ 'ki:deps:update': 'bun update --latest', 'ki:eval': 'bun evals/harness.ts', clean: 'rm -rf dist node_modules', prepare: 'husky' })
 })
 
 test('formatter commands are bounded arrays and coalesced', () => {

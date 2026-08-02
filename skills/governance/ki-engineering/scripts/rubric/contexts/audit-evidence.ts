@@ -10,10 +10,10 @@
  * packageManager, CI via mise-action + `ki repo audit`), the `bun test` trap,
  * tsconfig.json + tool exclusions, and the capability conditionals
  * (tests, compiled build + the cli-chmod rule, env) that fire only when the repo opts in.
- * It is deliberately PERMISSIVE about additive repo-specific scripts, and it does
- * NOT judge anything artifact-specific (an MCP's coverage-excludes, bin, tool
- * surface) — that is the artifact skill's checker (e.g. audit.ts), run after
- * this one. See references/rubric.md for the judgment half.
+ * It admits a `ki:` script only when one declared capability owns its script
+ * family, and it does NOT judge that family's artifact-specific command shape
+ * (an MCP's coverage-excludes, bin, tool surface) — that is the owning skill's
+ * checker, run after this one. See references/rubric.md for the judgment half.
  *
  * Each finding carries a minted rubric code (PKG-*, MISE-*, SCR-*, …), a
  * reference-doc pointer (`ref`), and — when file-scoped — the path it concerns
@@ -42,6 +42,21 @@ type Finding = { level: Level; area: string; msg: string; ref?: string; file?: s
 // Reference-doc pointers — the substantive standard (cited by every minted code) and
 // the rubric that maps code↔criterion (cited by the judgment/scope handoff).
 const STD = 'references/standards-engineering.md'
+
+const scriptOwner = (key: string): string | undefined => {
+  if (key === 'ki:deps:update') return 'ki-engineering'
+  if (key === 'ki:eval') return 'ki-harness'
+  if (key.startsWith('ki:binding:')) return 'ki-binding-claude'
+  if (key.startsWith('ki:site:')) return 'ki-website'
+  if (key.startsWith('ki:ingress:')) return 'ki-website-cloudflare'
+  if (key === 'ki:generate:client' || key.startsWith('ki:server:') || key.startsWith('ki:test:')) return 'ki-mcp'
+  if (key.startsWith('ki:tools:')) return 'ki-tools'
+  if (key.startsWith('ki:self:')) return 'ki-self'
+  return undefined
+}
+
+const declaredSkillNames = (configuration: string): ReadonlySet<string> =>
+  new Set([...configuration.matchAll(/^\["[^"\n]+:(ki-[a-z-]+)"\]/gm)].map((match) => match[1] as string))
 
 /** Inspect the repository once and return the complete engineering evidence set. */
 export const collectAuditEvidence = (repo: string): readonly EngineeringEvidenceFinding[] => {
@@ -307,15 +322,24 @@ export const collectAuditEvidence = (repo: string): readonly EngineeringEvidence
     : add('PASS', 'SCR-2', 'repository maintenance has no package scripts that invoke native governance', STD, 'package.json')
   const retired = Object.keys(scripts).filter(
     (key) =>
-      /^ki:(lint|deps):/.test(key) ||
+      /^ki:lint:/.test(key) ||
+      (/^ki:deps:/.test(key) && key !== 'ki:deps:update') ||
       key === 'ki:knip' ||
       key === 'ki:verify' ||
       /^ki:[a-z-]+:lint$/.test(key) ||
       ['ki:audit', 'ki:conform', 'ki:educate', 'ki:help'].includes(key)
   )
-  retired.length
-    ? add('FAIL', 'SCR-3', `retired script key(s): ${retired.join(', ')} — repository governance runs through the installed ki CLI`, STD, 'package.json')
-    : add('PASS', 'SCR-3', 'no retired aggregate or tool-level governance aliases', STD, 'package.json')
+  const declared = declaredSkillNames(read('.ki-config.toml'))
+  const unsupported = Object.keys(scripts).filter((key) => key.startsWith('ki:') && (!scriptOwner(key) || !declared.has(scriptOwner(key) as string)))
+  const missingDependencyUpdate = !Object.hasOwn(scripts, 'ki:deps:update')
+  const scriptProblems = [
+    ...(retired.length ? [`retired script key(s): ${retired.join(', ')}`] : []),
+    ...(unsupported.length ? [`unsupported or undeclared-owner script key(s): ${unsupported.join(', ')}`] : []),
+    ...(missingDependencyUpdate ? ['missing required ki:deps:update'] : [])
+  ]
+  scriptProblems.length
+    ? add('FAIL', 'SCR-3', `${scriptProblems.join('; ')} — every ki: script must be owned by a declared capability`, STD, 'package.json')
+    : add('PASS', 'SCR-3', 'every ki: script has a declared owner and ki:deps:update is present', STD, 'package.json')
 
   // ── core: per-skill wrapper aliases are retired ──────────────────────────────
   const skillModeAliases = Object.keys(scripts).filter((key) => /^ki:[a-z-]+:(audit|conform|educate|help)$/.test(key))

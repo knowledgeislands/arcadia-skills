@@ -213,7 +213,8 @@ const legacyAggregateScript = (key: string): boolean => key === 'ki:audit' || ke
 
 const nativeGovernanceScript = (value: string): boolean => /\bki\s+repo\s+(?:audit|conform|educate)\b/.test(value)
 
-const legacyToolScript = (key: string): boolean => /^ki:(lint|deps):/.test(key) || key === 'ki:knip' || key === 'ki:verify' || /^ki:[a-z-]+:lint$/.test(key)
+const legacyToolScript = (key: string): boolean =>
+  /^ki:lint:/.test(key) || (/^ki:deps:/.test(key) && key !== 'ki:deps:update') || key === 'ki:knip' || key === 'ki:verify' || /^ki:[a-z-]+:lint$/.test(key)
 
 const legacySkillModeScript = (key: string): boolean => /^ki:[a-z-]+:(audit|conform|educate|help)$/.test(key)
 
@@ -252,9 +253,10 @@ const packageContent = (source: string): string | undefined => {
     )
       delete scripts[key]
   }
+  scripts['ki:deps:update'] = 'bun update --latest'
   scripts.clean = scripts.clean?.includes('node_modules') ? scripts.clean : 'rm -rf dist node_modules'
   scripts.prepare = 'husky'
-  packageJson.scripts = scripts
+  packageJson.scripts = Object.fromEntries(Object.entries(scripts).sort(([first], [second]) => first.localeCompare(second)))
   return `${JSON.stringify(packageJson, null, 2)}\n`
 }
 

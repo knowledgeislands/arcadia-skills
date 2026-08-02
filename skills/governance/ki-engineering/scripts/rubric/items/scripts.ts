@@ -61,7 +61,7 @@ export const SCRIPTS: RubricFamily<EngineeringRubricContext, ScriptsRubricContex
     mechanical(
       'SCR-3',
       'Retired script families absent',
-      'Retired `ki:lint:*`, `ki:deps:*`, `ki:knip`, `ki:verify`, and aggregate governance aliases are absent.',
+      'Every `ki:` script belongs to a declared owning capability and `ki:deps:update` is present; retired tool families and aggregate governance aliases are absent.',
       'FAIL',
       (context) => context.scr3,
       { conform: true }

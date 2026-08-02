@@ -19,7 +19,7 @@
     "typescript": "^7.0.2"
   },
   "engines": {
-    "node": ">=22.0.0"
+    "node": ">=22"
   },
   "homepage": "https://github.com/knowledgeislands/ki-agentic-harness#readme",
   "keywords": [
@@ -33,7 +33,9 @@
   ],
   "license": "MIT",
   "lint-staged": {
-    "*.{ts,js,mjs,json,jsonc}": "bunx @biomejs/biome check --write --no-errors-on-unmatched",
+    "*.{ts,tsx,js,jsx,json,jsonc}": [
+      "bunx @biomejs/biome check --write --no-errors-on-unmatched"
+    ],
     "*.md": [
       "bunx prettier --write",
       "bunx markdownlint-cli2 --no-globs"
@@ -47,6 +49,7 @@
   "scripts": {
     "clean": "rm -rf node_modules",
     "ki:binding:build-plugin": "bun skills/environment/ki-binding-claude/scripts/build-plugin.ts",
+    "ki:deps:update": "bun update --latest",
     "ki:eval": "bun evals/harness.ts",
     "prepare": "husky",
     "test": "bun test --isolate --max-concurrency=1 ./skills ./hooks"

@@ -95,7 +95,7 @@ A repository-footprint replacement prefers the correct clean end state over tran
 
 ### The `ki:` naming law (core)
 
-Every entry in `scripts` is **either** one of the six universal lifecycle idioms — `build`, `prepare`, `test`, `test:coverage`, `test:watch`, `clean` — **or** it carries the `ki:` prefix. There is no third option: a bare (non-`ki:`, non-idiom) script name is **drift** (a `FAIL`). The prefix is what makes a script's provenance mechanically decidable — "is this script ours?" is answered by its name, not by grepping a checker — and is the lever that keeps the script surface fully governed. The exempt six are left bare because they are universally recognized package-lifecycle verbs that every Node toolchain, CI runner, and contributor already knows.
+Every entry in `scripts` is **either** one of the six universal lifecycle idioms — `build`, `prepare`, `test`, `test:coverage`, `test:watch`, `clean` — **or** it carries the `ki:` prefix. There is no third option: a bare (non-`ki:`, non-idiom) script name is **drift** (a `FAIL`). A `ki:` key is supported only when an explicitly declared capability owns its family; that capability's rubric mandates its required shape. `ki-engineering` mandates `"ki:deps:update": "bun update --latest"`; `ki-harness`, `ki-binding-claude`, `ki-mcp`, `ki-website`, `ki-website-cloudflare`, and `ki-tools` own their respective established families. A repository-local `ki-self` may own a `ki:self:*` family once it is declared and resolved. Any other `ki:` key is drift. The exempt six are left bare because they are universally recognized package-lifecycle verbs that every Node toolchain, CI runner, and contributor already knows.
 
 ### Native governance commands
 
@@ -109,7 +109,7 @@ ki repo conform
 - **`ki repo audit`** is the read-only gate; **`ki repo conform`** is the write pass. Both resolve the selected repo's declared skills to registered native operations from the verified active installed collection. Missing, incompatible, undeclared, or untrusted skills fail before an operation runs or writes.
 - Native rubric registration and focused reporting replace derived package scripts. No `.ki/bin`, generated manifest, standalone `govern.ts`, or child-process fallback participates in the execution path.
 - `clean` and `prepare` remain bare lifecycle idioms. A repo with tests exposes the complete suite through bare `test`; a compiled repo exposes bare `build`.
-- A repo MAY add governed, repo-specific scripts (`ki:eval`, `ki:skills:*`, `ki:server:auth:*`, `ki:site:dev:css`, …). The owning skill specifies their shape.
+- A repo MAY add only a script family explicitly owned by one of its declared capabilities (`ki:eval`, `ki:binding:*`, `ki:server:*`, `ki:site:*`, …). The owning skill specifies and audits its shape; `ki-self` is the local escape hatch for a repository-specific `ki:self:*` family.
 
 ### Code tools run inside the registered `ki-engineering` rubric
 
@@ -120,7 +120,7 @@ The code toolchain is implementation detail inside the registered native `ki-eng
 - For a flat repo, engineering invokes `tsc --noEmit` at the root. For a monorepo, it derives one `tsc --noEmit -p <workspace>/tsconfig.json` invocation for every declared workspace.
 - A root `knip.json` (§5) supplies entry points and intentional ignores; knip covers both dependency and dead-code hygiene.
 
-The former per-tool families and unified verify key are explicitly **retired** by ADR-KI-HARNESS-TOOLCHAIN-001. Any `ki:lint:*`, `ki:deps:*`, `ki:knip`, `ki:verify`, `ki:audit`, `ki:conform`, or derived scoped key is drift: those operations belong in native rubrics resolved by `ki repo audit`/`conform`.
+The former per-tool families and unified verify key are explicitly **retired** by ADR-KI-HARNESS-TOOLCHAIN-001. `ki:deps:update` is the one exception: it performs the explicit dependency-maintenance action `bun update --latest`. Any other `ki:lint:*`, `ki:deps:*`, `ki:knip`, `ki:verify`, `ki:audit`, `ki:conform`, or derived scoped key is drift: those operations belong in native rubrics resolved by `ki repo audit`/`conform`.
 
 **Monorepo type-checking (shape-driven).** A monorepo (§0) — e.g. a website with `site/` (Bun-typed Eleventy) plus `ingress/` (a Cloudflare Worker on `@cloudflare/workers-types`) — has per-workspace `tsconfig.json`s whose `types`/`lib` are mutually incompatible, so one root `tsc --noEmit` cannot type-check them all. Such a repo declares its packages in the standard Bun `workspaces` array in `package.json`:
 
