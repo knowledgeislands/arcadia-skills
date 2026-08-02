@@ -3,7 +3,7 @@ id: KI-HARNESS-RTP-005
 title: Align the Codex runtime identifier with ChatGPT Codex
 theme: runtime-portability
 horizon: blocking
-status: acceptance
+status: done
 blocks: []
 blocked-by: []
 baseline-ref: 20b134022b361b09d9a75a4f166dd6e5ad3eb198
@@ -98,6 +98,10 @@ Release or upgrade that installed CLI before expecting ordinary system `ki` invo
 The migration reaches the source contract, CLI, tests, and every available Knowledge Islands repository declaration without a legacy alias.
 
 It stops at acceptance pending the normal review decision and a separately authorised CLI release path.
+
+## Done
+
+Accepted by the repository owner on 2026-08-02. The previously recorded installed-CLI concern was rechecked before closure: `/Users/krisbrown/.local/bin/ki` is version 0.2.15 in both this repository and `tools-ki`, and successfully audits the `chatgpt-codex` runtime declaration. Retain this record until its explicitly authorised prune.
 
 ## Discussion
 
