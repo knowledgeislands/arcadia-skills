@@ -3,7 +3,7 @@ id: KI-HARNESS-GOV-008
 title: Require plain-language roadmap goals
 theme: governance-consistency
 horizon: next
-status: acceptance
+status: done
 blocks: []
 blocked-by: []
 baseline-ref: df6d6bf413641ba2be4e438175edd41e709cdd44
@@ -75,6 +75,10 @@ Sibling repositories with canonical roadmap items need their own adoption migrat
 ### Mini recap
 
 The new Goal requirement turns the intended outcome into an immediately visible part of every roadmap record while retaining Context for the technical reasoning needed to shape and deliver it.
+
+## Done
+
+Accepted by the repository owner on 2026-08-02. Retain this record as the evidence of the portable Goal requirement and the harness migration.
 
 ## Discussion
 
