@@ -60,6 +60,23 @@ Do not change content until the user confirms exact wording and placement.
 
 Use the native Focus and proposal procedure in `ki-kb-streams`.
 
+### Roadmap batchability screen
+
+Before selecting one viable item, compare the whole dependency-ready candidate set for a **safe delivery synergy**. Do not promote a later-horizon item merely to create a batch: every candidate must first satisfy its normal route into immediate work. A group is a batch candidate only when all of the following are true:
+
+- every item remains a distinct canonical work item with its own lifecycle, verification, and acceptance evidence;
+- the items share a concrete delivery advantage, such as one bounded source surface, setup or verification pass, external coordination window, or coherent user outcome;
+- their planned changes can be sequenced without conflicting writes, concealed dependencies, or one item's result changing another item's honest scope; and
+- each item is independently executable at its position, with satisfied dependencies and no unapproved decision required.
+
+Do not treat a shared theme, adjacent numbering, the same repository, or a desire for throughput as synergy. Related work that changes the same uncertain contract, needs a new decision, or would make a failure hard to isolate stays separate.
+
+For each safe candidate group, present the named items in proposed order, the concrete advantage, the evidence that keeps them independent, the shared verification where relevant, and the mandatory stops that `ki-batch` will enforce. Also state why any superficially related candidate was excluded.
+
+Require confirmation of the exact candidate set and order before planning each member through `ki-plan`. Once every selected item is Ready, offer the set to `ki-batch prepare`. This is a preparation handoff, not implementation authority: `ki-batch` re-validates scope, readiness, verification, and stops, then requires its own reviewed authorisation before any `ki-implement` cycle begins.
+
+If no group meets every condition, say so briefly and use the ordinary single-item selection path.
+
 ## 5. Defer
 
 `defer <item> <horizon-or-focus>` is an explicit user-confirmed move.
@@ -96,7 +113,7 @@ Two ready candidates can both be worthwhile: a narrow local repair may have low 
 
 Present those facts directly, choose only after the human confirms the order, and record neither candidate as objectively "higher value" once the unavailable dependency or chosen sequencing changes the decision.
 
-Before a write, show selected items, exact frontmatter or wording changes, order, and dependency effects.
+Before a write, show selected items, any proposed batch set and order, exact frontmatter or wording changes, and dependency effects.
 
 Require explicit confirmation, then run CONFORM and AUDIT.
 
@@ -104,13 +121,13 @@ Invoke `ki-plan` only after a non-KB item is Blocking or Next.
 
 It shapes the same item through the stage-detail contract and stops for review before marking it Ready.
 
-`ki-batch` may repeat this selection-and-shaping procedure only within an approved preparation boundary.
+`ki-batch` may coordinate a confirmed synergistic group only when every member is Ready and only within an approved preparation boundary.
 
-That orchestration does not permit `ki-next` to infer selection authority.
+That handoff does not permit `ki-next` to infer batch, selection, or implementation authority.
 
 ## 7. Finish
 
-Report each confirmed handoff disposition, files changed, selected work, and audit result.
+Report each confirmed handoff disposition, synergy decision (including excluded near-matches), files changed, selected work, and audit result.
 
 Identify `done` records that are eligible for pruning when useful, but do not delete them; path- or glob-selected pruning belongs to `ki-accept`.
 

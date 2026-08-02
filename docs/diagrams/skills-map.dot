@@ -150,7 +150,7 @@ digraph skills_map {
   roadmap -> next [xlabel="triages"]
   next -> plan [xlabel="prepares"]
   recap -> next [xlabel="surfaces", style=dashed]
-  next -> batch [style=dashed]
+  next -> batch [xlabel="proposes", style=dashed]
   batch -> plan [style=dashed]
   plan -> implement [style=dashed]
   batch -> implement [xlabel="repeats", style=dashed]
