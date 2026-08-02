@@ -59,6 +59,28 @@ The agreed initial model is local registered-repository visibility. A sender wri
 
 `tools-ki` item `KI-TOOL-CLI-012` is immediate follow-on work but cannot implement the public command surface until this item publishes the decision record and `ki-handoffs` contract. The present roadmap schema validates dependency fields locally only, so the cross-repository dependency is recorded here and in that receiving item rather than in `blocks` or `blocked-by`.
 
+## Delegation
+
+### Locked decisions
+
+- Define a local registered-repository submission capability only. A route grants visibility, never authority to modify another repository's roadmap, configuration, or acceptance state.
+- Use canonical `owner/repo` peer identities, two-level inbound and outbound storage, and globally unique `HND-...` identifiers.
+- Preserve `+` and `-` as `ki-repo` generic working areas; move only `_HANDOFFS` scaffold and lifecycle ownership to `ki-handoffs`.
+- Keep the direct-super-trust Feature Definitions pilot as a documented bootstrap bridge. Do not add host commands, remote interchange, or a revival of the retired delegation-readiness doctrine.
+
+### Escalate
+
+- Stop for owner direction if the decision record or skill would make a receiving repository's adoption, priority, or acceptance automatic.
+- Stop for owner direction before any `tools-ki` write, transport implementation, or change outside the decision, new skill, `ki-repo` ownership boundary, local fixtures, and this work item.
+
+### Round 1 — surface and contract discovery
+
+- **Class / worker / model:** Research / fresh general-purpose worker / `gpt-5.6-terra` at medium reasoning, sufficient for a bounded read-only repository and peer-record inventory.
+- **Scope:** Read-only inspection of the harness's current working-area and roadmap contracts, adjacent governance-skill patterns, and the existing `tools-ki` `KI-TOOL-CLI-012` record.
+- **Definition of done:** Return a concise, cited inventory of exact files, existing data shapes, receiving-item constraints, and contradictions or missing decisions that affect the locked contract. Do not create, edit, or commit files.
+- **Verification gate:** The orchestrator re-reads every source that shapes the next decision or file boundary before authoring; unsupported inferences are escalated.
+- **Checkpoint:** Report the findings only. The next implementation round starts only after orchestrator review turns them into a bounded decision-and-skill brief.
+
 ## Discussion
 
 ### Authority model
