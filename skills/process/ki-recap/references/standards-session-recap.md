@@ -113,8 +113,6 @@ Do not compact in the middle of an active implementation unit, a pending user de
 
 If compaction is unavailable in the current runtime, state that plainly and continue with the digest as the bounded handoff; it is not a substitute for reducing the live context.
 
-`--compress` requests the same digest even when the runtime does not currently signal pressure.
-
 Write a carry-forward digest of the recapped span:
 
 ```markdown
