@@ -25,44 +25,46 @@ Do not begin fleet rollout before that pilot exists.
 
 ### Intended approach
 
-Use `tools-ki` as the explicitly accepted Feature Definitions pilot. Its owner will receive one local `KI-TOOL-CLI-011` work item for repository-operation behaviour, transferred from this item. The receiving record owns its own priority, execution, and verification; it is not an instruction to declare a feature corpus before the pilot is shaped.
+Use `tools-ki` as the explicitly accepted Feature Definitions pilot. Its owner received and completed local item `KI-TOOL-CLI-011` for repository-audit behaviour. The receiving record owned its own priority, execution, and verification; this item records the resulting evidence without treating it as a fleet mandate.
 
-After the receiving item is Ready, it will declare `ki-feature-definitions`, create one bounded as-built CLI area and its index, then test whether that corpus helps a named maintenance task. Use the resulting evidence to decide whether a fleet rollout is warranted.
+The pilot declared `ki-feature-definitions`, created one bounded as-built CLI area and its index, then tested the corpus against a named maintenance task. Use the resulting evidence to decide whether a fleet rollout is warranted.
 
 ### Known dependencies
 
-The pilot repository has accepted its own roadmap item and remains the owner of every source, feature-corpus, and priority change.
+The pilot repository accepted, completed, and pruned its own roadmap item and remains the owner of every source, feature-corpus, and priority change.
 
 This harness can prepare the selection criteria and handoff, but must not create or prioritise another repository's work unilaterally.
 
 ### Pilot acceptance and success evidence
 
-The accepted pilot is `knowledgeislands/tools-ki`; its receiving work item is `KI-TOOL-CLI-011`. The pilot succeeds only if one as-built CLI area gives a maintainer a materially faster or clearer answer to a named behaviour-level maintenance question, while every numbered requirement remains tied to a concrete CLI test or observable assertion. The receiving owner records that review and any limitation before this harness item proposes a second repository.
+The accepted pilot is `knowledgeislands/tools-ki`; its receiving work item was `KI-TOOL-CLI-011`. The pilot succeeds only if one as-built CLI area gives a maintainer a materially faster or clearer answer to a named behaviour-level maintenance question, while every numbered requirement remains tied to a concrete CLI test or observable assertion. The receiving owner records that review and any limitation before this harness item proposes a second repository.
 
 ### Promotion conditions
 
-Promote when `KI-TOOL-CLI-011` is Ready, its owner and review window are named in the receiving record, and its success evidence is concrete.
+Promote only when the completed `KI-TOOL-CLI-011` evidence is concrete and this repository has decided what, if anything, the pilot justifies for another repository.
 
 ## Current state
 
-Only the harness currently declares `ki-feature-definitions` and carries a Feature Definitions corpus.
+The Harness and `tools-ki` now declare `ki-feature-definitions`. `tools-ki` carries an as-built `REPO-AUDIT` corpus at `docs/features/index.md` and `docs/features/repository-audit.md`, covering `ki repo audit` selection, reporting, output controls, failure status, and multi-repository summaries.
 
-`tools-ki` is the accepted pilot because it has externally visible CLI behaviour, a bounded command surface, and an active local owner. It now carries the local adoption item; it does not declare the governing skill or author a corpus until that item has been shaped and approved.
+The `tools-ki` owner found the corpus materially clearer and faster for the question: “When changing multi-repository audit failure reporting, which observable contract and focused CLI tests must change together?” The answer is `REPO-AUDIT-006` and `REPO-AUDIT-007`, with their named `repo.test.ts` and `repo-targets.test.ts` verification hooks.
+
+The evidence is qualitative rather than timed. The bounded corpus deliberately excludes `ki repo conform`, registration, initialization, and target-resolution edge cases, so the pilot alone does not decide a fleet rollout.
 
 ## Steps
 
 - [x] Have the `tools-ki` owner accept local item `KI-TOOL-CLI-011`, transferred from this harness item, for the bounded repository-operation Feature Definitions pilot.
-- [ ] In the accepted pilot, declare `ki-feature-definitions`, create the flat `docs/features/` index and repository-operation area, and state only as-built command behaviour with verification hooks.
-- [ ] Audit the pilot mechanically and review whether the corpus makes a concrete maintenance task easier to understand or verify.
-- [ ] Record the pilot outcome in this item and create receiving-repository handoffs only for repositories that accept a follow-up.
+- [x] In the accepted pilot, declare `ki-feature-definitions`, create the flat `docs/features/` index and repository-operation area, and state only as-built command behaviour with verification hooks.
+- [x] Audit the pilot mechanically and review whether the corpus makes a concrete maintenance task easier to understand or verify.
+- [x] Record the pilot outcome in this item through the temporary direct-super-trust bridge between the Harness and `tools-ki`; create no fleet follow-up or route claim.
 - [ ] Decide whether a fleet rollout is warranted from the pilot evidence; do not treat pilot adoption as a fleet-wide mandate.
 
 ## Files touched
 
 - This work item
-- `tools-ki` `docs/roadmap/KI-TOOL-CLI-011-pilot-feature-definitions-for-repository-operations.md`
-- The accepted pilot's later Feature Definitions corpus
-- Later accepted receiving-repository handoffs only
+- The completed and pruned `tools-ki` `KI-TOOL-CLI-011` record
+- `tools-ki` `docs/features/index.md` and `docs/features/repository-audit.md`
+- Any later accepted receiving-repository follow-up only
 
 ## Verify
 
@@ -72,7 +74,7 @@ Only the harness currently declares `ki-feature-definitions` and carries a Featu
 
 ## Dependencies / blocks
 
-This harness item cannot become Ready until `KI-TOOL-CLI-011` has its review window and success evidence explicit, then reaches Ready under `tools-ki` ownership.
+The local pilot outcome now satisfies the evidence dependency. This item remains open because fleet rollout still requires an explicit governance decision, not because `tools-ki` must do more work.
 
 ## Discussion
 
@@ -83,3 +85,7 @@ The first repository needs visible behaviour, a named owner, and a review path c
 ### Receiving ownership
 
 The `tools-ki` record is the acceptance boundary. This harness may supply the originating context and later read its durable evidence, but it neither prioritises the receiving work nor treats an accepted item as a fleet mandate.
+
+### Direct super-trust bridge
+
+During the handoff-protocol bootstrap, the Harness and `tools-ki` record accepted evidence directly in the owning repository's roadmap. The accepted CLI-011 pilot is therefore recorded above rather than retained as an outbound handoff artifact. `KI-HARNESS-FND-009` will define future cross-repository submissions; this bridge neither activates a route nor authorises a fleet rollout.
