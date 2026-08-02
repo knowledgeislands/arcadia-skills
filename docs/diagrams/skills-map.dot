@@ -57,6 +57,7 @@ digraph skills_map {
   skills [fillcolor="#d9f0e2", label=< <b>ki-skills</b><br/><font point-size="9">Keystone</font><br/><font point-size="9">skill quality · checker contract</font> >]
   harness [fillcolor="#e0f0fc", label=< <b>ki-harness</b><br/><font point-size="9">Agentic systems</font><br/><font point-size="9">agentic-harness shape</font> >]
   kb [fillcolor="#f8dce8", label=< <b>ki-kb</b><br/><font point-size="9">Knowledge bases</font><br/><font point-size="9">knowledge-base shape</font> >]
+  principal [fillcolor="#f8dce8", label=< <b>ki-principal</b><br/><font point-size="9">Knowledge bases</font><br/><font point-size="9">principal-base governance</font> >]
   website [fillcolor="#e1e9fb", label=< <b>ki-website</b><br/><font point-size="9">Websites</font><br/><font point-size="9">site build</font> >]
   binding [fillcolor="#d7f2ee", label=< <b>ki-binding</b><br/><font point-size="9">Environment</font><br/><font point-size="9">portable MCP binding</font> >]
   tokenomics [fillcolor="#d7f2ee", label=< <b>ki-tokenomics</b><br/><font point-size="9">Environment</font><br/><font point-size="9">portable context policy</font> >]
@@ -98,7 +99,7 @@ digraph skills_map {
   { rank=same; bootstrap; authoring; git }
   { rank=same; repo; dotfiles }
   { rank=same; decisions; engineering; features; guides; roadmap; specifications; skills; agents; kb_activities; kb_artifacts; kb_streams; website; binding; tokenomics; tools; tap; housekeeping_claude; recap }
-  { rank=same; harness; kb; cloudflare; binding_claude; binding_codex; binding_chezmoi; tokenomics_claude; tokenomics_codex; delegate; next; batch; self; checkers }
+  { rank=same; harness; kb; principal; cloudflare; binding_claude; binding_codex; binding_chezmoi; tokenomics_claude; tokenomics_codex; delegate; next; batch; self; checkers }
   { rank=same; mcp; plugins; plan; native_host; mcp_housekeeping; hooks }
   { rank=same; implement }
   { rank=same; accept }
@@ -119,6 +120,8 @@ digraph skills_map {
   kb_activities -> kb [xlabel="required by"]
   kb_artifacts -> kb
   kb_streams -> kb
+  kb -> principal [xlabel="required by"]
+  decisions -> principal
   decisions -> harness [xlabel="required by"]
   roadmap -> harness
   skills -> harness
