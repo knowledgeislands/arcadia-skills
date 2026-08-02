@@ -62,7 +62,7 @@ Use the native Focus and proposal procedure in `ki-kb-streams`.
 
 ### Roadmap batchability screen
 
-Before selecting one viable item, compare the whole dependency-ready candidate set for a **safe delivery synergy**. Do not promote a later-horizon item merely to create a batch: every candidate must first satisfy its normal route into immediate work. A group is a batch candidate only when all of the following are true:
+Before selecting one viable non-KB item, compare the whole dependency-ready candidate set for a **safe delivery synergy**. Do not promote a later-horizon item merely to create a batch: every candidate must first satisfy its normal route into immediate work. A group is a batch candidate only when all of the following are true:
 
 - every item remains a distinct canonical work item with its own lifecycle, verification, and acceptance evidence;
 - the items share a concrete delivery advantage, such as one bounded source surface, setup or verification pass, external coordination window, or coherent user outcome;
