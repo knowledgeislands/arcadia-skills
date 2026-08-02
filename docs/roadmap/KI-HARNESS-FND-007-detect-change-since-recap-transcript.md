@@ -3,7 +3,7 @@ id: KI-HARNESS-FND-007
 title: Detect repository change since the recap transcript
 theme: foundation-tooling
 horizon: next
-status: acceptance
+status: done
 blocks: []
 blocked-by: []
 baseline-ref: 8d1342895cb8996881abca88187b5ee4e45614ec
@@ -103,6 +103,10 @@ Transcript evidence is deliberately unavailable when a runtime does not retain a
 ### Mini recap
 
 Transcript evidence now qualifies historical recap signals; it does not replace live Git checks or automatically decide whether work is material.
+
+## Done
+
+Accepted by the repository owner on 2026-08-02. Retain this record as the evidence for conservative, runtime-adapted transcript repository evidence.
 
 ## Discussion
 
