@@ -54,7 +54,18 @@ const guideFiles = (root: string, directory: string): string[] => {
   return files.sort()
 }
 
-const h1Count = (content: string): number => content.split('\n').filter((line) => /^#\s+\S/.test(line)).length
+const h1Count = (content: string): number => {
+  let fenced = false
+  let count = 0
+  for (const line of content.split('\n')) {
+    if (/^\s*(`{3,}|~{3,})/.test(line)) {
+      fenced = !fenced
+      continue
+    }
+    if (!fenced && /^#\s+\S/.test(line)) count += 1
+  }
+  return count
+}
 
 export const createGuidesSession = ({ repository, publication }: RubricContextOptions): RubricSession<GuidesRubricContext> => {
   const root = resolve(repository)

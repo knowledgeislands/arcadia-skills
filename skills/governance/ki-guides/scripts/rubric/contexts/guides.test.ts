@@ -12,6 +12,7 @@ test('the session identifies the controlled root, guides, and retired roots', ()
   mkdirSync(join(repository, 'docs/spec'), { recursive: true })
   writeFileSync(join(repository, 'docs/guides/README.md'), '# Guides\n')
   writeFileSync(join(repository, 'docs/guides/developer/workflow.md'), '# Workflow\n')
+  writeFileSync(join(repository, 'docs/guides/developer/example.md'), '# Example\n\n```sh\n# A shell comment, not an H1.\n```\n')
   writeFileSync(join(repository, 'docs/guides/developer/broken.md'), 'No H1\n')
 
   const session = createGuidesSession({ mode: 'audit', repository, userHome: tmpdir(), configuration: {} })
