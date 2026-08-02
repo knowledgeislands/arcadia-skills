@@ -39,6 +39,23 @@ const FILES_3: RubricItem<FilesRubricContext> = {
   }
 }
 
+const FILES_4: RubricItem<FilesRubricContext> = {
+  code: 'FILES-4',
+  title: 'Runtime skill ignore contract',
+  description: 'Generated runtime skill links are ignored while the repository-owned .agents/skills/ki-self source remains committed.',
+  sources: [SOURCE],
+  mechanical: {
+    level: 'FAIL',
+    audit: { phase: 'INSPECT', run: (context) => auditEvidence(context.files4, 'FAIL') },
+    conform: {
+      phase: 'PRIMARY',
+      run: (context) => {
+        context.ensureRuntimeSkillIgnore?.()
+      }
+    }
+  }
+}
+
 const FILES_2: RubricItem<FilesRubricContext> = {
   code: 'FILES-2',
   title: 'Declared repository identity',
@@ -64,5 +81,5 @@ export const FILES: RubricFamily<RepoRubricContext, FilesRubricContext> = {
   description: 'Required repository files and document quality, using a local checkout when available or GitHub default-branch evidence for remote-only runs.',
   standard: SOURCE,
   selectContext: (context) => context.files,
-  items: [FILES_1, FILES_2, FILES_3, FILES_J1]
+  items: [FILES_1, FILES_2, FILES_3, FILES_4, FILES_J1]
 }

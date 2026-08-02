@@ -23,7 +23,7 @@ Every repo carries these at the root. A local audit reads the selected checkout'
 | ----------------- | --------------------------------------------------------------------------------------------------------------- |
 | `README.md`       | The repo's entry point.                                                                                         |
 | `LICENSE`         | The declared license's text (default MIT); proprietary copyright text if `license` is `UNLICENSED`.             |
-| `.gitignore`      | Keeps build/dep noise out of history.                                                                           |
+| `.gitignore`      | Keeps build/dep noise out of history and excludes generated runtime skill links.                                |
 | `.editorconfig`   | Shared editor defaults across the workspace toolchain.                                                          |
 | `CLAUDE.md`       | Agent instructions — the always-loaded anchor for any repo-specific gate or convention (skills rubric SHAPE-7). |
 | `.ki-config.toml` | Declares this repo's expected config under `["knowledgeislands/ki-agentic-harness:ki-repo"]`. †                 |
@@ -41,6 +41,8 @@ Every repo carries these at the root. A local audit reads the selected checkout'
 **Root orientation for a multi-runtime repo.** When a repo's declared [`supported_runtimes`](standards-configuration.md#table-per-skill) includes a runtime other than `claude-code` (e.g. `chatgpt-codex`), the repo's orientation should live in a literal root `AGENTS.md` — not an `@`-import index, since a non-Claude-Code runtime can't resolve that syntax — with `CLAUDE.md` `@AGENTS.md`-importing it and staying a thin, Claude-only appendix. A repo whose `supported_runtimes` is `["claude-code"]` only has no reason to split: `CLAUDE.md` alone, with its own topic-file imports, is sufficient.
 
 **Repository-local ki-self projection.** A repository may author a local `ki-self` at `.agents/skills/ki-self/`; this is its one canonical committed source and Codex reads it directly. If `claude-code` is declared in `supported_runtimes`, `.claude/skills/ki-self` must be a non-broken relative symbolic link resolving to that canonical source. If Claude Code is not declared, that projection must be absent. Do not maintain a copied Claude skill directory. This check is conditional because `ki-self` itself remains optional; once present, its runtime projection must match the declared support surface.
+
+**Runtime skill ignore contract.** `.gitignore` must ignore generated runtime links with `.agents/skills/*`, then re-include the repository-owned `ki-self` source with `!.agents/skills/ki-self/` and `!.agents/skills/ki-self/**`. The rule keeps bootstrap-created links out of history without excluding the canonical local source.
 
 ### `.ki/` — legacy migration state, not an executor
 

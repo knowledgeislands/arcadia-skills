@@ -25,7 +25,34 @@ const KI_AUTHORING_DEFAULT = `# The authoring standard (Markdown/TOML house styl
 ["${KI_AUTHORING_TABLE}"]
 `
 
-const GITIGNORE_DEFAULT = 'node_modules/\n.DS_Store\n'
+const RUNTIME_SKILL_GITIGNORE = `# Generated project-local runtime payloads (ki-bootstrap) — never committed
+.agents/skills/*
+!.agents/skills/ki-self/
+!.agents/skills/ki-self/**
+`
+const GITIGNORE_DEFAULT = `node_modules/
+.DS_Store
+
+${RUNTIME_SKILL_GITIGNORE}`
+
+const hasRuntimeSkillIgnoreRules = (content: string): boolean => {
+  const lines = content.split(/\r?\n/).map((line) => line.trim())
+  const ignore = lines.indexOf('.agents/skills/*')
+  const selfDirectory = lines.indexOf('!.agents/skills/ki-self/')
+  const selfContents = lines.indexOf('!.agents/skills/ki-self/**')
+  return ignore !== -1 && ignore < selfDirectory && selfDirectory < selfContents && !lines.includes('.agents/skills/')
+}
+
+const conformRuntimeSkillIgnore = (content: string): string => {
+  if (hasRuntimeSkillIgnoreRules(content)) return content
+  const lines = content.split(/\r?\n/)
+  const legacy = lines.findIndex((line) => line.trim() === '.agents/skills/')
+  if (legacy !== -1) {
+    lines.splice(legacy, 1, '.agents/skills/*', '!.agents/skills/ki-self/', '!.agents/skills/ki-self/**')
+    return `${lines.join('\n').replace(/\n*$/, '')}\n`
+  }
+  return `${content.replace(/\s*$/, '')}\n\n${RUNTIME_SKILL_GITIGNORE}`
+}
 
 const GITHUB_CODES = new Set([
   'FILES-1',
@@ -57,7 +84,9 @@ export type FilesRubricContext = {
   files1: readonly RepoEvidenceFinding[]
   files2: readonly RepoEvidenceFinding[]
   files3: readonly RepoEvidenceFinding[]
+  files4: readonly RepoEvidenceFinding[]
   ensureGitignore?: () => void
+  ensureRuntimeSkillIgnore?: () => void
   ensureRepoConfiguration?: () => void
   ensureAuthoringConfiguration?: () => void
 }
@@ -268,10 +297,11 @@ export const createRepoSession = (
   const configSource = !configExists ? '' : isSafeRegularFile(configPath) ? readFileSync(configPath, 'utf8') : undefined
   const gitignorePath = join(target, '.gitignore')
   const gitignoreExists = existsSync(gitignorePath)
-  const gitignoreSafe = !gitignoreExists || isSafeRegularFile(gitignorePath)
+  const gitignoreSource = !gitignoreExists ? '' : isSafeRegularFile(gitignorePath) ? readFileSync(gitignorePath, 'utf8') : undefined
   let repoConfigurationRequested = false
   let authoringConfigurationRequested = false
   let gitignoreRequested = false
+  let runtimeSkillIgnoreRequested = false
   let workingAreaScaffoldRequested = false
 
   const context: RepoRubricContext = {
@@ -280,10 +310,18 @@ export const createRepoSession = (
       files1: evidence('FILES-1'),
       files2: evidence('FILES-2'),
       files3: evidence('FILES-3'),
-      ...(mutable && gitignoreSafe && !gitignoreExists
+      files4: evidence('FILES-4'),
+      ...(mutable && !gitignoreExists
         ? {
             ensureGitignore: () => {
               gitignoreRequested = true
+            }
+          }
+        : {}),
+      ...(mutable && gitignoreExists && gitignoreSource !== undefined && !hasRuntimeSkillIgnoreRules(gitignoreSource)
+        ? {
+            ensureRuntimeSkillIgnore: () => {
+              runtimeSkillIgnoreRequested = true
             }
           }
         : {}),
@@ -368,6 +406,10 @@ export const createRepoSession = (
         if (content !== configSource) writes.push({ path: '.ki-config.toml', content, ...(!configExists ? { create: true } : {}) })
       }
       if (gitignoreRequested) writes.push({ path: '.gitignore', content: GITIGNORE_DEFAULT, create: true })
+      if (runtimeSkillIgnoreRequested && gitignoreSource !== undefined) {
+        const content = conformRuntimeSkillIgnore(gitignoreSource)
+        if (content !== gitignoreSource) writes.push({ path: '.gitignore', content })
+      }
       if (workingAreaScaffoldRequested) {
         for (const readme of WORKING_AREA_READMES) {
           const path = join(target, readme.path)

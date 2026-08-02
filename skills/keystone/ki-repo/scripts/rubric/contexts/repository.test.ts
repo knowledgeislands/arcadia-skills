@@ -34,7 +34,8 @@ const inspect = (root: string) => ({
   findings: [
     { level: 'FAIL' as const, code: 'FILES-1', message: 'required files are absent' },
     { level: 'FAIL' as const, code: 'FILES-2', message: 'repository identity is absent' },
-    { level: 'FAIL' as const, code: 'FILES-3', message: 'authoring marker is absent' }
+    { level: 'FAIL' as const, code: 'FILES-3', message: 'authoring marker is absent' },
+    { level: 'FAIL' as const, code: 'FILES-4', message: 'runtime skill ignore rules are absent' }
   ]
 })
 
@@ -92,6 +93,30 @@ describe('ki-repo session', () => {
     expect(config?.content.startsWith(original)).toBe(true)
     expect(config?.content).toContain('\n["knowledgeislands/ki-agentic-harness:ki-repo"]\n')
     expect(config?.content).toContain('\n["knowledgeislands/ki-agentic-harness:ki-authoring"]\n')
+  })
+
+  test('replaces the legacy runtime-skill ignore with a ki-self exception', () => {
+    const root = repository()
+    writeFileSync(join(root, '.gitignore'), 'node_modules/\n.agents/skills/\n')
+    const session = createRepoSession(options(root, 'conform'), inspect)
+    runFilesConform(filesContext(session))
+
+    const gitignore = session.proposal().writes.find((write) => write.path === '.gitignore')
+    expect(gitignore?.create).toBeUndefined()
+    expect(gitignore?.content).toBe('node_modules/\n.agents/skills/*\n!.agents/skills/ki-self/\n!.agents/skills/ki-self/**\n')
+  })
+
+  test('requires the runtime-skill ignore contract while allowing ki-self', () => {
+    const root = repository()
+    writeFileSync(join(root, '.ki-config.toml'), '["knowledgeislands/ki-agentic-harness:ki-repo"]\n')
+    writeFileSync(join(root, '.gitignore'), '.agents/skills/\n')
+
+    expect(collectAuditFindings([root]).findings).toContainEqual(
+      expect.objectContaining({ code: 'FILES-4', message: expect.stringContaining('must ignore .agents/skills/*') })
+    )
+
+    writeFileSync(join(root, '.gitignore'), '.agents/skills/*\n!.agents/skills/ki-self/\n!.agents/skills/ki-self/**\n')
+    expect(collectAuditFindings([root]).findings).not.toContainEqual(expect.objectContaining({ code: 'FILES-4' }))
   })
 
   test('audit is read-only and unsafe configuration leaves expose no write capability', () => {

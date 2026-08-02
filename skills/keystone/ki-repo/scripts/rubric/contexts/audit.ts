@@ -312,7 +312,15 @@ const WRANGLER = ['wrangler.jsonc', 'wrangler.json', 'wrangler.toml']
 const ELEVENTY = ['eleventy.config.ts', 'eleventy.config.js', 'eleventy.config.cjs', 'eleventy.config.mjs']
 type Signals = { root: Set<string>; tree: Set<string>; pkg: Pkg | null }
 type ContentSource = 'local checkout' | 'GitHub default branch'
-type ContentEvidence = { files: Set<string>; kiText: string | null; ki: KiConfig | null; readme: string | null; signals: Signals; source: ContentSource }
+type ContentEvidence = {
+  files: Set<string>
+  kiText: string | null
+  ki: KiConfig | null
+  readme: string | null
+  gitignore: string | null
+  signals: Signals
+  source: ContentSource
+}
 
 function localContentEvidence(dir: string): ContentEvidence {
   const tree = localTreePaths(dir)
@@ -323,6 +331,7 @@ function localContentEvidence(dir: string): ContentEvidence {
     kiText,
     ki: kiText == null ? null : parseKiConfig(kiText),
     readme: files.has('README.md') ? localRaw(dir, 'README.md') : null,
+    gitignore: files.has('.gitignore') ? localRaw(dir, '.gitignore') : null,
     signals: { root: files, tree, pkg: files.has('package.json') ? parsePkg(localRaw(dir, 'package.json')) : null },
     source: 'local checkout'
   }
@@ -336,6 +345,7 @@ function remoteContentEvidence(nwo: string, branch: string): ContentEvidence {
     kiText,
     ki: kiText == null ? null : parseKiConfig(kiText),
     readme: files.has('README.md') ? ghRaw(nwo, 'README.md') : null,
+    gitignore: files.has('.gitignore') ? ghRaw(nwo, '.gitignore') : null,
     signals: { root: files, tree: treePaths(nwo, branch), pkg: readRemotePkg(nwo, files) },
     source: 'GitHub default branch'
   }
@@ -474,7 +484,24 @@ export const declaresRootTable = (kiText: string, table: string): boolean => dec
 
 const readmeTitle = (text: string | null): string | null => text?.match(/^#\s+(.+?)(?:\s+#+)?\s*$/m)?.[1]?.trim() || null
 
-function auditRepo(r: Repo, files: Set<string>, ki: KiConfig | null, kiText: string | null, readme: string | null, signals: Signals): Finding[] {
+function hasRuntimeSkillIgnoreRules(gitignore: string | null): boolean {
+  if (gitignore == null) return false
+  const lines = gitignore.split(/\r?\n/).map((line) => line.trim())
+  const ignore = lines.indexOf('.agents/skills/*')
+  const selfDirectory = lines.indexOf('!.agents/skills/ki-self/')
+  const selfContents = lines.indexOf('!.agents/skills/ki-self/**')
+  return ignore !== -1 && ignore < selfDirectory && selfDirectory < selfContents && !lines.includes('.agents/skills/')
+}
+
+function auditRepo(
+  r: Repo,
+  files: Set<string>,
+  ki: KiConfig | null,
+  kiText: string | null,
+  readme: string | null,
+  gitignore: string | null,
+  signals: Signals
+): Finding[] {
   const { f, fail, warn, note } = mk()
   const pkgDesc = pkgDescription(signals.pkg)
   if (r.isArchived) {
@@ -486,6 +513,9 @@ function auditRepo(r: Repo, files: Set<string>, ki: KiConfig | null, kiText: str
   for (const [, paths] of REQUIRED_FILES) {
     if (!paths.some((p) => files.has(p))) fail('FILES-1', `no ${paths.join(' / ')}`, paths[0])
   }
+  // ── layer 1: runtime skill ignore contract (gated on the ki-repo marker) ── FILES-4
+  if (files.has(KI_CONFIG) && !hasRuntimeSkillIgnoreRules(gitignore))
+    fail('FILES-4', '.gitignore must ignore .agents/skills/* while re-including .agents/skills/ki-self/', '.gitignore')
   // ── layer 1: declared authoring baseline (gated on the ki-repo marker) ── FILES-3
   // A confirmed ki-repo declares the baseline authoring standard explicitly.
   // Native self-check resolution is a host precondition, not repository-local evidence.
@@ -882,7 +912,7 @@ const evidenceLevel = (level: Level): RepoEvidenceLevel => level
 
 const LIVE_GITHUB_AREAS = new Set(['ACCESS-1', 'GH-1', 'MERGE-1', 'TOGGLE-1', 'VIS-1', 'TOPICS-1', 'BP-1', 'DEP-1', 'SEC-1', 'ACT-1'])
 const MIXED_EVIDENCE_AREAS = new Set(['GH-2', 'GH-3', 'PKG-1'])
-const CONTENT_AREAS = new Set(['FILES-1', 'FILES-2', 'FILES-3', 'GH-2', 'GH-3', 'PKG-1', 'CHECKS-1', 'COV-1', 'STRUCT-1', 'STRUCT-2'])
+const CONTENT_AREAS = new Set(['FILES-1', 'FILES-2', 'FILES-3', 'FILES-4', 'GH-2', 'GH-3', 'PKG-1', 'CHECKS-1', 'COV-1', 'STRUCT-1', 'STRUCT-2'])
 
 const findingSource = (area: string, content: ContentSource, live = true): string => {
   if (!live) return content
@@ -914,7 +944,9 @@ const auditLocalContent = (nwo: string, content: ContentEvidence): Finding[] => 
     licenseInfo: { key: license },
     description
   }
-  return auditRepo(virtualRepo, content.files, content.ki, content.kiText, content.readme, content.signals).filter((finding) => CONTENT_AREAS.has(finding.area))
+  return auditRepo(virtualRepo, content.files, content.ki, content.kiText, content.readme, content.gitignore, content.signals).filter((finding) =>
+    CONTENT_AREAS.has(finding.area)
+  )
 }
 
 // ── evidence collection ───────────────────────────────────────────────────
@@ -1004,7 +1036,7 @@ export const collectAuditFindings = (argv: readonly string[]): RepoAuditCollecti
       const content = localContent ?? remoteContentEvidence(t.nameWithOwner, branch)
       // overrides are applied inside auditRepo: a not-enforced check simply does not fail
       // and is reported as INFO. No post-filtering here.
-      findings = [...auditRepo(r, content.files, content.ki, content.kiText, content.readme, content.signals), ...localFindings]
+      findings = [...auditRepo(r, content.files, content.ki, content.kiText, content.readme, content.gitignore, content.signals), ...localFindings]
       for (const x of findings) all.push({ level: x.level, area: x.area, msg: x.msg, ref: x.ref, file: scoped(t.nameWithOwner, x, content.source) })
     } catch {
       findings = [

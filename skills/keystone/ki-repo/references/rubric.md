@@ -47,6 +47,7 @@ Required repository files and document quality, using a local checkout when avai
 - **FILES-1 [M] — Required repository files** — README, license, gitignore, editor configuration, Claude orientation, and the exact ki-repo config marker are present in the selected evidence source. (standards-repository.md)
 - **FILES-2 [M] — Declared repository identity** — The ki-repo table declares title and description; its title matches the README H1, and a roadmap repository declares repo_code there. (standards-repository.md)
 - **FILES-3 [M] — Authoring baseline** — A governed repository declares ki-authoring explicitly. (standards-repository.md)
+- **FILES-4 [M] — Runtime skill ignore contract** — Generated runtime skill links are ignored while the repository-owned .agents/skills/ki-self source remains committed. (standards-repository.md)
 - **FILES-J1 [J] — Repository document content** — README and license content is accurate and current. (standards-repository.md)
   - _Review prompt:_ Read the README and license and assess whether they accurately describe and license this repository.
 
