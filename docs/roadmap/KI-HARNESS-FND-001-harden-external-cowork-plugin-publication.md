@@ -3,7 +3,7 @@ id: KI-HARNESS-FND-001
 title: Harden external Cowork plugin publication
 theme: foundation-tooling
 horizon: next
-status: in-progress
+status: acceptance
 blocks: []
 blocked-by: []
 baseline-ref: 3621af09436a0977e73388f116063309d20ce4f4
@@ -63,12 +63,12 @@ The named `ki-plugins` checkout contains both generated paths and remains the on
 
 ## Steps
 
-- [ ] Refactor projection discovery into one deterministic manifest that contains marketplace and plugin metadata, the two final generated paths, and sorted Claude-compatible skills and agents. Derive both dry-run output and staged files from that one manifest.
-- [ ] Add `--dry-run`, with `--json` rendering the complete machine-readable manifest. It must validate the named output boundary but create no staging or backup path and mutate neither generated path nor repository-owned scaffold.
-- [ ] Validate the physical output root and both generated-path states before every write. Create one token-scoped staging root directly below the output root and construct both replacement paths there; verify their manifests before touching either final path.
-- [ ] Capture each existing generated directory by same-filesystem rename to its direct-child token-scoped backup, recording absent versus captured state. Rename both verified staged paths to their final locations, then verify the final marketplace-to-plugin relationship against the original manifest.
-- [ ] On a final rename or verification failure, remove only paths published by the current run, restore captured backups in reverse order, verify restoration, and retain the primary failure plus any restoration failure in an actionable error. Remove staging and backups only after a verified successful publication or restoration.
-- [ ] Extend focused tests for a non-mutating dry run, successful two-path replacement, failure after each final rename, post-publish verification failure, absent prior generated paths, unsafe root/path rejection, and repository-scaffold preservation.
+- [x] Refactor projection discovery into one deterministic manifest that contains marketplace and plugin metadata, the two final generated paths, and sorted Claude-compatible skills and agents. Derive both dry-run output and staged files from that one manifest.
+- [x] Add `--dry-run`, with `--json` rendering the complete machine-readable manifest. It must validate the named output boundary but create no staging or backup path and mutate neither generated path nor repository-owned scaffold.
+- [x] Validate the physical output root and both generated-path states before every write. Create one token-scoped staging root directly below the output root and construct both replacement paths there; verify their manifests before touching either final path.
+- [x] Capture each existing generated directory by same-filesystem rename to its direct-child token-scoped backup, recording absent versus captured state. Rename both verified staged paths to their final locations, then verify the final marketplace-to-plugin relationship against the original manifest.
+- [x] On a final rename or verification failure, remove only paths published by the current run, restore captured backups in reverse order, verify restoration, and retain the primary failure plus any restoration failure in an actionable error. Remove staging and backups only after a verified successful publication or restoration.
+- [x] Extend focused tests for a non-mutating dry run, successful two-path replacement, failure after each final rename, post-publish verification failure, absent prior generated paths, unsafe root/path rejection, and repository-scaffold preservation.
 
 ## Files touched
 
@@ -107,6 +107,35 @@ Planning and local implementation are unblocked. Before any non-test publication
 - **Definition of done:** The builder derives one deterministic manifest, produces a non-mutating dry run, stages and verifies both generated paths, restores every captured path after injected write or verification failure, and has focused tests for every listed recovery and unsafe-path case.
 - **Verification gate:** `bun test skills/environment/ki-binding-claude/scripts/build-plugin.test.ts`; the orchestrator independently reviews the diff, runs the full verification set, and performs an adversarial safety review before any commit.
 - **Checkpoint:** Return an uncommitted diff, focused-test output, and any escalation; do not invoke the builder against the live target.
+
+## Acceptance
+
+### Delivered
+
+`build-plugin` now derives one deterministic full projection manifest, exposes it through non-mutating `--dry-run` and `--json` output, stages both generated paths beneath a pinned physical root, and publishes them only through a recoverable same-filesystem swap.
+
+The builder refuses unsafe roots, generated paths, token paths, root substitution, and nested projection symlinks. It verifies staged and final projections against the manifest, restores the exact pre-run pair after injected failure, and retains clear recovery evidence when restoration cannot complete.
+
+No live `ki-plugins` publication occurred. The target-owner approval gate remains required before any non-test publication.
+
+### Verification
+
+- `bun test skills/environment/ki-binding-claude/scripts/build-plugin.test.ts` — passed: 14 tests, 105 assertions.
+- `bun run test` — passed.
+- `bunx tsc --noEmit` — passed.
+- `bunx biome check skills/environment/ki-binding-claude/scripts/build-plugin.ts skills/environment/ki-binding-claude/scripts/build-plugin.test.ts` — passed.
+- `git diff --check` — passed before commit.
+- The pre-commit staged-snapshot `ki repo audit --skill ki-skills` — passed.
+
+### Review
+
+An independent adversarial review found and the delivery resolved dangling-symlink handling, output-root substitution, nested-container substitution, restoration-failure reporting, callback bracketing, and truthful recovery-location reporting. Its final verdict was PASS.
+
+### Evidence and concerns
+
+The immutable baseline is `3621af09436a0977e73388f116063309d20ce4f4`; the implementation commit is `3b2e0001252fdcacb31f38a3bdf6f2ebe6491839`.
+
+Node exposes the required filesystem operations by pathname rather than directory-descriptor-bound `*at` calls. The builder revalidates the pinned root before each mutation and around cooperative callbacks, but an independently hostile process can still race the validation-to-syscall gap. That bounded platform limitation is documented in the builder and does not permit an unreviewed live publication.
 
 ## Discussion
 
