@@ -87,6 +87,27 @@ The named `ki-plugins` checkout contains both generated paths and remains the on
 
 Planning and local implementation are unblocked. Before any non-test publication, the `ki-plugins` owner must approve the exact resolved checkout and its `.claude-plugin/` and `knowledge-islands/` generated paths. The harness test suite is currently clean (246 passing); full-suite cleanliness remains an acceptance requirement.
 
+## Delegation
+
+### Locked decisions
+
+- Keep the selected two-path, same-filesystem reversible swap. One deterministic manifest supplies dry-run output, staged projection, and final verification.
+- Preserve the output-root and symlink guards; create only token-scoped staging and backups directly beneath the verified output root. Never clean, reset, or alter repository-owned scaffold.
+- Support a read-only `--dry-run` and complete `--json` manifest. Do not publish to the live `ki-plugins` checkout during this delivery.
+
+### Escalate
+
+- Stop for owner direction before any non-test publication or when the target root or either generated path fails its required physical-path safety check.
+- Stop rather than invent a recovery path if a failure cannot restore the exact pre-run generated-path state or if the implementation requires scope outside the builder and its focused tests.
+
+### Round 1 — recoverable builder delivery
+
+- **Class / worker / model:** Judgmental implementation / fresh general-purpose worker / `gpt-5.6-sol` at high reasoning, because the recovery path guards destructive filesystem operations.
+- **Scope:** `skills/environment/ki-binding-claude/scripts/build-plugin.ts` and `skills/environment/ki-binding-claude/scripts/build-plugin.test.ts` only.
+- **Definition of done:** The builder derives one deterministic manifest, produces a non-mutating dry run, stages and verifies both generated paths, restores every captured path after injected write or verification failure, and has focused tests for every listed recovery and unsafe-path case.
+- **Verification gate:** `bun test skills/environment/ki-binding-claude/scripts/build-plugin.test.ts`; the orchestrator independently reviews the diff, runs the full verification set, and performs an adversarial safety review before any commit.
+- **Checkpoint:** Return an uncommitted diff, focused-test output, and any escalation; do not invoke the builder against the live target.
+
 ## Discussion
 
 ### Recovery boundary
