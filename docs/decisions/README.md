@@ -65,6 +65,7 @@ The records are living, compact, and independent. The order below is a **curated
 36. [ODR-KI-HARNESS-001](ODR-KI-HARNESS-001-scoped-lifecycle-operations.md) — separate repository and user lifecycle operations.
 37. [ADR-KI-HARNESS-012](ADR-KI-HARNESS-012-compatible-harness-publication-and-governed-rubric-boundary.md) — compatible harness publication and the governed-rubric boundary.
 38. [GDR-KI-HARNESS-003](GDR-KI-HARNESS-003-portable-git-governance-ownership.md) — portable Git governance ownership.
+39. [GDR-KI-HARNESS-004](GDR-KI-HARNESS-004-four-doc-repository-documentation-ownership.md) — four-doc repository documentation ownership.
 
 ## Template
 

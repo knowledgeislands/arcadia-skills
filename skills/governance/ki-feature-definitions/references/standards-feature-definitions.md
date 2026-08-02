@@ -2,15 +2,16 @@
 
 This standard defines how a Feature Definitions corpus is laid out and how each requirement is written. The hosted structured rubric enforces its mechanical criteria; the generated [rubric](rubric.md) publishes every criterion, and the [exemplars](exemplars.md) illustrate representative outcomes.
 
-## The three-doc split
+## The four-doc split
 
-A repo's `docs/` separates three concerns, and a Feature Definition is exactly one of them:
+A non-Knowledge-Base repository's `docs/` separates four durable concerns, and a Feature Definition is exactly one of them:
 
-| Doc          | Question | Instrument                               |
-| ------------ | -------- | ---------------------------------------- |
-| `decisions/` | Why      | Decision Records (`ki-decision-records`) |
-| `features/`  | What     | Feature Definitions (**this skill**)     |
-| `guides/`    | How      | Prose guides                             |
+| Location          | Question | Instrument                               |
+| ----------------- | -------- | ---------------------------------------- |
+| `docs/decisions/` | Why      | Decision Records (`ki-decision-records`) |
+| `docs/features/`  | What     | Feature Definitions (**this skill**)     |
+| `docs/guides/`    | How      | Guides (`ki-guides`)                     |
+| `docs/roadmap/`   | When     | Repository work items (`ki-roadmap`)     |
 
 A requirement states **behaviour**, not rationale and not procedure. If a statement starts explaining _why_, that reasoning belongs in a Decision Record the requirement cites; if it explains _how to operate_, it belongs in a guide.
 

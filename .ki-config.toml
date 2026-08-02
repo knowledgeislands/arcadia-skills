@@ -24,6 +24,8 @@ supported_runtimes = ["claude-code", "chatgpt-codex"]
 
 ["knowledgeislands/ki-agentic-harness:ki-feature-definitions"]
 
+["knowledgeislands/ki-agentic-harness:ki-guides"]
+
 ["knowledgeislands/ki-agentic-harness:ki-git"]
 
 ["knowledgeislands/ki-agentic-harness:ki-housekeeping-claude"]

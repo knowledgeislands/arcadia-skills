@@ -1,16 +1,17 @@
 # Feature Definitions
 
-The behaviour-level contract for what the **ki-agentic-harness** does — the **what**. Decisions capture the why ([`../decisions/`](../decisions)); guides capture the how ([`../`](..)); these Feature Definitions capture the observable behaviour the harness exhibits today, stated normatively and each paired with a verification hook. This corpus is governed by the `ki-feature-definitions` skill and checked by its `audit-features.ts`.
+The behaviour-level contract for what the **ki-agentic-harness** does — the **what**. Decisions capture the why ([`../decisions/`](../decisions)); guides capture the how ([`../guides/`](../guides)); roadmap items capture the when ([`../roadmap/`](../roadmap)); these Feature Definitions capture the observable behaviour the harness exhibits today, stated normatively and each paired with a verification hook. This corpus is governed by the `ki-feature-definitions` skill and checked by its native rubric.
 
 > **Status:** as-built baseline, behaviour-level.
 
 ## How this fits with other docs
 
-| Doc          | Question | Instrument                               |
-| ------------ | -------- | ---------------------------------------- |
-| `decisions/` | Why      | Decision Records (`ki-decision-records`) |
-| `features/`  | What     | Feature Definitions (this corpus)        |
-| guides       | How      | Prose guides                             |
+| Location               | Question | Instrument                               |
+| ---------------------- | -------- | ---------------------------------------- |
+| `decisions/`           | Why      | Decision Records (`ki-decision-records`) |
+| `features/`            | What     | Feature Definitions (this corpus)        |
+| [`guides/`](../guides) | How      | Guides (`ki-guides`)                     |
+| `roadmap/`             | When     | Repository work items (`ki-roadmap`)     |
 
 ## How to read a requirement
 

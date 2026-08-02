@@ -51,6 +51,7 @@ digraph skills_map {
   engineering [fillcolor="#feead2", label=< <b>ki-engineering</b><br/><font point-size="9">Governance</font><br/><font point-size="9">toolchain · tests</font> >]
   features [fillcolor="#feead2", label=< <b>ki-feature-definitions</b><br/><font point-size="9">Governance</font><br/><font point-size="9">feature behaviour</font> >]
   git [fillcolor="#feead2", label=< <b>ki-git</b><br/><font point-size="9">Governance</font><br/><font point-size="9">Git working · commit practice</font> >]
+  guides [fillcolor="#feead2", label=< <b>ki-guides</b><br/><font point-size="9">Governance</font><br/><font point-size="9">repository-local procedure</font> >]
   roadmap [fillcolor="#feead2", label=< <b>ki-roadmap</b><br/><font point-size="9">Governance</font><br/><font point-size="9">forward work</font> >]
   specifications [fillcolor="#feead2", label=< <b>ki-specifications</b><br/><font point-size="9">Governance</font><br/><font point-size="9">specification repository shape</font> >]
   skills [fillcolor="#d9f0e2", label=< <b>ki-skills</b><br/><font point-size="9">Keystone</font><br/><font point-size="9">skill quality · checker contract</font> >]
@@ -96,7 +97,7 @@ digraph skills_map {
   // one. Contextual links may deliberately point across the flow.
   { rank=same; bootstrap; authoring; git }
   { rank=same; repo; dotfiles }
-  { rank=same; decisions; engineering; features; roadmap; specifications; skills; agents; kb_activities; kb_artifacts; kb_streams; website; binding; tokenomics; tools; tap; housekeeping_claude; recap }
+  { rank=same; decisions; engineering; features; guides; roadmap; specifications; skills; agents; kb_activities; kb_artifacts; kb_streams; website; binding; tokenomics; tools; tap; housekeeping_claude; recap }
   { rank=same; harness; kb; cloudflare; binding_claude; binding_codex; binding_chezmoi; tokenomics_claude; tokenomics_codex; delegate; next; batch; self; checkers }
   { rank=same; mcp; plugins; plan; native_host; mcp_housekeeping; hooks }
   { rank=same; implement }
@@ -129,6 +130,7 @@ digraph skills_map {
   repo -> decisions [xlabel="baseline", style=dashed]
   repo -> engineering [style=dashed]
   repo -> features [style=dashed]
+  repo -> guides [style=dashed]
   repo -> roadmap [style=dashed]
   repo -> specifications [style=dashed]
   repo -> skills [style=dashed]

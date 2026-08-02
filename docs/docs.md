@@ -4,7 +4,7 @@ This is the map of `docs/` and the guiding principles that govern everything in 
 
 ## Guiding principles
 
-**Each source has one job.** Decisions record the **why**, feature definitions the **what**, developer guides the contributor **how**, and roadmap items the **when**. Public explanatory guidance lives on the website. A fact belongs in exactly one of them; if it is tempting to write it in two places, one of those is the wrong place.
+**Each source has one job.** Decisions record the **why**, Feature Definitions the **what**, guides the **how**, and roadmap items the **when**. Public explanatory guidance lives on the website. A fact belongs in exactly one of them; if it is tempting to write it in two places, one of those is the wrong place.
 
 **A source is written to be read on its own terms.** Decision Records ([`decisions/`](decisions)) are **self-contained**. A record inlines the context it needs and states the decision in full; its only outbound links are normally to sibling DRs in the same set, following the reading-order layering. The sole carve-out is a record whose subject is an external artefact or whose canonical public publication has moved, which may cite that current location while preserving the historical decision. The format is governed by the `ki-decision-records` skill.
 
@@ -20,9 +20,9 @@ This is the map of `docs/` and the guiding principles that govern everything in 
 
 [`features/`](features) holds the behaviour-level specification: what the harness does, stated normatively (RFC-2119) with a `_Verify:_` hook per requirement. Flat, one file per area, with [`features/index.md`](features/index.md) defining the ID scheme and areas table. Governed by the `ki-feature-definitions` skill.
 
-### Developer guides — the contributor _how_
+### Guides — the _how_
 
-[`developer/`](developer) holds repository-local contributor mechanics that are not part of normal user setup. Its [index](developer/README.md) covers local skill linking, testing, managed write boundaries, legacy retirement, and bounded acquisition work.
+[`guides/`](guides) holds repository-local practical instructions. Its [index](guides/README.md) directs contributors and operators to the right procedure; [`guides/developer/`](guides/developer) holds harness contributor mechanics such as local skill linking, testing, managed write boundaries, legacy retirement, and bounded acquisition work. Governed by the `ki-guides` skill.
 
 ### Public guidance — website-owned
 

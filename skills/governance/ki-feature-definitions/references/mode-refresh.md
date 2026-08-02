@@ -2,7 +2,7 @@
 
 **Precondition:** REFRESH edits this skill's own canonical files, which exist only in `ki-agentic-harness`. Invoked from an installed copy, it stops here and names the harness as where to run it — or, for a pattern recurring across bases, routes it through `ki-kb`'s IMPROVE mode instead.
 
-Canonical, on-change: this skill tracks no external spec beyond RFC 2119 (BCP 14), which is stable. Re-anchor when the **format model** changes — the three-doc split, the areas-table shape, the ID scheme, the requirement/`_Verify:_` shape, or the Gaps convention — or when the reference corpus this skill generalizes from ([sources.md](sources.md)) evolves in a way the standard should absorb.
+Canonical, on-change: this skill tracks no external spec beyond RFC 2119 (BCP 14), which is stable. Re-anchor when the **format model** changes — the four-doc split, the areas-table shape, the ID scheme, the requirement/`_Verify:_` shape, or the Gaps convention — or when the reference corpus this skill generalizes from ([sources.md](sources.md)) evolves in a way the standard should absorb.
 
 1. **Read [the source list](sources.md)** and re-examine the reference corpus. Confirm the [standard](standards-feature-definitions.md), structured rubric, and generated publication still match how a mature Feature Definitions corpus is written.
 2. **Diff and propose.** Where the reference practice has moved, propose a diff to the standard and the owning rubric family together, then regenerate `rubric.md` with `ki dev skill rubric ki-feature-definitions --write`.

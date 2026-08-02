@@ -104,7 +104,7 @@ The exposure is widest where harness edits and harness-dependent verification ov
 
 Vendored repository execution is retired.
 
-Existing `.ki/bootstrap/`, `.ki/bin/`, and manifest state are examined only through the maintainer [retirement guide](../../../../docs/developer/retiring-repository-vendored-ki.md).
+Existing `.ki/bootstrap/`, `.ki/bin/`, and manifest state are examined only through the maintainer [retirement guide](../../../../docs/guides/developer/retiring-repository-vendored-ki.md).
 
 Migration validates the required installed harnesses, repository declaration, target ownership, and complete removal set before writing.
 

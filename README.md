@@ -25,7 +25,7 @@ brew install knowledgeislands/tap/ki
 ki bootstrap
 ```
 
-`ki bootstrap` configures detected agent runtimes, installs the verified canonical harness, and activates the core user skills. Repository governance remains explicit through `.ki-config.toml`, `ki skill repo`, and the native `ki repo` operations. [Install and get started](https://knowledgeislands.info/guidance/using-ki/getting-started/) covers the complete flow; [Use skills](https://knowledgeislands.info/guidance/using-ki/using-skills/) explains how to work with the resulting skills. Harness contributors should see [local skill linking](docs/developer/linking-skills.md).
+`ki bootstrap` configures detected agent runtimes, installs the verified canonical harness, and activates the core user skills. Repository governance remains explicit through `.ki-config.toml`, `ki skill repo`, and the native `ki repo` operations. [Install and get started](https://knowledgeislands.info/guidance/using-ki/getting-started/) covers the complete flow; [Use skills](https://knowledgeislands.info/guidance/using-ki/using-skills/) explains how to work with the resulting skills. Harness contributors should see [local skill linking](docs/guides/developer/linking-skills.md).
 
 ## Documentation
 
@@ -37,7 +37,7 @@ ki bootstrap
 - [Onboarding reference](https://knowledgeislands.info/guidance/using-ki/onboarding/) — the detailed installed-harness, activation, native-governance, and legacy-retirement boundaries.
 - [Command-line interface](https://knowledgeislands.info/guidance/using-ki/command-line-interface/) — the current end-user `ki` command surface and scope boundaries.
 - [Optional tools](https://knowledgeislands.info/guidance/using-ki/recommended-tools/) — optional user and system tools: chezmoi, headroom-ai, Codex skill discovery, mcporter, and claude.ai connectors.
-- [Developer linking](docs/developer/linking-skills.md) — the current local live-link workflow for harness contributors.
+- [Developer linking](docs/guides/developer/linking-skills.md) — the current local live-link workflow for harness contributors.
 - [Prompting guides](https://knowledgeislands.info/guidance/prompting/) — how to prompt the models we run, with one source-backed guide per model.
 
 The public website guidance is self-contained. For how it relates to the decisions, feature definitions, roadmap items, and skill code underneath it — and to the Knowledge Islands concept — see [docs/docs.md](docs/docs.md).

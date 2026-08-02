@@ -40,7 +40,7 @@ Missing, incompatible, undeclared, or ambiguous skills fail before an audit or c
 
 An installed harness is the authoritative source of capabilities. A nearby checkout is used only through `ki dev on <path>` during development; `ki dev off` restores the installed canonical payload.
 
-Do not create `.ki` wrappers or copy scripts into repositories. If a repository still carries one, follow the maintainer [retirement guide](../../../docs/developer/retiring-repository-vendored-ki.md).
+Do not create `.ki` wrappers or copy scripts into repositories. If a repository still carries one, follow the maintainer [retirement guide](../../../docs/guides/developer/retiring-repository-vendored-ki.md).
 
 For command grammar, run `ki help`. For repository coverage, use `ki-repo`.
 
