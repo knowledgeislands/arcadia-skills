@@ -3,7 +3,7 @@ id: KI-HARNESS-FND-007
 title: Detect repository change since the recap transcript
 theme: foundation-tooling
 horizon: next
-status: open
+status: ready
 blocks: []
 blocked-by: []
 baseline-ref: null
