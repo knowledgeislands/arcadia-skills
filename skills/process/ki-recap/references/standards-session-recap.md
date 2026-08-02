@@ -107,7 +107,7 @@ At the end of a recap, decide whether the next request will begin a distinct wor
 
 Use the runtime's context signal where one is exposed; do not invent a portable token count or threshold where none exists.
 
-When the runtime reports high context use or low remaining headroom, preserve the digest below and then invoke the current runtime's native compaction control before beginning `ki-next`, planning, or implementation work.
+Identify the next work cycle's scope first. The goal is to reduce active context to the information that cycle needs, not merely to preserve a record of the finished session. When the runtime reports high context use or low remaining headroom, preserve only that scoped digest below and then invoke the documented runtime- or vendor-specific compaction mechanism before beginning `ki-next`, planning, or implementation work. The applicable `ki-tokenomics` runtime adapter owns the mechanism's documented evidence boundary.
 
 Do not compact in the middle of an active implementation unit, a pending user decision, an unfinished tool operation, or uncommitted work whose recovery information is not yet recorded.
 
@@ -119,6 +119,10 @@ Write a carry-forward digest of the recapped span:
 ## Context
 
 <why this span of work happened>
+
+## Next scope
+
+<the next work cycle and the minimum context it needs; omit resolved material that does not inform it>
 
 ## Decisions
 
@@ -141,4 +145,4 @@ Write a carry-forward digest of the recapped span:
 <comma-separated terms for future retrieval>
 ```
 
-State plainly that this digest is a **carry-forward artefact**, not a context-window reduction. Native compaction or a `PreCompact` hook remains `ki-tokenomics`'s runtime boundary; this procedure uses that native control only at the safe recap-to-new-work boundary.
+State plainly that this digest is a **carry-forward artefact**, not a context-window reduction. Runtime- or vendor-specific compaction remains the applicable `ki-tokenomics` adapter's boundary; this procedure invokes the documented mechanism only at the safe recap-to-new-work boundary, with the aim of retaining only the next cycle's scope.
