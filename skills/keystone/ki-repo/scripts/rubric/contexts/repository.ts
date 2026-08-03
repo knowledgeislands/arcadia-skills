@@ -26,6 +26,7 @@ const KI_AUTHORING_DEFAULT = `# The authoring standard (Markdown/TOML house styl
 `
 
 const RUNTIME_SKILL_GITIGNORE = `# Generated project-local runtime payloads (ki-bootstrap) — never committed
+.claude/skills/*
 .agents/skills/*
 !.agents/skills/ki-self/
 !.agents/skills/ki-self/**
@@ -37,21 +38,29 @@ ${RUNTIME_SKILL_GITIGNORE}`
 
 const hasRuntimeSkillIgnoreRules = (content: string): boolean => {
   const lines = content.split(/\r?\n/).map((line) => line.trim())
+  const claudeIgnore = lines.indexOf('.claude/skills/*')
   const ignore = lines.indexOf('.agents/skills/*')
   const selfDirectory = lines.indexOf('!.agents/skills/ki-self/')
   const selfContents = lines.indexOf('!.agents/skills/ki-self/**')
-  return ignore !== -1 && ignore < selfDirectory && selfDirectory < selfContents && !lines.includes('.agents/skills/')
+  return claudeIgnore !== -1 && claudeIgnore < ignore && ignore < selfDirectory && selfDirectory < selfContents && !lines.includes('.agents/skills/')
 }
 
 const conformRuntimeSkillIgnore = (content: string): string => {
   if (hasRuntimeSkillIgnoreRules(content)) return content
   const lines = content.split(/\r?\n/)
-  const legacy = lines.findIndex((line) => line.trim() === '.agents/skills/')
-  if (legacy !== -1) {
-    lines.splice(legacy, 1, '.agents/skills/*', '!.agents/skills/ki-self/', '!.agents/skills/ki-self/**')
-    return `${lines.join('\n').replace(/\n*$/, '')}\n`
-  }
-  return `${content.replace(/\s*$/, '')}\n\n${RUNTIME_SKILL_GITIGNORE}`
+  const runtimeSkillRules = new Set([
+    '.claude/skills/',
+    '.claude/skills/*',
+    '.agents/skills/',
+    '.agents/skills/*',
+    '!.agents/skills/ki-self/',
+    '!.agents/skills/ki-self/**'
+  ])
+  const retained = lines
+    .filter((line) => !runtimeSkillRules.has(line.trim()))
+    .join('\n')
+    .replace(/\n*$/, '')
+  return `${retained}\n\n${RUNTIME_SKILL_GITIGNORE}`
 }
 
 const GITHUB_CODES = new Set([

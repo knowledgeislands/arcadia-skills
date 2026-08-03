@@ -498,10 +498,11 @@ const readmeTitle = (text: string | null): string | null => text?.match(/^#\s+(.
 function hasRuntimeSkillIgnoreRules(gitignore: string | null): boolean {
   if (gitignore == null) return false
   const lines = gitignore.split(/\r?\n/).map((line) => line.trim())
+  const claudeIgnore = lines.indexOf('.claude/skills/*')
   const ignore = lines.indexOf('.agents/skills/*')
   const selfDirectory = lines.indexOf('!.agents/skills/ki-self/')
   const selfContents = lines.indexOf('!.agents/skills/ki-self/**')
-  return ignore !== -1 && ignore < selfDirectory && selfDirectory < selfContents && !lines.includes('.agents/skills/')
+  return claudeIgnore !== -1 && claudeIgnore < ignore && ignore < selfDirectory && selfDirectory < selfContents && !lines.includes('.agents/skills/')
 }
 
 function auditRepo(
@@ -526,7 +527,7 @@ function auditRepo(
   }
   // ── layer 1: runtime skill ignore contract (gated on the ki-repo marker) ── FILES-4
   if (files.has(KI_CONFIG) && !hasRuntimeSkillIgnoreRules(gitignore))
-    fail('FILES-4', '.gitignore must ignore .agents/skills/* while re-including .agents/skills/ki-self/', '.gitignore')
+    fail('FILES-4', '.gitignore must ignore .claude/skills/* and .agents/skills/* while re-including .agents/skills/ki-self/', '.gitignore')
   // ── layer 1: declared authoring baseline (gated on the ki-repo marker) ── FILES-3
   // A confirmed ki-repo declares the baseline authoring standard explicitly.
   // Native self-check resolution is a host precondition, not repository-local evidence.

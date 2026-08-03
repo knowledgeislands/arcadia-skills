@@ -95,15 +95,17 @@ describe('ki-repo session', () => {
     expect(config?.content).toContain('\n["knowledgeislands/ki-agentic-harness:ki-authoring"]\n')
   })
 
-  test('replaces the legacy runtime-skill ignore with a ki-self exception', () => {
+  test('replaces legacy runtime-skill ignores with the canonical ki-self exception', () => {
     const root = repository()
-    writeFileSync(join(root, '.gitignore'), 'node_modules/\n.agents/skills/\n')
+    writeFileSync(join(root, '.gitignore'), 'node_modules/\n.claude/skills/*\n.agents/skills/\n')
     const session = createRepoSession(options(root, 'conform'), inspect)
     runFilesConform(filesContext(session))
 
     const gitignore = session.proposal().writes.find((write) => write.path === '.gitignore')
     expect(gitignore?.create).toBeUndefined()
-    expect(gitignore?.content).toBe('node_modules/\n.agents/skills/*\n!.agents/skills/ki-self/\n!.agents/skills/ki-self/**\n')
+    expect(gitignore?.content).toBe(
+      'node_modules/\n\n# Generated project-local runtime payloads (ki-bootstrap) — never committed\n.claude/skills/*\n.agents/skills/*\n!.agents/skills/ki-self/\n!.agents/skills/ki-self/**\n'
+    )
   })
 
   test('requires the runtime-skill ignore contract while allowing ki-self', () => {
@@ -112,10 +114,10 @@ describe('ki-repo session', () => {
     writeFileSync(join(root, '.gitignore'), '.agents/skills/\n')
 
     expect(collectAuditFindings([root]).findings).toContainEqual(
-      expect.objectContaining({ code: 'FILES-4', message: expect.stringContaining('must ignore .agents/skills/*') })
+      expect.objectContaining({ code: 'FILES-4', message: expect.stringContaining('must ignore .claude/skills/* and .agents/skills/*') })
     )
 
-    writeFileSync(join(root, '.gitignore'), '.agents/skills/*\n!.agents/skills/ki-self/\n!.agents/skills/ki-self/**\n')
+    writeFileSync(join(root, '.gitignore'), '.claude/skills/*\n.agents/skills/*\n!.agents/skills/ki-self/\n!.agents/skills/ki-self/**\n')
     expect(collectAuditFindings([root]).findings).not.toContainEqual(expect.objectContaining({ code: 'FILES-4' }))
   })
 
