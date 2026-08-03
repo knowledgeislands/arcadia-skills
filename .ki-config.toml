@@ -28,8 +28,9 @@ supported_runtimes = ["claude-code", "chatgpt-codex"]
 
 ["knowledgeislands/ki-agentic-harness:ki-handoffs"]
 identity = "knowledgeislands/ki-agentic-harness"
-peers = []
-
+peers = [
+  "knowledgeislands/tools-ki",
+]
 ["knowledgeislands/ki-agentic-harness:ki-git"]
 
 ["knowledgeislands/ki-agentic-harness:ki-housekeeping-claude"]
