@@ -1,6 +1,6 @@
 <!-- GENERATED FILE: produced by `ki dev skill rubric`. Do not hand-edit; edit scripts/rubric/items/, then rerun `ki dev skill rubric <skill> --write`. -->
 
-# Generated rubric — Cross-repository handoff submissions
+# Generated rubric — Cross-repository trades
 
 > **Generated publication.** The TypeScript rubric items under `scripts/rubric/items/` are canonical. Edit those definitions, then rerun `ki dev skill rubric ki-handoffs --write`.
 
@@ -10,13 +10,13 @@ Line-by-line criteria for auditing ki-handoffs. Classifications are derived from
 
 - [RUBRIC — Generated rubric publication](#rubric--generated-rubric-publication)
 - [CONFIG — Declared participation](#config--declared-participation)
-- [ROUTE — Reciprocal routes](#route--reciprocal-routes)
+- [ROUTE — Typed reciprocal routes](#route--typed-reciprocal-routes)
 - [SCAFFOLD — Handoff scaffold](#scaffold--handoff-scaffold)
 - [RECORD — Record shape](#record--record-shape)
 - [AUTH — Write authority](#auth--write-authority)
 - [STATUS — Receiver lifecycle](#status--receiver-lifecycle)
 - [RELEASE — Release and pruning](#release--release-and-pruning)
-- [ADOPTION — Receiver roadmap authority](#adoption--receiver-roadmap-authority)
+- [ADOPTION — Receiver local authority](#adoption--receiver-local-authority)
 
 ## RUBRIC — Generated rubric publication
 
@@ -30,17 +30,17 @@ The tracked readable rubric is the exact publication of the structured catalogue
 
 → [standard](standards-handoffs.md)
 
-Repository identity and allowed peers are explicit, canonical, and owned locally.
+Typed trade routes are explicit, canonical, and owned locally.
 
-- **CONFIG-1 [M] — repository identity and peers are canonical** — A participating repository declares one canonical lower-case `owner/repo` identity and a required lexically ordered, duplicate-free peer list in its own ki-handoffs table. (standards-handoffs.md)
+- **CONFIG-1 [M] — typed routes are canonical** — A participating repository declares every closed trade kind as a lexically ordered, duplicate-free canonical HTTPS GitHub repository URL array under each of its own `exports_to` and `imports_from` tables; its identity comes only from `ki-repo.repository`. (standards-handoffs.md)
 
-## ROUTE — Reciprocal routes
+## ROUTE — Typed reciprocal routes
 
 → [standard](standards-handoffs.md)
 
-Registered repository visibility becomes an active route only through matching reciprocal declarations.
+Registered repository visibility becomes an active route only through matching declarations for the same trade kind.
 
-- **ROUTE-1 [M] — peer routes are reciprocal and registered** — A route is active only when exactly one locally registered repository declares the peer identity and both repositories include one another in their normalized peer lists. (standards-handoffs.md)
+- **ROUTE-1 [M] — trade routes are typed, reciprocal, and registered** — A route for a kind is active only when exactly one locally registered repository declares the canonical GitHub home, the sender exports that kind to it, and the receiver imports that same kind from the sender. (standards-handoffs.md)
 
 ## SCAFFOLD — Handoff scaffold
 
@@ -54,9 +54,9 @@ The optional capability owns only its `_HANDOFFS` directories and README files.
 
 → [standard](standards-handoffs.md)
 
-Handoff identity is collision-resistant and corroborated by canonical record content rather than inferred from a filename.
+Trade-record identity is collision-resistant and corroborated by canonical content rather than inferred from a filename.
 
-- **RECORD-1 [M] — record identity, placement, and payload are canonical** — Every handoff record uses the two-level peer layout, an `HND-` lower-case UUID-shaped identity repeated in filename, metadata, and H1, the closed sender envelope, and non-empty Context, Submission, and Constraints payload sections. (standards-handoffs.md)
+- **RECORD-1 [M] — record identity, placement, and payload are canonical** — Every trade record uses the two-level peer layout, an `HND-` lower-case UUID-shaped identity repeated in filename, metadata, and H1, a closed sender envelope with `kind: work | knowledge`, and non-empty Context, Submission, and Constraints payload sections. (standards-handoffs.md)
 
 ## AUTH — Write authority
 
@@ -70,9 +70,9 @@ A handoff remains a local copy protocol with immutable sender provenance and rec
 
 → [standard](standards-handoffs.md)
 
-Receiver-owned disposition uses a closed status vocabulary and explicit local evidence.
+Receiver-owned disposition uses a closed status vocabulary and explicit local work or knowledge evidence.
 
-- **STATUS-1 [M] — receiver status and linkage are valid** — Only inbound records carry receiver status: received, adopted, parked, clarify, declined, or superseded, with status-appropriate rationale and local adoption or supersession linkage. (standards-handoffs.md)
+- **STATUS-1 [M] — receiver status and linkage are valid** — Only inbound records carry receiver status: received, adopted, retained, parked, clarify, declined, or superseded, with status-appropriate rationale and local adoption, retention, or supersession linkage. (standards-handoffs.md)
 
 ## RELEASE — Release and pruning
 
@@ -80,13 +80,13 @@ Receiver-owned disposition uses a closed status vocabulary and explicit local ev
 
 Absence is interpreted only as an observable release signal after a terminal receiver disposition.
 
-- **RELEASE-1 [M] — release and pruning follow observable lifecycle evidence** — Sender release is permitted only after adopted, declined, or superseded; parked, clarify, and received retain the outbound copy, and receiver pruning becomes eligible only after an allowed release is observable. (standards-handoffs.md)
+- **RELEASE-1 [M] — release and pruning follow observable lifecycle evidence** — Sender release is permitted only after adopted, retained, declined, or superseded; parked, clarify, and received retain the outbound copy, and receiver pruning becomes eligible only after an allowed release is observable. (standards-handoffs.md)
 
-## ADOPTION — Receiver roadmap authority
+## ADOPTION — Receiver local authority
 
 → [standard](standards-handoffs.md)
 
-Human-confirmed disposition remains distinct from local work selection and acceptance.
+Human-confirmed disposition remains distinct from local work selection, acceptance, and knowledge stewardship.
 
-- **ADOPTION-1 [J] — adoption preserves receiver roadmap authority** — A receiver disposition is submission review only; adoption does not automatically create, prioritize, implement, or accept a roadmap item. (standards-handoffs.md)
-  - _Review prompt:_ Confirm that every proposed adoption remains a separately confirmed local roadmap decision and grants no sender or process skill priority, implementation, or acceptance authority.
+- **ADOPTION-1 [J] — disposition preserves receiver authority** — A receiver disposition is trade review only; adoption does not automatically create, prioritize, implement, or accept a roadmap item, and retention does not alter local knowledge authority. (standards-handoffs.md)
+  - _Review prompt:_ Confirm that every proposed adoption remains a separately confirmed local roadmap decision, every proposed retention remains a local knowledge decision, and neither grants a sender or process skill priority, implementation, acceptance, or knowledge authority.

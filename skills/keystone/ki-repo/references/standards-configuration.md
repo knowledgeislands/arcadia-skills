@@ -26,6 +26,7 @@ Each skill that needs declared config owns **exactly one** TOML table, named for
 
 ```toml
 ["knowledgeislands/ki-agentic-harness:ki-repo"]
+repository = "https://github.com/owner/repository" # canonical GitHub home
 title = "Example repository" # exact README.md H1
 description = "One sentence describing the repository." # exact GitHub and package.json description where present
 visibility = "public"
@@ -36,7 +37,7 @@ supported_runtimes = ["claude-code", "chatgpt-codex"] # required agent-runtime s
 branch-protection = true
 ```
 
-`["knowledgeislands/ki-agentic-harness:ki-repo"]` carries repository identity and declared facts the auditor checks. `title` and `description` are mandatory: title exactly matches the README H1, while description exactly matches GitHub and package.json where those surfaces exist. `visibility` (`"public"` | `"private"`, matched against GitHub) and `license` (an SPDX id — default MIT when unset — matched against the live GitHub license, the `LICENSE` file, and `package.json` `"license"`) are independent: a private repo may be MIT, a public repo proprietary. Pick a license at [choosealicense.com](https://choosealicense.com/); use `"UNLICENSED"` for all-rights-reserved proprietary.
+`["knowledgeislands/ki-agentic-harness:ki-repo"]` carries repository identity and declared facts the auditor checks. `repository` is mandatory and is the canonical HTTPS GitHub home (`https://github.com/<owner>/<repository>`), checked against GitHub's repository identity. `title` and `description` are mandatory: title exactly matches the README H1, while description exactly matches GitHub and package.json where those surfaces exist. `visibility` (`"public"` | `"private"`, matched against GitHub) and `license` (an SPDX id — default MIT when unset — matched against the live GitHub license, the `LICENSE` file, and `package.json` `"license"`) are independent: a private repo may be MIT, a public repo proprietary. Pick a license at [choosealicense.com](https://choosealicense.com/); use `"UNLICENSED"` for all-rights-reserved proprietary.
 
 The third, `supported_runtimes`, is a **repo-wide** fact — the agent runtimes this repo supports. It lives on `["knowledgeislands/ki-agentic-harness:ki-repo"]` rather than `["knowledgeislands/ki-agentic-harness:ki-harness"]` because it drives orientation, skills, subagents, and MCP across the whole repo, not just the five-part harness bundle; a non-harness KI repo can support runtimes too. Native activation resolves it to each runtime's discovery path (Claude Code → `.claude/`, ChatGPT Codex → `.agents/`; see the runtime feature-coverage matrix in `SDR-KI-HARNESS-002`). The key is required: support is a stable repository capability, never inferred from the directories present at a moment in time. Values must name runtimes the activation linkers recognise (`claude-code`, `chatgpt-codex`), must be non-empty, and must not repeat — the auditor's `RUNTIMES-1` FAILs otherwise. The retired `codex` identifier is rejected with recovery guidance; it is not a compatibility alias.
 

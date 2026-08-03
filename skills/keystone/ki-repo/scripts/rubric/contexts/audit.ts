@@ -231,6 +231,7 @@ const HARNESS_ID = 'knowledgeislands/ki-agentic-harness'
 const skillTable = (name: string): string => `${HARNESS_ID}:${name}`
 const KI_SECTION = skillTable('ki-repo')
 const KI_REPO_DEFAULT = `["${KI_SECTION}"]
+repository = ""         # required — canonical HTTPS GitHub home, for example https://github.com/owner/repository
 title = ""              # required — exact README.md H1
 description = ""        # required — exact GitHub and package.json description where present
 visibility = "private"   # "public" | "private" — must match the repo's actual GitHub visibility
@@ -253,7 +254,16 @@ const KI_DEFAULT = `${KI_REPO_DEFAULT}\n${KI_AUTHORING_DEFAULT}`
 // Parse the owned table with Bun's TOML parser so quoted table keys, comments,
 // and multiline strings cannot be mistaken for schema. Returns null when the
 // document is invalid or has no object-valued ["knowledgeislands/ki-agentic-harness:ki-repo"] table.
-type KiConfig = { title?: string; description?: string; repoCode?: string; visibility?: string; license?: string; checks: Record<string, boolean> }
+type KiConfig = {
+  repository?: string
+  title?: string
+  description?: string
+  repoCode?: string
+  visibility?: string
+  license?: string
+  checks: Record<string, boolean>
+}
+const GITHUB_REPOSITORY = /^https:\/\/github\.com\/([a-z0-9](?:[a-z0-9._-]*[a-z0-9])?)\/([a-z0-9](?:[a-z0-9._-]*[a-z0-9])?)$/
 const CHECKS_SECTION = `${KI_SECTION}.checks`
 const TOML = (globalThis as unknown as { Bun: { TOML: { parse(text: string): unknown } } }).Bun.TOML
 function parseKiConfig(text: string): KiConfig | null {
@@ -267,6 +277,7 @@ function parseKiConfig(text: string): KiConfig | null {
   if (!value || typeof value !== 'object' || Array.isArray(value)) return null
   const table = value as Record<string, unknown>
   const out: KiConfig = { checks: {} }
+  if (typeof table.repository === 'string') out.repository = table.repository
   if (typeof table.title === 'string') out.title = table.title
   if (typeof table.description === 'string') out.description = table.description
   if (typeof table.repo_code === 'string') out.repoCode = table.repo_code
@@ -530,6 +541,10 @@ function auditRepo(
   // ── layer 1: declared repository identity ── FILES-2
   if (!ki) fail('FILES-2', `${KI_CONFIG} has no [${KI_SECTION}] table`, KI_CONFIG)
   else {
+    if (!ki.repository || !GITHUB_REPOSITORY.test(ki.repository))
+      fail('FILES-2', `${KI_CONFIG} must declare a canonical HTTPS GitHub \`repository\` URL`, KI_CONFIG)
+    else if (`https://github.com/${r.nameWithOwner.toLowerCase()}` !== ki.repository)
+      fail('FILES-2', `${KI_CONFIG} repository must equal the canonical GitHub home for ${r.nameWithOwner}`, KI_CONFIG)
     if (!ki.title?.trim()) fail('FILES-2', `${KI_CONFIG} must declare a non-empty \`title\``, KI_CONFIG)
     else if (readmeTitle(readme) !== ki.title.trim()) fail('FILES-2', `README.md H1 must equal ${KI_CONFIG} title`, 'README.md')
     if (!ki.description?.trim()) fail('FILES-2', `${KI_CONFIG} must declare a non-empty \`description\``, KI_CONFIG)

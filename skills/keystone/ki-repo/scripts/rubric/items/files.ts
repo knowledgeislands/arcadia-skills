@@ -59,7 +59,8 @@ const FILES_4: RubricItem<FilesRubricContext> = {
 const FILES_2: RubricItem<FilesRubricContext> = {
   code: 'FILES-2',
   title: 'Declared repository identity',
-  description: 'The ki-repo table declares title and description; its title matches the README H1, and a roadmap repository declares repo_code there.',
+  description:
+    'The ki-repo table declares its canonical GitHub repository, title, and description; its title matches the README H1, and a roadmap repository declares repo_code there.',
   sources: [SOURCE],
   mechanical: {
     level: 'FAIL',

@@ -13,7 +13,7 @@ import { STATUS } from './status.ts'
 export default {
   contract: 1,
   name: 'ki-handoffs',
-  concern: 'Cross-repository handoff submissions',
+  concern: 'Cross-repository trades',
   createSession: createHandoffsSession,
   families: [RUBRIC, CONFIG, ROUTE, SCAFFOLD, RECORD, AUTH, STATUS, RELEASE, ADOPTION]
 } satisfies SkillRubricDefinition<HandoffsRubricContext>

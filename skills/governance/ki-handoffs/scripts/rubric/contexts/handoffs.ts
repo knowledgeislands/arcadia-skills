@@ -3,42 +3,48 @@ import { isAbsolute, join, relative, resolve, sep } from 'node:path'
 import type { AuditOutcome, ConformWrite, RubricContextOptions, RubricPublicationContext, RubricSession } from '../../shared/rubric.ts'
 
 const CONFIG_TABLE = 'knowledgeislands/ki-agentic-harness:ki-handoffs'
+const REPOSITORY_TABLE = 'knowledgeislands/ki-agentic-harness:ki-repo'
 const IDENTITY = /^[a-z0-9](?:[a-z0-9._-]*[a-z0-9])?\/[a-z0-9](?:[a-z0-9._-]*[a-z0-9])?$/
+const REPOSITORY = /^https:\/\/github\.com\/([a-z0-9](?:[a-z0-9._-]*[a-z0-9])?)\/([a-z0-9](?:[a-z0-9._-]*[a-z0-9])?)$/
 const HANDOFF_ID = /^HND-[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/
 const UTC_TIMESTAMP = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/
-const STATUSES = ['received', 'adopted', 'parked', 'clarify', 'declined', 'superseded'] as const
-const TERMINAL_STATUSES = new Set(['adopted', 'declined', 'superseded'])
-const SENDER_FIELDS = ['id', 'title', 'created_at', 'sender', 'receiver', 'source_ref'] as const
-const RECEIVER_FIELDS = ['status', 'reviewed_at', 'rationale', 'adopted_as', 'superseded_by'] as const
+const TRADE_KINDS = ['work', 'knowledge'] as const
+const STATUSES = ['received', 'adopted', 'retained', 'parked', 'clarify', 'declined', 'superseded'] as const
+const TERMINAL_STATUSES = new Set(['adopted', 'retained', 'declined', 'superseded'])
+const SENDER_FIELDS = ['id', 'title', 'created_at', 'sender', 'receiver', 'kind', 'source_ref'] as const
+const RECEIVER_FIELDS = ['status', 'reviewed_at', 'rationale', 'adopted_as', 'retained_as', 'superseded_by'] as const
 const ALLOWED_FIELDS = new Set<string>([...SENDER_FIELDS, ...RECEIVER_FIELDS])
 
 const HANDOFF_READMES = [
   {
     path: '+/_HANDOFFS/README.md',
-    content: `# Incoming handoffs
+    content: `# Incoming trades
 
-This directory holds receiver-owned copies of active cross-repository submissions, grouped by the sender's canonical \`owner/repo\` identity.
+This directory holds receiver-owned copies of active cross-repository work and knowledge trades, grouped by the sender's canonical \`owner/repo\` identity.
 
-Only this repository may change receiver-local status, rationale, or adoption and supersession linkage. Sender provenance and payload remain unchanged. Prune an inbound copy only after an eligible sender release is observable.
+Only this repository may change receiver-local status, rationale, adoption, retention, or supersession linkage. Sender provenance and payload remain unchanged. Prune an inbound copy only after an eligible sender release is observable.
 `
   },
   {
     path: '-/_HANDOFFS/README.md',
-    content: `# Outgoing handoffs
+    content: `# Outgoing trades
 
-This directory holds sender-owned cross-repository submissions, grouped by the receiver's canonical \`owner/repo\` identity.
+This directory holds sender-owned cross-repository work and knowledge trades, grouped by the receiver's canonical \`owner/repo\` identity.
 
-Only this repository writes or removes these outbound records. Retain each record until the receiver reports adopted, declined, or superseded; parked and clarify dispositions do not permit release.
+Only this repository writes or removes these outbound records. Retain each record until the receiver reports adopted, retained, declined, or superseded; parked and clarify dispositions do not permit release.
 `
   }
 ] as const
 
 type HandoffStatus = (typeof STATUSES)[number]
+type TradeKind = (typeof TRADE_KINDS)[number]
 type Direction = 'inbound' | 'outbound'
 
 type HandoffConfiguration = {
+  readonly repository?: string
   readonly identity?: string
-  readonly peers: readonly string[]
+  readonly exportsTo: Readonly<Record<TradeKind, readonly string[]>>
+  readonly importsFrom: Readonly<Record<TradeKind, readonly string[]>>
   readonly valid: boolean
 }
 
@@ -48,6 +54,7 @@ type HandoffRecord = {
   readonly peer?: string
   readonly id?: string
   readonly status?: HandoffStatus
+  readonly kind?: TradeKind
   readonly fields: Readonly<Record<string, unknown>>
   readonly body: string
 }
@@ -107,34 +114,55 @@ const containedPhysical = (root: string, path: string, kind: 'file' | 'directory
 
 const pass = (message: string): readonly AuditOutcome[] => [{ status: 'PASS', message }]
 
-const parseConfiguration = (value: Readonly<Record<string, unknown>>, subject: string): { configuration: HandoffConfiguration; outcomes: AuditOutcome[] } => {
+const repositoryIdentity = (repository: unknown): { repository?: string; identity?: string } => {
+  if (typeof repository !== 'string') return {}
+  const match = repository.match(REPOSITORY)
+  return match ? { repository, identity: `${match[1]}/${match[2]}` } : {}
+}
+
+const parseConfiguration = (
+  value: Readonly<Record<string, unknown>>,
+  repository: unknown,
+  subject: string
+): { configuration: HandoffConfiguration; outcomes: AuditOutcome[] } => {
   const outcomes: AuditOutcome[] = []
-  const unknown = Object.keys(value).filter((key) => key !== 'identity' && key !== 'peers')
+  const unknown = Object.keys(value).filter((key) => key !== 'exports_to' && key !== 'imports_from')
   for (const key of unknown) outcomes.push({ status: 'VIOLATION', level: 'WARN', message: `unrecognised ki-handoffs configuration key ${key}`, subject })
 
-  const identity = value.identity
-  if (typeof identity !== 'string' || !IDENTITY.test(identity)) {
-    outcomes.push({ status: 'VIOLATION', message: 'identity must be one canonical lower-case owner/repo value', subject })
-  }
+  const local = repositoryIdentity(repository)
+  if (!local.repository || !local.identity) outcomes.push({ status: 'VIOLATION', message: 'ki-repo repository must be a canonical HTTPS GitHub home', subject })
 
-  const rawPeers = value.peers
-  const peers = Array.isArray(rawPeers) && rawPeers.every((peer) => typeof peer === 'string') ? (rawPeers as string[]) : []
-  if (!Array.isArray(rawPeers) || rawPeers.some((peer) => typeof peer !== 'string')) {
-    outcomes.push({ status: 'VIOLATION', message: 'peers must be an array of canonical owner/repo values', subject })
-  } else {
-    for (const peer of peers.filter((peer) => !IDENTITY.test(peer)))
-      outcomes.push({ status: 'VIOLATION', message: `peer ${peer} is not a canonical lower-case owner/repo value`, subject })
-    if (new Set(peers).size !== peers.length) outcomes.push({ status: 'VIOLATION', message: 'peers must not repeat an identity', subject })
-    if (peers.some((peer) => peer === identity))
-      outcomes.push({ status: 'VIOLATION', message: 'peers must not contain the local repository identity', subject })
-    if (peers.join('\n') !== [...peers].sort((left, right) => left.localeCompare(right)).join('\n'))
-      outcomes.push({ status: 'VIOLATION', message: 'peers must be normalized in lexical order', subject })
+  const parseRoutes = (key: 'exports_to' | 'imports_from'): Readonly<Record<TradeKind, readonly string[]>> => {
+    const raw = value[key]
+    const routes = table(raw)
+    const result: Record<TradeKind, readonly string[]> = { work: [], knowledge: [] }
+    if (!routes) outcomes.push({ status: 'VIOLATION', message: `${key} must map every trade kind to canonical HTTPS GitHub repository URL arrays`, subject })
+    for (const kind of TRADE_KINDS) {
+      const values = routes?.[kind]
+      const entries = Array.isArray(values) && values.every((route) => typeof route === 'string') ? (values as string[]) : []
+      result[kind] = entries
+      if (!Array.isArray(values) || values.some((route) => typeof route !== 'string'))
+        outcomes.push({ status: 'VIOLATION', message: `${key}.${kind} must be an array of canonical HTTPS GitHub repository URLs`, subject })
+      else {
+        for (const route of entries.filter((route) => !REPOSITORY.test(route)))
+          outcomes.push({ status: 'VIOLATION', message: `${key}.${kind} entry ${route} is not a canonical HTTPS GitHub repository URL`, subject })
+        if (new Set(entries).size !== entries.length) outcomes.push({ status: 'VIOLATION', message: `${key}.${kind} must not repeat a repository`, subject })
+        if (entries.some((route) => route === local.repository))
+          outcomes.push({ status: 'VIOLATION', message: `${key}.${kind} must not contain the local repository`, subject })
+        if (entries.join('\n') !== [...entries].sort((left, right) => left.localeCompare(right)).join('\n'))
+          outcomes.push({ status: 'VIOLATION', message: `${key}.${kind} must be normalized in lexical order`, subject })
+      }
+    }
+    return result
   }
+  const exportsTo = parseRoutes('exports_to')
+  const importsFrom = parseRoutes('imports_from')
 
   return {
     configuration: {
-      ...(typeof identity === 'string' ? { identity } : {}),
-      peers,
+      ...local,
+      exportsTo,
+      importsFrom,
       valid: outcomes.every((outcome) => outcome.status !== 'VIOLATION' || outcome.level === 'WARN')
     },
     outcomes
@@ -143,14 +171,15 @@ const parseConfiguration = (value: Readonly<Record<string, unknown>>, subject: s
 
 const parseRepositoryConfiguration = (root: string): HandoffConfiguration => {
   const path = join(root, '.ki-config.toml')
-  if (!containedPhysical(root, path, 'file')) return { peers: [], valid: false }
+  if (!containedPhysical(root, path, 'file')) return { exportsTo: { work: [], knowledge: [] }, importsFrom: { work: [], knowledge: [] }, valid: false }
   try {
     const document = Bun.TOML.parse(readFileSync(path, 'utf8')) as Record<string, unknown>
     const owned = table(document[CONFIG_TABLE])
-    if (!owned) return { peers: [], valid: false }
-    return parseConfiguration(owned, path).configuration
+    const repository = table(document[REPOSITORY_TABLE])?.repository
+    if (!owned) return { exportsTo: { work: [], knowledge: [] }, importsFrom: { work: [], knowledge: [] }, valid: false }
+    return parseConfiguration(owned, repository, path).configuration
   } catch {
-    return { peers: [], valid: false }
+    return { exportsTo: { work: [], knowledge: [] }, importsFrom: { work: [], knowledge: [] }, valid: false }
   }
 }
 
@@ -182,9 +211,10 @@ const routeEvidence = (
   userHome: string,
   local: HandoffConfiguration
 ): { outcomes: readonly AuditOutcome[]; active: ReadonlyMap<string, RegisteredRepository> } => {
-  if (!local.valid || !local.identity)
-    return { outcomes: [{ status: 'NOT_APPLICABLE', message: 'routes require a valid local handoff identity' }], active: new Map() }
-  if (local.peers.length === 0) return { outcomes: pass('No peer routes are declared.'), active: new Map() }
+  if (!local.valid || !local.identity || !local.repository)
+    return { outcomes: [{ status: 'NOT_APPLICABLE', message: 'trade routes require a valid local ki-repo repository identity' }], active: new Map() }
+  if (TRADE_KINDS.every((kind) => local.exportsTo[kind].length === 0 && local.importsFrom[kind].length === 0))
+    return { outcomes: pass('No trade routes are declared.'), active: new Map() }
 
   const registered = registeredRepositories(userHome)
   const active = new Map<string, RegisteredRepository>()
@@ -194,27 +224,40 @@ const routeEvidence = (
     outcomes.push({ status: 'VIOLATION', message: `local repository ${local.identity} is not present in the KI repository registry`, subject: local.identity })
   }
 
-  for (const peer of local.peers) {
-    const matches = registered.filter((candidate) => candidate.configuration.identity === peer)
+  const validateRoute = (peer: string, direction: 'export' | 'import', kind: TradeKind): void => {
+    const matches = registered.filter((candidate) => candidate.configuration.repository === peer)
     if (matches.length === 0) {
-      outcomes.push({ status: 'VIOLATION', message: `declared peer ${peer} has no matching registered repository identity`, subject: peer })
-      continue
+      outcomes.push({ status: 'VIOLATION', message: `declared ${direction} route ${peer} has no matching registered repository`, subject: peer })
+      return
     }
     if (matches.length > 1) {
-      outcomes.push({ status: 'VIOLATION', message: `declared peer ${peer} is ambiguous across ${matches.length} registered repositories`, subject: peer })
-      continue
+      outcomes.push({
+        status: 'VIOLATION',
+        message: `declared ${direction} route ${peer} is ambiguous across ${matches.length} registered repositories`,
+        subject: peer
+      })
+      return
     }
     const [candidate] = matches
     if (!candidate?.configuration.valid) {
-      outcomes.push({ status: 'VIOLATION', message: `registered peer ${peer} has malformed ki-handoffs configuration`, subject: peer })
-      continue
+      outcomes.push({ status: 'VIOLATION', message: `registered route endpoint ${peer} has malformed ki-handoffs configuration`, subject: peer })
+      return
     }
-    if (!candidate.configuration.peers.includes(local.identity)) {
-      outcomes.push({ status: 'VIOLATION', message: `declared peer ${peer} does not reciprocally allow ${local.identity}`, subject: peer })
-      continue
+    const reciprocal = direction === 'export' ? candidate.configuration.importsFrom[kind] : candidate.configuration.exportsTo[kind]
+    if (!reciprocal.includes(local.repository ?? '')) {
+      outcomes.push({ status: 'VIOLATION', message: `declared ${direction} route ${peer} lacks its matching receiver or sender declaration`, subject: peer })
+      return
     }
-    active.set(peer, candidate)
-    outcomes.push({ status: 'PASS', message: `reciprocal route ${local.identity} ↔ ${peer} is active`, subject: peer })
+    if (candidate.configuration.identity) active.set(candidate.configuration.identity, candidate)
+    outcomes.push({
+      status: 'PASS',
+      message: `${kind} ${direction} trade route ${local.repository} ${direction === 'export' ? '→' : '←'} ${peer} is active`,
+      subject: peer
+    })
+  }
+  for (const kind of TRADE_KINDS) {
+    for (const peer of local.exportsTo[kind]) validateRoute(peer, 'export', kind)
+    for (const peer of local.importsFrom[kind]) validateRoute(peer, 'import', kind)
   }
   return { outcomes, active }
 }
@@ -273,6 +316,8 @@ const parseRecord = (root: string, path: string, direction: Direction, outcomes:
     outcomes.push({ status: 'VIOLATION', message: 'sender must be a canonical owner/repo identity', subject: path })
   if (typeof fields.receiver === 'string' && !IDENTITY.test(fields.receiver))
     outcomes.push({ status: 'VIOLATION', message: 'receiver must be a canonical owner/repo identity', subject: path })
+  if (typeof fields.kind !== 'string' || !TRADE_KINDS.includes(fields.kind as TradeKind))
+    outcomes.push({ status: 'VIOLATION', message: `kind must be one of ${TRADE_KINDS.join(', ')}`, subject: path })
 
   const expectedH1 = id && typeof fields.title === 'string' ? `# ${id}: ${fields.title}` : ''
   if (!expectedH1 || body.split('\n')[0] !== expectedH1)
@@ -284,7 +329,9 @@ const parseRecord = (root: string, path: string, direction: Direction, outcomes:
 
   const rawStatus = fields.status
   const status = typeof rawStatus === 'string' && STATUSES.includes(rawStatus as HandoffStatus) ? (rawStatus as HandoffStatus) : undefined
-  return { direction, path, ...(peer ? { peer } : {}), ...(id ? { id } : {}), ...(status ? { status } : {}), fields, body }
+  const rawKind = fields.kind
+  const kind = typeof rawKind === 'string' && TRADE_KINDS.includes(rawKind as TradeKind) ? (rawKind as TradeKind) : undefined
+  return { direction, path, ...(peer ? { peer } : {}), ...(id ? { id } : {}), ...(status ? { status } : {}), ...(kind ? { kind } : {}), fields, body }
 }
 
 const immutableRecord = (record: HandoffRecord): string =>
@@ -316,7 +363,7 @@ const recordEvidence = (
       if (previous) records.push({ status: 'VIOLATION', message: `${record.id} repeats the record identity already used by ${previous}`, subject: record.path })
       else seen.set(record.id, record.path)
     }
-    if (!local.identity || !record.peer || !record.id) continue
+    if (!local.identity || !record.peer || !record.id || !record.kind) continue
     const expectedLocal = record.direction === 'inbound' ? record.fields.receiver : record.fields.sender
     const expectedPeer = record.direction === 'inbound' ? record.fields.sender : record.fields.receiver
     if (expectedLocal !== local.identity)
@@ -326,6 +373,16 @@ const recordEvidence = (
     const peer = active.get(record.peer)
     if (!peer) {
       authority.push({ status: 'VIOLATION', message: `${record.direction} record has no active reciprocal route to ${record.peer}`, subject: record.path })
+      continue
+    }
+
+    const permitted = record.direction === 'outbound' ? local.exportsTo[record.kind] : local.importsFrom[record.kind]
+    if (!peer.configuration.repository || !permitted.includes(peer.configuration.repository)) {
+      authority.push({
+        status: 'VIOLATION',
+        message: `${record.kind} ${record.direction} record has no active directional trade route to ${record.peer}`,
+        subject: record.path
+      })
       continue
     }
 
@@ -341,8 +398,16 @@ const recordEvidence = (
         status.push({ status: 'VIOLATION', message: `${record.status} requires receiver-local rationale`, subject: record.path })
       if (record.status === 'adopted' && typeof record.fields.adopted_as !== 'string')
         status.push({ status: 'VIOLATION', message: 'adopted requires receiver-local adopted_as linkage', subject: record.path })
+      if (record.status === 'adopted' && record.kind !== 'work')
+        status.push({ status: 'VIOLATION', message: 'adopted is valid only for work handoffs', subject: record.path })
+      if (record.status === 'retained' && record.kind !== 'knowledge')
+        status.push({ status: 'VIOLATION', message: 'retained is valid only for knowledge handoffs', subject: record.path })
+      if (record.status === 'retained' && typeof record.fields.retained_as !== 'string')
+        status.push({ status: 'VIOLATION', message: 'retained requires receiver-local retained_as linkage', subject: record.path })
       if (record.status !== 'adopted' && record.fields.adopted_as !== undefined)
         status.push({ status: 'VIOLATION', message: 'adopted_as is valid only for adopted status', subject: record.path })
+      if (record.status !== 'retained' && record.fields.retained_as !== undefined)
+        status.push({ status: 'VIOLATION', message: 'retained_as is valid only for retained status', subject: record.path })
       if (record.status === 'superseded' && typeof record.fields.superseded_by !== 'string')
         status.push({ status: 'VIOLATION', message: 'superseded requires receiver-local superseded_by linkage', subject: record.path })
       if (record.status !== 'superseded' && record.fields.superseded_by !== undefined)
@@ -365,7 +430,7 @@ const recordEvidence = (
       } else {
         release.push({
           status: 'VIOLATION',
-          message: `sender released its outbound copy before an adopted, declined, or superseded disposition`,
+          message: `sender released its outbound copy before an adopted, retained, declined, or superseded disposition`,
           subject: record.path
         })
       }
@@ -411,24 +476,24 @@ export const createHandoffsSession = ({
   publication
 }: RubricContextOptions): RubricSession<HandoffsRubricContext> => {
   const root = resolve(repository)
-  const parsedConfiguration = parseConfiguration(configuration, '.ki-config.toml')
+  const parsedConfiguration = parseConfiguration(configuration, parseRepositoryConfiguration(root).repository, '.ki-config.toml')
   const routes = routeEvidence(root, userHome, parsedConfiguration.configuration)
   const evidence = recordEvidence(root, parsedConfiguration.configuration, routes.active)
   let scaffoldRequested = false
   const context: HandoffsRubricContext = {
     rubric: { publication },
     configuration: {
-      outcomes: parsedConfiguration.outcomes.length ? parsedConfiguration.outcomes : pass('Handoff identity and peer declarations are canonical.')
+      outcomes: parsedConfiguration.outcomes.length ? parsedConfiguration.outcomes : pass('Trade route declarations are canonical.')
     },
     routes: { outcomes: routes.outcomes },
     scaffold: {
       outcomes: scaffoldEvidence(root).length ? scaffoldEvidence(root) : pass('Owned handoff scaffold is present and conformed.'),
       ...(mode === 'conform' && canConformScaffold(root) ? { ensureScaffold: () => (scaffoldRequested = true) } : {})
     },
-    records: { outcomes: evidence.records.length ? evidence.records : pass('Handoff record identity and payload shape are valid.') },
-    authority: { outcomes: evidence.authority.length ? evidence.authority : pass('Handoff records preserve sender and receiver write boundaries.') },
+    records: { outcomes: evidence.records.length ? evidence.records : pass('Trade record identity and payload shape are valid.') },
+    authority: { outcomes: evidence.authority.length ? evidence.authority : pass('Trade records preserve sender and receiver write boundaries.') },
     status: { outcomes: evidence.status.length ? evidence.status : pass('Receiver statuses and local linkage are valid.') },
-    release: { outcomes: evidence.release.length ? evidence.release : pass('No handoff release or pruning violation is observable.') },
+    release: { outcomes: evidence.release.length ? evidence.release : pass('No trade release or pruning violation is observable.') },
     judgment: {}
   }
 

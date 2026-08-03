@@ -6,7 +6,7 @@ The sources behind [the cross-repository handoff standard](standards-handoffs.md
 
 | Source                                                            | last reviewed |
 | ----------------------------------------------------------------- | ------------- |
-| `GDR-KI-HARNESS-005` — cross-repository handoff submissions       | 2026-08-03    |
+| `GDR-KI-HARNESS-005` — cross-repository trade routes              | 2026-08-03    |
 | `ki-repo` configuration and local registered-repository contracts | 2026-08-03    |
 
 ## Last review
