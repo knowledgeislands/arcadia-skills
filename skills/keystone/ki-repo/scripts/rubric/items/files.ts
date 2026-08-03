@@ -42,7 +42,7 @@ const FILES_3: RubricItem<FilesRubricContext> = {
 const FILES_4: RubricItem<FilesRubricContext> = {
   code: 'FILES-4',
   title: 'Runtime skill ignore contract',
-  description: 'Generated Claude and Codex runtime skill links are ignored while the repository-owned .agents/skills/ki-self source remains committed.',
+  description: 'Generated skill links are ignored for each declared runtime, while a repository-local .agents/skills/ki-self source remains committed.',
   sources: [SOURCE],
   mechanical: {
     level: 'FAIL',

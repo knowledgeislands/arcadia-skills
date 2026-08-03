@@ -495,14 +495,18 @@ export const declaresRootTable = (kiText: string, table: string): boolean => dec
 
 const readmeTitle = (text: string | null): string | null => text?.match(/^#\s+(.+?)(?:\s+#+)?\s*$/m)?.[1]?.trim() || null
 
-function hasRuntimeSkillIgnoreRules(gitignore: string | null): boolean {
+const RUNTIME_SKILL_IGNORE_RULES = ['.claude/skills/*', '.agents/skills/*', '!.agents/skills/ki-self/', '!.agents/skills/ki-self/**']
+
+function hasRuntimeSkillIgnoreRules(gitignore: string | null, expected: readonly string[]): boolean {
   if (gitignore == null) return false
   const lines = gitignore.split(/\r?\n/).map((line) => line.trim())
-  const claudeIgnore = lines.indexOf('.claude/skills/*')
-  const ignore = lines.indexOf('.agents/skills/*')
-  const selfDirectory = lines.indexOf('!.agents/skills/ki-self/')
-  const selfContents = lines.indexOf('!.agents/skills/ki-self/**')
-  return claudeIgnore !== -1 && claudeIgnore < ignore && ignore < selfDirectory && selfDirectory < selfContents && !lines.includes('.agents/skills/')
+  const actual = lines.filter((line) => RUNTIME_SKILL_IGNORE_RULES.includes(line))
+  return (
+    actual.length === expected.length &&
+    actual.every((line, index) => line === expected[index]) &&
+    !lines.includes('.claude/skills/') &&
+    !lines.includes('.agents/skills/')
+  )
 }
 
 function auditRepo(
@@ -526,8 +530,13 @@ function auditRepo(
     if (!paths.some((p) => files.has(p))) fail('FILES-1', `no ${paths.join(' / ')}`, paths[0])
   }
   // ── layer 1: runtime skill ignore contract (gated on the ki-repo marker) ── FILES-4
-  if (files.has(KI_CONFIG) && !hasRuntimeSkillIgnoreRules(gitignore))
-    fail('FILES-4', '.gitignore must ignore .claude/skills/* and .agents/skills/* while re-including .agents/skills/ki-self/', '.gitignore')
+  const runtimeDeclaration = kiText == null ? undefined : parseSupportedRuntimes(kiText)
+  const runtimeRules =
+    runtimeDeclaration && !runtimeDeclaration.issue && runtimeDeclaration.runtimes.every((runtime) => KNOWN_RUNTIMES.includes(runtime))
+      ? runtimeSkillIgnoreRules(runtimeDeclaration.runtimes)
+      : undefined
+  if (files.has(KI_CONFIG) && runtimeRules && !hasRuntimeSkillIgnoreRules(gitignore, runtimeRules))
+    fail('FILES-4', `.gitignore must declare the generated skill rules for supported_runtimes: ${runtimeRules.join(', ')}`, '.gitignore')
   // ── layer 1: declared authoring baseline (gated on the ki-repo marker) ── FILES-3
   // A confirmed ki-repo declares the baseline authoring standard explicitly.
   // Native self-check resolution is a host precondition, not repository-local evidence.
@@ -769,15 +778,22 @@ function auditRepo(
 // The agent runtimes the bootstrap linkers know how to install for. A repo may
 // declare a subset in `["knowledgeislands/ki-agentic-harness:ki-repo"] supported_runtimes`; anything outside this set has no
 // discovery path, so the linker would silently do nothing for it (RUNTIMES-1).
-const KNOWN_RUNTIMES = ['claude-code', 'chatgpt-codex']
+export const KNOWN_RUNTIMES = ['claude-code', 'chatgpt-codex']
 const LOCAL_SELF_SOURCE = '.agents/skills/ki-self'
 const CLAUDE_SELF_PROJECTION = '.claude/skills/ki-self'
+
+export const runtimeSkillIgnoreRules = (runtimes: readonly string[]): string[] => [
+  ...(runtimes.includes('claude-code') ? ['.claude/skills/*'] : []),
+  ...(runtimes.includes('chatgpt-codex') ? ['.agents/skills/*'] : []),
+  '!.agents/skills/ki-self/',
+  '!.agents/skills/ki-self/**'
+]
 
 // Parse `supported_runtimes = ["a", "b"]` from the ["knowledgeislands/ki-agentic-harness:ki-repo"] table only (the documented
 // home of the key — table-aware, unlike the bootstrap resolver's tolerant match).
 // Returns null when the key is absent (the ["claude-code"] default applies, nothing to
 // check), else the declared list (possibly empty).
-function parseSupportedRuntimes(text: string): { runtimes: string[]; rootTables: string[]; issue?: string } {
+export function parseSupportedRuntimes(text: string): { runtimes: string[]; rootTables: string[]; issue?: string } {
   let document: Record<string, unknown>
   try {
     document = TOML.parse(text) as Record<string, unknown>

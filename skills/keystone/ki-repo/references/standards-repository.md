@@ -42,7 +42,7 @@ Every repo carries these at the root. A local audit reads the selected checkout'
 
 **Repository-local ki-self projection.** A repository may author a local `ki-self` at `.agents/skills/ki-self/`; this is its one canonical committed source and Codex reads it directly. If `claude-code` is declared in `supported_runtimes`, `.claude/skills/ki-self` must be a non-broken relative symbolic link resolving to that canonical source. If Claude Code is not declared, that projection must be absent. Do not maintain a copied Claude skill directory. This check is conditional because `ki-self` itself remains optional; once present, its runtime projection must match the declared support surface.
 
-**Runtime skill ignore contract.** `.gitignore` must ignore generated runtime links with `.claude/skills/*` and `.agents/skills/*`, then re-include the repository-owned `ki-self` source with `!.agents/skills/ki-self/` and `!.agents/skills/ki-self/**`. The rules keep bootstrap-created links out of history without excluding the canonical local source.
+**Runtime skill ignore contract.** `.gitignore` follows the declared `supported_runtimes`: `claude-code` requires `.claude/skills/*`; `chatgpt-codex` requires `.agents/skills/*`. Every repository re-includes the reserved canonical `.agents/skills/ki-self/` source with `!.agents/skills/ki-self/` and `!.agents/skills/ki-self/**`, regardless of the declared runtime set, so it remains trackable whenever a repository elects to author it. These rules keep bootstrap-created links out of history without excluding the canonical local source.
 
 ### `.ki/` — legacy migration state, not an executor
 

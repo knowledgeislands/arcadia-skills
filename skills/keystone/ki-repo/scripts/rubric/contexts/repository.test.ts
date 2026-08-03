@@ -97,6 +97,9 @@ describe('ki-repo session', () => {
 
   test('replaces legacy runtime-skill ignores with the canonical ki-self exception', () => {
     const root = repository()
+    writeFileSync(join(root, '.ki-config.toml'), '["knowledgeislands/ki-agentic-harness:ki-repo"]\nsupported_runtimes = ["claude-code", "chatgpt-codex"]\n')
+    mkdirSync(join(root, '.agents', 'skills', 'ki-self'), { recursive: true })
+    writeFileSync(join(root, '.agents', 'skills', 'ki-self', 'SKILL.md'), '# KI Self\n')
     writeFileSync(join(root, '.gitignore'), 'node_modules/\n.claude/skills/*\n.agents/skills/\n')
     const session = createRepoSession(options(root, 'conform'), inspect)
     runFilesConform(filesContext(session))
@@ -108,16 +111,25 @@ describe('ki-repo session', () => {
     )
   })
 
-  test('requires the runtime-skill ignore contract while allowing ki-self', () => {
+  test('derives runtime-skill ignores from supported runtimes while reserving ki-self', () => {
     const root = repository()
-    writeFileSync(join(root, '.ki-config.toml'), '["knowledgeislands/ki-agentic-harness:ki-repo"]\n')
-    writeFileSync(join(root, '.gitignore'), '.agents/skills/\n')
+    writeFileSync(join(root, '.ki-config.toml'), '["knowledgeislands/ki-agentic-harness:ki-repo"]\nsupported_runtimes = ["claude-code"]\n')
+    writeFileSync(join(root, '.gitignore'), '.agents/skills/*\n')
 
     expect(collectAuditFindings([root]).findings).toContainEqual(
-      expect.objectContaining({ code: 'FILES-4', message: expect.stringContaining('must ignore .claude/skills/* and .agents/skills/*') })
+      expect.objectContaining({ code: 'FILES-4', message: expect.stringContaining('.claude/skills/*') })
     )
 
-    writeFileSync(join(root, '.gitignore'), '.claude/skills/*\n.agents/skills/*\n!.agents/skills/ki-self/\n!.agents/skills/ki-self/**\n')
+    writeFileSync(join(root, '.gitignore'), '.claude/skills/*\n')
+    expect(collectAuditFindings([root]).findings).toContainEqual(
+      expect.objectContaining({ code: 'FILES-4', message: expect.stringContaining('!.agents/skills/ki-self/') })
+    )
+
+    writeFileSync(join(root, '.gitignore'), '.claude/skills/*\n!.agents/skills/ki-self/\n!.agents/skills/ki-self/**\n')
+    expect(collectAuditFindings([root]).findings).not.toContainEqual(expect.objectContaining({ code: 'FILES-4' }))
+
+    writeFileSync(join(root, '.ki-config.toml'), '["knowledgeislands/ki-agentic-harness:ki-repo"]\nsupported_runtimes = ["chatgpt-codex"]\n')
+    writeFileSync(join(root, '.gitignore'), '.agents/skills/*\n!.agents/skills/ki-self/\n!.agents/skills/ki-self/**\n')
     expect(collectAuditFindings([root]).findings).not.toContainEqual(expect.objectContaining({ code: 'FILES-4' }))
   })
 

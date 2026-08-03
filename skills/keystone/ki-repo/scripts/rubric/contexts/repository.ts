@@ -1,7 +1,15 @@
 import { existsSync, lstatSync, readFileSync } from 'node:fs'
 import { join, resolve } from 'node:path'
 import type { AuditOutcome, ConformWrite, RubricContextOptions, RubricPublicationContext, RubricSession, ViolationLevel } from '../../shared/rubric.ts'
-import { collectAuditFindings, declaresRootTable, type RepoAuditCollection, type RepoEvidenceFinding } from './audit.ts'
+import {
+  collectAuditFindings,
+  declaresRootTable,
+  KNOWN_RUNTIMES,
+  parseSupportedRuntimes,
+  type RepoAuditCollection,
+  type RepoEvidenceFinding,
+  runtimeSkillIgnoreRules
+} from './audit.ts'
 
 const HARNESS_ID = 'knowledgeislands/ki-agentic-harness'
 const KI_REPO_TABLE = `${HARNESS_ID}:ki-repo`
@@ -25,42 +33,42 @@ const KI_AUTHORING_DEFAULT = `# The authoring standard (Markdown/TOML house styl
 ["${KI_AUTHORING_TABLE}"]
 `
 
-const RUNTIME_SKILL_GITIGNORE = `# Generated project-local runtime payloads (ki-bootstrap) — never committed
-.claude/skills/*
-.agents/skills/*
-!.agents/skills/ki-self/
-!.agents/skills/ki-self/**
+const RUNTIME_SKILL_GITIGNORE = (rules: readonly string[]): string => `# Generated project-local runtime payloads (ki-bootstrap) — never committed
+${rules.join('\n')}
 `
-const GITIGNORE_DEFAULT = `node_modules/
+const GITIGNORE_DEFAULT = (rules: readonly string[]): string => `node_modules/
 .DS_Store
 
-${RUNTIME_SKILL_GITIGNORE}`
+${RUNTIME_SKILL_GITIGNORE(rules)}`
+const ALL_RUNTIME_SKILL_RULES = new Set([
+  '.claude/skills/',
+  '.claude/skills/*',
+  '.agents/skills/',
+  '.agents/skills/*',
+  '!.agents/skills/ki-self/',
+  '!.agents/skills/ki-self/**'
+])
 
-const hasRuntimeSkillIgnoreRules = (content: string): boolean => {
+const hasRuntimeSkillIgnoreRules = (content: string, expected: readonly string[]): boolean => {
   const lines = content.split(/\r?\n/).map((line) => line.trim())
-  const claudeIgnore = lines.indexOf('.claude/skills/*')
-  const ignore = lines.indexOf('.agents/skills/*')
-  const selfDirectory = lines.indexOf('!.agents/skills/ki-self/')
-  const selfContents = lines.indexOf('!.agents/skills/ki-self/**')
-  return claudeIgnore !== -1 && claudeIgnore < ignore && ignore < selfDirectory && selfDirectory < selfContents && !lines.includes('.agents/skills/')
+  const actual = lines.filter((line) => ALL_RUNTIME_SKILL_RULES.has(line))
+  return actual.length === expected.length && actual.every((line, index) => line === expected[index])
 }
 
-const conformRuntimeSkillIgnore = (content: string): string => {
-  if (hasRuntimeSkillIgnoreRules(content)) return content
+const conformRuntimeSkillIgnore = (content: string, rules: readonly string[]): string => {
+  if (hasRuntimeSkillIgnoreRules(content, rules)) return content
   const lines = content.split(/\r?\n/)
-  const runtimeSkillRules = new Set([
-    '.claude/skills/',
-    '.claude/skills/*',
-    '.agents/skills/',
-    '.agents/skills/*',
-    '!.agents/skills/ki-self/',
-    '!.agents/skills/ki-self/**'
-  ])
   const retained = lines
-    .filter((line) => !runtimeSkillRules.has(line.trim()))
+    .filter((line) => !ALL_RUNTIME_SKILL_RULES.has(line.trim()))
     .join('\n')
     .replace(/\n*$/, '')
-  return `${retained}\n\n${RUNTIME_SKILL_GITIGNORE}`
+  return `${retained}\n\n${RUNTIME_SKILL_GITIGNORE(rules)}`
+}
+
+const runtimeRules = (config: string): string[] | undefined => {
+  const parsed = parseSupportedRuntimes(config)
+  if (parsed.issue || parsed.runtimes.some((runtime) => !KNOWN_RUNTIMES.includes(runtime))) return undefined
+  return runtimeSkillIgnoreRules(parsed.runtimes)
 }
 
 const GITHUB_CODES = new Set([
@@ -289,6 +297,7 @@ export const createRepoSession = (
   const gitignorePath = join(target, '.gitignore')
   const gitignoreExists = existsSync(gitignorePath)
   const gitignoreSource = !gitignoreExists ? '' : isSafeRegularFile(gitignorePath) ? readFileSync(gitignorePath, 'utf8') : undefined
+  const declaredRuntimeRules = configSource === undefined ? undefined : runtimeRules(configSource || KI_REPO_DEFAULT)
   let repoConfigurationRequested = false
   let authoringConfigurationRequested = false
   let gitignoreRequested = false
@@ -309,7 +318,11 @@ export const createRepoSession = (
             }
           }
         : {}),
-      ...(mutable && gitignoreExists && gitignoreSource !== undefined && !hasRuntimeSkillIgnoreRules(gitignoreSource)
+      ...(mutable &&
+      gitignoreExists &&
+      gitignoreSource !== undefined &&
+      declaredRuntimeRules &&
+      !hasRuntimeSkillIgnoreRules(gitignoreSource, declaredRuntimeRules)
         ? {
             ensureRuntimeSkillIgnore: () => {
               runtimeSkillIgnoreRequested = true
@@ -396,9 +409,9 @@ export const createRepoSession = (
         const content = appendBlocks(configSource, blocks)
         if (content !== configSource) writes.push({ path: '.ki-config.toml', content, ...(!configExists ? { create: true } : {}) })
       }
-      if (gitignoreRequested) writes.push({ path: '.gitignore', content: GITIGNORE_DEFAULT, create: true })
-      if (runtimeSkillIgnoreRequested && gitignoreSource !== undefined) {
-        const content = conformRuntimeSkillIgnore(gitignoreSource)
+      if (gitignoreRequested && declaredRuntimeRules) writes.push({ path: '.gitignore', content: GITIGNORE_DEFAULT(declaredRuntimeRules), create: true })
+      if (runtimeSkillIgnoreRequested && gitignoreSource !== undefined && declaredRuntimeRules) {
+        const content = conformRuntimeSkillIgnore(gitignoreSource, declaredRuntimeRules)
         if (content !== gitignoreSource) writes.push({ path: '.gitignore', content })
       }
       if (workingAreaScaffoldRequested) {
