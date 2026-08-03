@@ -3,7 +3,7 @@ id: KI-HARNESS-FND-001
 title: Harden external Cowork plugin publication
 theme: foundation-tooling
 horizon: next
-status: acceptance
+status: done
 blocks: []
 blocked-by: []
 baseline-ref: 3621af09436a0977e73388f116063309d20ce4f4
@@ -136,6 +136,10 @@ An independent adversarial review found and the delivery resolved dangling-symli
 The immutable baseline is `3621af09436a0977e73388f116063309d20ce4f4`; the implementation commit is `3b2e0001252fdcacb31f38a3bdf6f2ebe6491839`.
 
 Node exposes the required filesystem operations by pathname rather than directory-descriptor-bound `*at` calls. The builder revalidates the pinned root before each mutation and around cooperative callbacks, but an independently hostile process can still race the validation-to-syscall gap. That bounded platform limitation is documented in the builder and does not permit an unreviewed live publication.
+
+## Done
+
+Accepted by the repository owner on 2026-08-03. Retain this record as the evidence for recoverable, manifest-backed Cowork plugin publication; a future live publication still requires the separate target-owner approval recorded above.
 
 ## Discussion
 
