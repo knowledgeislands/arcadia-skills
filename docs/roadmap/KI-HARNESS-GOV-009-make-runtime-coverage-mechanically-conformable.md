@@ -18,6 +18,8 @@ Let a repository that has declared a supported runtime converge to the required 
 
 `ki repo audit` correctly detects when a runtime declared in `supported_runtimes` lacks its required repository skill tables and managed runtime-discovery links. At present, the failure requires a user or agent to interpret the finding and run one `ki repo skill add <skill>` command for each missing capability. This is deterministic information already held by the runtime-coverage contract, so the repair should be mechanically conformable rather than a manual diagnosis step.
 
+The contract must distinguish repository-owned projections — shared `AGENTS.md`, the Claude `CLAUDE.md` appendix, and managed skill-discovery links — from user-owned runtime settings. It should reconcile only the declared, deterministic repository projections; `.claude/settings.json` and other personal configuration remain outside its scope.
+
 ## Boundary
 
 Do not infer or add supported runtimes, globally install user skills, or modify unmanaged runtime configuration. Do not weaken the read-only audit boundary or conceal an unresolved runtime-to-skill mapping.
