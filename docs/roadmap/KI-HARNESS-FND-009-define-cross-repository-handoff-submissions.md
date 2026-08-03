@@ -3,7 +3,7 @@ id: KI-HARNESS-FND-009
 title: Define cross-repository handoff submissions
 theme: foundation-tooling
 horizon: next
-status: in-progress
+status: acceptance
 blocks: []
 blocked-by: []
 baseline-ref: 59156a47570d61460c27913f0a400de925c224b6
@@ -38,7 +38,7 @@ The agreed initial model is local registered-repository visibility. A sender wri
 - [x] Define local route declarations and reciprocal route checking: each side records its willingness to exchange with the other, and only matching declarations form an active bi-directional route.
 - [x] Move `_HANDOFFS` scaffolding and lifecycle ownership from `ki-repo` to the new capability while preserving `+` and `-` as generic working areas.
 - [x] Add focused verification for route and submission shape, reciprocal-route eligibility, sender and receiver write boundaries, lifecycle status handling, and safe pruning observations.
-- [ ] Record the published contract directly in `tools-ki` item `KI-TOOL-CLI-012` so its CLI delivery can proceed independently.
+- [x] Record the published contract directly in `tools-ki` item `KI-TOOL-CLI-012` so its CLI delivery can proceed independently.
 
 ## Files touched
 
@@ -80,6 +80,28 @@ The agreed initial model is local registered-repository visibility. A sender wri
 - **Definition of done:** Return a concise, cited inventory of exact files, existing data shapes, receiving-item constraints, and contradictions or missing decisions that affect the locked contract. Do not create, edit, or commit files.
 - **Verification gate:** The orchestrator re-reads every source that shapes the next decision or file boundary before authoring; unsupported inferences are escalated.
 - **Checkpoint:** Report the findings only. The next implementation round starts only after orchestrator review turns them into a bounded decision-and-skill brief.
+
+## Acceptance
+
+### Delivered
+
+`GDR-KI-HARNESS-005`, the `ki-handoffs` governance skill, its structured checker and focused fixtures, and the bounded updates to `ki-repo`, `ki-roadmap`, and `ki-next` establish the local reciprocal submission contract. `tools-ki` recorded that published contract in `KI-TOOL-CLI-012` at commit `2c5513c` without receiving authority to alter the Harness or peer repositories.
+
+### Summary of changes
+
+Harness commit `34dbf448` publishes the contract and its verification surface; `f893af72` retains the cross-repository checkpoint. The contract preserves registered local visibility, sender/receiver write separation, independent receiver disposition, and release-observed pruning. It deliberately excludes host commands, remote transport, and cross-repository writes.
+
+### Verification
+
+`bun run test`, `bunx tsc --noEmit`, `ki repo audit --skill ki-skills --repo .`, `ki repo audit --skill ki-handoffs --repo .`, and `ki repo audit --skill ki-roadmap --repo .` passed on the Harness acceptance revision.
+
+### Outstanding concerns
+
+The future remote interchange remains separately scoped work. `KI-TOOL-CLI-012` retains ownership of its CLI delivery and its own acceptance evidence.
+
+### Mini recap
+
+No learning route is proposed. The completed FND-009 work is ready for explicit acceptance; this evidence packet does not approve or close it.
 
 ## Discussion
 
