@@ -6,7 +6,7 @@ const SOURCE = 'standards-repository.md'
 const WORK_1: RubricItem<WorkingAreasRubricContext> = {
   code: 'WORK-1',
   title: 'Working-area scaffold',
-  description: 'Every KI repository has the canonical inbound and outbound working areas, handoff subdirectories, and README orientation.',
+  description: 'Every KI repository has the canonical generic inbound and outbound working areas and README orientation.',
   sources: [SOURCE],
   mechanical: {
     level: 'FAIL',
@@ -23,19 +23,17 @@ const WORK_1: RubricItem<WorkingAreasRubricContext> = {
 const WORK_J1: RubricItem<WorkingAreasRubricContext> = {
   code: 'WORK-J1',
   title: 'working-area direction and lifecycle',
-  description:
-    'The required +/ and -/ working areas distinguish inbound from outbound material, and every retained handoff has an owner and active disposition.',
+  description: 'The required +/ and -/ working areas distinguish temporary inbound from outbound material without becoming a shadow canonical store.',
   sources: [SOURCE],
   judgment: {
-    prompt:
-      'Review that +/ and -/ remain working material rather than a shadow canonical store or archive: each retained handoff has a receiving owner, active disposition, reason or request, and named review trigger; resolved copies are removed while the required scaffold remains.'
+    prompt: 'Review that +/ and -/ remain temporary directional material rather than a shadow canonical store or archive.'
   }
 }
 
 export const WORK: RubricFamily<RepoRubricContext, WorkingAreasRubricContext> = {
   code: 'WORK',
   title: 'Working areas',
-  description: 'Required inbound and outbound working-area scaffold and handoff lifecycle.',
+  description: 'Required generic inbound and outbound working-area scaffold and direction.',
   standard: SOURCE,
   selectContext: (context) => context.workingAreas,
   items: [WORK_1, WORK_J1]

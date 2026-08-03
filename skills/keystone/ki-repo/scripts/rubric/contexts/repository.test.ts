@@ -133,13 +133,13 @@ describe('ki-repo session', () => {
     expect(context.ensureAuthoringConfiguration).toBeUndefined()
   })
 
-  test('conforms the required inbound and outbound working-area scaffold', () => {
+  test('conforms only the generic inbound and outbound working-area scaffold', () => {
     const root = repository()
     const session = createRepoSession(options(root, 'conform'), inspect)
     runWorkingAreasConform(workingAreasContext(session))
 
     const writes = session.proposal().writes
-    expect(writes.map((write) => write.path)).toEqual(['+/README.md', '+/_HANDOFFS/README.md', '-/README.md', '-/_HANDOFFS/README.md'])
+    expect(writes.map((write) => write.path)).toEqual(['+/README.md', '-/README.md'])
     expect(writes.every((write) => write.create)).toBe(true)
 
     applyWrites(root, writes)
@@ -163,6 +163,7 @@ describe('ki-repo session', () => {
     expect(write?.path).toBe('+/README.md')
     expect(write?.create).toBeUndefined()
     expect(write?.content).toContain('[the matching outbound working area](../-/README.md)')
+    expect(write?.content).not.toContain('_HANDOFFS')
   })
 
   test('does not write a working-area scaffold through an unsafe directory', () => {

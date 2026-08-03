@@ -23,21 +23,21 @@ When a preceding `ki-recap` records high context pressure, require its safe hand
 1. Resolve the current git repository physically and read `.ki-config.toml`.
 2. In a non-KB repository, run `ki repo audit --skill ki-roadmap --repo <git-root>` and stop on any FAIL or WARN. Read the generated `ROADMAP.md` and every canonical item directly below `docs/roadmap/`; derive lifecycle status and dependencies from frontmatter.
 3. In a Knowledge Base, run `ki repo audit --skill ki-kb-streams --repo <git-root>` and read the Focus and proposal indexes fresh.
-4. Inspect `+/_HANDOFFS/` after the clean governing-skill audit. Its `README.md` is orientation, not a handoff.
+4. When the repository declares `ki-handoffs`, run its audit and inspect validated inbound records after the clean governing-skill audits. Its `README.md` is orientation, not a record.
 
 ## 2. Triage inbound handoffs
 
-Review every unreviewed regular handoff file other than `README.md`.
+Present every inbound record that still needs receiver judgment. Use the receiver vocabulary: **adopted**, **parked**, **clarify**, **declined**, or **superseded**; a newly copied record begins **received**.
 
-Present its origin, scope, constraints, existing disposition, and the available dispositions: **adopt**, **park**, **clarify**, **decline**, or **supersede**.
+Present its sender provenance, payload, constraints, current status, existing receiver rationale and linkage, and the exact available status transitions.
 
-Require confirmation of the exact file, disposition, wording, horizon, and resulting writes or deletion.
+Require confirmation of the exact inbound file, receiver status, rationale, local linkage, and resulting local record write. Change only receiver-local fields; do not rewrite sender provenance or payload, mutate an outbound or peer copy, or delete a record as part of disposition.
 
-An adoption creates a local work item at an honest horizon; detailed execution material is retained by enriching that item, never a separate plan file.
+An adopted status records receiver judgment only. It does not create, prioritize, implement, or accept a roadmap item. If adoption suggests local work, present that as a separate roadmap proposal with its own exact wording, horizon, dependency effects, and confirmation boundary.
 
-Preserve the handoff's operating model, sources, alternatives, authority and safety boundaries, and unresolved questions in the work item's structured sections and final topic-oriented Discussion.
+If the receiver separately confirms a local work item, preserve the submission's operating model, sources, alternatives, authority and safety boundaries, and unresolved questions in that item's structured sections and final topic-oriented Discussion.
 
-After a resolved disposition, prompt the sender to remove its corresponding outbound copy.
+After adopted, declined, or superseded, report that sender release is eligible. Parked and clarify retain the outbound copy. Recommend receiver pruning only after eligible sender release is observable; `ki-next` never performs a peer write or infers release from silence.
 
 ## 3. Review relevance
 

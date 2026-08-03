@@ -113,7 +113,7 @@ const WORKING_AREA_READMES = [
     path: '+/README.md',
     content: `# Incoming working area
 
-\`+\` is this repository's top-level working area for material received from another repository or external source that needs local triage. Incoming cross-repository implementation briefs belong in [_HANDOFFS](_HANDOFFS/).
+\`+\` is this repository's top-level working area for temporary material received from another repository or external source that needs local triage.
 
 For material prepared here to send elsewhere, use [the matching outbound working area](../-/README.md).
 
@@ -121,37 +121,19 @@ It is not a canonical roadmap, plan, decision record, or knowledge-base destinat
 `
   },
   {
-    path: '+/_HANDOFFS/README.md',
-    content: `# Incoming handoffs
-
-This directory holds active inbound handoffs awaiting a local disposition.
-
-Each brief names its originating context, scope, constraints, receiving owner, and requested disposition. Adopt durable work into this repository's roadmap and, where needed, a plan; remove declined or superseded briefs.
-`
-  },
-  {
     path: '-/README.md',
     content: `# Outgoing working area
 
-\`-\` is this repository's top-level working area for material prepared here for another repository or external recipient. Outbound implementation briefs belong in [_HANDOFFS](_HANDOFFS/).
+\`-\` is this repository's top-level working area for temporary material prepared here for another repository or external recipient.
 
 For material received here to triage, use [the matching inbound working area](../+/README.md).
 
-It is not a canonical roadmap, plan, decision record, or knowledge-base destination. Keep a brief only until its receiving repository has adopted, declined, or superseded it.
-`
-  },
-  {
-    path: '-/_HANDOFFS/README.md',
-    content: `# Outgoing handoffs
-
-This directory holds active outbound handoffs, grouped by receiving repository.
-
-Each brief names its originating context, scope, constraints, receiving owner, and what that receiver owns. Remove it when the receiver's durable adoption, decline, or supersession is known.
+It is not a canonical roadmap, plan, decision record, or knowledge-base destination. Remove each item after delivery or when it no longer has value to retain.
 `
   }
 ] as const
 
-const WORKING_AREA_DIRECTORIES = ['+', '+/_HANDOFFS', '-', '-/_HANDOFFS'] as const
+const WORKING_AREA_DIRECTORIES = ['+', '-'] as const
 
 export type WorkingAreasRubricContext = {
   workingAreas1: readonly AuditOutcome[]

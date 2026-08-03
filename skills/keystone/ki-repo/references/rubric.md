@@ -209,8 +209,8 @@ Alignment across the knowledge chain.
 
 → [standard](standards-repository.md)
 
-Required inbound and outbound working-area scaffold and handoff lifecycle.
+Required generic inbound and outbound working-area scaffold and direction.
 
-- **WORK-1 [M] — Working-area scaffold** — Every KI repository has the canonical inbound and outbound working areas, handoff subdirectories, and README orientation. (standards-repository.md)
-- **WORK-J1 [J] — working-area direction and lifecycle** — The required +/ and -/ working areas distinguish inbound from outbound material, and every retained handoff has an owner and active disposition. (standards-repository.md)
-  - _Review prompt:_ Review that +/ and -/ remain working material rather than a shadow canonical store or archive: each retained handoff has a receiving owner, active disposition, reason or request, and named review trigger; resolved copies are removed while the required scaffold remains.
+- **WORK-1 [M] — Working-area scaffold** — Every KI repository has the canonical generic inbound and outbound working areas and README orientation. (standards-repository.md)
+- **WORK-J1 [J] — working-area direction and lifecycle** — The required +/ and -/ working areas distinguish temporary inbound from outbound material without becoming a shadow canonical store. (standards-repository.md)
+  - _Review prompt:_ Review that +/ and -/ remain temporary directional material rather than a shadow canonical store or archive.

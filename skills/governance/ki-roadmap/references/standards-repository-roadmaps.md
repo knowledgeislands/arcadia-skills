@@ -137,14 +137,14 @@ An explicit later prune path or glob removes only the resolved `done` items; the
 
 ## Handoff review
 
-Where `+/_HANDOFFS/` or `-/_HANDOFFS/` exists, include their review in the judgment portion of a roadmap audit.
+Where a repository declares `ki-handoffs` and its records exist, include their structural relevance in the judgment portion of a roadmap audit.
 
-- **Inbound:** identify each received handoff that needs local adoption, clarification, decline, or archive. An adopted handoff becomes this repository's own work item at an honest horizon.
-- **Outbound:** identify known recipient progress that needs an originating follow-up or closure decision. The receiving repository owns its priority and execution.
+- **Inbound:** identify each submission that still needs receiver review or a separately confirmed local roadmap proposal. A handoff status, including adopted, does not create or prioritize a work item.
+- **Outbound:** identify observable receiver progress that may warrant an originating follow-up. The receiver owns disposition, priority, execution, and acceptance.
 
-The review reports proposed local action only.
+The review is read-only and reports structural guidance or proposed local roadmap action only.
 
-It does not inspect a remote repository by default, infer acceptance from silence, move working files, or change another repository's state.
+It does not set disposition, infer adoption or acceptance from silence, move or prune handoff records, prioritize local work, or change another repository's state.
 
 ## Conform and educate
 

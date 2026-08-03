@@ -118,21 +118,14 @@ visibility = "private"
 
 ### Required `+` / `-` working areas
 
-A KI repository always carries its inbound and outbound working-area scaffold. Inbound and outbound handoffs stay distinct, and an outgoing handoff is grouped by its receiving repository. The handoff remains an originating brief; the receiver independently adopts work into its own roadmap and plan. The four README files are conformed `ki-repo` orientation, not handoff placeholders: remove resolved handoffs, but retain the scaffold.
+A KI repository always carries its generic inbound and outbound working-area scaffold. The two README files are conformed `ki-repo` direction and boundary orientation. A repository declaring `ki-handoffs` may additionally carry skill-owned `_HANDOFFS` subdirectories; those are not part of the generic scaffold.
 
 ```text
 my-repo/
 ├── +/
-│   ├── README.md
-│   └── _HANDOFFS/
-│       ├── README.md
-│       └── partner-repo.md
+│   └── README.md
 └── -/
-    ├── README.md
-    └── _HANDOFFS/
-        ├── README.md
-        └── receiving-repo/
-            └── implement-feature.md
+    └── README.md
 ```
 
 [harness]: https://github.com/knowledgeislands/ki-agentic-harness

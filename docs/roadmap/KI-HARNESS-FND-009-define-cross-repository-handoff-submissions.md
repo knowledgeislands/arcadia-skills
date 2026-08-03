@@ -33,11 +33,11 @@ The agreed initial model is local registered-repository visibility. A sender wri
 
 ## Steps
 
-- [ ] Write a decision record defining cross-repository handoff submissions, including repository identity as canonical `owner/repo`, submission versus transfer semantics, authority boundaries, and the direct-super-trust bootstrap bridge.
-- [ ] Create a new governance `ki-handoffs` skill that defines the two-level `owner/repo` layout, a globally unique `HND-...` identity, required metadata, allowed receiver statuses, and the sender-deletion pruning signal.
-- [ ] Define local route declarations and reciprocal route checking: each side records its willingness to exchange with the other, and only matching declarations form an active bi-directional route.
-- [ ] Move `_HANDOFFS` scaffolding and lifecycle ownership from `ki-repo` to the new capability while preserving `+` and `-` as generic working areas.
-- [ ] Add focused verification for route and submission shape, reciprocal-route eligibility, sender and receiver write boundaries, lifecycle status handling, and safe pruning observations.
+- [x] Write a decision record defining cross-repository handoff submissions, including repository identity as canonical `owner/repo`, submission versus transfer semantics, authority boundaries, and the direct-super-trust bootstrap bridge.
+- [x] Create a new governance `ki-handoffs` skill that defines the two-level `owner/repo` layout, a globally unique `HND-...` identity, required metadata, allowed receiver statuses, and the sender-deletion pruning signal.
+- [x] Define local route declarations and reciprocal route checking: each side records its willingness to exchange with the other, and only matching declarations form an active bi-directional route.
+- [x] Move `_HANDOFFS` scaffolding and lifecycle ownership from `ki-repo` to the new capability while preserving `+` and `-` as generic working areas.
+- [x] Add focused verification for route and submission shape, reciprocal-route eligibility, sender and receiver write boundaries, lifecycle status handling, and safe pruning observations.
 - [ ] Record the published contract directly in `tools-ki` item `KI-TOOL-CLI-012` so its CLI delivery can proceed independently.
 
 ## Files touched

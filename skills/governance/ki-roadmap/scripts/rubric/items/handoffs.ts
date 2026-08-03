@@ -7,18 +7,18 @@ const HANDOFF_1: RubricItem<RoadmapAuditContext> = {
   code: 'HANDOFF-1',
   title: 'handoff review',
   description:
-    'Where `+/_HANDOFFS/` or `-/_HANDOFFS/` exists, review incoming adoption and outgoing receiving-repository progress without inferring or changing remote state.',
+    'Where declared ki-handoffs records exist, report structural guidance and proposed local roadmap action without setting disposition, inferring adoption, prioritizing work, pruning records, or changing remote state.',
   sources: [SOURCE],
   judgment: {
     prompt:
-      'Inspect the handoff areas: identify any inbound material that needs a local roadmap decision and any outbound material needing follow-up or closure; report proposals only.'
+      'Inspect declared handoff records read-only: identify submissions needing receiver review or a separately confirmed local roadmap proposal and outbound progress needing follow-up; report proposals only.'
   }
 }
 
 export const HANDOFF: RubricFamily<RoadmapRubricContext, RoadmapAuditContext> = {
   code: 'HANDOFF',
   title: 'handoff review',
-  description: 'Judgment-led inbound adoption and outbound follow-up review.',
+  description: 'Read-only judgment guidance for declared cross-repository handoff submissions.',
   standard: SOURCE,
   selectContext: (context) => context.handoffs,
   items: [HANDOFF_1]

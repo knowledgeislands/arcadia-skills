@@ -94,7 +94,7 @@ Regular-file boundaries and host-owned transactional publication.
 
 → [standard](standards-repository-roadmaps.md)
 
-Judgment-led inbound adoption and outbound follow-up review.
+Read-only judgment guidance for declared cross-repository handoff submissions.
 
-- **HANDOFF-1 [J] — handoff review** — Where `+/_HANDOFFS/` or `-/_HANDOFFS/` exists, review incoming adoption and outgoing receiving-repository progress without inferring or changing remote state. (standards-repository-roadmaps.md)
-  - _Review prompt:_ Inspect the handoff areas: identify any inbound material that needs a local roadmap decision and any outbound material needing follow-up or closure; report proposals only.
+- **HANDOFF-1 [J] — handoff review** — Where declared ki-handoffs records exist, report structural guidance and proposed local roadmap action without setting disposition, inferring adoption, prioritizing work, pruning records, or changing remote state. (standards-repository-roadmaps.md)
+  - _Review prompt:_ Inspect declared handoff records read-only: identify submissions needing receiver review or a separately confirmed local roadmap proposal and outbound progress needing follow-up; report proposals only.
