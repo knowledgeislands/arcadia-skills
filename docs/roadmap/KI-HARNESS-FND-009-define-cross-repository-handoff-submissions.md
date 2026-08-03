@@ -3,7 +3,7 @@ id: KI-HARNESS-FND-009
 title: Define cross-repository handoff submissions
 theme: foundation-tooling
 horizon: next
-status: acceptance
+status: done
 blocks: []
 blocked-by: []
 baseline-ref: 59156a47570d61460c27913f0a400de925c224b6
@@ -102,6 +102,10 @@ The future remote interchange remains separately scoped work. `KI-TOOL-CLI-012` 
 ### Mini recap
 
 No learning route is proposed. The completed FND-009 work is ready for explicit acceptance; this evidence packet does not approve or close it.
+
+## Done
+
+Accepted by the repository owner on 2026-08-03. Retain this record as the evidence for the portable local submission contract; any remote interchange and repository-specific CLI delivery remain separately owned work.
 
 ## Discussion
 
