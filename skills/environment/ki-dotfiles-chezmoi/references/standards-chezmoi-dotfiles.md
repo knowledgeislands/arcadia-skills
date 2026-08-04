@@ -41,6 +41,8 @@ Prefixes stack in source-name order, e.g. `executable_dot_bash/private_secrets.t
 
 **Edit the source, never the rendered target.** A hand-edit to a file under `$HOME` is silently clobbered by the next `chezmoi apply` — there is no warning, the source of truth always wins. Resolve between the two with `chezmoi source-path <target>` (find the source file behind a `$HOME` path) and `chezmoi target-path <source>` (find where a source file renders to).
 
+**Managed target retirement.** When a managed source is renamed or deleted, append its old home-relative target path to `.chezmoiremove` so every managed machine receives the removal on its next apply. Treat this file as an append-only migration ledger: append a dated, concise reason at the end, retain the block until every managed machine has applied it, and prune only through a deliberate housekeeping pass. Do not treat a successful apply on one machine as evidence that a shared removal record is safe to discard.
+
 ## Shell configuration: loader, not rc
 
 Shell rc files (`.zshrc`, `.bashrc`, etc.) should be thin loops that `source` every file under one or more shared config directories, rather than accumulating configuration inline:
