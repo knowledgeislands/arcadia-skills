@@ -320,7 +320,8 @@ const parseRecord = (root: string, path: string, direction: Direction, outcomes:
     outcomes.push({ status: 'VIOLATION', message: `kind must be one of ${TRADE_KINDS.join(', ')}`, subject: path })
 
   const expectedH1 = id && typeof fields.title === 'string' ? `# ${id}: ${fields.title}` : ''
-  if (!expectedH1 || body.split('\n')[0] !== expectedH1)
+  const content = body.replace(/^(?:\r?\n)+/, '')
+  if (!expectedH1 || content.split('\n')[0] !== expectedH1)
     outcomes.push({ status: 'VIOLATION', message: 'H1 must exactly repeat the handoff id and title', subject: path })
   for (const heading of ['Context', 'Submission', 'Constraints']) {
     const section = body.match(new RegExp(`(?:^|\\n)## ${heading}\\n\\n([\\s\\S]*?)(?=\\n## |$)`))

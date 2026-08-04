@@ -56,7 +56,7 @@ The optional capability owns only its `_HANDOFFS` directories and README files.
 
 Trade-record identity is collision-resistant and corroborated by canonical content rather than inferred from a filename.
 
-- **RECORD-1 [M] — record identity, placement, and payload are canonical** — Every trade record uses the two-level peer layout, an `HND-` lower-case UUID-shaped identity repeated in filename, metadata, and H1, a closed sender envelope with `kind: work | knowledge`, and non-empty Context, Submission, and Constraints payload sections. (standards-handoffs.md)
+- **RECORD-1 [M] — record identity, placement, and payload are canonical** — Every trade record uses the two-level peer layout, an `HND-` lower-case UUID-shaped identity repeated in filename, metadata, and its first non-blank body H1, a closed sender envelope with `kind: work | knowledge`, and non-empty Context, Submission, and Constraints payload sections. (standards-handoffs.md)
 
 ## AUTH — Write authority
 

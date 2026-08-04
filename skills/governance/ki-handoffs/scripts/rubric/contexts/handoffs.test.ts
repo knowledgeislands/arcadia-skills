@@ -5,6 +5,7 @@ import { join } from 'node:path'
 import type { RubricContextOptions } from '../../shared/rubric.ts'
 import { AUTH } from '../items/authority.ts'
 import { CONFIG } from '../items/configuration.ts'
+import { RECORD } from '../items/records.ts'
 import { RELEASE } from '../items/release.ts'
 import { ROUTE } from '../items/routes.ts'
 import { SCAFFOLD } from '../items/scaffold.ts'
@@ -126,7 +127,7 @@ const writeRecord = (root: string, direction: '+' | '-', peerIdentity: string, i
 
 const mechanicalOutcomes = (
   session: ReturnType<typeof createHandoffsSession>,
-  family: typeof CONFIG | typeof ROUTE | typeof SCAFFOLD | typeof AUTH | typeof STATUS | typeof RELEASE
+  family: typeof CONFIG | typeof ROUTE | typeof SCAFFOLD | typeof RECORD | typeof AUTH | typeof STATUS | typeof RELEASE
 ) => {
   const item = family.items[0]
   if (!item?.mechanical) throw new Error(`${family.code} has no mechanical item`)
@@ -169,6 +170,31 @@ test('a route is active only for a kind that both repositories declare', () => {
     status: 'VIOLATION',
     message: 'declared export route https://github.com/peer/repo lacks its matching receiver or sender declaration',
     subject: 'https://github.com/peer/repo'
+  })
+})
+
+test('a blank line after frontmatter does not weaken exact H1 identity validation', () => {
+  const { home, local } = fixture()
+  const validId = 'HND-00000000-0000-4000-8000-000000000003'
+  writeRecord(local, '-', 'peer/repo', validId, record(validId, 'local/repo', 'peer/repo'))
+
+  const valid = createHandoffsSession(options(local, home, handoffConfiguration('local/repo', ['peer/repo'])))
+  expect(mechanicalOutcomes(valid, RECORD)).toEqual([{ status: 'PASS', message: 'Trade record identity and payload shape are valid.' }])
+
+  const invalidId = 'HND-00000000-0000-4000-8000-000000000004'
+  writeRecord(
+    local,
+    '-',
+    'peer/repo',
+    invalidId,
+    record(invalidId, 'local/repo', 'peer/repo').replace(`# ${invalidId}: Submission title`, `# ${invalidId}: Altered title`)
+  )
+
+  const invalid = createHandoffsSession(options(local, home, handoffConfiguration('local/repo', ['peer/repo'])))
+  expect(mechanicalOutcomes(invalid, RECORD)).toContainEqual({
+    status: 'VIOLATION',
+    message: 'H1 must exactly repeat the handoff id and title',
+    subject: `-/_HANDOFFS/peer/repo/${invalidId}.md`
   })
 })
 

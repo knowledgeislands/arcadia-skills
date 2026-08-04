@@ -75,7 +75,7 @@ The outcome proposed to the receiver.
 Authority, safety, dependency, and verification boundaries the receiver must retain when evaluating it.
 ```
 
-The seven sender fields are required strings. `kind` is `work` or `knowledge`; the record is valid only on an active route for that kind. `created_at` is a UTC `YYYY-MM-DDTHH:MM:SSZ` timestamp. `source_ref` is provenance only; it neither reuses the source identifier as the handoff identity nor transfers source lifecycle authority. The three payload sections are required and non-empty.
+The seven sender fields are required strings. `kind` is `work` or `knowledge`; the record is valid only on an active route for that kind. `created_at` is a UTC `YYYY-MM-DDTHH:MM:SSZ` timestamp. `source_ref` is provenance only; it neither reuses the source identifier as the handoff identity nor transfers source lifecycle authority. The three payload sections are required and non-empty. A blank line may separate the closing frontmatter delimiter from the H1; the H1 must remain the first non-blank body line and exactly repeat the `id` and `title`.
 
 An inbound receiver copy adds `status: received`. It may also carry receiver-local `reviewed_at`, `rationale`, `adopted_as`, `retained_as`, or `superseded_by`. No other frontmatter key is valid, so a peer cannot hide a sender-envelope or receiver-authority change behind an extension field.
 

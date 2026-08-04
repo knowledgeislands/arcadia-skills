@@ -7,7 +7,7 @@ const RECORD_1: RubricItem<OutcomeContext> = {
   code: 'RECORD-1',
   title: 'record identity, placement, and payload are canonical',
   description:
-    'Every trade record uses the two-level peer layout, an `HND-` lower-case UUID-shaped identity repeated in filename, metadata, and H1, a closed sender envelope with `kind: work | knowledge`, and non-empty Context, Submission, and Constraints payload sections.',
+    'Every trade record uses the two-level peer layout, an `HND-` lower-case UUID-shaped identity repeated in filename, metadata, and its first non-blank body H1, a closed sender envelope with `kind: work | knowledge`, and non-empty Context, Submission, and Constraints payload sections.',
   sources: [SOURCE],
   mechanical: { level: 'FAIL', audit: { phase: 'INSPECT', run: ({ outcomes }) => outcomes } }
 }
