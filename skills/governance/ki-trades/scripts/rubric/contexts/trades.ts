@@ -2,11 +2,11 @@ import { existsSync, lstatSync, readdirSync, readFileSync, realpathSync } from '
 import { isAbsolute, join, relative, resolve, sep } from 'node:path'
 import type { AuditOutcome, ConformWrite, RubricContextOptions, RubricPublicationContext, RubricSession } from '../../shared/rubric.ts'
 
-const CONFIG_TABLE = 'knowledgeislands/ki-agentic-harness:ki-handoffs'
+const CONFIG_TABLE = 'knowledgeislands/ki-agentic-harness:ki-trades'
 const REPOSITORY_TABLE = 'knowledgeislands/ki-agentic-harness:ki-repo'
 const IDENTITY = /^[a-z0-9](?:[a-z0-9._-]*[a-z0-9])?\/[a-z0-9](?:[a-z0-9._-]*[a-z0-9])?$/
 const REPOSITORY = /^https:\/\/github\.com\/([a-z0-9](?:[a-z0-9._-]*[a-z0-9])?)\/([a-z0-9](?:[a-z0-9._-]*[a-z0-9])?)$/
-const HANDOFF_ID = /^HND-[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/
+const TRADE_ID = /^TRD-[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/
 const UTC_TIMESTAMP = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/
 const TRADE_KINDS = ['work', 'knowledge'] as const
 const STATUSES = ['received', 'adopted', 'retained', 'parked', 'clarify', 'declined', 'superseded'] as const
@@ -15,9 +15,9 @@ const SENDER_FIELDS = ['id', 'title', 'created_at', 'sender', 'receiver', 'kind'
 const RECEIVER_FIELDS = ['status', 'reviewed_at', 'rationale', 'adopted_as', 'retained_as', 'superseded_by'] as const
 const ALLOWED_FIELDS = new Set<string>([...SENDER_FIELDS, ...RECEIVER_FIELDS])
 
-const HANDOFF_READMES = [
+const TRADE_READMES = [
   {
-    path: '+/_HANDOFFS/README.md',
+    path: '+/_TRADES/README.md',
     content: `# Incoming trades
 
 This directory holds receiver-owned copies of active cross-repository work and knowledge trades, grouped by the sender's canonical \`owner/repo\` identity.
@@ -26,7 +26,7 @@ Only this repository may change receiver-local status, rationale, adoption, rete
 `
   },
   {
-    path: '-/_HANDOFFS/README.md',
+    path: '-/_TRADES/README.md',
     content: `# Outgoing trades
 
 This directory holds sender-owned cross-repository work and knowledge trades, grouped by the receiver's canonical \`owner/repo\` identity.
@@ -36,11 +36,11 @@ Only this repository writes or removes these outbound records. Retain each recor
   }
 ] as const
 
-type HandoffStatus = (typeof STATUSES)[number]
+type TradeStatus = (typeof STATUSES)[number]
 type TradeKind = (typeof TRADE_KINDS)[number]
 type Direction = 'inbound' | 'outbound'
 
-type HandoffConfiguration = {
+type TradeConfiguration = {
   readonly repository?: string
   readonly identity?: string
   readonly exportsTo: Readonly<Record<TradeKind, readonly string[]>>
@@ -48,12 +48,12 @@ type HandoffConfiguration = {
   readonly valid: boolean
 }
 
-type HandoffRecord = {
+type TradeRecord = {
   readonly direction: Direction
   readonly path: string
   readonly peer?: string
   readonly id?: string
-  readonly status?: HandoffStatus
+  readonly status?: TradeStatus
   readonly kind?: TradeKind
   readonly fields: Readonly<Record<string, unknown>>
   readonly body: string
@@ -61,7 +61,7 @@ type HandoffRecord = {
 
 type RegisteredRepository = {
   readonly root: string
-  readonly configuration: HandoffConfiguration
+  readonly configuration: TradeConfiguration
 }
 
 export type OutcomeContext = {
@@ -72,9 +72,9 @@ export type ScaffoldContext = OutcomeContext & {
   readonly ensureScaffold?: () => void
 }
 
-export type HandoffJudgmentContext = Record<never, never>
+export type TradeJudgmentContext = Record<never, never>
 
-export type HandoffsRubricContext = {
+export type TradesRubricContext = {
   readonly rubric: RubricPublicationContext
   readonly configuration: OutcomeContext
   readonly routes: OutcomeContext
@@ -83,7 +83,7 @@ export type HandoffsRubricContext = {
   readonly authority: OutcomeContext
   readonly status: OutcomeContext
   readonly release: OutcomeContext
-  readonly judgment: HandoffJudgmentContext
+  readonly judgment: TradeJudgmentContext
 }
 
 const table = (value: unknown): Record<string, unknown> | null =>
@@ -124,10 +124,10 @@ const parseConfiguration = (
   value: Readonly<Record<string, unknown>>,
   repository: unknown,
   subject: string
-): { configuration: HandoffConfiguration; outcomes: AuditOutcome[] } => {
+): { configuration: TradeConfiguration; outcomes: AuditOutcome[] } => {
   const outcomes: AuditOutcome[] = []
   const unknown = Object.keys(value).filter((key) => key !== 'exports_to' && key !== 'imports_from')
-  for (const key of unknown) outcomes.push({ status: 'VIOLATION', level: 'WARN', message: `unrecognised ki-handoffs configuration key ${key}`, subject })
+  for (const key of unknown) outcomes.push({ status: 'VIOLATION', level: 'WARN', message: `unrecognised ki-trades configuration key ${key}`, subject })
 
   const local = repositoryIdentity(repository)
   if (!local.repository || !local.identity) outcomes.push({ status: 'VIOLATION', message: 'ki-repo repository must be a canonical HTTPS GitHub home', subject })
@@ -169,7 +169,7 @@ const parseConfiguration = (
   }
 }
 
-const parseRepositoryConfiguration = (root: string): HandoffConfiguration => {
+const parseRepositoryConfiguration = (root: string): TradeConfiguration => {
   const path = join(root, '.ki-config.toml')
   if (!containedPhysical(root, path, 'file')) return { exportsTo: { work: [], knowledge: [] }, importsFrom: { work: [], knowledge: [] }, valid: false }
   try {
@@ -209,7 +209,7 @@ const registeredRepositories = (userHome: string): readonly RegisteredRepository
 const routeEvidence = (
   root: string,
   userHome: string,
-  local: HandoffConfiguration
+  local: TradeConfiguration
 ): { outcomes: readonly AuditOutcome[]; active: ReadonlyMap<string, RegisteredRepository> } => {
   if (!local.valid || !local.identity || !local.repository)
     return { outcomes: [{ status: 'NOT_APPLICABLE', message: 'trade routes require a valid local ki-repo repository identity' }], active: new Map() }
@@ -240,7 +240,7 @@ const routeEvidence = (
     }
     const [candidate] = matches
     if (!candidate?.configuration.valid) {
-      outcomes.push({ status: 'VIOLATION', message: `registered route endpoint ${peer} has malformed ki-handoffs configuration`, subject: peer })
+      outcomes.push({ status: 'VIOLATION', message: `registered route endpoint ${peer} has malformed ki-trades configuration`, subject: peer })
       return
     }
     const reciprocal = direction === 'export' ? candidate.configuration.importsFrom[kind] : candidate.configuration.exportsTo[kind]
@@ -278,12 +278,12 @@ const readMarkdownFiles = (root: string, directory: string): readonly string[] =
   return files.sort((left, right) => left.localeCompare(right))
 }
 
-const parseRecord = (root: string, path: string, direction: Direction, outcomes: AuditOutcome[]): HandoffRecord => {
+const parseRecord = (root: string, path: string, direction: Direction, outcomes: AuditOutcome[]): TradeRecord => {
   const absolute = join(root, path)
   const source = containedPhysical(root, absolute, 'file') ? readFileSync(absolute, 'utf8') : ''
   const match = source.match(/^---\n([\s\S]*?)\n---\n([\s\S]*)$/)
   if (!match) {
-    outcomes.push({ status: 'VIOLATION', message: 'handoff record must have YAML frontmatter and a Markdown payload', subject: path })
+    outcomes.push({ status: 'VIOLATION', message: 'trade record must have YAML frontmatter and a Markdown payload', subject: path })
     return { direction, path, fields: {}, body: '' }
   }
 
@@ -291,22 +291,22 @@ const parseRecord = (root: string, path: string, direction: Direction, outcomes:
   try {
     fields = table(Bun.YAML.parse(match[1] ?? '')) ?? {}
   } catch {
-    outcomes.push({ status: 'VIOLATION', message: 'handoff frontmatter must be valid YAML', subject: path })
+    outcomes.push({ status: 'VIOLATION', message: 'trade frontmatter must be valid YAML', subject: path })
   }
   const body = match[2] ?? ''
-  const relativeHandoffs = path.replace(/^.*?_HANDOFFS\//, '')
-  const segments = relativeHandoffs.split('/')
+  const relativeTrades = path.replace(/^.*?_TRADES\//, '')
+  const segments = relativeTrades.split('/')
   const peer = segments.length === 3 ? `${segments[0]}/${segments[1]}` : undefined
   const filename = segments.at(-1) ?? ''
   const id = typeof fields.id === 'string' ? fields.id : undefined
 
   if (!peer || !IDENTITY.test(peer))
     outcomes.push({ status: 'VIOLATION', message: 'record path must use exactly two canonical owner/repo peer directories', subject: path })
-  if (!id || !HANDOFF_ID.test(id))
+  if (!id || !TRADE_ID.test(id))
     outcomes.push({ status: 'VIOLATION', message: 'id must use canonical HND plus a lower-case UUID-shaped identifier', subject: path })
-  if (id && filename !== `${id}.md`) outcomes.push({ status: 'VIOLATION', message: 'filename must exactly repeat the frontmatter handoff id', subject: path })
+  if (id && filename !== `${id}.md`) outcomes.push({ status: 'VIOLATION', message: 'filename must exactly repeat the frontmatter trade id', subject: path })
   for (const key of Object.keys(fields).filter((key) => !ALLOWED_FIELDS.has(key)))
-    outcomes.push({ status: 'VIOLATION', message: `frontmatter key ${key} is outside the handoff record contract`, subject: path })
+    outcomes.push({ status: 'VIOLATION', message: `frontmatter key ${key} is outside the trade record contract`, subject: path })
   for (const key of SENDER_FIELDS)
     if (typeof fields[key] !== 'string' || !fields[key])
       outcomes.push({ status: 'VIOLATION', message: `${key} must be a non-empty sender field`, subject: path })
@@ -322,30 +322,30 @@ const parseRecord = (root: string, path: string, direction: Direction, outcomes:
   const expectedH1 = id && typeof fields.title === 'string' ? `# ${id}: ${fields.title}` : ''
   const content = body.replace(/^(?:\r?\n)+/, '')
   if (!expectedH1 || content.split('\n')[0] !== expectedH1)
-    outcomes.push({ status: 'VIOLATION', message: 'H1 must exactly repeat the handoff id and title', subject: path })
+    outcomes.push({ status: 'VIOLATION', message: 'H1 must exactly repeat the trade id and title', subject: path })
   for (const heading of ['Context', 'Submission', 'Constraints']) {
     const section = body.match(new RegExp(`(?:^|\\n)## ${heading}\\n\\n([\\s\\S]*?)(?=\\n## |$)`))
     if (!section?.[1]?.trim()) outcomes.push({ status: 'VIOLATION', message: `payload section ${heading} is required and non-empty`, subject: path })
   }
 
   const rawStatus = fields.status
-  const status = typeof rawStatus === 'string' && STATUSES.includes(rawStatus as HandoffStatus) ? (rawStatus as HandoffStatus) : undefined
+  const status = typeof rawStatus === 'string' && STATUSES.includes(rawStatus as TradeStatus) ? (rawStatus as TradeStatus) : undefined
   const rawKind = fields.kind
   const kind = typeof rawKind === 'string' && TRADE_KINDS.includes(rawKind as TradeKind) ? (rawKind as TradeKind) : undefined
   return { direction, path, ...(peer ? { peer } : {}), ...(id ? { id } : {}), ...(status ? { status } : {}), ...(kind ? { kind } : {}), fields, body }
 }
 
-const immutableRecord = (record: HandoffRecord): string =>
+const immutableRecord = (record: TradeRecord): string =>
   JSON.stringify({ fields: Object.fromEntries(SENDER_FIELDS.map((field) => [field, record.fields[field]])), body: record.body })
 
-const remoteRecord = (root: string, path: string, direction: Direction): HandoffRecord | undefined => {
+const remoteRecord = (root: string, path: string, direction: Direction): TradeRecord | undefined => {
   if (!containedPhysical(root, join(root, path), 'file')) return undefined
   return parseRecord(root, path, direction, [])
 }
 
 const recordEvidence = (
   root: string,
-  local: HandoffConfiguration,
+  local: TradeConfiguration,
   active: ReadonlyMap<string, RegisteredRepository>
 ): { records: AuditOutcome[]; authority: AuditOutcome[]; status: AuditOutcome[]; release: AuditOutcome[] } => {
   const records: AuditOutcome[] = []
@@ -353,8 +353,8 @@ const recordEvidence = (
   const status: AuditOutcome[] = []
   const release: AuditOutcome[] = []
   const parsed = [
-    ...readMarkdownFiles(root, '+/_HANDOFFS').map((path) => parseRecord(root, path, 'inbound', records)),
-    ...readMarkdownFiles(root, '-/_HANDOFFS').map((path) => parseRecord(root, path, 'outbound', records))
+    ...readMarkdownFiles(root, '+/_TRADES').map((path) => parseRecord(root, path, 'inbound', records)),
+    ...readMarkdownFiles(root, '-/_TRADES').map((path) => parseRecord(root, path, 'outbound', records))
   ]
   const seen = new Map<string, string>()
 
@@ -400,9 +400,9 @@ const recordEvidence = (
       if (record.status === 'adopted' && typeof record.fields.adopted_as !== 'string')
         status.push({ status: 'VIOLATION', message: 'adopted requires receiver-local adopted_as linkage', subject: record.path })
       if (record.status === 'adopted' && record.kind !== 'work')
-        status.push({ status: 'VIOLATION', message: 'adopted is valid only for work handoffs', subject: record.path })
+        status.push({ status: 'VIOLATION', message: 'adopted is valid only for work trades', subject: record.path })
       if (record.status === 'retained' && record.kind !== 'knowledge')
-        status.push({ status: 'VIOLATION', message: 'retained is valid only for knowledge handoffs', subject: record.path })
+        status.push({ status: 'VIOLATION', message: 'retained is valid only for knowledge trades', subject: record.path })
       if (record.status === 'retained' && typeof record.fields.retained_as !== 'string')
         status.push({ status: 'VIOLATION', message: 'retained requires receiver-local retained_as linkage', subject: record.path })
       if (record.status !== 'adopted' && record.fields.adopted_as !== undefined)
@@ -417,8 +417,8 @@ const recordEvidence = (
 
     const counterpartPath =
       record.direction === 'inbound'
-        ? join('-/_HANDOFFS', ...local.identity.split('/'), `${record.id}.md`)
-        : join('+/_HANDOFFS', ...local.identity.split('/'), `${record.id}.md`)
+        ? join('-/_TRADES', ...local.identity.split('/'), `${record.id}.md`)
+        : join('+/_TRADES', ...local.identity.split('/'), `${record.id}.md`)
     const counterpart = remoteRecord(peer.root, counterpartPath, record.direction === 'inbound' ? 'outbound' : 'inbound')
     if (counterpart && immutableRecord(counterpart) !== immutableRecord(record))
       authority.push({ status: 'VIOLATION', message: 'sender provenance or payload differs between outbound and inbound copies', subject: record.path })
@@ -449,46 +449,40 @@ const recordEvidence = (
 
 const scaffoldEvidence = (root: string): readonly AuditOutcome[] => {
   const outcomes: AuditOutcome[] = []
-  for (const readme of HANDOFF_READMES) {
+  for (const readme of TRADE_READMES) {
     const directory = join(root, readme.path, '..')
     const path = join(root, readme.path)
     if (!containedPhysical(root, directory, 'directory'))
       outcomes.push({ status: 'VIOLATION', message: `${relative(root, directory)}/ is absent or unsafe`, subject: readme.path })
     else if (!containedPhysical(root, path, 'file')) outcomes.push({ status: 'VIOLATION', message: `${readme.path} is absent or unsafe`, subject: readme.path })
     else if (readFileSync(path, 'utf8') !== readme.content)
-      outcomes.push({ status: 'VIOLATION', message: `${readme.path} differs from the canonical ki-handoffs orientation`, subject: readme.path })
+      outcomes.push({ status: 'VIOLATION', message: `${readme.path} differs from the canonical ki-trades orientation`, subject: readme.path })
   }
   return outcomes
 }
 
 const canConformScaffold = (root: string): boolean =>
   ['+', '-'].every((directory) => containedPhysical(root, join(root, directory), 'directory')) &&
-  HANDOFF_READMES.every((readme) => {
+  TRADE_READMES.every((readme) => {
     const directory = join(root, readme.path, '..')
     const path = join(root, readme.path)
     return (!existsSync(directory) || physicalDirectory(directory)) && (!existsSync(path) || physicalFile(path))
   })
 
-export const createHandoffsSession = ({
-  mode,
-  repository,
-  userHome,
-  configuration,
-  publication
-}: RubricContextOptions): RubricSession<HandoffsRubricContext> => {
+export const createTradesSession = ({ mode, repository, userHome, configuration, publication }: RubricContextOptions): RubricSession<TradesRubricContext> => {
   const root = resolve(repository)
   const parsedConfiguration = parseConfiguration(configuration, parseRepositoryConfiguration(root).repository, '.ki-config.toml')
   const routes = routeEvidence(root, userHome, parsedConfiguration.configuration)
   const evidence = recordEvidence(root, parsedConfiguration.configuration, routes.active)
   let scaffoldRequested = false
-  const context: HandoffsRubricContext = {
+  const context: TradesRubricContext = {
     rubric: { publication },
     configuration: {
       outcomes: parsedConfiguration.outcomes.length ? parsedConfiguration.outcomes : pass('Trade route declarations are canonical.')
     },
     routes: { outcomes: routes.outcomes },
     scaffold: {
-      outcomes: scaffoldEvidence(root).length ? scaffoldEvidence(root) : pass('Owned handoff scaffold is present and conformed.'),
+      outcomes: scaffoldEvidence(root).length ? scaffoldEvidence(root) : pass('Owned trade scaffold is present and conformed.'),
       ...(mode === 'conform' && canConformScaffold(root) ? { ensureScaffold: () => (scaffoldRequested = true) } : {})
     },
     records: { outcomes: evidence.records.length ? evidence.records : pass('Trade record identity and payload shape are valid.') },
@@ -506,7 +500,7 @@ export const createHandoffsSession = ({
     proposal: () => {
       const writes: ConformWrite[] = []
       if (scaffoldRequested) {
-        for (const readme of HANDOFF_READMES) {
+        for (const readme of TRADE_READMES) {
           const path = join(root, readme.path)
           if (containedPhysical(root, path, 'file') && readFileSync(path, 'utf8') === readme.content) continue
           writes.push({ path: readme.path, content: readme.content, ...(!existsSync(path) ? { create: true } : {}) })
@@ -517,4 +511,4 @@ export const createHandoffsSession = ({
   }
 }
 
-export const handoffReadmes = HANDOFF_READMES
+export const tradeReadmes = TRADE_READMES

@@ -177,7 +177,7 @@ describe('ki-repo session', () => {
     expect(write?.path).toBe('+/README.md')
     expect(write?.create).toBeUndefined()
     expect(write?.content).toContain('[the matching outbound working area](../-/README.md)')
-    expect(write?.content).not.toContain('_HANDOFFS')
+    expect(write?.content).not.toContain('_TRADES')
   })
 
   test('does not write a working-area scaffold through an unsafe directory', () => {

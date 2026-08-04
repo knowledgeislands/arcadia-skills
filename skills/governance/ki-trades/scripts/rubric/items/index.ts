@@ -1,5 +1,5 @@
 import type { SkillRubricDefinition } from '../../shared/rubric.ts'
-import { createHandoffsSession, type HandoffsRubricContext } from '../contexts/handoffs.ts'
+import { createTradesSession, type TradesRubricContext } from '../contexts/trades.ts'
 import { ADOPTION } from './adoption.ts'
 import { AUTH } from './authority.ts'
 import { CONFIG } from './configuration.ts'
@@ -12,8 +12,8 @@ import { STATUS } from './status.ts'
 
 export default {
   contract: 1,
-  name: 'ki-handoffs',
+  name: 'ki-trades',
   concern: 'Cross-repository trades',
-  createSession: createHandoffsSession,
+  createSession: createTradesSession,
   families: [RUBRIC, CONFIG, ROUTE, SCAFFOLD, RECORD, AUTH, STATUS, RELEASE, ADOPTION]
-} satisfies SkillRubricDefinition<HandoffsRubricContext>
+} satisfies SkillRubricDefinition<TradesRubricContext>

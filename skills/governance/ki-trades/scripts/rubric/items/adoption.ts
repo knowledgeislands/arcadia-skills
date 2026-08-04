@@ -1,9 +1,9 @@
 import type { RubricFamily, RubricItem } from '../../shared/rubric.ts'
-import type { HandoffJudgmentContext, HandoffsRubricContext } from '../contexts/handoffs.ts'
+import type { TradeJudgmentContext, TradesRubricContext } from '../contexts/trades.ts'
 
-const SOURCE = 'standards-handoffs.md'
+const SOURCE = 'standards-trades.md'
 
-const ADOPTION_1: RubricItem<HandoffJudgmentContext> = {
+const ADOPTION_1: RubricItem<TradeJudgmentContext> = {
   code: 'ADOPTION-1',
   title: 'disposition preserves receiver authority',
   description:
@@ -15,7 +15,7 @@ const ADOPTION_1: RubricItem<HandoffJudgmentContext> = {
   }
 }
 
-export const ADOPTION: RubricFamily<HandoffsRubricContext, HandoffJudgmentContext> = {
+export const ADOPTION: RubricFamily<TradesRubricContext, TradeJudgmentContext> = {
   code: 'ADOPTION',
   title: 'Receiver local authority',
   description: 'Human-confirmed disposition remains distinct from local work selection, acceptance, and knowledge stewardship.',

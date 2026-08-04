@@ -23,7 +23,7 @@ When a preceding `ki-recap` records high context pressure, require its safe hand
 1. Resolve the current git repository physically and read `.ki-config.toml`.
 2. In a non-KB repository, run `ki repo audit --skill ki-roadmap --repo <git-root>` and stop on any FAIL or WARN. Read the generated `ROADMAP.md` and every canonical item directly below `docs/roadmap/`; derive lifecycle status and dependencies from frontmatter.
 3. In a Knowledge Base, run `ki repo audit --skill ki-kb-streams --repo <git-root>` and read the Focus and proposal indexes fresh.
-4. When the repository declares `ki-handoffs`, run its audit and inspect validated inbound records after the clean governing-skill audits. Its `README.md` is orientation, not a record.
+4. When the repository declares `ki-trades`, run its audit and inspect validated inbound records after the clean governing-skill audits. Its `README.md` is orientation, not a record.
 
 ## 2. Triage inbound handoffs
 

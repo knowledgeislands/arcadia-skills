@@ -30,8 +30,13 @@ The priority keeps foundational judgment ahead of downstream interpretation. It 
 
 Skill names follow the grammar **`ki-<concern>[-<technology>]`**. The set has three name classes, all conforming to it: **artifact-type** names govern a kind of thing (`ki-repo`, `ki-skills`, `ki-subagents`, `ki-mcp`, `ki-harness`, `ki-roadmap`, `ki-decision-records`); **doctrine/family** names govern a portable practice or family (`ki-authoring`, `ki-engineering`, `ki-tokenomics`, `ki-binding`, `ki-bootstrap`, the `ki-kb-*` family); **stack-specific standards** realise a concern in a named technology, with the concern leading and technology qualifier last. Runtime-bound examples are `ki-housekeeping-claude`, `ki-tokenomics-claude`, `ki-tokenomics-codex`, `ki-binding-claude`, and `ki-binding-codex`. A qualifier describes actual vendor-owned rules; it does not justify an empty symmetric counterpart.
 
+Within this Harness, the concern is plural for a collection or repeated unit (`ki-skills`, `ki-subagents`, `ki-decision-records`, `ki-trades`); it is singular for a discipline, lifecycle action, conceptual surface, or repository-structure concern (`ki-authoring`, `ki-plan`, `ki-mcp`, `ki-harness`). Proper names and mass nouns retain their natural form. This is a local naming convention, not an addition to the generic Agent Skills standard.
+
+Every compatible harness has one common skill-name prefix. The prefix belongs to the harness contract, not to individual skills, and must be explicitly declared and auditable through `ki-harness`; `ki` is this Harness's prefix. A technology qualifier does not alter the prefix or the singular/plural rule for the concern.
+
 ## Consequences
 
 - A composing skill's declared prerequisite executes before the skill itself.
 - Reordering TOML tables or dependency-array entries cannot change executable order.
 - In parallel judgment review (ADR-KI-HARNESS-AGENTS-001), the foundations-first list governs synthesis ranking only.
+- Harness implementations declare and audit their common skill-name prefix rather than assuming `ki` implicitly.

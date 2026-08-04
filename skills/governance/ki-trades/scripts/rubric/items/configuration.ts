@@ -1,7 +1,7 @@
 import type { RubricFamily, RubricItem } from '../../shared/rubric.ts'
-import type { HandoffsRubricContext, OutcomeContext } from '../contexts/handoffs.ts'
+import type { OutcomeContext, TradesRubricContext } from '../contexts/trades.ts'
 
-const SOURCE = 'standards-handoffs.md'
+const SOURCE = 'standards-trades.md'
 
 const CONFIG_1: RubricItem<OutcomeContext> = {
   code: 'CONFIG-1',
@@ -12,7 +12,7 @@ const CONFIG_1: RubricItem<OutcomeContext> = {
   mechanical: { level: 'FAIL', audit: { phase: 'INSPECT', run: ({ outcomes }) => outcomes }, overrideLevels: ['WARN'] }
 }
 
-export const CONFIG: RubricFamily<HandoffsRubricContext, OutcomeContext> = {
+export const CONFIG: RubricFamily<TradesRubricContext, OutcomeContext> = {
   code: 'CONFIG',
   title: 'Declared participation',
   description: 'Typed trade routes are explicit, canonical, and owned locally.',

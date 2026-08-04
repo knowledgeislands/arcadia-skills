@@ -17,11 +17,11 @@ This standard defines local, typed and directional trade routes between register
 A repository participates only by declaring its own table:
 
 ```toml
-["knowledgeislands/ki-agentic-harness:ki-handoffs".exports_to]
+["knowledgeislands/ki-agentic-harness:ki-trades".exports_to]
 work = ["https://github.com/owner/receiver"]
 knowledge = []
 
-["knowledgeislands/ki-agentic-harness:ki-handoffs".imports_from]
+["knowledgeislands/ki-agentic-harness:ki-trades".imports_from]
 work = []
 knowledge = ["https://github.com/owner/sender"]
 ```
@@ -32,18 +32,18 @@ A typed route is active only when the intended receiver is in the user's local K
 
 ## Storage and identity
 
-The generic `+` and `-` working areas and their README files remain owned by `ki-repo`. A repository declaring `ki-handoffs` also carries:
+The generic `+` and `-` working areas and their README files remain owned by `ki-repo`. A repository declaring `ki-trades` also carries:
 
 ```text
-+/_HANDOFFS/
-└── <sender-owner>/<sender-repository>/HND-<uuid>.md
--/_HANDOFFS/
-└── <receiver-owner>/<receiver-repository>/HND-<uuid>.md
++/_TRADES/
+└── <sender-owner>/<sender-repository>/TRD-<uuid>.md
+-/_TRADES/
+└── <receiver-owner>/<receiver-repository>/TRD-<uuid>.md
 ```
 
-Each `_HANDOFFS` directory retains its skill-owned README when empty. The two peer path segments exactly match the record's sender for inbound records and receiver for outbound records.
+Each `_TRADES` directory retains its skill-owned README when empty. The two peer path segments exactly match the record's sender for inbound records and receiver for outbound records.
 
-The canonical identifier grammar is `HND-[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}`. Generation uses collision-resistant random UUID values; audit validates the shape and lower-case spelling but never infers record identity from the filename alone. Filename, `id`, and H1 must agree.
+The canonical identifier grammar is `TRD-[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}`. Generation uses collision-resistant random UUID values; audit validates the shape and lower-case spelling but never infers record identity from the filename alone. Filename, `id`, and H1 must agree.
 
 ## Record format
 
@@ -51,7 +51,7 @@ The sender authors this immutable envelope and payload:
 
 ```markdown
 ---
-id: HND-01234567-89ab-4cde-8f01-23456789abcd
+id: TRD-01234567-89ab-4cde-8f01-23456789abcd
 title: 'Short submission title'
 created_at: 2026-08-03T12:00:00Z
 sender: sender-owner/sender-repository
@@ -60,7 +60,7 @@ kind: work
 source_ref: KI-SENDER-FND-001
 ---
 
-# HND-01234567-89ab-4cde-8f01-23456789abcd: Short submission title
+# TRD-01234567-89ab-4cde-8f01-23456789abcd: Short submission title
 
 ## Context
 
@@ -75,7 +75,7 @@ The outcome proposed to the receiver.
 Authority, safety, dependency, and verification boundaries the receiver must retain when evaluating it.
 ```
 
-The seven sender fields are required strings. `kind` is `work` or `knowledge`; the record is valid only on an active route for that kind. `created_at` is a UTC `YYYY-MM-DDTHH:MM:SSZ` timestamp. `source_ref` is provenance only; it neither reuses the source identifier as the handoff identity nor transfers source lifecycle authority. The three payload sections are required and non-empty. A blank line may separate the closing frontmatter delimiter from the H1; the H1 must remain the first non-blank body line and exactly repeat the `id` and `title`.
+The seven sender fields are required strings. `kind` is `work` or `knowledge`; the record is valid only on an active route for that kind. `created_at` is a UTC `YYYY-MM-DDTHH:MM:SSZ` timestamp. `source_ref` is provenance only; it neither reuses the source identifier as the trade identity nor transfers source lifecycle authority. The three payload sections are required and non-empty. A blank line may separate the closing frontmatter delimiter from the H1; the H1 must remain the first non-blank body line and exactly repeat the `id` and `title`.
 
 An inbound receiver copy adds `status: received`. It may also carry receiver-local `reviewed_at`, `rationale`, `adopted_as`, `retained_as`, or `superseded_by`. No other frontmatter key is valid, so a peer cannot hide a sender-envelope or receiver-authority change behind an extension field.
 
@@ -83,7 +83,7 @@ An inbound receiver copy adds `status: received`. It may also carry receiver-loc
 
 The sender writes and removes only its outbound record. It never sets receiver-local fields. The receiver creates and changes only its inbound copy. The sender envelope and the complete body are immutable between the outbound record and every retained inbound copy; the checker compares content rather than trusting matching filenames.
 
-`reviewed_at`, when present, is a UTC timestamp. `rationale` records the receiver's review or disposition reasoning. `adopted_as` links to receiver-local work only when status is `adopted`; `retained_as` links to receiver-local knowledge only when status is `retained`; `superseded_by` links to the replacing local or handoff identity only when status is `superseded`. These links are local evidence, not priority or acceptance authority.
+`reviewed_at`, when present, is a UTC timestamp. `rationale` records the receiver's review or disposition reasoning. `adopted_as` links to receiver-local work only when status is `adopted`; `retained_as` links to receiver-local knowledge only when status is `retained`; `superseded_by` links to the replacing local or trade identity only when status is `superseded`. These links are local evidence, not priority or acceptance authority.
 
 The governance checker is read-only across repositories. Its only conformable write is the local, owned README scaffold; record copying and disposition remain explicitly authored local actions.
 
@@ -97,7 +97,7 @@ The receiver alone moves its inbound status:
 - `parked` — intentionally retained without adoption or knowledge retention; `rationale` is required.
 - `clarify` — more information is requested; `rationale` is required.
 - `declined` — not adopted or retained; `rationale` is required.
-- `superseded` — replaced by another local record or handoff; `rationale` and `superseded_by` are required.
+- `superseded` — replaced by another local record or trade; `rationale` and `superseded_by` are required.
 
 A newly created inbound copy starts `received`. Existing copies may hold any listed status. Other values are invalid. The checker cannot infer or author the human decision behind a transition.
 

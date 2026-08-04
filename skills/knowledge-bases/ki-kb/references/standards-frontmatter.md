@@ -52,10 +52,10 @@ The slugs use slash-hierarchical notation: `<zone>/<arm>/<leaf>`. The zone prefi
 
 These types are only valid under `-/`. Files carrying them elsewhere are a ZONE-5 FAIL (see audit rubric).
 
-| Type             | Path context       | Lifecycle                                                                | Defined by |
-| ---------------- | ------------------ | ------------------------------------------------------------------------ | ---------- |
-| `session-digest` | `-/_DIGESTS/*.md`  | Ephemeral. Delete once content is extracted into Pillars/Streams/handoff | `ki-kb`    |
-| `handoff`        | `-/_HANDOFFS/*.md` | Ephemeral. Delete once recipient has routed it through their `+/`        | `ki-kb`    |
+| Type             | Path context      | Lifecycle                                                                | Defined by |
+| ---------------- | ----------------- | ------------------------------------------------------------------------ | ---------- |
+| `session-digest` | `-/_DIGESTS/*.md` | Ephemeral. Delete once content is extracted into Pillars/Streams/handoff | `ki-kb`    |
+| `handoff`        | `-/_TRADES/*.md`  | Ephemeral. Delete once recipient has routed it through their `+/`        | `ki-kb`    |
 
 ### Calendar branch (`calendar/`)
 

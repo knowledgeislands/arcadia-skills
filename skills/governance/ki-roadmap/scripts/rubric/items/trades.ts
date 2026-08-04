@@ -7,7 +7,7 @@ const HANDOFF_1: RubricItem<RoadmapAuditContext> = {
   code: 'HANDOFF-1',
   title: 'handoff review',
   description:
-    'Where declared ki-handoffs records exist, report structural guidance and proposed local roadmap action without setting disposition, inferring adoption, prioritizing work, pruning records, or changing remote state.',
+    'Where declared ki-trades records exist, report structural guidance and proposed local roadmap action without setting disposition, inferring adoption, prioritizing work, pruning records, or changing remote state.',
   sources: [SOURCE],
   judgment: {
     prompt:

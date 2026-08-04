@@ -16,7 +16,7 @@ The full procedure is in [the next-work standard](references/standards-next-work
 
 ## What this skill does
 
-1. **Ground** the generated repository roadmap index and canonical work items, or Streams Focus and proposal index, plus any inbound records validated by declared `ki-handoffs` governance.
+1. **Ground** the generated repository roadmap index and canonical work items, or Streams Focus and proposal index, plus any inbound records validated by declared `ki-trades` governance.
 2. **Triage** incoming submissions through an exact human-confirmed receiver disposition, without treating adoption as roadmap authority.
 3. **Review** relevance when asked or when a material stale signal is evident.
 4. **Screen for synergy** across dependency-ready candidates: propose a batch only when the items share a bounded delivery advantage and remain independently executable. A shared theme alone is not enough.

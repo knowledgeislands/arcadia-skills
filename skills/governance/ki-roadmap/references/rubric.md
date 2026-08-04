@@ -96,5 +96,5 @@ Regular-file boundaries and host-owned transactional publication.
 
 Read-only judgment guidance for declared cross-repository handoff submissions.
 
-- **HANDOFF-1 [J] — handoff review** — Where declared ki-handoffs records exist, report structural guidance and proposed local roadmap action without setting disposition, inferring adoption, prioritizing work, pruning records, or changing remote state. (standards-repository-roadmaps.md)
+- **HANDOFF-1 [J] — handoff review** — Where declared ki-trades records exist, report structural guidance and proposed local roadmap action without setting disposition, inferring adoption, prioritizing work, pruning records, or changing remote state. (standards-repository-roadmaps.md)
   - _Review prompt:_ Inspect declared handoff records read-only: identify submissions needing receiver review or a separately confirmed local roadmap proposal and outbound progress needing follow-up; report proposals only.

@@ -1,7 +1,7 @@
 import type { RubricFamily, RubricItem } from '../../shared/rubric.ts'
-import type { HandoffsRubricContext, OutcomeContext } from '../contexts/handoffs.ts'
+import type { OutcomeContext, TradesRubricContext } from '../contexts/trades.ts'
 
-const SOURCE = 'standards-handoffs.md'
+const SOURCE = 'standards-trades.md'
 
 const STATUS_1: RubricItem<OutcomeContext> = {
   code: 'STATUS-1',
@@ -12,7 +12,7 @@ const STATUS_1: RubricItem<OutcomeContext> = {
   mechanical: { level: 'FAIL', audit: { phase: 'INSPECT', run: ({ outcomes }) => outcomes } }
 }
 
-export const STATUS: RubricFamily<HandoffsRubricContext, OutcomeContext> = {
+export const STATUS: RubricFamily<TradesRubricContext, OutcomeContext> = {
   code: 'STATUS',
   title: 'Receiver lifecycle',
   description: 'Receiver-owned disposition uses a closed status vocabulary and explicit local work or knowledge evidence.',

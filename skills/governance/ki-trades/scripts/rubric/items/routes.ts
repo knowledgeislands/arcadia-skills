@@ -1,7 +1,7 @@
 import type { RubricFamily, RubricItem } from '../../shared/rubric.ts'
-import type { HandoffsRubricContext, OutcomeContext } from '../contexts/handoffs.ts'
+import type { OutcomeContext, TradesRubricContext } from '../contexts/trades.ts'
 
-const SOURCE = 'standards-handoffs.md'
+const SOURCE = 'standards-trades.md'
 
 const ROUTE_1: RubricItem<OutcomeContext> = {
   code: 'ROUTE-1',
@@ -12,7 +12,7 @@ const ROUTE_1: RubricItem<OutcomeContext> = {
   mechanical: { level: 'FAIL', audit: { phase: 'INSPECT', run: ({ outcomes }) => outcomes } }
 }
 
-export const ROUTE: RubricFamily<HandoffsRubricContext, OutcomeContext> = {
+export const ROUTE: RubricFamily<TradesRubricContext, OutcomeContext> = {
   code: 'ROUTE',
   title: 'Typed reciprocal routes',
   description: 'Registered repository visibility becomes an active route only through matching declarations for the same trade kind.',

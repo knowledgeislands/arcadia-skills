@@ -1,7 +1,7 @@
 import type { RubricFamily, RubricItem } from '../../shared/rubric.ts'
-import type { HandoffsRubricContext, OutcomeContext } from '../contexts/handoffs.ts'
+import type { OutcomeContext, TradesRubricContext } from '../contexts/trades.ts'
 
-const SOURCE = 'standards-handoffs.md'
+const SOURCE = 'standards-trades.md'
 
 const AUTH_1: RubricItem<OutcomeContext> = {
   code: 'AUTH-1',
@@ -12,10 +12,10 @@ const AUTH_1: RubricItem<OutcomeContext> = {
   mechanical: { level: 'FAIL', audit: { phase: 'INSPECT', run: ({ outcomes }) => outcomes } }
 }
 
-export const AUTH: RubricFamily<HandoffsRubricContext, OutcomeContext> = {
+export const AUTH: RubricFamily<TradesRubricContext, OutcomeContext> = {
   code: 'AUTH',
   title: 'Write authority',
-  description: 'A handoff remains a local copy protocol with immutable sender provenance and receiver-only disposition fields.',
+  description: 'A trade remains a local copy protocol with immutable sender provenance and receiver-only disposition fields.',
   standard: SOURCE,
   selectContext: (context) => context.authority,
   items: [AUTH_1]

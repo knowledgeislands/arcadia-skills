@@ -27,14 +27,14 @@ supported_runtimes = ["claude-code", "chatgpt-codex"]
 
 ["knowledgeislands/ki-agentic-harness:ki-guides"]
 
-["knowledgeislands/ki-agentic-harness:ki-handoffs".exports_to]
+["knowledgeislands/ki-agentic-harness:ki-trades".exports_to]
 knowledge = ["https://github.com/knowledgeislands/ki-website"]
 work = [
   "https://github.com/knowledgeislands/ki-website",
   "https://github.com/knowledgeislands/tools-ki",
 ]
 
-["knowledgeislands/ki-agentic-harness:ki-handoffs".imports_from]
+["knowledgeislands/ki-agentic-harness:ki-trades".imports_from]
 knowledge = []
 work = ["https://github.com/knowledgeislands/tools-ki"]
 ["knowledgeislands/ki-agentic-harness:ki-git"]

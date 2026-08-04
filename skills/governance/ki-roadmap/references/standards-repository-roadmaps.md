@@ -137,7 +137,7 @@ An explicit later prune path or glob removes only the resolved `done` items; the
 
 ## Handoff review
 
-Where a repository declares `ki-handoffs` and its records exist, include their structural relevance in the judgment portion of a roadmap audit.
+Where a repository declares `ki-trades` and its records exist, include their structural relevance in the judgment portion of a roadmap audit.
 
 - **Inbound:** identify each submission that still needs receiver review or a separately confirmed local roadmap proposal. A handoff status, including adopted, does not create or prioritize a work item.
 - **Outbound:** identify observable receiver progress that may warrant an originating follow-up. The receiver owns disposition, priority, execution, and acceptance.

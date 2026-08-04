@@ -2,7 +2,7 @@
 
 **Refresh:** canonical · on-change
 
-The sources behind [the cross-repository handoff standard](standards-handoffs.md) and its [generated rubric](rubric.md). REFRESH reconciles the current contract when either source changes.
+The sources behind [the cross-repository trade standard](standards-trades.md) and its [generated rubric](rubric.md). REFRESH reconciles the current contract when either source changes.
 
 | Source                                                            | last reviewed |
 | ----------------------------------------------------------------- | ------------- |

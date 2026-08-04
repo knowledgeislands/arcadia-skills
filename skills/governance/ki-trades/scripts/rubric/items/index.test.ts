@@ -1,9 +1,9 @@
 import { expect, test } from 'bun:test'
 import definition from './index.ts'
 
-test('the catalogue exposes the complete ordered handoff contract', () => {
+test('the catalogue exposes the complete ordered trade contract', () => {
   expect(definition.contract).toBe(1)
-  expect(definition.name).toBe('ki-handoffs')
+  expect(definition.name).toBe('ki-trades')
   expect(definition.createSession).toBeFunction()
   expect(definition.families.map((family) => family.code)).toEqual(['RUBRIC', 'CONFIG', 'ROUTE', 'SCAFFOLD', 'RECORD', 'AUTH', 'STATUS', 'RELEASE', 'ADOPTION'])
   expect(definition.families.flatMap((family) => family.items.map((item) => item.code))).toEqual([

@@ -29,9 +29,9 @@ A Knowledge Islands base is one markdown store with a fixed set of five zones, f
 
 ※ Migrates to `Pillars/` once settled. Its internal structure and process are owned by the `ki-kb-streams` skill.
 
-† `+/_HANDOFFS/` receives cross-repository briefs; their shared repository lifecycle belongs to `ki-repo`.
+† `+/_TRADES/` receives cross-repository briefs; their shared repository lifecycle belongs to `ki-repo`.
 
-‡ `-/_HANDOFFS/` holds cross-repository briefs; their shared repository lifecycle belongs to `ki-repo`.
+‡ `-/_TRADES/` holds cross-repository briefs; their shared repository lifecycle belongs to `ki-repo`.
 
 ### Admin/ subdivisions
 
