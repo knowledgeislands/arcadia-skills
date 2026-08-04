@@ -3,7 +3,7 @@ id: KI-HARNESS-GOV-010
 title: Rename cross-repository governance to ki-trades
 theme: governance-consistency
 horizon: blocking
-status: open
+status: ready
 blocks: []
 blocked-by: []
 baseline-ref: null
@@ -25,7 +25,7 @@ Do not change the route, authority, disposition, immutable-payload, or release-o
 
 ## Current state
 
-`ki-handoffs` remains the current Harness skill directory and configuration identity. The active standards and checker use `_HANDOFFS` paths and `HND-` identities, while user-facing CLI language already says `trades`. The exact canonical replacement for the owned working-area and record identifiers has not yet been decided, so a mechanical rename would risk mixing two contracts.
+`ki-handoffs` remains the current Harness skill directory and configuration identity. The active standards and checker use `_HANDOFFS` paths and `HND-` identities, while user-facing CLI language already says `trades`. The approved replacement is `ki-trades`, `_TRADES`, and `TRD-`; the migration must apply that vocabulary consistently rather than mixing two contracts.
 
 ## Steps
 
@@ -70,6 +70,10 @@ The skill name, table name, owned directory, record identity, generated document
 ### Current-state migration
 
 The project convention is one current contract, not permanent compatibility paths. The migration must therefore select exact trade vocabulary for every active surface and convert every owned footprint together. Historic Decision Records, completed work items, and Git history remain evidence and need not be falsified; a superseding decision makes the terminology change legible.
+
+### Approved vocabulary
+
+The current-state migration uses `ki-trades` for the capability and configuration table, `+/_TRADES/` and `-/_TRADES/` for the owned working areas, and `TRD-<uuid>` for the canonical record identifier. Active prose describes a trade, trade submission, sender, receiver, route, and disposition; historic use of `ki-handoffs`, `_HANDOFFS`, and `HND-` remains evidence only.
 
 ### Peer authority
 
