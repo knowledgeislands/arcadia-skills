@@ -3,10 +3,10 @@ id: KI-HARNESS-GOV-010
 title: Rename cross-repository governance to ki-trades
 theme: governance-consistency
 horizon: blocking
-status: ready
+status: in-progress
 blocks: []
 blocked-by: []
-baseline-ref: null
+baseline-ref: b3a9d5cf476a99a3a72322230d0dfed82dfe7aa7
 ---
 
 ## Goal
