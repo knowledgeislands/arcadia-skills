@@ -60,12 +60,14 @@ Order: `draft` → `ready` → (`in-progress` | `rejected`) → `rolled-out` →
 
 The stream note _is_ the proposal document — a working tracker, not a knowledge store. It carries frontmatter `status`, `priority`, and `dependencies` (an array of prerequisite proposal filenames — the machine-readable form of the `Prerequisite` rows in Inputs), plus the base's descriptive keys. Sections:
 
-- **Inputs** — what the change draws on: `Document` / `Decision` / `Prerequisite` rows.
-- **Outputs** — what it produces: `Decision` / `Artefact` rows. Complete before `ready`.
+- **Inputs** — what the change draws on, recorded as labelled `Document`, `Decision`, or `Prerequisite` entries.
+- **Outputs** — what it produces, recorded as labelled `Decision` or `Artefact` entries. Complete before `ready`.
 - **Checklist** — the concrete create/edit/move/delete operations rollout will perform; doubles as rollout status.
 - **Open Questions** — unresolved decisions; each closed with a resolution note before `ready`.
 - **Design Sections** — the substance: analysis, drafts, tables. May be extensive.
 - **Governance** — a short footer declaring adherence to the process and linking back to it. **Required on every stream note.**
+
+Use labelled bullet lists for proposal Inputs and Outputs. Avoid tables elsewhere in a proposal unless a genuine multi-column comparison makes a grid materially clearer; Focus and zone indexes remain tables.
 
 ## Project bindings
 

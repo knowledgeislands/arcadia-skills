@@ -49,14 +49,18 @@ priority: medium # urgent | high | medium | low
 dependencies: [] # filenames of prerequisite proposals
 ```
 
-`dependencies` is the machine-readable form of the `Prerequisite` rows in Inputs and must stay in sync with them; it is the gate checked before a change moves to `ready`. Sections:
+`dependencies` is the machine-readable form of the `Prerequisite` entries in Inputs and must stay in sync with them; it is the gate checked before a change moves to `ready`. Sections:
 
-- **Inputs** — what the change draws on, each row tagged `Document` (a source file, brief, or reference), `Decision` (a prior agreement that shapes this change), or `Prerequisite` (another proposal that must reach `rolled-out` first). Fill in what is known at opening; update as more are identified.
-- **Outputs** — what the change produces: `Decision` (a conclusion reached) or `Artefact` (a note or asset created/modified). Complete and accurate before `ready`.
+- **Inputs** — what the change draws on, each labelled entry tagged `Document` (a source file, brief, or reference), `Decision` (a prior agreement that shapes this change), or `Prerequisite` (another proposal that must reach `rolled-out` first). Fill in what is known at opening; update as more are identified.
+- **Outputs** — what the change produces, with each labelled entry tagged `Decision` (a conclusion reached) or `Artefact` (a note or asset created/modified). Complete and accurate before `ready`.
 - **Checklist** — the concrete operations rollout will perform (creates, edits, moves, deletes). Doubles as rollout status — items are ticked as executed.
 - **Open Questions** — unresolved decisions; close each with a resolution note before `ready`.
 - **Design Sections** — the substance: analysis, diagrams, draft content, comparative tables. May be extensive — that is expected and correct.
 - **Governance** — a short footer declaring adherence to the process and linking back to the bound process note. **Required on every stream note**; it makes the governing model discoverable from the stream and confirms the stream is a participant in the formal cycle.
+
+### Proposal presentation
+
+Use labelled bullet lists for Inputs and Outputs, such as `- **Decision:** <detail>`. Avoid tables elsewhere in a proposal unless a genuine multi-column comparison makes a grid materially clearer. Focus and zone indexes remain tables because they are live, parallel status views; a proposal is an evolving narrative and operational record.
 
 ### Status lifecycle
 
