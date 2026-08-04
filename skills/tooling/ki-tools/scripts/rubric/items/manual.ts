@@ -47,6 +47,18 @@ const MAN_SURFACE = {
   judgment: { prompt: 'A physical manual stays aligned with CLI help and uses the tool’s command-group vocabulary in its SYNOPSIS.' }
 } satisfies RubricItem<ManualToolsContext>
 
+const MAN_GUIDANCE = {
+  code: 'MAN-GUIDANCE',
+  title: 'Manual installation and completion guidance',
+  description:
+    'A physical manual documents the supported release and local-development installation paths, including manual installation or linking, and identifies the canonical completion action without assigning shell-startup mutation to the tool installer.',
+  sources: [STANDARD],
+  judgment: {
+    prompt:
+      'A physical manual documents the supported release and local-development installation paths, including manual installation or linking, and identifies the canonical completion action without assigning shell-startup mutation to the tool installer.'
+  }
+} satisfies RubricItem<ManualToolsContext>
+
 const MAN_STYLE = {
   code: 'MAN-STYLE',
   title: 'Manual source and layout',
@@ -65,5 +77,5 @@ export const MAN: RubricFamily<ToolsRubricContext, ManualToolsContext> = {
   description: 'Man-page linting requirements.',
   standard: STANDARD,
   selectContext: (context) => context.manual,
-  items: [MAN_LINT, MAN_INSTALL, MAN_SURFACE, MAN_STYLE]
+  items: [MAN_LINT, MAN_INSTALL, MAN_SURFACE, MAN_GUIDANCE, MAN_STYLE]
 }

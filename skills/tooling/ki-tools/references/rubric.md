@@ -12,6 +12,7 @@ Line-by-line criteria for auditing ki-tools. Classifications are derived from it
 - [TOOL — tool repository](#tool--tool-repository)
 - [SHELL — shell capabilities](#shell--shell-capabilities)
 - [LANG — language capabilities](#lang--language-capabilities)
+- [COMP — completion capabilities](#comp--completion-capabilities)
 - [MAN — manual capabilities](#man--manual-capabilities)
 - [CONFIG — configuration](#config--configuration)
 
@@ -76,6 +77,19 @@ Language toolchain deferral.
 
 - **LANG-DEFER [M] — JavaScript toolchain deferral** — A package.json-bearing tool defers lint and test to ki-engineering. (standards-tool-repositories.md)
 
+## COMP — completion capabilities
+
+→ [standard](standards-tool-repositories.md)
+
+Portable Bash and Zsh completion output, integration, and ownership.
+
+- **COMP-SURFACE [J] — Completion command surface** — The CLI exposes exactly one documented completion <shell> action at a stable command path; it accepts bash and zsh, prints only the selected definition to standard output, and rejects unsupported shells as owned invalid syntax. (standards-tool-repositories.md)
+  - _Review prompt:_ The CLI exposes exactly one documented completion <shell> action at a stable command path; it accepts bash and zsh, prints only the selected definition to standard output, and rejects unsupported shells as owned invalid syntax.
+- **COMP-INTEGRATION [J] — Completion integration** — The Bash definition registers the executable with complete; the Zsh definition is an autoloadable _<tool> artifact with #compdef and compdef registration that does not invoke itself while loading. Tests cover both emitted forms and Zsh registration under compinit. (standards-tool-repositories.md)
+  - _Review prompt:_ The Bash definition registers the executable with complete; the Zsh definition is an autoloadable _<tool> artifact with #compdef and compdef registration that does not invoke itself while loading. Tests cover both emitted forms and Zsh registration under compinit.
+- **COMP-OWNERSHIP [J] — Completion persistence ownership** — The tool does not edit shell startup files or personal completion directories. A shell configuration, package manager, or configuration manager persists the generated artifact and arranges fpath before compinit for Zsh. (standards-tool-repositories.md)
+  - _Review prompt:_ The tool does not edit shell startup files or personal completion directories. A shell configuration, package manager, or configuration manager persists the generated artifact and arranges fpath before compinit for Zsh.
+
 ## MAN — manual capabilities
 
 → [standard](standards-tool-repositories.md)
@@ -87,6 +101,8 @@ Man-page linting requirements.
   - _Review prompt:_ A shipped physical man page is installed by the release installer and linked with the executable by its --link mode.
 - **MAN-SURFACE [J] — Manual command surface** — A physical manual stays aligned with CLI help and uses the tool’s command-group vocabulary in its SYNOPSIS. (standards-tool-repositories.md)
   - _Review prompt:_ A physical manual stays aligned with CLI help and uses the tool’s command-group vocabulary in its SYNOPSIS.
+- **MAN-GUIDANCE [J] — Manual installation and completion guidance** — A physical manual documents the supported release and local-development installation paths, including manual installation or linking, and identifies the canonical completion action without assigning shell-startup mutation to the tool installer. (standards-tool-repositories.md)
+  - _Review prompt:_ A physical manual documents the supported release and local-development installation paths, including manual installation or linking, and identifies the canonical completion action without assigning shell-startup mutation to the tool installer.
 - **MAN-STYLE [J] — Manual source and layout** — A physical manual uses portable roff macros, documents each configuration format canonically in FILES, uses a literal \& after each .SH / .SS followed by .PP before prose or a structural macro, and receives a rendered-spacing inspection after mandoc lint. (standards-tool-repositories.md)
   - _Review prompt:_ A physical manual uses portable roff macros, documents each configuration format canonically in FILES, uses a literal \& after each .SH / .SS followed by .PP before prose or a structural macro, and receives a rendered-spacing inspection after mandoc lint.
 

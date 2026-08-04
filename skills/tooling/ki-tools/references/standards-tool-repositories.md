@@ -94,7 +94,9 @@ There is deliberately **no `ki-shell` skill**: shell is the reference language, 
 These are Knowledge Islands house style, established by `tools-mgit` and `tools-ki`; they do not prescribe a tool's own command semantics.
 
 - `--help` describes the currently available command surface and completes successfully. Successful commands exit 0; a normal operational error exits 1; invalid syntax the tool itself owns exits 2.
-- A shell completion command is singular: `<tool> completion <shell>`. It writes the selected shell's completion definition to standard output.
+- The CLI exposes one documented `completion <shell>` action at a stable command path. `mgit completion <shell>` and `ki manage completion <shell>` are both valid shapes; do not retain retired or plural aliases. It accepts `bash` and `zsh`, writes only the selected definition to standard output, and rejects an unsupported shell as owned invalid syntax.
+- The Bash definition is sourceable and registers the executable with `complete`. The Zsh definition is an autoloadable `_<tool>` artifact: it declares `#compdef <tool>` and registers `compdef _<tool> <tool>` without invoking the completion function while it is loaded. Test both emitted forms and the Zsh registration under `compinit`.
+- A tool never edits shell startup files or installs personal completion files itself. The user's shell configuration, package manager, or configuration manager owns persistence and activation; for Zsh, it writes the generated `_<tool>` artifact into an existing `fpath` directory before `compinit` runs.
 - Syntax the tool itself owns reports `<tool>: error: …`, exits with status 2, and includes usage. Invalid owned syntax takes precedence over `--help`; arguments intentionally passed through to another program remain that program's concern.
 - The active CLI help, a physical manual, the README's command overview, and the current-release changelog baseline describe the same public surface. A tool may give each a different level of detail, but none may advertise a retired command or omit a shipped user-facing command.
 
@@ -106,6 +108,7 @@ A physical `man/<tool>.1` is the installed command reference. It stays aligned w
 - Put a literal `\&` line immediately after every `.SH` and `.SS`. Begin ordinary prose with `.PP` after that line; a structural macro such as `.TP` or a nested `.SS` may follow it directly. Never place bare prose immediately after a heading. This gives the rendered heading a clear visual separation without relying on renderer-specific blank-line behaviour.
 - Put each configuration format's schema, fields, and examples in the canonical `FILES` section. Command sections describe their commands' behaviour and may name a file, but do not repeat the file format.
 - Keep SYNOPSIS short and executable: show the general forms first, then grouped commands as term/description pairs. Use the same names and ordering as help, and describe each command in a concise active sentence.
+- Include the user-facing release and local-development installation paths that the tool supports, including where the manual is installed or linked. Identify the canonical completion action, but keep shell-startup ownership with the user's configuration layer rather than prescribing an installer-side mutation.
 - Validate source with `mandoc -T lint man/<tool>.1`. For an authoring or layout change, also inspect the plain rendered form with `mandoc -Tutf8 man/<tool>.1 | col -b`; lint can validate roff syntax but cannot establish readable spacing.
 
 ## The qualified `ki-tools` marker
