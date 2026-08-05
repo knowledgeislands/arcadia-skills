@@ -1,6 +1,6 @@
 ---
 id: KI-HARNESS-GOV-009
-title: Make runtime coverage mechanically conformable
+title: Make runtime coverage conformable
 theme: governance-consistency
 horizon: future
 status: draft

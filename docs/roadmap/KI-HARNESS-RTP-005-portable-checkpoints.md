@@ -1,6 +1,6 @@
 ---
 id: KI-HARNESS-RTP-005
-title: Define portable checkpoints across agent runtimes
+title: Define portable checkpoints
 theme: runtime-portability
 horizon: now
 status: draft

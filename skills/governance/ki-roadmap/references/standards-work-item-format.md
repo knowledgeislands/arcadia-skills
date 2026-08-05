@@ -24,7 +24,7 @@ docs/roadmap/<REPO>-<THEME>-<NNN>-<slug>.md
 ```yaml
 ---
 id: KI-HARNESS-FND-001
-title: Short descriptive title
+title: Compact descriptive title
 theme: foundation-tooling
 horizon: future
 status: draft
@@ -36,6 +36,8 @@ baseline-ref: null
 ```
 
 `id`, `title`, `theme`, `horizon`, `status`, `blocks`, `blocked-by`, and `baseline-ref` are required.
+
+`title` contains at most four words. It is a compact human label for lists and reports; put scope and nuance in the Goal and Context rather than extending the title.
 
 `candidate` is required for Future items and must be `true`; it is absent from every other horizon.
 

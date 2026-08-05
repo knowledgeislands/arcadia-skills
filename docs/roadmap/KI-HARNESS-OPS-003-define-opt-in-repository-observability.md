@@ -1,6 +1,6 @@
 ---
 id: KI-HARNESS-OPS-003
-title: Define opt-in repository observability via OTLP
+title: Define OTLP observability
 theme: operations
 horizon: future
 status: draft

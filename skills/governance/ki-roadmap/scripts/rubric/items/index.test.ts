@@ -161,6 +161,13 @@ test('a Goal is mandatory and non-empty', () => {
   expect(inspectRoadmap(repository)).toContainEqual(expect.objectContaining({ area: 'ITEM-3', msg: '## Goal must be non-empty' }))
 })
 
+test('a title has at most four words', () => {
+  const repository = createFixture()
+  const item = join(repository, 'docs', 'roadmap', 'TEST-FND-001-build-the-foundation.md')
+  writeFileSync(item, readFileSync(item, 'utf8').replace('title: Build the foundation', 'title: Build a foundation for every user'))
+  expect(inspectRoadmap(repository)).toContainEqual(expect.objectContaining({ area: 'ITEM-1', msg: 'title must contain at most 4 words' }))
+})
+
 test('execution Steps use lifecycle-appropriate task lists', () => {
   const repository = createFixture()
   const item = join(repository, 'docs', 'roadmap', 'TEST-FND-001-build-the-foundation.md')

@@ -1,6 +1,6 @@
 ---
 id: KI-HARNESS-OPS-002
-title: Reconcile the three memory-store defects
+title: Reconcile memory-store defects
 theme: operations
 horizon: waiting-for
 status: draft

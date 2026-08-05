@@ -31,6 +31,8 @@ CLI tooling reports and filters the canonical items.
 
 Each work-item file is canonical and owns its full authored detail.
 
+Its frontmatter `title` is a compact label of at most four words. The file slug remains a stable identifier aid and need not repeat or constrain the title.
+
 There are no simple or thematic profiles, theme `ROADMAP.md` files, `plans/` directories, item locators, or standalone plan records.
 
 The item identifier is globally unique within its repository: `<REPO>-<THEME>-<NNN>`.

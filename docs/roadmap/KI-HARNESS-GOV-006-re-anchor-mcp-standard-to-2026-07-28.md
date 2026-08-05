@@ -1,6 +1,6 @@
 ---
 id: KI-HARNESS-GOV-006
-title: Re-anchor the MCP standard to specification 2026-07-28
+title: Reanchor MCP standard
 theme: governance-consistency
 horizon: soon
 status: draft

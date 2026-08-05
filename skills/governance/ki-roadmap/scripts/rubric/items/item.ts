@@ -7,8 +7,8 @@ const FORMAT = 'standards-work-item-format.md'
 const ITEM_1: RubricItem<RoadmapAuditContext> = {
   code: 'ITEM-1',
   title: 'flat work-item identity',
-  description: 'Each canonical item lives directly under docs/roadmap with a unique stable identifier and matching filename.',
-  sources: [SOURCE],
+  description: 'Each canonical item lives directly under docs/roadmap with a unique stable identifier, matching filename, and title of at most four words.',
+  sources: [SOURCE, FORMAT],
   mechanical: {
     level: 'FAIL',
     audit: {

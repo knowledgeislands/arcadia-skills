@@ -1,6 +1,6 @@
 ---
 id: KI-HARNESS-GOV-002
-title: Roll Feature Definitions out across the repository fleet
+title: Deploy Feature Definitions fleetwide
 theme: governance-consistency
 horizon: next
 status: draft

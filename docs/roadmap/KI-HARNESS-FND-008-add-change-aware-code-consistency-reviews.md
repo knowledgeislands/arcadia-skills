@@ -1,6 +1,6 @@
 ---
 id: KI-HARNESS-FND-008
-title: Add change-aware code consistency reviews
+title: Add change-aware code reviews
 theme: foundation-tooling
 horizon: next
 status: draft

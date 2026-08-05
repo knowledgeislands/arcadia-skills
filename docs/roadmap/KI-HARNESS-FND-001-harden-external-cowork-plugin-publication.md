@@ -1,6 +1,6 @@
 ---
 id: KI-HARNESS-FND-001
-title: Harden external Cowork plugin publication
+title: Harden Cowork plugin publication
 theme: foundation-tooling
 horizon: next
 status: done

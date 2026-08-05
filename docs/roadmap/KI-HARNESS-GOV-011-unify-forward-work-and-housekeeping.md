@@ -1,6 +1,6 @@
 ---
 id: KI-HARNESS-GOV-011
-title: Unify forward work and recurring housekeeping
+title: Unify forward work
 theme: governance-consistency
 horizon: now
 status: awaiting-review
@@ -37,6 +37,7 @@ KB Streams use a different Focus vocabulary and `draft` / `ready` / `in-progress
 - [x] Simplify `ki-next`, `ki-plan`, `ki-implement`, `ki-accept`, `ki-batch`, `ki-recap`, and `ki-delegate` around the shared command family and their explicit adapter boundaries.
 - [x] Update affected rubric contexts, generated publications, and focused tests; add the new skill to repository configuration.
 - [x] Run the relevant direct audits, focused tests, TypeScript, the full test suite, and formatting checks.
+- [x] Enforce compact four-word roadmap titles and normalize every registered repository roadmap.
 
 ## Files touched
 
@@ -83,29 +84,31 @@ The design was explicitly agreed: the shared queue includes a `housekeeping` hor
 
 ### Delivered
 
-The roadmap contract, Streams adapter, and all six process skills now use one queue and delivery lifecycle. `ki-housekeeping` owns portable recurring templates, and `ki-next` can spawn due ordinary work into the appropriate adapter's delivery horizon.
+The roadmap contract now limits every work-item title to four words, and every registered non-KB roadmap conforms.
 
 ### Summary of changes
 
-Added `ki-housekeeping` with a native rubric and focused tests; migrated repository work records and Streams proposals to `draft` → `ready` → `in-progress` → `awaiting-review` → `done`; and made `ki-accept` the shared human-review closure and explicit-pruning boundary.
+Added the title limit to the roadmap standard, mechanical auditor, generated rubric publication, and focused test. Normalized 70 registered roadmap titles without renaming files or changing their bodies.
 
 ### Verification
 
-- `bun run test` — pass: 273 tests, 0 failures.
+- `bun run test` — pass: 274 tests, 0 failures.
 - `bunx tsc --noEmit` — pass.
 - `ki repo audit --skill ki-roadmap --repo .` — pass.
-- `ki repo audit --skill ki-housekeeping --repo .` — pass.
-- Focused roadmap, Streams, and housekeeping rubric tests — pass.
-- `ki repo audit --skill ki-skills --repo .` — no failures; 12 known classifier warnings because process skills intentionally do not expose governance modes.
-- `ki repo audit --skill ki-kb-streams --repo .` — not applicable in this non-KB repository; the Streams focused context tests pass.
+- Every registered non-KB roadmap was checked for titles over four words — 0 remain.
+- The ten external changed roadmaps and chezmoi, KI Specifications, KI Website, MCP, tools, and Valle Armonia repositories each have a focused title-only commit.
 
 ### Outstanding concerns
 
-The host's `ki-skills` classifier still reports process skills as if they were governance skills. This is a pre-existing audit-model limitation, not a lifecycle-contract failure.
+Several registered repositories have pre-existing roadmap lifecycle/body-shape audit failures. The title migration introduced none; their title fields meet the new limit.
+
+### Post-change review
+
+Confirm that the concise title choices retain sufficient recognition in roadmap lists; identifiers and stable filename slugs preserve the fuller context.
 
 ### Mini recap
 
-The common-command design is implemented and verified through the human-review boundary. No new durable learning route is proposed.
+No new durable learning route is proposed.
 
 ## Discussion
 

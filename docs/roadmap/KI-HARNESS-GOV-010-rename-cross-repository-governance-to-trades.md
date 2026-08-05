@@ -1,6 +1,6 @@
 ---
 id: KI-HARNESS-GOV-010
-title: Rename cross-repository governance to ki-trades
+title: Rename governance to trades
 theme: governance-consistency
 horizon: now
 status: done

@@ -36,6 +36,7 @@ const ID_RE = /^[A-Z][A-Z0-9-]{1,23}-[A-Z][A-Z0-9]{1,7}-\d{3,}$/
 const FILE_RE = /^([A-Z][A-Z0-9-]{1,23}-[A-Z][A-Z0-9]{1,7}-\d{3,})-([a-z0-9]+(?:-[a-z0-9]+)*)\.md$/
 const THEME_RE = /^[a-z0-9]+(?:-[a-z0-9]+)*$/
 const COMMIT_RE = /^(?:[0-9a-f]{40}|[0-9a-f]{64})$/
+const MAX_TITLE_WORDS = 4
 const STATUS = new Set(['draft', 'ready', 'in-progress', 'awaiting-review', 'done'])
 const IMMEDIATE = new Set<Horizon>(['now', 'next'])
 const STANDARD = 'references/standards-repository-roadmaps.md'
@@ -244,6 +245,7 @@ const parseItem = (repository: string, name: string, configuration?: RoadmapConf
   if (unexpected.length) add('FAIL', 'ITEM-1', `frontmatter has unexpected field(s): ${unexpected.join(', ')}`, FORMAT, display)
   if (!id || id !== file[1] || !ID_RE.test(id)) add('FAIL', 'ITEM-1', 'frontmatter id must match the filename identifier', FORMAT, display)
   if (!title?.trim()) add('FAIL', 'ITEM-1', 'title must be non-empty', FORMAT, display)
+  else if (title.trim().split(/\s+/).length > MAX_TITLE_WORDS) add('FAIL', 'ITEM-1', `title must contain at most ${MAX_TITLE_WORDS} words`, FORMAT, display)
   if (!theme || !THEME_RE.test(theme)) add('FAIL', 'ITEM-2', 'theme must be lowercase kebab-case', FORMAT, display)
   const idTheme =
     configuration && id?.startsWith(`${configuration.repoCode}-`)
