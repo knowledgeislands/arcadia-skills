@@ -3,7 +3,7 @@ id: KI-HARNESS-GOV-010
 title: Rename cross-repository governance to ki-trades
 theme: governance-consistency
 horizon: blocking
-status: acceptance
+status: done
 blocks: []
 blocked-by: []
 baseline-ref: b3a9d5cf476a99a3a72322230d0dfed82dfe7aa7
@@ -86,6 +86,10 @@ Peer repositories remain responsible for their separately owned migrations. Hist
 ### Mini recap
 
 The migration retained the typed-route, immutable-payload, receiver-disposition, and release-observation model while making the capability's active public identifiers unambiguously trade-specific. No learning route is proposed.
+
+## Done
+
+Accepted on 2026-08-05 after review of the committed acceptance packet and its stated verification evidence.
 
 ## Discussion
 
