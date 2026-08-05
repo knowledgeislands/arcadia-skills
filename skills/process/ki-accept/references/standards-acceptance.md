@@ -42,6 +42,8 @@ Do not delete it as part of acceptance.
 
 Do not broaden a supplied glob, prune an accepted-but-not-done item, follow a symlink, or delete a record because it looks old.
 
+`ki repo roadmap prune` is a separate native host operation: it sweeps every selected repository's canonical regular `done` records after validating the complete selected set. It does not approve closure, choose records by inference, delete a non-terminal item, or replace this procedure when an explicit path or glob selection is required.
+
 ## Batch authority
 
 `ki-batch` may request batched acceptance only when its authorisation explicitly names the accepted items and grants that closure authority.

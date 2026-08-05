@@ -129,6 +129,6 @@ That handoff does not permit `ki-next` to infer batch, selection, or implementat
 
 Report each confirmed handoff disposition, synergy decision (including excluded near-matches), files changed, selected work, and audit result.
 
-Identify `done` records that are eligible for pruning when useful, but do not delete them; path- or glob-selected pruning belongs to `ki-accept`.
+Identify `done` records that are eligible for pruning when useful, but do not delete them; path- or glob-selected pruning belongs to `ki-accept`, while `ki repo roadmap prune` is the separate deterministic selected-repository sweep.
 
 If no work is eligible, identify the missing condition or scoping decision plainly.
