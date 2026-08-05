@@ -10,7 +10,7 @@ _On-demand procedure for `ki-recap`. The kind, scope, and leg summary live in [`
   - [2. Summarise](#2-summarise)
   - [3. Surface what is outstanding](#3-surface-what-is-outstanding)
   - [4. Harvest the learnings, and route each](#4-harvest-the-learnings-and-route-each)
-  - [5. Specific actions](#5-specific-actions)
+  - [5. Actions](#5-actions)
   - [6. Route future-work selection to `ki-next`](#6-route-future-work-selection-to-ki-next)
   - [7. Preserve the handoff and compact when needed](#7-preserve-the-handoff-and-compact-when-needed)
 
@@ -72,9 +72,9 @@ Use `highCostCandidates` from the grounding helper as a starting list, not the f
 
 When `ki-accept` requests a record-scoped recap, do not run or imply a full-session recap. Ground only the record's delivered outputs and verification evidence, then record these H3 parts in a roadmap item's `## Review` section or the equivalent proposal review evidence: **Delivered**, **Summary of changes**, **Verification**, **Outstanding concerns**, and **Mini recap**. The summary names the material changes and useful primary paths; verification records concrete commands, outcomes, and the checked evidence revision; concerns hold open questions and further review analysis. The mini recap may name a learning and its proposed route, but it must say that the route is unapproved. User closure of the record sets it Done only; it does not approve a guide, rubric, agent, hook, memory, or other durable learning write.
 
-## 5. Specific actions
+## 5. Actions
 
-Close the recap with a **Specific actions** section: a short, concrete, imperative list of only the unfinished work that emerged from this session's steps 3 and 4 — each item something that could be done right now, with the exact command, file, or artefact named. Do not add generic backlog, peer-repository state, a proposed feature, or a future-work choice merely because it is actionable; those are `ki-next` concerns, not recap actions. Prefix each item with a short, unique, uppercase hyphenated label that names the work (usually two to four words), so the user can respond in chat by label ("do `COMMIT-DOCS` and `FIX-AUTHORING-AUDIT`") instead of restating the action. Do not use arbitrary sequence labels such as `A1`, `A2`, or `A3`; labels are ephemeral recap handles, not roadmap identifiers. Typical entries:
+Close the recap with an **Actions** section: a short, concrete, imperative list of only the unfinished work that emerged from this session's steps 3 and 4 — each item something that could be done right now, with the exact command, file, or artefact named. Do not add generic backlog, peer-repository state, a proposed feature, or a future-work choice merely because it is actionable; those are `ki-next` concerns, not recap actions. Prefix each item with a short, unique, uppercase hyphenated label that names the work (usually two to four words), so the user can respond in chat by label ("do `COMMIT-DOCS` and `FIX-AUTHORING-AUDIT`") instead of restating the action. Do not use arbitrary sequence labels such as `A1`, `A2`, or `A3`; labels are ephemeral recap handles, not roadmap identifiers. Typical entries:
 
 - `COMMIT-SESSION-CHANGES` — Commit (or explicitly discard) the session's uncommitted files — name the paths and suggest the commit message.
 - `PRESERVE-SESSION-DEFERRAL` — Create the offered roadmap / plan or Stream / proposal Checklist for a thread explicitly deferred during this session that has no home.
