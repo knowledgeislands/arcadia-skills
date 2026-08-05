@@ -41,6 +41,8 @@ work = ["https://github.com/knowledgeislands/tools-ki"]
 
 ["knowledgeislands/ki-agentic-harness:ki-housekeeping-claude"]
 
+["knowledgeislands/ki-agentic-harness:ki-housekeeping"]
+
 ["knowledgeislands/ki-agentic-harness:ki-roadmap"]
 ["knowledgeislands/ki-agentic-harness:ki-roadmap".themes]
 FND = "foundation-tooling"

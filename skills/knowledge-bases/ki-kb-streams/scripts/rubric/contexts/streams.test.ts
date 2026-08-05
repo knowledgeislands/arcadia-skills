@@ -38,11 +38,11 @@ dependencies: []
 
 const streamsFixture = (): { root: string; files: string[] } => {
   const root = repository()
-  mkdirSync(join(root, 'Streams', 'Active', 'Alpha Proposal'), { recursive: true })
+  mkdirSync(join(root, 'Streams', 'Now', 'Alpha Proposal'), { recursive: true })
   mkdirSync(join(root, 'Streams', 'Future', 'Beta Proposal'), { recursive: true })
-  writeFileSync(join(root, 'Streams', 'Active', 'Active.md'), '# Active\n')
+  writeFileSync(join(root, 'Streams', 'Now', 'Now.md'), '# Now\n')
   writeFileSync(join(root, 'Streams', 'Future', 'Future.md'), '# Future\n')
-  const files = [join(root, 'Streams', 'Active', 'Alpha Proposal', 'Alpha Proposal.md'), join(root, 'Streams', 'Future', 'Beta Proposal', 'Beta Proposal.md')]
+  const files = [join(root, 'Streams', 'Now', 'Alpha Proposal', 'Alpha Proposal.md'), join(root, 'Streams', 'Future', 'Beta Proposal', 'Beta Proposal.md')]
   writeFileSync(files[0] as string, proposal('Alpha Proposal'))
   writeFileSync(files[1] as string, proposal('Beta Proposal'))
   writeFileSync(join(root, 'AGENTS.md'), 'Canonical changes use a proposal governed by ki-kb-streams.\n')
@@ -65,7 +65,7 @@ describe('ki-kb-streams session', () => {
     lifecycle?.mechanical?.conform?.run(context)
 
     const writes = session.proposal().writes
-    expect(writes.map((write) => write.path)).toEqual(['Streams/Active/Alpha Proposal/Alpha Proposal.md', 'Streams/Future/Beta Proposal/Beta Proposal.md'])
+    expect(writes.map((write) => write.path)).toEqual(['Streams/Now/Alpha Proposal/Alpha Proposal.md', 'Streams/Future/Beta Proposal/Beta Proposal.md'])
     expect(writes.every((write) => write.content.includes('status: draft\npriority: high\n'))).toBe(true)
     expect(files.map((file) => readFileSync(file, 'utf8'))).toEqual(originals)
     expect(session.proposal()).toEqual({ writes })
@@ -91,7 +91,7 @@ describe('ki-kb-streams session', () => {
 
   test('recognises every canonical Focus', () => {
     const root = repository()
-    const foci = ['Blocking', 'Active', 'Background', 'Waiting for', 'Dormant', 'Future']
+    const foci = ['Now', 'Next', 'Soon', 'Waiting for', 'Parked', 'Future', 'Housekeeping']
     for (const focus of foci) {
       mkdirSync(join(root, 'Streams', focus), { recursive: true })
       writeFileSync(join(root, 'Streams', focus, `${focus}.md`), `# ${focus}\n`)

@@ -3,7 +3,7 @@ id: KI-HARNESS-OPS-001
 title: Complete the approved Claude-state cleanup
 theme: operations
 horizon: waiting-for
-status: open
+status: draft
 blocks: []
 blocked-by: []
 baseline-ref: null

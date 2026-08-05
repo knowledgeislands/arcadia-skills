@@ -48,8 +48,8 @@ Proposal frontmatter, lifecycle, and settlement.
   - _Review prompt:_ Do sampled stream notes carry an appropriate Governance section?
 - **ENACT-4 [J] — index accuracy** — Focus and proposal indexes match the live streams and statuses. (standards-enactment-process.md)
   - _Review prompt:_ Do indexes accurately reflect live streams and statuses?
-- **ENACT-5 [J] — completed-proposal settlement** — Completed proposals are deleted after their output reaches a canonical zone. (standards-enactment-process.md)
-  - _Review prompt:_ Have completed proposals been deleted only after their output settled into the appropriate store?
+- **ENACT-5 [J] — done-proposal retention** — Done proposals retain their reviewed evidence until an explicit prune selection removes them. (standards-enactment-process.md)
+  - _Review prompt:_ Do done proposals retain their review evidence and canonical outputs until an explicit prune selection?
 
 ## GATE — always-loaded gate
 

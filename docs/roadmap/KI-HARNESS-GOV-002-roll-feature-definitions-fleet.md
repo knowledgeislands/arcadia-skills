@@ -3,7 +3,7 @@ id: KI-HARNESS-GOV-002
 title: Roll Feature Definitions out across the repository fleet
 theme: governance-consistency
 horizon: next
-status: open
+status: draft
 blocks: []
 blocked-by: []
 baseline-ref: null

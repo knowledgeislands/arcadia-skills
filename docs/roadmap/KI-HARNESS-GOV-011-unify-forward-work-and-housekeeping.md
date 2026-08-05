@@ -2,7 +2,7 @@
 id: KI-HARNESS-GOV-011
 title: Unify forward work and recurring housekeeping
 theme: governance-consistency
-horizon: next
+horizon: now
 status: in-progress
 blocks: []
 blocked-by: []

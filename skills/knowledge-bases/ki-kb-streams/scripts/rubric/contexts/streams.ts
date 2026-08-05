@@ -10,8 +10,8 @@ import type {
   ViolationLevel
 } from '../../shared/rubric.ts'
 
-const FOCI = ['Blocking', 'Active', 'Background', 'Waiting for', 'Dormant', 'Future'] as const
-const STATUS = ['draft', 'ready', 'rejected', 'in-progress', 'rolled-out', 'reviewed', 'completed'] as const
+const FOCI = ['Now', 'Next', 'Soon', 'Waiting for', 'Parked', 'Future', 'Housekeeping'] as const
+const STATUS = ['draft', 'ready', 'in-progress', 'awaiting-review', 'done'] as const
 const PRIORITY = ['urgent', 'high', 'medium', 'low'] as const
 const SUFFIX = ' Proposal'
 const STREAMS_TABLE = 'knowledgeislands/ki-agentic-harness:ki-kb-streams'

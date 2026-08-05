@@ -108,7 +108,7 @@ Planning and local implementation are unblocked. Before any non-test publication
 - **Verification gate:** `bun test skills/environment/ki-binding-claude/scripts/build-plugin.test.ts`; the orchestrator independently reviews the diff, runs the full verification set, and performs an adversarial safety review before any commit.
 - **Checkpoint:** Return an uncommitted diff, focused-test output, and any escalation; do not invoke the builder against the live target.
 
-## Acceptance
+## Review
 
 ### Delivered
 

@@ -3,7 +3,7 @@ id: KI-HARNESS-RTP-001
 title: Add Codex housekeeping when a safe contract exists
 theme: runtime-portability
 horizon: waiting-for
-status: open
+status: draft
 blocks: []
 blocked-by: []
 baseline-ref: null

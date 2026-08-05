@@ -11,7 +11,7 @@ This standard defines how the `Streams` zone is laid out for the [Knowledge Isla
 - [Note types and frontmatter](#note-types-and-frontmatter)
 - [Index notes](#index-notes)
 - [What lives in a stream note](#what-lives-in-a-stream-note)
-- [Completed streams](#completed-streams)
+- [Completed streams](#done-streams)
 - [Provenance and inbound links](#provenance-and-inbound-links)
 
 ## The zone
@@ -30,23 +30,24 @@ Every stream sits at `Streams/$Focus/$Category?/$Name…`.
 
 **Focus** is mandatory and expresses the level of attention the stream is currently receiving. Moving a stream between Focus folders is an explicit act — it signals a shift in what the project is paying attention to.
 
-| Focus         | Meaning                                         |
-| ------------- | ----------------------------------------------- |
-| `Blocking`    | Urgent work preventing focused work from moving |
-| `Active`      | Receiving focused attention now                 |
-| `Background`  | Understood work, but not the current focus      |
-| `Waiting for` | Blocked by a named dependency or condition      |
-| `Dormant`     | Intentionally paused with a return trigger      |
-| `Future`      | Planned or ideated; not yet started             |
+| Focus          | Meaning                                           |
+| -------------- | ------------------------------------------------- |
+| `Now`          | Receiving current delivery attention              |
+| `Next`         | The next bounded work to prepare or begin         |
+| `Soon`         | Understood work, but not current                  |
+| `Waiting for`  | Blocked by a named dependency or condition        |
+| `Parked`       | Intentionally paused with a return trigger        |
+| `Future`       | Planned or ideated; not yet started               |
+| `Housekeeping` | Recurring-work templates that may spawn a due run |
 
-Focus describes **attention**, not maturity: a `draft` proposal may sit in `Active/` or `Future/`. Be honest about attention — a stream in `Active/` without movement belongs in `Background/`, `Waiting for/`, or `Dormant/`.
+Focus describes **attention**, not maturity: a `draft` proposal may sit in `Now/` or `Future/`. Be honest about attention — a stream in `Now/` without movement belongs in `Soon/`, `Waiting for/`, or `Parked/`.
 
-A stream in `Waiting for/` names the dependency or external condition that prevents progress. It moves to `Active/` when it becomes the current focus, or to `Background/` when it is unblocked but not yet immediate. `Dormant/` is different: it is intentionally paused, not merely waiting on another party.
+A stream in `Waiting for/` names the dependency or external condition that prevents progress. It moves to `Now/` when it becomes the current focus, or to `Soon/` when it is unblocked but not yet immediate. `Parked/` is different: it is intentionally paused, not merely waiting on another party.
 
 **Category** is optional grouping within a Focus, for navigability. Pick one pattern per Focus and stick to it:
 
 - **No category** — flat; best for a base with few concurrent streams.
-- **Destination path** — the category mirrors the stream's destination in the store (e.g. `Active/Knowledge Islands/`); scales at volume and echoes where the knowledge is heading.
+- **Destination path** — the category mirrors the stream's destination in the store (e.g. `Now/Knowledge Islands/`); scales at volume and echoes where the knowledge is heading.
 - **Status sub-grouping** — the category expresses status; useful when many streams sit at similar levels across one domain.
 
 The guiding principle is easy navigation: too much depth is as unhelpful as too much breadth at one level.
@@ -95,15 +96,15 @@ The zone uses the machine-readable `type:` key (the canonical scheme; see the sk
 
 ## Index notes
 
-Every Focus folder carries an **index note same-named as the folder** (`Active/Active.md`, …, `type: stream-focus`). Its `## Streams` section is a table:
+Every Focus folder carries an **index note same-named as the folder** (`Now/Now.md`, …, `type: stream-focus`). Its `## Streams` section is a table:
 
 | Column   | Content                                                                       |
 | -------- | ----------------------------------------------------------------------------- |
 | Topic    | A bare-basename link to the stream note (e.g. an `Admin Audit Proposal` link) |
-| Status   | The proposal's lifecycle position (`draft` … `completed` / `rejected`)        |
+| Status   | The proposal's lifecycle position (`draft` … `done`)                          |
 | Priority | `urgent` / `high` / `medium` / `low`                                          |
 
-**Ordering.** In `Blocking/`, `Active/`, `Background/`, `Waiting for/`, `Dormant/`, and `Future/`: `in-progress` → `ready` → `draft`, then by priority within each group. Group by category before sorting where categories are in use.
+**Ordering.** In `Now/`, `Next/`, `Soon/`, `Waiting for/`, `Parked/`, and `Future/`: `in-progress` → `ready` → `draft`, then by priority within each group. `Housekeeping/` lists active templates by next due date. Group by category before sorting where categories are in use.
 
 The `Streams/` zone index note (`type: stream-zone`) also carries a cross-Focus **proposals index** — a live triage view of every proposal by Topic / Focus / Status / Priority. It has no value if it lags: update it on creation, status change, and priority change. (Note-content links inside a base use Obsidian `[[wikilinks]]` per the `ki-kb` convention; this skill's own files use relative markdown links.)
 
@@ -111,17 +112,17 @@ The `Streams/` zone index note (`type: stream-zone`) also carries a cross-Focus 
 
 A stream note is a proposal document and status tracker. Inside the [proposal anatomy](standards-enactment-process.md) frame it holds: current status, progress updates, decisions made within the stream, next steps, blockers, and links out to the canonical zones. What does **not** belong: durable analysis, drafting work product, reusable methodology (→ `Pillars/`); external reference material (→ `Resources/`); a settled change to the base's operating model — a process, convention, or configuration (→ `Admin/`); time-bound records (→ `Calendar/`). When a stream produces lasting insight, extract it to its canonical zone and link back.
 
-## Completed streams
+## Done streams
 
-Streams are open working material, not a completion archive. After rollout, keep the proposal in the Focus that honestly reflects any remaining review or validation attention. Once it is `completed`, delete the proposal document. A final `rejected` proposal is likewise removed once any durable rationale has been recorded.
+Streams hold working material and retained completion evidence. After rollout, keep the proposal in the Focus that honestly reflects any remaining review or validation attention. Once it is `done`, retain the reviewed proposal until an explicit `ki-accept prune` selection removes it.
 
-Durable outcomes belong in `Admin/`, `Pillars/`, `Resources/`, or a Decision Record; Git retains transient process history. There is no `Settled/` Focus or retained completion marker.
+Durable outcomes belong in `Admin/`, `Pillars/`, `Resources/`, or a Decision Record. There is no `Settled/` Focus.
 
 ## Provenance and inbound links
 
-Streams are **ephemeral**: a stream is deleted once its durable output has migrated, so nothing durable may depend on a link _into_ one.
+Streams are working records: durable notes should link to their durable output rather than treating a Stream as the only source of truth.
 
-- **Durable notes never cite a stream as provenance.** A note in a canonical zone (`Pillars` / `Resources` / `Admin`) — including the conventions, templates, and policies within them — must not link to a stream to record where something came from: the link breaks the moment the stream retires. Record provenance as plain prose (a date and short description, e.g. "the pilot reorganisation (2026-05)") or link to the **durable artefact** the stream produced (a store note, a convention, a template) — never to the stream itself.
-- **Stream-to-stream links only between live streams.** They are fine while both are active; when a stream retires, fixing or dropping the inbound links from other streams is part of its retirement.
+- **Durable notes prefer durable provenance.** A note in a canonical zone (`Pillars` / `Resources` / `Admin`) should record provenance as plain prose or link to the durable artefact the stream produced; a proposal link is supplementary review evidence, not the only record.
+- **Stream-to-stream links remain current.** A pruned proposal's inbound links must be fixed or dropped as part of pruning.
 
-This is the inbound complement to [Completed streams](#completed-streams): completed streams are deleted, so durable notes must never depend on a stream link.
+This is the inbound complement to [Done streams](#done-streams): pruning is deliberate, so durable notes should not depend on a proposal link surviving forever.

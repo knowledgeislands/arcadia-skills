@@ -3,7 +3,7 @@ id: KI-HARNESS-FND-008
 title: Add change-aware code consistency reviews
 theme: foundation-tooling
 horizon: next
-status: open
+status: draft
 blocks: []
 blocked-by: []
 baseline-ref: null

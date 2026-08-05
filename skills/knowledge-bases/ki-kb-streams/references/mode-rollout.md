@@ -7,4 +7,4 @@ _On-demand procedure for streams' ROLLOUT mode. The shared model — the zone-at
 1. **Re-verify each Checklist item against the live file** — plans drift between drafting and execution; the live file at the moment of execution is authoritative.
 2. For complex or destructive steps, stage the output as a **working-area preview** first (a review checkpoint and a concrete artefact for the review).
 3. Execute every create / edit / move / delete; create index notes for any new folders; update references to moved or renamed content. Use file tools, **not state-changing git** — leave `git add` / `commit` to the user unless instructed per-command.
-4. Set `status: rolled-out`; keep the stream in the Focus that honestly reflects its remaining review or validation attention. Hand off to **REVIEW**.
+4. Add the required `## Review` packet, set `status: awaiting-review`, and hand the record to `ki-accept` for human review and closure.

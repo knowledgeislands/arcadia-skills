@@ -38,7 +38,7 @@ author: Mixed
 ---
 ```
 
-`type: stream-proposal` is the machine-readable marker the checker keys on. `status` is one of `draft` / `ready` / `in-progress` / `rolled-out` / `reviewed` / `rejected`. `dependencies` is a YAML list of prerequisite proposal filenames — empty here because none exist yet, but always present so the checker can validate it. `priority` is `urgent` / `high` / `medium` / `low`. Index notes (`stream-focus`, `stream-zone`, `stream-index`) do not carry `status`, `priority`, or `dependencies` — those fields are for proposals only.
+`type: stream-proposal` is the machine-readable marker the checker keys on. `status` is one of `draft` / `ready` / `in-progress` / `awaiting-review` / `done`. `dependencies` is a YAML list of prerequisite proposal filenames — empty here because none exist yet, but always present so the checker can validate it. `priority` is `urgent` / `high` / `medium` / `low`. Index notes (`stream-focus`, `stream-zone`, `stream-index`) do not carry `status`, `priority`, or `dependencies` — those fields are for proposals only.
 
 ### Proposal document structure
 
@@ -92,7 +92,7 @@ The Governance footer links to the base's bound process note (not to the skill i
 
 ### Focus dashboard (stream-focus index)
 
-Each Focus folder carries a same-name index note. Its `## Streams` table is the live triage view for that Focus. From `Streams/Active/Active.md` in `ki-arcadia-principal`:
+Each Focus folder carries a same-name index note. Its `## Streams` table is the live triage view for that Focus. From `Streams/Now/Now.md` in `ki-arcadia-principal`:
 
 ```yaml
 ---
@@ -105,7 +105,7 @@ author: AI-assisted
 ```
 
 ```markdown
-# Active
+# Now
 
 ## Overview
 

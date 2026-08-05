@@ -3,7 +3,7 @@ id: KI-HARNESS-GOV-009
 title: Make runtime coverage mechanically conformable
 theme: governance-consistency
 horizon: future
-status: open
+status: draft
 candidate: true
 blocks: []
 blocked-by: []

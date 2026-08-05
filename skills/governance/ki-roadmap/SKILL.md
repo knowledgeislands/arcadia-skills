@@ -4,7 +4,7 @@ ki-depends-on: []
 ki-shared-dependencies: [ki-skills:rubric]
 owns: ['ROADMAP.md']
 description: >
-  Governs flat repository work items and their concise root orientation in non-KB repositories. Use for "audit the roadmap", "audit plans", roadmap horizons, theme grouping, work-item identity, lifecycle detail, plan dependencies, or root-orientation drift. Every repository work item lives directly under docs/roadmap and gains detail in place as it moves from an open idea through shaping, implementation evidence, acceptance, and retained completion. Knowledge Bases are out of scope: use ki-kb-streams, where streams and proposal checklists replace repository roadmaps and plans. Process skills apply this lifecycle; ki-decision-records owns durable decisions.
+  Governs flat repository work items and their concise root orientation in non-KB repositories. Use for "audit the roadmap", "audit plans", roadmap horizons, theme grouping, work-item identity, lifecycle detail, plan dependencies, or root-orientation drift. Every repository work item lives directly under docs/roadmap and gains detail in place as it moves from draft through readiness, delivery, required review, and retained completion. Knowledge Bases use ki-kb-streams as the matching adapter. Process skills apply the shared lifecycle; ki-decision-records owns durable decisions.
 argument-hint: 'audit <repo> | conform <repo> | help | educate <repo> | refresh'
 ---
 
@@ -16,7 +16,7 @@ Read [the repository-roadmap standard](references/standards-repository-roadmaps.
 
 ## Shared model
 
-`ROADMAP.md` is a concise orientation: it points to `docs/roadmap/` and deliberately repeats no queue information. Each canonical item is a single file at `docs/roadmap/<REPO>-<THEME>-<NNN>-<slug>.md`, beginning with a mandatory plain-language Goal before its technical context. The item’s `theme` field groups related work for CLI reporting; the item’s `horizon` field establishes priority; and `status` records its independent lifecycle. A concise item becomes an execution plan by gaining task-list plan sections in the same file: new work starts `- [ ]`, and completed work becomes `- [x]`. The `ki-repo` table declares the stable uppercase `repo_code`; the `ki-roadmap` table's `themes` mapping declares every allowed uppercase `<THEME>` code and canonical theme name; the serial begins at `001` for each repository/theme pair. The globally unique identifier is also used by dependencies.
+`ROADMAP.md` is a concise orientation: it points to `docs/roadmap/` and deliberately repeats no queue information. Each canonical item is a single file at `docs/roadmap/<REPO>-<THEME>-<NNN>-<slug>.md`, beginning with a mandatory plain-language Goal before its technical context. The item’s `theme` field groups related work for CLI reporting; the `horizon` field establishes queue position; and `status` records the common `draft` → `ready` → `in-progress` → `awaiting-review` → `done` lifecycle. A concise item becomes an execution plan by gaining task-list plan sections in the same file: new work starts `- [ ]`, and completed work becomes `- [x]`. The `ki-repo` table declares the stable uppercase `repo_code`; the `ki-roadmap` table's `themes` mapping declares every allowed uppercase `<THEME>` code and canonical theme name; the serial begins at `001` for each repository/theme pair. The globally unique identifier is also used by dependencies.
 
 ## Operating modes
 
@@ -50,7 +50,7 @@ On the cadence in [the source list](references/sources.md), compare actual repos
 - Exploration needs no plan; multi-file or multi-step implementation enriches its item before execution.
 - A plan answers “how”; a Decision Record answers “why”. Use `ki-decision-records` for the latter.
 - The `ki-next` process skill selects and promotes work through the readiness contract defined here.
-- The `ki-plan` process skill creates, shapes, and marks an immediate work item ready.
-- `ki-implement` owns Ready → In progress → Acceptance; `ki-accept` owns Acceptance → Done and pruning by explicit roadmap-item path or glob.
+- The `ki-plan` process skill shapes an immediate draft through Ready.
+- `ki-implement` owns Ready → In progress → Awaiting review; `ki-accept` owns Awaiting review → Done and pruning by explicit work-record path or glob.
 - `ki-recap` and `ki-next` may recommend pruning; they never delete canonical work-item records.
 - The local `scripts/shared/rubric.ts` is the materialised compile-time contract from `ki-skills`; generic execution, findings, progress, transaction safety, rollback, and reporting belong to `ki`.

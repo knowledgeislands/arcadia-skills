@@ -3,7 +3,7 @@ id: KI-HARNESS-RTP-004
 title: Evaluate agent-native developer environments and remote session workflows
 theme: runtime-portability
 horizon: future
-status: open
+status: draft
 candidate: true
 blocks: []
 blocked-by: []

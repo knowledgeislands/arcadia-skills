@@ -10,12 +10,11 @@ This standard defines the **Enactment Process** — Knowledge Islands' canonical
 - [The cycle](#the-cycle)
 - [Rollout](#rollout)
 - [Post-change review](#post-change-review)
-- [Rejection](#rejection)
 - [Discipline](#discipline)
 
 ## The model
 
-The Enactment Process is the base's governance _in action_ — not a tool a reviewer uses but _how review operates_. Work moves back and forth between the workspace and the canonical zones until the change is approved or rejected:
+The Enactment Process is the base's governance _in action_ — not a tool a reviewer uses but _how review operates_. Work moves between the workspace and the canonical zones until the reviewed record is closed:
 
 ```text
 Stream  ←→  Enactment Process (approval)
@@ -51,7 +50,7 @@ dependencies: [] # filenames of prerequisite proposals
 
 `dependencies` is the machine-readable form of the `Prerequisite` entries in Inputs and must stay in sync with them; it is the gate checked before a change moves to `ready`. Sections:
 
-- **Inputs** — what the change draws on, each labelled entry tagged `Document` (a source file, brief, or reference), `Decision` (a prior agreement that shapes this change), or `Prerequisite` (another proposal that must reach `rolled-out` first). Fill in what is known at opening; update as more are identified.
+- **Inputs** — what the change draws on, each labelled entry tagged `Document` (a source file, brief, or reference), `Decision` (a prior agreement that shapes this change), or `Prerequisite` (another proposal that must reach `done` first). Fill in what is known at opening; update as more are identified.
 - **Outputs** — what the change produces, with each labelled entry tagged `Decision` (a conclusion reached) or `Artefact` (a note or asset created/modified). Complete and accurate before `ready`.
 - **Checklist** — the concrete operations rollout will perform (creates, edits, moves, deletes). Doubles as rollout status — items are ticked as executed.
 - **Open Questions** — unresolved decisions; close each with a resolution note before `ready`.
@@ -64,26 +63,23 @@ Use labelled bullet lists for Inputs and Outputs, such as `- **Decision:** <deta
 
 ### Status lifecycle
 
-| Status        | Meaning                                                                    |
-| ------------- | -------------------------------------------------------------------------- |
-| `draft`       | Work in progress; iterating in the proposal document                       |
-| `ready`       | Stable; no open questions; prerequisites satisfied; submitted for approval |
-| `rejected`    | Rejected; reasons recorded; terminal (may reopen as a new `draft`)         |
-| `in-progress` | Approved; rollout underway                                                 |
-| `rolled-out`  | Checklist executed; post-change review pending                             |
-| `reviewed`    | Post-change review complete                                                |
-| `completed`   | Proven in practice; the proposal document is deleted                       |
+| Status            | Meaning                                                                       |
+| ----------------- | ----------------------------------------------------------------------------- |
+| `draft`           | Work in progress; iterating in the proposal document.                         |
+| `ready`           | Stable; no open questions; prerequisites satisfied; approved to deliver.      |
+| `in-progress`     | Approved rollout underway.                                                    |
+| `awaiting-review` | Checklist executed; the required review packet awaits human closure.          |
+| `done`            | The review is accepted; retain the completed proposal until explicit pruning. |
 
-Order: `draft` → `ready` → (`in-progress` | `rejected`) → `rolled-out` → `reviewed` → `completed`. A `rejected` proposal may reopen as a new `draft`; the prior rejection stays on record. **Priority** (`urgent` / `high` / `medium` / `low`) is set at creation and may rise as context shifts — update the proposal frontmatter and the focus index when it does.
+Order: `draft` → `ready` → `in-progress` → `awaiting-review` → `done`. **Priority** (`urgent` / `high` / `medium` / `low`) is set at creation and may rise as context shifts — update the proposal frontmatter and the focus index when it does.
 
 ## The cycle
 
 1. **Emerge** — a change is conceived; create the stream folder and proposal note under the appropriate Focus (and Category), add a row to the focus index and the proposals index. (Propose the name and path and wait for confirmation first.)
 2. **Mature** — iterate the proposal in place: develop the Design Sections, resolve Open Questions with resolution notes, track prerequisites, keep Inputs / Outputs / Checklist current.
-3. **Submit** — when stable (no open questions) and every prerequisite is at `rolled-out` or beyond, set `status: ready` and submit. Approve → `in-progress`; return to draft → continue; reject → `rejected`, reasons documented, the stream settles.
-4. **Roll out** — execute the Checklist; outputs land in the stores. Set `status: rolled-out`; keep the stream in the Focus that honestly reflects its remaining review or validation attention.
-5. **Review** — run the post-change review → `reviewed`.
-6. **Complete** — once proven in practice → `completed`; delete the proposal document. Durable outcomes live in the canonical zones and Git retains transient history.
+3. **Submit** — when stable (no open questions) and every prerequisite is `done`, set `status: ready` and submit. Approval starts `in-progress`; a declined plan returns to `draft` with its rationale recorded in Discussion.
+4. **Roll out** — execute the Checklist; outputs land in the stores. Set `status: awaiting-review`; keep the stream in the Focus that honestly reflects its remaining review or validation attention.
+5. **Review and close** — `ki-accept` runs the post-change review, records the outcome, and sets `done`. Durable outcomes live in the canonical zones while the completed proposal remains recoverable until explicitly pruned.
 
 ## Rollout
 
@@ -92,7 +88,7 @@ Rollout means executing the operations from the Checklist. **Do not begin withou
 - every create / update / delete in the proposal has been executed;
 - index notes for any new folders have been created;
 - existing notes that reference moved or renamed content have been updated;
-- the proposal document itself has been deleted (on completion).
+- the required review packet has been added to the proposal document.
 
 ### Working-area previews
 
@@ -108,7 +104,7 @@ Plans drift between drafting and execution. **Re-verify each Checklist item agai
 
 ## Post-change review
 
-Run after rollout, before `reviewed`:
+Run after rollout, before `done`:
 
 1. The agent prepares an initial review summary — what went well, issues encountered, lessons observed — as a _starting point_.
 2. The review is an interactive conversation; the summary is input, not output — the user challenges, corrects, and adds to it.
@@ -116,20 +112,16 @@ Run after rollout, before `reviewed`:
 
 Record the final review under a `## Post-Change Review` section in the proposal, or in the process note if the lesson is structural.
 
-## Rejection
-
-A rejection is a **first-class outcome, not a failure**. The reasons are documented in the proposal; the stream settles with `status: rejected`. A rejected proposal may reopen as a new `draft` if circumstances change; the prior rejection and its reasons remain on record.
-
 ## Discipline
 
 The rules that keep the workspace trustworthy:
 
-- **Streams move.** A stream in `Active/` without progress belongs in `Background/` or `Dormant/`; be honest about attention.
+- **Streams move.** A stream in `Now/` without progress belongs in `Soon/` or `Parked/`; be honest about attention.
 - **Knowledge migrates out.** Substantive subject-matter content in a stream is leaking knowledge that should live in a store — extract it early and link back.
-- **Completed streams retire.** A completed or final rejected stream is deleted after its durable outcome or rationale is recorded; if work resumes later, open a new stream.
+- **Done streams retain evidence.** A done proposal remains until `ki-accept prune` receives an explicit selection; if work resumes later, open a new draft proposal.
 - **Keep the proposal and indexes current.** Update immediately on a decision, status, or priority change; reload before resuming.
-- **No `ready` while a prerequisite is below `rolled-out`; no rollout without explicit authorisation.**
+- **No `ready` while a prerequisite is below `done`; no rollout without explicit authorisation.**
 - **Re-verify each rollout item against the live file.**
-- **Delete the proposal on completion.** The test: would deleting it today lose knowledge? If not, delete it — the settled marker remains.
+- **Prune only explicitly.** Completion alone never deletes the reviewed proposal record.
 - **When in doubt, prefer a proposal.** The cost of a lightweight proposal is low; the cost of an unauthorised change to canonical content is high.
 - **Lightweight streams.** A low-effort request ("add this to the list") is handled as a lightweight stream and bypasses the full name-confirmation gate; reserve the gate for substantive new streams, sub-proposal splits, and renames.

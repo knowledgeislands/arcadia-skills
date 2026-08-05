@@ -2,7 +2,7 @@
 name: ki-implement
 ki-depends-on: []
 description: >
-  Implements one explicitly approved, ready repository work item through the delivery cycle: preflight, immutable baseline, in-progress transition, bounded plan execution, delegation when the approved plan says so, integration, verification, and an acceptance packet. A process skill (kind: process): it stops at acceptance and never selects work, reshapes a plan, self-accepts, prunes, pushes, releases, or expands authority. Use when asked to "implement this ready plan", "start this work item", "execute the approved plan", or "prepare this plan for acceptance". For next-work selection use ki-next; for plan shaping use ki-plan; for delegated execution use ki-delegate; for closure and pruning use ki-accept.
+  Implements one explicitly approved ready work record through the shared delivery cycle in either repository adapter: preflight, immutable baseline, in-progress transition, bounded execution, appropriate delegation, verification, and a required review packet. It stops at awaiting-review and never selects work, reshapes a plan, self-accepts, prunes, pushes, releases, or expands authority.
 argument-hint: 'implement <work-item> | help'
 ---
 
@@ -10,22 +10,22 @@ argument-hint: 'implement <work-item> | help'
 
 **Kind:** process.
 
-Delivers one approved, ready repository work item to an evidence-backed acceptance boundary.
+Delivers one approved, ready work record to an evidence-backed awaiting-review boundary.
 
 Read [the implementation procedure](references/standards-implementation.md) before acting.
 
 ## What this skill does
 
-`ki-implement` owns one work item's delivery path from `ready` to `in-progress` to `acceptance`.
+`ki-implement` owns one work record's delivery path from `ready` to `in-progress` to `awaiting-review`.
 
 It does not choose work, create or reshape a plan, close a lifecycle, or delete a record.
 
-1. Preflight the repository, exact work item, readiness, approval, dependencies, and stated verification.
-2. Record the immutable full-commit baseline and transition only that item to `in-progress`.
+1. Preflight the repository adapter, exact record, readiness, approval, dependencies, and stated verification.
+2. Record immutable baseline evidence and transition only that record to `in-progress`.
 3. Apply the approved plan within its boundary.
-4. Use `ki-delegate` only when the approved plan or an explicit authority record calls for delegation.
+4. Apply `ki-delegate` guidance when bounded parallel work would improve delivery; it is not a separate user command or authority source.
 5. Review and integrate bounded results, run the required verification, and record the evidence.
-6. Create the acceptance packet, transition the item to `acceptance`, and stop.
+6. Create the required review packet, transition the record to `awaiting-review`, and stop.
 
 The caller or `ki-accept` owns the next decision.
 
@@ -47,7 +47,7 @@ It does not bypass readiness, baseline, scope, verification, or acceptance gates
 
 `help` / `-h` / `?` explains this skill and stops, taking no action.
 
-`implement <work-item>` resolves one canonical repository work item and follows the procedure.
+`implement <work>` resolves one canonical roadmap item or Streams proposal and follows the procedure.
 
 With no item, identify that an explicit approved ready item is required and stop.
 
@@ -56,4 +56,4 @@ With no item, identify that an explicit approved ready item is required and stop
 - This is a process skill, not a universal AUDIT / CONFORM / EDUCATE / REFRESH checker.
 - Implementation is not autonomous authority. Stop for a missing approval, an ambiguous plan, a failed required gate, material scope expansion, an external coordination need, an irreversible action, or any decision outside the item's stated authority.
 - No KI CLI command, wrapper script, runtime-specific spawning mechanism, push, release, or deletion belongs here.
-- `acceptance` is evidence for review, never inferred approval.
+- `awaiting-review` is evidence for review, never inferred approval.

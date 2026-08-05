@@ -30,7 +30,7 @@ id: TEST-FND-001
 title: Build the foundation
 theme: foundation-tooling
 horizon: next
-status: open
+status: draft
 blocks: []
 blocked-by: []
 baseline-ref: null
@@ -119,11 +119,11 @@ test('invalid lifecycle placement and missing execution sections fail', () => {
   writeFileSync(
     item,
     readFileSync(item, 'utf8')
-      .replace('horizon: next\nstatus: open', 'horizon: future\nstatus: in-progress\ncandidate: true')
+      .replace('horizon: next\nstatus: draft', 'horizon: future\nstatus: in-progress\ncandidate: true')
       .replace('## Current state', '## Baseline')
   )
   const failures = inspectRoadmap(repository).filter((finding) => finding.level === 'FAIL')
-  expect(failures).toContainEqual(expect.objectContaining({ area: 'ITEM-2', msg: 'non-open item must be in blocking or next' }))
+  expect(failures).toContainEqual(expect.objectContaining({ area: 'ITEM-2', msg: 'non-draft item must be in now or next' }))
   expect(failures).toContainEqual(expect.objectContaining({ area: 'ITEM-3' }))
 })
 
@@ -170,23 +170,25 @@ test('execution Steps use lifecycle-appropriate task lists', () => {
   )
 })
 
-test('acceptance Steps are all checked', () => {
+test('awaiting-review Steps are all checked', () => {
   const repository = createFixture()
   const item = join(repository, 'docs', 'roadmap', 'TEST-FND-001-build-the-foundation.md')
   writeFileSync(
     item,
     readFileSync(item, 'utf8')
-      .replace('status: open', 'status: acceptance')
+      .replace('status: draft', 'status: awaiting-review')
       .replace('baseline-ref: null', 'baseline-ref: 0123456789abcdef0123456789abcdef01234567')
       .replace('- [ ] Implement the first slice.', '- [x] Implement the first slice.')
       .replace(
         '## Discussion',
-        '## Acceptance\n\n### Delivered\n\nThe first slice is delivered.\n\n### Summary of changes\n\nOne change.\n\n### Verification\n\n`bun test` passes.\n\n### Outstanding concerns\n\nNone.\n\n### Mini recap\n\nNo learning route proposed.\n\n## Discussion'
+        '## Review\n\n### Delivered\n\nThe first slice is delivered.\n\n### Summary of changes\n\nOne change.\n\n### Verification\n\n`bun test` passes.\n\n### Outstanding concerns\n\nNone.\n\n### Post-change review\n\nReady for the user review.\n\n### Mini recap\n\nNo learning route proposed.\n\n## Discussion'
       )
   )
   expect(inspectRoadmap(repository).filter((finding) => finding.area === 'ITEM-3')).toEqual([])
   writeFileSync(item, readFileSync(item, 'utf8').replace('- [x] Implement the first slice.', '- [ ] Implement the first slice.'))
-  expect(inspectRoadmap(repository)).toContainEqual(expect.objectContaining({ area: 'ITEM-3', msg: 'acceptance and done items must mark every Step as - [x]' }))
+  expect(inspectRoadmap(repository)).toContainEqual(
+    expect.objectContaining({ area: 'ITEM-3', msg: 'awaiting-review and done items must mark every Step as - [x]' })
+  )
 })
 
 test('conform repairs only a stale root orientation', () => {

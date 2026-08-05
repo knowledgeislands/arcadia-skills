@@ -3,8 +3,8 @@ name: ki-kb-streams
 ki-shared-dependencies: [ki-skills:rubric]
 ki-depends-on: []
 description: >
-  Operates and governs the Streams zone of a Knowledge Islands base — the working copy of work in motion, run as the Enactment Process (the canonical change process: a proposal goes draft → ready → ratify → roll out → review → settle, and nothing reaches stable knowledge except through that gate). Use to start a stream, iterate a proposal, mark one ready, roll out an approved change, run a post-change review, and settle or reject a stream — and to audit a base's Streams structure (Focus lifecycle, the `Proposal` suffix, leaf/parent layout, proposal frontmatter) or conform it. Triggers: "start a stream", "create a proposal", "mark this ready", "roll out this proposal", "settle this stream", "what's the enactment process", "plan mode for my knowledge base", "does this change need a proposal", "audit my streams". For the five-zone model and note CRUD / routing use the `ki-kb` skill, which delegates the Streams zone here; for Markdown / TOML house style use `ki-authoring`.
-argument-hint: 'audit | conform | help | educate | iterate | propose | ready | refresh | reject | review | rollout | settle'
+  Operates and governs the Streams zone of a Knowledge Islands base — the working copy of work in motion, run as the Enactment Process. It is the KB adapter for the shared forward-work lifecycle: a proposal goes draft → ready → in-progress → awaiting-review → done, while the Enactment gate keeps canonical knowledge changes approved. Use to start or iterate a stream, inspect its queue, or audit Streams structure. For common selection, planning, delivery, review, and closure use ki-next, ki-plan, ki-implement, and ki-accept; for the five-zone model and note CRUD use ki-kb.
+argument-hint: 'audit | conform | help | educate | iterate | propose | ready | refresh | rollout'
 ---
 
 # Knowledge Islands Streams
@@ -19,14 +19,15 @@ The full detail lives in the references (progressive disclosure): the structure 
 
 A stream lives at `Streams/$Focus/$Category?/$Name…`. **Focus** is mandatory — the level of attention the stream is receiving; moving a stream between Focus folders is an explicit act. **Category** is optional grouping within a Focus (pick one pattern per Focus: none / destination-path / status sub-grouping).
 
-| Focus         | Meaning                                         |
-| ------------- | ----------------------------------------------- |
-| `Blocking`    | Urgent work preventing focused work from moving |
-| `Active`      | Receiving focused attention now                 |
-| `Background`  | Understood work, but not the current focus      |
-| `Waiting for` | Blocked by a named dependency or condition      |
-| `Dormant`     | Intentionally paused with a return trigger      |
-| `Future`      | Planned or ideated; not yet started             |
+| Focus          | Meaning                                           |
+| -------------- | ------------------------------------------------- |
+| `Now`          | Receiving current delivery attention              |
+| `Next`         | The next bounded work to prepare or begin         |
+| `Soon`         | Understood work, but not current                  |
+| `Waiting for`  | Blocked by a named dependency or condition        |
+| `Parked`       | Intentionally paused with a return trigger        |
+| `Future`       | Planned or ideated; not yet started               |
+| `Housekeeping` | Recurring-work templates that may spawn a due run |
 
 Each Focus folder carries a **same-name index note** whose `## Streams` table lists each stream by Topic / Status / Priority, ordered by status then priority (grouped by category where used). The base also keeps a cross-Focus **proposals index** in the `Streams/` zone index note.
 
@@ -44,17 +45,15 @@ Full structure — Category patterns, leaf/parent/multi, index ordering — in [
 
 A proposal's `status` is its position in the Enactment Process (distinct from its Focus, which is _attention_):
 
-| Status        | Meaning                                                                                   |
-| ------------- | ----------------------------------------------------------------------------------------- |
-| `draft`       | Work in progress; iterating in the proposal document                                      |
-| `ready`       | Stable; no open questions; prerequisites satisfied; submitted for approval                |
-| `rejected`    | Rejected; reasons recorded; terminal (may reopen as a new `draft`)                        |
-| `in-progress` | Approved; rollout underway                                                                |
-| `rolled-out`  | Checklist executed; post-change review pending                                            |
-| `reviewed`    | Post-change review complete                                                               |
-| `completed`   | Proven in practice; the proposal document is deleted (its knowledge now lives in a store) |
+| Status            | Meaning                                                                 |
+| ----------------- | ----------------------------------------------------------------------- |
+| `draft`           | Work in progress; iterating in the proposal document                    |
+| `ready`           | Stable; no open questions; prerequisites satisfied; approved to deliver |
+| `in-progress`     | Approved rollout underway                                               |
+| `awaiting-review` | Checklist executed; required review packet awaits human closure         |
+| `done`            | Review accepted; retain the completed proposal until explicit pruning   |
 
-Order: `draft` → `ready` → (`in-progress` | `rejected`) → `rolled-out` → `reviewed` → `completed`. **Priority** is one of `urgent` · `high` · `medium` · `low`, set at creation and raised as context shifts.
+Order: `draft` → `ready` → `in-progress` → `awaiting-review` → `done`. **Priority** is one of `urgent` · `high` · `medium` · `low`, set at creation and raised as context shifts.
 
 ## Proposal document anatomy
 
@@ -84,7 +83,7 @@ Almost everything is fixed above. Only these come from the host base — take de
 
 ## Operating modes
 
-Invoked as `help` / `-h` / `?`, it explains itself and stops — the generated HELP block (name, purpose, invocation, modes, off-ramps), taking no action. With no mode it does the same, then, in an interactive session only, offers the mode choice via `AskUserQuestion`, prompting for any `argument-hint` target the chosen mode shows. The shared model above — the zone-at-a-glance, the status lifecycle, the proposal anatomy, the bindings, Step 1, and the **Working rules** and **Enactment gate** below — is what every mode needs and stays loaded; each mode's _procedure_ lives in its own on-demand file, so read only the one the request selects. This carries the universal **AUDIT · CONFORM · EDUCATE · REFRESH**. EDUCATE explains the canonical Streams model and routes creation of the parent zone to `ki-kb`; it ships no standalone scaffold or runner. Its enactment-lifecycle modes are **ITERATE · PROPOSE · READY · REJECT · REVIEW · ROLLOUT · SETTLE**. Modes are named and alphabetical.
+Invoked as `help` / `-h` / `?`, it explains itself and stops — the generated HELP block (name, purpose, invocation, modes, off-ramps), taking no action. With no mode it does the same, then, in an interactive session only, offers the mode choice via `AskUserQuestion`, prompting for any `argument-hint` target the chosen mode shows. The shared model above — the zone-at-a-glance, the status lifecycle, the proposal anatomy, the bindings, Step 1, and the **Working rules** and **Enactment gate** below — is what every mode needs and stays loaded; each mode's _procedure_ lives in its own on-demand file, so read only the one the request selects. This carries the universal **AUDIT · CONFORM · EDUCATE · REFRESH**. EDUCATE explains the canonical Streams model and routes creation of the parent zone to `ki-kb`; it ships no standalone scaffold or runner. Its adapter modes are **ITERATE · PROPOSE · READY · ROLLOUT**. Common review and closure belong to `ki-accept`. Modes are named and alphabetical.
 
 | Mode    | Fires on                                                       | Read before acting                             |
 | ------- | -------------------------------------------------------------- | ---------------------------------------------- |
@@ -95,10 +94,7 @@ Invoked as `help` / `-h` / `?`, it explains itself and stops — the generated H
 | PROPOSE | "start a stream / create a proposal"                           | [mode-propose.md](references/mode-propose.md)  |
 | READY   | "mark this ready"                                              | [mode-ready.md](references/mode-ready.md)      |
 | REFRESH | "is the Streams model still current" (on its declared cadence) | [mode-refresh.md](references/mode-refresh.md)  |
-| REJECT  | "reject this stream"                                           | [mode-reject.md](references/mode-reject.md)    |
-| REVIEW  | "run the post-change review"                                   | [mode-review.md](references/mode-review.md)    |
 | ROLLOUT | "roll out this proposal" (needs explicit authorisation)        | [mode-rollout.md](references/mode-rollout.md)  |
-| SETTLE  | "settle this stream"                                           | [mode-settle.md](references/mode-settle.md)    |
 
 The Enactment gate (`## Installing the gate` below) and the Working rules apply on every fire, before any mode procedure loads — ROLLOUT in particular must not begin without explicit user authorisation.
 
@@ -109,9 +105,9 @@ These apply to every change (the discipline that keeps the workspace trustworthy
 - **Name-confirmation gate.** Before creating a stream/sub-proposal or renaming one, propose the name and resulting path and **wait for confirmation** — renames ripple through links.
 - **Keep the proposal and indexes current.** Update immediately on a decision, status change, or priority change; the canonical state must never lag.
 - **Load before editing.** Reload the proposal and indexes before resuming work.
-- **No `ready` while a prerequisite is below `rolled-out`.** No rollout without explicit authorisation.
+- **No `ready` while a prerequisite is below `done`.** No rollout without explicit authorisation.
 - **Re-verify each rollout item against the live file** before making the edit.
-- **Delete the proposal on completion** — once its content is in a store it has no residual value.
+- **Retain done proposals** until an explicit prune selection removes their reviewed evidence.
 - **Out of scope** (no proposal needed): trivial typo / formatting fixes, time-bound `Calendar/` entries, person-file auto-appends, inbound `+/` triage — though when in doubt, prefer a proposal: the cost of a lightweight one is low, the cost of an unauthorised change to canonical content is high.
 
 ## Installing the gate

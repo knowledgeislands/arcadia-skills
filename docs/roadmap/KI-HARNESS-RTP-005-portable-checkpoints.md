@@ -2,8 +2,8 @@
 id: KI-HARNESS-RTP-005
 title: Define portable checkpoints across agent runtimes
 theme: runtime-portability
-horizon: blocking
-status: open
+horizon: now
+status: draft
 blocks: []
 blocked-by: []
 baseline-ref: null

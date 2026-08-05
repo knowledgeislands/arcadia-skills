@@ -63,8 +63,8 @@ The mapping is the complete allowed theme vocabulary for the repository. Every i
 
 Every work item carries one of these six `horizon` values:
 
-1. `Blocking` — actively broken or preventing `Next`; plans permitted.
-2. `Next` — scoped and ready for immediate work; plans permitted.
+1. `Now` — receiving current delivery attention; plans permitted.
+2. `Next` — the next bounded work to prepare or begin; plans permitted.
 3. `Soon` — understood but not yet started.
 4. `Waiting for` — blocked by a named external condition.
 5. `Parked` — intentionally paused with a named return trigger.
@@ -72,7 +72,7 @@ Every work item carries one of these six `horizon` values:
 
 The root orientation holds no horizon headings or item list.
 
-Work items are open-only.
+Work items are draft-only until they enter the common delivery lifecycle.
 
 Completed work is removed by an explicit prune after its accepted item record has been committed.
 
@@ -91,15 +91,15 @@ CONFORM never chooses a move; it only repairs the concise root orientation.
 - **Parked → another horizon** requires evidence that its named return trigger or priority changed.
 - A move back to **Soon**, **Waiting for**, **Parked**, or **Future** must preserve honest wording and any linked item lifecycle state.
 
-`Blocking` and `Next` are the only horizons that may be shaped into an execution-ready plan or enter implementation.
+`Now` and `Next` are the only horizons that may be shaped into an execution-ready plan or enter implementation.
 
 An item may be expanded with executable steps only after it reaches one of those horizons and the user confirms the work.
 
-An immediate item may remain `status: open` while `ki-plan` shapes it.
+An immediate item may remain `status: draft` while `ki-plan` shapes it.
 
 It becomes `status: ready` only after its execution detail and verification are reviewable, its dependencies are satisfied, and the user approves it for implementation.
 
-When no immediate work is eligible, `ki-next` evaluates Blocking and Next first, then Soon, then Future.
+When no immediate work is eligible, `ki-next` evaluates Now and Next first, then Soon, then Future.
 
 Every confirmed move is re-evaluated at its destination.
 
@@ -115,25 +115,25 @@ When multi-file or multi-step execution is selected for immediate work, `ki-plan
 
 It never creates a duplicate plan file.
 
-`status` records the lifecycle independently of `horizon`:
+`status` records the shared delivery lifecycle independently of `horizon`:
 
-`open` → `ready` → `in-progress` → `acceptance` → `done`.
+`draft` → `ready` → `in-progress` → `awaiting-review` → `done`.
 
-`open` covers unplanned and actively shaped work.
+`draft` covers captured and actively shaped work.
 
-`ready`, `in-progress`, `acceptance`, and `done` must remain in Blocking or Next.
+`ready`, `in-progress`, `awaiting-review`, and `done` must remain in Now or Next.
 
-`ki-implement` owns `ready` → `in-progress` → `acceptance`.
+`ki-implement` owns `ready` → `in-progress` → `awaiting-review`.
 
-Its start transition records the immutable full `HEAD` commit in `baseline-ref`; its completion writes the acceptance evidence packet.
+Its start transition records the immutable full `HEAD` commit in `baseline-ref`; its completion writes the required review packet.
 
-`ki-accept` owns explicit `acceptance` → `done` and pruning selected by an explicit roadmap-item path or glob.
+`ki-accept` owns explicit `awaiting-review` → `done` and pruning selected by an explicit work-record path or glob.
 
 `ki-recap` and `ki-next` may identify or recommend eligible pruning, but they never delete a work-item record.
 
 `blocks` and `blocked-by` use work-item identifiers, must be reverse-consistent and acyclic, and cannot permit execution while a blocker is not done.
 
-An explicit later prune path or glob removes only the resolved `done` items; the selection itself is the deletion authority and does not need a second confirmation.
+An explicit later prune path or glob removes only the resolved `done` items; the selection itself is the deletion authority and does not need a second confirmation. `ki-housekeeping` templates may spawn linked ordinary work records; their cadence does not create a second delivery lifecycle.
 
 ## Trade review
 

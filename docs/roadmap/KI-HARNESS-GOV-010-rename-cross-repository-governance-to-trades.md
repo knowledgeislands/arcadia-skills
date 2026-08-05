@@ -2,7 +2,7 @@
 id: KI-HARNESS-GOV-010
 title: Rename cross-repository governance to ki-trades
 theme: governance-consistency
-horizon: blocking
+horizon: now
 status: done
 blocks: []
 blocked-by: []
@@ -61,7 +61,7 @@ The Harness now publishes `ki-trades`, declares its `ki-trades` configuration ta
 
 This is a blocking terminology migration. It must complete before the Harness publishes new trade guidance, configuration, or peer-integration material under a mixture of `ki-handoffs` and `ki-trades`. No existing local work item supplies a valid dependency edge.
 
-## Acceptance
+## Review
 
 ### Delivered
 

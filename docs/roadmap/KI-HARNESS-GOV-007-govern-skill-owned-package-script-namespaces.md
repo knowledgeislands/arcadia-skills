@@ -3,7 +3,7 @@ id: KI-HARNESS-GOV-007
 title: Govern skill-declared package scripts
 theme: governance-consistency
 horizon: next
-status: open
+status: draft
 blocks: []
 blocked-by: []
 baseline-ref: null

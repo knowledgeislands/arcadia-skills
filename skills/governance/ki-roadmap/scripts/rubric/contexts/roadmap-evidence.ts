@@ -21,11 +21,10 @@ export type WorkItem = {
 }
 type RoadmapConfiguration = { readonly repoCode: string; readonly themes: ReadonlyMap<string, string> }
 
-export const HORIZONS = ['blocking', 'next', 'soon', 'waiting-for', 'parked', 'future'] as const
+export const HORIZONS = ['now', 'next', 'soon', 'waiting-for', 'parked', 'future'] as const
 export const HORIZON_BLURBS: Record<Horizon, string> = {
-  blocking:
-    'Actively broken, or blocking the `Next` horizon: takes priority over everything else and must clear before `Next` work proceeds. Empty means nothing is on fire.',
-  next: 'Scoped and ready to start — the immediate queue, picked up before anything in **Soon** or **Future**.',
+  now: 'Receiving current delivery attention. An urgent breakage may be Now, but dependency links—not the horizon—record what it blocks.',
+  next: 'The next bounded work to prepare or begin once current Now work permits it.',
   soon: 'Understood and roughly scoped but not yet started — worth doing once the **Next** queue clears, ahead of anything still speculative.',
   'waiting-for':
     'Worth doing, but presently blocked on an external dependency or decision. Revisit when its named condition changes; do not use this horizon for intentionally paused work.',
@@ -37,8 +36,8 @@ const ID_RE = /^[A-Z][A-Z0-9-]{1,23}-[A-Z][A-Z0-9]{1,7}-\d{3,}$/
 const FILE_RE = /^([A-Z][A-Z0-9-]{1,23}-[A-Z][A-Z0-9]{1,7}-\d{3,})-([a-z0-9]+(?:-[a-z0-9]+)*)\.md$/
 const THEME_RE = /^[a-z0-9]+(?:-[a-z0-9]+)*$/
 const COMMIT_RE = /^(?:[0-9a-f]{40}|[0-9a-f]{64})$/
-const STATUS = new Set(['open', 'ready', 'in-progress', 'acceptance', 'done'])
-const IMMEDIATE = new Set<Horizon>(['blocking', 'next'])
+const STATUS = new Set(['draft', 'ready', 'in-progress', 'awaiting-review', 'done'])
+const IMMEDIATE = new Set<Horizon>(['now', 'next'])
 const STANDARD = 'references/standards-repository-roadmaps.md'
 const FORMAT = 'references/standards-work-item-format.md'
 const RUBRIC = 'references/rubric.md'
@@ -151,9 +150,9 @@ const EXECUTION_SECTIONS = ['Current state', 'Steps', 'Files touched', 'Verify',
 
 const requiredSections = (item: WorkItem): readonly string[] => {
   const sections: string[] = ['Goal', 'Context', 'Boundary']
-  if (item.status === 'open' && item.horizon === 'soon') sections.push('Shaping')
-  if (item.status !== 'open' || IMMEDIATE.has(item.horizon)) sections.push(...EXECUTION_SECTIONS)
-  if (item.status === 'acceptance' || item.status === 'done') sections.push('Acceptance')
+  if (item.status === 'draft' && item.horizon === 'soon') sections.push('Shaping')
+  if (item.status !== 'draft' || IMMEDIATE.has(item.horizon)) sections.push(...EXECUTION_SECTIONS)
+  if (item.status === 'awaiting-review' || item.status === 'done') sections.push('Review')
   if (item.status === 'done') sections.push('Done')
   sections.push('Discussion')
   return sections
@@ -181,10 +180,10 @@ const validateSteps = (item: WorkItem): void => {
     return
   }
   const hasUnchecked = steps.some((step) => step.startsWith('- [ ]'))
-  if (['acceptance', 'done'].includes(item.status) && hasUnchecked)
-    add('FAIL', 'ITEM-3', 'acceptance and done items must mark every Step as - [x]', FORMAT, item.file)
-  if (['open', 'ready'].includes(item.status) && !hasUnchecked)
-    add('FAIL', 'ITEM-3', 'open and ready items must retain at least one - [ ] Step', FORMAT, item.file)
+  if (['awaiting-review', 'done'].includes(item.status) && hasUnchecked)
+    add('FAIL', 'ITEM-3', 'awaiting-review and done items must mark every Step as - [x]', FORMAT, item.file)
+  if (['draft', 'ready'].includes(item.status) && !hasUnchecked)
+    add('FAIL', 'ITEM-3', 'draft and ready items must retain at least one - [ ] Step', FORMAT, item.file)
 }
 
 const validateBody = (item: WorkItem): void => {
@@ -226,7 +225,21 @@ const parseItem = (repository: string, name: string, configuration?: RoadmapConf
     if (!(key in parsed.values)) add('FAIL', 'ITEM-1', `frontmatter is missing '${key}'`, FORMAT, display)
   }
   const unexpected = Object.keys(parsed.values).filter(
-    (key) => !['id', 'title', 'theme', 'horizon', 'status', 'candidate', 'blocks', 'blocked-by', 'baseline-ref', 'transferred-from'].includes(key)
+    (key) =>
+      ![
+        'id',
+        'title',
+        'theme',
+        'horizon',
+        'status',
+        'candidate',
+        'blocks',
+        'blocked-by',
+        'baseline-ref',
+        'transferred-from',
+        'housekeeping-template',
+        'scheduled-for'
+      ].includes(key)
   )
   if (unexpected.length) add('FAIL', 'ITEM-1', `frontmatter has unexpected field(s): ${unexpected.join(', ')}`, FORMAT, display)
   if (!id || id !== file[1] || !ID_RE.test(id)) add('FAIL', 'ITEM-1', 'frontmatter id must match the filename identifier', FORMAT, display)
@@ -245,9 +258,9 @@ const parseItem = (repository: string, name: string, configuration?: RoadmapConf
     add('FAIL', 'ITEM-2', 'baseline-ref must be null or a full lowercase commit ID', FORMAT, display)
   if (horizon === 'future' ? !candidate : 'candidate' in parsed.values)
     add('FAIL', 'ITEM-2', 'candidate: true is required only for Future items', FORMAT, display)
-  if (status && status !== 'open' && horizon && !IMMEDIATE.has(horizon)) add('FAIL', 'ITEM-2', 'non-open item must be in blocking or next', FORMAT, display)
-  if (status === 'open' && baselineRef !== null) add('FAIL', 'ITEM-2', 'open item baseline-ref must be null', FORMAT, display)
-  if (status && ['in-progress', 'acceptance', 'done'].includes(status) && (typeof baselineRef !== 'string' || !COMMIT_RE.test(baselineRef)))
+  if (status && status !== 'draft' && horizon && !IMMEDIATE.has(horizon)) add('FAIL', 'ITEM-2', 'non-draft item must be in now or next', FORMAT, display)
+  if (status === 'draft' && baselineRef !== null) add('FAIL', 'ITEM-2', 'draft item baseline-ref must be null', FORMAT, display)
+  if (status && ['in-progress', 'awaiting-review', 'done'].includes(status) && (typeof baselineRef !== 'string' || !COMMIT_RE.test(baselineRef)))
     add('FAIL', 'ITEM-2', 'executing or completed item needs an immutable baseline-ref', FORMAT, display)
   if (!id || !title || !theme || !horizon || !status || !blocks || !blockedBy) return undefined
   const item: WorkItem = {
@@ -284,7 +297,7 @@ const validateDependencies = (items: readonly WorkItem[]): void => {
     for (const id of item.blocks) if (!byId.get(id)?.blockedBy.includes(item.id)) add('FAIL', 'ITEM-4', `blocks '${id}' is not reciprocal`, FORMAT, item.file)
     for (const id of item.blockedBy)
       if (!byId.get(id)?.blocks.includes(item.id)) add('FAIL', 'ITEM-4', `blocked-by '${id}' is not reciprocal`, FORMAT, item.file)
-    if (['ready', 'in-progress', 'acceptance'].includes(item.status) && item.blockedBy.some((id) => byId.get(id)?.status !== 'done'))
+    if (['ready', 'in-progress', 'awaiting-review'].includes(item.status) && item.blockedBy.some((id) => byId.get(id)?.status !== 'done'))
       add('FAIL', 'ITEM-4', 'active item has a non-done blocker', FORMAT, item.file)
   }
 }

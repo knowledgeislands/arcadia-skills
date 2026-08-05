@@ -50,11 +50,11 @@ const ENACT_4: RubricItem<EnactmentRubricContext> = {
 
 const ENACT_5: RubricItem<EnactmentRubricContext> = {
   code: 'ENACT-5',
-  title: 'completed-proposal settlement',
-  description: 'Completed proposals are deleted after their output reaches a canonical zone.',
+  title: 'done-proposal retention',
+  description: 'Done proposals retain their reviewed evidence until an explicit prune selection removes them.',
   sources: [SOURCE],
   judgment: {
-    prompt: 'Have completed proposals been deleted only after their output settled into the appropriate store?'
+    prompt: 'Do done proposals retain their review evidence and canonical outputs until an explicit prune selection?'
   }
 }
 

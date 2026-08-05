@@ -3,7 +3,7 @@ id: KI-HARNESS-OPS-002
 title: Reconcile the three memory-store defects
 theme: operations
 horizon: waiting-for
-status: open
+status: draft
 blocks: []
 blocked-by: []
 baseline-ref: null

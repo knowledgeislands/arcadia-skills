@@ -3,7 +3,7 @@ id: KI-HARNESS-RTP-003
 title: Route multi-machine harness state through durable homes
 theme: runtime-portability
 horizon: future
-status: open
+status: draft
 candidate: true
 blocks: []
 blocked-by: []

@@ -81,7 +81,7 @@ The agreed initial model is local registered-repository visibility. A sender wri
 - **Verification gate:** The orchestrator re-reads every source that shapes the next decision or file boundary before authoring; unsupported inferences are escalated.
 - **Checkpoint:** Report the findings only. The next implementation round starts only after orchestrator review turns them into a bounded decision-and-skill brief.
 
-## Acceptance
+## Review
 
 ### Delivered
 

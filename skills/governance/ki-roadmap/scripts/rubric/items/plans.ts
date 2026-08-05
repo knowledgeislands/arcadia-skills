@@ -37,7 +37,7 @@ const EXEC_3: RubricItem<RoadmapAuditContext> = {
   code: 'EXEC-3',
   title: 'honest execution status',
   description:
-    'Open awaits readiness approval; ready awaits execution; in-progress reflects live work; acceptance awaits explicit user acceptance; done is a retained closure record. Every non-open item is Blocking or Next.',
+    'Draft awaits readiness approval; ready awaits execution; in-progress reflects live work; awaiting-review carries the required review packet; done is a retained closure record. Every non-draft item is Now or Next.',
   sources: [SOURCE],
   judgment: { prompt: 'Review whether work-item status honestly reflects its lifecycle gate or retained completion record.' }
 }

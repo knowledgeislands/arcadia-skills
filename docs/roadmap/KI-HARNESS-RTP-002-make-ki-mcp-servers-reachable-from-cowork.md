@@ -3,7 +3,7 @@ id: KI-HARNESS-RTP-002
 title: Make KI MCP servers reachable from Cowork
 theme: runtime-portability
 horizon: waiting-for
-status: open
+status: draft
 blocks: []
 blocked-by: []
 baseline-ref: null

@@ -2,33 +2,23 @@
 name: ki-plan
 ki-depends-on: []
 description: >
-  Creates and shapes governed work items in a non-KB repository through explicit readiness — new / shape / ready / promote / status — and routes equivalent planning requests to the native Streams proposal Checklist lifecycle in a KB. A process skill (kind: process, ADR-KI-HARNESS-SKILLS-006): it enriches one canonical work item in place and stops at Ready. Item shape, horizons, and methodology belong to ki-roadmap; implementation and acceptance are separate process responsibilities.
-argument-hint: 'new <theme> <title> | shape <REPO>-<THEME>-<NNN>... | ready <REPO>-<THEME>-<NNN>... | promote | status [theme] | help'
+  Shapes selected Now or Next draft work through readiness in either repository adapter. It enriches a roadmap item in place for non-KB repositories or iterates a Streams proposal in a Knowledge Base, then stops at ready. Use when asked "plan this", "make this ready", or "prepare this work for implementation". It does not capture work, implement it, or close it.
+argument-hint: 'plan <work>... | help'
 ---
 
 # ki-plan
 
 **Kind:** process.
 
-Creates and shapes one or more repository work items through Ready.
+Shapes one or more selected Now or Next drafts through Ready.
 
 The class-level standard—horizons, identity, and file shape—is owned by `ki-roadmap`; read [the lifecycle procedure](references/standards-plan-lifecycle.md) for the complete operation.
 
 ## What this skill does
 
-`ki-plan` operates a **non-KB repository** item through `new`, `shape`, `ready`, `promote`, and `status`.
+`ki-plan` resolves the selected record through the repository adapter and enriches it in place. `ki-next` captures and promotes drafts; this skill never creates a duplicate plan record.
 
-An item begins as a concise issue under `docs/roadmap/`.
-
-As its horizon advances, this skill adds the stage-appropriate shaping and execution-plan sections to that same file.
-
-It never creates a duplicate plan document.
-
-`ready` is an explicit, all-or-nothing transition: validate every named item before publishing any status change, then commit the transition once.
-
-In a Knowledge Base, it dispatches to `ki-kb-streams`: `new` and `shape` → PROPOSE, `ready` → READY, and `status` → Focus and proposal indexes.
-
-`promote` is unavailable in a Knowledge Base.
+In a non-KB repository it adds the work-item execution sections. In a KB it invokes the Streams iteration and readiness rules over the same proposal. Readiness is explicit and all-or-nothing: validate every named record before publishing any `ready` transition, then commit the coherent transition once.
 
 ## Responsibility boundary
 
@@ -61,21 +51,17 @@ When referring to a specific work item in prose, link its canonical document usi
 
 ## Invocation
 
-`help` / `-h` / `?` explains this skill and stops, taking no action.
-
-With no argument, present the lifecycle verbs using the runtime’s available interactive choice mechanism; in a non-interactive session, print the choices and stop.
-
-Otherwise dispatch on the first token of the argument per [the lifecycle procedure](references/standards-plan-lifecycle.md).
+`help` / `-h` / `?` explains this skill and stops, taking no action. `plan <work>...` resolves one or more explicit selected records; with no target, identify that `ki-next` must first select or capture a Now or Next draft and stop.
 
 ## Preflight
 
 1. Run `git rev-parse --show-toplevel` and physically resolve the result.
-2. If `.ki-config.toml` declares `repo_type = "kb"`, dispatch the requested verb to `ki-kb-streams` and create no repository work-item artifact.
-3. Run `ki repo audit --skill ki-roadmap --repo <git-root>` and stop on any failure or warning.
-4. Resolve an item identifier only to its one regular file directly below `docs/roadmap/`; never follow a symlink outside the physical git root or infer an alternate tree.
+2. Resolve the repository adapter: a KB uses `ki-kb-streams`; every other repository uses `ki-roadmap`.
+3. Run the relevant adapter audit and stop on any failure or warning.
+4. Resolve each record only inside its canonical adapter root; never follow a symlink outside the physical git root or infer an alternate tree.
 
 ## Notes
 
 - This is a process skill, not a universal AUDIT / CONFORM / EDUCATE / REFRESH checker.
 - Installed as a core user skill by `ki bootstrap`; it is not a repository-governance root.
-- `shape` and `ready` accept one or more explicit item identifiers; `promote` is runtime-only because it consumes host Plan Mode state.
+- This skill has no capture, status, import, or runtime scratch-plan verb. `ki-next` owns queue changes and capture; an adapter may preserve a native scratch record only as a pointer to its governed record.

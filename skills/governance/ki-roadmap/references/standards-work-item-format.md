@@ -27,7 +27,7 @@ id: KI-HARNESS-FND-001
 title: Short descriptive title
 theme: foundation-tooling
 horizon: future
-status: open
+status: draft
 candidate: true
 blocks: []
 blocked-by: []
@@ -39,9 +39,9 @@ baseline-ref: null
 
 `candidate` is required for Future items and must be `true`; it is absent from every other horizon.
 
-`horizon` is one of `blocking`, `next`, `soon`, `waiting-for`, `parked`, or `future`.
+`horizon` is one of `now`, `next`, `soon`, `waiting-for`, `parked`, or `future`.
 
-`status` is `open`, `ready`, `in-progress`, `acceptance`, or `done`.
+`status` is `draft`, `ready`, `in-progress`, `awaiting-review`, or `done`.
 
 `blocks` and `blocked-by` are arrays of item identifiers and use `[]` when empty.
 
@@ -97,19 +97,19 @@ The roadmap item is the durable handoff record until its work is planned; extern
 
 ## Detail by stage
 
-### Future / open
+### Future / draft
 
 `Goal`, `Context`, `Boundary`, and final `Discussion` are sufficient.
 
 They preserve the intended outcome, why the item exists, its deliberate exclusion, and the reasoning needed to shape it later without pretending that it is planned.
 
-### Soon / open
+### Soon / draft
 
 Add `## Shaping` between `Boundary` and `Discussion`.
 
 It states the intended approach, known dependencies, decisions still needed, and the conditions for promotion.
 
-### Next or Blocking / open to ready
+### Next or Now / draft to ready
 
 Once selected for immediate work, retain the earlier sections and add these sections before `Discussion`, in order:
 
@@ -139,7 +139,7 @@ When delegated work is planned, add `## Delegation` after `## Dependencies / blo
 
 It names bounded worker deliverables and file boundaries, the gate between rounds, and the orchestrator’s final review and verification responsibility.
 
-An immediate item may remain `status: open` while `ki-plan` shapes these sections.
+An immediate item may remain `status: draft` while `ki-plan` shapes these sections.
 
 It becomes `status: ready` only after the sections are concrete, dependencies are satisfied, verification is checkable, and the user approves the plan.
 
@@ -151,15 +151,15 @@ The implementation process records the immutable full `HEAD` commit in `baseline
 
 Record material departures, decisions, and newly discovered constraints under the relevant topic in the final `Discussion`; do not record routine activity.
 
-### Acceptance
+### Awaiting review
 
-Before setting `status: acceptance`, insert `## Acceptance` immediately before `Discussion` with `### Delivered`, `### Summary of changes`, `### Verification`, `### Outstanding concerns`, and `### Mini recap` in that order.
+Before setting `status: awaiting-review`, insert `## Review` immediately before `Discussion` with `### Delivered`, `### Summary of changes`, `### Verification`, `### Outstanding concerns`, `### Post-change review`, and `### Mini recap` in that order.
 
-This is the evidence packet for an explicit acceptance decision.
+This is the required evidence and review packet for an explicit acceptance decision. `ki-accept` records the interactive review outcome here before closure.
 
 ### Done
 
-After explicit acceptance, insert terminal `## Done` immediately before `Discussion` and set `status: done`.
+After explicit acceptance, insert terminal `## Done` immediately before `Discussion` and set `status: done`. Keep the reviewed record until an explicitly selected prune path or glob removes it.
 
 Retain the accepted record until an explicitly selected prune path or glob.
 
