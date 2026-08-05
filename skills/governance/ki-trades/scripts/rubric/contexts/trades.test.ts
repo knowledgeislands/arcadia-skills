@@ -198,6 +198,19 @@ test('a blank line after frontmatter does not weaken exact H1 identity validatio
   })
 })
 
+test('legacy HND record identities are rejected', () => {
+  const { home, local } = fixture()
+  const id = 'HND-00000000-0000-4000-8000-000000000005'
+  writeRecord(local, '-', 'peer/repo', id, record(id, 'local/repo', 'peer/repo'))
+
+  const session = createTradesSession(options(local, home, tradeConfiguration('local/repo', ['peer/repo'])))
+  expect(mechanicalOutcomes(session, RECORD)).toContainEqual({
+    status: 'VIOLATION',
+    message: 'id must use canonical TRD plus a lower-case UUID-shaped identifier',
+    subject: `-/_TRADES/peer/repo/${id}.md`
+  })
+})
+
 test('sender and receiver write boundaries reject receiver fields outbound and changed inbound payload', () => {
   const { home, local, peer } = fixture()
   const outboundId = 'TRD-00000000-0000-4000-8000-000000000001'

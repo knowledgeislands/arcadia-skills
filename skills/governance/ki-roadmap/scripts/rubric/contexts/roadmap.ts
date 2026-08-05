@@ -18,7 +18,7 @@ export type RoadmapRubricContext = {
   readonly index: RoadmapIndexContext
   readonly execution: RoadmapAuditContext
   readonly safety: RoadmapAuditContext
-  readonly handoffs: RoadmapAuditContext
+  readonly trades: RoadmapAuditContext
 }
 
 const auditOutcome = (finding: Finding): AuditOutcome => ({
@@ -45,14 +45,14 @@ export const createRoadmapSession = ({ mode, repository, publication }: RubricCo
     index: { ...audit, ...(draft ? { normaliseRoot: draft.normaliseRoot } : {}) },
     execution: audit,
     safety: audit,
-    handoffs: audit
+    trades: audit
   }
 
   return {
     subjects: [
       { families: ['RUBRIC'], context: () => context },
       {
-        families: ['SCOPE', 'ROAD', 'ITEM', 'INDEX', 'EXEC', 'SAFE', 'HANDOFF'],
+        families: ['SCOPE', 'ROAD', 'ITEM', 'INDEX', 'EXEC', 'SAFE', 'TRADE'],
         context: () => context
       }
     ],

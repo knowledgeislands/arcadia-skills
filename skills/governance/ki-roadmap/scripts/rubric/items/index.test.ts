@@ -83,7 +83,7 @@ test('the structured catalogue represents the flat work-item standard', () => {
   expect(catalogue.contract).toBe(1)
   expect(catalogue.name).toBe('ki-roadmap')
   expect(catalogue.createSession).toBeFunction()
-  expect(catalogue.families.map((family) => family.code)).toEqual(['RUBRIC', 'SCOPE', 'ROAD', 'ITEM', 'INDEX', 'EXEC', 'SAFE', 'HANDOFF'])
+  expect(catalogue.families.map((family) => family.code)).toEqual(['RUBRIC', 'SCOPE', 'ROAD', 'ITEM', 'INDEX', 'EXEC', 'SAFE', 'TRADE'])
   expect(items.map((item) => item.code)).toEqual([
     'SCOPE-1',
     'ROAD-1',
@@ -102,7 +102,7 @@ test('the structured catalogue represents the flat work-item standard', () => {
     'EXEC-2',
     'EXEC-3',
     'SAFE-1',
-    'HANDOFF-1'
+    'TRADE-1'
   ])
 })
 

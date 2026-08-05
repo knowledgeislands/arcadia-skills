@@ -303,7 +303,7 @@ const parseRecord = (root: string, path: string, direction: Direction, outcomes:
   if (!peer || !IDENTITY.test(peer))
     outcomes.push({ status: 'VIOLATION', message: 'record path must use exactly two canonical owner/repo peer directories', subject: path })
   if (!id || !TRADE_ID.test(id))
-    outcomes.push({ status: 'VIOLATION', message: 'id must use canonical HND plus a lower-case UUID-shaped identifier', subject: path })
+    outcomes.push({ status: 'VIOLATION', message: 'id must use canonical TRD plus a lower-case UUID-shaped identifier', subject: path })
   if (id && filename !== `${id}.md`) outcomes.push({ status: 'VIOLATION', message: 'filename must exactly repeat the frontmatter trade id', subject: path })
   for (const key of Object.keys(fields).filter((key) => !ALLOWED_FIELDS.has(key)))
     outcomes.push({ status: 'VIOLATION', message: `frontmatter key ${key} is outside the trade record contract`, subject: path })

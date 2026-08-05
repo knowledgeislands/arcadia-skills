@@ -5,7 +5,7 @@ ki-shared-dependencies: [ki-skills:rubric]
 contributes: ['.ki-config.toml']
 owns: ['+/_TRADES/README.md', '-/_TRADES/README.md']
 description: >
-  Governs typed, directional cross-repository trades between locally registered Knowledge Islands repositories: canonical GitHub repository homes, work and knowledge routes, HND UUID-shaped trade records, immutable sender payload, receiver-only disposition, and release-observed pruning. Use when submitting work or knowledge to another repository, reviewing inbound trades, auditing trade routes or records, or resolving adoption, retention, parking, clarification, decline, or supersession. A route grants visibility only; ki-roadmap and the receiving repository retain priority and acceptance authority.
+  Governs typed, directional cross-repository trades between locally registered Knowledge Islands repositories: canonical GitHub repository homes, work and knowledge routes, TRD UUID-shaped trade records, immutable sender payload, receiver-only disposition, and release-observed pruning. Use when submitting work or knowledge to another repository, reviewing inbound trades, auditing trade routes or records, or resolving adoption, retention, parking, clarification, decline, or supersession. A route grants visibility only; ki-roadmap and the receiving repository retain priority and acceptance authority.
 argument-hint: 'audit <repo> | conform <repo> | educate <repo> | help | refresh'
 ---
 

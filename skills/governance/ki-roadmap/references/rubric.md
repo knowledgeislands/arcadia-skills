@@ -15,7 +15,7 @@ Line-by-line criteria for auditing ki-roadmap. Classifications are derived from 
 - [INDEX — root orientation](#index--root-orientation)
 - [EXEC — execution](#exec--execution)
 - [SAFE — safe mechanics](#safe--safe-mechanics)
-- [HANDOFF — handoff review](#handoff--handoff-review)
+- [TRADE — trade review](#trade--trade-review)
 
 ## RUBRIC — Generated rubric publication
 
@@ -90,11 +90,11 @@ Regular-file boundaries and host-owned transactional publication.
 
 - **SAFE-1 [M] — safe mechanics** — Governed roadmap inputs and outputs are regular local files; CONFORM changes session-owned drafts and leaves dry-run, validation, atomic publication, and rollback to the host. (standards-repository-roadmaps.md)
 
-## HANDOFF — handoff review
+## TRADE — trade review
 
 → [standard](standards-repository-roadmaps.md)
 
-Read-only judgment guidance for declared cross-repository handoff submissions.
+Read-only judgment guidance for declared cross-repository trade submissions.
 
-- **HANDOFF-1 [J] — handoff review** — Where declared ki-trades records exist, report structural guidance and proposed local roadmap action without setting disposition, inferring adoption, prioritizing work, pruning records, or changing remote state. (standards-repository-roadmaps.md)
-  - _Review prompt:_ Inspect declared handoff records read-only: identify submissions needing receiver review or a separately confirmed local roadmap proposal and outbound progress needing follow-up; report proposals only.
+- **TRADE-1 [J] — trade review** — Where declared ki-trades records exist, report structural guidance and proposed local roadmap action without setting disposition, inferring adoption, prioritizing work, pruning records, or changing remote state. (standards-repository-roadmaps.md)
+  - _Review prompt:_ Inspect declared trade records read-only: identify submissions needing receiver review or a separately confirmed local roadmap proposal and outbound progress needing follow-up; report proposals only.

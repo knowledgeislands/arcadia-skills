@@ -12,7 +12,7 @@ A repository whose `.ki-config.toml` declares `repo_type = "kb"` uses `ki-kb-str
 - [Horizons](#horizons)
 - [Horizon transitions and readiness](#horizon-transitions-and-readiness)
 - [Work-item discipline](#work-item-discipline)
-- [Handoff review](#handoff-review)
+- [Trade review](#trade-review)
 - [Conform and educate](#conform-and-educate)
 
 ## Canonical shape
@@ -135,16 +135,16 @@ Its start transition records the immutable full `HEAD` commit in `baseline-ref`;
 
 An explicit later prune path or glob removes only the resolved `done` items; the selection itself is the deletion authority and does not need a second confirmation.
 
-## Handoff review
+## Trade review
 
 Where a repository declares `ki-trades` and its records exist, include their structural relevance in the judgment portion of a roadmap audit.
 
-- **Inbound:** identify each submission that still needs receiver review or a separately confirmed local roadmap proposal. A handoff status, including adopted, does not create or prioritize a work item.
+- **Inbound:** identify each submission that still needs receiver review or a separately confirmed local roadmap proposal. A trade status, including adopted, does not create or prioritize a work item.
 - **Outbound:** identify observable receiver progress that may warrant an originating follow-up. The receiver owns disposition, priority, execution, and acceptance.
 
 The review is read-only and reports structural guidance or proposed local roadmap action only.
 
-It does not set disposition, infer adoption or acceptance from silence, move or prune handoff records, prioritize local work, or change another repository's state.
+It does not set disposition, infer adoption or acceptance from silence, move or prune trade records, prioritize local work, or change another repository's state.
 
 ## Conform and educate
 
