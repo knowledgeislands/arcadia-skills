@@ -4,7 +4,7 @@ title: Define portable checkpoints
 theme: runtime-portability
 horizon: now
 status: draft
-blocks: []
+blocks: [KI-HARNESS-RTP-006]
 blocked-by: []
 baseline-ref: null
 ---
@@ -56,7 +56,7 @@ The Harness has no `ki-checkpoints` skill, checkpoint schema, owned scaffold, or
 
 `ki-repo` owns the generic working-area contract. `ki-recap` owns session-end recap and compaction boundaries. `ki-tokenomics` and its runtime adapters own context-cost and runtime-evidence boundaries. Cross-repository trades are unrelated: they govern proposals between repositories, whereas a checkpoint is local state for one active thread.
 
-This item blocks any claim of a standard `ki-checkpoints` capability or runtime-specific checkpoint adapter until the portable schema, ownership split, lifecycle and migration policy, exact checker scope, and at least one runtime-neutral resume flow are reviewable. Runtime-specific adapters remain independently optional.
+This item blocks any claim of a standard `ki-checkpoints` capability or runtime-specific checkpoint adapter until the portable schema, ownership split, lifecycle and migration policy, exact checker scope, and at least one runtime-neutral resume flow are reviewable. Runtime-specific adapters remain independently optional, including the proposed Stop-hook adapter in `KI-HARNESS-RTP-006`.
 
 ## Discussion
 
