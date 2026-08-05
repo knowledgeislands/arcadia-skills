@@ -1,5 +1,6 @@
 ---
 name: ki-specifications
+ki-kind: governance
 ki-depends-on: []
 ki-shared-dependencies: [ki-skills:rubric]
 contributes: [.ki-config.toml]

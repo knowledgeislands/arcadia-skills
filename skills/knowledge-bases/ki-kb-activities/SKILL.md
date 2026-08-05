@@ -1,5 +1,6 @@
 ---
 name: ki-kb-activities
+ki-kind: governance
 ki-shared-dependencies: [ki-skills:rubric]
 ki-depends-on: []
 description: >

@@ -10,7 +10,7 @@ ki doctor
 ki diag
 ```
 
-The first command detects supported agent runtimes, establishes the user configuration, installs the canonical harness, and activates the eight core user skills. `ki doctor` checks the resulting environment; `ki diag` reports the effective configuration, harness inventory, repository, and XDG paths.
+The first command detects supported agent runtimes, establishes the user configuration, installs the canonical harness, and activates the nine core user skills, including the `ki-delegation` standard and its `ki-delegate` process. `ki doctor` checks the resulting environment; `ki diag` reports the effective configuration, harness inventory, repository, and XDG paths.
 
 Running `ki bootstrap` again leaves correctly managed state in place. Use the refresh form after adding or removing a supported agent runtime or after reconciling installed state:
 

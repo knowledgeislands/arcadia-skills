@@ -52,6 +52,7 @@ digraph skills_map {
   features [fillcolor="#feead2", label=< <b>ki-feature-definitions</b><br/><font point-size="9">Governance</font><br/><font point-size="9">feature behaviour</font> >]
   git [fillcolor="#feead2", label=< <b>ki-git</b><br/><font point-size="9">Governance</font><br/><font point-size="9">Git working · commit practice</font> >]
   guides [fillcolor="#feead2", label=< <b>ki-guides</b><br/><font point-size="9">Governance</font><br/><font point-size="9">repository-local procedure</font> >]
+  delegation [fillcolor="#feead2", label=< <b>ki-delegation</b><br/><font point-size="9">Governance</font><br/><font point-size="9">delegation packets</font> >]
   roadmap [fillcolor="#feead2", label=< <b>ki-roadmap</b><br/><font point-size="9">Governance</font><br/><font point-size="9">forward work</font> >]
   specifications [fillcolor="#feead2", label=< <b>ki-specifications</b><br/><font point-size="9">Governance</font><br/><font point-size="9">specification repository shape</font> >]
   skills [fillcolor="#d9f0e2", label=< <b>ki-skills</b><br/><font point-size="9">Keystone</font><br/><font point-size="9">skill quality · checker contract</font> >]
@@ -98,7 +99,7 @@ digraph skills_map {
   // one. Contextual links may deliberately point across the flow.
   { rank=same; bootstrap; authoring; git }
   { rank=same; repo; dotfiles }
-  { rank=same; decisions; engineering; features; guides; roadmap; specifications; skills; agents; kb_activities; kb_artifacts; kb_streams; website; binding; tokenomics; tools; tap; housekeeping_claude; recap }
+  { rank=same; decisions; delegation; engineering; features; guides; roadmap; specifications; skills; agents; kb_activities; kb_artifacts; kb_streams; website; binding; tokenomics; tools; tap; housekeeping_claude; recap }
   { rank=same; harness; kb; principal; cloudflare; binding_claude; binding_codex; binding_chezmoi; tokenomics_claude; tokenomics_codex; delegate; next; batch; self; checkers }
   { rank=same; mcp; plugins; plan; native_host; mcp_housekeeping; hooks }
   { rank=same; implement }
@@ -151,6 +152,7 @@ digraph skills_map {
 
   // Process and local-governance relationships.
   roadmap -> next [xlabel="triages"]
+  delegation -> delegate [xlabel="required by"]
   next -> plan [xlabel="prepares"]
   recap -> next [xlabel="surfaces", style=dashed]
   next -> batch [xlabel="proposes", style=dashed]

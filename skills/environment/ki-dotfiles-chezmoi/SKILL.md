@@ -1,5 +1,6 @@
 ---
 name: ki-dotfiles-chezmoi
+ki-kind: governance
 ki-shared-dependencies: [ki-skills:rubric]
 ki-depends-on: [ki-authoring]
 description: >

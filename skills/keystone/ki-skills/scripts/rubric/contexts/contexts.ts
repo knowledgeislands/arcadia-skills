@@ -124,6 +124,8 @@ type OwnershipCollision = {
 
 export type KiShapeSkillContext = {
   knowledgeIslandsSkill: boolean
+  kiKindPresent: boolean
+  kiKind: string
   governanceSkill: boolean
   localGovernanceSource: boolean
   argumentHint: string | undefined
@@ -162,19 +164,23 @@ export type KiShapeRubricContext = {
 
 export const createKiShapeFrontmatterEvidence = ({
   frontmatter,
-  description,
   scriptNames,
   localGovernanceSource = false
 }: {
   frontmatter: ParsedFrontmatter
-  description: string
   scriptNames: readonly string[]
   localGovernanceSource?: boolean
-}): Pick<KiShapeSkillContext, 'knowledgeIslandsSkill' | 'governanceSkill' | 'localGovernanceSource' | 'argumentHint' | 'hintVerbs' | 'scriptNames'> => {
+}): Pick<
+  KiShapeSkillContext,
+  'knowledgeIslandsSkill' | 'kiKindPresent' | 'kiKind' | 'governanceSkill' | 'localGovernanceSource' | 'argumentHint' | 'hintVerbs' | 'scriptNames'
+> => {
   const argumentHint = frontmatter.keys.get('argument-hint')
+  const kiKind = (frontmatter.keys.get('ki-kind') ?? '').trim()
   return {
     knowledgeIslandsSkill: (frontmatter.keys.get('name') ?? '').startsWith('ki-'),
-    governanceSkill: !isProcessSkill(description),
+    kiKindPresent: frontmatter.present.has('ki-kind'),
+    kiKind,
+    governanceSkill: !isProcessSkill(kiKind) && kiKind === 'governance',
     localGovernanceSource,
     argumentHint,
     hintVerbs: hintVerbs(argumentHint ?? ''),
@@ -184,6 +190,8 @@ export const createKiShapeFrontmatterEvidence = ({
 
 const emptyKiShapeSkill: KiShapeSkillContext = {
   knowledgeIslandsSkill: false,
+  kiKindPresent: false,
+  kiKind: '',
   governanceSkill: false,
   localGovernanceSource: false,
   argumentHint: undefined,

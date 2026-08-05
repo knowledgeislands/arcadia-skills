@@ -1,5 +1,6 @@
 ---
 name: ki-authoring
+ki-kind: governance
 ki-depends-on: []
 ki-shared-dependencies: [ki-skills:rubric]
 owns: ['.prettierrc.json', '.editorconfig', '.markdownlint-cli2.jsonc']

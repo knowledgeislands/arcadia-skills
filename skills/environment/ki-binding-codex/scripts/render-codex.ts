@@ -149,7 +149,10 @@ const stringRecord = (value: unknown): Record<string, string> | null => {
 }
 
 const absentOrEmpty = (value: unknown): boolean =>
-  value === undefined || value === null || (Array.isArray(value) && value.length === 0) || (record(value) !== null && Object.keys(record(value)!).length === 0)
+  value === undefined ||
+  value === null ||
+  (Array.isArray(value) && value.length === 0) ||
+  (record(value) !== null && Object.keys(record(value) ?? {}).length === 0)
 
 const hasOnly = (value: Record<string, unknown>, allowed: readonly string[]): boolean => Object.keys(value).every((key) => allowed.includes(key))
 

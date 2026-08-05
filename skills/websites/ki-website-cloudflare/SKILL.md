@@ -1,5 +1,6 @@
 ---
 name: ki-website-cloudflare
+ki-kind: governance
 ki-shared-dependencies: [ki-skills:rubric]
 ki-depends-on: [ki-website]
 description: >

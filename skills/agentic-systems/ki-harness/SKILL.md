@@ -1,5 +1,6 @@
 ---
 name: ki-harness
+ki-kind: governance
 ki-runtime-binding: true
 ki-depends-on: [ki-skills, ki-subagents, ki-decision-records, ki-roadmap]
 ki-shared-dependencies: [ki-skills:rubric]

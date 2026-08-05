@@ -1,5 +1,6 @@
 ---
 name: ki-self
+ki-kind: governance
 ki-depends-on: []
 description: >
   Repository-local governance for ki-agentic-harness. Use when making changes here to preserve the repository's direct KI CLI contract, working practices, and recoverable incremental history.

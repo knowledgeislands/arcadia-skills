@@ -1,5 +1,6 @@
 ---
 name: ki-mcp
+ki-kind: governance
 ki-runtime-binding: true
 ki-shared-dependencies: [ki-skills:rubric]
 ki-depends-on: []

@@ -1,5 +1,6 @@
 ---
 name: ki-guides
+ki-kind: governance
 ki-depends-on: []
 ki-shared-dependencies: [ki-skills:rubric]
 description: >

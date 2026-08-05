@@ -1,5 +1,6 @@
 ---
 name: ki-kb
+ki-kind: governance
 ki-shared-dependencies: [ki-skills:rubric]
 ki-depends-on: [ki-kb-activities, ki-kb-live-artifacts, ki-kb-streams]
 description: >

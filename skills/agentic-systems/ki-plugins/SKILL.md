@@ -1,5 +1,6 @@
 ---
 name: ki-plugins
+ki-kind: governance
 ki-depends-on: []
 ki-runtime-binding: true
 ki-shared-dependencies: [ki-skills:rubric]

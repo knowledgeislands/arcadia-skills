@@ -1,5 +1,6 @@
 ---
 name: ki-principal
+ki-kind: governance
 ki-depends-on: [ki-kb, ki-decision-records]
 ki-shared-dependencies: [ki-skills:rubric]
 description: >

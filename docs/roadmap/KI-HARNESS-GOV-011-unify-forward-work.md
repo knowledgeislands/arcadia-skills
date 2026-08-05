@@ -42,16 +42,16 @@ KB Streams use a different Focus vocabulary and `draft` / `ready` / `in-progress
 
 ## Files touched
 
-- `skills/governance/ki-roadmap/`
-- `skills/governance/ki-housekeeping/`
+- `skills/change-management/ki-roadmap/`
+- `skills/change-management/ki-housekeeping/`
 - `skills/knowledge-bases/ki-kb-streams/`
-- `skills/process/ki-next/`
-- `skills/process/ki-plan/`
-- `skills/process/ki-implement/`
-- `skills/process/ki-accept/`
-- `skills/process/ki-batch/`
-- `skills/process/ki-recap/`
-- `skills/process/ki-delegate/`
+- `skills/change-management/ki-next/`
+- `skills/change-management/ki-plan/`
+- `skills/change-management/ki-implement/`
+- `skills/change-management/ki-accept/`
+- `skills/change-management/ki-batch/`
+- `skills/change-management/ki-recap/`
+- `skills/change-management/ki-delegate/`
 - `.ki-config.toml`
 
 ## Verify

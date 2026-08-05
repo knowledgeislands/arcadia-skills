@@ -1,5 +1,6 @@
 ---
 name: ki-engineering
+ki-kind: governance
 ki-depends-on: []
 ki-shared-dependencies: [ki-skills:rubric]
 owns: [mise.toml, tsconfig.json, biome.json, knip.json]

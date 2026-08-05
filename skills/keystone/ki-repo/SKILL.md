@@ -1,5 +1,6 @@
 ---
 name: ki-repo
+ki-kind: governance
 ki-runtime-binding: true
 ki-depends-on: [ki-authoring, ki-git]
 ki-shared-dependencies: [ki-skills:rubric]

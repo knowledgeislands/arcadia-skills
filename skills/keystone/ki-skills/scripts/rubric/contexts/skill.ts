@@ -158,7 +158,7 @@ const endorsesRetiredExtension = (markdown: string): boolean => {
 }
 
 /** Build the complete KI shape evidence used by both AUDIT and CONFORM fallback checks. */
-const createKiShapeEvidence = (skillDirectory: string, frontmatter: ParsedFrontmatter, description: string, body: string): KiShapeSkillContext => {
+const createKiShapeEvidence = (skillDirectory: string, frontmatter: ParsedFrontmatter, body: string): KiShapeSkillContext => {
   const localGovernanceSource = isLocalGovernanceSource(skillDirectory)
   const section = extractSection(body, 'Operating modes')
   const markdownFiles = listMarkdownFiles(skillDirectory)
@@ -180,7 +180,7 @@ const createKiShapeEvidence = (skillDirectory: string, frontmatter: ParsedFrontm
     .join('\n')
 
   return {
-    ...createKiShapeFrontmatterEvidence({ frontmatter, description, scriptNames, localGovernanceSource }),
+    ...createKiShapeFrontmatterEvidence({ frontmatter, scriptNames, localGovernanceSource }),
     referencePaths,
     operatingModesSection: section,
     bodyModes: extractBodyModes(section),
@@ -289,7 +289,7 @@ export const createSkillRubricContext = (
       },
       ...(name === 'ki-skills' ? { rubric: { publication } } : {}),
       shape: createKiShapeContext({
-        skill: createKiShapeEvidence(directory, frontmatter, description ?? '', body),
+        skill: createKiShapeEvidence(directory, frontmatter, body),
         addArgumentHintVerbs: capabilities.addArgumentHintVerbs
       }),
       size: { bodyLines: body.split(/\r?\n/).length, bodyTokens: estimateTokens(body) }

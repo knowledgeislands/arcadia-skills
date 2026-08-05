@@ -45,9 +45,22 @@ const KI_SHAPE_3: RubricItem<KiShapeRubricContext> = {
   code: 'KI-SHAPE-3',
   title: 'the skill declares its kind',
   description:
-    'The skill declares its **kind** — **governance** or **process** — clearly (ADR-KI-HARNESS-SKILLS-006). A **governance skill** holds a house standard and exposes the universal modes (KI-SHAPE-5). A **process skill** drives an action or lifecycle rather than holding a standard: it is lightweight, may bundle a helper `scripts/` and a `references/` procedure, and is exempt from universal governance modes — its mode count follows its own lifecycle and it exposes HELP only optionally. Both kinds use the closed Knowledge Islands reference vocabulary (KI-SHAPE-6) and are dual-invocable (`/<name>` and model-triggered).',
+    'Every KI skill declares its **kind** in exact frontmatter as `ki-kind: governance` or `ki-kind: process`; a directory and prose never establish kind (ADR-KI-HARNESS-SKILLS-006). A **governance skill** holds a house standard and exposes the universal modes (KI-SHAPE-5). A **process skill** drives an action or lifecycle rather than holding a standard: it is lightweight, may bundle a helper `scripts/` and a `references/` procedure, and is exempt from universal governance modes — its mode count follows its own lifecycle and it exposes HELP only optionally. Both kinds use the closed Knowledge Islands reference vocabulary (KI-SHAPE-6) and are dual-invocable (`/<name>` and model-triggered).',
   sources: ['ki-agentic-harness README', 'ADR-KI-HARNESS-SKILLS-006'],
-  judgment: { prompt: 'Does the skill correctly and clearly declare its governance or process kind?' }
+  mechanical: {
+    level: 'FAIL',
+    audit: {
+      phase: 'INSPECT',
+      run: ({ skill }) => {
+        if (!skill?.knowledgeIslandsSkill) return [{ status: 'NOT_APPLICABLE', message: 'the target is not a Knowledge Islands skill' }]
+        if (!skill.kiKindPresent) return [{ status: 'VIOLATION', message: 'missing required `ki-kind: governance | process` frontmatter metadata' }]
+        if (skill.kiKind !== 'governance' && skill.kiKind !== 'process')
+          return [{ status: 'VIOLATION', message: '`ki-kind:` must be exactly `governance` or `process`' }]
+        return [{ status: 'PASS', message: 'the skill declares an explicit governance or process kind' }]
+      }
+    }
+  },
+  judgment: { prompt: 'Does the explicit kind accurately match the skill’s concern and operating contract?' }
 }
 
 const KI_SHAPE_4: RubricItem<KiShapeRubricContext> = {

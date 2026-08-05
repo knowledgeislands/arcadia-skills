@@ -1,5 +1,6 @@
 ---
 name: ki-binding-codex
+ki-kind: governance
 ki-depends-on: [ki-binding]
 ki-runtime-binding: true
 ki-supported-runtimes: [chatgpt-codex]

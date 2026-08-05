@@ -1,5 +1,6 @@
 ---
 name: ki-website
+ki-kind: governance
 ki-shared-dependencies: [ki-skills:rubric]
 ki-depends-on: []
 owns: [eleventy.config.ts, eleventy.config.js, eleventy.config.mjs, eleventy.config.cjs]

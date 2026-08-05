@@ -1,5 +1,6 @@
 ---
 name: ki-skills
+ki-kind: governance
 ki-depends-on: []
 ki-shared-modules: [rubric]
 description: >
@@ -22,7 +23,7 @@ Every criterion carries a mechanical aspect, a judgment aspect, or both:
 
 A hybrid criterion retains one code and shared meaning while its deterministic evidence runs mechanically and its remaining judgment is counted for later review.
 
-The portable and general conventions a good skill follows live in [the Agent Skills standard](references/standards-agent-skills.md); [the Knowledge Islands standard](references/standards-knowledge-islands.md) adds the house contract. The current readable criteria live in [the generated rubric](references/rubric.md), each citing its standard section; [the exemplars](references/exemplars.md) illustrate selected authoring choices. Load the applicable standards and rubric before an AUDIT, CONFORM, or EDUCATE, and the exemplars when a rule needs a worked example.
+The portable and general conventions a good skill follows live in [the Agent Skills standard](references/standards-agent-skills.md); [the Knowledge Islands standard](references/standards-knowledge-islands.md) adds the house contract. Every KI skill declares `ki-kind: governance` or `ki-kind: process` in frontmatter; source directories group the concern and never determine kind. The current readable criteria live in [the generated rubric](references/rubric.md), each citing its standard section; [the exemplars](references/exemplars.md) illustrate selected authoring choices. Load the applicable standards and rubric before an AUDIT, CONFORM, or EDUCATE, and the exemplars when a rule needs a worked example.
 
 [The rubric-authoring standard](references/standards-rubric-authoring.md) defines the code-first catalogue, session, context, and host boundary for writing or reviewing a governance rubric. Generic execution, findings, progress, transactions, and reporting belong to `ki`, not this skill. REVIEW and EXTRACT use the shared [candidate-finding standard](references/standards-candidate-findings.md) and their focused [REVIEW](references/mode-review.md) or [EXTRACT](references/mode-extract.md) procedure.
 

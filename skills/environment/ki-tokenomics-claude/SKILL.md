@@ -1,5 +1,6 @@
 ---
 name: ki-tokenomics-claude
+ki-kind: governance
 ki-depends-on: [ki-tokenomics]
 ki-runtime-binding: true
 ki-supported-runtimes: [claude-code]

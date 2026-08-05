@@ -11,6 +11,7 @@ const temporaryDirectories: string[] = []
 const validLocalSkill = `---
 name: ki-self
 ki-depends-on: []
+ki-kind: governance
 description: Repository-local governance.
 argument-hint: 'audit | conform | educate | refresh | help'
 ---
@@ -82,6 +83,37 @@ describe('repository-local ki-self source', () => {
     expect(result.name.name === result.name.directoryName).toBe(nameMatchesDirectory)
     expect(result.name.localGovernanceSource).toBe(false)
     expect(result.shape.skill?.localGovernanceSource).toBe(false)
+  })
+})
+
+describe('explicit skill kind metadata', () => {
+  const outcomes = (directory: string) => {
+    const shape = evidence(directory).shape
+    const item = KI_SHAPE.items.find(({ code }) => code === 'KI-SHAPE-3')
+    if (!item?.mechanical || !('audit' in item.mechanical)) throw new Error('KI-SHAPE-3 mechanical audit is unavailable')
+    return { skill: shape.skill, outcomes: item.mechanical.audit.run(shape) }
+  }
+
+  test('classifies a process skill from ki-kind rather than body wording', () => {
+    const directory = createSkill('.agents/skills/ki-self')
+    const skillFile = join(directory, 'SKILL.md')
+    writeFileSync(skillFile, validLocalSkill.replace('ki-kind: governance', 'ki-kind: process'))
+
+    const result = outcomes(directory)
+
+    expect(result.skill?.governanceSkill).toBe(false)
+    expect(result.outcomes).toEqual([{ status: 'PASS', message: 'the skill declares an explicit governance or process kind' }])
+  })
+
+  test('rejects a missing kind instead of inferring one from prose', () => {
+    const directory = createSkill('.agents/skills/ki-self')
+    const skillFile = join(directory, 'SKILL.md')
+    writeFileSync(skillFile, validLocalSkill.replace('ki-kind: governance\n', ''))
+
+    const result = outcomes(directory)
+
+    expect(result.skill?.governanceSkill).toBe(false)
+    expect(result.outcomes).toEqual([{ status: 'VIOLATION', message: 'missing required `ki-kind: governance | process` frontmatter metadata' }])
   })
 })
 

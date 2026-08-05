@@ -1,0 +1,65 @@
+---
+name: ki-delegation
+ki-kind: governance
+ki-depends-on: []
+description: >
+  Governs delegation packets for bounded agent work: their source-informed quality bar, durable worker briefs, and safe mechanical checks over a selected roadmap record. Use when designing or auditing a delegation packet, deciding what a worker brief must contain, or making an approved plan ready for bounded delegation. The process that dispatches and gates workers is ki-delegate; model-purpose policy belongs to ki-tokenomics; cross-repository work transfer is ki-trades.
+argument-hint: 'audit <repo> | conform <repo> | educate <work-item> | help | refresh'
+---
+
+# Knowledge Islands delegation standard
+
+`ki-delegation` owns the quality of an explicit delegation packet embedded in a governed work record.
+
+It does not select work, authorise execution, choose a model, spawn a worker, accept results, or transfer work between repositories.
+
+Read [the delegation-packet standard](references/standards-delegation-packets.md) before designing or reviewing a packet, [the generated rubric](references/rubric.md) for its mechanical and judgment criteria, and [the sources](references/sources.md) when refreshing the standard.
+
+`ki-delegate` is the process skill that applies this standard to an approved plan or delivery run.
+
+## Operating modes
+
+Carries the universal **AUDIT · CONFORM · EDUCATE · REFRESH** modes.
+
+Invoked as `help` / `-h` / `?`, it explains this boundary and stops.
+
+### Mode AUDIT
+
+Run `ki repo audit --skill ki-delegation --repo <repo>`.
+
+The native rubric inspects only delegation packets: a roadmap record opts in by carrying `## Delegation` with a `### Rounds` section.
+
+It checks the mechanically legible packet shape, then reviews whether the packet’s partitioning, model choices, locked decisions, escalation boundaries, and verification gates are actually sound.
+
+Ordinary `## Delegation` plan notes without the packet marker remain under `ki-roadmap` and are not a failure here.
+
+### Mode CONFORM
+
+Run `ki repo conform --skill ki-delegation --repo <repo> --dry-run` before applying it.
+
+CONFORM performs only the safe legacy heading repair `### Escalation` → `### Escalate` in an opted-in packet.
+
+It never creates a packet, chooses a worker, model, or round, invents a locked decision, alters an escalation boundary, or grants execution authority.
+
+### Mode EDUCATE
+
+For one explicitly selected approved work record, explain or add the packet shape from [the delegation-packet standard](references/standards-delegation-packets.md).
+
+Ask the planner to supply every semantic value; EDUCATE never guesses the delegation design.
+
+### Mode REFRESH
+
+**Precondition:** REFRESH writes only this canonical skill under `ki-agentic-harness`.
+
+When invoked from an installed copy, stop and redirect to the harness.
+
+Read [the sources](references/sources.md), compare durable delegation practice and its sources against [the standard](references/standards-delegation-packets.md) and rubric, then update the source review in the same commit as any normative change.
+
+### Mode HELP
+
+Explain the delegation-packet boundary and route operational dispatch to `ki-delegate`, model-purpose policy to `ki-tokenomics`, and cross-repository transfer to `ki-trades`.
+
+## Notes
+
+- A packet makes the existing `ki-delegate` brief durable and reviewable; it is not a separate execution lifecycle.
+- The local rubric is the materialised domain contract; generic execution, reporting, transaction safety, and publication remain owned by `ki`.

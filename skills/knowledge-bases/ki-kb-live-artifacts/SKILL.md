@@ -1,5 +1,6 @@
 ---
 name: ki-kb-live-artifacts
+ki-kind: governance
 ki-shared-dependencies: [ki-skills:rubric]
 ki-depends-on: []
 description: >
