@@ -17,7 +17,7 @@ Make every rubric criterion state separately what can be checked deterministical
 
 The shared rubric contract already distinguishes `mechanical` and `judgment` aspects, but its mechanical `conform` callback is optional. A deterministic audit can therefore fail without a declared repair path, while a judgment aspect exposes only a prompt. This makes the audit result more actionable than the conform result and hides whether a missing automatic repair is a safety boundary, an environmental failure, or unfinished engineering.
 
-A catalogue-wide scan found 34 active rubric catalogues. Their criteria include substantial mechanical evidence, judgment prompts, and safe conform actions, but these are not consistently declared as one complete audit-and-remediation model. The current `ki-skills` audit also warns where process skills are assessed as though they were governance skills; that is evidence to classify and correct, not a reason to weaken process-skill boundaries.
+A catalogue-wide scan found 34 active rubric catalogues. Their criteria include substantial mechanical evidence, judgment prompts, and safe conform actions, but these are not consistently declared as one complete audit-and-remediation model. The current `ki-skills` audit falsely assesses six already-correct process skills as governance skills because its classifier looks only for literal `(kind: process` text in the frontmatter description, while those skills declare `**Kind:** process.` in their bodies. That is a `ki-skills` checker defect; the process skills must not be changed to satisfy governance modes.
 
 ## Boundary
 
@@ -46,6 +46,32 @@ Every mechanical aspect must declare one remediation class:
 An omitted class is a catalogue error. `automatic` requires a conform action; `diagnostic` and `guarded` forbid a misleading automatic repair and must carry an actionable reason. A mechanical condition whose repair is actually deterministic but lacks a callback remains an implementation gap, not a legitimate classification.
 
 Judgment aspects gain required review metadata: a bounded evidence scope, a concrete prompt, expected result vocabulary, and conforming guidance. The host reports them as unevaluated judgment work; it may render the review and guidance, but it neither executes the guidance nor converts it into PASS or FAIL.
+
+### Before and after examples
+
+#### Process-kind false positive
+
+Before, `ki-plan` correctly says `**Kind:** process.` and exposes only `plan … | help`. The `ki-skills` context nevertheless derives `governanceSkill` from whether the description contains the unrelated literal `(kind: process`. It then emits KI-SHAPE-12 and KI-SHAPE-13 warnings, and its current CONFORM path could append governance verbs to a process skill.
+
+After, kind is read from one canonical structured declaration and the same source drives both the process-kind audit and the governance-mode exemption. `ki-plan` returns `NOT_APPLICABLE` for governance-only mode and heading checks; CONFORM makes no governance-mode change. A governance skill missing `educate` still receives the existing warning and safe repair.
+
+#### Automatic mechanical repair
+
+Before, a wholly owned authoring configuration can drift and an audit can identify the byte difference without publishing whether CONFORM is safe to repair it.
+
+After, `ki-authoring` classifies the owned configuration criterion as `automatic`: AUDIT reports exact template drift, and CONFORM transactionally restores only the regular owned file, then proves the audit clean.
+
+#### Diagnostic mechanical evidence
+
+Before, a configured test command can fail mechanically but the rubric gives no explicit explanation for why CONFORM cannot make the test pass.
+
+After, the criterion is `diagnostic`: AUDIT retains the exact failed command evidence, while CONFORM reports the bounded next route—diagnose or fix the implementation—and makes no speculative source change.
+
+#### Guarded repair and judgment
+
+Before, a missing runtime route or a vague skill trigger-quality prompt provides little direction about the required human decision and subsequent edits.
+
+After, a user-owned runtime, route, or remote-account decision is `guarded`: the mechanical evidence names the gap and hands to a documented judgment review. The reviewer records one named outcome and applies only the approved local configuration or decision route. The host neither chooses the route nor claims the judgment passed.
 
 ### Classification rule
 
@@ -83,7 +109,7 @@ Before this item enters `ready`, two distinct models from different vendors must
 - [ ] Extend the shared rubric types, catalogue validator, and generated publication so every mechanical aspect declares its remediation class and every judgment aspect supplies review scope, outcome vocabulary, and guided conforming work.
 - [ ] Update the `ki` rubric host to validate the new metadata, show mechanical audit/conform and judgment review/conform sections distinctly, execute only `automatic` draft actions, and retain its no-synthetic-judgment-finding boundary.
 - [ ] Build an inventory of every current criterion across all 34 catalogues, recording its evidence, remediation class, safe writer or manual route, and whether a hybrid split is warranted.
-- [ ] Migrate `ki-skills` and `ki-engineering` first, including the process-skill mode false warnings, then use their fixtures to prove automatic, diagnostic, guarded, hybrid, and invalid-metadata cases.
+- [ ] Migrate `ki-skills` and `ki-engineering` first, fixing the process-kind classifier so already-correct process skills are not applicable to governance-mode checks, then use fixtures to prove automatic, diagnostic, guarded, hybrid, and invalid-metadata cases.
 - [ ] Migrate the remaining catalogues in concern-sized batches. Promote only deterministic subconditions with reliable fixtures; preserve semantic, authority, and truth questions as judgment.
 - [ ] Regenerate every affected rubric publication, update standards and skill procedures, and publish a concise reviewer workflow explaining judgment audit and guided conforming work.
 - [ ] Run a cross-catalogue audit proving no mechanical item lacks a remediation class, no `automatic` class lacks a safe conform action, and no judgment aspect is reported as mechanically evaluated.
