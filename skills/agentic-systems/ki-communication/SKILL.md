@@ -31,7 +31,7 @@ Draft a communication section for a new user or repository instruction surface. 
 
 ### Mode REFRESH
 
-**Precondition:** REFRESH edits this skill's canonical files, which exist only in `ki-agentic-harness`. Invoked from an installed copy, stop and direct the user to the canonical harness repository.
+**Precondition:** REFRESH edits this skill's own canonical files, which exist only in `ki-agentic-harness`. Invoked from an installed copy, stop here and name the harness as where to run it.
 
 Review the contract when runtimes add durable instruction, session, or output-control mechanisms. Preserve the portable precedence model; add runtime-specific detail only when it cannot be expressed in shared Markdown.
 
