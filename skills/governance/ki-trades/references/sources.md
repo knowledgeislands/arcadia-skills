@@ -11,4 +11,5 @@ The sources behind [the cross-repository trade standard](standards-trades.md) an
 
 ## Last review
 
+- 2026-08-05 — Clarified that a sender may declare an export and create its local outbound record before the receiver participates; activation remains reciprocal.
 - 2026-08-03 — Initial standard authored from GDR-KI-HARNESS-005 and the local KI repository-registry contract. No external moving source or calendar refresh is required.

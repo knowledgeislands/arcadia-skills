@@ -143,20 +143,20 @@ test('malformed, duplicated, and non-normalized declarations are refused', () =>
   expect(messages).toContain('exports_to.work must be normalized in lexical order')
 })
 
-test('mismatched and nonreciprocal registered routes are reported rather than trusted', () => {
+test('declared routes remain pending until the other repository registers and reciprocates', () => {
   const mismatch = fixture('peer/other')
   const mismatchSession = createTradesSession(options(mismatch.local, mismatch.home, tradeConfiguration('local/repo', ['peer/repo'])))
   expect(mechanicalOutcomes(mismatchSession, ROUTE)).toContainEqual({
-    status: 'VIOLATION',
-    message: 'declared export route https://github.com/peer/repo has no matching registered repository',
+    status: 'INFO',
+    message: 'declared export route https://github.com/peer/repo awaits receiver registration',
     subject: 'https://github.com/peer/repo'
   })
 
   const oneSided = fixture('peer/repo', false)
   const oneSidedSession = createTradesSession(options(oneSided.local, oneSided.home, tradeConfiguration('local/repo', ['peer/repo'])))
   expect(mechanicalOutcomes(oneSidedSession, ROUTE)).toContainEqual({
-    status: 'VIOLATION',
-    message: 'declared export route https://github.com/peer/repo lacks its matching receiver or sender declaration',
+    status: 'INFO',
+    message: 'declared export route https://github.com/peer/repo awaits matching receiver declaration',
     subject: 'https://github.com/peer/repo'
   })
 })
@@ -167,10 +167,31 @@ test('a route is active only for a kind that both repositories declare', () => {
   const session = createTradesSession(options(local, home, tradeConfiguration('local/repo', ['peer/repo'], ['knowledge'])))
 
   expect(mechanicalOutcomes(session, ROUTE)).toContainEqual({
-    status: 'VIOLATION',
-    message: 'declared export route https://github.com/peer/repo lacks its matching receiver or sender declaration',
+    status: 'INFO',
+    message: 'declared export route https://github.com/peer/repo awaits matching receiver declaration',
     subject: 'https://github.com/peer/repo'
   })
+})
+
+test('outbound records are valid on a declared export route while receiver participation is pending', () => {
+  const { home, local, peer } = fixture('peer/repo', false)
+  const id = 'TRD-000000aa'
+  writeRecord(local, '-', 'peer/repo', id, record(id, 'local/repo', 'peer/repo'))
+  writeFileSync(
+    join(peer, '.ki-config.toml'),
+    ['["knowledgeislands/ki-agentic-harness:ki-repo"]', 'repository = "https://github.com/peer/repo"', ''].join('\n')
+  )
+
+  const session = createTradesSession(options(local, home, tradeConfiguration('local/repo', ['peer/repo'])))
+  expect(mechanicalOutcomes(session, ROUTE)).toContainEqual({
+    status: 'INFO',
+    message: 'declared export route https://github.com/peer/repo awaits receiver ki-trades participation',
+    subject: 'https://github.com/peer/repo'
+  })
+  expect(mechanicalOutcomes(session, AUTH)).toEqual([{ status: 'PASS', message: 'Trade records preserve sender and receiver write boundaries.' }])
+  expect(mechanicalOutcomes(session, RELEASE)).toEqual([
+    { status: 'PASS', message: 'receiver has not created an inbound copy; sender retains the outbound record', subject: `-/_TRADES/peer/repo/${id}.md` }
+  ])
 })
 
 test('a blank line after frontmatter does not weaken exact H1 identity validation', () => {

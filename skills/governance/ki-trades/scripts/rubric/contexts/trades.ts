@@ -32,6 +32,8 @@ Only this repository may change receiver-local status, rationale, adoption, rete
 This directory holds sender-owned cross-repository work and knowledge trades, grouped by the receiver's canonical \`owner/repo\` identity.
 
 Only this repository writes or removes these outbound records. Retain each record until the receiver reports adopted, retained, declined, or superseded; parked and clarify dispositions do not permit release.
+
+An outbound record may await the receiver's \`ki-trades\` participation and matching import declaration. It remains sender-owned until an inbound copy is observable.
 `
   }
 ] as const
@@ -45,6 +47,7 @@ type TradeConfiguration = {
   readonly identity?: string
   readonly exportsTo: Readonly<Record<TradeKind, readonly string[]>>
   readonly importsFrom: Readonly<Record<TradeKind, readonly string[]>>
+  readonly participates: boolean
   readonly valid: boolean
 }
 
@@ -163,6 +166,7 @@ const parseConfiguration = (
       ...local,
       exportsTo,
       importsFrom,
+      participates: true,
       valid: outcomes.every((outcome) => outcome.status !== 'VIOLATION' || outcome.level === 'WARN')
     },
     outcomes
@@ -171,15 +175,23 @@ const parseConfiguration = (
 
 const parseRepositoryConfiguration = (root: string): TradeConfiguration => {
   const path = join(root, '.ki-config.toml')
-  if (!containedPhysical(root, path, 'file')) return { exportsTo: { work: [], knowledge: [] }, importsFrom: { work: [], knowledge: [] }, valid: false }
+  if (!containedPhysical(root, path, 'file'))
+    return { exportsTo: { work: [], knowledge: [] }, importsFrom: { work: [], knowledge: [] }, participates: false, valid: false }
   try {
     const document = Bun.TOML.parse(readFileSync(path, 'utf8')) as Record<string, unknown>
     const owned = table(document[CONFIG_TABLE])
     const repository = table(document[REPOSITORY_TABLE])?.repository
-    if (!owned) return { exportsTo: { work: [], knowledge: [] }, importsFrom: { work: [], knowledge: [] }, valid: false }
+    if (!owned)
+      return {
+        ...repositoryIdentity(repository),
+        exportsTo: { work: [], knowledge: [] },
+        importsFrom: { work: [], knowledge: [] },
+        participates: false,
+        valid: false
+      }
     return parseConfiguration(owned, repository, path).configuration
   } catch {
-    return { exportsTo: { work: [], knowledge: [] }, importsFrom: { work: [], knowledge: [] }, valid: false }
+    return { exportsTo: { work: [], knowledge: [] }, importsFrom: { work: [], knowledge: [] }, participates: true, valid: false }
   }
 }
 
@@ -226,8 +238,9 @@ const routeEvidence = (
 
   const validateRoute = (peer: string, direction: 'export' | 'import', kind: TradeKind): void => {
     const matches = registered.filter((candidate) => candidate.configuration.repository === peer)
+    const otherParty = direction === 'export' ? 'receiver' : 'sender'
     if (matches.length === 0) {
-      outcomes.push({ status: 'VIOLATION', message: `declared ${direction} route ${peer} has no matching registered repository`, subject: peer })
+      outcomes.push({ status: 'INFO', message: `declared ${direction} route ${peer} awaits ${otherParty} registration`, subject: peer })
       return
     }
     if (matches.length > 1) {
@@ -239,13 +252,21 @@ const routeEvidence = (
       return
     }
     const [candidate] = matches
-    if (!candidate?.configuration.valid) {
+    if (!candidate?.configuration.participates) {
+      outcomes.push({ status: 'INFO', message: `declared ${direction} route ${peer} awaits ${otherParty} ki-trades participation`, subject: peer })
+      return
+    }
+    if (!candidate.configuration.valid) {
       outcomes.push({ status: 'VIOLATION', message: `registered route endpoint ${peer} has malformed ki-trades configuration`, subject: peer })
       return
     }
     const reciprocal = direction === 'export' ? candidate.configuration.importsFrom[kind] : candidate.configuration.exportsTo[kind]
     if (!reciprocal.includes(local.repository ?? '')) {
-      outcomes.push({ status: 'VIOLATION', message: `declared ${direction} route ${peer} lacks its matching receiver or sender declaration`, subject: peer })
+      outcomes.push({
+        status: 'INFO',
+        message: `declared ${direction} route ${peer} awaits matching ${otherParty} declaration`,
+        subject: peer
+      })
       return
     }
     if (candidate.configuration.identity) active.set(candidate.configuration.identity, candidate)
@@ -371,19 +392,20 @@ const recordEvidence = (
       authority.push({ status: 'VIOLATION', message: `${record.direction} record local identity does not match ${local.identity}`, subject: record.path })
     if (expectedPeer !== record.peer)
       authority.push({ status: 'VIOLATION', message: `${record.direction} record peer identity does not match its two-level path`, subject: record.path })
-    const peer = active.get(record.peer)
-    if (!peer) {
-      authority.push({ status: 'VIOLATION', message: `${record.direction} record has no active reciprocal route to ${record.peer}`, subject: record.path })
+    const permitted = record.direction === 'outbound' ? local.exportsTo[record.kind] : local.importsFrom[record.kind]
+    const peerRepository = `https://github.com/${record.peer}`
+    if (!permitted.includes(peerRepository)) {
+      authority.push({
+        status: 'VIOLATION',
+        message: `${record.kind} ${record.direction} record has no declared local directional trade route to ${record.peer}`,
+        subject: record.path
+      })
       continue
     }
 
-    const permitted = record.direction === 'outbound' ? local.exportsTo[record.kind] : local.importsFrom[record.kind]
-    if (!peer.configuration.repository || !permitted.includes(peer.configuration.repository)) {
-      authority.push({
-        status: 'VIOLATION',
-        message: `${record.kind} ${record.direction} record has no active directional trade route to ${record.peer}`,
-        subject: record.path
-      })
+    const peer = active.get(record.peer)
+    if (record.direction === 'inbound' && !peer) {
+      authority.push({ status: 'VIOLATION', message: `inbound record has no active reciprocal route to ${record.peer}`, subject: record.path })
       continue
     }
 
@@ -419,7 +441,7 @@ const recordEvidence = (
       record.direction === 'inbound'
         ? join('-/_TRADES', ...local.identity.split('/'), `${record.id}.md`)
         : join('+/_TRADES', ...local.identity.split('/'), `${record.id}.md`)
-    const counterpart = remoteRecord(peer.root, counterpartPath, record.direction === 'inbound' ? 'outbound' : 'inbound')
+    const counterpart = peer ? remoteRecord(peer.root, counterpartPath, record.direction === 'inbound' ? 'outbound' : 'inbound') : undefined
     if (counterpart && immutableRecord(counterpart) !== immutableRecord(record))
       authority.push({ status: 'VIOLATION', message: 'sender provenance or payload differs between outbound and inbound copies', subject: record.path })
 

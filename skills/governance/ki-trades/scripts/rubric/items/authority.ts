@@ -7,7 +7,7 @@ const AUTH_1: RubricItem<OutcomeContext> = {
   code: 'AUTH-1',
   title: 'sender and receiver write boundaries are preserved',
   description:
-    'Outbound records belong to the local sender and contain no receiver-local fields; inbound records belong to the local receiver, use an active route, and preserve the outbound sender envelope and body exactly.',
+    'Outbound records belong to the local sender, use its declared export route, and contain no receiver-local fields; inbound records belong to the local receiver, use an active route, and preserve the outbound sender envelope and body exactly.',
   sources: [SOURCE],
   mechanical: { level: 'FAIL', audit: { phase: 'INSPECT', run: ({ outcomes }) => outcomes } }
 }

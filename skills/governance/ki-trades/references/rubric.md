@@ -40,7 +40,7 @@ Typed trade routes are explicit, canonical, and owned locally.
 
 Registered repository visibility becomes an active route only through matching declarations for the same trade kind.
 
-- **ROUTE-1 [M] — trade routes are typed, reciprocal, and registered** — A route for a kind is active only when exactly one locally registered repository declares the canonical GitHub home, the sender exports that kind to it, and the receiver imports that same kind from the sender. (standards-trades.md)
+- **ROUTE-1 [M] — trade routes are typed, declared, and activated reciprocally** — A sender may declare an export route before the receiver participates. The route is active only when exactly one locally registered repository declares the canonical GitHub home, the sender exports that kind to it, and the receiver imports that same kind from the sender. (standards-trades.md)
 
 ## SCAFFOLD — Trade scaffold
 
@@ -64,7 +64,7 @@ Trade-record identity is concise and corroborated by canonical content rather th
 
 A trade remains a local copy protocol with immutable sender provenance and receiver-only disposition fields.
 
-- **AUTH-1 [M] — sender and receiver write boundaries are preserved** — Outbound records belong to the local sender and contain no receiver-local fields; inbound records belong to the local receiver, use an active route, and preserve the outbound sender envelope and body exactly. (standards-trades.md)
+- **AUTH-1 [M] — sender and receiver write boundaries are preserved** — Outbound records belong to the local sender, use its declared export route, and contain no receiver-local fields; inbound records belong to the local receiver, use an active route, and preserve the outbound sender envelope and body exactly. (standards-trades.md)
 
 ## STATUS — Receiver lifecycle
 

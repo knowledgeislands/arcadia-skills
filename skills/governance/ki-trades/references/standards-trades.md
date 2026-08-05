@@ -28,7 +28,7 @@ knowledge = ["https://github.com/owner/sender"]
 
 The repository's canonical endpoint is `ki-repo.repository`, a required HTTPS GitHub URI. `exports_to` and `imports_from` each declare the initial closed trade-kind set: `work` and `knowledge`. Every route array is required, lexical, duplicate-free, and contains canonical GitHub repository URIs.
 
-A typed route is active only when the intended receiver is in the user's local KI repository registry, exactly one registered root declares that canonical home, the sender exports the kind, and the receiver imports that same kind. Filesystem visibility, a one-sided declaration, or a declaration for another kind never activates a route.
+A sender may declare a typed export route independently and create its local outbound record. The declaration is pending while the intended receiver is absent from the user's local KI repository registry, does not participate in `ki-trades`, or has not declared the matching import. A typed route is active only when exactly one registered root declares that canonical home, the sender exports the kind, and the receiver imports that same kind. Filesystem visibility, a one-sided declaration, or a declaration for another kind never activates a route; malformed or ambiguous endpoints are findings.
 
 ## Storage and identity
 
@@ -75,7 +75,7 @@ The outcome proposed to the receiver.
 Authority, safety, dependency, and verification boundaries the receiver must retain when evaluating it.
 ```
 
-The seven sender fields are required strings. `kind` is `work` or `knowledge`; the record is valid only on an active route for that kind. `created_at` is a UTC `YYYY-MM-DDTHH:MM:SSZ` timestamp. `source_ref` is provenance only; it neither reuses the source identifier as the trade identity nor transfers source lifecycle authority. The three payload sections are required and non-empty. A blank line may separate the closing frontmatter delimiter from the H1; the H1 must remain the first non-blank body line and exactly repeat the `id` and `title`.
+The seven sender fields are required strings. `kind` is `work` or `knowledge`; an outbound record is valid on the sender's declared export route for that kind, while an inbound record requires an active matching route. `created_at` is a UTC `YYYY-MM-DDTHH:MM:SSZ` timestamp. `source_ref` is provenance only; it neither reuses the source identifier as the trade identity nor transfers source lifecycle authority. The three payload sections are required and non-empty. A blank line may separate the closing frontmatter delimiter from the H1; the H1 must remain the first non-blank body line and exactly repeat the `id` and `title`.
 
 An inbound receiver copy adds `status: received`. It may also carry receiver-local `reviewed_at`, `rationale`, `adopted_as`, `retained_as`, or `superseded_by`. No other frontmatter key is valid, so a peer cannot hide a sender-envelope or receiver-authority change behind an extension field.
 
