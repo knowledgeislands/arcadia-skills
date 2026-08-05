@@ -20,7 +20,7 @@ The full procedure is in [the next-work standard](references/standards-next-work
 2. **Triage** incoming submissions through an exact human-confirmed receiver disposition, without treating adoption as roadmap authority.
 3. **Review** relevance when asked or when a material stale signal is evident.
 4. **Screen for synergy** across dependency-ready candidates: propose a batch only when the items share a bounded delivery advantage and remain independently executable. A shared theme alone is not enough.
-5. **Select or spawn** one dependency-ready immediate record, or a small, explicitly confirmed synergistic group to plan independently before it can become a `ki-batch prepare` candidate.
+5. **Select or spawn** one dependency-ready immediate record, or a small, explicitly confirmed synergistic group to plan independently before it can become a `ki-batch` candidate.
 6. **Defer** an explicitly named record only after presenting its exact destination horizon, wording, and affected lifecycle state.
 7. **Hand off for planning** selected Now or Next drafts to `ki-plan`; its adapter creates the right in-place execution detail.
 8. **Recommend cleanup** when done records are eligible for explicit pruning, without deleting them.
@@ -31,9 +31,9 @@ The full procedure is in [the next-work standard](references/standards-next-work
 ki-recap (optional current-session context)
   └─> ki-next (selection, promotion, and deferral)
         └─> ki-plan (shape each selected repository item through Ready)
-              ├─> ki-implement (one Ready item through Acceptance)
-              │     └─> ki-accept (Acceptance through Done)
-              └─> ki-batch prepare (confirmed independent, synergistic Ready set)
+              ├─> ki-implement (one Ready item through Awaiting review)
+              │     └─> ki-accept (Awaiting review through Done)
+              └─> ki-batch (confirmed independent, synergistic Ready set)
                     └─> repeated ki-implement cycles under an approved authorisation
 
 ki-roadmap governs the shared forward-work contract and the non-KB adapter.
@@ -64,7 +64,7 @@ With no argument or `next`, run the full procedure.
 
 - This is a process skill, not a universal AUDIT / CONFORM / EDUCATE / REFRESH checker.
 - A housekeeping template may create a due run only under its declared spawning policy; every other capture, selection, and queue transition follows the applicable confirmed promotion rule.
-- `ki-next` does not start or authorise a batch from similarity alone. A confirmed candidate group proceeds only to `ki-batch prepare`; implementation still requires that skill's reviewed authorisation.
+- `ki-next` does not start or authorise a batch from similarity alone. A confirmed candidate group proceeds only to `ki-batch`; implementation still requires that skill's reviewed authorisation.
 - `ki-roadmap` owns the common transition rules; `ki-kb-streams` supplies the KB adapter; `ki-next` applies them consistently.
 - `ki-next` may recommend `status: done` records for pruning, but it never deletes them. `ki-accept` owns explicit path or glob selection; `ki repo roadmap prune` is the separate deterministic selected-repository sweep.
 - Installed as a core user skill by `ki bootstrap`; it is not a repository-governance root.

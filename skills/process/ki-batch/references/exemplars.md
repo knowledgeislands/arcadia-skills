@@ -25,7 +25,7 @@ FND-002 may start only after FND-001 has recorded its shared host result.
 ## Timebox and completion target
 
 - Timebox: two hours from explicit approval
-- Completion target: every named item reaches `acceptance` with its own verification packet, or is parked with evidence and a required human decision
+- Completion target: every named record reaches `awaiting-review` with its own review packet, or is parked with evidence and a required human decision
 
 ## Required verification
 
@@ -37,7 +37,7 @@ FND-002 may start only after FND-001 has recorded its shared host result.
 
 - Delegation: permitted only for the bounded mechanical units named in each plan
 - Decisions: apply locked plan decisions; escalate any new interface, external coordination, scope, or safety decision
-- Acceptance: not authorised in this batch; each item stops at `acceptance`
+- Closure: not authorised in this batch; each record stops at `awaiting-review`
 
 ## Mandatory stops
 
@@ -52,9 +52,9 @@ Approved by: <human name and timestamp>
 
 The approval must be explicit and must cover this exact record.
 
-If acceptance authority is intended, name the exact items and state it separately under **Allowed decisions and delegation**.
+If closure authority is intended, name the exact records and state it separately under **Allowed decisions and delegation**.
 
-Pruning needs its own explicit roadmap-item path or glob selection even when batch acceptance is authorised.
+Pruning needs its own explicit adapter-root path or glob selection even when batch closure is authorised.
 
 ## Parked-item and post-gate example
 
@@ -63,14 +63,14 @@ Append the outcome to the approved authorisation; do not create a parallel track
 ```md
 ## Run ledger
 
-| Item               | Start | Result     | Evidence                                             | Next human action                             |
-| ------------------ | ----- | ---------- | ---------------------------------------------------- | --------------------------------------------- |
-| KI-HARNESS-FND-001 | ready | acceptance | `<baseline>` → `<commit>`; stated checks pass        | Review acceptance packet                      |
-| KI-HARNESS-FND-002 | ready | parked     | FND-001 exposed a public API choice outside the plan | Decide the API contract, then re-plan FND-002 |
+| Item               | Start | Result          | Evidence                                             | Next human action                             |
+| ------------------ | ----- | --------------- | ---------------------------------------------------- | --------------------------------------------- |
+| KI-HARNESS-FND-001 | ready | awaiting-review | `<baseline>` → `<commit>`; stated checks pass        | Review the delivery packet                    |
+| KI-HARNESS-FND-002 | ready | parked          | FND-001 exposed a public API choice outside the plan | Decide the API contract, then re-plan FND-002 |
 
 ## Batch recap
 
-FND-001 reached Acceptance with its recorded verification. FND-002 was parked rather than widened because its dependent API decision was not authorised. No independent remaining item was admitted. The batch stopped at its normal Acceptance target; no item was accepted, marked Done, pruned, pushed, or released.
+FND-001 reached awaiting-review with its recorded verification. FND-002 was parked rather than widened because its dependent API decision was not authorised. No independent remaining item was admitted. The batch stopped at its normal review target; no record was closed, marked Done, pruned, pushed, or released.
 ```
 
 The ledger accounts for every admitted item, including a parked one.

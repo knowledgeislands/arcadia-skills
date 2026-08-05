@@ -50,7 +50,7 @@ Then look only for threads left mid-change by this session: uncommitted edits, a
 
 - A roadmap item or Stream **added during this session** counts as **what happened** (placing work in the repository's durable forward-work structure is a completed action), not as outstanding.
 - An in-session non-KB `ki-plan` with unchecked Steps or KB proposal with unchecked Checklist entries **is** outstanding — cite its identifier and lifecycle state. An unrelated plan or proposal is not.
-- If an explicitly deferred in-session thread has no durable home, offer its correct local route: `ki-plan new` or a roadmap edit for a non-KB repository; `ki-kb-streams` PROPOSE for a Knowledge Base. Do not manufacture a route for work merely noticed during the recap.
+- If an explicitly deferred in-session thread has no durable home, offer its correct local route: `ki-next` capture into the shared queue, then `ki-plan` when it is selected; use the roadmap adapter for a non-KB repository and the Streams adapter for a Knowledge Base. Do not manufacture a route for work merely noticed during the recap.
 
 ## 4. Harvest the learnings, and route each
 
@@ -68,9 +68,9 @@ The standard owns the placement ladder, promotion evidence, and duplicate-reconc
 
 Use `highCostCandidates` from the grounding helper as a starting list, not the full set — warm context surfaces things the helper cannot see (a design dead-end, a rejected approach).
 
-### Per-plan acceptance mini recap
+### Per-record review mini recap
 
-When `ki-accept` requests an item-scoped recap, do not run or imply a full-session recap. Ground only the item's delivered outputs and verification evidence, then record these H3 parts in its `## Acceptance` section: **Delivered**, **Summary of changes**, **Verification**, **Outstanding concerns**, and **Mini recap**. The summary names the material changes and useful primary paths; verification records concrete commands, outcomes, and the checked evidence revision; concerns hold open questions and further acceptance analysis. The mini recap may name a learning and its proposed route, but it must say that the route is unapproved. User acceptance of the item closes that item only; it does not approve a guide, rubric, agent, hook, memory, or other durable learning write.
+When `ki-accept` requests a record-scoped recap, do not run or imply a full-session recap. Ground only the record's delivered outputs and verification evidence, then record these H3 parts in a roadmap item's `## Review` section or the equivalent proposal review evidence: **Delivered**, **Summary of changes**, **Verification**, **Outstanding concerns**, and **Mini recap**. The summary names the material changes and useful primary paths; verification records concrete commands, outcomes, and the checked evidence revision; concerns hold open questions and further review analysis. The mini recap may name a learning and its proposed route, but it must say that the route is unapproved. User closure of the record sets it Done only; it does not approve a guide, rubric, agent, hook, memory, or other durable learning write.
 
 ## 5. Specific actions
 

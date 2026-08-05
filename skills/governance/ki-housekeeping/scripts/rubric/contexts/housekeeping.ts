@@ -64,10 +64,7 @@ export const createHousekeepingSession = ({ repository, publication }: RubricCon
   }
   const context: HousekeepingRubricContext = { rubric: { publication }, templates: { outcomes } }
   return {
-    subjects: [
-      { families: ['RUBRIC'], context: () => context },
-      { families: ['HOUSE'], context: () => context }
-    ],
+    subjects: [{ families: ['HOUSE'], context: () => context }],
     proposal: () => ({ writes: [] })
   }
 }

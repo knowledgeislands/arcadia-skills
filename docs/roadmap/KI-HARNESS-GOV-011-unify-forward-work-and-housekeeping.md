@@ -3,7 +3,7 @@ id: KI-HARNESS-GOV-011
 title: Unify forward work and recurring housekeeping
 theme: governance-consistency
 horizon: now
-status: in-progress
+status: awaiting-review
 blocks: []
 blocked-by: []
 baseline-ref: 8cf83d6fd243d853a6ca9241ca310678acc535a6
@@ -31,12 +31,12 @@ KB Streams use a different Focus vocabulary and `draft` / `ready` / `in-progress
 
 ## Steps
 
-- [ ] Define the shared `now` / `next` / `soon` / `future` / `waiting-for` / `parked` queue and `draft` / `ready` / `in-progress` / `awaiting-review` / `done` lifecycle in the roadmap contract, including a required review packet.
-- [ ] Add `ki-housekeeping` as the recurring-work template owner, with non-KB templates in `docs/housekeeping/`, stable identities, cadence and last-run evidence, and due-run spawning rules for `ki-next`.
-- [ ] Adapt `ki-kb-streams` to the shared queue and lifecycle, including `Streams/Housekeeping/`, retained done proposals, explicit pruning, and the KB template binding.
-- [ ] Simplify `ki-next`, `ki-plan`, `ki-implement`, `ki-accept`, `ki-batch`, `ki-recap`, and `ki-delegate` around the shared command family and their explicit adapter boundaries.
-- [ ] Update affected rubric contexts, generated publications, and focused tests; add the new skill to repository configuration.
-- [ ] Run the relevant direct audits, focused tests, TypeScript, the full test suite, and formatting checks.
+- [x] Define the shared `now` / `next` / `soon` / `future` / `waiting-for` / `parked` queue and `draft` / `ready` / `in-progress` / `awaiting-review` / `done` lifecycle in the roadmap contract, including a required review packet.
+- [x] Add `ki-housekeeping` as the recurring-work template owner, with non-KB templates in `docs/housekeeping/`, stable identities, cadence and last-run evidence, and due-run spawning rules for `ki-next`.
+- [x] Adapt `ki-kb-streams` to the shared queue and lifecycle, including `Streams/Housekeeping/`, retained done proposals, explicit pruning, and the KB template binding.
+- [x] Simplify `ki-next`, `ki-plan`, `ki-implement`, `ki-accept`, `ki-batch`, `ki-recap`, and `ki-delegate` around the shared command family and their explicit adapter boundaries.
+- [x] Update affected rubric contexts, generated publications, and focused tests; add the new skill to repository configuration.
+- [x] Run the relevant direct audits, focused tests, TypeScript, the full test suite, and formatting checks.
 
 ## Files touched
 
@@ -78,6 +78,34 @@ The design was explicitly agreed: the shared queue includes a `housekeeping` hor
 
 - Stop if an existing rubric or host contract cannot represent a required invariant without an unapproved host change.
 - Stop before changing another repository or performing a destructive prune.
+
+## Review
+
+### Delivered
+
+The roadmap contract, Streams adapter, and all six process skills now use one queue and delivery lifecycle. `ki-housekeeping` owns portable recurring templates, and `ki-next` can spawn due ordinary work into the appropriate adapter's delivery horizon.
+
+### Summary of changes
+
+Added `ki-housekeeping` with a native rubric and focused tests; migrated repository work records and Streams proposals to `draft` → `ready` → `in-progress` → `awaiting-review` → `done`; and made `ki-accept` the shared human-review closure and explicit-pruning boundary.
+
+### Verification
+
+- `bun run test` — pass: 273 tests, 0 failures.
+- `bunx tsc --noEmit` — pass.
+- `ki repo audit --skill ki-roadmap --repo .` — pass.
+- `ki repo audit --skill ki-housekeeping --repo .` — pass.
+- Focused roadmap, Streams, and housekeeping rubric tests — pass.
+- `ki repo audit --skill ki-skills --repo .` — no failures; 12 known classifier warnings because process skills intentionally do not expose governance modes.
+- `ki repo audit --skill ki-kb-streams --repo .` — not applicable in this non-KB repository; the Streams focused context tests pass.
+
+### Outstanding concerns
+
+The host's `ki-skills` classifier still reports process skills as if they were governance skills. This is a pre-existing audit-model limitation, not a lifecycle-contract failure.
+
+### Mini recap
+
+The common-command design is implemented and verified through the human-review boundary. No new durable learning route is proposed.
 
 ## Discussion
 

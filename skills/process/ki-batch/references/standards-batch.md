@@ -8,7 +8,7 @@ The kind, phases, and relationship boundary live in [the skill](../SKILL.md).
 
 Accept only an explicit candidate set.
 
-Use the normal roadmap cycle for each candidate: `ki-next` for selection and priority, `ki-plan` for plan shape and readiness, and `ki-delegate` where delegation needs preparation.
+Use the normal forward-work cycle for each candidate: `ki-next` for selection and priority, `ki-plan` for plan shape and readiness, and the `ki-delegate` guidance where bounded parallel work is useful. Resolve each record through its roadmap or Streams adapter.
 
 Do not start `ki-implement` in this phase.
 
@@ -22,7 +22,7 @@ Prepare one authorisation containing all of the following:
 - timebox;
 - required verification;
 - allowed decisions and delegation;
-- explicit acceptance authority, if any;
+- explicit closure authority, if any;
 - completion target; and
 - mandatory stops.
 
@@ -44,7 +44,7 @@ Stop the whole batch when its dependency order, authority, or completion target 
 
 Run named items in dependency order.
 
-For each independent item, invoke its normal `ki-implement` cycle and preserve that item's lifecycle transition, baseline, scope, verification, and acceptance packet.
+For each independent record, invoke its normal `ki-implement` cycle and preserve that record's lifecycle transition, baseline, scope, verification, and review packet.
 
 Use delegation only when the authorisation permits it and the item's plan supports it.
 
@@ -56,13 +56,13 @@ When an item is ambiguous or blocked, park it with the evidence, named decision 
 
 Continue only items proven independent of the parked item and within the authorisation.
 
-## 4. Acceptance and recap
+## 4. Review closure and recap
 
-Items reach `acceptance` through `ki-implement`; the batch does not self-certify them.
+Records reach `awaiting-review` through `ki-implement`; the batch does not self-certify them.
 
-Request named batched acceptance from `ki-accept` only when the authorisation expressly grants that authority for those items.
+Request named batched closure from `ki-accept` only when the authorisation expressly grants that authority for those records.
 
-Otherwise stop each item at acceptance for normal human review.
+Otherwise stop each record at awaiting-review for normal human review.
 
 After the run, produce a concise `ki-recap`-shaped record of delivered items, verification, decisions, parks, failures, deferred work, and proposed learning routes.
 

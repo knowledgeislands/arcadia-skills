@@ -4,7 +4,7 @@
 
 It never treats a recap, handoff, or historic transcript as authority to write.
 
-Its responsibility ends at selecting, promoting, or deferring work and handing confirmed immediate non-KB work to `ki-plan` for shaping.
+Its responsibility ends at selecting, promoting, deferring, or spawning due work and handing confirmed immediate work to `ki-plan` for shaping.
 
 ## Contents
 
@@ -14,15 +14,16 @@ Its responsibility ends at selecting, promoting, or deferring work and handing c
 - [4. Select candidates](#4-select-candidates)
 - [5. Defer](#5-defer)
 - [6. Compare, rank, and confirm](#6-compare-rank-and-confirm)
-- [7. Finish](#7-finish)
+- [7. Spawn due housekeeping work](#7-spawn-due-housekeeping-work)
+- [8. Finish](#8-finish)
 
 ## 1. Ground
 
 When a preceding `ki-recap` records high context pressure, require its safe handoff/compaction boundary before starting a new selection cycle. After compaction, treat the digest as orientation only and re-ground every repository fact below.
 
 1. Resolve the current git repository physically and read `.ki-config.toml`.
-2. In a non-KB repository, run `ki repo audit --skill ki-roadmap --repo <git-root>` and stop on any FAIL or WARN. Read the generated `ROADMAP.md` and every canonical item directly below `docs/roadmap/`; derive lifecycle status and dependencies from frontmatter.
-3. In a Knowledge Base, run `ki repo audit --skill ki-kb-streams --repo <git-root>` and read the Focus and proposal indexes fresh.
+2. In a non-KB repository, run `ki repo audit --skill ki-roadmap --repo <git-root>` and stop on any FAIL or WARN. Read the generated `ROADMAP.md`, every canonical item directly below `docs/roadmap/`, and active `docs/housekeeping/` templates; derive lifecycle status and dependencies from frontmatter.
+3. In a Knowledge Base, run `ki repo audit --skill ki-kb-streams --repo <git-root>` and read the Focus, proposal, and `Streams/Housekeeping/` indexes fresh.
 4. When the repository declares `ki-trades`, run its audit and inspect validated inbound records after the clean governing-skill audits. Its `README.md` is orientation, not a record.
 
 ## 2. Triage inbound handoffs
@@ -51,20 +52,20 @@ Do not change content until the user confirms exact wording and placement.
 
 ### Non-KB repositories
 
-1. Gather dependency-ready `blocking` and `next` items. Reuse their canonical item record; if several are independently ready, recommend a small ranked set only when each retains its own lifecycle and the user confirms the set and order.
-2. Only when none is eligible, assess `soon` items against the Next entry rule. After confirmation, change `horizon` to `next`, run CONFORM and AUDIT, then re-evaluate it at the destination.
-3. Only when Soon has no viable item, assess Future candidates. Move directly to Next only when the full Next rule is met and Soon adds no value; otherwise move to Soon once the intended outcome and boundary are known. Re-evaluate after every confirmed move.
+1. Gather dependency-ready `now` and `next` records. Reuse their canonical record; if several are independently ready, recommend a small ranked set only when each retains its own lifecycle and the user confirms the set and order.
+2. Only when none is eligible, assess `soon` records against the Next entry rule. After confirmation, change horizon or Focus to `next`, run the adapter audit, then re-evaluate it at the destination.
+3. Only when Soon has no viable record, assess Future candidates. Move directly to Next only when the full Next rule is met and Soon adds no value; otherwise move to Soon once the intended outcome and boundary are known. Re-evaluate after every confirmed move.
 4. Reconsider Waiting-for or Parked items only when their named external condition or return trigger changed.
 
 ### Knowledge Bases
 
-Use the native Focus and proposal procedure in `ki-kb-streams`.
+Use the same queue through native Focus folders: `Now`, `Next`, `Soon`, `Future`, `Waiting for`, and `Parked`. `Streams/Housekeeping` is a template horizon, not a delivery destination; due runs move to the template's declared delivery Focus.
 
 ### Roadmap batchability screen
 
 Before selecting one viable non-KB item, compare the whole dependency-ready candidate set for a **safe delivery synergy**. Do not promote a later-horizon item merely to create a batch: every candidate must first satisfy its normal route into immediate work. A group is a batch candidate only when all of the following are true:
 
-- every item remains a distinct canonical work item with its own lifecycle, verification, and acceptance evidence;
+- every record remains distinct with its own lifecycle, verification, and review packet;
 - the items share a concrete delivery advantage, such as one bounded source surface, setup or verification pass, external coordination window, or coherent user outcome;
 - their planned changes can be sequenced without conflicting writes, concealed dependencies, or one item's result changing another item's honest scope; and
 - each item is independently executable at its position, with satisfied dependencies and no unapproved decision required.
@@ -73,7 +74,7 @@ Do not treat a shared theme, adjacent numbering, the same repository, or a desir
 
 For each safe candidate group, present the named items in proposed order, the concrete advantage, the evidence that keeps them independent, the shared verification where relevant, and the mandatory stops that `ki-batch` will enforce. Also state why any superficially related candidate was excluded.
 
-Require confirmation of the exact candidate set and order before planning each member through `ki-plan`. Once every selected item is Ready, offer the set to `ki-batch prepare`. This is a preparation handoff, not implementation authority: `ki-batch` re-validates scope, readiness, verification, and stops, then requires its own reviewed authorisation before any `ki-implement` cycle begins.
+Require confirmation of the exact candidate set and order before planning each member through `ki-plan`. Once every selected record is Ready, offer the set to `ki-batch`. This is a preparation handoff, not implementation authority: `ki-batch` re-validates scope, readiness, verification, and stops, then requires its own reviewed authorisation before any `ki-implement` cycle begins.
 
 If no group meets every condition, say so briefly and use the ordinary single-item selection path.
 
@@ -115,9 +116,9 @@ Present those facts directly, choose only after the human confirms the order, an
 
 Before a write, show selected items, any proposed batch set and order, exact frontmatter or wording changes, and dependency effects.
 
-Require explicit confirmation, then run CONFORM and AUDIT.
+Require explicit confirmation, then run the applicable adapter audit.
 
-Invoke `ki-plan` only after a non-KB item is Blocking or Next.
+Invoke `ki-plan` only after a selected record is Now or Next.
 
 It shapes the same item through the stage-detail contract and stops for review before marking it Ready.
 
@@ -125,7 +126,15 @@ It shapes the same item through the stage-detail contract and stops for review b
 
 That handoff does not permit `ki-next` to infer batch, selection, or implementation authority.
 
-## 7. Finish
+## 7. Spawn due housekeeping work
+
+After grounding and before ordinary candidate selection, evaluate each active housekeeping template under the adapter's template horizon. A template is due only when its cadence, last-run evidence, grace period, and spawn policy say so, and it has no active run.
+
+For each due template, present the exact proposed work record, destination (normally Now or Next), template link, and policy effect. Spawn automatically only when the template expressly permits automatic spawning; otherwise require confirmation. The spawned record enters as `draft` and follows the ordinary shared lifecycle. Update the template's `last-run` and `active-run` only in the same coherent change that creates the record.
+
+Never implement a template directly, spawn a duplicate active run, or leave a due run in `Streams/Housekeeping`.
+
+## 8. Finish
 
 Report each confirmed handoff disposition, synergy decision (including excluded near-matches), files changed, selected work, and audit result.
 

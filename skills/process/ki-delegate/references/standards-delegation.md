@@ -101,12 +101,12 @@ For a repository-wide audit, run `ki repo audit --repo <repo>` first and treat t
    next: <checkpoint>; blocker/change: <none or concise detail>
    ```
 
-9. **Mark verified implementation complete.** Once the work has passed its stated verification gate and reaches manual acceptance (or is recorded Done where no acceptance gate applies), end the caller-facing completion update with this compact banner. It means the implementation is complete and the next step is acceptance, not that the work item has already been closed. Use it once per completed unit, never for an intermediate round, an unverified diff, or a task merely handed to another agent.
+9. **Mark verified implementation complete.** Once the work has passed its stated verification gate and reaches `awaiting-review` (or is recorded Done where no review gate applies), end the caller-facing completion update with this compact banner. It means the implementation is complete and the next step is human review, not that the work record has already been closed. Use it once per completed unit, never for an intermediate round, an unverified diff, or a task merely handed to another agent.
 
    ```text
    +------------------------------+
    | COMPLETE! \o/                |
-   | Ready for acceptance review. |
+   | Ready for human review. |
    +------------------------------+
    ```
 

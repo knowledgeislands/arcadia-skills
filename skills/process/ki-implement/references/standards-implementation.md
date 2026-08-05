@@ -35,11 +35,11 @@ Review and integrate every result before the next dependent unit.
 
 Stop rather than infer authority when scope must expand, a decision is escalated, verification fails, external coordination is needed, or an irreversible action is proposed.
 
-## 4. Verify and prepare acceptance
+## 4. Verify and prepare review
 
 Run the item's stated verification after integration and inspect its actual results.
 
-Record an acceptance packet containing:
+Record a review packet containing:
 
 - the delivered boundary and any deliberately excluded work;
 - baseline and resulting commits or equivalent immutable evidence;
@@ -47,14 +47,14 @@ Record an acceptance packet containing:
 - material decisions, deviations, and unresolved concerns; and
 - proposed learning routes, if any, without promoting them automatically.
 
-Set the item to `acceptance` only when all required steps and checks are complete.
+Set the record to `awaiting-review` only when all required steps and checks are complete. In a roadmap item, add the packet under `## Review`; in a Streams proposal, add it to the proposal's review evidence.
 
 Then stop.
 
-`ki-accept` owns review approval, terminal closure, retention, and deletion.
+`ki-accept` owns human review, terminal closure, retention, and explicit pruning.
 
 ## Batch authority
 
 `ki-batch` may authorise a named item to enter this procedure only when its bounded authorisation expressly grants that execution.
 
-It never makes a vague plan executable, and it does not make acceptance automatic unless the authorisation explicitly grants batched acceptance for the named item.
+It never makes a vague plan executable, and it does not make closure automatic unless the authorisation explicitly grants batched closure for the named record.

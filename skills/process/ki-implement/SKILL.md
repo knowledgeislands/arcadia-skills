@@ -41,7 +41,7 @@ The caller or `ki-accept` owns the next decision.
 
 `ki-batch` may coordinate repeated independent runs only under an explicit bounded authorisation.
 
-It does not bypass readiness, baseline, scope, verification, or acceptance gates.
+It does not bypass readiness, baseline, scope, verification, or human-review gates.
 
 ## Invocation
 

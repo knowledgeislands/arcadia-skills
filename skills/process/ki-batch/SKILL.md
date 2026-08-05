@@ -2,8 +2,8 @@
 name: ki-batch
 ki-depends-on: []
 description: >
-  Coordinates an explicitly authorised batch of independent repository work-item cycles in two phases: prepare a reviewed batch authorisation from named candidates, then run repeated bounded ki-implement cycles with per-item ledgers and a concise recap. A process skill (kind: process): it does not select work, reshape plans, bypass lifecycle gates, infer acceptance, prune, push, release, or introduce a tracker. Use when asked to "prepare a work batch", "authorise these plans as a batch", "run this approved batch", "coordinate several ready plans", or "record a batch run". For selection use ki-next; plan shape use ki-plan; single-item delivery use ki-implement; closure use ki-accept; delegation use ki-delegate.
-argument-hint: 'prepare <candidate-item>... | implement <batch-authorisation> | help'
+  Prepares and coordinates an explicitly authorised batch of independent work records in either repository adapter: plan the named candidates up front, then use bounded parallel delivery where ki-delegate guidance makes it safe. A process skill: it does not select work, reshape plans, bypass lifecycle gates, infer closure, prune, push, release, or introduce a tracker. Use when asked to "prepare a work batch", "run this approved batch", "coordinate several ready work items", or "record a batch run". For selection use ki-next; plan shape use ki-plan; single-item delivery use ki-implement; closure use ki-accept.
+argument-hint: 'batch <work>... | implement <batch-authorisation> | help'
 ---
 
 # ki-batch
@@ -20,7 +20,7 @@ Read [the batch procedure](references/standards-batch.md) before acting, [the au
 
 ### Preparation
 
-Use the normal roadmap cycle over an explicit candidate set.
+Use the normal forward-work cycle over an explicit candidate set, resolving each named record through the roadmap or Streams adapter.
 
 `ki-next` selects and prioritises work; `ki-plan` shapes it; `ki-implement` does not begin during preparation.
 
@@ -30,13 +30,13 @@ The phase produces a reviewed batch authorisation that names exactly what may ru
 
 Under that authorisation, coordinate repeated independent `ki-implement` cycles in dependency order.
 
-Every item retains its own `ready` → `in-progress` → `acceptance` lifecycle, baseline, verification, and acceptance evidence.
+Every record retains its own `ready` → `in-progress` → `awaiting-review` lifecycle, baseline, verification, and review packet.
 
 Park ambiguity rather than resolving it by inference, then record a per-item ledger and concise `ki-recap`-shaped batch recap.
 
 `ki-accept` remains the only closure owner.
 
-`ki-batch` may request batched acceptance only when the authorisation expressly grants it for named items.
+`ki-batch` may request batched closure only when the authorisation expressly grants it for named records.
 
 Pruning always requires separate explicit destructive authority.
 
@@ -60,7 +60,7 @@ This skill coordinates these siblings; it does not duplicate their procedures or
 
 `help` / `-h` / `?` explains this skill and stops, taking no action.
 
-`prepare <candidate-item>...` evaluates only the named candidates through the normal roadmap cycle and produces a reviewed proposed authorisation.
+`batch <work>...` prepares only the named candidates through the normal shared cycle: shape every draft to Ready, decide whether safe parallel lanes exist with the embedded `ki-delegate` guidance, and produce a reviewed proposed authorisation.
 
 `implement <batch-authorisation>` validates one approved authorisation and coordinates its named items in dependency order.
 

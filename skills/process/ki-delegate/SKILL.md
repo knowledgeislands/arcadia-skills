@@ -2,13 +2,13 @@
 name: ki-delegate
 ki-depends-on: []
 description: >
-  Prepares and runs execution delegation for a multi-task effort in five legs — decide whether the origin must retain non-durable reasoning, classify each task as judgment / mechanical / research, assign an agent type and minimum-viable per-spawn model, sequence dependency-ordered rounds, and gate every result through orchestrator review. Banks planning reasoning in cold-agent-ready briefs with locked-versus-escalate decisions, a definition of done, bounded scope, a verification gate, and a completion checkpoint. A process skill (kind: process, ADR-KI-HARNESS-SKILLS-006): it drives an action, it does not hold a standard. Installable globally and usable in any repo. Triggers: "delegate this", "make this delegable", "is this ready to delegate", "fan this out", "split this across agents", "how should I parallelise this work", "/ki-delegate". Not cross-repository work transfer, the model cost/selection policy itself (that is `ki-tokenomics`), or the plan lifecycle it often runs on top of (that is `ki-plan`).
+  Explains and prepares effective agent delegation for multi-task work: decide whether the origin must retain non-durable reasoning, classify tasks, use the minimum viable worker, sequence dependency-ordered rounds, and gate every result through orchestrator review. Banks planning reasoning in cold-agent-ready briefs with locked-versus-escalate decisions, a definition of done, bounded scope, a verification gate, and a completion checkpoint. A process skill: ki-implement and ki-batch apply this guidance automatically when parallel work would help, while it remains available for an explicit delegation-design request. Use when asked "delegate this", "make this delegable", "fan this out", "split this across agents", or "how should I parallelise this work". Not cross-repository work transfer, model-cost policy (`ki-tokenomics`), or the plan lifecycle (`ki-plan`).
 argument-hint: 'delegate [plan-or-task-list] | help'
 ---
 
 # ki-delegate
 
-**Kind:** process. Turns a task list or an approved plan into a **delegation-ready, round-sequenced execution** run across sub-agents; the model cost/selection policy it draws on is owned by `ki-tokenomics`. Full procedure in [the delegation standard](references/standards-delegation.md).
+**Kind:** process. Supplies **delegation-ready, round-sequenced execution guidance** to `ki-implement` and `ki-batch`; an explicit invocation is optional when a caller wants to design delegation itself. The model cost/selection policy it draws on is owned by `ki-tokenomics`. Full procedure in [the delegation standard](references/standards-delegation.md).
 
 ## What this skill does
 
@@ -24,7 +24,7 @@ Five legs, always in this order:
 
 ## Invocation
 
-`help` / `-h` / `?` explains this skill and stops, taking no action. With no argument, run the five legs over the current task list or the active `ki-plan`. Given a plan file or an explicit task list, decide dispatch, then classify and sequence it. Before dispatching a governed plan, ensure its `## Delegation` section records locked and escalated decisions, planned rounds, and for each worker the definition of done, explicit minimum-viable per-spawn model, bounded file scope, verification gate, and checkpoint. Apply the cold-agent readiness test from the procedure and refine the brief before dispatch when it fails.
+`help` / `-h` / `?` explains this skill and stops, taking no action. `ki-implement` and `ki-batch` consult its five legs automatically when bounded parallel work may improve delivery; this does not create authority or require a separate user command. Given an explicit delegation-design request, a plan file, or a task list, decide dispatch, then classify and sequence it. Before dispatching a governed plan, ensure its `## Delegation` section records locked and escalated decisions, planned rounds, and for each worker the definition of done, explicit minimum-viable per-spawn model, bounded file scope, verification gate, and checkpoint. Apply the cold-agent readiness test from the procedure and refine the brief before dispatch when it fails.
 
 ## Notes
 

@@ -28,12 +28,12 @@ ki-next
     └─> ki-plan
           create, shape, and mark Ready
             └─> ki-implement
-                  Ready → In progress → Acceptance
+                  Ready → In progress → Awaiting review
                     └─> ki-accept
-                          Acceptance → Done and explicit prune selection
+                          Awaiting review → Done and explicit prune selection
 ```
 
-`ki-plan` does not implement work, assemble acceptance evidence, accept delivery, mark an item Done, or prune retained records.
+`ki-plan` does not implement work, assemble a review packet, close delivery, mark an item Done, or prune retained records.
 
 Those responsibilities move cleanly to the dedicated process skills; `ki-plan` carries no compatibility verbs or fallback path for them.
 
