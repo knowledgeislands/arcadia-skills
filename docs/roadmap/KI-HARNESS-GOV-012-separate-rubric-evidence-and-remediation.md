@@ -66,8 +66,15 @@ Start with `ki-skills` and `ki-engineering` as the shared-model and common-toolc
 
 The rubric-authoring standard expressly permits an audit-only mechanical item and gives judgment only a `prompt`. Its generated publications describe criterion type but do not require an audit/remediation classification or a judgment conforming path. Existing CONFORM behaviour is appropriately conservative in many places; the missing distinction is whether that conservatism is deliberate and what the user should do next.
 
+## Model review
+
+This draft and its initial catalogue audit were reviewed by OpenAI GPT-5.6 through Codex on 2026-08-05.
+
+Before this item enters `ready`, two distinct models from different vendors must have reviewed the plan. The second review is pending and must use a non-OpenAI vendor. Record each reviewer's model, vendor, date, material findings, and their resolution in this section; a second run of the same vendor does not satisfy the gate.
+
 ## Steps
 
+- [ ] Obtain and record independent plan reviews from two distinct models supplied by different vendors — currently OpenAI GPT-5.6 through Codex; obtain a non-OpenAI review — then resolve material findings before moving this item to `ready`.
 - [ ] Extend the shared rubric types, catalogue validator, and generated publication so every mechanical aspect declares its remediation class and every judgment aspect supplies review scope, outcome vocabulary, and guided conforming work.
 - [ ] Update the `ki` rubric host to validate the new metadata, show mechanical audit/conform and judgment review/conform sections distinctly, execute only `automatic` draft actions, and retain its no-synthetic-judgment-finding boundary.
 - [ ] Build an inventory of every current criterion across all 34 catalogues, recording its evidence, remediation class, safe writer or manual route, and whether a hybrid split is warranted.
@@ -126,3 +133,19 @@ Judgment is not a failure to provide a workflow. A reviewer can inspect a bounde
 ### Fleet review findings
 
 The broad scan found repeated candidates for exact structural checks: index completeness, reference and link integrity, declared configuration vocabulary, record relationships, generated projection parity, command-surface shape, and required evidence fields. It also found repeated irreducibly judgmental questions: semantic fit, intent, useful wording, appropriate scope, repository-specific authority, truthful external correspondence, and lifecycle honesty. The migration must record the candidate, evidence boundary, and rejected automation reason for each family rather than applying a one-size-fits-all heuristic.
+
+### Completed initial audit
+
+The audit read every `SKILL.md`, structured rubric catalogue, and generated `references/rubric.md` in the current fleet, and compared mode claims with the Harness configuration. All 34 catalogues publish a rubric. The resulting source-level shape is uneven by design: `ki-engineering` already has substantial safe conform coverage; several safety- and environment-oriented catalogues correctly carry only observational checks; and `ki-git` is judgment-only. The missing contract is the explicit reason for those different shapes.
+
+| Owners reviewed | Deterministic evidence worth preserving or extending | Judgment that must remain reviewer-led |
+| --- | --- | --- |
+| `ki-harness`, `ki-mcp`, `ki-plugins`, `ki-subagents` | Manifests, local layout, declarations, link targets, command surfaces, and generated projections. | Capability fit, tool behaviour, plugin value, agent lanes, prompts, and delegation quality. |
+| `ki-binding`, `ki-binding-chezmoi`, `ki-binding-claude`, `ki-binding-codex`, `ki-dotfiles-chezmoi`, `ki-housekeeping-claude`, `ki-tokenomics`, `ki-tokenomics-claude`, `ki-tokenomics-codex` | Parseable runtime configuration, managed links, renderer-neutral surface inventory, declared files, and measured context inputs. | Runtime choice, configuration preservation, intended rendered state, memory doctrine, and portable policy fit. |
+| `ki-authoring`, `ki-decision-records`, `ki-engineering`, `ki-feature-definitions`, `ki-git`, `ki-guides`, `ki-housekeeping`, `ki-roadmap`, `ki-specifications`, `ki-trades` | Formatting, schemas, IDs, links, index completeness, record relations, configured toolchain evidence, and route structure. | Prose usefulness, decision reasoning, test adequacy, feature behaviour, Git hygiene, priority, authority, adoption, and retention. |
+| `ki-repo`, `ki-skills` | Root/configuration shape, declared relationships, catalogue/publication parity, links, names, modes, and owned-file containment. | Repository purpose, warranted overrides, trigger quality, skill scope, instruction altitude, semantic collisions, and refresh fitness. |
+| `ki-kb`, `ki-kb-activities`, `ki-kb-live-artifacts`, `ki-kb-streams`, `ki-principal` | Zone and note structure, frontmatter, required sections, identifiers, indexes, state transitions, and local link integrity. | Knowledge placement, activity rationale, authoritativeness, reader usefulness, Focus, governance fit, and charter meaning. |
+| `ki-homebrew-tap`, `ki-tools` | Formula/manifest syntax, declared files, generated completions, manual presence, CLI command geometry, and release projection parity. | Release/archive correspondence, meaningful installed-binary tests, command semantics, and documentation usefulness. |
+| `ki-website`, `ki-website-cloudflare` | Site configuration, declared build/dist seams, physical routing, and static deployment configuration. | Site purpose, domain choice, real deployment correctness, and remote-account authority. |
+
+The audit also confirms a concrete migration test: a mechanical item that reports a failed external command, a remote-setting discrepancy, or an environment-derived measurement is not automatically repairable merely because the evidence is exact. It must become `diagnostic`, with a bounded next action. A parseable missing declaration or wholly owned generated projection is instead an `automatic` candidate. A required choice such as a runtime, route, knowledge destination, or user-owned configuration edit is `guarded` and must hand into the criterion's judgment conforming guidance.
