@@ -29,10 +29,13 @@ Do not present a heuristic as a fact, make the host pretend to perform human jud
 
 Keep one stable criterion code when a rule has both aspects, but publish and execute them separately:
 
-| Aspect | Audit | Conform |
-| --- | --- | --- |
-| Mechanical | Deterministic evidence and an exact outcome. | A safe transactional action when one exists; otherwise a required remediation classification and concise reason. |
-| Judgment | A reviewer prompt, evidence scope, and result vocabulary. | Reviewer-guided edits or a documented decision route; never a host callback or synthetic mechanical finding. |
+#### Mechanical
+
+AUDIT supplies deterministic evidence and an exact outcome. CONFORM supplies a safe transactional action when one exists; otherwise the criterion declares a remediation classification and concise reason.
+
+#### Judgment
+
+AUDIT supplies a reviewer prompt, evidence scope, and result vocabulary. CONFORM supplies reviewer-guided edits or a documented decision route; it never supplies a host callback or synthetic mechanical finding.
 
 Every mechanical aspect must declare one remediation class:
 
@@ -48,13 +51,15 @@ Judgment aspects gain required review metadata: a bounded evidence scope, a conc
 
 Promote a judgment subcondition to mechanical evidence only when it has a stable subject, deterministic inputs, a false-positive boundary, and focused fixtures. Keep the semantic conclusion judgmental. Typical splits are:
 
-| Review concern | Mechanical candidate | Judgment retained |
-| --- | --- | --- |
-| Index, inventory, or generated reference | Discover missing, duplicate, stale, or broken entries against authoritative inputs. | Whether wording, ordering, and explanation are useful to the reader. |
-| Configuration and runtime bindings | Parse schema, declared keys, paths, links, modes, and ownership containment. | Whether the selected runtime, exception, or local arrangement is appropriate. |
-| Commands, manuals, and projections | Check declared script presence, `--help`/generation parity, link targets, and known output seams. | Whether a command proves the intended behaviour or a deployment path is operationally sound. |
-| Lifecycle and record structure | Validate identifiers, status transitions, required evidence, and reciprocal references. | Whether priority, readiness, disposition, authority, or retention is honest. |
-| Skill and agent prose | Check parseable frontmatter, link resolution, declared modes, and named sibling references where an authority set exists. | Scope, trigger quality, terminology, instruction altitude, and durable semantic fit. |
+For indexes, inventories, and generated references, discover missing, duplicate, stale, or broken entries against authoritative inputs; retain wording, ordering, and explanation for review.
+
+For configuration and runtime bindings, parse schema, declared keys, paths, links, modes, and ownership containment; retain the appropriateness of a runtime, exception, or local arrangement for review.
+
+For commands, manuals, and projections, check declared script presence, `--help` or generation parity, link targets, and known output seams; retain whether a command proves the intended behaviour or a deployment path is operationally sound for review.
+
+For lifecycle and record structure, validate identifiers, status transitions, required evidence, and reciprocal references; retain priority, readiness, disposition, authority, and retention honesty for review.
+
+For skill and agent prose, check parseable frontmatter, link resolution, declared modes, and named sibling references where an authority set exists; retain scope, trigger quality, terminology, instruction altitude, and durable semantic fit for review.
 
 This makes existing hybrid rules the normal form: the mechanical condition is exact and independently useful; the reviewer decides the quality or authority question that remains.
 
@@ -138,14 +143,18 @@ The broad scan found repeated candidates for exact structural checks: index comp
 
 The audit read every `SKILL.md`, structured rubric catalogue, and generated `references/rubric.md` in the current fleet, and compared mode claims with the Harness configuration. All 34 catalogues publish a rubric. The resulting source-level shape is uneven by design: `ki-engineering` already has substantial safe conform coverage; several safety- and environment-oriented catalogues correctly carry only observational checks; and `ki-git` is judgment-only. The missing contract is the explicit reason for those different shapes.
 
-| Owners reviewed | Deterministic evidence worth preserving or extending | Judgment that must remain reviewer-led |
-| --- | --- | --- |
-| `ki-harness`, `ki-mcp`, `ki-plugins`, `ki-subagents` | Manifests, local layout, declarations, link targets, command surfaces, and generated projections. | Capability fit, tool behaviour, plugin value, agent lanes, prompts, and delegation quality. |
-| `ki-binding`, `ki-binding-chezmoi`, `ki-binding-claude`, `ki-binding-codex`, `ki-dotfiles-chezmoi`, `ki-housekeeping-claude`, `ki-tokenomics`, `ki-tokenomics-claude`, `ki-tokenomics-codex` | Parseable runtime configuration, managed links, renderer-neutral surface inventory, declared files, and measured context inputs. | Runtime choice, configuration preservation, intended rendered state, memory doctrine, and portable policy fit. |
-| `ki-authoring`, `ki-decision-records`, `ki-engineering`, `ki-feature-definitions`, `ki-git`, `ki-guides`, `ki-housekeeping`, `ki-roadmap`, `ki-specifications`, `ki-trades` | Formatting, schemas, IDs, links, index completeness, record relations, configured toolchain evidence, and route structure. | Prose usefulness, decision reasoning, test adequacy, feature behaviour, Git hygiene, priority, authority, adoption, and retention. |
-| `ki-repo`, `ki-skills` | Root/configuration shape, declared relationships, catalogue/publication parity, links, names, modes, and owned-file containment. | Repository purpose, warranted overrides, trigger quality, skill scope, instruction altitude, semantic collisions, and refresh fitness. |
-| `ki-kb`, `ki-kb-activities`, `ki-kb-live-artifacts`, `ki-kb-streams`, `ki-principal` | Zone and note structure, frontmatter, required sections, identifiers, indexes, state transitions, and local link integrity. | Knowledge placement, activity rationale, authoritativeness, reader usefulness, Focus, governance fit, and charter meaning. |
-| `ki-homebrew-tap`, `ki-tools` | Formula/manifest syntax, declared files, generated completions, manual presence, CLI command geometry, and release projection parity. | Release/archive correspondence, meaningful installed-binary tests, command semantics, and documentation usefulness. |
-| `ki-website`, `ki-website-cloudflare` | Site configuration, declared build/dist seams, physical routing, and static deployment configuration. | Site purpose, domain choice, real deployment correctness, and remote-account authority. |
+`ki-harness`, `ki-mcp`, `ki-plugins`, and `ki-subagents` can preserve or extend checks for manifests, local layout, declarations, link targets, command surfaces, and generated projections. Capability fit, tool behaviour, plugin value, agent lanes, prompts, and delegation quality remain reviewer-led.
+
+`ki-binding`, `ki-binding-chezmoi`, `ki-binding-claude`, `ki-binding-codex`, `ki-dotfiles-chezmoi`, `ki-housekeeping-claude`, `ki-tokenomics`, `ki-tokenomics-claude`, and `ki-tokenomics-codex` can check parseable runtime configuration, managed links, renderer-neutral surface inventory, declared files, and measured context inputs. Runtime choice, configuration preservation, intended rendered state, memory doctrine, and portable policy fit remain reviewer-led.
+
+`ki-authoring`, `ki-decision-records`, `ki-engineering`, `ki-feature-definitions`, `ki-git`, `ki-guides`, `ki-housekeeping`, `ki-roadmap`, `ki-specifications`, and `ki-trades` can check formatting, schemas, IDs, links, index completeness, record relations, configured toolchain evidence, and route structure. Prose usefulness, decision reasoning, test adequacy, feature behaviour, Git hygiene, priority, authority, adoption, and retention remain reviewer-led.
+
+`ki-repo` and `ki-skills` can check root and configuration shape, declared relationships, catalogue/publication parity, links, names, modes, and owned-file containment. Repository purpose, warranted overrides, trigger quality, skill scope, instruction altitude, semantic collisions, and refresh fitness remain reviewer-led.
+
+`ki-kb`, `ki-kb-activities`, `ki-kb-live-artifacts`, `ki-kb-streams`, and `ki-principal` can check zone and note structure, frontmatter, required sections, identifiers, indexes, state transitions, and local link integrity. Knowledge placement, activity rationale, authoritativeness, reader usefulness, Focus, governance fit, and charter meaning remain reviewer-led.
+
+`ki-homebrew-tap` and `ki-tools` can check formula and manifest syntax, declared files, generated completions, manual presence, CLI command geometry, and release projection parity. Release/archive correspondence, meaningful installed-binary tests, command semantics, and documentation usefulness remain reviewer-led.
+
+`ki-website` and `ki-website-cloudflare` can check site configuration, declared build/dist seams, physical routing, and static deployment configuration. Site purpose, domain choice, real deployment correctness, and remote-account authority remain reviewer-led.
 
 The audit also confirms a concrete migration test: a mechanical item that reports a failed external command, a remote-setting discrepancy, or an environment-derived measurement is not automatically repairable merely because the evidence is exact. It must become `diagnostic`, with a bounded next action. A parseable missing declaration or wholly owned generated projection is instead an `automatic` candidate. A required choice such as a runtime, route, knowledge destination, or user-owned configuration edit is `guarded` and must hand into the criterion's judgment conforming guidance.
