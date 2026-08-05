@@ -3,7 +3,7 @@ id: KI-HARNESS-GOV-010
 title: Rename cross-repository governance to ki-trades
 theme: governance-consistency
 horizon: blocking
-status: in-progress
+status: acceptance
 blocks: []
 blocked-by: []
 baseline-ref: b3a9d5cf476a99a3a72322230d0dfed82dfe7aa7
@@ -25,16 +25,16 @@ Do not change the route, authority, disposition, immutable-payload, or release-o
 
 ## Current state
 
-`ki-handoffs` remains the current Harness skill directory and configuration identity. The active standards and checker use `_HANDOFFS` paths and `HND-` identities, while user-facing CLI language already says `trades`. The approved replacement is `ki-trades`, `_TRADES`, and `TRD-`; the migration must apply that vocabulary consistently rather than mixing two contracts.
+The Harness now publishes `ki-trades`, declares its `ki-trades` configuration table, and uses `_TRADES` paths with `TRD-` identities. The active standard, checker, route configuration, composition boundaries, generated rubrics, and owned scaffolds use that vocabulary consistently. Legacy `ki-handoffs`, `_HANDOFFS`, and `HND-` uses remain only as historical evidence in completed records and session material.
 
 ## Steps
 
-- [ ] Record the current-state migration decision: `ki-trades` is the capability and configuration identity; choose and document the canonical working-area and record-identity vocabulary, including any `_TRADES` and `TRD-` replacements.
-- [ ] Rename the governance skill, structured catalogue, generated rubric, configuration table, owned scaffold, and every active Harness reference to the approved `ki-trades` vocabulary.
-- [ ] Update the `ki-repo`, `ki-roadmap`, and `ki-next` composition boundaries and fixtures so they discover and audit the renamed capability without reintroducing the retired delegation doctrine.
-- [ ] Provide an explicit, recoverable migration for current Harness-owned records and scaffolds; request separately owned peer changes through their local roadmap rather than writing another repository.
-- [ ] Add checker and fixture coverage for the renamed configuration, route eligibility, owned directories, record identity, authority boundary, and refusal of legacy aliases.
-- [ ] Reconcile public orientation and runtime-discovery surfaces, and publish a superseding terminology decision while retaining historic decisions and completed work items as evidence.
+- [x] Record the current-state migration decision: `ki-trades` is the capability and configuration identity; choose and document the canonical working-area and record-identity vocabulary, including any `_TRADES` and `TRD-` replacements.
+- [x] Rename the governance skill, structured catalogue, generated rubric, configuration table, owned scaffold, and every active Harness reference to the approved `ki-trades` vocabulary.
+- [x] Update the `ki-repo`, `ki-roadmap`, and `ki-next` composition boundaries and fixtures so they discover and audit the renamed capability without reintroducing the retired delegation doctrine.
+- [x] Provide an explicit, recoverable migration for current Harness-owned records and scaffolds; request separately owned peer changes through their local roadmap rather than writing another repository.
+- [x] Add checker and fixture coverage for the renamed configuration, route eligibility, owned directories, record identity, authority boundary, and refusal of legacy aliases.
+- [x] Reconcile public orientation and runtime-discovery surfaces, and publish a superseding terminology decision while retaining historic decisions and completed work items as evidence.
 
 ## Files touched
 
@@ -60,6 +60,32 @@ Do not change the route, authority, disposition, immutable-payload, or release-o
 ## Dependencies / blocks
 
 This is a blocking terminology migration. It must complete before the Harness publishes new trade guidance, configuration, or peer-integration material under a mixture of `ki-handoffs` and `ki-trades`. No existing local work item supplies a valid dependency edge.
+
+## Acceptance
+
+### Delivered
+
+The Harness now has one active cross-repository contract: `ki-trades`, `+/_TRADES/` and `-/_TRADES/`, and `TRD-<uuid>` record identities. No `ki-handoffs` compatibility capability remains.
+
+### Summary of changes
+
+The migration renamed the governance skill, configuration table, owned working areas, record identity, standards, checker, fixtures, generated rubrics, composition boundaries, and decision-record terminology. The final reconciliation renamed the roadmap's public trade-review family and added a fixture that rejects legacy `HND-` identities.
+
+### Verification
+
+- `bun test` — 269 passing tests.
+- `bunx tsc --noEmit` — passed.
+- `ki dev skill rubric ki-trades` and `ki dev skill rubric ki-roadmap` — both publications in sync.
+- `ki repo audit --skill ki-trades --repo .`, `ki repo audit --skill ki-roadmap --repo .`, and `ki repo audit --skill ki-skills --repo .` — passed.
+- Active contract scan found no `ki-handoffs`, `_HANDOFFS`, `HND-`, or `HANDOFF-*` references in `ki-trades`, `ki-roadmap`, `ki-repo`, `ki-next`, configured trade paths, or the repository configuration.
+
+### Outstanding concerns
+
+Peer repositories remain responsible for their separately owned migrations. Historical decision, roadmap, and session evidence retains the old terms by design.
+
+### Mini recap
+
+The migration retained the typed-route, immutable-payload, receiver-disposition, and release-observation model while making the capability's active public identifiers unambiguously trade-specific. No learning route is proposed.
 
 ## Discussion
 
