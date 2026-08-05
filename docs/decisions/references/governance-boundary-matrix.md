@@ -1,6 +1,6 @@
 # Governance boundary matrix
 
-Reference companion to [GDR-KI-FUNDAMENTALS-001](../GDR-KI-FUNDAMENTALS-001-knowledge-islands-ecosystem-fundamentals.md), [SDR-KI-HARNESS-001](../SDR-KI-HARNESS-001-purpose-and-scope-of-the-agentic-harness.md), [SDR-KI-HARNESS-002](../SDR-KI-HARNESS-002-runtime-portable-contracts-and-executor-positioning.md), and [ADR-KI-HARNESS-SKILLS-006](../ADR-KI-HARNESS-SKILLS-006-six-cluster-skill-taxonomy-and-the-implication-graph.md).
+Reference companion to [GDR-KI-FUNDAMENTALS-001](../GDR-KI-FUNDAMENTALS-001-knowledge-islands-ecosystem-fundamentals.md), [SDR-KI-HARNESS-001](../SDR-KI-HARNESS-001-purpose-and-scope-of-the-agentic-harness.md), [SDR-KI-HARNESS-002](../SDR-KI-HARNESS-002-runtime-portable-contracts-and-executor-positioning.md), and [ADR-KI-HARNESS-SKILLS-006](../ADR-KI-HARNESS-SKILLS-006-concern-first-skill-taxonomy-and-implication-graph.md).
 
 This is an inspection aid, not a new standard or policy layer.
 

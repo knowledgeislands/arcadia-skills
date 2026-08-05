@@ -34,7 +34,7 @@ _Verify:_ no `skills/*/scripts/**/*.ts` relative import resolves outside its own
 
 ### GOV-005 — Machine-readable dependency graph
 
-Each `SKILL.md` MUST declare a `ki-depends-on:` frontmatter list, and the resulting graph MUST be acyclic with every edge resolving to an existing skill, per [ADR-KI-HARNESS-SKILLS-006](../decisions/ADR-KI-HARNESS-SKILLS-006-six-cluster-skill-taxonomy-and-the-implication-graph.md).
+Each `SKILL.md` MUST declare a `ki-depends-on:` frontmatter list, and the resulting graph MUST be acyclic with every edge resolving to an existing skill, per [ADR-KI-HARNESS-SKILLS-006](../decisions/ADR-KI-HARNESS-SKILLS-006-concern-first-skill-taxonomy-and-implication-graph.md).
 
 A dependency identifies a prerequisite governance capability that selection of a skill also selects. The host MUST execute every dependency before its dependent; the order of names within `ki-depends-on` has no meaning, and the host MUST use a stable order between otherwise independent capabilities. Coverage selection is separate. A target that declares a skill MUST explicitly declare each of its dependencies in `.ki-config.toml`.
 
@@ -42,7 +42,7 @@ _Verify:_ `bun run ki:skills:graph:check` passes — it validates that every edg
 
 ### GOV-006 — Exactly one repo-structure skill per repo
 
-A Knowledge Islands repo MUST declare at most one repo-structure table (`["knowledgeislands/ki-agentic-harness:ki-harness"]`, `["knowledgeislands/ki-agentic-harness:ki-kb"]`, `["knowledgeislands/ki-agentic-harness:ki-website"]`, `["knowledgeislands/ki-agentic-harness:ki-mcp"]`, `["knowledgeislands/ki-agentic-harness:ki-plugins"]`, `["knowledgeislands/ki-agentic-harness:ki-tools"]`, `["knowledgeislands/ki-agentic-harness:ki-homebrew-tap"]`) in its `.ki-config.toml`, since exactly one skill governs a repo's on-disk shape; declaring more than one is a governance error, per [ADR-KI-HARNESS-SKILLS-006](../decisions/ADR-KI-HARNESS-SKILLS-006-six-cluster-skill-taxonomy-and-the-implication-graph.md).
+A Knowledge Islands repo MUST declare at most one repo-structure table (`["knowledgeislands/ki-agentic-harness:ki-harness"]`, `["knowledgeislands/ki-agentic-harness:ki-kb"]`, `["knowledgeislands/ki-agentic-harness:ki-website"]`, `["knowledgeislands/ki-agentic-harness:ki-mcp"]`, `["knowledgeislands/ki-agentic-harness:ki-plugins"]`, `["knowledgeislands/ki-agentic-harness:ki-tools"]`, `["knowledgeislands/ki-agentic-harness:ki-homebrew-tap"]`) in its `.ki-config.toml`, since exactly one skill governs a repo's on-disk shape; declaring more than one is a governance error, per [ADR-KI-HARNESS-SKILLS-006](../decisions/ADR-KI-HARNESS-SKILLS-006-concern-first-skill-taxonomy-and-implication-graph.md).
 
 _Verify:_ `ki-repo`'s `audit-repo.ts` emits a FAIL (`repo-structure`) when more than one repo-structure table is declared; implied family members (`ki-website-cloudflare`, `ki-kb-streams`) are excluded from the count.
 

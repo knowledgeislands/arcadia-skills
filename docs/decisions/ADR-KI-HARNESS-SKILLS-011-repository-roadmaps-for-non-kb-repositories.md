@@ -47,4 +47,4 @@ A Knowledge Base uses `ki-kb-streams`, not repository roadmap artefacts.
 ## References
 
 - [ADR-KI-HARNESS-SKILLS-003](ADR-KI-HARNESS-SKILLS-003-dependency-order-for-multi-skill-composition.md)
-- [ADR-KI-HARNESS-SKILLS-006](ADR-KI-HARNESS-SKILLS-006-six-cluster-skill-taxonomy-and-the-implication-graph.md)
+- [ADR-KI-HARNESS-SKILLS-006](ADR-KI-HARNESS-SKILLS-006-concern-first-skill-taxonomy-and-implication-graph.md)

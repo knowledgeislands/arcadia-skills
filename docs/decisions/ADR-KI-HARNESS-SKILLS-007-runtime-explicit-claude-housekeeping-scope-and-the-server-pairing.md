@@ -16,7 +16,7 @@ The former `ki-memory` skill governed one narrow thing: the Claude Code auto-mem
 
 ## Decision
 
-`ki-memory` broadens into **`ki-housekeeping-claude`**: the runtime-explicit standard-and-judgment governor of the hygiene of accumulated Claude state, across all its areas, sitting in the Environment cluster ([ADR-KI-HARNESS-SKILLS-006](ADR-KI-HARNESS-SKILLS-006-six-cluster-skill-taxonomy-and-the-implication-graph.md)). It pairs with the `mcp-claude-housekeeping` server on one principle: **the skill is the standard and the judgment; the server is the tools.**
+`ki-memory` broadens into **`ki-housekeeping-claude`**: the runtime-explicit standard-and-judgment governor of the hygiene of accumulated Claude state, across all its areas, sitting in the Environment concern ([ADR-KI-HARNESS-SKILLS-006](ADR-KI-HARNESS-SKILLS-006-concern-first-skill-taxonomy-and-implication-graph.md)). It pairs with the `mcp-claude-housekeeping` server on one principle: **the skill is the standard and the judgment; the server is the tools.**
 
 - **Memory** stays governed locally in full for the selected repository only — a file convention the skill fully specifies and checks without scanning another repository's state.
 - **Every other area** is audited and cleaned through the server's codified audits and access-gated read/`destructive` tools; the skill reads the findings and decides, and never re-implements the tools.
@@ -31,4 +31,4 @@ The former `ki-memory` skill governed one narrow thing: the Claude Code auto-mem
 
 ## References
 
-- [ADR-KI-HARNESS-SKILLS-006](ADR-KI-HARNESS-SKILLS-006-six-cluster-skill-taxonomy-and-the-implication-graph.md) — the taxonomy that places `ki-housekeeping-claude` in the Environment cluster.
+- [ADR-KI-HARNESS-SKILLS-006](ADR-KI-HARNESS-SKILLS-006-concern-first-skill-taxonomy-and-implication-graph.md) — the taxonomy that places `ki-housekeeping-claude` in the Environment concern.

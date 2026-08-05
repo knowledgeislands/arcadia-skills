@@ -1,0 +1,45 @@
+---
+id: ADR-KI-HARNESS-SKILLS-006
+title: 'Concern-first skill taxonomy and implication graph'
+date: 2026-07-09
+status: current
+type: Architecture Decision Record
+type_url: https://knowledgeislands.info/specifications/decision-records/adr
+decision_type: architecture
+---
+
+# ADR-KI-HARNESS-SKILLS-006: Concern-first skill taxonomy and implication graph
+
+## Context
+
+The skill set needs a stable physical taxonomy for discovery and a separate, machine-readable classification for the contract each skill carries.
+
+The previous decision made the directory name imply a skill's kind, especially through `skills/process/`.
+
+That reversed the useful order: directory placement should say what a capability concerns, while metadata should say whether it governs a standard or executes a process.
+
+The `ki-skills` checker also inferred process kind from an incidental description phrase, producing false governance-mode warnings for valid process skills.
+
+## Decision
+
+The skills use a concern-first physical taxonomy and declare their kind in frontmatter.
+
+- **Explicit kind.** Every KI skill declares exactly one `ki-kind: governance` or `ki-kind: process` frontmatter field. A **governance skill** holds a house standard and ships the universal modes (AUDIT/CONFORM/EDUCATE/REFRESH + HELP) and a native rubric. A **process skill** drives an action or lifecycle and is exempt from that governance shape. The `ki-skills` rubric reads the field, validates its vocabulary, and routes kind-gated checks from it; neither a directory nor prose establishes kind. Kind is orthogonal to install scope: process skills may be global utilities, while a governance skill becomes repository-active only when the repository declares it.
+- **Concerns.** Directories group a skill by what it concerns, not by kind. The current concern roots are `agentic-systems`, `change-management`, `environment`, `governance`, `keystone`, `knowledge-bases`, and `repo-structure`. A concern may contain governance and process skills. `ki-roadmap` and `ki-housekeeping` are change-management governance standards. `ki-next`, `ki-plan`, `ki-implement`, `ki-accept`, `ki-batch`, `ki-recap`, and `ki-delegate` are change-management processes. `ki-kb-streams` remains under `knowledge-bases`: it specialises the roadmap model for the KB Streams concern. Existing concern roots may be refined only when their own concern boundary becomes clearer; no directory encodes kind.
+- **Delegation.** `ki-delegation` is the governance standard for a delegation packet: sources, a quality bar, and native audit/conform over the packet shape. `ki-delegate` is the process skill that applies that standard during planning or delivery; it decides dispatch, classifies work, assigns a minimum-viable model, sequences bounded lanes, and gates their results. The standard does not grant execution authority, and the process does not duplicate the standard. This differs from the retired `ki-handoffs` capability, which had no concrete governed artifact and conflated execution delegation with cross-repository transfer.
+- **Canonical names and implication graph.** Each skill's directory name remains its canonical name. Names in `.ki-config.toml`, `ki-depends-on:`, package scripts, and references are bare `ki-<name>`, never a source path. Each `SKILL.md` declares its necessary composition prerequisites in `ki-depends-on:`; a dependency is not coverage detection, an off-ramp, or shared-module packaging.
+- **Dependency graph.** Each SKILL.md declares a `ki-depends-on:` frontmatter list. A dependency identifies a necessary governance prerequisite: selecting the dependent includes the prerequisite first, while independent skills receive a stable host-defined order. The list's textual order is never semantic; an additional edge expresses any further required partial order. A repo declaring a skill MUST explicitly declare each dependency in `.ki-config.toml`; activation and repository resolution reject a missing declaration before mutation or execution. Separately coverage-detected governance adds no dependency edge.
+- **Universal vs coverage-detected.** `ki-authoring` is a universal requirement of `ki-repo`, declared by its `ki-depends-on:` edge and explicitly present in each repo's configuration. `ki-engineering` governs the TS/Bun toolchain, which only exists where a `package.json` does — it remains **coverage-detected**: `ki-repo`'s coverage cascade expects `["knowledgeislands/ki-agentic-harness:ki-engineering"]` to be declared by any repo with a `package.json`, and only then does it get vendored/linked. A non-code repo (dotfiles, a KB, the homebrew tap) carries neither that table nor an inactive edge.
+- **Mutual exclusion.** A repo carries exactly one repo-structure skill; `ki-repo`'s coverage cascade enforces it mechanically.
+- **Canonical names.** Each skill's directory name is its canonical name. A portable root keeps the unqualified concern name; a runtime-bound capability uses the runtime suffix and declares its supported runtimes in frontmatter. `ki-feature-definitions` is the general-governance skill for feature specs; `ki-guides` governs repository-local practical documentation.
+
+## Consequences
+
+- New skills are placed by concern and declare kind independently, so a path move never changes their contract.
+- Kind-gated audit, conform, and documentation logic has one explicit metadata source and cannot accidentally reclassify a process skill from description wording.
+- The delegation quality bar is reusable and auditable without making the operational delegation process a governance command or confusing it with cross-repository trades.
+- The canonical bare-name resolver and dependency graph continue to isolate consumers from source paths.
+
+## References
+
+- [ADR-KI-HARNESS-004](ADR-KI-HARNESS-004-composition-over-extension.md) — composition over extension, how skills relate within the graph.
