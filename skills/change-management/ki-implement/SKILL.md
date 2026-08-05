@@ -2,6 +2,7 @@
 name: ki-implement
 ki-kind: process
 ki-depends-on: []
+ki-optional-depends-on: [ki-delegation]
 description: >
   Implements one explicitly approved ready work record through the shared delivery cycle in either repository adapter: preflight, immutable baseline, in-progress transition, bounded execution, appropriate delegation, verification, and a required review packet. It stops at awaiting-review and never selects work, reshapes a plan, self-accepts, prunes, pushes, releases, or expands authority.
 argument-hint: 'implement <work-item> | help'
@@ -24,7 +25,7 @@ It does not choose work, create or reshape a plan, close a lifecycle, or delete 
 1. Preflight the repository adapter, exact record, readiness, approval, dependencies, and stated verification.
 2. Record immutable baseline evidence and transition only that record to `in-progress`.
 3. Apply the approved plan within its boundary.
-4. Apply `ki-delegate` guidance when bounded parallel work would improve delivery; it is not a separate user command or authority source.
+4. When bounded parallel work would improve delivery, use runtime subagents while retaining orchestration, review, and integration. If `ki-delegation` is active in the same scope, apply its packet standard before creating a durable delegation packet.
 5. Review and integrate bounded results, run the required verification, and record the evidence.
 6. Create the required review packet, transition the record to `awaiting-review`, and stop.
 
@@ -38,7 +39,7 @@ The caller or `ki-accept` owns the next decision.
 
 `ki-plan` owns plan shape and readiness material; it does not replace this delivery procedure.
 
-`ki-delegate` prepares and gates bounded worker lanes when this item's approved plan calls for them; it does not confer execution authority.
+Runtime subagents may execute bounded worker lanes when this item's approved plan calls for them; they do not confer execution authority. `ki-delegation`, when active, supplies the additional durable packet standard.
 
 `ki-batch` may coordinate repeated independent runs only under an explicit bounded authorisation.
 

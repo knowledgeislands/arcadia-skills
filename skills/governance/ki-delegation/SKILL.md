@@ -3,7 +3,7 @@ name: ki-delegation
 ki-kind: governance
 ki-depends-on: []
 description: >
-  Governs delegation packets for bounded agent work: their source-informed quality bar, durable worker briefs, and safe mechanical checks over a selected roadmap record. Use when designing or auditing a delegation packet, deciding what a worker brief must contain, or making an approved plan ready for bounded delegation. The process that dispatches and gates workers is ki-delegate; model-purpose policy belongs to ki-tokenomics; cross-repository work transfer is ki-trades.
+  Governs delegation packets for bounded agent work: their source-informed quality bar, durable worker briefs, and safe mechanical checks over a selected roadmap record. Use when designing or auditing a delegation packet, deciding what a worker brief must contain, or making an approved plan ready for bounded delegation. It augments runtime subagent delegation only when active in the same scope; model-purpose policy belongs to ki-tokenomics; cross-repository work transfer is ki-trades.
 argument-hint: 'audit <repo> | conform <repo> | educate <work-item> | help | refresh'
 ---
 
@@ -15,7 +15,7 @@ It does not select work, authorise execution, choose a model, spawn a worker, ac
 
 Read [the delegation-packet standard](references/standards-delegation-packets.md) before designing or reviewing a packet, [the generated rubric](references/rubric.md) for its mechanical and judgment criteria, and [the sources](references/sources.md) when refreshing the standard.
 
-`ki-delegate` is the process skill that applies this standard to an approved plan or delivery run.
+When active, this standard adds packet requirements to normal runtime subagent delegation; it is not an execution command.
 
 ## Operating modes
 
@@ -57,9 +57,9 @@ Read [the sources](references/sources.md), compare durable delegation practice a
 
 ### Mode HELP
 
-Explain the delegation-packet boundary and route operational dispatch to `ki-delegate`, model-purpose policy to `ki-tokenomics`, and cross-repository transfer to `ki-trades`.
+Explain the delegation-packet boundary, runtime subagent delegation, model-purpose policy in `ki-tokenomics`, and cross-repository transfer in `ki-trades`.
 
 ## Notes
 
-- A packet makes the existing `ki-delegate` brief durable and reviewable; it is not a separate execution lifecycle.
+- A packet makes a runtime subagent brief durable and reviewable; it is not a separate execution lifecycle.
 - The local rubric is the materialised domain contract; generic execution, reporting, transaction safety, and publication remain owned by `ki`.

@@ -21,7 +21,7 @@ This applies to all Knowledge Islands multi-skill invocations, not only audits.
 For any multi-skill invocation (AUDIT, CONFORM, REFRESH, or other modes run across multiple governance skills):
 
 1. **Run the mechanical aggregate first** — the repository's `ki:audit` entrypoint is the authoritative mechanical result. Keep set-level checks such as skill-name collisions and description reciprocity in the orchestrator, because they are cross-skill by nature.
-2. **Fan out only independent judgment review** — when the host supports subagents and the review is large enough to justify them, use `ki-delegate` to give each reviewer one bounded concern and the already-captured mechanical result. Do not re-run or reinterpret another concern's checker in a subagent.
+2. **Fan out only independent judgment review** — when the host supports subagents and the review is large enough to justify them, give each reviewer one bounded concern and the already-captured mechanical result. When `ki-delegation` is active in the same scope, use its packet standard for a durable brief. Do not re-run or reinterpret another concern's checker in a subagent.
 3. **Synthesise in the main agent** — collect the bounded reviews, rank findings with the foundations-first review priority from ADR-KI-HARNESS-SKILLS-003, and report across concerns. The orchestrator remains responsible for gating any resulting changes.
 
 This is a method, not a tracked runtime workflow. Each host uses its available delegation mechanism without making that mechanism part of the governed harness contract.

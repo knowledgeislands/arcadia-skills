@@ -4,7 +4,7 @@
 
 A delegation packet is an explicit, durable brief for bounded agent work inside one approved roadmap record.
 
-It translates the `ki-delegate` process into a reviewable artifact before workers are dispatched.
+It translates a runtime subagent brief into a reviewable artifact before workers are dispatched.
 
 It is not required for a focused task that remains with the orchestrator, and it does not replace the work item’s plan, authority, baseline, review packet, or acceptance decision.
 

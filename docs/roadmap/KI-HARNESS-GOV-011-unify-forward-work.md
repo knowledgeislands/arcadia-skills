@@ -34,7 +34,7 @@ KB Streams use a different Focus vocabulary and `draft` / `ready` / `in-progress
 - [x] Define the shared `now` / `next` / `soon` / `future` / `waiting-for` / `parked` queue and `draft` / `ready` / `in-progress` / `awaiting-review` / `done` lifecycle in the roadmap contract, including a required review packet.
 - [x] Add `ki-housekeeping` as the recurring-work template owner, with non-KB templates in `docs/housekeeping/`, stable identities, cadence and last-run evidence, and due-run spawning rules for `ki-next`.
 - [x] Adapt `ki-kb-streams` to the shared queue and lifecycle, including `Streams/Housekeeping/`, retained done proposals, explicit pruning, and the KB template binding.
-- [x] Simplify `ki-next`, `ki-plan`, `ki-implement`, `ki-accept`, `ki-batch`, `ki-recap`, and `ki-delegate` around the shared command family and their explicit adapter boundaries.
+- [x] Simplify `ki-next`, `ki-plan`, `ki-implement`, `ki-accept`, `ki-batch`, and `ki-recap` around the shared command family and their explicit adapter boundaries.
 - [x] Update affected rubric contexts, generated publications, and focused tests; add the new skill to repository configuration.
 - [x] Run the relevant direct audits, focused tests, TypeScript, the full test suite, and formatting checks.
 - [x] Enforce compact four-word roadmap titles and normalize every registered repository roadmap.
@@ -51,7 +51,6 @@ KB Streams use a different Focus vocabulary and `draft` / `ready` / `in-progress
 - `skills/change-management/ki-accept/`
 - `skills/change-management/ki-batch/`
 - `skills/change-management/ki-recap/`
-- `skills/change-management/ki-delegate/`
 - `.ki-config.toml`
 
 ## Verify
@@ -74,7 +73,7 @@ The design was explicitly agreed: the shared queue includes a `housekeeping` hor
 - One public command family operates both adapters; repository shape decides the backing record and implementation details.
 - The common delivery lifecycle is `draft` → `ready` → `in-progress` → `awaiting-review` → `done`.
 - `ki-housekeeping` owns templates; `ki-next` owns due-run selection and spawning; each run uses the common delivery cycle.
-- `ki-delegate` supplies embedded delegation guidance to `ki-implement` and `ki-batch`, not a separate required lifecycle invocation.
+- Runtime subagent delegation supplies bounded execution; optional `ki-delegation` supplies durable packet guidance to `ki-plan`, `ki-implement`, and `ki-batch` when active.
 
 ### Escalate
 

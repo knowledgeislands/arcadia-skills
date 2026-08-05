@@ -2,8 +2,9 @@
 name: ki-batch
 ki-kind: process
 ki-depends-on: []
+ki-optional-depends-on: [ki-delegation]
 description: >
-  Prepares and coordinates an explicitly authorised batch of independent work records in either repository adapter: plan the named candidates up front, then use bounded parallel delivery where ki-delegate guidance makes it safe. A process skill: it does not select work, reshape plans, bypass lifecycle gates, infer closure, prune, push, release, or introduce a tracker. Use when asked to "prepare a work batch", "run this approved batch", "coordinate several ready work items", or "record a batch run". For selection use ki-next; plan shape use ki-plan; single-item delivery use ki-implement; closure use ki-accept.
+  Prepares and coordinates an explicitly authorised batch of independent work records in either repository adapter: plan the named candidates up front, then use bounded parallel delivery where it is safe. A process skill: it does not select work, reshape plans, bypass lifecycle gates, infer closure, prune, push, release, or introduce a tracker. Use when asked to "prepare a work batch", "run this approved batch", "coordinate several ready work items", or "record a batch run". For selection use ki-next; plan shape use ki-plan; single-item delivery use ki-implement; closure use ki-accept.
 argument-hint: 'batch <work>... | implement <batch-authorisation> | help'
 ---
 
@@ -53,7 +54,7 @@ Pruning always requires separate explicit destructive authority.
 
 `ki-accept` owns human-approved closure and pruning.
 
-`ki-delegate` owns bounded worker preparation and integration gates where the authorisation permits delegation.
+Runtime subagents may execute bounded work where the authorisation permits delegation; the orchestrator retains preparation, integration, and gates. `ki-delegation`, when active in the same scope, supplies the additional durable packet standard.
 
 This skill coordinates these siblings; it does not duplicate their procedures or create a tracker, plugin, worktree scheme, runtime-specific mechanic, wrapper, or KI CLI command.
 
@@ -61,7 +62,7 @@ This skill coordinates these siblings; it does not duplicate their procedures or
 
 `help` / `-h` / `?` explains this skill and stops, taking no action.
 
-`batch <work>...` prepares only the named candidates through the normal shared cycle: shape every draft to Ready, decide whether safe parallel lanes exist with the embedded `ki-delegate` guidance, and produce a reviewed proposed authorisation.
+`batch <work>...` prepares only the named candidates through the normal shared cycle: shape every draft to Ready, decide whether safe parallel lanes exist, and produce a reviewed proposed authorisation. When `ki-delegation` is active, read its packet standard before creating a durable delegation packet.
 
 `implement <batch-authorisation>` validates one approved authorisation and coordinates its named items in dependency order.
 

@@ -79,16 +79,10 @@ digraph roadmap_implementation_cycles {
     progress [fillcolor="#d9f0e2", label=< <b>In progress</b><br/><font point-size="10">baseline recorded</font> >]
     verification [fillcolor="#d9f0e2", label=< <b>Verified delivery</b><br/><font point-size="10">required checks pass</font> >]
     acceptance [fillcolor="#d9f0e2", label=< <b>Acceptance</b><br/><font point-size="10">evidence packet ready</font> >]
-    delegate [fillcolor="#e8edf3", label=< <b>ki-delegate</b><br/><font point-size="10">optional bounded work</font> >]
-
-    { rank=same; implement; delegate }
-
     ready -> implement [lhead=cluster_implementation]
     implement -> progress
     progress -> verification
     verification -> acceptance
-    implement -> delegate [style=dashed, constraint=false, xlabel="when useful"]
-    delegate -> progress [style=dashed, constraint=false, xlabel="integrate + gate"]
   }
 
   subgraph cluster_acceptance {

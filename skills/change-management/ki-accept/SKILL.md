@@ -34,7 +34,7 @@ It never chooses work, starts implementation, edits plan scope, reconstructs mis
 
 `ki-plan` owns plan shape and the ongoing record, but terminal closure and explicitly selected pruning belong here.
 
-`ki-delegate` can help execute bounded review preparation only when separately authorised; it cannot approve or delete.
+Runtime subagents can help execute bounded review preparation only when separately authorised; they cannot approve or delete. `ki-delegation`, when active, supplies the durable packet standard.
 
 `ki-batch` may request batched closure only when its explicit authorisation grants it for named records.
 

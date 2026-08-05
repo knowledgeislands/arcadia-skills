@@ -2,6 +2,7 @@
 name: ki-plan
 ki-kind: process
 ki-depends-on: []
+ki-optional-depends-on: [ki-delegation]
 description: >
   Shapes selected Now or Next draft work through readiness in either repository adapter. It enriches a roadmap item in place for non-KB repositories or iterates a Streams proposal in a Knowledge Base, then stops at ready. Use when asked "plan this", "make this ready", or "prepare this work for implementation". It does not capture work, implement it, or close it.
 argument-hint: 'plan <work>... | help'

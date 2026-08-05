@@ -20,13 +20,14 @@ The canonical home for Knowledge Islands [Agent Skills](https://agentskills.io/)
 
 † Agents and Hooks are Claude-Code-specific today; multi-runtime support (Claude Code + OpenAI Codex CLI) is a targeted future effort — see `SDR-KI-HARNESS-002-runtime-portable-contracts-and-executor-positioning.md` and the [runtime parity scorecard](docs/decisions/references/runtime-parity-scorecard.md).
 
-## How skills relate — composition only
+## How skills relate
 
-Skills compose rather than extend: a skill runs a sibling's mode in sequence and adds its delta, declaring the edge in AUDIT. Repo variation is declared in `.ki-config.toml` or orientation guidance, never forked into a base-specific skill. See the `ki-skills` rubric (SHAPE-2) and `ADR-KI-HARNESS-SKILLS-004`.
+Skills compose rather than extend: a skill runs a sibling's mode in sequence and adds its delta, declaring the edge in `ki-depends-on:`. An optional capability is declared separately in `ki-optional-depends-on:`; it is used only when active in the same scope and never blocks the parent. Repo variation is declared in `.ki-config.toml` or orientation guidance, never forked into a base-specific skill. See the `ki-skills` rubric and `ADR-KI-HARNESS-SKILLS-004`.
 
 ## Working here
 
 - **Cross-repository choreography** — Arcadia Principal, the harness, `tools-ki`, KI Specifications, and the KI Website may add a concrete handoff item to one another's Stream or roadmap. The receiving repository owns its priority, plan, and execution. Record the originating item and whether the handoff `blocks` or is `blocked by` the local item; prefer independently executable work over a blocking dependency.
+- **Delegation** — when bounded independent work materially helps, use runtime subagents while retaining orchestration, review, and integration. When `ki-delegation` is active in the same user or repository scope, read its standard before creating a durable delegation packet; otherwise do not claim a governed packet.
 - **Writing or editing a `SKILL.md`** → follow the `ki-skills` rubric: run `ki repo audit --skill ki-skills` for the mechanical half and apply the judgment half by reading. The directory name **is** the `name:` frontmatter.
 - **Adding a `ki-skills` rubric criterion** → pick the next code number by scanning the complete family under `skills/keystone/ki-skills/scripts/rubric/items/`. The structured catalogue is authoritative; `references/rubric.md` is its generated publication. Keep the item private to its family module and regenerate the publication with `ki dev skill rubric ki-skills --write`.
 - **Markdown / TOML style** → the `ki-authoring` conventions. Until its catalogue reaches the final session contract, run Prettier and markdownlint directly for Markdown; TOML remains judgment-only. Wide tables → footnotes; relative Markdown links, never wikilinks; refer to another skill by its `name`, never a file path.

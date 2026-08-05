@@ -60,9 +60,9 @@ Replaced by BOOT-016. Legacy retirement is guide-led and fail-closed rather than
 
 ### BOOT-011 — First-time bootstrap establishes the minimum user environment
 
-`ki bootstrap` MUST detect supported local agent runtimes, create the KI user configuration when absent, install or restore the canonical `knowledgeislands/ki-agentic-harness`, and activate the nine core user skills — `ki-bootstrap`, `ki-delegation`, `ki-delegate`, `ki-next`, `ki-plan`, `ki-implement`, `ki-accept`, `ki-batch`, and `ki-recap` — for every detected runtime.
+`ki bootstrap` MUST detect supported local agent runtimes, create the KI user configuration when absent, install or restore the canonical `knowledgeislands/ki-agentic-harness`, and activate the seven core user skills — `ki-bootstrap`, `ki-next`, `ki-plan`, `ki-implement`, `ki-accept`, `ki-batch`, and `ki-recap` — for every detected runtime. `ki-delegation` is opt-in and augments runtime subagent delegation only when active in the same scope.
 
-_Verify:_ run `ki bootstrap` against isolated empty XDG and runtime homes, then inspect `config.toml`, the canonical harness installation, and the eight managed user-skill links in each detected runtime.
+_Verify:_ run `ki bootstrap` against isolated empty XDG and runtime homes, then inspect `config.toml`, the canonical harness installation, and the seven managed user-skill links in each detected runtime.
 
 ### BOOT-012 — Refresh reconciles detected user state
 

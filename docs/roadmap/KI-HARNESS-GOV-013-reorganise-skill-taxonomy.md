@@ -23,7 +23,7 @@ The `ki-skills` checker infers process kind from an incidental description conve
 
 `ki-kb-streams` is a Knowledge Base specialisation of `ki-roadmap`; it belongs in `knowledge-bases`, not change management.
 
-`ki-delegate` currently contains both the reusable delegation quality doctrine and the process that applies it.
+Runtime subagent delegation owns execution; `ki-delegation` owns optional durable packet governance.
 
 ## Boundary
 
@@ -43,7 +43,7 @@ Seven forward-work process skills live under a kind-first `skills/process/` dire
 - [x] Add and mechanically enforce `ki-kind: governance | process` for every KI skill; use it for mode and shape routing.
 - [x] Move the forward-work process skills into `skills/change-management/` and move `ki-roadmap` and `ki-housekeeping` there with their governance kind unchanged.
 - [x] Introduce `ki-delegation` under `skills/governance/` with sources, a delegation-packet standard, and a native rubric that audits declared delegation sections and safely repairs only the legacy mechanical heading.
-- [x] Reduce `ki-delegate` to the process that applies `ki-delegation` to an approved plan or delivery run, retaining no duplicate packet standard.
+- [x] Retire `ki-delegate`; runtime subagent delegation now owns execution while optional `ki-delegation` owns durable packet governance.
 - [x] Update all source references, discovery/projection paths, diagrams, configuration, generated rubrics, and tests.
 - [x] Verify focused migrations, the full test and type gates, and affected native audits.
 
@@ -83,7 +83,7 @@ The `ki bootstrap` implementation change is submitted to `tools-ki` as `TRD-9ab8
 
 - Concern is the physical taxonomy; kind is explicit `ki-kind` metadata and never inferred from a directory or prose convention.
 - `ki-kb-streams` remains a Knowledge Base specialisation of `ki-roadmap` under `skills/knowledge-bases/`.
-- `ki-delegation` is a governance standard; `ki-delegate` is a process skill under change management that applies it.
+- `ki-delegation` is an optional governance standard that augments runtime subagent delegation with durable packet rules.
 - `ki-delegation` may inspect a named roadmap item's `## Delegation` packet, but it does not grant execution authority, spawn workers, or change repository priority.
 - CONFORM may supply only missing mechanical delegation-packet structure; it does not invent a model selection, task partition, locked decision, or escalation boundary.
 
@@ -139,4 +139,4 @@ Repairing kind identification first removes a false governance-mode diagnosis an
 
 The retired `ki-handoffs` capability had no concrete governed artifact and conflated execution delegation with cross-repository transfer.
 
-The new `ki-delegation` standard instead owns a bounded delegation packet embedded in an approved work record; `ki-delegate` remains the procedure that decides, classifies, assigns, sequences, and gates actual execution.
+The `ki-delegation` standard owns a bounded delegation packet embedded in an approved work record; runtime subagent orchestration decides, classifies, assigns, sequences, and gates actual execution.

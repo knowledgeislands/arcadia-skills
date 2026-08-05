@@ -22,11 +22,11 @@ The original decision created the composition-shaped governance skill `ki-handof
 
 - The doctrine became discoverable, but its governance shape introduced a standalone declaration, rubric, and marker contract for a concern exercised only while delegating execution.
 - The term “handoff” became ambiguous with cross-repository work transfer, whose receiving repository owns adoption, priority, and planning.
-- The separate semantic tier metadata duplicated the more portable, explicit per-spawn model choice already made by `ki-delegate`.
+- The separate semantic tier metadata duplicated the more portable, explicit per-spawn model choice made by the orchestrator.
 
 ## Supersession
 
-This decision was superseded on 2026-07-27. Delegation readiness now belongs to the `ki-delegate` process: reason once, lock or escalate decisions, give every unit a definition of done, choose the explicit minimum-viable model per spawn, test the brief against a cold agent, bound its scope, gate, and checkpoint, then require orchestrator review. Cross-repository transfer is a distinct roadmap lifecycle concern. The standalone governance skill, declaration, rubric, evals, marker fields, and compatibility surface were retired.
+This decision was superseded on 2026-07-27. Delegation readiness belongs to runtime subagent orchestration: reason once, lock or escalate decisions, give every unit a definition of done, choose the explicit minimum-viable model per spawn, test the brief against a cold agent, bound its scope, gate, and checkpoint, then require orchestrator review. When active, `ki-delegation` adds the durable packet standard. Cross-repository transfer is a distinct roadmap lifecycle concern. The standalone governance skill, declaration, rubric, evals, marker fields, and compatibility surface were retired.
 
 ## References
 

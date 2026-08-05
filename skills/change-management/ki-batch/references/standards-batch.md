@@ -8,7 +8,7 @@ The kind, phases, and relationship boundary live in [the skill](../SKILL.md).
 
 Accept only an explicit candidate set.
 
-Use the normal forward-work cycle for each candidate: `ki-next` for selection and priority, `ki-plan` for plan shape and readiness, and the `ki-delegate` guidance where bounded parallel work is useful. Resolve each record through its roadmap or Streams adapter.
+Use the normal forward-work cycle for each candidate: `ki-next` for selection and priority and `ki-plan` for plan shape and readiness. Where bounded parallel work is useful, use runtime subagents and retain orchestration, review, and integration. If `ki-delegation` is active in the same scope, read its packet standard before creating a durable delegation packet. Resolve each record through its roadmap or Streams adapter.
 
 Do not start `ki-implement` in this phase.
 

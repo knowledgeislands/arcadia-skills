@@ -82,7 +82,6 @@ digraph skills_map {
   tokenomics_codex [fillcolor="#d7f2ee", label=< <b>ki-tokenomics-codex</b><br/><font point-size="9">Environment</font><br/><font point-size="9">Codex context evidence</font> >]
   accept [fillcolor="#e7ebf1", label=< <b>ki-accept</b><br/><font point-size="9">Process</font><br/><font point-size="9">closure · confirmed prune</font> >]
   batch [fillcolor="#e7ebf1", label=< <b>ki-batch</b><br/><font point-size="9">Process</font><br/><font point-size="9">authorised batch coordination</font> >]
-  delegate [fillcolor="#e7ebf1", label=< <b>ki-delegate</b><br/><font point-size="9">Process</font><br/><font point-size="9">delegated execution support</font> >]
   implement [fillcolor="#e7ebf1", label=< <b>ki-implement</b><br/><font point-size="9">Process</font><br/><font point-size="9">bounded delivery · acceptance</font> >]
   next [fillcolor="#e7ebf1", label=< <b>ki-next</b><br/><font point-size="9">Process</font><br/><font point-size="9">next-work selection</font> >]
   plan [fillcolor="#e7ebf1", label=< <b>ki-plan</b><br/><font point-size="9">Process</font><br/><font point-size="9">planning · Ready</font> >]
@@ -100,7 +99,7 @@ digraph skills_map {
   { rank=same; bootstrap; authoring; git }
   { rank=same; repo; dotfiles }
   { rank=same; decisions; delegation; engineering; features; guides; roadmap; specifications; skills; agents; kb_activities; kb_artifacts; kb_streams; website; binding; tokenomics; tools; tap; housekeeping_claude; recap }
-  { rank=same; harness; kb; principal; cloudflare; binding_claude; binding_codex; binding_chezmoi; tokenomics_claude; tokenomics_codex; delegate; next; batch; self; checkers }
+  { rank=same; harness; kb; principal; cloudflare; binding_claude; binding_codex; binding_chezmoi; tokenomics_claude; tokenomics_codex; next; batch; self; checkers }
   { rank=same; mcp; plugins; plan; native_host; mcp_housekeeping; hooks }
   { rank=same; implement }
   { rank=same; accept }
@@ -152,14 +151,12 @@ digraph skills_map {
 
   // Process and local-governance relationships.
   roadmap -> next [xlabel="triages"]
-  delegation -> delegate [xlabel="required by"]
   next -> plan [xlabel="prepares"]
   recap -> next [xlabel="surfaces", style=dashed]
   next -> batch [xlabel="proposes", style=dashed]
   batch -> plan [style=dashed]
   plan -> implement [style=dashed]
   batch -> implement [xlabel="repeats", style=dashed]
-  delegate -> implement [xlabel="supports", style=dashed]
   implement -> accept [style=dashed]
   self -> skills [xlabel="promotes patterns into", style=dashed]
   housekeeping_claude -> self [xlabel="maintains", style=dashed]

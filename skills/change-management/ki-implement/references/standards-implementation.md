@@ -27,7 +27,7 @@ The baseline describes the starting evidence; it is not a substitute for verific
 
 Follow the checked plan steps in order and preserve its boundary.
 
-Use `ki-delegate` only when the plan explicitly calls for it, or when an explicit authority record permits it.
+Use runtime subagents only when the plan explicitly calls for delegation, or when an explicit authority record permits it. When `ki-delegation` is active in the same scope, read its packet standard before creating a durable delegation packet.
 
 Every delegated unit must retain its bounded scope, locked decisions, escalation boundary, definition of done, and verification gate.
 

@@ -21,15 +21,15 @@
 </g>
 <g id="clust2" class="cluster">
 <title>cluster_implementation</title>
-<path fill="#fbfcfe" stroke="#a8cfbd" d="M168.34,-431.96C168.34,-431.96 450.34,-431.96 450.34,-431.96 456.33,-431.96 462.34,-437.96 462.34,-443.96 462.34,-443.96 462.34,-714.6 462.34,-714.6 462.34,-720.6 456.34,-726.6 450.34,-726.6 450.34,-726.6 168.34,-726.6 168.34,-726.6 162.34,-726.6 156.34,-720.6 156.34,-714.6 156.34,-714.6 156.34,-443.96 156.34,-443.96 156.34,-437.96 162.34,-431.96 168.34,-431.96"/>
-<text xml:space="preserve" text-anchor="middle" x="309.34" y="-709.3" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#24543d">Implementation cycle — deliver one ready item</text>
+<path fill="#fbfcfe" stroke="#a8cfbd" d="M151.34,-431.96C151.34,-431.96 427.33,-431.96 427.33,-431.96 433.33,-431.96 439.34,-437.96 439.34,-443.96 439.34,-443.96 439.34,-714.6 439.34,-714.6 439.34,-720.6 433.34,-726.6 427.34,-726.6 427.34,-726.6 151.34,-726.6 151.34,-726.6 145.34,-726.6 139.34,-720.6 139.34,-714.6 139.34,-714.6 139.34,-443.96 139.34,-443.96 139.34,-437.96 145.34,-431.96 151.34,-431.96"/>
+<text xml:space="preserve" text-anchor="middle" x="289.34" y="-709.3" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#24543d">Implementation cycle — deliver one ready item</text>
 </g>
-<g id="clust4" class="cluster">
+<g id="clust3" class="cluster">
 <title>cluster_acceptance</title>
 <path fill="#fbfcfe" stroke="#d9c78d" d="M92.34,-8C92.34,-8 374.34,-8 374.34,-8 380.33,-8 386.34,-14 386.34,-20 386.34,-20 386.34,-411.96 386.34,-411.96 386.34,-417.96 380.34,-423.96 374.34,-423.96 374.34,-423.96 92.34,-423.96 92.34,-423.96 86.34,-423.96 80.34,-417.96 80.34,-411.96 80.34,-411.96 80.34,-20 80.34,-20 80.34,-14 86.34,-8 92.34,-8"/>
 <text xml:space="preserve" text-anchor="middle" x="233.34" y="-406.66" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#6f5118">Acceptance and cleanup — close deliberately</text>
 </g>
-<g id="clust5" class="cluster">
+<g id="clust4" class="cluster">
 <title>cluster_batch</title>
 <path fill="#fbfcfe" stroke="#c4b3de" stroke-dasharray="5,2" d="M434.34,-1006.24C434.34,-1006.24 818.34,-1006.24 818.34,-1006.24 824.34,-1006.24 830.34,-1012.24 830.34,-1018.24 830.34,-1018.24 830.34,-1381.2 830.34,-1381.2 830.34,-1387.2 824.34,-1393.2 818.34,-1393.2 818.34,-1393.2 434.34,-1393.2 434.34,-1393.2 428.34,-1393.2 422.34,-1387.2 422.34,-1381.2 422.34,-1381.2 422.34,-1018.24 422.34,-1018.24 422.34,-1012.24 428.34,-1006.24 434.34,-1006.24"/>
 <text xml:space="preserve" text-anchor="middle" x="626.34" y="-1375.9" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#503d78">Authorised batch — prepare, then repeat bounded delivery</text>
@@ -120,7 +120,7 @@
 <polygon fill="#5f7087" stroke="#5f7087" stroke-width="1.15" points="235.96,-987.01 233.34,-979.51 230.71,-987.01 235.96,-987.01"/>
 </g>
 <!-- batch_prepare -->
-<g id="node19" class="node">
+<g id="node18" class="node">
 <title>batch_prepare</title>
 <path fill="#f0ebfa" stroke="#8291a6" stroke-width="1.25" d="M705.67,-1370.2C705.67,-1370.2 547,-1370.2 547,-1370.2 541,-1370.2 535,-1364.2 535,-1358.2 535,-1358.2 535,-1336.04 535,-1336.04 535,-1330.04 541,-1324.04 547,-1324.04 547,-1324.04 705.67,-1324.04 705.67,-1324.04 711.67,-1324.04 717.67,-1330.04 717.67,-1336.04 717.67,-1336.04 717.67,-1358.2 717.67,-1358.2 717.67,-1364.2 711.67,-1370.2 705.67,-1370.2"/>
 <text xml:space="preserve" text-anchor="start" x="559.59" y="-1348.77" font-family="Helvetica,sans-Serif" font-size="13.00" fill="#172033"> </text>
@@ -129,11 +129,11 @@
 <text xml:space="preserve" text-anchor="start" x="700.96" y="-1335.77" font-family="Helvetica,sans-Serif" font-size="13.00" fill="#172033"> </text>
 </g>
 <!-- planned&#45;&gt;batch_prepare -->
-<g id="edge20" class="edge">
+<g id="edge18" class="edge">
 <title>planned&#45;&gt;batch_prepare</title>
-<path fill="none" stroke="#5f7087" stroke-width="1.15" stroke-dasharray="5,2" d="M297.86,-1022C347.6,-1022 407.95,-1022 407.95,-1022 407.95,-1022 407.95,-1347 407.95,-1347 407.95,-1347 525.43,-1347 525.43,-1347"/>
-<polygon fill="#5f7087" stroke="#5f7087" stroke-width="1.15" points="525.43,-1349.63 532.93,-1347 525.43,-1344.38 525.43,-1349.63"/>
-<text xml:space="preserve" text-anchor="middle" x="357.32" y="-1189.95" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#41546d">approved candidate set</text>
+<path fill="none" stroke="#5f7087" stroke-width="1.15" stroke-dasharray="5,2" d="M298.1,-1022C348.5,-1022 409.94,-1022 409.94,-1022 409.94,-1022 409.94,-1347 409.94,-1347 409.94,-1347 525.33,-1347 525.33,-1347"/>
+<polygon fill="#5f7087" stroke="#5f7087" stroke-width="1.15" points="525.33,-1349.63 532.83,-1347 525.33,-1344.38 525.33,-1349.63"/>
+<text xml:space="preserve" text-anchor="middle" x="359.32" y="-1176.77" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#41546d">approved candidate set</text>
 </g>
 <!-- ready_gate -->
 <g id="node7" class="node">
@@ -196,22 +196,6 @@
 <path fill="none" stroke="#5f7087" stroke-width="1.15" d="M233.34,-657.15C233.34,-657.15 233.34,-638.21 233.34,-638.21"/>
 <polygon fill="#5f7087" stroke="#5f7087" stroke-width="1.15" points="235.96,-638.21 233.34,-630.71 230.71,-638.21 235.96,-638.21"/>
 </g>
-<!-- delegate -->
-<g id="node13" class="node">
-<title>delegate</title>
-<path fill="#e8edf3" stroke="#8291a6" stroke-width="1.25" d="M449.92,-703.6C449.92,-703.6 346.75,-703.6 346.75,-703.6 340.75,-703.6 334.75,-697.6 334.75,-691.6 334.75,-691.6 334.75,-669.44 334.75,-669.44 334.75,-663.44 340.75,-657.44 346.75,-657.44 346.75,-657.44 449.92,-657.44 449.92,-657.44 455.92,-657.44 461.92,-663.44 461.92,-669.44 461.92,-669.44 461.92,-691.6 461.92,-691.6 461.92,-697.6 455.92,-703.6 449.92,-703.6"/>
-<text xml:space="preserve" text-anchor="start" x="361.21" y="-682.17" font-family="Helvetica,sans-Serif" font-size="13.00" fill="#172033"> </text>
-<text xml:space="preserve" text-anchor="start" x="364.96" y="-682.17" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="13.00" fill="#172033">ki&#45;delegate</text>
-<text xml:space="preserve" text-anchor="start" x="347.71" y="-669.17" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#172033">optional bounded work</text>
-<text xml:space="preserve" text-anchor="start" x="445.21" y="-669.17" font-family="Helvetica,sans-Serif" font-size="13.00" fill="#172033"> </text>
-</g>
-<!-- implement&#45;&gt;delegate -->
-<g id="edge12" class="edge">
-<title>implement&#45;&gt;delegate</title>
-<path fill="none" stroke="#5f7087" stroke-width="1.15" stroke-dasharray="5,2" d="M310.52,-681C310.52,-681 325.33,-681 325.33,-681"/>
-<polygon fill="#5f7087" stroke="#5f7087" stroke-width="1.15" points="325.33,-683.63 332.83,-681 325.33,-678.38 325.33,-683.63"/>
-<text xml:space="preserve" text-anchor="middle" x="304.8" y="-671.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#41546d">when useful</text>
-</g>
 <!-- verification -->
 <g id="node11" class="node">
 <title>verification</title>
@@ -243,7 +227,7 @@
 <polygon fill="#5f7087" stroke="#5f7087" stroke-width="1.15" points="235.96,-487.89 233.34,-480.39 230.71,-487.89 235.96,-487.89"/>
 </g>
 <!-- acceptance_gate -->
-<g id="node14" class="node">
+<g id="node13" class="node">
 <title>acceptance_gate</title>
 <path fill="#fff0b8" stroke="#8291a6" stroke-width="1.25" d="M221.85,-397.49C221.85,-397.49 92.15,-358.27 92.15,-358.27 86.41,-356.54 86.41,-353.06 92.15,-351.33 92.15,-351.33 221.85,-312.11 221.85,-312.11 227.59,-310.38 239.08,-310.38 244.82,-312.11 244.82,-312.11 374.52,-351.33 374.52,-351.33 380.26,-353.06 380.26,-356.54 374.52,-358.27 374.52,-358.27 244.82,-397.49 244.82,-397.49 239.08,-399.22 227.59,-399.22 221.85,-397.49"/>
 <text xml:space="preserve" text-anchor="start" x="169.96" y="-356.45" font-family="Helvetica,sans-Serif" font-size="13.00" fill="#172033"> </text>
@@ -252,20 +236,13 @@
 <text xml:space="preserve" text-anchor="start" x="292.59" y="-343.45" font-family="Helvetica,sans-Serif" font-size="13.00" fill="#172033"> </text>
 </g>
 <!-- acceptance&#45;&gt;acceptance_gate -->
-<g id="edge14" class="edge">
+<g id="edge12" class="edge">
 <title>acceptance&#45;&gt;acceptance_gate</title>
 <path fill="none" stroke="#5f7087" stroke-width="1.15" d="M233.34,-431.54C233.34,-431.54 233.34,-410.66 233.34,-410.66"/>
 <polygon fill="#5f7087" stroke="#5f7087" stroke-width="1.15" points="235.96,-410.66 233.34,-403.16 230.71,-410.66 235.96,-410.66"/>
 </g>
-<!-- delegate&#45;&gt;progress -->
-<g id="edge13" class="edge">
-<title>delegate&#45;&gt;progress</title>
-<path fill="none" stroke="#5f7087" stroke-width="1.15" stroke-dasharray="5,2" d="M360.38,-657.04C360.38,-634.87 360.38,-605 360.38,-605 360.38,-605 296.08,-605 296.08,-605"/>
-<polygon fill="#5f7087" stroke="#5f7087" stroke-width="1.15" points="296.08,-602.38 288.58,-605 296.08,-607.63 296.08,-602.38"/>
-<text xml:space="preserve" text-anchor="middle" x="320.13" y="-606.75" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#41546d">integrate + gate</text>
-</g>
 <!-- accept -->
-<g id="node15" class="node">
+<g id="node14" class="node">
 <title>accept</title>
 <path fill="#e8edf3" stroke="#8291a6" stroke-width="1.25" d="M311.55,-279.64C311.55,-279.64 155.12,-279.64 155.12,-279.64 149.12,-279.64 143.12,-273.64 143.12,-267.64 143.12,-267.64 143.12,-245.48 143.12,-245.48 143.12,-239.48 149.12,-233.48 155.12,-233.48 155.12,-233.48 311.55,-233.48 311.55,-233.48 317.55,-233.48 323.55,-239.48 323.55,-245.48 323.55,-245.48 323.55,-267.64 323.55,-267.64 323.55,-273.64 317.55,-279.64 311.55,-279.64"/>
 <text xml:space="preserve" text-anchor="start" x="202.21" y="-258.21" font-family="Helvetica,sans-Serif" font-size="13.00" fill="#172033"> </text>
@@ -274,14 +251,14 @@
 <text xml:space="preserve" text-anchor="start" x="306.84" y="-245.21" font-family="Helvetica,sans-Serif" font-size="13.00" fill="#172033"> </text>
 </g>
 <!-- acceptance_gate&#45;&gt;accept -->
-<g id="edge15" class="edge">
+<g id="edge13" class="edge">
 <title>acceptance_gate&#45;&gt;accept</title>
 <path fill="none" stroke="#5f7087" stroke-width="1.15" d="M233.34,-308.27C233.34,-308.27 233.34,-289.47 233.34,-289.47"/>
 <polygon fill="#5f7087" stroke="#5f7087" stroke-width="1.15" points="235.96,-289.47 233.34,-281.97 230.71,-289.47 235.96,-289.47"/>
 <text xml:space="preserve" text-anchor="middle" x="216.09" y="-289.37" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#41546d">approve</text>
 </g>
 <!-- done -->
-<g id="node16" class="node">
+<g id="node15" class="node">
 <title>done</title>
 <path fill="#efe5c4" stroke="#8291a6" stroke-width="1.25" d="M293.55,-204.48C293.55,-204.48 173.12,-204.48 173.12,-204.48 167.12,-204.48 161.12,-198.48 161.12,-192.48 161.12,-192.48 161.12,-170.32 161.12,-170.32 161.12,-164.32 167.12,-158.32 173.12,-158.32 173.12,-158.32 293.55,-158.32 293.55,-158.32 299.55,-158.32 305.55,-164.32 305.55,-170.32 305.55,-170.32 305.55,-192.48 305.55,-192.48 305.55,-198.48 299.55,-204.48 293.55,-204.48"/>
 <text xml:space="preserve" text-anchor="start" x="214.59" y="-183.05" font-family="Helvetica,sans-Serif" font-size="13.00" fill="#172033"> </text>
@@ -290,20 +267,20 @@
 <text xml:space="preserve" text-anchor="start" x="288.84" y="-170.05" font-family="Helvetica,sans-Serif" font-size="13.00" fill="#172033"> </text>
 </g>
 <!-- accept&#45;&gt;done -->
-<g id="edge16" class="edge">
+<g id="edge14" class="edge">
 <title>accept&#45;&gt;done</title>
 <path fill="none" stroke="#5f7087" stroke-width="1.15" d="M233.34,-233.19C233.34,-233.19 233.34,-214.25 233.34,-214.25"/>
 <polygon fill="#5f7087" stroke="#5f7087" stroke-width="1.15" points="235.96,-214.25 233.34,-206.75 230.71,-214.25 235.96,-214.25"/>
 </g>
 <!-- done&#45;&gt;recap -->
-<g id="edge19" class="edge">
+<g id="edge17" class="edge">
 <title>done&#45;&gt;recap</title>
 <path fill="none" stroke="#5f7087" stroke-width="1.15" d="M160.96,-181C114.44,-181 62.67,-181 62.67,-181 62.67,-181 62.67,-1347 62.67,-1347 62.67,-1347 83.33,-1347 83.33,-1347"/>
 <polygon fill="#5f7087" stroke="#5f7087" stroke-width="1.15" points="83.33,-1349.63 90.83,-1347 83.33,-1344.38 83.33,-1349.63"/>
 <text xml:space="preserve" text-anchor="middle" x="34.92" y="-726.94" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#41546d">next session</text>
 </g>
 <!-- prune -->
-<g id="node17" class="node">
+<g id="node16" class="node">
 <title>prune</title>
 <path fill="#efe5c4" stroke="#8291a6" stroke-width="1.25" d="M292.8,-129.32C292.8,-129.32 173.88,-129.32 173.88,-129.32 167.88,-129.32 161.88,-123.32 161.88,-117.32 161.88,-117.32 161.88,-95.16 161.88,-95.16 161.88,-89.16 167.88,-83.16 173.88,-83.16 173.88,-83.16 292.8,-83.16 292.8,-83.16 298.8,-83.16 304.8,-89.16 304.8,-95.16 304.8,-95.16 304.8,-117.32 304.8,-117.32 304.8,-123.32 298.8,-129.32 292.8,-129.32"/>
 <text xml:space="preserve" text-anchor="start" x="181.59" y="-107.89" font-family="Helvetica,sans-Serif" font-size="13.00" fill="#172033"> </text>
@@ -312,14 +289,14 @@
 <text xml:space="preserve" text-anchor="start" x="288.09" y="-94.89" font-family="Helvetica,sans-Serif" font-size="13.00" fill="#172033"> </text>
 </g>
 <!-- done&#45;&gt;prune -->
-<g id="edge17" class="edge">
+<g id="edge15" class="edge">
 <title>done&#45;&gt;prune</title>
 <path fill="none" stroke="#5f7087" stroke-width="1.15" d="M233.34,-158.03C233.34,-158.03 233.34,-139.09 233.34,-139.09"/>
 <polygon fill="#5f7087" stroke="#5f7087" stroke-width="1.15" points="235.96,-139.09 233.34,-131.59 230.71,-139.09 235.96,-139.09"/>
 <text xml:space="preserve" text-anchor="middle" x="169.59" y="-139.06" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#41546d">recap / next may recommend</text>
 </g>
 <!-- pruned -->
-<g id="node18" class="node">
+<g id="node17" class="node">
 <title>pruned</title>
 <path fill="#f1f3f5" stroke="#8291a6" stroke-width="1.25" d="M286.42,-54.16C286.42,-54.16 180.25,-54.16 180.25,-54.16 174.25,-54.16 168.25,-48.16 168.25,-42.16 168.25,-42.16 168.25,-20 168.25,-20 168.25,-14 174.25,-8 180.25,-8 180.25,-8 286.42,-8 286.42,-8 292.42,-8 298.42,-14 298.42,-20 298.42,-20 298.42,-42.16 298.42,-42.16 298.42,-48.16 292.42,-54.16 286.42,-54.16"/>
 <text xml:space="preserve" text-anchor="start" x="208.21" y="-32.73" font-family="Helvetica,sans-Serif" font-size="13.00" fill="#172033"> </text>
@@ -328,14 +305,14 @@
 <text xml:space="preserve" text-anchor="start" x="281.71" y="-19.73" font-family="Helvetica,sans-Serif" font-size="13.00" fill="#172033"> </text>
 </g>
 <!-- prune&#45;&gt;pruned -->
-<g id="edge18" class="edge">
+<g id="edge16" class="edge">
 <title>prune&#45;&gt;pruned</title>
 <path fill="none" stroke="#5f7087" stroke-width="1.15" d="M233.34,-82.87C233.34,-82.87 233.34,-63.93 233.34,-63.93"/>
 <polygon fill="#5f7087" stroke="#5f7087" stroke-width="1.15" points="235.96,-63.93 233.34,-56.43 230.71,-63.93 235.96,-63.93"/>
 <text xml:space="preserve" text-anchor="middle" x="190.21" y="-63.9" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#41546d">confirm exact items</text>
 </g>
 <!-- batch_gate -->
-<g id="node20" class="node">
+<g id="node19" class="node">
 <title>batch_gate</title>
 <path fill="#fff0b8" stroke="#8291a6" stroke-width="1.25" d="M614.63,-1292.4C614.63,-1292.4 433.62,-1251.52 433.62,-1251.52 427.77,-1250.2 427.77,-1247.56 433.62,-1246.24 433.62,-1246.24 614.63,-1205.36 614.63,-1205.36 620.48,-1204.04 632.19,-1204.04 638.04,-1205.36 638.04,-1205.36 819.05,-1246.24 819.05,-1246.24 824.9,-1247.56 824.9,-1250.2 819.05,-1251.52 819.05,-1251.52 638.04,-1292.4 638.04,-1292.4 632.19,-1293.72 620.48,-1293.72 614.63,-1292.4"/>
 <text xml:space="preserve" text-anchor="start" x="537.09" y="-1250.53" font-family="Helvetica,sans-Serif" font-size="13.00" fill="#172033"> </text>
@@ -344,13 +321,13 @@
 <text xml:space="preserve" text-anchor="start" x="692.34" y="-1237.53" font-family="Helvetica,sans-Serif" font-size="13.00" fill="#172033"> </text>
 </g>
 <!-- batch_prepare&#45;&gt;batch_gate -->
-<g id="edge21" class="edge">
+<g id="edge19" class="edge">
 <title>batch_prepare&#45;&gt;batch_gate</title>
 <path fill="none" stroke="#5f7087" stroke-width="1.15" d="M626.34,-1323.84C626.34,-1323.84 626.34,-1304.78 626.34,-1304.78"/>
 <polygon fill="#5f7087" stroke="#5f7087" stroke-width="1.15" points="628.96,-1304.78 626.34,-1297.28 623.71,-1304.78 628.96,-1304.78"/>
 </g>
 <!-- batch_run -->
-<g id="node21" class="node">
+<g id="node20" class="node">
 <title>batch_run</title>
 <path fill="#f0ebfa" stroke="#8291a6" stroke-width="1.25" d="M727.42,-1150.64C727.42,-1150.64 525.25,-1150.64 525.25,-1150.64 519.25,-1150.64 513.25,-1144.64 513.25,-1138.64 513.25,-1138.64 513.25,-1116.48 513.25,-1116.48 513.25,-1110.48 519.25,-1104.48 525.25,-1104.48 525.25,-1104.48 727.42,-1104.48 727.42,-1104.48 733.42,-1104.48 739.42,-1110.48 739.42,-1116.48 739.42,-1116.48 739.42,-1138.64 739.42,-1138.64 739.42,-1144.64 733.42,-1150.64 727.42,-1150.64"/>
 <text xml:space="preserve" text-anchor="start" x="547.59" y="-1129.21" font-family="Helvetica,sans-Serif" font-size="13.00" fill="#172033"> </text>
@@ -359,27 +336,27 @@
 <text xml:space="preserve" text-anchor="start" x="722.71" y="-1116.21" font-family="Helvetica,sans-Serif" font-size="13.00" fill="#172033"> </text>
 </g>
 <!-- batch_gate&#45;&gt;batch_run -->
-<g id="edge22" class="edge">
+<g id="edge20" class="edge">
 <title>batch_gate&#45;&gt;batch_run</title>
 <path fill="none" stroke="#5f7087" stroke-width="1.15" d="M626.34,-1202.32C626.34,-1202.32 626.34,-1160.35 626.34,-1160.35"/>
 <polygon fill="#5f7087" stroke="#5f7087" stroke-width="1.15" points="628.96,-1160.35 626.34,-1152.85 623.71,-1160.35 628.96,-1160.35"/>
 <text xml:space="preserve" text-anchor="middle" x="609.09" y="-1183.08" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#41546d">approve</text>
 </g>
 <!-- batch_run&#45;&gt;implement -->
-<g id="edge23" class="edge">
+<g id="edge21" class="edge">
 <title>batch_run&#45;&gt;implement</title>
-<path fill="none" stroke="#5f7087" stroke-width="1.15" stroke-dasharray="5,2" d="M526.75,-1103.91C526.75,-1027.93 526.75,-795 526.75,-795 526.75,-795 301.8,-795 301.8,-795 301.8,-795 301.8,-713.2 301.8,-713.2"/>
-<polygon fill="#5f7087" stroke="#5f7087" stroke-width="1.15" points="304.42,-713.2 301.8,-705.7 299.17,-713.2 304.42,-713.2"/>
-<text xml:space="preserve" text-anchor="middle" x="473.88" y="-797.83" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#41546d">one ready item at a time</text>
+<path fill="none" stroke="#5f7087" stroke-width="1.15" stroke-dasharray="5,2" d="M526.75,-1103.87C526.75,-1011.55 526.75,-681 526.75,-681 526.75,-681 319.67,-681 319.67,-681"/>
+<polygon fill="#5f7087" stroke="#5f7087" stroke-width="1.15" points="319.67,-678.38 312.17,-681 319.67,-683.63 319.67,-678.38"/>
+<text xml:space="preserve" text-anchor="middle" x="473.88" y="-790.64" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#41546d">one ready item at a time</text>
 </g>
 <!-- batch_run&#45;&gt;acceptance_gate -->
-<g id="edge26" class="edge">
+<g id="edge24" class="edge">
 <title>batch_run&#45;&gt;acceptance_gate</title>
 <path fill="none" stroke="#5f7087" stroke-width="1.15" stroke-dasharray="5,2" d="M540.25,-1104.02C540.25,-974.54 540.25,-355 540.25,-355 540.25,-355 396.48,-355 396.48,-355"/>
 <polygon fill="#5f7087" stroke="#5f7087" stroke-width="1.15" points="396.48,-352.38 388.98,-355 396.48,-357.63 396.48,-352.38"/>
 </g>
 <!-- park -->
-<g id="node22" class="node">
+<g id="node21" class="node">
 <title>park</title>
 <path fill="#f6d9d9" stroke="#8291a6" stroke-width="1.25" d="M686.92,-1052.4C686.92,-1052.4 565.75,-1052.4 565.75,-1052.4 559.75,-1052.4 553.75,-1046.4 553.75,-1040.4 553.75,-1040.4 553.75,-1018.24 553.75,-1018.24 553.75,-1012.24 559.75,-1006.24 565.75,-1006.24 565.75,-1006.24 686.92,-1006.24 686.92,-1006.24 692.92,-1006.24 698.92,-1012.24 698.92,-1018.24 698.92,-1018.24 698.92,-1040.4 698.92,-1040.4 698.92,-1046.4 692.92,-1052.4 686.92,-1052.4"/>
 <text xml:space="preserve" text-anchor="start" x="609.84" y="-1030.97" font-family="Helvetica,sans-Serif" font-size="13.00" fill="#172033"> </text>
@@ -388,18 +365,18 @@
 <text xml:space="preserve" text-anchor="start" x="682.21" y="-1017.97" font-family="Helvetica,sans-Serif" font-size="13.00" fill="#172033"> </text>
 </g>
 <!-- batch_run&#45;&gt;park -->
-<g id="edge24" class="edge">
+<g id="edge22" class="edge">
 <title>batch_run&#45;&gt;park</title>
 <path fill="none" stroke="#5f7087" stroke-width="1.15" d="M626.34,-1104.28C626.34,-1104.28 626.34,-1062.02 626.34,-1062.02"/>
 <polygon fill="#5f7087" stroke="#5f7087" stroke-width="1.15" points="628.96,-1062.02 626.34,-1054.52 623.71,-1062.02 628.96,-1062.02"/>
 <text xml:space="preserve" text-anchor="middle" x="594.09" y="-1084.9" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#41546d">stop / escalate</text>
 </g>
 <!-- park&#45;&gt;recap -->
-<g id="edge25" class="edge">
+<g id="edge23" class="edge">
 <title>park&#45;&gt;recap</title>
-<path fill="none" stroke="#5f7087" stroke-width="1.15" stroke-dasharray="5,2" d="M553.13,-1037C485.02,-1037 393.98,-1037 393.98,-1037 393.98,-1037 393.98,-1284 393.98,-1284 393.98,-1284 212.7,-1284 212.7,-1284 212.7,-1284 212.7,-1314.38 212.7,-1314.38"/>
+<path fill="none" stroke="#5f7087" stroke-width="1.15" stroke-dasharray="5,2" d="M553.14,-1037C486.34,-1037 397.98,-1037 397.98,-1037 397.98,-1037 397.98,-1284 397.98,-1284 397.98,-1284 212.7,-1284 212.7,-1284 212.7,-1284 212.7,-1314.38 212.7,-1314.38"/>
 <polygon fill="#5f7087" stroke="#5f7087" stroke-width="1.15" points="210.07,-1314.38 212.7,-1321.88 215.32,-1314.38 210.07,-1314.38"/>
-<text xml:space="preserve" text-anchor="middle" x="362.1" y="-1177.25" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#41546d">record + return</text>
+<text xml:space="preserve" text-anchor="middle" x="366.1" y="-1192.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#41546d">record + return</text>
 </g>
 </g>
 </svg>
