@@ -175,13 +175,13 @@ test('a route is active only for a kind that both repositories declare', () => {
 
 test('a blank line after frontmatter does not weaken exact H1 identity validation', () => {
   const { home, local } = fixture()
-  const validId = 'TRD-00000000-0000-4000-8000-000000000003'
+  const validId = 'TRD-00000003'
   writeRecord(local, '-', 'peer/repo', validId, record(validId, 'local/repo', 'peer/repo'))
 
   const valid = createTradesSession(options(local, home, tradeConfiguration('local/repo', ['peer/repo'])))
   expect(mechanicalOutcomes(valid, RECORD)).toEqual([{ status: 'PASS', message: 'Trade record identity and payload shape are valid.' }])
 
-  const invalidId = 'TRD-00000000-0000-4000-8000-000000000004'
+  const invalidId = 'TRD-00000004'
   writeRecord(
     local,
     '-',
@@ -198,25 +198,34 @@ test('a blank line after frontmatter does not weaken exact H1 identity validatio
   })
 })
 
-test('legacy HND record identities are rejected', () => {
+test('legacy or extended record identities are rejected', () => {
   const { home, local } = fixture()
-  const id = 'HND-00000000-0000-4000-8000-000000000005'
+  const id = 'HND-00000005'
   writeRecord(local, '-', 'peer/repo', id, record(id, 'local/repo', 'peer/repo'))
 
   const session = createTradesSession(options(local, home, tradeConfiguration('local/repo', ['peer/repo'])))
   expect(mechanicalOutcomes(session, RECORD)).toContainEqual({
     status: 'VIOLATION',
-    message: 'id must use canonical TRD plus a lower-case UUID-shaped identifier',
+    message: 'id must use canonical TRD plus eight lower-case hexadecimal characters',
     subject: `-/_TRADES/peer/repo/${id}.md`
+  })
+
+  const uuidId = 'TRD-00000000-0000-4000-8000-000000000005'
+  writeRecord(local, '-', 'peer/repo', uuidId, record(uuidId, 'local/repo', 'peer/repo'))
+  const uuidSession = createTradesSession(options(local, home, tradeConfiguration('local/repo', ['peer/repo'])))
+  expect(mechanicalOutcomes(uuidSession, RECORD)).toContainEqual({
+    status: 'VIOLATION',
+    message: 'id must use canonical TRD plus eight lower-case hexadecimal characters',
+    subject: `-/_TRADES/peer/repo/${uuidId}.md`
   })
 })
 
 test('sender and receiver write boundaries reject receiver fields outbound and changed inbound payload', () => {
   const { home, local, peer } = fixture()
-  const outboundId = 'TRD-00000000-0000-4000-8000-000000000001'
+  const outboundId = 'TRD-00000001'
   writeRecord(local, '-', 'peer/repo', outboundId, record(outboundId, 'local/repo', 'peer/repo', ['status: received']))
 
-  const inboundId = 'TRD-00000000-0000-4000-8000-000000000002'
+  const inboundId = 'TRD-00000002'
   writeRecord(peer, '-', 'local/repo', inboundId, record(inboundId, 'peer/repo', 'local/repo'))
   writeRecord(
     local,
@@ -241,10 +250,10 @@ test('all receiver statuses are accepted with their required rationale and linka
     ['parked', ["rationale: 'Wait for dependency.'"]],
     ['clarify', ["rationale: 'Confirm the expected boundary.'"]],
     ['declined', ["rationale: 'The proposal does not fit local scope.'"]],
-    ['superseded', ["rationale: 'A newer submission replaces this one.'", 'superseded_by: TRD-00000000-0000-4000-8000-000000000099']]
+    ['superseded', ["rationale: 'A newer submission replaces this one.'", 'superseded_by: TRD-00000099']]
   ] as const
   for (const [index, [status, fields]] of statuses.entries()) {
-    const id = `TRD-00000000-0000-4000-8000-${String(index + 10).padStart(12, '0')}`
+    const id = `TRD-${String(index + 10).padStart(8, '0')}`
     const kind = status === 'retained' ? 'knowledge' : 'work'
     writeRecord(peer, '-', 'local/repo', id, record(id, 'peer/repo', 'local/repo', [], undefined, kind))
     writeRecord(local, '+', 'peer/repo', id, record(id, 'peer/repo', 'local/repo', [`status: ${status}`, ...fields], undefined, kind))
@@ -253,7 +262,7 @@ test('all receiver statuses are accepted with their required rationale and linka
   const valid = createTradesSession(options(local, home, tradeConfiguration('local/repo', ['peer/repo'])))
   expect(mechanicalOutcomes(valid, STATUS)).toEqual([{ status: 'PASS', message: 'Receiver statuses and local linkage are valid.' }])
 
-  const invalidId = 'TRD-00000000-0000-4000-8000-000000000090'
+  const invalidId = 'TRD-00000090'
   writeRecord(peer, '-', 'local/repo', invalidId, record(invalidId, 'peer/repo', 'local/repo'))
   writeRecord(local, '+', 'peer/repo', invalidId, record(invalidId, 'peer/repo', 'local/repo', ['status: accepted']))
   const invalid = createTradesSession(options(local, home, tradeConfiguration('local/repo', ['peer/repo'])))
@@ -261,7 +270,7 @@ test('all receiver statuses are accepted with their required rationale and linka
     'status must be one of received, adopted, retained, parked, clarify, declined, superseded'
   )
 
-  const wrongKindId = 'TRD-00000000-0000-4000-8000-000000000091'
+  const wrongKindId = 'TRD-00000091'
   writeRecord(peer, '-', 'local/repo', wrongKindId, record(wrongKindId, 'peer/repo', 'local/repo'))
   writeRecord(local, '+', 'peer/repo', wrongKindId, record(wrongKindId, 'peer/repo', 'local/repo', ['status: retained', 'retained_as: Knowledge/Local/Note']))
   const wrongKind = createTradesSession(options(local, home, tradeConfiguration('local/repo', ['peer/repo'])))
@@ -270,11 +279,11 @@ test('all receiver statuses are accepted with their required rationale and linka
 
 test('only terminal receiver dispositions permit sender release and receiver pruning observation', () => {
   const { home, local } = fixture()
-  const parkedId = 'TRD-00000000-0000-4000-8000-000000000020'
+  const parkedId = 'TRD-00000020'
   writeRecord(local, '+', 'peer/repo', parkedId, record(parkedId, 'peer/repo', 'local/repo', ['status: parked', "rationale: 'Wait.'"]))
-  const adoptedId = 'TRD-00000000-0000-4000-8000-000000000021'
+  const adoptedId = 'TRD-00000021'
   writeRecord(local, '+', 'peer/repo', adoptedId, record(adoptedId, 'peer/repo', 'local/repo', ['status: adopted', 'adopted_as: KI-LOCAL-FND-001']))
-  const retainedId = 'TRD-00000000-0000-4000-8000-000000000022'
+  const retainedId = 'TRD-00000022'
   writeRecord(
     local,
     '+',

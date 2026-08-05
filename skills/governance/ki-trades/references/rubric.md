@@ -54,9 +54,9 @@ The optional capability owns only its `_TRADES` directories and README files.
 
 → [standard](standards-trades.md)
 
-Trade-record identity is collision-resistant and corroborated by canonical content rather than inferred from a filename.
+Trade-record identity is concise and corroborated by canonical content rather than inferred from a filename.
 
-- **RECORD-1 [M] — record identity, placement, and payload are canonical** — Every trade record uses the two-level peer layout, an `TRD-` lower-case UUID-shaped identity repeated in filename, metadata, and its first non-blank body H1, a closed sender envelope with `kind: work | knowledge`, and non-empty Context, Submission, and Constraints payload sections. (standards-trades.md)
+- **RECORD-1 [M] — record identity, placement, and payload are canonical** — Every trade record uses the two-level peer layout, an `TRD-` eight lower-case hexadecimal-character identity repeated in filename, metadata, and its first non-blank body H1, a closed sender envelope with `kind: work | knowledge`, and non-empty Context, Submission, and Constraints payload sections. (standards-trades.md)
 
 ## AUTH — Write authority
 

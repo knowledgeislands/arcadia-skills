@@ -36,14 +36,14 @@ The generic `+` and `-` working areas and their README files remain owned by `ki
 
 ```text
 +/_TRADES/
-└── <sender-owner>/<sender-repository>/TRD-<uuid>.md
+└── <sender-owner>/<sender-repository>/TRD-<eight-hex>.md
 -/_TRADES/
-└── <receiver-owner>/<receiver-repository>/TRD-<uuid>.md
+└── <receiver-owner>/<receiver-repository>/TRD-<eight-hex>.md
 ```
 
 Each `_TRADES` directory retains its skill-owned README when empty. The two peer path segments exactly match the record's sender for inbound records and receiver for outbound records.
 
-The canonical identifier grammar is `TRD-[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}`. Generation uses collision-resistant random UUID values; audit validates the shape and lower-case spelling but never infers record identity from the filename alone. Filename, `id`, and H1 must agree.
+The canonical identifier grammar is `TRD-[0-9a-f]{8}`. Generation uses eight lower-case hexadecimal characters from a random UUID; the short form deliberately accepts its collision risk. Audit validates the shape and lower-case spelling but never infers record identity from the filename alone. Filename, `id`, and H1 must agree.
 
 ## Record format
 
@@ -51,7 +51,7 @@ The sender authors this immutable envelope and payload:
 
 ```markdown
 ---
-id: TRD-01234567-89ab-4cde-8f01-23456789abcd
+id: TRD-01234567
 title: 'Short submission title'
 created_at: 2026-08-03T12:00:00Z
 sender: sender-owner/sender-repository
@@ -60,7 +60,7 @@ kind: work
 source_ref: KI-SENDER-FND-001
 ---
 
-# TRD-01234567-89ab-4cde-8f01-23456789abcd: Short submission title
+# TRD-01234567: Short submission title
 
 ## Context
 

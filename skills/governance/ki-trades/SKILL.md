@@ -5,7 +5,7 @@ ki-shared-dependencies: [ki-skills:rubric]
 contributes: ['.ki-config.toml']
 owns: ['+/_TRADES/README.md', '-/_TRADES/README.md']
 description: >
-  Governs typed, directional cross-repository trades between locally registered Knowledge Islands repositories: canonical GitHub repository homes, work and knowledge routes, TRD UUID-shaped trade records, immutable sender payload, receiver-only disposition, and release-observed pruning. Use when submitting work or knowledge to another repository, reviewing inbound trades, auditing trade routes or records, or resolving adoption, retention, parking, clarification, decline, or supersession. A route grants visibility only; ki-roadmap and the receiving repository retain priority and acceptance authority.
+  Governs typed, directional cross-repository trades between locally registered Knowledge Islands repositories: canonical GitHub repository homes, work and knowledge routes, TRD eight-hexadecimal record identities, immutable sender payload, receiver-only disposition, and release-observed pruning. Use when submitting work or knowledge to another repository, reviewing inbound trades, auditing trade routes or records, or resolving adoption, retention, parking, clarification, decline, or supersession. A route grants visibility only; ki-roadmap and the receiving repository retain priority and acceptance authority.
 argument-hint: 'audit <repo> | conform <repo> | educate <repo> | help | refresh'
 ---
 
@@ -17,7 +17,7 @@ This governance skill defines safe **trade submission**, not transfer: a sender 
 
 1. **Declared participation** — a repository opts in with its own `ki-trades` table, declaring typed `exports_to` and `imports_from` routes. Its canonical HTTPS GitHub home comes from `ki-repo.repository`.
 2. **Directional trade routes** — a route is active only when both repositories are present in the local KI repository registry, the sender exports a trade kind to the receiver, and the receiver imports that same kind from the sender. Missing, malformed, mismatched, ambiguous, or one-sided declarations are findings, never implicit trust.
-3. **Trade record identity and placement** — every record uses `TRD-<lower-case UUID-shaped identifier>`, declares `kind: work | knowledge`, and uses the two-level peer layout under the local `+/_TRADES/` or `-/_TRADES/` area. Filenames are validated but never treated as sufficient identity evidence.
+3. **Trade record identity and placement** — every record uses `TRD-<eight lower-case hexadecimal characters>`, declares `kind: work | knowledge`, and uses the two-level peer layout under the local `+/_TRADES/` or `-/_TRADES/` area. Filenames are validated but never treated as sufficient identity evidence.
 4. **Authority boundaries** — the sender writes only its outbound record. The receiver creates and updates only its inbound copy. Sender provenance and body payload remain byte-stable; only receiver-local status, review/disposition rationale, and local adoption, retention, or supersession linkage may differ.
 5. **Lifecycle** — an inbound copy starts `received`; work may be `adopted`, while knowledge may be `retained`, and either may be `parked`, `clarify`, `declined`, or `superseded`.
 6. **Release observation** — the sender may remove its outbound copy only after `adopted`, `retained`, `declined`, or `superseded`. The receiver may prune inbound only after that release is observable. `parked` and `clarify` retain the sender copy.
