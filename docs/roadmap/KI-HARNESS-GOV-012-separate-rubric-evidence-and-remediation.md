@@ -83,7 +83,7 @@ For configuration and runtime bindings, parse schema, declared keys, paths, link
 
 For commands, manuals, and projections, check declared script presence, `--help` or generation parity, link targets, and known output seams; retain whether a command proves the intended behaviour or a deployment path is operationally sound for review.
 
-For lifecycle and record structure, validate identifiers, status transitions, required evidence, reciprocal references, and canonical Markdown links for named work items in prose; retain priority, readiness, disposition, authority, and retention honesty for review. Structured fields and lifecycle commands retain their bare identifiers.
+For lifecycle and record structure, validate identifiers, status transitions, required evidence, and reciprocal references; retain priority, readiness, disposition, authority, and retention honesty for review.
 
 For skill and agent prose, check parseable frontmatter, link resolution, declared modes, and named sibling references where an authority set exists; retain scope, trigger quality, terminology, instruction altitude, and durable semantic fit for review.
 
@@ -91,7 +91,7 @@ This makes existing hybrid rules the normal form: the mechanical condition is ex
 
 ### Catalogue rollout
 
-Start with `ki-skills` and `ki-engineering` as the shared-model and common-toolchain pilots, then classify every current rubric family. [GOV-007](KI-HARNESS-GOV-007-govern-skill-owned-package-script-namespaces.md) remains the bounded package-script ownership adopter; it does not silently establish this broader rubric contract. The work must identify each audit-only mechanical criterion as automatic, diagnostic, guarded, or an implementation gap before declaring the fleet complete.
+Start with `ki-skills` and `ki-engineering` as the shared-model and common-toolchain pilots, then classify every current rubric family. `GOV-007` remains the bounded package-script ownership adopter; it does not silently establish this broader rubric contract. The work must identify each audit-only mechanical criterion as automatic, diagnostic, guarded, or an implementation gap before declaring the fleet complete.
 
 ## Current state
 
@@ -133,7 +133,7 @@ Before this item enters `ready`, two distinct models from different vendors must
 
 ## Dependencies / blocks
 
-The design is ready for detailed inventory, but status must remain `draft` until the first complete criterion inventory establishes the exact migration batches and the `tools-ki` host owner accepts its bounded host-contract work. [GOV-007](KI-HARNESS-GOV-007-govern-skill-owned-package-script-namespaces.md) is a coordinated adopter, not a hidden ownership dependency.
+The design is ready for detailed inventory, but status must remain `draft` until the first complete criterion inventory establishes the exact migration batches and the `tools-ki` host owner accepts its bounded host-contract work. `GOV-007` is a coordinated adopter, not a hidden ownership dependency.
 
 ## Delegation
 
