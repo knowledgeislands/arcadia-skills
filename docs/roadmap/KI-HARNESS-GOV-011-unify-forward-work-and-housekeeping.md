@@ -38,6 +38,7 @@ KB Streams use a different Focus vocabulary and `draft` / `ready` / `in-progress
 - [x] Update affected rubric contexts, generated publications, and focused tests; add the new skill to repository configuration.
 - [x] Run the relevant direct audits, focused tests, TypeScript, the full test suite, and formatting checks.
 - [x] Enforce compact four-word roadmap titles and normalize every registered repository roadmap.
+- [x] Align the native `ki repo roadmap` parser, ordering, promotion help, and CLI coverage in `tools-ki` with the shared lifecycle and horizon names.
 
 ## Files touched
 
@@ -84,11 +85,11 @@ The design was explicitly agreed: the shared queue includes a `housekeeping` hor
 
 ### Delivered
 
-The roadmap contract now limits every work-item title to four words, and every registered non-KB roadmap conforms.
+The roadmap contract now limits every work-item title to four words, every registered non-KB roadmap conforms, and the native `ki repo roadmap` command accepts the shared lifecycle and horizon names.
 
 ### Summary of changes
 
-Added the title limit to the roadmap standard, mechanical auditor, generated rubric publication, and focused test. Normalized 70 registered roadmap titles without renaming files or changing their bodies.
+Added the title limit to the roadmap standard, mechanical auditor, generated rubric publication, and focused test. Normalized 70 registered roadmap titles without renaming files or changing their bodies. Updated `tools-ki` from `blocking` / `open` / `acceptance` to `now` / `draft` / `awaiting-review` in its native parser, ordering, help, tests, and remaining roadmap records.
 
 ### Verification
 
@@ -97,6 +98,9 @@ Added the title limit to the roadmap standard, mechanical auditor, generated rub
 - `ki repo audit --skill ki-roadmap --repo .` — pass.
 - Every registered non-KB roadmap was checked for titles over four words — 0 remain.
 - The ten external changed roadmaps and chezmoi, KI Specifications, KI Website, MCP, tools, and Valle Armonia repositories each have a focused title-only commit.
+- `tools-ki` `bun run test` — pass: 475 tests, 0 failures.
+- `tools-ki` `bunx tsc --noEmit` and focused Biome check — pass.
+- `ki repo roadmap list` — pass: lists GOV-007 as `[draft]`; no invalid lifecycle diagnostic.
 
 ### Outstanding concerns
 
