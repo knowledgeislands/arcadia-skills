@@ -40,6 +40,34 @@ const MD_MECH: RubricItem<MarkdownRubricContext> = {
   }
 }
 
+const MD_FRONTMATTER: RubricItem<MarkdownRubricContext> = {
+  code: 'MD-frontmatter',
+  title: 'frontmatter uses canonical bare-safe scalars',
+  description:
+    'Markdown frontmatter leaves identifier-like scalar tokens unquoted when their YAML meaning is unchanged; quoted YAML-significant values, dates, numeric-looking values, punctuation, whitespace, and escaped strings remain quoted.',
+  sources: ['standards-markdown.md#frontmatter'],
+  mechanical: {
+    level: 'FAIL',
+    audit: {
+      phase: 'INSPECT',
+      run: ({ frontmatter: { files } }) =>
+        files.length === 0
+          ? [{ status: 'PASS', message: 'frontmatter scalars are canonical' }]
+          : files.map(({ path, count }) => ({
+              status: 'VIOLATION' as const,
+              message: `frontmatter has ${count} unnecessarily quoted bare-safe scalar${count === 1 ? '' : 's'}`,
+              subject: path
+            }))
+    },
+    conform: {
+      phase: 'NORMALISE',
+      run: ({ frontmatter: { files } }) => {
+        for (const file of files) file.normalise?.()
+      }
+    }
+  }
+}
+
 const MD_TABLE: RubricItem<MarkdownRubricContext> = {
   code: 'MD-table',
   title: 'wide tables are reshaped',
@@ -90,5 +118,5 @@ export const MARKDOWN: RubricFamily<AuthoringRubricContext, MarkdownRubricContex
   description: 'The mechanical Markdown gate and reviewer-applied Markdown conventions.',
   standard: 'standards-markdown.md',
   selectContext: (context: AuthoringRubricContext) => context.markdown,
-  items: [MD_MECH, MD_TABLE, MD_FOOTNOTE, MD_LINK, MD_CELL_PROSE, MD_CALLOUT]
+  items: [MD_MECH, MD_FRONTMATTER, MD_TABLE, MD_FOOTNOTE, MD_LINK, MD_CELL_PROSE, MD_CALLOUT]
 }

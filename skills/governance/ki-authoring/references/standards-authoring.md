@@ -17,9 +17,9 @@ A path that exists but is not a regular non-symlink file is a violation and is n
 
 ## Markdown gate
 
-AUDIT runs Prettier in check mode and then markdownlint-cli2 against the repository's authored Markdown, excluding generated, vendored, dependency, and runtime-projection paths. The commands receive fixed argument arrays; no repository path or file content is interpolated into a shell program.
+AUDIT runs Prettier in check mode and then markdownlint-cli2 against the repository's authored Markdown, excluding generated, vendored, dependency, and runtime-projection paths. It also inspects Markdown frontmatter for safely removable scalar quotes under the [Markdown authoring standard](standards-markdown.md#frontmatter). The commands receive fixed argument arrays; no repository path or file content is interpolated into a shell program.
 
-CONFORM requests the corresponding Prettier write pass and markdownlint-cli2 fix pass in the rubric's `NORMALISE` phase. The formatter commands are part of the session's final proposal rather than launched by a rubric item.
+CONFORM requests the corresponding Prettier write pass and markdownlint-cli2 fix pass in the rubric's `NORMALISE` phase, together with host-validated direct writes for safely canonicalized frontmatter. The formatter commands are part of the session's final proposal rather than launched by a rubric item.
 
 The [Markdown authoring standard](standards-markdown.md) defines the judgment choices left after this mechanical gate.
 

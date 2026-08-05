@@ -1,6 +1,6 @@
 import { spawnSync } from 'node:child_process'
 import { createHash } from 'node:crypto'
-import { existsSync, lstatSync, readFileSync } from 'node:fs'
+import { existsSync, lstatSync, readdirSync, readFileSync } from 'node:fs'
 import { join, resolve } from 'node:path'
 import type { ConformCommand, ConformWrite, RubricContextOptions, RubricPublicationContext, RubricSession } from '../../shared/rubric.ts'
 
@@ -84,10 +84,19 @@ const MARKDOWN_CONFORM_COMMANDS: readonly ConformCommand[] = [
 export type OwnedFile = '.prettierrc.json' | '.editorconfig' | '.markdownlint-cli2.jsonc'
 export type OwnedFileState = 'missing' | 'canonical' | 'drifted' | 'unsafe'
 export type MarkdownAudit = { clean: boolean; detail?: string }
+export type FrontmatterFileEvidence = {
+  path: string
+  count: number
+  normalise?: () => void
+}
+export type FrontmatterRubricContext = {
+  files: readonly FrontmatterFileEvidence[]
+}
 export type MarkdownRubricContext = {
   target: string
   exists: boolean
   audit: MarkdownAudit
+  frontmatter: FrontmatterRubricContext
   normalise?: () => void
 }
 export type OwnedFileEvidence = {
@@ -114,6 +123,11 @@ type OwnedFileDraft = {
   proposal: () => ConformWrite | undefined
 }
 
+type FrontmatterFileDraft = {
+  evidence: FrontmatterFileEvidence
+  proposal: () => ConformWrite | undefined
+}
+
 const canonical: Record<OwnedFile, string> = {
   '.prettierrc.json': PRETTIER_DEFAULT,
   '.editorconfig': EDITORCONFIG_DEFAULT,
@@ -121,6 +135,61 @@ const canonical: Record<OwnedFile, string> = {
 }
 
 const sha256 = (content: string): string => createHash('sha256').update(content).digest('hex')
+
+const FRONTMATTER_IGNORED_DIRECTORIES = new Set(['.git', 'dist', 'node_modules'])
+const FRONTMATTER_IGNORED_PATHS = ['src/generated', '.claude/commands', '.claude/skills', '.claude/agents', '.agents/skills']
+const YAML_SIGNIFICANT_SCALARS = /^(?:true|false|null|y|n|yes|no|on|off|\.nan|\.inf)$/i
+const BARE_SAFE_SCALAR = /^[A-Za-z_][A-Za-z0-9_-]*$/
+
+const frontmatterPathIsIgnored = (path: string): boolean => FRONTMATTER_IGNORED_PATHS.some((ignored) => path === ignored || path.startsWith(`${ignored}/`))
+
+const markdownFiles = (repository: string, directory = '', files: string[] = []): readonly string[] => {
+  for (const entry of readdirSync(join(repository, directory), { withFileTypes: true })) {
+    const path = directory ? `${directory}/${entry.name}` : entry.name
+    if (entry.isDirectory()) {
+      if (!FRONTMATTER_IGNORED_DIRECTORIES.has(entry.name) && !frontmatterPathIsIgnored(path)) markdownFiles(repository, path, files)
+      continue
+    }
+    if (entry.isFile() && !entry.isSymbolicLink() && path.endsWith('.md') && !frontmatterPathIsIgnored(path)) files.push(path)
+  }
+  return files
+}
+
+const normaliseFrontmatter = (content: string): { content: string; count: number } => {
+  const frontmatter = /^(---\n)([\s\S]*?)(\n---(?:\n|$))/.exec(content)
+  if (!frontmatter) return { content, count: 0 }
+  let count = 0
+  const fields = frontmatter[2].replace(/^([a-z][a-z0-9-]*: )(['"])([A-Za-z_][A-Za-z0-9_-]*)\2$/gm, (line, prefix, _quote, value) => {
+    if (!BARE_SAFE_SCALAR.test(value) || YAML_SIGNIFICANT_SCALARS.test(value)) return line
+    count += 1
+    return `${prefix}${value}`
+  })
+  return count === 0 ? { content, count } : { content: `${frontmatter[1]}${fields}${frontmatter[3]}${content.slice(frontmatter[0].length)}`, count }
+}
+
+const createFrontmatterDrafts = (repository: string, mutable: boolean): readonly FrontmatterFileDraft[] =>
+  markdownFiles(repository).flatMap((path) => {
+    const original = readFileSync(join(repository, path), 'utf8')
+    const normalised = normaliseFrontmatter(original)
+    if (normalised.count === 0) return []
+    let requested = false
+    return [
+      {
+        evidence: {
+          path,
+          count: normalised.count,
+          ...(mutable
+            ? {
+                normalise: () => {
+                  requested = true
+                }
+              }
+            : {})
+        },
+        proposal: () => (requested ? { path, content: normalised.content } : undefined)
+      }
+    ]
+  })
 
 const inspectOwnedFile = (repository: string, name: OwnedFile): OwnedFileState => {
   const path = join(repository, name)
@@ -191,12 +260,14 @@ export const createAuthoringSession = (
   const mutable = mode === 'conform' && targetExists
   let normaliseMarkdown = false
   const ownedDrafts = (Object.keys(canonical) as OwnedFile[]).map((name) => createOwnedFileDraft(target, name, mutable))
+  const frontmatterDrafts = targetExists ? createFrontmatterDrafts(target, mutable) : []
   const context: AuthoringRubricContext = {
     rubric: { publication },
     markdown: {
       target,
       exists: targetExists,
       audit: targetExists ? markdownInspector(target) : { clean: false },
+      frontmatter: { files: frontmatterDrafts.map((draft) => draft.evidence) },
       ...(mutable
         ? {
             normalise: () => {
@@ -219,10 +290,17 @@ export const createAuthoringSession = (
       { families: ['MD', 'OWN', 'TOML', 'SYNC'], context: () => context }
     ],
     proposal: () => ({
-      writes: ownedDrafts.flatMap((draft) => {
-        const write = draft.proposal()
-        return write ? [write] : []
-      }),
+      writes: ownedDrafts
+        .flatMap((draft) => {
+          const write = draft.proposal()
+          return write ? [write] : []
+        })
+        .concat(
+          frontmatterDrafts.flatMap((draft) => {
+            const write = draft.proposal()
+            return write ? [write] : []
+          })
+        ),
       ...(normaliseMarkdown ? { commands: MARKDOWN_CONFORM_COMMANDS } : {})
     })
   }

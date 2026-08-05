@@ -6,8 +6,9 @@ The **judgment-layer** rules for the Markdown written across Knowledge Islands r
 
 - [What to leave to the linter](#what-to-leave-to-the-linter)
 - [Migration safety](#migration-safety)
-- [Tables and footnotes](#tables-and-footnotes)
-- [Links](#links)
+  - [Tables and footnotes](#tables-and-footnotes)
+  - [Frontmatter](#frontmatter)
+  - [Links](#links)
 - [Callouts](#callouts)
 - [Code blocks](#code-blocks)
 
@@ -84,6 +85,16 @@ Learned applying this; bake them in:
 3. **When the long cell is content, not a URL,** reference links don't help — shorten the cell to a short label with a marker and move the full content to a **second-series (`※`) footnote**.
 4. **Watch for a pre-existing footnote series.** If a table already uses `†` for something (e.g. a date caveat), give the dominant content series the primary daggers and move the lone caveat to the `※` series so markers don't collide.
 5. **Author loosely, then run `ki repo conform --skill ki-authoring`.** Prettier re-aligns table padding (`MD060`) and markdownlint flags `MD052` (undefined reference) until the `[ref]:` definitions land — both transient; the pass should end at 0 errors.
+
+## Frontmatter
+
+Frontmatter is authored Markdown content. Use an unquoted scalar when it is a plain, unambiguous token; quote a value only when quoting preserves its intended string meaning or makes punctuation and whitespace clear.
+
+The mechanical normalizer removes paired single or double quotes only when the value is a bare-safe identifier-like token (`[A-Za-z_][A-Za-z0-9_-]*`) and is not YAML-significant (`true`, `false`, `null`, `y`, `n`, `yes`, `no`, `on`, `off`, `.nan`, or `.inf`, case-insensitively). It leaves dates, numeric-looking values, whitespace, punctuation, escaped values, and YAML-significant scalars unchanged.
+
+For example, write `id: DOTFILES-UE-001`, not `id: 'DOTFILES-UE-001'`; retain `title: "A value: with punctuation"` and `enabled: "true"` where those values must remain strings.
+
+This is an authoring presentation rule. Domain skills own a document's required frontmatter fields and value semantics; `ki` accepts valid quoted scalar input so existing authored files remain readable.
 
 ## Links
 

@@ -30,6 +30,7 @@ test('the default export is the sole catalogue entrypoint and families are compl
   expect(catalogue.families.map((family) => family.code)).toEqual(['RUBRIC', 'MD', 'OWN', 'TOML', 'SYNC'])
   expect(catalogue.families.filter((family) => family.code !== 'RUBRIC').flatMap((family) => family.items.map((item) => item.code))).toEqual([
     'MD-mech',
+    'MD-frontmatter',
     'MD-table',
     'MD-footnote',
     'MD-link',
@@ -98,6 +99,34 @@ test('conform retains drafts, coalesces writes, and leaves publication to the ho
   expect(readFileSync(join(repository, '.prettierrc.json'), 'utf8')).toBe('{}\n')
   expect(existsSync(join(repository, '.editorconfig'))).toBe(false)
   expect(existsSync(join(repository, '.markdownlint-cli2.jsonc'))).toBe(false)
+})
+
+test('frontmatter conform removes only safely unnecessary scalar quotes', () => {
+  const repository = temporaryRepository()
+  writeFileSync(
+    join(repository, 'guide.md'),
+    '---\nid: \'DOTFILES-UE-001\'\nname: "agent"\nenabled: "true"\nrelease: "2026-08-05"\ntitle: "A value: with punctuation"\n---\n\n# Guide\n'
+  )
+  const session = createAuthoringSession({ mode: 'conform', repository, userHome: tmpdir(), configuration: {} }, () => ({ clean: true }))
+  const context = session.subjects[1]?.context()
+  const frontmatter = markdownModule.MARKDOWN.items.find((item) => item.code === 'MD-frontmatter')
+
+  expect(frontmatter?.mechanical?.audit.run(context?.markdown as NonNullable<typeof context>['markdown'])).toEqual([
+    {
+      status: 'VIOLATION',
+      message: 'frontmatter has 2 unnecessarily quoted bare-safe scalars',
+      subject: 'guide.md'
+    }
+  ])
+
+  frontmatter?.mechanical?.conform?.run(context?.markdown as NonNullable<typeof context>['markdown'])
+
+  expect(session.proposal().writes).toEqual([
+    {
+      path: 'guide.md',
+      content: '---\nid: DOTFILES-UE-001\nname: agent\nenabled: "true"\nrelease: "2026-08-05"\ntitle: "A value: with punctuation"\n---\n\n# Guide\n'
+    }
+  ])
 })
 
 test('owned-file conform refuses to propose a write through a symlink', () => {
