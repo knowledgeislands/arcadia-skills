@@ -244,7 +244,7 @@ test('legacy or extended record identities are rejected', () => {
 test('sender and receiver write boundaries reject receiver fields outbound and changed inbound payload', () => {
   const { home, local, peer } = fixture()
   const outboundId = 'TRD-00000001'
-  writeRecord(local, '-', 'peer/repo', outboundId, record(outboundId, 'local/repo', 'peer/repo', ['status: received']))
+  writeRecord(local, '-', 'peer/repo', outboundId, record(outboundId, 'local/repo', 'peer/repo', ['decision_status: unconsidered']))
 
   const inboundId = 'TRD-00000002'
   writeRecord(peer, '-', 'local/repo', inboundId, record(inboundId, 'peer/repo', 'local/repo'))
@@ -253,19 +253,20 @@ test('sender and receiver write boundaries reject receiver fields outbound and c
     '+',
     'peer/repo',
     inboundId,
-    record(inboundId, 'peer/repo', 'local/repo', ['status: received'], 'The receiver changed the sender payload.')
+    record(inboundId, 'peer/repo', 'local/repo', ['decision_status: unconsidered'], 'The receiver changed the sender payload.')
   )
 
   const session = createTradesSession(options(local, home, tradeConfiguration('local/repo', ['peer/repo'])))
   const messages = mechanicalOutcomes(session, AUTH).map((outcome) => outcome.message)
-  expect(messages).toContain('sender-owned outbound record must not set receiver-local field status')
+  expect(messages).toContain('sender-owned outbound record must not set receiver-local field decision_status')
   expect(messages).toContain('sender provenance or payload differs between outbound and inbound copies')
 })
 
-test('all receiver statuses are accepted with their required rationale and linkage', () => {
+test('all receiver decision statuses are accepted with their required rationale and linkage', () => {
   const { home, local, peer } = fixture()
   const statuses = [
-    ['received', []],
+    ['unconsidered', []],
+    ['in_progress', []],
     ['adopted', ['adopted_as: KI-LOCAL-FND-001']],
     ['retained', ['retained_as: Knowledge/Local/Note']],
     ['parked', ["rationale: 'Wait for dependency.'"]],
@@ -277,23 +278,29 @@ test('all receiver statuses are accepted with their required rationale and linka
     const id = `TRD-${String(index + 10).padStart(8, '0')}`
     const kind = status === 'retained' ? 'knowledge' : 'work'
     writeRecord(peer, '-', 'local/repo', id, record(id, 'peer/repo', 'local/repo', [], undefined, kind))
-    writeRecord(local, '+', 'peer/repo', id, record(id, 'peer/repo', 'local/repo', [`status: ${status}`, ...fields], undefined, kind))
+    writeRecord(local, '+', 'peer/repo', id, record(id, 'peer/repo', 'local/repo', [`decision_status: ${status}`, ...fields], undefined, kind))
   }
 
   const valid = createTradesSession(options(local, home, tradeConfiguration('local/repo', ['peer/repo'])))
-  expect(mechanicalOutcomes(valid, STATUS)).toEqual([{ status: 'PASS', message: 'Receiver statuses and local linkage are valid.' }])
+  expect(mechanicalOutcomes(valid, STATUS)).toEqual([{ status: 'PASS', message: 'Receiver decision statuses and local linkage are valid.' }])
 
   const invalidId = 'TRD-00000090'
   writeRecord(peer, '-', 'local/repo', invalidId, record(invalidId, 'peer/repo', 'local/repo'))
-  writeRecord(local, '+', 'peer/repo', invalidId, record(invalidId, 'peer/repo', 'local/repo', ['status: accepted']))
+  writeRecord(local, '+', 'peer/repo', invalidId, record(invalidId, 'peer/repo', 'local/repo', ['decision_status: accepted']))
   const invalid = createTradesSession(options(local, home, tradeConfiguration('local/repo', ['peer/repo'])))
   expect(mechanicalOutcomes(invalid, STATUS).map((outcome) => outcome.message)).toContain(
-    'status must be one of received, adopted, retained, parked, clarify, declined, superseded'
+    'decision_status must be one of unconsidered, in_progress, parked, clarify, adopted, retained, declined, superseded'
   )
 
   const wrongKindId = 'TRD-00000091'
   writeRecord(peer, '-', 'local/repo', wrongKindId, record(wrongKindId, 'peer/repo', 'local/repo'))
-  writeRecord(local, '+', 'peer/repo', wrongKindId, record(wrongKindId, 'peer/repo', 'local/repo', ['status: retained', 'retained_as: Knowledge/Local/Note']))
+  writeRecord(
+    local,
+    '+',
+    'peer/repo',
+    wrongKindId,
+    record(wrongKindId, 'peer/repo', 'local/repo', ['decision_status: retained', 'retained_as: Knowledge/Local/Note'])
+  )
   const wrongKind = createTradesSession(options(local, home, tradeConfiguration('local/repo', ['peer/repo'])))
   expect(mechanicalOutcomes(wrongKind, STATUS).map((outcome) => outcome.message)).toContain('retained is valid only for knowledge trades')
 })
@@ -301,16 +308,16 @@ test('all receiver statuses are accepted with their required rationale and linka
 test('only terminal receiver dispositions permit sender release and receiver pruning observation', () => {
   const { home, local } = fixture()
   const parkedId = 'TRD-00000020'
-  writeRecord(local, '+', 'peer/repo', parkedId, record(parkedId, 'peer/repo', 'local/repo', ['status: parked', "rationale: 'Wait.'"]))
+  writeRecord(local, '+', 'peer/repo', parkedId, record(parkedId, 'peer/repo', 'local/repo', ['decision_status: parked', "rationale: 'Wait.'"]))
   const adoptedId = 'TRD-00000021'
-  writeRecord(local, '+', 'peer/repo', adoptedId, record(adoptedId, 'peer/repo', 'local/repo', ['status: adopted', 'adopted_as: KI-LOCAL-FND-001']))
+  writeRecord(local, '+', 'peer/repo', adoptedId, record(adoptedId, 'peer/repo', 'local/repo', ['decision_status: adopted', 'adopted_as: KI-LOCAL-FND-001']))
   const retainedId = 'TRD-00000022'
   writeRecord(
     local,
     '+',
     'peer/repo',
     retainedId,
-    record(retainedId, 'peer/repo', 'local/repo', ['status: retained', 'retained_as: Knowledge/Local/Note'], undefined, 'knowledge')
+    record(retainedId, 'peer/repo', 'local/repo', ['decision_status: retained', 'retained_as: Knowledge/Local/Note'], undefined, 'knowledge')
   )
 
   const session = createTradesSession(options(local, home, tradeConfiguration('local/repo', ['peer/repo'])))

@@ -7,7 +7,7 @@ const RELEASE_1: RubricItem<OutcomeContext> = {
   code: 'RELEASE-1',
   title: 'release and pruning follow observable lifecycle evidence',
   description:
-    'Sender release is permitted only after adopted, retained, declined, or superseded; parked, clarify, and received retain the outbound copy, and receiver pruning becomes eligible only after an allowed release is observable.',
+    'Sender release is permitted only after adopted, retained, declined, or superseded; unconsidered, in_progress, parked, and clarify retain the outbound copy, and receiver pruning becomes eligible only after an allowed release is observable.',
   sources: [SOURCE],
   mechanical: { level: 'FAIL', audit: { phase: 'INSPECT', run: ({ outcomes }) => outcomes } }
 }

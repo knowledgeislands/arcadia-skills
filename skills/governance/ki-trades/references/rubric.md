@@ -14,7 +14,7 @@ Line-by-line criteria for auditing ki-trades. Classifications are derived from i
 - [SCAFFOLD — Trade scaffold](#scaffold--trade-scaffold)
 - [RECORD — Record shape](#record--record-shape)
 - [AUTH — Write authority](#auth--write-authority)
-- [STATUS — Receiver lifecycle](#status--receiver-lifecycle)
+- [STATUS — Mutual lifecycle](#status--mutual-lifecycle)
 - [RELEASE — Release and pruning](#release--release-and-pruning)
 - [ADOPTION — Receiver local authority](#adoption--receiver-local-authority)
 
@@ -66,13 +66,13 @@ A trade remains a local copy protocol with immutable sender provenance and recei
 
 - **AUTH-1 [M] — sender and receiver write boundaries are preserved** — Outbound records belong to the local sender, use its declared export route, and contain no receiver-local fields; inbound records belong to the local receiver, use an active route, and preserve the outbound sender envelope and body exactly. (standards-trades.md)
 
-## STATUS — Receiver lifecycle
+## STATUS — Mutual lifecycle
 
 → [standard](standards-trades.md)
 
-Receiver-owned disposition uses a closed status vocabulary and explicit local work or knowledge evidence.
+Derived sender and receiver delivery statuses pair with a closed receiver-owned decision vocabulary and explicit local work or knowledge evidence.
 
-- **STATUS-1 [M] — receiver status and linkage are valid** — Only inbound records carry receiver status: received, adopted, retained, parked, clarify, declined, or superseded, with status-appropriate rationale and local adoption, retention, or supersession linkage. (standards-trades.md)
+- **STATUS-1 [M] — receiver decision status and linkage are valid** — Inbound records evidence receiver acceptance and carry one receiver decision status: unconsidered, in_progress, adopted, retained, parked, clarify, declined, or superseded, with decision-appropriate rationale and local adoption, retention, or supersession linkage. (standards-trades.md)
 
 ## RELEASE — Release and pruning
 
@@ -80,7 +80,7 @@ Receiver-owned disposition uses a closed status vocabulary and explicit local wo
 
 Absence is interpreted only as an observable release signal after a terminal receiver disposition.
 
-- **RELEASE-1 [M] — release and pruning follow observable lifecycle evidence** — Sender release is permitted only after adopted, retained, declined, or superseded; parked, clarify, and received retain the outbound copy, and receiver pruning becomes eligible only after an allowed release is observable. (standards-trades.md)
+- **RELEASE-1 [M] — release and pruning follow observable lifecycle evidence** — Sender release is permitted only after adopted, retained, declined, or superseded; unconsidered, in_progress, parked, and clarify retain the outbound copy, and receiver pruning becomes eligible only after an allowed release is observable. (standards-trades.md)
 
 ## ADOPTION — Receiver local authority
 

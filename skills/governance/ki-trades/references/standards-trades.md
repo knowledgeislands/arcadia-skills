@@ -8,7 +8,7 @@ This standard defines local, typed and directional trade routes between register
 - [Storage and identity](#storage-and-identity)
 - [Record format](#record-format)
 - [Copy and write authority](#copy-and-write-authority)
-- [Receiver lifecycle](#receiver-lifecycle)
+- [Mutual lifecycle](#mutual-lifecycle)
 - [Release and pruning](#release-and-pruning)
 - [Roadmap and process boundary](#roadmap-and-process-boundary)
 
@@ -77,21 +77,32 @@ Authority, safety, dependency, and verification boundaries the receiver must ret
 
 The seven sender fields are required strings. `kind` is `work` or `knowledge`; an outbound record is valid on the sender's declared export route for that kind, while an inbound record requires an active matching route. `created_at` is a UTC `YYYY-MM-DDTHH:MM:SSZ` timestamp. `source_ref` is provenance only; it neither reuses the source identifier as the trade identity nor transfers source lifecycle authority. The three payload sections are required and non-empty. A blank line may separate the closing frontmatter delimiter from the H1; the H1 must remain the first non-blank body line and exactly repeat the `id` and `title`.
 
-An inbound receiver copy adds `status: received`. It may also carry receiver-local `reviewed_at`, `rationale`, `adopted_as`, `retained_as`, or `superseded_by`. No other frontmatter key is valid, so a peer cannot hide a sender-envelope or receiver-authority change behind an extension field.
+An inbound receiver copy adds `decision_status: unconsidered`. It may also carry receiver-local `reviewed_at`, `rationale`, `adopted_as`, `retained_as`, or `superseded_by`. No other frontmatter key is valid, so a peer cannot hide a sender-envelope or receiver-authority change behind an extension field.
 
 ## Copy and write authority
 
 The sender writes and removes only its outbound record. It never sets receiver-local fields. The receiver creates and changes only its inbound copy. The sender envelope and the complete body are immutable between the outbound record and every retained inbound copy; the checker compares content rather than trusting matching filenames.
 
-`reviewed_at`, when present, is a UTC timestamp. `rationale` records the receiver's review or disposition reasoning. `adopted_as` links to receiver-local work only when status is `adopted`; `retained_as` links to receiver-local knowledge only when status is `retained`; `superseded_by` links to the replacing local or trade identity only when status is `superseded`. These links are local evidence, not priority or acceptance authority.
+`reviewed_at`, when present, is a UTC timestamp. `rationale` records the receiver's review or decision reasoning. `adopted_as` links to receiver-local work only when decision status is `adopted`; `retained_as` links to receiver-local knowledge only when decision status is `retained`; `superseded_by` links to the replacing local or trade identity only when decision status is `superseded`. These links are local evidence, not priority or acceptance authority.
 
 The governance checker is read-only across repositories. Its only conformable write is the local, owned README scaffold; record copying and disposition remain explicitly authored local actions.
 
-## Receiver lifecycle
+## Mutual lifecycle
 
-The receiver alone moves its inbound status:
+The delivery and decision axes are distinct. Sender and receiver statuses are derived by comparing the two copies; only the receiver writes `decision_status` on its inbound copy.
 
-- `received` — copied locally and awaiting disposition.
+| Sender status | Receiver status | Decision status       | Meaning                                                                   |
+| ------------- | --------------- | --------------------- | ------------------------------------------------------------------------- |
+| `sent`        | `unavailable`   | —                     | An outbound copy exists but the receiver has not created an inbound copy. |
+| `received`    | `accepted`      | `unconsidered`        | The receiver has accepted the trade for consideration.                    |
+| `received`    | `accepted`      | `in_progress`         | The receiver is actively considering or carrying out the trade.           |
+| `received`    | `accepted`      | `parked` or `clarify` | The trade is paused or requires sender input.                             |
+| `received`    | `accepted`      | terminal decision     | The receiver has resolved the trade.                                      |
+
+The receiver alone moves its inbound decision status:
+
+- `unconsidered` — accepted for consideration but not yet reviewed.
+- `in_progress` — actively being considered or carried out.
 - `adopted` — a work trade accepted as input to local work; `adopted_as` is required.
 - `retained` — a knowledge trade retained in local knowledge; `retained_as` is required.
 - `parked` — intentionally retained without adoption or knowledge retention; `rationale` is required.
@@ -99,13 +110,13 @@ The receiver alone moves its inbound status:
 - `declined` — not adopted or retained; `rationale` is required.
 - `superseded` — replaced by another local record or trade; `rationale` and `superseded_by` are required.
 
-A newly created inbound copy starts `received`. Existing copies may hold any listed status. Other values are invalid. The checker cannot infer or author the human decision behind a transition.
+A newly created inbound copy starts `unconsidered`. Existing copies may hold any listed decision status. Other values are invalid. The checker cannot infer or author the human decision behind a transition.
 
 ## Release and pruning
 
-The sender may release its outbound copy only after observing receiver status `adopted`, `retained`, `declined`, or `superseded`. An outbound copy with one of those terminal dispositions is release-eligible but remains valid until the sender acts. `received`, `parked`, and `clarify` require the outbound copy to remain.
+The sender may release its outbound copy only after observing receiver decision status `adopted`, `retained`, `declined`, or `superseded`. An outbound copy with one of those terminal decisions is release-eligible but remains valid until the sender acts. `unconsidered`, `in_progress`, `parked`, and `clarify` require the outbound copy to remain.
 
-The receiver may prune its inbound copy only after the matching outbound record's absence is observable. If the outbound copy disappears while status is `received`, `parked`, or `clarify`, audit reports premature sender release rather than treating the inbound copy as prune-eligible. If a terminal inbound copy remains after release, audit reports that it is eligible for receiver-controlled pruning; it never deletes the file.
+The receiver may prune its inbound copy only after the matching outbound record's absence is observable. If the outbound copy disappears while decision status is `unconsidered`, `in_progress`, `parked`, or `clarify`, audit reports premature sender release rather than treating the inbound copy as prune-eligible. If a terminal inbound copy remains after release, audit reports that it is eligible for receiver-controlled pruning; it never deletes the file.
 
 ## Roadmap and process boundary
 

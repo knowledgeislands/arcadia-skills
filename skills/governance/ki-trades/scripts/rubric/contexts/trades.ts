@@ -9,10 +9,10 @@ const REPOSITORY = /^https:\/\/github\.com\/([a-z0-9](?:[a-z0-9._-]*[a-z0-9])?)\
 const TRADE_ID = /^TRD-[0-9a-f]{8}$/
 const UTC_TIMESTAMP = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/
 const TRADE_KINDS = ['work', 'knowledge'] as const
-const STATUSES = ['received', 'adopted', 'retained', 'parked', 'clarify', 'declined', 'superseded'] as const
-const TERMINAL_STATUSES = new Set(['adopted', 'retained', 'declined', 'superseded'])
+const DECISION_STATUSES = ['unconsidered', 'in_progress', 'parked', 'clarify', 'adopted', 'retained', 'declined', 'superseded'] as const
+const TERMINAL_DECISION_STATUSES = new Set(['adopted', 'retained', 'declined', 'superseded'])
 const SENDER_FIELDS = ['id', 'title', 'created_at', 'sender', 'receiver', 'kind', 'source_ref'] as const
-const RECEIVER_FIELDS = ['status', 'reviewed_at', 'rationale', 'adopted_as', 'retained_as', 'superseded_by'] as const
+const RECEIVER_FIELDS = ['decision_status', 'reviewed_at', 'rationale', 'adopted_as', 'retained_as', 'superseded_by'] as const
 const ALLOWED_FIELDS = new Set<string>([...SENDER_FIELDS, ...RECEIVER_FIELDS])
 
 const TRADE_READMES = [
@@ -22,7 +22,7 @@ const TRADE_READMES = [
 
 This directory holds receiver-owned copies of active cross-repository work and knowledge trades, grouped by the sender's canonical \`owner/repo\` identity.
 
-Only this repository may change receiver-local status, rationale, adoption, retention, or supersession linkage. Sender provenance and payload remain unchanged. Prune an inbound copy only after an eligible sender release is observable.
+Only this repository may change receiver-local decision status, rationale, adoption, retention, or supersession linkage. Sender provenance and payload remain unchanged. An inbound copy means this repository has accepted delivery; prune it only after an eligible sender release is observable.
 `
   },
   {
@@ -31,14 +31,14 @@ Only this repository may change receiver-local status, rationale, adoption, rete
 
 This directory holds sender-owned cross-repository work and knowledge trades, grouped by the receiver's canonical \`owner/repo\` identity.
 
-Only this repository writes or removes these outbound records. Retain each record until the receiver reports adopted, retained, declined, or superseded; parked and clarify dispositions do not permit release.
+Only this repository writes or removes these outbound records. Retain each record until the receiver reports adopted, retained, declined, or superseded; unconsidered, in_progress, parked, and clarify decisions do not permit release.
 
 An outbound record may await the receiver's \`ki-trades\` participation and matching import declaration. It remains sender-owned until an inbound copy is observable.
 `
   }
 ] as const
 
-type TradeStatus = (typeof STATUSES)[number]
+type DecisionStatus = (typeof DECISION_STATUSES)[number]
 type TradeKind = (typeof TRADE_KINDS)[number]
 type Direction = 'inbound' | 'outbound'
 
@@ -56,7 +56,7 @@ type TradeRecord = {
   readonly path: string
   readonly peer?: string
   readonly id?: string
-  readonly status?: TradeStatus
+  readonly decisionStatus?: DecisionStatus
   readonly kind?: TradeKind
   readonly fields: Readonly<Record<string, unknown>>
   readonly body: string
@@ -349,11 +349,21 @@ const parseRecord = (root: string, path: string, direction: Direction, outcomes:
     if (!section?.[1]?.trim()) outcomes.push({ status: 'VIOLATION', message: `payload section ${heading} is required and non-empty`, subject: path })
   }
 
-  const rawStatus = fields.status
-  const status = typeof rawStatus === 'string' && STATUSES.includes(rawStatus as TradeStatus) ? (rawStatus as TradeStatus) : undefined
+  const rawDecisionStatus = fields.decision_status
+  const decisionStatus =
+    typeof rawDecisionStatus === 'string' && DECISION_STATUSES.includes(rawDecisionStatus as DecisionStatus) ? (rawDecisionStatus as DecisionStatus) : undefined
   const rawKind = fields.kind
   const kind = typeof rawKind === 'string' && TRADE_KINDS.includes(rawKind as TradeKind) ? (rawKind as TradeKind) : undefined
-  return { direction, path, ...(peer ? { peer } : {}), ...(id ? { id } : {}), ...(status ? { status } : {}), ...(kind ? { kind } : {}), fields, body }
+  return {
+    direction,
+    path,
+    ...(peer ? { peer } : {}),
+    ...(id ? { id } : {}),
+    ...(decisionStatus ? { decisionStatus } : {}),
+    ...(kind ? { kind } : {}),
+    fields,
+    body
+  }
 }
 
 const immutableRecord = (record: TradeRecord): string =>
@@ -414,26 +424,31 @@ const recordEvidence = (
         if (record.fields[field] !== undefined)
           authority.push({ status: 'VIOLATION', message: `sender-owned outbound record must not set receiver-local field ${field}`, subject: record.path })
     } else {
-      if (!record.status) status.push({ status: 'VIOLATION', message: `status must be one of ${STATUSES.join(', ')}`, subject: record.path })
+      if (!record.decisionStatus)
+        status.push({ status: 'VIOLATION', message: `decision_status must be one of ${DECISION_STATUSES.join(', ')}`, subject: record.path })
       if (typeof record.fields.reviewed_at === 'string' && !UTC_TIMESTAMP.test(record.fields.reviewed_at))
         status.push({ status: 'VIOLATION', message: 'reviewed_at must be a UTC YYYY-MM-DDTHH:MM:SSZ timestamp', subject: record.path })
-      if (record.status && ['parked', 'clarify', 'declined', 'superseded'].includes(record.status) && typeof record.fields.rationale !== 'string')
-        status.push({ status: 'VIOLATION', message: `${record.status} requires receiver-local rationale`, subject: record.path })
-      if (record.status === 'adopted' && typeof record.fields.adopted_as !== 'string')
+      if (
+        record.decisionStatus &&
+        ['parked', 'clarify', 'declined', 'superseded'].includes(record.decisionStatus) &&
+        typeof record.fields.rationale !== 'string'
+      )
+        status.push({ status: 'VIOLATION', message: `${record.decisionStatus} requires receiver-local rationale`, subject: record.path })
+      if (record.decisionStatus === 'adopted' && typeof record.fields.adopted_as !== 'string')
         status.push({ status: 'VIOLATION', message: 'adopted requires receiver-local adopted_as linkage', subject: record.path })
-      if (record.status === 'adopted' && record.kind !== 'work')
+      if (record.decisionStatus === 'adopted' && record.kind !== 'work')
         status.push({ status: 'VIOLATION', message: 'adopted is valid only for work trades', subject: record.path })
-      if (record.status === 'retained' && record.kind !== 'knowledge')
+      if (record.decisionStatus === 'retained' && record.kind !== 'knowledge')
         status.push({ status: 'VIOLATION', message: 'retained is valid only for knowledge trades', subject: record.path })
-      if (record.status === 'retained' && typeof record.fields.retained_as !== 'string')
+      if (record.decisionStatus === 'retained' && typeof record.fields.retained_as !== 'string')
         status.push({ status: 'VIOLATION', message: 'retained requires receiver-local retained_as linkage', subject: record.path })
-      if (record.status !== 'adopted' && record.fields.adopted_as !== undefined)
+      if (record.decisionStatus !== 'adopted' && record.fields.adopted_as !== undefined)
         status.push({ status: 'VIOLATION', message: 'adopted_as is valid only for adopted status', subject: record.path })
-      if (record.status !== 'retained' && record.fields.retained_as !== undefined)
+      if (record.decisionStatus !== 'retained' && record.fields.retained_as !== undefined)
         status.push({ status: 'VIOLATION', message: 'retained_as is valid only for retained status', subject: record.path })
-      if (record.status === 'superseded' && typeof record.fields.superseded_by !== 'string')
+      if (record.decisionStatus === 'superseded' && typeof record.fields.superseded_by !== 'string')
         status.push({ status: 'VIOLATION', message: 'superseded requires receiver-local superseded_by linkage', subject: record.path })
-      if (record.status !== 'superseded' && record.fields.superseded_by !== undefined)
+      if (record.decisionStatus !== 'superseded' && record.fields.superseded_by !== undefined)
         status.push({ status: 'VIOLATION', message: 'superseded_by is valid only for superseded status', subject: record.path })
     }
 
@@ -447,8 +462,12 @@ const recordEvidence = (
 
     if (record.direction === 'inbound') {
       if (counterpart) {
-        release.push({ status: 'PASS', message: `sender outbound copy is retained for ${record.status ?? 'invalid'} status`, subject: record.path })
-      } else if (record.status && TERMINAL_STATUSES.has(record.status)) {
+        release.push({
+          status: 'PASS',
+          message: `sender outbound copy is retained for ${record.decisionStatus ?? 'invalid'} decision status`,
+          subject: record.path
+        })
+      } else if (record.decisionStatus && TERMINAL_DECISION_STATUSES.has(record.decisionStatus)) {
         release.push({ status: 'INFO', message: 'eligible sender release is observable; receiver may prune this inbound copy', subject: record.path })
       } else {
         release.push({
@@ -459,10 +478,14 @@ const recordEvidence = (
       }
     } else if (!counterpart) {
       release.push({ status: 'PASS', message: 'receiver has not created an inbound copy; sender retains the outbound record', subject: record.path })
-    } else if (counterpart.status && TERMINAL_STATUSES.has(counterpart.status)) {
-      release.push({ status: 'INFO', message: `receiver status ${counterpart.status} permits sender release`, subject: record.path })
+    } else if (counterpart.decisionStatus && TERMINAL_DECISION_STATUSES.has(counterpart.decisionStatus)) {
+      release.push({ status: 'INFO', message: `receiver decision status ${counterpart.decisionStatus} permits sender release`, subject: record.path })
     } else {
-      release.push({ status: 'PASS', message: `receiver status ${counterpart.status ?? 'invalid'} requires sender retention`, subject: record.path })
+      release.push({
+        status: 'PASS',
+        message: `receiver decision status ${counterpart.decisionStatus ?? 'invalid'} requires sender retention`,
+        subject: record.path
+      })
     }
   }
 
@@ -509,7 +532,7 @@ export const createTradesSession = ({ mode, repository, userHome, configuration,
     },
     records: { outcomes: evidence.records.length ? evidence.records : pass('Trade record identity and payload shape are valid.') },
     authority: { outcomes: evidence.authority.length ? evidence.authority : pass('Trade records preserve sender and receiver write boundaries.') },
-    status: { outcomes: evidence.status.length ? evidence.status : pass('Receiver statuses and local linkage are valid.') },
+    status: { outcomes: evidence.status.length ? evidence.status : pass('Receiver decision statuses and local linkage are valid.') },
     release: { outcomes: evidence.release.length ? evidence.release : pass('No trade release or pruning violation is observable.') },
     judgment: {}
   }
