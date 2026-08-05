@@ -11,7 +11,7 @@ _On-demand procedure for `ki-recap`. The kind, scope, and leg summary live in [`
   - [3. Surface what is outstanding](#3-surface-what-is-outstanding)
   - [4. Harvest the learnings, and route each](#4-harvest-the-learnings-and-route-each)
   - [5. Specific actions](#5-specific-actions)
-  - [6. Optional handoff to `ki-next`](#6-optional-handoff-to-ki-next)
+  - [6. Route future-work selection to `ki-next`](#6-route-future-work-selection-to-ki-next)
   - [7. Preserve the handoff and compact when needed](#7-preserve-the-handoff-and-compact-when-needed)
 
 **Ground every claim in reality, not memory.** Warm in-session context, compaction summaries, and recalled memory entries are hypotheses about state, not evidence of it — concurrent sessions, background processes, and elapsed time all make them stale. Before the recap asserts a checkable fact — a commit landed, a gate passed, a file contains something, a plan is open — check it now (`git log`, re-run the read-only gate, read the file). What cannot be cheaply re-checked, state as recollection ("as of when it ran"), not as fact.
@@ -46,11 +46,11 @@ Using warm context plus the helper's `filesTouched` / `diffStat`: state what cha
 
 **Always check whether everything is committed** — even if the session felt "done", verify the working tree is clean for the files this session touched (staged, unstaged, and untracked). Uncommitted session work is the most common silently-dropped outstanding item. Files dirty from _other_ threads of work are out of scope (per the stay-scoped rule) — note their existence in one line at most, never enumerate or adopt them.
 
-Then look for threads left mid-change: uncommitted edits, a failing gate, a decision still open, work neither done nor parked. First resolve the repository structure: a non-KB repository routes forward work to its roadmap and, when needed, a governed plan; a Knowledge Base routes it to Streams and, when needed, a proposal Checklist. **Ground every "uncommitted" or "still dirty" claim in the `filesTouched` from the grounding helper run at the start of _this_ recap, never in a `git status`/`git diff` seen earlier in the conversation** — commits (yours or a concurrent process's) can land between that earlier look and the recap itself, and stale context reads as a false outstanding item. If `transcriptEvidence.status` is `changed` or `unavailable`, describe transcript-derived tool tallies only as historical or omit their recommendation. If meaningful time has passed since step 1 ran, re-run it before finalizing this section. Apply the house rule:
+Then look only for threads left mid-change by this session: uncommitted edits, a failing gate, a decision still open, or an explicitly deferred fix. Do not use a recap to inventory repository backlog, peer-repository state, or plausible future work; those are outside the thread and `ki-next` owns future-work selection. **Ground every "uncommitted" or "still dirty" claim in the `filesTouched` from the grounding helper run at the start of _this_ recap, never in a `git status`/`git diff` seen earlier in the conversation** — commits (yours or a concurrent process's) can land between that earlier look and the recap itself, and stale context reads as a false outstanding item. If `transcriptEvidence.status` is `changed` or `unavailable`, describe transcript-derived tool tallies only as historical or omit their recommendation. If meaningful time has passed since step 1 ran, re-run it before finalizing this section. Apply the house rule:
 
 - A roadmap item or Stream **added during this session** counts as **what happened** (placing work in the repository's durable forward-work structure is a completed action), not as outstanding.
-- A non-KB `ki-plan` with unchecked Steps or a KB proposal with unchecked Checklist entries **is** outstanding — cite its identifier and lifecycle state.
-- If something outstanding has no home, offer the correct local route: `ki-plan new` or a roadmap edit for a non-KB repository; `ki-kb-streams` PROPOSE for a Knowledge Base.
+- An in-session non-KB `ki-plan` with unchecked Steps or KB proposal with unchecked Checklist entries **is** outstanding — cite its identifier and lifecycle state. An unrelated plan or proposal is not.
+- If an explicitly deferred in-session thread has no durable home, offer its correct local route: `ki-plan new` or a roadmap edit for a non-KB repository; `ki-kb-streams` PROPOSE for a Knowledge Base. Do not manufacture a route for work merely noticed during the recap.
 
 ## 4. Harvest the learnings, and route each
 
@@ -74,34 +74,31 @@ When `ki-accept` requests an item-scoped recap, do not run or imply a full-sessi
 
 ## 5. Specific actions
 
-Close the recap with a **Specific actions** section: a short, concrete, imperative list of everything actionable that emerged from steps 3 and 4 — each item something that could be done right now, with the exact command, file, or artefact named. Prefix each item with a short, unique, uppercase hyphenated label that names its work (usually two to four words), so the user can respond in chat by label ("do `COMMIT-DOCS` and `FIX-AUTHORING-AUDIT`") instead of restating the action. Do not use arbitrary sequence labels such as `A1`, `A2`, or `A3`; labels are ephemeral recap handles, not roadmap identifiers. Typical entries:
+Close the recap with a **Specific actions** section: a short, concrete, imperative list of only the unfinished work that emerged from this session's steps 3 and 4 — each item something that could be done right now, with the exact command, file, or artefact named. Do not add generic backlog, peer-repository state, a proposed feature, or a future-work choice merely because it is actionable; those are `ki-next` concerns, not recap actions. Prefix each item with a short, unique, uppercase hyphenated label that names the work (usually two to four words), so the user can respond in chat by label ("do `COMMIT-DOCS` and `FIX-AUTHORING-AUDIT`") instead of restating the action. Do not use arbitrary sequence labels such as `A1`, `A2`, or `A3`; labels are ephemeral recap handles, not roadmap identifiers. Typical entries:
 
 - `COMMIT-SESSION-CHANGES` — Commit (or explicitly discard) the session's uncommitted files — name the paths and suggest the commit message.
-- `PARK-DEFERRED-WORK` — Create the offered roadmap / plan or Stream / proposal Checklist for outstanding work that has no home.
+- `PRESERVE-SESSION-DEFERRAL` — Create the offered roadmap / plan or Stream / proposal Checklist for a thread explicitly deferred during this session that has no home.
 - `APPLY-LEARNING-ROUTE` — Apply an approved learning route from the knowledge-promotion standard (for example, a repository rule, skill criterion, hook, memory, or personal configuration update).
 - `RERUN-FAILING-GATE` — Re-run a gate that was left failing, or finish a mid-change thread.
-- `CHOOSE-NEXT-WORK` — Offer `ki-next` when one or more grounded actions need a roadmap priority or plan decision. Carry only their labels, the grounded outstanding work, and the approval state of any learning routes; `ki-next` re-reads the roadmap before it ranks anything.
 
 If nothing is actionable, say so in one line ("No actions — tree clean, nothing outstanding"). Do **not** perform the actions unprompted — this section is the checklist the user acts on (or asks you to act on); durable writes still require the step-4 confirmation.
 
-## 6. Optional handoff to `ki-next`
+## 6. Route future-work selection to `ki-next`
 
-Offer this handoff only when the recap has a roadmap-directed action. It is an in-conversation invitation, not a new invocation mode, a persistent transcript, or a dependency:
+Future-work selection is separate from recap. Route to `ki-next` only when the user asks to choose, rank, or defer future work; it is not a Specific action, a standing recap requirement, or an automatic handoff:
 
-1. State the candidate action labels and the grounded context available to `ki-next`: outstanding work, learning routes and whether each is approved, and the Specific actions themselves.
-2. State the boundary: `ki-next` works without this recap, re-runs the current roadmap audit, and treats every dynamic claim here as a lead rather than fact.
-3. Do not create a roadmap entry, promote an item, create a plan, write a learning route, or invoke `ki-next` merely by offering the handoff. The user chooses whether to continue.
+1. State the boundary: `ki-next` re-runs the current roadmap audit and treats any recap context as a lead rather than fact.
+2. Do not turn candidate work into a recap action, create a roadmap entry, promote an item, create a plan, write a learning route, or invoke `ki-next` merely by naming the route. The user chooses whether to continue.
 
 Apply these scenario checks when offering it:
 
-| Situation | Required result |
-| --- | --- |
-| Clean recap | Say “No actions”; do not manufacture a `ki-next` handoff. |
-| Repository has no roadmap | Recap still completes; do not offer `ki-next` as a selection route. |
-| Deferred work was already parked on the roadmap | Record it as what happened, not outstanding; `ki-next` will re-ground its current state if invoked. |
-| Learning route is unapproved | Label it as a proposal; neither recap nor `ki-next` writes it. |
-| Generated-footprint rollout has unrelated consumer drift | Report the rollout evidence and the unrelated drift separately; do not let either prove the other. |
-| User confirms multi-step next work | `ki-next` re-audits, confirms the exact roadmap transition, calls `ki-plan`, then stops for plan review. |
+| Situation                                       | Required result                                                                    |
+| ----------------------------------------------- | ---------------------------------------------------------------------------------- |
+| Clean recap                                     | Say “No actions”; do not manufacture a `ki-next` handoff.                          |
+| Future work is merely visible in the repository | Omit it from the recap; it is neither an outstanding thread nor a Specific action. |
+| User asks to choose future work                 | Route to `ki-next`, which re-grounds the roadmap before selection.                 |
+| Deferred work was already parked on the roadmap | Record it as what happened, not outstanding.                                       |
+| Learning route is unapproved                    | Label it as a proposal; neither recap nor `ki-next` writes it.                     |
 
 ## 7. Preserve the handoff and compact when needed
 
