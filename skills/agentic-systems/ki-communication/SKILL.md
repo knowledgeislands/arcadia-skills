@@ -31,8 +31,14 @@ Draft a communication section for a new user or repository instruction surface. 
 
 ### Mode REFRESH
 
+Run REFRESH only in `ki-agentic-harness`; from an installed copy, stop and direct the user to the canonical harness repository.
+
 Review the contract when runtimes add durable instruction, session, or output-control mechanisms. Preserve the portable precedence model; add runtime-specific detail only when it cannot be expressed in shared Markdown.
+
+### Mode HELP
+
+Explain the contract, precedence, levels, and modes without changing any instruction surface.
 
 ## Modes and boundaries
 
-`help` explains this contract and stops. AUDIT is read-only; CONFORM requires confirmation before writing. The skill governs communication instructions, not product documentation, agent definitions, or tool-specific command behaviour. Keep evidence available for inspection, but present passing verification as a summary unless the selected level or a failure calls for detail.
+AUDIT is read-only; CONFORM requires confirmation before writing. The skill governs communication instructions, not product documentation, agent definitions, or tool-specific command behaviour. Keep evidence available for inspection, but present passing verification as a summary unless the selected level or a failure calls for detail.
