@@ -14,7 +14,7 @@ const mechanical = (code: string, title: string, description: string, passMessag
   }
 })
 
-const PLAN_1 = mechanical(
+const EXEC_1 = mechanical(
   'EXEC-1',
   'in-place execution record',
   'A work item entering execution retains its concise issue context and adds the required execution sections in the same file.',
@@ -48,5 +48,5 @@ export const EXEC: RubricFamily<RoadmapRubricContext, RoadmapAuditContext> = {
   description: 'In-place execution shape and lifecycle integrity.',
   standard: SOURCE,
   selectContext: (context) => context.execution,
-  items: [PLAN_1, EXEC_2, EXEC_3]
+  items: [EXEC_1, EXEC_2, EXEC_3]
 }
