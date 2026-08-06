@@ -4,6 +4,13 @@ import type { HomebrewTapRubricContext, TapContext } from '../contexts/homebrew-
 const STANDARD = 'standards-homebrew-tap.md'
 const SOURCE = [STANDARD] as const
 const many = (outcomes: AuditOutcome[]): RubricOutcomes<AuditOutcome> => outcomes as RubricOutcomes<AuditOutcome>
+const DIAGNOSTIC = { class: 'diagnostic' as const, guidance: 'Correct the tap formula or release evidence through the responsible maintainer; hosted conform does not infer release or package semantics.' }
+const judgment = (prompt: string) => ({
+  scope: 'The Homebrew tap, its formulae, release evidence, and CI configuration.',
+  prompt,
+  outcomes: ['conforming', 'gap', 'exclusion'] as const,
+  guidance: 'Revise the tap through its responsible maintainer, record a named gap, or record an explicit justified exclusion.'
+})
 
 const TAP_1: RubricItem<TapContext> = {
   code: 'TAP-1',
@@ -12,6 +19,7 @@ const TAP_1: RubricItem<TapContext> = {
   sources: SOURCE,
   mechanical: {
     level: 'FAIL',
+    remediation: DIAGNOSTIC,
     audit: {
       phase: 'INSPECT',
       run: (context) => {
@@ -34,6 +42,7 @@ const TAP_2: RubricItem<TapContext> = {
   sources: SOURCE,
   mechanical: {
     level: 'WARN',
+    remediation: DIAGNOSTIC,
     audit: {
       phase: 'INSPECT',
       run: (context) => {
@@ -62,6 +71,7 @@ const TAP_3: RubricItem<TapContext> = {
   sources: SOURCE,
   mechanical: {
     level: 'WARN',
+    remediation: DIAGNOSTIC,
     audit: {
       phase: 'INSPECT',
       run: (context) => {
@@ -98,6 +108,7 @@ const TAP_4: RubricItem<TapContext> = {
   sources: SOURCE,
   mechanical: {
     level: 'WARN',
+    remediation: DIAGNOSTIC,
     audit: {
       phase: 'INSPECT',
       run: (context) => {
@@ -133,6 +144,7 @@ const TAP_5: RubricItem<TapContext> = {
   sources: SOURCE,
   mechanical: {
     level: 'WARN',
+    remediation: DIAGNOSTIC,
     audit: {
       phase: 'INSPECT',
       run: (context) => {
@@ -157,6 +169,7 @@ const TAP_6: RubricItem<TapContext> = {
   sources: SOURCE,
   mechanical: {
     level: 'WARN',
+    remediation: DIAGNOSTIC,
     audit: {
       phase: 'INSPECT',
       run: (context) => {
@@ -184,6 +197,7 @@ const TAP_7: RubricItem<TapContext> = {
   sources: SOURCE,
   mechanical: {
     level: 'WARN',
+    remediation: DIAGNOSTIC,
     audit: {
       phase: 'DERIVED',
       run: (context) => {
@@ -204,42 +218,42 @@ const TAP_J1: RubricItem<TapContext> = {
   title: 'tap naming',
   description: 'The repository name follows Homebrew tap naming conventions.',
   sources: SOURCE,
-  judgment: { prompt: 'Does the repository name follow the `homebrew-<name>` convention without an unsafe rename?' }
+  judgment: judgment('Does the repository name follow the `homebrew-<name>` convention without an unsafe rename?')
 }
 const TAP_J2: RubricItem<TapContext> = {
   code: 'TAP-J2',
   title: 'meaningful formula test',
   description: 'Each `test do` block exercises an installed binary rather than a placeholder.',
   sources: SOURCE,
-  judgment: { prompt: 'Does each formula test exercise its installed binary with a meaningful assertion?' }
+  judgment: judgment('Does each formula test exercise its installed binary with a meaningful assertion?')
 }
 const TAP_J3: RubricItem<TapContext> = {
   code: 'TAP-J3',
   title: 'install correctness',
   description: 'Each install block installs the artefact the tool actually ships.',
   sources: SOURCE,
-  judgment: { prompt: 'Does each `def install` block install the artefact the tool actually ships?' }
+  judgment: judgment('Does each `def install` block install the artefact the tool actually ships?')
 }
 const TAP_J4: RubricItem<TapContext> = {
   code: 'TAP-J4',
   title: 'source integrity',
   description: 'Checksums and release tags correspond to the declared source archive.',
   sources: SOURCE,
-  judgment: { prompt: 'Do each source URL, version, and checksum correspond to the intended release archive?' }
+  judgment: judgment('Do each source URL, version, and checksum correspond to the intended release archive?')
 }
 const TAP_J5: RubricItem<TapContext> = {
   code: 'TAP-J5',
   title: 'fresh README entries',
   description: 'README formula rows have accurate descriptions and source links.',
   sources: SOURCE,
-  judgment: { prompt: 'Are README formula rows complete, current, and accurate?' }
+  judgment: judgment('Are README formula rows complete, current, and accurate?')
 }
 const TAP_J6: RubricItem<TapContext> = {
   code: 'TAP-J6',
   title: 'CI Homebrew coverage',
   description: 'Tap CI runs `brew test-bot` when local Homebrew is unavailable.',
   sources: SOURCE,
-  judgment: { prompt: 'When local Homebrew is unavailable, does CI run the appropriate Homebrew test-bot checks?' }
+  judgment: judgment('When local Homebrew is unavailable, does CI run the appropriate Homebrew test-bot checks?')
 }
 export const TAP: RubricFamily<HomebrewTapRubricContext, TapContext> = {
   code: 'TAP',

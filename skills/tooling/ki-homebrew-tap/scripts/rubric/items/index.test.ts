@@ -12,6 +12,26 @@ test('the catalogue exposes every ordered Homebrew-tap family and criterion', ()
   expect(definition.families.filter((family) => family.code !== 'RUBRIC').flatMap((family) => family.items.map((item) => item.code))).toEqual(expectedItems)
 })
 
+test('every criterion declares strict v1 remediation or review evidence', () => {
+  const families = definition.families as unknown as readonly {
+    items: readonly {
+      mechanical?: { remediation: { class: string }; conform?: unknown }
+      judgment?: { scope: string; outcomes: readonly string[]; guidance: string }
+    }[]
+  }[]
+  for (const item of families.flatMap((family) => family.items)) {
+    if (item.mechanical) {
+      expect(item.mechanical.remediation.class).not.toBe('')
+      if (item.mechanical.conform) expect(item.mechanical.remediation.class).toBe('automatic')
+    }
+    if (item.judgment) {
+      expect(item.judgment.scope).not.toBe('')
+      expect(item.judgment.outcomes.length).toBeGreaterThan(0)
+      expect(item.judgment.guidance).not.toBe('')
+    }
+  }
+})
+
 test('the catalogue and family modules keep their public surfaces narrow', async () => {
   expect(Object.keys(await import('./index.ts'))).toEqual(['default'])
   for (const file of ['tap', 'config']) {

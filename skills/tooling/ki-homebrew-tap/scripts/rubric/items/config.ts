@@ -12,6 +12,7 @@ const CONFIG_1: RubricItem<TapConfigContext> = {
   mechanical: {
     level: 'WARN',
     overrideLevels: ['FAIL'],
+    remediation: { class: 'automatic' },
     audit: {
       phase: 'INSPECT',
       run: (context) => {
