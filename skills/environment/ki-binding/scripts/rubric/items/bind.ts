@@ -8,6 +8,10 @@ const BIND_1: RubricItem<BindingRubricContext> = {
   sources: ['standards-cross-surface-binding.md'],
   mechanical: {
     level: 'WARN',
+    remediation: {
+      class: 'diagnostic',
+      guidance: 'Reconcile the canonical source and mcporter target through the binding workflow; do not infer client exposure from the target alone.'
+    },
     audit: {
       phase: 'INSPECT',
       run: ({ sourceState, mcporterPath, mcporterServerKeys }) => {
@@ -45,6 +49,10 @@ const BIND_2: RubricItem<BindingRubricContext> = {
   mechanical: {
     level: 'FAIL',
     overrideLevels: ['WARN'],
+    remediation: {
+      class: 'diagnostic',
+      guidance: 'Correct the canonical MCP source so every server has one transport and valid, intentional client targets before regenerating bindings.'
+    },
     audit: {
       phase: 'PREPARE',
       run: ({ source, sourceState }) => {
@@ -95,7 +103,12 @@ const BIND_J1: RubricItem<BindingRubricContext> = {
   title: 'Client targeting is right for use',
   description: 'The clients set reflects intended, least-surprising client availability.',
   sources: ['standards-cross-surface-binding.md'],
-  judgment: { prompt: 'Does each server target the clients that need it, without exposing it on clients that do not?' }
+  judgment: {
+    scope: 'Every canonical MCP server and its intended client availability.',
+    prompt: 'Does each server target the clients that need it, without exposing it on clients that do not?',
+    outcomes: ['conforming', 'target adjustment required', 'authority decision required'],
+    guidance: 'Adjust the canonical clients set to the least-surprising intended availability, or record the owning authority decision before changing exposure.'
+  }
 }
 export const BIND: RubricFamily<BindingRubricContext, BindingRubricContext> = {
   code: 'BIND',

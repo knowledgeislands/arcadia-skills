@@ -20,6 +20,19 @@ test('the portable catalogue publishes the host-owned rubric criterion', () => {
   expect(catalogue.families[0]?.items.map((item) => item.code)).toEqual(['BIND-1', 'BIND-2', 'BIND-J1'])
   expect(catalogue.families[1]?.items.map((item) => item.code)).toEqual(['RUBRIC-1'])
 })
+
+test('criteria declare complete v1 remediation and review metadata', () => {
+  const bind = catalogue.families[0]
+  const publication = catalogue.families[1]
+  const mechanicalItems = [...(bind?.items ?? []), ...(publication?.items ?? [])].filter((item) => item.mechanical)
+  const judgment = bind?.items.find((item) => item.code === 'BIND-J1')?.judgment
+
+  expect(mechanicalItems).toHaveLength(3)
+  expect(mechanicalItems.every((item) => item.mechanical?.remediation)).toBe(true)
+  expect(judgment?.scope).not.toBeEmpty()
+  expect(judgment?.outcomes.length).toBeGreaterThan(0)
+  expect(judgment?.guidance).not.toBeEmpty()
+})
 test('the session compares only mcporter against a canonical source', () => {
   const repository = mkdtempSync(join(tmpdir(), 'ki-binding-repository-'))
   const userHome = mkdtempSync(join(tmpdir(), 'ki-binding-home-'))
