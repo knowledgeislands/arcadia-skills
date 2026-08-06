@@ -2,6 +2,16 @@ import type { AuditOutcome, RubricFamily, RubricItem } from '../../shared/rubric
 import { configDirectory, type WebsiteCloudflareContext, type WebsiteCloudflareRubricContext } from '../contexts/website-cloudflare.ts'
 
 const SOURCE = 'standards-cloudflare-hosting.md'
+const DIAGNOSTIC = {
+  class: 'diagnostic' as const,
+  guidance: 'Correct the evidenced Cloudflare hosting issue through the responsible site owner; hosted conform does not infer deployment or security intent.'
+}
+const judgment = (prompt: string) => ({
+  scope: 'The Cloudflare Worker, static assets, deployment configuration, and evidence named by this criterion.',
+  prompt,
+  outcomes: ['conforming', 'gap', 'exclusion'] as const,
+  guidance: 'Revise the hosting design through the responsible site owner, record a named gap, or record an explicit justified exclusion.'
+})
 
 const skipped = (context: WebsiteCloudflareContext): readonly AuditOutcome[] | null => (context.applicable ? null : [])
 
@@ -14,6 +24,7 @@ const WCF_1: RubricItem<WebsiteCloudflareContext> = {
   sources: [`${SOURCE}#1-model--workers--static-assets-not-pages`],
   mechanical: {
     level: 'FAIL',
+    remediation: DIAGNOSTIC,
     audit: {
       phase: 'INSPECT',
       run: (context) => {
@@ -49,6 +60,7 @@ const WCF_2: RubricItem<WebsiteCloudflareContext> = {
   sources: [`${SOURCE}#1-model--workers--static-assets-not-pages`],
   mechanical: {
     level: 'FAIL',
+    remediation: DIAGNOSTIC,
     audit: {
       phase: 'INSPECT',
       run: (context) => {
@@ -78,6 +90,7 @@ const WCF_3: RubricItem<WebsiteCloudflareContext> = {
   sources: [`${SOURCE}#1-model--workers--static-assets-not-pages`],
   mechanical: {
     level: 'WARN',
+    remediation: DIAGNOSTIC,
     audit: {
       phase: 'INSPECT',
       run: (context) => {
@@ -103,6 +116,7 @@ const WCF_4: RubricItem<WebsiteCloudflareContext> = {
   sources: [`${SOURCE}#2-the-dist-seam`],
   mechanical: {
     level: 'FAIL',
+    remediation: DIAGNOSTIC,
     audit: {
       phase: 'INSPECT',
       run: (context) => {
@@ -129,9 +143,7 @@ const WCF_4: RubricItem<WebsiteCloudflareContext> = {
       }
     }
   },
-  judgment: {
-    prompt: 'Confirm the declared dist path is the exact output directory produced by the separately audited ki-website build.'
-  }
+  judgment: judgment('Confirm the declared dist path is the exact output directory produced by the separately audited ki-website build.')
 }
 
 const WCF_6: RubricItem<WebsiteCloudflareContext> = {
@@ -141,6 +153,7 @@ const WCF_6: RubricItem<WebsiteCloudflareContext> = {
   sources: [`${SOURCE}#2-the-dist-seam`, `${SOURCE}#4-the-script-family`],
   mechanical: {
     level: 'WARN',
+    remediation: DIAGNOSTIC,
     audit: {
       phase: 'INSPECT',
       run: (context) => {
@@ -174,6 +187,7 @@ const WCF_8: RubricItem<WebsiteCloudflareContext> = {
   sources: [`${SOURCE}#3-the-site-wranglerjsonc-shape`],
   mechanical: {
     level: 'WARN',
+    remediation: DIAGNOSTIC,
     audit: {
       phase: 'INSPECT',
       run: (context) => {
@@ -205,6 +219,7 @@ const WCF_9: RubricItem<WebsiteCloudflareContext> = {
   sources: [`${SOURCE}#3-the-site-wranglerjsonc-shape`],
   mechanical: {
     level: 'WARN',
+    remediation: DIAGNOSTIC,
     audit: {
       phase: 'INSPECT',
       run: (context) => {
@@ -231,6 +246,7 @@ const WCF_10: RubricItem<WebsiteCloudflareContext> = {
   sources: [`${SOURCE}#3-the-site-wranglerjsonc-shape`],
   mechanical: {
     level: 'WARN',
+    remediation: DIAGNOSTIC,
     heuristic: true,
     audit: {
       phase: 'INSPECT',
@@ -251,9 +267,7 @@ const WCF_10: RubricItem<WebsiteCloudflareContext> = {
       }
     }
   },
-  judgment: {
-    prompt: 'Verify the custom-domain routes name the correct apex and www host, or document the intentional workers.dev-only exception.'
-  }
+  judgment: judgment('Verify the custom-domain routes name the correct apex and www host, or document the intentional workers.dev-only exception.')
 }
 
 const WCF_13: RubricItem<WebsiteCloudflareContext> = {
@@ -263,6 +277,7 @@ const WCF_13: RubricItem<WebsiteCloudflareContext> = {
   sources: [`${SOURCE}#4-the-script-family`],
   mechanical: {
     level: 'WARN',
+    remediation: DIAGNOSTIC,
     audit: {
       phase: 'INSPECT',
       run: (context) => {
@@ -281,9 +296,7 @@ const WCF_13: RubricItem<WebsiteCloudflareContext> = {
       }
     }
   },
-  judgment: {
-    prompt: 'Confirm the real deployment path builds a current dist before invoking wrangler deploy; do not execute deployment during audit or conform.'
-  }
+  judgment: judgment('Confirm the real deployment path builds a current dist before invoking wrangler deploy; do not execute deployment during audit or conform.')
 }
 
 const WCF_14: RubricItem<WebsiteCloudflareContext> = {
@@ -293,6 +306,7 @@ const WCF_14: RubricItem<WebsiteCloudflareContext> = {
   sources: [`${SOURCE}#4-the-script-family`],
   mechanical: {
     level: 'WARN',
+    remediation: DIAGNOSTIC,
     audit: {
       phase: 'INSPECT',
       run: (context) => {
@@ -307,9 +321,7 @@ const WCF_14: RubricItem<WebsiteCloudflareContext> = {
       }
     }
   },
-  judgment: {
-    prompt: 'Verify the preview script builds the site before wrangler dev and serves the same dist seam as production.'
-  }
+  judgment: judgment('Verify the preview script builds the site before wrangler dev and serves the same dist seam as production.')
 }
 
 const WCF_19: RubricItem<WebsiteCloudflareContext> = {
@@ -319,6 +331,7 @@ const WCF_19: RubricItem<WebsiteCloudflareContext> = {
   sources: [`${SOURCE}#6-boundaries--what-is-not-in-scope`],
   mechanical: {
     level: 'WARN',
+    remediation: DIAGNOSTIC,
     audit: {
       phase: 'INSPECT',
       run: (context) => {
@@ -335,9 +348,7 @@ const WCF_19: RubricItem<WebsiteCloudflareContext> = {
       }
     }
   },
-  judgment: {
-    prompt: 'Confirm configs classified as companions have main without assets and route their bindings, secrets, and runtime concerns to cloudflare/wrangler.'
-  }
+  judgment: judgment('Confirm configs classified as companions have main without assets and route their bindings, secrets, and runtime concerns to cloudflare/wrangler.')
 }
 
 const WCF_20: RubricItem<WebsiteCloudflareContext> = {
@@ -347,6 +358,7 @@ const WCF_20: RubricItem<WebsiteCloudflareContext> = {
   sources: [`${SOURCE}#1-model--workers--static-assets-not-pages`],
   mechanical: {
     level: 'WARN',
+    remediation: DIAGNOSTIC,
     audit: {
       phase: 'INSPECT',
       run: (context) => {
@@ -387,6 +399,7 @@ const WCF_21: RubricItem<WebsiteCloudflareContext> = {
   sources: [`${SOURCE}#1-model--workers--static-assets-not-pages`],
   mechanical: {
     level: 'WARN',
+    remediation: DIAGNOSTIC,
     audit: {
       phase: 'INSPECT',
       run: (context) => {
@@ -441,6 +454,7 @@ const WCF_22: RubricItem<WebsiteCloudflareContext> = {
   sources: [`${SOURCE}#6-boundaries--what-is-not-in-scope`],
   mechanical: {
     level: 'WARN',
+    remediation: DIAGNOSTIC,
     audit: {
       phase: 'INSPECT',
       run: (context) => {
@@ -456,10 +470,7 @@ const WCF_22: RubricItem<WebsiteCloudflareContext> = {
       }
     }
   },
-  judgment: {
-    prompt:
-      'Confirm Workers Builds, account/domain binding, and deployed behavior separately without expanding this rubric into the site build or general Worker concerns.'
-  }
+  judgment: judgment('Confirm Workers Builds, account/domain binding, and deployed behavior separately without expanding this rubric into the site build or general Worker concerns.')
 }
 
 export const WCF: RubricFamily<WebsiteCloudflareRubricContext, WebsiteCloudflareContext> = {
