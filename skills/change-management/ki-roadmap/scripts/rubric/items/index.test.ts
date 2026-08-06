@@ -107,6 +107,24 @@ test('the structured catalogue represents the flat work-item standard', () => {
   ])
 })
 
+test('every criterion declares its v1 remediation or review evidence', () => {
+  for (const family of catalogue.families) {
+    for (const item of family.items) {
+      if (item.mechanical) {
+        expect(item.mechanical.remediation).toBeDefined()
+        if (item.mechanical.conform) expect(item.mechanical.remediation.class).toBe('automatic')
+        if (item.mechanical.remediation.class === 'guarded') expect(item.judgment).toBeDefined()
+      }
+      if (item.judgment) {
+        expect(item.judgment.scope).not.toBe('')
+        expect(item.judgment.prompt).not.toBe('')
+        expect(item.judgment.outcomes.length).toBeGreaterThan(0)
+        expect(item.judgment.guidance).not.toBe('')
+      }
+    }
+  }
+})
+
 test('a flat work item and concise root orientation conform', () => {
   const repository = createFixture()
   expect(inspectRoadmap(repository).filter((finding) => finding.level === 'FAIL')).toEqual([])

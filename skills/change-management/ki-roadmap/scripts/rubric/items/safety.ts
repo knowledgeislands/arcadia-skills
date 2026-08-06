@@ -11,6 +11,7 @@ const SAFE_1: RubricItem<RoadmapAuditContext> = {
   sources: [SOURCE],
   mechanical: {
     level: 'FAIL',
+    remediation: { class: 'diagnostic', guidance: 'Replace unsafe inputs or outputs with regular local files and preserve host-owned publication controls.' },
     audit: { phase: 'INSPECT', run: (context) => outcomesFor(context, 'SAFE-1', 'Roadmap files satisfy the safe local-file boundary.') }
   }
 }

@@ -10,6 +10,10 @@ const mechanical = (code: string, title: string, description: string, passMessag
   sources: [SOURCE],
   mechanical: {
     level: 'FAIL',
+    remediation: {
+      class: 'diagnostic',
+      guidance: 'Restore the required in-place execution sections without changing the item priority, acceptance, or lifecycle decision.'
+    },
     audit: { phase: 'INSPECT', run: (context) => outcomesFor(context, code, passMessage) }
   }
 })
@@ -28,8 +32,11 @@ const EXEC_2: RubricItem<RoadmapAuditContext> = {
     'Future items preserve the issue and its discussion; Soon adds useful shaping; immediate and active items have concrete Steps, checkable Verify, honest Current state, and minimal Files touched.',
   sources: [SOURCE],
   judgment: {
+    scope: 'The stage-appropriate detail in every canonical work item.',
     prompt:
-      'Review whether each work item has useful detail for its stage, including topic-oriented Discussion and concrete, checkable execution detail when immediate.'
+      'Review whether each work item has useful detail for its stage, including topic-oriented Discussion and concrete, checkable execution detail when immediate.',
+    outcomes: ['conforming', 'gap', 'exclusion'],
+    guidance: 'Add or refine only the detail supported by the work; record a gap or explicit exclusion where evidence is insufficient.'
   }
 }
 
@@ -39,7 +46,12 @@ const EXEC_3: RubricItem<RoadmapAuditContext> = {
   description:
     'Draft awaits readiness approval; ready awaits execution; in-progress reflects live work; awaiting-review carries the required review packet; done is a retained closure record. Every non-draft item is Now or Next.',
   sources: [SOURCE],
-  judgment: { prompt: 'Review whether work-item status honestly reflects its lifecycle gate or retained completion record.' }
+  judgment: {
+    scope: 'The declared lifecycle status and retained evidence of every work item.',
+    prompt: 'Review whether work-item status honestly reflects its lifecycle gate or retained completion record.',
+    outcomes: ['conforming', 'gap', 'exclusion'],
+    guidance: 'Select or confirm lifecycle transitions with the owning authority; otherwise record a gap or explicit exclusion.'
+  }
 }
 
 export const EXEC: RubricFamily<RoadmapRubricContext, RoadmapAuditContext> = {

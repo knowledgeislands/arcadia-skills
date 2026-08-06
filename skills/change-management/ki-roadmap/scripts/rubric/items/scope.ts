@@ -10,6 +10,7 @@ const SCOPE_1: RubricItem<RoadmapAuditContext> = {
   sources: [SOURCE],
   mechanical: {
     level: 'FAIL',
+    remediation: { class: 'diagnostic', guidance: 'Remove repository-roadmap artifacts from a KB repository or route the concern through ki-kb-streams.' },
     audit: { phase: 'INSPECT', run: (context) => outcomesFor(context, 'SCOPE-1', 'The repository is in scope.') }
   }
 }

@@ -11,6 +11,7 @@ const ITEM_1: RubricItem<RoadmapAuditContext> = {
   sources: [SOURCE, FORMAT],
   mechanical: {
     level: 'FAIL',
+    remediation: { class: 'diagnostic', guidance: 'Correct the item filename, frontmatter identity, or title to match the canonical flat work-item contract.' },
     audit: {
       phase: 'INSPECT',
       run: (context) => outcomesFor(context, 'ITEM-1', 'Every work item has a canonical identity and frontmatter.')
@@ -33,6 +34,10 @@ export const ITEM: RubricFamily<RoadmapRubricContext, RoadmapAuditContext> = {
       sources: [SOURCE],
       mechanical: {
         level: 'FAIL',
+        remediation: {
+          class: 'diagnostic',
+          guidance: 'Correct the item state fields or dependency declarations; do not choose a priority or lifecycle transition automatically.'
+        },
         audit: { phase: 'INSPECT', run: (context) => outcomesFor(context, 'ITEM-2', 'Every item has valid state fields.') }
       }
     },
@@ -44,6 +49,10 @@ export const ITEM: RubricFamily<RoadmapRubricContext, RoadmapAuditContext> = {
       sources: [FORMAT],
       mechanical: {
         level: 'FAIL',
+        remediation: {
+          class: 'diagnostic',
+          guidance: 'Restore the lifecycle-appropriate canonical sections and task-list shape from the work-item format standard.'
+        },
         audit: { phase: 'INSPECT', run: (context) => outcomesFor(context, 'ITEM-3', 'Every item body matches its lifecycle state.') }
       }
     },
@@ -53,8 +62,11 @@ export const ITEM: RubricFamily<RoadmapRubricContext, RoadmapAuditContext> = {
       description: 'Each work item states a concise user or system outcome before its technical context.',
       sources: [FORMAT],
       judgment: {
+        scope: 'The Goal and Context sections of every active roadmap item.',
         prompt:
-          'Review that Goal explains the intended user or system outcome in plain language, while Context holds the supporting evidence and technical rationale.'
+          'Review that Goal explains the intended user or system outcome in plain language, while Context holds the supporting evidence and technical rationale.',
+        outcomes: ['conforming', 'gap', 'exclusion'],
+        guidance: 'Rewrite the Goal or Context, record a named gap, or record an explicit exclusion in the item discussion.'
       }
     },
     {
@@ -64,7 +76,17 @@ export const ITEM: RubricFamily<RoadmapRubricContext, RoadmapAuditContext> = {
       sources: [SOURCE],
       mechanical: {
         level: 'FAIL',
-        audit: { phase: 'INSPECT', run: (context) => outcomesFor(context, 'ITEM-4', 'Every item dependency is valid and reciprocal.') }
+        remediation: {
+          class: 'guarded',
+          guidance: 'Correct only the evidenced dependency declarations after confirming the intended relationship; do not infer or create work dependencies.'
+        },
+        audit: { phase: 'INSPECT', run: (context) => outcomesFor(context, 'ITEM-5', 'Every item dependency is valid and reciprocal.') }
+      },
+      judgment: {
+        scope: 'Every declared roadmap dependency and its reciprocal work item.',
+        prompt: 'Review whether each dependency represents a real execution relationship without hiding a priority or acceptance decision.',
+        outcomes: ['conforming', 'gap', 'exclusion'],
+        guidance: 'Correct the declared relationship with the owning work-item decision, record a gap, or record an explicit exclusion.'
       }
     }
   ]

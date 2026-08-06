@@ -10,8 +10,11 @@ const TRADE_1: RubricItem<RoadmapAuditContext> = {
     'Where declared ki-trades records exist, report structural guidance and proposed local roadmap action without setting disposition, inferring adoption, prioritizing work, pruning records, or changing remote state.',
   sources: [SOURCE],
   judgment: {
+    scope: 'Declared inbound and outbound trade records in the local repository.',
     prompt:
-      'Inspect declared trade records read-only: identify submissions needing receiver review or a separately confirmed local roadmap proposal and outbound progress needing follow-up; report proposals only.'
+      'Inspect declared trade records read-only: identify submissions needing receiver review or a separately confirmed local roadmap proposal and outbound progress needing follow-up; report proposals only.',
+    outcomes: ['conforming', 'proposal', 'exclusion'],
+    guidance: 'Record read-only observations and proposals only; the receiver owns disposition, prioritization, adoption, and pruning decisions.'
   }
 }
 
@@ -23,14 +26,22 @@ const TRADE_2: RubricItem<RoadmapAuditContext> = {
   sources: [SOURCE],
   mechanical: {
     level: 'FAIL',
+    remediation: {
+      class: 'guarded',
+      guidance: 'Correct evidenced wait identities or prose only after confirming the relevant trade state; do not prune or release records automatically.'
+    },
     audit: {
       phase: 'INSPECT',
       run: (context) => outcomesFor(context, 'TRADE-2', 'Every declared trade wait has valid flat identity and horizon fields.')
     }
   },
   judgment: {
+    scope: 'Every trade-aware wait and candidate for done-work pruning.',
     prompt:
-      'Review each trade-aware wait and pruning candidate: confirm the trade exists and is relevant, the prose names receipt, terminal decision, or linked-work completion precisely, and no done work is pruned before completion-observation sender release is observable.'
+      'Review each trade-aware wait and pruning candidate: confirm the trade exists and is relevant, the prose names receipt, terminal decision, or linked-work completion precisely, and no done work is pruned before completion-observation sender release is observable.',
+    outcomes: ['conforming', 'gap', 'exclusion'],
+    guidance:
+      'Retain the record until the responsible receiver or sender has made and observed the required decision; record a gap or exclusion when evidence is incomplete.'
   }
 }
 

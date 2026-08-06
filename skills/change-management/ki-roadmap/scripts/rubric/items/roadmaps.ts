@@ -10,6 +10,10 @@ const ROAD_1: RubricItem<RoadmapAuditContext> = {
   sources: [SOURCE],
   mechanical: {
     level: 'FAIL',
+    remediation: {
+      class: 'diagnostic',
+      guidance: 'Restore the concise root orientation and canonical roadmap structure without reconstructing or prioritizing the work queue.'
+    },
     audit: { phase: 'INSPECT', run: (context) => outcomesFor(context, 'ROAD-1', 'Every authored roadmap has canonical structure.') }
   }
 }
@@ -19,7 +23,12 @@ const ROAD_2: RubricItem<RoadmapAuditContext> = {
   title: 'honest horizon placement',
   description: 'Items sit in honest horizons; Waiting-for items name their external condition; speculative Future work carries `candidate: true`.',
   sources: [SOURCE],
-  judgment: { prompt: 'Review horizon placement, waiting conditions, and Future candidate marking.' }
+  judgment: {
+    scope: 'Every horizon, Waiting-for condition, and Future candidate declaration.',
+    prompt: 'Review horizon placement, waiting conditions, and Future candidate marking.',
+    outcomes: ['conforming', 'gap', 'exclusion'],
+    guidance: 'Confirm placement with the owning authority, record a gap, or record an explicit exclusion; do not move work automatically.'
+  }
 }
 
 const ROAD_3: RubricItem<RoadmapAuditContext> = {
@@ -27,7 +36,12 @@ const ROAD_3: RubricItem<RoadmapAuditContext> = {
   title: 'open finite work',
   description: 'Work-item indexes are open-only and contain finite work rather than continuous practice.',
   sources: [SOURCE],
-  judgment: { prompt: 'Review that roadmap items are finite open work, not completed work or ongoing practice.' }
+  judgment: {
+    scope: 'Every roadmap item represented in the open work queue.',
+    prompt: 'Review that roadmap items are finite open work, not completed work or ongoing practice.',
+    outcomes: ['conforming', 'gap', 'exclusion'],
+    guidance: 'Split, retain, close, or exclude work only after an owner confirms the intended record; otherwise record a gap.'
+  }
 }
 
 const ROAD_4: RubricItem<RoadmapAuditContext> = {
@@ -37,6 +51,10 @@ const ROAD_4: RubricItem<RoadmapAuditContext> = {
   sources: [SOURCE],
   mechanical: {
     level: 'FAIL',
+    remediation: {
+      class: 'diagnostic',
+      guidance: 'Use the canonical horizon vocabulary and remove duplicate root-horizon lists without changing any item placement.'
+    },
     audit: { phase: 'INSPECT', run: (context) => outcomesFor(context, 'ROAD-4', 'Every horizon has its canonical blurb.') }
   }
 }
@@ -46,7 +64,12 @@ const ROAD_5: RubricItem<RoadmapAuditContext> = {
   title: 'horizon transitions and readiness',
   description: 'Horizon promotion and deferral meet the readiness contract; execution state remains honest and CONFORM never chooses a move.',
   sources: [SOURCE],
-  judgment: { prompt: 'Review each promotion or deferral against its readiness contract and plan state.' }
+  judgment: {
+    scope: 'Every proposed promotion, deferral, and its readiness evidence.',
+    prompt: 'Review each promotion or deferral against its readiness contract and plan state.',
+    outcomes: ['conforming', 'gap', 'exclusion'],
+    guidance: 'Confirm the lifecycle move with its owner, record a gap, or record an explicit exclusion; never choose the move automatically.'
+  }
 }
 
 const ROAD_6: RubricItem<RoadmapAuditContext> = {
@@ -56,6 +79,7 @@ const ROAD_6: RubricItem<RoadmapAuditContext> = {
   sources: [SOURCE],
   mechanical: {
     level: 'FAIL',
+    remediation: { class: 'diagnostic', guidance: 'Correct the configured repository code or theme mapping from authoritative repository configuration.' },
     audit: { phase: 'INSPECT', run: (context) => outcomesFor(context, 'ROAD-6', 'The repository work-item code is valid.') }
   }
 }
