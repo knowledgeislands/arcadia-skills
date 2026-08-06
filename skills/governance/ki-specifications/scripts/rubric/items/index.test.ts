@@ -25,7 +25,7 @@ test('the structured catalogue preserves the specifications structural floor', (
 })
 
 test('criteria declare complete v1 remediation and review metadata', () => {
-  const mechanicalItems = catalogue.families.flatMap((family) => family.items).filter((item) => item.mechanical)
+  const mechanicalItems = catalogue.families.flatMap((family) => family.items as readonly RubricItem<unknown>[]).filter((item) => item.mechanical)
   const judgmentItems = items.filter((item) => item.judgment)
 
   expect(mechanicalItems).toHaveLength(4)
