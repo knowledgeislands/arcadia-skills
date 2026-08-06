@@ -3,7 +3,7 @@ id: KI-HARNESS-GOV-013
 title: Reorganise skill taxonomy
 theme: governance-consistency
 horizon: now
-status: awaiting-review
+status: done
 blocks: []
 blocked-by: []
 baseline-ref: a333ece9e91a4aca416dc8d699f3f19b1f519a7b
@@ -126,6 +126,10 @@ Confirm that the concern grouping remains intuitive as future skills are added, 
 ### Mini recap
 
 The existing rubric-remediation work can now rely on explicit kind metadata rather than correcting a false process-skill diagnosis.
+
+## Done
+
+The user accepted the delivered concern-first skill taxonomy on 2026-08-06. The reviewed record is retained as committed closure evidence and is eligible for explicit pruning.
 
 ## Discussion
 

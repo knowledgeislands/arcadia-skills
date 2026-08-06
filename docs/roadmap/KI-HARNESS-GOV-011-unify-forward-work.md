@@ -3,7 +3,7 @@ id: KI-HARNESS-GOV-011
 title: Unify forward work
 theme: governance-consistency
 horizon: now
-status: awaiting-review
+status: done
 blocks: []
 blocked-by: []
 baseline-ref: 8cf83d6fd243d853a6ca9241ca310678acc535a6
@@ -112,6 +112,10 @@ Confirm that the concise title choices retain sufficient recognition in roadmap 
 ### Mini recap
 
 No new durable learning route is proposed.
+
+## Done
+
+The user accepted the delivered shared forward-work contract on 2026-08-06. The reviewed record is retained as committed closure evidence and is eligible for explicit pruning.
 
 ## Discussion
 
