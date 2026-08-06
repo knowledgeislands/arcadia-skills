@@ -46,7 +46,7 @@ The rounds record genuine ordering and dependency boundaries; no two workers may
 
 ## Rolling worker utilisation
 
-Independent delegation uses a rolling worker pool. Dispatch the currently safe non-overlapping lanes up to available capacity, then replenish a freed worker immediately with the next independent lane after its result has been reviewed and integrated. Report each completion, verification result, and atomic commit as it lands.
+Independent delegation uses a rolling worker pool. Dispatch the currently safe non-overlapping lanes up to available capacity, then replenish a freed worker immediately with the next independent lane after its result has been reviewed and integrated. This matters especially when capacity is small, such as three worker slots: do not leave a slot idle while an independent lane is ready. Report each completion, verification result, and atomic commit as it lands.
 
 Use a later round only when one lane genuinely depends on another's result or would otherwise overlap its write scope. Do not use rounds to make independent work wait for a nominal batch to finish.
 
