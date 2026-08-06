@@ -3,10 +3,10 @@ id: KI-HARNESS-GOV-012
 title: Separate rubric evidence
 theme: governance-consistency
 horizon: next
-status: ready
+status: in-progress
 blocks: []
 blocked-by: []
-baseline-ref: null
+baseline-ref: 6225d1d9008c2cd77df1b0b60a443f4f68f0a2ff
 ---
 
 ## Goal
