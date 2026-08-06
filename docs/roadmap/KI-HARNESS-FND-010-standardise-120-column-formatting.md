@@ -21,6 +21,10 @@ Prettier currently uses a 160-column `printWidth`, while the repository has no m
 
 This changes formatting policy only. It does not alter Markdown semantic structure, relax Markdown table guidance, or impose a hard lint rule where the tools do not support one. Reformat only files changed by the formatter under the new policy; do not use the policy change to make unrelated prose edits.
 
+## Current state
+
+Prettier is configured with `printWidth: 160`; no repository `.editorconfig` currently supplies a matching maximum line length.
+
 ## Steps
 
 - [ ] Set Prettier `printWidth` to `120`.
@@ -41,3 +45,11 @@ This changes formatting policy only. It does not alter Markdown semantic structu
 - Prettier reports the repository in sync at 120 columns.
 - EditorConfig resolves a 120-column maximum line length for Markdown, JSON, TypeScript, and JavaScript editors.
 - `bun run test`, `bunx tsc --noEmit`, and the relevant repository audits pass.
+
+## Dependencies / blocks
+
+This change is independently executable after the active rubric-metadata migration restores clean repository-wide audits.
+
+## Discussion
+
+The 120-column target is the forward formatting policy. Existing long lines need change only when the formatter rewrites them under this policy or when they are otherwise edited.
