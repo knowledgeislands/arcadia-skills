@@ -42,6 +42,8 @@ The packet contains non-empty `Locked decisions`, `Escalate`, and `Rounds` secti
 
 Each worker subsection names a bounded deliverable, file or system boundary, pass/fail definition of done, explicit model choice, verification gate, and completion checkpoint.
 
+When a worker will run Git write commands in a shared worktree, its brief also names a unique temporary Git index path. The worker passes it explicitly on every Git write command, for example `GIT_INDEX_FILE=<worker-index> git add -- <paths>`. The path is a worker-local staging boundary, not authority to commit concurrently; `ki-git` owns the matching shared-`HEAD` serialization rule.
+
 The rounds record genuine ordering and dependency boundaries; no two workers may be assigned overlapping write scope in the same round. They are not a batch barrier: once the orchestrator verifies and integrates a completed worker result, it should assign that worker the next independent bounded lane without waiting for every worker named in the current round.
 
 ## Rolling worker utilisation
