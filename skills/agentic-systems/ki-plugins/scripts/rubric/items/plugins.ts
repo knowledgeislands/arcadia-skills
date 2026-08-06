@@ -30,6 +30,11 @@ const mechanical = (
   sources: [SOURCE],
   mechanical: {
     level,
+    remediation: {
+      class: 'diagnostic',
+      guidance:
+        'Correct the marketplace projection from its authoritative harness inputs; do not infer or rewrite generated projection semantics automatically.'
+    },
     audit: { phase: 'INSPECT', run: audit }
   }
 })
@@ -39,7 +44,12 @@ const judgment = (code: string, title: string, description: string, prompt: stri
   title,
   description,
   sources: [SOURCE],
-  judgment: { prompt }
+  judgment: {
+    scope: 'The generated marketplace projection and its authoritative harness inputs.',
+    prompt,
+    outcomes: ['conforming', 'gap', 'exclusion'],
+    guidance: 'Regenerate or revise the projection through its responsible owner, record a named gap, or record an explicit justified exclusion.'
+  }
 })
 
 const formatted = (raw: string, value: Record<string, unknown> | null): boolean => Boolean(value) && raw === `${JSON.stringify(value, null, 2)}\n`
