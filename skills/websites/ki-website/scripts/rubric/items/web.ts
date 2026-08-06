@@ -34,6 +34,9 @@ const mechanical = (
   sources: [SOURCE],
   mechanical: {
     level,
+    remediation: options.conform
+      ? { class: 'automatic' }
+      : { class: 'diagnostic', guidance: 'Inspect the affected website surface and apply the standard through a reviewable, site-owned change.' },
     ...(options.overrideLevels ? { overrideLevels: options.overrideLevels } : {}),
     audit: { phase: 'INSPECT', run: audit },
     ...(options.conform ? { conform: { phase: 'NORMALISE' as const, run: options.conform } } : {})
@@ -45,7 +48,12 @@ const judgment = (code: string, title: string, description: string, prompt: stri
   title,
   description,
   sources: [SOURCE],
-  judgment: { prompt }
+  judgment: {
+    scope: description,
+    prompt,
+    outcomes: ['conforming', 'revision required', 'design decision required'],
+    guidance: 'Revise the affected website surface to meet the standard, or record the owning design decision before accepting a deliberate exception.'
+  }
 })
 
 const one = (condition: boolean, pass: string, violation: string, subject?: string): readonly AuditOutcome[] => [

@@ -16,6 +16,12 @@ test('the structured catalogue preserves the complete website rule surface', () 
   expect(items.map((item) => item.code)).toEqual(Array.from({ length: 42 }, (_, index) => `WEB-${index + 1}`))
   expect(new Set(items.map((item) => item.code)).size).toBe(items.length)
   expect(items.filter((item) => item.judgment).every((item) => Boolean(item.judgment?.prompt.trim()))).toBe(true)
+  expect(items.filter((item) => item.mechanical).every((item) => Boolean(item.mechanical?.remediation))).toBe(true)
+  expect(
+    items
+      .filter((item) => item.judgment)
+      .every((item) => Boolean(item.judgment?.scope.trim()) && item.judgment?.outcomes.length && Boolean(item.judgment?.guidance.trim()))
+  ).toBe(true)
   expect(items.every((item) => item.sources?.includes('standards-eleventy-site.md'))).toBe(true)
 })
 
