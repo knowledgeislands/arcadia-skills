@@ -10,6 +10,7 @@ const PRINCIPAL_1: RubricItem<PrincipalContext> = {
   sources: [SOURCE],
   mechanical: {
     level: 'FAIL',
+    remediation: { class: 'diagnostic', guidance: 'Create or restore the missing principal governance entry point through the principal owner.' },
     audit: {
       phase: 'INSPECT',
       run: (context) =>
@@ -26,6 +27,7 @@ const PRINCIPAL_2: RubricItem<PrincipalContext> = {
   sources: [SOURCE],
   mechanical: {
     level: 'FAIL',
+    remediation: { class: 'diagnostic', guidance: 'Anchor the Enactment Process in the authoritative repository guidance through the principal owner.' },
     audit: {
       phase: 'INSPECT',
       run: (context) => [

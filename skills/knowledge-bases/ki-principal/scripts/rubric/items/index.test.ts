@@ -9,6 +9,13 @@ test('the principal catalogue has the expected native contract', () => {
   expect(catalogue.name).toBe('ki-principal')
   expect(catalogue.families.map((family) => family.code)).toEqual(['RUBRIC', 'PRINCIPAL'])
   expect(catalogue.families[1]?.items.map((item) => item.code)).toEqual(['PRINCIPAL-1', 'PRINCIPAL-2'])
+  for (const family of catalogue.families) {
+    for (const item of family.items) {
+      if (!item.mechanical) continue
+      expect(item.mechanical.remediation.class).not.toBe('')
+      if (item.mechanical.conform) expect(item.mechanical.remediation.class).toBe('automatic')
+    }
+  }
 })
 
 test('the principal checker distinguishes a missing surface from a complete one', () => {
