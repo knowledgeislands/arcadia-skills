@@ -42,7 +42,15 @@ The packet contains non-empty `Locked decisions`, `Escalate`, and `Rounds` secti
 
 Each worker subsection names a bounded deliverable, file or system boundary, pass/fail definition of done, explicit model choice, verification gate, and completion checkpoint.
 
-The rounds record ordering and dependency boundaries; no two workers may be assigned overlapping write scope in the same round.
+The rounds record genuine ordering and dependency boundaries; no two workers may be assigned overlapping write scope in the same round. They are not a batch barrier: once the orchestrator verifies and integrates a completed worker result, it should assign that worker the next independent bounded lane without waiting for every worker named in the current round.
+
+## Rolling worker utilisation
+
+Independent delegation uses a rolling worker pool. Dispatch the currently safe non-overlapping lanes up to available capacity, then replenish a freed worker immediately with the next independent lane after its result has been reviewed and integrated. Report each completion, verification result, and atomic commit as it lands.
+
+Use a later round only when one lane genuinely depends on another's result or would otherwise overlap its write scope. Do not use rounds to make independent work wait for a nominal batch to finish.
+
+`ki-batch` is different: it coordinates an explicitly authorised, synergistic set of separate Ready work records. A delegation packet may support an individual member's implementation, but ordinary replenishment of a worker slot does not create or require a `ki-batch` batch.
 
 ## Quality bar
 
@@ -50,7 +58,7 @@ The packet must be cold-agent ready: a worker with no hidden conversation contex
 
 Choose the minimum viable model for each worker; stronger reasoning responds to decision risk, not habit or retained context.
 
-Split a task that mixes research, judgment, and mechanical implementation when the split makes ownership and gates clearer.
+Split a task that mixes research, judgment, and mechanical implementation when the split makes ownership and gates clearer. Keep the next independent lane ready so a completed worker can be replenished without reopening a completed boundary.
 
 The orchestrator reviews every result and the stated verification before integrating or committing it.
 

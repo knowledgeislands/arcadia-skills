@@ -18,9 +18,9 @@ Opted-in delegation-packet structure and the isolated safe legacy-heading repair
 
 - **PACKET-1 [M + J] — packet structure and delegation quality** — An opted-in delegation packet has the required durable brief structure; its worker boundaries, model choices, and gates are fit for the work. (standards-delegation-packets.md)
   - _Remediation:_ guarded — Supply the missing packet evidence or revise the worker brief only through the planner with the relevant delegation authority.
-  - _Evidence scope:_ Every opted-in delegation packet, its rounds, worker briefs, and referenced governing work record.
-  - _Review prompt:_ Are the worker boundaries, model choices, locked decisions, escalation boundaries, rounds, and verification gates appropriate for the delegated work?
+  - _Evidence scope:_ Every opted-in delegation packet, its rounds, worker briefs, rolling replenishment plan, and referenced governing work record.
+  - _Review prompt:_ Are the worker boundaries, model choices, locked decisions, escalation boundaries, genuine dependency rounds, rolling replenishment, and verification gates appropriate for the delegated work?
   - _Outcomes:_ conforming; revise packet; escalate to planner
-  - _Conforming guidance:_ Keep execution authority with the planner. Record a packet revision only after the responsible authority chooses the worker scope, model purpose, and escalation boundary.
+  - _Conforming guidance:_ Keep execution authority with the planner. Record a packet revision only after the responsible authority chooses the worker scope, model purpose, escalation boundary, and any genuine dependency gate; replenish completed independent workers without treating the work as a batch.
 - **PACKET-2 [M] — legacy escalation heading is normalised** — An opted-in packet with only the legacy `### Escalation` heading is safely normalised to `### Escalate` without altering its content or authority boundary. (standards-delegation-packets.md)
   - _Remediation:_ automatic

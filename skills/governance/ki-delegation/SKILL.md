@@ -4,7 +4,7 @@ ki-kind: governance
 ki-depends-on: []
 ki-shared-dependencies: [ki-skills:rubric]
 description: >
-  Governs delegation packets for bounded agent work: their source-informed quality bar, durable worker briefs, and safe mechanical checks over a selected roadmap record. Use when designing or auditing a delegation packet, deciding what a worker brief must contain, or making an approved plan ready for bounded delegation. It augments runtime subagent delegation only when active in the same scope; model-purpose policy belongs to ki-tokenomics; cross-repository work transfer is ki-trades.
+  Governs delegation packets for bounded agent work: their source-informed quality bar, durable worker briefs, rolling worker replenishment, and safe mechanical checks over a selected roadmap record. Use when designing or auditing a delegation packet, deciding what a worker brief must contain, or making an approved plan ready for bounded delegation. It augments runtime subagent delegation only when active in the same scope; model-purpose policy belongs to ki-tokenomics; cross-repository work transfer is ki-trades.
 argument-hint: 'audit <repo> | conform <repo> | educate <work-item> | help | refresh'
 ---
 
@@ -17,6 +17,8 @@ It does not select work, authorise execution, choose a model, spawn a worker, ac
 Read [the delegation-packet standard](references/standards-delegation-packets.md) before designing or reviewing a packet, [the generated rubric](references/rubric.md) for its mechanical and judgment criteria, and [the sources](references/sources.md) when refreshing the standard.
 
 When active, this standard adds packet requirements to normal runtime subagent delegation; it is not an execution command.
+
+Independent worker capacity is used as a rolling pool: after the orchestrator verifies and integrates one completed worker result, it assigns that worker the next independent bounded lane without waiting for other workers in the initial set. Rounds record only genuine ordering or dependency gates. `ki-batch` remains the separate process for an explicitly authorised set of distinct work records; it does not describe ordinary rolling worker utilisation.
 
 ## Operating modes
 

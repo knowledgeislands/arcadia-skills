@@ -23,12 +23,12 @@ export const PACKET: RubricFamily<DelegationRubricContext, DelegationRubricConte
         audit: { phase: 'INSPECT', run: ({ outcomes }) => outcomes }
       },
       judgment: {
-        scope: 'Every opted-in delegation packet, its rounds, worker briefs, and referenced governing work record.',
+        scope: 'Every opted-in delegation packet, its rounds, worker briefs, rolling replenishment plan, and referenced governing work record.',
         prompt:
-          'Are the worker boundaries, model choices, locked decisions, escalation boundaries, rounds, and verification gates appropriate for the delegated work?',
+          'Are the worker boundaries, model choices, locked decisions, escalation boundaries, genuine dependency rounds, rolling replenishment, and verification gates appropriate for the delegated work?',
         outcomes: ['conforming', 'revise packet', 'escalate to planner'],
         guidance:
-          'Keep execution authority with the planner. Record a packet revision only after the responsible authority chooses the worker scope, model purpose, and escalation boundary.'
+          'Keep execution authority with the planner. Record a packet revision only after the responsible authority chooses the worker scope, model purpose, escalation boundary, and any genuine dependency gate; replenish completed independent workers without treating the work as a batch.'
       }
     },
     {
