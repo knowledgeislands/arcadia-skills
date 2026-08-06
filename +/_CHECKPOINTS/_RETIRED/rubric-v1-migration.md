@@ -1,9 +1,10 @@
 ---
 type: ki-checkpoint
 thread: rubric-v1-migration
-state: active
+state: retired
 created_at: 2026-08-06T21:04:16Z
 updated_at: 2026-08-06T21:59:18Z
+retired_at: 2026-08-06T22:22:31Z
 ---
 
 # rubric-v1-migration
