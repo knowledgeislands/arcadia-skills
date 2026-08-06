@@ -10,6 +10,7 @@ const GUIDE_1: RubricItem<GuidesLayoutContext> = {
   sources: [SOURCE],
   mechanical: {
     level: 'FAIL',
+    remediation: { class: 'diagnostic', guidance: 'Create a regular `docs/guides/` directory inside the repository, then rerun the audit.' },
     audit: {
       phase: 'INSPECT',
       run: (context) => [
@@ -28,6 +29,7 @@ const GUIDE_2: RubricItem<GuidesLayoutContext> = {
   sources: [SOURCE],
   mechanical: {
     level: 'FAIL',
+    remediation: { class: 'diagnostic', guidance: 'Add a regular `docs/guides/README.md` collection entry point, then rerun the audit.' },
     audit: {
       phase: 'INSPECT',
       run: (context) => [
@@ -48,6 +50,7 @@ const GUIDE_3: RubricItem<GuidesLayoutContext> = {
   sources: [SOURCE],
   mechanical: {
     level: 'FAIL',
+    remediation: { class: 'diagnostic', guidance: 'Give each affected guide exactly one H1, then rerun the audit.' },
     audit: {
       phase: 'INSPECT',
       run: (context) =>
