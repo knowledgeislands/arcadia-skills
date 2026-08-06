@@ -133,7 +133,7 @@ Before this item enters `ready`, two distinct models from different vendors must
 
 ## Dependencies / blocks
 
-The design is ready for detailed inventory, but status must remain `draft` until the first complete criterion inventory establishes the exact migration batches and the `tools-ki` host owner accepts its bounded host-contract work through [TRD-9eb558c6](../../-/_TRADES/knowledgeislands/tools-ki/TRD-9eb558c6.md). `GOV-007` is a coordinated adopter, not a hidden ownership dependency.
+The design is ready for detailed inventory, but status must remain `draft` until the first complete criterion inventory establishes the exact migration batches and a non-OpenAI reviewer records an independent plan review. `tools-ki` has accepted the bounded host work as `KI-TOOL-CLI-020`; it waits for this Harness contract before host implementation begins. `GOV-007` is a coordinated adopter, not a hidden ownership dependency.
 
 ## Delegation
 
@@ -149,7 +149,7 @@ The design is ready for detailed inventory, but status must remain `draft` until
 
 - Stop if a proposed automatic repair would overwrite user-owned content, cross a repository boundary, change remote state, or choose semantic meaning.
 - Stop if an item’s evidence cannot distinguish a deterministic defect from a reviewer judgment; retain or split the judgment aspect rather than inventing a weak check.
-- Create a receiving `tools-ki` record before changing the shared host contract; this Harness item owns the standard and catalogue migration, not an unapproved cross-repository write.
+- The accepted `KI-TOOL-CLI-020` host item remains blocked on the published Harness contract; this item owns the standard and catalogue migration, not an unapproved cross-repository write.
 
 ## Discussion
 
