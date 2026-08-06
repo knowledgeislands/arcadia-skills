@@ -8,6 +8,10 @@ const CODEXBIND_1: RubricItem<CodexBindingContext> = {
   sources: ['standards-codex-binding.md'],
   mechanical: {
     level: 'WARN',
+    remediation: {
+      class: 'diagnostic',
+      guidance: 'Review the canonical source and run the native Codex renderer after confirming the intended client targets; do not overwrite unrelated application configuration.'
+    },
     audit: {
       phase: 'INSPECT',
       run: ({ configPath, servers, expected }) =>
@@ -31,7 +35,10 @@ const CODEXBIND_J1: RubricItem<CodexBindingContext> = {
   description: 'The Codex native writer remains the safe merge boundary for the live TOML file.',
   sources: ['standards-codex-binding.md'],
   judgment: {
-    prompt: 'Does the native Codex writer still preserve non-KI application configuration better than whole-file ownership would?'
+    scope: 'The native Codex renderer, the live TOML configuration, and non-KI application entries it must preserve.',
+    prompt: 'Does the native Codex writer still preserve non-KI application configuration better than whole-file ownership would?',
+    outcomes: ['conforming', 'merge boundary revision required', 'ownership decision required'],
+    guidance: 'Keep native merge ownership where it preserves unrelated configuration; otherwise record the owning runtime decision before changing the write boundary.'
   }
 }
 export const CODEXBIND: RubricFamily<CodexBindingContext, CodexBindingContext> = {
