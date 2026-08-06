@@ -36,7 +36,7 @@ const packetOutcomes = (subject: string, section: string): AuditOutcome[] => {
   return violations.length ? violations : [{ status: 'PASS', message: 'Delegation packet has the required durable brief structure.', subject }]
 }
 
-export const createDelegationSession = ({ mode, repository }: RubricContextOptions): RubricSession<DelegationRubricContext> => {
+export const createDelegationSession = ({ repository }: RubricContextOptions): RubricSession<DelegationRubricContext> => {
   const root = resolve(repository)
   const roadmap = join(root, 'docs', 'roadmap')
   const outcomes: AuditOutcome[] = []
