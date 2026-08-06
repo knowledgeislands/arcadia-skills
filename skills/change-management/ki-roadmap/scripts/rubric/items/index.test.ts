@@ -102,7 +102,8 @@ test('the structured catalogue represents the flat work-item standard', () => {
     'EXEC-2',
     'EXEC-3',
     'SAFE-1',
-    'TRADE-1'
+    'TRADE-1',
+    'TRADE-2'
   ])
 })
 
@@ -222,5 +223,39 @@ test('item theme codes must be declared by the repository roadmap configuration'
   writeFileSync(item, readFileSync(item, 'utf8').replace('theme: foundation-tooling', 'theme: other-theme'))
   expect(inspectRoadmap(repository)).toContainEqual(
     expect.objectContaining({ area: 'ITEM-2', msg: 'item identifier theme code must map to its configured theme' })
+  )
+})
+
+test('trade waits use a flat canonical identity array only at Waiting for', () => {
+  const repository = createFixture()
+  const item = join(repository, 'docs', 'roadmap', 'TEST-FND-001-build-the-foundation.md')
+  writeFileSync(
+    item,
+    readFileSync(item, 'utf8')
+      .replace('horizon: next', 'horizon: waiting-for')
+      .replace('blocked-by: []', 'blocked-by: []\nwaiting-on-trades: [TRD-1234abcd]')
+      .replace(
+        '\n## Current state\n\nThe first slice is not implemented.\n\n## Steps\n\n- [ ] Implement the first slice.\n\n## Files touched\n\n- `src/foundation.ts`\n\n## Verify\n\n- `bun test`\n\n## Dependencies / blocks\n\nNo dependencies.\n',
+        '\n'
+      )
+  )
+  expect(inspectRoadmap(repository).filter((finding) => finding.area === 'TRADE-2')).toEqual([])
+
+  writeFileSync(item, readFileSync(item, 'utf8').replace('horizon: waiting-for', 'horizon: soon'))
+  expect(inspectRoadmap(repository)).toContainEqual(
+    expect.objectContaining({ area: 'TRADE-2', msg: 'waiting-on-trades is valid only at the waiting-for horizon' })
+  )
+
+  writeFileSync(
+    item,
+    readFileSync(item, 'utf8')
+      .replace('horizon: soon', 'horizon: waiting-for')
+      .replace('waiting-on-trades: [TRD-1234abcd]', 'waiting-on-trades: [TRD-INVALID, TRD-INVALID]')
+  )
+  expect(inspectRoadmap(repository)).toEqual(
+    expect.arrayContaining([
+      expect.objectContaining({ area: 'TRADE-2', msg: 'waiting-on-trades must contain only canonical trade identities' }),
+      expect.objectContaining({ area: 'TRADE-2', msg: 'waiting-on-trades must not repeat a trade identity' })
+    ])
   )
 })

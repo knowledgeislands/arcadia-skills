@@ -47,6 +47,8 @@ baseline-ref: null
 
 `blocks` and `blocked-by` are arrays of item identifiers and use `[]` when empty.
 
+`waiting-on-trades` is an optional flat array of unique `TRD-<eight-hex>` identities. It is valid only when `horizon: waiting-for` and records observed cross-repository conditions rather than local work-item dependencies. Do not place trade identities in `blocks` or `blocked-by`.
+
 `baseline-ref` is `null` until execution begins, then the immutable full lowercase commit ID.
 
 `theme` is the human-readable kebab-case project grouping.

@@ -15,6 +15,7 @@ export type WorkItem = {
   readonly candidate: boolean
   readonly blocks: readonly string[]
   readonly blockedBy: readonly string[]
+  readonly waitingOnTrades: readonly string[]
   readonly baselineRef: string | null
   readonly file: string
   readonly body: string
@@ -36,6 +37,7 @@ const ID_RE = /^[A-Z][A-Z0-9-]{1,23}-[A-Z][A-Z0-9]{1,7}-\d{3,}$/
 const FILE_RE = /^([A-Z][A-Z0-9-]{1,23}-[A-Z][A-Z0-9]{1,7}-\d{3,})-([a-z0-9]+(?:-[a-z0-9]+)*)\.md$/
 const THEME_RE = /^[a-z0-9]+(?:-[a-z0-9]+)*$/
 const COMMIT_RE = /^(?:[0-9a-f]{40}|[0-9a-f]{64})$/
+const TRADE_RE = /^TRD-[0-9a-f]{8}$/
 const MAX_TITLE_WORDS = 4
 const STATUS = new Set(['draft', 'ready', 'in-progress', 'awaiting-review', 'done'])
 const IMMEDIATE = new Set<Horizon>(['now', 'next'])
@@ -220,6 +222,7 @@ const parseItem = (repository: string, name: string, configuration?: RoadmapConf
   const status = value('status')
   const blocks = Array.isArray(parsed.values.blocks) ? (parsed.values.blocks as string[]) : undefined
   const blockedBy = Array.isArray(parsed.values['blocked-by']) ? (parsed.values['blocked-by'] as string[]) : undefined
+  const waitingOnTrades = Array.isArray(parsed.values['waiting-on-trades']) ? (parsed.values['waiting-on-trades'] as string[]) : undefined
   const baselineRef = parsed.values['baseline-ref']
   const candidate = parsed.values.candidate === true
   for (const key of ['id', 'title', 'theme', 'horizon', 'status', 'blocks', 'blocked-by', 'baseline-ref']) {
@@ -236,6 +239,7 @@ const parseItem = (repository: string, name: string, configuration?: RoadmapConf
         'candidate',
         'blocks',
         'blocked-by',
+        'waiting-on-trades',
         'baseline-ref',
         'transferred-from',
         'housekeeping-template',
@@ -256,6 +260,16 @@ const parseItem = (repository: string, name: string, configuration?: RoadmapConf
   if (!horizon || !HORIZONS.includes(horizon)) add('FAIL', 'ITEM-2', 'horizon must be one canonical value', FORMAT, display)
   if (!status || !STATUS.has(status)) add('FAIL', 'ITEM-2', 'status must be one lifecycle value', FORMAT, display)
   if (!blocks || !blockedBy) add('FAIL', 'ITEM-2', 'blocks and blocked-by must be arrays', FORMAT, display)
+  if ('waiting-on-trades' in parsed.values) {
+    if (!waitingOnTrades?.length) add('FAIL', 'TRADE-2', 'waiting-on-trades must be a non-empty flat array', FORMAT, display)
+    else {
+      if (waitingOnTrades.some((trade) => !TRADE_RE.test(trade)))
+        add('FAIL', 'TRADE-2', 'waiting-on-trades must contain only canonical trade identities', FORMAT, display)
+      if (new Set(waitingOnTrades).size !== waitingOnTrades.length)
+        add('FAIL', 'TRADE-2', 'waiting-on-trades must not repeat a trade identity', FORMAT, display)
+    }
+    if (horizon !== 'waiting-for') add('FAIL', 'TRADE-2', 'waiting-on-trades is valid only at the waiting-for horizon', FORMAT, display)
+  }
   if (baselineRef !== null && (typeof baselineRef !== 'string' || !COMMIT_RE.test(baselineRef)))
     add('FAIL', 'ITEM-2', 'baseline-ref must be null or a full lowercase commit ID', FORMAT, display)
   if (horizon === 'future' ? !candidate : 'candidate' in parsed.values)
@@ -274,6 +288,7 @@ const parseItem = (repository: string, name: string, configuration?: RoadmapConf
     candidate,
     blocks,
     blockedBy,
+    waitingOnTrades: waitingOnTrades ?? [],
     baselineRef: baselineRef as string | null,
     file: display,
     body: parsed.body

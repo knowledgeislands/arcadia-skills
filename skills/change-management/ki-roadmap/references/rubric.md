@@ -98,3 +98,5 @@ Read-only judgment guidance for declared cross-repository trade submissions.
 
 - **TRADE-1 [J] — trade review** — Where declared ki-trades records exist, report structural guidance and proposed local roadmap action without setting disposition, inferring adoption, prioritizing work, pruning records, or changing remote state. (standards-repository-roadmaps.md)
   - _Review prompt:_ Inspect declared trade records read-only: identify submissions needing receiver review or a separately confirmed local roadmap proposal and outbound progress needing follow-up; report proposals only.
+- **TRADE-2 [M + J] — trade-aware waiting and pruning** — Trade waits use one flat canonical identity array only at Waiting for, name the exact observed condition in prose, and retain done work referenced by unresolved completion observation. (standards-repository-roadmaps.md)
+  - _Review prompt:_ Review each trade-aware wait and pruning candidate: confirm the trade exists and is relevant, the prose names receipt, terminal decision, or linked-work completion precisely, and no done work is pruned before completion-observation sender release is observable.

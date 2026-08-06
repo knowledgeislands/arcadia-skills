@@ -135,7 +135,11 @@ Its start transition records the immutable full `HEAD` commit in `baseline-ref`;
 
 `blocks` and `blocked-by` use work-item identifiers, must be reverse-consistent and acyclic, and cannot permit execution while a blocker is not done.
 
+An optional flat `waiting-on-trades: [TRD-…]` field identifies the exact trade records whose observable progress forms a Waiting-for condition. It is valid only at `horizon: waiting-for`, contains unique canonical trade identities, and never replaces or extends `blocks` or `blocked-by`. The item body states the exact condition being observed: receipt, a terminal receiver decision, or completion of receiver-local work linked from an adopted trade.
+
 An explicit later prune path or glob removes only the resolved `done` items; the selection itself is the deletion authority and does not need a second confirmation. `ki-housekeeping` templates may spawn linked ordinary work records; their cadence does not create a second delivery lifecycle.
+
+A done work item linked from an adopted completion-observation trade remains retained until sender release is observable. Roadmap review and pruning report that external reference as a guard and refuse to remove the linked work record while it is unresolved.
 
 ## Trade review
 
@@ -143,6 +147,8 @@ Where a repository declares `ki-trades` and its records exist, include their str
 
 - **Inbound:** identify each submission that still needs receiver review or a separately confirmed local roadmap proposal. A trade status, including adopted, does not create or prioritize a work item.
 - **Outbound:** identify observable receiver progress that may warrant an originating follow-up. The receiver owns disposition, priority, execution, and acceptance.
+- **Waiting:** confirm that each `waiting-on-trades` identity names an existing relevant trade and that the prose names its precise observed condition without treating the trade as a local dependency.
+- **Pruning:** identify a done item still referenced by an adopted completion-observation trade whose sender release is not yet observable; it is not prune-eligible.
 
 The review is read-only and reports structural guidance or proposed local roadmap action only.
 

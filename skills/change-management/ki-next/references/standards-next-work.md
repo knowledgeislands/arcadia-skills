@@ -28,17 +28,22 @@ When a preceding `ki-recap` records high context pressure, require its safe hand
 
 ## 2. Triage inbound handoffs
 
-Present every inbound record that still needs receiver judgment. Use the receiver vocabulary: **adopted**, **parked**, **clarify**, **declined**, or **superseded**; a newly copied record begins **received**.
+Present every inbound record that still needs receiver judgment. Use the receiver vocabulary: **unconsidered**, **in progress**, **parked**, **clarify**, **applied**, **adopted**, **retained**, **declined**, or **superseded**. A newly copied record begins `unconsidered`; receipt is a separate delivery fact, not a decision.
 
 Present its sender provenance, payload, constraints, current status, existing receiver rationale and linkage, and the exact available status transitions.
 
 Require confirmation of the exact inbound file, receiver status, rationale, local linkage, and resulting local record write. Change only receiver-local fields; do not rewrite sender provenance or payload, mutate an outbound or peer copy, or delete a record as part of disposition.
 
-An adopted status records receiver judgment only. It does not create, prioritize, implement, or accept a roadmap item. If adoption suggests local work, present that as a separate roadmap proposal with its own exact wording, horizon, dependency effects, and confirmation boundary.
+For a work trade, choose between direct application and a local roadmap proposal before recording a terminal decision:
 
-If the receiver separately confirms a local work item, preserve the submission's operating model, sources, alternatives, authority and safety boundaries, and unresolved questions in that item's structured sections and final topic-oriented Discussion.
+- Propose `applied` only when the trade has one bounded, reversible, independently verifiable local outcome; authority is clear; no material design decision, dependency, migration, public-contract change, or cross-repository write is involved; and an existing targeted verification gate proves the result. Present the exact local edit, verification, and commit boundary, require confirmation, apply and verify the change, commit it atomically, then record `applied` with that full verified commit ID. A documentation or configuration change is not automatically trivial merely because its diff is small.
+- Otherwise propose one or more local work records. Preserve the trade's operating model, sources, alternatives, authority and safety boundaries, and unresolved questions. Require separate confirmation of each record's wording and horizon, then record `adopted` with the confirmed local linkage. Adoption does not itself prioritize, implement, accept, or complete that work.
 
-After adopted, declined, or superseded, report that sender release is eligible. Parked and clarify retain the outbound copy. Recommend receiver pruning only after eligible sender release is observable; `ki-next` never performs a peer write or infers release from silence.
+Knowledge trades never use direct application. Record `retained` only after the knowledge is placed in a named canonical local artifact; otherwise keep the trade in progress, park it, ask for clarification, decline it, or supersede it as the evidence warrants.
+
+Do not manufacture a roadmap item merely to close a trivial work trade. Conversely, do not use `applied` to bypass roadmap selection or review for material work.
+
+After a terminal decision, report the next condition required by the sender's observation policy. `unattended` and `receipt` permit release after receipt; `decision` waits for a terminal decision; `completion` waits through decision and, for adopted work, local completion. Applied work and retained knowledge satisfy completion directly, while decline or supersession resolves it without completion. In progress, parked, and clarify retain the outbound copy whenever its policy still waits. Recommend receiver pruning only after sender release is observable; `ki-next` never performs a peer write or infers release from silence.
 
 ## 3. Review relevance
 
@@ -85,6 +90,8 @@ If no group meets every condition, say so briefly and use the ordinary single-it
 Resolve the exact record and identify linked dependencies before proposing it.
 
 Use Soon only for understood but non-immediate work; Waiting for only with a named external condition; Parked only with an intentional pause and named return trigger; Future only when re-scoping is needed, adding `candidate: true`.
+
+When the named external condition is observation of one or more trades, add the flat `waiting-on-trades: [TRD-…]` field and state in prose whether the item awaits receipt, a terminal receiver decision, or completion of linked receiver-local work. Do not add trade identities to `blocks` or `blocked-by`: those arrays remain local work-item dependencies. Remove `waiting-on-trades` when moving the item out of Waiting for.
 
 Never silently delete, reopen, or detach a canonical execution record.
 

@@ -3,7 +3,7 @@ name: ki-next
 ki-kind: process
 ki-depends-on: []
 description: >
-  Selects, captures, promotes, defers, and spawns the next work through one shared queue: now, next, soon, future, waiting-for, and parked. It uses roadmap items in non-KB repositories and Streams proposals in Knowledge Bases, including due runs from ki-housekeeping templates. Use when asked "what should we do next", "promote this work", or "defer this". A process skill: it applies the transition rules owned by ki-roadmap and the ki-kb-streams adapter.
+  Selects, captures, promotes, defers, and spawns the next work through one shared queue: now, next, soon, future, waiting-for, and parked. It also records the receiver's confirmed disposition of validated inbound trades, including direct application of a trivial local work change versus a separately prioritised work record. Use when asked "what should we do next", "review these inbound trades", "apply this trade directly", "promote this work", or "defer this". It applies the transition rules owned by ki-roadmap and the ki-kb-streams adapter; local trade transport belongs to ki-trade.
 argument-hint: 'next [--review] | defer <item> <horizon-or-focus> | help'
 ---
 
@@ -18,7 +18,7 @@ The full procedure is in [the next-work standard](references/standards-next-work
 ## What this skill does
 
 1. **Ground** the generated repository roadmap index and canonical work items, or Streams Focus and proposal index, plus active `ki-housekeeping` templates and any inbound records validated by declared `ki-trades` governance.
-2. **Triage** incoming submissions through an exact human-confirmed receiver disposition, without treating adoption as roadmap authority.
+2. **Triage** incoming submissions through an exact human-confirmed receiver disposition, including the proportionate direct-application gate for a work trade, without treating adoption as roadmap authority.
 3. **Review** relevance when asked or when a material stale signal is evident.
 4. **Screen for synergy** across dependency-ready candidates: propose a batch only when the items share a bounded delivery advantage and remain independently executable. A shared theme alone is not enough.
 5. **Select or spawn** one dependency-ready immediate record, or a small, explicitly confirmed synergistic group to plan independently before it can become a `ki-batch` candidate.
@@ -48,6 +48,8 @@ ki-kb-streams governs the KB Streams adapter and Enactment gate.
 When a preceding recap records context pressure, `ki-next` begins only after that recap has preserved its bounded handoff and the runtime has compacted where it can. It then re-grounds the repository rather than trusting the carry-forward digest as current state.
 
 `ki-batch` prepares and coordinates an explicitly authorised independent Ready set. It does not change `ki-next` ownership of selection, priority, or an individual item's lifecycle.
+
+`ki-trade` prepares, submits, receives, releases, and prunes local trade records. It hands a validated received record to `ki-next`; it never chooses the receiver's disposition.
 
 The process skills are global invocation surfaces, not `.ki-config.toml` governance roots.
 
