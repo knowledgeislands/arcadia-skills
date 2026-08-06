@@ -2,6 +2,7 @@
 name: ki-delegation
 ki-kind: governance
 ki-depends-on: []
+ki-shared-dependencies: [ki-skills:rubric]
 description: >
   Governs delegation packets for bounded agent work: their source-informed quality bar, durable worker briefs, and safe mechanical checks over a selected roadmap record. Use when designing or auditing a delegation packet, deciding what a worker brief must contain, or making an approved plan ready for bounded delegation. It augments runtime subagent delegation only when active in the same scope; model-purpose policy belongs to ki-tokenomics; cross-repository work transfer is ki-trades.
 argument-hint: 'audit <repo> | conform <repo> | educate <work-item> | help | refresh'

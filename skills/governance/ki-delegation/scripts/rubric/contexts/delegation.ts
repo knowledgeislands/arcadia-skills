@@ -1,6 +1,7 @@
 import { existsSync, readdirSync, readFileSync } from 'node:fs'
 import { join, relative, resolve } from 'node:path'
-import type { AuditOutcome, DelegationRubricContext, RubricContextOptions, RubricSession } from '../types.ts'
+import type { AuditOutcome, RubricContextOptions, RubricSession } from '../../shared/rubric.ts'
+import type { DelegationRubricContext } from '../types.ts'
 
 const REQUIRED_SECTIONS = ['Locked decisions', 'Escalate', 'Rounds']
 const REQUIRED_WORKER_FIELDS = ['Deliverable', 'Files', 'Definition of done', 'Model', 'Verify', 'Checkpoint']
@@ -24,7 +25,7 @@ const packetOutcomes = (subject: string, section: string): AuditOutcome[] => {
   if (!/^### Rounds\s*$/m.test(section)) return [{ status: 'NOT_APPLICABLE', message: 'The delegation note is not an opted-in delegation packet.', subject }]
   const violations: AuditOutcome[] = []
   for (const heading of REQUIRED_SECTIONS)
-    if (!sectionHasContent(section, heading))
+    if (!sectionHasContent(section, heading) && !(heading === 'Escalate' && sectionHasContent(section, 'Escalation')))
       violations.push({ status: 'VIOLATION', message: `Delegation packet requires a non-empty \`${heading}\` section.`, subject })
   const workers = workerSections(section)
   if (!workers.length) violations.push({ status: 'VIOLATION', message: 'Delegation packet requires at least one `### Worker: <name>` subsection.', subject })
@@ -40,6 +41,7 @@ export const createDelegationSession = ({ mode, repository }: RubricContextOptio
   const roadmap = join(root, 'docs', 'roadmap')
   const writes = new Map<string, string>()
   const outcomes: AuditOutcome[] = []
+  const legacyEscalationOutcomes: AuditOutcome[] = []
   const legacyPackets: { path: string; content: string }[] = []
 
   if (!existsSync(roadmap)) outcomes.push({ status: 'NOT_APPLICABLE', message: 'No roadmap directory is present.', subject: 'docs/roadmap' })
@@ -52,13 +54,23 @@ export const createDelegationSession = ({ mode, repository }: RubricContextOptio
       if (!section) continue
       const subject = relative(root, path)
       outcomes.push(...packetOutcomes(subject, section))
-      if (/^### Escalation\s*$/m.test(section) && !/^### Escalate\s*$/m.test(section)) legacyPackets.push({ path, content })
+      if (/^### Escalation\s*$/m.test(section) && !/^### Escalate\s*$/m.test(section)) {
+        legacyPackets.push({ path, content })
+        legacyEscalationOutcomes.push({
+          status: 'VIOLATION',
+          message: 'Delegation packet uses the legacy `Escalation` heading; use `Escalate`.',
+          subject
+        })
+      }
     }
 
   if (!outcomes.length) outcomes.push({ status: 'NOT_APPLICABLE', message: 'No delegation packets are present.', subject: 'docs/roadmap' })
+  if (!legacyEscalationOutcomes.length)
+    legacyEscalationOutcomes.push({ status: 'NOT_APPLICABLE', message: 'No legacy delegation escalation headings are present.', subject: 'docs/roadmap' })
   const context: DelegationRubricContext = {
     packets: {
       outcomes,
+      legacyEscalationOutcomes,
       ...(mode === 'conform'
         ? {
             normaliseLegacyEscalation: () => {

@@ -1,5 +1,6 @@
+import type { SkillRubricDefinition } from '../../shared/rubric.ts'
 import { createDelegationSession } from '../contexts/delegation.ts'
-import type { DelegationRubricContext, SkillRubricDefinition } from '../types.ts'
+import type { DelegationRubricContext } from '../types.ts'
 import { PACKET } from './delegation.ts'
 
 export default {
