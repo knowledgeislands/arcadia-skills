@@ -61,6 +61,17 @@ test('the catalogue preserves every ordered ki-tools criterion', () => {
     'CONFIG-1': 'WARN'
   })
   expect(items.filter((item) => item.judgment)).toHaveLength(18)
+  for (const item of items) {
+    if (item.mechanical) {
+      expect(item.mechanical.remediation?.class).toBeDefined()
+      if (item.mechanical.conform) expect(item.mechanical.remediation?.class).toBe('automatic')
+    }
+    if (item.judgment) {
+      expect(item.judgment.scope).not.toBe('')
+      expect(item.judgment.outcomes?.length).toBeGreaterThan(0)
+      expect(item.judgment.guidance).not.toBe('')
+    }
+  }
 })
 
 test('the catalogue and family modules expose only the final public surfaces', async () => {
