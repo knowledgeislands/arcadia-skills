@@ -65,6 +65,10 @@ This work is independently shapeable and blocks [KI-HARNESS-GOV-016](KI-HARNESS-
 
 Keep the schema and authority wording under one orchestrator in the first round. After that contract is reviewed, one bounded worker may implement `ki-repo` catalogue and fixture changes while another migrates the three existing kind consumers; a separate bounded lane may align the repository-local `ki-self` exemplar and `ki-skills` checks. Workers must not edit generated publications or sibling repositories. The orchestrator resolves cross-skill wording, generates publications once, reviews the combined diff, and runs the final audits and test gates.
 
+## Review
+
+Awaiting review of the portable KB kind/store contract, selected-repository authority boundary, and the two existing Knowledge Base migrations.
+
 ## Discussion
 
 ### Consolidated sources
