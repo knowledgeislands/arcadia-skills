@@ -11,13 +11,13 @@ The cross-format mechanical contract for Knowledge Islands authoring. It is sepa
 
 ## Owned configuration
 
-The `ki-authoring` skill wholly owns `.prettierrc.json`, `.editorconfig`, and `.markdownlint-cli2.jsonc`. A repository has no legitimate local variation in these files: AUDIT compares each regular file with its canonical template, and CONFORM scaffolds a missing file or replaces a drifted regular file.
+The `ki-authoring` skill wholly owns `.prettierrc.json`, `.editorconfig`, `.prettierignore`, and `.markdownlint-cli2.jsonc`. A repository has no legitimate local variation in these files: AUDIT compares each regular file with its canonical template, and CONFORM scaffolds a missing file or replaces a drifted regular file.
 
 A path that exists but is not a regular non-symlink file is a violation and is not proposed for replacement. This makes the ownership rule explicit without following a link or replacing a directory, device, or other unsafe target.
 
 ## Markdown gate
 
-AUDIT runs Prettier in check mode and then markdownlint-cli2 against the repository's authored Markdown, excluding generated, vendored, dependency, and runtime-projection paths. It also inspects Markdown frontmatter for safely removable scalar quotes under the [Markdown authoring standard](standards-markdown.md#frontmatter). The commands receive fixed argument arrays; no repository path or file content is interpolated into a shell program.
+AUDIT runs Prettier in check mode and then markdownlint-cli2 against the repository's authored Markdown, excluding generated, vendored, dependency, runtime-projection, and immutable submitted-trade paths. A submitted trade is exactly `+/_TRADES/<sender-owner>/<sender-repository>/TRD-*.md` or `-/_TRADES/<receiver-owner>/<receiver-repository>/TRD-*.md`; it is a byte-immutable sender projection and must never be formatted, lint-fixed, or frontmatter-normalized. The owned `.prettierignore`, the markdownlint ignore list, the fixed Prettier argument list, and frontmatter traversal all encode that same boundary. `_PREPARATIONS/<owner>/<repo>/` sits one level deeper, and the two trade README files sit at the root, so both remain authored Markdown in every pass. It also inspects Markdown frontmatter for safely removable scalar quotes under the [Markdown authoring standard](standards-markdown.md#frontmatter). The commands receive fixed argument arrays; no repository path or file content is interpolated into a shell program.
 
 CONFORM requests the corresponding Prettier write pass and markdownlint-cli2 fix pass in the rubric's `NORMALISE` phase, together with host-validated direct writes for safely canonicalized frontmatter. The formatter commands are part of the session's final proposal rather than launched by a rubric item.
 

@@ -21,7 +21,7 @@ const OWN_1: RubricItem<OwnedRubricContext> = {
   code: 'OWN-1',
   title: 'owned authoring configuration matches the house templates',
   description:
-    'The skill owns `.prettierrc.json`, `.editorconfig`, and `.markdownlint-cli2.jsonc` wholly (SHAPE-16 `owns:`): AUDIT warns on drift from the house templates, while CONFORM transactionally scaffolds missing files and overwrites drifted regular files.',
+    'The skill owns `.prettierrc.json`, `.editorconfig`, `.prettierignore`, and `.markdownlint-cli2.jsonc` wholly (SHAPE-16 `owns:`): AUDIT warns on drift from the house templates, while CONFORM transactionally scaffolds missing files and overwrites drifted regular files.',
   sources: ['standards-authoring.md#owned-configuration'],
   mechanical: {
     level: 'WARN',

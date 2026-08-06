@@ -37,6 +37,17 @@ insert_final_newline = true
 trim_trailing_whitespace = false
 `
 
+// Submitted records are immutable sender projections. The two peer segments are
+// deliberate: preparations live under -/_TRADES/_PREPARATIONS/<owner>/<repo>/ and
+// remain authored Markdown, as do the README files at either trade root.
+export const SUBMITTED_TRADE_PATHS = ['+/_TRADES/*/*/TRD-*.md', '-/_TRADES/*/*/TRD-*.md'] as const
+
+export const PRETTIER_IGNORE_DEFAULT = `# Submitted trade records are immutable sender projections.
+
++/_TRADES/*/*/TRD-*.md
+-/_TRADES/*/*/TRD-*.md
+`
+
 export const MARKDOWNLINT_DEFAULT = `{
   // Base: enable all rules, then selectively adjust below.
   "config": {
@@ -61,27 +72,35 @@ export const MARKDOWNLINT_DEFAULT = `{
   // Skill bodies, references, and repo docs are all markdown content.
   "globs": ["**/*.md"],
 
-  // Never lint generated output, dependencies, or runtime projections. Generated
-  // source and runtime payloads are machine-produced (ADR-KI-HARNESS-TOOLCHAIN-005)
-  // and excluded like dist/, so their formatting is never a finding. Command files are frontmatter-first runtime definitions,
-  // while authored \`.claude/\` siblings such as workflows remain in scope.
-  "ignores": ["dist/**", "**/node_modules/**", "src/generated/**", ".claude/commands/**", ".claude/skills/**", ".claude/agents/**", ".agents/skills/**"]
+  // Never lint generated output, dependencies, runtime projections, or submitted
+  // trade projections. Submitted records are byte-immutable evidence; authored
+  // trade READMEs and mutable _PREPARATIONS remain in scope.
+  "ignores": ["dist/**", "**/node_modules/**", "src/generated/**", ".claude/commands/**", ".claude/skills/**", ".claude/agents/**", ".agents/skills/**", "+/_TRADES/*/*/TRD-*.md", "-/_TRADES/*/*/TRD-*.md"]
 }
 `
 
-const MARKDOWN_PATHS = ['**/*.md', '!src/generated/**', '!.claude/commands/**', '!.claude/skills/**', '!.claude/agents/**', '!.agents/skills/**'] as const
+const MARKDOWN_PATHS = [
+  '**/*.md',
+  '!src/generated/**',
+  '!.claude/commands/**',
+  '!.claude/skills/**',
+  '!.claude/agents/**',
+  '!.agents/skills/**',
+  '!+/_TRADES/*/*/TRD-*.md',
+  '!-/_TRADES/*/*/TRD-*.md'
+] as const
 
 const MARKDOWN_AUDIT_COMMANDS: readonly ConformCommand[] = [
-  { program: 'bunx', arguments: ['prettier', '--check', ...MARKDOWN_PATHS, '--ignore-path', '.gitignore'] },
+  { program: 'bunx', arguments: ['prettier', '--check', ...MARKDOWN_PATHS, '--ignore-path', '.gitignore', '--ignore-path', '.prettierignore'] },
   { program: 'bunx', arguments: ['markdownlint-cli2', '**/*.md'] }
 ]
 
 const MARKDOWN_CONFORM_COMMANDS: readonly ConformCommand[] = [
-  { program: 'bunx', arguments: ['prettier', '--write', ...MARKDOWN_PATHS, '--ignore-path', '.gitignore'] },
+  { program: 'bunx', arguments: ['prettier', '--write', ...MARKDOWN_PATHS, '--ignore-path', '.gitignore', '--ignore-path', '.prettierignore'] },
   { program: 'bunx', arguments: ['markdownlint-cli2', '--fix'] }
 ]
 
-export type OwnedFile = '.prettierrc.json' | '.editorconfig' | '.markdownlint-cli2.jsonc'
+export type OwnedFile = '.prettierrc.json' | '.editorconfig' | '.prettierignore' | '.markdownlint-cli2.jsonc'
 export type OwnedFileState = 'missing' | 'canonical' | 'drifted' | 'unsafe'
 export type MarkdownAudit = { clean: boolean; detail?: string }
 export type FrontmatterFileEvidence = {
@@ -131,6 +150,7 @@ type FrontmatterFileDraft = {
 const canonical: Record<OwnedFile, string> = {
   '.prettierrc.json': PRETTIER_DEFAULT,
   '.editorconfig': EDITORCONFIG_DEFAULT,
+  '.prettierignore': PRETTIER_IGNORE_DEFAULT,
   '.markdownlint-cli2.jsonc': MARKDOWNLINT_DEFAULT
 }
 
@@ -141,7 +161,10 @@ const FRONTMATTER_IGNORED_PATHS = ['src/generated', '.claude/commands', '.claude
 const YAML_SIGNIFICANT_SCALARS = /^(?:true|false|null|y|n|yes|no|on|off|\.nan|\.inf)$/i
 const BARE_SAFE_SCALAR = /^[A-Za-z_][A-Za-z0-9_-]*$/
 
-const frontmatterPathIsIgnored = (path: string): boolean => FRONTMATTER_IGNORED_PATHS.some((ignored) => path === ignored || path.startsWith(`${ignored}/`))
+const submittedTradeRecordPathIsIgnored = (path: string): boolean => /^[+-]\/_TRADES\/[^/]+\/[^/]+\/TRD-[^/]+\.md$/.test(path)
+
+const frontmatterPathIsIgnored = (path: string): boolean =>
+  submittedTradeRecordPathIsIgnored(path) || FRONTMATTER_IGNORED_PATHS.some((ignored) => path === ignored || path.startsWith(`${ignored}/`))
 
 const markdownFiles = (repository: string, directory = '', files: string[] = []): readonly string[] => {
   for (const entry of readdirSync(join(repository, directory), { withFileTypes: true })) {

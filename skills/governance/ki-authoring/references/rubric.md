@@ -47,7 +47,7 @@ The mechanical Markdown gate and reviewer-applied Markdown conventions.
 
 Configuration files wholly owned by the authoring convention.
 
-- **OWN-1 [M] — owned authoring configuration matches the house templates** — The skill owns `.prettierrc.json`, `.editorconfig`, and `.markdownlint-cli2.jsonc` wholly (SHAPE-16 `owns:`): AUDIT warns on drift from the house templates, while CONFORM transactionally scaffolds missing files and overwrites drifted regular files. (standards-authoring.md#owned-configuration)
+- **OWN-1 [M] — owned authoring configuration matches the house templates** — The skill owns `.prettierrc.json`, `.editorconfig`, `.prettierignore`, and `.markdownlint-cli2.jsonc` wholly (SHAPE-16 `owns:`): AUDIT warns on drift from the house templates, while CONFORM transactionally scaffolds missing files and overwrites drifted regular files. (standards-authoring.md#owned-configuration)
 
 ## TOML — TOML formatting
 

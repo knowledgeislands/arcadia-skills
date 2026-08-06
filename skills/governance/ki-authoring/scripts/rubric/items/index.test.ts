@@ -1,8 +1,8 @@
 import { afterEach, expect, test } from 'bun:test'
-import { existsSync, mkdtempSync, readFileSync, rmSync, symlinkSync, writeFileSync } from 'node:fs'
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, symlinkSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
-import { createAuthoringSession, PRETTIER_DEFAULT } from '../contexts/authoring.ts'
+import { createAuthoringSession, EDITORCONFIG_DEFAULT, MARKDOWNLINT_DEFAULT, PRETTIER_DEFAULT, PRETTIER_IGNORE_DEFAULT } from '../contexts/authoring.ts'
 import catalogue, * as indexModule from './index.ts'
 import * as markdownModule from './markdown.ts'
 import * as ownedModule from './owned.ts'
@@ -64,6 +64,7 @@ test('conform retains drafts, coalesces writes, and leaves publication to the ho
   expect(owned?.mechanical?.audit.run(context?.owned as NonNullable<typeof context>['owned']).map((outcome) => outcome.status)).toEqual([
     'VIOLATION',
     'VIOLATION',
+    'VIOLATION',
     'VIOLATION'
   ])
 
@@ -74,8 +75,9 @@ test('conform retains drafts, coalesces writes, and leaves publication to the ho
   expect(session.proposal()).toEqual({
     writes: [
       { path: '.prettierrc.json', content: PRETTIER_DEFAULT },
-      { path: '.editorconfig', content: expect.any(String), create: true },
-      { path: '.markdownlint-cli2.jsonc', content: expect.any(String), create: true }
+      { path: '.editorconfig', content: EDITORCONFIG_DEFAULT, create: true },
+      { path: '.prettierignore', content: PRETTIER_IGNORE_DEFAULT, create: true },
+      { path: '.markdownlint-cli2.jsonc', content: MARKDOWNLINT_DEFAULT, create: true }
     ],
     commands: [
       {
@@ -89,8 +91,12 @@ test('conform retains drafts, coalesces writes, and leaves publication to the ho
           '!.claude/skills/**',
           '!.claude/agents/**',
           '!.agents/skills/**',
+          '!+/_TRADES/*/*/TRD-*.md',
+          '!-/_TRADES/*/*/TRD-*.md',
           '--ignore-path',
-          '.gitignore'
+          '.gitignore',
+          '--ignore-path',
+          '.prettierignore'
         ]
       },
       { program: 'bunx', arguments: ['markdownlint-cli2', '--fix'] }
@@ -98,7 +104,38 @@ test('conform retains drafts, coalesces writes, and leaves publication to the ho
   })
   expect(readFileSync(join(repository, '.prettierrc.json'), 'utf8')).toBe('{}\n')
   expect(existsSync(join(repository, '.editorconfig'))).toBe(false)
+  expect(existsSync(join(repository, '.prettierignore'))).toBe(false)
   expect(existsSync(join(repository, '.markdownlint-cli2.jsonc'))).toBe(false)
+})
+
+test('submitted trade records are never normalized, while preparation and README Markdown remain authored', () => {
+  const repository = temporaryRepository()
+  const submitted = join(repository, '+', '_TRADES', 'peer', 'repo')
+  const preparation = join(repository, '-', '_TRADES', '_PREPARATIONS', 'peer', 'repo')
+  const outbound = join(repository, '-', '_TRADES', 'peer', 'repo')
+  mkdirSync(submitted, { recursive: true })
+  mkdirSync(preparation, { recursive: true })
+  mkdirSync(outbound, { recursive: true })
+  mkdirSync(join(repository, '+', '_TRADES'), { recursive: true })
+  writeFileSync(join(submitted, 'TRD-00000001.md'), '---\nid: "TRD-00000001"\n---\n\n# Submitted\n')
+  writeFileSync(join(outbound, 'TRD-malformed.md'), '---\nid: "TRD-malformed"\n---\n\n# Submitted\n')
+  writeFileSync(join(preparation, 'TRD-00000002.md'), '---\nid: "TRD-00000002"\n---\n\n# Preparation\n')
+  writeFileSync(join(repository, '+', '_TRADES', 'README.md'), '---\nid: "trade-readme"\n---\n\n# Trade README\n')
+
+  const session = createAuthoringSession({ mode: 'conform', repository, userHome: tmpdir(), configuration: {} }, () => ({ clean: true }))
+  const context = session.subjects[1]?.context()
+  const frontmatter = markdownModule.MARKDOWN.items.find((item) => item.code === 'MD-frontmatter')
+
+  expect(context?.markdown.frontmatter.files.map((file) => file.path)).toEqual(['+/_TRADES/README.md', '-/_TRADES/_PREPARATIONS/peer/repo/TRD-00000002.md'])
+
+  frontmatter?.mechanical?.conform?.run(context?.markdown as NonNullable<typeof context>['markdown'])
+
+  expect(session.proposal().writes).toEqual([
+    { path: '+/_TRADES/README.md', content: '---\nid: trade-readme\n---\n\n# Trade README\n' },
+    { path: '-/_TRADES/_PREPARATIONS/peer/repo/TRD-00000002.md', content: '---\nid: TRD-00000002\n---\n\n# Preparation\n' }
+  ])
+  expect(readFileSync(join(submitted, 'TRD-00000001.md'), 'utf8')).toContain('id: "TRD-00000001"')
+  expect(readFileSync(join(outbound, 'TRD-malformed.md'), 'utf8')).toContain('id: "TRD-malformed"')
 })
 
 test('frontmatter conform removes only safely unnecessary scalar quotes', () => {

@@ -44,7 +44,7 @@ The shared package metadata and toolchain dependency surface.
 - **PKG-3 [M] — Node engine floor** — `"engines.node"` floor is `>= 22`. (standards-engineering.md)
 - **PKG-4 [M] — Closed package coverage manifest** — Every top-level `package.json` key is in the engineering coverage manifest; an unknown key is drift. This is also the criterion for an unparseable `package.json`. (standards-engineering.md)
 - **PKG-5 [M] — Toolchain dependencies declared** — The toolchain devDependencies `@biomejs/biome`, `knip`, `prettier`, `husky`, `lint-staged`, `markdownlint-cli2`, `syncpack`, and `typescript` are declared rather than implied. (standards-engineering.md)
-- **PKG-6 [M] — Lint-staged fan-out** — `lint-staged` is present and fans out to Biome on code and Prettier plus `markdownlint-cli2 --no-globs` on staged Markdown only. (standards-engineering.md)
+- **PKG-6 [M] — Lint-staged fan-out** — `lint-staged` is present and fans out to Biome on code and Prettier plus `markdownlint-cli2 --no-globs` on staged authored Markdown only; `.prettierignore` and markdownlint exclude immutable submitted trade projections while leaving README and `_PREPARATIONS` Markdown checked. (standards-engineering.md)
 
 ## MISE — Toolchain pins
 
