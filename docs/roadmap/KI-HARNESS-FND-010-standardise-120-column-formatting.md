@@ -3,7 +3,7 @@ id: KI-HARNESS-FND-010
 title: Standardise 120-column formatting
 theme: foundation-tooling
 horizon: next
-status: ready
+status: in-progress
 blocks: []
 blocked-by: []
 baseline-ref: 19656a1fbe8b4fcab67a9a25f61c2e32aba9b65b
