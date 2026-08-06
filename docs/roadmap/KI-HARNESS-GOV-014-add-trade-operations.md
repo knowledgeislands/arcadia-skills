@@ -3,10 +3,10 @@ id: KI-HARNESS-GOV-014
 title: Add trade operations
 theme: governance-consistency
 horizon: now
-status: ready
+status: in-progress
 blocks: []
 blocked-by: []
-baseline-ref: null
+baseline-ref: a30b91707f7460a7bbcc8d5f4ee608594f8824aa
 ---
 
 ## Goal
