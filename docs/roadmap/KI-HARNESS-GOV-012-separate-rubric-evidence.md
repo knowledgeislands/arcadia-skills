@@ -19,9 +19,11 @@ The shared rubric contract already distinguishes `mechanical` and `judgment` asp
 
 A catalogue-wide scan now finds 35 active rubric catalogues. Their criteria include substantial mechanical evidence, judgment prompts, and safe conform actions, but these are not consistently declared as one complete audit-and-remediation model. An earlier scan also found that `ki-skills` assessed already-correct process skills as governance skills because its classifier inferred kind from prose. The explicit `ki-kind` migration has resolved that defect: kind now comes from exact frontmatter, and governance-only checks return not applicable for process skills. Retain that regression fixture; do not change process skills merely to satisfy governance modes.
 
+The now-enforced trade lifecycle supplies a concrete boundary for the rubric model: record shape, routes, immutable sender projection, receiver-local evidence, and release eligibility are deterministic evidence; receiver disposition, local priority, authority, and retention value remain judgment. A rubric host must report that split without treating an imported record as authority to change a peer or as proof that locally adopted work is complete.
+
 ## Boundary
 
-Do not present a heuristic as a fact, make the host pretend to perform human judgment, or auto-rewrite user-owned, semantic, remote, or environment-dependent state. Do not require every mechanical failure to be automatically fixable: require its non-automatic boundary and next conforming action to be explicit instead. Do not turn semantic quality, intent, priority, authority, or truth into a keyword metric.
+Do not present a heuristic as a fact, make the host pretend to perform human judgment, or auto-rewrite user-owned, semantic, remote, or environment-dependent state. Do not require every mechanical failure to be automatically fixable: require its non-automatic boundary and next conforming action to be explicit instead. Do not turn semantic quality, intent, priority, authority, or truth into a keyword metric. A trade import never grants a peer write, release, pruning, or local-work acceptance authority.
 
 ## Shaping
 
@@ -85,6 +87,8 @@ For commands, manuals, and projections, check declared script presence, `--help`
 
 For lifecycle and record structure, validate identifiers, status transitions, required evidence, and reciprocal references; retain priority, readiness, disposition, authority, and retention honesty for review.
 
+For trades, validate the mandatory observation policy, typed reciprocal route, raw sender projection, receiver-only fields, closed status/linkage vocabulary, and release/pruning eligibility. Retain the receiver's disposition, whether direct work is genuinely trivial and reversible, whether adoption belongs on the local roadmap, and whether knowledge merits canonical retention. The host may render those review routes but cannot mutate either trade copy or manufacture a terminal decision.
+
 For skill and agent prose, check parseable frontmatter, link resolution, declared modes, and named sibling references where an authority set exists; retain scope, trigger quality, terminology, instruction altitude, and durable semantic fit for review.
 
 This makes existing hybrid rules the normal form: the mechanical condition is exact and independently useful; the reviewer decides the quality or authority question that remains.
@@ -109,7 +113,7 @@ Before this item enters `ready`, two distinct models from different vendors must
 - [ ] Extend the shared rubric types, catalogue validator, and generated publication so every mechanical aspect declares its remediation class and every judgment aspect supplies review scope, outcome vocabulary, and guided conforming work.
 - [ ] Update the `ki` rubric host to validate the new metadata, show mechanical audit/conform and judgment review/conform sections distinctly, execute only `automatic` draft actions, and retain its no-synthetic-judgment-finding boundary.
 - [ ] Build an inventory of every current criterion across all 34 catalogues, recording its evidence, remediation class, safe writer or manual route, and whether a hybrid split is warranted.
-- [ ] Migrate `ki-skills` and `ki-engineering` first, retaining the completed process-kind classifier fix as a regression fixture, then use fixtures to prove automatic, diagnostic, guarded, hybrid, and invalid-metadata cases.
+- [ ] Migrate `ki-skills` and `ki-engineering` first, retaining the completed process-kind classifier fix as a regression fixture, then use fixtures to prove automatic, diagnostic, guarded, hybrid, and invalid-metadata cases. Use `ki-trades` as the reference hybrid: structural lifecycle evidence is mechanical, while disposition and direct-application suitability remain judgment.
 - [ ] Migrate the remaining catalogues in concern-sized batches. Promote only deterministic subconditions with reliable fixtures; preserve semantic, authority, and truth questions as judgment.
 - [ ] Regenerate every affected rubric publication, update standards and skill procedures, and publish a concise reviewer workflow explaining judgment audit and guided conforming work.
 - [ ] Run a cross-catalogue audit proving no mechanical item lacks a remediation class, no `automatic` class lacks a safe conform action, and no judgment aspect is reported as mechanically evaluated.
@@ -118,6 +122,7 @@ Before this item enters `ready`, two distinct models from different vendors must
 
 - `skills/keystone/ki-skills/` rubric-authoring standard, shared rubric types, catalogue, generated rubric, and tests
 - `skills/governance/ki-engineering/` pilot catalogue, standards, generated rubric, and tests
+- `skills/governance/ki-trades/` rubric metadata, publication, and fixtures preserving its read-only lifecycle boundary
 - Every governed skill under `skills/**/scripts/rubric/`, its generated `references/rubric.md`, and focused tests as classified
 - `tools-ki` rubric-host validation, rendering, CONFORM planning, and CLI fixtures through a receiving trade or local work item
 - This roadmap item
@@ -128,6 +133,7 @@ Before this item enters `ready`, two distinct models from different vendors must
 - Focused `ki-skills` and `ki-engineering` rubric tests, then each migrated family’s colocated tests
 - `ki dev skill rubric <skill> --write` followed by publication-parity audit for every migrated catalogue
 - `ki repo audit --skill ki-skills --repo .` and affected focused audits, with process skills no longer judged as governance-mode skills
+- `ki repo audit --skill ki-trades --repo .`, including fixtures for mandatory observation, immutable sender projection, terminal knowledge retention, and explicit release/pruning eligibility
 - `bun run test` and `bunx tsc --noEmit` in the Harness; receiving `tools-ki` host tests and type gate
 - A dry-run and apply fixture proving automatic repair is idempotent, while diagnostic, guarded, and judgment cases make no unapproved write
 
@@ -176,6 +182,12 @@ The audit read every `SKILL.md`, structured rubric catalogue, and generated `ref
 `ki-authoring`, `ki-decision-records`, `ki-engineering`, `ki-feature-definitions`, `ki-git`, `ki-guides`, `ki-housekeeping`, `ki-roadmap`, `ki-specifications`, and `ki-trades` can check formatting, schemas, IDs, links, index completeness, record relations, configured toolchain evidence, and route structure. Prose usefulness, decision reasoning, test adequacy, feature behaviour, Git hygiene, priority, authority, adoption, and retention remain reviewer-led.
 
 `ki-repo` and `ki-skills` can check root and configuration shape, declared relationships, catalogue/publication parity, links, names, modes, and owned-file containment. Repository purpose, warranted overrides, trigger quality, skill scope, instruction altitude, semantic collisions, and refresh fitness remain reviewer-led.
+
+### Trade lifecycle alignment
+
+`ki-trades` already demonstrates the intended division. Its record, authority, status, and release checks are deterministic and read-only; its receiver-disposition criterion is reviewer-led. The migration must preserve that separation: metadata can make the remediation route explicit, but it must not turn a decision, retention, direct application, or peer cleanup into an automatic rubric-host action.
+
+Knowledge trades are retained only by linking a terminal `retained` decision to a named canonical local artifact. Work trades may be `applied` only for a bounded, reversible, independently verifiable local change with commit evidence; otherwise adoption creates separately governed local work. Sender release and receiver pruning remain explicit lifecycle operations after the declared observation condition, not CONFORM side effects or a substitute for roadmap acceptance.
 
 `ki-kb`, `ki-kb-activities`, `ki-kb-live-artifacts`, `ki-kb-streams`, and `ki-principal` can check zone and note structure, frontmatter, required sections, identifiers, indexes, state transitions, and local link integrity. Knowledge placement, activity rationale, authoritativeness, reader usefulness, Focus, governance fit, and charter meaning remain reviewer-led.
 
