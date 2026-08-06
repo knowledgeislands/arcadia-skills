@@ -14,7 +14,14 @@ const item = (
   title,
   description,
   sources: [SOURCE],
-  mechanical: { level, audit: { phase: 'INSPECT', run: (context) => auditEvidence(evidence(context), level) } }
+  mechanical: {
+    level,
+    remediation: {
+      class: 'diagnostic',
+      guidance: 'Align the repository structure declaration with the applicable standard or record an explicit exemption, then rerun the audit.'
+    },
+    audit: { phase: 'INSPECT', run: (context) => auditEvidence(evidence(context), level) }
+  }
 })
 
 export const STRUCT: RubricFamily<RepoRubricContext, StructureRubricContext> = {

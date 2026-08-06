@@ -9,6 +9,7 @@ const ACCESS_1: RubricItem<EvidenceRubricContext> = {
   mechanical: {
     level: 'WARN',
     overrideLevels: ['FAIL'],
+    remediation: { class: 'diagnostic', guidance: 'Restore GitHub access or record the repository archive state, then rerun the audit.' },
     audit: { phase: 'INSPECT', run: (context) => auditEvidence(context.evidence, 'WARN', ['FAIL']) }
   }
 }

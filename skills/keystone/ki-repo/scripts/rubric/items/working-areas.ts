@@ -10,6 +10,7 @@ const WORK_1: RubricItem<WorkingAreasRubricContext> = {
   sources: [SOURCE],
   mechanical: {
     level: 'FAIL',
+    remediation: { class: 'automatic' },
     audit: { phase: 'INSPECT', run: (context) => context.workingAreas1 },
     conform: {
       phase: 'PRIMARY',
@@ -26,7 +27,10 @@ const WORK_J1: RubricItem<WorkingAreasRubricContext> = {
   description: 'The required +/ and -/ working areas distinguish temporary inbound from outbound material without becoming a shadow canonical store.',
   sources: [SOURCE],
   judgment: {
-    prompt: 'Review that +/ and -/ remain temporary directional material rather than a shadow canonical store or archive.'
+    scope: 'The repository +/ and -/ working areas and their README orientation.',
+    prompt: 'Review that +/ and -/ remain temporary directional material rather than a shadow canonical store or archive.',
+    outcomes: ['conforming', 'gap', 'exclusion'],
+    guidance: 'Move material to its canonical store, record a named gap, or record an explicit repository-level exclusion.'
   }
 }
 

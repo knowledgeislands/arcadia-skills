@@ -9,6 +9,7 @@ const SEC_1: RubricItem<EvidenceRubricContext> = {
   mechanical: {
     level: 'FAIL',
     overrideLevels: ['WARN'],
+    remediation: { class: 'diagnostic', guidance: 'Enable secret scanning and push protection or record an explicit override, then rerun the audit.' },
     audit: { phase: 'INSPECT', run: (context) => auditEvidence(context.evidence, 'FAIL', ['WARN']) }
   }
 }

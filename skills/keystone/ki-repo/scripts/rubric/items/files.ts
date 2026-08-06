@@ -11,6 +11,7 @@ const FILES_1: RubricItem<FilesRubricContext> = {
   sources: [SOURCE],
   mechanical: {
     level: 'FAIL',
+    remediation: { class: 'automatic' },
     audit: { phase: 'INSPECT', run: (context) => auditEvidence(context.files1, 'FAIL') },
     conform: {
       phase: 'PRIMARY',
@@ -29,6 +30,7 @@ const FILES_3: RubricItem<FilesRubricContext> = {
   sources: [SOURCE],
   mechanical: {
     level: 'FAIL',
+    remediation: { class: 'automatic' },
     audit: { phase: 'INSPECT', run: (context) => auditEvidence(context.files3, 'FAIL') },
     conform: {
       phase: 'PRIMARY',
@@ -46,6 +48,7 @@ const FILES_4: RubricItem<FilesRubricContext> = {
   sources: [SOURCE],
   mechanical: {
     level: 'FAIL',
+    remediation: { class: 'automatic' },
     audit: { phase: 'INSPECT', run: (context) => auditEvidence(context.files4, 'FAIL') },
     conform: {
       phase: 'PRIMARY',
@@ -64,6 +67,7 @@ const FILES_2: RubricItem<FilesRubricContext> = {
   sources: [SOURCE],
   mechanical: {
     level: 'FAIL',
+    remediation: { class: 'diagnostic', guidance: 'Correct the declared repository identity, README H1, or roadmap code, then rerun the audit.' },
     audit: { phase: 'INSPECT', run: (context) => auditEvidence(context.files2, 'FAIL') }
   }
 }
@@ -73,7 +77,12 @@ const FILES_J1: RubricItem<FilesRubricContext> = {
   title: 'Repository document content',
   description: 'README and license content is accurate and current.',
   sources: [SOURCE],
-  judgment: { prompt: 'Read the README and license and assess whether they accurately describe and license this repository.' }
+  judgment: {
+    scope: 'The repository README and license.',
+    prompt: 'Read the README and license and assess whether they accurately describe and license this repository.',
+    outcomes: ['conforming', 'gap', 'exclusion'],
+    guidance: 'Correct the document, record a named gap, or record an explicit repository-level exclusion.'
+  }
 }
 
 export const FILES: RubricFamily<RepoRubricContext, FilesRubricContext> = {

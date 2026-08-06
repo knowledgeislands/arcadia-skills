@@ -13,7 +13,11 @@ const item = (
   title,
   description,
   sources: [SOURCE],
-  mechanical: { level: 'FAIL', audit: { phase: 'INSPECT', run: (context) => auditEvidence(evidence(context), 'FAIL') } }
+  mechanical: {
+    level: 'FAIL',
+    remediation: { class: 'diagnostic', guidance: 'Correct the GitHub setting or aligned local declaration, then rerun the audit.' },
+    audit: { phase: 'INSPECT', run: (context) => auditEvidence(evidence(context), 'FAIL') }
+  }
 })
 
 export const GH: RubricFamily<RepoRubricContext, GhRubricContext> = {

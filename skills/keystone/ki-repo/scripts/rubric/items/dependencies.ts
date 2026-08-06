@@ -9,6 +9,10 @@ const DEP_1: RubricItem<EvidenceRubricContext> = {
   mechanical: {
     level: 'FAIL',
     overrideLevels: ['WARN'],
+    remediation: {
+      class: 'diagnostic',
+      guidance: 'Enable the required Dependabot and branch-update settings or record an explicit override, then rerun the audit.'
+    },
     audit: { phase: 'INSPECT', run: (context) => auditEvidence(context.evidence, 'FAIL', ['WARN']) }
   }
 }

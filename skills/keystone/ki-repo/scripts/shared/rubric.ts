@@ -57,6 +57,7 @@ export type MechanicalRubric<Context> = {
   level: ViolationLevel
   overrideLevels?: readonly ViolationLevel[]
   heuristic?: boolean
+  remediation: MechanicalRemediation
   audit: RubricExecution<Context, RubricOutcomes<AuditOutcome>>
   /**
    * The canonical CONFORM action. It changes only the operation-scoped
@@ -67,8 +68,13 @@ export type MechanicalRubric<Context> = {
   conformOn?: readonly Extract<AuditOutcomeStatus, 'INFO'>[]
 }
 
+export type MechanicalRemediation = { class: 'automatic' } | { class: 'diagnostic' | 'guarded'; guidance: string }
+
 export type JudgmentRubric = {
+  scope: string
   prompt: string
+  outcomes: NonEmptyReadonlyArray<string>
+  guidance: string
 }
 
 export type RubricItemBase = {
@@ -190,6 +196,7 @@ export const createRubricPublicationFamily = <RootContext>(
       sources,
       mechanical: {
         level: 'FAIL',
+        remediation: { class: 'automatic' },
         audit: {
           phase: 'DERIVED',
           run: ({ publication }) => {

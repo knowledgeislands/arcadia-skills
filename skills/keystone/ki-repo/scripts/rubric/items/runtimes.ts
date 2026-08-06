@@ -10,6 +10,7 @@ const RUNTIMES_1: RubricItem<RuntimesRubricContext> = {
   sources: [SOURCE],
   mechanical: {
     level: 'FAIL',
+    remediation: { class: 'diagnostic', guidance: 'Declare the supported runtimes as a non-empty duplicate-free supported set, then rerun the audit.' },
     audit: { phase: 'INSPECT', run: (context) => auditEvidence(context.runtimes1, 'FAIL') }
   }
 }
@@ -21,6 +22,7 @@ const RUNTIMES_2: RubricItem<RuntimesRubricContext> = {
   sources: [SOURCE],
   mechanical: {
     level: 'FAIL',
+    remediation: { class: 'diagnostic', guidance: 'Add the required tokenomics and runtime capabilities for each declared runtime, then rerun the audit.' },
     audit: { phase: 'INSPECT', run: (context) => auditEvidence(context.runtimes2, 'FAIL') }
   }
 }
@@ -32,6 +34,7 @@ const RUNTIMES_3: RubricItem<RuntimesRubricContext> = {
   sources: [SOURCE],
   mechanical: {
     level: 'FAIL',
+    remediation: { class: 'diagnostic', guidance: 'Restore the canonical ki-self source and applicable runtime projection, then rerun the audit.' },
     audit: { phase: 'INSPECT', run: (context) => auditEvidence(context.runtimes3, 'FAIL') }
   }
 }
@@ -42,7 +45,10 @@ const RUNTIMES_J1: RubricItem<RuntimesRubricContext> = {
   description: 'Multi-runtime repositories use a shared AGENTS.md orientation with a thin Claude import unless a justified exception applies.',
   sources: [SOURCE],
   judgment: {
-    prompt: 'Review whether orientation is shared cleanly across the declared runtimes without duplicated or Claude-only instructions.'
+    scope: 'The shared AGENTS.md and runtime-specific orientation files for every declared runtime.',
+    prompt: 'Review whether orientation is shared cleanly across the declared runtimes without duplicated or Claude-only instructions.',
+    outcomes: ['conforming', 'gap', 'exclusion'],
+    guidance: 'Consolidate shared guidance, record a named gap, or record an explicit repository-level exception.'
   }
 }
 

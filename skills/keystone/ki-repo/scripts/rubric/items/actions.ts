@@ -9,6 +9,7 @@ const ACT_1: RubricItem<EvidenceRubricContext> = {
   mechanical: {
     level: 'WARN',
     overrideLevels: ['FAIL'],
+    remediation: { class: 'diagnostic', guidance: 'Set the intended GitHub Actions policy or record an explicit override, then rerun the audit.' },
     audit: { phase: 'INSPECT', run: (context) => auditEvidence(context.evidence, 'WARN', ['FAIL']) }
   }
 }

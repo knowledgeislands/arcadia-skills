@@ -38,6 +38,7 @@ Line-by-line criteria for auditing ki-repo. Classifications are derived from ite
 The tracked readable rubric is the exact publication of the structured catalogue.
 
 - **RUBRIC-1 [M] — structured catalogue publication is exact** — A structured catalogue tracks `references/rubric.md` as its exact generated publication. The host supplies only validated publication evidence: a missing or differing file is a FAIL; during CONFORM this item requests the host-owned derived write without choosing its path or bytes. (../../ki-skills/references/standards-rubric-authoring.md#generated-rubric-publication)
+  - _Remediation:_ automatic
 
 ## FILES — Repository files
 
@@ -46,11 +47,18 @@ The tracked readable rubric is the exact publication of the structured catalogue
 Required repository files and document quality, using a local checkout when available or GitHub default-branch evidence for remote-only runs.
 
 - **FILES-1 [M] — Required repository files** — README, license, gitignore, editor configuration, Claude orientation, and the exact ki-repo config marker are present in the selected evidence source. (standards-repository.md)
+  - _Remediation:_ automatic
 - **FILES-2 [M] — Declared repository identity** — The ki-repo table declares its canonical GitHub repository, title, and description; its title matches the README H1, and a roadmap repository declares repo_code there. (standards-repository.md)
+  - _Remediation:_ diagnostic — Correct the declared repository identity, README H1, or roadmap code, then rerun the audit.
 - **FILES-3 [M] — Authoring baseline** — A governed repository declares ki-authoring explicitly. (standards-repository.md)
+  - _Remediation:_ automatic
 - **FILES-4 [M] — Runtime skill ignore contract** — Generated skill links are ignored for each declared runtime, while a repository-local .agents/skills/ki-self source remains committed. (standards-repository.md)
+  - _Remediation:_ automatic
 - **FILES-J1 [J] — Repository document content** — README and license content is accurate and current. (standards-repository.md)
+  - _Evidence scope:_ The repository README and license.
   - _Review prompt:_ Read the README and license and assess whether they accurately describe and license this repository.
+  - _Outcomes:_ conforming; gap; exclusion
+  - _Conforming guidance:_ Correct the document, record a named gap, or record an explicit repository-level exclusion.
 
 ## GH — Core GitHub settings
 
@@ -59,8 +67,11 @@ Required repository files and document quality, using a local checkout when avai
 Default branch, licensing, and repository description.
 
 - **GH-1 [M] — Default branch** — The default branch is main. (standards-repository.md)
+  - _Remediation:_ diagnostic — Correct the GitHub setting or aligned local declaration, then rerun the audit.
 - **GH-2 [M] — Declared license alignment** — The declared license agrees with GitHub and package.json. (standards-repository.md)
+  - _Remediation:_ diagnostic — Correct the GitHub setting or aligned local declaration, then rerun the audit.
 - **GH-3 [M] — Description presence and synchronisation** — The declared ki-repo description is non-empty and matches GitHub and package.json when those surfaces exist. (standards-repository.md)
+  - _Remediation:_ diagnostic — Correct the GitHub setting or aligned local declaration, then rerun the audit.
 
 ## PKG — Package metadata
 
@@ -69,6 +80,7 @@ Default branch, licensing, and repository description.
 Package identity and repository metadata.
 
 - **PKG-1 [M] — Package identity metadata** — package.json carries coherent identity and repository metadata when present. (standards-repository.md)
+  - _Remediation:_ diagnostic — Correct package identity metadata or record an explicit override, then rerun the audit.
 
 ## MERGE — Merge policy
 
@@ -77,6 +89,7 @@ Package identity and repository metadata.
 GitHub merge and branch-cleanup behaviour.
 
 - **MERGE-1 [M] — Merge policy** — The repository permits squash merges only and deletes merged head branches. (standards-repository.md)
+  - _Remediation:_ diagnostic — Configure squash-only merging and merged-branch deletion, then rerun the audit.
 
 ## TOGGLE — Repository features
 
@@ -85,6 +98,7 @@ GitHub merge and branch-cleanup behaviour.
 Issues, Wiki, and Projects settings.
 
 - **TOGGLE-1 [M] — Repository feature toggles** — Issues are enabled and Wiki and Projects are disabled unless explicitly overridden. (standards-repository.md)
+  - _Remediation:_ diagnostic — Align the repository feature settings or record an explicit override, then rerun the audit.
 
 ## VIS — Visibility
 
@@ -93,6 +107,7 @@ Issues, Wiki, and Projects settings.
 Declared and live repository visibility.
 
 - **VIS-1 [M] — Declared visibility** — Live GitHub visibility matches the valid visibility declared in .ki-config.toml. (standards-repository.md)
+  - _Remediation:_ diagnostic — Align the declared and live repository visibility, then rerun the audit.
 
 ## TOPICS — Topics
 
@@ -101,6 +116,7 @@ Declared and live repository visibility.
 Public repository topic conventions.
 
 - **TOPICS-1 [M] — Public repository topics** — A public repository carries the standard topic set unless explicitly overridden. (standards-repository.md)
+  - _Remediation:_ diagnostic — Set the required public topics or record an explicit override, then rerun the audit.
 
 ## BP — Branch protection
 
@@ -109,6 +125,7 @@ Public repository topic conventions.
 Optional main-branch protection.
 
 - **BP-1 [M] — Branch protection** — Main has the configured branch-protection posture, including required PR, build check, and linear history when enabled. (standards-repository.md)
+  - _Remediation:_ diagnostic — Configure the required branch-protection posture or record an explicit override, then rerun the audit.
 
 ## DEP — Dependency security
 
@@ -117,6 +134,7 @@ Optional main-branch protection.
 Dependabot and branch freshness.
 
 - **DEP-1 [M] — Dependabot and branch freshness** — Dependabot alerts and updates are enabled and pull-request branches may be updated. (standards-repository.md)
+  - _Remediation:_ diagnostic — Enable the required Dependabot and branch-update settings or record an explicit override, then rerun the audit.
 
 ## SEC — Secret protection
 
@@ -125,6 +143,7 @@ Dependabot and branch freshness.
 Secret scanning and push protection.
 
 - **SEC-1 [M] — Secret scanning protection** — Public repositories enable secret scanning and push protection unless explicitly overridden. (standards-repository.md)
+  - _Remediation:_ diagnostic — Enable secret scanning and push protection or record an explicit override, then rerun the audit.
 
 ## ACT — Actions policy
 
@@ -133,6 +152,7 @@ Secret scanning and push protection.
 GitHub Actions permissions.
 
 - **ACT-1 [M] — Actions policy** — GitHub Actions allowed_actions is all; tighter deliberate policies are reported as warnings. (standards-repository.md)
+  - _Remediation:_ diagnostic — Set the intended GitHub Actions policy or record an explicit override, then rerun the audit.
 
 ## CHECKS — Check overrides
 
@@ -141,6 +161,7 @@ GitHub Actions permissions.
 Per-repository override schema.
 
 - **CHECKS-1 [M] — Override keys** — Every ki-repo checks override names a supported overridable concern. (standards-configuration.md)
+  - _Remediation:_ diagnostic — Remove the unsupported override or select a supported concern, then rerun the audit.
 
 ## COV — Governance coverage
 
@@ -149,6 +170,7 @@ Per-repository override schema.
 Detected and declared governance coverage.
 
 - **COV-1 [M] — Governance coverage cascade** — Detected governance applicability and declared opt-in tables agree, subject to explicit coverage overrides. (standards-configuration.md)
+  - _Remediation:_ diagnostic — Align the declared coverage table with detected applicability or record an explicit override, then rerun the audit.
 
 ## STRUCT — Repository structure
 
@@ -157,7 +179,9 @@ Detected and declared governance coverage.
 Structural governance identity.
 
 - **STRUCT-1 [M] — Single repository structure** — A repository declares at most one repo-structure governance table. (standards-repository.md)
+  - _Remediation:_ diagnostic — Align the repository structure declaration with the applicable standard or record an explicit exemption, then rerun the audit.
 - **STRUCT-2 [M] — Repository structure presence** — A repository normally declares one repo-structure table unless explicitly exempted. (standards-repository.md)
+  - _Remediation:_ diagnostic — Align the repository structure declaration with the applicable standard or record an explicit exemption, then rerun the audit.
 
 ## ACCESS — Repository access
 
@@ -166,6 +190,7 @@ Structural governance identity.
 GitHub reachability and archive state.
 
 - **ACCESS-1 [M] — GitHub access and archive state** — GitHub reachability is reported without manufacturing drift when offline, and archived repositories are skipped. (standards-repository.md)
+  - _Remediation:_ diagnostic — Restore GitHub access or record the repository archive state, then rerun the audit.
 
 ## KIND — Repository kind
 
@@ -174,7 +199,9 @@ GitHub reachability and archive state.
 The selected repository operating model and named Knowledge Base store roles.
 
 - **KIND-1 [M] — Repository kind and store roles** — ki-repo owns the optional KB discriminator and validates its closed named-store vocabulary without accepting legacy locations. (standards-repository.md)
+  - _Remediation:_ diagnostic — Declare a supported repository kind and compatible store roles, then rerun the audit.
 - **KIND-2 [M] — Kind and structure compatibility** — A KB kind declares the KB structure and Streams planning model; a non-KB does not declare the KB structure. (standards-repository.md)
+  - _Remediation:_ diagnostic — Align the repository kind with its declared structure and planning model, then rerun the audit.
 
 ## RUNTIMES — Runtime support
 
@@ -183,10 +210,16 @@ The selected repository operating model and named Knowledge Base store roles.
 Declared agent-runtime support and orientation.
 
 - **RUNTIMES-1 [M] — Supported runtime declaration** — ki-repo declares a non-empty, duplicate-free list containing only supported runtimes. (standards-repository.md)
+  - _Remediation:_ diagnostic — Declare the supported runtimes as a non-empty duplicate-free supported set, then rerun the audit.
 - **RUNTIMES-2 [M] — Runtime environment coverage** — Every repository declares portable tokenomics and the real housekeeping and tokenomics capabilities required by its supported runtimes. (standards-repository.md)
+  - _Remediation:_ diagnostic — Add the required tokenomics and runtime capabilities for each declared runtime, then rerun the audit.
 - **RUNTIMES-3 [M] — Repository-local ki-self projection** — An optional repository-local ki-self has one canonical .agents source and a relative Claude projection exactly when Claude Code is supported. (standards-repository.md)
+  - _Remediation:_ diagnostic — Restore the canonical ki-self source and applicable runtime projection, then rerun the audit.
 - **RUNTIMES-J1 [J] — Runtime orientation split** — Multi-runtime repositories use a shared AGENTS.md orientation with a thin Claude import unless a justified exception applies. (standards-repository.md)
+  - _Evidence scope:_ The shared AGENTS.md and runtime-specific orientation files for every declared runtime.
   - _Review prompt:_ Review whether orientation is shared cleanly across the declared runtimes without duplicated or Claude-only instructions.
+  - _Outcomes:_ conforming; gap; exclusion
+  - _Conforming guidance:_ Consolidate shared guidance, record a named gap, or record an explicit repository-level exception.
 
 ## DESCFIT — Description fitness
 
@@ -195,7 +228,10 @@ Declared agent-runtime support and orientation.
 Human assessment of repository purpose.
 
 - **DESCFIT-1 [J] — Description fit** — The repository description accurately and concisely describes its purpose. (standards-repository.md)
+  - _Evidence scope:_ The repository description and its current public purpose.
   - _Review prompt:_ Read the repository and judge whether its one-sentence description fits its actual purpose.
+  - _Outcomes:_ conforming; gap; exclusion
+  - _Conforming guidance:_ Update the description, record a named gap, or record an explicit repository-level exclusion.
 
 ## OVR — Override rationale
 
@@ -204,7 +240,10 @@ Human assessment of repository purpose.
 Human assessment of exceptions.
 
 - **OVR-J1 [J] — Override rationale** — Every checks override represents a warranted repository-specific decision. (standards-configuration.md)
+  - _Evidence scope:_ Every configured ki-repo checks override and its repository context.
   - _Review prompt:_ Review each configured override and confirm that it records a real exception rather than hiding drift.
+  - _Outcomes:_ conforming; gap; exclusion
+  - _Conforming guidance:_ Remove or justify the override, record a named gap, or record an explicit repository-level exclusion.
 
 ## SYNC — Standard synchronisation
 
@@ -213,7 +252,10 @@ Human assessment of exceptions.
 Alignment across the knowledge chain.
 
 - **SYNC-1 [J] — Standard synchronisation** — The standard, structured rubric, and executable behaviour remain aligned. (standards-repository.md)
+  - _Evidence scope:_ The repository standard, structured rubric, generated publication, and checker behaviour.
   - _Review prompt:_ Compare the standard, generated rubric, and checker behaviour for semantic drift.
+  - _Outcomes:_ conforming; gap; exclusion
+  - _Conforming guidance:_ Align the affected source, record a named gap, or record an explicit repository-level exclusion.
 
 ## WORK — Working areas
 
@@ -222,5 +264,9 @@ Alignment across the knowledge chain.
 Required generic inbound and outbound working-area scaffold and direction.
 
 - **WORK-1 [M] — Working-area scaffold** — Every KI repository has the canonical generic inbound and outbound working areas and README orientation. (standards-repository.md)
+  - _Remediation:_ automatic
 - **WORK-J1 [J] — working-area direction and lifecycle** — The required +/ and -/ working areas distinguish temporary inbound from outbound material without becoming a shadow canonical store. (standards-repository.md)
+  - _Evidence scope:_ The repository +/ and -/ working areas and their README orientation.
   - _Review prompt:_ Review that +/ and -/ remain temporary directional material rather than a shadow canonical store or archive.
+  - _Outcomes:_ conforming; gap; exclusion
+  - _Conforming guidance:_ Move material to its canonical store, record a named gap, or record an explicit repository-level exclusion.
