@@ -3,10 +3,10 @@ id: KI-HARNESS-RTP-005
 title: Define portable checkpoints
 theme: runtime-portability
 horizon: now
-status: ready
+status: in-progress
 blocks: [KI-HARNESS-RTP-006]
 blocked-by: []
-baseline-ref: null
+baseline-ref: a4c10e775a3f7c5a42b2c72c061de5c9ab0c409f
 ---
 
 ## Goal
