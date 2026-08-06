@@ -3,7 +3,7 @@ id: KI-HARNESS-GOV-012
 title: Separate rubric evidence
 theme: governance-consistency
 horizon: next
-status: in-progress
+status: done
 blocks: []
 blocked-by: []
 baseline-ref: 6225d1d9008c2cd77df1b0b60a443f4f68f0a2ff
@@ -116,13 +116,13 @@ Two distinct vendors have now reviewed the plan: OpenAI GPT-5.6 through Codex an
 ## Steps
 
 - [x] Obtain and record independent plan reviews from two distinct models supplied by different vendors — OpenAI GPT-5.6 through Codex and Anthropic Claude through Claude Code are both recorded; resolve material findings before moving this item to `ready`.
-- [ ] Extend the shared rubric types, catalogue validator, and generated publication so every mechanical aspect declares its remediation class and every judgment aspect supplies review scope, outcome vocabulary, and guided conforming work.
-- [ ] Update the `ki` rubric host to validate the new metadata, show mechanical audit/conform and judgment review/conform sections distinctly, execute only `automatic` draft actions, and retain its no-synthetic-judgment-finding boundary.
+- [x] Extend the shared rubric types, catalogue validator, and generated publication so every mechanical aspect declares its remediation class and every judgment aspect supplies review scope, outcome vocabulary, and guided conforming work.
+- [x] Update the `ki` rubric host to validate the new metadata, show mechanical audit/conform and judgment review/conform sections distinctly, execute only `automatic` draft actions, and retain its no-synthetic-judgment-finding boundary.
 - [x] Build an inventory of every current criterion across all 35 catalogues, recording its evidence, remediation class, safe writer or manual route, and whether a hybrid split is warranted. Treat a mechanical aspect whose conditions mix remediation classes as a mandatory split, not a labelling choice.
-- [ ] Migrate `ki-skills` and `ki-engineering` first, retaining the completed process-kind classifier fix as a regression fixture, then use fixtures to prove automatic, diagnostic, guarded, hybrid, and invalid-metadata cases. Use `ki-trades` as the reference hybrid: structural lifecycle evidence is mechanical, while disposition and direct-application suitability remain judgment.
-- [ ] Migrate the remaining catalogues in concern-sized batches. Promote only deterministic subconditions with reliable fixtures; preserve semantic, authority, and truth questions as judgment.
-- [ ] Regenerate every affected rubric publication, update standards and skill procedures, and publish a concise reviewer workflow explaining judgment audit and guided conforming work.
-- [ ] Run a cross-catalogue audit proving no mechanical item lacks a remediation class, no `automatic` class lacks a safe conform action, and no judgment aspect is reported as mechanically evaluated.
+- [x] Migrate `ki-skills` and `ki-engineering` first, retaining the completed process-kind classifier fix as a regression fixture, then use fixtures to prove automatic, diagnostic, guarded, hybrid, and invalid-metadata cases. Use `ki-trades` as the reference hybrid: structural lifecycle evidence is mechanical, while disposition and direct-application suitability remain judgment.
+- [x] Migrate the remaining catalogues in concern-sized batches. Promote only deterministic subconditions with reliable fixtures; preserve semantic, authority, and truth questions as judgment.
+- [x] Regenerate every affected rubric publication, update standards and skill procedures, and publish a concise reviewer workflow explaining judgment audit and guided conforming work.
+- [x] Run a cross-catalogue audit proving no mechanical item lacks a remediation class, no `automatic` class lacks a safe conform action, and no judgment aspect is reported as mechanically evaluated.
 
 ## Files touched
 
@@ -185,6 +185,27 @@ The complete initial catalogue audit and two-vendor review establish the impleme
 - **Model:** high-reasoning — interface and authority analysis.
 - **Verify:** Orchestrator verifies each claimed owner and source location.
 - **Checkpoint:** Return before proposing any `tools-ki` edit.
+
+## Review
+
+### Delivered boundary
+
+The strict `contract: 1` rubric evidence model is now implemented in the Harness and validated by the receiver-owned `tools-ki` host. All 36 Harness catalogues declare explicit mechanical remediation or judgment review evidence, their publications are regenerated, and no executable metadata fallback remains.
+
+### Evidence
+
+- Baseline: `6225d1d9008c2cd77df1b0b60a443f4f68f0a2ff`.
+- Harness delivery: the 36 atomic `feat(rubric): migrate … evidence` commits, followed by compatibility cleanup `b0324d45`, `d79aa32e`, `e9d77f85`, and `6910f1a9`.
+- Receiver-owned host delivery: `tools-ki` commits `23b7f88` and `6652290` validate, render, and execute the v1 model without synthetic judgment findings.
+- Verification: `bun run test` passes 309 tests; `bunx tsc --noEmit` passes after the five focused typing repairs ending at `153d4e08`; focused `ki-checkpoints`, `ki-skills`, and `ki-trades` audits pass.
+
+### Decision
+
+No scope deviation or unresolved concern remains. The user approved closure on 2026-08-06.
+
+## Done
+
+Accepted by the user on 2026-08-06 after review of the recorded evidence.
 
 ## Discussion
 
