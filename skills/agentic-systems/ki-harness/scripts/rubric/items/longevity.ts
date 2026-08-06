@@ -7,7 +7,11 @@ const LONG_1: RubricItem<HarnessReviewContext> = {
   description: 'The ki-harness skill carries REFRESH and a dated source review record.',
   sources: ['standards-compatible-harness.md'],
   judgment: {
-    prompt: 'Do the ki-harness REFRESH procedure and sources.md cadence provide a usable current refresh path?'
+    scope: 'The ki-harness REFRESH procedure, source list, cadence, and current compatible-harness standard.',
+    prompt: 'Do the ki-harness REFRESH procedure and sources.md cadence provide a usable current refresh path?',
+    outcomes: ['conforming', 'refresh-path revision', 'source review required'],
+    guidance:
+      'Update the documented refresh path or complete its source review through the canonical harness; do not invent a review result without source evidence.'
   }
 }
 

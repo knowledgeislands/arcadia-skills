@@ -25,6 +25,7 @@ const SKILLS_1: RubricItem<HarnessSkillsContext> = {
   mechanical: {
     level: 'FAIL',
     overrideLevels: ['WARN'],
+    remediation: { class: 'diagnostic', guidance: 'Correct the affected skill directory or frontmatter identity, then rerun the audit.' },
     audit: {
       phase: 'INSPECT',
       run: (context) => {
@@ -57,6 +58,10 @@ const SKILLS_2: RubricItem<HarnessSkillsContext> = {
   sources: STANDARD,
   mechanical: {
     level: 'FAIL',
+    remediation: {
+      class: 'guarded',
+      guidance: 'Resolve the name collision through the owning capability authorities before changing a published or installed identity.'
+    },
     audit: {
       phase: 'INSPECT',
       run: (context) => {
@@ -79,7 +84,11 @@ const SKILLS_2: RubricItem<HarnessSkillsContext> = {
     }
   },
   judgment: {
-    prompt: 'Does another installed harness make an otherwise unique local skill name ambiguous?'
+    scope: 'The local skill inventory and every installed compatible harness surface in scope.',
+    prompt: 'Does another installed harness make an otherwise unique local skill name ambiguous?',
+    outcomes: ['conforming', 'resolve collision', 'escalate to capability owner'],
+    guidance:
+      'Preserve the responsible capability owner’s authority over a published name; record the collision and escalate rather than renaming or removing another harness’s skill.'
   }
 }
 

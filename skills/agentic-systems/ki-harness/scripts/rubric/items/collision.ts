@@ -7,7 +7,10 @@ const COLL_1: RubricItem<HarnessReviewContext> = {
   description: 'Declared prerequisites, coverage-selected siblings, and contents-governing off-ramps are complete and distinct.',
   sources: ['standards-compatible-harness.md#ownership-boundaries'],
   judgment: {
-    prompt: 'Are prerequisite dependencies, coverage-selected siblings, and description off-ramps complete and non-overlapping?'
+    scope: 'The harness skill frontmatter, description, dependency declarations, and adjacent owning skills.',
+    prompt: 'Are prerequisite dependencies, coverage-selected siblings, and description off-ramps complete and non-overlapping?',
+    outcomes: ['conforming', 'boundary revision', 'route to owner'],
+    guidance: 'Clarify the boundary or route the concern to its owner; do not claim another capability’s execution or content semantics.'
   }
 }
 

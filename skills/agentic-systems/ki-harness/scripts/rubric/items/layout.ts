@@ -17,6 +17,7 @@ const LAY_1: RubricItem<HarnessLayoutContext> = {
   sources: ['standards-compatible-harness.md#source-harness-layout'],
   mechanical: {
     level: 'FAIL',
+    remediation: { class: 'diagnostic', guidance: 'Create or repair the missing physical source-harness shelf, then rerun the audit.' },
     audit: {
       phase: 'INSPECT',
       run: (context) =>
@@ -38,6 +39,7 @@ const LAY_2: RubricItem<HarnessLayoutContext> = {
   sources: ['standards-compatible-harness.md#source-harness-layout'],
   mechanical: {
     level: 'WARN',
+    remediation: { class: 'diagnostic', guidance: 'Add the missing physical shelf README with its purpose and status, then rerun the audit.' },
     audit: {
       phase: 'INSPECT',
       run: (context) =>
@@ -70,6 +72,7 @@ const rootFileItem = (
   sources: [source],
   mechanical: {
     level,
+    remediation: { class: 'diagnostic', guidance: 'Create or repair the required physical root file with owner-approved content, then rerun the audit.' },
     audit: {
       phase: 'INSPECT',
       run: (context) => {

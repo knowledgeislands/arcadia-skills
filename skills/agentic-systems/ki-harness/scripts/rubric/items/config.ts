@@ -10,6 +10,7 @@ const CONFIG_1: RubricItem<HarnessConfigContext> = {
   sources: STANDARD,
   mechanical: {
     level: 'FAIL',
+    remediation: { class: 'automatic' },
     audit: {
       phase: 'INSPECT',
       run: ({ state, hasHarnessTable }) => {
@@ -54,6 +55,7 @@ const CONFIG_2: RubricItem<HarnessConfigContext> = {
   sources: STANDARD,
   mechanical: {
     level: 'WARN',
+    remediation: { class: 'diagnostic', guidance: 'Declare the ki-repo governance root in the physical configuration, then rerun the audit.' },
     audit: {
       phase: 'INSPECT',
       run: ({ state, hasRepositoryTable }) => {
@@ -82,7 +84,11 @@ const CONFIG_3: RubricItem<HarnessConfigContext> = {
   description: 'A source harness with populated skills declares ki-skills.',
   sources: STANDARD,
   judgment: {
-    prompt: 'When skills/ is populated, does .ki-config.toml declare the ki-skills governance root?'
+    scope: 'The physical .ki-config.toml and the source harness skills shelf.',
+    prompt: 'When skills/ is populated, does .ki-config.toml declare the ki-skills governance root?',
+    outcomes: ['conforming', 'configuration revision', 'not applicable'],
+    guidance:
+      'Add or correct the declaration only through the repository owner’s configuration decision; do not infer activation scope from shelf contents alone.'
   }
 }
 

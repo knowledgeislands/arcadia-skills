@@ -57,6 +57,7 @@ export type MechanicalRubric<Context> = {
   level: ViolationLevel
   overrideLevels?: readonly ViolationLevel[]
   heuristic?: boolean
+  remediation: MechanicalRemediation
   audit: RubricExecution<Context, RubricOutcomes<AuditOutcome>>
   /**
    * The canonical CONFORM action. It changes only the operation-scoped
@@ -67,9 +68,31 @@ export type MechanicalRubric<Context> = {
   conformOn?: readonly Extract<AuditOutcomeStatus, 'INFO'>[]
 }
 
+export type MechanicalRemediation = { class: 'automatic' } | { class: 'diagnostic' | 'guarded'; guidance: string }
+
+/** A deterministic finding whose correct repair needs authorship or a local decision. */
+export const DIAGNOSTIC_REMEDIATION = {
+  class: 'diagnostic',
+  guidance: 'Use the finding and this criterion to make the appropriate local change, then rerun the audit.'
+} as const
+
+/** A deterministic finding with a safe, idempotent host-executed repair. */
+export const AUTOMATIC_REMEDIATION = { class: 'automatic' } as const
+
 export type JudgmentRubric = {
+  scope: string
   prompt: string
+  outcomes: NonEmptyReadonlyArray<string>
+  guidance: string
 }
+
+/** Common review metadata for criteria that differ only by their question. */
+export const judgment = (prompt: string): JudgmentRubric => ({
+  scope: 'The target skill and the evidence named by this criterion.',
+  prompt,
+  outcomes: ['conforming', 'gap', 'exclusion'],
+  guidance: 'Record the review as conforming, a named Gap with its next action, or an explicit justified exclusion.'
+})
 
 export type RubricItemBase = {
   code: string
@@ -190,6 +213,7 @@ export const createRubricPublicationFamily = <RootContext>(
       sources,
       mechanical: {
         level: 'FAIL',
+        remediation: AUTOMATIC_REMEDIATION,
         audit: {
           phase: 'DERIVED',
           run: ({ publication }) => {

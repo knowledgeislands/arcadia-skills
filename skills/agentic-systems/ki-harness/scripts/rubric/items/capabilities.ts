@@ -10,8 +10,12 @@ const CAP_1: RubricItem<HarnessReviewContext> = {
     'Each populated harness shelf makes its typed capabilities discoverable and routes their content and runtime semantics to the owning kind standard.',
   sources: STANDARD,
   judgment: {
+    scope: 'Every populated source shelf, its compatible payload representation, and the owning kind standards.',
     prompt:
-      'Review each populated shelf: are its capabilities discoverable through the compatible payload, and are kind-specific semantics delegated to the appropriate standard?'
+      'Review each populated shelf: are its capabilities discoverable through the compatible payload, and are kind-specific semantics delegated to the appropriate standard?',
+    outcomes: ['conforming', 'inventory revision', 'route to owning standard'],
+    guidance:
+      'Revise the inventory or route the concern to its owning standard; do not alter a capability’s runtime semantics from this container-level review.'
   }
 }
 
