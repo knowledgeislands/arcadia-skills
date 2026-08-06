@@ -7,6 +7,17 @@ export type AuditOutcome = {
 
 export type RubricPublicationContext = { publication?: unknown }
 
+export type NonEmptyReadonlyArray<Value> = readonly [Value, ...Value[]]
+
+export type MechanicalRemediation = { class: 'automatic' } | { class: 'diagnostic' | 'guarded'; guidance: string }
+
+export type JudgmentRubric = {
+  scope: string
+  prompt: string
+  outcomes: NonEmptyReadonlyArray<string>
+  guidance: string
+}
+
 export type RubricContextOptions = {
   mode: 'audit' | 'conform'
   repository: string
@@ -31,7 +42,12 @@ export type RubricFamily<Root, Selected> = {
     title: string
     description: string
     sources: readonly string[]
-    mechanical: { level: 'FAIL' | 'WARN'; audit: { phase: 'INSPECT'; run: (context: Selected) => readonly AuditOutcome[] } }
+    mechanical: {
+      level: 'FAIL' | 'WARN'
+      remediation: MechanicalRemediation
+      audit: { phase: 'INSPECT'; run: (context: Selected) => readonly AuditOutcome[] }
+    }
+    judgment?: JudgmentRubric
   }[]
 }
 
