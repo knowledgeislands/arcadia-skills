@@ -9,10 +9,12 @@ const BOUNDARY_1: RubricItem<OutcomeContext> = {
   description:
     'A checkpoint has no vendor-session field, conversation locator, role-by-role transcript, or mechanically recognisable claim that a fresh agent can reopen the originating session. It is reconstruction state, not session continuity.',
   sources: [SOURCE],
-  mechanical: { level: 'FAIL', heuristic: true, audit: { phase: 'INSPECT', run: ({ outcomes }) => outcomes } },
+  mechanical: { level: 'FAIL', heuristic: true, remediation: { class: 'guarded', guidance: 'Remove session-continuity material only through an explicit user-authorised checkpoint update.' }, audit: { phase: 'INSPECT', run: ({ outcomes }) => outcomes } },
   judgment: {
-    prompt:
-      'Would this checkpoint reconstruct the work for an agent with no transcript or vendor-session access, without implying that the originating conversation can be reopened?'
+    scope: 'Every active and retired checkpoint record and its reconstruction content.',
+    prompt: 'Would this checkpoint reconstruct the work for an agent with no transcript or vendor-session access, without implying that the originating conversation can be reopened?',
+    outcomes: ['conforming', 'explicit update required', 'escalate to user'],
+    guidance: 'Do not edit checkpoint content without explicit authority; ask the user when reconstruction content or ownership is uncertain.'
   }
 }
 

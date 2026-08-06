@@ -9,7 +9,7 @@ const STRUCTURE_1: RubricItem<OutcomeContext> = {
   description:
     'When present, `+/_CHECKPOINTS/` is a physical directory containing only flat active Markdown records and the optional physical `_RETIRED/` directory, which contains only flat retired Markdown records. Symlinks, unsupported files, and nested or timestamped layouts are invalid; an absent subarea is not applicable.',
   sources: [SOURCE],
-  mechanical: { level: 'FAIL', audit: { phase: 'INSPECT', run: ({ outcomes }) => outcomes } }
+  mechanical: { level: 'FAIL', remediation: { class: 'diagnostic', guidance: 'Repair the checkpoint directory structure without creating or moving records, then rerun the audit.' }, audit: { phase: 'INSPECT', run: ({ outcomes }) => outcomes } }
 }
 
 export const STRUCTURE: RubricFamily<CheckpointsRubricContext, OutcomeContext> = {

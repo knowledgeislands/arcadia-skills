@@ -9,7 +9,7 @@ const CONFIG_1: RubricItem<OutcomeContext> = {
   description:
     'The optional `ki-checkpoints` declaration is an empty capability marker. It carries no runtime, session, retention, or lifecycle options; repository policy and optional adapters remain separate owners.',
   sources: [SOURCE],
-  mechanical: { level: 'WARN', audit: { phase: 'PREPARE', run: ({ outcomes }) => outcomes } }
+  mechanical: { level: 'WARN', remediation: { class: 'diagnostic', guidance: 'Remove unsupported declaration options, then rerun the audit.' }, audit: { phase: 'PREPARE', run: ({ outcomes }) => outcomes } }
 }
 
 export const CONFIG: RubricFamily<CheckpointsRubricContext, OutcomeContext> = {
