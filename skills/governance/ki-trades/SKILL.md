@@ -6,22 +6,22 @@ ki-shared-dependencies: [ki-skills:rubric]
 contributes: ['.ki-config.toml']
 owns: ['+/_TRADES/README.md', '-/_TRADES/README.md']
 description: >
-  Governs typed, directional cross-repository trades between locally registered Knowledge Islands repositories: canonical GitHub repository homes, work and knowledge routes, TRD eight-hexadecimal record identities, immutable sender payload, mutually observable delivery, receiver-only decisions, and release-observed pruning. Use when submitting work or knowledge to another repository, reviewing inbound trades, auditing trade routes or records, or resolving adoption, retention, parking, clarification, decline, or supersession. A route grants visibility only; ki-roadmap and the receiving repository retain priority and acceptance authority.
+  Governs typed, directional cross-repository trades between locally registered Knowledge Islands repositories: mutable committed preparations, work and knowledge routes, TRD eight-hexadecimal identities, immutable submitted sender projections, receipt, receiver-only decisions, sender observation policies, release, and pruning. Use when preparing or submitting work or knowledge to another repository, observing a preparation, receiving or reviewing an inbound trade, auditing routes or records, or resolving direct application, adoption, retention, parking, clarification, decline, or supersession. A route grants visibility only; ki-roadmap and the receiving repository retain priority and acceptance authority.
 argument-hint: 'audit <repo> | conform <repo> | educate <repo> | help | refresh'
 ---
 
 # Knowledge Islands cross-repository trades
 
-This governance skill defines safe **trade submission**, not transfer: a sender may make work or knowledge visible to a willing peer, while the receiver alone decides its disposition and any local follow-on work or knowledge. Read [the trade standard](references/standards-trades.md) before creating or reviewing records; [the generated rubric](references/rubric.md) publishes the mechanical and judgment criteria, and [the source list](references/sources.md) records the contract's provenance.
+This governance skill defines safe **trade preparation and submission**, not transfer: a sender may make evolving work or knowledge visible without asking a peer to act, then publish an immutable submission while the receiver alone decides receipt, disposition, and any local follow-on work or knowledge. Read [the trade standard](references/standards-trades.md) before creating or reviewing records; [the generated rubric](references/rubric.md) publishes the mechanical and judgment criteria, and [the source list](references/sources.md) records the contract's provenance.
 
 ## What this skill owns
 
 1. **Declared participation** — a repository opts in with its own `ki-trades` table, declaring typed `exports_to` and `imports_from` routes. Its canonical HTTPS GitHub home comes from `ki-repo.repository`.
-2. **Directional trade routes** — a sender may declare an export and create its local outbound record before the receiver participates. A route becomes active only when both repositories are present in the local KI repository registry, the sender exports a trade kind to the receiver, and the receiver imports that same kind from the sender. Missing registration, participation, or reciprocity is reported as pending; malformed or ambiguous declarations are findings, never implicit trust.
-3. **Trade record identity and placement** — every record uses `TRD-<eight lower-case hexadecimal characters>`, declares `kind: work | knowledge`, and uses the two-level peer layout under the local `+/_TRADES/` or `-/_TRADES/` area. Filenames are validated but never treated as sufficient identity evidence.
-4. **Authority boundaries** — the sender writes only its outbound record. The receiver creates and updates only its inbound copy. Sender provenance and body payload remain byte-stable; only receiver-local `decision_status`, review rationale, and local adoption, retention, or supersession linkage may differ.
-5. **Mutual lifecycle** — the sender's derived status is `sent` until an inbound copy is observable, then `received`; the receiver's reciprocal derived status is `unavailable` until it creates that copy, then `accepted`. The receiver alone writes the decision status: `unconsidered`, `in_progress`, `parked`, `clarify`, `adopted`, `retained`, `declined`, or `superseded`.
-6. **Release observation** — the sender may remove its outbound copy only after terminal decision status `adopted`, `retained`, `declined`, or `superseded`. The receiver may prune inbound only after that release is observable. `unconsidered`, `in_progress`, `parked`, and `clarify` retain the sender copy.
+2. **Directional trade routes** — a sender-declared export permits local preparation or submission before receiver participation. Receipt becomes available only when both repositories are registered, the sender exports that trade kind, and the receiver imports it. Pending participation and active reciprocity remain distinct route facts.
+3. **Trade phases and identity** — every preparation and submission uses one `TRD-<eight lower-case hexadecimal characters>` identity and declares `kind: work | knowledge`. A committed `phase: preparing` record is mutable and silently observable beneath the sender's `_PREPARATIONS` area. Submission atomically moves it to the canonical outbound path, removes the phase, and freezes it.
+4. **Authority and byte boundaries** — the sender writes only preparations and outbound submissions. The receiver creates and updates only its inbound copy. The complete raw sender projection remains byte-stable; only closed receiver-local receipt, decision, rationale, and linkage fields may differ.
+5. **Independent lifecycle axes** — submission, receipt, receiver decision, and sender observation policy are separate facts. Receipt creates an inbound `unconsidered` copy but implies no review or acceptance. The receiver alone moves through `in_progress`, `parked`, `clarify`, `applied`, `adopted`, `retained`, `declined`, or `superseded`.
+6. **Observation-led release** — `unattended` and `receipt` permit sender release after receipt, `decision` waits for a terminal receiver decision, and `completion` additionally waits for adopted local work to become done. The receiver may prune only after an eligible sender release is observable.
 7. **Owned scaffold** — when the skill is declared, it owns the two `_TRADES` directories and their README files. `ki-repo` continues to own the generic `+` and `-` directories and README files whether or not this capability is declared.
 
 ## Operating modes
@@ -30,7 +30,7 @@ The skill carries the universal **AUDIT · CONFORM · EDUCATE · REFRESH** modes
 
 ### Mode AUDIT
 
-Run `ki repo audit --skill ki-trades --repo <repo>`. The structured catalogue validates the local configuration, typed directional routes through the registered-repository inventory, owned scaffold, trade-record identity and shape, sender/receiver authority boundary, allowed status, immutable-copy agreement, and release/pruning observation. Then review whether any proposed local adoption or knowledge retention preserves the receiver's independent authority.
+Run `ki repo audit --skill ki-trades --repo <repo>`. The structured catalogue validates local configuration, declared and active typed routes, owned scaffold, preparation and submitted-record shape, sender/receiver authority, receipt and decision fields, raw sender-projection agreement, and observation-led release or pruning. Then review whether any direct application, local adoption, or knowledge retention preserves the receiver's independent authority.
 
 ### Mode CONFORM
 

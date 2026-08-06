@@ -5,9 +5,9 @@ const SOURCE = 'standards-trades.md'
 
 const RECORD_1: RubricItem<OutcomeContext> = {
   code: 'RECORD-1',
-  title: 'record identity, placement, and payload are canonical',
+  title: 'preparation and submission shape is canonical',
   description:
-    'Every trade record uses the two-level peer layout, an `TRD-` eight lower-case hexadecimal-character identity repeated in filename, metadata, and its first non-blank body H1, a closed sender envelope with `kind: work | knowledge`, and non-empty Context, Submission, and Constraints payload sections.',
+    'Every trade uses one `TRD-` eight lower-case hexadecimal identity repeated in filename, metadata, and H1, a closed sender envelope with kind and observation policy, and non-empty payload sections. A mutable preparation alone uses the `_PREPARATIONS` peer layout and `phase: preparing`; a submitted record uses the canonical peer layout without phase.',
   sources: [SOURCE],
   mechanical: { level: 'FAIL', audit: { phase: 'INSPECT', run: ({ outcomes }) => outcomes } }
 }
@@ -15,7 +15,7 @@ const RECORD_1: RubricItem<OutcomeContext> = {
 export const RECORD: RubricFamily<TradesRubricContext, OutcomeContext> = {
   code: 'RECORD',
   title: 'Record shape',
-  description: 'Trade-record identity is concise and corroborated by canonical content rather than inferred from a filename.',
+  description: 'One concise identity moves atomically from mutable preparation to immutable submitted record.',
   standard: SOURCE,
   selectContext: (context) => context.records,
   items: [RECORD_1]

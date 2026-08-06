@@ -14,7 +14,7 @@ Line-by-line criteria for auditing ki-trades. Classifications are derived from i
 - [SCAFFOLD — Trade scaffold](#scaffold--trade-scaffold)
 - [RECORD — Record shape](#record--record-shape)
 - [AUTH — Write authority](#auth--write-authority)
-- [STATUS — Mutual lifecycle](#status--mutual-lifecycle)
+- [STATUS — Delivery and receiver decision](#status--delivery-and-receiver-decision)
 - [RELEASE — Release and pruning](#release--release-and-pruning)
 - [ADOPTION — Receiver local authority](#adoption--receiver-local-authority)
 
@@ -38,9 +38,9 @@ Typed trade routes are explicit, canonical, and owned locally.
 
 → [standard](standards-trades.md)
 
-Registered repository visibility becomes an active route only through matching declarations for the same trade kind.
+Sender-declared observation and active reciprocal receipt remain distinct typed route facts.
 
-- **ROUTE-1 [M] — trade routes are typed, declared, and activated reciprocally** — A sender may declare an export route before the receiver participates. The route is active only when exactly one locally registered repository declares the canonical GitHub home, the sender exports that kind to it, and the receiver imports that same kind from the sender. (standards-trades.md)
+- **ROUTE-1 [M] — trade routes are typed, declared, and activated reciprocally** — A sender-declared export permits local preparation and submission before the receiver participates. Receipt is active only when exactly one locally registered repository declares the canonical GitHub home, the sender exports that kind to it, and the receiver imports that same kind from the sender. (standards-trades.md)
 
 ## SCAFFOLD — Trade scaffold
 
@@ -54,33 +54,33 @@ The optional capability owns only its `_TRADES` directories and README files.
 
 → [standard](standards-trades.md)
 
-Trade-record identity is concise and corroborated by canonical content rather than inferred from a filename.
+One concise identity moves atomically from mutable preparation to immutable submitted record.
 
-- **RECORD-1 [M] — record identity, placement, and payload are canonical** — Every trade record uses the two-level peer layout, an `TRD-` eight lower-case hexadecimal-character identity repeated in filename, metadata, and its first non-blank body H1, a closed sender envelope with `kind: work | knowledge`, and non-empty Context, Submission, and Constraints payload sections. (standards-trades.md)
+- **RECORD-1 [M] — preparation and submission shape is canonical** — Every trade uses one `TRD-` eight lower-case hexadecimal identity repeated in filename, metadata, and H1, a closed sender envelope with kind and observation policy, and non-empty payload sections. A mutable preparation alone uses the `_PREPARATIONS` peer layout and `phase: preparing`; a submitted record uses the canonical peer layout without phase. (standards-trades.md)
 
 ## AUTH — Write authority
 
 → [standard](standards-trades.md)
 
-A trade remains a local copy protocol with immutable sender provenance and receiver-only disposition fields.
+A trade remains a local copy protocol with an immutable raw sender projection and receiver-only local fields.
 
-- **AUTH-1 [M] — sender and receiver write boundaries are preserved** — Outbound records belong to the local sender, use its declared export route, and contain no receiver-local fields; inbound records belong to the local receiver, use an active route, and preserve the outbound sender envelope and body exactly. (standards-trades.md)
+- **AUTH-1 [M] — sender and receiver write boundaries are preserved** — Preparations and outbound records belong to the local sender, retain their declared export route, and contain no receiver-local fields; inbound records belong to the local receiver, retain an active receipt route, and preserve the complete raw submitted sender projection byte-for-byte. (standards-trades.md)
 
-## STATUS — Mutual lifecycle
+## STATUS — Delivery and receiver decision
 
 → [standard](standards-trades.md)
 
-Derived sender and receiver delivery statuses pair with a closed receiver-owned decision vocabulary and explicit local work or knowledge evidence.
+Preparation, submission, receipt, receiver decision, and local completion remain separate facts with closed receiver-owned evidence.
 
-- **STATUS-1 [M] — receiver decision status and linkage are valid** — Inbound records evidence receiver acceptance and carry one receiver decision status: unconsidered, in_progress, adopted, retained, parked, clarify, declined, or superseded, with decision-appropriate rationale and local adoption, retention, or supersession linkage. (standards-trades.md)
+- **STATUS-1 [M] — receipt evidence, decision status, and linkage are valid** — Inbound records evidence receipt independently from decision and carry one receiver-owned status: unconsidered, in_progress, parked, clarify, applied, adopted, retained, declined, or superseded, with full commit evidence and decision-appropriate rationale or local linkage. (standards-trades.md)
 
 ## RELEASE — Release and pruning
 
 → [standard](standards-trades.md)
 
-Absence is interpreted only as an observable release signal after a terminal receiver disposition.
+Absence is an observable release signal only after the sender-selected receipt, decision, or completion condition is satisfied.
 
-- **RELEASE-1 [M] — release and pruning follow observable lifecycle evidence** — Sender release is permitted only after adopted, retained, declined, or superseded; unconsidered, in_progress, parked, and clarify retain the outbound copy, and receiver pruning becomes eligible only after an allowed release is observable. (standards-trades.md)
+- **RELEASE-1 [M] — release and pruning follow observable lifecycle evidence** — Sender release follows the declared observation policy: unattended and receipt wait for receipt, decision waits for a terminal receiver decision, and completion additionally waits for adopted local work to be done. Receiver pruning becomes eligible only after such a release is observable. (standards-trades.md)
 
 ## ADOPTION — Receiver local authority
 
@@ -88,5 +88,5 @@ Absence is interpreted only as an observable release signal after a terminal rec
 
 Human-confirmed disposition remains distinct from local work selection, acceptance, and knowledge stewardship.
 
-- **ADOPTION-1 [J] — disposition preserves receiver authority** — A receiver disposition is trade review only; adoption does not automatically create, prioritize, implement, or accept a roadmap item, and retention does not alter local knowledge authority. (standards-trades.md)
-  - _Review prompt:_ Confirm that every proposed adoption remains a separately confirmed local roadmap decision, every proposed retention remains a local knowledge decision, and neither grants a sender or process skill priority, implementation, acceptance, or knowledge authority.
+- **ADOPTION-1 [J] — disposition preserves receiver authority** — A receiver disposition is trade review only. Direct applied work is bounded and commit-verified; adoption does not automatically create, prioritise, implement, or accept a roadmap item; retention does not alter local knowledge authority. (standards-trades.md)
+  - _Review prompt:_ Confirm that applied is limited to one bounded, reversible, independently verifiable local work change with no material design, dependency, migration, public-contract, or cross-repository effect; every other work disposition remains separately confirmed, every retention remains a local knowledge decision, and none grants sender authority.

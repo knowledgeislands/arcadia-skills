@@ -1,7 +1,7 @@
 ---
 id: GDR-KI-HARNESS-005
 title: 'Cross-repository trade routes'
-date: 2026-08-03
+date: 2026-08-06
 status: current
 type: Governance Decision Record
 type_url: https://knowledgeislands.info/specifications/decision-records/gdr
@@ -13,23 +13,23 @@ decision_depends_on: ['GDR-KI-FUNDAMENTALS-001']
 
 ## Context
 
-Knowledge Islands repositories have generic inbound and outbound working areas, but the `_TRADES` subdirectories do not establish a trusted typed route, stable trade identity, immutable sender evidence, or a safe release signal. The Feature Definitions pilot between the Harness and `tools-ki` used direct super trust and recorded the receiving work directly; that bootstrap bridge supplied design evidence without creating a reusable transport or granting one repository authority over another.
+Knowledge Islands repositories have generic inbound and outbound working areas, but those areas do not establish trusted typed routes, stable identities, immutable sender evidence, or safe release signals. A sender may also expose an evolving proposal before submission, then choose to observe receipt, a decision, or completion of linked receiver work.
 
 A repository remains the sole authority for its roadmap, priority, implementation, acceptance, and knowledge state. Local registered-repository visibility can support review of another repository's files, but filesystem visibility alone does not prove that either repository consents to exchange trades.
 
 ## Decision
 
-We adopt `ki-trades` as the portable governance owner for optional cross-repository trades. Each participating repository declares its canonical HTTPS GitHub home once through `ki-repo.repository`; its optional `ki-trades` table declares normalized, typed `exports_to` and `imports_from` routes. A sender may declare an export route and create its local outbound record before the receiver participates. The route is active only when a sender exports a kind to a locally registered receiver and that receiver imports the same kind from the sender; missing receiver registration, participation, or reciprocity is pending, while malformed configuration or ambiguity is reported and never trusted.
+We adopt `ki-trades` as the portable governance owner for optional cross-repository trades. Each repository declares its canonical home through `ki-repo` and its typed export and import routes through `ki-trades`. A sender-declared export permits local preparation and submission; receipt additionally requires one registered receiver with the matching typed import. Missing reciprocity is pending, while malformed or ambiguous configuration is never trusted.
 
-Each trade record represents one trade, receives an independent `TRD-` identifier followed by eight lower-case hexadecimal characters, and declares `kind: work | knowledge`. This concise identifier deliberately accepts its collision risk. The sender creates only its own outbound record under `-/_TRADES/<receiver-owner>/<receiver-repo>/`; the receiver creates and changes only its inbound copy under `+/_TRADES/<sender-owner>/<sender-repo>/`. Sender provenance and payload are immutable between copies. The sender's `sent` or `received` status and the receiver's reciprocal `unavailable` or `accepted` status are derived from the observable copies rather than written by either peer. The receiver alone writes its inbound decision status, which begins `unconsidered`, may move to `in_progress`, `parked`, or `clarify`, and reaches a terminal result through `adopted`, `retained`, `declined`, or `superseded`.
+Each trade has one concise `TRD-` identity. A sender may commit a mutable preparation that is silently observable through Git but creates no receiver state. Submission atomically moves that identity to its outbound path and freezes the raw sender projection. The receiver creates an inbound copy only on an active route and may add only receiver-local receipt, review, decision, and linkage evidence. Receipt means delivery, not acceptance. Directly applied work requires a verified local commit; adopted work links to a local item whose lifecycle owns completion.
 
-Adoption and retention are dispositions, not authority to create, prioritize, implement, or accept local roadmap work, nor to alter local knowledge. `ki-next` presents inbound trades for an exact human-confirmed disposition. `ki-roadmap` may report structural and review guidance but remains read-only for trades. `ki-repo` retains ownership of the generic `+` and `-` directories and their README orientation; `ki-trades` owns only the optional `_TRADES` directories, their README files, records, route checks, and lifecycle when declared.
+Every preparation and submission declares whether the sender observes only receipt, a terminal receiver decision, or completion of adopted local work; an unattended submission still remains until receipt. The policy grants no deadline, priority, response guarantee, or receiver authority. Existing submissions retain their former decision-waiting behaviour.
 
-The sender may release its outbound copy only after observing terminal receiver decision `adopted`, `retained`, `declined`, or `superseded`. `unconsidered`, `in_progress`, `parked`, and `clarify` retain it. The receiver may prune its inbound copy only after sender release is observable. Neither silence nor file visibility implies acceptance, review, or retention.
+The receiver chooses between bounded direct application and separately confirmed local work or knowledge retention. The sender releases only its outbound copy when its observation condition is satisfied; the receiver prunes only after observing eligible release. Neither preparation visibility, receipt, silence, nor elapsed time implies review or a decision.
 
 ## Consequences
 
-Repositories gain a reviewable typed-trade protocol without a cross-repository write authority or automatic transfer semantics. A malformed repository identity, nonreciprocal declaration for a trade kind, altered payload, peer-side status write, or premature release becomes detectable evidence rather than an inferred route, acceptance, or retention signal.
+Repositories gain a reviewable typed-trade protocol without cross-repository write authority or automatic transfer semantics. Preparations use Git history rather than a dialogue log; a receiver may retain a local observation cursor, but observation remains invisible to the sender. Altered sender bytes, peer-side decision writes, and premature release become detectable evidence rather than inferred acceptance.
 
 The initial capability depends on mutually visible repositories in the local KI registry. Remote interchange remains outside this authority model: any later transport may relay permitted records and receiver decisions, but it cannot decide a disposition or mutate either repository's roadmap. The direct-super-trust pilot remains historical bootstrap evidence rather than a compatibility path.
 

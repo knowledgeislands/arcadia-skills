@@ -89,7 +89,9 @@ const record = (
   receiver: string,
   receiverFields: readonly string[] = [],
   submission = 'Please consider the proposed local outcome.',
-  kind: 'work' | 'knowledge' = 'work'
+  kind: 'work' | 'knowledge' = 'work',
+  observation: 'unattended' | 'receipt' | 'decision' | 'completion' | undefined = 'decision',
+  preparing = false
 ): string =>
   [
     '---',
@@ -100,6 +102,8 @@ const record = (
     `receiver: ${receiver}`,
     `kind: ${kind}`,
     'source_ref: KI-SOURCE-FND-001',
+    ...(observation ? [`observation: ${observation}`] : []),
+    ...(preparing ? ['phase: preparing'] : []),
     ...receiverFields,
     '---',
     '',
@@ -194,6 +198,20 @@ test('outbound records are valid on a declared export route while receiver parti
   ])
 })
 
+test('a committed preparation is valid on a sender-declared export and is not receivable', () => {
+  const { home, local, peer } = fixture('peer/repo', false)
+  const id = 'TRD-000000ab'
+  writeRecord(local, '-', '_PREPARATIONS/peer/repo', id, record(id, 'local/repo', 'peer/repo', [], undefined, 'work', 'receipt', true))
+  writeFileSync(
+    join(peer, '.ki-config.toml'),
+    ['["knowledgeislands/ki-agentic-harness:ki-repo"]', 'repository = "https://github.com/peer/repo"', ''].join('\n')
+  )
+
+  const session = createTradesSession(options(local, home, tradeConfiguration('local/repo', ['peer/repo'])))
+  expect(mechanicalOutcomes(session, RECORD)).toEqual([{ status: 'PASS', message: 'Trade record identity and payload shape are valid.' }])
+  expect(mechanicalOutcomes(session, AUTH)).toEqual([{ status: 'PASS', message: 'Trade records preserve sender and receiver write boundaries.' }])
+})
+
 test('a blank line after frontmatter does not weaken exact H1 identity validation', () => {
   const { home, local } = fixture()
   const validId = 'TRD-00000003'
@@ -259,7 +277,30 @@ test('sender and receiver write boundaries reject receiver fields outbound and c
   const session = createTradesSession(options(local, home, tradeConfiguration('local/repo', ['peer/repo'])))
   const messages = mechanicalOutcomes(session, AUTH).map((outcome) => outcome.message)
   expect(messages).toContain('sender-owned outbound record must not set receiver-local field decision_status')
-  expect(messages).toContain('sender provenance or payload differs between outbound and inbound copies')
+  expect(messages).toContain('raw sender projection differs between outbound and inbound copies')
+})
+
+test('raw sender projection comparison rejects formatting drift with the same parsed values', () => {
+  const { home, local, peer } = fixture()
+  const id = 'TRD-00000006'
+  const outbound = record(id, 'peer/repo', 'local/repo')
+  writeRecord(peer, '-', 'local/repo', id, outbound)
+  writeRecord(
+    local,
+    '+',
+    'peer/repo',
+    id,
+    outbound
+      .replace("title: 'Submission title'", 'title: "Submission title"')
+      .replace('observation: decision', 'observation: decision\ndecision_status: unconsidered')
+  )
+
+  const session = createTradesSession(options(local, home, tradeConfiguration('local/repo', ['peer/repo'])))
+  expect(mechanicalOutcomes(session, AUTH)).toContainEqual({
+    status: 'VIOLATION',
+    message: 'raw sender projection differs between outbound and inbound copies',
+    subject: `+/_TRADES/peer/repo/${id}.md`
+  })
 })
 
 test('all receiver decision statuses are accepted with their required rationale and linkage', () => {
@@ -267,6 +308,7 @@ test('all receiver decision statuses are accepted with their required rationale 
   const statuses = [
     ['unconsidered', []],
     ['in_progress', []],
+    ['applied', [`applied_commit: ${'a'.repeat(40)}`]],
     ['adopted', ['adopted_as: KI-LOCAL-FND-001']],
     ['retained', ['retained_as: Knowledge/Local/Note']],
     ['parked', ["rationale: 'Wait for dependency.'"]],
@@ -289,7 +331,7 @@ test('all receiver decision statuses are accepted with their required rationale 
   writeRecord(local, '+', 'peer/repo', invalidId, record(invalidId, 'peer/repo', 'local/repo', ['decision_status: accepted']))
   const invalid = createTradesSession(options(local, home, tradeConfiguration('local/repo', ['peer/repo'])))
   expect(mechanicalOutcomes(invalid, STATUS).map((outcome) => outcome.message)).toContain(
-    'decision_status must be one of unconsidered, in_progress, parked, clarify, adopted, retained, declined, superseded'
+    'decision_status must be one of unconsidered, in_progress, parked, clarify, applied, adopted, retained, declined, superseded'
   )
 
   const wrongKindId = 'TRD-00000091'
@@ -324,7 +366,7 @@ test('only terminal receiver dispositions permit sender release and receiver pru
   const outcomes = mechanicalOutcomes(session, RELEASE)
   expect(outcomes).toContainEqual({
     status: 'VIOLATION',
-    message: 'sender released its outbound copy before an adopted, retained, declined, or superseded disposition',
+    message: 'sender released its outbound copy before satisfying the decision observation policy',
     subject: `+/_TRADES/peer/repo/${parkedId}.md`
   })
   expect(outcomes).toContainEqual({
@@ -337,6 +379,65 @@ test('only terminal receiver dispositions permit sender release and receiver pru
     message: 'eligible sender release is observable; receiver may prune this inbound copy',
     subject: `+/_TRADES/peer/repo/${retainedId}.md`
   })
+})
+
+test('receipt and completion policies produce different release eligibility', () => {
+  const { home, local, peer } = fixture()
+  const receiptId = 'TRD-00000030'
+  writeRecord(local, '-', 'peer/repo', receiptId, record(receiptId, 'local/repo', 'peer/repo', [], undefined, 'work', 'receipt'))
+  writeRecord(peer, '+', 'local/repo', receiptId, record(receiptId, 'local/repo', 'peer/repo', ['decision_status: unconsidered'], undefined, 'work', 'receipt'))
+
+  const completionId = 'TRD-00000031'
+  writeRecord(local, '-', 'peer/repo', completionId, record(completionId, 'local/repo', 'peer/repo', [], undefined, 'work', 'completion'))
+  writeRecord(
+    peer,
+    '+',
+    'local/repo',
+    completionId,
+    record(completionId, 'local/repo', 'peer/repo', ['decision_status: adopted', 'adopted_as: KI-PEER-FND-001'], undefined, 'work', 'completion')
+  )
+  const roadmapDirectory = join(peer, 'docs', 'roadmap')
+  mkdirSync(roadmapDirectory, { recursive: true })
+  const roadmapPath = join(roadmapDirectory, 'KI-PEER-FND-001-linked-work.md')
+  writeFileSync(roadmapPath, ['---', 'id: KI-PEER-FND-001', 'status: in-progress', '---', '', '# Linked work', ''].join('\n'))
+
+  const waiting = createTradesSession(options(local, home, tradeConfiguration('local/repo', ['peer/repo'])))
+  expect(mechanicalOutcomes(waiting, RELEASE)).toContainEqual({
+    status: 'INFO',
+    message: 'receipt observation policy permits sender release',
+    subject: `-/_TRADES/peer/repo/${receiptId}.md`
+  })
+  expect(mechanicalOutcomes(waiting, RELEASE)).toContainEqual({
+    status: 'PASS',
+    message: 'completion observation policy requires sender retention',
+    subject: `-/_TRADES/peer/repo/${completionId}.md`
+  })
+
+  writeFileSync(roadmapPath, ['---', 'id: KI-PEER-FND-001', 'status: done', '---', '', '# Linked work', ''].join('\n'))
+  const completed = createTradesSession(options(local, home, tradeConfiguration('local/repo', ['peer/repo'])))
+  expect(mechanicalOutcomes(completed, RELEASE)).toContainEqual({
+    status: 'INFO',
+    message: 'completion observation policy permits sender release',
+    subject: `-/_TRADES/peer/repo/${completionId}.md`
+  })
+})
+
+test('receipt and applied commit references require full lower-case commit ids', () => {
+  const { home, local, peer } = fixture()
+  const id = 'TRD-00000040'
+  writeRecord(peer, '-', 'local/repo', id, record(id, 'peer/repo', 'local/repo'))
+  writeRecord(
+    local,
+    '+',
+    'peer/repo',
+    id,
+    record(id, 'peer/repo', 'local/repo', ['decision_status: applied', 'received_from_ref: short', 'applied_commit: abc'])
+  )
+
+  const session = createTradesSession(options(local, home, tradeConfiguration('local/repo', ['peer/repo'])))
+  const messages = mechanicalOutcomes(session, STATUS).map((outcome) => outcome.message)
+  expect(messages).toContain('received_from_ref must be a full 40-character lower-case hexadecimal commit')
+  expect(messages).toContain('applied requires a full verified local applied_commit')
 })
 
 test('conform proposes only the local owned README scaffold and never writes a peer', () => {

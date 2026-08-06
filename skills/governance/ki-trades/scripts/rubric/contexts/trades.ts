@@ -8,12 +8,25 @@ const IDENTITY = /^[a-z0-9](?:[a-z0-9._-]*[a-z0-9])?\/[a-z0-9](?:[a-z0-9._-]*[a-
 const REPOSITORY = /^https:\/\/github\.com\/([a-z0-9](?:[a-z0-9._-]*[a-z0-9])?)\/([a-z0-9](?:[a-z0-9._-]*[a-z0-9])?)$/
 const TRADE_ID = /^TRD-[0-9a-f]{8}$/
 const UTC_TIMESTAMP = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/
+const FULL_COMMIT = /^[0-9a-f]{40}$/
 const TRADE_KINDS = ['work', 'knowledge'] as const
-const DECISION_STATUSES = ['unconsidered', 'in_progress', 'parked', 'clarify', 'adopted', 'retained', 'declined', 'superseded'] as const
-const TERMINAL_DECISION_STATUSES = new Set(['adopted', 'retained', 'declined', 'superseded'])
-const SENDER_FIELDS = ['id', 'title', 'created_at', 'sender', 'receiver', 'kind', 'source_ref'] as const
-const RECEIVER_FIELDS = ['decision_status', 'reviewed_at', 'rationale', 'adopted_as', 'retained_as', 'superseded_by'] as const
-const ALLOWED_FIELDS = new Set<string>([...SENDER_FIELDS, ...RECEIVER_FIELDS])
+const OBSERVATION_POLICIES = ['unattended', 'receipt', 'decision', 'completion'] as const
+const DECISION_STATUSES = ['unconsidered', 'in_progress', 'parked', 'clarify', 'applied', 'adopted', 'retained', 'declined', 'superseded'] as const
+const TERMINAL_DECISION_STATUSES = new Set<DecisionStatus>(['applied', 'adopted', 'retained', 'declined', 'superseded'])
+const SENDER_FIELDS = ['id', 'title', 'created_at', 'sender', 'receiver', 'kind', 'source_ref', 'observation'] as const
+const LEGACY_SENDER_FIELDS = SENDER_FIELDS.filter((field) => field !== 'observation')
+const RECEIVER_FIELDS = [
+  'decision_status',
+  'received_from_ref',
+  'reviewed_at',
+  'rationale',
+  'applied_commit',
+  'adopted_as',
+  'retained_as',
+  'superseded_by'
+] as const
+const ALLOWED_SUBMITTED_FIELDS = new Set<string>([...SENDER_FIELDS, ...RECEIVER_FIELDS])
+const ALLOWED_PREPARATION_FIELDS = new Set<string>([...SENDER_FIELDS, 'phase'])
 
 const TRADE_READMES = [
   {
@@ -22,16 +35,16 @@ const TRADE_READMES = [
 
 This directory holds receiver-owned copies of active cross-repository work and knowledge trades, grouped by the sender's canonical \`owner/repo\` identity.
 
-Only this repository may change receiver-local decision status, rationale, adoption, retention, or supersession linkage. Sender provenance and payload remain unchanged. An inbound copy means this repository has accepted delivery; prune it only after an eligible sender release is observable.
+Only this repository may change receiver-local receipt evidence, decision status, rationale, or disposition linkage. The raw sender projection remains unchanged. An inbound copy records receipt only; prune it only after an observation-policy-eligible sender release is observable.
 `
   },
   {
     path: '-/_TRADES/README.md',
     content: `# Outgoing trades
 
-This directory holds sender-owned cross-repository work and knowledge trades, grouped by the receiver's canonical \`owner/repo\` identity.
+This directory holds sender-owned cross-repository work and knowledge preparations and submitted trades, grouped by the receiver's canonical \`owner/repo\` identity. Mutable preparations live beneath \`_PREPARATIONS/\`; submission atomically moves one to the peer path and freezes it.
 
-Only this repository writes or removes these outbound records. Retain each record until the receiver reports adopted, retained, declined, or superseded; unconsidered, in_progress, parked, and clarify decisions do not permit release.
+Only this repository writes or removes these records. A submitted trade's observation policy determines whether receipt, a terminal decision, or completion of adopted local work permits release.
 
 An outbound record may await the receiver's \`ki-trades\` participation and matching import declaration. It remains sender-owned until an inbound copy is observable.
 `
@@ -40,7 +53,8 @@ An outbound record may await the receiver's \`ki-trades\` participation and matc
 
 type DecisionStatus = (typeof DECISION_STATUSES)[number]
 type TradeKind = (typeof TRADE_KINDS)[number]
-type Direction = 'inbound' | 'outbound'
+type ObservationPolicy = (typeof OBSERVATION_POLICIES)[number]
+type Direction = 'preparation' | 'inbound' | 'outbound'
 
 type TradeConfiguration = {
   readonly repository?: string
@@ -57,9 +71,11 @@ type TradeRecord = {
   readonly peer?: string
   readonly id?: string
   readonly decisionStatus?: DecisionStatus
+  readonly observation?: ObservationPolicy
   readonly kind?: TradeKind
   readonly fields: Readonly<Record<string, unknown>>
   readonly body: string
+  readonly rawSenderProjection: string
 }
 
 type RegisteredRepository = {
@@ -269,7 +285,7 @@ const routeEvidence = (
       })
       return
     }
-    if (candidate.configuration.identity) active.set(candidate.configuration.identity, candidate)
+    if (candidate.configuration.identity) active.set(`${kind}:${candidate.configuration.identity}`, candidate)
     outcomes.push({
       status: 'PASS',
       message: `${kind} ${direction} trade route ${local.repository} ${direction === 'export' ? '→' : '←'} ${peer} is active`,
@@ -299,13 +315,22 @@ const readMarkdownFiles = (root: string, directory: string): readonly string[] =
   return files.sort((left, right) => left.localeCompare(right))
 }
 
+const stripReceiverFields = (frontmatter: string): string =>
+  frontmatter
+    .split('\n')
+    .filter((line) => {
+      const key = line.match(/^([A-Za-z][A-Za-z0-9_]*):/)?.[1]
+      return !key || !RECEIVER_FIELDS.includes(key as (typeof RECEIVER_FIELDS)[number])
+    })
+    .join('\n')
+
 const parseRecord = (root: string, path: string, direction: Direction, outcomes: AuditOutcome[]): TradeRecord => {
   const absolute = join(root, path)
   const source = containedPhysical(root, absolute, 'file') ? readFileSync(absolute, 'utf8') : ''
   const match = source.match(/^---\n([\s\S]*?)\n---\n([\s\S]*)$/)
   if (!match) {
     outcomes.push({ status: 'VIOLATION', message: 'trade record must have YAML frontmatter and a Markdown payload', subject: path })
-    return { direction, path, fields: {}, body: '' }
+    return { direction, path, fields: {}, body: '', rawSenderProjection: source }
   }
 
   let fields: Record<string, unknown> = {}
@@ -314,10 +339,18 @@ const parseRecord = (root: string, path: string, direction: Direction, outcomes:
   } catch {
     outcomes.push({ status: 'VIOLATION', message: 'trade frontmatter must be valid YAML', subject: path })
   }
+  const frontmatter = match[1] ?? ''
   const body = match[2] ?? ''
   const relativeTrades = path.replace(/^.*?_TRADES\//, '')
   const segments = relativeTrades.split('/')
-  const peer = segments.length === 3 ? `${segments[0]}/${segments[1]}` : undefined
+  const preparation = direction === 'preparation'
+  const peer = preparation
+    ? segments.length === 4 && segments[0] === '_PREPARATIONS'
+      ? `${segments[1]}/${segments[2]}`
+      : undefined
+    : segments.length === 3
+      ? `${segments[0]}/${segments[1]}`
+      : undefined
   const filename = segments.at(-1) ?? ''
   const id = typeof fields.id === 'string' ? fields.id : undefined
 
@@ -326,11 +359,13 @@ const parseRecord = (root: string, path: string, direction: Direction, outcomes:
   if (!id || !TRADE_ID.test(id))
     outcomes.push({ status: 'VIOLATION', message: 'id must use canonical TRD plus eight lower-case hexadecimal characters', subject: path })
   if (id && filename !== `${id}.md`) outcomes.push({ status: 'VIOLATION', message: 'filename must exactly repeat the frontmatter trade id', subject: path })
-  for (const key of Object.keys(fields).filter((key) => !ALLOWED_FIELDS.has(key)))
+  const allowedFields = preparation ? ALLOWED_PREPARATION_FIELDS : ALLOWED_SUBMITTED_FIELDS
+  for (const key of Object.keys(fields).filter((key) => !allowedFields.has(key)))
     outcomes.push({ status: 'VIOLATION', message: `frontmatter key ${key} is outside the trade record contract`, subject: path })
-  for (const key of SENDER_FIELDS)
+  for (const key of preparation ? SENDER_FIELDS : LEGACY_SENDER_FIELDS)
     if (typeof fields[key] !== 'string' || !fields[key])
       outcomes.push({ status: 'VIOLATION', message: `${key} must be a non-empty sender field`, subject: path })
+  if (preparation && fields.phase !== 'preparing') outcomes.push({ status: 'VIOLATION', message: 'a preparation must declare phase: preparing', subject: path })
   if (typeof fields.created_at === 'string' && !UTC_TIMESTAMP.test(fields.created_at))
     outcomes.push({ status: 'VIOLATION', message: 'created_at must be a UTC YYYY-MM-DDTHH:MM:SSZ timestamp', subject: path })
   if (typeof fields.sender === 'string' && !IDENTITY.test(fields.sender))
@@ -339,6 +374,10 @@ const parseRecord = (root: string, path: string, direction: Direction, outcomes:
     outcomes.push({ status: 'VIOLATION', message: 'receiver must be a canonical owner/repo identity', subject: path })
   if (typeof fields.kind !== 'string' || !TRADE_KINDS.includes(fields.kind as TradeKind))
     outcomes.push({ status: 'VIOLATION', message: `kind must be one of ${TRADE_KINDS.join(', ')}`, subject: path })
+  if (fields.observation !== undefined && (typeof fields.observation !== 'string' || !OBSERVATION_POLICIES.includes(fields.observation as ObservationPolicy)))
+    outcomes.push({ status: 'VIOLATION', message: `observation must be one of ${OBSERVATION_POLICIES.join(', ')}`, subject: path })
+  if (preparation && fields.observation === undefined)
+    outcomes.push({ status: 'VIOLATION', message: 'a preparation must declare an observation policy', subject: path })
 
   const expectedH1 = id && typeof fields.title === 'string' ? `# ${id}: ${fields.title}` : ''
   const content = body.replace(/^(?:\r?\n)+/, '')
@@ -352,26 +391,59 @@ const parseRecord = (root: string, path: string, direction: Direction, outcomes:
   const rawDecisionStatus = fields.decision_status
   const decisionStatus =
     typeof rawDecisionStatus === 'string' && DECISION_STATUSES.includes(rawDecisionStatus as DecisionStatus) ? (rawDecisionStatus as DecisionStatus) : undefined
+  const rawObservation = fields.observation
+  const observation =
+    typeof rawObservation === 'string' && OBSERVATION_POLICIES.includes(rawObservation as ObservationPolicy)
+      ? (rawObservation as ObservationPolicy)
+      : !preparation && rawObservation === undefined
+        ? 'decision'
+        : undefined
   const rawKind = fields.kind
   const kind = typeof rawKind === 'string' && TRADE_KINDS.includes(rawKind as TradeKind) ? (rawKind as TradeKind) : undefined
+  const senderFrontmatter = direction === 'inbound' ? stripReceiverFields(frontmatter) : frontmatter
   return {
     direction,
     path,
     ...(peer ? { peer } : {}),
     ...(id ? { id } : {}),
     ...(decisionStatus ? { decisionStatus } : {}),
+    ...(observation ? { observation } : {}),
     ...(kind ? { kind } : {}),
     fields,
-    body
+    body,
+    rawSenderProjection: `---\n${senderFrontmatter}\n---\n${body}`
   }
 }
-
-const immutableRecord = (record: TradeRecord): string =>
-  JSON.stringify({ fields: Object.fromEntries(SENDER_FIELDS.map((field) => [field, record.fields[field]])), body: record.body })
 
 const remoteRecord = (root: string, path: string, direction: Direction): TradeRecord | undefined => {
   if (!containedPhysical(root, join(root, path), 'file')) return undefined
   return parseRecord(root, path, direction, [])
+}
+
+const linkedWorkIsDone = (root: string, identity: unknown): boolean => {
+  if (typeof identity !== 'string' || !identity) return false
+  for (const directory of ['docs/roadmap', 'Streams']) {
+    for (const path of readMarkdownFiles(root, directory)) {
+      const source = readFileSync(join(root, path), 'utf8')
+      const frontmatter = source.match(/^---\n([\s\S]*?)\n---\n/)?.[1]
+      if (!frontmatter) continue
+      try {
+        const fields = table(Bun.YAML.parse(frontmatter))
+        if (fields?.id === identity && fields.status === 'done') return true
+      } catch {}
+    }
+  }
+  return false
+}
+
+const releaseEligible = (record: TradeRecord, receiptVisible: boolean, receiverRoot: string): boolean => {
+  if (!record.observation) return false
+  if (record.observation === 'unattended' || record.observation === 'receipt') return receiptVisible
+  if (!record.decisionStatus || !TERMINAL_DECISION_STATUSES.has(record.decisionStatus)) return false
+  if (record.observation === 'decision') return true
+  if (record.decisionStatus === 'applied' || record.decisionStatus === 'retained') return true
+  if (record.decisionStatus === 'declined' || record.decisionStatus === 'superseded') return true
+  return record.decisionStatus === 'adopted' && linkedWorkIsDone(receiverRoot, record.fields.adopted_as)
 }
 
 const recordEvidence = (
@@ -384,8 +456,11 @@ const recordEvidence = (
   const status: AuditOutcome[] = []
   const release: AuditOutcome[] = []
   const parsed = [
+    ...readMarkdownFiles(root, '-/_TRADES/_PREPARATIONS').map((path) => parseRecord(root, path, 'preparation', records)),
     ...readMarkdownFiles(root, '+/_TRADES').map((path) => parseRecord(root, path, 'inbound', records)),
-    ...readMarkdownFiles(root, '-/_TRADES').map((path) => parseRecord(root, path, 'outbound', records))
+    ...readMarkdownFiles(root, '-/_TRADES')
+      .filter((path) => !path.startsWith('-/_TRADES/_PREPARATIONS/'))
+      .map((path) => parseRecord(root, path, 'outbound', records))
   ]
   const seen = new Map<string, string>()
 
@@ -402,7 +477,7 @@ const recordEvidence = (
       authority.push({ status: 'VIOLATION', message: `${record.direction} record local identity does not match ${local.identity}`, subject: record.path })
     if (expectedPeer !== record.peer)
       authority.push({ status: 'VIOLATION', message: `${record.direction} record peer identity does not match its two-level path`, subject: record.path })
-    const permitted = record.direction === 'outbound' ? local.exportsTo[record.kind] : local.importsFrom[record.kind]
+    const permitted = record.direction === 'inbound' ? local.importsFrom[record.kind] : local.exportsTo[record.kind]
     const peerRepository = `https://github.com/${record.peer}`
     if (!permitted.includes(peerRepository)) {
       authority.push({
@@ -413,9 +488,16 @@ const recordEvidence = (
       continue
     }
 
-    const peer = active.get(record.peer)
+    const peer = active.get(`${record.kind}:${record.peer}`)
     if (record.direction === 'inbound' && !peer) {
       authority.push({ status: 'VIOLATION', message: `inbound record has no active reciprocal route to ${record.peer}`, subject: record.path })
+      continue
+    }
+
+    if (record.direction === 'preparation') {
+      for (const field of RECEIVER_FIELDS)
+        if (record.fields[field] !== undefined)
+          authority.push({ status: 'VIOLATION', message: `sender-owned preparation must not set receiver-local field ${field}`, subject: record.path })
       continue
     }
 
@@ -426,6 +508,11 @@ const recordEvidence = (
     } else {
       if (!record.decisionStatus)
         status.push({ status: 'VIOLATION', message: `decision_status must be one of ${DECISION_STATUSES.join(', ')}`, subject: record.path })
+      if (
+        record.fields.received_from_ref !== undefined &&
+        (typeof record.fields.received_from_ref !== 'string' || !FULL_COMMIT.test(record.fields.received_from_ref))
+      )
+        status.push({ status: 'VIOLATION', message: 'received_from_ref must be a full 40-character lower-case hexadecimal commit', subject: record.path })
       if (typeof record.fields.reviewed_at === 'string' && !UTC_TIMESTAMP.test(record.fields.reviewed_at))
         status.push({ status: 'VIOLATION', message: 'reviewed_at must be a UTC YYYY-MM-DDTHH:MM:SSZ timestamp', subject: record.path })
       if (
@@ -436,6 +523,10 @@ const recordEvidence = (
         status.push({ status: 'VIOLATION', message: `${record.decisionStatus} requires receiver-local rationale`, subject: record.path })
       if (record.decisionStatus === 'adopted' && typeof record.fields.adopted_as !== 'string')
         status.push({ status: 'VIOLATION', message: 'adopted requires receiver-local adopted_as linkage', subject: record.path })
+      if (record.decisionStatus === 'applied' && (typeof record.fields.applied_commit !== 'string' || !FULL_COMMIT.test(record.fields.applied_commit)))
+        status.push({ status: 'VIOLATION', message: 'applied requires a full verified local applied_commit', subject: record.path })
+      if (record.decisionStatus === 'applied' && record.kind !== 'work')
+        status.push({ status: 'VIOLATION', message: 'applied is valid only for work trades', subject: record.path })
       if (record.decisionStatus === 'adopted' && record.kind !== 'work')
         status.push({ status: 'VIOLATION', message: 'adopted is valid only for work trades', subject: record.path })
       if (record.decisionStatus === 'retained' && record.kind !== 'knowledge')
@@ -444,6 +535,8 @@ const recordEvidence = (
         status.push({ status: 'VIOLATION', message: 'retained requires receiver-local retained_as linkage', subject: record.path })
       if (record.decisionStatus !== 'adopted' && record.fields.adopted_as !== undefined)
         status.push({ status: 'VIOLATION', message: 'adopted_as is valid only for adopted status', subject: record.path })
+      if (record.decisionStatus !== 'applied' && record.fields.applied_commit !== undefined)
+        status.push({ status: 'VIOLATION', message: 'applied_commit is valid only for applied status', subject: record.path })
       if (record.decisionStatus !== 'retained' && record.fields.retained_as !== undefined)
         status.push({ status: 'VIOLATION', message: 'retained_as is valid only for retained status', subject: record.path })
       if (record.decisionStatus === 'superseded' && typeof record.fields.superseded_by !== 'string')
@@ -457,33 +550,36 @@ const recordEvidence = (
         ? join('-/_TRADES', ...local.identity.split('/'), `${record.id}.md`)
         : join('+/_TRADES', ...local.identity.split('/'), `${record.id}.md`)
     const counterpart = peer ? remoteRecord(peer.root, counterpartPath, record.direction === 'inbound' ? 'outbound' : 'inbound') : undefined
-    if (counterpart && immutableRecord(counterpart) !== immutableRecord(record))
-      authority.push({ status: 'VIOLATION', message: 'sender provenance or payload differs between outbound and inbound copies', subject: record.path })
+    if (counterpart && counterpart.rawSenderProjection !== record.rawSenderProjection)
+      authority.push({ status: 'VIOLATION', message: 'raw sender projection differs between outbound and inbound copies', subject: record.path })
 
     if (record.direction === 'inbound') {
       if (counterpart) {
-        release.push({
-          status: 'PASS',
-          message: `sender outbound copy is retained for ${record.decisionStatus ?? 'invalid'} decision status`,
-          subject: record.path
-        })
-      } else if (record.decisionStatus && TERMINAL_DECISION_STATUSES.has(record.decisionStatus)) {
+        if (releaseEligible(record, true, root))
+          release.push({ status: 'INFO', message: `${record.observation} observation policy permits sender release`, subject: record.path })
+        else
+          release.push({
+            status: 'PASS',
+            message: `${record.observation ?? 'invalid'} observation policy requires sender retention`,
+            subject: record.path
+          })
+      } else if (releaseEligible(record, true, root)) {
         release.push({ status: 'INFO', message: 'eligible sender release is observable; receiver may prune this inbound copy', subject: record.path })
       } else {
         release.push({
           status: 'VIOLATION',
-          message: `sender released its outbound copy before an adopted, retained, declined, or superseded disposition`,
+          message: `sender released its outbound copy before satisfying the ${record.observation ?? 'invalid'} observation policy`,
           subject: record.path
         })
       }
     } else if (!counterpart) {
       release.push({ status: 'PASS', message: 'receiver has not created an inbound copy; sender retains the outbound record', subject: record.path })
-    } else if (counterpart.decisionStatus && TERMINAL_DECISION_STATUSES.has(counterpart.decisionStatus)) {
-      release.push({ status: 'INFO', message: `receiver decision status ${counterpart.decisionStatus} permits sender release`, subject: record.path })
+    } else if (releaseEligible(counterpart, true, peer?.root ?? root)) {
+      release.push({ status: 'INFO', message: `${counterpart.observation} observation policy permits sender release`, subject: record.path })
     } else {
       release.push({
         status: 'PASS',
-        message: `receiver decision status ${counterpart.decisionStatus ?? 'invalid'} requires sender retention`,
+        message: `${counterpart.observation ?? 'invalid'} observation policy requires sender retention`,
         subject: record.path
       })
     }

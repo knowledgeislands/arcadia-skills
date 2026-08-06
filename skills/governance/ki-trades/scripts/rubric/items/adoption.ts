@@ -7,11 +7,11 @@ const ADOPTION_1: RubricItem<TradeJudgmentContext> = {
   code: 'ADOPTION-1',
   title: 'disposition preserves receiver authority',
   description:
-    'A receiver disposition is trade review only; adoption does not automatically create, prioritize, implement, or accept a roadmap item, and retention does not alter local knowledge authority.',
+    'A receiver disposition is trade review only. Direct applied work is bounded and commit-verified; adoption does not automatically create, prioritise, implement, or accept a roadmap item; retention does not alter local knowledge authority.',
   sources: [SOURCE],
   judgment: {
     prompt:
-      'Confirm that every proposed adoption remains a separately confirmed local roadmap decision, every proposed retention remains a local knowledge decision, and neither grants a sender or process skill priority, implementation, acceptance, or knowledge authority.'
+      'Confirm that applied is limited to one bounded, reversible, independently verifiable local work change with no material design, dependency, migration, public-contract, or cross-repository effect; every other work disposition remains separately confirmed, every retention remains a local knowledge decision, and none grants sender authority.'
   }
 }
 

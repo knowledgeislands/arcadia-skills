@@ -5,18 +5,17 @@ const SOURCE = 'standards-trades.md'
 
 const STATUS_1: RubricItem<OutcomeContext> = {
   code: 'STATUS-1',
-  title: 'receiver decision status and linkage are valid',
+  title: 'receipt evidence, decision status, and linkage are valid',
   description:
-    'Inbound records evidence receiver acceptance and carry one receiver decision status: unconsidered, in_progress, adopted, retained, parked, clarify, declined, or superseded, with decision-appropriate rationale and local adoption, retention, or supersession linkage.',
+    'Inbound records evidence receipt independently from decision and carry one receiver-owned status: unconsidered, in_progress, parked, clarify, applied, adopted, retained, declined, or superseded, with full commit evidence and decision-appropriate rationale or local linkage.',
   sources: [SOURCE],
   mechanical: { level: 'FAIL', audit: { phase: 'INSPECT', run: ({ outcomes }) => outcomes } }
 }
 
 export const STATUS: RubricFamily<TradesRubricContext, OutcomeContext> = {
   code: 'STATUS',
-  title: 'Mutual lifecycle',
-  description:
-    'Derived sender and receiver delivery statuses pair with a closed receiver-owned decision vocabulary and explicit local work or knowledge evidence.',
+  title: 'Delivery and receiver decision',
+  description: 'Preparation, submission, receipt, receiver decision, and local completion remain separate facts with closed receiver-owned evidence.',
   standard: SOURCE,
   selectContext: (context) => context.status,
   items: [STATUS_1]
