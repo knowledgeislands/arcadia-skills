@@ -11,7 +11,13 @@ describe('Claude tokenomics catalogue', () => {
     ]))
 
   test('mechanical criteria expose v1 diagnostic remediation', () => {
-    const mechanical = definition.families.flatMap((family) => family.items).filter((item) => item.mechanical)
+    const mechanical = (
+      definition.families as unknown as readonly {
+        items: readonly { code: string; mechanical?: { remediation: { class: string } } }[]
+      }[]
+    )
+      .flatMap((family) => family.items)
+      .filter((item) => item.mechanical)
 
     expect(mechanical).toHaveLength(4)
     expect(mechanical.filter((item) => item.code !== 'RUBRIC-1').every((item) => item.mechanical?.remediation.class === 'diagnostic')).toBe(true)
