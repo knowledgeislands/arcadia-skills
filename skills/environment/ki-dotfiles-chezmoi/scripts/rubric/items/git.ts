@@ -8,6 +8,10 @@ const GIT_1: RubricItem<GitContext> = {
   sources: ['standards-chezmoi-dotfiles.md'],
   mechanical: {
     level: 'FAIL',
+    remediation: {
+      class: 'diagnostic',
+      guidance: 'Inspect the lock’s owning process and repository boundary, then use the governed stale-lock recovery procedure; do not remove it blindly.'
+    },
     audit: {
       phase: 'INSPECT',
       run: ({ repositoryState, locks }) => {

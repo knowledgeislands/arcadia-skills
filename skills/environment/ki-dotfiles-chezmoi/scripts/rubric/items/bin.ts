@@ -8,6 +8,10 @@ const BIN_1: RubricItem<BinContext> = {
   sources: ['standards-chezmoi-dotfiles.md'],
   mechanical: {
     level: 'WARN',
+    remediation: {
+      class: 'diagnostic',
+      guidance: 'Choose and apply the recognised source-attribute prefix that expresses the file’s intended chezmoi behaviour.'
+    },
     audit: {
       phase: 'INSPECT',
       run: ({ repositoryState, entries }) => {

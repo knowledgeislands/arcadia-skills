@@ -52,6 +52,21 @@ test('the catalogue preserves every chezmoi criterion in family order', () => {
   expect(new Set(codes).size).toBe(codes.length)
 })
 
+test('criteria declare complete v1 remediation and review metadata', () => {
+  const items = catalogue.families.flatMap((family) => family.items)
+  const mechanical = items.filter((item) => item.mechanical)
+  const judgment = items.filter((item) => item.judgment)
+
+  expect(mechanical).toHaveLength(5)
+  expect(mechanical.every((item) => item.mechanical?.remediation)).toBe(true)
+  expect(judgment).toHaveLength(8)
+  for (const item of judgment) {
+    expect(item.judgment?.scope).not.toBeEmpty()
+    expect(item.judgment?.outcomes.length).toBeGreaterThan(0)
+    expect(item.judgment?.guidance).not.toBeEmpty()
+  }
+})
+
 test('each family module exports one complete family', async () => {
   for (const file of familyModules) {
     const module = (await import(`./${file}`)) as Record<string, unknown>

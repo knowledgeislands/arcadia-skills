@@ -6,7 +6,12 @@ const ETIQ_J1: RubricItem<ReviewContext> = {
   title: 'Audit etiquette',
   description: 'Audits report a file, concise problem, and options before any change is applied.',
   sources: ['standards-chezmoi-dotfiles.md'],
-  judgment: { prompt: 'Were findings reported with a file, concise problem statement, and options before a change was applied?' }
+  judgment: {
+    scope: 'Each audit finding and any subsequent proposed or applied change.',
+    prompt: 'Were findings reported with a file, concise problem statement, and options before a change was applied?',
+    outcomes: ['conforming', 'reporting correction required', 'change deferral required'],
+    guidance: 'Report the affected file, concise problem, and available options before proposing or applying a change; defer action where that evidence is absent.'
+  }
 }
 
 export const ETIQ: RubricFamily<ChezmoiRubricContext, ReviewContext> = {

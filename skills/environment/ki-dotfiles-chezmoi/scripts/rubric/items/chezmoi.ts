@@ -10,6 +10,7 @@ const CHEZMOI_1: RubricItem<ChezmoiShapeContext> = {
   sources: STANDARD,
   mechanical: {
     level: 'FAIL',
+    remediation: { class: 'automatic' },
     audit: {
       phase: 'INSPECT',
       run: ({ repository, repositoryState, ignoreState }) => {
@@ -49,6 +50,10 @@ const CHEZMOI_2: RubricItem<ChezmoiShapeContext> = {
   sources: STANDARD,
   mechanical: {
     level: 'WARN',
+    remediation: {
+      class: 'diagnostic',
+      guidance: 'Add the appropriate physical template-support directory after confirming which data or template responsibility the repository needs.'
+    },
     audit: {
       phase: 'INSPECT',
       run: ({ repositoryState, hasTemplateFiles, hasTemplateSupport }) => {
@@ -73,7 +78,12 @@ const CHEZMOI_J1: RubricItem<ChezmoiShapeContext> = {
   title: 'Chezmoiignore negation intent',
   description: 'A `.chezmoiignore` negation is deliberate and documented rather than accidentally broad.',
   sources: STANDARD,
-  judgment: { prompt: 'Are `.chezmoiignore` negations deliberate, documented exceptions to broad ignores?' }
+  judgment: {
+    scope: 'Every `.chezmoiignore` negation and the broad ignore it overrides.',
+    prompt: 'Are `.chezmoiignore` negations deliberate, documented exceptions to broad ignores?',
+    outcomes: ['conforming', 'documentation required', 'negation revision required'],
+    guidance: 'Document the intentional exception beside the negation, narrow or remove accidental patterns, and preserve only the intended managed path.'
+  }
 }
 
 export const CHEZMOI: RubricFamily<ChezmoiRubricContext, ChezmoiShapeContext> = {
