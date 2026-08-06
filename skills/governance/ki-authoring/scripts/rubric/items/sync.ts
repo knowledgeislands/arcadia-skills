@@ -6,7 +6,12 @@ const SYNC_1: RubricItem<SynchronisationRubricContext> = {
   title: 'conventions, rubric, and source record agree',
   description: 'The convention references, this rubric, and `sources.md` agree; when a convention moves, all three move together.',
   sources: ['standards-authoring.md#synchronisation', 'sources.md'],
-  judgment: { prompt: 'Do the convention references, rubric publication, and source record agree?' }
+  judgment: {
+    scope: 'The authoring convention references, generated rubric publication, and source record changed by the same concern.',
+    prompt: 'Assess whether the convention references, rubric publication, and source record agree.',
+    outcomes: ['conforming', 'synchronisation required', 'review required'],
+    guidance: 'Update the affected canonical source and generated publication together, or record the unresolved source-review question before publishing.'
+  }
 }
 
 export const SYNCHRONISATION: RubricFamily<AuthoringRubricContext, SynchronisationRubricContext> = {

@@ -25,6 +25,7 @@ const OWN_1: RubricItem<OwnedRubricContext> = {
   sources: ['standards-authoring.md#owned-configuration'],
   mechanical: {
     level: 'WARN',
+    remediation: { class: 'automatic' },
     audit: {
       phase: 'INSPECT',
       run: (context): RubricOutcomes<AuditOutcome> => {
