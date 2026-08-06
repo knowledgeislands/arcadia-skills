@@ -17,7 +17,7 @@ Make every rubric criterion state separately what can be checked deterministical
 
 The shared rubric contract already distinguishes `mechanical` and `judgment` aspects, but its mechanical `conform` callback is optional. A deterministic audit can therefore fail without a declared repair path, while a judgment aspect exposes only a prompt. This makes the audit result more actionable than the conform result and hides whether a missing automatic repair is a safety boundary, an environmental failure, or unfinished engineering.
 
-A catalogue-wide scan found 34 active rubric catalogues. Their criteria include substantial mechanical evidence, judgment prompts, and safe conform actions, but these are not consistently declared as one complete audit-and-remediation model. The current `ki-skills` audit falsely assesses six already-correct process skills as governance skills because its classifier looks only for literal `(kind: process` text in the frontmatter description, while those skills declare `**Kind:** process.` in their bodies. That is a `ki-skills` checker defect; the process skills must not be changed to satisfy governance modes.
+A catalogue-wide scan now finds 35 active rubric catalogues. Their criteria include substantial mechanical evidence, judgment prompts, and safe conform actions, but these are not consistently declared as one complete audit-and-remediation model. An earlier scan also found that `ki-skills` assessed already-correct process skills as governance skills because its classifier inferred kind from prose. The explicit `ki-kind` migration has resolved that defect: kind now comes from exact frontmatter, and governance-only checks return not applicable for process skills. Retain that regression fixture; do not change process skills merely to satisfy governance modes.
 
 ## Boundary
 
@@ -95,7 +95,7 @@ Start with `ki-skills` and `ki-engineering` as the shared-model and common-toolc
 
 ## Current state
 
-The rubric-authoring standard expressly permits an audit-only mechanical item and gives judgment only a `prompt`. Its generated publications describe criterion type but do not require an audit/remediation classification or a judgment conforming path. Existing CONFORM behaviour is appropriately conservative in many places; the missing distinction is whether that conservatism is deliberate and what the user should do next.
+The rubric-authoring standard expressly permits an audit-only mechanical item and gives judgment only a `prompt`. Its generated publications describe criterion type but do not require an audit/remediation classification or a judgment conforming path. Existing CONFORM behaviour is appropriately conservative in many places; the missing distinction is whether that conservatism is deliberate and what the user should do next. The completed explicit `ki-kind` migration supplies the process-kind regression fixture but does not establish the broader remediation model.
 
 ## Model review
 
@@ -109,7 +109,7 @@ Before this item enters `ready`, two distinct models from different vendors must
 - [ ] Extend the shared rubric types, catalogue validator, and generated publication so every mechanical aspect declares its remediation class and every judgment aspect supplies review scope, outcome vocabulary, and guided conforming work.
 - [ ] Update the `ki` rubric host to validate the new metadata, show mechanical audit/conform and judgment review/conform sections distinctly, execute only `automatic` draft actions, and retain its no-synthetic-judgment-finding boundary.
 - [ ] Build an inventory of every current criterion across all 34 catalogues, recording its evidence, remediation class, safe writer or manual route, and whether a hybrid split is warranted.
-- [ ] Migrate `ki-skills` and `ki-engineering` first, fixing the process-kind classifier so already-correct process skills are not applicable to governance-mode checks, then use fixtures to prove automatic, diagnostic, guarded, hybrid, and invalid-metadata cases.
+- [ ] Migrate `ki-skills` and `ki-engineering` first, retaining the completed process-kind classifier fix as a regression fixture, then use fixtures to prove automatic, diagnostic, guarded, hybrid, and invalid-metadata cases.
 - [ ] Migrate the remaining catalogues in concern-sized batches. Promote only deterministic subconditions with reliable fixtures; preserve semantic, authority, and truth questions as judgment.
 - [ ] Regenerate every affected rubric publication, update standards and skill procedures, and publish a concise reviewer workflow explaining judgment audit and guided conforming work.
 - [ ] Run a cross-catalogue audit proving no mechanical item lacks a remediation class, no `automatic` class lacks a safe conform action, and no judgment aspect is reported as mechanically evaluated.
@@ -133,7 +133,7 @@ Before this item enters `ready`, two distinct models from different vendors must
 
 ## Dependencies / blocks
 
-The design is ready for detailed inventory, but status must remain `draft` until the first complete criterion inventory establishes the exact migration batches and the `tools-ki` host owner accepts its bounded host-contract work. `GOV-007` is a coordinated adopter, not a hidden ownership dependency.
+The design is ready for detailed inventory, but status must remain `draft` until the first complete criterion inventory establishes the exact migration batches and the `tools-ki` host owner accepts its bounded host-contract work through [TRD-9eb558c6](../../-/_TRADES/knowledgeislands/tools-ki/TRD-9eb558c6.md). `GOV-007` is a coordinated adopter, not a hidden ownership dependency.
 
 ## Delegation
 
@@ -167,7 +167,7 @@ The broad scan found repeated candidates for exact structural checks: index comp
 
 ### Completed initial audit
 
-The audit read every `SKILL.md`, structured rubric catalogue, and generated `references/rubric.md` in the current fleet, and compared mode claims with the Harness configuration. All 34 catalogues publish a rubric. The resulting source-level shape is uneven by design: `ki-engineering` already has substantial safe conform coverage; several safety- and environment-oriented catalogues correctly carry only observational checks; and `ki-git` is judgment-only. The missing contract is the explicit reason for those different shapes.
+The audit read every `SKILL.md`, structured rubric catalogue, and generated `references/rubric.md` in the current fleet, and compared mode claims with the Harness configuration. All 35 catalogues publish a rubric. The resulting source-level shape is uneven by design: `ki-engineering` already has substantial safe conform coverage; several safety- and environment-oriented catalogues correctly carry only observational checks; and `ki-git` is judgment-only. The missing contract is the explicit reason for those different shapes.
 
 `ki-harness`, `ki-mcp`, `ki-plugins`, and `ki-subagents` can preserve or extend checks for manifests, local layout, declarations, link targets, command surfaces, and generated projections. Capability fit, tool behaviour, plugin value, agent lanes, prompts, and delegation quality remain reviewer-led.
 
