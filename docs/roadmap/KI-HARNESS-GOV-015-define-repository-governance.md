@@ -3,7 +3,7 @@ id: KI-HARNESS-GOV-015
 title: Define repository governance
 theme: governance-consistency
 horizon: next
-status: in-progress
+status: awaiting-review
 blocks: [KI-HARNESS-GOV-016]
 blocked-by: []
 baseline-ref: 01a9a0d8a3a2ac4638553f2798be4d713e3764ec
@@ -23,17 +23,17 @@ Do not encode machine paths in tracked configuration, make sibling repositories 
 
 ## Current state
 
-`ki-repo` has a canonical repository identity and checks the optional `.agents/skills/ki-self/` projection shape, but it does not define one validated repository-kind or named-store schema, selected-repository write authority, or a repository-local rubric boundary. `repo_type = "kb"` is already consumed independently by roadmap, Decision Record, and housekeeping code without an owning `ki-repo` schema, so this work must migrate those readers rather than introduce a second spelling or compatibility path.
+`ki-repo` now owns the KB discriminator and closed store-role vocabulary; its `KIND` rubric family validates kind, roles, and compatible structure. Roadmap, Decision Records, and housekeeping each read that canonical table only. The two existing KBs declare their self-reference as `notes`, while physical external bindings remain user-local.
 
 ## Steps
 
-- [ ] Inventory every current `repo_type` consumer, then settle one `ki-repo`-owned repository-kind vocabulary and migration with no alias or fallback path.
-- [ ] Define the Knowledge Base store-role schema: `notes` is the required canonical repository self-reference, `sources` and `legacy` are optional roles, and physical bindings remain user-local rather than tracked configuration.
-- [ ] Add `ki-repo` validation for the kind, store roles, and compatible repository-structure skill declarations; migrate roadmap, Decision Record, and housekeeping consumers to the canonical parser.
-- [ ] Define selected-repository authority: task-scoped writes and commits stay local by default, sibling repositories remain read-only until a bounded write is explicitly approved, and each sibling commit needs separate approval after its target and staged scope are known.
-- [ ] Formalise optional repository-local `ki-self` as a committed `.agents/skills/ki-self/` source with derived runtime projections, a repository-specific rubric boundary, and no bootstrap or installed-harness status.
-- [ ] Align the Harness `ki-self` exemplar and `ki-skills` validation with that contract, while leaving native host discovery, inventory, activation, and repair implementation to separately accepted `tools-ki` work.
-- [ ] Add focused fixtures for valid and invalid kinds, stores, skill compatibility, local-source shape, projection, and authority judgment; regenerate every affected rubric publication once.
+- [x] Inventory every current `repo_type` consumer, then settle one `ki-repo`-owned repository-kind vocabulary and migration with no alias or fallback path.
+- [x] Define the Knowledge Base store-role schema: `notes` is the required canonical repository self-reference, `sources` and `legacy` are optional roles, and physical bindings remain user-local rather than tracked configuration.
+- [x] Add `ki-repo` validation for the kind, store roles, and compatible repository-structure skill declarations; migrate roadmap, Decision Record, and housekeeping consumers to the canonical parser.
+- [x] Define selected-repository authority: task-scoped writes and commits stay local by default, sibling repositories remain read-only until a bounded write is explicitly approved, and each sibling commit needs separate approval after its target and staged scope are known.
+- [x] Formalise optional repository-local `ki-self` as a committed `.agents/skills/ki-self/` source with derived runtime projections, a repository-specific rubric boundary, and no bootstrap or installed-harness status.
+- [x] Align the Harness `ki-self` exemplar and `ki-skills` validation with that contract, while leaving native host discovery, inventory, activation, and repair implementation to separately accepted `tools-ki` work.
+- [x] Add focused fixtures for valid and invalid kinds, stores, skill compatibility, local-source shape, projection, and authority judgment; regenerate every affected rubric publication once.
 
 ## Files touched
 

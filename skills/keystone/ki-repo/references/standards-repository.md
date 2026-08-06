@@ -9,6 +9,7 @@ The canonical configuration a Knowledge Islands repo should carry, so repos pres
 - [Layer 3 — deeper GitHub](#layer-3--deeper-github)
 - [Working areas](#working-areas)
 - [Repository kind and Knowledge Base stores](#repository-kind-and-knowledge-base-stores)
+- [Repository write authority](#repository-write-authority)
 - [Visibility](#visibility)
 - [Per-repo overrides](#per-repo-overrides)
 - [Coverage cascade](#coverage-cascade)
@@ -41,7 +42,7 @@ Every repo carries these at the root. A local audit reads the selected checkout'
 
 **Root orientation for a multi-runtime repo.** When a repo's declared [`supported_runtimes`](standards-configuration.md#table-per-skill) includes a runtime other than `claude-code` (e.g. `chatgpt-codex`), the repo's orientation should live in a literal root `AGENTS.md` — not an `@`-import index, since a non-Claude-Code runtime can't resolve that syntax — with `CLAUDE.md` `@AGENTS.md`-importing it and staying a thin, Claude-only appendix. A repo whose `supported_runtimes` is `["claude-code"]` only has no reason to split: `CLAUDE.md` alone, with its own topic-file imports, is sufficient.
 
-**Repository-local ki-self projection.** A repository may author a local `ki-self` at `.agents/skills/ki-self/`; this is its one canonical committed source and Codex reads it directly. If `claude-code` is declared in `supported_runtimes`, `.claude/skills/ki-self` must be a non-broken relative symbolic link resolving to that canonical source. If Claude Code is not declared, that projection must be absent. Do not maintain a copied Claude skill directory. This check is conditional because `ki-self` itself remains optional; once present, its runtime projection must match the declared support surface.
+**Repository-local ki-self projection.** A repository may author a local `ki-self` at `.agents/skills/ki-self/`; this is its one canonical committed source and Codex reads it directly. It is repository-specific governance, not a bootstrap payload or installed-harness capability. If `claude-code` is declared in `supported_runtimes`, `.claude/skills/ki-self` must be a non-broken relative symbolic link resolving to that canonical source. If Claude Code is not declared, that projection must be absent. Do not maintain a copied Claude skill directory. This check is conditional because `ki-self` itself remains optional; once present, its runtime projection must match the declared support surface.
 
 **Runtime skill ignore contract.** `.gitignore` follows the declared `supported_runtimes`: `claude-code` requires `.claude/skills/*`; `chatgpt-codex` requires `.agents/skills/*`. Every repository re-includes the reserved canonical `.agents/skills/ki-self/` source with `!.agents/skills/ki-self/` and `!.agents/skills/ki-self/**`, regardless of the declared runtime set, so it remains trackable whenever a repository elects to author it. These rules keep bootstrap-created links out of history without excluding the canonical local source.
 
@@ -64,6 +65,12 @@ store_roles = ["notes", "sources", "legacy"]
 ```
 
 A KB must declare `ki-kb` and must not declare `ki-roadmap`: its planning model is `ki-kb-streams`. Conversely, the `ki-kb` structure declaration requires `repo_type = "kb"`. This validates operating model separately from the structural skill that implements its layout.
+
+## Repository write authority
+
+The selected repository is the sole default write target for a task. Its task-scoped files may be edited and committed under the repository’s normal workflow. A sibling repository is read-only by default, including when a trade, route, workspace, or local checkout makes it visible.
+
+A caller must explicitly authorise a bounded sibling write before it is made. That approval names the target repository and intended change; after the target and staged scope are known, every sibling commit needs its own explicit approval. A trade records a handoff and observation, never write authority. `ki-git` governs how an already authorised commit is prepared; `ki-repo` owns whether that repository may be changed.
 
 ## Working areas
 
