@@ -6,6 +6,7 @@ sender: knowledgeislands/ki-agentic-harness
 receiver: knowledgeislands/tools-ki
 kind: work
 source_ref: "KI-HARNESS-GOV-014"
+observation: decision
 ---
 # TRD-4a0f42a2: Implement trade lifecycle
 

@@ -6,6 +6,7 @@ sender: knowledgeislands/ki-agentic-harness
 receiver: knowledgeislands/tools-ki
 kind: work
 source_ref: KI-HARNESS-GOV-012
+observation: decision
 ---
 
 # TRD-9eb558c6: Render rubric remediation model

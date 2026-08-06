@@ -6,6 +6,7 @@ sender: knowledgeislands/ki-agentic-harness
 receiver: knowledgeislands/tools-ki
 kind: work
 source_ref: KI-HARNESS-GOV-013
+observation: decision
 ---
 
 # TRD-9ab83d52: Activate delegation standard

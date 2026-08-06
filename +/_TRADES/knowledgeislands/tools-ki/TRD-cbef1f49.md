@@ -6,6 +6,8 @@ sender: knowledgeislands/tools-ki
 receiver: knowledgeislands/ki-agentic-harness
 kind: work
 source_ref: "tools-ki/discussion-coverage-review"
+observation: decision
+received_from_ref: c66bea7d30be57610ef7a89150b40ed1a6cb4788
 decision_status: adopted
 rationale: 'Adopted as the recap-coverage roadmap item.'
 adopted_as: KI-HARNESS-GOV-019

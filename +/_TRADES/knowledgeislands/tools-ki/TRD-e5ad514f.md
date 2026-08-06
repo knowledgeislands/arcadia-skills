@@ -6,6 +6,8 @@ sender: knowledgeislands/tools-ki
 receiver: knowledgeislands/ki-agentic-harness
 kind: knowledge
 source_ref: KI-TOOL-CLI-019
+observation: decision
+received_from_ref: c66bea7d30be57610ef7a89150b40ed1a6cb4788
 decision_status: retained
 rationale: 'Retained in the roadmap contract as explicit cross-repository wait evidence.'
 retained_as: skills/change-management/ki-roadmap/references/standards-repository-roadmaps.md

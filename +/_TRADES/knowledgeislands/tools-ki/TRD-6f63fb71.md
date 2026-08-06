@@ -6,6 +6,8 @@ sender: knowledgeislands/tools-ki
 receiver: knowledgeislands/ki-agentic-harness
 kind: knowledge
 source_ref: KI-TOOL-CLI-019
+observation: decision
+received_from_ref: c66bea7d30be57610ef7a89150b40ed1a6cb4788
 decision_status: in_progress
 rationale: 'Consolidated into documentation-topology governance work.'
 ---
