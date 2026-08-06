@@ -1,4 +1,5 @@
 import type { RubricFamily, RubricItem } from '../../shared/rubric.ts'
+import { DIAGNOSTIC_REMEDIATION, judgment } from '../../shared/rubric.ts'
 import { type KiSkillsRubricContext, type ScriptsRubricContext, selectKiSkillsContext } from '../contexts/contexts.ts'
 
 const SCRIPT_1: RubricItem<ScriptsRubricContext> = {
@@ -6,7 +7,7 @@ const SCRIPT_1: RubricItem<ScriptsRubricContext> = {
   title: 'scripts handle expected errors',
   description: 'Scripts handle expected errors (missing file, permissions) rather than punt to the agent.',
   sources: ['BP'],
-  judgment: { prompt: 'Do scripts handle expected errors rather than punting them to an agent?' }
+  judgment: judgment('Do scripts handle expected errors rather than punting them to an agent?')
 }
 
 const SCRIPT_2: RubricItem<ScriptsRubricContext> = {
@@ -14,7 +15,7 @@ const SCRIPT_2: RubricItem<ScriptsRubricContext> = {
   title: 'scripts explain configuration values',
   description: 'No unexplained magic numbers — every config value is justified.',
   sources: ['BP'],
-  judgment: { prompt: 'Are configuration values justified rather than unexplained magic numbers?' }
+  judgment: judgment('Are configuration values justified rather than unexplained magic numbers?')
 }
 
 const SCRIPT_3: RubricItem<ScriptsRubricContext> = {
@@ -22,7 +23,7 @@ const SCRIPT_3: RubricItem<ScriptsRubricContext> = {
   title: 'runtime dependencies and MCP tools are explicit',
   description: 'Required packages are listed/verified for the runtime; MCP tools use fully-qualified `ServerName:tool_name`.',
   sources: ['BP'],
-  judgment: { prompt: 'Are runtime dependencies verified and MCP tools fully qualified?' }
+  judgment: judgment('Are runtime dependencies verified and MCP tools fully qualified?')
 }
 
 const SCRIPT_4: RubricItem<ScriptsRubricContext> = {
@@ -30,7 +31,7 @@ const SCRIPT_4: RubricItem<ScriptsRubricContext> = {
   title: 'deterministic reusable logic is pre-written',
   description: 'Deterministic, frequently-reused logic is pre-written, not regenerated each run.',
   sources: ['BP'],
-  judgment: { prompt: 'Is deterministic, frequently reused logic pre-written rather than regenerated each run?' }
+  judgment: judgment('Is deterministic, frequently reused logic pre-written rather than regenerated each run?')
 }
 
 const SCRIPT_5: RubricItem<ScriptsRubricContext> = {
@@ -38,7 +39,7 @@ const SCRIPT_5: RubricItem<ScriptsRubricContext> = {
   title: 'validation errors are actionable',
   description: 'Validation scripts are verbose — errors name the problem and the valid options.',
   sources: ['BP'],
-  judgment: { prompt: 'Do validation errors name the problem and valid options?' }
+  judgment: judgment('Do validation errors name the problem and valid options?')
 }
 
 const SCRIPT_6: RubricItem<ScriptsRubricContext> = {
@@ -46,7 +47,7 @@ const SCRIPT_6: RubricItem<ScriptsRubricContext> = {
   title: 'batch and destructive work is planned and validated first',
   description: 'Plan-validate-execute for batch/destructive ops.',
   sources: ['BP', 'COMMUNITY'],
-  judgment: { prompt: 'Do batch or destructive operations plan and validate before execution?' }
+  judgment: judgment('Do batch or destructive operations plan and validate before execution?')
 }
 
 const SCRIPT_7: RubricItem<ScriptsRubricContext> = {
@@ -55,7 +56,7 @@ const SCRIPT_7: RubricItem<ScriptsRubricContext> = {
   description:
     "Scripts installed into a target repo's `scripts/` directory are **copies**, not symlinks or out-of-repo references — the target repo must be autonomous.",
   sources: ['BP'],
-  judgment: { prompt: 'Are target-repository scripts copied rather than symlinked or referenced outside the repository?' }
+  judgment: judgment('Are target-repository scripts copied rather than symlinked or referenced outside the repository?')
 }
 
 const SCRIPT_8: RubricItem<ScriptsRubricContext> = {
@@ -66,6 +67,7 @@ const SCRIPT_8: RubricItem<ScriptsRubricContext> = {
   sources: ['AS', 'KI'],
   mechanical: {
     level: 'FAIL',
+    remediation: DIAGNOSTIC_REMEDIATION,
     heuristic: true,
     audit: {
       phase: 'INSPECT',
@@ -87,10 +89,9 @@ const SCRIPT_8: RubricItem<ScriptsRubricContext> = {
       }
     }
   },
-  judgment: {
-    prompt:
-      'Is each top-level script still a necessary, tested public command at the correct ownership boundary, with a truthful header, useful help, and expected-error handling?'
-  }
+  judgment: judgment(
+    'Is each top-level script still a necessary, tested public command at the correct ownership boundary, with a truthful header, useful help, and expected-error handling?'
+  )
 }
 
 export const SCRIPTS: RubricFamily<KiSkillsRubricContext, ScriptsRubricContext> = {

@@ -1,4 +1,5 @@
 import type { AuditOutcome, RubricFamily, RubricItem, RubricOutcomes } from '../../shared/rubric.ts'
+import { AUTOMATIC_REMEDIATION, DIAGNOSTIC_REMEDIATION, judgment } from '../../shared/rubric.ts'
 import { type KiShapeRubricContext, type KiSkillsRubricContext, selectKiSkillsContext } from '../contexts/contexts.ts'
 
 const UNIVERSAL_VERBS = ['AUDIT', 'CONFORM', 'EDUCATE', 'REFRESH', 'HELP'] as const
@@ -8,7 +9,7 @@ const KI_SHAPE_1: RubricItem<KiShapeRubricContext> = {
   title: 'standard skills resolve base bindings at runtime',
   description: 'A **standard** KI skill resolves base bindings at runtime and hard-codes **no single base**.',
   sources: ['ki-agentic-harness README', '`ki-kb`'],
-  judgment: { prompt: 'Does this standard skill resolve base bindings at runtime without hard-coding one base?' }
+  judgment: judgment('Does this standard skill resolve base bindings at runtime without hard-coding one base?')
 }
 
 const KI_SHAPE_2: RubricItem<KiShapeRubricContext> = {
@@ -19,6 +20,7 @@ const KI_SHAPE_2: RubricItem<KiShapeRubricContext> = {
   sources: ['ki-agentic-harness README', '`ki-engineering`'],
   mechanical: {
     level: 'WARN',
+    remediation: DIAGNOSTIC_REMEDIATION,
     heuristic: true,
     audit: {
       phase: 'INSPECT',
@@ -35,10 +37,9 @@ const KI_SHAPE_2: RubricItem<KiShapeRubricContext> = {
       }
     }
   },
-  judgment: {
-    prompt:
-      'Does every claimed composition have a required dependency edge, every optional augmentation the correct optional edge, and coverage-detected standards, off-ramps, and shared-module packaging remain distinct?'
-  }
+  judgment: judgment(
+    'Does every claimed composition have a required dependency edge, every optional augmentation the correct optional edge, and coverage-detected standards, off-ramps, and shared-module packaging remain distinct?'
+  )
 }
 
 const KI_SHAPE_3: RubricItem<KiShapeRubricContext> = {
@@ -49,6 +50,7 @@ const KI_SHAPE_3: RubricItem<KiShapeRubricContext> = {
   sources: ['ki-agentic-harness README', 'ADR-KI-HARNESS-SKILLS-006'],
   mechanical: {
     level: 'FAIL',
+    remediation: DIAGNOSTIC_REMEDIATION,
     audit: {
       phase: 'INSPECT',
       run: ({ skill }) => {
@@ -60,7 +62,7 @@ const KI_SHAPE_3: RubricItem<KiShapeRubricContext> = {
       }
     }
   },
-  judgment: { prompt: 'Does the explicit kind accurately match the skill’s concern and operating contract?' }
+  judgment: judgment('Does the explicit kind accurately match the skill’s concern and operating contract?')
 }
 
 const KI_SHAPE_4: RubricItem<KiShapeRubricContext> = {
@@ -69,7 +71,7 @@ const KI_SHAPE_4: RubricItem<KiShapeRubricContext> = {
   description:
     "A skill that reads the shared `.ki-config.toml` consumes and **validates only its own `[<skill>]` table** — warns on a key it doesn't recognise, advises dropping one that merely restates a default — and never inspects another skill's table. Validate down, ignore across.",
   sources: ['contract defined by `ki-repo`'],
-  judgment: { prompt: 'Does this skill validate only its own configuration table and ignore unrelated tables?' }
+  judgment: judgment('Does this skill validate only its own configuration table and ignore unrelated tables?')
 }
 
 const KI_SHAPE_5: RubricItem<KiShapeRubricContext> = {
@@ -78,7 +80,7 @@ const KI_SHAPE_5: RubricItem<KiShapeRubricContext> = {
   description:
     "A **governance skill** (one that holds a standard) exposes the universal modes **AUDIT** + **CONFORM** + **EDUCATE** + **REFRESH**. AUDIT and CONFORM run through the skill's hosted rubric; EDUCATE teaches or creates the governed artifact from that standard; REFRESH re-anchors the standard to its sources. Further modes (`OPTIMISE` to push a compliant artifact from the floor toward excellent, and operational modes like kb's note-ops) are skill-specific. Modes are named, not lettered, and ordered alphabetically in the body and `argument-hint`.",
   sources: ['ki-agentic-harness README'],
-  judgment: { prompt: 'Does this governance skill expose the universal modes with appropriate additional modes only?' }
+  judgment: judgment('Does this governance skill expose the universal modes with appropriate additional modes only?')
 }
 
 const KI_SHAPE_6: RubricItem<KiShapeRubricContext> = {
@@ -89,6 +91,7 @@ const KI_SHAPE_6: RubricItem<KiShapeRubricContext> = {
   sources: ['ki-agentic-harness README'],
   mechanical: {
     level: 'FAIL',
+    remediation: DIAGNOSTIC_REMEDIATION,
     audit: {
       phase: 'INSPECT',
       run: ({ skill }) => {
@@ -106,7 +109,7 @@ const KI_SHAPE_6: RubricItem<KiShapeRubricContext> = {
       }
     }
   },
-  judgment: { prompt: 'Does each retained reference class serve a distinct reader need, with templates and executable helpers elsewhere?' }
+  judgment: judgment('Does each retained reference class serve a distinct reader need, with templates and executable helpers elsewhere?')
 }
 
 const KI_SHAPE_7: RubricItem<KiShapeRubricContext> = {
@@ -117,6 +120,7 @@ const KI_SHAPE_7: RubricItem<KiShapeRubricContext> = {
   sources: ['standards-knowledge-islands.md §2', 'standards-rubric-authoring.md#context-and-evidence'],
   mechanical: {
     level: 'WARN',
+    remediation: DIAGNOSTIC_REMEDIATION,
     heuristic: true,
     audit: {
       phase: 'INSPECT',
@@ -135,7 +139,7 @@ const KI_SHAPE_7: RubricItem<KiShapeRubricContext> = {
       }
     }
   },
-  judgment: { prompt: 'Does a behaviour-changing skill have an appropriate always-loaded anchor that its rubric verifies?' }
+  judgment: judgment('Does a behaviour-changing skill have an appropriate always-loaded anchor that its rubric verifies?')
 }
 
 const KI_SHAPE_9: RubricItem<KiShapeRubricContext> = {
@@ -146,6 +150,7 @@ const KI_SHAPE_9: RubricItem<KiShapeRubricContext> = {
   sources: ['[Rubric authoring](standards-rubric-authoring.md)'],
   mechanical: {
     level: 'WARN',
+    remediation: DIAGNOSTIC_REMEDIATION,
     heuristic: true,
     audit: {
       phase: 'INSPECT',
@@ -162,7 +167,7 @@ const KI_SHAPE_9: RubricItem<KiShapeRubricContext> = {
       }
     }
   },
-  judgment: { prompt: 'Do remaining judgment criteria genuinely require review rather than deterministic checking?' }
+  judgment: judgment('Do remaining judgment criteria genuinely require review rather than deterministic checking?')
 }
 
 const KI_SHAPE_10: RubricItem<KiShapeRubricContext> = {
@@ -171,7 +176,7 @@ const KI_SHAPE_10: RubricItem<KiShapeRubricContext> = {
   description:
     "_A skill must not assume personal runtime configuration._ A Knowledge Islands skill is installed by any contributor, not only its author. It must not assume the user has any particular private configuration or imported topic files — plan-mode gates, house style rules, footnote conventions, workflow preferences. Any behaviour a skill requires beyond what the open spec guarantees must be **anchored in always-loaded repo context** (`CLAUDE.md`, `AGENTS.md`, or a KI-SHAPE-7-style companion hook) — not in the author's private config. Where a skill cross-checks a convention that _might_ live in personal config, it must degrade gracefully rather than silently rely on that content being present.",
   sources: ['standards-knowledge-islands.md §2'],
-  judgment: { prompt: 'Does the skill avoid assuming private personal configuration?' }
+  judgment: judgment('Does the skill avoid assuming private personal configuration?')
 }
 
 const KI_SHAPE_11: RubricItem<KiShapeRubricContext> = {
@@ -182,6 +187,7 @@ const KI_SHAPE_11: RubricItem<KiShapeRubricContext> = {
   sources: ['ADR-KI-HARNESS-SKILLS-001'],
   mechanical: {
     level: 'FAIL',
+    remediation: AUTOMATIC_REMEDIATION,
     audit: {
       phase: 'INSPECT',
       run: ({ skill }) => {
@@ -222,6 +228,7 @@ const KI_SHAPE_12: RubricItem<KiShapeRubricContext> = {
   sources: ['ADR-KI-HARNESS-SKILLS-001', 'ADR-KI-HARNESS-SKILLS-006', 'ADR-KI-HARNESS-007'],
   mechanical: {
     level: 'WARN',
+    remediation: AUTOMATIC_REMEDIATION,
     audit: { phase: 'INSPECT', run: auditKiShape12 },
     conform: {
       phase: 'PRIMARY',
@@ -242,6 +249,7 @@ const KI_SHAPE_13: RubricItem<KiShapeRubricContext> = {
   sources: ['ADR-KI-HARNESS-SKILLS-001'],
   mechanical: {
     level: 'WARN',
+    remediation: DIAGNOSTIC_REMEDIATION,
     audit: {
       phase: 'INSPECT',
       run: ({ skill }) => {
@@ -286,6 +294,7 @@ const KI_SHAPE_14: RubricItem<KiShapeRubricContext> = {
   sources: ['ADR-KI-HARNESS-SKILLS-001', 'ADR-KI-HARNESS-SKILLS-006'],
   mechanical: {
     level: 'WARN',
+    remediation: DIAGNOSTIC_REMEDIATION,
     audit: {
       phase: 'INSPECT',
       run: ({ skill }) => {
@@ -338,6 +347,7 @@ const KI_SHAPE_15: RubricItem<KiShapeRubricContext> = {
   sources: ['standards-knowledge-islands.md §2', 'ADR-KI-HARNESS-007'],
   mechanical: {
     level: 'FAIL',
+    remediation: DIAGNOSTIC_REMEDIATION,
     audit: { phase: 'INSPECT', run: auditKiShape15 }
   }
 }
@@ -350,6 +360,7 @@ const KI_SHAPE_16: RubricItem<KiShapeRubricContext> = {
   sources: ['KI'],
   mechanical: {
     level: 'WARN',
+    remediation: DIAGNOSTIC_REMEDIATION,
     heuristic: true,
     audit: {
       phase: 'INSPECT',
@@ -376,7 +387,7 @@ const KI_SHAPE_16: RubricItem<KiShapeRubricContext> = {
       }
     }
   },
-  judgment: { prompt: 'Do all governed target-file reads and session proposals carry the appropriate ownership declaration?' }
+  judgment: judgment('Do all governed target-file reads and session proposals carry the appropriate ownership declaration?')
 }
 
 const KI_SHAPE_17: RubricItem<KiShapeRubricContext> = {
@@ -387,6 +398,7 @@ const KI_SHAPE_17: RubricItem<KiShapeRubricContext> = {
   sources: ['ADR-KI-HARNESS-SKILLS-006'],
   mechanical: {
     level: 'FAIL',
+    remediation: DIAGNOSTIC_REMEDIATION,
     audit: {
       phase: 'INSPECT',
       run: ({ skill }) => {
@@ -419,6 +431,7 @@ const KI_SHAPE_18: RubricItem<KiShapeRubricContext> = {
   sources: ['standards-knowledge-islands.md §2'],
   mechanical: {
     level: 'FAIL',
+    remediation: DIAGNOSTIC_REMEDIATION,
     audit: {
       phase: 'INSPECT',
       run: ({ skill }) => {

@@ -1,4 +1,5 @@
 import type { RubricFamily, RubricItem } from '../../shared/rubric.ts'
+import { AUTOMATIC_REMEDIATION, DIAGNOSTIC_REMEDIATION, judgment } from '../../shared/rubric.ts'
 import { type KiSkillsRubricContext, type LayoutRubricContext, selectKiSkillsContext } from '../contexts/contexts.ts'
 
 const hasBackslashLink = (markdown: string): boolean => /\[[^\]]*\]\([^)]*\\[^)]*\)/.test(markdown)
@@ -14,6 +15,7 @@ const LAY_1: RubricItem<LayoutRubricContext> = {
   sources: ['SPEC', 'CC'],
   mechanical: {
     level: 'FAIL',
+    remediation: DIAGNOSTIC_REMEDIATION,
     audit: {
       phase: 'INSPECT',
       run: ({ missingSkillRoot, noSkillsFound }) => {
@@ -32,6 +34,7 @@ const LAY_2: RubricItem<LayoutRubricContext> = {
   sources: ['SPEC', 'CC'],
   mechanical: {
     level: 'FAIL',
+    remediation: DIAGNOSTIC_REMEDIATION,
     audit: {
       phase: 'INSPECT',
       run: ({ standaloneMarkdownFile }) =>
@@ -50,6 +53,7 @@ const LAY_3: RubricItem<LayoutRubricContext> = {
   sources: ['SPEC', 'KI'],
   mechanical: {
     level: 'FAIL',
+    remediation: DIAGNOSTIC_REMEDIATION,
     audit: {
       phase: 'INSPECT',
       run: ({ supportDirectories }) => {
@@ -75,6 +79,7 @@ const LAY_4: RubricItem<LayoutRubricContext> = {
   sources: ['BP'],
   mechanical: {
     level: 'FAIL',
+    remediation: AUTOMATIC_REMEDIATION,
     audit: {
       phase: 'INSPECT',
       run: ({ markdown }) => {
@@ -100,7 +105,7 @@ const LAY_5: RubricItem<LayoutRubricContext> = {
   title: 'reference chains are shallow',
   description: 'Reference files are **one level deep** from `SKILL.md` — no nested chains (SKILL → a → b → c).',
   sources: ['BP', 'SPEC'],
-  judgment: { prompt: 'Are supporting files one level deep from SKILL.md, without nested reference chains?' }
+  judgment: judgment('Are supporting files one level deep from SKILL.md, without nested reference chains?')
 }
 
 const LAY_6: RubricItem<LayoutRubricContext> = {
@@ -108,7 +113,7 @@ const LAY_6: RubricItem<LayoutRubricContext> = {
   title: 'supporting files are named by their content',
   description: 'Supporting files are named by content (`form-validation-rules.md`, not `doc2.md`).',
   sources: ['BP'],
-  judgment: { prompt: 'Do supporting file names clearly describe their contents?' }
+  judgment: judgment('Do supporting file names clearly describe their contents?')
 }
 
 export const LAYOUT: RubricFamily<KiSkillsRubricContext, LayoutRubricContext> = {

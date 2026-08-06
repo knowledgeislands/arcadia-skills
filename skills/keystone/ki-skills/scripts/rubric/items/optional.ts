@@ -1,4 +1,5 @@
 import type { RubricFamily, RubricItem } from '../../shared/rubric.ts'
+import { DIAGNOSTIC_REMEDIATION, judgment } from '../../shared/rubric.ts'
 import { type KiSkillsRubricContext, type OptionalRubricContext, selectKiSkillsContext } from '../contexts/contexts.ts'
 
 const COMPATIBILITY_MIN_LENGTH = 1
@@ -11,6 +12,7 @@ const OPT_1: RubricItem<OptionalRubricContext> = {
   sources: ['SPEC'],
   mechanical: {
     level: 'FAIL',
+    remediation: DIAGNOSTIC_REMEDIATION,
     audit: {
       phase: 'INSPECT',
       run: ({ compatibility }) => {
@@ -35,6 +37,7 @@ const OPT_2: RubricItem<OptionalRubricContext> = {
   sources: ['SPEC'],
   mechanical: {
     level: 'FAIL',
+    remediation: DIAGNOSTIC_REMEDIATION,
     audit: {
       phase: 'INSPECT',
       run: ({ metadataPresent, metadata }) => {
@@ -57,6 +60,7 @@ const OPT_3: RubricItem<OptionalRubricContext> = {
   sources: ['SPEC', 'CC'],
   mechanical: {
     level: 'FAIL',
+    remediation: DIAGNOSTIC_REMEDIATION,
     audit: {
       phase: 'INSPECT',
       run: ({ allowedToolsPresent, allowedTools, disallowedToolsPresent, disallowedTools }) => {
@@ -80,6 +84,7 @@ const OPT_4: RubricItem<OptionalRubricContext> = {
   sources: ['SPEC'],
   mechanical: {
     level: 'FAIL',
+    remediation: DIAGNOSTIC_REMEDIATION,
     audit: {
       phase: 'INSPECT',
       run: ({ licensePresent, license }) => {
@@ -150,7 +155,7 @@ const OPT_5: RubricItem<OptionalRubricContext> = {
   title: 'runtime-specific fields are flagged where portability matters',
   description: 'CC-only fields are flagged when cross-platform portability matters (see ※3).',
   sources: ['CC'],
-  judgment: { prompt: 'Where cross-platform portability matters, are runtime-specific fields clearly identified?' }
+  judgment: judgment('Where cross-platform portability matters, are runtime-specific fields clearly identified?')
 }
 
 const OPT_6: RubricItem<OptionalRubricContext> = {
@@ -158,7 +163,7 @@ const OPT_6: RubricItem<OptionalRubricContext> = {
   title: 'manually timed side effects disable model invocation',
   description: 'Side-effecting / manually-timed workflows set `disable-model-invocation: true` (contrast `user-invocable: false`).',
   sources: ['CC'],
-  judgment: { prompt: 'Do side-effecting or manually timed workflows set disable-model-invocation: true where appropriate?' }
+  judgment: judgment('Do side-effecting or manually timed workflows set disable-model-invocation: true where appropriate?')
 }
 
 const OPT_7: RubricItem<OptionalRubricContext> = {
@@ -166,7 +171,7 @@ const OPT_7: RubricItem<OptionalRubricContext> = {
   title: 'discrete modes have an ordered argument hint',
   description: 'A skill with discrete modes sets `argument-hint`; modes are **named** (not lettered) and **alphabetically ordered**.',
   sources: ['CC', 'COMMUNITY'],
-  judgment: { prompt: 'Where the skill has discrete modes, are they named and alphabetically ordered in argument-hint?' }
+  judgment: judgment('Where the skill has discrete modes, are they named and alphabetically ordered in argument-hint?')
 }
 
 export const OPTIONAL: RubricFamily<KiSkillsRubricContext, OptionalRubricContext> = {

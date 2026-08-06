@@ -1,4 +1,5 @@
 import type { RubricFamily, RubricItem } from '../../shared/rubric.ts'
+import { DIAGNOSTIC_REMEDIATION } from '../../shared/rubric.ts'
 import { type KiSkillsRubricContext, type PortabilityRubricContext, selectKiSkillsContext } from '../contexts/contexts.ts'
 import { unqualifiedRuntimeAssumptions } from '../contexts/portability.ts'
 
@@ -10,6 +11,7 @@ const PORT_1: RubricItem<PortabilityRubricContext> = {
   sources: ['KI'],
   mechanical: {
     level: 'FAIL',
+    remediation: DIAGNOSTIC_REMEDIATION,
     audit: {
       phase: 'INSPECT',
       run: (context) => {

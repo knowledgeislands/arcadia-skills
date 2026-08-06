@@ -1,4 +1,5 @@
 import type { RubricFamily, RubricItem } from '../../shared/rubric.ts'
+import { DIAGNOSTIC_REMEDIATION, judgment } from '../../shared/rubric.ts'
 import { type KiCheckerRubricContext, type KiSkillsRubricContext, selectKiSkillsContext } from '../contexts/contexts.ts'
 
 const KI_CHECKER_1: RubricItem<KiCheckerRubricContext> = {
@@ -7,9 +8,7 @@ const KI_CHECKER_1: RubricItem<KiCheckerRubricContext> = {
   description:
     '`ki repo audit` and `ki repo conform` pass the repository root to `createSession`. The skill discovers only its governed subjects beneath that root and represents an absent scope explicitly with `NOT_APPLICABLE`; it does not reinterpret the root as its content directory, scan unrelated files, or claim a vacuous pass.',
   sources: ['standards-rubric-authoring.md#context-and-evidence', 'standards-rubric-authoring.md#host-and-session-boundary'],
-  judgment: {
-    prompt: 'Does the rubric session discover only its governed subjects and represent an absent scope explicitly?'
-  }
+  judgment: judgment('Does the rubric session discover only its governed subjects and represent an absent scope explicitly?')
 }
 
 const KI_CHECKER_2: RubricItem<KiCheckerRubricContext> = {
@@ -20,6 +19,7 @@ const KI_CHECKER_2: RubricItem<KiCheckerRubricContext> = {
   sources: ['KI'],
   mechanical: {
     level: 'FAIL',
+    remediation: DIAGNOSTIC_REMEDIATION,
     audit: {
       phase: 'INSPECT',
       run: ({ imports }) => {
@@ -44,6 +44,7 @@ const KI_CHECKER_3: RubricItem<KiCheckerRubricContext> = {
   sources: ['ADR-KI-HARNESS-SKILLS-012'],
   mechanical: {
     level: 'FAIL',
+    remediation: DIAGNOSTIC_REMEDIATION,
     audit: {
       phase: 'INSPECT',
       run: ({ rootSkill, declaredSharedModules, sharedDependencies, rubricModuleExists }) => {
@@ -80,6 +81,7 @@ const KI_CHECKER_4: RubricItem<KiCheckerRubricContext> = {
   sources: ['standards-rubric-authoring.md#rubric-families-and-items'],
   mechanical: {
     level: 'FAIL',
+    remediation: DIAGNOSTIC_REMEDIATION,
     audit: {
       phase: 'INSPECT',
       run: ({ structuredRubricRequired, itemsIndexExists, itemsIndexDefinesRules, familyModules }) => {
@@ -127,6 +129,7 @@ const KI_CHECKER_5: RubricItem<KiCheckerRubricContext> = {
   sources: ['KI'],
   mechanical: {
     level: 'FAIL',
+    remediation: DIAGNOSTIC_REMEDIATION,
     audit: {
       phase: 'INSPECT',
       run: ({ declaredSharedModules, legacyLibPresent, presentSharedModules, sharedDependencies }) => {

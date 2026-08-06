@@ -1,4 +1,5 @@
 import type { RubricFamily, RubricItem } from '../../shared/rubric.ts'
+import { AUTOMATIC_REMEDIATION, DIAGNOSTIC_REMEDIATION, judgment } from '../../shared/rubric.ts'
 import { type KiSkillsRubricContext, type NameRubricContext, selectKiSkillsContext } from '../contexts/contexts.ts'
 import { containsXmlTag } from '../contexts/text.ts'
 
@@ -12,6 +13,7 @@ const NAME_1: RubricItem<NameRubricContext> = {
   sources: ['SPEC', 'CC'],
   mechanical: {
     level: 'FAIL',
+    remediation: DIAGNOSTIC_REMEDIATION,
     audit: {
       phase: 'INSPECT',
       run: ({ name }) => (!name ? [{ status: 'VIOLATION', message: '`name` is missing from frontmatter' }] : [{ status: 'PASS', message: 'name is present' }])
@@ -26,6 +28,7 @@ const NAME_2: RubricItem<NameRubricContext> = {
   sources: ['SPEC', 'BP'],
   mechanical: {
     level: 'FAIL',
+    remediation: DIAGNOSTIC_REMEDIATION,
     audit: {
       phase: 'INSPECT',
       run: ({ name }) =>
@@ -45,6 +48,7 @@ const NAME_3: RubricItem<NameRubricContext> = {
   sources: ['SPEC', 'BP'],
   mechanical: {
     level: 'FAIL',
+    remediation: DIAGNOSTIC_REMEDIATION,
     audit: {
       phase: 'INSPECT',
       run: ({ name }) =>
@@ -64,6 +68,7 @@ const NAME_4: RubricItem<NameRubricContext> = {
   sources: ['SPEC'],
   mechanical: {
     level: 'FAIL',
+    remediation: DIAGNOSTIC_REMEDIATION,
     audit: {
       phase: 'INSPECT',
       run: ({ name }) =>
@@ -84,6 +89,7 @@ const NAME_5: RubricItem<NameRubricContext> = {
   sources: ['SPEC'],
   mechanical: {
     level: 'FAIL',
+    remediation: AUTOMATIC_REMEDIATION,
     audit: {
       phase: 'INSPECT',
       run: ({ name, directoryName, localGovernanceSource }) =>
@@ -117,6 +123,7 @@ const NAME_6: RubricItem<NameRubricContext> = {
   sources: ['BP', 'KI'],
   mechanical: {
     level: 'FAIL',
+    remediation: DIAGNOSTIC_REMEDIATION,
     audit: {
       phase: 'INSPECT',
       run: ({ name, reservedVendorNameAllowed }) => {
@@ -145,7 +152,7 @@ const NAME_7: RubricItem<NameRubricContext> = {
   title: 'name is specific rather than generic',
   description: '`name` is specific, not generic (avoid `helper`, `utils`, `tools`, `data`).',
   sources: ['BP'],
-  judgment: { prompt: 'Is this name concrete and appropriately scoped for the capability it governs?' }
+  judgment: judgment('Is this name concrete and appropriately scoped for the capability it governs?')
 }
 
 export const NAME: RubricFamily<KiSkillsRubricContext, NameRubricContext> = {

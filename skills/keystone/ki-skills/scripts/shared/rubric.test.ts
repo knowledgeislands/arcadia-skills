@@ -1,7 +1,17 @@
 #!/usr/bin/env bun
 /** Focused contract tests for the generic structured-rubric model and catalogue. */
 import { describe, expect, test } from 'bun:test'
-import { defineRubricFamily, OUTCOME_STATUSES, RUBRIC_PHASES, type RubricDefinition, type RubricItem, rubricTypes, VIOLATION_LEVELS } from './rubric.ts'
+import {
+  AUTOMATIC_REMEDIATION,
+  defineRubricFamily,
+  judgment,
+  OUTCOME_STATUSES,
+  RUBRIC_PHASES,
+  type RubricDefinition,
+  type RubricItem,
+  rubricTypes,
+  VIOLATION_LEVELS
+} from './rubric.ts'
 
 type RootContext = {
   document: { present: boolean }
@@ -15,6 +25,7 @@ const hybrid: RubricItem<RootContext['document']> = {
   sources: ['STANDARD §1'],
   mechanical: {
     level: 'FAIL',
+    remediation: AUTOMATIC_REMEDIATION,
     audit: {
       phase: 'INSPECT',
       run: ({ present }) => [{ status: present ? 'PASS' : 'VIOLATION', message: present ? 'document is present' : 'document is absent' }]
@@ -24,7 +35,7 @@ const hybrid: RubricItem<RootContext['document']> = {
       run: () => {}
     }
   },
-  judgment: { prompt: 'Does the document explain its subject usefully?' }
+  judgment: judgment('Does the document explain its subject usefully?')
 }
 
 const documentFamily = defineRubricFamily<RootContext, RootContext['document']>({
@@ -48,7 +59,7 @@ const proseFamily = defineRubricFamily<RootContext, RootContext['prose']>({
       title: 'prose is readable',
       description: 'The prose is readable for its intended audience.',
       sources: ['STANDARD §2'],
-      judgment: { prompt: 'Is the prose readable for its intended audience?' }
+      judgment: judgment('Is the prose readable for its intended audience?')
     }
   ]
 })

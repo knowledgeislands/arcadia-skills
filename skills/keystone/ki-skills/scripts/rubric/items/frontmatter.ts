@@ -1,4 +1,5 @@
 import type { RubricFamily, RubricItem } from '../../shared/rubric.ts'
+import { DIAGNOSTIC_REMEDIATION } from '../../shared/rubric.ts'
 import { type FrontmatterRubricContext, type KiSkillsRubricContext, selectKiSkillsContext } from '../contexts/contexts.ts'
 
 const FM_1: RubricItem<FrontmatterRubricContext> = {
@@ -8,6 +9,7 @@ const FM_1: RubricItem<FrontmatterRubricContext> = {
   sources: ['SPEC', 'CC'],
   mechanical: {
     level: 'FAIL',
+    remediation: DIAGNOSTIC_REMEDIATION,
     audit: {
       phase: 'INSPECT',
       run: ({ hasBlock, isMapping }) => {
