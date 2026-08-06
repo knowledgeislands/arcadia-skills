@@ -15,6 +15,7 @@ const SHELL_LINT: RubricItem<ShellToolsContext> = {
   sources: SOURCE,
   mechanical: {
     level: 'WARN',
+    remediation: { class: 'diagnostic', guidance: 'Add or correct the shellcheck CI evidence through the repository’s maintained workflow.' },
     audit: {
       phase: 'INSPECT',
       run: (context) => {
@@ -38,6 +39,7 @@ const SHELL_TEST: RubricItem<ShellToolsContext> = {
   sources: SOURCE,
   mechanical: {
     level: 'WARN',
+    remediation: { class: 'diagnostic', guidance: 'Add or correct the Bats suite and CI evidence through the repository’s maintained test workflow.' },
     audit: {
       phase: 'INSPECT',
       run: (context) => {

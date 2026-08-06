@@ -16,7 +16,11 @@ const mechanical = (
   title,
   description,
   sources: SOURCE,
-  mechanical: { level, audit: { phase: 'INSPECT', run } }
+  mechanical: {
+    level,
+    remediation: { class: 'diagnostic', guidance: 'Correct the evidenced tool-repository issue through the responsible maintainer; hosted conform does not infer tool, release, or documentation semantics.' },
+    audit: { phase: 'INSPECT', run }
+  }
 })
 
 const judgment = (code: string, title: string, description: string): RubricItem<ToolRepositoryContext> => ({
@@ -24,7 +28,12 @@ const judgment = (code: string, title: string, description: string): RubricItem<
   title,
   description,
   sources: SOURCE,
-  judgment: { prompt: description }
+  judgment: {
+    scope: 'The target command-line tool repository and the evidence named by this criterion.',
+    prompt: description,
+    outcomes: ['conforming', 'gap', 'exclusion'],
+    guidance: 'Revise the tool repository through its responsible maintainer, record a named gap, or record an explicit justified exclusion.'
+  }
 })
 
 const notApplicable = (context: ToolRepositoryContext): readonly AuditOutcome[] | null =>
@@ -59,6 +68,7 @@ const TOOL_EXEC: RubricItem<ToolRepositoryContext> = {
   sources: SOURCE,
   mechanical: {
     level: 'FAIL',
+    remediation: { class: 'automatic' },
     audit: {
       phase: 'INSPECT',
       run: (context) => {
@@ -98,6 +108,7 @@ const TOOL_INSTALL: RubricItem<ToolRepositoryContext> = {
   sources: SOURCE,
   mechanical: {
     level: 'WARN',
+    remediation: { class: 'automatic' },
     audit: {
       phase: 'INSPECT',
       run: (context) => {

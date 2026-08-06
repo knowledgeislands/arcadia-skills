@@ -10,6 +10,7 @@ const LANG_DEFER: RubricItem<LanguageToolsContext> = {
   sources: [STANDARD],
   mechanical: {
     level: 'WARN',
+    remediation: { class: 'diagnostic', guidance: 'Route package toolchain concerns to ki-engineering; this tool rubric does not infer language-specific lint or test changes.' },
     audit: {
       phase: 'INSPECT',
       run: (context) => {
