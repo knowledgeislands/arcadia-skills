@@ -3,7 +3,7 @@ id: KI-HARNESS-GOV-014
 title: Add trade operations
 theme: governance-consistency
 horizon: now
-status: in-progress
+status: awaiting-review
 blocks: []
 blocked-by: []
 baseline-ref: a30b91707f7460a7bbcc8d5f4ee608594f8824aa
@@ -62,7 +62,7 @@ Promote when the lifecycle, observation policies, route guards, raw-byte copy ru
 
 ## Current state
 
-The Harness contract, process guidance, route guards, formatter boundary, and roadmap integration are implemented and verified. `observation` is mandatory: active records are migrated in matched sender and receiver copies, while terminal release-eligible records follow normal sender release and receiver pruning. The receiver-owned host implementation is submitted to `tools-ki` as [TRD-4a0f42a2](../../-/_TRADES/knowledgeislands/tools-ki/TRD-4a0f42a2.md); this item cannot complete its end-to-end evidence until that work is observable.
+The Harness contract, process guidance, route guards, formatter boundary, and roadmap integration are implemented and verified. `observation` is mandatory: active records were migrated in matched sender and receiver copies, while terminal release-eligible records followed normal sender release and receiver pruning. `tools-ki` now implements and documents the host lifecycle with end-to-end CLI fixtures.
 
 ## Steps
 
@@ -71,7 +71,7 @@ The Harness contract, process guidance, route guards, formatter boundary, and ro
 - [x] Add the `ki-trade` process skill, `ki-next` disposition rules, and roadmap `waiting-on-trades` field without extending local work-item dependency arrays.
 - [x] Specify host `prepare`, `observe`, `submit`, `abandon`, exact `receive`, release, prune, and route commands, with local observation cursors and no peer write.
 - [x] Submit one bounded work trade to `tools-ki` for host implementation, including route mutation guards, committed-ref observation, command migration, byte preservation, and fixtures.
-- [ ] Prove preparation observation, receipt, each observation policy, terminal disposition, sender release, receiver pruning, direct application, no-history fallback, and every no-write route failure.
+- [x] Prove preparation observation, receipt, each observation policy, terminal disposition, sender release, receiver pruning, direct application, no-history fallback, and every no-write route failure.
 
 ## Files touched
 
@@ -143,7 +143,7 @@ This item is independently shapeable. A `tools-ki` implementation item is requir
 - **Verify:** Orchestrator runs focused audits and checks every named owner.
 - **Checkpoint:** Stop before writing any shared standard.
 
-## Discussion
+## Review
 
 ### Governance and operation split
 
@@ -161,6 +161,36 @@ A committed preparation is visible to a willing receiver through its registered 
 
 Receipt means only that an inbound copy exists; it does not mean review, adoption, retention, or completion. `ki-next` records human-confirmed receiver disposition. Any adopted work follows the local roadmap lifecycle, while `applied` preserves a verified direct local update without inventing a roadmap item.
 
+### Delivery review
+
+### Delivered
+
+The strict observation contract, immutable-record boundary, local trade process, and `tools-ki` host lifecycle are delivered across every participating repository.
+
+### Summary of changes
+
+`observation` is mandatory for every submitted record. Active submissions were migrated with their matched receiver copies and committed receipt references. Resolved submissions were released by their senders then pruned by their receivers. The host now implements preparation, observation, submission, exact receipt, policy-aware release and prune, route guards, and public command guidance.
+
+### Verification
+
+- Harness: `bun run test` (286 passing), `bunx tsc --noEmit`, and `ki repo audit --skill ki-trades --repo .`
+- tools-ki: `bun run test` (495 passing), TypeScript, trade and Feature Definitions audits, and public command inventory fixtures
+- Fleet: `ki repo audit --skill ki-trades` passes for Harness, tools-ki, tools-mgit, and ki-website
+
+### Outstanding concerns
+
+None for this bounded lifecycle rollout. Future trade work can use the strict mandatory-observation contract directly.
+
+### Post-change review
+
+Ready for explicit user acceptance.
+
+### Mini recap
+
+The migration confirmed that release and receiver pruning are the correct path for terminal immutable submissions; no persistent compatibility rule is required.
+
+## Discussion
+
 ### Consolidated submissions
 
-This item adopts [TRD-27279159](../../+/_TRADES/knowledgeislands/tools-ki/TRD-27279159.md), [TRD-2f417537](../../+/_TRADES/knowledgeislands/tools-ki/TRD-2f417537.md), [TRD-e5ad514f](../../+/_TRADES/knowledgeislands/tools-ki/TRD-e5ad514f.md), [TRD-0f0b10a2](../../+/_TRADES/knowledgeislands/tools-mgit/TRD-0f0b10a2.md), [TRD-43b5c5e6](../../+/_TRADES/knowledgeislands/tools-mgit/TRD-43b5c5e6.md), and [TRD-67a0c878](../../+/_TRADES/knowledgeislands/tools-mgit/TRD-67a0c878.md).
+The six retained knowledge submissions were incorporated into the contract and process guidance, then released and pruned through the lifecycle once their sender observation condition was satisfied.
