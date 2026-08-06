@@ -3,7 +3,7 @@ type: ki-checkpoint
 thread: rubric-v1-migration
 state: active
 created_at: 2026-08-06T21:04:16Z
-updated_at: 2026-08-06T21:51:13Z
+updated_at: 2026-08-06T21:59:18Z
 ---
 
 # rubric-v1-migration
@@ -14,9 +14,9 @@ Migrate every Harness rubric catalogue to the strict `contract: 1` remediation a
 
 ## Current state
 
-26 of 36 catalogues are committed. The latest three are `ki-tokenomics` (`a9e91225`), `ki-tokenomics-claude` (`4cf701b4`), and `ki-tokenomics-codex` (`d1aadb10`).
+All 36 rubric catalogues are committed to the strict v1 evidence contract. The final five commits are `a5d0b5bc` (Claude housekeeping), `5cf673a9` (Homebrew tap), `a925542d` (tools), `a8696d10` (website), and `6c5070a1` (website Cloudflare).
 
-The active rolling lanes are `ki-kb`, `ki-kb-activities`, and `ki-kb-live-artifacts`. Each worker edits and verifies one skill, leaves it unstaged, and reports exact paths; the orchestrator commits each verified skill through a unique temporary `GIT_INDEX_FILE` and serialises `HEAD` updates.
+The strict-v1 migration and compatibility cleanup are complete. `ki-tools` (`e9d77f85`), `ki-website-cloudflare` (`b0324d45`), and `ki-subagents` (`6910f1a9`) now declare required metadata at source; `ki-delegation` removed its obsolete heading normalizer in `d79aa32e`.
 
 ## Decisions made
 
@@ -39,7 +39,8 @@ The active rolling lanes are `ki-kb`, `ki-kb-activities`, and `ki-kb-live-artifa
 
 - None for the v1 contract. Remaining catalogue classifications should follow the established exemplars and escalate only a genuine mixed-remediation criterion that needs splitting.
 - The 120-column formatting item is planned, not yet implemented.
+- None. The residual scan found no executable rubric-v1 metadata fallback or enrichment path.
 
 ## Next step
 
-Collect and serialise the three active Knowledge Base migrations, then immediately dispatch the next three unmigrated catalogues. Update this checkpoint after every three skill commits, after any shared gate failure, and immediately before any context compaction or hand-off. A fresh agent resumes by reading this exact file, checking `git status`, and running `git log --grep='migrate .* evidence'`.
+Run the final combined gates after the current local `tools-ki` progress-refactor work is committed or its Bun cache is disabled. A fresh agent resumes by reading this exact file, checking `git status`, and running `git log --grep='migrate .* evidence'`.
