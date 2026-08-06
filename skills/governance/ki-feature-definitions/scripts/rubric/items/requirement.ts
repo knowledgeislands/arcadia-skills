@@ -14,6 +14,7 @@ const REQ_1: RubricItem<FeatureRequirementContext> = {
   sources: [SOURCE],
   mechanical: {
     level: 'FAIL',
+    remediation: { class: 'diagnostic', guidance: 'Rewrite the affected requirement with the intended RFC-2119 keyword, then rerun the audit.' },
     audit: {
       phase: 'INSPECT',
       run: (context) =>

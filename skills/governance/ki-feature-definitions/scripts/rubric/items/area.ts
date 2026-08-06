@@ -14,6 +14,7 @@ const AREA_1: RubricItem<FeatureAreaContext> = {
   sources: [SOURCE],
   mechanical: {
     level: 'WARN',
+    remediation: { class: 'diagnostic', guidance: 'Register the missing area file or correct the areas table, then rerun the audit.' },
     audit: {
       phase: 'INSPECT',
       run: (context) =>
@@ -36,6 +37,7 @@ const AREA_2: RubricItem<FeatureAreaContext> = {
   sources: [SOURCE],
   mechanical: {
     level: 'WARN',
+    remediation: { class: 'diagnostic', guidance: 'Add the area file to the appropriate areas table, then rerun the audit.' },
     audit: {
       phase: 'INSPECT',
       run: (context) =>

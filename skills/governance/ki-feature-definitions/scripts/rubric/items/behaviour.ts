@@ -9,8 +9,11 @@ const BEHAVIOUR_1: RubricItem<FeatureJudgmentContext> = {
   description: 'A requirement describes behaviour rather than rationale or procedure.',
   sources: [SOURCE],
   judgment: {
+    scope: 'Every numbered requirement and its linked Decision Records or guides.',
     prompt:
-      'Assess whether each requirement describes behaviour rather than rationale or procedure; move reasoning to a Decision Record and operational instruction to a guide.'
+      'Assess whether each requirement describes behaviour rather than rationale or procedure; move reasoning to a Decision Record and operational instruction to a guide.',
+    outcomes: ['conforming', 'gap', 'exclusion'],
+    guidance: 'Rewrite a non-behavioural requirement, move its reasoning or procedure to the appropriate artifact, or record an explicit area-level exclusion.'
   }
 }
 

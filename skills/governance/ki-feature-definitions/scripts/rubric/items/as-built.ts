@@ -9,7 +9,10 @@ const AS_BUILT_1: RubricItem<FeatureJudgmentContext> = {
   description: 'Numbered requirements are true of the system today; aspirational behaviour belongs in `## Gaps`.',
   sources: [SOURCE],
   judgment: {
-    prompt: 'Assess whether each numbered requirement is true of the system today and move aspirational or not-yet-built behaviour to `## Gaps`.'
+    scope: 'Every numbered requirement and the current system behaviour it claims.',
+    prompt: 'Assess whether each numbered requirement is true of the system today and move aspirational or not-yet-built behaviour to `## Gaps`.',
+    outcomes: ['conforming', 'gap', 'exclusion'],
+    guidance: 'Move unbuilt behaviour to a named Gap or record why the area is explicitly excluded from the review.'
   }
 }
 

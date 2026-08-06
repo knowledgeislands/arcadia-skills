@@ -10,6 +10,7 @@ const INDEX_1: RubricItem<FeatureIndexContext> = {
   sources: [SOURCE],
   mechanical: {
     level: 'FAIL',
+    remediation: { class: 'diagnostic', guidance: 'Create the Feature Definitions index with an authoritative areas table, then rerun the audit.' },
     audit: {
       phase: 'INSPECT',
       run: (context) => [
@@ -28,6 +29,7 @@ const INDEX_2: RubricItem<FeatureIndexContext> = {
   sources: [SOURCE],
   mechanical: {
     level: 'FAIL',
+    remediation: { class: 'diagnostic', guidance: 'Add a populated Prefix and File areas table to the index, then rerun the audit.' },
     audit: {
       phase: 'INSPECT',
       run: (context) => [
