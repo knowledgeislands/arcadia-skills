@@ -30,3 +30,14 @@ test('the catalogue entrypoint and family module keep their public surfaces narr
   expect(Object.keys(await import('./index.ts'))).toEqual(['default'])
   expect(Object.keys(await import('./activities.ts'))).toEqual(['ACT'])
 })
+
+test('criteria expose complete v1 remediation and review metadata', () => {
+  const items = definition.families.flatMap((family) => family.items)
+  const mechanical = items.filter((item) => item.mechanical)
+  const judgment = items.filter((item) => item.judgment)
+
+  expect(mechanical).toHaveLength(12)
+  expect(mechanical.every((item) => item.mechanical?.remediation)).toBe(true)
+  expect(judgment).toHaveLength(6)
+  expect(judgment.every((item) => item.judgment?.scope && item.judgment.outcomes.length && item.judgment.guidance)).toBe(true)
+})

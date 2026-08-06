@@ -34,6 +34,7 @@ const ACT_S_1: RubricItem<ActivitiesContext> = {
   sources: [SOURCE],
   mechanical: {
     level: 'WARN',
+    remediation: { class: 'automatic' },
     audit: {
       phase: 'INSPECT',
       run: (context) => {
@@ -81,7 +82,12 @@ const ACT_S_1: RubricItem<ActivitiesContext> = {
       }
     }
   },
-  judgment: { prompt: 'Is the index current, well ordered, and informative rather than merely mechanically complete?' }
+  judgment: {
+    scope: 'The Activities index, its note entries, ordering, and reader-facing descriptions.',
+    prompt: 'Is the index current, well ordered, and informative rather than merely mechanically complete?',
+    outcomes: ['conforming', 'index revision required', 'index structure decision required'],
+    guidance: 'Revise the index ordering or descriptions so a reader can understand and navigate the active activity set; record a structure decision for a material reorganisation.'
+  }
 }
 
 const ACT_S_2: RubricItem<ActivitiesContext> = {
@@ -91,6 +97,10 @@ const ACT_S_2: RubricItem<ActivitiesContext> = {
   sources: [SOURCE],
   mechanical: {
     level: 'FAIL',
+    remediation: {
+      class: 'diagnostic',
+      guidance: 'Correct activities_dir so it resolves safely beneath the selected base, or repair the unsafe collection entry without following links.'
+    },
     audit: {
       phase: 'PREPARE',
       run: (context) => {
@@ -137,6 +147,10 @@ const ACT_S_3: RubricItem<ActivitiesContext> = {
   sources: [SOURCE],
   mechanical: {
     level: 'WARN',
+    remediation: {
+      class: 'diagnostic',
+      guidance: 'Remove or document unsupported configuration keys after confirming the activity collection contract they were intended to express.'
+    },
     audit: {
       phase: 'INSPECT',
       run: (context) => {
@@ -168,6 +182,10 @@ const ACT_F_1: RubricItem<ActivitiesContext> = {
   sources: [SOURCE],
   mechanical: {
     level: 'WARN',
+    remediation: {
+      class: 'diagnostic',
+      guidance: 'Add a valid activity status that reflects the activity’s actual lifecycle state.'
+    },
     audit: {
       phase: 'INSPECT',
       run: (context) => {
@@ -203,6 +221,10 @@ const ACT_F_2: RubricItem<ActivitiesContext> = {
   sources: [SOURCE],
   mechanical: {
     level: 'WARN',
+    remediation: {
+      class: 'diagnostic',
+      guidance: 'Declare the activity realization that accurately describes how the activity is invoked or operated.'
+    },
     audit: {
       phase: 'INSPECT',
       run: (context) => {
@@ -228,6 +250,10 @@ const ACT_F_3: RubricItem<ActivitiesContext> = {
   sources: [SOURCE],
   mechanical: {
     level: 'WARN',
+    remediation: {
+      class: 'diagnostic',
+      guidance: 'Document an unknown realization in the agentic environment or select a known realization only when it accurately describes the activity.'
+    },
     audit: {
       phase: 'INSPECT',
       run: (context) => {
@@ -257,6 +283,10 @@ const ACT_F_4: RubricItem<ActivitiesContext> = {
   sources: [SOURCE],
   mechanical: {
     level: 'WARN',
+    remediation: {
+      class: 'diagnostic',
+      guidance: 'Declare the person or agent that authored or adopted the activity according to its actual provenance.'
+    },
     audit: {
       phase: 'INSPECT',
       run: (context) => {
@@ -280,6 +310,10 @@ const ACT_R_1: RubricItem<ActivitiesContext> = {
   sources: [SOURCE],
   mechanical: {
     level: 'WARN',
+    remediation: {
+      class: 'diagnostic',
+      guidance: 'Declare the owning SKILL.md for the slash-command activity after confirming the command’s intended capability.'
+    },
     audit: {
       phase: 'INSPECT',
       run: (context) => {
@@ -310,6 +344,10 @@ const ACT_R_2: RubricItem<ActivitiesContext> = {
   sources: [SOURCE],
   mechanical: {
     level: 'WARN',
+    remediation: {
+      class: 'diagnostic',
+      guidance: 'Correct the declared skill or configure the intended harness path; do not infer a substitute capability automatically.'
+    },
     audit: {
       phase: 'INSPECT',
       run: (context) => {
@@ -348,6 +386,10 @@ const ACT_R_3: RubricItem<ActivitiesContext> = {
   sources: [SOURCE],
   mechanical: {
     level: 'WARN',
+    remediation: {
+      class: 'diagnostic',
+      guidance: 'Declare the external scheduler’s actual task name for the scheduled activity.'
+    },
     audit: {
       phase: 'INSPECT',
       run: (context) => {
@@ -374,6 +416,10 @@ const ACT_R_4: RubricItem<ActivitiesContext> = {
   sources: [SOURCE],
   mechanical: {
     level: 'WARN',
+    remediation: {
+      class: 'diagnostic',
+      guidance: 'Verify the named task in its external scheduler and update the activity note or scheduler registration through the owning environment.'
+    },
     audit: {
       phase: 'INSPECT',
       run: (context) => {
@@ -398,7 +444,12 @@ const ACT_J_1: RubricItem<ActivitiesContext> = {
   title: 'activity note clarity',
   description: 'Each activity note body explains what the activity does, when it runs, and why it was adopted.',
   sources: [SOURCE],
-  judgment: { prompt: 'Does each activity note clearly explain what it does, when it runs, and why it was adopted?' }
+  judgment: {
+    scope: 'Every activity note body and its stated purpose, trigger, and adoption rationale.',
+    prompt: 'Does each activity note clearly explain what it does, when it runs, and why it was adopted?',
+    outcomes: ['conforming', 'narrative revision required', 'rationale required'],
+    guidance: 'Add a concise explanation of behaviour, trigger or cadence, and adoption rationale while retaining the note’s operational focus.'
+  }
 }
 
 const ACT_J_2: RubricItem<ActivitiesContext> = {
@@ -406,7 +457,12 @@ const ACT_J_2: RubricItem<ActivitiesContext> = {
   title: 'activity index quality',
   description: 'The activity index is current, ordered, and useful to a reader.',
   sources: [SOURCE],
-  judgment: { prompt: 'Is the activity index current, ordered, and useful rather than just mechanically complete?' }
+  judgment: {
+    scope: 'The Activities index and its ordering, descriptions, and current activity coverage.',
+    prompt: 'Is the activity index current, ordered, and useful rather than just mechanically complete?',
+    outcomes: ['conforming', 'index revision required', 'organisation decision required'],
+    guidance: 'Revise ordering and descriptions to aid a reader, or record the organisation decision that explains a non-obvious index structure.'
+  }
 }
 
 const ACT_J_3: RubricItem<ActivitiesContext> = {
@@ -414,7 +470,12 @@ const ACT_J_3: RubricItem<ActivitiesContext> = {
   title: 'retirement rationale',
   description: 'Retired activities document why they were retired rather than disappearing silently.',
   sources: [SOURCE],
-  judgment: { prompt: 'Do retired activities document a clear retirement rationale?' }
+  judgment: {
+    scope: 'Every retired activity note and its lifecycle history.',
+    prompt: 'Do retired activities document a clear retirement rationale?',
+    outcomes: ['conforming', 'rationale required', 'status correction required'],
+    guidance: 'Record why the activity was retired and the relevant replacement or cessation context, or correct a status that does not reflect retirement.'
+  }
 }
 
 const ACT_J_4: RubricItem<ActivitiesContext> = {
@@ -422,7 +483,12 @@ const ACT_J_4: RubricItem<ActivitiesContext> = {
   title: 'slash-command documentation',
   description: 'Slash-command activities link to their skill documentation or trigger description.',
   sources: [SOURCE],
-  judgment: { prompt: 'Does every slash-command activity link to useful skill documentation or trigger guidance?' }
+  judgment: {
+    scope: 'Every slash-command activity and its linked skill documentation or trigger guidance.',
+    prompt: 'Does every slash-command activity link to useful skill documentation or trigger guidance?',
+    outcomes: ['conforming', 'documentation link required', 'trigger guidance required'],
+    guidance: 'Link the activity to its authoritative skill documentation or add clear trigger guidance that explains how it is invoked.'
+  }
 }
 
 const ACT_J_5: RubricItem<ActivitiesContext> = {
@@ -430,7 +496,12 @@ const ACT_J_5: RubricItem<ActivitiesContext> = {
   title: 'scheduled-task narrative',
   description: 'Scheduled-task activities document cadence and expected outcome.',
   sources: [SOURCE],
-  judgment: { prompt: 'Does every scheduled-task note state its cadence and expected outcome?' }
+  judgment: {
+    scope: 'Every scheduled-task activity note, its cadence, and expected outcome.',
+    prompt: 'Does every scheduled-task note state its cadence and expected outcome?',
+    outcomes: ['conforming', 'cadence required', 'outcome required'],
+    guidance: 'State the scheduler cadence and the expected observable outcome so operators can distinguish normal execution from drift.'
+  }
 }
 
 export const ACT: RubricFamily<ActivitiesRubricContext, ActivitiesContext> = {
