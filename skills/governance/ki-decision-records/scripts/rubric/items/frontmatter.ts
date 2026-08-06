@@ -13,6 +13,7 @@ const FM_0: RubricItem<RecordsRubricContext> = {
   sources: [SOURCE],
   mechanical: {
     level: 'FAIL',
+    remediation: { class: 'diagnostic', guidance: 'Add canonical YAML frontmatter using the record body and filename as evidence.' },
     audit: {
       phase: 'INSPECT',
       run: (context: RecordsRubricContext) =>
@@ -33,6 +34,7 @@ const FM_3: RubricItem<RecordsRubricContext> = {
   sources: [SOURCE],
   mechanical: {
     level: 'FAIL',
+    remediation: { class: 'diagnostic', guidance: 'Set `type` to the canonical human-readable value for the record prefix.' },
     audit: {
       phase: 'INSPECT',
       run: (context: RecordsRubricContext) =>
@@ -59,6 +61,7 @@ const FM_4: RubricItem<RecordsRubricContext> = {
   sources: [SOURCE],
   mechanical: {
     level: 'FAIL',
+    remediation: { class: 'diagnostic', guidance: 'Add the canonical `decision_type` metadata derived from the record prefix.' },
     audit: {
       phase: 'INSPECT',
       run: (context: RecordsRubricContext) =>
@@ -87,6 +90,7 @@ const FM_5: RubricItem<RecordsRubricContext> = {
   mechanical: {
     level: 'FAIL',
     overrideLevels: ['WARN'],
+    remediation: { class: 'diagnostic', guidance: 'Align `decision_type` with the canonical filename prefix after confirming the record classification.' },
     audit: {
       phase: 'INSPECT',
       run: (context: RecordsRubricContext) => {
@@ -115,6 +119,7 @@ const FM_6: RubricItem<RecordsRubricContext> = {
   sources: [SOURCE],
   mechanical: {
     level: 'FAIL',
+    remediation: { class: 'diagnostic', guidance: 'Complete the required metadata from the canonical H1, filename, and record type.' },
     audit: {
       phase: 'INSPECT',
       run: (context: RecordsRubricContext) =>

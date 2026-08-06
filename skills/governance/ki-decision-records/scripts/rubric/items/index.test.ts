@@ -50,7 +50,19 @@ test('the structured catalogue preserves every decision-record criterion', () =>
     'INDEX-8'
   ])
   expect(items.filter((item) => item.judgment)).toHaveLength(9)
-  expect(items.filter((item) => item.judgment).every((item) => Boolean(item.judgment?.prompt.trim()))).toBe(true)
+  expect(items.filter((item) => item.mechanical).every((item) => Boolean(item.mechanical?.remediation))).toBe(true)
+  expect(items.filter((item) => item.mechanical?.conform).every((item) => item.mechanical?.remediation.class === 'automatic')).toBe(true)
+  expect(
+    items
+      .filter((item) => item.judgment)
+      .every(
+        (item) =>
+          Boolean(item.judgment?.scope.trim()) &&
+          Boolean(item.judgment?.prompt.trim()) &&
+          item.judgment?.outcomes.length &&
+          Boolean(item.judgment?.guidance.trim())
+      )
+  ).toBe(true)
 })
 
 test('each family module exports one complete family', async () => {
