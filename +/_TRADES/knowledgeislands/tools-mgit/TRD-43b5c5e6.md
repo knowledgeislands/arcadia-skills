@@ -6,8 +6,9 @@ sender: knowledgeislands/tools-mgit
 receiver: knowledgeislands/ki-agentic-harness
 kind: knowledge
 source_ref: TRD-0f0b10a2
-decision_status: in_progress
-rationale: 'Consolidated into the active trade-operations work as response-boundary evidence.'
+decision_status: retained
+rationale: 'Retained in the trade standard as sender observation policy without receiver obligation.'
+retained_as: skills/governance/ki-trades/references/standards-trades.md
 ---
 
 # TRD-43b5c5e6: Trade response expectations

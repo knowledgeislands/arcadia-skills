@@ -6,8 +6,9 @@ sender: knowledgeislands/tools-ki
 receiver: knowledgeislands/ki-agentic-harness
 kind: knowledge
 source_ref: KI-TOOL-CLI-019
-decision_status: in_progress
-rationale: 'Consolidated into the active trade-operations work as cross-repository waiting evidence.'
+decision_status: retained
+rationale: 'Retained in the roadmap contract as explicit cross-repository wait evidence.'
+retained_as: skills/change-management/ki-roadmap/references/standards-repository-roadmaps.md
 ---
 
 # TRD-e5ad514f: Model roadmap trade waits

@@ -6,8 +6,9 @@ sender: knowledgeislands/tools-mgit
 receiver: knowledgeislands/ki-agentic-harness
 kind: knowledge
 source_ref: TRD-67a0c878
-decision_status: in_progress
-rationale: 'Consolidated into the active trade-operations work as draft pre-advisement evidence.'
+decision_status: retained
+rationale: 'Retained in the governance decision as the silent committed preparation model.'
+retained_as: docs/decisions/GDR-KI-HARNESS-005-cross-repository-trade-routes.md
 ---
 
 # TRD-0f0b10a2: Draft trade advisories
