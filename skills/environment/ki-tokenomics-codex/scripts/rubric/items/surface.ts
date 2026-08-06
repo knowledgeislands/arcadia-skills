@@ -8,7 +8,11 @@ const SURF_1: RubricItem<CodexEvidenceContext> = {
   description:
     'Only documented selected-repository and bounded user Codex configuration, instructions, skills, memory, subagent, and MCP structural evidence is reported; values that may be secret are not emitted.',
   sources: [SOURCE],
-  mechanical: { level: 'WARN', audit: { phase: 'INSPECT', run: (context) => context.surfaces } }
+  mechanical: {
+    level: 'WARN',
+    remediation: { class: 'diagnostic', guidance: 'Adjust the selected Codex configuration or document the observed standing surface; hosted conform does not change runtime state.' },
+    audit: { phase: 'INSPECT', run: (context) => context.surfaces }
+  }
 }
 export const SURF: RubricFamily<CodexRubricContext, CodexEvidenceContext> = {
   code: 'SURF',

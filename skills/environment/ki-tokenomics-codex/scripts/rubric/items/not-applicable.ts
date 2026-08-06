@@ -8,7 +8,11 @@ const NA_1: RubricItem<CodexEvidenceContext> = {
   description:
     'Actual billing, tool-schema weights, compaction totals, and transcript metrics are explicitly not applicable until Codex documents a safe evidence contract.',
   sources: [SOURCE],
-  mechanical: { level: 'WARN', audit: { phase: 'INSPECT', run: (context) => context.unavailableMetrics } }
+  mechanical: {
+    level: 'WARN',
+    remediation: { class: 'diagnostic', guidance: 'Supply the selected Codex configuration evidence or record the unavailable metric; hosted conform does not infer runtime state.' },
+    audit: { phase: 'INSPECT', run: (context) => context.unavailableMetrics }
+  }
 }
 export const NA: RubricFamily<CodexRubricContext, CodexEvidenceContext> = {
   code: 'NA',
