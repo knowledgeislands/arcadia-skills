@@ -3,7 +3,7 @@ id: KI-HARNESS-GOV-012
 title: Separate rubric evidence
 theme: governance-consistency
 horizon: next
-status: draft
+status: ready
 blocks: []
 blocked-by: []
 baseline-ref: null
@@ -105,14 +105,18 @@ The rubric-authoring standard expressly permits an audit-only mechanical item an
 
 This draft and its initial catalogue audit were reviewed by OpenAI GPT-5.6 through Codex on 2026-08-05.
 
-Before this item enters `ready`, two distinct models from different vendors must have reviewed the plan. The second review is pending and must use a non-OpenAI vendor. Record each reviewer's model, vendor, date, material findings, and their resolution in this section; a second run of the same vendor does not satisfy the gate.
+This draft was reviewed by Anthropic Claude through Claude Code on 2026-08-06, by Sonnet 5 for the plan review and by Opus 5 for the follow-on `ki-delegation` catalogue audit. First material finding: the catalogue count was inconsistent — Context and Current state reported 35 active catalogues while Steps and Dependencies said 34. A directory scan of `skills/**/scripts/rubric` confirms 35 catalogues exist, and the 34-name list in "Completed initial audit" omitted `ki-delegation`, which has a populated rubric catalogue. Resolved: `ki-delegation` is now listed in the governance family paragraph, audited in "Delegation packet alignment", and the Steps wording reads 35 catalogues.
+
+Second material finding, from auditing that catalogue: `PACKET-1` is already a hybrid, but its mechanical aspect spans two remediation classes — `normaliseLegacyEscalation` is a safe idempotent rename and therefore `automatic`, while every missing section, worker, or worker field requires authored content and is therefore `guarded`. The one-class-per-mechanical-aspect rule in the criterion model cannot be satisfied by this criterion without splitting its mechanical evidence, so the model must state that a mechanical aspect mixing classes is a split trigger rather than a labelling choice. "Delegation packet alignment" records the required split. No further material findings; the mechanical/judgment/remediation-class model, the boundary section, and the trade-lifecycle alignment are internally consistent and sufficiently bounded.
+
+Two distinct vendors have now reviewed the plan: OpenAI GPT-5.6 through Codex and Anthropic Claude through Claude Code. The latter's follow-on `ki-delegation` audit confirms the mixed-remediation-class split trigger, and its finding is incorporated in the selected model. The user confirmed this two-vendor review gate complete on 2026-08-06; no review gate remains before implementation.
 
 ## Steps
 
-- [ ] Obtain and record independent plan reviews from two distinct models supplied by different vendors — currently OpenAI GPT-5.6 through Codex; obtain a non-OpenAI review — then resolve material findings before moving this item to `ready`.
+- [x] Obtain and record independent plan reviews from two distinct models supplied by different vendors — OpenAI GPT-5.6 through Codex and Anthropic Claude through Claude Code are both recorded; resolve material findings before moving this item to `ready`.
 - [ ] Extend the shared rubric types, catalogue validator, and generated publication so every mechanical aspect declares its remediation class and every judgment aspect supplies review scope, outcome vocabulary, and guided conforming work.
 - [ ] Update the `ki` rubric host to validate the new metadata, show mechanical audit/conform and judgment review/conform sections distinctly, execute only `automatic` draft actions, and retain its no-synthetic-judgment-finding boundary.
-- [ ] Build an inventory of every current criterion across all 34 catalogues, recording its evidence, remediation class, safe writer or manual route, and whether a hybrid split is warranted.
+- [ ] Build an inventory of every current criterion across all 35 catalogues, recording its evidence, remediation class, safe writer or manual route, and whether a hybrid split is warranted. Treat a mechanical aspect whose conditions mix remediation classes as a mandatory split, not a labelling choice.
 - [ ] Migrate `ki-skills` and `ki-engineering` first, retaining the completed process-kind classifier fix as a regression fixture, then use fixtures to prove automatic, diagnostic, guarded, hybrid, and invalid-metadata cases. Use `ki-trades` as the reference hybrid: structural lifecycle evidence is mechanical, while disposition and direct-application suitability remain judgment.
 - [ ] Migrate the remaining catalogues in concern-sized batches. Promote only deterministic subconditions with reliable fixtures; preserve semantic, authority, and truth questions as judgment.
 - [ ] Regenerate every affected rubric publication, update standards and skill procedures, and publish a concise reviewer workflow explaining judgment audit and guided conforming work.
@@ -139,7 +143,7 @@ Before this item enters `ready`, two distinct models from different vendors must
 
 ## Dependencies / blocks
 
-The design is ready for detailed inventory, but status must remain `draft` until the first complete criterion inventory establishes the exact migration batches and a non-OpenAI reviewer records an independent plan review. `tools-ki` has accepted the bounded host work as `KI-TOOL-CLI-020`; it waits for this Harness contract before host implementation begins. `GOV-007` is a coordinated adopter, not a hidden ownership dependency.
+The complete initial catalogue audit and two-vendor review establish the implementation boundary and migration approach. Delivery begins with the detailed per-criterion inventory and the `ki-skills` and `ki-engineering` pilots. `tools-ki` has accepted the bounded host work as `KI-TOOL-CLI-020`; it waits for this Harness contract before host implementation begins. `GOV-007` is a coordinated adopter, not a hidden ownership dependency.
 
 ## Delegation
 
@@ -179,7 +183,7 @@ The audit read every `SKILL.md`, structured rubric catalogue, and generated `ref
 
 `ki-binding`, `ki-binding-chezmoi`, `ki-binding-claude`, `ki-binding-codex`, `ki-dotfiles-chezmoi`, `ki-housekeeping-claude`, `ki-tokenomics`, `ki-tokenomics-claude`, and `ki-tokenomics-codex` can check parseable runtime configuration, managed links, renderer-neutral surface inventory, declared files, and measured context inputs. Runtime choice, configuration preservation, intended rendered state, memory doctrine, and portable policy fit remain reviewer-led.
 
-`ki-authoring`, `ki-decision-records`, `ki-engineering`, `ki-feature-definitions`, `ki-git`, `ki-guides`, `ki-housekeeping`, `ki-roadmap`, `ki-specifications`, and `ki-trades` can check formatting, schemas, IDs, links, index completeness, record relations, configured toolchain evidence, and route structure. Prose usefulness, decision reasoning, test adequacy, feature behaviour, Git hygiene, priority, authority, adoption, and retention remain reviewer-led.
+`ki-authoring`, `ki-decision-records`, `ki-delegation`, `ki-engineering`, `ki-feature-definitions`, `ki-git`, `ki-guides`, `ki-housekeeping`, `ki-roadmap`, `ki-specifications`, and `ki-trades` can check formatting, schemas, IDs, links, index completeness, record relations, configured toolchain evidence, delegation-packet section and worker-field structure, and route structure. Prose usefulness, decision reasoning, test adequacy, feature behaviour, Git hygiene, priority, authority, adoption, worker-boundary and model-choice suitability, and retention remain reviewer-led.
 
 `ki-repo` and `ki-skills` can check root and configuration shape, declared relationships, catalogue/publication parity, links, names, modes, and owned-file containment. Repository purpose, warranted overrides, trigger quality, skill scope, instruction altitude, semantic collisions, and refresh fitness remain reviewer-led.
 
@@ -194,6 +198,12 @@ Knowledge trades are retained only by linking a terminal `retained` decision to 
 `ki-homebrew-tap` and `ki-tools` can check formula and manifest syntax, declared files, generated completions, manual presence, CLI command geometry, and release projection parity. Release/archive correspondence, meaningful installed-binary tests, command semantics, and documentation usefulness remain reviewer-led.
 
 `ki-website` and `ki-website-cloudflare` can check site configuration, declared build/dist seams, physical routing, and static deployment configuration. Site purpose, domain choice, real deployment correctness, and remote-account authority remain reviewer-led.
+
+### Delegation packet alignment
+
+`ki-delegation` is the second reference hybrid and exposes a case the migration must decide explicitly. Its single `PACKET-1` criterion already carries both aspects under one stable code: the mechanical aspect derives exact structural evidence from an opted-in `## Delegation` section — the `### Rounds` opt-in gate, non-empty `Locked decisions`, `Escalate`, and `Rounds` sections, at least one `### Worker:` subsection, and non-empty `Deliverable`, `Files`, `Definition of done`, `Model`, `Verify`, and `Checkpoint` fields per worker — while worker boundaries, model choices, and gate fit remain reviewer-led.
+
+Its mechanical aspect nevertheless spans two remediation classes. The only conform action, `normaliseLegacyEscalation`, renames a legacy `### Escalation` heading to `### Escalate`: a safe, idempotent, wholly owned session-draft write, and therefore `automatic`. Every other violation — a missing section body, a missing worker, or a missing worker field — requires authored content and a delegation decision that CONFORM must not manufacture, and is therefore `guarded`. Because the model requires one class per mechanical aspect, this criterion must split its mechanical evidence rather than declare a single misleading class: retain packet structure as `guarded` under `PACKET-1` and give legacy-heading normalisation its own `automatic` criterion. Its judgment aspect currently supplies only a prompt and needs the standard evidence scope, outcome vocabulary, and conforming guidance. Fixtures must cover both the opted-in packet and the `NOT_APPLICABLE` note that never opted in, since most repositories return the latter.
 
 ### Submitted scope
 
