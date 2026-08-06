@@ -101,6 +101,8 @@ Start with `ki-skills` and `ki-engineering` as the shared-model and common-toolc
 
 The rubric-authoring standard expressly permits an audit-only mechanical item and gives judgment only a `prompt`. Its generated publications describe criterion type but do not require an audit/remediation classification or a judgment conforming path. Existing CONFORM behaviour is appropriately conservative in many places; the missing distinction is whether that conservatism is deliberate and what the user should do next. The completed explicit `ki-kind` migration supplies the process-kind regression fixture but does not establish the broader remediation model.
 
+The completed baseline inventory covers 35 catalogues and 613 criteria: 387 mechanical aspects, 250 judgment aspects, and 24 hybrids. It identifies 299 audit-only mechanical aspects, 88 existing conform callbacks, and 250 judgment aspects that all need evidence scope, outcome vocabulary, and guided conforming work. The first implementation batch is the shared contract and publication model, followed by `ki-skills` and `ki-engineering`; every `RUBRIC-1` publication check and the known mixed-remediation criteria must split before one remediation class can be assigned.
+
 ## Model review
 
 This draft and its initial catalogue audit were reviewed by OpenAI GPT-5.6 through Codex on 2026-08-05.
@@ -116,7 +118,7 @@ Two distinct vendors have now reviewed the plan: OpenAI GPT-5.6 through Codex an
 - [x] Obtain and record independent plan reviews from two distinct models supplied by different vendors — OpenAI GPT-5.6 through Codex and Anthropic Claude through Claude Code are both recorded; resolve material findings before moving this item to `ready`.
 - [ ] Extend the shared rubric types, catalogue validator, and generated publication so every mechanical aspect declares its remediation class and every judgment aspect supplies review scope, outcome vocabulary, and guided conforming work.
 - [ ] Update the `ki` rubric host to validate the new metadata, show mechanical audit/conform and judgment review/conform sections distinctly, execute only `automatic` draft actions, and retain its no-synthetic-judgment-finding boundary.
-- [ ] Build an inventory of every current criterion across all 35 catalogues, recording its evidence, remediation class, safe writer or manual route, and whether a hybrid split is warranted. Treat a mechanical aspect whose conditions mix remediation classes as a mandatory split, not a labelling choice.
+- [x] Build an inventory of every current criterion across all 35 catalogues, recording its evidence, remediation class, safe writer or manual route, and whether a hybrid split is warranted. Treat a mechanical aspect whose conditions mix remediation classes as a mandatory split, not a labelling choice.
 - [ ] Migrate `ki-skills` and `ki-engineering` first, retaining the completed process-kind classifier fix as a regression fixture, then use fixtures to prove automatic, diagnostic, guarded, hybrid, and invalid-metadata cases. Use `ki-trades` as the reference hybrid: structural lifecycle evidence is mechanical, while disposition and direct-application suitability remain judgment.
 - [ ] Migrate the remaining catalogues in concern-sized batches. Promote only deterministic subconditions with reliable fixtures; preserve semantic, authority, and truth questions as judgment.
 - [ ] Regenerate every affected rubric publication, update standards and skill procedures, and publish a concise reviewer workflow explaining judgment audit and guided conforming work.
@@ -197,6 +199,12 @@ Judgment is not a failure to provide a workflow. A reviewer can inspect a bounde
 ### Fleet review findings
 
 The broad scan found repeated candidates for exact structural checks: index completeness, reference and link integrity, declared configuration vocabulary, record relationships, generated projection parity, command-surface shape, and required evidence fields. It also found repeated irreducibly judgmental questions: semantic fit, intent, useful wording, appropriate scope, repository-specific authority, truthful external correspondence, and lifecycle honesty. The migration must record the candidate, evidence boundary, and rejected automation reason for each family rather than applying a one-size-fits-all heuristic.
+
+### Implementation inventory
+
+The 2026-08-06 baseline inventory found 35 catalogues and 613 criteria. `ki-authoring`, `ki-delegation`, `ki-decision-records`, `ki-engineering`, `ki-feature-definitions`, `ki-repo`, `ki-roadmap`, and scaffold-owning Knowledge Base skills contain the first mandatory split cases: their individual rules combine safe normalization or derived writes with authored content, external evidence, unsafe paths, or user-owned choices. The `RUBRIC-1` publication rule itself must split into automatic stale/missing publication repair and diagnostic absent-host evidence.
+
+The resulting metadata is a contract-v2 change. Under the current receiver host, retaining contract 1 drops the added metadata while moving only the Harness to contract 2 makes the host reject it. The next implementation boundary is therefore a coordinated `tools-ki` receiver update: validation, automatic-only CONFORM execution, judgment review rendering, generated publication, and its focused tests. The existing `--allow-guarded` host option must be renamed or made unambiguous because it has a different meaning from the new non-executable `guarded` remediation class.
 
 ### Completed initial audit
 
