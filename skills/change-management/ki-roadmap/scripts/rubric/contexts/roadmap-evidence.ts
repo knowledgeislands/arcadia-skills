@@ -97,8 +97,8 @@ const isKb = (repository: string): boolean => {
   if (!existsSync(config)) return false
   try {
     const parsed = TOML.parse(readFileSync(config, 'utf8')) as Record<string, unknown>
-    const table = parsed['knowledgeislands/ki-agentic-harness:ki-repo']
-    return parsed.repo_type === 'kb' || (typeof table === 'object' && table !== null && (table as Record<string, unknown>).repo_type === 'kb')
+    const table = parsed[REPO_CONFIG]
+    return typeof table === 'object' && table !== null && !Array.isArray(table) && (table as Record<string, unknown>).repo_type === 'kb'
   } catch {
     return false
   }

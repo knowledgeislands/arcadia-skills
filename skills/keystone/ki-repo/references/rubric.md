@@ -24,6 +24,7 @@ Line-by-line criteria for auditing ki-repo. Classifications are derived from ite
 - [COV — Governance coverage](#cov--governance-coverage)
 - [STRUCT — Repository structure](#struct--repository-structure)
 - [ACCESS — Repository access](#access--repository-access)
+- [KIND — Repository kind](#kind--repository-kind)
 - [RUNTIMES — Runtime support](#runtimes--runtime-support)
 - [DESCFIT — Description fitness](#descfit--description-fitness)
 - [OVR — Override rationale](#ovr--override-rationale)
@@ -165,6 +166,15 @@ Structural governance identity.
 GitHub reachability and archive state.
 
 - **ACCESS-1 [M] — GitHub access and archive state** — GitHub reachability is reported without manufacturing drift when offline, and archived repositories are skipped. (standards-repository.md)
+
+## KIND — Repository kind
+
+→ [standard](standards-repository.md)
+
+The selected repository operating model and named Knowledge Base store roles.
+
+- **KIND-1 [M] — Repository kind and store roles** — ki-repo owns the optional KB discriminator and validates its closed named-store vocabulary without accepting legacy locations. (standards-repository.md)
+- **KIND-2 [M] — Kind and structure compatibility** — A KB kind declares the KB structure and Streams planning model; a non-KB does not declare the KB structure. (standards-repository.md)
 
 ## RUNTIMES — Runtime support
 

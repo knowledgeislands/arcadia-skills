@@ -113,6 +113,10 @@ This is the **one place** `ki-repo` reads across skill tables — and it reads o
 
 No marker table is decorative — each is read by code. Most are read by their **owning** skill's auditor too (`-engineering`/`-kb`/`-streams`/`-website`/`-website-cloudflare`/`-mcp`/`-plugins` each read their own table when run). `ki-skills` and `ki-subagents` are the documented exception: their checkers lint an artifact set (`SKILL.md` files, agent definitions), not a repo's config, so their opt-in table is read only by `ki-repo`'s coverage check.
 
+## Repository kind
+
+`["knowledgeislands/ki-agentic-harness:ki-repo"]` owns `repo_type` and, for a Knowledge Base, `store_roles`. The ordinary repository model is implicit when `repo_type` is omitted. A Knowledge Base writes `repo_type = "kb"` and a duplicate-free `store_roles` array containing `notes`; it may additionally declare `sources` and `legacy`. These are role names, not paths or local-machine bindings. No other skill table owns or accepts a repository kind declaration.
+
 ## Scaffolding & ownership
 
 The **schema and conformer** inside a table belong to the skill that owns it: that skill documents the allowed keys and may emit or update its canonical fragment while preserving unrelated content. `ki-repo` owns the shared file-level contract and the two required foundation markers. No operation embeds another skill's TOML template or edits that skill's table directly. This retains one shared `.ki-config.toml`, one table per skill, read-only access across table boundaries, and validate-down/conform-down ownership.

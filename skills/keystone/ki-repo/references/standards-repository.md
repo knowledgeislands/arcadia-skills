@@ -8,6 +8,7 @@ The canonical configuration a Knowledge Islands repo should carry, so repos pres
 - [Layer 2 — core GitHub settings](#layer-2--core-github-settings)
 - [Layer 3 — deeper GitHub](#layer-3--deeper-github)
 - [Working areas](#working-areas)
+- [Repository kind and Knowledge Base stores](#repository-kind-and-knowledge-base-stores)
 - [Visibility](#visibility)
 - [Per-repo overrides](#per-repo-overrides)
 - [Coverage cascade](#coverage-cascade)
@@ -49,6 +50,20 @@ Every repo carries these at the root. A local audit reads the selected checkout'
 Under ADR-KI-HARNESS-012, `.ki/` is not a governance working-artifacts area or an execution surface. The former vendored checker tree, aggregate runner, wrapper, and manifest are retired without a compatibility path; `ki repo` must never invoke `.ki/bin`, a manifest payload, or a nearby checkout. Existing `.ki` runner and manifest material is examined only by an explicit, fail-closed migration operation and is never removed without complete ownership proof.
 
 No document may represent a legacy `.ki/bin` runner as the current self-check contract or as a fallback. Repository activation belongs to `ki repo skill add`, which creates only managed runtime discovery links after containment, ownership, idempotence, and dry-run checks.
+
+## Repository kind and Knowledge Base stores
+
+`ki-repo` owns the portable operating-model declaration. An omitted `repo_type` is an ordinary `repository`; `repo_type = "kb"` is the only specialised kind. The older `repo_type` declarations under other skill tables are invalid and must be migrated here. There is no alias or second location.
+
+A Knowledge Base declares its roles with `store_roles`. `notes` is required and names the selected repository itself; `sources` and `legacy` are optional external roles. Roles are stable identities only, never filesystem paths, URLs, or local bindings. User-local tooling chooses and validates physical bindings separately, so an external store is not silently made a KI repository.
+
+```toml
+["knowledgeislands/ki-agentic-harness:ki-repo"]
+repo_type = "kb"
+store_roles = ["notes", "sources", "legacy"]
+```
+
+A KB must declare `ki-kb` and must not declare `ki-roadmap`: its planning model is `ki-kb-streams`. Conversely, the `ki-kb` structure declaration requires `repo_type = "kb"`. This validates operating model separately from the structural skill that implements its layout.
 
 ## Working areas
 

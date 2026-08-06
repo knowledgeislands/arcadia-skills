@@ -6,6 +6,8 @@ const TEMPLATE_ID = /^[A-Z][A-Z0-9-]{1,23}-HK-\d{3,}$/
 const CADENCE = /^P[1-9]\d*[DWM]$/
 const DATE = /^\d{4}-\d{2}-\d{2}$/
 const HORIZONS = new Set(['now', 'next', 'soon', 'future', 'waiting-for', 'parked'])
+const REPO_CONFIG = 'knowledgeislands/ki-agentic-harness:ki-repo'
+const TOML = (globalThis as unknown as { Bun: { TOML: { parse(text: string): unknown } } }).Bun.TOML
 
 export type HousekeepingRubricContext = {
   rubric: RubricPublicationContext
@@ -25,8 +27,17 @@ const values = (content: string): Record<string, string> => {
   )
 }
 
-const isKb = (root: string): boolean =>
-  /repo_type\s*=\s*["']kb["']/.test(file(join(root, '.ki-config.toml')) ? readFileSync(join(root, '.ki-config.toml'), 'utf8') : '')
+const isKb = (root: string): boolean => {
+  const config = join(root, '.ki-config.toml')
+  if (!file(config)) return false
+  try {
+    const parsed = TOML.parse(readFileSync(config, 'utf8')) as Record<string, unknown>
+    const table = parsed[REPO_CONFIG]
+    return typeof table === 'object' && table !== null && !Array.isArray(table) && (table as Record<string, unknown>).repo_type === 'kb'
+  } catch {
+    return false
+  }
+}
 
 export const createHousekeepingSession = ({ repository, publication }: RubricContextOptions): RubricSession<HousekeepingRubricContext> => {
   const root = resolve(repository)

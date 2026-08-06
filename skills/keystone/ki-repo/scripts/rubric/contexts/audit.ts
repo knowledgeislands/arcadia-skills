@@ -263,6 +263,15 @@ type KiConfig = {
   license?: string
   checks: Record<string, boolean>
 }
+export type RepositoryType = 'repository' | 'kb'
+export type RepositoryConfiguration = {
+  repositoryType: RepositoryType
+  storeRoles: readonly string[]
+  rootTables: readonly string[]
+  issue?: string
+}
+const REPOSITORY_TYPES = new Set<RepositoryType>(['repository', 'kb'])
+const KB_STORE_ROLES = ['notes', 'sources', 'legacy'] as const
 const GITHUB_REPOSITORY = /^https:\/\/github\.com\/([a-z0-9](?:[a-z0-9._-]*[a-z0-9])?)\/([a-z0-9](?:[a-z0-9._-]*[a-z0-9])?)$/
 const CHECKS_SECTION = `${KI_SECTION}.checks`
 const TOML = (globalThis as unknown as { Bun: { TOML: { parse(text: string): unknown } } }).Bun.TOML
@@ -289,6 +298,53 @@ function parseKiConfig(text: string): KiConfig | null {
     }
   }
   return out
+}
+
+/**
+ * Parse the portable repository-kind contract owned by ki-repo.  A repository
+ * that omits `repo_type` is an ordinary repository; the only specialised
+ * operating model is a Knowledge Base (`kb`).  Store roles are identities, not
+ * paths: `notes` names the KB repository itself and external bindings stay in
+ * user-local tooling.
+ */
+export function parseRepositoryConfiguration(text: string): RepositoryConfiguration {
+  let document: Record<string, unknown>
+  try {
+    document = TOML.parse(text) as Record<string, unknown>
+  } catch {
+    return { repositoryType: 'repository', storeRoles: [], rootTables: [], issue: 'must be valid TOML' }
+  }
+  const rootTables = Object.entries(document)
+    .filter(([, value]) => value && typeof value === 'object' && !Array.isArray(value))
+    .map(([name]) => name)
+  const value = document[KI_SECTION]
+  if (!value || typeof value !== 'object' || Array.isArray(value))
+    return { repositoryType: 'repository', storeRoles: [], rootTables, issue: `must contain a [${KI_SECTION}] table` }
+  const table = value as Record<string, unknown>
+  const rawType = table.repo_type
+  if (rawType !== undefined && (typeof rawType !== 'string' || !REPOSITORY_TYPES.has(rawType as RepositoryType)))
+    return {
+      repositoryType: 'repository',
+      storeRoles: [],
+      rootTables,
+      issue: `repo_type must be one of: ${[...REPOSITORY_TYPES].join(', ')}`
+    }
+  const repositoryType = (rawType ?? 'repository') as RepositoryType
+  const rawRoles = table.store_roles
+  if (rawRoles === undefined) {
+    if (repositoryType === 'kb') return { repositoryType, storeRoles: [], rootTables, issue: 'KB repo_type requires store_roles including notes' }
+    return { repositoryType, storeRoles: [], rootTables }
+  }
+  if (!Array.isArray(rawRoles) || rawRoles.some((role) => typeof role !== 'string'))
+    return { repositoryType, storeRoles: [], rootTables, issue: 'store_roles must be an array of role names' }
+  const storeRoles = rawRoles as string[]
+  if (new Set(storeRoles).size !== storeRoles.length) return { repositoryType, storeRoles, rootTables, issue: 'store_roles must not repeat a role' }
+  const unknown = storeRoles.filter((role) => !(KB_STORE_ROLES as readonly string[]).includes(role))
+  if (unknown.length)
+    return { repositoryType, storeRoles, rootTables, issue: `store_roles names unknown role(s): ${unknown.join(', ')} (known: ${KB_STORE_ROLES.join(', ')})` }
+  if (repositoryType !== 'kb' && storeRoles.length) return { repositoryType, storeRoles, rootTables, issue: 'store_roles is only valid when repo_type is kb' }
+  if (repositoryType === 'kb' && !storeRoles.includes('notes')) return { repositoryType, storeRoles, rootTables, issue: 'KB store_roles must include notes' }
+  return { repositoryType, storeRoles, rootTables }
 }
 
 type Repo = {
@@ -560,6 +616,19 @@ function auditRepo(
     if (!ki.description?.trim()) fail('FILES-2', `${KI_CONFIG} must declare a non-empty \`description\``, KI_CONFIG)
     if (declaresRootTable(kiText ?? '', skillTable('ki-roadmap')) && !/^[A-Z][A-Z0-9-]{1,23}$/.test(ki.repoCode ?? ''))
       fail('FILES-2', `${KI_CONFIG} ki-repo repo_code must be a stable uppercase identifier when ki-roadmap is declared`, KI_CONFIG)
+  }
+
+  // ── repository kind and named KB store roles ── KIND-1/2
+  if (kiText != null) {
+    const configuration = parseRepositoryConfiguration(kiText)
+    if (configuration.issue) fail('KIND-1', `[${KI_SECTION}] ${configuration.issue}`, KI_CONFIG)
+    else if (configuration.repositoryType === 'kb') {
+      if (!declaresRootTable(kiText, skillTable('ki-kb')))
+        fail('KIND-2', 'repo_type = "kb" requires the [knowledgeislands/ki-agentic-harness:ki-kb] structure declaration', KI_CONFIG)
+      if (declaresRootTable(kiText, skillTable('ki-roadmap')))
+        fail('KIND-2', 'repo_type = "kb" cannot declare ki-roadmap; Knowledge Bases use ki-kb-streams', KI_CONFIG)
+    } else if (declaresRootTable(kiText, skillTable('ki-kb')))
+      fail('KIND-2', '[knowledgeislands/ki-agentic-harness:ki-kb] requires repo_type = "kb"', KI_CONFIG)
   }
 
   // ── layer 2: core GitHub ── GH-1
@@ -944,7 +1013,21 @@ const evidenceLevel = (level: Level): RepoEvidenceLevel => level
 
 const LIVE_GITHUB_AREAS = new Set(['ACCESS-1', 'GH-1', 'MERGE-1', 'TOGGLE-1', 'VIS-1', 'TOPICS-1', 'BP-1', 'DEP-1', 'SEC-1', 'ACT-1'])
 const MIXED_EVIDENCE_AREAS = new Set(['GH-2', 'GH-3', 'PKG-1'])
-const CONTENT_AREAS = new Set(['FILES-1', 'FILES-2', 'FILES-3', 'FILES-4', 'GH-2', 'GH-3', 'PKG-1', 'CHECKS-1', 'COV-1', 'STRUCT-1', 'STRUCT-2'])
+const CONTENT_AREAS = new Set([
+  'FILES-1',
+  'FILES-2',
+  'FILES-3',
+  'FILES-4',
+  'KIND-1',
+  'KIND-2',
+  'GH-2',
+  'GH-3',
+  'PKG-1',
+  'CHECKS-1',
+  'COV-1',
+  'STRUCT-1',
+  'STRUCT-2'
+])
 
 const findingSource = (area: string, content: ContentSource, live = true): string => {
   if (!live) return content

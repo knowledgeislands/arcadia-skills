@@ -4,6 +4,8 @@ import type { ConformWrite, RubricContextOptions, RubricPublicationContext, Rubr
 
 const CODE_DIR = 'docs/decisions'
 const KB_DIR = 'Admin/Governance/Decisions'
+const REPO_CONFIG = 'knowledgeislands/ki-agentic-harness:ki-repo'
+const TOML = (globalThis as unknown as { Bun: { TOML: { parse(text: string): unknown } } }).Bun.TOML
 const PREFIX_TO_TYPE: Record<string, { decisionType: string; type: string; typeUrl: string }> = {
   SDR: {
     decisionType: 'strategy',
@@ -140,8 +142,13 @@ const findKiConfig = (start: string): string | undefined => {
 const isKb = (target: string): boolean => {
   const config = findKiConfig(target)
   if (!config) return false
-  const content = readFileSync(config, 'utf8')
-  return /^\s*repo_type\s*=\s*["']kb["']/m.test(content) || /^\[ki-kb\]/m.test(content)
+  try {
+    const parsed = TOML.parse(readFileSync(config, 'utf8')) as Record<string, unknown>
+    const table = parsed[REPO_CONFIG]
+    return typeof table === 'object' && table !== null && !Array.isArray(table) && (table as Record<string, unknown>).repo_type === 'kb'
+  } catch {
+    return false
+  }
 }
 
 const isDirectory = (path: string): boolean => existsSync(path) && statSync(path).isDirectory()

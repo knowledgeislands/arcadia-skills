@@ -284,6 +284,53 @@ supported_runtimes = ["claude-code", "chatgpt-codex"]
   })
 })
 
+describe('repository kind and Knowledge Base stores', () => {
+  const kindFindings = (configuration: string) => {
+    const root = repository()
+    writeFileSync(join(root, '.ki-config.toml'), configuration)
+    return collectAuditFindings([root]).findings.filter(({ code }) => code === 'KIND-1' || code === 'KIND-2')
+  }
+
+  test('accepts a KB with the canonical notes role and KB structure', () => {
+    expect(
+      kindFindings(`['knowledgeislands/ki-agentic-harness:ki-repo']
+repo_type = "kb"
+store_roles = ["notes", "sources"]
+
+['knowledgeislands/ki-agentic-harness:ki-kb']
+`)
+    ).toEqual([])
+  })
+
+  test('rejects invalid roles and incompatible structures', () => {
+    expect(
+      kindFindings(`['knowledgeislands/ki-agentic-harness:ki-repo']
+repo_type = "kb"
+store_roles = ["sources"]
+`)
+    ).toContainEqual(expect.objectContaining({ code: 'KIND-1', message: expect.stringContaining('must include notes') }))
+    expect(
+      kindFindings(`['knowledgeislands/ki-agentic-harness:ki-repo']
+repo_type = "repository"
+
+['knowledgeislands/ki-agentic-harness:ki-kb']
+`)
+    ).toContainEqual(expect.objectContaining({ code: 'KIND-2', message: expect.stringContaining('requires repo_type = "kb"') }))
+  })
+
+  test('does not accept a legacy kind declaration outside ki-repo', () => {
+    expect(
+      kindFindings(`['knowledgeislands/ki-agentic-harness:ki-repo']
+
+['knowledgeislands/ki-agentic-harness:ki-kb']
+
+['knowledgeislands/ki-agentic-harness:ki-decision-records']
+repo_type = "kb"
+`)
+    ).toContainEqual(expect.objectContaining({ code: 'KIND-2', message: expect.stringContaining('requires repo_type = "kb"') }))
+  })
+})
+
 describe('local repository evidence', () => {
   test('uses the checkout tree, including unpushed content and excluding ignored dependencies', () => {
     const root = repository()

@@ -9,6 +9,7 @@ import { DEP } from './dependencies.ts'
 import { DESCFIT } from './description-fit.ts'
 import { FILES } from './files.ts'
 import { GH } from './gh.ts'
+import { KIND } from './kind.ts'
 import { MERGE } from './merge.ts'
 import { OVR } from './overrides.ts'
 import { PKG } from './pkg.ts'
@@ -27,5 +28,5 @@ export default {
   name: 'ki-repo',
   concern: 'Knowledge Islands repositories',
   createSession: createRepoSession,
-  families: [RUBRIC, FILES, GH, PKG, MERGE, TOGGLE, VIS, TOPICS, BP, DEP, SEC, ACT, CHECKS, COV, STRUCT, ACCESS, RUNTIMES, DESCFIT, OVR, SYNC, WORK]
+  families: [RUBRIC, FILES, GH, PKG, MERGE, TOGGLE, VIS, TOPICS, BP, DEP, SEC, ACT, CHECKS, COV, STRUCT, ACCESS, KIND, RUNTIMES, DESCFIT, OVR, SYNC, WORK]
 } satisfies SkillRubricDefinition<RepoRubricContext>

@@ -125,6 +125,11 @@ export type RuntimesRubricContext = {
   runtimes3: readonly RepoEvidenceFinding[]
 }
 
+export type KindRubricContext = {
+  kind1: readonly RepoEvidenceFinding[]
+  kind2: readonly RepoEvidenceFinding[]
+}
+
 const WORKING_AREA_READMES = [
   {
     path: '+/README.md',
@@ -174,6 +179,7 @@ export type RepoRubricContext = {
   coverage: EvidenceRubricContext
   structure: StructureRubricContext
   access: EvidenceRubricContext
+  kind: KindRubricContext
   runtimes: RuntimesRubricContext
   descriptionFit: Record<string, never>
   overrides: Record<string, never>
@@ -354,6 +360,7 @@ export const createRepoSession = (
     coverage: { evidence: evidence('COV-1') },
     structure: { structure1: evidence('STRUCT-1'), structure2: evidence('STRUCT-2') },
     access: { evidence: evidence('ACCESS-1') },
+    kind: { kind1: evidence('KIND-1'), kind2: evidence('KIND-2') },
     runtimes: { runtimes1: evidence('RUNTIMES-1'), runtimes2: evidence('RUNTIMES-2'), runtimes3: evidence('RUNTIMES-3') },
     descriptionFit: {},
     overrides: {},
@@ -390,6 +397,7 @@ export const createRepoSession = (
           'COV',
           'STRUCT',
           'ACCESS',
+          'KIND',
           'RUNTIMES',
           'DESCFIT',
           'OVR',
