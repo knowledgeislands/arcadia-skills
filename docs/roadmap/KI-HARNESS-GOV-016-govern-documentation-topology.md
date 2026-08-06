@@ -5,7 +5,7 @@ theme: governance-consistency
 horizon: next
 status: draft
 blocks: []
-blocked-by: [KI-HARNESS-GOV-015]
+blocked-by: []
 baseline-ref: null
 ---
 
@@ -58,7 +58,7 @@ Do not require every repository to create every documentation category, make gui
 
 ## Dependencies / blocks
 
-This work is blocked by [KI-HARNESS-GOV-015](KI-HARNESS-GOV-015-define-repository-governance.md), which supplies the canonical non-KB repository-kind signal. It must preserve specialist-skill ownership and the independent usability of all four skills. All implementation is local to this repository; trade records remain evidence, sibling repositories remain read-only, and fleet documentation migration requires separate receiver-owned work.
+The accepted repository-governance work supplied the canonical non-KB repository-kind signal; its retained record has now been pruned. This work must preserve specialist-skill ownership and the independent usability of all four skills. All implementation is local to this repository; trade records remain evidence, sibling repositories remain read-only, and fleet documentation migration requires separate receiver-owned work.
 
 ## Delegation
 
