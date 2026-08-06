@@ -9,7 +9,21 @@ const RELEASE_1: RubricItem<OutcomeContext> = {
   description:
     'Sender release follows the declared observation policy: unattended and receipt wait for receipt, decision waits for a terminal receiver decision, and completion additionally waits for adopted local work to be done. Receiver pruning becomes eligible only after such a release is observable.',
   sources: [SOURCE],
-  mechanical: { level: 'FAIL', audit: { phase: 'INSPECT', run: ({ outcomes }) => outcomes } }
+  mechanical: {
+    level: 'FAIL',
+    remediation: {
+      class: 'guarded',
+      guidance: 'Observe the sender-selected lifecycle evidence and make no release or pruning change until the responsible repository confirms it.'
+    },
+    audit: { phase: 'INSPECT', run: ({ outcomes }) => outcomes }
+  },
+  judgment: {
+    scope: 'Every submitted trade whose sender release or receiver pruning eligibility is under review.',
+    prompt:
+      'Assess the observable receipt, terminal decision, and completion evidence against the sender-selected observation policy before any sender release or receiver pruning action.',
+    outcomes: ['conforming', 'wait for evidence', 'eligible for human action'],
+    guidance: 'Leave the record in place when evidence is incomplete; when eligible, the owning sender or receiver may make its own confirmed lifecycle change.'
+  }
 }
 
 export const RELEASE: RubricFamily<TradesRubricContext, OutcomeContext> = {

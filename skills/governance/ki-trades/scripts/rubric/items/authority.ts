@@ -9,7 +9,14 @@ const AUTH_1: RubricItem<OutcomeContext> = {
   description:
     'Preparations and outbound records belong to the local sender, retain their declared export route, and contain no receiver-local fields; inbound records belong to the local receiver, retain an active receipt route, and preserve the complete raw submitted sender projection byte-for-byte.',
   sources: [SOURCE],
-  mechanical: { level: 'FAIL', audit: { phase: 'INSPECT', run: ({ outcomes }) => outcomes } }
+  mechanical: {
+    level: 'FAIL',
+    remediation: {
+      class: 'diagnostic',
+      guidance: 'Correct only the locally owned record or route; do not alter a peer repository or the immutable sender projection.'
+    },
+    audit: { phase: 'INSPECT', run: ({ outcomes }) => outcomes }
+  }
 }
 
 export const AUTH: RubricFamily<TradesRubricContext, OutcomeContext> = {

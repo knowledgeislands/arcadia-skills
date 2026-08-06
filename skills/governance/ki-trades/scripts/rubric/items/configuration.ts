@@ -9,7 +9,12 @@ const CONFIG_1: RubricItem<OutcomeContext> = {
   description:
     'A participating repository declares every closed trade kind as a lexically ordered, duplicate-free canonical HTTPS GitHub repository URL array under each of its own `exports_to` and `imports_from` tables; its identity comes only from `ki-repo.repository`.',
   sources: [SOURCE],
-  mechanical: { level: 'FAIL', audit: { phase: 'INSPECT', run: ({ outcomes }) => outcomes }, overrideLevels: ['WARN'] }
+  mechanical: {
+    level: 'FAIL',
+    overrideLevels: ['WARN'],
+    remediation: { class: 'diagnostic', guidance: 'Correct the local ki-trades route declaration, then rerun the audit.' },
+    audit: { phase: 'INSPECT', run: ({ outcomes }) => outcomes }
+  }
 }
 
 export const CONFIG: RubricFamily<TradesRubricContext, OutcomeContext> = {

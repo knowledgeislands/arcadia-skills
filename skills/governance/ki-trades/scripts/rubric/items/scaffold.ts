@@ -11,6 +11,7 @@ const SCAFFOLD_1: RubricItem<ScaffoldContext> = {
   sources: [SOURCE],
   mechanical: {
     level: 'FAIL',
+    remediation: { class: 'automatic' },
     audit: { phase: 'INSPECT', run: ({ outcomes }) => outcomes },
     conform: { phase: 'PRIMARY', run: (context) => context.ensureScaffold?.() }
   }

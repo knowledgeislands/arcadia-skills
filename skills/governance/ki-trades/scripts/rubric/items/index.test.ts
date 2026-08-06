@@ -26,3 +26,27 @@ test('the catalogue and family modules keep narrow public surfaces', async () =>
     expect(Object.keys(module)).toHaveLength(1)
   }
 })
+
+test('only owned scaffold and derived publication use automatic remediation', () => {
+  const items = definition.families.flatMap(
+    (family) =>
+      family.items as unknown as readonly {
+        code: string
+        mechanical?: { remediation: { class: string } }
+        judgment?: { scope: string; prompt: string; outcomes: readonly string[]; guidance: string }
+      }[]
+  )
+  const mechanical = items.filter((item) => item.mechanical)
+
+  expect(mechanical.filter((item) => item.mechanical?.remediation.class === 'automatic').map((item) => item.code)).toEqual(['RUBRIC-1', 'SCAFFOLD-1'])
+  expect(mechanical.filter((item) => item.mechanical?.remediation.class === 'guarded').map((item) => item.code)).toEqual(['STATUS-1', 'RELEASE-1'])
+
+  for (const item of mechanical.filter((item) => item.mechanical?.remediation.class === 'guarded')) {
+    expect(item.judgment).toMatchObject({
+      scope: expect.any(String),
+      prompt: expect.any(String),
+      outcomes: expect.any(Array),
+      guidance: expect.any(String)
+    })
+  }
+})

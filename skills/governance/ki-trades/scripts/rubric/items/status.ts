@@ -9,7 +9,21 @@ const STATUS_1: RubricItem<OutcomeContext> = {
   description:
     'Inbound records evidence receipt independently from decision and carry one receiver-owned status: unconsidered, in_progress, parked, clarify, applied, adopted, retained, declined, or superseded, with full commit evidence and decision-appropriate rationale or local linkage.',
   sources: [SOURCE],
-  mechanical: { level: 'FAIL', audit: { phase: 'INSPECT', run: ({ outcomes }) => outcomes } }
+  mechanical: {
+    level: 'FAIL',
+    remediation: {
+      class: 'guarded',
+      guidance: 'Record a receiver-owned decision only after the responsible human selects it; do not infer receipt, disposition, or local work.'
+    },
+    audit: { phase: 'INSPECT', run: ({ outcomes }) => outcomes }
+  },
+  judgment: {
+    scope: 'Every inbound trade record whose receipt, decision status, rationale, or local linkage needs correction.',
+    prompt:
+      'Assess whether the receiver has independently confirmed any status transition and supporting rationale or linkage, without treating sender submission or route visibility as authority to decide.',
+    outcomes: ['conforming', 'decision required', 'clarification required'],
+    guidance: 'Record only the chosen receiver decision and its evidence, or leave the trade unconsidered or in clarification until authority is available.'
+  }
 }
 
 export const STATUS: RubricFamily<TradesRubricContext, OutcomeContext> = {

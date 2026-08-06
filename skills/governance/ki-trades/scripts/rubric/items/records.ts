@@ -9,7 +9,11 @@ const RECORD_1: RubricItem<OutcomeContext> = {
   description:
     'Every trade uses one `TRD-` eight lower-case hexadecimal identity repeated in filename, metadata, and H1, a closed sender envelope with kind and observation policy, and non-empty payload sections. A mutable preparation alone uses the `_PREPARATIONS` peer layout and `phase: preparing`; a submitted record uses the canonical peer layout without phase.',
   sources: [SOURCE],
-  mechanical: { level: 'FAIL', audit: { phase: 'INSPECT', run: ({ outcomes }) => outcomes } }
+  mechanical: {
+    level: 'FAIL',
+    remediation: { class: 'diagnostic', guidance: 'Correct the locally owned trade record, then rerun the audit.' },
+    audit: { phase: 'INSPECT', run: ({ outcomes }) => outcomes }
+  }
 }
 
 export const RECORD: RubricFamily<TradesRubricContext, OutcomeContext> = {

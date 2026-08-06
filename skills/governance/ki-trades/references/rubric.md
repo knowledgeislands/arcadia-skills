@@ -25,6 +25,7 @@ Line-by-line criteria for auditing ki-trades. Classifications are derived from i
 The tracked readable rubric is the exact publication of the structured catalogue.
 
 - **RUBRIC-1 [M] — structured catalogue publication is exact** — A structured catalogue tracks `references/rubric.md` as its exact generated publication. The host supplies only validated publication evidence: a missing or differing file is a FAIL; during CONFORM this item requests the host-owned derived write without choosing its path or bytes. (../../../keystone/ki-skills/references/standards-rubric-authoring.md#generated-rubric-publication)
+  - _Remediation:_ automatic
 
 ## CONFIG — Declared participation
 
@@ -33,6 +34,7 @@ The tracked readable rubric is the exact publication of the structured catalogue
 Typed trade routes are explicit, canonical, and owned locally.
 
 - **CONFIG-1 [M] — typed routes are canonical** — A participating repository declares every closed trade kind as a lexically ordered, duplicate-free canonical HTTPS GitHub repository URL array under each of its own `exports_to` and `imports_from` tables; its identity comes only from `ki-repo.repository`. (standards-trades.md)
+  - _Remediation:_ diagnostic — Correct the local ki-trades route declaration, then rerun the audit.
 
 ## ROUTE — Typed reciprocal routes
 
@@ -41,6 +43,7 @@ Typed trade routes are explicit, canonical, and owned locally.
 Sender-declared observation and active reciprocal receipt remain distinct typed route facts.
 
 - **ROUTE-1 [M] — trade routes are typed, declared, and activated reciprocally** — A sender-declared export permits local preparation and submission before the receiver participates. Receipt is active only when exactly one locally registered repository declares the canonical GitHub home, the sender exports that kind to it, and the receiver imports that same kind from the sender. (standards-trades.md)
+  - _Remediation:_ diagnostic — Correct the locally owned route declaration or registered repository configuration, then rerun the audit.
 
 ## SCAFFOLD — Trade scaffold
 
@@ -49,6 +52,7 @@ Sender-declared observation and active reciprocal receipt remain distinct typed 
 The optional capability owns only its `_TRADES` directories and README files.
 
 - **SCAFFOLD-1 [M] — owned trade scaffold is canonical** — A repository declaring ki-trades carries the two `_TRADES` directories and their canonical README orientation beneath the generic working areas owned by ki-repo. (standards-trades.md)
+  - _Remediation:_ automatic
 
 ## RECORD — Record shape
 
@@ -57,6 +61,7 @@ The optional capability owns only its `_TRADES` directories and README files.
 One concise identity moves atomically from mutable preparation to immutable submitted record.
 
 - **RECORD-1 [M] — preparation and submission shape is canonical** — Every trade uses one `TRD-` eight lower-case hexadecimal identity repeated in filename, metadata, and H1, a closed sender envelope with kind and observation policy, and non-empty payload sections. A mutable preparation alone uses the `_PREPARATIONS` peer layout and `phase: preparing`; a submitted record uses the canonical peer layout without phase. (standards-trades.md)
+  - _Remediation:_ diagnostic — Correct the locally owned trade record, then rerun the audit.
 
 ## AUTH — Write authority
 
@@ -65,6 +70,7 @@ One concise identity moves atomically from mutable preparation to immutable subm
 A trade remains a local copy protocol with an immutable raw sender projection and receiver-only local fields.
 
 - **AUTH-1 [M] — sender and receiver write boundaries are preserved** — Preparations and outbound records belong to the local sender, retain their declared export route, and contain no receiver-local fields; inbound records belong to the local receiver, retain an active receipt route, and preserve the complete raw submitted sender projection byte-for-byte. (standards-trades.md)
+  - _Remediation:_ diagnostic — Correct only the locally owned record or route; do not alter a peer repository or the immutable sender projection.
 
 ## STATUS — Delivery and receiver decision
 
@@ -72,7 +78,12 @@ A trade remains a local copy protocol with an immutable raw sender projection an
 
 Preparation, submission, receipt, receiver decision, and local completion remain separate facts with closed receiver-owned evidence.
 
-- **STATUS-1 [M] — receipt evidence, decision status, and linkage are valid** — Inbound records evidence receipt independently from decision and carry one receiver-owned status: unconsidered, in_progress, parked, clarify, applied, adopted, retained, declined, or superseded, with full commit evidence and decision-appropriate rationale or local linkage. (standards-trades.md)
+- **STATUS-1 [M + J] — receipt evidence, decision status, and linkage are valid** — Inbound records evidence receipt independently from decision and carry one receiver-owned status: unconsidered, in_progress, parked, clarify, applied, adopted, retained, declined, or superseded, with full commit evidence and decision-appropriate rationale or local linkage. (standards-trades.md)
+  - _Remediation:_ guarded — Record a receiver-owned decision only after the responsible human selects it; do not infer receipt, disposition, or local work.
+  - _Evidence scope:_ Every inbound trade record whose receipt, decision status, rationale, or local linkage needs correction.
+  - _Review prompt:_ Assess whether the receiver has independently confirmed any status transition and supporting rationale or linkage, without treating sender submission or route visibility as authority to decide.
+  - _Outcomes:_ conforming; decision required; clarification required
+  - _Conforming guidance:_ Record only the chosen receiver decision and its evidence, or leave the trade unconsidered or in clarification until authority is available.
 
 ## RELEASE — Release and pruning
 
@@ -80,7 +91,12 @@ Preparation, submission, receipt, receiver decision, and local completion remain
 
 Absence is an observable release signal only after the sender-selected receipt, decision, or completion condition is satisfied.
 
-- **RELEASE-1 [M] — release and pruning follow observable lifecycle evidence** — Sender release follows the declared observation policy: unattended and receipt wait for receipt, decision waits for a terminal receiver decision, and completion additionally waits for adopted local work to be done. Receiver pruning becomes eligible only after such a release is observable. (standards-trades.md)
+- **RELEASE-1 [M + J] — release and pruning follow observable lifecycle evidence** — Sender release follows the declared observation policy: unattended and receipt wait for receipt, decision waits for a terminal receiver decision, and completion additionally waits for adopted local work to be done. Receiver pruning becomes eligible only after such a release is observable. (standards-trades.md)
+  - _Remediation:_ guarded — Observe the sender-selected lifecycle evidence and make no release or pruning change until the responsible repository confirms it.
+  - _Evidence scope:_ Every submitted trade whose sender release or receiver pruning eligibility is under review.
+  - _Review prompt:_ Assess the observable receipt, terminal decision, and completion evidence against the sender-selected observation policy before any sender release or receiver pruning action.
+  - _Outcomes:_ conforming; wait for evidence; eligible for human action
+  - _Conforming guidance:_ Leave the record in place when evidence is incomplete; when eligible, the owning sender or receiver may make its own confirmed lifecycle change.
 
 ## ADOPTION — Receiver local authority
 
@@ -89,4 +105,7 @@ Absence is an observable release signal only after the sender-selected receipt, 
 Human-confirmed disposition remains distinct from local work selection, acceptance, and knowledge stewardship.
 
 - **ADOPTION-1 [J] — disposition preserves receiver authority** — A receiver disposition is trade review only. Direct applied work is bounded and commit-verified; adoption does not automatically create, prioritise, implement, or accept a roadmap item; retention does not alter local knowledge authority. (standards-trades.md)
+  - _Evidence scope:_ Every receiver disposition and any proposed direct application, local adoption, or knowledge retention following it.
   - _Review prompt:_ Confirm that applied is limited to one bounded, reversible, independently verifiable local work change with no material design, dependency, migration, public-contract, or cross-repository effect; every other work disposition remains separately confirmed, every retention remains a local knowledge decision, and none grants sender authority.
+  - _Outcomes:_ conforming; separate local work required; decline or clarify required
+  - _Conforming guidance:_ Keep the trade decision separate from local prioritisation and acceptance; create or link local work only through its own confirmed lifecycle.

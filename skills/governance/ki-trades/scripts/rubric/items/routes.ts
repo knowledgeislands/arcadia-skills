@@ -9,7 +9,14 @@ const ROUTE_1: RubricItem<OutcomeContext> = {
   description:
     'A sender-declared export permits local preparation and submission before the receiver participates. Receipt is active only when exactly one locally registered repository declares the canonical GitHub home, the sender exports that kind to it, and the receiver imports that same kind from the sender.',
   sources: [SOURCE],
-  mechanical: { level: 'FAIL', audit: { phase: 'INSPECT', run: ({ outcomes }) => outcomes } }
+  mechanical: {
+    level: 'FAIL',
+    remediation: {
+      class: 'diagnostic',
+      guidance: 'Correct the locally owned route declaration or registered repository configuration, then rerun the audit.'
+    },
+    audit: { phase: 'INSPECT', run: ({ outcomes }) => outcomes }
+  }
 }
 
 export const ROUTE: RubricFamily<TradesRubricContext, OutcomeContext> = {
