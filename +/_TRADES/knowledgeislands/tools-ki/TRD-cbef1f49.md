@@ -6,7 +6,9 @@ sender: knowledgeislands/tools-ki
 receiver: knowledgeislands/ki-agentic-harness
 kind: work
 source_ref: "tools-ki/discussion-coverage-review"
-decision_status: unconsidered
+decision_status: adopted
+rationale: 'Adopted as the recap-coverage roadmap item.'
+adopted_as: KI-HARNESS-GOV-019
 ---
 # TRD-cbef1f49: Assess recap coverage matrix
 

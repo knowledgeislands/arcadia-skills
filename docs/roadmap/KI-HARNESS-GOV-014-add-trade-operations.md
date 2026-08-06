@@ -19,6 +19,8 @@ Make declared cross-repository trade routes usable through a local, confirmation
 
 That boundary is safe but leaves a practical gap. For example, a receiver that has an active import route must manually locate the sender's record, create the correctly placed inbound copy, add `decision_status: unconsidered`, and then run the audit. Nothing guides the route check, exact paths, immutable-copy rule, or required confirmation.
 
+The recent intake from `tools-ki` and `tools-mgit` also shows that receiver review needs a proportional local-work rule. Some submissions need a separately prioritised roadmap item; a bounded, independently verifiable local correction may instead be directly applied after the receiver has made and recorded its decision.
+
 ## Boundary
 
 Do not add network transport, peer-checkout writes, automatic receiver decisions, roadmap prioritisation, implementation authority, or automated record pruning.
@@ -34,6 +36,8 @@ Introduce a companion process surface, tentatively `ki-trade`, operated by the `
 `submit <receiver> <kind>` should prepare an outbound sender record with a generated `TRD-<eight-hex>` identity and the complete immutable envelope and payload. `receive <sender> <trade-id>` should prepare the matching inbound receiver copy, preserve the sender fields and body byte-for-byte, and add only `decision_status: unconsidered`.
 
 Receiver disposition remains with `ki-next`: its existing human-confirmed workflow chooses `in_progress`, `parked`, `clarify`, `adopted`, `retained`, `declined`, or `superseded`, with the required rationale and local linkage. Adoption remains separate from creating or prioritising local roadmap work.
+
+The disposition workflow must state when a local follow-on is direct: only a bounded local update with clear authority, no material design decision, no cross-repository write, and a proportionate verification gate. Otherwise it proposes one or more local roadmap items, which retain their normal horizon and planning decisions. Neither route is inferred from trade receipt or adoption.
 
 ### Known dependencies
 
@@ -58,6 +62,7 @@ The trade contract already validates reciprocal routes, record placement, immuta
 - [ ] Add host fixtures proving that inactive, missing, ambiguous, or kind-mismatched routes create no record and that a process invocation cannot write a peer checkout.
 - [ ] Prove inbound copying preserves the sender envelope and full body byte-for-byte, adding only valid receiver-local fields.
 - [ ] Document that a received record starts `unconsidered` and route all receiver disposition and local-roadmap follow-on work through `ki-next`.
+- [ ] Specify the reviewed choice between a directly applied, bounded local update and a separately confirmed roadmap proposal, including the evidence and verification required for the direct path.
 - [ ] Update the `ki-trades` standard, rubric, generated guidance, and host help only where the companion process contract requires a cross-reference.
 
 ## Files touched
@@ -92,3 +97,7 @@ The sender creates and later releases only its outbound copy. The receiver creat
 ### Lifecycle boundary
 
 Creating an inbound record means it is available for consideration, not adopted. `ki-next` remains the only process surface that presents and records a human-confirmed disposition; any local roadmap item follows its own confirmed queue transition and plan lifecycle.
+
+### Consolidated submissions
+
+This item adopts [TRD-27279159](../../+/_TRADES/knowledgeislands/tools-ki/TRD-27279159.md), [TRD-2f417537](../../+/_TRADES/knowledgeislands/tools-ki/TRD-2f417537.md), [TRD-e5ad514f](../../+/_TRADES/knowledgeislands/tools-ki/TRD-e5ad514f.md), [TRD-0f0b10a2](../../+/_TRADES/knowledgeislands/tools-mgit/TRD-0f0b10a2.md), [TRD-43b5c5e6](../../+/_TRADES/knowledgeislands/tools-mgit/TRD-43b5c5e6.md), and [TRD-67a0c878](../../+/_TRADES/knowledgeislands/tools-mgit/TRD-67a0c878.md).

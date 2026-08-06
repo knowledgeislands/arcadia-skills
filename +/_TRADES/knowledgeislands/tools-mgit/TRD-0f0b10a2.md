@@ -6,7 +6,8 @@ sender: knowledgeislands/tools-mgit
 receiver: knowledgeislands/ki-agentic-harness
 kind: knowledge
 source_ref: TRD-67a0c878
-decision_status: unconsidered
+decision_status: in_progress
+rationale: 'Consolidated into the active trade-operations work as draft pre-advisement evidence.'
 ---
 
 # TRD-0f0b10a2: Draft trade advisories

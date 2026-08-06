@@ -6,7 +6,8 @@ sender: knowledgeislands/tools-ki
 receiver: knowledgeislands/ki-agentic-harness
 kind: knowledge
 source_ref: KI-TOOL-CLI-019
-decision_status: unconsidered
+decision_status: in_progress
+rationale: 'Consolidated into documentation-topology governance work.'
 ---
 
 # TRD-6f63fb71: Assign documentation governance boundaries

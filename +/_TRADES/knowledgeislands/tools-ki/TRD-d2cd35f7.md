@@ -6,7 +6,9 @@ sender: knowledgeislands/tools-ki
 receiver: knowledgeislands/ki-agentic-harness
 kind: work
 source_ref: "docs/roadmap/KI-TOOL-CLI-018-decouple-agora-editor-targets.md"
-decision_status: unconsidered
+decision_status: adopted
+rationale: 'Consolidated into repository governance work on kind and store contracts.'
+adopted_as: KI-HARNESS-GOV-015
 ---
 # TRD-d2cd35f7: Define repository kind and stores
 

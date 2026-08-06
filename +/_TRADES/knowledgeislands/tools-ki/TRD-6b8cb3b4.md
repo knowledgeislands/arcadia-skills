@@ -6,7 +6,8 @@ sender: knowledgeislands/tools-ki
 receiver: knowledgeislands/ki-agentic-harness
 kind: knowledge
 source_ref: "KI-TOOL-CLI-017"
-decision_status: unconsidered
+decision_status: in_progress
+rationale: 'Adopted as the verification-boundaries roadmap item.'
 ---
 # TRD-6b8cb3b4: Define observable CLI boundary testing
 

@@ -6,7 +6,8 @@ sender: knowledgeislands/tools-mgit
 receiver: knowledgeislands/ki-agentic-harness
 kind: knowledge
 source_ref: TRD-0f0b10a2
-decision_status: unconsidered
+decision_status: in_progress
+rationale: 'Consolidated into the active trade-operations work as response-boundary evidence.'
 ---
 
 # TRD-43b5c5e6: Trade response expectations

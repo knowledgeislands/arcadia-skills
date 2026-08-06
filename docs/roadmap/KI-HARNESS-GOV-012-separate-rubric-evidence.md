@@ -183,4 +183,8 @@ The audit read every `SKILL.md`, structured rubric catalogue, and generated `ref
 
 `ki-website` and `ki-website-cloudflare` can check site configuration, declared build/dist seams, physical routing, and static deployment configuration. Site purpose, domain choice, real deployment correctness, and remote-account authority remain reviewer-led.
 
+### Submitted scope
+
+This item adopts [TRD-312359ed](../../+/_TRADES/knowledgeislands/tools-ki/TRD-312359ed.md), whose proposed evidence and remediation model is consistent with the selected criterion model above.
+
 The audit also confirms a concrete migration test: a mechanical item that reports a failed external command, a remote-setting discrepancy, or an environment-derived measurement is not automatically repairable merely because the evidence is exact. It must become `diagnostic`, with a bounded next action. A parseable missing declaration or wholly owned generated projection is instead an `automatic` candidate. A required choice such as a runtime, route, knowledge destination, or user-owned configuration edit is `guarded` and must hand into the criterion's judgment conforming guidance.
