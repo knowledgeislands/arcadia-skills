@@ -7,8 +7,12 @@ const LOCK_1: RubricItem<GitRubricContext> = {
   description: 'Stale-lock recovery follows the guard’s worktree, process, containment, and file-type limits.',
   sources: ['standards-git.md'],
   judgment: {
+    scope: 'Every stale-lock candidate and its repository, process, containment, and filesystem evidence.',
     prompt:
-      'Assess whether stale-lock recovery remains best-effort: it must not interrupt Git, cross the current physical worktree boundary, remove ambiguous or symlinked candidates, or act when process inspection is inconclusive.'
+      'Assess whether stale-lock recovery remains best-effort: it must not interrupt Git, cross the current physical worktree boundary, remove ambiguous or symlinked candidates, or act when process inspection is inconclusive.',
+    outcomes: ['conforming', 'safe removal authorised', 'leave untouched', 'investigation required'],
+    guidance:
+      'Remove only a clearly stale regular lock within the current physical worktree after process checks; otherwise leave it untouched and investigate through the repository owner.'
   }
 }
 

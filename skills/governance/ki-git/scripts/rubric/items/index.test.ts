@@ -21,6 +21,24 @@ test('the Git catalogue exposes the complete judgment-only session contract', ()
   expect(semanticItems.every((item) => item.mechanical === undefined)).toBeTrue()
 })
 
+test('judgment criteria expose complete v1 review metadata', () => {
+  const judgmentItems = (
+    catalogue.families.filter((family) => family.code !== 'RUBRIC') as unknown as readonly {
+      items: readonly {
+        judgment?: { scope: string; prompt: string; outcomes: readonly string[]; guidance: string }
+      }[]
+    }[]
+  ).flatMap((family) => family.items.map((item) => item.judgment))
+
+  expect(judgmentItems).toHaveLength(4)
+  for (const judgment of judgmentItems) {
+    expect(judgment?.scope).not.toBeEmpty()
+    expect(judgment?.prompt).not.toBeEmpty()
+    expect(judgment?.outcomes.length).toBeGreaterThan(0)
+    expect(judgment?.guidance).not.toBeEmpty()
+  }
+})
+
 test('family modules expose only one complete family', async () => {
   const files = readdirSync(import.meta.dir)
     .filter((file) => file.endsWith('.ts') && file !== 'index.ts' && !file.endsWith('.test.ts'))

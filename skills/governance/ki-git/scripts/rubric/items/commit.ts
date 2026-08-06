@@ -7,8 +7,12 @@ const COMMIT_1: RubricItem<GitRubricContext> = {
   description: 'A commit uses the portable Conventional Commit shape and accurately represents one completed unit of work.',
   sources: ['standards-git.md'],
   judgment: {
+    scope: 'Each proposed commit and the changes it contains.',
     prompt:
-      'Assess whether the commit type, optional scope, and imperative summary accurately describe one completed unit, using the established vocabulary without combining unrelated changes.'
+      'Assess whether the commit type, optional scope, and imperative summary accurately describe one completed unit, using the established vocabulary without combining unrelated changes.',
+    outcomes: ['conforming', 'split required', 'message revision required'],
+    guidance:
+      'Split unrelated changes into separately reviewable commits, then revise the Conventional Commit type, scope, or imperative summary to describe the completed unit.'
   }
 }
 
