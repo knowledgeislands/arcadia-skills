@@ -365,6 +365,19 @@ describe('local repository evidence', () => {
     expect(findings).toContainEqual(expect.objectContaining({ message: expect.stringContaining('repo_code must be a stable uppercase identifier') }))
   })
 
+  test('detects the optional checkpoints subarea without creating or interpreting it', () => {
+    const root = repository()
+    mkdirSync(join(root, '+', '_CHECKPOINTS'), { recursive: true })
+    writeFileSync(join(root, '+', '_CHECKPOINTS', 'Thread.md'), '# Thread\n')
+    writeFileSync(join(root, '.ki-config.toml'), '["knowledgeislands/ki-agentic-harness:ki-repo"]\n')
+
+    const findings = collectAuditFindings([root]).findings.filter((finding) => finding.code === 'COV-1')
+    expect(findings).toContainEqual(expect.objectContaining({ message: expect.stringContaining('looks governed by ki-checkpoints') }))
+
+    writeFileSync(join(root, '.ki-config.toml'), '["knowledgeislands/ki-agentic-harness:ki-repo"]\n\n["knowledgeislands/ki-agentic-harness:ki-checkpoints"]\n')
+    expect(collectAuditFindings([root]).findings.filter((finding) => finding.code === 'COV-1')).toEqual([])
+  })
+
   test('fails a selected local target rather than falling back to GitHub content', () => {
     const root = mkdtempSync(join(tmpdir(), 'ki-repo-broken-local-'))
     roots.push(root)

@@ -480,6 +480,12 @@ const COVERAGE: { skill: string; table: string; artifact: string; detect: (s: Si
     table: skillTable('ki-subagents'),
     artifact: 'subagents/**/*.md',
     detect: (s) => [...s.tree].some((p) => /^subagents\/.+\.md$/.test(p) && !/(^|\/)README\.md$/i.test(p))
+  },
+  {
+    skill: 'checkpoints',
+    table: skillTable('ki-checkpoints'),
+    artifact: '+/_CHECKPOINTS/ subarea',
+    detect: (s) => [...s.tree].some((p) => p.startsWith('+/_CHECKPOINTS/'))
   }
 ]
 const COVERAGE_SKILLS = new Set(COVERAGE.map((c) => c.skill))

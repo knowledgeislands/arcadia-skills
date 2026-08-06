@@ -108,6 +108,7 @@ The detection signals `ki-repo` uses (one recursive tree read + `package.json`):
 | `ki-homebrew-tap`       | `Formula/*.rb`                                | `["knowledgeislands/ki-agentic-harness:ki-homebrew-tap"]`       |
 | `ki-skills`             | `skills/*/SKILL.md`                           | `["knowledgeislands/ki-agentic-harness:ki-skills"]`             |
 | `ki-subagents`          | `subagents/**/*.md`                           | `["knowledgeislands/ki-agentic-harness:ki-subagents"]`          |
+| `ki-checkpoints`        | `+/_CHECKPOINTS/` subarea                     | `["knowledgeislands/ki-agentic-harness:ki-checkpoints"]`        |
 
 This is the **one place** `ki-repo` reads across skill tables — and it reads only table **presence**, never another skill's keys (_validate down, ignore across_ still governs table _contents_). It is an **audit-time enforcement** run by `repo`'s auditor, not behaviour baked into the regular use of each skill. A repo opts out of a single signal it doesn't want enforced with a `coverage-<skill> = false` entry in its `["knowledgeislands/ki-agentic-harness:ki-repo".checks]` table (e.g. a repo that vendors an `eleventy.config` it does not own) — reported as an acknowledged note.
 
