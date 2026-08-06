@@ -81,7 +81,17 @@ export const MARKDOWNLINT_DEFAULT = `{
   // Never lint generated output, dependencies, runtime projections, or submitted
   // trade projections. Submitted records are byte-immutable evidence; authored
   // trade READMEs and mutable _PREPARATIONS remain in scope.
-  "ignores": ["dist/**", "**/node_modules/**", "src/generated/**", ".claude/commands/**", ".claude/skills/**", ".claude/agents/**", ".agents/skills/**", "+/_TRADES/*/*/TRD-*.md", "-/_TRADES/*/*/TRD-*.md"]
+  "ignores": [
+    "dist/**",
+    "**/node_modules/**",
+    "src/generated/**",
+    ".claude/commands/**",
+    ".claude/skills/**",
+    ".claude/agents/**",
+    ".agents/skills/**",
+    "+/_TRADES/*/*/TRD-*.md",
+    "-/_TRADES/*/*/TRD-*.md"
+  ]
 }
 `
 
