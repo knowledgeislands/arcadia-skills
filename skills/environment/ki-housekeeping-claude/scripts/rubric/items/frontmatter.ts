@@ -10,6 +10,7 @@ const FM_1: RubricItem<HousekeepingFrontmatterContext> = {
   sources: [SOURCE],
   mechanical: {
     level: 'FAIL',
+    remediation: { class: 'diagnostic', guidance: 'Add valid frontmatter, then rerun the audit.' },
     audit: { phase: 'INSPECT', run: (context) => context.present }
   }
 }
@@ -21,6 +22,7 @@ const FM_2: RubricItem<HousekeepingFrontmatterContext> = {
   sources: [SOURCE],
   mechanical: {
     level: 'FAIL',
+    remediation: { class: 'automatic' },
     audit: { phase: 'INSPECT', run: (context) => context.namesMatch },
     conform: {
       phase: 'NORMALISE',
@@ -38,6 +40,7 @@ const FM_3: RubricItem<HousekeepingFrontmatterContext> = {
   sources: [SOURCE],
   mechanical: {
     level: 'FAIL',
+    remediation: { class: 'diagnostic', guidance: 'Add a non-empty description, then rerun the audit.' },
     audit: { phase: 'INSPECT', run: (context) => context.descriptions }
   }
 }
@@ -49,6 +52,7 @@ const FM_4: RubricItem<HousekeepingFrontmatterContext> = {
   sources: [SOURCE],
   mechanical: {
     level: 'FAIL',
+    remediation: { class: 'diagnostic', guidance: 'Correct the metadata type, then rerun the audit.' },
     audit: { phase: 'INSPECT', run: (context) => context.types }
   }
 }
@@ -60,6 +64,7 @@ const FM_5: RubricItem<HousekeepingFrontmatterContext> = {
   sources: [SOURCE],
   mechanical: {
     level: 'FAIL',
+    remediation: { class: 'diagnostic', guidance: 'Resolve duplicate memory names, then rerun the audit.' },
     audit: { phase: 'INSPECT', run: (context) => context.uniqueNames }
   }
 }

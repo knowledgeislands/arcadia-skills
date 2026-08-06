@@ -11,6 +11,7 @@ const IDX_1: RubricItem<HousekeepingIndexContext> = {
   sources: [SOURCE],
   mechanical: {
     level: 'FAIL',
+    remediation: { class: 'diagnostic', guidance: 'Add the required memory index, then rerun the audit.' },
     audit: { phase: 'INSPECT', run: (context) => context.exists }
   }
 }
@@ -23,6 +24,7 @@ const IDX_2: RubricItem<HousekeepingIndexContext> = {
   sources: [SOURCE],
   mechanical: {
     level: 'FAIL',
+    remediation: { class: 'diagnostic', guidance: 'Correct the dangling index entry, then rerun the audit.' },
     audit: { phase: 'INSPECT', run: (context) => context.entriesResolve }
   }
 }
@@ -34,6 +36,7 @@ const IDX_3: RubricItem<HousekeepingIndexContext> = {
   sources: [SOURCE],
   mechanical: {
     level: 'WARN',
+    remediation: { class: 'automatic' },
     audit: { phase: 'INSPECT', run: (context) => context.filesIndexed },
     conform: {
       phase: 'NORMALISE',
@@ -51,6 +54,7 @@ const IDX_4: RubricItem<HousekeepingIndexContext> = {
   sources: [SOURCE],
   mechanical: {
     level: 'WARN',
+    remediation: { class: 'diagnostic', guidance: 'Shorten the index entry, then rerun the audit.' },
     heuristic: true,
     audit: { phase: 'INSPECT', run: (context) => context.lineLength }
   }
@@ -64,6 +68,7 @@ const IDX_5: RubricItem<HousekeepingIndexContext> = {
   sources: [SOURCE],
   mechanical: {
     level: 'WARN',
+    remediation: { class: 'diagnostic', guidance: 'Correct the memory index entry, then rerun the audit.' },
     audit: { phase: 'INSPECT', run: (context) => context.markers }
   }
 }
@@ -76,6 +81,7 @@ const IDX_6: RubricItem<HousekeepingIndexContext> = {
   sources: [SOURCE],
   mechanical: {
     level: 'WARN',
+    remediation: { class: 'diagnostic', guidance: 'Correct the index ordering, then rerun the audit.' },
     heuristic: true,
     audit: { phase: 'INSPECT', run: (context) => context.learnedEntries }
   }

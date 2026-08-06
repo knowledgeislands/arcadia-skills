@@ -1,4 +1,4 @@
-import type { RubricFamily, RubricItem } from '../../shared/rubric.ts'
+import { judgment, type RubricFamily, type RubricItem } from '../../shared/rubric.ts'
 import type { HousekeepingDocContext, HousekeepingRubricContext } from '../contexts/housekeeping.ts'
 
 const SOURCE = 'standards-auto-memory.md'
@@ -8,9 +8,7 @@ const DOC_1: RubricItem<HousekeepingDocContext> = {
   title: 'Content doctrine',
   description: '`feedback` and `project` memories carry the rule/fact, then a **Why:** line and a **How to apply:** line — not just a bare assertion.',
   sources: [SOURCE],
-  judgment: {
-    prompt: '`feedback` and `project` memories carry the rule/fact, then a **Why:** line and a **How to apply:** line — not just a bare assertion.'
-  }
+  judgment: judgment('Do feedback and project memories carry their rule or fact, Why, and How to apply?')
 }
 
 const DOC_2: RubricItem<HousekeepingDocContext> = {
@@ -18,9 +16,7 @@ const DOC_2: RubricItem<HousekeepingDocContext> = {
   title: 'Content doctrine',
   description: '`project` memories use absolute dates, not relative ones ("2026-03-05", not "Thursday").',
   sources: [SOURCE],
-  judgment: {
-    prompt: '`project` memories use absolute dates, not relative ones ("2026-03-05", not "Thursday").'
-  }
+  judgment: judgment('Do project memories use absolute rather than relative dates?')
 }
 
 const DOC_3: RubricItem<HousekeepingDocContext> = {
@@ -29,10 +25,7 @@ const DOC_3: RubricItem<HousekeepingDocContext> = {
   description:
     'No memory duplicates content that belongs in a `CLAUDE.md` (codebase conventions, file layout, architecture, anything derivable from the repo or git history). Flag promotion candidates instead of leaving them to drift from the code.',
   sources: [SOURCE],
-  judgment: {
-    prompt:
-      'No memory duplicates content that belongs in a `CLAUDE.md` (codebase conventions, file layout, architecture, anything derivable from the repo or git history). Flag promotion candidates instead of leaving them to drift from the code.'
-  }
+  judgment: judgment('Do memories avoid duplicating content that belongs in CLAUDE.md or is derivable from current repository evidence?')
 }
 
 const DOC_4: RubricItem<HousekeepingDocContext> = {
@@ -40,9 +33,7 @@ const DOC_4: RubricItem<HousekeepingDocContext> = {
   title: 'Content doctrine',
   description: '`user`-type memories describe role/preferences/knowledge neutrally — no content that reads as a negative judgment of the user.',
   sources: [SOURCE],
-  judgment: {
-    prompt: '`user`-type memories describe role/preferences/knowledge neutrally — no content that reads as a negative judgment of the user.'
-  }
+  judgment: judgment('Do user memories describe role, preferences, and knowledge neutrally?')
 }
 
 const DOC_5: RubricItem<HousekeepingDocContext> = {
@@ -51,10 +42,7 @@ const DOC_5: RubricItem<HousekeepingDocContext> = {
   description:
     'No memory is stale — a `project` memory whose fact or decision has visibly been superseded by current repo state (check against `git log`/current files, not the memory’s own text).',
   sources: [SOURCE],
-  judgment: {
-    prompt:
-      'No memory is stale — a `project` memory whose fact or decision has visibly been superseded by current repo state (check against `git log`/current files, not the memory’s own text).'
-  }
+  judgment: judgment('Do project memories remain current against repository state and history?')
 }
 
 const DOC_6: RubricItem<HousekeepingDocContext> = {
@@ -62,9 +50,7 @@ const DOC_6: RubricItem<HousekeepingDocContext> = {
   title: 'Semantic index ordering',
   description: '`MEMORY.md` entries are organized semantically by topic, not chronologically.',
   sources: [SOURCE],
-  judgment: {
-    prompt: '`MEMORY.md` entries are organized semantically by topic, not chronologically.'
-  }
+  judgment: judgment('Are MEMORY.md entries organised semantically rather than chronologically?')
 }
 
 export const DOC: RubricFamily<HousekeepingRubricContext, HousekeepingDocContext> = {
