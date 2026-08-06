@@ -105,12 +105,12 @@ test('the structured catalogue preserves the complete ki-subagents rule surface'
   expect(items.filter((item) => item.judgment).every((item) => Boolean(item.judgment?.prompt.trim()))).toBe(true)
   for (const item of items) {
     if (item.mechanical) {
-      expect(item.mechanical.remediation?.class).toBeDefined()
+      expect(item.mechanical.remediation.class).toBeDefined()
       if (item.code !== 'RUBRIC-1') expect(item.mechanical.conform).toBeUndefined()
     }
     if (item.judgment) {
       expect(item.judgment.scope).not.toBe('')
-      expect(item.judgment.outcomes?.length).toBeGreaterThan(0)
+      expect(item.judgment.outcomes.length).toBeGreaterThan(0)
       expect(item.judgment.guidance).not.toBe('')
     }
   }

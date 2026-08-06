@@ -4,6 +4,13 @@ import type { AgentFileContext, AgentsRubricContext } from '../contexts/agents.t
 const STANDARD = 'standards-subagent-definitions.md'
 const NAME_MAX = 64
 const RESERVED_NAMES = ['anthropic', 'claude'] as const
+const DIAGNOSTIC = { class: 'diagnostic' as const, guidance: 'Correct the agent name through its responsible author; do not infer or rename the agent automatically.' }
+const judgment = (prompt: string) => ({
+  scope: 'The target agent name and the role identity it communicates.',
+  prompt,
+  outcomes: ['conforming', 'gap', 'exclusion'] as const,
+  guidance: 'Revise the name through its responsible author, record a named gap, or record an explicit justified exclusion.'
+})
 
 const inspect = (context: AgentFileContext, run: (agent: NonNullable<AgentFileContext['agent']>) => readonly AuditOutcome[]): readonly AuditOutcome[] =>
   context.agent ? run(context.agent) : [{ status: 'NOT_APPLICABLE', message: 'No physical agent definition is available.' }]
@@ -15,6 +22,7 @@ const NAME_1: RubricItem<AgentFileContext> = {
   sources: [`${STANDARD}#3-frontmatter-name`, 'CC'],
   mechanical: {
     level: 'FAIL',
+    remediation: DIAGNOSTIC,
     audit: {
       phase: 'INSPECT',
       run: (context) =>
@@ -38,6 +46,7 @@ const NAME_2: RubricItem<AgentFileContext> = {
   sources: [`${STANDARD}#3-frontmatter-name`, 'CC', 'BP'],
   mechanical: {
     level: 'FAIL',
+    remediation: DIAGNOSTIC,
     audit: {
       phase: 'INSPECT',
       run: (context) =>
@@ -65,6 +74,7 @@ const NAME_3: RubricItem<AgentFileContext> = {
   sources: [`${STANDARD}#3-frontmatter-name`, 'CC'],
   mechanical: {
     level: 'FAIL',
+    remediation: DIAGNOSTIC,
     audit: {
       phase: 'INSPECT',
       run: (context) =>
@@ -88,6 +98,7 @@ const NAME_4: RubricItem<AgentFileContext> = {
   sources: [`${STANDARD}#3-frontmatter-name`, 'BP'],
   mechanical: {
     level: 'FAIL',
+    remediation: DIAGNOSTIC,
     audit: {
       phase: 'INSPECT',
       run: (context) =>
@@ -111,6 +122,7 @@ const NAME_5: RubricItem<AgentFileContext> = {
   sources: [`${STANDARD}#3-frontmatter-name`, 'CC', 'HOUSE'],
   mechanical: {
     level: 'FAIL',
+    remediation: DIAGNOSTIC,
     audit: {
       phase: 'INSPECT',
       run: (context) =>
@@ -139,7 +151,7 @@ const NAME_6: RubricItem<AgentFileContext> = {
   title: 'Specific role name',
   description: 'name is a specific role, not a generic helper or assistant.',
   sources: [`${STANDARD}#3-frontmatter-name`, 'BP'],
-  judgment: { prompt: 'name is a specific role, not generic (engineering-lead, not helper/assistant).' }
+  judgment: judgment('name is a specific role, not generic (engineering-lead, not helper/assistant).')
 }
 
 export const NAME: RubricFamily<AgentsRubricContext, AgentFileContext> = {

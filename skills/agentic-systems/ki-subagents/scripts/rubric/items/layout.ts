@@ -2,6 +2,7 @@ import type { AuditOutcome, RubricFamily, RubricItem } from '../../shared/rubric
 import type { AgentFileContext, AgentsRubricContext } from '../contexts/agents.ts'
 
 const STANDARD = 'standards-subagent-definitions.md'
+const REVIEW = { scope: 'The target agent file, grouping path, and declared identity.', outcomes: ['conforming', 'gap', 'exclusion'] as const, guidance: 'Revise layout or identity through the responsible author, record a gap, or record an explicit exclusion.' }
 
 const unavailable = (context: AgentFileContext): readonly AuditOutcome[] | null => {
   if (context.unsafePath)
@@ -47,7 +48,7 @@ const LAY_2: RubricItem<AgentFileContext> = {
   title: 'Path-independent identity',
   description: 'Grouping subdirectories are for human organisation only; identity is name, not path.',
   sources: [`${STANDARD}#2-layout`, 'CC', 'HOUSE'],
-  judgment: { prompt: 'Grouping subdirectories are for human organisation only; identity is name, not path.' }
+  judgment: { ...REVIEW, prompt: 'Grouping subdirectories are for human organisation only; identity is name, not path.' }
 }
 
 const LAY_3: RubricItem<AgentFileContext> = {

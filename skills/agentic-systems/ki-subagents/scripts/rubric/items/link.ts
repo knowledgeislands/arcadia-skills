@@ -4,6 +4,7 @@ import type { RubricFamily, RubricItem } from '../../shared/rubric.ts'
 import type { AgentFileContext, AgentsRubricContext } from '../contexts/agents.ts'
 
 const STANDARD = 'standards-subagent-definitions.md'
+const REVIEW = { scope: 'The target agent links and named skill or agent references.', outcomes: ['conforming', 'gap', 'exclusion'] as const, guidance: 'Correct the reference through the responsible author, record a gap, or record an explicit exclusion.' }
 const stripCode = (markdown: string): string => markdown.replace(/```[\s\S]*?```/g, '').replace(/`[^`\n]*`/g, '')
 const relativeLinkTargets = (markdown: string): string[] => {
   const targets: string[] = []
@@ -29,6 +30,7 @@ const LINK_ITEMS = [
     sources: [`${STANDARD}#10-linking`, 'HOUSE'],
     mechanical: {
       level: 'FAIL',
+      remediation: { class: 'diagnostic', guidance: 'Correct broken references through the responsible agent author.' },
       audit: {
         phase: 'INSPECT',
         run: (context: AgentFileContext) => {
@@ -48,6 +50,7 @@ const LINK_ITEMS = [
     description: 'Wikilinks to knowledge-base notes are allowed in grounded agent prompts.',
     sources: [`${STANDARD}#10-linking`, 'HOUSE'],
     judgment: {
+      ...REVIEW,
       prompt: '`[[wikilinks]]` to KB notes are allowed here (a grounded agent cites its notes) and are not a defect, unlike in a `SKILL.md`.'
     }
   },
@@ -56,7 +59,7 @@ const LINK_ITEMS = [
     title: 'Name-based composition references',
     description: 'Other agents and skills are referred to by name, never by file path.',
     sources: [`${STANDARD}#10-linking`, 'HOUSE'],
-    judgment: { prompt: 'Other agents/skills are referred to by name, never by file path.' }
+    judgment: { ...REVIEW, prompt: 'Other agents/skills are referred to by name, never by file path.' }
   }
 ] as const
 
