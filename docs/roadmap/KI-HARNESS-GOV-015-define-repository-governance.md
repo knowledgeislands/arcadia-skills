@@ -3,10 +3,10 @@ id: KI-HARNESS-GOV-015
 title: Define repository governance
 theme: governance-consistency
 horizon: next
-status: ready
+status: in-progress
 blocks: [KI-HARNESS-GOV-016]
 blocked-by: []
-baseline-ref: null
+baseline-ref: 01a9a0d8a3a2ac4638553f2798be4d713e3764ec
 ---
 
 ## Goal
