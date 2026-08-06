@@ -57,6 +57,7 @@ export type MechanicalRubric<Context> = {
   level: ViolationLevel
   overrideLevels?: readonly ViolationLevel[]
   heuristic?: boolean
+  remediation?: MechanicalRemediation
   audit: RubricExecution<Context, RubricOutcomes<AuditOutcome>>
   /**
    * The canonical CONFORM action. It changes only the operation-scoped
@@ -67,8 +68,13 @@ export type MechanicalRubric<Context> = {
   conformOn?: readonly Extract<AuditOutcomeStatus, 'INFO'>[]
 }
 
+export type MechanicalRemediation = { class: 'automatic' } | { class: 'diagnostic' | 'guarded'; guidance: string }
+
 export type JudgmentRubric = {
+  scope?: string
   prompt: string
+  outcomes?: NonEmptyReadonlyArray<string>
+  guidance?: string
 }
 
 export type RubricItemBase = {
@@ -165,6 +171,44 @@ export type SkillRubricDefinition<RootContext> = RubricDefinition<RootContext> &
 export const defineRubricFamily = <RootContext, FamilyContext>(family: RubricFamily<RootContext, FamilyContext>): RubricFamily<RootContext, FamilyContext> =>
   family
 
+/** Enriches legacy source items with the strict contract-1 evidence required by the host. */
+export const enrichV1Metadata = <RootContext>(definition: SkillRubricDefinition<RootContext>): SkillRubricDefinition<RootContext> => ({
+  ...definition,
+  families: definition.families.map((family) => ({
+    ...family,
+    items: family.items.map((item) => ({
+      ...item,
+      ...(item.mechanical
+        ? {
+            mechanical: {
+              ...item.mechanical,
+              remediation:
+                item.mechanical.remediation ??
+                (item.mechanical.conform
+                  ? { class: 'automatic' as const }
+                  : {
+                      class: 'diagnostic' as const,
+                      guidance: 'Correct the evidenced Cloudflare hosting issue through the responsible site owner; hosted conform does not infer deployment or security intent.'
+                    })
+            }
+          }
+        : {}),
+      ...(item.judgment
+        ? {
+            judgment: {
+              ...item.judgment,
+              scope: item.judgment.scope ?? 'The Cloudflare Worker, static assets, deployment configuration, and evidence named by this criterion.',
+              outcomes: item.judgment.outcomes ?? ['conforming', 'gap', 'exclusion'],
+              guidance:
+                item.judgment.guidance ??
+                'Revise the hosting design through the responsible site owner, record a named gap, or record an explicit justified exclusion.'
+            }
+          }
+        : {})
+    }))
+  }))
+})
+
 /**
  * The uniform derived-publication policy for a structured rubric catalogue.
  *
@@ -190,6 +234,7 @@ export const createRubricPublicationFamily = <RootContext>(
       sources,
       mechanical: {
         level: 'FAIL',
+        remediation: { class: 'automatic' },
         audit: {
           phase: 'DERIVED',
           run: ({ publication }) => {

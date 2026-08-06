@@ -20,6 +20,23 @@ test('the catalogue exposes the complete ordered Cloudflare hosting family', () 
     'WCF-21',
     'WCF-22'
   ])
+  const families = definition.families as unknown as readonly {
+    items: readonly {
+      mechanical?: { remediation?: { class?: string }; conform?: unknown }
+      judgment?: { scope?: string; outcomes?: readonly string[]; guidance?: string }
+    }[]
+  }[]
+  for (const item of families.flatMap((family) => family.items)) {
+    if (item.mechanical) {
+      expect(item.mechanical.remediation?.class).toBeDefined()
+      if (item.mechanical.conform) expect(item.mechanical.remediation?.class).toBe('automatic')
+    }
+    if (item.judgment) {
+      expect(item.judgment.scope).not.toBe('')
+      expect(item.judgment.outcomes?.length).toBeGreaterThan(0)
+      expect(item.judgment.guidance).not.toBe('')
+    }
+  }
 })
 
 test('the catalogue and family module expose only the final public surfaces', () => {
