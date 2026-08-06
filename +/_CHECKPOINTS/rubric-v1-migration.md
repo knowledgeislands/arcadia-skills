@@ -3,7 +3,7 @@ type: ki-checkpoint
 thread: rubric-v1-migration
 state: active
 created_at: 2026-08-06T21:04:16Z
-updated_at: 2026-08-06T21:04:16Z
+updated_at: 2026-08-06T21:51:13Z
 ---
 
 # rubric-v1-migration
@@ -14,9 +14,9 @@ Migrate every Harness rubric catalogue to the strict `contract: 1` remediation a
 
 ## Current state
 
-15 of 36 catalogues are committed: `ki-feature-definitions`, `ki-engineering`, `ki-skills`, `ki-trades`, `ki-authoring`, `ki-repo`, `ki-decision-records`, `ki-git`, `ki-delegation`, `ki-roadmap`, `ki-specifications`, `ki-guides`, `ki-housekeeping`, `ki-mcp`, and `ki-subagents`.
+26 of 36 catalogues are committed. The latest three are `ki-tokenomics` (`a9e91225`), `ki-tokenomics-claude` (`4cf701b4`), and `ki-tokenomics-codex` (`d1aadb10`).
 
-`ki-harness` is implemented and focused-verified in the worktree; its former dependency blocker, `ki-subagents`, is now committed as `6e11e98a`, so re-run its focused audit and commit it as one skill. The worktree also contains the uncommitted correction to roadmap item `KI-HARNESS-FND-010`, adding required item sections after the Roadmap audit found the original shape incomplete.
+The active rolling lanes are `ki-kb`, `ki-kb-activities`, and `ki-kb-live-artifacts`. Each worker edits and verifies one skill, leaves it unstaged, and reports exact paths; the orchestrator commits each verified skill through a unique temporary `GIT_INDEX_FILE` and serialises `HEAD` updates.
 
 ## Decisions made
 
@@ -24,6 +24,8 @@ Migrate every Harness rubric catalogue to the strict `contract: 1` remediation a
 - Every mechanical aspect declares `automatic`, `diagnostic`, or `guarded`; only safe, idempotent local callbacks are automatic.
 - Every judgment aspect supplies scope, prompt, unique outcomes, and guidance; the host does not synthesize judgment findings.
 - Migrate and commit one skill at a time. Reuse the three available worker slots immediately when a worker finishes.
+- A worker never commits concurrently with another worker: a dedicated temporary index isolates staging, while the orchestrator retains commit authority and checks the expected baseline.
+- Report a timestamped task start and finish, with a heartbeat at least once per minute while work remains active.
 - Legacy compatibility is cleanup work, never an executable fallback. Remove actual old footprints before retiring migration-only checks.
 
 ## Files touched
@@ -31,7 +33,7 @@ Migrate every Harness rubric catalogue to the strict `contract: 1` remediation a
 - `docs/roadmap/KI-HARNESS-GOV-012-separate-rubric-evidence.md` records the active migration boundary.
 - `tools-ki` host commits `23b7f88` and `6652290` provide v1 validation, rendering, automatic-only execution, and the `--allow-commands` wording.
 - Harness migration commits are discoverable with `git log --grep='migrate .* evidence'`.
-- `docs/roadmap/KI-HARNESS-FND-010-standardise-120-column-formatting.md` is committed as `9e3c1bf5` and currently has an uncommitted structural correction.
+- `docs/roadmap/KI-HARNESS-FND-010-standardise-120-column-formatting.md` has been structurally corrected and committed as `593d69e1`.
 
 ## Open questions
 
@@ -40,4 +42,4 @@ Migrate every Harness rubric catalogue to the strict `contract: 1` remediation a
 
 ## Next step
 
-Commit the verified `ki-harness` migration after its now-unblocked focused audit, then dispatch the next three independent unmigrated catalogues. Update this checkpoint after every three skill commits, after any shared gate failure, and immediately before any context compaction or hand-off. A fresh agent resumes by reading this exact file, checking `git status`, and running `git log --grep='migrate .* evidence'`.
+Collect and serialise the three active Knowledge Base migrations, then immediately dispatch the next three unmigrated catalogues. Update this checkpoint after every three skill commits, after any shared gate failure, and immediately before any context compaction or hand-off. A fresh agent resumes by reading this exact file, checking `git status`, and running `git log --grep='migrate .* evidence'`.
