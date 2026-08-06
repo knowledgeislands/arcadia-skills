@@ -7,6 +7,9 @@ visibility = "public"
 license = "MIT"
 supported_runtimes = ["claude-code", "chatgpt-codex"]
 
+["knowledgeislands/ki-agentic-harness:ki-repo".checks]
+coverage-checkpoints = false # source repository publishes the optional capability without adopting a checkpoint subarea
+
 ["knowledgeislands/ki-agentic-harness:ki-authoring"]
 
 ["knowledgeislands/ki-agentic-harness:ki-engineering"]
@@ -49,6 +52,8 @@ FND = "foundation-tooling"
 GOV = "governance-consistency"
 OPS = "operations"
 RTP = "runtime-portability"
+
+["knowledgeislands/ki-agentic-harness:ki-checkpoints"]
 
 ["knowledgeislands/ki-agentic-harness:ki-tokenomics"]
 headroom = "recommended"
