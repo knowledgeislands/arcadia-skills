@@ -50,38 +50,4 @@ describe('ki-delegation session', () => {
       { status: 'PASS', message: 'Delegation packet has the required durable brief structure.', subject: 'docs/roadmap/KI-TEST-GOV-001-packet.md' }
     ])
   })
-
-  test('conforms the safe legacy escalation heading only', () => {
-    const root = repository(validPacket.replace('### Escalate', '### Escalation'))
-    const session = createDelegationSession({ mode: 'conform', repository: root, userHome: '', configuration: {} })
-    session.subjects[0]?.context().packets.normaliseLegacyEscalation?.()
-    expect(session.proposal().writes).toEqual([
-      {
-        path: 'docs/roadmap/KI-TEST-GOV-001-packet.md',
-        content: validPacket
-      }
-    ])
-  })
-
-  test('isolates the automatic legacy-heading outcome from the guarded packet review', () => {
-    const session = createDelegationSession({
-      mode: 'audit',
-      repository: repository(validPacket.replace('### Escalate', '### Escalation')),
-      userHome: '',
-      configuration: {}
-    })
-    const packets = session.subjects[0]?.context().packets
-    expect(packets?.outcomes).toContainEqual({
-      status: 'PASS',
-      message: 'Delegation packet has the required durable brief structure.',
-      subject: 'docs/roadmap/KI-TEST-GOV-001-packet.md'
-    })
-    expect(packets?.legacyEscalationOutcomes).toEqual([
-      {
-        status: 'VIOLATION',
-        message: 'Delegation packet uses the legacy `Escalation` heading; use `Escalate`.',
-        subject: 'docs/roadmap/KI-TEST-GOV-001-packet.md'
-      }
-    ])
-  })
 })

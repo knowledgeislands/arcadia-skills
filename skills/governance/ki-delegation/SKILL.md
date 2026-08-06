@@ -40,7 +40,7 @@ Ordinary `## Delegation` plan notes without the packet marker remain under `ki-r
 
 Run `ki repo conform --skill ki-delegation --repo <repo> --dry-run` before applying it.
 
-CONFORM performs only the safe legacy heading repair `### Escalation` → `### Escalate` in an opted-in packet.
+CONFORM makes no authored packet-content change.
 
 It never creates a packet, chooses a worker, model, or round, invents a locked decision, alters an escalation boundary, or grants execution authority.
 

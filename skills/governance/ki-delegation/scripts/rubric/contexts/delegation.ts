@@ -39,10 +39,7 @@ const packetOutcomes = (subject: string, section: string): AuditOutcome[] => {
 export const createDelegationSession = ({ mode, repository }: RubricContextOptions): RubricSession<DelegationRubricContext> => {
   const root = resolve(repository)
   const roadmap = join(root, 'docs', 'roadmap')
-  const writes = new Map<string, string>()
   const outcomes: AuditOutcome[] = []
-  const legacyEscalationOutcomes: AuditOutcome[] = []
-  const legacyPackets: { path: string; content: string }[] = []
 
   if (!existsSync(roadmap)) outcomes.push({ status: 'NOT_APPLICABLE', message: 'No roadmap directory is present.', subject: 'docs/roadmap' })
   else
@@ -54,34 +51,16 @@ export const createDelegationSession = ({ mode, repository }: RubricContextOptio
       if (!section) continue
       const subject = relative(root, path)
       outcomes.push(...packetOutcomes(subject, section))
-      if (/^### Escalation\s*$/m.test(section) && !/^### Escalate\s*$/m.test(section)) {
-        legacyPackets.push({ path, content })
-        legacyEscalationOutcomes.push({
-          status: 'VIOLATION',
-          message: 'Delegation packet uses the legacy `Escalation` heading; use `Escalate`.',
-          subject
-        })
-      }
     }
 
   if (!outcomes.length) outcomes.push({ status: 'NOT_APPLICABLE', message: 'No delegation packets are present.', subject: 'docs/roadmap' })
-  if (!legacyEscalationOutcomes.length)
-    legacyEscalationOutcomes.push({ status: 'NOT_APPLICABLE', message: 'No legacy delegation escalation headings are present.', subject: 'docs/roadmap' })
   const context: DelegationRubricContext = {
     packets: {
-      outcomes,
-      legacyEscalationOutcomes,
-      ...(mode === 'conform'
-        ? {
-            normaliseLegacyEscalation: () => {
-              for (const packet of legacyPackets) writes.set(relative(root, packet.path), packet.content.replace(/^### Escalation(?=\s*$)/m, '### Escalate'))
-            }
-          }
-        : {})
+      outcomes
     }
   }
   return {
     subjects: [{ families: ['PACKET'], context: () => context }],
-    proposal: () => ({ writes: [...writes].map(([path, content]) => ({ path, content })) })
+    proposal: () => ({ writes: [] })
   }
 }

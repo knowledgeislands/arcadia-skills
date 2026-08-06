@@ -5,7 +5,5 @@ export type { AuditOutcome, RubricContextOptions, RubricFamily, RubricSession, S
 export type DelegationRubricContext = {
   packets: {
     outcomes: readonly AuditOutcome[]
-    legacyEscalationOutcomes: readonly AuditOutcome[]
-    normaliseLegacyEscalation?: () => void
   }
 }

@@ -70,6 +70,6 @@ The native rubric checks only the opt-in marker, required headings, and non-empt
 
 It cannot decide whether a model is actually sufficient, a split is sensible, a decision is truly locked, or a verification gate is adequate; those are judgment review.
 
-CONFORM may rename the legacy `### Escalation` heading to `### Escalate` when a packet has otherwise explicitly opted in.
+CONFORM does not rewrite authored packet content.
 
 It never supplies semantic packet content.

@@ -4,7 +4,7 @@ import type { DelegationRubricContext } from '../types.ts'
 export const PACKET: RubricFamily<DelegationRubricContext, DelegationRubricContext['packets']> = {
   code: 'PACKET',
   title: 'delegation packets',
-  description: 'Opted-in delegation-packet structure and the isolated safe legacy-heading repair.',
+  description: 'Opted-in delegation-packet structure and delegation quality.',
   standard: 'standards-delegation-packets.md',
   selectContext: (context) => context.packets,
   items: [
@@ -29,19 +29,6 @@ export const PACKET: RubricFamily<DelegationRubricContext, DelegationRubricConte
         outcomes: ['conforming', 'revise packet', 'escalate to planner'],
         guidance:
           'Keep execution authority with the planner. Record a packet revision only after the responsible authority chooses the worker scope, model purpose, escalation boundary, and any genuine dependency gate; replenish completed independent workers without treating the work as a batch.'
-      }
-    },
-    {
-      code: 'PACKET-2',
-      title: 'legacy escalation heading is normalised',
-      description:
-        'An opted-in packet with only the legacy `### Escalation` heading is safely normalised to `### Escalate` without altering its content or authority boundary.',
-      sources: ['standards-delegation-packets.md'],
-      mechanical: {
-        level: 'FAIL',
-        remediation: { class: 'automatic' },
-        audit: { phase: 'NORMALISE', run: ({ legacyEscalationOutcomes }) => legacyEscalationOutcomes },
-        conform: { phase: 'NORMALISE', run: ({ normaliseLegacyEscalation }) => normaliseLegacyEscalation?.() }
       }
     }
   ]
