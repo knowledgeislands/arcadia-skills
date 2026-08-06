@@ -11,6 +11,7 @@ const ENACT_1: RubricItem<EnactmentRubricContext> = {
   mechanical: {
     level: 'WARN',
     overrideLevels: ['FAIL'],
+    remediation: { class: 'diagnostic', guidance: 'Add or correct closed proposal frontmatter to reflect the proposal’s actual status, priority, and dependencies.' },
     audit: { phase: 'INSPECT', run: (context) => auditEvidence(context.proposalFrontmatter, 'WARN', ['FAIL']) }
   }
 }
@@ -22,6 +23,7 @@ const ENACT_2: RubricItem<EnactmentRubricContext> = {
   sources: [SOURCE],
   mechanical: {
     level: 'WARN',
+    remediation: { class: 'automatic' },
     audit: { phase: 'INSPECT', run: (context) => auditEvidence(context.lifecycle, 'WARN') },
     conform: {
       phase: 'NORMALISE',
@@ -37,7 +39,12 @@ const ENACT_3: RubricItem<EnactmentRubricContext> = {
   title: 'Governance section',
   description: 'Every stream note declares and links its bound process note.',
   sources: [SOURCE],
-  judgment: { prompt: 'Do sampled stream notes carry an appropriate Governance section?' }
+  judgment: {
+    scope: 'Sampled stream notes and their bound process-note links.',
+    prompt: 'Do sampled stream notes carry an appropriate Governance section?',
+    outcomes: ['conforming', 'governance link required', 'process-boundary decision required'],
+    guidance: 'Add the appropriate bound process-note link, or record the governing decision where the note intentionally follows a different process boundary.'
+  }
 }
 
 const ENACT_4: RubricItem<EnactmentRubricContext> = {
@@ -45,7 +52,12 @@ const ENACT_4: RubricItem<EnactmentRubricContext> = {
   title: 'index accuracy',
   description: 'Focus and proposal indexes match the live streams and statuses.',
   sources: [SOURCE],
-  judgment: { prompt: 'Do indexes accurately reflect live streams and statuses?' }
+  judgment: {
+    scope: 'Focus and proposal indexes, live streams, and their lifecycle statuses.',
+    prompt: 'Do indexes accurately reflect live streams and statuses?',
+    outcomes: ['conforming', 'index update required', 'lifecycle correction required'],
+    guidance: 'Update the index from the canonical live stream or correct the stream lifecycle state before publishing an index claim.'
+  }
 }
 
 const ENACT_5: RubricItem<EnactmentRubricContext> = {
@@ -54,7 +66,10 @@ const ENACT_5: RubricItem<EnactmentRubricContext> = {
   description: 'Done proposals retain their reviewed evidence until an explicit prune selection removes them.',
   sources: [SOURCE],
   judgment: {
-    prompt: 'Do done proposals retain their review evidence and canonical outputs until an explicit prune selection?'
+    scope: 'Done proposals, their reviewed evidence, canonical outputs, and any prune selection.',
+    prompt: 'Do done proposals retain their review evidence and canonical outputs until an explicit prune selection?',
+    outcomes: ['conforming', 'retain evidence', 'explicit prune selection required'],
+    guidance: 'Restore or retain the reviewed evidence and canonical outputs until an explicit owner-approved prune selection names the proposal.'
   }
 }
 

@@ -10,6 +10,7 @@ const GATE_1: RubricItem<GateRubricContext> = {
   sources: [SOURCE],
   mechanical: {
     level: 'WARN',
+    remediation: { class: 'diagnostic', guidance: 'Add the appropriate canonical Enactment Process anchor only after confirming the base carries proposals and the always-loaded instruction surface.' },
     audit: { phase: 'INSPECT', run: (context) => auditEvidence(context.anchor, 'WARN') }
   }
 }
@@ -19,7 +20,12 @@ const GATE_2: RubricItem<GateRubricContext> = {
   title: 'imperative gate directive',
   description: 'The anchor is imperative and states the gate exemptions.',
   sources: [SOURCE],
-  judgment: { prompt: 'Is the anchor a genuine imperative directive with the appropriate exemptions?' }
+  judgment: {
+    scope: 'The always-loaded gate anchor and its stated exceptions.',
+    prompt: 'Is the anchor a genuine imperative directive with the appropriate exemptions?',
+    outcomes: ['conforming', 'directive revision required', 'exception decision required'],
+    guidance: 'Rewrite the anchor as a clear imperative directive and document only the process-approved exemptions.'
+  }
 }
 
 export const GATE: RubricFamily<StreamsRubricContext, GateRubricContext> = {

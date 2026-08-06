@@ -10,6 +10,7 @@ const CONFIG_1: RubricItem<ConfigRubricContext> = {
   sources: [SOURCE],
   mechanical: {
     level: 'WARN',
+    remediation: { class: 'diagnostic', guidance: 'Remove or document unsupported configuration keys after confirming the Streams behaviour they were intended to express.' },
     audit: { phase: 'INSPECT', run: (context) => auditEvidence(context.knownKeys, 'WARN') }
   }
 }
@@ -21,6 +22,7 @@ const CONFIG_2: RubricItem<ConfigRubricContext> = {
   sources: [SOURCE],
   mechanical: {
     level: 'WARN',
+    remediation: { class: 'diagnostic', guidance: 'Use the documented `type` or `tags` scheme, or record the governing decision for a different note classification.' },
     audit: { phase: 'INSPECT', run: (context) => auditEvidence(context.noteTypeScheme, 'WARN') }
   }
 }
