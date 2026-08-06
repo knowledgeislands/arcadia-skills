@@ -78,6 +78,8 @@ Any remediation, including a change to canonical chezmoi sources, realised user 
 - **Deliverable:** Inventory and criterion outcomes for the canonical Codex user source, realised `~/.codex/AGENTS.md`, `~/.codex/instructions.md` if proven active, and explicit imports only.
 - **Files:** Read-only paths under the named chezmoi Codex source and realised `~/.codex/` instruction surfaces; exclude plugins, skills, caches, memory, configuration, and secrets.
 - **Definition of done:** Every candidate is classified as active or `unverified`, canonical or derived, and assessed without a write.
+- **Model:** high-reasoning — loadedness and precedence inference from indirect evidence.
+- **Verify:** Orchestrator re-reads each cited path and confirms every `unverified` classification is genuinely unprovable rather than unexamined.
 - **Checkpoint:** Return findings to the orchestrator; do not append to the roadmap item directly.
 
 ### Worker: claude-user-surface
@@ -85,6 +87,8 @@ Any remediation, including a change to canonical chezmoi sources, realised user 
 - **Deliverable:** Inventory and criterion outcomes for the canonical Claude user source, realised `~/.claude/CLAUDE.md`, and its explicit instruction-topic imports only.
 - **Files:** Read-only paths under the named chezmoi Claude source and realised `~/.claude/` instruction surfaces; exclude settings, plugins, skills, memory, and secrets.
 - **Definition of done:** Shared preferences and Claude-only mechanics are distinguished, and source/realised drift is reported without repair.
+- **Model:** high-reasoning — the shared-versus-runtime-specific split is a judgment call, not a lookup.
+- **Verify:** Orchestrator confirms each reported drift against both the chezmoi source and the realised copy before any repair is scheduled.
 - **Checkpoint:** Return findings to the orchestrator; do not run chezmoi or edit any source or realised file.
 
 ### Worker: repository-surface
@@ -92,6 +96,8 @@ Any remediation, including a change to canonical chezmoi sources, realised user 
 - **Deliverable:** Inventory and criterion outcomes for this repository's `AGENTS.md`, `CLAUDE.md`, runtime declaration, and explicit tracked imports.
 - **Files:** Read-only `.ki-config.toml`, `AGENTS.md`, `CLAUDE.md`, and explicit imports in this repository.
 - **Definition of done:** Portable placement, thin runtime supplementation, precedence, level, progress, output, and failure-preservation criteria are each evidenced.
+- **Model:** balanced — a bounded, tracked file set assessed against an enumerated criterion list.
+- **Verify:** Orchestrator checks each criterion outcome against the cited line in the tracked file rather than the worker's summary.
 - **Checkpoint:** Return findings to the orchestrator; do not change repository instructions.
 
 ### Escalate

@@ -79,6 +79,8 @@ Applying codes to live Knowledge Bases is deliberately outside this Harness item
 - **Deliverable:** Normative requiredness, grammar, allocation, stability, migration, and mode guidance with one conforming exemplar.
 - **Files:** `SKILL.md` and `references/` under `skills/knowledge-bases/ki-kb-streams/`, excluding generated `references/rubric.md`.
 - **Definition of done:** A proposal author can assign a code without using title/path derivation, and an existing base has a bounded manual migration route.
+- **Model:** high-reasoning — normative standard authoring against a locked contract.
+- **Verify:** Orchestrator runs the `ki-skills` audit and checks every normative statement and the exemplar against the locked grammar.
 - **Checkpoint:** Return before changing catalogue code, generated publications, or any live Knowledge Base.
 
 ### Worker: stream-code-checker
@@ -86,6 +88,8 @@ Applying codes to live Knowledge Bases is deliberately outside this Harness item
 - **Deliverable:** One catalogue criterion, session evidence, and fixtures for requiredness, grammar, and Knowledge-Base-wide uniqueness.
 - **Files:** `skills/knowledge-bases/ki-kb-streams/scripts/rubric/` only.
 - **Definition of done:** Valid codes pass; missing, malformed, and cross-Focus duplicates fail; AUDIT and CONFORM invent no code and propose no identity write.
+- **Model:** balanced — a single criterion with fixtures inside one enumerated directory.
+- **Verify:** Orchestrator runs the focused rubric tests and confirms CONFORM proposes no identity write on the malformed fixtures.
 - **Checkpoint:** Return before regenerating the publication or changing `tools-ki`.
 
 ### Escalate
