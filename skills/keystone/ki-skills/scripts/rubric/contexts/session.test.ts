@@ -56,7 +56,9 @@ describe('ki-skills session evidence', () => {
 
   test('keeps conform draft capabilities on the cached subject context', () => {
     const session = createSession('conform')
-    const subject = session.subjects.find((candidate) => candidate.subject?.endsWith('SKILL.md') && candidate.families.includes('KI-LINK'))
+    const subject = session.subjects.find(
+      (candidate) => candidate.subject?.endsWith('SKILL.md') && candidate.families.includes('KI-LINK')
+    )
 
     expect(subject).toBeDefined()
     const initial = subject?.context()
@@ -83,7 +85,9 @@ describe('ki-skills session evidence', () => {
     shape?.addArgumentHintVerbs?.(['conform', 'educate'])
     shape?.addArgumentHintVerbs?.(['refresh', 'help'])
 
-    expect(session.proposal().writes[0]?.content).toContain("argument-hint: 'audit | conform | educate | refresh | help'")
+    expect(session.proposal().writes[0]?.content).toContain(
+      "argument-hint: 'audit | conform | educate | refresh | help'"
+    )
   })
 
   test('routes the host publication capability to one dedicated rubric subject', () => {

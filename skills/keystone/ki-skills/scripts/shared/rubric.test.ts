@@ -28,7 +28,9 @@ const hybrid: RubricItem<RootContext['document']> = {
     remediation: AUTOMATIC_REMEDIATION,
     audit: {
       phase: 'INSPECT',
-      run: ({ present }) => [{ status: present ? 'PASS' : 'VIOLATION', message: present ? 'document is present' : 'document is absent' }]
+      run: ({ present }) => [
+        { status: present ? 'PASS' : 'VIOLATION', message: present ? 'document is present' : 'document is absent' }
+      ]
     },
     conform: {
       phase: 'PRIMARY',

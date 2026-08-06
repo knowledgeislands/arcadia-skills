@@ -61,7 +61,12 @@ const fixture = (filename: string, options: { metadata?: string; legacyDate?: st
   mkdirSync(directory, { recursive: true })
   writeFileSync(join(directory, filename), record(options))
   writeFileSync(join(directory, 'README.md'), `# Decisions\n\n1. [ADR-EXAMPLE-001](${filename}) — record shape.\n`)
-  return createDecisionRecordsSession({ mode: 'audit', repository: root, userHome: tmpdir(), configuration: {} }).subjects[0]?.context()
+  return createDecisionRecordsSession({
+    mode: 'audit',
+    repository: root,
+    userHome: tmpdir(),
+    configuration: {}
+  }).subjects[0]?.context()
 }
 
 const rootRecord = ({ id, title, sharedRecord = false }: { id: string; title: string; sharedRecord?: boolean }) => {
@@ -115,8 +120,16 @@ const rootFixture = ({
       return `${index + 1}. [${id}](${file?.file ?? `${id}.md`}) — ${file?.title ?? 'unknown'}.`
     })
     .join('\n')
-  writeFileSync(join(directory, 'README.md'), `# Decisions\n\n${marker ? '<!-- ki-decision-records: adoption-root -->\n\n' : ''}${entries}\n`)
-  return createDecisionRecordsSession({ mode: 'audit', repository: root, userHome: tmpdir(), configuration: {} }).subjects[0]?.context()
+  writeFileSync(
+    join(directory, 'README.md'),
+    `# Decisions\n\n${marker ? '<!-- ki-decision-records: adoption-root -->\n\n' : ''}${entries}\n`
+  )
+  return createDecisionRecordsSession({
+    mode: 'audit',
+    repository: root,
+    userHome: tmpdir(),
+    configuration: {}
+  }).subjects[0]?.context()
 }
 
 describe('decision-record metadata contract', () => {
@@ -146,8 +159,16 @@ decision_type: architecture`,
 })
 
 describe('new collection adoption root', () => {
-  const adoption = { file: 'GDR-EXAMPLE-001-adopting-decision-records.md', id: 'GDR-EXAMPLE-001', title: 'Adopting Decision Records' }
-  const unrelated = { file: 'ADR-EXAMPLE-001-unrelated-decision.md', id: 'ADR-EXAMPLE-001', title: 'Unrelated decision' }
+  const adoption = {
+    file: 'GDR-EXAMPLE-001-adopting-decision-records.md',
+    id: 'GDR-EXAMPLE-001',
+    title: 'Adopting Decision Records'
+  }
+  const unrelated = {
+    file: 'ADR-EXAMPLE-001-unrelated-decision.md',
+    id: 'ADR-EXAMPLE-001',
+    title: 'Unrelated decision'
+  }
 
   test('accepts a marked collection whose first record adopts Decision Records', () => {
     const context = rootFixture({ files: [adoption], indexIds: [adoption.id] })

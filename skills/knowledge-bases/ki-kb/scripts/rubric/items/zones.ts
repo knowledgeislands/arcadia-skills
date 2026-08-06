@@ -16,7 +16,10 @@ const mechanical = (
   sources: [SOURCE],
   mechanical: {
     level,
-    remediation: { class: 'diagnostic', guidance: 'Correct the required zone layout or placement, then rerun the audit.' },
+    remediation: {
+      class: 'diagnostic',
+      guidance: 'Correct the required zone layout or placement, then rerun the audit.'
+    },
     audit: { phase: 'INSPECT', run: evidence }
   }
 })

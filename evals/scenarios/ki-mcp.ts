@@ -27,7 +27,8 @@ export const scenarios: Scenario[] = [
   {
     skill: 'ki-mcp',
     id: 'mcp-access-env',
-    prompt: "What environment variable sets a workspace MCP server's access level, what is its default, and how do the levels nest?",
+    prompt:
+      "What environment variable sets a workspace MCP server's access level, what is its default, and how do the levels nest?",
     assertions: [
       { name: 'MCP_<APP>_ACCESS_LEVEL env var', re: /MCP_[A-Z<][^\s`]*ACCESS_LEVEL/ },
       { name: 'default read', re: /default[^.\n]{0,20}\bread\b|\bread\b[^.\n]{0,20}default/i },
@@ -44,12 +45,22 @@ export const scenarios: Scenario[] = [
     // per-repo fixed `<app>`, and the CLI-mirrors-tools rule).
     skill: 'ki-mcp',
     id: 'mcp-tool-naming',
-    prompt: 'What is the tool-naming convention for our workspace MCP servers? Give the exact name shape, what the leading segment is, and how the CLI relates to the tool names.',
+    prompt:
+      'What is the tool-naming convention for our workspace MCP servers? Give the exact name shape, what the leading segment is, and how the CLI relates to the tool names.',
     assertions: [
-      { name: '<app>_<resource>_<action> snake_case shape', re: /<?app>?_<?resource>?_<?action>?|app[^.\n]{0,18}resource[^.\n]{0,18}action/i },
+      {
+        name: '<app>_<resource>_<action> snake_case shape',
+        re: /<?app>?_<?resource>?_<?action>?|app[^.\n]{0,18}resource[^.\n]{0,18}action/i
+      },
       { name: 'snake_case', re: /snake[_ ]?case/i },
-      { name: '<app> fixed per repo', re: /(fixed|one|same)[^.\n]{0,25}per (repo|server)|per (repo|server)[^.\n]{0,15}(app|prefix)/i },
-      { name: 'CLI verb surface mirrors the tool names', re: /CLI[^.\n]{0,40}mirror|mirror[^.\n]{0,40}(tool|MCP|name)/i }
+      {
+        name: '<app> fixed per repo',
+        re: /(fixed|one|same)[^.\n]{0,25}per (repo|server)|per (repo|server)[^.\n]{0,15}(app|prefix)/i
+      },
+      {
+        name: 'CLI verb surface mirrors the tool names',
+        re: /CLI[^.\n]{0,40}mirror|mirror[^.\n]{0,40}(tool|MCP|name)/i
+      }
     ],
     rubric:
       'House convention: workspace MCP tools are named `<app>_<resource>_<action>` in snake_case; `<app>` is FIXED per repo (git, kb, gsuite, m365, claude_code/claude_desktop/vscode, voicenotes); metadata/lifecycle tools may drop the resource segment (e.g. gsuite_auth_start, m365_about); and the CLI verb surface MIRRORS the tool names (same resource/action structure). A correct answer gives the `<app>_<resource>_<action>` snake_case shape, the per-repo-fixed `<app>`, and the CLI-mirrors-tools relationship.'

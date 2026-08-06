@@ -27,8 +27,7 @@ export const scenarios: Scenario[] = [
   {
     skill: 'ki-kb-live-artifacts',
     id: 'la-sync-threshold',
-    prompt:
-      'How does the live-artifacts audit decide a dashboard is stale? Give the exact default rule.',
+    prompt: 'How does the live-artifacts audit decide a dashboard is stale? Give the exact default rule.',
     assertions: [
       { name: 'default 24 hours', re: /\b24\b/ },
       { name: 'sync_threshold_hours binding', re: /sync_threshold_hours/i },
@@ -41,8 +40,7 @@ export const scenarios: Scenario[] = [
   {
     skill: 'ki-kb-live-artifacts',
     id: 'la-renders-fm',
-    prompt:
-      'Scaffold the frontmatter for a new live-artifact Markdown source. What keys are mandatory?',
+    prompt: 'Scaffold the frontmatter for a new live-artifact Markdown source. What keys are mandatory?',
     assertions: [
       { name: 'renders key', re: /renders/i },
       { name: 'html render type', re: /html/i },

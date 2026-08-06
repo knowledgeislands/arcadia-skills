@@ -20,7 +20,11 @@ describe('Claude tokenomics catalogue', () => {
       .filter((item) => item.mechanical)
 
     expect(mechanical).toHaveLength(4)
-    expect(mechanical.filter((item) => item.code !== 'RUBRIC-1').every((item) => item.mechanical?.remediation.class === 'diagnostic')).toBe(true)
+    expect(
+      mechanical
+        .filter((item) => item.code !== 'RUBRIC-1')
+        .every((item) => item.mechanical?.remediation.class === 'diagnostic')
+    ).toBe(true)
     expect(mechanical.find((item) => item.code === 'RUBRIC-1')?.mechanical?.remediation.class).toBe('automatic')
   })
 })

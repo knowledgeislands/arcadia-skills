@@ -48,7 +48,10 @@ const createSkill = (relativeDirectory: string, frontmatter = ''): string => {
   temporaryDirectories.push(root)
   const directory = join(root, relativeDirectory)
   mkdirSync(directory, { recursive: true })
-  writeFileSync(join(directory, 'SKILL.md'), frontmatter ? validLocalSkill.replace('ki-depends-on: []', `ki-depends-on: []\n${frontmatter}`) : validLocalSkill)
+  writeFileSync(
+    join(directory, 'SKILL.md'),
+    frontmatter ? validLocalSkill.replace('ki-depends-on: []', `ki-depends-on: []\n${frontmatter}`) : validLocalSkill
+  )
   return directory
 }
 
@@ -90,7 +93,8 @@ describe('explicit skill kind metadata', () => {
   const outcomes = (directory: string) => {
     const shape = evidence(directory).shape
     const item = KI_SHAPE.items.find(({ code }) => code === 'KI-SHAPE-3')
-    if (!item?.mechanical || !('audit' in item.mechanical)) throw new Error('KI-SHAPE-3 mechanical audit is unavailable')
+    if (!item?.mechanical || !('audit' in item.mechanical))
+      throw new Error('KI-SHAPE-3 mechanical audit is unavailable')
     return { skill: shape.skill, outcomes: item.mechanical.audit.run(shape) }
   }
 
@@ -102,7 +106,9 @@ describe('explicit skill kind metadata', () => {
     const result = outcomes(directory)
 
     expect(result.skill?.governanceSkill).toBe(false)
-    expect(result.outcomes).toEqual([{ status: 'PASS', message: 'the skill declares an explicit governance or process kind' }])
+    expect(result.outcomes).toEqual([
+      { status: 'PASS', message: 'the skill declares an explicit governance or process kind' }
+    ])
   })
 
   test('rejects a missing kind instead of inferring one from prose', () => {
@@ -113,7 +119,9 @@ describe('explicit skill kind metadata', () => {
     const result = outcomes(directory)
 
     expect(result.skill?.governanceSkill).toBe(false)
-    expect(result.outcomes).toEqual([{ status: 'VIOLATION', message: 'missing required `ki-kind: governance | process` frontmatter metadata' }])
+    expect(result.outcomes).toEqual([
+      { status: 'VIOLATION', message: 'missing required `ki-kind: governance | process` frontmatter metadata' }
+    ])
   })
 })
 
@@ -121,7 +129,8 @@ describe('runtime compatibility metadata', () => {
   const outcomes = (frontmatter: string) => {
     const shape = evidence(createSkill('.agents/skills/ki-self', frontmatter)).shape
     const item = KI_SHAPE.items.find(({ code }) => code === 'KI-SHAPE-18')
-    if (!item?.mechanical || !('audit' in item.mechanical)) throw new Error('KI-SHAPE-18 mechanical audit is unavailable')
+    if (!item?.mechanical || !('audit' in item.mechanical))
+      throw new Error('KI-SHAPE-18 mechanical audit is unavailable')
     return item.mechanical.audit.run(shape)
   }
 
@@ -132,7 +141,9 @@ describe('runtime compatibility metadata', () => {
   })
 
   test('treats an absent runtime list as portable', () => {
-    expect(outcomes('')).toEqual([{ status: 'PASS', message: 'the skill declares no runtime compatibility restriction' }])
+    expect(outcomes('')).toEqual([
+      { status: 'PASS', message: 'the skill declares no runtime compatibility restriction' }
+    ])
   })
 
   test.each([

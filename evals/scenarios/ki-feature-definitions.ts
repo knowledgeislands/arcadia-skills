@@ -41,11 +41,14 @@ export const scenarios: Scenario[] = [
     prompt:
       'There is a behaviour we want our system to have but have not built yet. Should I add it as a numbered requirement in the relevant feature file so we do not forget it?',
     assertions: [
-      { name: 'not a numbered requirement yet', re: /not.*(numbered|requirement)|don.?t (number|add).*requirement|unnumbered/i },
+      {
+        name: 'not a numbered requirement yet',
+        re: /not.*(numbered|requirement)|don.?t (number|add).*requirement|unnumbered/i
+      },
       { name: 'goes in Gaps', re: /##?\s*gaps|gaps section|gaps backlog/i },
       { name: 'as-built only / promote when true', re: /as.?built|once.*built|when.*(built|true)|promote/i }
     ],
     rubric:
-      'House fact: the numbered contract is **as-built** — it describes what the system does **today**. A not-yet-built behaviour belongs in the file\'s **unnumbered `## Gaps`** backlog, which sits outside the as-built contract; it is **promoted** to a numbered requirement only once it is built and true. A correct answer keeps it out of the numbered set and puts it in `## Gaps`.'
+      "House fact: the numbered contract is **as-built** — it describes what the system does **today**. A not-yet-built behaviour belongs in the file's **unnumbered `## Gaps`** backlog, which sits outside the as-built contract; it is **promoted** to a numbered requirement only once it is built and true. A correct answer keeps it out of the numbered set and puts it in `## Gaps`."
   }
 ]

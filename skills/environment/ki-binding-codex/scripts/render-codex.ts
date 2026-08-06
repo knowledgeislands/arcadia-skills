@@ -45,11 +45,14 @@ type CodexServer = {
   env?: unknown
   url?: unknown
 }
-type NativeSnapshot = { transport: 'stdio'; command: string; args: string[]; env: Record<string, string> } | { transport: 'streamable_http'; url: string }
+type NativeSnapshot =
+  | { transport: 'stdio'; command: string; args: string[]; env: Record<string, string> }
+  | { transport: 'streamable_http'; url: string }
 export type NativeCodexCommand = (args: readonly string[]) => string
 export type RenderCodexOptions = Options & { nativeCommand?: NativeCodexCommand }
 
-const nativeCodexCommand: NativeCodexCommand = (args) => execFileSync('codex', args, { encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] })
+const nativeCodexCommand: NativeCodexCommand = (args) =>
+  execFileSync('codex', args, { encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] })
 
 const valueAfter = (argv: readonly string[], index: number, option: string): string => {
   const value = argv[index + 1]
@@ -78,7 +81,8 @@ const sourceEntries = (path: string): SourceEntry[] => {
   const parsed = Bun.YAML.parse(readFileSync(path, 'utf8')) as { mcpServers?: unknown }
   if (!parsed || !Array.isArray(parsed.mcpServers)) throw new Error(`source mcpServers must be a list: ${path}`)
   return parsed.mcpServers.map((entry, index) => {
-    if (!entry || typeof entry !== 'object' || typeof (entry as SourceEntry).name !== 'string') throw new Error(`source entry ${index + 1} has no name`)
+    if (!entry || typeof entry !== 'object' || typeof (entry as SourceEntry).name !== 'string')
+      throw new Error(`source entry ${index + 1} has no name`)
     return entry as SourceEntry
   })
 }
@@ -86,7 +90,9 @@ const sourceEntries = (path: string): SourceEntry[] => {
 const codexServers = (path: string): Record<string, CodexServer> => {
   if (!existsSync(path)) return {}
   const parsed = Bun.TOML.parse(readFileSync(path, 'utf8')) as { mcp_servers?: unknown }
-  return parsed.mcp_servers && typeof parsed.mcp_servers === 'object' ? (parsed.mcp_servers as Record<string, CodexServer>) : {}
+  return parsed.mcp_servers && typeof parsed.mcp_servers === 'object'
+    ? (parsed.mcp_servers as Record<string, CodexServer>)
+    : {}
 }
 
 const plainEnv = (env: Record<string, unknown> | undefined): Record<string, string> | null => {
@@ -100,7 +106,9 @@ const plainEnv = (env: Record<string, unknown> | undefined): Record<string, stri
 
 const orderedRecord = (value: unknown): Record<string, unknown> =>
   value && typeof value === 'object'
-    ? Object.fromEntries(Object.entries(value as Record<string, unknown>).sort(([left], [right]) => left.localeCompare(right)))
+    ? Object.fromEntries(
+        Object.entries(value as Record<string, unknown>).sort(([left], [right]) => left.localeCompare(right))
+      )
     : {}
 
 const sameServer = (entry: SourceEntry, actual: CodexServer | undefined): boolean => {
@@ -139,7 +147,8 @@ const shownCommand = (entry: SourceEntry): string => {
 const record = (value: unknown): Record<string, unknown> | null =>
   value && typeof value === 'object' && !Array.isArray(value) ? (value as Record<string, unknown>) : null
 
-const strings = (value: unknown): string[] | null => (Array.isArray(value) && value.every((item) => typeof item === 'string') ? [...value] : null)
+const strings = (value: unknown): string[] | null =>
+  Array.isArray(value) && value.every((item) => typeof item === 'string') ? [...value] : null
 
 const stringRecord = (value: unknown): Record<string, string> | null => {
   const values = record(value)
@@ -154,7 +163,8 @@ const absentOrEmpty = (value: unknown): boolean =>
   (Array.isArray(value) && value.length === 0) ||
   (record(value) !== null && Object.keys(record(value) ?? {}).length === 0)
 
-const hasOnly = (value: Record<string, unknown>, allowed: readonly string[]): boolean => Object.keys(value).every((key) => allowed.includes(key))
+const hasOnly = (value: Record<string, unknown>, allowed: readonly string[]): boolean =>
+  Object.keys(value).every((key) => allowed.includes(key))
 
 const nativeSnapshot = (name: string, output: string): NativeSnapshot => {
   let parsed: unknown
@@ -176,10 +186,17 @@ const nativeSnapshot = (name: string, output: string): NativeSnapshot => {
     throw new Error(`native record for ${name} has options this renderer cannot replay`)
 
   if (transport.type === 'stdio') {
-    if (!hasOnly(transport, ['type', 'command', 'args', 'env', 'env_vars', 'cwd'])) throw new Error(`native record for ${name} has an unsupported stdio option`)
+    if (!hasOnly(transport, ['type', 'command', 'args', 'env', 'env_vars', 'cwd']))
+      throw new Error(`native record for ${name} has an unsupported stdio option`)
     const args = strings(transport.args)
     const env = transport.env === null ? {} : stringRecord(transport.env)
-    if (typeof transport.command !== 'string' || !args || !env || !absentOrEmpty(transport.env_vars) || !absentOrEmpty(transport.cwd))
+    if (
+      typeof transport.command !== 'string' ||
+      !args ||
+      !env ||
+      !absentOrEmpty(transport.env_vars) ||
+      !absentOrEmpty(transport.cwd)
+    )
       throw new Error(`native record for ${name} is not replayable stdio`)
     return { transport: 'stdio', command: transport.command, args, env }
   }
@@ -266,7 +283,8 @@ export const runRenderCodex = (options: RenderCodexOptions): number => {
         }
         native(desiredAdd)
         const rendered = nativeSnapshot(entry.name, native(['mcp', 'get', entry.name, '--json']))
-        if (!matches(entry, rendered)) throw new Error(`post-write verification disagrees with the source for ${entry.name}`)
+        if (!matches(entry, rendered))
+          throw new Error(`post-write verification disagrees with the source for ${entry.name}`)
         add('PASS', `rendered \`${entry.name}\` to Codex`)
       } catch {
         failed = true
@@ -297,8 +315,13 @@ export const runRenderCodex = (options: RenderCodexOptions): number => {
   }
   const planned = toAdd.length + toRemove.length
   if (planned === 0) add('PASS', `Codex agrees with the source (${desired.length} server(s) target Codex)`)
-  if (options.json) process.stdout.write(`${JSON.stringify({ concern: 'ki-binding-codex render-codex', target: configPath, source, findings }, null, 2)}\n`)
-  else for (const finding of findings) process.stdout.write(`${finding.level} ${finding.file}  ${finding.msg} (${finding.ref})\n`)
+  if (options.json)
+    process.stdout.write(
+      `${JSON.stringify({ concern: 'ki-binding-codex render-codex', target: configPath, source, findings }, null, 2)}\n`
+    )
+  else
+    for (const finding of findings)
+      process.stdout.write(`${finding.level} ${finding.file}  ${finding.msg} (${finding.ref})\n`)
   return failed || (options.check && planned > 0) ? 1 : 0
 }
 

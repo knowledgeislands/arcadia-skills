@@ -10,7 +10,10 @@ const UTIL_1: RubricItem<McpUtilitiesContext> = {
   sources: [STANDARD],
   mechanical: {
     level: 'FAIL',
-    remediation: { class: 'diagnostic', guidance: 'Restore the required shared utility from the owning implementation and security decision.' },
+    remediation: {
+      class: 'diagnostic',
+      guidance: 'Restore the required shared utility from the owning implementation and security decision.'
+    },
     audit: {
       phase: 'INSPECT',
       run: (context) =>
@@ -23,9 +26,11 @@ const UTIL_1: RubricItem<McpUtilitiesContext> = {
   },
   judgment: {
     scope: 'Audit logging and every tool error envelope in the MCP implementation.',
-    prompt: 'Verify audit logging never captures secrets and tool errors are errorResult envelopes so the audit wrapper sees them.',
+    prompt:
+      'Verify audit logging never captures secrets and tool errors are errorResult envelopes so the audit wrapper sees them.',
     outcomes: ['conforming', 'gap', 'exclusion'],
-    guidance: 'Make security-sensitive changes only with the responsible authority, or record a named gap or explicit exclusion.'
+    guidance:
+      'Make security-sensitive changes only with the responsible authority, or record a named gap or explicit exclusion.'
   }
 }
 

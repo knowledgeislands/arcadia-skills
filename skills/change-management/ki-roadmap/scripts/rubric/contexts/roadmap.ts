@@ -1,4 +1,10 @@
-import type { AuditOutcome, RubricContextOptions, RubricOutcomes, RubricPublicationContext, RubricSession } from '../../shared/rubric.ts'
+import type {
+  AuditOutcome,
+  RubricContextOptions,
+  RubricOutcomes,
+  RubricPublicationContext,
+  RubricSession
+} from '../../shared/rubric.ts'
 import { createRoadmapDraft } from './roadmap-drafts.ts'
 import { type Finding, inspectRoadmap } from './roadmap-evidence.ts'
 
@@ -23,17 +29,31 @@ export type RoadmapRubricContext = {
 
 const auditOutcome = (finding: Finding): AuditOutcome => ({
   status:
-    finding.level === 'FAIL' || finding.level === 'WARN' ? 'VIOLATION' : finding.level === 'NA' ? 'NOT_APPLICABLE' : finding.level === 'INFO' ? 'INFO' : 'PASS',
+    finding.level === 'FAIL' || finding.level === 'WARN'
+      ? 'VIOLATION'
+      : finding.level === 'NA'
+        ? 'NOT_APPLICABLE'
+        : finding.level === 'INFO'
+          ? 'INFO'
+          : 'PASS',
   message: finding.msg,
   ...(finding.file ? { subject: finding.file } : {})
 })
 
-export const outcomesFor = (context: RoadmapAuditContext, code: string, passMessage: string): RubricOutcomes<AuditOutcome> => {
+export const outcomesFor = (
+  context: RoadmapAuditContext,
+  code: string,
+  passMessage: string
+): RubricOutcomes<AuditOutcome> => {
   const outcomes = context.findings.filter((finding) => finding.area === code).map(auditOutcome)
   return outcomes.length > 0 ? outcomes : [{ status: 'PASS', message: passMessage }]
 }
 
-export const createRoadmapSession = ({ mode, repository, publication }: RubricContextOptions): RubricSession<RoadmapRubricContext> => {
+export const createRoadmapSession = ({
+  mode,
+  repository,
+  publication
+}: RubricContextOptions): RubricSession<RoadmapRubricContext> => {
   const findings = inspectRoadmap(repository)
   const draft = mode === 'conform' ? createRoadmapDraft(repository, findings) : undefined
   const audit = { findings }

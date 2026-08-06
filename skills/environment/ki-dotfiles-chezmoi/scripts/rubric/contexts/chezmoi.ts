@@ -1,10 +1,16 @@
 import { type Dirent, lstatSync, readdirSync } from 'node:fs'
 import { join, relative, resolve } from 'node:path'
-import type { ConformWrite, RubricContextOptions, RubricPublicationContext, RubricSession } from '../../shared/rubric.ts'
+import type {
+  ConformWrite,
+  RubricContextOptions,
+  RubricPublicationContext,
+  RubricSession
+} from '../../shared/rubric.ts'
 
 const SKIP_DIRECTORIES = new Set(['.git', 'node_modules', '.ki', '.agents', '.claude'])
 const RECOGNISED_PREFIXES = ['executable_', 'symlink_', 'private_', 'readonly_', 'dot_', 'create_', 'modify_'] as const
-const IGNORE_CONTENT = '# Files/directories chezmoi should never manage.\n# Add repository-specific ignore patterns deliberately.\n'
+const IGNORE_CONTENT =
+  '# Files/directories chezmoi should never manage.\n# Add repository-specific ignore patterns deliberately.\n'
 
 export type RepositoryState = 'absent' | 'physical' | 'unsafe'
 export type IgnoreState = 'missing' | 'physical' | 'unsafe'
@@ -59,7 +65,11 @@ const pathState = (path: string): 'missing' | 'file' | 'directory' | 'unsafe' =>
   }
 }
 
-const walkPhysicalFiles = (directory: string, onFile: (path: string) => void, skip: (name: string) => boolean): void => {
+const walkPhysicalFiles = (
+  directory: string,
+  onFile: (path: string) => void,
+  skip: (name: string) => boolean
+): void => {
   let entries: Dirent[]
   try {
     entries = readdirSync(directory, { withFileTypes: true })
@@ -93,7 +103,9 @@ const inspectTemplates = (repository: string, state: RepositoryState): { files: 
   )
   return {
     files,
-    support: pathState(join(repository, '.chezmoidata')) === 'directory' || pathState(join(repository, '.chezmoitemplates')) === 'directory'
+    support:
+      pathState(join(repository, '.chezmoidata')) === 'directory' ||
+      pathState(join(repository, '.chezmoitemplates')) === 'directory'
   }
 }
 
@@ -131,14 +143,20 @@ const inspectGitLocks = (repository: string, state: RepositoryState): readonly s
   return locks.sort()
 }
 
-export const hasRecognisedPrefix = (name: string): boolean => RECOGNISED_PREFIXES.some((prefix) => name.startsWith(prefix))
+export const hasRecognisedPrefix = (name: string): boolean =>
+  RECOGNISED_PREFIXES.some((prefix) => name.startsWith(prefix))
 
-export const createChezmoiSession = ({ mode, repository, publication }: RubricContextOptions): RubricSession<ChezmoiRubricContext> => {
+export const createChezmoiSession = ({
+  mode,
+  repository,
+  publication
+}: RubricContextOptions): RubricSession<ChezmoiRubricContext> => {
   const root = resolve(repository)
   const state = repositoryState(root)
   const ignorePath = join(root, '.chezmoiignore')
   const rawIgnoreState = pathState(ignorePath)
-  const ignoreState: IgnoreState = rawIgnoreState === 'missing' ? 'missing' : rawIgnoreState === 'file' ? 'physical' : 'unsafe'
+  const ignoreState: IgnoreState =
+    rawIgnoreState === 'missing' ? 'missing' : rawIgnoreState === 'file' ? 'physical' : 'unsafe'
   let ignoreRequested = false
   const templates = inspectTemplates(root, state)
   const shape: ChezmoiShapeContext = {
@@ -164,7 +182,11 @@ export const createChezmoiSession = ({ mode, repository, publication }: RubricCo
   }
   return {
     subjects: [
-      { families: ['CHEZMOI', 'BIN', 'GIT', 'PATTERN', 'CONFIG', 'LAYER', 'ETIQ', 'SYNC'], context: () => context, subject: root },
+      {
+        families: ['CHEZMOI', 'BIN', 'GIT', 'PATTERN', 'CONFIG', 'LAYER', 'ETIQ', 'SYNC'],
+        context: () => context,
+        subject: root
+      },
       { families: ['RUBRIC'], context: () => context, subject: root }
     ],
     proposal: () => {

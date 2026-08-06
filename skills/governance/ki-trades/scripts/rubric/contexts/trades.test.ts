@@ -25,16 +25,28 @@ const temporaryDirectory = (prefix: string): string => {
 }
 
 const repositoryUrl = (identity: string): string => `https://github.com/${identity}`
-const routes = (peers: readonly string[], kinds: readonly ('work' | 'knowledge')[] = ['work', 'knowledge']): Record<string, readonly string[]> => ({
+const routes = (
+  peers: readonly string[],
+  kinds: readonly ('work' | 'knowledge')[] = ['work', 'knowledge']
+): Record<string, readonly string[]> => ({
   work: kinds.includes('work') ? peers.map(repositoryUrl) : [],
   knowledge: kinds.includes('knowledge') ? peers.map(repositoryUrl) : []
 })
-const tradeConfiguration = (_identity: string, peers: readonly string[], kinds?: readonly ('work' | 'knowledge')[]): Record<string, unknown> => ({
+const tradeConfiguration = (
+  _identity: string,
+  peers: readonly string[],
+  kinds?: readonly ('work' | 'knowledge')[]
+): Record<string, unknown> => ({
   exports_to: routes(peers, kinds),
   imports_from: routes(peers, kinds)
 })
 
-const writeRepositoryConfiguration = (root: string, identity: string, peers: readonly string[], kinds?: readonly ('work' | 'knowledge')[]): void => {
+const writeRepositoryConfiguration = (
+  root: string,
+  identity: string,
+  peers: readonly string[],
+  kinds?: readonly ('work' | 'knowledge')[]
+): void => {
   writeFileSync(
     join(root, '.ki-config.toml'),
     [
@@ -61,7 +73,10 @@ const scaffold = (root: string): void => {
 const registry = (home: string, roots: readonly string[]): void => {
   const directory = join(home, '.config', 'ki')
   mkdirSync(directory, { recursive: true })
-  writeFileSync(join(directory, 'config.toml'), ['[repositories]', `paths = [${roots.map((root) => JSON.stringify(root)).join(', ')}]`, ''].join('\n'))
+  writeFileSync(
+    join(directory, 'config.toml'),
+    ['[repositories]', `paths = [${roots.map((root) => JSON.stringify(root)).join(', ')}]`, ''].join('\n')
+  )
 }
 
 const fixture = (peerIdentity = 'peer/repo', reciprocal = true) => {
@@ -76,7 +91,12 @@ const fixture = (peerIdentity = 'peer/repo', reciprocal = true) => {
   return { home, local, peer }
 }
 
-const options = (repository: string, userHome: string, configuration: Record<string, unknown>, mode: 'audit' | 'conform' = 'audit'): RubricContextOptions => ({
+const options = (
+  repository: string,
+  userHome: string,
+  configuration: Record<string, unknown>,
+  mode: 'audit' | 'conform' = 'audit'
+): RubricContextOptions => ({
   mode,
   repository,
   userHome,
@@ -140,7 +160,9 @@ const mechanicalOutcomes = (
 
 test('malformed, duplicated, and non-normalized declarations are refused', () => {
   const { home, local } = fixture()
-  const session = createTradesSession(options(local, home, tradeConfiguration('Local/Repo', ['peer/repo', 'peer/repo', 'another/repo'])))
+  const session = createTradesSession(
+    options(local, home, tradeConfiguration('Local/Repo', ['peer/repo', 'peer/repo', 'another/repo']))
+  )
   const messages = mechanicalOutcomes(session, CONFIG).map((outcome) => outcome.message)
 
   expect(messages).toContain('exports_to.work must not repeat a repository')
@@ -149,7 +171,9 @@ test('malformed, duplicated, and non-normalized declarations are refused', () =>
 
 test('declared routes remain pending until the other repository registers and reciprocates', () => {
   const mismatch = fixture('peer/other')
-  const mismatchSession = createTradesSession(options(mismatch.local, mismatch.home, tradeConfiguration('local/repo', ['peer/repo'])))
+  const mismatchSession = createTradesSession(
+    options(mismatch.local, mismatch.home, tradeConfiguration('local/repo', ['peer/repo']))
+  )
   expect(mechanicalOutcomes(mismatchSession, ROUTE)).toContainEqual({
     status: 'INFO',
     message: 'declared export route https://github.com/peer/repo awaits receiver registration',
@@ -157,7 +181,9 @@ test('declared routes remain pending until the other repository registers and re
   })
 
   const oneSided = fixture('peer/repo', false)
-  const oneSidedSession = createTradesSession(options(oneSided.local, oneSided.home, tradeConfiguration('local/repo', ['peer/repo'])))
+  const oneSidedSession = createTradesSession(
+    options(oneSided.local, oneSided.home, tradeConfiguration('local/repo', ['peer/repo']))
+  )
   expect(mechanicalOutcomes(oneSidedSession, ROUTE)).toContainEqual({
     status: 'INFO',
     message: 'declared export route https://github.com/peer/repo awaits matching receiver declaration',
@@ -168,7 +194,9 @@ test('declared routes remain pending until the other repository registers and re
 test('a route is active only for a kind that both repositories declare', () => {
   const { home, local, peer } = fixture()
   writeRepositoryConfiguration(peer, 'peer/repo', ['local/repo'], ['work'])
-  const session = createTradesSession(options(local, home, tradeConfiguration('local/repo', ['peer/repo'], ['knowledge'])))
+  const session = createTradesSession(
+    options(local, home, tradeConfiguration('local/repo', ['peer/repo'], ['knowledge']))
+  )
 
   expect(mechanicalOutcomes(session, ROUTE)).toContainEqual({
     status: 'INFO',
@@ -192,24 +220,40 @@ test('outbound records are valid on a declared export route while receiver parti
     message: 'declared export route https://github.com/peer/repo awaits receiver ki-trades participation',
     subject: 'https://github.com/peer/repo'
   })
-  expect(mechanicalOutcomes(session, AUTH)).toEqual([{ status: 'PASS', message: 'Trade records preserve sender and receiver write boundaries.' }])
+  expect(mechanicalOutcomes(session, AUTH)).toEqual([
+    { status: 'PASS', message: 'Trade records preserve sender and receiver write boundaries.' }
+  ])
   expect(mechanicalOutcomes(session, RELEASE)).toEqual([
-    { status: 'PASS', message: 'receiver has not created an inbound copy; sender retains the outbound record', subject: `-/_TRADES/peer/repo/${id}.md` }
+    {
+      status: 'PASS',
+      message: 'receiver has not created an inbound copy; sender retains the outbound record',
+      subject: `-/_TRADES/peer/repo/${id}.md`
+    }
   ])
 })
 
 test('a committed preparation is valid on a sender-declared export and is not receivable', () => {
   const { home, local, peer } = fixture('peer/repo', false)
   const id = 'TRD-000000ab'
-  writeRecord(local, '-', '_PREPARATIONS/peer/repo', id, record(id, 'local/repo', 'peer/repo', [], undefined, 'work', 'receipt', true))
+  writeRecord(
+    local,
+    '-',
+    '_PREPARATIONS/peer/repo',
+    id,
+    record(id, 'local/repo', 'peer/repo', [], undefined, 'work', 'receipt', true)
+  )
   writeFileSync(
     join(peer, '.ki-config.toml'),
     ['["knowledgeislands/ki-agentic-harness:ki-repo"]', 'repository = "https://github.com/peer/repo"', ''].join('\n')
   )
 
   const session = createTradesSession(options(local, home, tradeConfiguration('local/repo', ['peer/repo'])))
-  expect(mechanicalOutcomes(session, RECORD)).toEqual([{ status: 'PASS', message: 'Trade record identity and payload shape are valid.' }])
-  expect(mechanicalOutcomes(session, AUTH)).toEqual([{ status: 'PASS', message: 'Trade records preserve sender and receiver write boundaries.' }])
+  expect(mechanicalOutcomes(session, RECORD)).toEqual([
+    { status: 'PASS', message: 'Trade record identity and payload shape are valid.' }
+  ])
+  expect(mechanicalOutcomes(session, AUTH)).toEqual([
+    { status: 'PASS', message: 'Trade records preserve sender and receiver write boundaries.' }
+  ])
 })
 
 test('a blank line after frontmatter does not weaken exact H1 identity validation', () => {
@@ -218,7 +262,9 @@ test('a blank line after frontmatter does not weaken exact H1 identity validatio
   writeRecord(local, '-', 'peer/repo', validId, record(validId, 'local/repo', 'peer/repo'))
 
   const valid = createTradesSession(options(local, home, tradeConfiguration('local/repo', ['peer/repo'])))
-  expect(mechanicalOutcomes(valid, RECORD)).toEqual([{ status: 'PASS', message: 'Trade record identity and payload shape are valid.' }])
+  expect(mechanicalOutcomes(valid, RECORD)).toEqual([
+    { status: 'PASS', message: 'Trade record identity and payload shape are valid.' }
+  ])
 
   const invalidId = 'TRD-00000004'
   writeRecord(
@@ -226,7 +272,10 @@ test('a blank line after frontmatter does not weaken exact H1 identity validatio
     '-',
     'peer/repo',
     invalidId,
-    record(invalidId, 'local/repo', 'peer/repo').replace(`# ${invalidId}: Submission title`, `# ${invalidId}: Altered title`)
+    record(invalidId, 'local/repo', 'peer/repo').replace(
+      `# ${invalidId}: Submission title`,
+      `# ${invalidId}: Altered title`
+    )
   )
 
   const invalid = createTradesSession(options(local, home, tradeConfiguration('local/repo', ['peer/repo'])))
@@ -275,7 +324,13 @@ test('every submitted trade declares an observation policy', () => {
 test('sender and receiver write boundaries reject receiver fields outbound and changed inbound payload', () => {
   const { home, local, peer } = fixture()
   const outboundId = 'TRD-00000001'
-  writeRecord(local, '-', 'peer/repo', outboundId, record(outboundId, 'local/repo', 'peer/repo', ['decision_status: unconsidered']))
+  writeRecord(
+    local,
+    '-',
+    'peer/repo',
+    outboundId,
+    record(outboundId, 'local/repo', 'peer/repo', ['decision_status: unconsidered'])
+  )
 
   const inboundId = 'TRD-00000002'
   writeRecord(peer, '-', 'local/repo', inboundId, record(inboundId, 'peer/repo', 'local/repo'))
@@ -284,7 +339,13 @@ test('sender and receiver write boundaries reject receiver fields outbound and c
     '+',
     'peer/repo',
     inboundId,
-    record(inboundId, 'peer/repo', 'local/repo', ['decision_status: unconsidered'], 'The receiver changed the sender payload.')
+    record(
+      inboundId,
+      'peer/repo',
+      'local/repo',
+      ['decision_status: unconsidered'],
+      'The receiver changed the sender payload.'
+    )
   )
 
   const session = createTradesSession(options(local, home, tradeConfiguration('local/repo', ['peer/repo'])))
@@ -333,15 +394,29 @@ test('all receiver decision statuses are accepted with their required rationale 
     const id = `TRD-${String(index + 10).padStart(8, '0')}`
     const kind = status === 'retained' ? 'knowledge' : 'work'
     writeRecord(peer, '-', 'local/repo', id, record(id, 'peer/repo', 'local/repo', [], undefined, kind))
-    writeRecord(local, '+', 'peer/repo', id, record(id, 'peer/repo', 'local/repo', [`decision_status: ${status}`, ...fields], undefined, kind))
+    writeRecord(
+      local,
+      '+',
+      'peer/repo',
+      id,
+      record(id, 'peer/repo', 'local/repo', [`decision_status: ${status}`, ...fields], undefined, kind)
+    )
   }
 
   const valid = createTradesSession(options(local, home, tradeConfiguration('local/repo', ['peer/repo'])))
-  expect(mechanicalOutcomes(valid, STATUS)).toEqual([{ status: 'PASS', message: 'Receiver decision statuses and local linkage are valid.' }])
+  expect(mechanicalOutcomes(valid, STATUS)).toEqual([
+    { status: 'PASS', message: 'Receiver decision statuses and local linkage are valid.' }
+  ])
 
   const invalidId = 'TRD-00000090'
   writeRecord(peer, '-', 'local/repo', invalidId, record(invalidId, 'peer/repo', 'local/repo'))
-  writeRecord(local, '+', 'peer/repo', invalidId, record(invalidId, 'peer/repo', 'local/repo', ['decision_status: accepted']))
+  writeRecord(
+    local,
+    '+',
+    'peer/repo',
+    invalidId,
+    record(invalidId, 'peer/repo', 'local/repo', ['decision_status: accepted'])
+  )
   const invalid = createTradesSession(options(local, home, tradeConfiguration('local/repo', ['peer/repo'])))
   expect(mechanicalOutcomes(invalid, STATUS).map((outcome) => outcome.message)).toContain(
     'decision_status must be one of unconsidered, in_progress, parked, clarify, applied, adopted, retained, declined, superseded'
@@ -357,22 +432,43 @@ test('all receiver decision statuses are accepted with their required rationale 
     record(wrongKindId, 'peer/repo', 'local/repo', ['decision_status: retained', 'retained_as: Knowledge/Local/Note'])
   )
   const wrongKind = createTradesSession(options(local, home, tradeConfiguration('local/repo', ['peer/repo'])))
-  expect(mechanicalOutcomes(wrongKind, STATUS).map((outcome) => outcome.message)).toContain('retained is valid only for knowledge trades')
+  expect(mechanicalOutcomes(wrongKind, STATUS).map((outcome) => outcome.message)).toContain(
+    'retained is valid only for knowledge trades'
+  )
 })
 
 test('only terminal receiver dispositions permit sender release and receiver pruning observation', () => {
   const { home, local } = fixture()
   const parkedId = 'TRD-00000020'
-  writeRecord(local, '+', 'peer/repo', parkedId, record(parkedId, 'peer/repo', 'local/repo', ['decision_status: parked', "rationale: 'Wait.'"]))
+  writeRecord(
+    local,
+    '+',
+    'peer/repo',
+    parkedId,
+    record(parkedId, 'peer/repo', 'local/repo', ['decision_status: parked', "rationale: 'Wait.'"])
+  )
   const adoptedId = 'TRD-00000021'
-  writeRecord(local, '+', 'peer/repo', adoptedId, record(adoptedId, 'peer/repo', 'local/repo', ['decision_status: adopted', 'adopted_as: KI-LOCAL-FND-001']))
+  writeRecord(
+    local,
+    '+',
+    'peer/repo',
+    adoptedId,
+    record(adoptedId, 'peer/repo', 'local/repo', ['decision_status: adopted', 'adopted_as: KI-LOCAL-FND-001'])
+  )
   const retainedId = 'TRD-00000022'
   writeRecord(
     local,
     '+',
     'peer/repo',
     retainedId,
-    record(retainedId, 'peer/repo', 'local/repo', ['decision_status: retained', 'retained_as: Knowledge/Local/Note'], undefined, 'knowledge')
+    record(
+      retainedId,
+      'peer/repo',
+      'local/repo',
+      ['decision_status: retained', 'retained_as: Knowledge/Local/Note'],
+      undefined,
+      'knowledge'
+    )
   )
 
   const session = createTradesSession(options(local, home, tradeConfiguration('local/repo', ['peer/repo'])))
@@ -397,22 +493,51 @@ test('only terminal receiver dispositions permit sender release and receiver pru
 test('receipt and completion policies produce different release eligibility', () => {
   const { home, local, peer } = fixture()
   const receiptId = 'TRD-00000030'
-  writeRecord(local, '-', 'peer/repo', receiptId, record(receiptId, 'local/repo', 'peer/repo', [], undefined, 'work', 'receipt'))
-  writeRecord(peer, '+', 'local/repo', receiptId, record(receiptId, 'local/repo', 'peer/repo', ['decision_status: unconsidered'], undefined, 'work', 'receipt'))
+  writeRecord(
+    local,
+    '-',
+    'peer/repo',
+    receiptId,
+    record(receiptId, 'local/repo', 'peer/repo', [], undefined, 'work', 'receipt')
+  )
+  writeRecord(
+    peer,
+    '+',
+    'local/repo',
+    receiptId,
+    record(receiptId, 'local/repo', 'peer/repo', ['decision_status: unconsidered'], undefined, 'work', 'receipt')
+  )
 
   const completionId = 'TRD-00000031'
-  writeRecord(local, '-', 'peer/repo', completionId, record(completionId, 'local/repo', 'peer/repo', [], undefined, 'work', 'completion'))
+  writeRecord(
+    local,
+    '-',
+    'peer/repo',
+    completionId,
+    record(completionId, 'local/repo', 'peer/repo', [], undefined, 'work', 'completion')
+  )
   writeRecord(
     peer,
     '+',
     'local/repo',
     completionId,
-    record(completionId, 'local/repo', 'peer/repo', ['decision_status: adopted', 'adopted_as: KI-PEER-FND-001'], undefined, 'work', 'completion')
+    record(
+      completionId,
+      'local/repo',
+      'peer/repo',
+      ['decision_status: adopted', 'adopted_as: KI-PEER-FND-001'],
+      undefined,
+      'work',
+      'completion'
+    )
   )
   const roadmapDirectory = join(peer, 'docs', 'roadmap')
   mkdirSync(roadmapDirectory, { recursive: true })
   const roadmapPath = join(roadmapDirectory, 'KI-PEER-FND-001-linked-work.md')
-  writeFileSync(roadmapPath, ['---', 'id: KI-PEER-FND-001', 'status: in-progress', '---', '', '# Linked work', ''].join('\n'))
+  writeFileSync(
+    roadmapPath,
+    ['---', 'id: KI-PEER-FND-001', 'status: in-progress', '---', '', '# Linked work', ''].join('\n')
+  )
 
   const waiting = createTradesSession(options(local, home, tradeConfiguration('local/repo', ['peer/repo'])))
   expect(mechanicalOutcomes(waiting, RELEASE)).toContainEqual({
@@ -444,7 +569,11 @@ test('receipt and applied commit references require full lower-case commit ids',
     '+',
     'peer/repo',
     id,
-    record(id, 'peer/repo', 'local/repo', ['decision_status: applied', 'received_from_ref: short', 'applied_commit: abc'])
+    record(id, 'peer/repo', 'local/repo', [
+      'decision_status: applied',
+      'received_from_ref: short',
+      'applied_commit: abc'
+    ])
   )
 
   const session = createTradesSession(options(local, home, tradeConfiguration('local/repo', ['peer/repo'])))

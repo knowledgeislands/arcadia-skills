@@ -1,6 +1,11 @@
 import { existsSync, lstatSync, readdirSync, readFileSync } from 'node:fs'
 import { join, relative, resolve, sep } from 'node:path'
-import type { ConformWrite, RubricContextOptions, RubricPublicationContext, RubricSession } from '../../shared/rubric.ts'
+import type {
+  ConformWrite,
+  RubricContextOptions,
+  RubricPublicationContext,
+  RubricSession
+} from '../../shared/rubric.ts'
 
 const CONFIG_NAMES = ['eleventy.config.ts', 'eleventy.config.js', 'eleventy.config.mjs', 'eleventy.config.cjs'] as const
 const SKILL_NAME = 'ki-website'
@@ -67,12 +72,18 @@ const containedPhysical = (root: string, path: string, kind: 'file' | 'directory
   return kind === 'file' ? state.isFile() : state.isDirectory()
 }
 
-export const createWebsiteSession = ({ mode, repository, publication }: RubricContextOptions): RubricSession<WebsiteContext> => {
+export const createWebsiteSession = ({
+  mode,
+  repository,
+  publication
+}: RubricContextOptions): RubricSession<WebsiteContext> => {
   const root = resolve(repository)
   const available = physicalDirectory(root)
   const at = (...parts: string[]) => join(root, ...parts)
-  const has = (...parts: string[]) => available && (containedPhysical(root, at(...parts), 'file') || containedPhysical(root, at(...parts), 'directory'))
-  const read = (...parts: string[]) => (available && containedPhysical(root, at(...parts), 'file') ? readFileSync(at(...parts), 'utf8') : '')
+  const has = (...parts: string[]) =>
+    available && (containedPhysical(root, at(...parts), 'file') || containedPhysical(root, at(...parts), 'directory'))
+  const read = (...parts: string[]) =>
+    available && containedPhysical(root, at(...parts), 'file') ? readFileSync(at(...parts), 'utf8') : ''
   const isDir = (...parts: string[]) => available && containedPhysical(root, at(...parts), 'directory')
 
   const flatCfg = CONFIG_NAMES.find((name) => containedPhysical(root, at(name), 'file'))
@@ -132,20 +143,25 @@ export const createWebsiteSession = ({ mode, repository, publication }: RubricCo
     return draft
   }
 
-  const configDraft = mode === 'conform' && !kiWebsiteTable && !ki.malformed ? prepareDraft('.ki-config.toml') : undefined
+  const configDraft =
+    mode === 'conform' && !kiWebsiteTable && !ki.malformed ? prepareDraft('.ki-config.toml') : undefined
   const ignoreDraft = mode === 'conform' && cfgName ? prepareDraft('.gitignore') : undefined
   const addOptIn =
     configDraft === undefined
       ? undefined
       : (): void => {
           if (/\["knowledgeislands\/ki-agentic-harness:ki-website"\]/.test(configDraft.content)) return
-          configDraft.content = configDraft.content ? `${configDraft.content.replace(/\n*$/, '\n')}\n${KI_DEFAULT}` : KI_DEFAULT
+          configDraft.content = configDraft.content
+            ? `${configDraft.content.replace(/\n*$/, '\n')}\n${KI_DEFAULT}`
+            : KI_DEFAULT
         }
   const addDistIgnore =
     ignoreDraft === undefined
       ? undefined
       : (): void => {
-          const correct = siteRoot ? /^\s*\/?site\/dist\/?\s*$/m.test(ignoreDraft.content) : /^\s*\/?dist\/?\s*$/m.test(ignoreDraft.content)
+          const correct = siteRoot
+            ? /^\s*\/?site\/dist\/?\s*$/m.test(ignoreDraft.content)
+            : /^\s*\/?dist\/?\s*$/m.test(ignoreDraft.content)
           if (correct) return
           ignoreDraft.content =
             siteRoot && /^\s*\/dist\/?\s*$/m.test(ignoreDraft.content)
@@ -182,7 +198,9 @@ export const createWebsiteSession = ({ mode, repository, publication }: RubricCo
     ],
     proposal: () => ({
       writes: [...drafts.values()].flatMap((draft): ConformWrite[] =>
-        draft.content === (draft.original ?? '') ? [] : [{ path: draft.path, content: draft.content, ...(draft.original === null ? { create: true } : {}) }]
+        draft.content === (draft.original ?? '')
+          ? []
+          : [{ path: draft.path, content: draft.content, ...(draft.original === null ? { create: true } : {}) }]
       )
     })
   }

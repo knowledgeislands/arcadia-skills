@@ -14,8 +14,10 @@ export type HousekeepingRubricContext = {
   templates: { outcomes: readonly AuditOutcome[] }
 }
 
-const file = (path: string): boolean => existsSync(path) && lstatSync(path).isFile() && !lstatSync(path).isSymbolicLink()
-const directory = (path: string): boolean => existsSync(path) && lstatSync(path).isDirectory() && !lstatSync(path).isSymbolicLink()
+const file = (path: string): boolean =>
+  existsSync(path) && lstatSync(path).isFile() && !lstatSync(path).isSymbolicLink()
+const directory = (path: string): boolean =>
+  existsSync(path) && lstatSync(path).isDirectory() && !lstatSync(path).isSymbolicLink()
 
 const values = (content: string): Record<string, string> => {
   const block = content.match(/^---\n([\s\S]*?)\n---/)
@@ -33,24 +35,41 @@ const isKb = (root: string): boolean => {
   try {
     const parsed = TOML.parse(readFileSync(config, 'utf8')) as Record<string, unknown>
     const table = parsed[REPO_CONFIG]
-    return typeof table === 'object' && table !== null && !Array.isArray(table) && (table as Record<string, unknown>).repo_type === 'kb'
+    return (
+      typeof table === 'object' &&
+      table !== null &&
+      !Array.isArray(table) &&
+      (table as Record<string, unknown>).repo_type === 'kb'
+    )
   } catch {
     return false
   }
 }
 
-export const createHousekeepingSession = ({ repository, publication }: RubricContextOptions): RubricSession<HousekeepingRubricContext> => {
+export const createHousekeepingSession = ({
+  repository,
+  publication
+}: RubricContextOptions): RubricSession<HousekeepingRubricContext> => {
   const root = resolve(repository)
   const templateRoot = isKb(root) ? join(root, 'Streams', 'Housekeeping') : join(root, 'docs', 'housekeeping')
   const relativeRoot = relative(root, templateRoot)
   const outcomes: AuditOutcome[] = []
   if (!directory(templateRoot)) {
-    outcomes.push({ status: 'NOT_APPLICABLE', message: 'No housekeeping template directory is present.', subject: relativeRoot })
+    outcomes.push({
+      status: 'NOT_APPLICABLE',
+      message: 'No housekeeping template directory is present.',
+      subject: relativeRoot
+    })
   } else {
     const templates = readdirSync(templateRoot, { withFileTypes: true }).filter(
       (entry) => entry.isFile() && entry.name.endsWith('.md') && entry.name !== 'Housekeeping.md'
     )
-    if (!templates.length) outcomes.push({ status: 'NOT_APPLICABLE', message: 'No housekeeping templates are present.', subject: relativeRoot })
+    if (!templates.length)
+      outcomes.push({
+        status: 'NOT_APPLICABLE',
+        message: 'No housekeeping templates are present.',
+        subject: relativeRoot
+      })
     for (const entry of templates) {
       const path = join(templateRoot, entry.name)
       const subject = relative(root, path)
@@ -62,7 +81,9 @@ export const createHousekeepingSession = ({ repository, publication }: RubricCon
         Boolean(frontmatter.cadence && CADENCE.test(frontmatter.cadence)) &&
         Boolean(frontmatter.grace && CADENCE.test(frontmatter.grace)) &&
         (frontmatter['last-run'] === 'null' || Boolean(frontmatter['last-run'] && DATE.test(frontmatter['last-run'])))
-      const spawn = HORIZONS.has(frontmatter['spawn-horizon'] ?? '') && ['manual', 'when-due', 'when-overdue'].includes(frontmatter['spawn-policy'] ?? '')
+      const spawn =
+        HORIZONS.has(frontmatter['spawn-horizon'] ?? '') &&
+        ['manual', 'when-due', 'when-overdue'].includes(frontmatter['spawn-policy'] ?? '')
       outcomes.push({
         status: valid && spawn ? 'PASS' : 'VIOLATION',
         message:

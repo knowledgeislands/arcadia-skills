@@ -65,12 +65,17 @@ const containedPhysical = (root: string, path: string, kind: 'file' | 'directory
   return kind === 'file' ? state.isFile() : state.isDirectory()
 }
 
-export const createPluginsSession = ({ repository, publication }: RubricContextOptions): RubricSession<PluginsContext> => {
+export const createPluginsSession = ({
+  repository,
+  publication
+}: RubricContextOptions): RubricSession<PluginsContext> => {
   const root = resolve(repository)
   const available = physicalDirectory(root)
   const at = (...parts: string[]) => join(root, ...parts)
-  const has = (...parts: string[]) => available && (containedPhysical(root, at(...parts), 'file') || containedPhysical(root, at(...parts), 'directory'))
-  const read = (...parts: string[]) => (available && containedPhysical(root, at(...parts), 'file') ? readFileSync(at(...parts), 'utf8') : '')
+  const has = (...parts: string[]) =>
+    available && (containedPhysical(root, at(...parts), 'file') || containedPhysical(root, at(...parts), 'directory'))
+  const read = (...parts: string[]) =>
+    available && containedPhysical(root, at(...parts), 'file') ? readFileSync(at(...parts), 'utf8') : ''
   const isDir = (...parts: string[]) => available && containedPhysical(root, at(...parts), 'directory')
 
   const configRaw = read('.ki-config.toml')
@@ -85,25 +90,34 @@ export const createPluginsSession = ({ repository, publication }: RubricContextO
   const marketplaceFile = '.claude-plugin/marketplace.json'
   const marketplacePath = at('.claude-plugin', 'marketplace.json')
   const marketplace = jsonDocument(read('.claude-plugin', 'marketplace.json'))
-  const pluginEntries = Array.isArray(marketplace.value?.plugins) ? (marketplace.value.plugins as Record<string, unknown>[]) : []
+  const pluginEntries = Array.isArray(marketplace.value?.plugins)
+    ? (marketplace.value.plugins as Record<string, unknown>[])
+    : []
   const entry = pluginEntries.length === 1 ? pluginEntries[0] : null
   const pluginName = typeof entry?.name === 'string' ? entry.name : ''
   const pluginDescription = typeof entry?.description === 'string' ? entry.description : ''
   const pluginFile = pluginName ? `${pluginName}/.claude-plugin/plugin.json` : ''
   const plugin = jsonDocument(pluginFile ? read(pluginName, '.claude-plugin', 'plugin.json') : '')
-  const applicable = available && (configTable !== null || malformedConfig || existsSync(marketplacePath) || Boolean(marketplace.raw))
+  const applicable =
+    available && (configTable !== null || malformedConfig || existsSync(marketplacePath) || Boolean(marketplace.raw))
 
   const skillRoot = pluginName ? at(pluginName, 'skills') : ''
   const projectedSkills =
     skillRoot && isDir(pluginName, 'skills')
-      ? readdirSync(skillRoot, { withFileTypes: true }).filter((skill) => skill.isDirectory() && !skill.isSymbolicLink() && !skill.name.startsWith('.'))
+      ? readdirSync(skillRoot, { withFileTypes: true }).filter(
+          (skill) => skill.isDirectory() && !skill.isSymbolicLink() && !skill.name.startsWith('.')
+        )
       : []
-  const projectedSkillsWithoutManifest = projectedSkills.filter((skill) => !has(pluginName, 'skills', skill.name, 'SKILL.md')).map((skill) => skill.name)
+  const projectedSkillsWithoutManifest = projectedSkills
+    .filter((skill) => !has(pluginName, 'skills', skill.name, 'SKILL.md'))
+    .map((skill) => skill.name)
 
   const agentRoot = pluginName ? at(pluginName, 'agents') : ''
   const agentEntries =
     agentRoot && isDir(pluginName, 'agents')
-      ? readdirSync(agentRoot, { withFileTypes: true }).filter((agent) => !agent.isSymbolicLink() && !agent.name.startsWith('.'))
+      ? readdirSync(agentRoot, { withFileTypes: true }).filter(
+          (agent) => !agent.isSymbolicLink() && !agent.name.startsWith('.')
+        )
       : []
   const nestedAgentDirectories = agentEntries.filter((agent) => agent.isDirectory()).map((agent) => agent.name)
 

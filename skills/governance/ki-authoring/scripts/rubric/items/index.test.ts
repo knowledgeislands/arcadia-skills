@@ -2,7 +2,13 @@ import { afterEach, expect, test } from 'bun:test'
 import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, symlinkSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
-import { createAuthoringSession, EDITORCONFIG_DEFAULT, MARKDOWNLINT_DEFAULT, PRETTIER_DEFAULT, PRETTIER_IGNORE_DEFAULT } from '../contexts/authoring.ts'
+import {
+  createAuthoringSession,
+  EDITORCONFIG_DEFAULT,
+  MARKDOWNLINT_DEFAULT,
+  PRETTIER_DEFAULT,
+  PRETTIER_IGNORE_DEFAULT
+} from '../contexts/authoring.ts'
 import catalogue, * as indexModule from './index.ts'
 import * as markdownModule from './markdown.ts'
 import * as ownedModule from './owned.ts'
@@ -28,7 +34,11 @@ test('the default export is the sole catalogue entrypoint and families are compl
   expect(Object.keys(tomlModule)).toEqual(['TOML'])
   expect(Object.keys(synchronisationModule)).toEqual(['SYNCHRONISATION'])
   expect(catalogue.families.map((family) => family.code)).toEqual(['RUBRIC', 'MD', 'OWN', 'TOML', 'SYNC'])
-  expect(catalogue.families.filter((family) => family.code !== 'RUBRIC').flatMap((family) => family.items.map((item) => item.code))).toEqual([
+  expect(
+    catalogue.families
+      .filter((family) => family.code !== 'RUBRIC')
+      .flatMap((family) => family.items.map((item) => item.code))
+  ).toEqual([
     'MD-mech',
     'MD-frontmatter',
     'MD-table',
@@ -60,13 +70,14 @@ test('conform retains drafts, coalesces writes, and leaves publication to the ho
 
   expect(inspections).toBe(1)
   expect(subject?.context()).toBe(context)
-  expect(markdown?.mechanical?.audit.run(context?.markdown as NonNullable<typeof context>['markdown'])[0]?.status).toBe('VIOLATION')
-  expect(owned?.mechanical?.audit.run(context?.owned as NonNullable<typeof context>['owned']).map((outcome) => outcome.status)).toEqual([
-    'VIOLATION',
-    'VIOLATION',
-    'VIOLATION',
+  expect(markdown?.mechanical?.audit.run(context?.markdown as NonNullable<typeof context>['markdown'])[0]?.status).toBe(
     'VIOLATION'
-  ])
+  )
+  expect(
+    owned?.mechanical?.audit
+      .run(context?.owned as NonNullable<typeof context>['owned'])
+      .map((outcome) => outcome.status)
+  ).toEqual(['VIOLATION', 'VIOLATION', 'VIOLATION', 'VIOLATION'])
 
   owned?.mechanical?.conform?.run(context?.owned as NonNullable<typeof context>['owned'])
   owned?.mechanical?.conform?.run(context?.owned as NonNullable<typeof context>['owned'])
@@ -122,17 +133,26 @@ test('submitted trade records are never normalized, while preparation and README
   writeFileSync(join(preparation, 'TRD-00000002.md'), '---\nid: "TRD-00000002"\n---\n\n# Preparation\n')
   writeFileSync(join(repository, '+', '_TRADES', 'README.md'), '---\nid: "trade-readme"\n---\n\n# Trade README\n')
 
-  const session = createAuthoringSession({ mode: 'conform', repository, userHome: tmpdir(), configuration: {} }, () => ({ clean: true }))
+  const session = createAuthoringSession(
+    { mode: 'conform', repository, userHome: tmpdir(), configuration: {} },
+    () => ({ clean: true })
+  )
   const context = session.subjects[1]?.context()
   const frontmatter = markdownModule.MARKDOWN.items.find((item) => item.code === 'MD-frontmatter')
 
-  expect(context?.markdown.frontmatter.files.map((file) => file.path)).toEqual(['+/_TRADES/README.md', '-/_TRADES/_PREPARATIONS/peer/repo/TRD-00000002.md'])
+  expect(context?.markdown.frontmatter.files.map((file) => file.path)).toEqual([
+    '+/_TRADES/README.md',
+    '-/_TRADES/_PREPARATIONS/peer/repo/TRD-00000002.md'
+  ])
 
   frontmatter?.mechanical?.conform?.run(context?.markdown as NonNullable<typeof context>['markdown'])
 
   expect(session.proposal().writes).toEqual([
     { path: '+/_TRADES/README.md', content: '---\nid: trade-readme\n---\n\n# Trade README\n' },
-    { path: '-/_TRADES/_PREPARATIONS/peer/repo/TRD-00000002.md', content: '---\nid: TRD-00000002\n---\n\n# Preparation\n' }
+    {
+      path: '-/_TRADES/_PREPARATIONS/peer/repo/TRD-00000002.md',
+      content: '---\nid: TRD-00000002\n---\n\n# Preparation\n'
+    }
   ])
   expect(readFileSync(join(submitted, 'TRD-00000001.md'), 'utf8')).toContain('id: "TRD-00000001"')
   expect(readFileSync(join(outbound, 'TRD-malformed.md'), 'utf8')).toContain('id: "TRD-malformed"')
@@ -144,7 +164,10 @@ test('frontmatter conform removes only safely unnecessary scalar quotes', () => 
     join(repository, 'guide.md'),
     '---\nid: \'DOTFILES-UE-001\'\nname: "agent"\nenabled: "true"\nrelease: "2026-08-05"\ntitle: "A value: with punctuation"\n---\n\n# Guide\n'
   )
-  const session = createAuthoringSession({ mode: 'conform', repository, userHome: tmpdir(), configuration: {} }, () => ({ clean: true }))
+  const session = createAuthoringSession(
+    { mode: 'conform', repository, userHome: tmpdir(), configuration: {} },
+    () => ({ clean: true })
+  )
   const context = session.subjects[1]?.context()
   const frontmatter = markdownModule.MARKDOWN.items.find((item) => item.code === 'MD-frontmatter')
 
@@ -161,7 +184,8 @@ test('frontmatter conform removes only safely unnecessary scalar quotes', () => 
   expect(session.proposal().writes).toEqual([
     {
       path: 'guide.md',
-      content: '---\nid: DOTFILES-UE-001\nname: agent\nenabled: "true"\nrelease: "2026-08-05"\ntitle: "A value: with punctuation"\n---\n\n# Guide\n'
+      content:
+        '---\nid: DOTFILES-UE-001\nname: agent\nenabled: "true"\nrelease: "2026-08-05"\ntitle: "A value: with punctuation"\n---\n\n# Guide\n'
     }
   ])
 })
@@ -171,7 +195,10 @@ test('owned-file conform refuses to propose a write through a symlink', () => {
   const outside = join(temporaryRepository(), 'outside')
   writeFileSync(outside, 'do not replace\n')
   symlinkSync(outside, join(repository, '.editorconfig'))
-  const session = createAuthoringSession({ mode: 'conform', repository, userHome: tmpdir(), configuration: {} }, () => ({ clean: true }))
+  const session = createAuthoringSession(
+    { mode: 'conform', repository, userHome: tmpdir(), configuration: {} },
+    () => ({ clean: true })
+  )
   const context = session.subjects[1]?.context()
   const owned = ownedModule.OWNED.items[0]
 

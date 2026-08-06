@@ -10,12 +10,14 @@ const GIT_1: RubricItem<GitContext> = {
     level: 'FAIL',
     remediation: {
       class: 'diagnostic',
-      guidance: 'Inspect the lock’s owning process and repository boundary, then use the governed stale-lock recovery procedure; do not remove it blindly.'
+      guidance:
+        'Inspect the lock’s owning process and repository boundary, then use the governed stale-lock recovery procedure; do not remove it blindly.'
     },
     audit: {
       phase: 'INSPECT',
       run: ({ repositoryState, locks }) => {
-        if (repositoryState !== 'physical') return [{ status: 'NOT_APPLICABLE', message: 'The target repository is not safely inspectable.' }]
+        if (repositoryState !== 'physical')
+          return [{ status: 'NOT_APPLICABLE', message: 'The target repository is not safely inspectable.' }]
         if (locks === null) return [{ status: 'NOT_APPLICABLE', message: 'No physical .git directory exists.' }]
         return locks.length
           ? locks.map((lock) => ({

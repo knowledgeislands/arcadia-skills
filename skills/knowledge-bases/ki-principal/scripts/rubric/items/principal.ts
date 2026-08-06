@@ -10,12 +10,19 @@ const PRINCIPAL_1: RubricItem<PrincipalContext> = {
   sources: [SOURCE],
   mechanical: {
     level: 'FAIL',
-    remediation: { class: 'diagnostic', guidance: 'Create or restore the missing principal governance entry point through the principal owner.' },
+    remediation: {
+      class: 'diagnostic',
+      guidance: 'Create or restore the missing principal governance entry point through the principal owner.'
+    },
     audit: {
       phase: 'INSPECT',
       run: (context) =>
         context.missing.length
-          ? context.missing.map((subject) => ({ status: 'VIOLATION', message: 'Missing or unsafe principal entry point.', subject }))
+          ? context.missing.map((subject) => ({
+              status: 'VIOLATION',
+              message: 'Missing or unsafe principal entry point.',
+              subject
+            }))
           : [{ status: 'PASS', message: 'The principal governance surface is present.' }]
     }
   }
@@ -27,13 +34,20 @@ const PRINCIPAL_2: RubricItem<PrincipalContext> = {
   sources: [SOURCE],
   mechanical: {
     level: 'FAIL',
-    remediation: { class: 'diagnostic', guidance: 'Anchor the Enactment Process in the authoritative repository guidance through the principal owner.' },
+    remediation: {
+      class: 'diagnostic',
+      guidance: 'Anchor the Enactment Process in the authoritative repository guidance through the principal owner.'
+    },
     audit: {
       phase: 'INSPECT',
       run: (context) => [
         context.enactmentAnchor
           ? { status: 'PASS', message: 'The Enactment gate is anchored in repository orientation.' }
-          : { status: 'VIOLATION', message: 'Anchor the Enactment Process in CLAUDE.md or AGENTS.md.', subject: 'CLAUDE.md / AGENTS.md' }
+          : {
+              status: 'VIOLATION',
+              message: 'Anchor the Enactment Process in CLAUDE.md or AGENTS.md.',
+              subject: 'CLAUDE.md / AGENTS.md'
+            }
       ]
     }
   }

@@ -6,13 +6,15 @@ const STANDARD = 'standards-mcp-servers.md#1-project-layout'
 const LAY_1: RubricItem<McpLayoutContext> = {
   code: 'LAY-1',
   title: 'MCP source layout',
-  description: 'src/ contains config/, mcp-server/, tools/, main/, and utils/; an optional cli/ contains cli.ts and index.ts.',
+  description:
+    'src/ contains config/, mcp-server/, tools/, main/, and utils/; an optional cli/ contains cli.ts and index.ts.',
   sources: [STANDARD],
   mechanical: {
     level: 'FAIL',
     remediation: {
       class: 'diagnostic',
-      guidance: 'Restore the required source layout without moving implementation across ownership boundaries automatically.'
+      guidance:
+        'Restore the required source layout without moving implementation across ownership boundaries automatically.'
     },
     audit: {
       phase: 'INSPECT',
@@ -27,12 +29,20 @@ const LAY_1: RubricItem<McpLayoutContext> = {
                 : `Required directory is missing: ${path}/.`,
           subject: path
         }))
-        if (context.cli.state === 'unsafe') required.push({ status: 'VIOLATION', message: 'Optional src/cli/ is not a regular directory.', subject: 'src/cli' })
+        if (context.cli.state === 'unsafe')
+          required.push({
+            status: 'VIOLATION',
+            message: 'Optional src/cli/ is not a regular directory.',
+            subject: 'src/cli'
+          })
         if (context.cli.state === 'directory')
           required.push(
             ...context.cli.files.map(({ path, state }) => ({
               status: state === 'file' ? ('PASS' as const) : ('VIOLATION' as const),
-              message: state === 'file' ? `Required CLI file is present: ${path}.` : `Required CLI file is missing or unsafe: ${path}.`,
+              message:
+                state === 'file'
+                  ? `Required CLI file is present: ${path}.`
+                  : `Required CLI file is missing or unsafe: ${path}.`,
               subject: path
             }))
           )
@@ -52,7 +62,8 @@ const LAY_1: RubricItem<McpLayoutContext> = {
 export const LAY: RubricFamily<McpRubricContext, McpLayoutContext> = {
   code: 'LAY',
   title: 'Source layout',
-  description: 'The repository separates MCP wiring, tool shells, reusable implementation, configuration, and shared utilities.',
+  description:
+    'The repository separates MCP wiring, tool shells, reusable implementation, configuration, and shared utilities.',
   standard: STANDARD,
   selectContext: (context) => context.layout,
   items: [LAY_1]

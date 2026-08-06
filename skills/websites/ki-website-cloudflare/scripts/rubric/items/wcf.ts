@@ -1,16 +1,22 @@
 import type { AuditOutcome, RubricFamily, RubricItem } from '../../shared/rubric.ts'
-import { configDirectory, type WebsiteCloudflareContext, type WebsiteCloudflareRubricContext } from '../contexts/website-cloudflare.ts'
+import {
+  configDirectory,
+  type WebsiteCloudflareContext,
+  type WebsiteCloudflareRubricContext
+} from '../contexts/website-cloudflare.ts'
 
 const SOURCE = 'standards-cloudflare-hosting.md'
 const DIAGNOSTIC = {
   class: 'diagnostic' as const,
-  guidance: 'Correct the evidenced Cloudflare hosting issue through the responsible site owner; hosted conform does not infer deployment or security intent.'
+  guidance:
+    'Correct the evidenced Cloudflare hosting issue through the responsible site owner; hosted conform does not infer deployment or security intent.'
 }
 const judgment = (prompt: string) => ({
   scope: 'The Cloudflare Worker, static assets, deployment configuration, and evidence named by this criterion.',
   prompt,
   outcomes: ['conforming', 'gap', 'exclusion'] as const,
-  guidance: 'Revise the hosting design through the responsible site owner, record a named gap, or record an explicit justified exclusion.'
+  guidance:
+    'Revise the hosting design through the responsible site owner, record a named gap, or record an explicit justified exclusion.'
 })
 
 const skipped = (context: WebsiteCloudflareContext): readonly AuditOutcome[] | null => (context.applicable ? null : [])
@@ -68,7 +74,9 @@ const WCF_2: RubricItem<WebsiteCloudflareContext> = {
         if (skip) return skip
         if (context.package.state === 'unsafe' || context.package.state === 'malformed')
           return [{ status: 'VIOLATION', message: 'package.json scripts could not be safely inspected.' }]
-        const pages = Object.entries(context.package.scripts).filter(([, script]) => /\bwrangler\s+pages\s+deploy\b/.test(script))
+        const pages = Object.entries(context.package.scripts).filter(([, script]) =>
+          /\bwrangler\s+pages\s+deploy\b/.test(script)
+        )
         return pages.length === 0
           ? [{ status: 'PASS', message: 'No package script uses wrangler pages deploy.', subject: 'package.json' }]
           : [
@@ -124,7 +132,8 @@ const WCF_4: RubricItem<WebsiteCloudflareContext> = {
         if (skip) return skip
         const site = firstSite(context)
         if (!site) return []
-        if (!site.assetsDirectory) return [{ status: 'VIOLATION', message: 'The assets block has no directory.', subject: site.path }]
+        if (!site.assetsDirectory)
+          return [{ status: 'VIOLATION', message: 'The assets block has no directory.', subject: site.path }]
         return /(?:^|\/)dist\/?$/.test(site.assetsDirectory)
           ? [
               {
@@ -143,7 +152,9 @@ const WCF_4: RubricItem<WebsiteCloudflareContext> = {
       }
     }
   },
-  judgment: judgment('Confirm the declared dist path is the exact output directory produced by the separately audited ki-website build.')
+  judgment: judgment(
+    'Confirm the declared dist path is the exact output directory produced by the separately audited ki-website build.'
+  )
 }
 
 const WCF_6: RubricItem<WebsiteCloudflareContext> = {
@@ -160,7 +171,9 @@ const WCF_6: RubricItem<WebsiteCloudflareContext> = {
         const skip = skipped(context)
         if (skip) return skip
         if (context.gitignore.state === 'unsafe')
-          return [{ status: 'VIOLATION', message: '.gitignore is not a safely readable regular file.', subject: '.gitignore' }]
+          return [
+            { status: 'VIOLATION', message: '.gitignore is not a safely readable regular file.', subject: '.gitignore' }
+          ]
         const distIgnored = /^\s*\/?(?:[^#\s]+\/)?dist\/?\s*$/m.test(context.gitignore.text)
         const wranglerIgnored = /^\s*\/?(?:[^#\s]+\/)?\.wrangler\/?\s*$/m.test(context.gitignore.text)
         return [
@@ -203,7 +216,9 @@ const WCF_8: RubricItem<WebsiteCloudflareContext> = {
           },
           {
             status: site.hasCompatibilityDate ? 'PASS' : 'VIOLATION',
-            message: site.hasCompatibilityDate ? 'compatibility_date is pinned.' : 'compatibility_date is not pinned as YYYY-MM-DD.',
+            message: site.hasCompatibilityDate
+              ? 'compatibility_date is pinned.'
+              : 'compatibility_date is not pinned as YYYY-MM-DD.',
             subject: site.path
           }
         ]
@@ -230,7 +245,9 @@ const WCF_9: RubricItem<WebsiteCloudflareContext> = {
         return [
           {
             status: site.observabilityEnabled ? 'PASS' : 'VIOLATION',
-            message: site.observabilityEnabled ? 'observability.enabled is true.' : 'observability.enabled is not true.',
+            message: site.observabilityEnabled
+              ? 'observability.enabled is true.'
+              : 'observability.enabled is not true.',
             subject: site.path
           }
         ]
@@ -267,7 +284,9 @@ const WCF_10: RubricItem<WebsiteCloudflareContext> = {
       }
     }
   },
-  judgment: judgment('Verify the custom-domain routes name the correct apex and www host, or document the intentional workers.dev-only exception.')
+  judgment: judgment(
+    'Verify the custom-domain routes name the correct apex and www host, or document the intentional workers.dev-only exception.'
+  )
 }
 
 const WCF_13: RubricItem<WebsiteCloudflareContext> = {
@@ -284,7 +303,13 @@ const WCF_13: RubricItem<WebsiteCloudflareContext> = {
         const skip = skipped(context)
         if (skip) return skip
         if (context.package.state === 'unsafe' || context.package.state === 'malformed')
-          return [{ status: 'VIOLATION', message: 'package.json scripts could not be safely inspected.', subject: 'package.json' }]
+          return [
+            {
+              status: 'VIOLATION',
+              message: 'package.json scripts could not be safely inspected.',
+              subject: 'package.json'
+            }
+          ]
         const named = context.package.scripts['ki:site:deploy']
           ? (['ki:site:deploy', context.package.scripts['ki:site:deploy']] as const)
           : context.package.scripts.deploy
@@ -296,7 +321,9 @@ const WCF_13: RubricItem<WebsiteCloudflareContext> = {
       }
     }
   },
-  judgment: judgment('Confirm the real deployment path builds a current dist before invoking wrangler deploy; do not execute deployment during audit or conform.')
+  judgment: judgment(
+    'Confirm the real deployment path builds a current dist before invoking wrangler deploy; do not execute deployment during audit or conform.'
+  )
 }
 
 const WCF_14: RubricItem<WebsiteCloudflareContext> = {
@@ -313,7 +340,13 @@ const WCF_14: RubricItem<WebsiteCloudflareContext> = {
         const skip = skipped(context)
         if (skip) return skip
         if (context.package.state === 'unsafe' || context.package.state === 'malformed')
-          return [{ status: 'VIOLATION', message: 'package.json scripts could not be safely inspected.', subject: 'package.json' }]
+          return [
+            {
+              status: 'VIOLATION',
+              message: 'package.json scripts could not be safely inspected.',
+              subject: 'package.json'
+            }
+          ]
         const preview = context.package.scripts['ki:site:preview'] ?? context.package.scripts.preview
         return preview && /\bwrangler\s+dev\b/.test(preview)
           ? [{ status: 'PASS', message: 'The site preview script runs wrangler dev.', subject: 'package.json' }]
@@ -321,7 +354,9 @@ const WCF_14: RubricItem<WebsiteCloudflareContext> = {
       }
     }
   },
-  judgment: judgment('Verify the preview script builds the site before wrangler dev and serves the same dist seam as production.')
+  judgment: judgment(
+    'Verify the preview script builds the site before wrangler dev and serves the same dist seam as production.'
+  )
 }
 
 const WCF_19: RubricItem<WebsiteCloudflareContext> = {
@@ -348,7 +383,9 @@ const WCF_19: RubricItem<WebsiteCloudflareContext> = {
       }
     }
   },
-  judgment: judgment('Confirm configs classified as companions have main without assets and route their bindings, secrets, and runtime concerns to cloudflare/wrangler.')
+  judgment: judgment(
+    'Confirm configs classified as companions have main without assets and route their bindings, secrets, and runtime concerns to cloudflare/wrangler.'
+  )
 }
 
 const WCF_20: RubricItem<WebsiteCloudflareContext> = {
@@ -390,7 +427,8 @@ const WCF_20: RubricItem<WebsiteCloudflareContext> = {
   }
 }
 
-const safeSiteRoot = (value: string): boolean => value === '.' || (!value.startsWith('/') && !value.split(/[\\/]/).includes('..') && !value.includes('\\'))
+const safeSiteRoot = (value: string): boolean =>
+  value === '.' || (!value.startsWith('/') && !value.split(/[\\/]/).includes('..') && !value.includes('\\'))
 
 const WCF_21: RubricItem<WebsiteCloudflareContext> = {
   code: 'WCF-21',
@@ -470,7 +508,9 @@ const WCF_22: RubricItem<WebsiteCloudflareContext> = {
       }
     }
   },
-  judgment: judgment('Confirm Workers Builds, account/domain binding, and deployed behavior separately without expanding this rubric into the site build or general Worker concerns.')
+  judgment: judgment(
+    'Confirm Workers Builds, account/domain binding, and deployed behavior separately without expanding this rubric into the site build or general Worker concerns.'
+  )
 }
 
 export const WCF: RubricFamily<WebsiteCloudflareRubricContext, WebsiteCloudflareContext> = {

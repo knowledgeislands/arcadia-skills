@@ -1,5 +1,10 @@
 import type { RubricFamily, RubricItem, ViolationLevel } from '../../shared/rubric.ts'
-import { auditEvidence, type EngineeringEvidence, type EngineeringRubricContext, type TestRubricContext } from '../contexts/engineering.ts'
+import {
+  auditEvidence,
+  type EngineeringEvidence,
+  type EngineeringRubricContext,
+  type TestRubricContext
+} from '../contexts/engineering.ts'
 
 const mechanical = (
   code: string,
@@ -18,7 +23,8 @@ const mechanical = (
     ...(overrideLevels ? { overrideLevels } : {}),
     remediation: {
       class: 'diagnostic',
-      guidance: 'Align the test runner or Vitest coverage configuration with the declared test capability, then rerun the audit.'
+      guidance:
+        'Align the test runner or Vitest coverage configuration with the declared test capability, then rerun the audit.'
     },
     audit: { phase: 'INSPECT', run: (context) => auditEvidence(evidence(context), level, overrideLevels) }
   }
@@ -46,7 +52,13 @@ export const TEST: RubricFamily<EngineeringRubricContext, TestRubricContext> = {
       'FAIL',
       (context) => context.test2
     ),
-    mechanical('TEST-3', 'Vitest test-source exclusion', 'Under the Vitest profile, coverage excludes `src/**/*.test.ts`.', 'WARN', (context) => context.test3),
+    mechanical(
+      'TEST-3',
+      'Vitest test-source exclusion',
+      'Under the Vitest profile, coverage excludes `src/**/*.test.ts`.',
+      'WARN',
+      (context) => context.test3
+    ),
     mechanical(
       'TEST-4',
       'Vitest monorepo scoping',
@@ -64,7 +76,8 @@ export const TEST: RubricFamily<EngineeringRubricContext, TestRubricContext> = {
     {
       code: 'TEST-6',
       title: 'Tests are colocated and genuinely complete',
-      description: 'Under the Vitest profile, tests are colocated with the source they cover and genuinely reach the 100% bar.',
+      description:
+        'Under the Vitest profile, tests are colocated with the source they cover and genuinely reach the 100% bar.',
       sources: ['standards-engineering.md'],
       judgment: {
         scope: 'The Vitest test files, covered source files, and coverage evidence.',

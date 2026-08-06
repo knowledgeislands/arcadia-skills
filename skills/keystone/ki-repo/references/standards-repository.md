@@ -21,14 +21,14 @@ The canonical configuration a Knowledge Islands repo should carry, so repos pres
 
 Every repo carries these at the root. A local audit reads the selected checkout's repository tree, configuration, and package metadata first. A remote-only or scheduled audit with no filesystem reads the GitHub default branch through its API instead. Neither mode silently substitutes the other source; findings identify the source used.
 
-| File              | Why                                                                                                             |
-| ----------------- | --------------------------------------------------------------------------------------------------------------- |
-| `README.md`       | The repo's entry point.                                                                                         |
-| `LICENSE`         | The declared license's text (default MIT); proprietary copyright text if `license` is `UNLICENSED`.             |
-| `.gitignore`      | Keeps build/dep noise out of history and excludes generated runtime skill links.                                |
-| `.editorconfig`   | Shared editor defaults across the workspace toolchain.                                                          |
-| `CLAUDE.md`       | Agent instructions — the always-loaded anchor for any repo-specific gate or convention (skills rubric SHAPE-7). |
-| `.ki-config.toml` | Declares this repo's expected config under `["knowledgeislands/ki-agentic-harness:ki-repo"]`. †                 |
+| File | Why |
+| --- | --- |
+| `README.md` | The repo's entry point. |
+| `LICENSE` | The declared license's text (default MIT); proprietary copyright text if `license` is `UNLICENSED`. |
+| `.gitignore` | Keeps build/dep noise out of history and excludes generated runtime skill links. |
+| `.editorconfig` | Shared editor defaults across the workspace toolchain. |
+| `CLAUDE.md` | Agent instructions — the always-loaded anchor for any repo-specific gate or convention (skills rubric SHAPE-7). |
+| `.ki-config.toml` | Declares this repo's expected config under `["knowledgeislands/ki-agentic-harness:ki-repo"]`. † |
 
 † The values it carries: mandatory `title` and `description`, `visibility`, the declared `license` (SPDX id, default MIT), and any per-repo check overrides. A repository that declares `ki-roadmap` also carries its stable `repo_code` here.
 
@@ -91,18 +91,18 @@ Every KI repository carries this fixed working-area scaffold:
 
 For every repo on github.com:
 
-| Setting            | Value                                                                             | Why                                      |
-| ------------------ | --------------------------------------------------------------------------------- | ---------------------------------------- |
-| Default branch     | `main`                                                                            | Uniform; what tooling and docs assume.   |
-| License            | Live GitHub license matches the declared `license` SPDX id (default MIT)          | Decoupled from visibility.               |
-| Package license    | `package.json` `"license"` matches the declared id (`UNLICENSED` if proprietary)  | Matches the declared license.            |
-| Description        | Equals declared `ki-repo` `description`; synced with `package.json` where present | One-line identity on GitHub.             |
-| Merge methods      | **Squash only** — merge-commit off, rebase off                                    | One commit per PR; clean, linear `main`. |
-| Auto-delete branch | On                                                                                | No stale merged branches.                |
-| Issues             | On                                                                                | The tracker.                             |
-| Wiki               | Off                                                                               | Docs live in-repo.                       |
-| Projects           | Off                                                                               | Unused.                                  |
-| Discussions        | Off                                                                               | Unused.                                  |
+| Setting | Value | Why |
+| --- | --- | --- |
+| Default branch | `main` | Uniform; what tooling and docs assume. |
+| License | Live GitHub license matches the declared `license` SPDX id (default MIT) | Decoupled from visibility. |
+| Package license | `package.json` `"license"` matches the declared id (`UNLICENSED` if proprietary) | Matches the declared license. |
+| Description | Equals declared `ki-repo` `description`; synced with `package.json` where present | One-line identity on GitHub. |
+| Merge methods | **Squash only** — merge-commit off, rebase off | One commit per PR; clean, linear `main`. |
+| Auto-delete branch | On | No stale merged branches. |
+| Issues | On | The tracker. |
+| Wiki | Off | Docs live in-repo. |
+| Projects | Off | Unused. |
+| Discussions | Off | Unused. |
 
 Public repos (`mcp-*`) additionally:
 

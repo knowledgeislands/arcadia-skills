@@ -7,7 +7,11 @@ export type GitRubricContext = {
   mode: RubricMode
 }
 
-export const createGitSession = ({ mode, repository, publication }: RubricContextOptions): RubricSession<GitRubricContext> => {
+export const createGitSession = ({
+  mode,
+  repository,
+  publication
+}: RubricContextOptions): RubricSession<GitRubricContext> => {
   const context: GitRubricContext = { rubric: { publication }, repository: resolve(repository), mode }
   return {
     subjects: [

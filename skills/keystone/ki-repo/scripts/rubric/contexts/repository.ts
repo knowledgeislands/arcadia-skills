@@ -1,6 +1,13 @@
 import { existsSync, lstatSync, readFileSync } from 'node:fs'
 import { join, resolve } from 'node:path'
-import type { AuditOutcome, ConformWrite, RubricContextOptions, RubricPublicationContext, RubricSession, ViolationLevel } from '../../shared/rubric.ts'
+import type {
+  AuditOutcome,
+  ConformWrite,
+  RubricContextOptions,
+  RubricPublicationContext,
+  RubricSession,
+  ViolationLevel
+} from '../../shared/rubric.ts'
 import {
   collectAuditFindings,
   declaresRootTable,
@@ -33,7 +40,9 @@ const KI_AUTHORING_DEFAULT = `# The authoring standard (Markdown/TOML house styl
 ["${KI_AUTHORING_TABLE}"]
 `
 
-const RUNTIME_SKILL_GITIGNORE = (rules: readonly string[]): string => `# Generated project-local runtime payloads (ki-bootstrap) — never committed
+const RUNTIME_SKILL_GITIGNORE = (
+  rules: readonly string[]
+): string => `# Generated project-local runtime payloads (ki-bootstrap) — never committed
 ${rules.join('\n')}
 `
 const GITIGNORE_DEFAULT = (rules: readonly string[]): string => `node_modules/
@@ -257,7 +266,9 @@ const workingAreaOutcomes = (target: string): readonly AuditOutcome[] => {
       })
     }
   }
-  return outcomes.length > 0 ? outcomes : [{ status: 'PASS', message: 'working-area scaffold is present and conformed' }]
+  return outcomes.length > 0
+    ? outcomes
+    : [{ status: 'PASS', message: 'working-area scaffold is present and conformed' }]
 }
 
 const canConformWorkingAreaScaffold = (target: string): boolean =>
@@ -279,11 +290,14 @@ const appendBlocks = (source: string, blocks: readonly string[]): string => {
 const findingsByCode = (findings: readonly RepoEvidenceFinding[]) => {
   const grouped = new Map<string, RepoEvidenceFinding[]>()
   for (const finding of findings) grouped.set(finding.code, [...(grouped.get(finding.code) ?? []), finding])
-  const githubUnavailable = findings.some((finding) => finding.code === 'ACCESS-1' && finding.level === 'NOT_APPLICABLE')
+  const githubUnavailable = findings.some(
+    (finding) => finding.code === 'ACCESS-1' && finding.level === 'NOT_APPLICABLE'
+  )
   return (code: string): readonly RepoEvidenceFinding[] => {
     const matched = grouped.get(code)
     if (matched?.length) return matched
-    if (githubUnavailable && GITHUB_CODES.has(code)) return [{ level: 'NOT_APPLICABLE', code, message: 'GitHub evidence was unavailable for this run' }]
+    if (githubUnavailable && GITHUB_CODES.has(code))
+      return [{ level: 'NOT_APPLICABLE', code, message: 'GitHub evidence was unavailable for this run' }]
     return [{ level: 'PASS', code, message: 'criterion satisfied' }]
   }
 }
@@ -302,7 +316,11 @@ export const createRepoSession = (
   const configSource = !configExists ? '' : isSafeRegularFile(configPath) ? readFileSync(configPath, 'utf8') : undefined
   const gitignorePath = join(target, '.gitignore')
   const gitignoreExists = existsSync(gitignorePath)
-  const gitignoreSource = !gitignoreExists ? '' : isSafeRegularFile(gitignorePath) ? readFileSync(gitignorePath, 'utf8') : undefined
+  const gitignoreSource = !gitignoreExists
+    ? ''
+    : isSafeRegularFile(gitignorePath)
+      ? readFileSync(gitignorePath, 'utf8')
+      : undefined
   const declaredRuntimeRules = configSource === undefined ? undefined : runtimeRules(configSource || KI_REPO_DEFAULT)
   let repoConfigurationRequested = false
   let authoringConfigurationRequested = false
@@ -361,7 +379,11 @@ export const createRepoSession = (
     structure: { structure1: evidence('STRUCT-1'), structure2: evidence('STRUCT-2') },
     access: { evidence: evidence('ACCESS-1') },
     kind: { kind1: evidence('KIND-1'), kind2: evidence('KIND-2') },
-    runtimes: { runtimes1: evidence('RUNTIMES-1'), runtimes2: evidence('RUNTIMES-2'), runtimes3: evidence('RUNTIMES-3') },
+    runtimes: {
+      runtimes1: evidence('RUNTIMES-1'),
+      runtimes2: evidence('RUNTIMES-2'),
+      runtimes3: evidence('RUNTIMES-3')
+    },
     descriptionFit: {},
     overrides: {},
     synchronisation: {},
@@ -412,12 +434,16 @@ export const createRepoSession = (
       if (configSource !== undefined) {
         const blocks = [
           repoConfigurationRequested && !declaresRootTable(configSource, KI_REPO_TABLE) ? KI_REPO_DEFAULT : '',
-          authoringConfigurationRequested && !declaresRootTable(configSource, KI_AUTHORING_TABLE) ? KI_AUTHORING_DEFAULT : ''
+          authoringConfigurationRequested && !declaresRootTable(configSource, KI_AUTHORING_TABLE)
+            ? KI_AUTHORING_DEFAULT
+            : ''
         ].filter(Boolean)
         const content = appendBlocks(configSource, blocks)
-        if (content !== configSource) writes.push({ path: '.ki-config.toml', content, ...(!configExists ? { create: true } : {}) })
+        if (content !== configSource)
+          writes.push({ path: '.ki-config.toml', content, ...(!configExists ? { create: true } : {}) })
       }
-      if (gitignoreRequested && declaredRuntimeRules) writes.push({ path: '.gitignore', content: GITIGNORE_DEFAULT(declaredRuntimeRules), create: true })
+      if (gitignoreRequested && declaredRuntimeRules)
+        writes.push({ path: '.gitignore', content: GITIGNORE_DEFAULT(declaredRuntimeRules), create: true })
       if (runtimeSkillIgnoreRequested && gitignoreSource !== undefined && declaredRuntimeRules) {
         const content = conformRuntimeSkillIgnore(gitignoreSource, declaredRuntimeRules)
         if (content !== gitignoreSource) writes.push({ path: '.gitignore', content })

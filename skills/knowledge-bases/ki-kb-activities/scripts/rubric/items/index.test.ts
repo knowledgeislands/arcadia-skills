@@ -45,5 +45,7 @@ test('criteria expose complete v1 remediation and review metadata', () => {
   expect(mechanical).toHaveLength(12)
   expect(mechanical.every((item) => item.mechanical?.remediation)).toBe(true)
   expect(judgment).toHaveLength(6)
-  expect(judgment.every((item) => item.judgment?.scope && item.judgment.outcomes?.length && item.judgment.guidance)).toBe(true)
+  expect(
+    judgment.every((item) => item.judgment?.scope && item.judgment.outcomes?.length && item.judgment.guidance)
+  ).toBe(true)
 })

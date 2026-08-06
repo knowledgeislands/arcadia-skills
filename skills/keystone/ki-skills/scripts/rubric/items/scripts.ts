@@ -21,7 +21,8 @@ const SCRIPT_2: RubricItem<ScriptsRubricContext> = {
 const SCRIPT_3: RubricItem<ScriptsRubricContext> = {
   code: 'SCRIPT-3',
   title: 'runtime dependencies and MCP tools are explicit',
-  description: 'Required packages are listed/verified for the runtime; MCP tools use fully-qualified `ServerName:tool_name`.',
+  description:
+    'Required packages are listed/verified for the runtime; MCP tools use fully-qualified `ServerName:tool_name`.',
   sources: ['BP'],
   judgment: judgment('Are runtime dependencies verified and MCP tools fully qualified?')
 }
@@ -72,15 +73,29 @@ const SCRIPT_8: RubricItem<ScriptsRubricContext> = {
     audit: {
       phase: 'INSPECT',
       run: ({ helpEvidence }) => {
-        if (helpEvidence.length === 0) return [{ status: 'NOT_APPLICABLE', message: 'the skill has no top-level scripts' }]
+        if (helpEvidence.length === 0)
+          return [{ status: 'NOT_APPLICABLE', message: 'the skill has no top-level scripts' }]
         const violations = helpEvidence
           .filter(
-            ({ declaresPurpose, declaresCanonicalRun, declaresBoundary, declaresShortHelp, declaresLongHelp, declaresUsageText }) =>
-              !declaresPurpose || !declaresCanonicalRun || !declaresBoundary || !declaresShortHelp || !declaresLongHelp || !declaresUsageText
+            ({
+              declaresPurpose,
+              declaresCanonicalRun,
+              declaresBoundary,
+              declaresShortHelp,
+              declaresLongHelp,
+              declaresUsageText
+            }) =>
+              !declaresPurpose ||
+              !declaresCanonicalRun ||
+              !declaresBoundary ||
+              !declaresShortHelp ||
+              !declaresLongHelp ||
+              !declaresUsageText
           )
           .map(({ subject }) => ({
             status: 'VIOLATION' as const,
-            message: 'source must declare `Purpose:`, canonical `Run:`, `Boundary:`, `-h`, `--help`, and useful `Usage:` text',
+            message:
+              'source must declare `Purpose:`, canonical `Run:`, `Boundary:`, `-h`, `--help`, and useful `Usage:` text',
             subject
           }))
         return violations.length > 0

@@ -13,7 +13,8 @@ const ROUTE_1: RubricItem<GuidesRubricContext> = {
     level: 'FAIL',
     remediation: {
       class: 'diagnostic',
-      guidance: 'Reclassify durable material from the retired root into its owning documentation concern, then remove the retired root and rerun the audit.'
+      guidance:
+        'Reclassify durable material from the retired root into its owning documentation concern, then remove the retired root and rerun the audit.'
     },
     audit: {
       phase: 'INSPECT',
@@ -36,7 +37,8 @@ const ROUTE_2: RubricItem<GuidesRubricContext> = {
     'The guide index gives each intended reader a useful route, and each guide contains practical procedure rather than duplicated rationale, behaviour specification, or future work.',
   sources: [SOURCE],
   judgment: {
-    scope: 'The Guides index, every guide below `docs/guides/`, and their linked Decision Records, Feature Definitions, and roadmap records where applicable.',
+    scope:
+      'The Guides index, every guide below `docs/guides/`, and their linked Decision Records, Feature Definitions, and roadmap records where applicable.',
     prompt:
       'Can the intended reader find the guide, complete its stated outcome, verify success, and recover from the failures it describes? Are why, what, and when statements held by their Decision Record, Feature Definition, and roadmap owners instead?',
     outcomes: ['conforming', 'guide revision', 'reclassify material'],

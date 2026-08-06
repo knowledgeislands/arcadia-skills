@@ -12,7 +12,8 @@ const TYPE_FIT_1: RubricItem<RecordsRubricContext> = {
     prompt:
       'Assess whether the filename prefix accurately categorises the decision itself without a stretch fit and whether the body makes the type obvious. Resolve a mismatch with a human, never by mechanically overwriting either side.',
     outcomes: ['conforming', 'gap', 'exclusion'],
-    guidance: 'Agree the canonical classification with the responsible human, record a named Gap, or record an explicit exclusion.'
+    guidance:
+      'Agree the canonical classification with the responsible human, record a named Gap, or record an explicit exclusion.'
   }
 }
 

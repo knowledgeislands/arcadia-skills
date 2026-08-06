@@ -14,7 +14,10 @@ const VERIFY_1: RubricItem<FeatureVerificationContext> = {
   sources: [SOURCE],
   mechanical: {
     level: 'WARN',
-    remediation: { class: 'diagnostic', guidance: 'Add a concrete _Verify:_ hook for the requirement, then rerun the audit.' },
+    remediation: {
+      class: 'diagnostic',
+      guidance: 'Add a concrete _Verify:_ hook for the requirement, then rerun the audit.'
+    },
     audit: {
       phase: 'INSPECT',
       run: (context) =>
@@ -35,11 +38,13 @@ const VERIFY_1: RubricItem<FeatureVerificationContext> = {
 const VERIFY_2: RubricItem<FeatureVerificationContext> = {
   code: 'VERIFY-2',
   title: 'Verify hooks are concrete and checkable',
-  description: 'The `_Verify:_` hook names a concrete built-output assertion, test, or source symbol rather than restating the requirement.',
+  description:
+    'The `_Verify:_` hook names a concrete built-output assertion, test, or source symbol rather than restating the requirement.',
   sources: [SOURCE],
   judgment: {
     scope: 'Every active requirement and its _Verify:_ hook in the Feature Definitions corpus.',
-    prompt: 'Assess whether each `_Verify:_` hook names a concrete built-output assertion, test, or source symbol rather than restating the requirement.',
+    prompt:
+      'Assess whether each `_Verify:_` hook names a concrete built-output assertion, test, or source symbol rather than restating the requirement.',
     outcomes: ['conforming', 'gap', 'exclusion'],
     guidance: 'Record the result as a requirement improvement, a named Gap, or an explicit area-level exclusion.'
   }

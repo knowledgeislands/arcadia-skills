@@ -8,7 +8,8 @@ const options = (configuration: Record<string, unknown>): RubricContextOptions =
   userHome: '/home',
   configuration
 })
-const context = (configuration: Record<string, unknown>) => createTokenomicsSession(options(configuration)).subjects[0]?.context().config
+const context = (configuration: Record<string, unknown>) =>
+  createTokenomicsSession(options(configuration)).subjects[0]?.context().config
 
 describe('portable tokenomics session', () => {
   test('validates known configuration without reading a runtime surface', () => {

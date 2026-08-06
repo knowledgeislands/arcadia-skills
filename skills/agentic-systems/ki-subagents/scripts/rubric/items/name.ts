@@ -4,16 +4,25 @@ import type { AgentFileContext, AgentsRubricContext } from '../contexts/agents.t
 const STANDARD = 'standards-subagent-definitions.md'
 const NAME_MAX = 64
 const RESERVED_NAMES = ['anthropic', 'claude'] as const
-const DIAGNOSTIC = { class: 'diagnostic' as const, guidance: 'Correct the agent name through its responsible author; do not infer or rename the agent automatically.' }
+const DIAGNOSTIC = {
+  class: 'diagnostic' as const,
+  guidance: 'Correct the agent name through its responsible author; do not infer or rename the agent automatically.'
+}
 const judgment = (prompt: string) => ({
   scope: 'The target agent name and the role identity it communicates.',
   prompt,
   outcomes: ['conforming', 'gap', 'exclusion'] as const,
-  guidance: 'Revise the name through its responsible author, record a named gap, or record an explicit justified exclusion.'
+  guidance:
+    'Revise the name through its responsible author, record a named gap, or record an explicit justified exclusion.'
 })
 
-const inspect = (context: AgentFileContext, run: (agent: NonNullable<AgentFileContext['agent']>) => readonly AuditOutcome[]): readonly AuditOutcome[] =>
-  context.agent ? run(context.agent) : [{ status: 'NOT_APPLICABLE', message: 'No physical agent definition is available.' }]
+const inspect = (
+  context: AgentFileContext,
+  run: (agent: NonNullable<AgentFileContext['agent']>) => readonly AuditOutcome[]
+): readonly AuditOutcome[] =>
+  context.agent
+    ? run(context.agent)
+    : [{ status: 'NOT_APPLICABLE', message: 'No physical agent definition is available.' }]
 
 const NAME_1: RubricItem<AgentFileContext> = {
   code: 'NAME-1',
@@ -54,14 +63,20 @@ const NAME_2: RubricItem<AgentFileContext> = {
           if (!agent.name) return [{ status: 'NOT_APPLICABLE', message: 'name is absent.', subject: agent.file }]
           const violations: AuditOutcome[] = []
           if (agent.name.length > NAME_MAX)
-            violations.push({ status: 'VIOLATION', message: `name is ${agent.name.length} chars (max ${NAME_MAX}).`, subject: agent.file })
+            violations.push({
+              status: 'VIOLATION',
+              message: `name is ${agent.name.length} chars (max ${NAME_MAX}).`,
+              subject: agent.file
+            })
           if (!/^[a-z0-9-]+$/.test(agent.name))
             violations.push({
               status: 'VIOLATION',
               message: `name "${agent.name}" must use lowercase letters, digits, and hyphens only.`,
               subject: agent.file
             })
-          return violations.length ? violations : [{ status: 'PASS', message: 'name characters and length are valid.', subject: agent.file }]
+          return violations.length
+            ? violations
+            : [{ status: 'PASS', message: 'name characters and length are valid.', subject: agent.file }]
         })
     }
   }
@@ -82,7 +97,10 @@ const NAME_3: RubricItem<AgentFileContext> = {
           !agent.name
             ? { status: 'NOT_APPLICABLE', message: 'name is absent.', subject: agent.file }
             : {
-                status: agent.name.startsWith('-') || agent.name.endsWith('-') || agent.name.includes('--') ? 'VIOLATION' : 'PASS',
+                status:
+                  agent.name.startsWith('-') || agent.name.endsWith('-') || agent.name.includes('--')
+                    ? 'VIOLATION'
+                    : 'PASS',
                 message: 'name must not start or end with a hyphen or contain consecutive hyphens.',
                 subject: agent.file
               }
@@ -105,11 +123,18 @@ const NAME_4: RubricItem<AgentFileContext> = {
         inspect(context, (agent) => {
           if (!agent.name) return [{ status: 'NOT_APPLICABLE', message: 'name is absent.', subject: agent.file }]
           const violations: AuditOutcome[] = []
-          if (/<\/?[a-zA-Z][^>]*>/.test(agent.name)) violations.push({ status: 'VIOLATION', message: 'name contains an XML tag.', subject: agent.file })
+          if (/<\/?[a-zA-Z][^>]*>/.test(agent.name))
+            violations.push({ status: 'VIOLATION', message: 'name contains an XML tag.', subject: agent.file })
           for (const reserved of RESERVED_NAMES)
             if (agent.name.includes(reserved))
-              violations.push({ status: 'VIOLATION', message: `name contains the reserved word "${reserved}".`, subject: agent.file })
-          return violations.length ? violations : [{ status: 'PASS', message: 'name contains no XML tags or reserved words.', subject: agent.file }]
+              violations.push({
+                status: 'VIOLATION',
+                message: `name contains the reserved word "${reserved}".`,
+                subject: agent.file
+              })
+          return violations.length
+            ? violations
+            : [{ status: 'PASS', message: 'name contains no XML tags or reserved words.', subject: agent.file }]
         })
     }
   }

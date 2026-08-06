@@ -6,11 +6,15 @@ const STANDARD = ['standards-chezmoi-mcp-rendering.md'] as const
 const BINDCHEZ_1: RubricItem<BindingChezMoiContext> = {
   code: 'BINDCHEZ-1',
   title: 'Chezmoi source repository is inspectable',
-  description: 'The explicitly targeted chezmoi source repository is a physical directory that can supply render evidence.',
+  description:
+    'The explicitly targeted chezmoi source repository is a physical directory that can supply render evidence.',
   sources: STANDARD,
   mechanical: {
     level: 'WARN',
-    remediation: { class: 'diagnostic', guidance: 'Select a safe chezmoi source repository or remove unsafe evidence before re-running the audit.' },
+    remediation: {
+      class: 'diagnostic',
+      guidance: 'Select a safe chezmoi source repository or remove unsafe evidence before re-running the audit.'
+    },
     audit: {
       phase: 'PREPARE',
       run: ({ repository, repositoryState, unsafePaths }) => {
@@ -45,11 +49,15 @@ const BINDCHEZ_1: RubricItem<BindingChezMoiContext> = {
 const BINDCHEZ_2: RubricItem<BindingChezMoiContext> = {
   code: 'BINDCHEZ-2',
   title: 'Surface agreement remains renderer-neutral',
-  description: 'The renderer-neutral ki-binding audit, composed separately, remains the authority for rendered surface agreement.',
+  description:
+    'The renderer-neutral ki-binding audit, composed separately, remains the authority for rendered surface agreement.',
   sources: STANDARD,
   mechanical: {
     level: 'WARN',
-    remediation: { class: 'diagnostic', guidance: 'Run the preceding ki-binding audit; its renderer-neutral findings own surface agreement.' },
+    remediation: {
+      class: 'diagnostic',
+      guidance: 'Run the preceding ki-binding audit; its renderer-neutral findings own surface agreement.'
+    },
     audit: {
       phase: 'DERIVED',
       run: () => [
@@ -65,15 +73,20 @@ const BINDCHEZ_2: RubricItem<BindingChezMoiContext> = {
 const BINDCHEZ_3: RubricItem<BindingChezMoiContext> = {
   code: 'BINDCHEZ-3',
   title: 'MCP source data is present',
-  description: 'The chezmoi repository carries MCP source data through either supported, explicitly chosen render pattern.',
+  description:
+    'The chezmoi repository carries MCP source data through either supported, explicitly chosen render pattern.',
   sources: STANDARD,
   mechanical: {
     level: 'WARN',
-    remediation: { class: 'diagnostic', guidance: 'Add or correct the explicitly chosen MCP data pattern through the repository owner.' },
+    remediation: {
+      class: 'diagnostic',
+      guidance: 'Add or correct the explicitly chosen MCP data pattern through the repository owner.'
+    },
     audit: {
       phase: 'INSPECT',
       run: ({ repositoryState, data }) => {
-        if (repositoryState !== 'physical') return [{ status: 'NOT_APPLICABLE', message: 'The chezmoi source repository is not safely inspectable.' }]
+        if (repositoryState !== 'physical')
+          return [{ status: 'NOT_APPLICABLE', message: 'The chezmoi source repository is not safely inspectable.' }]
         if (!data.length)
           return [
             {
@@ -102,9 +115,14 @@ const BINDCHEZ_4: RubricItem<BindingChezMoiContext> = {
     audit: {
       phase: 'INSPECT',
       run: ({ repositoryState, templates }) => {
-        if (repositoryState !== 'physical') return [{ status: 'NOT_APPLICABLE', message: 'The chezmoi source repository is not safely inspectable.' }]
+        if (repositoryState !== 'physical')
+          return [{ status: 'NOT_APPLICABLE', message: 'The chezmoi source repository is not safely inspectable.' }]
         return templates.length
-          ? templates.map((path) => ({ status: 'PASS' as const, message: 'The render template is present.', subject: path }))
+          ? templates.map((path) => ({
+              status: 'PASS' as const,
+              message: 'The render template is present.',
+              subject: path
+            }))
           : [{ status: 'VIOLATION', message: 'No mcp-servers-json render template was found.' }]
       }
     }
@@ -118,11 +136,15 @@ const BINDCHEZ_5: RubricItem<BindingChezMoiContext> = {
   sources: STANDARD,
   mechanical: {
     level: 'WARN',
-    remediation: { class: 'diagnostic', guidance: 'Wire the render partial into an intended surface target through the repository owner.' },
+    remediation: {
+      class: 'diagnostic',
+      guidance: 'Wire the render partial into an intended surface target through the repository owner.'
+    },
     audit: {
       phase: 'DERIVED',
       run: ({ repositoryState, wiredTargets }) => {
-        if (repositoryState !== 'physical') return [{ status: 'NOT_APPLICABLE', message: 'The chezmoi source repository is not safely inspectable.' }]
+        if (repositoryState !== 'physical')
+          return [{ status: 'NOT_APPLICABLE', message: 'The chezmoi source repository is not safely inspectable.' }]
         return wiredTargets.length
           ? wiredTargets.map((path) => ({
               status: 'PASS' as const,
@@ -144,7 +166,8 @@ const BINDCHEZ_6: RubricItem<BindingChezMoiContext> = {
     scope: 'The reviewed chezmoi preview and the intended renderer-neutral surface state.',
     prompt: 'Does a reviewed chezmoi diff reproduce exactly the intended renderer-neutral surface state?',
     outcomes: ['conforming', 'gap', 'exclusion'],
-    guidance: 'Revise the source data or templates through the responsible owner, record a named gap, or record an explicit justified exclusion.'
+    guidance:
+      'Revise the source data or templates through the responsible owner, record a named gap, or record an explicit justified exclusion.'
   }
 }
 
@@ -155,16 +178,19 @@ const BINDCHEZ_7: RubricItem<BindingChezMoiContext> = {
   sources: STANDARD,
   judgment: {
     scope: 'The render standard, structured rubric, source list, and sibling composition instructions.',
-    prompt: 'Do the standard, rubric, sources, and composition instructions describe the same render contract without duplicating sibling policy?',
+    prompt:
+      'Do the standard, rubric, sources, and composition instructions describe the same render contract without duplicating sibling policy?',
     outcomes: ['conforming', 'gap', 'exclusion'],
-    guidance: 'Reconcile the authoritative documents with their owners, record a named gap, or record an explicit justified exclusion.'
+    guidance:
+      'Reconcile the authoritative documents with their owners, record a named gap, or record an explicit justified exclusion.'
   }
 }
 
 export const BINDCHEZ: RubricFamily<BindingChezMoiContext, BindingChezMoiContext> = {
   code: 'BINDCHEZ',
   title: 'Chezmoi binding render path',
-  description: 'The renderer-specific delta connecting MCP source data, a chezmoi partial, and rendered surface targets.',
+  description:
+    'The renderer-specific delta connecting MCP source data, a chezmoi partial, and rendered surface targets.',
   standard: 'standards-chezmoi-mcp-rendering.md',
   selectContext: (context) => context,
   items: [BINDCHEZ_1, BINDCHEZ_2, BINDCHEZ_3, BINDCHEZ_4, BINDCHEZ_5, BINDCHEZ_6, BINDCHEZ_7]

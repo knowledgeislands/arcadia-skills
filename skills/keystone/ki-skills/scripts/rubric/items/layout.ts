@@ -39,7 +39,12 @@ const LAY_2: RubricItem<LayoutRubricContext> = {
       phase: 'INSPECT',
       run: ({ standaloneMarkdownFile }) =>
         standaloneMarkdownFile
-          ? [{ status: 'VIOLATION', message: 'a standalone Markdown file is not a skill; place SKILL.md in a skill directory' }]
+          ? [
+              {
+                status: 'VIOLATION',
+                message: 'a standalone Markdown file is not a skill; place SKILL.md in a skill directory'
+              }
+            ]
           : [{ status: 'PASS', message: 'the skill is a directory named after the skill' }]
     }
   }
@@ -57,7 +62,8 @@ const LAY_3: RubricItem<LayoutRubricContext> = {
     audit: {
       phase: 'INSPECT',
       run: ({ supportDirectories }) => {
-        if (supportDirectories === undefined) return [{ status: 'NOT_APPLICABLE', message: 'support directories were not inspected for this subject' }]
+        if (supportDirectories === undefined)
+          return [{ status: 'NOT_APPLICABLE', message: 'support directories were not inspected for this subject' }]
         const violations = supportDirectories
           .filter((directory) => !['references', 'scripts', 'assets', '.ki-meta'].includes(directory))
           .map((directory) => ({
@@ -83,7 +89,8 @@ const LAY_4: RubricItem<LayoutRubricContext> = {
     audit: {
       phase: 'INSPECT',
       run: ({ markdown }) => {
-        if (markdown === undefined) return [{ status: 'NOT_APPLICABLE', message: 'Markdown is unavailable for link inspection' }]
+        if (markdown === undefined)
+          return [{ status: 'NOT_APPLICABLE', message: 'Markdown is unavailable for link inspection' }]
         return hasBackslashLink(markdown)
           ? [{ status: 'VIOLATION', message: 'a link target uses backslashes — use forward slashes' }]
           : [{ status: 'PASS', message: 'file references use forward slashes' }]

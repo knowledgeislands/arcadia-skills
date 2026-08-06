@@ -10,21 +10,39 @@ const BIND_1: RubricItem<BindingRubricContext> = {
     level: 'WARN',
     remediation: {
       class: 'diagnostic',
-      guidance: 'Reconcile the canonical source and mcporter target through the binding workflow; do not infer client exposure from the target alone.'
+      guidance:
+        'Reconcile the canonical source and mcporter target through the binding workflow; do not infer client exposure from the target alone.'
     },
     audit: {
       phase: 'INSPECT',
       run: ({ sourceState, mcporterPath, mcporterServerKeys }) => {
-        if (sourceState.kind !== 'valid') return [{ status: 'NOT_APPLICABLE', message: 'The source could not be read, so mcporter was not compared.' }]
+        if (sourceState.kind !== 'valid')
+          return [{ status: 'NOT_APPLICABLE', message: 'The source could not be read, so mcporter was not compared.' }]
         if (mcporterServerKeys === null)
-          return [{ status: 'INFO', message: 'The mcporter configuration is absent or unreadable; it was not compared.', subject: mcporterPath }]
+          return [
+            {
+              status: 'INFO',
+              message: 'The mcporter configuration is absent or unreadable; it was not compared.',
+              subject: mcporterPath
+            }
+          ]
         const universe = new Set(sourceState.entries.flatMap((entry) => (entry.name ? [entry.name] : [])))
-        const expected = new Set(sourceState.entries.flatMap((entry) => (entry.name && entry.clients?.includes('mcporter') ? [entry.name] : [])))
+        const expected = new Set(
+          sourceState.entries.flatMap((entry) =>
+            entry.name && entry.clients?.includes('mcporter') ? [entry.name] : []
+          )
+        )
         const present = new Set([...mcporterServerKeys].filter((name) => universe.has(name)))
         const missing = [...expected].filter((name) => !present.has(name)).sort()
         const stray = [...present].filter((name) => !expected.has(name)).sort()
         if (!missing.length && !stray.length)
-          return [{ status: 'PASS', message: `mcporter agrees with the source (${expected.size} server(s)).`, subject: mcporterPath }]
+          return [
+            {
+              status: 'PASS',
+              message: `mcporter agrees with the source (${expected.size} server(s)).`,
+              subject: mcporterPath
+            }
+          ]
         return [
           ...missing.map((name) => ({
             status: 'VIOLATION' as const,
@@ -51,25 +69,63 @@ const BIND_2: RubricItem<BindingRubricContext> = {
     overrideLevels: ['WARN'],
     remediation: {
       class: 'diagnostic',
-      guidance: 'Correct the canonical MCP source so every server has one transport and valid, intentional client targets before regenerating bindings.'
+      guidance:
+        'Correct the canonical MCP source so every server has one transport and valid, intentional client targets before regenerating bindings.'
     },
     audit: {
       phase: 'PREPARE',
       run: ({ source, sourceState }) => {
         if (sourceState.kind === 'absent')
-          return [{ status: 'VIOLATION', message: 'The canonical MCP source is absent; create it or set KI_MCP_SOURCE.', subject: source }]
+          return [
+            {
+              status: 'VIOLATION',
+              message: 'The canonical MCP source is absent; create it or set KI_MCP_SOURCE.',
+              subject: source
+            }
+          ]
         if (sourceState.kind === 'invalid')
-          return [{ status: 'VIOLATION', message: `The canonical MCP source cannot be parsed: ${sourceState.message}`, subject: source }]
+          return [
+            {
+              status: 'VIOLATION',
+              message: `The canonical MCP source cannot be parsed: ${sourceState.message}`,
+              subject: source
+            }
+          ]
         const names = new Set<string>()
         const outcomes: AuditOutcome[] = sourceState.entries.flatMap((entry, index) => {
           const label = entry.name ? `Server ${JSON.stringify(entry.name)}` : `Entry ${index + 1}`
           const duplicate = entry.name ? names.has(entry.name) : false
           if (entry.name) names.add(entry.name)
           return [
-            ...(!entry.name ? [{ status: 'VIOLATION' as const, level: 'WARN' as const, message: `${label} has no name.`, subject: source }] : []),
-            ...(duplicate ? [{ status: 'VIOLATION' as const, level: 'WARN' as const, message: `${label} repeats an existing name.`, subject: source }] : []),
+            ...(!entry.name
+              ? [
+                  {
+                    status: 'VIOLATION' as const,
+                    level: 'WARN' as const,
+                    message: `${label} has no name.`,
+                    subject: source
+                  }
+                ]
+              : []),
+            ...(duplicate
+              ? [
+                  {
+                    status: 'VIOLATION' as const,
+                    level: 'WARN' as const,
+                    message: `${label} repeats an existing name.`,
+                    subject: source
+                  }
+                ]
+              : []),
             ...((entry.clients ?? []).length === 0
-              ? [{ status: 'VIOLATION' as const, level: 'WARN' as const, message: `${label} targets no client.`, subject: source }]
+              ? [
+                  {
+                    status: 'VIOLATION' as const,
+                    level: 'WARN' as const,
+                    message: `${label} targets no client.`,
+                    subject: source
+                  }
+                ]
               : []),
             ...(Boolean(entry.command) === Boolean(entry.url)
               ? [
@@ -93,7 +149,13 @@ const BIND_2: RubricItem<BindingRubricContext> = {
         })
         return outcomes.length
           ? outcomes
-          : [{ status: 'PASS', message: `The source is valid with ${sourceState.entries.length} declared server(s).`, subject: source }]
+          : [
+              {
+                status: 'PASS',
+                message: `The source is valid with ${sourceState.entries.length} declared server(s).`,
+                subject: source
+              }
+            ]
       }
     }
   }
@@ -107,7 +169,8 @@ const BIND_J1: RubricItem<BindingRubricContext> = {
     scope: 'Every canonical MCP server and its intended client availability.',
     prompt: 'Does each server target the clients that need it, without exposing it on clients that do not?',
     outcomes: ['conforming', 'target adjustment required', 'authority decision required'],
-    guidance: 'Adjust the canonical clients set to the least-surprising intended availability, or record the owning authority decision before changing exposure.'
+    guidance:
+      'Adjust the canonical clients set to the least-surprising intended availability, or record the owning authority decision before changing exposure.'
   }
 }
 export const BIND: RubricFamily<BindingRubricContext, BindingRubricContext> = {

@@ -6,7 +6,9 @@ import type { RubricItem } from '../../shared/rubric.ts'
 import catalogue from './index.ts'
 
 const temporaryDirectories: string[] = []
-const items = catalogue.families.filter((family) => family.code !== 'RUBRIC').flatMap((family) => family.items as readonly RubricItem<unknown>[])
+const items = catalogue.families
+  .filter((family) => family.code !== 'RUBRIC')
+  .flatMap((family) => family.items as readonly RubricItem<unknown>[])
 const familyModules = readdirSync(import.meta.dir)
   .filter((file) => file.endsWith('.ts') && file !== 'index.ts' && !file.endsWith('.test.ts'))
   .sort()
@@ -25,7 +27,9 @@ test('the structured catalogue preserves the specifications structural floor', (
 })
 
 test('criteria declare complete v1 remediation and review metadata', () => {
-  const mechanicalItems = catalogue.families.flatMap((family) => family.items as readonly RubricItem<unknown>[]).filter((item) => item.mechanical)
+  const mechanicalItems = catalogue.families
+    .flatMap((family) => family.items as readonly RubricItem<unknown>[])
+    .filter((item) => item.mechanical)
   const judgmentItems = items.filter((item) => item.judgment)
 
   expect(mechanicalItems).toHaveLength(4)
@@ -74,5 +78,7 @@ test('the session keeps one configuration draft and proposes the marker once', (
       content: expect.stringContaining('["knowledgeislands/ki-agentic-harness:ki-specifications"]')
     }
   ])
-  expect(session.proposal().writes[0]?.content.match(/\["knowledgeislands\/ki-agentic-harness:ki-specifications"\]/g)).toHaveLength(1)
+  expect(
+    session.proposal().writes[0]?.content.match(/\["knowledgeislands\/ki-agentic-harness:ki-specifications"\]/g)
+  ).toHaveLength(1)
 })

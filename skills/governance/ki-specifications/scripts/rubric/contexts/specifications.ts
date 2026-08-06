@@ -1,6 +1,11 @@
 import { existsSync, lstatSync, readFileSync } from 'node:fs'
 import { join, resolve } from 'node:path'
-import type { ConformWrite, RubricContextOptions, RubricPublicationContext, RubricSession } from '../../shared/rubric.ts'
+import type {
+  ConformWrite,
+  RubricContextOptions,
+  RubricPublicationContext,
+  RubricSession
+} from '../../shared/rubric.ts'
 
 const SECTION = 'knowledgeislands/ki-agentic-harness:ki-specifications'
 const core = ['proposals', 'specifications', 'schemas'] as const
@@ -34,7 +39,11 @@ export type SpecificationsContext = {
   readonly addMarker?: () => void
 }
 
-export const createSpecificationsSession = ({ mode, repository, publication }: RubricContextOptions): RubricSession<SpecificationsContext> => {
+export const createSpecificationsSession = ({
+  mode,
+  repository,
+  publication
+}: RubricContextOptions): RubricSession<SpecificationsContext> => {
   const target = resolve(repository)
   const targetExists = isPhysicalDirectory(target)
   const configPath = join(target, '.ki-config.toml')
@@ -54,7 +63,10 @@ export const createSpecificationsSession = ({ mode, repository, publication }: R
     }
 
   const coreEvidence = core.map((path) => ({ path, exists: targetExists && isPhysicalDirectory(join(target, path)) }))
-  const supportingEvidence = supporting.map((path) => ({ path, exists: targetExists && isPhysicalDirectory(join(target, path)) }))
+  const supportingEvidence = supporting.map((path) => ({
+    path,
+    exists: targetExists && isPhysicalDirectory(join(target, path))
+  }))
   let draft = mode === 'conform' && configExists && !malformed && !table ? configSource : undefined
   let markerAdded = false
   const addMarker =
@@ -85,7 +97,10 @@ export const createSpecificationsSession = ({ mode, repository, publication }: R
       { families: ['SPEC', 'SYNC'], subject: target, context: () => context }
     ],
     proposal: () => ({
-      writes: draft === undefined || draft === configSource ? [] : ([{ path: '.ki-config.toml', content: draft }] satisfies readonly ConformWrite[])
+      writes:
+        draft === undefined || draft === configSource
+          ? []
+          : ([{ path: '.ki-config.toml', content: draft }] satisfies readonly ConformWrite[])
     })
   }
 }

@@ -1,7 +1,13 @@
 import { spawnSync } from 'node:child_process'
 import { type Dirent, lstatSync, readdirSync, readFileSync } from 'node:fs'
 import { basename, join, resolve } from 'node:path'
-import type { ConformCommand, ConformWrite, RubricContextOptions, RubricPublicationContext, RubricSession } from '../../shared/rubric.ts'
+import type {
+  ConformCommand,
+  ConformWrite,
+  RubricContextOptions,
+  RubricPublicationContext,
+  RubricSession
+} from '../../shared/rubric.ts'
 
 type NodeKind = 'missing' | 'file' | 'directory' | 'unsafe'
 type RootState = 'absent' | 'physical' | 'unsafe'
@@ -115,7 +121,10 @@ const entries = (directory: string): readonly Dirent[] | null => {
 
 const executable = (path: string): boolean => (lstatSync(path).mode & 0o111) !== 0
 
-const inspectConfig = (path: string, kind: NodeKind): { readonly state: ConfigState; readonly keys: readonly string[]; readonly content: string | null } => {
+const inspectConfig = (
+  path: string,
+  kind: NodeKind
+): { readonly state: ConfigState; readonly keys: readonly string[]; readonly content: string | null } => {
   if (kind === 'missing') return { state: 'missing', keys: [], content: null }
   if (kind !== 'file') return { state: 'unsafe', keys: [], content: null }
   const content = readableText(path)
@@ -169,13 +178,20 @@ const inspectDirectory = (
   return { state: 'present', files: files.sort(), unsafe: unsafe.sort() }
 }
 
-export const createToolsSession = ({ mode, repository, publication }: RubricContextOptions): RubricSession<ToolsRubricContext> => {
+export const createToolsSession = ({
+  mode,
+  repository,
+  publication
+}: RubricContextOptions): RubricSession<ToolsRubricContext> => {
   const root = resolve(repository)
   const rootKind = nodeKind(root)
   const rootState: RootState = rootKind === 'missing' ? 'absent' : rootKind === 'directory' ? 'physical' : 'unsafe'
 
   const binPath = join(root, 'bin')
-  const inspectedBins = rootState === 'physical' ? inspectDirectory(binPath, root, () => true) : { state: 'missing' as const, files: [], unsafe: [] }
+  const inspectedBins =
+    rootState === 'physical'
+      ? inspectDirectory(binPath, root, () => true)
+      : { state: 'missing' as const, files: [], unsafe: [] }
   const bins = inspectedBins.files.map((name) => ({ name, executable: executable(join(binPath, name)) }))
   const expected = basename(root).replace(/^tools-/, '')
   const manualPath = `man/${expected}.1`
@@ -189,10 +205,17 @@ export const createToolsSession = ({ mode, repository, publication }: RubricCont
   const installPath = join(root, 'install.sh')
   const installKind = rootState === 'physical' ? nodeKind(installPath) : 'missing'
   const install: ExecutableState =
-    installKind === 'missing' ? 'missing' : installKind !== 'file' ? 'unsafe' : executable(installPath) ? 'executable' : 'non-executable'
+    installKind === 'missing'
+      ? 'missing'
+      : installKind !== 'file'
+        ? 'unsafe'
+        : executable(installPath)
+          ? 'executable'
+          : 'non-executable'
 
   const changelogKind = rootState === 'physical' ? nodeKind(join(root, 'CHANGELOG.md')) : 'missing'
-  const changelog: FileState = changelogKind === 'missing' ? 'missing' : changelogKind === 'file' ? 'physical' : 'unsafe'
+  const changelog: FileState =
+    changelogKind === 'missing' ? 'missing' : changelogKind === 'file' ? 'physical' : 'unsafe'
 
   const githubPath = join(root, '.github')
   const githubKind = rootState === 'physical' ? nodeKind(githubPath) : 'missing'
@@ -205,14 +228,22 @@ export const createToolsSession = ({ mode, repository, publication }: RubricCont
         : { state: 'unsafe' as const, files: [], unsafe: ['.github'] }
   const workflowTexts = inspectedWorkflows.files.map((name) => readableText(join(workflowPath, name)))
   const unreadableWorkflows = inspectedWorkflows.files.filter((_, index) => workflowTexts[index] === null)
-  const unsafeWorkflowEntries = [...inspectedWorkflows.unsafe, ...unreadableWorkflows.map((name) => `.github/workflows/${name}`)].sort()
+  const unsafeWorkflowEntries = [
+    ...inspectedWorkflows.unsafe,
+    ...unreadableWorkflows.map((name) => `.github/workflows/${name}`)
+  ].sort()
   const workflowText = workflowTexts.filter((text): text is string => text !== null).join('\n')
 
   const testsPath = join(root, 'tests')
   const sourceTestsPath = join(root, 'src', 'tests')
-  const inspectedTests = rootState === 'physical' ? inspectDirectory(testsPath, root, () => true) : { state: 'missing' as const, files: [], unsafe: [] }
+  const inspectedTests =
+    rootState === 'physical'
+      ? inspectDirectory(testsPath, root, () => true)
+      : { state: 'missing' as const, files: [], unsafe: [] }
   const inspectedSourceTests =
-    rootState === 'physical' ? inspectDirectory(sourceTestsPath, root, () => true) : { state: 'missing' as const, files: [], unsafe: [] }
+    rootState === 'physical'
+      ? inspectDirectory(sourceTestsPath, root, () => true)
+      : { state: 'missing' as const, files: [], unsafe: [] }
   const testInspections = [
     ['tests/', inspectedTests],
     ['src/tests/', inspectedSourceTests]
@@ -222,7 +253,9 @@ export const createToolsSession = ({ mode, repository, publication }: RubricCont
     : testInspections.some(([, inspection]) => inspection.state === 'present')
       ? 'present'
       : 'missing'
-  const testDirectories = testInspections.filter(([, inspection]) => inspection.state === 'present').map(([path]) => path)
+  const testDirectories = testInspections
+    .filter(([, inspection]) => inspection.state === 'present')
+    .map(([path]) => path)
   const bats = inspectedTests.files.some((name) => name.endsWith('.bats'))
 
   const packageKind = rootState === 'physical' ? nodeKind(join(root, 'package.json')) : 'missing'
@@ -230,7 +263,9 @@ export const createToolsSession = ({ mode, repository, publication }: RubricCont
   let manualCommand: string | null = null
   if (packageJson === 'physical') {
     try {
-      const parsed = JSON.parse(readableText(join(root, 'package.json')) ?? '') as { readonly scripts?: Record<string, unknown> }
+      const parsed = JSON.parse(readableText(join(root, 'package.json')) ?? '') as {
+        readonly scripts?: Record<string, unknown>
+      }
       const candidate = parsed.scripts?.['ki:tools:lint-man']
       if (typeof candidate === 'string') manualCommand = candidate
     } catch {
@@ -243,9 +278,15 @@ export const createToolsSession = ({ mode, repository, publication }: RubricCont
   const manual: FileState = manualKind === 'missing' ? 'missing' : manualKind === 'file' ? 'physical' : 'unsafe'
 
   const configPath = join(root, '.ki-config.toml')
-  const configEvidence = rootState === 'physical' ? inspectConfig(configPath, nodeKind(configPath)) : { state: 'missing' as const, keys: [], content: null }
+  const configEvidence =
+    rootState === 'physical'
+      ? inspectConfig(configPath, nodeKind(configPath))
+      : { state: 'missing' as const, keys: [], content: null }
   const applicable =
-    configEvidence.state === 'present' || configEvidence.state === 'malformed' || configEvidence.state === 'unsafe' || inspectedBins.state !== 'missing'
+    configEvidence.state === 'present' ||
+    configEvidence.state === 'malformed' ||
+    configEvidence.state === 'unsafe' ||
+    inspectedBins.state !== 'missing'
 
   const requestedExecutables = new Set<string>()
   let markerRequested = false
@@ -296,13 +337,25 @@ export const createToolsSession = ({ mode, repository, publication }: RubricCont
       unsafeTestEntries: inspectedTests.unsafe
     },
     language: { applicable, packageJson },
-    manual: { applicable, manual, manualPath, packageJson, manualCommand, workflows: inspectedWorkflows.state, workflowText, unsafeWorkflowEntries },
+    manual: {
+      applicable,
+      manual,
+      manualPath,
+      packageJson,
+      manualCommand,
+      workflows: inspectedWorkflows.state,
+      workflowText,
+      unsafeWorkflowEntries
+    },
     config: {
       rootState,
       applicable,
       config: configEvidence.state,
       configKeys: configEvidence.keys,
-      ...(mode === 'conform' && inspectedBins.state === 'present' && configEvidence.state === 'absent' && originalConfig !== null
+      ...(mode === 'conform' &&
+      inspectedBins.state === 'present' &&
+      configEvidence.state === 'absent' &&
+      originalConfig !== null
         ? {
             requestMarker: () => {
               markerRequested = true
@@ -318,7 +371,9 @@ export const createToolsSession = ({ mode, repository, publication }: RubricCont
       { families: ['TOOL', 'SHELL', 'LANG', 'MAN', 'CONFIG'], context: () => context, subject: root }
     ],
     proposal: () => {
-      const commands = [...requestedExecutables].sort().map((path): ConformCommand => ({ program: 'chmod', arguments: ['+x', path] }))
+      const commands = [...requestedExecutables]
+        .sort()
+        .map((path): ConformCommand => ({ program: 'chmod', arguments: ['+x', path] }))
       const writes: ConformWrite[] =
         markerRequested && originalConfig !== null
           ? [{ path: '.ki-config.toml', content: `${originalConfig.replace(/\n*$/, '\n')}\n["${TOOLS_TABLE}"]\n` }]

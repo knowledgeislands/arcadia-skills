@@ -8,7 +8,10 @@ const TOGGLE_1: RubricItem<EvidenceRubricContext> = {
   sources: ['standards-repository.md'],
   mechanical: {
     level: 'FAIL',
-    remediation: { class: 'diagnostic', guidance: 'Align the repository feature settings or record an explicit override, then rerun the audit.' },
+    remediation: {
+      class: 'diagnostic',
+      guidance: 'Align the repository feature settings or record an explicit override, then rerun the audit.'
+    },
     audit: { phase: 'INSPECT', run: (context) => auditEvidence(context.evidence, 'FAIL') }
   }
 }

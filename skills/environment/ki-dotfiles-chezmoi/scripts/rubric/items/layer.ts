@@ -8,9 +8,11 @@ const LAYER_J1: RubricItem<ReviewContext> = {
   sources: ['standards-chezmoi-dotfiles.md'],
   judgment: {
     scope: 'Each piece of agent guidance and its repository-local, user-level, or persistent-memory audience.',
-    prompt: 'Does each piece of agent guidance sit at the correct repository-local, user-level, or persistent-memory layer?',
+    prompt:
+      'Does each piece of agent guidance sit at the correct repository-local, user-level, or persistent-memory layer?',
     outcomes: ['conforming', 'relocation required', 'scope decision required'],
-    guidance: 'Move the guidance to the narrowest durable layer that owns its scope, or record the reason a broader layer is required.'
+    guidance:
+      'Move the guidance to the narrowest durable layer that owns its scope, or record the reason a broader layer is required.'
   }
 }
 

@@ -12,7 +12,8 @@ const CLAUDE_1: RubricItem<HarnessReviewContext> = {
     scope: 'The effective root orientation and all five source-harness shelves.',
     prompt: 'Does the effective root orientation explain the source harness and name all five parts?',
     outcomes: ['conforming', 'orientation revision', 'not applicable'],
-    guidance: 'Revise the orientation with owner-approved current source facts; do not infer shelf status from an unverified payload.'
+    guidance:
+      'Revise the orientation with owner-approved current source facts; do not infer shelf status from an unverified payload.'
   }
 }
 
@@ -25,7 +26,8 @@ const CLAUDE_2: RubricItem<HarnessReviewContext> = {
     scope: 'The orientation status table or equivalent and the five physical source shelves.',
     prompt: 'Does the orientation status table or equivalent agree with the five actual source shelves?',
     outcomes: ['conforming', 'orientation revision', 'source evidence required'],
-    guidance: 'Update the orientation only from current source evidence and preserve the distinction between source shelves and installed payload.'
+    guidance:
+      'Update the orientation only from current source evidence and preserve the distinction between source shelves and installed payload.'
   }
 }
 
@@ -38,7 +40,8 @@ const CLAUDE_3: RubricItem<HarnessReviewContext> = {
     scope: 'The root orientation and the working guidance or owning-skill route for every source-harness part.',
     prompt: 'Does each source-harness part have concise working guidance or a route to its governing skill?',
     outcomes: ['conforming', 'orientation revision', 'route to owner'],
-    guidance: 'Add concise routing guidance without duplicating the owning standard or claiming another skill’s authority.'
+    guidance:
+      'Add concise routing guidance without duplicating the owning standard or claiming another skill’s authority.'
   }
 }
 
@@ -48,23 +51,30 @@ const CLAUDE_4: RubricItem<HarnessReviewContext> = {
   description: 'The root orientation lists the direct ki commands and repository gates contributors need.',
   sources: STANDARD,
   judgment: {
-    scope: 'The root orientation, documented commands, and the repository’s current direct host and verification interfaces.',
-    prompt: 'Are direct ki audit, conform, rubric-publication, test, and TypeScript gates documented without retired package aliases?',
+    scope:
+      'The root orientation, documented commands, and the repository’s current direct host and verification interfaces.',
+    prompt:
+      'Are direct ki audit, conform, rubric-publication, test, and TypeScript gates documented without retired package aliases?',
     outcomes: ['conforming', 'orientation revision', 'tooling clarification required'],
-    guidance: 'Document only verified current commands; route a toolchain or host change to its owning capability rather than inventing an alias.'
+    guidance:
+      'Document only verified current commands; route a toolchain or host change to its owning capability rather than inventing an alias.'
   }
 }
 
 const CLAUDE_5: RubricItem<HarnessReviewContext> = {
   code: 'CLAUDE-5',
   title: 'Orientation freshness',
-  description: 'Counts, shelf statuses, capability boundaries, and command names in the orientation match the repository.',
+  description:
+    'Counts, shelf statuses, capability boundaries, and command names in the orientation match the repository.',
   sources: STANDARD,
   judgment: {
-    scope: 'All factual orientation claims, current source shelves, compatible payload evidence, and direct host commands.',
-    prompt: 'Do orientation claims agree with the current source shelves, compatible payload, and direct host commands?',
+    scope:
+      'All factual orientation claims, current source shelves, compatible payload evidence, and direct host commands.',
+    prompt:
+      'Do orientation claims agree with the current source shelves, compatible payload, and direct host commands?',
     outcomes: ['conforming', 'orientation revision', 'evidence required'],
-    guidance: 'Correct only evidence-backed claims and leave unresolved host or payload facts for their owning authority.'
+    guidance:
+      'Correct only evidence-backed claims and leave unresolved host or payload facts for their owning authority.'
   }
 }
 

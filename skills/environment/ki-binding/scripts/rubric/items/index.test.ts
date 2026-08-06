@@ -39,7 +39,10 @@ test('the session compares only mcporter against a canonical source', () => {
   temporaryDirectories.push(repository, userHome)
   mkdirSync(join(userHome, '.config', 'ki'), { recursive: true })
   mkdirSync(join(userHome, '.mcporter'), { recursive: true })
-  writeFileSync(join(userHome, '.config', 'ki', 'mcp-servers.yaml'), 'mcpServers:\n  - name: ki-example\n    clients: [mcporter]\n    command: node\n')
+  writeFileSync(
+    join(userHome, '.config', 'ki', 'mcp-servers.yaml'),
+    'mcpServers:\n  - name: ki-example\n    clients: [mcporter]\n    command: node\n'
+  )
   writeFileSync(join(userHome, '.mcporter', 'mcporter.json'), '{"mcpServers":{"ki-example":{}}}\n')
   delete process.env.KI_MCP_SOURCE
   const context = createBindingSession({
@@ -72,7 +75,9 @@ test('the session honours an explicit MCP source override', () => {
   expect(context.sourceState).toMatchObject({ kind: 'valid' })
 })
 test('family modules export only one complete family', async () => {
-  for (const file of readdirSync(import.meta.dir).filter((file) => file.endsWith('.ts') && file !== 'index.ts' && !file.endsWith('.test.ts'))) {
+  for (const file of readdirSync(import.meta.dir).filter(
+    (file) => file.endsWith('.ts') && file !== 'index.ts' && !file.endsWith('.test.ts')
+  )) {
     const module = (await import(`./${file}`)) as Record<string, unknown>
     expect(Object.keys(module)).toHaveLength(1)
   }

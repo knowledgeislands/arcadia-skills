@@ -11,7 +11,11 @@ const ENACT_1: RubricItem<EnactmentRubricContext> = {
   mechanical: {
     level: 'WARN',
     overrideLevels: ['FAIL'],
-    remediation: { class: 'diagnostic', guidance: 'Add or correct closed proposal frontmatter to reflect the proposal’s actual status, priority, and dependencies.' },
+    remediation: {
+      class: 'diagnostic',
+      guidance:
+        'Add or correct closed proposal frontmatter to reflect the proposal’s actual status, priority, and dependencies.'
+    },
     audit: { phase: 'INSPECT', run: (context) => auditEvidence(context.proposalFrontmatter, 'WARN', ['FAIL']) }
   }
 }
@@ -43,7 +47,8 @@ const ENACT_3: RubricItem<EnactmentRubricContext> = {
     scope: 'Sampled stream notes and their bound process-note links.',
     prompt: 'Do sampled stream notes carry an appropriate Governance section?',
     outcomes: ['conforming', 'governance link required', 'process-boundary decision required'],
-    guidance: 'Add the appropriate bound process-note link, or record the governing decision where the note intentionally follows a different process boundary.'
+    guidance:
+      'Add the appropriate bound process-note link, or record the governing decision where the note intentionally follows a different process boundary.'
   }
 }
 
@@ -56,7 +61,8 @@ const ENACT_4: RubricItem<EnactmentRubricContext> = {
     scope: 'Focus and proposal indexes, live streams, and their lifecycle statuses.',
     prompt: 'Do indexes accurately reflect live streams and statuses?',
     outcomes: ['conforming', 'index update required', 'lifecycle correction required'],
-    guidance: 'Update the index from the canonical live stream or correct the stream lifecycle state before publishing an index claim.'
+    guidance:
+      'Update the index from the canonical live stream or correct the stream lifecycle state before publishing an index claim.'
   }
 }
 
@@ -69,7 +75,8 @@ const ENACT_5: RubricItem<EnactmentRubricContext> = {
     scope: 'Done proposals, their reviewed evidence, canonical outputs, and any prune selection.',
     prompt: 'Do done proposals retain their review evidence and canonical outputs until an explicit prune selection?',
     outcomes: ['conforming', 'retain evidence', 'explicit prune selection required'],
-    guidance: 'Restore or retain the reviewed evidence and canonical outputs until an explicit owner-approved prune selection names the proposal.'
+    guidance:
+      'Restore or retain the reviewed evidence and canonical outputs until an explicit owner-approved prune selection names the proposal.'
   }
 }
 

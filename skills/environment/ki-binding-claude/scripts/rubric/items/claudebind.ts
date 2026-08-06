@@ -9,7 +9,11 @@ const CLAUDEBIND_1: RubricItem<ClaudeBindingContext> = {
   sources: source,
   mechanical: {
     level: 'WARN',
-    remediation: { class: 'diagnostic', guidance: 'Reconcile the affected Claude JSON surface with the canonical targeted server set, then rerun the audit.' },
+    remediation: {
+      class: 'diagnostic',
+      guidance:
+        'Reconcile the affected Claude JSON surface with the canonical targeted server set, then rerun the audit.'
+    },
     audit: {
       phase: 'INSPECT',
       run: ({ codePath, desktopPath, codeServers, desktopServers, expectedCode, expectedDesktop }) =>
@@ -18,14 +22,22 @@ const CLAUDEBIND_1: RubricItem<ClaudeBindingContext> = {
           [desktopPath, desktopServers, expectedDesktop, 'Claude Desktop']
         ].map(([path, actual, wanted, label]) =>
           actual === null
-            ? { status: 'INFO' as const, message: `${label} configuration is absent or unreadable.`, subject: path as string }
+            ? {
+                status: 'INFO' as const,
+                message: `${label} configuration is absent or unreadable.`,
+                subject: path as string
+              }
             : [...(wanted as ReadonlySet<string>)].every((name) => (actual as ReadonlySet<string>).has(name))
               ? {
                   status: 'PASS' as const,
                   message: `${label} contains all ${(wanted as ReadonlySet<string>).size} targeted server(s).`,
                   subject: path as string
                 }
-              : { status: 'VIOLATION' as const, message: `${label} is missing a canonical targeted server.`, subject: path as string }
+              : {
+                  status: 'VIOLATION' as const,
+                  message: `${label} is missing a canonical targeted server.`,
+                  subject: path as string
+                }
         )
     }
   }
@@ -45,10 +57,17 @@ const CLAUDEBIND_2: RubricItem<ClaudeBindingContext> = {
           ? [{ status: 'INFO', message: 'No Cowork workspace settings were found.', subject: coworkBase }]
           : cowork.map((file) =>
               file.status === 'already'
-                ? { status: 'PASS' as const, message: 'The KI plugin is registered and enabled.', subject: file.subject }
+                ? {
+                    status: 'PASS' as const,
+                    message: 'The KI plugin is registered and enabled.',
+                    subject: file.subject
+                  }
                 : {
                     status: 'VIOLATION' as const,
-                    message: file.status === 'pending' ? 'The KI plugin is not registered and enabled.' : 'Cowork settings are unsafe or unreadable.',
+                    message:
+                      file.status === 'pending'
+                        ? 'The KI plugin is not registered and enabled.'
+                        : 'Cowork settings are unsafe or unreadable.',
                     subject: file.subject
                   }
             )
@@ -71,7 +90,8 @@ const CLAUDEBIND_J1: RubricItem<ClaudeBindingContext> = {
     scope: 'The documented claude.ai web convention and every claimed Claude runtime surface.',
     prompt: 'Is the web convention explicit without claiming a local file or renderer exists?',
     outcomes: ['conforming', 'documentation revision', 'route to binding owner'],
-    guidance: 'Clarify the convention or route a claimed renderer to its owning binding; do not invent a local web configuration surface.'
+    guidance:
+      'Clarify the convention or route a claimed renderer to its owning binding; do not invent a local web configuration surface.'
   }
 }
 export const CLAUDEBIND: RubricFamily<ClaudeBindingContext, ClaudeBindingContext> = {

@@ -42,7 +42,10 @@ const ID_2: RubricItem<FeatureIdentityContext> = {
   sources: [SOURCE],
   mechanical: {
     level: 'FAIL',
-    remediation: { class: 'diagnostic', guidance: 'Register the prefix to its owning file or correct the requirement identifier, then rerun the audit.' },
+    remediation: {
+      class: 'diagnostic',
+      guidance: 'Register the prefix to its owning file or correct the requirement identifier, then rerun the audit.'
+    },
     audit: {
       phase: 'INSPECT',
       run: (context) =>
@@ -69,7 +72,10 @@ const ID_3: RubricItem<FeatureIdentityContext> = {
   sources: [SOURCE],
   mechanical: {
     level: 'WARN',
-    remediation: { class: 'diagnostic', guidance: 'Allocate an unused append-only identifier and update the duplicate requirement, then rerun the audit.' },
+    remediation: {
+      class: 'diagnostic',
+      guidance: 'Allocate an unused append-only identifier and update the duplicate requirement, then rerun the audit.'
+    },
     audit: {
       phase: 'INSPECT',
       run: (context) =>

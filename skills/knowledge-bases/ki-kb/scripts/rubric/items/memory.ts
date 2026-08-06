@@ -8,7 +8,12 @@ const MEM_1: RubricItem<KbMemoryContext> = {
   title: 'active-Pillar memory accuracy',
   description: 'Admin/MEMORY.md lists the Pillars actually active in the base.',
   sources: [SOURCE],
-  judgment: { scope: 'The memory index and active Pillars in the base.', prompt: 'Does the memory index accurately list active Pillars?', outcomes: ['conforming', 'memory revision', 'not applicable'], guidance: 'Update the owned memory index from current base evidence; do not infer active status.' }
+  judgment: {
+    scope: 'The memory index and active Pillars in the base.',
+    prompt: 'Does the memory index accurately list active Pillars?',
+    outcomes: ['conforming', 'memory revision', 'not applicable'],
+    guidance: 'Update the owned memory index from current base evidence; do not infer active status.'
+  }
 }
 
 const MEM_2: RubricItem<KbMemoryContext> = {
@@ -18,7 +23,10 @@ const MEM_2: RubricItem<KbMemoryContext> = {
   sources: [SOURCE],
   mechanical: {
     level: 'WARN',
-    remediation: { class: 'diagnostic', guidance: 'Add or correct the root memory cascade anchor, then rerun the audit.' },
+    remediation: {
+      class: 'diagnostic',
+      guidance: 'Add or correct the root memory cascade anchor, then rerun the audit.'
+    },
     audit: { phase: 'INSPECT', run: (context) => context.anchor }
   }
 }

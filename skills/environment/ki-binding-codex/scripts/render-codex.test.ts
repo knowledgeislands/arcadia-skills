@@ -31,7 +31,11 @@ const fixture = (config: string, sourceContents = stdioSource): { home: string; 
   return { home, source }
 }
 
-const stdioRecord = (args = ['server.js'], env: Record<string, string> | null = null, extras: Record<string, unknown> = {}): string =>
+const stdioRecord = (
+  args = ['server.js'],
+  env: Record<string, string> | null = null,
+  extras: Record<string, unknown> = {}
+): string =>
   JSON.stringify({
     name: 'ki-example',
     enabled: true,
@@ -144,7 +148,12 @@ test('restores a captured server after an add failure without reporting its envi
 command = "node"
 args = ["old.js"]
 `)
-  const { calls, native } = scriptedNative([stdioRecord(['old.js'], { TOKEN: 'top-secret' }), '', new Error('add failed'), ''])
+  const { calls, native } = scriptedNative([
+    stdioRecord(['old.js'], { TOKEN: 'top-secret' }),
+    '',
+    new Error('add failed'),
+    ''
+  ])
   const { result, output } = capture(() => runRenderCodex(options(home, source, native)))
   expect(result).toBe(1)
   expect(calls).toEqual([
@@ -162,7 +171,12 @@ test('reports a failed restore without exposing native command details', () => {
 command = "node"
 args = ["old.js"]
 `)
-  const { native } = scriptedNative([stdioRecord(['old.js'], { TOKEN: 'top-secret' }), '', new Error('add failed'), new Error('restore failed')])
+  const { native } = scriptedNative([
+    stdioRecord(['old.js'], { TOKEN: 'top-secret' }),
+    '',
+    new Error('add failed'),
+    new Error('restore failed')
+  ])
   const { result, output } = capture(() => runRenderCodex(options(home, source, native)))
   expect(result).toBe(1)
   expect(output).toContain('could not be restored')
@@ -201,7 +215,12 @@ url = "https://old.invalid/mcp"
 `,
     urlSource
   )
-  const { calls, native } = scriptedNative([urlRecord('https://old.invalid/mcp'), '', '', urlRecord('https://example.invalid/mcp')])
+  const { calls, native } = scriptedNative([
+    urlRecord('https://old.invalid/mcp'),
+    '',
+    '',
+    urlRecord('https://example.invalid/mcp')
+  ])
   expect(runRenderCodex(options(home, source, native))).toBe(0)
   expect(calls).toEqual([
     ['mcp', 'get', 'ki-example', '--json'],

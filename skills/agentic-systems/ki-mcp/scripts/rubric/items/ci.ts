@@ -13,7 +13,10 @@ const CI_1: RubricItem<McpCiContext> = {
   sources: [STANDARD],
   mechanical: {
     level: 'FAIL',
-    remediation: { class: 'diagnostic', guidance: 'Add the smoke invocation to the CI workflow when the declared smoke script exists.' },
+    remediation: {
+      class: 'diagnostic',
+      guidance: 'Add the smoke invocation to the CI workflow when the declared smoke script exists.'
+    },
     audit: {
       phase: 'INSPECT',
       run: (context) =>
@@ -31,17 +34,25 @@ const CI_1: RubricItem<McpCiContext> = {
 const CI_2: RubricItem<McpCiContext> = {
   code: 'CI-2',
   title: 'MCP smoke execution',
-  description: 'When ki:test:smoke is defined, its execution remains an explicit verification step outside hosted audit and conform.',
+  description:
+    'When ki:test:smoke is defined, its execution remains an explicit verification step outside hosted audit and conform.',
   sources: [STANDARD],
   mechanical: {
     level: 'FAIL',
-    remediation: { class: 'diagnostic', guidance: 'Run the declared smoke script explicitly and investigate its result outside hosted audit or conform.' },
+    remediation: {
+      class: 'diagnostic',
+      guidance: 'Run the declared smoke script explicitly and investigate its result outside hosted audit or conform.'
+    },
     audit: {
       phase: 'INSPECT',
       run: (context) =>
         !context.scripts['ki:test:smoke']
           ? outcome('NOT_APPLICABLE', 'No MCP smoke script is defined.')
-          : outcome('INFO', 'Run `bun run ki:test:smoke` explicitly; hosted rubric execution does not launch repository scripts.', 'package.json')
+          : outcome(
+              'INFO',
+              'Run `bun run ki:test:smoke` explicitly; hosted rubric execution does not launch repository scripts.',
+              'package.json'
+            )
     }
   }
 }

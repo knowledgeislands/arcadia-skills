@@ -15,7 +15,10 @@ const item = (
   sources: [SOURCE],
   mechanical: {
     level: 'FAIL',
-    remediation: { class: 'diagnostic', guidance: 'Correct the GitHub setting or aligned local declaration, then rerun the audit.' },
+    remediation: {
+      class: 'diagnostic',
+      guidance: 'Correct the GitHub setting or aligned local declaration, then rerun the audit.'
+    },
     audit: { phase: 'INSPECT', run: (context) => auditEvidence(evidence(context), 'FAIL') }
   }
 })
@@ -28,7 +31,12 @@ export const GH: RubricFamily<RepoRubricContext, GhRubricContext> = {
   selectContext: (context) => context.gh,
   items: [
     item('GH-1', 'Default branch', 'The default branch is main.', (context) => context.gh1),
-    item('GH-2', 'Declared license alignment', 'The declared license agrees with GitHub and package.json.', (context) => context.gh2),
+    item(
+      'GH-2',
+      'Declared license alignment',
+      'The declared license agrees with GitHub and package.json.',
+      (context) => context.gh2
+    ),
     item(
       'GH-3',
       'Description presence and synchronisation',

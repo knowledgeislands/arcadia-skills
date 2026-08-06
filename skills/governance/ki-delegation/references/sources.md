@@ -2,11 +2,11 @@
 
 **Refresh:** canonical · on-change
 
-| Source                                | Last reviewed | Governs                                                                      |
-| ------------------------------------- | ------------- | ---------------------------------------------------------------------------- |
-| Knowledge Islands delegation practice | 2026-08-05    | Durable briefs, cold-agent readiness, rounds, gates, and orchestrator review |
-| `ki-tokenomics`                       | 2026-08-05    | Minimum-viable model purpose and cost boundary                               |
-| `ki-roadmap`                          | 2026-08-05    | Work-record lifecycle, plan ownership, and review boundary                   |
+| Source | Last reviewed | Governs |
+| --- | --- | --- |
+| Knowledge Islands delegation practice | 2026-08-05 | Durable briefs, cold-agent readiness, rounds, gates, and orchestrator review |
+| `ki-tokenomics` | 2026-08-05 | Minimum-viable model purpose and cost boundary |
+| `ki-roadmap` | 2026-08-05 | Work-record lifecycle, plan ownership, and review boundary |
 
 ## Last review
 

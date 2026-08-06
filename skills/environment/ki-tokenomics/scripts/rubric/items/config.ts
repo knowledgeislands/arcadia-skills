@@ -8,7 +8,15 @@ const CFG_1: RubricItem<TokenomicsConfigContext> = {
   description:
     'Only the selected repository’s ["knowledgeislands/ki-agentic-harness:ki-tokenomics"] table is validated; malformed recognised values FAIL and unknown keys WARN.',
   sources: [SOURCE],
-  mechanical: { level: 'FAIL', overrideLevels: ['WARN'], remediation: { class: 'diagnostic', guidance: 'Correct the selected repository tokenomics declaration, then rerun the audit.' }, audit: { phase: 'INSPECT', run: (context) => context.validates } }
+  mechanical: {
+    level: 'FAIL',
+    overrideLevels: ['WARN'],
+    remediation: {
+      class: 'diagnostic',
+      guidance: 'Correct the selected repository tokenomics declaration, then rerun the audit.'
+    },
+    audit: { phase: 'INSPECT', run: (context) => context.validates }
+  }
 }
 export const CFG: RubricFamily<TokenomicsRubricContext, TokenomicsConfigContext> = {
   code: 'CFG',

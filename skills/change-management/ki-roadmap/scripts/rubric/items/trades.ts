@@ -14,7 +14,8 @@ const TRADE_1: RubricItem<RoadmapAuditContext> = {
     prompt:
       'Inspect declared trade records read-only: identify submissions needing receiver review or a separately confirmed local roadmap proposal and outbound progress needing follow-up; report proposals only.',
     outcomes: ['conforming', 'proposal', 'exclusion'],
-    guidance: 'Record read-only observations and proposals only; the receiver owns disposition, prioritization, adoption, and pruning decisions.'
+    guidance:
+      'Record read-only observations and proposals only; the receiver owns disposition, prioritization, adoption, and pruning decisions.'
   }
 }
 
@@ -28,11 +29,13 @@ const TRADE_2: RubricItem<RoadmapAuditContext> = {
     level: 'FAIL',
     remediation: {
       class: 'guarded',
-      guidance: 'Correct evidenced wait identities or prose only after confirming the relevant trade state; do not prune or release records automatically.'
+      guidance:
+        'Correct evidenced wait identities or prose only after confirming the relevant trade state; do not prune or release records automatically.'
     },
     audit: {
       phase: 'INSPECT',
-      run: (context) => outcomesFor(context, 'TRADE-2', 'Every declared trade wait has valid flat identity and horizon fields.')
+      run: (context) =>
+        outcomesFor(context, 'TRADE-2', 'Every declared trade wait has valid flat identity and horizon fields.')
     }
   },
   judgment: {

@@ -4,7 +4,11 @@ import catalogue from './index.ts'
 test('the Claude catalogue is independently complete', () => {
   expect(catalogue.contract).toBe(1)
   expect(catalogue.name).toBe('ki-binding-claude')
-  expect(catalogue.families[0]?.items.map((item) => item.code)).toEqual(['CLAUDEBIND-1', 'CLAUDEBIND-2', 'CLAUDEBIND-J1'])
+  expect(catalogue.families[0]?.items.map((item) => item.code)).toEqual([
+    'CLAUDEBIND-1',
+    'CLAUDEBIND-2',
+    'CLAUDEBIND-J1'
+  ])
 })
 
 test('only safe Cowork settings repair is automatic', () => {
@@ -13,7 +17,10 @@ test('only safe Cowork settings repair is automatic', () => {
     mechanical?: { remediation: { class: string } }
     judgment?: { scope: string; prompt: string; outcomes: readonly string[]; guidance: string }
   }[]
-  expect(items.filter((item) => item.mechanical?.remediation.class === 'automatic').map((item) => item.code)).toEqual(['CLAUDEBIND-2', 'RUBRIC-1'])
+  expect(items.filter((item) => item.mechanical?.remediation.class === 'automatic').map((item) => item.code)).toEqual([
+    'CLAUDEBIND-2',
+    'RUBRIC-1'
+  ])
   expect(items.find((item) => item.code === 'CLAUDEBIND-1')?.mechanical?.remediation.class).toBe('diagnostic')
   expect(items.find((item) => item.code === 'CLAUDEBIND-J1')?.judgment).toMatchObject({
     scope: expect.any(String),

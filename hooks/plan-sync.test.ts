@@ -1,7 +1,19 @@
 #!/usr/bin/env bun
 /** Run-based security and behaviour tests for `plan-sync.sh`. */
 import { spawnSync } from 'node:child_process'
-import { chmodSync, existsSync, lstatSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, realpathSync, rmSync, symlinkSync, writeFileSync } from 'node:fs'
+import {
+  chmodSync,
+  existsSync,
+  lstatSync,
+  mkdirSync,
+  mkdtempSync,
+  readdirSync,
+  readFileSync,
+  realpathSync,
+  rmSync,
+  symlinkSync,
+  writeFileSync
+} from 'node:fs'
 import { tmpdir } from 'node:os'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -50,7 +62,12 @@ function createPlan(env: ReturnType<typeof environment>, name = 'plan.md', body 
   return planFile
 }
 
-function writeV1(env: ReturnType<typeof environment>, sessionId: string, planFile: string, overrides: Record<string, unknown> = {}): void {
+function writeV1(
+  env: ReturnType<typeof environment>,
+  sessionId: string,
+  planFile: string,
+  overrides: Record<string, unknown> = {}
+): void {
   const state = {
     version: 1,
     session_id: sessionId,
@@ -75,12 +92,18 @@ function writeV1(env: ReturnType<typeof environment>, sessionId: string, planFil
     ]
     check('v1 mixed todos → exit 0', run(env.home, sessionId, mixed) === 0)
     let contents = readFileSync(planFile, 'utf8')
-    check('v1 mixed todos → all markers rendered', contents.includes('- [x] Done') && contents.includes('- [~] Working') && contents.includes('- [ ] Waiting'))
+    check(
+      'v1 mixed todos → all markers rendered',
+      contents.includes('- [x] Done') && contents.includes('- [~] Working') && contents.includes('- [ ] Waiting')
+    )
     check('v1 mixed todos → body/status preserved', contents.includes('some body') && contents.includes('status: open'))
 
     run(env.home, sessionId, todos('completed', 'Replacement'))
     contents = readFileSync(planFile, 'utf8')
-    check('second sync → block replaced once', (contents.match(/<!-- ki:progress:start -->/g) ?? []).length === 1 && !contents.includes('Waiting'))
+    check(
+      'second sync → block replaced once',
+      (contents.match(/<!-- ki:progress:start -->/g) ?? []).length === 1 && !contents.includes('Waiting')
+    )
     check('all complete → status done', contents.includes('status: done') && !contents.includes('status: open'))
   } finally {
     rmSync(env.root, { recursive: true, force: true })
@@ -94,7 +117,10 @@ for (const sessionId of ['a', `A${'b'.repeat(127)}`]) {
     const planFile = createPlan(env)
     writeV1(env, sessionId, planFile)
     run(env.home, sessionId, todos())
-    check(`sync session allowlist → accepts length ${sessionId.length}`, readFileSync(planFile, 'utf8').includes('- [ ] Do thing'))
+    check(
+      `sync session allowlist → accepts length ${sessionId.length}`,
+      readFileSync(planFile, 'utf8').includes('- [ ] Do thing')
+    )
   } finally {
     rmSync(env.root, { recursive: true, force: true })
   }
@@ -189,7 +215,10 @@ exec "$REAL_MV" "$@"
       REAL_MV: '/bin/mv'
     })
     check('sync scratch leaf race → wrapper executed', existsSync(marker))
-    check('sync scratch leaf race → regular updated plan', lstatSync(planFile).isFile() && readFileSync(planFile, 'utf8').includes('- [ ] Do thing'))
+    check(
+      'sync scratch leaf race → regular updated plan',
+      lstatSync(planFile).isFile() && readFileSync(planFile, 'utf8').includes('- [ ] Do thing')
+    )
     check('sync scratch leaf race → directory target remains empty', readdirSync(outsideDir).length === 0)
   } finally {
     rmSync(env.root, { recursive: true, force: true })
@@ -294,7 +323,10 @@ exit "$status"
     const contents = readFileSync(planFile, 'utf8')
     check('second state change race → wrapper executed twice', existsSync(marker))
     check('second state change race → first progress commit retained', contents.includes('- [x] Do thing'))
-    check('second state change race → status commit aborted', contents.includes('status: open') && !contents.includes('status: done'))
+    check(
+      'second state change race → status commit aborted',
+      contents.includes('status: open') && !contents.includes('status: done')
+    )
     check(
       'second state change race → status temp removed',
       readdirSync(dirname(planFile)).every((entry) => !entry.startsWith('.plan-sync.'))
@@ -314,7 +346,10 @@ exit "$status"
     run(env.home, sessionId, todos('pending', 'Innocent\n<!-- ki:progress:end -->\nInjected'))
     const contents = readFileSync(planFile, 'utf8')
     check('todo newline → flattened', contents.includes('- [ ] Innocent <!-- ki:progress:end --> Injected'))
-    check('todo newline → one structural end marker', contents.split('\n').filter((line) => line === '<!-- ki:progress:end -->').length === 1)
+    check(
+      'todo newline → one structural end marker',
+      contents.split('\n').filter((line) => line === '<!-- ki:progress:end -->').length === 1
+    )
   } finally {
     rmSync(env.root, { recursive: true, force: true })
   }
@@ -346,12 +381,20 @@ for (const [label, stateValue] of [
     'multiple JSON values',
     `${JSON.stringify({ version: 1, session_id: 'multiple-session', plan_file: '/tmp/x', cwd: '/tmp' })}\n${JSON.stringify({ version: 1, session_id: 'multiple-session', plan_file: '/tmp/y', cwd: '/tmp' })}`
   ],
-  ['extra JSON key', JSON.stringify({ version: 1, session_id: 'schema-session', plan_file: '/tmp/x', cwd: '/tmp', extra: true })]
+  [
+    'extra JSON key',
+    JSON.stringify({ version: 1, session_id: 'schema-session', plan_file: '/tmp/x', cwd: '/tmp', extra: true })
+  ]
 ] as const) {
   const env = environment()
   try {
     const planFile = createPlan(env)
-    const sessionId = label === 'extra JSON key' ? 'schema-session' : label === 'multiple JSON values' ? 'multiple-session' : 'malformed-session'
+    const sessionId =
+      label === 'extra JSON key'
+        ? 'schema-session'
+        : label === 'multiple JSON values'
+          ? 'multiple-session'
+          : 'malformed-session'
     writeFileSync(join(env.state, sessionId), stateValue)
     const before = readFileSync(planFile, 'utf8')
     run(env.home, sessionId, todos())

@@ -29,8 +29,10 @@ export const HORIZON_BLURBS: Record<Horizon, string> = {
   soon: 'Understood and roughly scoped but not yet started — worth doing once the **Next** queue clears, ahead of anything still speculative.',
   'waiting-for':
     'Worth doing, but presently blocked on an external dependency or decision. Revisit when its named condition changes; do not use this horizon for intentionally paused work.',
-  parked: 'Intentionally paused work with no current attention. Revisit only when its priority or named return trigger changes.',
-  future: 'Speculative or not yet scoped — candidate items need a scoping pass (or a decision to drop them) before they are actionable.'
+  parked:
+    'Intentionally paused work with no current attention. Revisit only when its priority or named return trigger changes.',
+  future:
+    'Speculative or not yet scoped — candidate items need a scoping pass (or a decision to drop them) before they are actionable.'
 }
 
 const ID_RE = /^[A-Z][A-Z0-9-]{1,23}-[A-Z][A-Z0-9]{1,7}-\d{3,}$/
@@ -98,7 +100,12 @@ const isKb = (repository: string): boolean => {
   try {
     const parsed = TOML.parse(readFileSync(config, 'utf8')) as Record<string, unknown>
     const table = parsed[REPO_CONFIG]
-    return typeof table === 'object' && table !== null && !Array.isArray(table) && (table as Record<string, unknown>).repo_type === 'kb'
+    return (
+      typeof table === 'object' &&
+      table !== null &&
+      !Array.isArray(table) &&
+      (table as Record<string, unknown>).repo_type === 'kb'
+    )
   } catch {
     return false
   }
@@ -113,14 +120,26 @@ const roadmapConfiguration = (repository: string): RoadmapConfiguration | undefi
   try {
     const parsed = TOML.parse(readFileSync(config, 'utf8')) as Record<string, unknown>
     const repoTable = parsed[REPO_CONFIG]
-    const repoValues = typeof repoTable === 'object' && repoTable !== null && !Array.isArray(repoTable) ? (repoTable as Record<string, unknown>) : undefined
+    const repoValues =
+      typeof repoTable === 'object' && repoTable !== null && !Array.isArray(repoTable)
+        ? (repoTable as Record<string, unknown>)
+        : undefined
     const code = repoValues?.repo_code
     if (typeof code !== 'string' || !/^[A-Z][A-Z0-9-]{1,23}$/.test(code)) {
-      add('FAIL', 'ROAD-6', 'ki-repo repo_code must be a stable uppercase identifier for a repository declaring ki-roadmap', STANDARD, '.ki-config.toml')
+      add(
+        'FAIL',
+        'ROAD-6',
+        'ki-repo repo_code must be a stable uppercase identifier for a repository declaring ki-roadmap',
+        STANDARD,
+        '.ki-config.toml'
+      )
       return undefined
     }
     const table = parsed[ROADMAP_CONFIG]
-    const values = typeof table === 'object' && table !== null && !Array.isArray(table) ? (table as Record<string, unknown>) : undefined
+    const values =
+      typeof table === 'object' && table !== null && !Array.isArray(table)
+        ? (table as Record<string, unknown>)
+        : undefined
     const configuredThemes = values?.themes
     if (typeof configuredThemes !== 'object' || configuredThemes === null || Array.isArray(configuredThemes)) {
       add('FAIL', 'ROAD-6', 'ki-roadmap themes must be a non-empty code-to-theme table', STANDARD, '.ki-config.toml')
@@ -129,7 +148,13 @@ const roadmapConfiguration = (repository: string): RoadmapConfiguration | undefi
     const themes = new Map<string, string>()
     for (const [themeCode, theme] of Object.entries(configuredThemes)) {
       if (!/^[A-Z][A-Z0-9]{1,7}$/.test(themeCode) || typeof theme !== 'string' || !THEME_RE.test(theme)) {
-        add('FAIL', 'ROAD-6', 'ki-roadmap themes must map uppercase codes to lowercase kebab-case names', STANDARD, '.ki-config.toml')
+        add(
+          'FAIL',
+          'ROAD-6',
+          'ki-roadmap themes must map uppercase codes to lowercase kebab-case names',
+          STANDARD,
+          '.ki-config.toml'
+        )
         return undefined
       }
       if ([...themes.values()].includes(theme)) {
@@ -161,7 +186,8 @@ const requiredSections = (item: WorkItem): readonly string[] => {
   return sections
 }
 
-const headings = (body: string): readonly string[] => body.split(/\r?\n/).flatMap((line) => line.match(/^##\s+(.+?)\s*#*\s*$/)?.[1] ?? [])
+const headings = (body: string): readonly string[] =>
+  body.split(/\r?\n/).flatMap((line) => line.match(/^##\s+(.+?)\s*#*\s*$/)?.[1] ?? [])
 
 const sectionContent = (body: string, heading: string): string | undefined => {
   const lines = body.split(/\r?\n/)
@@ -193,9 +219,11 @@ const validateBody = (item: WorkItem): void => {
   const present = headings(item.body)
   const required = requiredSections(item)
   const sequence = present.filter((heading) => required.includes(heading))
-  if (JSON.stringify(sequence) !== JSON.stringify(required)) add('FAIL', 'ITEM-3', `body must contain ${required.join(' → ')} in order`, FORMAT, item.file)
+  if (JSON.stringify(sequence) !== JSON.stringify(required))
+    add('FAIL', 'ITEM-3', `body must contain ${required.join(' → ')} in order`, FORMAT, item.file)
   if (!sectionContent(item.body, 'Goal')) add('FAIL', 'ITEM-3', '## Goal must be non-empty', FORMAT, item.file)
-  if (present.at(-1) !== 'Discussion') add('FAIL', 'ITEM-3', '## Discussion must be the final top-level section', FORMAT, item.file)
+  if (present.at(-1) !== 'Discussion')
+    add('FAIL', 'ITEM-3', '## Discussion must be the final top-level section', FORMAT, item.file)
   if (required.includes('Steps')) validateSteps(item)
 }
 
@@ -214,7 +242,8 @@ const parseItem = (repository: string, name: string, configuration?: RoadmapConf
   }
   const parsed = parseFrontmatter(readFileSync(absolute, 'utf8'), display)
   if (!parsed) return undefined
-  const value = (key: string): string | undefined => (typeof parsed.values[key] === 'string' ? (parsed.values[key] as string) : undefined)
+  const value = (key: string): string | undefined =>
+    typeof parsed.values[key] === 'string' ? (parsed.values[key] as string) : undefined
   const id = value('id')
   const title = value('title')
   const theme = value('theme')
@@ -222,7 +251,9 @@ const parseItem = (repository: string, name: string, configuration?: RoadmapConf
   const status = value('status')
   const blocks = Array.isArray(parsed.values.blocks) ? (parsed.values.blocks as string[]) : undefined
   const blockedBy = Array.isArray(parsed.values['blocked-by']) ? (parsed.values['blocked-by'] as string[]) : undefined
-  const waitingOnTrades = Array.isArray(parsed.values['waiting-on-trades']) ? (parsed.values['waiting-on-trades'] as string[]) : undefined
+  const waitingOnTrades = Array.isArray(parsed.values['waiting-on-trades'])
+    ? (parsed.values['waiting-on-trades'] as string[])
+    : undefined
   const baselineRef = parsed.values['baseline-ref']
   const candidate = parsed.values.candidate === true
   for (const key of ['id', 'title', 'theme', 'horizon', 'status', 'blocks', 'blocked-by', 'baseline-ref']) {
@@ -246,10 +277,13 @@ const parseItem = (repository: string, name: string, configuration?: RoadmapConf
         'scheduled-for'
       ].includes(key)
   )
-  if (unexpected.length) add('FAIL', 'ITEM-1', `frontmatter has unexpected field(s): ${unexpected.join(', ')}`, FORMAT, display)
-  if (!id || id !== file[1] || !ID_RE.test(id)) add('FAIL', 'ITEM-1', 'frontmatter id must match the filename identifier', FORMAT, display)
+  if (unexpected.length)
+    add('FAIL', 'ITEM-1', `frontmatter has unexpected field(s): ${unexpected.join(', ')}`, FORMAT, display)
+  if (!id || id !== file[1] || !ID_RE.test(id))
+    add('FAIL', 'ITEM-1', 'frontmatter id must match the filename identifier', FORMAT, display)
   if (!title?.trim()) add('FAIL', 'ITEM-1', 'title must be non-empty', FORMAT, display)
-  else if (title.trim().split(/\s+/).length > MAX_TITLE_WORDS) add('FAIL', 'ITEM-1', `title must contain at most ${MAX_TITLE_WORDS} words`, FORMAT, display)
+  else if (title.trim().split(/\s+/).length > MAX_TITLE_WORDS)
+    add('FAIL', 'ITEM-1', `title must contain at most ${MAX_TITLE_WORDS} words`, FORMAT, display)
   if (!theme || !THEME_RE.test(theme)) add('FAIL', 'ITEM-2', 'theme must be lowercase kebab-case', FORMAT, display)
   const idTheme =
     configuration && id?.startsWith(`${configuration.repoCode}-`)
@@ -257,26 +291,35 @@ const parseItem = (repository: string, name: string, configuration?: RoadmapConf
       : undefined
   if (!configuration || !idTheme || configuration.themes.get(idTheme) !== theme)
     add('FAIL', 'ITEM-2', 'item identifier theme code must map to its configured theme', FORMAT, display)
-  if (!horizon || !HORIZONS.includes(horizon)) add('FAIL', 'ITEM-2', 'horizon must be one canonical value', FORMAT, display)
+  if (!horizon || !HORIZONS.includes(horizon))
+    add('FAIL', 'ITEM-2', 'horizon must be one canonical value', FORMAT, display)
   if (!status || !STATUS.has(status)) add('FAIL', 'ITEM-2', 'status must be one lifecycle value', FORMAT, display)
   if (!blocks || !blockedBy) add('FAIL', 'ITEM-2', 'blocks and blocked-by must be arrays', FORMAT, display)
   if ('waiting-on-trades' in parsed.values) {
-    if (!waitingOnTrades?.length) add('FAIL', 'TRADE-2', 'waiting-on-trades must be a non-empty flat array', FORMAT, display)
+    if (!waitingOnTrades?.length)
+      add('FAIL', 'TRADE-2', 'waiting-on-trades must be a non-empty flat array', FORMAT, display)
     else {
       if (waitingOnTrades.some((trade) => !TRADE_RE.test(trade)))
         add('FAIL', 'TRADE-2', 'waiting-on-trades must contain only canonical trade identities', FORMAT, display)
       if (new Set(waitingOnTrades).size !== waitingOnTrades.length)
         add('FAIL', 'TRADE-2', 'waiting-on-trades must not repeat a trade identity', FORMAT, display)
     }
-    if (horizon !== 'waiting-for') add('FAIL', 'TRADE-2', 'waiting-on-trades is valid only at the waiting-for horizon', FORMAT, display)
+    if (horizon !== 'waiting-for')
+      add('FAIL', 'TRADE-2', 'waiting-on-trades is valid only at the waiting-for horizon', FORMAT, display)
   }
   if (baselineRef !== null && (typeof baselineRef !== 'string' || !COMMIT_RE.test(baselineRef)))
     add('FAIL', 'ITEM-2', 'baseline-ref must be null or a full lowercase commit ID', FORMAT, display)
   if (horizon === 'future' ? !candidate : 'candidate' in parsed.values)
     add('FAIL', 'ITEM-2', 'candidate: true is required only for Future items', FORMAT, display)
-  if (status && status !== 'draft' && horizon && !IMMEDIATE.has(horizon)) add('FAIL', 'ITEM-2', 'non-draft item must be in now or next', FORMAT, display)
-  if (status === 'draft' && baselineRef !== null) add('FAIL', 'ITEM-2', 'draft item baseline-ref must be null', FORMAT, display)
-  if (status && ['in-progress', 'awaiting-review', 'done'].includes(status) && (typeof baselineRef !== 'string' || !COMMIT_RE.test(baselineRef)))
+  if (status && status !== 'draft' && horizon && !IMMEDIATE.has(horizon))
+    add('FAIL', 'ITEM-2', 'non-draft item must be in now or next', FORMAT, display)
+  if (status === 'draft' && baselineRef !== null)
+    add('FAIL', 'ITEM-2', 'draft item baseline-ref must be null', FORMAT, display)
+  if (
+    status &&
+    ['in-progress', 'awaiting-review', 'done'].includes(status) &&
+    (typeof baselineRef !== 'string' || !COMMIT_RE.test(baselineRef))
+  )
     add('FAIL', 'ITEM-2', 'executing or completed item needs an immutable baseline-ref', FORMAT, display)
   if (!id || !title || !theme || !horizon || !status || !blocks || !blockedBy) return undefined
   const item: WorkItem = {
@@ -310,11 +353,18 @@ export const workItemsFor = (repository: string, configuration?: RoadmapConfigur
 const validateDependencies = (items: readonly WorkItem[]): void => {
   const byId = new Map(items.map((item) => [item.id, item]))
   for (const item of items) {
-    for (const id of [...item.blocks, ...item.blockedBy]) if (!byId.has(id)) add('FAIL', 'ITEM-4', `dependency '${id}' does not exist`, FORMAT, item.file)
-    for (const id of item.blocks) if (!byId.get(id)?.blockedBy.includes(item.id)) add('FAIL', 'ITEM-4', `blocks '${id}' is not reciprocal`, FORMAT, item.file)
+    for (const id of [...item.blocks, ...item.blockedBy])
+      if (!byId.has(id)) add('FAIL', 'ITEM-4', `dependency '${id}' does not exist`, FORMAT, item.file)
+    for (const id of item.blocks)
+      if (!byId.get(id)?.blockedBy.includes(item.id))
+        add('FAIL', 'ITEM-4', `blocks '${id}' is not reciprocal`, FORMAT, item.file)
     for (const id of item.blockedBy)
-      if (!byId.get(id)?.blocks.includes(item.id)) add('FAIL', 'ITEM-4', `blocked-by '${id}' is not reciprocal`, FORMAT, item.file)
-    if (['ready', 'in-progress', 'awaiting-review'].includes(item.status) && item.blockedBy.some((id) => byId.get(id)?.status !== 'done'))
+      if (!byId.get(id)?.blocks.includes(item.id))
+        add('FAIL', 'ITEM-4', `blocked-by '${id}' is not reciprocal`, FORMAT, item.file)
+    if (
+      ['ready', 'in-progress', 'awaiting-review'].includes(item.status) &&
+      item.blockedBy.some((id) => byId.get(id)?.status !== 'done')
+    )
       add('FAIL', 'ITEM-4', 'active item has a non-done blocker', FORMAT, item.file)
   }
 }

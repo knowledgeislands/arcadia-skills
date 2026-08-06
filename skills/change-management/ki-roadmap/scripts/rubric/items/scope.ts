@@ -6,11 +6,15 @@ const SOURCE = 'standards-repository-roadmaps.md'
 const SCOPE_1: RubricItem<RoadmapAuditContext> = {
   code: 'SCOPE-1',
   title: 'KB scope',
-  description: 'KB repositories use `ki-kb-streams`; repository-roadmap artifacts in a KB fail, while a KB without them is not applicable.',
+  description:
+    'KB repositories use `ki-kb-streams`; repository-roadmap artifacts in a KB fail, while a KB without them is not applicable.',
   sources: [SOURCE],
   mechanical: {
     level: 'FAIL',
-    remediation: { class: 'diagnostic', guidance: 'Remove repository-roadmap artifacts from a KB repository or route the concern through ki-kb-streams.' },
+    remediation: {
+      class: 'diagnostic',
+      guidance: 'Remove repository-roadmap artifacts from a KB repository or route the concern through ki-kb-streams.'
+    },
     audit: { phase: 'INSPECT', run: (context) => outcomesFor(context, 'SCOPE-1', 'The repository is in scope.') }
   }
 }

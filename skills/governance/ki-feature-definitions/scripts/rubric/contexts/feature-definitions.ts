@@ -1,10 +1,16 @@
 import { existsSync, lstatSync, readdirSync, readFileSync } from 'node:fs'
 import { basename, isAbsolute, join, relative, resolve } from 'node:path'
-import type { ConformWrite, RubricContextOptions, RubricPublicationContext, RubricSession } from '../../shared/rubric.ts'
+import type {
+  ConformWrite,
+  RubricContextOptions,
+  RubricPublicationContext,
+  RubricSession
+} from '../../shared/rubric.ts'
 
 const DEFAULT_DIRECTORY = 'docs/features'
 const INDEX_FILE = 'index.md'
-const RFC2119 = /\b(MUST NOT|MUST|SHALL NOT|SHALL|SHOULD NOT|SHOULD|MAY|REQUIRED|RECOMMENDED|NOT RECOMMENDED|OPTIONAL)\b/
+const RFC2119 =
+  /\b(MUST NOT|MUST|SHALL NOT|SHALL|SHOULD NOT|SHOULD|MAY|REQUIRED|RECOMMENDED|NOT RECOMMENDED|OPTIONAL)\b/
 const REQUIREMENT_HEADING = /^###\s+([A-Z][A-Z0-9]*(?:-[A-Z][A-Z0-9]*)*)-(\d{3,})\s+—\s+(.+?)\s*$/
 const H3 = /^###\s+(.+?)\s*$/
 const NEAR_MISS_HEADING = /^###\s+([A-Z][A-Z0-9]*(?:-[A-Z][A-Z0-9]*)*-\d{3,})\s*(?:[–—-]{1,2})\s*(\S.*?)\s*$/
@@ -64,9 +70,11 @@ export type FeatureDefinitionsRubricContext = {
   readonly judgment: FeatureJudgmentContext
 }
 
-const isDirectory = (path: string): boolean => existsSync(path) && !lstatSync(path).isSymbolicLink() && lstatSync(path).isDirectory()
+const isDirectory = (path: string): boolean =>
+  existsSync(path) && !lstatSync(path).isSymbolicLink() && lstatSync(path).isDirectory()
 
-const isFile = (path: string): boolean => existsSync(path) && !lstatSync(path).isSymbolicLink() && lstatSync(path).isFile()
+const isFile = (path: string): boolean =>
+  existsSync(path) && !lstatSync(path).isSymbolicLink() && lstatSync(path).isFile()
 
 const containedPath = (root: string, path: string): string | undefined => {
   const value = relative(root, path)
@@ -137,10 +145,16 @@ const featuresDirectory = (target: string): string => {
   return nested
 }
 
-export const createFeatureDefinitionsSession = ({ mode, repository, publication }: RubricContextOptions): RubricSession<FeatureDefinitionsRubricContext> => {
+export const createFeatureDefinitionsSession = ({
+  mode,
+  repository,
+  publication
+}: RubricContextOptions): RubricSession<FeatureDefinitionsRubricContext> => {
   const root = resolve(repository)
   const directory = featuresDirectory(root)
-  const directorySafe = containedPath(root, directory) ? safeDirectory(root, directory) : directory === root && isDirectory(root)
+  const directorySafe = containedPath(root, directory)
+    ? safeDirectory(root, directory)
+    : directory === root && isDirectory(root)
   const entries = directorySafe ? readdirSync(directory, { withFileTypes: true }) : []
   const indexPath = join(directory, INDEX_FILE)
   const indexExists = entries.some((entry) => entry.name === INDEX_FILE && entry.isFile()) && isFile(indexPath)
@@ -151,7 +165,9 @@ export const createFeatureDefinitionsSession = ({ mode, repository, publication 
     .map((entry) => entry.name)
     .sort()
   const registeredFiles = new Set(prefixToFile.values())
-  const registeredMissingFiles = [...prefixToFile].filter(([, file]) => !areaFiles.includes(file)).map(([prefix, file]) => ({ prefix, file }))
+  const registeredMissingFiles = [...prefixToFile]
+    .filter(([, file]) => !areaFiles.includes(file))
+    .map(([prefix, file]) => ({ prefix, file }))
   const unregisteredFiles = areaFiles.filter((file) => !registeredFiles.has(file))
   const headingIssues: FeatureHeadingIssue[] = []
   const requirements: FeatureRequirement[] = []
@@ -231,7 +247,9 @@ export const createFeatureDefinitionsSession = ({ mode, repository, publication 
         ? {
             normaliseHeadings: () => {
               const byFile = new Map<string, CanonicalHeadingIssue[]>()
-              for (const issue of headingIssues.filter((value): value is CanonicalHeadingIssue => typeof value.canonical === 'string'))
+              for (const issue of headingIssues.filter(
+                (value): value is CanonicalHeadingIssue => typeof value.canonical === 'string'
+              ))
                 byFile.set(issue.file, [...(byFile.get(issue.file) ?? []), issue])
               for (const [file, issues] of byFile) {
                 const path = relative(root, join(directory, file))

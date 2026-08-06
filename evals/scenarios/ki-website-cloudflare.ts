@@ -31,15 +31,19 @@ export const scenarios: Scenario[] = [
     assertions: [
       { name: 'assets.directory points at dist/', re: /assets\.directory|\.\.?\/dist|dist\//i },
       { name: 'site Worker has assets and no main', re: /assets[^.\n]{0,30}(no|without)[^.\n]{0,8}main|no `?main`?/i },
-      { name: 'companion routes to cloudflare/wrangler', re: /cloudflare[^.\n]{0,8}\/?[^.\n]{0,8}wrangler|generic (cloudflare|wrangler)/i }
+      {
+        name: 'companion routes to cloudflare/wrangler',
+        re: /cloudflare[^.\n]{0,8}\/?[^.\n]{0,8}wrangler|generic (cloudflare|wrangler)/i
+      }
     ],
     rubric:
-      "House model: `assets.directory` is the **seam** — it points at the `dist/` that `ki-website` emits (`./dist` flat, `../dist` from a `site/` subfolder). The in-scope **site Worker carries `assets` and no `main`**; a Worker with a `main` entry and no `assets` is a **companion** (bot, ingress, API, …) that belongs to the generic `cloudflare` / `wrangler` skills, not this one. A correct answer states assets.directory → dist/, the assets-and-no-main test for the site Worker, and that a main/no-assets Worker routes to the generic cloudflare/wrangler skills."
+      'House model: `assets.directory` is the **seam** — it points at the `dist/` that `ki-website` emits (`./dist` flat, `../dist` from a `site/` subfolder). The in-scope **site Worker carries `assets` and no `main`**; a Worker with a `main` entry and no `assets` is a **companion** (bot, ingress, API, …) that belongs to the generic `cloudflare` / `wrangler` skills, not this one. A correct answer states assets.directory → dist/, the assets-and-no-main test for the site Worker, and that a main/no-assets Worker routes to the generic cloudflare/wrangler skills.'
   },
   {
     skill: 'ki-website-cloudflare',
     id: 'host-config-keys',
-    prompt: 'Beyond the `assets` block, what must our site `wrangler.jsonc` carry, and what gets gitignored for hosting?',
+    prompt:
+      'Beyond the `assets` block, what must our site `wrangler.jsonc` carry, and what gets gitignored for hosting?',
     assertions: [
       { name: 'name + compatibility_date', re: /compatibility_date/i },
       { name: 'observability enabled', re: /observability/i },

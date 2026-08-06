@@ -2,7 +2,8 @@ import type { AuditOutcome, RubricFamily, RubricItem, RubricOutcomes } from '../
 import type { AuthoringRubricContext, OwnedFileEvidence, OwnedRubricContext } from '../contexts/authoring.ts'
 
 const ownedFileAudit = (file: OwnedFileEvidence): AuditOutcome => {
-  if (file.state === 'canonical') return { status: 'PASS', message: `${file.name} matches the house template`, subject: file.name }
+  if (file.state === 'canonical')
+    return { status: 'PASS', message: `${file.name} matches the house template`, subject: file.name }
   if (file.state === 'unsafe')
     return {
       status: 'VIOLATION',

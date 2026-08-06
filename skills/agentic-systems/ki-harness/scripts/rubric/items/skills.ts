@@ -5,9 +5,17 @@ const STANDARD = ['standards-compatible-harness.md#skill-capability-identity'] a
 
 const unavailable = (context: HarnessSkillsContext): readonly AuditOutcome[] | null => {
   if (context.repositoryState !== 'physical')
-    return [{ status: 'NOT_APPLICABLE', message: 'The source harness is not safely inspectable.', subject: context.repository }]
-  if (context.skillsState === 'missing') return [{ status: 'NOT_APPLICABLE', message: 'The skills/ shelf is absent.', subject: 'skills/' }]
-  if (context.skillsState !== 'directory') return [{ status: 'VIOLATION', message: 'The skills/ shelf is not a physical directory.', subject: 'skills/' }]
+    return [
+      {
+        status: 'NOT_APPLICABLE',
+        message: 'The source harness is not safely inspectable.',
+        subject: context.repository
+      }
+    ]
+  if (context.skillsState === 'missing')
+    return [{ status: 'NOT_APPLICABLE', message: 'The skills/ shelf is absent.', subject: 'skills/' }]
+  if (context.skillsState !== 'directory')
+    return [{ status: 'VIOLATION', message: 'The skills/ shelf is not a physical directory.', subject: 'skills/' }]
   if (context.unsafePaths.length)
     return context.unsafePaths.map((path) => ({
       status: 'VIOLATION',
@@ -25,13 +33,20 @@ const SKILLS_1: RubricItem<HarnessSkillsContext> = {
   mechanical: {
     level: 'FAIL',
     overrideLevels: ['WARN'],
-    remediation: { class: 'diagnostic', guidance: 'Correct the affected skill directory or frontmatter identity, then rerun the audit.' },
+    remediation: {
+      class: 'diagnostic',
+      guidance: 'Correct the affected skill directory or frontmatter identity, then rerun the audit.'
+    },
     audit: {
       phase: 'INSPECT',
       run: (context) => {
         const blocked = unavailable(context)
-        if (blocked) return blocked.map((outcome) => (outcome.status === 'VIOLATION' ? { ...outcome, level: 'WARN' as const } : outcome))
-        if (!context.skills.length) return [{ status: 'PASS', message: 'No skill roots require name alignment.', subject: 'skills/' }]
+        if (blocked)
+          return blocked.map((outcome) =>
+            outcome.status === 'VIOLATION' ? { ...outcome, level: 'WARN' as const } : outcome
+          )
+        if (!context.skills.length)
+          return [{ status: 'PASS', message: 'No skill roots require name alignment.', subject: 'skills/' }]
         return context.skills.map((skill) =>
           skill.declaredName === null
             ? {
@@ -54,13 +69,15 @@ const SKILLS_1: RubricItem<HarnessSkillsContext> = {
 const SKILLS_2: RubricItem<HarnessSkillsContext> = {
   code: 'SKILLS-2',
   title: 'Unique skill names',
-  description: 'No two discovered skill roots share a frontmatter name, and combined installed surfaces remain unambiguous.',
+  description:
+    'No two discovered skill roots share a frontmatter name, and combined installed surfaces remain unambiguous.',
   sources: STANDARD,
   mechanical: {
     level: 'FAIL',
     remediation: {
       class: 'guarded',
-      guidance: 'Resolve the name collision through the owning capability authorities before changing a published or installed identity.'
+      guidance:
+        'Resolve the name collision through the owning capability authorities before changing a published or installed identity.'
     },
     audit: {
       phase: 'INSPECT',

@@ -35,13 +35,18 @@ const fixture = (): {
   readonly packageContent: string
 } => {
   const repository = temporaryDirectory('ki-mcp-')
-  for (const directory of ['config', 'mcp-server', 'tools/example', 'main', 'utils']) mkdirSync(join(repository, 'src', directory), { recursive: true })
+  for (const directory of ['config', 'mcp-server', 'tools/example', 'main', 'utils'])
+    mkdirSync(join(repository, 'src', directory), { recursive: true })
   writeFileSync(
     join(repository, 'src', 'config', 'index.ts'),
     'export const loadConfig = () => process.loadEnvFile()\nconst values = [ACCESS_LEVELS, ACCESS_LEVEL_RANK, AuditLogMode]\n'
   )
-  writeFileSync(join(repository, 'src', 'tools', 'example', 'index.ts'), "server.registerTool('example_items_list', {})\n")
-  for (const file of ['access-level.ts', 'annotations.ts', 'audit-log.ts']) writeFileSync(join(repository, 'src', 'utils', file), '')
+  writeFileSync(
+    join(repository, 'src', 'tools', 'example', 'index.ts'),
+    "server.registerTool('example_items_list', {})\n"
+  )
+  for (const file of ['access-level.ts', 'annotations.ts', 'audit-log.ts'])
+    writeFileSync(join(repository, 'src', 'utils', file), '')
   const config = join(repository, '.ki-config.toml')
   const configContent = '["knowledgeislands/ki-agentic-harness:ki-repo"]\n'
   writeFileSync(config, configContent)

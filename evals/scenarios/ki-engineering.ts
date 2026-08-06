@@ -17,10 +17,16 @@ export const scenarios: Scenario[] = [
     prompt:
       'In our Knowledge Islands TypeScript/Bun repos, which native commands run the complete and engineering-scoped audit/conform operations, where do the code tools run, and when does the Vitest profile apply?',
     assertions: [
-      { name: 'native audit/conform', re: /ki repo audit[^.\n]{0,80}ki repo conform|ki repo conform[^.\n]{0,80}ki repo audit/ },
+      {
+        name: 'native audit/conform',
+        re: /ki repo audit[^.\n]{0,80}ki repo conform|ki repo conform[^.\n]{0,80}ki repo audit/
+      },
       { name: 'skill-scoped engineering', re: /--skill\s+ki-engineering/ },
       { name: 'no package aliases', re: /(no|not|without)[^.\n]{0,50}(package|script|alias)/i },
-      { name: 'code tools internal', re: /(Biome|TypeScript|tsc)[^.\n]{0,80}(inside|internal|direct)|inside[^.\n]{0,80}(Biome|TypeScript|tsc)/i },
+      {
+        name: 'code tools internal',
+        re: /(Biome|TypeScript|tsc)[^.\n]{0,80}(inside|internal|direct)|inside[^.\n]{0,80}(Biome|TypeScript|tsc)/i
+      },
       { name: 'runner-neutral test', re: /(bare|runner-neutral)[^.\n]{0,30}`?test`?/i },
       { name: 'Vitest config-gated', re: /vitest\.config[^.\n]{0,50}(gate|select|present|carry|when)/i }
     ],
@@ -30,7 +36,8 @@ export const scenarios: Scenario[] = [
   {
     skill: 'ki-engineering',
     id: 'eng-cli-chmod',
-    prompt: 'In our repos that compile to dist/, what is the rule for what the `build` script chmods +x — and what must it NOT chmod?',
+    prompt:
+      'In our repos that compile to dist/, what is the rule for what the `build` script chmods +x — and what must it NOT chmod?',
     assertions: [
       { name: 'chmod dist/cli/cli.js', re: /dist\/cli\/cli\.js/ },
       { name: 'iff src/cli exists', re: /(iff|only if|when)[^.\n]{0,30}src\/cli|src\/cli[^.\n]{0,30}(exist|present)/i },
@@ -45,9 +52,13 @@ export const scenarios: Scenario[] = [
   {
     skill: 'ki-engineering',
     id: 'eng-composition',
-    prompt: 'How does `ki repo audit` fully audit a workspace MCP repository — which declared capabilities run, what does each own, and how do they compose?',
+    prompt:
+      'How does `ki repo audit` fully audit a workspace MCP repository — which declared capabilities run, what does each own, and how do they compose?',
     assertions: [
-      { name: 'engineering common layer', re: /ki-engineering[^.\n]{0,50}(common|toolchain)|engineering[^.\n]{0,40}(common|toolchain)/i },
+      {
+        name: 'engineering common layer',
+        re: /ki-engineering[^.\n]{0,50}(common|toolchain)|engineering[^.\n]{0,40}(common|toolchain)/i
+      },
       { name: 'mcp delta', re: /ki-mcp[^.\n]{0,50}(delta|MCP)|MCP delta/i },
       {
         name: 'declared native composition',

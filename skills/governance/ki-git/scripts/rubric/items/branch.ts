@@ -11,7 +11,8 @@ const BRANCH_1: RubricItem<GitRubricContext> = {
     prompt:
       'Assess whether direct main or a branch is appropriate for this repository’s protection policy, the user’s request, and the value of an isolated review boundary.',
     outcomes: ['conforming', 'branch required', 'direct-main rationale required'],
-    guidance: 'Create an isolated branch where review or repository policy requires it, or record why a focused direct-main change is appropriate.'
+    guidance:
+      'Create an isolated branch where review or repository policy requires it, or record why a focused direct-main change is appropriate.'
   }
 }
 

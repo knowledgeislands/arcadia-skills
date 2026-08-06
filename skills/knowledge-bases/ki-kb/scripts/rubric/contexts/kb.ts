@@ -1,6 +1,13 @@
 import { existsSync, lstatSync, readdirSync, readFileSync } from 'node:fs'
 import { dirname, isAbsolute, join, relative, resolve } from 'node:path'
-import type { AuditOutcome, ConformProposal, RubricContextOptions, RubricOutcomes, RubricPublicationContext, RubricSession } from '../../shared/rubric.ts'
+import type {
+  AuditOutcome,
+  ConformProposal,
+  RubricContextOptions,
+  RubricOutcomes,
+  RubricPublicationContext,
+  RubricSession
+} from '../../shared/rubric.ts'
 
 export const ZONES = ['Calendar', 'Pillars', 'Resources', 'Streams', 'Admin'] as const
 export const STAGING = ['+', '-'] as const
@@ -22,8 +29,10 @@ export type KbEvidenceFinding = {
   subject?: string
 }
 
-const isDirectory = (path: string): boolean => existsSync(path) && !lstatSync(path).isSymbolicLink() && lstatSync(path).isDirectory()
-const isFile = (path: string): boolean => existsSync(path) && !lstatSync(path).isSymbolicLink() && lstatSync(path).isFile()
+const isDirectory = (path: string): boolean =>
+  existsSync(path) && !lstatSync(path).isSymbolicLink() && lstatSync(path).isDirectory()
+const isFile = (path: string): boolean =>
+  existsSync(path) && !lstatSync(path).isSymbolicLink() && lstatSync(path).isFile()
 const sample = (values: readonly string[], maximum = 10): string =>
   `${values.slice(0, maximum).join('; ')}${values.length > maximum ? `; …+${values.length - maximum} more` : ''}`
 
@@ -36,13 +45,17 @@ const parseConfig = (text: string): { value: KiKbConfig | null; malformed: boole
     const zones =
       record.zones && typeof record.zones === 'object' && !Array.isArray(record.zones)
         ? Object.fromEntries<string>(
-            Object.entries(record.zones as Record<string, unknown>).filter((entry): entry is [string, string] => typeof entry[1] === 'string')
+            Object.entries(record.zones as Record<string, unknown>).filter(
+              (entry): entry is [string, string] => typeof entry[1] === 'string'
+            )
           )
         : {}
     const templates =
       record.templates && typeof record.templates === 'object' && !Array.isArray(record.templates)
         ? Object.fromEntries<string>(
-            Object.entries(record.templates as Record<string, unknown>).filter((entry): entry is [string, string] => typeof entry[1] === 'string')
+            Object.entries(record.templates as Record<string, unknown>).filter(
+              (entry): entry is [string, string] => typeof entry[1] === 'string'
+            )
           )
         : {}
     return {
@@ -57,7 +70,9 @@ const parseConfig = (text: string): { value: KiKbConfig | null; malformed: boole
         requiredFrontmatter: Array.isArray(record.required_frontmatter)
           ? record.required_frontmatter.filter((value): value is string => typeof value === 'string')
           : [],
-        preflight: Array.isArray(record.preflight) ? record.preflight.filter((value): value is string => typeof value === 'string') : []
+        preflight: Array.isArray(record.preflight)
+          ? record.preflight.filter((value): value is string => typeof value === 'string')
+          : []
       },
       malformed: false
     }
@@ -176,16 +191,21 @@ export const collectKbAuditEvidence = (target: string): readonly KbEvidenceFindi
       add(
         'NOT_APPLICABLE',
         code,
-        parsed.malformed ? 'Configuration is malformed; the table cannot be inspected.' : '["knowledgeislands/ki-agentic-harness:ki-kb"] is not declared.'
+        parsed.malformed
+          ? 'Configuration is malformed; the table cannot be inspected.'
+          : '["knowledgeislands/ki-agentic-harness:ki-kb"] is not declared.'
       )
   } else {
     for (const key of Object.keys(config.keys))
       add('WARN', 'CONFIG-1', `Unrecognised scalar ["knowledgeislands/ki-agentic-harness:ki-kb"] key: ${key}.`, CONFIG)
-    if (Object.keys(config.keys).length === 0) add('PASS', 'CONFIG-1', 'No unrecognised scalar ["knowledgeislands/ki-agentic-harness:ki-kb"] keys.', CONFIG)
+    if (Object.keys(config.keys).length === 0)
+      add('PASS', 'CONFIG-1', 'No unrecognised scalar ["knowledgeislands/ki-agentic-harness:ki-kb"] keys.', CONFIG)
     const aliasable = new Set<string>([...ZONES, ...STAGING])
     for (const [zone, folder] of Object.entries(config.zones)) {
-      if (!aliasable.has(zone)) add('WARN', 'CONFIG-3', `Zone alias ${zone} is not a canonical zone or staging area.`, CONFIG)
-      else if (zone === folder) add('INFO', 'CONFIG-2', `Zone alias ${zone} restates its canonical folder name.`, CONFIG)
+      if (!aliasable.has(zone))
+        add('WARN', 'CONFIG-3', `Zone alias ${zone} is not a canonical zone or staging area.`, CONFIG)
+      else if (zone === folder)
+        add('INFO', 'CONFIG-2', `Zone alias ${zone} restates its canonical folder name.`, CONFIG)
       else add('PASS', 'CONFIG-4', `Zone alias resolves ${zone} to ${folder}/.`, CONFIG)
     }
     if (Object.keys(config.zones).length === 0) {
@@ -195,7 +215,13 @@ export const collectKbAuditEvidence = (target: string): readonly KbEvidenceFindi
     }
     const missing = config.preflight.filter((path) => !/[*?[\]]/.test(path) && !existsSync(join(root, path)))
     if (missing.length) add('WARN', 'CONFIG-5', `Declared preflight paths are missing: ${sample(missing)}.`, CONFIG)
-    else add('PASS', 'CONFIG-5', config.preflight.length ? 'Declared literal preflight paths resolve.' : 'No preflight paths are declared.', CONFIG)
+    else
+      add(
+        'PASS',
+        'CONFIG-5',
+        config.preflight.length ? 'Declared literal preflight paths resolve.' : 'No preflight paths are declared.',
+        CONFIG
+      )
   }
   for (const zone of ZONES) {
     const folder = zoneOf(zone)
@@ -215,7 +241,12 @@ export const collectKbAuditEvidence = (target: string): readonly KbEvidenceFindi
   const admin = zoneOf('Admin')
   if (isDirectory(join(root, admin))) {
     const memory = join(root, admin, 'MEMORY.md')
-    add(isFile(memory) ? 'PASS' : 'FAIL', 'ZONE-3', isFile(memory) ? 'Root memory index is present.' : 'Root memory index is missing.', `${admin}/MEMORY.md`)
+    add(
+      isFile(memory) ? 'PASS' : 'FAIL',
+      'ZONE-3',
+      isFile(memory) ? 'Root memory index is present.' : 'Root memory index is missing.',
+      `${admin}/MEMORY.md`
+    )
     for (const subdivision of ['Governance', 'Operations']) {
       const directory = join(root, admin, subdivision)
       const index = join(directory, `${subdivision}.md`)
@@ -242,7 +273,12 @@ export const collectKbAuditEvidence = (target: string): readonly KbEvidenceFindi
   } else add('NOT_APPLICABLE', 'ZONE-3', 'Admin zone is absent.')
   for (const staging of STAGING) {
     const folder = zoneOf(staging)
-    add('INFO', 'ZONE-4', `${folder}/ is ${isDirectory(join(root, folder)) ? 'present' : 'absent'} staging, not a zone.`, `${folder}/`)
+    add(
+      'INFO',
+      'ZONE-4',
+      `${folder}/ is ${isDirectory(join(root, folder)) ? 'present' : 'absent'} staging, not a zone.`,
+      `${folder}/`
+    )
   }
   const anchor = ['CLAUDE.md', 'AGENTS.md'].find((name) => isFile(join(root, name)))
   if (!anchor) add('WARN', 'MEM-2', 'No root CLAUDE.md or AGENTS.md anchors the memory cascade.')
@@ -251,7 +287,9 @@ export const collectKbAuditEvidence = (target: string): readonly KbEvidenceFindi
     add(
       /memory|ki-kb/i.test(text) ? 'PASS' : 'WARN',
       'MEM-2',
-      /memory|ki-kb/i.test(text) ? 'Memory cascade has an always-loaded anchor.' : 'Root orientation does not anchor the memory cascade.',
+      /memory|ki-kb/i.test(text)
+        ? 'Memory cascade has an always-loaded anchor.'
+        : 'Root orientation does not anchor the memory cascade.',
       anchor
     )
   }
@@ -271,7 +309,8 @@ export const collectKbAuditEvidence = (target: string): readonly KbEvidenceFindi
     }
     for (const key of value.keys) if (!SNAKE_CASE.test(key)) badKeys.push(`${relative}: ${key}`)
     for (const key of required) if (!value.keys.includes(key)) missingRequired.push(`${relative} (${key})`)
-    if ((value.type === 'session-digest' || value.type === 'handoff') && !relative.startsWith(outbound)) misplacedOutputs.push(relative)
+    if ((value.type === 'session-digest' || value.type === 'handoff') && !relative.startsWith(outbound))
+      misplacedOutputs.push(relative)
   }
   add(
     unterminated.length ? 'FAIL' : 'PASS',
@@ -287,11 +326,17 @@ export const collectKbAuditEvidence = (target: string): readonly KbEvidenceFindi
         ? 'Declared required frontmatter is present.'
         : 'No required frontmatter is declared.'
   )
-  add(badKeys.length ? 'WARN' : 'PASS', 'NOTE-1b', badKeys.length ? `Non-snake_case frontmatter keys: ${sample(badKeys)}.` : 'Frontmatter keys use snake_case.')
+  add(
+    badKeys.length ? 'WARN' : 'PASS',
+    'NOTE-1b',
+    badKeys.length ? `Non-snake_case frontmatter keys: ${sample(badKeys)}.` : 'Frontmatter keys use snake_case.'
+  )
   add(
     misplacedOutputs.length ? 'FAIL' : 'PASS',
     'ZONE-5',
-    misplacedOutputs.length ? `Produced outputs outside ${outbound}: ${sample(misplacedOutputs)}.` : 'Produced outputs are routed to outbound staging.'
+    misplacedOutputs.length
+      ? `Produced outputs outside ${outbound}: ${sample(misplacedOutputs)}.`
+      : 'Produced outputs are routed to outbound staging.'
   )
   return findings
 }
@@ -306,7 +351,9 @@ const auditOutcome = (finding: KbEvidenceFinding): AuditOutcome => {
 
 const outcomesFor = (findings: readonly KbEvidenceFinding[], code: string): RubricOutcomes<AuditOutcome> => {
   const outcomes = findings.filter((finding) => finding.code === code).map(auditOutcome)
-  return outcomes.length > 0 ? outcomes : [{ status: 'NOT_APPLICABLE', message: `${code} did not apply to this target.` }]
+  return outcomes.length > 0
+    ? outcomes
+    : [{ status: 'NOT_APPLICABLE', message: `${code} did not apply to this target.` }]
 }
 
 type KbDraft = {
@@ -358,12 +405,18 @@ const createKbDraft = (repository: string): KbDraft | undefined => {
       stageCreate(join(admin, 'MEMORY.md'), '# MEMORY\n\n## Active Pillars\n\n<!-- list active Pillars here -->\n')
     },
     proposal: () => ({
-      writes: [...creates].sort(([left], [right]) => left.localeCompare(right)).map(([path, content]) => ({ path, content, create: true }))
+      writes: [...creates]
+        .sort(([left], [right]) => left.localeCompare(right))
+        .map(([path, content]) => ({ path, content, create: true }))
     })
   }
 }
 
-export const createKbSession = ({ mode, repository, publication }: RubricContextOptions): RubricSession<KbRubricContext> => {
+export const createKbSession = ({
+  mode,
+  repository,
+  publication
+}: RubricContextOptions): RubricSession<KbRubricContext> => {
   const findings = collectKbAuditEvidence(repository)
   const check = (code: string): KbCheck => outcomesFor(findings, code)
   const draft = mode === 'conform' ? createKbDraft(repository) : undefined

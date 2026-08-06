@@ -1,7 +1,19 @@
 import { expect, test } from 'bun:test'
 import definition from './index.ts'
 
-const expectedFamilies = ['RUBRIC', 'INDEX', 'AREA', 'ID', 'REQ', 'VERIFY', 'BEHAVIOUR', 'AS-BUILT', 'SPLIT', 'DR-LINK', 'AREA-FIT']
+const expectedFamilies = [
+  'RUBRIC',
+  'INDEX',
+  'AREA',
+  'ID',
+  'REQ',
+  'VERIFY',
+  'BEHAVIOUR',
+  'AS-BUILT',
+  'SPLIT',
+  'DR-LINK',
+  'AREA-FIT'
+]
 const expectedItems = [
   'INDEX-1',
   'INDEX-2',
@@ -25,12 +37,27 @@ test('the catalogue exposes every ordered Feature Definitions family and criteri
   expect(definition.name).toBe('ki-feature-definitions')
   expect(definition.createSession).toBeFunction()
   expect(definition.families.map((family) => family.code)).toEqual(expectedFamilies)
-  expect(definition.families.filter((family) => family.code !== 'RUBRIC').flatMap((family) => family.items.map((item) => item.code))).toEqual(expectedItems)
+  expect(
+    definition.families
+      .filter((family) => family.code !== 'RUBRIC')
+      .flatMap((family) => family.items.map((item) => item.code))
+  ).toEqual(expectedItems)
 })
 
 test('the catalogue and family modules keep their public surfaces narrow', async () => {
   expect(Object.keys(await import('./index.ts'))).toEqual(['default'])
-  for (const file of ['area-fit', 'area', 'as-built', 'behaviour', 'decision-link', 'identity', 'index-family', 'requirement', 'split', 'verification']) {
+  for (const file of [
+    'area-fit',
+    'area',
+    'as-built',
+    'behaviour',
+    'decision-link',
+    'identity',
+    'index-family',
+    'requirement',
+    'split',
+    'verification'
+  ]) {
     const module = (await import(`./${file}.ts`)) as Record<string, unknown>
     expect(Object.keys(module)).toHaveLength(1)
     const family = Object.values(module)[0] as { code?: unknown; items?: unknown }

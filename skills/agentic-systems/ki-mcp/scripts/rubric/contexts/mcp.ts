@@ -1,6 +1,11 @@
 import { lstatSync, readdirSync, readFileSync } from 'node:fs'
 import { isAbsolute, join, relative, resolve } from 'node:path'
-import type { ConformWrite, RubricContextOptions, RubricPublicationContext, RubricSession } from '../../shared/rubric.ts'
+import type {
+  ConformWrite,
+  RubricContextOptions,
+  RubricPublicationContext,
+  RubricSession
+} from '../../shared/rubric.ts'
 
 const CONFIG_FILE = '.ki-config.toml'
 const CONFIG_SECTION = 'knowledgeislands/ki-agentic-harness:ki-mcp'
@@ -27,7 +32,10 @@ export type McpApplicabilityContext = {
 
 export type McpLayoutContext = {
   readonly requiredDirectories: readonly { readonly path: string; readonly state: NodeKind }[]
-  readonly cli: { readonly state: NodeKind; readonly files: readonly { readonly path: string; readonly state: NodeKind }[] }
+  readonly cli: {
+    readonly state: NodeKind
+    readonly files: readonly { readonly path: string; readonly state: NodeKind }[]
+  }
 }
 
 export type McpDocumentationContext = {
@@ -119,7 +127,10 @@ const sourceFilesBelow = (root: string, directory: string): SourceFile[] => {
   return files.sort((left, right) => left.path.localeCompare(right.path))
 }
 
-const inspectConfig = (path: string, kind: NodeKind): { readonly state: ConfigState; readonly keys: readonly string[]; readonly content: string | null } => {
+const inspectConfig = (
+  path: string,
+  kind: NodeKind
+): { readonly state: ConfigState; readonly keys: readonly string[]; readonly content: string | null } => {
   if (kind === 'missing') return { state: 'missing', keys: [], content: null }
   if (kind !== 'file') return { state: 'unsafe', keys: [], content: null }
   const content = readFileSync(path, 'utf8')
@@ -198,20 +209,31 @@ const stripComments = (line: string, state: { inBlock: boolean }): string => {
   return code
 }
 
-export const createMcpSession = ({ mode, repository, publication }: RubricContextOptions): RubricSession<McpRubricContext> => {
+export const createMcpSession = ({
+  mode,
+  repository,
+  publication
+}: RubricContextOptions): RubricSession<McpRubricContext> => {
   const root = resolve(repository)
   const rootExists = nodeKind(root) === 'directory'
   const at = (...parts: string[]): string => join(root, ...parts)
   const sourceFiles = rootExists ? sourceFilesBelow(root, at('src')) : []
   const sourceByPath = new Map(sourceFiles.map((file) => [file.path, file.content]))
   const configPath = at(CONFIG_FILE)
-  const configEvidence = rootExists ? inspectConfig(configPath, nodeKind(configPath)) : { state: 'missing' as const, keys: [], content: null }
+  const configEvidence = rootExists
+    ? inspectConfig(configPath, nodeKind(configPath))
+    : { state: 'missing' as const, keys: [], content: null }
   const mcpServerState = rootExists ? nodeKind(at('src', 'mcp-server')) : 'missing'
   const applicable =
     rootExists &&
-    (configEvidence.state === 'present' || configEvidence.state === 'malformed' || configEvidence.state === 'unsafe' || mcpServerState !== 'missing')
+    (configEvidence.state === 'present' ||
+      configEvidence.state === 'malformed' ||
+      configEvidence.state === 'unsafe' ||
+      mcpServerState !== 'missing')
   const packagePath = at(PACKAGE_FILE)
-  const packageEvidence = rootExists ? inspectPackage(packagePath, nodeKind(packagePath)) : { value: null, malformed: false, content: null }
+  const packageEvidence = rootExists
+    ? inspectPackage(packagePath, nodeKind(packagePath))
+    : { value: null, malformed: false, content: null }
   const scripts = packageScripts(packageEvidence.value)
   const originalConfig = configEvidence.content
   let configDraft = originalConfig
@@ -221,9 +243,14 @@ export const createMcpSession = ({ mode, repository, publication }: RubricContex
   const regularDocument = (file: 'ROADMAP.md' | 'CONTRIBUTING.md' | 'SECURITY.md' | 'CHANGELOG.md'): string | null =>
     nodeKind(at(file)) === 'file' ? readFileSync(at(file), 'utf8') : null
   const vitestFile =
-    ['vitest.config.ts', 'vitest.config.js', 'vitest.config.mts', 'vitest.config.cts', 'vitest.config.mjs', 'vitest.config.cjs'].find(
-      (file) => nodeKind(at(file)) === 'file'
-    ) ?? null
+    [
+      'vitest.config.ts',
+      'vitest.config.js',
+      'vitest.config.mts',
+      'vitest.config.cts',
+      'vitest.config.mjs',
+      'vitest.config.cjs'
+    ].find((file) => nodeKind(at(file)) === 'file') ?? null
   const toolFiles = sourceFiles.filter((file) => file.path.startsWith('src/tools/') && !file.path.endsWith('.test.ts'))
   // Envelope helpers are not always reached from `src/tools/`: a server may build its result in
   // `main/` or share a `jsonResult` in `utils/`, so scoping the structured-output scan to the tool
@@ -254,7 +281,10 @@ export const createMcpSession = ({ mode, repository, publication }: RubricContex
       })),
       cli: {
         state: nodeKind(at('src', 'cli')),
-        files: ['cli.ts', 'index.ts'].map((file) => ({ path: `src/cli/${file}`, state: nodeKind(at('src', 'cli', file)) }))
+        files: ['cli.ts', 'index.ts'].map((file) => ({
+          path: `src/cli/${file}`,
+          state: nodeKind(at('src', 'cli', file))
+        }))
       }
     },
     documentation: {
@@ -270,7 +300,10 @@ export const createMcpSession = ({ mode, repository, publication }: RubricContex
       ambientProcessEnvOffenders: sourceFiles
         .filter(
           (file) =>
-            !file.path.startsWith('src/config/') && !file.path.endsWith('.test.ts') && file.path !== 'src/mcp-server/index.ts' && file.path !== 'src/cli/cli.ts'
+            !file.path.startsWith('src/config/') &&
+            !file.path.endsWith('.test.ts') &&
+            file.path !== 'src/mcp-server/index.ts' &&
+            file.path !== 'src/cli/cli.ts'
         )
         .filter((file) => {
           const state = { inBlock: false }
@@ -308,7 +341,11 @@ export const createMcpSession = ({ mode, repository, publication }: RubricContex
               }
               if (!Object.values(bin).includes(MCP_MAIN)) {
                 const names = Object.keys(bin)
-                bin[names.length === 1 ? (names[0] as string) : String(packageDraft.name ?? 'mcp-server').replace(/^@[^/]+\//, '')] = MCP_MAIN
+                bin[
+                  names.length === 1
+                    ? (names[0] as string)
+                    : String(packageDraft.name ?? 'mcp-server').replace(/^@[^/]+\//, '')
+                ] = MCP_MAIN
                 packageDraft.bin = bin
                 packageChanged = true
               }
@@ -333,7 +370,10 @@ export const createMcpSession = ({ mode, repository, publication }: RubricContex
     },
     ci: {
       scripts,
-      workflow: nodeKind(at('.github', 'workflows', 'ci.yml')) === 'file' ? readFileSync(at('.github', 'workflows', 'ci.yml'), 'utf8') : null
+      workflow:
+        nodeKind(at('.github', 'workflows', 'ci.yml')) === 'file'
+          ? readFileSync(at('.github', 'workflows', 'ci.yml'), 'utf8')
+          : null
     }
   }
 
@@ -344,7 +384,8 @@ export const createMcpSession = ({ mode, repository, publication }: RubricContex
     ],
     proposal: () => {
       const writes: ConformWrite[] = []
-      if (configDraft !== null && originalConfig !== null && configDraft !== originalConfig) writes.push({ path: CONFIG_FILE, content: configDraft })
+      if (configDraft !== null && originalConfig !== null && configDraft !== originalConfig)
+        writes.push({ path: CONFIG_FILE, content: configDraft })
       if (packageChanged && packageDraft && packageEvidence.content !== null)
         writes.push({ path: PACKAGE_FILE, content: `${JSON.stringify(packageDraft, null, 2)}\n` })
       return { writes }

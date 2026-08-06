@@ -19,7 +19,9 @@ const LONG_2: RubricItem<unknown> = {
   description:
     "_A cadence, not just a capability._ A skill that ships a refresh path also **declares a cadence** in its `sources.md` `**Refresh:**` marker (`<class> · <cadence>`) and, where supported, registers a scheduled run; a refresh capability with no declared cadence is a half-measure. The cadence has runtime teeth in both directions: overdue → LONG-3 WARN; too-soon → the REFRESH mode's confirm-before-force gate (enforcement framework §5).",
   sources: ['COMMUNITY'],
-  judgment: judgment('Does the refresh path have an appropriate declared cadence and scheduled execution where supported?')
+  judgment: judgment(
+    'Does the refresh path have an appropriate declared cadence and scheduled execution where supported?'
+  )
 }
 
 const LONG_3: RubricItem<LongevityRubricContext> = {
@@ -68,14 +70,16 @@ const LONG_4: RubricItem<LongevityRubricContext> = {
           return [
             {
               status: 'VIOLATION',
-              message: 'references/sources.md has no parseable `**Refresh:** <class> · <cadence>` marker near the top (LONG-4a)'
+              message:
+                'references/sources.md has no parseable `**Refresh:** <class> · <cadence>` marker near the top (LONG-4a)'
             }
           ]
         return [
           context.refreshClass === 'external-spec' && context.cadence === 'on-change'
             ? {
                 status: 'VIOLATION',
-                message: '`**Refresh:**` marks this external-spec but cadence is `on-change` — an external-spec tracker needs a clock cadence (LONG-4b)'
+                message:
+                  '`**Refresh:**` marks this external-spec but cadence is `on-change` — an external-spec tracker needs a clock cadence (LONG-4b)'
               }
             : { status: 'PASS', message: 'the refresh marker is present and coherent' }
         ]

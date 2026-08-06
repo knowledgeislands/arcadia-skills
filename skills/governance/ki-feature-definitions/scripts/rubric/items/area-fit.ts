@@ -13,7 +13,8 @@ const AREA_FIT_1: RubricItem<FeatureJudgmentContext> = {
     prompt:
       'Assess whether each requirement sits in the area its behaviour belongs to; when behaviour changes area, allocate a new ID rather than moving the old number.',
     outcomes: ['conforming', 'gap', 'exclusion'],
-    guidance: 'Record the selected outcome and allocate a new requirement identifier where a behaviour belongs to another area.'
+    guidance:
+      'Record the selected outcome and allocate a new requirement identifier where a behaviour belongs to another area.'
   }
 }
 

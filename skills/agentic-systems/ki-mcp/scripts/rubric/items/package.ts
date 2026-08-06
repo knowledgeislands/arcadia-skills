@@ -29,7 +29,10 @@ const PKG_1: RubricItem<McpPackageContext> = {
         return [
           {
             status: pkg.main === MAIN ? ('PASS' as const) : ('VIOLATION' as const),
-            message: pkg.main === MAIN ? `main = ${JSON.stringify(MAIN)}.` : `main should be ${JSON.stringify(MAIN)}, got ${JSON.stringify(pkg.main)}.`,
+            message:
+              pkg.main === MAIN
+                ? `main = ${JSON.stringify(MAIN)}.`
+                : `main should be ${JSON.stringify(MAIN)}, got ${JSON.stringify(pkg.main)}.`,
             subject: 'package.json'
           },
           {
@@ -41,7 +44,10 @@ const PKG_1: RubricItem<McpPackageContext> = {
             (key) =>
               ({
                 status: exports_[key] === undefined ? 'VIOLATION' : 'PASS',
-                message: exports_[key] === undefined ? `exports missing ${JSON.stringify(key)}.` : `exports has ${JSON.stringify(key)}.`,
+                message:
+                  exports_[key] === undefined
+                    ? `exports missing ${JSON.stringify(key)}.`
+                    : `exports has ${JSON.stringify(key)}.`,
                 subject: 'package.json'
               }) as AuditOutcome
           )

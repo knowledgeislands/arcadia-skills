@@ -13,7 +13,8 @@ const ROUTE_1: RubricItem<OutcomeContext> = {
     level: 'FAIL',
     remediation: {
       class: 'diagnostic',
-      guidance: 'Correct the locally owned route declaration or registered repository configuration, then rerun the audit.'
+      guidance:
+        'Correct the locally owned route declaration or registered repository configuration, then rerun the audit.'
     },
     audit: { phase: 'INSPECT', run: ({ outcomes }) => outcomes }
   }

@@ -64,7 +64,12 @@ const inspectRepository = (repository: string): Omit<BindingChezMoiContext, 'rub
         continue
       }
       if (state.isSymbolicLink()) {
-        if (entry.name === '.chezmoidata' || entry.name === '.chezmoitemplates' || /mcp/i.test(entry.name) || entry.name.endsWith('.tmpl'))
+        if (
+          entry.name === '.chezmoidata' ||
+          entry.name === '.chezmoitemplates' ||
+          /mcp/i.test(entry.name) ||
+          entry.name.endsWith('.tmpl')
+        )
           unsafePaths.push(subject)
         continue
       }
@@ -103,7 +108,10 @@ const inspectRepository = (repository: string): Omit<BindingChezMoiContext, 'rub
   }
 }
 
-export const createBindingChezMoiSession = ({ repository, publication }: RubricContextOptions): RubricSession<BindingChezMoiContext> => {
+export const createBindingChezMoiSession = ({
+  repository,
+  publication
+}: RubricContextOptions): RubricSession<BindingChezMoiContext> => {
   const root = resolve(repository)
   const context = { ...inspectRepository(root), rubric: { publication } }
   return {

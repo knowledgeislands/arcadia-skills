@@ -1,6 +1,10 @@
 import type { RubricFamily, RubricItem } from '../../shared/rubric.ts'
 import { DIAGNOSTIC_REMEDIATION, judgment } from '../../shared/rubric.ts'
-import { type DescriptionRubricContext, type KiSkillsRubricContext, selectKiSkillsContext } from '../contexts/contexts.ts'
+import {
+  type DescriptionRubricContext,
+  type KiSkillsRubricContext,
+  selectKiSkillsContext
+} from '../contexts/contexts.ts'
 import { containsXmlTag, stripCode } from '../contexts/text.ts'
 
 const DESCRIPTION_MAX_LENGTH = 1024
@@ -37,7 +41,12 @@ const DESC_2: RubricItem<DescriptionRubricContext> = {
         !description
           ? [{ status: 'NOT_APPLICABLE', message: 'description is not present' }]
           : description.length > DESCRIPTION_MAX_LENGTH
-            ? [{ status: 'VIOLATION', message: `\`description\` is ${description.length} chars (max ${DESCRIPTION_MAX_LENGTH})` }]
+            ? [
+                {
+                  status: 'VIOLATION',
+                  message: `\`description\` is ${description.length} chars (max ${DESCRIPTION_MAX_LENGTH})`
+                }
+              ]
             : [{ status: 'PASS', message: 'description is no longer than 1024 characters' }]
     }
   }
@@ -92,7 +101,9 @@ const DESC_7: RubricItem<DescriptionRubricContext> = {
   title: 'description leans toward firing and front-loads its main trigger',
   description: 'Leans toward firing, and front-loads the most important trigger.',
   sources: ['ENG', 'COMMUNITY', 'CC'],
-  judgment: judgment('Does the description lean toward appropriate selection and front-load its most important trigger?')
+  judgment: judgment(
+    'Does the description lean toward appropriate selection and front-load its most important trigger?'
+  )
 }
 
 const DESC_8: RubricItem<DescriptionRubricContext> = {

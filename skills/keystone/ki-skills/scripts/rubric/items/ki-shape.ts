@@ -25,7 +25,8 @@ const KI_SHAPE_2: RubricItem<KiShapeRubricContext> = {
     audit: {
       phase: 'INSPECT',
       run: ({ skill }) => {
-        if (!skill) return [{ status: 'NOT_APPLICABLE', message: 'skill evidence is unavailable for composition inspection' }]
+        if (!skill)
+          return [{ status: 'NOT_APPLICABLE', message: 'skill evidence is unavailable for composition inspection' }]
         const violations = skill.retiredExtensionFiles.map((file) => ({
           status: 'VIOLATION' as const,
           message:
@@ -54,8 +55,12 @@ const KI_SHAPE_3: RubricItem<KiShapeRubricContext> = {
     audit: {
       phase: 'INSPECT',
       run: ({ skill }) => {
-        if (!skill?.knowledgeIslandsSkill) return [{ status: 'NOT_APPLICABLE', message: 'the target is not a Knowledge Islands skill' }]
-        if (!skill.kiKindPresent) return [{ status: 'VIOLATION', message: 'missing required `ki-kind: governance | process` frontmatter metadata' }]
+        if (!skill?.knowledgeIslandsSkill)
+          return [{ status: 'NOT_APPLICABLE', message: 'the target is not a Knowledge Islands skill' }]
+        if (!skill.kiKindPresent)
+          return [
+            { status: 'VIOLATION', message: 'missing required `ki-kind: governance | process` frontmatter metadata' }
+          ]
         if (skill.kiKind !== 'governance' && skill.kiKind !== 'process')
           return [{ status: 'VIOLATION', message: '`ki-kind:` must be exactly `governance` or `process`' }]
         return [{ status: 'PASS', message: 'the skill declares an explicit governance or process kind' }]
@@ -95,7 +100,8 @@ const KI_SHAPE_6: RubricItem<KiShapeRubricContext> = {
     audit: {
       phase: 'INSPECT',
       run: ({ skill }) => {
-        if (!skill?.knowledgeIslandsSkill) return [{ status: 'NOT_APPLICABLE', message: 'the target is not a Knowledge Islands skill' }]
+        if (!skill?.knowledgeIslandsSkill)
+          return [{ status: 'NOT_APPLICABLE', message: 'the target is not a Knowledge Islands skill' }]
         const allowed = /^(?:exemplars|rubric|sources|standards-[a-z0-9]+(?:-[a-z0-9]+)*|mode-[a-z0-9]+)\.md$/
         const violations = skill.referencePaths
           .filter((path) => !allowed.test(path))
@@ -105,11 +111,15 @@ const KI_SHAPE_6: RubricItem<KiShapeRubricContext> = {
             subject: `references/${path}`
           }))
         const [first, ...rest] = violations
-        return first ? [first, ...rest] : [{ status: 'PASS', message: 'reference files use the closed Knowledge Islands vocabulary' }]
+        return first
+          ? [first, ...rest]
+          : [{ status: 'PASS', message: 'reference files use the closed Knowledge Islands vocabulary' }]
       }
     }
   },
-  judgment: judgment('Does each retained reference class serve a distinct reader need, with templates and executable helpers elsewhere?')
+  judgment: judgment(
+    'Does each retained reference class serve a distinct reader need, with templates and executable helpers elsewhere?'
+  )
 }
 
 const KI_SHAPE_7: RubricItem<KiShapeRubricContext> = {
@@ -125,8 +135,10 @@ const KI_SHAPE_7: RubricItem<KiShapeRubricContext> = {
     audit: {
       phase: 'INSPECT',
       run: ({ skill }) => {
-        if (!skill) return [{ status: 'NOT_APPLICABLE', message: 'skill evidence is unavailable for anchor inspection' }]
-        if (!skill.strongGate) return [{ status: 'NOT_APPLICABLE', message: 'the skill does not appear to change default behaviour' }]
+        if (!skill)
+          return [{ status: 'NOT_APPLICABLE', message: 'skill evidence is unavailable for anchor inspection' }]
+        if (!skill.strongGate)
+          return [{ status: 'NOT_APPLICABLE', message: 'the skill does not appear to change default behaviour' }]
         return skill.anchorMentioned && skill.rubricReadsAnchor
           ? [{ status: 'PASS', message: 'the behaviour-changing skill defines and checks its anchor' }]
           : [
@@ -139,7 +151,9 @@ const KI_SHAPE_7: RubricItem<KiShapeRubricContext> = {
       }
     }
   },
-  judgment: judgment('Does a behaviour-changing skill have an appropriate always-loaded anchor that its rubric verifies?')
+  judgment: judgment(
+    'Does a behaviour-changing skill have an appropriate always-loaded anchor that its rubric verifies?'
+  )
 }
 
 const KI_SHAPE_9: RubricItem<KiShapeRubricContext> = {
@@ -155,7 +169,8 @@ const KI_SHAPE_9: RubricItem<KiShapeRubricContext> = {
     audit: {
       phase: 'INSPECT',
       run: ({ skill }) => {
-        if (!skill || skill.mechanicalRubricCount === 0) return [{ status: 'NOT_APPLICABLE', message: 'the skill declares no mechanical rubric criteria' }]
+        if (!skill || skill.mechanicalRubricCount === 0)
+          return [{ status: 'NOT_APPLICABLE', message: 'the skill declares no mechanical rubric criteria' }]
         return skill.hasMechanicalImplementation || skill.documentsMechanicalDelegation
           ? [{ status: 'PASS', message: 'mechanical work belongs in the structured rubric' }]
           : [
@@ -195,13 +210,19 @@ const KI_SHAPE_11: RubricItem<KiShapeRubricContext> = {
           return [{ status: 'NOT_APPLICABLE', message: '`argument-hint` is unavailable for HELP-mode inspection' }]
         return skill.hintVerbs.includes('HELP')
           ? [{ status: 'PASS', message: 'governance skills expose HELP' }]
-          : [{ status: 'VIOLATION', message: '`argument-hint` does not expose the universal `help` mode (ADR-KI-HARNESS-SKILLS-001)' }]
+          : [
+              {
+                status: 'VIOLATION',
+                message: '`argument-hint` does not expose the universal `help` mode (ADR-KI-HARNESS-SKILLS-001)'
+              }
+            ]
       }
     },
     conform: {
       phase: 'NORMALISE',
       run: ({ skill, addArgumentHintVerbs }) => {
-        if (skill?.governanceSkill && skill.argumentHint && !skill.hintVerbs.includes('HELP')) addArgumentHintVerbs?.(['help'])
+        if (skill?.governanceSkill && skill.argumentHint && !skill.hintVerbs.includes('HELP'))
+          addArgumentHintVerbs?.(['help'])
       }
     }
   }
@@ -217,7 +238,9 @@ const auditKiShape12 = ({ skill }: KiShapeRubricContext): RubricOutcomes<AuditOu
       message: `\`argument-hint\` is missing the universal verb(s) ${missing.map((verb) => verb.toLowerCase()).join(', ')} — a governance skill exposes AUDIT, CONFORM, EDUCATE, REFRESH and HELP (ADR-KI-HARNESS-SKILLS-001)`
     })
   const [first, ...rest] = violations
-  return first ? [first, ...rest] : [{ status: 'PASS', message: 'governance mode vocabulary is canonical and complete' }]
+  return first
+    ? [first, ...rest]
+    : [{ status: 'PASS', message: 'governance mode vocabulary is canonical and complete' }]
 }
 
 const KI_SHAPE_12: RubricItem<KiShapeRubricContext> = {
@@ -253,7 +276,8 @@ const KI_SHAPE_13: RubricItem<KiShapeRubricContext> = {
     audit: {
       phase: 'INSPECT',
       run: ({ skill }) => {
-        if (!skill?.governanceSkill) return [{ status: 'NOT_APPLICABLE', message: 'the target is not a governance skill' }]
+        if (!skill?.governanceSkill)
+          return [{ status: 'NOT_APPLICABLE', message: 'the target is not a governance skill' }]
         const violations: AuditOutcome[] = []
         if (skill.operatingModesSection === null)
           violations.push({
@@ -300,7 +324,9 @@ const KI_SHAPE_14: RubricItem<KiShapeRubricContext> = {
       run: ({ skill }) => {
         if (!skill?.governanceSkill || !skill.refreshText)
           return [{ status: 'NOT_APPLICABLE', message: 'the target has no governance REFRESH procedure to inspect' }]
-        const namesOwner = skill.localGovernanceSource ? /\.agents\/skills\/ki-self/.test(skill.refreshText) : /ki-agentic-harness/.test(skill.refreshText)
+        const namesOwner = skill.localGovernanceSource
+          ? /\.agents\/skills\/ki-self/.test(skill.refreshText)
+          : /ki-agentic-harness/.test(skill.refreshText)
         const stopsAndRedirects = skill.localGovernanceSource
           ? /\bstop(s)?\b[\s\S]{0,160}\bpromot\w*/i.test(skill.refreshText)
           : /\bstop(s)?\b[\s\S]{0,160}\b(redirect|names?|route)/i.test(skill.refreshText)
@@ -327,7 +353,8 @@ const KI_SHAPE_14: RubricItem<KiShapeRubricContext> = {
 }
 
 const auditKiShape15 = ({ skill }: KiShapeRubricContext): RubricOutcomes<AuditOutcome> => {
-  if (!skill?.governanceSkill || skill.localGovernanceSource) return [{ status: 'NOT_APPLICABLE', message: 'the target is not a direct governance capability' }]
+  if (!skill?.governanceSkill || skill.localGovernanceSource)
+    return [{ status: 'NOT_APPLICABLE', message: 'the target is not a direct governance capability' }]
   const violations: AuditOutcome[] = []
   for (const script of ['govern.ts', 'educate.ts', 'audit.ts', 'conform.ts'])
     if (skill.scriptNames.includes(script))
@@ -336,7 +363,9 @@ const auditKiShape15 = ({ skill }: KiShapeRubricContext): RubricOutcomes<AuditOu
         message: `\`scripts/${script}\` is retired — expose the catalogue only through \`scripts/rubric/items/index.ts\``
       })
   const [first, ...rest] = violations
-  return first ? [first, ...rest] : [{ status: 'PASS', message: 'governance skills expose no legacy runner entrypoints' }]
+  return first
+    ? [first, ...rest]
+    : [{ status: 'PASS', message: 'governance skills expose no legacy runner entrypoints' }]
 }
 
 const KI_SHAPE_15: RubricItem<KiShapeRubricContext> = {
@@ -365,7 +394,8 @@ const KI_SHAPE_16: RubricItem<KiShapeRubricContext> = {
     audit: {
       phase: 'INSPECT',
       run: ({ skill, ownershipCollisions }) => {
-        if (!skill && ownershipCollisions.length === 0) return [{ status: 'NOT_APPLICABLE', message: 'skill and ownership-collision evidence are unavailable' }]
+        if (!skill && ownershipCollisions.length === 0)
+          return [{ status: 'NOT_APPLICABLE', message: 'skill and ownership-collision evidence are unavailable' }]
         const violations: AuditOutcome[] = []
         if (skill) {
           if (skill.implementationSource !== null)
@@ -387,7 +417,9 @@ const KI_SHAPE_16: RubricItem<KiShapeRubricContext> = {
       }
     }
   },
-  judgment: judgment('Do all governed target-file reads and session proposals carry the appropriate ownership declaration?')
+  judgment: judgment(
+    'Do all governed target-file reads and session proposals carry the appropriate ownership declaration?'
+  )
 }
 
 const KI_SHAPE_17: RubricItem<KiShapeRubricContext> = {
@@ -402,12 +434,14 @@ const KI_SHAPE_17: RubricItem<KiShapeRubricContext> = {
     audit: {
       phase: 'INSPECT',
       run: ({ skill }) => {
-        if (!skill) return [{ status: 'NOT_APPLICABLE', message: 'skill evidence is unavailable for dependency inspection' }]
+        if (!skill)
+          return [{ status: 'NOT_APPLICABLE', message: 'skill evidence is unavailable for dependency inspection' }]
         if (!skill.dependsOnPresent)
           return [
             {
               status: 'VIOLATION',
-              message: 'frontmatter carries no `ki-depends-on:` declaration — declare `ki-depends-on: []` when the skill has no governance dependencies'
+              message:
+                'frontmatter carries no `ki-depends-on:` declaration — declare `ki-depends-on: []` when the skill has no governance dependencies'
             }
           ]
         return /^\[[^\]]*\]$/.test(skill.dependsOn)
@@ -435,8 +469,10 @@ const KI_SHAPE_18: RubricItem<KiShapeRubricContext> = {
     audit: {
       phase: 'INSPECT',
       run: ({ skill }) => {
-        if (!skill) return [{ status: 'NOT_APPLICABLE', message: 'skill evidence is unavailable for runtime inspection' }]
-        if (!skill.supportedRuntimesPresent) return [{ status: 'PASS', message: 'the skill declares no runtime compatibility restriction' }]
+        if (!skill)
+          return [{ status: 'NOT_APPLICABLE', message: 'skill evidence is unavailable for runtime inspection' }]
+        if (!skill.supportedRuntimesPresent)
+          return [{ status: 'PASS', message: 'the skill declares no runtime compatibility restriction' }]
         if (!/^\[[^\]]+\]$/.test(skill.supportedRuntimes))
           return [
             {
@@ -449,10 +485,16 @@ const KI_SHAPE_18: RubricItem<KiShapeRubricContext> = {
           .split(',')
           .map((runtime) => runtime.trim())
           .filter(Boolean)
-        if (new Set(runtimes).size !== runtimes.length) return [{ status: 'VIOLATION', message: '`ki-supported-runtimes:` must not repeat a runtime' }]
+        if (new Set(runtimes).size !== runtimes.length)
+          return [{ status: 'VIOLATION', message: '`ki-supported-runtimes:` must not repeat a runtime' }]
         const retired = runtimes.filter((runtime) => runtime === 'codex')
         if (retired.length > 0)
-          return [{ status: 'VIOLATION', message: `\`ki-supported-runtimes:\` names retired runtime(s): ${retired.join(', ')}; use chatgpt-codex` }]
+          return [
+            {
+              status: 'VIOLATION',
+              message: `\`ki-supported-runtimes:\` names retired runtime(s): ${retired.join(', ')}; use chatgpt-codex`
+            }
+          ]
         const recognised = new Set(['claude-code', 'chatgpt-codex'])
         const unknown = runtimes.filter((runtime) => !recognised.has(runtime))
         if (unknown.length > 0)

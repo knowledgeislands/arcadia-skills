@@ -23,11 +23,15 @@ export const TOML: RubricFamily<EngineeringRubricContext, TomlRubricContext> = {
     {
       code: 'TOML-2',
       title: 'Engineering configuration validates down',
-      description: 'Every key under `["knowledgeislands/ki-agentic-harness:ki-engineering"]` is known to the checker; an unknown key is drift.',
+      description:
+        'Every key under `["knowledgeislands/ki-agentic-harness:ki-engineering"]` is known to the checker; an unknown key is drift.',
       sources: ['standards-engineering.md'],
       mechanical: {
         level: 'WARN',
-        remediation: { class: 'diagnostic', guidance: 'Remove or correct the unknown engineering configuration key, then rerun the audit.' },
+        remediation: {
+          class: 'diagnostic',
+          guidance: 'Remove or correct the unknown engineering configuration key, then rerun the audit.'
+        },
         audit: { phase: 'INSPECT', run: (context) => auditEvidence(context.toml2, 'WARN') }
       }
     }

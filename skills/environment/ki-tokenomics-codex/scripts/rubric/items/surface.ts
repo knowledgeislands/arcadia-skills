@@ -10,7 +10,11 @@ const SURF_1: RubricItem<CodexEvidenceContext> = {
   sources: [SOURCE],
   mechanical: {
     level: 'WARN',
-    remediation: { class: 'diagnostic', guidance: 'Adjust the selected Codex configuration or document the observed standing surface; hosted conform does not change runtime state.' },
+    remediation: {
+      class: 'diagnostic',
+      guidance:
+        'Adjust the selected Codex configuration or document the observed standing surface; hosted conform does not change runtime state.'
+    },
     audit: { phase: 'INSPECT', run: (context) => context.surfaces }
   }
 }

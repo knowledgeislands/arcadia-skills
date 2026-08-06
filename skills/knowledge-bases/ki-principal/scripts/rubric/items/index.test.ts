@@ -41,7 +41,9 @@ test('the principal checker distinguishes a missing surface from a complete one'
   }
   writeFileSync(join(repository, 'AGENTS.md'), '# Guidance\n\nUse the Enactment Process.\n')
 
-  const complete = catalogue.createSession({ mode: 'audit', repository, userHome: tmpdir(), configuration: {} }).subjects[1]?.context()
+  const complete = catalogue
+    .createSession({ mode: 'audit', repository, userHome: tmpdir(), configuration: {} })
+    .subjects[1]?.context()
   const principal = family?.selectContext(complete as never) as { missing: readonly string[]; enactmentAnchor: boolean }
   expect(principal.missing).toEqual([])
   expect(principal.enactmentAnchor).toBe(true)

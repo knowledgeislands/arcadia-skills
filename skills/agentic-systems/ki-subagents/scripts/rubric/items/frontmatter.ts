@@ -5,12 +5,14 @@ const STANDARD = 'standards-subagent-definitions.md'
 const MODEL_ALIASES = ['sonnet', 'opus', 'haiku', 'fable'] as const
 const DIAGNOSTIC = {
   class: 'diagnostic' as const,
-  guidance: 'Correct the agent frontmatter through its responsible author; do not infer model, permission, or runtime authority automatically.'
+  guidance:
+    'Correct the agent frontmatter through its responsible author; do not infer model, permission, or runtime authority automatically.'
 }
 const REVIEW = {
   scope: 'The target agent frontmatter and the authority, runtime, and portability choice it declares.',
   outcomes: ['conforming', 'gap', 'exclusion'] as const,
-  guidance: 'Revise frontmatter through its responsible author, record a named gap, or record an explicit justified exclusion.'
+  guidance:
+    'Revise frontmatter through its responsible author, record a named gap, or record an explicit justified exclusion.'
 }
 
 const FRONTMATTER_ITEMS = [
@@ -28,7 +30,8 @@ const FRONTMATTER_ITEMS = [
   {
     code: 'FM-2',
     title: 'Deliberate model choice',
-    description: 'model is inherited by default or deliberately pinned to a portable Claude alias with a stated reason.',
+    description:
+      'model is inherited by default or deliberately pinned to a portable Claude alias with a stated reason.',
     sources: [`${STANDARD}#5-frontmatter-optional-fields`, `${STANDARD}#8-tools--model`, 'CC', 'BP'],
     judgment: {
       ...REVIEW,
@@ -54,7 +57,8 @@ const FRONTMATTER_ITEMS = [
     sources: [`${STANDARD}#5-frontmatter-optional-fields`, 'CC'],
     judgment: {
       ...REVIEW,
-      prompt: '`permissionMode`, if set, is deliberate, and `bypassPermissions` (which skips permission prompts) carries a stated reason.'
+      prompt:
+        '`permissionMode`, if set, is deliberate, and `bypassPermissions` (which skips permission prompts) carries a stated reason.'
     }
   },
   {
@@ -136,9 +140,11 @@ const FRONTMATTER_ITEMS = [
         phase: 'INSPECT',
         run: (context: AgentFileContext) => {
           const agent = context.agent
-          if (!agent) return [{ status: 'NOT_APPLICABLE' as const, message: 'No physical agent definition is available.' }]
+          if (!agent)
+            return [{ status: 'NOT_APPLICABLE' as const, message: 'No physical agent definition is available.' }]
           const model = agent.frontmatter.keys.get('model')
-          if (model === undefined || model === '' || model === 'inherit') return [{ status: 'PASS', message: 'model is tier-agnostic.', subject: agent.file }]
+          if (model === undefined || model === '' || model === 'inherit')
+            return [{ status: 'PASS', message: 'model is tier-agnostic.', subject: agent.file }]
           if (MODEL_ALIASES.includes(model as (typeof MODEL_ALIASES)[number]))
             return [
               {

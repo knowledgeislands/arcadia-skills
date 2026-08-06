@@ -10,7 +10,10 @@ const INDEX_1: RubricItem<FeatureIndexContext> = {
   sources: [SOURCE],
   mechanical: {
     level: 'FAIL',
-    remediation: { class: 'diagnostic', guidance: 'Create the Feature Definitions index with an authoritative areas table, then rerun the audit.' },
+    remediation: {
+      class: 'diagnostic',
+      guidance: 'Create the Feature Definitions index with an authoritative areas table, then rerun the audit.'
+    },
     audit: {
       phase: 'INSPECT',
       run: (context) => [
@@ -29,15 +32,30 @@ const INDEX_2: RubricItem<FeatureIndexContext> = {
   sources: [SOURCE],
   mechanical: {
     level: 'FAIL',
-    remediation: { class: 'diagnostic', guidance: 'Add a populated Prefix and File areas table to the index, then rerun the audit.' },
+    remediation: {
+      class: 'diagnostic',
+      guidance: 'Add a populated Prefix and File areas table to the index, then rerun the audit.'
+    },
     audit: {
       phase: 'INSPECT',
       run: (context) => [
         !context.exists
-          ? { status: 'NOT_APPLICABLE', message: 'The areas table cannot be inspected until index.md exists.', subject: 'index.md' }
+          ? {
+              status: 'NOT_APPLICABLE',
+              message: 'The areas table cannot be inspected until index.md exists.',
+              subject: 'index.md'
+            }
           : context.prefixToFile.size > 0
-            ? { status: 'PASS', message: 'The index contains a populated Prefix and File areas table.', subject: 'index.md' }
-            : { status: 'VIOLATION', message: 'No populated areas table with Prefix and File columns was found.', subject: 'index.md' }
+            ? {
+                status: 'PASS',
+                message: 'The index contains a populated Prefix and File areas table.',
+                subject: 'index.md'
+              }
+            : {
+                status: 'VIOLATION',
+                message: 'No populated areas table with Prefix and File columns was found.',
+                subject: 'index.md'
+              }
       ]
     }
   }

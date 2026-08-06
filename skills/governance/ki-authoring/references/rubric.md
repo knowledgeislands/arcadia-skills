@@ -33,7 +33,7 @@ The mechanical Markdown gate and reviewer-applied Markdown conventions.
   - _Remediation:_ automatic
 - **MD-frontmatter [M] — frontmatter uses canonical bare-safe scalars** — Markdown frontmatter leaves identifier-like scalar tokens unquoted when their YAML meaning is unchanged; quoted YAML-significant values, dates, numeric-looking values, punctuation, whitespace, and escaped strings remain quoted. (standards-markdown.md#frontmatter)
   - _Remediation:_ automatic
-- **MD-table [J] — wide tables are reshaped** — A table with rows that would exceed `printWidth` (160 chars) is reshaped into subheadings or a bulleted definition list; genuinely tabular data with one long column keeps the table and moves that column to footnotes below it. (standards-markdown.md#tables-and-footnotes)
+- **MD-table [J] — wide tables are reshaped** — A table with rows that would exceed `printWidth` (120 chars) is reshaped into subheadings or a bulleted definition list; genuinely tabular data with one long column keeps the table and moves that column to footnotes below it. (standards-markdown.md#tables-and-footnotes)
   - _Evidence scope:_ Every authored Markdown table that is wide or contains descriptive prose.
   - _Review prompt:_ Assess whether wide or prose-heavy tables are reshaped according to the Markdown convention.
   - _Outcomes:_ conforming; reshape required; exclusion

@@ -131,7 +131,11 @@ const regularJsonlFiles = (directory: string, recursive: boolean): string[] => {
   return files
 }
 
-const candidate = (runtime: Runtime, path: string): TranscriptCandidate => ({ runtime, path, mtime: statSync(path).mtimeMs })
+const candidate = (runtime: Runtime, path: string): TranscriptCandidate => ({
+  runtime,
+  path,
+  mtime: statSync(path).mtimeMs
+})
 
 const claudeCandidates = (directory: string): TranscriptCandidate[] =>
   regularJsonlFiles(directory, false)
@@ -148,21 +152,35 @@ const candidateDirectories = ({ repo, transcriptsDir }: Pick<Arguments, 'transcr
   codex: transcriptsDir ? resolve(transcriptsDir) : resolveCodexSessionsDir()
 })
 
-const discoverCandidates = ({ runtime, repo, transcriptsDir }: Pick<Arguments, 'runtime' | 'transcriptsDir'> & { repo: string }): TranscriptCandidate[] => {
+const discoverCandidates = ({
+  runtime,
+  repo,
+  transcriptsDir
+}: Pick<Arguments, 'runtime' | 'transcriptsDir'> & { repo: string }): TranscriptCandidate[] => {
   const directories = candidateDirectories({ repo, transcriptsDir })
   if (runtime === 'claude') return claudeCandidates(directories.claude)
   if (runtime === 'codex') return codexCandidates(directories.codex, repo)
   return [...claudeCandidates(directories.claude), ...codexCandidates(directories.codex, repo)]
 }
 
-const selectTranscript = (candidates: readonly TranscriptCandidate[], selector: string | undefined): TranscriptCandidate | null => {
+const selectTranscript = (
+  candidates: readonly TranscriptCandidate[],
+  selector: string | undefined
+): TranscriptCandidate | null => {
   if (!selector) return [...candidates].sort((left, right) => right.mtime - left.mtime)[0] ?? null
-  if (selector.length <= '.jsonl'.length || !selector.endsWith('.jsonl') || isAbsolute(selector) || basename(selector) !== selector || selector.includes('\\'))
+  if (
+    selector.length <= '.jsonl'.length ||
+    !selector.endsWith('.jsonl') ||
+    isAbsolute(selector) ||
+    basename(selector) !== selector ||
+    selector.includes('\\')
+  )
     throw new Error('`--transcript` must be a basename ending in .jsonl from the eligible transcript candidates')
 
   const matches = candidates.filter((candidate_) => basename(candidate_.path) === selector)
   if (matches.length === 0) throw new Error(`selected transcript is not an eligible regular file: ${selector}`)
-  if (matches.length > 1) throw new Error(`selected transcript basename is ambiguous across eligible candidates: ${selector}`)
+  if (matches.length > 1)
+    throw new Error(`selected transcript basename is ambiguous across eligible candidates: ${selector}`)
   return matches[0] ?? null
 }
 
@@ -199,7 +217,8 @@ const parseArguments = (args: string[]): Arguments => {
       const value = args[index + 1]
       if (!value || value.startsWith('--')) throw new Error(`\`${argument}\` requires a value`)
       if (argument === '--runtime') {
-        if (!['detect', 'claude', 'codex'].includes(value)) throw new Error('`--runtime` accepts detect, claude, or codex')
+        if (!['detect', 'claude', 'codex'].includes(value))
+          throw new Error('`--runtime` accepts detect, claude, or codex')
         runtime = value as RuntimeSelector
       } else if (argument === '--transcripts-dir') transcriptsDir = value
       else transcriptSelector = value
@@ -233,7 +252,12 @@ const textValues = (value: unknown): string[] => {
 const repositoryEvidence = (value: unknown, repository: string): RepositoryEvidence | null => {
   const record = asRecord(value)
   const marker = asRecord(record?.[REPOSITORY_EVIDENCE_MARKER])
-  if (!marker || marker.repo !== repository || (marker.head !== null && (typeof marker.head !== 'string' || !COMMIT.test(marker.head)))) return null
+  if (
+    !marker ||
+    marker.repo !== repository ||
+    (marker.head !== null && (typeof marker.head !== 'string' || !COMMIT.test(marker.head)))
+  )
+    return null
   if (marker.worktree !== 'clean' && marker.worktree !== 'dirty') return null
   return { repo: repository, head: marker.head as string | null, worktree: marker.worktree }
 }
@@ -269,7 +293,10 @@ const transcriptOutputTexts = (transcriptPath: string, runtime: Runtime): string
   return texts
 }
 
-const latestTranscriptEvidence = (selected: TranscriptCandidate | null, repository: string): RepositoryEvidence | null => {
+const latestTranscriptEvidence = (
+  selected: TranscriptCandidate | null,
+  repository: string
+): RepositoryEvidence | null => {
   if (!selected) return null
   return (
     transcriptOutputTexts(selected.path, selected.runtime)
@@ -291,7 +318,8 @@ const readToolCalls = (transcriptPath: string, runtime: Runtime): ToolCall[] => 
       if (!Array.isArray(content)) continue
       for (const block of content) {
         const tool = asRecord(block)
-        if (tool?.type === 'tool_use' && typeof tool.name === 'string') calls.push({ name: tool.name, input: tool.input })
+        if (tool?.type === 'tool_use' && typeof tool.name === 'string')
+          calls.push({ name: tool.name, input: tool.input })
       }
       continue
     }
@@ -299,7 +327,12 @@ const readToolCalls = (transcriptPath: string, runtime: Runtime): ToolCall[] => 
     if (event.type !== 'response_item') continue
     const item = asRecord(event.payload)
     const payload = asRecord(item?.item) ?? item
-    if (!payload || (payload.type !== 'function_call' && payload.type !== 'custom_tool_call') || typeof payload.name !== 'string') continue
+    if (
+      !payload ||
+      (payload.type !== 'function_call' && payload.type !== 'custom_tool_call') ||
+      typeof payload.name !== 'string'
+    )
+      continue
     calls.push({ name: payload.name, input: toolInput(payload.arguments ?? payload.input) })
   }
   return calls
@@ -319,11 +352,19 @@ const evidenceFor = (repo: string, status: string): RepositoryEvidence => ({
   worktree: status ? 'dirty' : 'clean'
 })
 
-const compareEvidence = (repo: string, baseline: RepositoryEvidence | null, current: RepositoryEvidence): TranscriptEvidence => {
+const compareEvidence = (
+  repo: string,
+  baseline: RepositoryEvidence | null,
+  current: RepositoryEvidence
+): TranscriptEvidence => {
   if (!baseline?.head || !current.head) return { status: 'unavailable', baseline, current }
-  if (!gitOutput(repo, ['rev-parse', '--verify', `${baseline.head}^{commit}`]) || !gitOutput(repo, ['rev-parse', '--verify', `${current.head}^{commit}`]))
+  if (
+    !gitOutput(repo, ['rev-parse', '--verify', `${baseline.head}^{commit}`]) ||
+    !gitOutput(repo, ['rev-parse', '--verify', `${current.head}^{commit}`])
+  )
     return { status: 'unavailable', baseline, current }
-  if (baseline.head === current.head && baseline.worktree === 'clean' && current.worktree === 'clean') return { status: 'unchanged', baseline, current }
+  if (baseline.head === current.head && baseline.worktree === 'clean' && current.worktree === 'clean')
+    return { status: 'unchanged', baseline, current }
 
   const changed = baseline.head !== current.head || baseline.worktree !== current.worktree
   if (!changed) return { status: 'unavailable', baseline, current }

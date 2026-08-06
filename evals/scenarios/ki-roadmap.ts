@@ -17,7 +17,8 @@ export const scenarios: Scenario[] = [
   {
     skill: 'ki-roadmap',
     id: 'repo-roadmap-id-theme-and-horizon',
-    prompt: "Set up a Future item for 'replace stale links' in the seo theme. I want a generic filename and no candidate field. Anything to correct?",
+    prompt:
+      "Set up a Future item for 'replace stale links' in the seo theme. I want a generic filename and no candidate field. Anything to correct?",
     assertions: [
       { name: 'repository-theme-serial identifier', re: /<REPO>-<THEME>-<NNN>|SEO|001/i },
       { name: 'flat placement', re: /docs\/roadmap\//i },
@@ -30,7 +31,8 @@ export const scenarios: Scenario[] = [
   {
     skill: 'ki-roadmap',
     id: 'repo-roadmap-one-home-generated-index',
-    prompt: 'I copied a work item into root ROADMAP.md for convenience and changed its link text by hand. Is that acceptable?',
+    prompt:
+      'I copied a work item into root ROADMAP.md for convenience and changed its link text by hand. Is that acceptable?',
     assertions: [
       { name: 'one authoritative item home', re: /one|single|authoritative|canonical|duplicate/i },
       { name: 'flat item directory owns prose', re: /docs\/roadmap\//i },
@@ -43,7 +45,8 @@ export const scenarios: Scenario[] = [
   {
     skill: 'ki-roadmap',
     id: 'repo-roadmap-blocks-graph',
-    prompt: "KI-WEB-SEO-005 cannot start until KI-WEB-CNT-004 is finished. I've added blocked-by: [KI-WEB-CNT-004] and would like to start it now in parallel. Anything wrong with that?",
+    prompt:
+      "KI-WEB-SEO-005 cannot start until KI-WEB-CNT-004 is finished. I've added blocked-by: [KI-WEB-CNT-004] and would like to start it now in parallel. Anything wrong with that?",
     assertions: [
       { name: 'blocked-by field', re: /blocked-by/i },
       { name: 'reverse blocks edge', re: /blocks/i },

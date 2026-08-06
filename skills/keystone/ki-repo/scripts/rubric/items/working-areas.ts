@@ -6,7 +6,8 @@ const SOURCE = 'standards-repository.md'
 const WORK_1: RubricItem<WorkingAreasRubricContext> = {
   code: 'WORK-1',
   title: 'Working-area scaffold',
-  description: 'Every KI repository has the canonical generic inbound and outbound working areas and README orientation.',
+  description:
+    'Every KI repository has the canonical generic inbound and outbound working areas and README orientation.',
   sources: [SOURCE],
   mechanical: {
     level: 'FAIL',
@@ -24,13 +25,16 @@ const WORK_1: RubricItem<WorkingAreasRubricContext> = {
 const WORK_J1: RubricItem<WorkingAreasRubricContext> = {
   code: 'WORK-J1',
   title: 'working-area direction and lifecycle',
-  description: 'The required +/ and -/ working areas distinguish temporary inbound from outbound material without becoming a shadow canonical store.',
+  description:
+    'The required +/ and -/ working areas distinguish temporary inbound from outbound material without becoming a shadow canonical store.',
   sources: [SOURCE],
   judgment: {
     scope: 'The repository +/ and -/ working areas and their README orientation.',
-    prompt: 'Review that +/ and -/ remain temporary directional material rather than a shadow canonical store or archive.',
+    prompt:
+      'Review that +/ and -/ remain temporary directional material rather than a shadow canonical store or archive.',
     outcomes: ['conforming', 'gap', 'exclusion'],
-    guidance: 'Move material to its canonical store, record a named gap, or record an explicit repository-level exclusion.'
+    guidance:
+      'Move material to its canonical store, record a named gap, or record an explicit repository-level exclusion.'
   }
 }
 

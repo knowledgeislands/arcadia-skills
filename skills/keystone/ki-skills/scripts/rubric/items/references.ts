@@ -1,6 +1,10 @@
 import type { RubricFamily, RubricItem } from '../../shared/rubric.ts'
 import { DIAGNOSTIC_REMEDIATION, judgment } from '../../shared/rubric.ts'
-import { type KiSkillsRubricContext, type ReferencesRubricContext, selectKiSkillsContext } from '../contexts/contexts.ts'
+import {
+  type KiSkillsRubricContext,
+  type ReferencesRubricContext,
+  selectKiSkillsContext
+} from '../contexts/contexts.ts'
 
 const TOC_LINE_THRESHOLD = 100
 
@@ -15,7 +19,9 @@ const REF_1: RubricItem<ReferencesRubricContext> = {
   title: 'rarely used detail is separated into on-demand files',
   description: 'Detailed/rarely-used material is in on-demand files; mutually-exclusive domains are split.',
   sources: ['BP', 'ENG', 'SPEC'],
-  judgment: judgment('Is detailed or rarely used material routed to on-demand files, with mutually exclusive domains split?')
+  judgment: judgment(
+    'Is detailed or rarely used material routed to on-demand files, with mutually exclusive domains split?'
+  )
 }
 
 const REF_2: RubricItem<ReferencesRubricContext> = {

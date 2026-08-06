@@ -10,7 +10,11 @@ const NA_1: RubricItem<CodexEvidenceContext> = {
   sources: [SOURCE],
   mechanical: {
     level: 'WARN',
-    remediation: { class: 'diagnostic', guidance: 'Supply the selected Codex configuration evidence or record the unavailable metric; hosted conform does not infer runtime state.' },
+    remediation: {
+      class: 'diagnostic',
+      guidance:
+        'Supply the selected Codex configuration evidence or record the unavailable metric; hosted conform does not infer runtime state.'
+    },
     audit: { phase: 'INSPECT', run: (context) => context.unavailableMetrics }
   }
 }

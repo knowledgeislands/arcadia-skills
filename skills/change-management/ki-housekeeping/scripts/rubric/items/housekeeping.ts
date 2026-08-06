@@ -11,7 +11,8 @@ export const HOUSE: RubricFamily<HousekeepingRubricContext, HousekeepingRubricCo
     {
       code: 'HOUSE-1',
       title: 'template contract',
-      description: 'Each housekeeping template has a safe location and controlled identity, lifecycle, cadence, and spawn fields.',
+      description:
+        'Each housekeeping template has a safe location and controlled identity, lifecycle, cadence, and spawn fields.',
       sources: ['standards-housekeeping.md'],
       mechanical: {
         level: 'FAIL',

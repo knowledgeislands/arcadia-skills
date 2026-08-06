@@ -6,7 +6,8 @@ const SOURCE = 'standards-auto-memory.md'
 const FM_1: RubricItem<HousekeepingFrontmatterContext> = {
   code: 'FM-1',
   title: 'Frontmatter is present',
-  description: 'A `---`-delimited frontmatter block is present at the top of every `memory/*.md` file. Missing is a FAIL.',
+  description:
+    'A `---`-delimited frontmatter block is present at the top of every `memory/*.md` file. Missing is a FAIL.',
   sources: [SOURCE],
   mechanical: {
     level: 'FAIL',
@@ -18,7 +19,8 @@ const FM_1: RubricItem<HousekeepingFrontmatterContext> = {
 const FM_2: RubricItem<HousekeepingFrontmatterContext> = {
   code: 'FM-2',
   title: 'Frontmatter name matches filename',
-  description: 'The `name` field is present and matches the kebab-case filename without its `.md` suffix. Mismatch is a FAIL.',
+  description:
+    'The `name` field is present and matches the kebab-case filename without its `.md` suffix. Mismatch is a FAIL.',
   sources: [SOURCE],
   mechanical: {
     level: 'FAIL',
@@ -48,7 +50,8 @@ const FM_3: RubricItem<HousekeepingFrontmatterContext> = {
 const FM_4: RubricItem<HousekeepingFrontmatterContext> = {
   code: 'FM-4',
   title: 'Frontmatter type is valid',
-  description: '`metadata.type` is present and is exactly one of `user`, `feedback`, `project`, or `reference`. Missing or invalid is a FAIL.',
+  description:
+    '`metadata.type` is present and is exactly one of `user`, `feedback`, `project`, or `reference`. Missing or invalid is a FAIL.',
   sources: [SOURCE],
   mechanical: {
     level: 'FAIL',

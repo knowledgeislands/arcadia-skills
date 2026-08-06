@@ -26,14 +26,30 @@ const fixture = (): string => {
 }
 
 const shapeFamily = (): RubricFamily<ChezmoiRubricContext, ChezmoiShapeContext> =>
-  catalogue.families.find((family) => family.code === 'CHEZMOI') as RubricFamily<ChezmoiRubricContext, ChezmoiShapeContext>
+  catalogue.families.find((family) => family.code === 'CHEZMOI') as RubricFamily<
+    ChezmoiRubricContext,
+    ChezmoiShapeContext
+  >
 
 test('the catalogue preserves every chezmoi criterion in family order', () => {
   expect(catalogue.contract).toBe(1)
   expect(catalogue.name).toBe('ki-dotfiles-chezmoi')
   expect(catalogue.createSession).toBeFunction()
-  expect(catalogue.families.map((family) => family.code)).toEqual(['CHEZMOI', 'BIN', 'GIT', 'PATTERN', 'CONFIG', 'LAYER', 'SHELL', 'ETIQ', 'SYNC', 'RUBRIC'])
-  const codes = catalogue.families.flatMap((family) => (family.items as readonly { code: string }[]).map((item) => item.code))
+  expect(catalogue.families.map((family) => family.code)).toEqual([
+    'CHEZMOI',
+    'BIN',
+    'GIT',
+    'PATTERN',
+    'CONFIG',
+    'LAYER',
+    'SHELL',
+    'ETIQ',
+    'SYNC',
+    'RUBRIC'
+  ])
+  const codes = catalogue.families.flatMap((family) =>
+    (family.items as readonly { code: string }[]).map((item) => item.code)
+  )
   expect(codes).toEqual([
     'CHEZMOI-1',
     'CHEZMOI-2',
@@ -98,7 +114,8 @@ test('conform coalesces repeated explicit-create requests for a missing ignore f
   expect(session.proposal().writes).toEqual([
     {
       path: '.chezmoiignore',
-      content: '# Files/directories chezmoi should never manage.\n# Add repository-specific ignore patterns deliberately.\n',
+      content:
+        '# Files/directories chezmoi should never manage.\n# Add repository-specific ignore patterns deliberately.\n',
       create: true
     }
   ])

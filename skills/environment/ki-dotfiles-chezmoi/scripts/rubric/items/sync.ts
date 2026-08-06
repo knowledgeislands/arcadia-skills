@@ -10,7 +10,8 @@ const SYNC_1: RubricItem<ReviewContext> = {
     scope: 'The chezmoi standard, structured rubric items, generated publication, tests, and mechanical behaviour.',
     prompt: 'Do the standard, structured rubric items, and mechanical behaviour still agree?',
     outcomes: ['conforming', 'synchronisation required', 'standard review required'],
-    guidance: 'Update the affected standard, item, test, and generated publication together, or record the unresolved standard-review question.'
+    guidance:
+      'Update the affected standard, item, test, and generated publication together, or record the unresolved standard-review question.'
   }
 }
 

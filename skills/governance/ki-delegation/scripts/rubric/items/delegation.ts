@@ -18,12 +18,14 @@ export const PACKET: RubricFamily<DelegationRubricContext, DelegationRubricConte
         level: 'FAIL',
         remediation: {
           class: 'guarded',
-          guidance: 'Supply the missing packet evidence or revise the worker brief only through the planner with the relevant delegation authority.'
+          guidance:
+            'Supply the missing packet evidence or revise the worker brief only through the planner with the relevant delegation authority.'
         },
         audit: { phase: 'INSPECT', run: ({ outcomes }) => outcomes }
       },
       judgment: {
-        scope: 'Every opted-in delegation packet, its rounds, worker briefs, rolling replenishment plan, and referenced governing work record.',
+        scope:
+          'Every opted-in delegation packet, its rounds, worker briefs, rolling replenishment plan, and referenced governing work record.',
         prompt:
           'Are the worker boundaries, model choices, locked decisions, escalation boundaries, genuine dependency rounds, rolling replenishment, and verification gates appropriate for the delegated work?',
         outcomes: ['conforming', 'revise packet', 'escalate to planner'],

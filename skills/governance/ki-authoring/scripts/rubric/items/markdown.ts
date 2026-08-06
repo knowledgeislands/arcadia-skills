@@ -8,7 +8,8 @@ const markdownMechanicalAudit = (
   message: string
   subject: string
 }> => {
-  if (!context.exists) return [{ status: 'VIOLATION', message: 'audit target is missing or is not a directory', subject: context.target }]
+  if (!context.exists)
+    return [{ status: 'VIOLATION', message: 'audit target is missing or is not a directory', subject: context.target }]
   return context.audit.clean
     ? [{ status: 'PASS', message: 'Prettier + markdownlint clean', subject: context.target }]
     : [
@@ -74,13 +75,14 @@ const MD_TABLE: RubricItem<MarkdownRubricContext> = {
   code: 'MD-table',
   title: 'wide tables are reshaped',
   description:
-    'A table with rows that would exceed `printWidth` (160 chars) is reshaped into subheadings or a bulleted definition list; genuinely tabular data with one long column keeps the table and moves that column to footnotes below it.',
+    'A table with rows that would exceed `printWidth` (120 chars) is reshaped into subheadings or a bulleted definition list; genuinely tabular data with one long column keeps the table and moves that column to footnotes below it.',
   sources: ['standards-markdown.md#tables-and-footnotes'],
   judgment: {
     scope: 'Every authored Markdown table that is wide or contains descriptive prose.',
     prompt: 'Assess whether wide or prose-heavy tables are reshaped according to the Markdown convention.',
     outcomes: ['conforming', 'reshape required', 'exclusion'],
-    guidance: 'Reshape the table into subheadings or a definition list, move a long column to footnotes, or record why genuinely tabular content is excluded.'
+    guidance:
+      'Reshape the table into subheadings or a definition list, move a long column to footnotes, or record why genuinely tabular content is excluded.'
   }
 }
 
@@ -108,7 +110,8 @@ const MD_LINK: RubricItem<MarkdownRubricContext> = {
     scope: 'Every house-file Markdown link outside the explicitly scoped KB-note and agent-prompt exceptions.',
     prompt: 'Assess whether links are descriptive, relative Markdown links where this convention applies.',
     outcomes: ['conforming', 'correction required', 'scoped exception'],
-    guidance: 'Replace the link with descriptive relative Markdown, use angle brackets for paths with spaces, or record the applicable scoped exception.'
+    guidance:
+      'Replace the link with descriptive relative Markdown, use angle brackets for paths with spaces, or record the applicable scoped exception.'
   }
 }
 
@@ -121,7 +124,8 @@ const MD_CELL_PROSE: RubricItem<MarkdownRubricContext> = {
     scope: 'Every authored Markdown table containing descriptive text.',
     prompt: 'Assess whether table cells avoid long descriptive prose.',
     outcomes: ['conforming', 'move prose required', 'exclusion'],
-    guidance: 'Move descriptive prose to footnotes or surrounding text, reshape the table, or record why the table is excluded.'
+    guidance:
+      'Move descriptive prose to footnotes or surrounding text, reshape the table, or record why the table is excluded.'
   }
 }
 
@@ -133,9 +137,11 @@ const MD_CALLOUT: RubricItem<MarkdownRubricContext> = {
   sources: ['standards-markdown.md#callouts'],
   judgment: {
     scope: 'Every authored Markdown callout.',
-    prompt: 'Assess whether callouts use supported GitHub alerts, remain concise, and are reserved for genuine contextual asides.',
+    prompt:
+      'Assess whether callouts use supported GitHub alerts, remain concise, and are reserved for genuine contextual asides.',
     outcomes: ['conforming', 'rewrite required', 'remove required'],
-    guidance: 'Use a supported concise alert for a genuine aside, rewrite the content as ordinary prose, or remove the callout.'
+    guidance:
+      'Use a supported concise alert for a genuine aside, rewrite the content as ordinary prose, or remove the callout.'
   }
 }
 

@@ -13,7 +13,8 @@ const STATUS_1: RubricItem<OutcomeContext> = {
     level: 'FAIL',
     remediation: {
       class: 'guarded',
-      guidance: 'Record a receiver-owned decision only after the responsible human selects it; do not infer receipt, disposition, or local work.'
+      guidance:
+        'Record a receiver-owned decision only after the responsible human selects it; do not infer receipt, disposition, or local work.'
     },
     audit: { phase: 'INSPECT', run: ({ outcomes }) => outcomes }
   },
@@ -22,14 +23,16 @@ const STATUS_1: RubricItem<OutcomeContext> = {
     prompt:
       'Assess whether the receiver has independently confirmed any status transition and supporting rationale or linkage, without treating sender submission or route visibility as authority to decide.',
     outcomes: ['conforming', 'decision required', 'clarification required'],
-    guidance: 'Record only the chosen receiver decision and its evidence, or leave the trade unconsidered or in clarification until authority is available.'
+    guidance:
+      'Record only the chosen receiver decision and its evidence, or leave the trade unconsidered or in clarification until authority is available.'
   }
 }
 
 export const STATUS: RubricFamily<TradesRubricContext, OutcomeContext> = {
   code: 'STATUS',
   title: 'Delivery and receiver decision',
-  description: 'Preparation, submission, receipt, receiver decision, and local completion remain separate facts with closed receiver-owned evidence.',
+  description:
+    'Preparation, submission, receipt, receiver decision, and local completion remain separate facts with closed receiver-owned evidence.',
   standard: SOURCE,
   selectContext: (context) => context.status,
   items: [STATUS_1]

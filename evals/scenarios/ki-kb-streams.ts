@@ -25,8 +25,14 @@ export const scenarios: Scenario[] = [
     prompt:
       'A proposal in my Knowledge Islands base is marked `ready`. Can I go ahead and roll out (apply) its changes to the canonical notes? What is the status sequence a proposal moves through?',
     assertions: [
-      { name: 'ready is not sufficient / needs authorisation', re: /(not (enough|sufficient)|explicit (user )?authoris|approval needed|wait for|do not (begin|roll))/i },
-      { name: 'names the lifecycle statuses', re: /draft[\s\S]*ready[\s\S]*in-progress[\s\S]*rolled-out[\s\S]*reviewed[\s\S]*completed/i }
+      {
+        name: 'ready is not sufficient / needs authorisation',
+        re: /(not (enough|sufficient)|explicit (user )?authoris|approval needed|wait for|do not (begin|roll))/i
+      },
+      {
+        name: 'names the lifecycle statuses',
+        re: /draft[\s\S]*ready[\s\S]*in-progress[\s\S]*rolled-out[\s\S]*reviewed[\s\S]*completed/i
+      }
     ],
     rubric:
       'House process (Enactment Process): `ready` is a necessary but NOT sufficient condition for rollout — rollout requires explicit user authorisation; exploratory talk is not approval. The status sequence is draft → ready → (in-progress | rejected) → rolled-out → reviewed → completed. A correct answer declines to roll out on `ready` alone (needs authorisation) and gives the lifecycle order.'
@@ -39,7 +45,10 @@ export const scenarios: Scenario[] = [
     assertions: [
       { name: 'names the three gated canonical zones', re: /Admin[\s\S]*Pillars[\s\S]*Resources/i },
       { name: 'the Pillars change routes through a proposal', re: /pillars[\s\S]*proposal/i },
-      { name: 'the trivial / Calendar fix is exempt (direct edit)', re: /(typo|trivial|calendar)[\s\S]*(exempt|directly|without a proposal|no proposal)/i }
+      {
+        name: 'the trivial / Calendar fix is exempt (direct edit)',
+        re: /(typo|trivial|calendar)[\s\S]*(exempt|directly|without a proposal|no proposal)/i
+      }
     ],
     rubric:
       'House process (the Enactment gate): nothing reaches a canonical zone — `Admin`, `Pillars`, `Resources` — except through an approved `ready` proposal, so a substantive `Pillars/` change must be routed through a Streams proposal rather than edited directly. Trivial fixes (typos / formatting), `Calendar/` entries, and `+/` triage are explicitly exempt and may be edited directly. A correct answer gates the Pillars edit behind a proposal, names the three canonical zones the gate protects, and lets the Calendar typo be a direct edit.'

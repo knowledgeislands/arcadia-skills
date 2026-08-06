@@ -4,20 +4,27 @@ import type { HarnessLayoutContext, HarnessRubricContext } from '../contexts/har
 const STANDARD = ['standards-compatible-harness.md'] as const
 
 const rootUnavailable = (context: HarnessLayoutContext): readonly AuditOutcome[] | null => {
-  if (context.repositoryState === 'absent') return [{ status: 'VIOLATION', message: 'The harness root does not exist.', subject: context.repository }]
+  if (context.repositoryState === 'absent')
+    return [{ status: 'VIOLATION', message: 'The harness root does not exist.', subject: context.repository }]
   if (context.repositoryState === 'unsafe')
-    return [{ status: 'VIOLATION', message: 'The harness root is not a physical directory.', subject: context.repository }]
+    return [
+      { status: 'VIOLATION', message: 'The harness root is not a physical directory.', subject: context.repository }
+    ]
   return null
 }
 
 const LAY_1: RubricItem<HarnessLayoutContext> = {
   code: 'LAY-1',
   title: 'Five-part directory layout',
-  description: 'skills/, subagents/, mcp/, evals/, and hooks/ all exist as physical directories at the source-harness root.',
+  description:
+    'skills/, subagents/, mcp/, evals/, and hooks/ all exist as physical directories at the source-harness root.',
   sources: ['standards-compatible-harness.md#source-harness-layout'],
   mechanical: {
     level: 'FAIL',
-    remediation: { class: 'diagnostic', guidance: 'Create or repair the missing physical source-harness shelf, then rerun the audit.' },
+    remediation: {
+      class: 'diagnostic',
+      guidance: 'Create or repair the missing physical source-harness shelf, then rerun the audit.'
+    },
     audit: {
       phase: 'INSPECT',
       run: (context) =>
@@ -25,7 +32,9 @@ const LAY_1: RubricItem<HarnessLayoutContext> = {
         context.parts.map(({ name, state }) => ({
           status: state === 'directory' ? ('PASS' as const) : ('VIOLATION' as const),
           message:
-            state === 'directory' ? 'Required source-harness directory is present.' : 'Required source-harness path is absent or not a physical directory.',
+            state === 'directory'
+              ? 'Required source-harness directory is present.'
+              : 'Required source-harness path is absent or not a physical directory.',
           subject: `${name}/`
         }))
     }
@@ -39,13 +48,21 @@ const LAY_2: RubricItem<HarnessLayoutContext> = {
   sources: ['standards-compatible-harness.md#source-harness-layout'],
   mechanical: {
     level: 'WARN',
-    remediation: { class: 'diagnostic', guidance: 'Add the missing physical shelf README with its purpose and status, then rerun the audit.' },
+    remediation: {
+      class: 'diagnostic',
+      guidance: 'Add the missing physical shelf README with its purpose and status, then rerun the audit.'
+    },
     audit: {
       phase: 'INSPECT',
       run: (context) =>
         rootUnavailable(context) ??
         context.parts.map(({ name, state, readmeState }) => ({
-          status: state !== 'directory' ? ('NOT_APPLICABLE' as const) : readmeState === 'file' ? ('PASS' as const) : ('VIOLATION' as const),
+          status:
+            state !== 'directory'
+              ? ('NOT_APPLICABLE' as const)
+              : readmeState === 'file'
+                ? ('PASS' as const)
+                : ('VIOLATION' as const),
           message:
             state !== 'directory'
               ? 'The source-harness shelf is absent or unsafe.'
@@ -72,7 +89,10 @@ const rootFileItem = (
   sources: [source],
   mechanical: {
     level,
-    remediation: { class: 'diagnostic', guidance: 'Create or repair the required physical root file with owner-approved content, then rerun the audit.' },
+    remediation: {
+      class: 'diagnostic',
+      guidance: 'Create or repair the required physical root file with owner-approved content, then rerun the audit.'
+    },
     audit: {
       phase: 'INSPECT',
       run: (context) => {

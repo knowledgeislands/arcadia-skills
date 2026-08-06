@@ -11,7 +11,10 @@ const LINK_1: RubricItem<HousekeepingLinkContext> = {
   sources: [SOURCE],
   mechanical: {
     level: 'WARN',
-    remediation: { class: 'diagnostic', guidance: 'Review the unresolved link and correct it when it is not an intentional forward reference.' },
+    remediation: {
+      class: 'diagnostic',
+      guidance: 'Review the unresolved link and correct it when it is not an intentional forward reference.'
+    },
     heuristic: true,
     audit: { phase: 'INSPECT', run: (context) => context.unresolved }
   }

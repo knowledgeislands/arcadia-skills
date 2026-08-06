@@ -1,6 +1,12 @@
 import { existsSync, lstatSync, readdirSync, readFileSync } from 'node:fs'
 import { basename, join, relative, resolve } from 'node:path'
-import type { AuditOutcome, ConformWrite, RubricContextOptions, RubricPublicationContext, RubricSession } from '../../shared/rubric.ts'
+import type {
+  AuditOutcome,
+  ConformWrite,
+  RubricContextOptions,
+  RubricPublicationContext,
+  RubricSession
+} from '../../shared/rubric.ts'
 
 const VALID_TYPES = new Set(['user', 'feedback', 'project', 'reference'])
 const INDEX_FILE = 'MEMORY.md'
@@ -51,9 +57,11 @@ type MemoryDraft = {
   content: string
 }
 
-const physicalDirectory = (path: string): boolean => existsSync(path) && !lstatSync(path).isSymbolicLink() && lstatSync(path).isDirectory()
+const physicalDirectory = (path: string): boolean =>
+  existsSync(path) && !lstatSync(path).isSymbolicLink() && lstatSync(path).isDirectory()
 
-const physicalFile = (path: string): boolean => existsSync(path) && !lstatSync(path).isSymbolicLink() && lstatSync(path).isFile()
+const physicalFile = (path: string): boolean =>
+  existsSync(path) && !lstatSync(path).isSymbolicLink() && lstatSync(path).isFile()
 
 const parseFrontmatter = (content: string): MemoryFrontmatter | null => {
   const match = content.match(/^---\n([\s\S]*?)\n---/)
@@ -70,26 +78,35 @@ const parseFrontmatter = (content: string): MemoryFrontmatter | null => {
     }
     const nested = line.match(/^\s+([a-zA-Z_]+):\s*(.*)$/)
     if (nested && currentKey && typeof output[currentKey] === 'object') {
-      ;(output[currentKey] as Record<string, string>)[nested[1] as string] = (nested[2] as string).trim().replace(/^["']|["']$/g, '')
+      ;(output[currentKey] as Record<string, string>)[nested[1] as string] = (nested[2] as string)
+        .trim()
+        .replace(/^["']|["']$/g, '')
     }
   }
   return output
 }
 
 const one = (outcome: AuditOutcome): readonly AuditOutcome[] => [outcome]
-const notApplicable = (message: string, subject: string): readonly AuditOutcome[] => one({ status: 'NOT_APPLICABLE', message, subject })
+const notApplicable = (message: string, subject: string): readonly AuditOutcome[] =>
+  one({ status: 'NOT_APPLICABLE', message, subject })
 
-const indexEntries = (index: string): string[] => [...index.matchAll(/^-\s*\[.+\]\(([^)]+\.md)\)/gm)].map((match) => match[1] as string)
+const indexEntries = (index: string): string[] =>
+  [...index.matchAll(/^-\s*\[.+\]\(([^)]+\.md)\)/gm)].map((match) => match[1] as string)
 
 const replaceName = (content: string, expected: string): string => {
   const block = content.match(/^---\n([\s\S]*?)\n---/)
   if (!block) return content
   const body = block[1] as string
-  const replacement = /^name:\s*.*$/m.test(body) ? body.replace(/^name:\s*.*$/m, `name: ${expected}`) : `name: ${expected}\n${body}`
+  const replacement = /^name:\s*.*$/m.test(body)
+    ? body.replace(/^name:\s*.*$/m, `name: ${expected}`)
+    : `name: ${expected}\n${body}`
   return content.replace(block[0], `---\n${replacement}\n---`)
 }
 
-const unavailableMemoryContext = (subject: string, publication?: RubricContextOptions['publication']): HousekeepingRubricContext => {
+const unavailableMemoryContext = (
+  subject: string,
+  publication?: RubricContextOptions['publication']
+): HousekeepingRubricContext => {
   const memory = notApplicable('The selected repository has no physical Claude project memory directory.', subject)
   return {
     rubric: { publication },
@@ -184,7 +201,9 @@ const projectContext = (
         const valid = Boolean(type && VALID_TYPES.has(type))
         return {
           status: valid ? ('PASS' as const) : ('VIOLATION' as const),
-          message: valid ? 'metadata.type is valid' : `metadata.type is '${type ?? '(missing)'}', must be one of ${[...VALID_TYPES].join(', ')}`,
+          message: valid
+            ? 'metadata.type is valid'
+            : `metadata.type is '${type ?? '(missing)'}', must be one of ${[...VALID_TYPES].join(', ')}`,
           subject: memory.relativePath
         }
       })
@@ -206,9 +225,11 @@ const projectContext = (
     if (!prior) seen.set(name, memory.relativePath)
   }
   if (uniqueNames.length === 0) uniqueNames.push(...noFileEvidence)
-  const missingFiles = index === null ? [] : indexEntries(index).filter((entry) => !memoryFiles.some((file) => file.file === entry))
+  const missingFiles =
+    index === null ? [] : indexEntries(index).filter((entry) => !memoryFiles.some((file) => file.file === entry))
   const unindexed = index === null ? [] : memoryFiles.filter((memory) => !indexed.has(memory.file))
-  const longLines = index === null ? [] : index.split('\n').filter((line) => /^-\s*\[.+\]\(.+\.md\)/.test(line) && line.length > 150)
+  const longLines =
+    index === null ? [] : index.split('\n').filter((line) => /^-\s*\[.+\]\(.+\.md\)/.test(line) && line.length > 150)
   const start = index?.indexOf('<!-- headroom:learn:start -->') ?? -1
   const end = index?.indexOf('<!-- headroom:learn:end -->') ?? -1
   const markers =
@@ -218,7 +239,11 @@ const projectContext = (
           start === -1 && end === -1
             ? { status: 'PASS', message: 'No headroom:learn block is present.', subject: indexRelativePath }
             : start === -1 || end === -1 || end < start
-              ? { status: 'VIOLATION', message: 'headroom:learn block has malformed markers', subject: indexRelativePath }
+              ? {
+                  status: 'VIOLATION',
+                  message: 'headroom:learn block has malformed markers',
+                  subject: indexRelativePath
+                }
               : { status: 'PASS', message: 'headroom:learn block markers well-formed', subject: indexRelativePath }
         )
   const learnedEntries =
@@ -251,7 +276,9 @@ const projectContext = (
                   }
             )
           })()
-  const knownNames = new Set(memoryFiles.map((memory) => memory.frontmatter?.name).filter((name): name is string => typeof name === 'string'))
+  const knownNames = new Set(
+    memoryFiles.map((memory) => memory.frontmatter?.name).filter((name): name is string => typeof name === 'string')
+  )
   let dangling = 0
   for (const memory of memoryFiles) {
     for (const link of memory.content.match(/\[\[([a-z0-9-]+)\]\]/g) ?? []) {
@@ -358,7 +385,12 @@ const projectContext = (
   }
 }
 
-export const createHousekeepingSession = ({ mode, repository, userHome, publication }: RubricContextOptions): RubricSession<HousekeepingRubricContext> => {
+export const createHousekeepingSession = ({
+  mode,
+  repository,
+  userHome,
+  publication
+}: RubricContextOptions): RubricSession<HousekeepingRubricContext> => {
   const home = resolve(userHome)
   const repositoryRoot = resolve(repository)
   const repositoryName = basename(repositoryRoot)

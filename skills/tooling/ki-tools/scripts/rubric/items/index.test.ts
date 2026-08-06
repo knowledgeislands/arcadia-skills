@@ -3,7 +3,9 @@ import { readdirSync } from 'node:fs'
 import type { RubricItem } from '../../shared/rubric.ts'
 import catalogue from './index.ts'
 
-const items = catalogue.families.filter((family) => family.code !== 'RUBRIC').flatMap((family) => family.items as readonly RubricItem<unknown>[])
+const items = catalogue.families
+  .filter((family) => family.code !== 'RUBRIC')
+  .flatMap((family) => family.items as readonly RubricItem<unknown>[])
 const familyModules = readdirSync(import.meta.dir)
   .filter((file) => file.endsWith('.ts') && file !== 'index.ts' && !file.endsWith('.test.ts'))
   .sort()
@@ -12,7 +14,15 @@ test('the catalogue preserves every ordered ki-tools criterion', () => {
   expect(catalogue.contract).toBe(1)
   expect(catalogue.name).toBe('ki-tools')
   expect(catalogue.createSession).toBeFunction()
-  expect(catalogue.families.map((family) => family.code)).toEqual(['RUBRIC', 'TOOL', 'SHELL', 'LANG', 'COMP', 'MAN', 'CONFIG'])
+  expect(catalogue.families.map((family) => family.code)).toEqual([
+    'RUBRIC',
+    'TOOL',
+    'SHELL',
+    'LANG',
+    'COMP',
+    'MAN',
+    'CONFIG'
+  ])
   expect(items.map((item) => item.code)).toEqual([
     'TOOL-BIN',
     'TOOL-EXEC',
@@ -46,7 +56,9 @@ test('the catalogue preserves every ordered ki-tools criterion', () => {
     'CONFIG-1'
   ])
   expect(new Set(items.map((item) => item.code)).size).toBe(items.length)
-  expect(Object.fromEntries(items.filter((item) => item.mechanical).map((item) => [item.code, item.mechanical?.level]))).toEqual({
+  expect(
+    Object.fromEntries(items.filter((item) => item.mechanical).map((item) => [item.code, item.mechanical?.level]))
+  ).toEqual({
     'TOOL-BIN': 'FAIL',
     'TOOL-EXEC': 'FAIL',
     'TOOL-INSTALL': 'WARN',

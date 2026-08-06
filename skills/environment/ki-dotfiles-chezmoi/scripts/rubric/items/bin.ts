@@ -10,14 +10,18 @@ const BIN_1: RubricItem<BinContext> = {
     level: 'WARN',
     remediation: {
       class: 'diagnostic',
-      guidance: 'Choose and apply the recognised source-attribute prefix that expresses the file’s intended chezmoi behaviour.'
+      guidance:
+        'Choose and apply the recognised source-attribute prefix that expresses the file’s intended chezmoi behaviour.'
     },
     audit: {
       phase: 'INSPECT',
       run: ({ repositoryState, entries }) => {
-        if (repositoryState !== 'physical') return [{ status: 'NOT_APPLICABLE', message: 'The target repository is not safely inspectable.' }]
-        if (entries === null) return [{ status: 'NOT_APPLICABLE', message: 'No bin/ directory exists in the source tree.' }]
-        if (!entries.length) return [{ status: 'NOT_APPLICABLE', message: 'The bin/ directory contains no direct files.' }]
+        if (repositoryState !== 'physical')
+          return [{ status: 'NOT_APPLICABLE', message: 'The target repository is not safely inspectable.' }]
+        if (entries === null)
+          return [{ status: 'NOT_APPLICABLE', message: 'No bin/ directory exists in the source tree.' }]
+        if (!entries.length)
+          return [{ status: 'NOT_APPLICABLE', message: 'The bin/ directory contains no direct files.' }]
         const outcomes: AuditOutcome[] = entries.map((entry) => {
           if (!entry.physical)
             return {
@@ -26,7 +30,11 @@ const BIN_1: RubricItem<BinContext> = {
               subject: `bin/${entry.name}`
             }
           return hasRecognisedPrefix(entry.name)
-            ? { status: 'PASS', message: 'The file uses a recognised chezmoi source-attribute prefix.', subject: `bin/${entry.name}` }
+            ? {
+                status: 'PASS',
+                message: 'The file uses a recognised chezmoi source-attribute prefix.',
+                subject: `bin/${entry.name}`
+              }
             : {
                 status: 'VIOLATION',
                 message: 'The file has no recognised chezmoi source-attribute prefix.',

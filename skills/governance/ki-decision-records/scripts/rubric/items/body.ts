@@ -14,13 +14,19 @@ const BODY_1: RubricItem<RecordsRubricContext> = {
   mechanical: {
     level: 'FAIL',
     overrideLevels: ['WARN'],
-    remediation: { class: 'diagnostic', guidance: 'Align the H1 identifier with the filename and retain the established record identity.' },
+    remediation: {
+      class: 'diagnostic',
+      guidance: 'Align the H1 identifier with the filename and retain the established record identity.'
+    },
     audit: {
       phase: 'INSPECT',
       run: (context: RecordsRubricContext) =>
         outcomes(
           context.records.flatMap((record): AuditOutcome[] => {
-            if (!record.headingId) return [{ status: 'VIOLATION', message: 'Canonical decision-record heading is absent.', subject: record.file }]
+            if (!record.headingId)
+              return [
+                { status: 'VIOLATION', message: 'Canonical decision-record heading is absent.', subject: record.file }
+              ]
             if (record.headingId !== record.id)
               return [
                 {
@@ -45,7 +51,10 @@ const BODY_3: RubricItem<RecordsRubricContext> = {
   sources: [SOURCE],
   mechanical: {
     level: 'WARN',
-    remediation: { class: 'diagnostic', guidance: 'Remove the legacy date line after confirming that canonical frontmatter carries the date.' },
+    remediation: {
+      class: 'diagnostic',
+      guidance: 'Remove the legacy date line after confirming that canonical frontmatter carries the date.'
+    },
     audit: {
       phase: 'INSPECT',
       run: (context: RecordsRubricContext) =>
@@ -72,7 +81,10 @@ const BODY_4: RubricItem<RecordsRubricContext> = {
   sources: [SOURCE],
   mechanical: {
     level: 'FAIL',
-    remediation: { class: 'diagnostic', guidance: 'Add the missing canonical section with substantive decision-record content.' },
+    remediation: {
+      class: 'diagnostic',
+      guidance: 'Add the missing canonical section with substantive decision-record content.'
+    },
     audit: {
       phase: 'INSPECT',
       run: (context: RecordsRubricContext) =>
@@ -140,7 +152,8 @@ const BODY_8: RubricItem<RecordsRubricContext> = {
     scope: 'The body of every active decision record.',
     prompt: 'Assess whether the body is a focused one to two pages, roughly 200–500 words.',
     outcomes: ['conforming', 'gap', 'exclusion'],
-    guidance: 'Tighten or expand the body while preserving the decision, record a named Gap, or record an explicit exclusion.'
+    guidance:
+      'Tighten or expand the body while preserving the decision, record a named Gap, or record an explicit exclusion.'
   }
 }
 
@@ -165,9 +178,11 @@ const BODY_10: RubricItem<RecordsRubricContext> = {
   sources: [SOURCE],
   judgment: {
     scope: 'The narrative body of every active decision record.',
-    prompt: 'Assess whether the record states the present decision without historic, superseding, forward-looking, parked, or not-yet-started narration.',
+    prompt:
+      'Assess whether the record states the present decision without historic, superseding, forward-looking, parked, or not-yet-started narration.',
     outcomes: ['conforming', 'gap', 'exclusion'],
-    guidance: 'Move lifecycle narration to its appropriate record, revise to present state, record a named Gap, or record an explicit exclusion.'
+    guidance:
+      'Move lifecycle narration to its appropriate record, revise to present state, record a named Gap, or record an explicit exclusion.'
   }
 }
 

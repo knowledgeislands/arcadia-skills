@@ -1,5 +1,10 @@
 import type { RubricFamily, RubricItem, ViolationLevel } from '../../shared/rubric.ts'
-import { auditEvidence, type EngineeringEvidence, type EngineeringRubricContext, type ScriptsRubricContext } from '../contexts/engineering.ts'
+import {
+  auditEvidence,
+  type EngineeringEvidence,
+  type EngineeringRubricContext,
+  type ScriptsRubricContext
+} from '../contexts/engineering.ts'
 
 const mechanical = (
   code: string,
@@ -18,7 +23,10 @@ const mechanical = (
     ...(options.overrideLevels ? { overrideLevels: options.overrideLevels } : {}),
     remediation: options.conform
       ? { class: 'automatic' }
-      : { class: 'diagnostic', guidance: 'Revise the package scripts to meet the governed script surface, then rerun the audit.' },
+      : {
+          class: 'diagnostic',
+          guidance: 'Revise the package scripts to meet the governed script surface, then rerun the audit.'
+        },
     audit: { phase: 'INSPECT', run: (context) => auditEvidence(evidence(context), level, options.overrideLevels) },
     ...(options.conform
       ? {
@@ -31,7 +39,14 @@ const mechanical = (
   }
 })
 
-const judgment = (code: string, title: string, description: string, scope: string, prompt: string, guidance: string): RubricItem<ScriptsRubricContext> => ({
+const judgment = (
+  code: string,
+  title: string,
+  description: string,
+  scope: string,
+  prompt: string,
+  guidance: string
+): RubricItem<ScriptsRubricContext> => ({
   code,
   title,
   description,

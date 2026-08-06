@@ -185,8 +185,9 @@ export type SkillRubricDefinition<RootContext> = RubricDefinition<RootContext> &
   createSession: (options: RubricContextOptions) => RubricSession<RootContext>
 }
 
-export const defineRubricFamily = <RootContext, FamilyContext>(family: RubricFamily<RootContext, FamilyContext>): RubricFamily<RootContext, FamilyContext> =>
-  family
+export const defineRubricFamily = <RootContext, FamilyContext>(
+  family: RubricFamily<RootContext, FamilyContext>
+): RubricFamily<RootContext, FamilyContext> => family
 
 /**
  * The uniform derived-publication policy for a structured rubric catalogue.
@@ -217,8 +218,15 @@ export const createRubricPublicationFamily = <RootContext>(
         audit: {
           phase: 'DERIVED',
           run: ({ publication }) => {
-            if (!publication) return [{ status: 'VIOLATION', message: 'the host did not provide generated-publication evidence for this structured catalogue' }]
-            if (publication.state === 'in-sync') return [{ status: 'PASS', message: 'the structured catalogue publication is exact' }]
+            if (!publication)
+              return [
+                {
+                  status: 'VIOLATION',
+                  message: 'the host did not provide generated-publication evidence for this structured catalogue'
+                }
+              ]
+            if (publication.state === 'in-sync')
+              return [{ status: 'PASS', message: 'the structured catalogue publication is exact' }]
             return [
               {
                 status: 'VIOLATION',

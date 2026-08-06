@@ -38,7 +38,9 @@ const fixture = (): string => {
     json({
       name: 'ki-plugins',
       owner: { name: 'Knowledge Islands' },
-      plugins: [{ name: 'knowledge-islands', source: './knowledge-islands', description: 'Knowledge Islands governance' }]
+      plugins: [
+        { name: 'knowledge-islands', source: './knowledge-islands', description: 'Knowledge Islands governance' }
+      ]
     })
   )
   writeFileSync(

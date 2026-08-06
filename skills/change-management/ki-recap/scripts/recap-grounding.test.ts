@@ -8,20 +8,35 @@ import { fileURLToPath } from 'node:url'
 
 const helper = join(dirname(fileURLToPath(import.meta.url)), 'recap-grounding.ts')
 const fixture = () => mkdtempSync(join(tmpdir(), 'ki-recap-'))
-const claudeToolUse = (name: string, input: unknown) => JSON.stringify({ message: { content: [{ type: 'tool_use', name, input }] } })
-const claudeToolResult = (text: string) => JSON.stringify({ message: { content: [{ type: 'tool_result', content: text }] } })
+const claudeToolUse = (name: string, input: unknown) =>
+  JSON.stringify({ message: { content: [{ type: 'tool_use', name, input }] } })
+const claudeToolResult = (text: string) =>
+  JSON.stringify({ message: { content: [{ type: 'tool_result', content: text }] } })
 const codexMeta = (cwd: string) => JSON.stringify({ type: 'session_meta', payload: { cwd } })
 const codexFunction = (name: string, arguments_: unknown) =>
-  JSON.stringify({ type: 'response_item', payload: { type: 'function_call', name, arguments: JSON.stringify(arguments_) } })
-const codexCustom = (name: string, input: unknown) => JSON.stringify({ type: 'response_item', payload: { type: 'custom_tool_call', name, input } })
+  JSON.stringify({
+    type: 'response_item',
+    payload: { type: 'function_call', name, arguments: JSON.stringify(arguments_) }
+  })
+const codexCustom = (name: string, input: unknown) =>
+  JSON.stringify({ type: 'response_item', payload: { type: 'custom_tool_call', name, input } })
 const codexOutput = (text: string) =>
-  JSON.stringify({ type: 'response_item', payload: { type: 'custom_tool_call_output', output: [{ type: 'input_text', text }] } })
+  JSON.stringify({
+    type: 'response_item',
+    payload: { type: 'custom_tool_call_output', output: [{ type: 'input_text', text }] }
+  })
 const evidence = (repo: string, head: string | null, worktree: 'clean' | 'dirty') =>
   JSON.stringify({ 'ki-recap-repository-evidence/v1': { repo, head, worktree } })
 
 const run = (repo: string, transcripts: string, args: readonly string[] = []) => {
-  const result = spawnSync('bun', [helper, repo, '--json', '--transcripts-dir', transcripts, ...args], { encoding: 'utf8' })
-  return { status: result.status ?? 1, stdout: result.stdout ?? '', output: `${result.stdout ?? ''}${result.stderr ?? ''}` }
+  const result = spawnSync('bun', [helper, repo, '--json', '--transcripts-dir', transcripts, ...args], {
+    encoding: 'utf8'
+  })
+  return {
+    status: result.status ?? 1,
+    stdout: result.stdout ?? '',
+    output: `${result.stdout ?? ''}${result.stderr ?? ''}`
+  }
 }
 
 const git = (repository: string, args: readonly string[]): string => {
@@ -64,7 +79,11 @@ describe('recap grounding runtime selection', () => {
       utimesSync(irrelevant, now + 20, now + 20)
 
       const result = run(repo, transcripts)
-      const grounded = JSON.parse(result.stdout) as { runtime: string; transcript: string; toolTally: Record<string, number> }
+      const grounded = JSON.parse(result.stdout) as {
+        runtime: string
+        transcript: string
+        toolTally: Record<string, number>
+      }
       expect(result.status).toBe(0)
       expect(grounded.runtime).toBe('codex')
       expect(grounded.transcript).toBe(codex)
@@ -92,7 +111,10 @@ describe('recap grounding runtime selection', () => {
       utimesSync(codexOld, now - 20, now - 20)
       utimesSync(codexNew, now, now)
 
-      const forcedClaude = JSON.parse(run(repo, transcripts, ['--runtime', 'claude']).stdout) as { runtime: string; transcript: string }
+      const forcedClaude = JSON.parse(run(repo, transcripts, ['--runtime', 'claude']).stdout) as {
+        runtime: string
+        transcript: string
+      }
       expect(forcedClaude.runtime).toBe('claude')
       expect(forcedClaude.transcript).toBe(claude)
 
@@ -221,7 +243,10 @@ describe('recap grounding runtime selection', () => {
       const uncertain = JSON.parse(run(repo, transcripts, ['--runtime', 'claude']).stdout) as {
         transcriptEvidence: { status: string; baseline: { head: string; worktree: string } }
       }
-      expect(uncertain.transcriptEvidence).toMatchObject({ status: 'unavailable', baseline: { head: baseline, worktree: 'dirty' } })
+      expect(uncertain.transcriptEvidence).toMatchObject({
+        status: 'unavailable',
+        baseline: { head: baseline, worktree: 'dirty' }
+      })
     } finally {
       rmSync(root, { recursive: true, force: true })
     }

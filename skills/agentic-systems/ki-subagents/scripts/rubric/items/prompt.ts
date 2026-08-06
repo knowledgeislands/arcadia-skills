@@ -11,18 +11,24 @@ const PROMPT_ITEMS = [
     sources: [`${STANDARD}#6-system-prompt-size--focus`, 'CC'],
     mechanical: {
       level: 'FAIL',
-      remediation: { class: 'diagnostic', guidance: 'Write a non-empty system prompt that states the agent’s role, lane, and operating guidance.' },
+      remediation: {
+        class: 'diagnostic',
+        guidance: 'Write a non-empty system prompt that states the agent’s role, lane, and operating guidance.'
+      },
       audit: {
         phase: 'INSPECT',
         run: (context: AgentFileContext) => {
           const agent = context.agent
-          if (!agent) return [{ status: 'NOT_APPLICABLE' as const, message: 'No physical agent definition is available.' }]
+          if (!agent)
+            return [{ status: 'NOT_APPLICABLE' as const, message: 'No physical agent definition is available.' }]
           return [
             agent.frontmatter.raw === null
               ? { status: 'NOT_APPLICABLE', message: 'Frontmatter is absent.', subject: agent.file }
               : {
                   status: agent.body.trim() ? 'PASS' : 'VIOLATION',
-                  message: agent.body.trim() ? 'System-prompt body is present.' : 'No system-prompt body follows the frontmatter.',
+                  message: agent.body.trim()
+                    ? 'System-prompt body is present.'
+                    : 'No system-prompt body follows the frontmatter.',
                   subject: agent.file
                 }
           ]
@@ -39,7 +45,8 @@ const PROMPT_ITEMS = [
       scope: 'The system-prompt opening, role statement, and lane boundary.',
       prompt: 'Opens with role & lane — what it owns and, explicitly, what it does not.',
       outcomes: ['conforming', 'opening revision required', 'boundary clarification required'],
-      guidance: 'Open with a concise role and explicit owns/does-not-own lane statement, clarifying the boundary before adding more procedure.'
+      guidance:
+        'Open with a concise role and explicit owns/does-not-own lane statement, clarifying the boundary before adding more procedure.'
     }
   },
   {
@@ -49,9 +56,11 @@ const PROMPT_ITEMS = [
     sources: [`${STANDARD}#7-system-prompt-structure--quality`, 'HOUSE'],
     judgment: {
       scope: 'The prompt’s required sources, read-before-act ordering, and citation obligation.',
-      prompt: 'Grounding: names the sources it must read before acting and requires citing them, not reasoning from memory.',
+      prompt:
+        'Grounding: names the sources it must read before acting and requires citing them, not reasoning from memory.',
       outcomes: ['conforming', 'grounding source required', 'citation guidance required'],
-      guidance: 'Name the authoritative sources, require reading them before action, and require the agent to cite the evidence it uses.'
+      guidance:
+        'Name the authoritative sources, require reading them before action, and require the agent to cite the evidence it uses.'
     }
   },
   {
@@ -63,7 +72,8 @@ const PROMPT_ITEMS = [
       scope: 'The when-invoked procedure in the system prompt.',
       prompt: 'A short ordered when-invoked procedure (clarify → read → reason → produce).',
       outcomes: ['conforming', 'procedure revision required', 'step ordering required'],
-      guidance: 'Add a concise ordered procedure that clarifies the request, reads sources, reasons from evidence, and produces the bounded result.'
+      guidance:
+        'Add a concise ordered procedure that clarifies the request, reads sources, reasons from evidence, and produces the bounded result.'
     }
   },
   {
@@ -85,9 +95,11 @@ const PROMPT_ITEMS = [
     sources: [`${STANDARD}#7-system-prompt-structure--quality`, 'HOUSE'],
     judgment: {
       scope: 'Writing authority, confirm-before-write instruction, and applicable house conventions.',
-      prompt: 'If it may write, requires confirm-before-write and house conventions, stating the why alongside each rule.',
+      prompt:
+        'If it may write, requires confirm-before-write and house conventions, stating the why alongside each rule.',
       outcomes: ['conforming', 'write safety revision required', 'convention rationale required'],
-      guidance: 'Require confirmation before writing and state each applicable convention with its rationale; remove write authority if it is not needed.'
+      guidance:
+        'Require confirmation before writing and state each applicable convention with its rationale; remove write authority if it is not needed.'
     }
   },
   {
@@ -99,7 +111,8 @@ const PROMPT_ITEMS = [
       scope: 'The complete system-prompt body, role focus, terminology, and standing-token cost.',
       prompt: 'Focused on one role, consistent terminology, no token spent on what Claude already knows.',
       outcomes: ['conforming', 'focus revision required', 'terminology revision required'],
-      guidance: 'Remove generic knowledge, keep one role and consistent terms, and move rarely needed detail to referenced material.'
+      guidance:
+        'Remove generic knowledge, keep one role and consistent terms, and move rarely needed detail to referenced material.'
     }
   }
 ] as const

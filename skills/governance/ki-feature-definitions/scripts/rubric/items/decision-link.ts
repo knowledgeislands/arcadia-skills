@@ -10,7 +10,8 @@ const DR_LINK_1: RubricItem<FeatureJudgmentContext> = {
   sources: [SOURCE],
   judgment: {
     scope: 'Requirements that follow from a recorded Decision Record and their cited links.',
-    prompt: 'Assess whether requirements governed by a recorded decision cite it, preserving the audit trail from why to what.',
+    prompt:
+      'Assess whether requirements governed by a recorded decision cite it, preserving the audit trail from why to what.',
     outcomes: ['conforming', 'gap', 'exclusion'],
     guidance: 'Add the governing Decision Record link, record a named Gap, or record an explicit area-level exclusion.'
   }

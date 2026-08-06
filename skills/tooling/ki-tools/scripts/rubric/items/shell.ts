@@ -6,7 +6,12 @@ const SOURCE = [STANDARD] as const
 const one = (outcome: AuditOutcome): readonly AuditOutcome[] => [outcome]
 
 const unavailable = (context: ShellToolsContext): readonly AuditOutcome[] | null =>
-  context.applicable ? null : one({ status: 'NOT_APPLICABLE', message: 'No qualified ki-tools declaration or bin/ structural marker is present.' })
+  context.applicable
+    ? null
+    : one({
+        status: 'NOT_APPLICABLE',
+        message: 'No qualified ki-tools declaration or bin/ structural marker is present.'
+      })
 
 const SHELL_LINT: RubricItem<ShellToolsContext> = {
   code: 'SHELL-LINT',
@@ -15,18 +20,30 @@ const SHELL_LINT: RubricItem<ShellToolsContext> = {
   sources: SOURCE,
   mechanical: {
     level: 'WARN',
-    remediation: { class: 'diagnostic', guidance: 'Add or correct the shellcheck CI evidence through the repository’s maintained workflow.' },
+    remediation: {
+      class: 'diagnostic',
+      guidance: 'Add or correct the shellcheck CI evidence through the repository’s maintained workflow.'
+    },
     audit: {
       phase: 'INSPECT',
       run: (context) => {
         const skipped = unavailable(context)
         if (skipped) return skipped
-        if (!context.primary || !context.shell) return one({ status: 'NOT_APPLICABLE', message: 'Primary executable is not a shell entrypoint.' })
+        if (!context.primary || !context.shell)
+          return one({ status: 'NOT_APPLICABLE', message: 'Primary executable is not a shell entrypoint.' })
         if (context.workflows === 'unsafe' || context.unsafeWorkflowEntries.length > 0)
-          return one({ status: 'VIOLATION', message: 'CI workflow evidence is unsafe or unreadable.', subject: '.github/workflows/' })
+          return one({
+            status: 'VIOLATION',
+            message: 'CI workflow evidence is unsafe or unreadable.',
+            subject: '.github/workflows/'
+          })
         return /shellcheck/i.test(context.workflowText)
           ? one({ status: 'PASS', message: 'A CI workflow references shellcheck.', subject: `bin/${context.primary}` })
-          : one({ status: 'VIOLATION', message: 'Shell entrypoint has no CI shellcheck reference.', subject: `bin/${context.primary}` })
+          : one({
+              status: 'VIOLATION',
+              message: 'Shell entrypoint has no CI shellcheck reference.',
+              subject: `bin/${context.primary}`
+            })
       }
     }
   }
@@ -39,16 +56,25 @@ const SHELL_TEST: RubricItem<ShellToolsContext> = {
   sources: SOURCE,
   mechanical: {
     level: 'WARN',
-    remediation: { class: 'diagnostic', guidance: 'Add or correct the Bats suite and CI evidence through the repository’s maintained test workflow.' },
+    remediation: {
+      class: 'diagnostic',
+      guidance: 'Add or correct the Bats suite and CI evidence through the repository’s maintained test workflow.'
+    },
     audit: {
       phase: 'INSPECT',
       run: (context) => {
         const skipped = unavailable(context)
         if (skipped) return skipped
-        if (!context.primary || !context.shell) return one({ status: 'NOT_APPLICABLE', message: 'Primary executable is not a shell entrypoint.' })
+        if (!context.primary || !context.shell)
+          return one({ status: 'NOT_APPLICABLE', message: 'Primary executable is not a shell entrypoint.' })
         if (context.tests === 'unsafe' || context.unsafeTestEntries.length > 0)
           return one({ status: 'VIOLATION', message: 'Bats test evidence is unsafe or unreadable.', subject: 'tests/' })
-        if (!context.bats) return one({ status: 'VIOLATION', message: 'Shell entrypoint has no physical *.bats suite.', subject: 'tests/' })
+        if (!context.bats)
+          return one({
+            status: 'VIOLATION',
+            message: 'Shell entrypoint has no physical *.bats suite.',
+            subject: 'tests/'
+          })
         return /\bbats\b/i.test(context.workflowText)
           ? one({ status: 'PASS', message: 'A *.bats suite is referenced by CI.', subject: 'tests/' })
           : one({ status: 'VIOLATION', message: '*.bats suite is not referenced by CI.', subject: 'tests/' })

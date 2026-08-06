@@ -110,10 +110,16 @@ export const auditEvidence = (
   overrideLevels?: readonly ViolationLevel[]
 ): readonly AuditOutcome[] => {
   const outcomes = evidence.map((finding): AuditOutcome => {
-    if (finding.level === 'PASS') return { status: 'PASS', message: finding.message, ...(finding.subject ? { subject: finding.subject } : {}) }
+    if (finding.level === 'PASS')
+      return { status: 'PASS', message: finding.message, ...(finding.subject ? { subject: finding.subject } : {}) }
     if (finding.level === 'NOT_APPLICABLE')
-      return { status: 'NOT_APPLICABLE', message: finding.message, ...(finding.subject ? { subject: finding.subject } : {}) }
-    if (finding.level === 'INFO') return { status: 'INFO', message: finding.message, ...(finding.subject ? { subject: finding.subject } : {}) }
+      return {
+        status: 'NOT_APPLICABLE',
+        message: finding.message,
+        ...(finding.subject ? { subject: finding.subject } : {})
+      }
+    if (finding.level === 'INFO')
+      return { status: 'INFO', message: finding.message, ...(finding.subject ? { subject: finding.subject } : {}) }
     const level = finding.level as ViolationLevel
     return {
       status: 'VIOLATION',
@@ -122,10 +128,21 @@ export const auditEvidence = (
       ...(level !== defaultLevel && overrideLevels?.includes(level) ? { level } : {})
     }
   })
-  return outcomes.length ? outcomes : [{ status: 'NOT_APPLICABLE', message: 'This criterion did not apply to the target.' }]
+  return outcomes.length
+    ? outcomes
+    : [{ status: 'NOT_APPLICABLE', message: 'This criterion did not apply to the target.' }]
 }
 
-const requiredDev = ['@biomejs/biome', 'knip', 'prettier', 'husky', 'lint-staged', 'markdownlint-cli2', 'syncpack', 'typescript']
+const requiredDev = [
+  '@biomejs/biome',
+  'knip',
+  'prettier',
+  'husky',
+  'lint-staged',
+  'markdownlint-cli2',
+  'syncpack',
+  'typescript'
+]
 const versions: Record<string, string> = {
   '@biomejs/biome': '^2.5.4',
   knip: '^6.27.0',
@@ -173,7 +190,7 @@ const defaults = {
   "formatter": {
     "enabled": true,
     "indentStyle": "space",
-    "lineWidth": 160,
+    "lineWidth": 120,
     "indentWidth": 2
   },
   "javascript": {
@@ -207,17 +224,24 @@ const defaults = {
 `
 } as const
 
-const legacyAggregateScript = (key: string): boolean => key === 'ki:audit' || key === 'ki:conform' || key === 'ki:educate' || key === 'ki:help'
+const legacyAggregateScript = (key: string): boolean =>
+  key === 'ki:audit' || key === 'ki:conform' || key === 'ki:educate' || key === 'ki:help'
 
 const nativeGovernanceScript = (value: string): boolean => /\bki\s+repo\s+(?:audit|conform|educate)\b/.test(value)
 
 const legacyToolScript = (key: string): boolean =>
-  /^ki:lint:/.test(key) || (/^ki:deps:/.test(key) && key !== 'ki:deps:update') || key === 'ki:knip' || key === 'ki:verify' || /^ki:[a-z-]+:lint$/.test(key)
+  /^ki:lint:/.test(key) ||
+  (/^ki:deps:/.test(key) && key !== 'ki:deps:update') ||
+  key === 'ki:knip' ||
+  key === 'ki:verify' ||
+  /^ki:[a-z-]+:lint$/.test(key)
 
 const legacySkillModeScript = (key: string): boolean => /^ki:[a-z-]+:(audit|conform|educate|help)$/.test(key)
 
 const legacyRuntimeOnlyScript = (value: string): boolean =>
-  /^\s*(?:bun|node)\s+\S*(?:\.ki\/(?:bin|bootstrap)\/|scripts\/(?:govern|educate)\.ts|scripts\/rubric\/index\.ts|scripts\/vendored\/).*$/.test(value)
+  /^\s*(?:bun|node)\s+\S*(?:\.ki\/(?:bin|bootstrap)\/|scripts\/(?:govern|educate)\.ts|scripts\/rubric\/index\.ts|scripts\/vendored\/).*$/.test(
+    value
+  )
 
 const isSafeRegularFile = (path: string): boolean => {
   if (!existsSync(path)) return false
@@ -254,11 +278,15 @@ const packageContent = (source: string): string | undefined => {
   scripts['ki:deps:update'] = 'bun update --latest'
   scripts.clean = scripts.clean?.includes('node_modules') ? scripts.clean : 'rm -rf dist node_modules'
   scripts.prepare = 'husky'
-  packageJson.scripts = Object.fromEntries(Object.entries(scripts).sort(([first], [second]) => first.localeCompare(second)))
+  packageJson.scripts = Object.fromEntries(
+    Object.entries(scripts).sort(([first], [second]) => first.localeCompare(second))
+  )
   return `${JSON.stringify(packageJson, null, 2)}\n`
 }
 
-const evidenceByCode = (findings: readonly EngineeringEvidenceFinding[]): ((code: string) => readonly EngineeringEvidenceFinding[]) => {
+const evidenceByCode = (
+  findings: readonly EngineeringEvidenceFinding[]
+): ((code: string) => readonly EngineeringEvidenceFinding[]) => {
   const grouped = new Map<string, EngineeringEvidenceFinding[]>()
   for (const finding of findings) {
     const values = grouped.get(finding.code) ?? []
@@ -394,7 +422,23 @@ export const createEngineeringSession = (
     subjects: [
       { families: ['RUBRIC'], context: () => context },
       {
-        families: ['PKG', 'MISE', 'CI', 'SCR', 'BUN', 'TSC', 'BIO', 'KNIP', 'SYNC', 'DEPS', 'GEN', 'TEST', 'BUILD', 'ENV', 'TOML'],
+        families: [
+          'PKG',
+          'MISE',
+          'CI',
+          'SCR',
+          'BUN',
+          'TSC',
+          'BIO',
+          'KNIP',
+          'SYNC',
+          'DEPS',
+          'GEN',
+          'TEST',
+          'BUILD',
+          'ENV',
+          'TOML'
+        ],
         context: () => context
       }
     ],
@@ -407,11 +451,15 @@ export const createEngineeringSession = (
       for (const name of scaffold) writes.push({ path: name, content: defaults[name], create: true })
       if (declareEngineering) {
         const path = join(target, '.ki-config.toml')
-        if (!existsSync(path)) writes.push({ path: '.ki-config.toml', content: `["${ENGINEERING_TABLE}"]\n`, create: true })
+        if (!existsSync(path))
+          writes.push({ path: '.ki-config.toml', content: `["${ENGINEERING_TABLE}"]\n`, create: true })
         else {
           const source = readFileSync(path, 'utf8')
           if (!new RegExp(`^\\["${ENGINEERING_TABLE}"\\]`, 'm').test(source))
-            writes.push({ path: '.ki-config.toml', content: `${source.replace(/\n*$/, '\n\n')}["${ENGINEERING_TABLE}"]\n` })
+            writes.push({
+              path: '.ki-config.toml',
+              content: `${source.replace(/\n*$/, '\n\n')}["${ENGINEERING_TABLE}"]\n`
+            })
         }
       }
       return {

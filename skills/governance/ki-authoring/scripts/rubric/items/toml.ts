@@ -4,13 +4,15 @@ import type { AuthoringRubricContext, TomlRubricContext } from '../contexts/auth
 const TOML_KEYS: RubricItem<TomlRubricContext> = {
   code: 'TOML-keys',
   title: 'TOML keys are concise lowercase nouns',
-  description: 'Keys are lowercase, use `snake_case` for multiple words, and name the noun their value holds (`visibility`, not `repo_visibility_setting`).',
+  description:
+    'Keys are lowercase, use `snake_case` for multiple words, and name the noun their value holds (`visibility`, not `repo_visibility_setting`).',
   sources: ['standards-toml.md#keys-and-values'],
   judgment: {
     scope: 'Every authored TOML key in the convention scope.',
     prompt: 'Assess whether TOML keys are concise lowercase nouns, using snake_case for multiple words.',
     outcomes: ['conforming', 'rename required', 'exception required'],
-    guidance: 'Rename the key to a concise lowercase noun using snake_case where needed, or record the external-contract exception.'
+    guidance:
+      'Rename the key to a concise lowercase noun using snake_case where needed, or record the external-contract exception.'
   }
 }
 
@@ -37,7 +39,8 @@ const TOML_TABLES: RubricItem<TomlRubricContext> = {
     scope: 'Every shared `.ki-config.toml` skill declaration and its subtables.',
     prompt: 'Assess whether the TOML uses one table per skill with nested subtables where appropriate.',
     outcomes: ['conforming', 'restructure required', 'contract exception'],
-    guidance: 'Restructure declarations into one table per skill with nested subtables, or record the ki-repo contract exception.'
+    guidance:
+      'Restructure declarations into one table per skill with nested subtables, or record the ki-repo contract exception.'
   }
 }
 

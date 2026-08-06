@@ -19,12 +19,15 @@ export const scenarios: Scenario[] = [
     prompt:
       'In the Knowledge Islands harness, what is the single source that decides which MCP servers are enabled on which surface (Claude Code, Desktop, mcporter), and what field on each server carries that targeting?',
     assertions: [
-      { name: 'source is the canonical mcp-servers.yaml', re: /mcp-servers\.yaml|mcps\.yaml|\.config\/ki|\.chezmoidata/i },
+      {
+        name: 'source is the canonical mcp-servers.yaml',
+        re: /mcp-servers\.yaml|mcps\.yaml|\.config\/ki|\.chezmoidata/i
+      },
       { name: 'per-server clients field', re: /\bclients\b/i },
       { name: 'not a new/second source', re: /single source|not a (new|second) (file|source)|already/i }
     ],
     rubric:
-      'House model: the single source is the canonical `~/.config/ki/mcp-servers.yaml` — one `mcpServers` list where each entry declares a `clients:` list (`code` / `desktop` / `mcporter` / `cowork`) naming the surfaces it targets. Whatever renders that into each surface (chezmoi\'s `mcp-servers-json` template is one example, the maintainer\'s) is a separate concern; chezmoi is not the identity of the source. A correct answer names the canonical `mcp-servers.yaml` path (or its transitional chezmoi-data fallback) as the source and the per-server `clients` field as the targeting lever, and does not invent a second source file.'
+      "House model: the single source is the canonical `~/.config/ki/mcp-servers.yaml` — one `mcpServers` list where each entry declares a `clients:` list (`code` / `desktop` / `mcporter` / `cowork`) naming the surfaces it targets. Whatever renders that into each surface (chezmoi's `mcp-servers-json` template is one example, the maintainer's) is a separate concern; chezmoi is not the identity of the source. A correct answer names the canonical `mcp-servers.yaml` path (or its transitional chezmoi-data fallback) as the source and the per-server `clients` field as the targeting lever, and does not invent a second source file."
   },
   {
     skill: 'ki-binding',
@@ -45,24 +48,27 @@ export const scenarios: Scenario[] = [
     prompt:
       'Does the `ki-binding` skill require chezmoi (or any particular renderer) to be installed? What does it actually check, and where does chezmoi-specific rendering live instead?',
     assertions: [
-      { name: 'renderer-neutral / no renderer required', re: /renderer-neutral|does not require|any renderer|reads the source/i },
+      {
+        name: 'renderer-neutral / no renderer required',
+        re: /renderer-neutral|does not require|any renderer|reads the source/i
+      },
       { name: 'names ki-binding-chezmoi', re: /ki-binding-chezmoi/i },
       { name: 'composition relationship to ki-binding', re: /compos|implies|depends/i }
     ],
     rubric:
-      "House model: `ki-binding` is renderer-neutral — it reads the canonical source and audits that each surface (Claude Code, Desktop, mcporter) agrees with it, requiring no particular renderer installed. chezmoi is one renderer, now governed by the composition skill `ki-binding-chezmoi`, which implies/depends on `ki-binding` + `ki-dotfiles-chezmoi` and owns the chezmoi-specific render mechanics (the `mcp-servers-json` template, `chezmoi apply`, 1Password refs resolved at apply). A correct answer states `ki-binding` needs no renderer and audits agreement, and names `ki-binding-chezmoi` as the composition skill that owns the chezmoi render path."
+      'House model: `ki-binding` is renderer-neutral — it reads the canonical source and audits that each surface (Claude Code, Desktop, mcporter) agrees with it, requiring no particular renderer installed. chezmoi is one renderer, now governed by the composition skill `ki-binding-chezmoi`, which implies/depends on `ki-binding` + `ki-dotfiles-chezmoi` and owns the chezmoi-specific render mechanics (the `mcp-servers-json` template, `chezmoi apply`, 1Password refs resolved at apply). A correct answer states `ki-binding` needs no renderer and audits agreement, and names `ki-binding-chezmoi` as the composition skill that owns the chezmoi render path.'
   },
   {
     skill: 'ki-binding',
     id: 'binding-cowork-gated',
     prompt:
-      'Why does the binding skill not yet write Claude Cowork\'s `enabledPlugins`, even though Cowork is a controllable surface, and what has to happen first?',
+      "Why does the binding skill not yet write Claude Cowork's `enabledPlugins`, even though Cowork is a controllable surface, and what has to happen first?",
     assertions: [
       { name: 'external-edit-honoured verification', re: /external edit|honou?red|next launch|verif/i },
       { name: 'gate before wiring', re: /gate|before[^.\n]{0,30}(wire|write|depend)|first/i },
       { name: 'cowork_settings.json', re: /cowork_settings|enabledPlugins/i }
     ],
     rubric:
-      "House sequencing: Cowork is gated on the first build-time check — whether an external edit to `cowork_settings.json` is honoured on next Cowork launch. Until that passes, a `cowork` target is surfaced as declared-but-unwired (WARN), never silently written. A correct answer ties the hold to the external-edit-honoured verification that must pass before `enabledPlugins` is written."
+      'House sequencing: Cowork is gated on the first build-time check — whether an external edit to `cowork_settings.json` is honoured on next Cowork launch. Until that passes, a `cowork` target is surfaced as declared-but-unwired (WARN), never silently written. A correct answer ties the hold to the external-edit-honoured verification that must pass before `enabledPlugins` is written.'
   }
 ]

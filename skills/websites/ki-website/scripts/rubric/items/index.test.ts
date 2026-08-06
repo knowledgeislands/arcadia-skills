@@ -3,7 +3,9 @@ import { readdirSync } from 'node:fs'
 import type { RubricItem } from '../../shared/rubric.ts'
 import catalogue from './index.ts'
 
-const items = catalogue.families.filter((family) => family.code !== 'RUBRIC').flatMap((family) => family.items as readonly RubricItem<unknown>[])
+const items = catalogue.families
+  .filter((family) => family.code !== 'RUBRIC')
+  .flatMap((family) => family.items as readonly RubricItem<unknown>[])
 const familyModules = readdirSync(import.meta.dir)
   .filter((file) => file.endsWith('.ts') && file !== 'index.ts' && !file.endsWith('.test.ts'))
   .sort()
@@ -20,7 +22,12 @@ test('the structured catalogue preserves the complete website rule surface', () 
   expect(
     items
       .filter((item) => item.judgment)
-      .every((item) => Boolean(item.judgment?.scope.trim()) && item.judgment?.outcomes.length && Boolean(item.judgment?.guidance.trim()))
+      .every(
+        (item) =>
+          Boolean(item.judgment?.scope.trim()) &&
+          item.judgment?.outcomes.length &&
+          Boolean(item.judgment?.guidance.trim())
+      )
   ).toBe(true)
   expect(items.every((item) => item.sources?.includes('standards-eleventy-site.md'))).toBe(true)
 })

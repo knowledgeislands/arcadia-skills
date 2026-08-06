@@ -7,7 +7,10 @@ import type { DecisionRecordsRubricContext } from '../contexts/decision-records.
 import catalogue from './index.ts'
 
 const temporaryDirectories: string[] = []
-const families = catalogue.families.filter((family) => family.code !== 'RUBRIC') as unknown as readonly RubricFamily<DecisionRecordsRubricContext, unknown>[]
+const families = catalogue.families.filter((family) => family.code !== 'RUBRIC') as unknown as readonly RubricFamily<
+  DecisionRecordsRubricContext,
+  unknown
+>[]
 const items = families.flatMap((family) => family.items) as readonly RubricItem<unknown>[]
 const familyModules = readdirSync(import.meta.dir)
   .filter((file) => file.endsWith('.ts') && file !== 'index.ts' && !file.endsWith('.test.ts'))
@@ -21,7 +24,15 @@ test('the structured catalogue preserves every decision-record criterion', () =>
   expect(catalogue.contract).toBe(1)
   expect(catalogue.name).toBe('ki-decision-records')
   expect(catalogue.createSession).toBeFunction()
-  expect(catalogue.families.map((family) => family.code)).toEqual(['RUBRIC', 'FILENAME', 'ROOT', 'FM', 'TYPE-FIT', 'BODY', 'INDEX'])
+  expect(catalogue.families.map((family) => family.code)).toEqual([
+    'RUBRIC',
+    'FILENAME',
+    'ROOT',
+    'FM',
+    'TYPE-FIT',
+    'BODY',
+    'INDEX'
+  ])
   expect(items.map((item) => item.code)).toEqual([
     'FILENAME-1',
     'FILENAME-2',
@@ -51,7 +62,9 @@ test('the structured catalogue preserves every decision-record criterion', () =>
   ])
   expect(items.filter((item) => item.judgment)).toHaveLength(9)
   expect(items.filter((item) => item.mechanical).every((item) => Boolean(item.mechanical?.remediation))).toBe(true)
-  expect(items.filter((item) => item.mechanical?.conform).every((item) => item.mechanical?.remediation.class === 'automatic')).toBe(true)
+  expect(
+    items.filter((item) => item.mechanical?.conform).every((item) => item.mechanical?.remediation.class === 'automatic')
+  ).toBe(true)
   expect(
     items
       .filter((item) => item.judgment)
@@ -126,7 +139,9 @@ The decision is available.
   const indexItem = family?.items.find((candidate) => candidate.code === 'INDEX-2')
 
   expect(subject?.context()).toBe(rootContext)
-  expect(indexItem?.mechanical?.audit.run(indexContext as NonNullable<typeof indexContext>)[0]?.status).toBe('VIOLATION')
+  expect(indexItem?.mechanical?.audit.run(indexContext as NonNullable<typeof indexContext>)[0]?.status).toBe(
+    'VIOLATION'
+  )
 
   indexItem?.mechanical?.conform?.run(indexContext as NonNullable<typeof indexContext>)
 

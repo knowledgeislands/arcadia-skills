@@ -92,13 +92,13 @@ Future-work selection is separate from recap. Route to `ki-next` only when the u
 
 Apply these scenario checks when offering it:
 
-| Situation                                       | Required result                                                                    |
-| ----------------------------------------------- | ---------------------------------------------------------------------------------- |
-| Clean recap                                     | Say “No actions”; do not manufacture a `ki-next` handoff.                          |
+| Situation | Required result |
+| --- | --- |
+| Clean recap | Say “No actions”; do not manufacture a `ki-next` handoff. |
 | Future work is merely visible in the repository | Omit it from the recap; it is neither an outstanding thread nor a Specific action. |
-| User asks to choose future work                 | Route to `ki-next`, which re-grounds the roadmap before selection.                 |
-| Deferred work was already parked on the roadmap | Record it as what happened, not outstanding.                                       |
-| Learning route is unapproved                    | Label it as a proposal; neither recap nor `ki-next` writes it.                     |
+| User asks to choose future work | Route to `ki-next`, which re-grounds the roadmap before selection. |
+| Deferred work was already parked on the roadmap | Record it as what happened, not outstanding. |
+| Learning route is unapproved | Label it as a proposal; neither recap nor `ki-next` writes it. |
 
 ## 7. Preserve the handoff and compact when needed
 

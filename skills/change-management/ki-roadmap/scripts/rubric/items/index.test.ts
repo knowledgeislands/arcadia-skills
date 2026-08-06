@@ -8,7 +8,10 @@ import { inspectRoadmap, rootRoadmap } from '../contexts/roadmap-evidence.ts'
 import catalogue from './index.ts'
 
 const temporaryDirectories: string[] = []
-const families = catalogue.families.filter((family) => family.code !== 'RUBRIC') as unknown as readonly RubricFamily<RoadmapRubricContext, unknown>[]
+const families = catalogue.families.filter((family) => family.code !== 'RUBRIC') as unknown as readonly RubricFamily<
+  RoadmapRubricContext,
+  unknown
+>[]
 const items = families.flatMap((family) => family.items) as readonly RubricItem<unknown>[]
 
 afterEach(() => {
@@ -83,7 +86,16 @@ test('the structured catalogue represents the flat work-item standard', () => {
   expect(catalogue.contract).toBe(1)
   expect(catalogue.name).toBe('ki-roadmap')
   expect(catalogue.createSession).toBeFunction()
-  expect(catalogue.families.map((family) => family.code)).toEqual(['RUBRIC', 'SCOPE', 'ROAD', 'ITEM', 'INDEX', 'EXEC', 'SAFE', 'TRADE'])
+  expect(catalogue.families.map((family) => family.code)).toEqual([
+    'RUBRIC',
+    'SCOPE',
+    'ROAD',
+    'ITEM',
+    'INDEX',
+    'EXEC',
+    'SAFE',
+    'TRADE'
+  ])
   expect(items.map((item) => item.code)).toEqual([
     'SCOPE-1',
     'ROAD-1',
@@ -142,7 +154,9 @@ test('invalid lifecycle placement and missing execution sections fail', () => {
       .replace('## Current state', '## Baseline')
   )
   const failures = inspectRoadmap(repository).filter((finding) => finding.level === 'FAIL')
-  expect(failures).toContainEqual(expect.objectContaining({ area: 'ITEM-2', msg: 'non-draft item must be in now or next' }))
+  expect(failures).toContainEqual(
+    expect.objectContaining({ area: 'ITEM-2', msg: 'non-draft item must be in now or next' })
+  )
   expect(failures).toContainEqual(expect.objectContaining({ area: 'ITEM-3' }))
 })
 
@@ -150,7 +164,9 @@ test('every item ends with Discussion', () => {
   const repository = createFixture()
   const item = join(repository, 'docs', 'roadmap', 'TEST-FND-001-build-the-foundation.md')
   writeFileSync(item, readFileSync(item, 'utf8').replace('\n## Discussion\n', '\n## Discussion moved\n'))
-  expect(inspectRoadmap(repository)).toContainEqual(expect.objectContaining({ area: 'ITEM-3', msg: '## Discussion must be the final top-level section' }))
+  expect(inspectRoadmap(repository)).toContainEqual(
+    expect.objectContaining({ area: 'ITEM-3', msg: '## Discussion must be the final top-level section' })
+  )
 })
 
 test('Soon work carries shaping detail', () => {
@@ -177,22 +193,35 @@ test('a Goal is mandatory and non-empty', () => {
   const repository = createFixture()
   const item = join(repository, 'docs', 'roadmap', 'TEST-FND-001-build-the-foundation.md')
   writeFileSync(item, readFileSync(item, 'utf8').replace('Give users a working foundation.', ''))
-  expect(inspectRoadmap(repository)).toContainEqual(expect.objectContaining({ area: 'ITEM-3', msg: '## Goal must be non-empty' }))
+  expect(inspectRoadmap(repository)).toContainEqual(
+    expect.objectContaining({ area: 'ITEM-3', msg: '## Goal must be non-empty' })
+  )
 })
 
 test('a title has at most four words', () => {
   const repository = createFixture()
   const item = join(repository, 'docs', 'roadmap', 'TEST-FND-001-build-the-foundation.md')
-  writeFileSync(item, readFileSync(item, 'utf8').replace('title: Build the foundation', 'title: Build a foundation for every user'))
-  expect(inspectRoadmap(repository)).toContainEqual(expect.objectContaining({ area: 'ITEM-1', msg: 'title must contain at most 4 words' }))
+  writeFileSync(
+    item,
+    readFileSync(item, 'utf8').replace('title: Build the foundation', 'title: Build a foundation for every user')
+  )
+  expect(inspectRoadmap(repository)).toContainEqual(
+    expect.objectContaining({ area: 'ITEM-1', msg: 'title must contain at most 4 words' })
+  )
 })
 
 test('execution Steps use lifecycle-appropriate task lists', () => {
   const repository = createFixture()
   const item = join(repository, 'docs', 'roadmap', 'TEST-FND-001-build-the-foundation.md')
-  writeFileSync(item, readFileSync(item, 'utf8').replace('- [ ] Implement the first slice.', '1. [ ] Implement the first slice.'))
+  writeFileSync(
+    item,
+    readFileSync(item, 'utf8').replace('- [ ] Implement the first slice.', '1. [ ] Implement the first slice.')
+  )
   expect(inspectRoadmap(repository)).toContainEqual(
-    expect.objectContaining({ area: 'ITEM-3', msg: '## Steps must contain only task-list entries using - [ ] or - [x]' })
+    expect.objectContaining({
+      area: 'ITEM-3',
+      msg: '## Steps must contain only task-list entries using - [ ] or - [x]'
+    })
   )
 })
 
@@ -211,7 +240,10 @@ test('awaiting-review Steps are all checked', () => {
       )
   )
   expect(inspectRoadmap(repository).filter((finding) => finding.area === 'ITEM-3')).toEqual([])
-  writeFileSync(item, readFileSync(item, 'utf8').replace('- [x] Implement the first slice.', '- [ ] Implement the first slice.'))
+  writeFileSync(
+    item,
+    readFileSync(item, 'utf8').replace('- [x] Implement the first slice.', '- [ ] Implement the first slice.')
+  )
   expect(inspectRoadmap(repository)).toContainEqual(
     expect.objectContaining({ area: 'ITEM-3', msg: 'awaiting-review and done items must mark every Step as - [x]' })
   )
@@ -232,7 +264,9 @@ test('dependency links must be reciprocal', () => {
   const repository = createFixture()
   const item = join(repository, 'docs', 'roadmap', 'TEST-FND-001-build-the-foundation.md')
   writeFileSync(item, readFileSync(item, 'utf8').replace('blocks: []', 'blocks: [TEST-FND-002]'))
-  expect(inspectRoadmap(repository)).toContainEqual(expect.objectContaining({ area: 'ITEM-4', msg: "dependency 'TEST-FND-002' does not exist" }))
+  expect(inspectRoadmap(repository)).toContainEqual(
+    expect.objectContaining({ area: 'ITEM-4', msg: "dependency 'TEST-FND-002' does not exist" })
+  )
 })
 
 test('item theme codes must be declared by the repository roadmap configuration', () => {
@@ -272,7 +306,10 @@ test('trade waits use a flat canonical identity array only at Waiting for', () =
   )
   expect(inspectRoadmap(repository)).toEqual(
     expect.arrayContaining([
-      expect.objectContaining({ area: 'TRADE-2', msg: 'waiting-on-trades must contain only canonical trade identities' }),
+      expect.objectContaining({
+        area: 'TRADE-2',
+        msg: 'waiting-on-trades must contain only canonical trade identities'
+      }),
       expect.objectContaining({ area: 'TRADE-2', msg: 'waiting-on-trades must not repeat a trade identity' })
     ])
   )

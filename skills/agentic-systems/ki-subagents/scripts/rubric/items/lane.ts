@@ -2,7 +2,11 @@ import type { RubricFamily, RubricItem } from '../../shared/rubric.ts'
 import type { AgentFileContext, AgentsRubricContext } from '../contexts/agents.ts'
 
 const STANDARD = 'standards-subagent-definitions.md'
-const REVIEW = { scope: 'The target agent role, lane boundary, sibling hand-offs, and grounding sources.', outcomes: ['conforming', 'gap', 'exclusion'] as const, guidance: 'Revise the role boundary through its responsible author, record a gap, or record an explicit exclusion.' }
+const REVIEW = {
+  scope: 'The target agent role, lane boundary, sibling hand-offs, and grounding sources.',
+  outcomes: ['conforming', 'gap', 'exclusion'] as const,
+  guidance: 'Revise the role boundary through its responsible author, record a gap, or record an explicit exclusion.'
+}
 
 const LANE_ITEMS = [
   {
@@ -17,7 +21,11 @@ const LANE_ITEMS = [
     title: 'Reciprocal hand-offs',
     description: 'Adjacent sibling agents name each other as hand-offs.',
     sources: [`${STANDARD}#9-lane--delegation`, 'HOUSE'],
-    judgment: { ...REVIEW, prompt: 'Where a sibling is genuinely adjacent, each names the other as the hand-off — reciprocal, not one-directional.' }
+    judgment: {
+      ...REVIEW,
+      prompt:
+        'Where a sibling is genuinely adjacent, each names the other as the hand-off — reciprocal, not one-directional.'
+    }
   },
   {
     code: 'LANE-3',

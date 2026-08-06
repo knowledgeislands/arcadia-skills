@@ -22,7 +22,7 @@ export const scenarios: Scenario[] = [
       { name: 'slugified absolute path', re: /-Users-kris-proj/ }
     ],
     rubric:
-      'House fact: memory lives OUTSIDE the repo tree at `~/.claude/projects/<slug>/memory/` with a `MEMORY.md` index, where `<slug>` is the repo\'s absolute path with every `/` replaced by `-` (so `/Users/kris/proj` → `-Users-kris-proj`). A correct answer gives that path and derives the slug correctly, not a `.claude/` folder inside the repo.'
+      "House fact: memory lives OUTSIDE the repo tree at `~/.claude/projects/<slug>/memory/` with a `MEMORY.md` index, where `<slug>` is the repo's absolute path with every `/` replaced by `-` (so `/Users/kris/proj` → `-Users-kris-proj`). A correct answer gives that path and derives the slug correctly, not a `.claude/` folder inside the repo."
   },
   {
     skill: 'ki-housekeeping-claude',
@@ -42,7 +42,7 @@ export const scenarios: Scenario[] = [
     skill: 'ki-housekeeping-claude',
     id: 'mem-index-promote',
     prompt:
-      "One of our memory files just records our import-path and file-layout conventions. Is that fine to keep? And what maintenance does MEMORY.md need?",
+      'One of our memory files just records our import-path and file-layout conventions. Is that fine to keep? And what maintenance does MEMORY.md need?',
     assertions: [
       { name: 'MEMORY.md index', re: /MEMORY\.md/ },
       { name: 'belongs in CLAUDE.md', re: /CLAUDE\.md/ },
@@ -50,6 +50,6 @@ export const scenarios: Scenario[] = [
       { name: 'delete the duplicate memory', re: /delet|remove/i }
     ],
     rubric:
-      "House fact: repo conventions (code structure, import paths) do NOT belong in memory — they are promoted to a `CLAUDE.md` and the memory deleted, not left to duplicate it; and every `memory/*.md` must have a matching `MEMORY.md` index entry (`- [Title](file.md) — hook`). A correct answer says to promote the conventions to `CLAUDE.md` and delete the memory, and that the index and files stay in sync bidirectionally."
+      'House fact: repo conventions (code structure, import paths) do NOT belong in memory — they are promoted to a `CLAUDE.md` and the memory deleted, not left to duplicate it; and every `memory/*.md` must have a matching `MEMORY.md` index entry (`- [Title](file.md) — hook`). A correct answer says to promote the conventions to `CLAUDE.md` and delete the memory, and that the index and files stay in sync bidirectionally.'
   }
 ]

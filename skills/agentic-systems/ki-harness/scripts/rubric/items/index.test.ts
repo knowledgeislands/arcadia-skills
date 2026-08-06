@@ -31,7 +31,9 @@ const fixture = (): string => {
 }
 
 const configItem = () => {
-  const family = catalogue.families.find((candidate) => candidate.code === 'CONFIG') as RubricFamily<HarnessRubricContext, HarnessConfigContext> | undefined
+  const family = catalogue.families.find((candidate) => candidate.code === 'CONFIG') as
+    | RubricFamily<HarnessRubricContext, HarnessConfigContext>
+    | undefined
   const item = family?.items.find((candidate) => candidate.code === 'CONFIG-1')
   if (!family || !item) throw new Error('CONFIG-1 is missing')
   return { family, item }
@@ -41,7 +43,16 @@ test('the catalogue preserves the current compatible-harness criteria', () => {
   expect(catalogue.contract).toBe(1)
   expect(catalogue.name).toBe('ki-harness')
   expect(catalogue.createSession).toBeFunction()
-  expect(catalogue.families.map((family) => family.code)).toEqual(['CAP', 'LAY', 'CLAUDE', 'CONFIG', 'SKILLS', 'LONG', 'COLL', 'RUBRIC'])
+  expect(catalogue.families.map((family) => family.code)).toEqual([
+    'CAP',
+    'LAY',
+    'CLAUDE',
+    'CONFIG',
+    'SKILLS',
+    'LONG',
+    'COLL',
+    'RUBRIC'
+  ])
   const codes = catalogue.families.flatMap((family) => family.items.map((item) => item.code))
   expect(codes).toEqual([
     'CAP-1',
@@ -82,7 +93,9 @@ test('the session discovers grouped skills once and coalesces marker requests', 
   const session = catalogue.createSession({ mode: 'conform', repository, userHome: tmpdir(), configuration: {} })
   const context = session.subjects[0]?.context() as HarnessRubricContext
   expect(session.subjects[0]?.context()).toBe(context)
-  expect(context.skills.skills).toEqual([{ path: 'skills/group/example', directory: 'example', declaredName: 'example' }])
+  expect(context.skills.skills).toEqual([
+    { path: 'skills/group/example', directory: 'example', declaredName: 'example' }
+  ])
   const { family, item } = configItem()
   const config = family.selectContext(context) as HarnessConfigContext
   expect(item.mechanical?.audit.run(config)[0]?.status).toBe('VIOLATION')
@@ -98,7 +111,10 @@ test('the session discovers grouped skills once and coalesces marker requests', 
 
 test('audit is read-only and an existing marker produces no proposal', () => {
   const repository = fixture()
-  writeFileSync(join(repository, '.ki-config.toml'), '["knowledgeislands/ki-agentic-harness:ki-repo"]\n\n["knowledgeislands/ki-agentic-harness:ki-harness"]\n')
+  writeFileSync(
+    join(repository, '.ki-config.toml'),
+    '["knowledgeislands/ki-agentic-harness:ki-repo"]\n\n["knowledgeislands/ki-agentic-harness:ki-harness"]\n'
+  )
   const session = catalogue.createSession({ mode: 'audit', repository, userHome: tmpdir(), configuration: {} })
   const context = session.subjects[0]?.context() as HarnessRubricContext
   expect(context.config.hasHarnessTable).toBe(true)

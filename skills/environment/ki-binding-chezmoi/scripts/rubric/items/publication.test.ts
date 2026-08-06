@@ -3,7 +3,12 @@ import { createBindingChezMoiSession } from '../contexts/binding-chezmoi.ts'
 import { RUBRIC } from './publication.ts'
 
 test('the session supplies one focused generated-rubric publication subject', () => {
-  const publication = { target: 'references/rubric.md', rendered: '', state: 'stale' as const, propose: () => undefined }
+  const publication = {
+    target: 'references/rubric.md',
+    rendered: '',
+    state: 'stale' as const,
+    propose: () => undefined
+  }
   const session = createBindingChezMoiSession({
     mode: 'audit',
     repository: process.cwd(),

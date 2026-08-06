@@ -1,6 +1,11 @@
 import { lstatSync, readdirSync, readFileSync } from 'node:fs'
 import { join, resolve } from 'node:path'
-import type { ConformWrite, RubricContextOptions, RubricPublicationContext, RubricSession } from '../../shared/rubric.ts'
+import type {
+  ConformWrite,
+  RubricContextOptions,
+  RubricPublicationContext,
+  RubricSession
+} from '../../shared/rubric.ts'
 
 const FORMULA_DIRECTORY = 'Formula'
 const CONFIG_FILE = '.ki-config.toml'
@@ -50,7 +55,10 @@ const nodeKind = (path: string): NodeKind => {
   }
 }
 
-const inspectConfig = (path: string, kind: NodeKind): { readonly state: ConfigState; readonly keys: readonly string[]; readonly content: string | null } => {
+const inspectConfig = (
+  path: string,
+  kind: NodeKind
+): { readonly state: ConfigState; readonly keys: readonly string[]; readonly content: string | null } => {
   if (kind === 'missing') return { state: 'missing', keys: [], content: null }
   if (kind !== 'file') return { state: 'unsafe', keys: [], content: null }
   const content = readFileSync(path, 'utf8')
@@ -65,12 +73,17 @@ const inspectConfig = (path: string, kind: NodeKind): { readonly state: ConfigSt
   }
 }
 
-export const createHomebrewTapSession = ({ mode, repository, publication }: RubricContextOptions): RubricSession<HomebrewTapRubricContext> => {
+export const createHomebrewTapSession = ({
+  mode,
+  repository,
+  publication
+}: RubricContextOptions): RubricSession<HomebrewTapRubricContext> => {
   const target = resolve(repository)
   const targetExists = nodeKind(target) === 'directory'
   const formulaPath = join(target, FORMULA_DIRECTORY)
   const formulaKind = targetExists ? nodeKind(formulaPath) : 'missing'
-  const formulaDirectory: FormulaDirectoryState = formulaKind === 'directory' ? 'present' : formulaKind === 'missing' ? 'missing' : 'unsafe'
+  const formulaDirectory: FormulaDirectoryState =
+    formulaKind === 'directory' ? 'present' : formulaKind === 'missing' ? 'missing' : 'unsafe'
   const formulae =
     formulaDirectory === 'present'
       ? readdirSync(formulaPath, { withFileTypes: true })
@@ -84,9 +97,14 @@ export const createHomebrewTapSession = ({ mode, repository, publication }: Rubr
           }))
       : []
   const configPath = join(target, CONFIG_FILE)
-  const configEvidence = targetExists ? inspectConfig(configPath, nodeKind(configPath)) : { state: 'missing' as const, keys: [], content: null }
+  const configEvidence = targetExists
+    ? inspectConfig(configPath, nodeKind(configPath))
+    : { state: 'missing' as const, keys: [], content: null }
   const applicable =
-    configEvidence.state === 'present' || configEvidence.state === 'malformed' || configEvidence.state === 'unsafe' || formulaDirectory !== 'missing'
+    configEvidence.state === 'present' ||
+    configEvidence.state === 'malformed' ||
+    configEvidence.state === 'unsafe' ||
+    formulaDirectory !== 'missing'
   const readmePath = join(target, 'README.md')
   const readme = targetExists && nodeKind(readmePath) === 'file' ? readFileSync(readmePath, 'utf8') : null
   const originalConfig = configEvidence.content
@@ -106,7 +124,10 @@ export const createHomebrewTapSession = ({ mode, repository, publication }: Rubr
       applicable,
       config: configEvidence.state,
       configKeys: configEvidence.keys,
-      ...(mode === 'conform' && formulaDirectory === 'present' && configEvidence.state === 'absent' && originalConfig !== null
+      ...(mode === 'conform' &&
+      formulaDirectory === 'present' &&
+      configEvidence.state === 'absent' &&
+      originalConfig !== null
         ? {
             addMarker: () => {
               if (configDraft !== originalConfig) return
@@ -124,7 +145,9 @@ export const createHomebrewTapSession = ({ mode, repository, publication }: Rubr
     ],
     proposal: () => {
       const writes: ConformWrite[] =
-        configDraft !== null && originalConfig !== null && configDraft !== originalConfig ? [{ path: CONFIG_FILE, content: configDraft }] : []
+        configDraft !== null && originalConfig !== null && configDraft !== originalConfig
+          ? [{ path: CONFIG_FILE, content: configDraft }]
+          : []
       return { writes }
     }
   }

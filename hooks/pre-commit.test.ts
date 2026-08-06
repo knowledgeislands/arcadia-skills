@@ -36,7 +36,11 @@ test('the staged skill audit includes unchanged siblings, providers, and the loc
 
   write(repository, '.ki-config.toml', '["knowledgeislands/ki-agentic-harness:ki-skills"]\n')
   write(repository, 'README.md', '# Fixture\n')
-  write(repository, 'skills/governance/ki-consumer/SKILL.md', skill('ki-consumer', 'ki-shared-dependencies: [ki-skills:rubric]\n'))
+  write(
+    repository,
+    'skills/governance/ki-consumer/SKILL.md',
+    skill('ki-consumer', 'ki-shared-dependencies: [ki-skills:rubric]\n')
+  )
   write(repository, 'skills/governance/ki-sibling/SKILL.md', skill('ki-sibling'))
   write(repository, 'skills/keystone/ki-skills/SKILL.md', skill('ki-skills', 'ki-shared-modules: [rubric]\n'))
   write(repository, 'skills/governance/ki-specifications/SKILL.md', skill('ki-specifications'))

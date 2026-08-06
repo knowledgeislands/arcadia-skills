@@ -10,7 +10,8 @@ const inactive = (context: WebsiteContext): readonly AuditOutcome[] | null =>
       ? [
           {
             status: 'NOT_APPLICABLE',
-            message: 'ki-website not applicable: no ["knowledgeislands/ki-agentic-harness:ki-website"] declaration or Eleventy config structural marker'
+            message:
+              'ki-website not applicable: no ["knowledgeislands/ki-agentic-harness:ki-website"] declaration or Eleventy config structural marker'
           }
         ]
       : null
@@ -36,7 +37,11 @@ const mechanical = (
     level,
     remediation: options.conform
       ? { class: 'automatic' }
-      : { class: 'diagnostic', guidance: 'Inspect the affected website surface and apply the standard through a reviewable, site-owned change.' },
+      : {
+          class: 'diagnostic',
+          guidance:
+            'Inspect the affected website surface and apply the standard through a reviewable, site-owned change.'
+        },
     ...(options.overrideLevels ? { overrideLevels: options.overrideLevels } : {}),
     audit: { phase: 'INSPECT', run: audit },
     ...(options.conform ? { conform: { phase: 'NORMALISE' as const, run: options.conform } } : {})
@@ -52,7 +57,8 @@ const judgment = (code: string, title: string, description: string, prompt: stri
     scope: description,
     prompt,
     outcomes: ['conforming', 'revision required', 'design decision required'],
-    guidance: 'Revise the affected website surface to meet the standard, or record the owning design decision before accepting a deliberate exception.'
+    guidance:
+      'Revise the affected website surface to meet the standard, or record the owning design decision before accepting a deliberate exception.'
   }
 })
 
@@ -74,7 +80,14 @@ const configRule = (
     title,
     description,
     level,
-    (context) => inactive(context) ?? one(pass.test(context.config), passMessage, failMessage, context.cfgName ? context.siteAt(context.cfgName) : undefined)
+    (context) =>
+      inactive(context) ??
+      one(
+        pass.test(context.config),
+        passMessage,
+        failMessage,
+        context.cfgName ? context.siteAt(context.cfgName) : undefined
+      )
   )
 
 const script = (context: WebsiteContext, base: string): string | undefined =>
@@ -87,21 +100,32 @@ const WEB_1 = mechanical(
   'FAIL',
   (context) =>
     inactive(context) ??
-    one(Boolean(context.deps['@11ty/eleventy']), `@11ty/eleventy ${context.deps['@11ty/eleventy']}`, '@11ty/eleventy not a dependency', 'package.json')
+    one(
+      Boolean(context.deps['@11ty/eleventy']),
+      `@11ty/eleventy ${context.deps['@11ty/eleventy']}`,
+      '@11ty/eleventy not a dependency',
+      'package.json'
+    )
 )
 
-const WEB_2 = mechanical('WEB-2', 'Eleventy rather than SPA stack', 'Astro and Next dependencies are absent.', 'WARN', (context) => {
-  const stop = inactive(context)
-  if (stop) return stop
-  const found = ['astro', 'next'].filter((name) => context.deps[name])
-  return found.length
-    ? found.map((name) => ({
-        status: 'VIOLATION' as const,
-        message: `${name} present — this skill governs Eleventy sites, not ${name}`,
-        subject: 'package.json'
-      }))
-    : [{ status: 'PASS', message: 'no Astro or Next dependency', subject: 'package.json' }]
-})
+const WEB_2 = mechanical(
+  'WEB-2',
+  'Eleventy rather than SPA stack',
+  'Astro and Next dependencies are absent.',
+  'WARN',
+  (context) => {
+    const stop = inactive(context)
+    if (stop) return stop
+    const found = ['astro', 'next'].filter((name) => context.deps[name])
+    return found.length
+      ? found.map((name) => ({
+          status: 'VIOLATION' as const,
+          message: `${name} present — this skill governs Eleventy sites, not ${name}`,
+          subject: 'package.json'
+        }))
+      : [{ status: 'PASS', message: 'no Astro or Next dependency', subject: 'package.json' }]
+  }
+)
 
 const WEB_3 = mechanical(
   'WEB-3',
@@ -111,7 +135,9 @@ const WEB_3 = mechanical(
   (context) => {
     const stop = inactive(context)
     if (stop) return stop
-    const usesTsx = context.deps.tsx !== undefined || Object.values(context.scripts).some((value) => /tsx\/esm|--import\s+tsx/.test(value))
+    const usesTsx =
+      context.deps.tsx !== undefined ||
+      Object.values(context.scripts).some((value) => /tsx\/esm|--import\s+tsx/.test(value))
     return one(
       !usesTsx,
       'no tsx (TypeScript runs natively)',
@@ -143,7 +169,8 @@ const WEB_6 = mechanical(
   (context) => {
     const stop = inactive(context)
     if (stop) return stop
-    if (!context.cfgName) return [{ status: 'VIOLATION', message: 'no physical eleventy.config.{ts,js,mjs,cjs} at repo root or site/' }]
+    if (!context.cfgName)
+      return [{ status: 'VIOLATION', message: 'no physical eleventy.config.{ts,js,mjs,cjs} at repo root or site/' }]
     return context.siteRoot
       ? [{ status: 'PASS', message: `site/${context.cfgName} present`, subject: context.siteAt(context.cfgName) }]
       : [
@@ -181,12 +208,19 @@ const WEB_9 = mechanical(
     inactive(context) ??
     ['_data', '_includes/layouts', '_includes/partials', 'assets/css'].map((path) => ({
       status: context.isDir(context.siteAt('src', ...path.split('/'))) ? ('PASS' as const) : ('VIOLATION' as const),
-      message: context.isDir(context.siteAt('src', ...path.split('/'))) ? `src/${path}/ present` : `src/${path}/ missing`,
+      message: context.isDir(context.siteAt('src', ...path.split('/')))
+        ? `src/${path}/ present`
+        : `src/${path}/ missing`,
       subject: context.siteAt('src', ...path.split('/'))
     }))
 )
 
-const WEB_10 = judgment('WEB-10', 'Site script prefix', 'Every site script carries the `site:` prefix.', 'Do site scripts carry the required `site:` prefix?')
+const WEB_10 = judgment(
+  'WEB-10',
+  'Site script prefix',
+  'Every site script carries the `site:` prefix.',
+  'Do site scripts carry the required `site:` prefix?'
+)
 
 const WEB_11 = judgment(
   'WEB-11',
@@ -275,12 +309,16 @@ const WEB_19 = mechanical(
     return [
       {
         status: /@import\s+["']tailwindcss["']/.test(css) ? 'PASS' : 'VIOLATION',
-        message: /@import\s+["']tailwindcss["']/.test(css) ? 'main.css imports tailwindcss' : 'main.css does not import tailwindcss',
+        message: /@import\s+["']tailwindcss["']/.test(css)
+          ? 'main.css imports tailwindcss'
+          : 'main.css does not import tailwindcss',
         subject: path
       },
       {
         status: /@import\s+["']\.\/tokens\.css["']/.test(css) ? 'PASS' : 'VIOLATION',
-        message: /@import\s+["']\.\/tokens\.css["']/.test(css) ? 'main.css imports tokens.css' : 'main.css does not import tokens.css',
+        message: /@import\s+["']\.\/tokens\.css["']/.test(css)
+          ? 'main.css imports tokens.css'
+          : 'main.css does not import tokens.css',
         subject: path
       }
     ]
@@ -288,18 +326,24 @@ const WEB_19 = mechanical(
   { overrideLevels: ['FAIL'] }
 )
 
-const WEB_20 = mechanical('WEB-20', 'Token utility exposure', '`tokens.css` exposes variables through `@theme inline`.', 'WARN', (context) => {
-  const stop = inactive(context)
-  if (stop) return stop
-  const path = context.siteAt('src', 'assets', 'css', 'tokens.css')
-  const css = context.read(path)
-  return one(
-    /@theme\s+inline/.test(css),
-    'tokens.css exposes variables through @theme inline',
-    css ? 'tokens.css has no @theme inline' : 'tokens.css missing',
-    path
-  )
-})
+const WEB_20 = mechanical(
+  'WEB-20',
+  'Token utility exposure',
+  '`tokens.css` exposes variables through `@theme inline`.',
+  'WARN',
+  (context) => {
+    const stop = inactive(context)
+    if (stop) return stop
+    const path = context.siteAt('src', 'assets', 'css', 'tokens.css')
+    const css = context.read(path)
+    return one(
+      /@theme\s+inline/.test(css),
+      'tokens.css exposes variables through @theme inline',
+      css ? 'tokens.css has no @theme inline' : 'tokens.css missing',
+      path
+    )
+  }
+)
 
 const WEB_21 = judgment(
   'WEB-21',
@@ -343,7 +387,12 @@ const WEB_26 = mechanical(
   'WARN',
   (context) =>
     inactive(context) ??
-    one(context.seoMeta, 'seo-meta partial present', 'no seo-meta partial under _includes/partials/', context.siteAt('src', '_includes', 'partials'))
+    one(
+      context.seoMeta,
+      'seo-meta partial present',
+      'no seo-meta partial under _includes/partials/',
+      context.siteAt('src', '_includes', 'partials')
+    )
 )
 
 const WEB_27 = judgment(
@@ -418,7 +467,9 @@ const WEB_32 = mechanical(
   'Site cleanup script',
   '`ki:site:clean` is present.',
   'WARN',
-  (context) => inactive(context) ?? one(Boolean(script(context, 'clean')), 'clean script present', 'no ki:site:clean script', 'package.json')
+  (context) =>
+    inactive(context) ??
+    one(Boolean(script(context, 'clean')), 'clean script present', 'no ki:site:clean script', 'package.json')
 )
 
 const WEB_33 = mechanical(
@@ -481,12 +532,16 @@ const WEB_36 = mechanical(
     const content = context.read(path)
     if (!content) return [{ status: 'NOT_APPLICABLE', message: 'no site Wrangler configuration found' }]
     const directory = /"directory"\s*:\s*"([^"]+)"/.exec(content)?.[1]
-    if (directory === 'dist' || directory === './dist') return [{ status: 'PASS', message: `assets.directory = "${directory}"`, subject: path }]
+    if (directory === 'dist' || directory === './dist')
+      return [{ status: 'PASS', message: `assets.directory = "${directory}"`, subject: path }]
     return [
       {
         status: 'VIOLATION',
         ...(directory === '../dist' ? { level: 'FAIL' as const } : {}),
-        message: directory === undefined ? 'Wrangler configuration has no assets.directory' : `assets.directory = "${directory}"; expected "dist"`,
+        message:
+          directory === undefined
+            ? 'Wrangler configuration has no assets.directory'
+            : `assets.directory = "${directory}"; expected "dist"`,
         subject: path
       }
     ]
@@ -513,7 +568,14 @@ const WEB_39 = mechanical(
   'Parseable package manifest',
   '`package.json` is physical and parseable.',
   'FAIL',
-  (context) => inactive(context) ?? one(context.packageOk, 'package.json present and parseable', 'package.json missing, unsafe, or unparseable', 'package.json')
+  (context) =>
+    inactive(context) ??
+    one(
+      context.packageOk,
+      'package.json present and parseable',
+      'package.json missing, unsafe, or unparseable',
+      'package.json'
+    )
 )
 
 const WEB_40 = mechanical(
@@ -523,7 +585,12 @@ const WEB_40 = mechanical(
   'WARN',
   (context) =>
     inactive(context) ??
-    one(Boolean(context.deps['@tailwindcss/cli']), `@tailwindcss/cli ${context.deps['@tailwindcss/cli']}`, '@tailwindcss/cli not a dependency', 'package.json')
+    one(
+      Boolean(context.deps['@tailwindcss/cli']),
+      `@tailwindcss/cli ${context.deps['@tailwindcss/cli']}`,
+      '@tailwindcss/cli not a dependency',
+      'package.json'
+    )
 )
 
 const WEB_41 = mechanical(
@@ -542,25 +609,34 @@ const WEB_41 = mechanical(
   { conform: (context) => context.addOptIn?.() }
 )
 
-const WEB_42 = mechanical('WEB-42', 'Website opt-in validation', 'The marker table has no unknown keys.', 'WARN', (context) => {
-  const stop = inactive(context)
-  if (stop) return stop
-  if (!context.kiWebsiteTable) return [{ status: 'NOT_APPLICABLE', message: '["knowledgeislands/ki-agentic-harness:ki-website"] table is absent' }]
-  const keys = Object.keys(context.kiWebsiteTable)
-  return keys.length
-    ? keys.map((key) => ({
-        status: 'VIOLATION' as const,
-        message: `unknown key under ["knowledgeislands/ki-agentic-harness:ki-website"]: ${key}`,
-        subject: '.ki-config.toml'
-      }))
-    : [
-        {
-          status: 'PASS',
-          message: '["knowledgeislands/ki-agentic-harness:ki-website"] contains no unknown keys',
-          subject: '.ki-config.toml'
-        }
+const WEB_42 = mechanical(
+  'WEB-42',
+  'Website opt-in validation',
+  'The marker table has no unknown keys.',
+  'WARN',
+  (context) => {
+    const stop = inactive(context)
+    if (stop) return stop
+    if (!context.kiWebsiteTable)
+      return [
+        { status: 'NOT_APPLICABLE', message: '["knowledgeislands/ki-agentic-harness:ki-website"] table is absent' }
       ]
-})
+    const keys = Object.keys(context.kiWebsiteTable)
+    return keys.length
+      ? keys.map((key) => ({
+          status: 'VIOLATION' as const,
+          message: `unknown key under ["knowledgeislands/ki-agentic-harness:ki-website"]: ${key}`,
+          subject: '.ki-config.toml'
+        }))
+      : [
+          {
+            status: 'PASS',
+            message: '["knowledgeislands/ki-agentic-harness:ki-website"] contains no unknown keys',
+            subject: '.ki-config.toml'
+          }
+        ]
+  }
+)
 
 export const WEB: RubricFamily<WebsiteContext, WebsiteContext> = {
   code: 'WEB',

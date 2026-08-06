@@ -28,7 +28,9 @@ const servers = (path: string): ReadonlySet<string> | null => {
   if (!physicalFile(path)) return null
   try {
     const json = JSON.parse(readFileSync(path, 'utf8')) as { mcpServers?: unknown }
-    return json.mcpServers && typeof json.mcpServers === 'object' ? new Set(Object.keys(json.mcpServers as Record<string, unknown>)) : new Set()
+    return json.mcpServers && typeof json.mcpServers === 'object'
+      ? new Set(Object.keys(json.mcpServers as Record<string, unknown>))
+      : new Set()
   } catch {
     return null
   }
@@ -42,7 +44,9 @@ const expected = (path: string, client: string): ReadonlySet<string> => {
       Array.isArray(source?.mcpServers)
         ? source.mcpServers.flatMap((entry) => {
             const value = entry as { name?: unknown; clients?: unknown }
-            return typeof value?.name === 'string' && Array.isArray(value.clients) && value.clients.includes(client) ? [value.name] : []
+            return typeof value?.name === 'string' && Array.isArray(value.clients) && value.clients.includes(client)
+              ? [value.name]
+              : []
           })
         : []
     )
@@ -52,7 +56,8 @@ const expected = (path: string, client: string): ReadonlySet<string> => {
 }
 const enabled = (json: Record<string, unknown>) =>
   ((json.enabledPlugins ?? {}) as Record<string, unknown>)[`${COWORK_PLUGIN}@${COWORK_MARKETPLACE}`] === true &&
-  ((json.extraKnownMarketplaces ?? {}) as Record<string, { source?: { repo?: string } }>)[COWORK_MARKETPLACE]?.source?.repo === COWORK_REPO
+  ((json.extraKnownMarketplaces ?? {}) as Record<string, { source?: { repo?: string } }>)[COWORK_MARKETPLACE]?.source
+    ?.repo === COWORK_REPO
 const coworkFile = (path: string, home: string, mutable: boolean): CoworkFile => {
   const subject = relative(home, path)
   if (!physicalFile(path)) return { path, subject, status: 'unsafe', proposal: () => undefined }
@@ -68,7 +73,10 @@ const coworkFile = (path: string, home: string, mutable: boolean): CoworkFile =>
     if (on) return
     json = {
       ...json,
-      enabledPlugins: { ...((json.enabledPlugins as Record<string, unknown>) ?? {}), [`${COWORK_PLUGIN}@${COWORK_MARKETPLACE}`]: true },
+      enabledPlugins: {
+        ...((json.enabledPlugins as Record<string, unknown>) ?? {}),
+        [`${COWORK_PLUGIN}@${COWORK_MARKETPLACE}`]: true
+      },
       extraKnownMarketplaces: {
         ...((json.extraKnownMarketplaces as Record<string, unknown>) ?? {}),
         [COWORK_MARKETPLACE]: { source: { source: 'github', repo: COWORK_REPO } }
@@ -81,7 +89,10 @@ const coworkFile = (path: string, home: string, mutable: boolean): CoworkFile =>
     subject,
     status: on ? 'already' : 'pending',
     ...(mutable ? { enable } : {}),
-    proposal: () => (on && original !== JSON.stringify(json) ? { path: subject, content: `${JSON.stringify(json, null, 2)}\n` } : undefined)
+    proposal: () =>
+      on && original !== JSON.stringify(json)
+        ? { path: subject, content: `${JSON.stringify(json, null, 2)}\n` }
+        : undefined
   }
 }
 const find = (directory: string, depth = 0): string[] =>
@@ -89,12 +100,23 @@ const find = (directory: string, depth = 0): string[] =>
     ? []
     : readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
         const path = join(directory, entry.name)
-        return entry.name === 'cowork_settings.json' ? [path] : entry.isDirectory() && !entry.isSymbolicLink() ? find(path, depth + 1) : []
+        return entry.name === 'cowork_settings.json'
+          ? [path]
+          : entry.isDirectory() && !entry.isSymbolicLink()
+            ? find(path, depth + 1)
+            : []
       })
-export const createClaudeBindingSession = ({ mode, repository, userHome, publication }: RubricContextOptions): RubricSession<ClaudeBindingContext> => {
+export const createClaudeBindingSession = ({
+  mode,
+  repository,
+  userHome,
+  publication
+}: RubricContextOptions): RubricSession<ClaudeBindingContext> => {
   const home = resolve(userHome),
     base = join(home, 'Library', 'Application Support', 'Claude', 'local-agent-mode-sessions')
-  const source = process.env.KI_MCP_SOURCE ? resolve(process.env.KI_MCP_SOURCE) : join(home, '.config', 'ki', 'mcp-servers.yaml')
+  const source = process.env.KI_MCP_SOURCE
+    ? resolve(process.env.KI_MCP_SOURCE)
+    : join(home, '.config', 'ki', 'mcp-servers.yaml')
   const context: ClaudeBindingContext = {
     rubric: { publication },
     codePath: join(home, '.claude.json'),

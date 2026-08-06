@@ -1,6 +1,11 @@
 import { type Dirent, lstatSync, readdirSync, readFileSync } from 'node:fs'
 import { basename, join, relative, resolve } from 'node:path'
-import type { ConformWrite, RubricContextOptions, RubricPublicationContext, RubricSession } from '../../shared/rubric.ts'
+import type {
+  ConformWrite,
+  RubricContextOptions,
+  RubricPublicationContext,
+  RubricSession
+} from '../../shared/rubric.ts'
 
 export const HARNESS_PARTS = ['skills', 'subagents', 'mcp', 'evals', 'hooks'] as const
 export type HarnessPart = (typeof HARNESS_PARTS)[number]
@@ -77,7 +82,10 @@ const parseFrontmatterName = (content: string): string | null => {
   return nameMatch?.[1]?.trim() ?? null
 }
 
-const inspectSkills = (repository: string, state: RepositoryState): Pick<HarnessSkillsContext, 'skillsState' | 'skills' | 'unsafePaths'> => {
+const inspectSkills = (
+  repository: string,
+  state: RepositoryState
+): Pick<HarnessSkillsContext, 'skillsState' | 'skills' | 'unsafePaths'> => {
   const root = join(repository, 'skills')
   const skillsState = state === 'physical' ? pathState(root) : 'missing'
   if (skillsState !== 'directory') return { skillsState, skills: [], unsafePaths: [] }
@@ -127,15 +135,21 @@ const inspectSkills = (repository: string, state: RepositoryState): Pick<Harness
 
 const HARNESS_ID = 'knowledgeislands/ki-agentic-harness'
 const tableIdentity = (name: string): string => `${HARNESS_ID}:${name}`
-const hasTomlTable = (toml: string, name: string): boolean => new RegExp(`^\\["${tableIdentity(name)}"\\]`, 'm').test(toml)
+const hasTomlTable = (toml: string, name: string): boolean =>
+  new RegExp(`^\\["${tableIdentity(name)}"\\]`, 'm').test(toml)
 
-export const createHarnessSession = ({ mode, repository, publication }: RubricContextOptions): RubricSession<HarnessRubricContext> => {
+export const createHarnessSession = ({
+  mode,
+  repository,
+  publication
+}: RubricContextOptions): RubricSession<HarnessRubricContext> => {
   const root = resolve(repository)
   const state = repositoryState(root)
   const configPath = join(root, '.ki-config.toml')
   const rawConfigState = state === 'physical' ? pathState(configPath) : 'missing'
   let configContent: string | null = null
-  let configState: HarnessConfigContext['state'] = rawConfigState === 'missing' ? 'missing' : rawConfigState === 'file' ? 'physical' : 'unsafe'
+  let configState: HarnessConfigContext['state'] =
+    rawConfigState === 'missing' ? 'missing' : rawConfigState === 'file' ? 'physical' : 'unsafe'
   if (configState === 'physical') {
     try {
       configContent = readFileSync(configPath, 'utf8')

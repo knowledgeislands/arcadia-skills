@@ -1,6 +1,11 @@
 import { existsSync, lstatSync, readdirSync, readFileSync } from 'node:fs'
 import { isAbsolute, join, relative, resolve } from 'node:path'
-import type { ConformWrite, RubricContextOptions, RubricPublicationContext, RubricSession } from '../../shared/rubric.ts'
+import type {
+  ConformWrite,
+  RubricContextOptions,
+  RubricPublicationContext,
+  RubricSession
+} from '../../shared/rubric.ts'
 
 const DEFAULT_ACTIVITIES_DIRECTORY = 'Admin/Operations/Activities'
 const ACTIVITIES_INDEX = 'Activities.md'
@@ -45,9 +50,11 @@ export type ActivitiesRubricContext = {
   readonly activities: ActivitiesContext
 }
 
-const isDirectory = (path: string): boolean => existsSync(path) && !lstatSync(path).isSymbolicLink() && lstatSync(path).isDirectory()
+const isDirectory = (path: string): boolean =>
+  existsSync(path) && !lstatSync(path).isSymbolicLink() && lstatSync(path).isDirectory()
 
-const isFile = (path: string): boolean => existsSync(path) && !lstatSync(path).isSymbolicLink() && lstatSync(path).isFile()
+const isFile = (path: string): boolean =>
+  existsSync(path) && !lstatSync(path).isSymbolicLink() && lstatSync(path).isFile()
 
 const containedPath = (root: string, path: string): string | undefined => {
   const value = relative(root, path)
@@ -109,7 +116,12 @@ const indexEntry = (note: ActivityNote): string => {
   return `- [${note.title}](${target})`
 }
 
-export const createActivitiesSession = ({ mode, repository, configuration, publication }: RubricContextOptions): RubricSession<ActivitiesRubricContext> => {
+export const createActivitiesSession = ({
+  mode,
+  repository,
+  configuration,
+  publication
+}: RubricContextOptions): RubricSession<ActivitiesRubricContext> => {
   const root = resolve(repository)
   const repositoryAvailable = isDirectory(root)
   const activitiesDirectory = configuredString(configuration, 'activities_dir') ?? DEFAULT_ACTIVITIES_DIRECTORY
@@ -120,7 +132,9 @@ export const createActivitiesSession = ({ mode, repository, configuration, publi
   const activitiesAvailable = repositoryAvailable && pathSafe && safeDirectory(root, activitiesPath)
   const unsafeCollectionEntry = collectionEntryExists && !activitiesAvailable
   const indexPath = join(activitiesPath, ACTIVITIES_INDEX)
-  const indexRelative = activitiesRelative ? join(activitiesRelative, ACTIVITIES_INDEX) : join(activitiesDirectory, ACTIVITIES_INDEX)
+  const indexRelative = activitiesRelative
+    ? join(activitiesRelative, ACTIVITIES_INDEX)
+    : join(activitiesDirectory, ACTIVITIES_INDEX)
   const indexEntryExists = pathSafe && existsSync(indexPath)
   const indexExists = activitiesAvailable && isFile(indexPath)
   const unsafeIndexEntry = indexEntryExists && !indexExists
@@ -166,7 +180,8 @@ export const createActivitiesSession = ({ mode, repository, configuration, publi
         ? {
             harness: {
               path: harness,
-              hasSkill: (name: string) => /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(name) && isFile(join(harness, 'skills', name, 'SKILL.md'))
+              hasSkill: (name: string) =>
+                /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(name) && isFile(join(harness, 'skills', name, 'SKILL.md'))
             }
           }
         : {}),

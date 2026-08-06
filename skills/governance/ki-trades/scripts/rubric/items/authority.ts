@@ -13,7 +13,8 @@ const AUTH_1: RubricItem<OutcomeContext> = {
     level: 'FAIL',
     remediation: {
       class: 'diagnostic',
-      guidance: 'Correct only the locally owned record or route; do not alter a peer repository or the immutable sender projection.'
+      guidance:
+        'Correct only the locally owned record or route; do not alter a peer repository or the immutable sender projection.'
     },
     audit: { phase: 'INSPECT', run: ({ outcomes }) => outcomes }
   }
@@ -22,7 +23,8 @@ const AUTH_1: RubricItem<OutcomeContext> = {
 export const AUTH: RubricFamily<TradesRubricContext, OutcomeContext> = {
   code: 'AUTH',
   title: 'Write authority',
-  description: 'A trade remains a local copy protocol with an immutable raw sender projection and receiver-only local fields.',
+  description:
+    'A trade remains a local copy protocol with an immutable raw sender projection and receiver-only local fields.',
   standard: SOURCE,
   selectContext: (context) => context.authority,
   items: [AUTH_1]

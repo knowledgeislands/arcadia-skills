@@ -56,8 +56,12 @@ describe('ki-kb-live-artifacts session', () => {
     const original = readFileSync(source, 'utf8')
     const session = createLiveArtifactsSession(options(root, 'conform'))
     const context = rootContext(session)
-    LA_STRUCTURE.items.find((item) => item.code === 'LA-S-1')?.mechanical?.conform?.run(LA_STRUCTURE.selectContext(context))
-    LA_FRONTMATTER.items.find((item) => item.code === 'LA-F-2')?.mechanical?.conform?.run(LA_FRONTMATTER.selectContext(context))
+    LA_STRUCTURE.items
+      .find((item) => item.code === 'LA-S-1')
+      ?.mechanical?.conform?.run(LA_STRUCTURE.selectContext(context))
+    LA_FRONTMATTER.items
+      .find((item) => item.code === 'LA-F-2')
+      ?.mechanical?.conform?.run(LA_FRONTMATTER.selectContext(context))
 
     const proposal = session.proposal()
     expect(proposal.writes.map((write) => write.path)).toEqual([
@@ -122,9 +126,15 @@ describe('ki-kb-live-artifacts session', () => {
 
   test('honours a safe configured artifacts directory', () => {
     const root = repository()
-    writeFileSync(join(root, '.ki-config.toml'), '["knowledgeislands/ki-agentic-harness:ki-kb-live-artifacts"]\nartifacts_dir = "Operational/Boards"\n')
+    writeFileSync(
+      join(root, '.ki-config.toml'),
+      '["knowledgeislands/ki-agentic-harness:ki-kb-live-artifacts"]\nartifacts_dir = "Operational/Boards"\n'
+    )
     mkdirSync(join(root, 'Operational', 'Boards'), { recursive: true })
-    writeFileSync(join(root, 'Operational', 'Boards', 'Queue.md'), '---\nstatus: active\nrenders: html\nauthor: Ops\n---\n')
+    writeFileSync(
+      join(root, 'Operational', 'Boards', 'Queue.md'),
+      '---\nstatus: active\nrenders: html\nauthor: Ops\n---\n'
+    )
     const session = createLiveArtifactsSession(options(root, 'conform'))
     const context = rootContext(session)
     context.structure.ensureIndex?.()

@@ -10,7 +10,11 @@ const GATE_1: RubricItem<GateRubricContext> = {
   sources: [SOURCE],
   mechanical: {
     level: 'WARN',
-    remediation: { class: 'diagnostic', guidance: 'Add the appropriate canonical Enactment Process anchor only after confirming the base carries proposals and the always-loaded instruction surface.' },
+    remediation: {
+      class: 'diagnostic',
+      guidance:
+        'Add the appropriate canonical Enactment Process anchor only after confirming the base carries proposals and the always-loaded instruction surface.'
+    },
     audit: { phase: 'INSPECT', run: (context) => auditEvidence(context.anchor, 'WARN') }
   }
 }

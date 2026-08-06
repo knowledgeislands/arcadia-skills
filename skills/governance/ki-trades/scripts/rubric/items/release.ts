@@ -13,7 +13,8 @@ const RELEASE_1: RubricItem<OutcomeContext> = {
     level: 'FAIL',
     remediation: {
       class: 'guarded',
-      guidance: 'Observe the sender-selected lifecycle evidence and make no release or pruning change until the responsible repository confirms it.'
+      guidance:
+        'Observe the sender-selected lifecycle evidence and make no release or pruning change until the responsible repository confirms it.'
     },
     audit: { phase: 'INSPECT', run: ({ outcomes }) => outcomes }
   },
@@ -22,14 +23,16 @@ const RELEASE_1: RubricItem<OutcomeContext> = {
     prompt:
       'Assess the observable receipt, terminal decision, and completion evidence against the sender-selected observation policy before any sender release or receiver pruning action.',
     outcomes: ['conforming', 'wait for evidence', 'eligible for human action'],
-    guidance: 'Leave the record in place when evidence is incomplete; when eligible, the owning sender or receiver may make its own confirmed lifecycle change.'
+    guidance:
+      'Leave the record in place when evidence is incomplete; when eligible, the owning sender or receiver may make its own confirmed lifecycle change.'
   }
 }
 
 export const RELEASE: RubricFamily<TradesRubricContext, OutcomeContext> = {
   code: 'RELEASE',
   title: 'Release and pruning',
-  description: 'Absence is an observable release signal only after the sender-selected receipt, decision, or completion condition is satisfied.',
+  description:
+    'Absence is an observable release signal only after the sender-selected receipt, decision, or completion condition is satisfied.',
   standard: SOURCE,
   selectContext: (context) => context.release,
   items: [RELEASE_1]

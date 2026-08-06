@@ -2,7 +2,11 @@ import type { RubricFamily, RubricItem } from '../../shared/rubric.ts'
 import type { AgentFileContext, AgentsRubricContext } from '../contexts/agents.ts'
 
 const STANDARD = 'standards-subagent-definitions.md'
-const REVIEW = { scope: 'The target agent prompt and any volatile facts it contains.', outcomes: ['conforming', 'gap', 'exclusion'] as const, guidance: 'Replace volatile facts with runtime grounding or record a named gap or explicit exclusion.' }
+const REVIEW = {
+  scope: 'The target agent prompt and any volatile facts it contains.',
+  outcomes: ['conforming', 'gap', 'exclusion'] as const,
+  guidance: 'Replace volatile facts with runtime grounding or record a named gap or explicit exclusion.'
+}
 
 const LONGEVITY_ITEMS = [
   {

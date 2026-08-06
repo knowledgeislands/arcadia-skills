@@ -45,9 +45,18 @@ const validPacket = `## Delegation
 
 describe('ki-delegation session', () => {
   test('accepts a complete opted-in packet', () => {
-    const session = createDelegationSession({ mode: 'audit', repository: repository(validPacket), userHome: '', configuration: {} })
+    const session = createDelegationSession({
+      mode: 'audit',
+      repository: repository(validPacket),
+      userHome: '',
+      configuration: {}
+    })
     expect(session.subjects[0]?.context().packets.outcomes).toEqual([
-      { status: 'PASS', message: 'Delegation packet has the required durable brief structure.', subject: 'docs/roadmap/KI-TEST-GOV-001-packet.md' }
+      {
+        status: 'PASS',
+        message: 'Delegation packet has the required durable brief structure.',
+        subject: 'docs/roadmap/KI-TEST-GOV-001-packet.md'
+      }
     ])
   })
 })

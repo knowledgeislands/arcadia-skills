@@ -29,7 +29,10 @@ const LA_S_2: RubricItem<LiveArtifactsStructureContext> = {
   sources: [SOURCE],
   mechanical: {
     level: 'WARN',
-    remediation: { class: 'diagnostic', guidance: 'Render or correct the artifact source through the responsible owner.' },
+    remediation: {
+      class: 'diagnostic',
+      guidance: 'Render or correct the artifact source through the responsible owner.'
+    },
     audit: { phase: 'INSPECT', run: (context) => context.publishedSources }
   }
 }
@@ -41,7 +44,10 @@ const LA_S_3: RubricItem<LiveArtifactsStructureContext> = {
   sources: [SOURCE],
   mechanical: {
     level: 'WARN',
-    remediation: { class: 'diagnostic', guidance: 'Restore or retire the orphaned render through the responsible owner.' },
+    remediation: {
+      class: 'diagnostic',
+      guidance: 'Restore or retire the orphaned render through the responsible owner.'
+    },
     audit: { phase: 'INSPECT', run: (context) => context.orphanedRenders }
   }
 }
@@ -63,7 +69,12 @@ const LA_J_1: RubricItem<LiveArtifactsStructureContext> = {
   title: 'useful index descriptions',
   description: 'The index accurately lists active artifacts with useful one-line descriptions.',
   sources: [SOURCE],
-  judgment: { scope: 'The live-artifact index and every active artifact.', prompt: 'Does the index accurately list every active artifact with a useful one-line description?', outcomes: ['conforming', 'gap', 'exclusion'], guidance: 'Correct the index, record a named gap, or record an explicit justified exclusion.' }
+  judgment: {
+    scope: 'The live-artifact index and every active artifact.',
+    prompt: 'Does the index accurately list every active artifact with a useful one-line description?',
+    outcomes: ['conforming', 'gap', 'exclusion'],
+    guidance: 'Correct the index, record a named gap, or record an explicit justified exclusion.'
+  }
 }
 
 const LA_J_2: RubricItem<LiveArtifactsStructureContext> = {
@@ -71,7 +82,12 @@ const LA_J_2: RubricItem<LiveArtifactsStructureContext> = {
   title: 'Markdown authority',
   description: 'Markdown is the authoritative source and no content exists only in HTML.',
   sources: [SOURCE],
-  judgment: { scope: 'Every Markdown live artifact and its rendered representation.', prompt: 'Is each Markdown artifact authoritative, with no essential content present only in its HTML render?', outcomes: ['conforming', 'gap', 'exclusion'], guidance: 'Restore Markdown authority, record a named gap, or record an explicit justified exclusion.' }
+  judgment: {
+    scope: 'Every Markdown live artifact and its rendered representation.',
+    prompt: 'Is each Markdown artifact authoritative, with no essential content present only in its HTML render?',
+    outcomes: ['conforming', 'gap', 'exclusion'],
+    guidance: 'Restore Markdown authority, record a named gap, or record an explicit justified exclusion.'
+  }
 }
 
 const LA_J_3: RubricItem<LiveArtifactsStructureContext> = {
@@ -79,7 +95,12 @@ const LA_J_3: RubricItem<LiveArtifactsStructureContext> = {
   title: 'archive rationale',
   description: 'Archived artifacts retain when-and-why context rather than disappearing silently.',
   sources: [SOURCE],
-  judgment: { scope: 'Every archived live artifact and its retained rationale.', prompt: 'Do archived artifacts retain a clear when-and-why rationale rather than disappearing silently?', outcomes: ['conforming', 'gap', 'exclusion'], guidance: 'Add the retained rationale, record a named gap, or record an explicit justified exclusion.' }
+  judgment: {
+    scope: 'Every archived live artifact and its retained rationale.',
+    prompt: 'Do archived artifacts retain a clear when-and-why rationale rather than disappearing silently?',
+    outcomes: ['conforming', 'gap', 'exclusion'],
+    guidance: 'Add the retained rationale, record a named gap, or record an explicit justified exclusion.'
+  }
 }
 
 const LA_J_4: RubricItem<LiveArtifactsStructureContext> = {
@@ -87,7 +108,13 @@ const LA_J_4: RubricItem<LiveArtifactsStructureContext> = {
   title: 'stable artifact names',
   description: 'Artifact names are descriptive and stable for published links.',
   sources: [SOURCE],
-  judgment: { scope: 'Every active and archived artifact filename and its published links.', prompt: 'Are artifact names descriptive and stable enough to preserve published links?', outcomes: ['conforming', 'gap', 'exclusion'], guidance: 'Rename only with responsible-owner approval and preserve links; otherwise record a gap or explicit exclusion.' }
+  judgment: {
+    scope: 'Every active and archived artifact filename and its published links.',
+    prompt: 'Are artifact names descriptive and stable enough to preserve published links?',
+    outcomes: ['conforming', 'gap', 'exclusion'],
+    guidance:
+      'Rename only with responsible-owner approval and preserve links; otherwise record a gap or explicit exclusion.'
+  }
 }
 
 export const LA_STRUCTURE: RubricFamily<LiveArtifactsRubricContext, LiveArtifactsStructureContext> = {

@@ -8,7 +8,10 @@ const CHECKS_1: RubricItem<EvidenceRubricContext> = {
   sources: ['standards-configuration.md'],
   mechanical: {
     level: 'WARN',
-    remediation: { class: 'diagnostic', guidance: 'Remove the unsupported override or select a supported concern, then rerun the audit.' },
+    remediation: {
+      class: 'diagnostic',
+      guidance: 'Remove the unsupported override or select a supported concern, then rerun the audit.'
+    },
     audit: { phase: 'INSPECT', run: (context) => auditEvidence(context.evidence, 'WARN') }
   }
 }

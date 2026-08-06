@@ -3,7 +3,12 @@ import { outcomesFor, type RoadmapAuditContext, type RoadmapRubricContext } from
 
 const SOURCE = 'standards-work-item-format.md'
 
-const mechanical = (code: string, title: string, description: string, passMessage: string): RubricItem<RoadmapAuditContext> => ({
+const mechanical = (
+  code: string,
+  title: string,
+  description: string,
+  passMessage: string
+): RubricItem<RoadmapAuditContext> => ({
   code,
   title,
   description,
@@ -12,7 +17,8 @@ const mechanical = (code: string, title: string, description: string, passMessag
     level: 'FAIL',
     remediation: {
       class: 'diagnostic',
-      guidance: 'Restore the required in-place execution sections without changing the item priority, acceptance, or lifecycle decision.'
+      guidance:
+        'Restore the required in-place execution sections without changing the item priority, acceptance, or lifecycle decision.'
     },
     audit: { phase: 'INSPECT', run: (context) => outcomesFor(context, code, passMessage) }
   }
@@ -36,7 +42,8 @@ const EXEC_2: RubricItem<RoadmapAuditContext> = {
     prompt:
       'Review whether each work item has useful detail for its stage, including topic-oriented Discussion and concrete, checkable execution detail when immediate.',
     outcomes: ['conforming', 'gap', 'exclusion'],
-    guidance: 'Add or refine only the detail supported by the work; record a gap or explicit exclusion where evidence is insufficient.'
+    guidance:
+      'Add or refine only the detail supported by the work; record a gap or explicit exclusion where evidence is insufficient.'
   }
 }
 
@@ -50,7 +57,8 @@ const EXEC_3: RubricItem<RoadmapAuditContext> = {
     scope: 'The declared lifecycle status and retained evidence of every work item.',
     prompt: 'Review whether work-item status honestly reflects its lifecycle gate or retained completion record.',
     outcomes: ['conforming', 'gap', 'exclusion'],
-    guidance: 'Select or confirm lifecycle transitions with the owning authority; otherwise record a gap or explicit exclusion.'
+    guidance:
+      'Select or confirm lifecycle transitions with the owning authority; otherwise record a gap or explicit exclusion.'
   }
 }
 

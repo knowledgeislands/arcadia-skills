@@ -19,29 +19,49 @@ const sectionHasContent = (section: string, heading: string): boolean => {
 const workerSections = (section: string): string[] =>
   [...section.matchAll(/^### Worker:\s+.+$([\s\S]*?)(?=^###\s|^##\s|$(?![\s\S]))/gm)].map((match) => match[1] ?? '')
 
-const workerHasField = (worker: string, field: string): boolean => new RegExp(`^- \\*\\*${field}:\\*\\*\\s*\\S`, 'm').test(worker)
+const workerHasField = (worker: string, field: string): boolean =>
+  new RegExp(`^- \\*\\*${field}:\\*\\*\\s*\\S`, 'm').test(worker)
 
 const packetOutcomes = (subject: string, section: string): AuditOutcome[] => {
-  if (!/^### Rounds\s*$/m.test(section)) return [{ status: 'NOT_APPLICABLE', message: 'The delegation note is not an opted-in delegation packet.', subject }]
+  if (!/^### Rounds\s*$/m.test(section))
+    return [{ status: 'NOT_APPLICABLE', message: 'The delegation note is not an opted-in delegation packet.', subject }]
   const violations: AuditOutcome[] = []
   for (const heading of REQUIRED_SECTIONS)
     if (!sectionHasContent(section, heading) && !(heading === 'Escalate' && sectionHasContent(section, 'Escalation')))
-      violations.push({ status: 'VIOLATION', message: `Delegation packet requires a non-empty \`${heading}\` section.`, subject })
+      violations.push({
+        status: 'VIOLATION',
+        message: `Delegation packet requires a non-empty \`${heading}\` section.`,
+        subject
+      })
   const workers = workerSections(section)
-  if (!workers.length) violations.push({ status: 'VIOLATION', message: 'Delegation packet requires at least one `### Worker: <name>` subsection.', subject })
+  if (!workers.length)
+    violations.push({
+      status: 'VIOLATION',
+      message: 'Delegation packet requires at least one `### Worker: <name>` subsection.',
+      subject
+    })
   for (const worker of workers)
     for (const field of REQUIRED_WORKER_FIELDS)
       if (!workerHasField(worker, field))
-        violations.push({ status: 'VIOLATION', message: `Delegation worker is missing a non-empty \`${field}\` field.`, subject })
-  return violations.length ? violations : [{ status: 'PASS', message: 'Delegation packet has the required durable brief structure.', subject }]
+        violations.push({
+          status: 'VIOLATION',
+          message: `Delegation worker is missing a non-empty \`${field}\` field.`,
+          subject
+        })
+  return violations.length
+    ? violations
+    : [{ status: 'PASS', message: 'Delegation packet has the required durable brief structure.', subject }]
 }
 
-export const createDelegationSession = ({ repository }: RubricContextOptions): RubricSession<DelegationRubricContext> => {
+export const createDelegationSession = ({
+  repository
+}: RubricContextOptions): RubricSession<DelegationRubricContext> => {
   const root = resolve(repository)
   const roadmap = join(root, 'docs', 'roadmap')
   const outcomes: AuditOutcome[] = []
 
-  if (!existsSync(roadmap)) outcomes.push({ status: 'NOT_APPLICABLE', message: 'No roadmap directory is present.', subject: 'docs/roadmap' })
+  if (!existsSync(roadmap))
+    outcomes.push({ status: 'NOT_APPLICABLE', message: 'No roadmap directory is present.', subject: 'docs/roadmap' })
   else
     for (const entry of readdirSync(roadmap, { withFileTypes: true })) {
       if (!entry.isFile() || !entry.name.endsWith('.md')) continue
@@ -53,7 +73,8 @@ export const createDelegationSession = ({ repository }: RubricContextOptions): R
       outcomes.push(...packetOutcomes(subject, section))
     }
 
-  if (!outcomes.length) outcomes.push({ status: 'NOT_APPLICABLE', message: 'No delegation packets are present.', subject: 'docs/roadmap' })
+  if (!outcomes.length)
+    outcomes.push({ status: 'NOT_APPLICABLE', message: 'No delegation packets are present.', subject: 'docs/roadmap' })
   const context: DelegationRubricContext = {
     packets: {
       outcomes

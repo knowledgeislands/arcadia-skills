@@ -10,13 +10,13 @@ The canonical home for Knowledge Islands [Agent Skills](https://agentskills.io/)
 
 ## Five-part bundle status
 
-| Part        | Directory    | Status                                                                                                                |
-| ----------- | ------------ | --------------------------------------------------------------------------------------------------------------------- |
-| Skills      | `skills/`    | **Populated** — the governance `ki-*` skills                                                                          |
-| Subagents   | `subagents/` | **Populated**† — governance sub-agents in `subagents/governance/`                                                     |
-| MCP servers | `mcp/`       | **Shelf** — scaffolded, no servers yet                                                                                |
-| Evals       | `evals/`     | **Populated (partial)** — scenarios + result matrices in `evals/`                                                     |
-| Hooks       | `hooks/`     | **Populated (partial)**† — three global Claude Code hooks (plan lifecycle + stale Git-lock guard) + payload installer |
+| Part | Directory | Status |
+| --- | --- | --- |
+| Skills | `skills/` | **Populated** — the governance `ki-*` skills |
+| Subagents | `subagents/` | **Populated**† — governance sub-agents in `subagents/governance/` |
+| MCP servers | `mcp/` | **Shelf** — scaffolded, no servers yet |
+| Evals | `evals/` | **Populated (partial)** — scenarios + result matrices in `evals/` |
+| Hooks | `hooks/` | **Populated (partial)**† — three global Claude Code hooks (plan lifecycle + stale Git-lock guard) + payload installer |
 
 † Agents and Hooks are Claude-Code-specific today; multi-runtime support (Claude Code + OpenAI Codex CLI) is a targeted future effort — see `SDR-KI-HARNESS-002-runtime-portable-contracts-and-executor-positioning.md` and the [runtime parity scorecard](docs/decisions/references/runtime-parity-scorecard.md).
 

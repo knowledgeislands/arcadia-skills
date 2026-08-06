@@ -63,10 +63,10 @@ Append the outcome to the approved authorisation; do not create a parallel track
 ```md
 ## Run ledger
 
-| Item               | Start | Result          | Evidence                                             | Next human action                             |
-| ------------------ | ----- | --------------- | ---------------------------------------------------- | --------------------------------------------- |
-| KI-HARNESS-FND-001 | ready | awaiting-review | `<baseline>` → `<commit>`; stated checks pass        | Review the delivery packet                    |
-| KI-HARNESS-FND-002 | ready | parked          | FND-001 exposed a public API choice outside the plan | Decide the API contract, then re-plan FND-002 |
+| Item | Start | Result | Evidence | Next human action |
+| --- | --- | --- | --- | --- |
+| KI-HARNESS-FND-001 | ready | awaiting-review | `<baseline>` → `<commit>`; stated checks pass | Review the delivery packet |
+| KI-HARNESS-FND-002 | ready | parked | FND-001 exposed a public API choice outside the plan | Decide the API contract, then re-plan FND-002 |
 
 ## Batch recap
 

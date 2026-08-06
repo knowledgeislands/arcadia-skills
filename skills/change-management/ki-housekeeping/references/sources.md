@@ -2,9 +2,9 @@
 
 **Refresh:** canonical · on-change
 
-| Source                                  | Last reviewed | Governs                                                            |
-| --------------------------------------- | ------------- | ------------------------------------------------------------------ |
-| Knowledge Islands forward-work practice | 2026-08-05    | Template cadence, due-run spawning, and shared lifecycle alignment |
+| Source | Last reviewed | Governs |
+| --- | --- | --- |
+| Knowledge Islands forward-work practice | 2026-08-05 | Template cadence, due-run spawning, and shared lifecycle alignment |
 
 ## Last review
 

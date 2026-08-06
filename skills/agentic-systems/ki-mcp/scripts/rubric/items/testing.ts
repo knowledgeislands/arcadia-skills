@@ -9,15 +9,20 @@ const outcome = (status: AuditOutcome['status'], message: string, subject?: stri
 const TEST_1: RubricItem<McpTestingContext> = {
   code: 'TEST-1',
   title: 'MCP coverage exclusions',
-  description: 'When a Vitest config exists, coverage excludes mcp-server/index.ts, tools wiring, utils/annotations.ts, and src/generated/.',
+  description:
+    'When a Vitest config exists, coverage excludes mcp-server/index.ts, tools wiring, utils/annotations.ts, and src/generated/.',
   sources: [STANDARD],
   mechanical: {
     level: 'WARN',
-    remediation: { class: 'diagnostic', guidance: 'Adjust the Vitest coverage exclusions using the repository test-policy decision.' },
+    remediation: {
+      class: 'diagnostic',
+      guidance: 'Adjust the Vitest coverage exclusions using the repository test-policy decision.'
+    },
     audit: {
       phase: 'INSPECT',
       run: (context) => {
-        if (!context.vitestFile || context.source === null) return outcome('NOT_APPLICABLE', 'No regular Vitest configuration is present.')
+        if (!context.vitestFile || context.source === null)
+          return outcome('NOT_APPLICABLE', 'No regular Vitest configuration is present.')
         return [
           ['mcp-server/index.ts', /mcp-server\/index\.ts/],
           ['tools/**/index.ts', /tools\/\*\*(?:\/index\.ts)?|tools\/\*\/index\.ts/],
@@ -25,7 +30,9 @@ const TEST_1: RubricItem<McpTestingContext> = {
           ['src/generated/**', /generated\/\*\*/]
         ].map(([label, pattern]) => ({
           status: (pattern as RegExp).test(context.source as string) ? ('PASS' as const) : ('VIOLATION' as const),
-          message: (pattern as RegExp).test(context.source as string) ? `Coverage excludes ${label}.` : `Coverage should exclude ${label}.`,
+          message: (pattern as RegExp).test(context.source as string)
+            ? `Coverage excludes ${label}.`
+            : `Coverage should exclude ${label}.`,
           subject: context.vitestFile as string
         }))
       }

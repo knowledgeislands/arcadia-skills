@@ -53,15 +53,15 @@ Re-run `ki repo audit --repo .` immediately. Do not retain both names or add an 
 
 Use these replacements only once the preconditions hold:
 
-| Legacy role                          | Native or retained role                                                                               |
-| ------------------------------------ | ----------------------------------------------------------------------------------------------------- |
-| `.ki/bin` or `.ki-meta/bin` audit    | `ki repo audit --repo .`                                                                              |
-| Aggregate conform                    | `ki repo conform --repo .`                                                                            |
-| Aggregate rubric education           | `ki repo educate --repo .`                                                                            |
-| Per-skill package alias              | The corresponding `ki repo` command with `--skill`, including declared dependencies                   |
-| CI governance gate                   | Install verified `ki`, then run `ki repo audit --repo .`                                              |
-| Pre-commit staged snapshot           | Native repository audit against the prepared snapshot, after its staged-snapshot semantics are proven |
-| Graph, HELP, guide, or build fixture | Retain or rehome as a development/build concern; it is not repository-maintenance execution           |
+| Legacy role | Native or retained role |
+| --- | --- |
+| `.ki/bin` or `.ki-meta/bin` audit | `ki repo audit --repo .` |
+| Aggregate conform | `ki repo conform --repo .` |
+| Aggregate rubric education | `ki repo educate --repo .` |
+| Per-skill package alias | The corresponding `ki repo` command with `--skill`, including declared dependencies |
+| CI governance gate | Install verified `ki`, then run `ki repo audit --repo .` |
+| Pre-commit staged snapshot | Native repository audit against the prepared snapshot, after its staged-snapshot semantics are proven |
+| Graph, HELP, guide, or build fixture | Retain or rehome as a development/build concern; it is not repository-maintenance execution |
 
 `ki repo educate` renders a declared rubric catalogue.
 

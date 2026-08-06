@@ -15,7 +15,13 @@ const CONFIG_1: RubricItem<HarnessConfigContext> = {
       phase: 'INSPECT',
       run: ({ state, hasHarnessTable }) => {
         if (state === 'missing')
-          return [{ status: 'NOT_APPLICABLE', message: 'KI configuration is absent; LAY-5 owns its presence.', subject: '.ki-config.toml' }]
+          return [
+            {
+              status: 'NOT_APPLICABLE',
+              message: 'KI configuration is absent; LAY-5 owns its presence.',
+              subject: '.ki-config.toml'
+            }
+          ]
         if (state === 'unsafe')
           return [
             {
@@ -55,11 +61,17 @@ const CONFIG_2: RubricItem<HarnessConfigContext> = {
   sources: STANDARD,
   mechanical: {
     level: 'WARN',
-    remediation: { class: 'diagnostic', guidance: 'Declare the ki-repo governance root in the physical configuration, then rerun the audit.' },
+    remediation: {
+      class: 'diagnostic',
+      guidance: 'Declare the ki-repo governance root in the physical configuration, then rerun the audit.'
+    },
     audit: {
       phase: 'INSPECT',
       run: ({ state, hasRepositoryTable }) => {
-        if (state !== 'physical') return [{ status: 'NOT_APPLICABLE', message: 'KI configuration is absent or unsafe.', subject: '.ki-config.toml' }]
+        if (state !== 'physical')
+          return [
+            { status: 'NOT_APPLICABLE', message: 'KI configuration is absent or unsafe.', subject: '.ki-config.toml' }
+          ]
         return [
           hasRepositoryTable
             ? {

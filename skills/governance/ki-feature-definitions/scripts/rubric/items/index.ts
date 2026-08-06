@@ -1,5 +1,8 @@
 import type { SkillRubricDefinition } from '../../shared/rubric.ts'
-import { createFeatureDefinitionsSession, type FeatureDefinitionsRubricContext } from '../contexts/feature-definitions.ts'
+import {
+  createFeatureDefinitionsSession,
+  type FeatureDefinitionsRubricContext
+} from '../contexts/feature-definitions.ts'
 import { AREA } from './area.ts'
 import { AREA_FIT } from './area-fit.ts'
 import { AS_BUILT } from './as-built.ts'

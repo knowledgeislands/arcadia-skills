@@ -29,15 +29,18 @@ export const KNIP: RubricFamily<EngineeringRubricContext, KnipRubricContext> = {
         level: 'FAIL',
         remediation: {
           class: 'guarded',
-          guidance: 'Review each reported unused symbol or dependency and make the intended source or configuration change, then rerun Knip.'
+          guidance:
+            'Review each reported unused symbol or dependency and make the intended source or configuration change, then rerun Knip.'
         },
         audit: { phase: 'INSPECT', run: (context) => auditEvidence(context.knip2, 'FAIL') }
       },
       judgment: {
         scope: 'Every unused-code or dependency finding reported by Knip.',
-        prompt: 'Is each finding genuinely unused, or does it represent a runtime, generated, or public surface that needs configuration rather than deletion?',
+        prompt:
+          'Is each finding genuinely unused, or does it represent a runtime, generated, or public surface that needs configuration rather than deletion?',
         outcomes: ['remove', 'configure', 'exclusion'],
-        guidance: 'Remove genuinely unused code, protect a valid surface in configuration, or record an explicit exclusion.'
+        guidance:
+          'Remove genuinely unused code, protect a valid surface in configuration, or record an explicit exclusion.'
       }
     },
     {
@@ -50,7 +53,8 @@ export const KNIP: RubricFamily<EngineeringRubricContext, KnipRubricContext> = {
         level: 'FAIL',
         remediation: {
           class: 'diagnostic',
-          guidance: 'Add the intended source entry glob to `knip.json` so the published export is protected, then rerun the audit.'
+          guidance:
+            'Add the intended source entry glob to `knip.json` so the published export is protected, then rerun the audit.'
         },
         audit: { phase: 'INSPECT', run: (context) => auditEvidence(context.knip3, 'FAIL') }
       }

@@ -11,7 +11,11 @@ const STREAM_1: RubricItem<StreamRubricContext> = {
   mechanical: {
     level: 'WARN',
     overrideLevels: ['FAIL'],
-    remediation: { class: 'diagnostic', guidance: 'Reshape the Streams tree only after confirming the intended Focus ownership and canonical location for each entry.' },
+    remediation: {
+      class: 'diagnostic',
+      guidance:
+        'Reshape the Streams tree only after confirming the intended Focus ownership and canonical location for each entry.'
+    },
     audit: { phase: 'INSPECT', run: (context) => auditEvidence(context.focusFolders, 'WARN', ['FAIL']) }
   }
 }
@@ -23,7 +27,10 @@ const STREAM_2: RubricItem<StreamRubricContext> = {
   sources: [SOURCE],
   mechanical: {
     level: 'WARN',
-    remediation: { class: 'diagnostic', guidance: 'Add or repair the matching Focus index after confirming the Focus and stream ownership relationship.' },
+    remediation: {
+      class: 'diagnostic',
+      guidance: 'Add or repair the matching Focus index after confirming the Focus and stream ownership relationship.'
+    },
     audit: { phase: 'INSPECT', run: (context) => auditEvidence(context.focusIndexes, 'WARN') }
   }
 }
@@ -31,11 +38,16 @@ const STREAM_2: RubricItem<StreamRubricContext> = {
 const STREAM_3: RubricItem<StreamRubricContext> = {
   code: 'STREAM-3',
   title: 'proposal suffix',
-  description: 'Full proposal filenames, H1 headings, and titles use the Proposal suffix while lightweight streams do not.',
+  description:
+    'Full proposal filenames, H1 headings, and titles use the Proposal suffix while lightweight streams do not.',
   sources: [SOURCE],
   mechanical: {
     level: 'WARN',
-    remediation: { class: 'diagnostic', guidance: 'Correct the filename, H1, and title suffix only after confirming whether the note is a full proposal or lightweight stream.' },
+    remediation: {
+      class: 'diagnostic',
+      guidance:
+        'Correct the filename, H1, and title suffix only after confirming whether the note is a full proposal or lightweight stream.'
+    },
     audit: { phase: 'INSPECT', run: (context) => auditEvidence(context.proposalSuffix, 'WARN') }
   }
 }
@@ -49,7 +61,8 @@ const STREAM_4: RubricItem<StreamRubricContext> = {
     scope: 'Focus index tables, their current streams, ordering, and category convention.',
     prompt: 'Are index tables current, ordered, and consistently categorised?',
     outcomes: ['conforming', 'index revision required', 'category decision required'],
-    guidance: 'Update rows and ordering from the current streams, and apply one documented category convention or record a deliberate exception.'
+    guidance:
+      'Update rows and ordering from the current streams, and apply one documented category convention or record a deliberate exception.'
   }
 }
 
@@ -62,7 +75,8 @@ const STREAM_5: RubricItem<StreamRubricContext> = {
     scope: 'Sampled streams, their stated purpose, and parent Focus placement.',
     prompt: 'Do sampled streams match their actual attention Focus?',
     outcomes: ['conforming', 'relocation required', 'focus decision required'],
-    guidance: 'Move the stream to the Focus that owns its present attention, or record the deliberate cross-Focus rationale.'
+    guidance:
+      'Move the stream to the Focus that owns its present attention, or record the deliberate cross-Focus rationale.'
   }
 }
 

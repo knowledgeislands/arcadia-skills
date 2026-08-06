@@ -18,7 +18,8 @@ const item = (
     level,
     remediation: {
       class: 'diagnostic',
-      guidance: 'Align the repository structure declaration with the applicable standard or record an explicit exemption, then rerun the audit.'
+      guidance:
+        'Align the repository structure declaration with the applicable standard or record an explicit exemption, then rerun the audit.'
     },
     audit: { phase: 'INSPECT', run: (context) => auditEvidence(evidence(context), level) }
   }

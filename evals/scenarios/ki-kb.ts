@@ -22,11 +22,18 @@ export const scenarios: Scenario[] = [
   {
     skill: 'ki-kb',
     id: 'kb-zone-set',
-    prompt: 'What are the top-level folders of a Knowledge Islands base, and which of them are zones vs. staging areas?',
+    prompt:
+      'What are the top-level folders of a Knowledge Islands base, and which of them are zones vs. staging areas?',
     assertions: [
-      { name: 'names the five zones', re: /Calendar[\s\S]*Pillars[\s\S]*Resources[\s\S]*Streams[\s\S]*Admin|Admin[\s\S]*Calendar/i },
+      {
+        name: 'names the five zones',
+        re: /Calendar[\s\S]*Pillars[\s\S]*Resources[\s\S]*Streams[\s\S]*Admin|Admin[\s\S]*Calendar/i
+      },
       { name: 'Admin is a zone', re: /\bAdmin\b/ },
-      { name: '+ / - are staging, not zones', re: /(`?\+`?|`?-`?)[^.\n]{0,40}(staging|inbound|outbound|not (a )?zone)/i }
+      {
+        name: '+ / - are staging, not zones',
+        re: /(`?\+`?|`?-`?)[^.\n]{0,40}(staging|inbound|outbound|not (a )?zone)/i
+      }
     ],
     rubric:
       'House structure: FIVE zones — Calendar, Pillars, Resources, Streams, Admin — each with a same-name index note; flanked by `+` (inbound) and `-` (outbound) STAGING areas, which are not zones and carry no same-name index. A correct answer lists the five zones and identifies + / - as staging rather than zones.'
@@ -34,7 +41,8 @@ export const scenarios: Scenario[] = [
   {
     skill: 'ki-kb',
     id: 'kb-digest-path',
-    prompt: 'I want to save a session digest in a Knowledge Islands base. What is the exact destination path and required frontmatter?',
+    prompt:
+      'I want to save a session digest in a Knowledge Islands base. What is the exact destination path and required frontmatter?',
     assertions: [
       { name: 'outbound _DIGESTS path', re: /-\/_DIGESTS\/|_DIGESTS/ },
       { name: 'type: session-digest', re: /session-digest/ },

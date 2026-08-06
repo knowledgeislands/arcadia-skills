@@ -11,7 +11,10 @@ const INDEX_1: RubricItem<RoadmapIndexContext> = {
   mechanical: {
     level: 'FAIL',
     remediation: { class: 'automatic' },
-    audit: { phase: 'INSPECT', run: (context) => outcomesFor(context, 'ROOT-1', 'The root work-item orientation is current.') },
+    audit: {
+      phase: 'INSPECT',
+      run: (context) => outcomesFor(context, 'ROOT-1', 'The root work-item orientation is current.')
+    },
     conform: { phase: 'DERIVED', run: (context) => context.normaliseRoot?.() }
   }
 }

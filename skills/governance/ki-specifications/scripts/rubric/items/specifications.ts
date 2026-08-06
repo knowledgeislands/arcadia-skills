@@ -30,7 +30,10 @@ const SPEC_1: RubricItem<SpecificationsContext> = {
               message: 'ki-specifications is not applicable: no declaration or core structural marker is present.'
             }
           ]
-        if (context.malformed) return [{ status: 'VIOLATION', message: '.ki-config.toml is malformed or unsafe.', subject: '.ki-config.toml' }]
+        if (context.malformed)
+          return [
+            { status: 'VIOLATION', message: '.ki-config.toml is malformed or unsafe.', subject: '.ki-config.toml' }
+          ]
         if (!context.table)
           return [
             {
@@ -47,7 +50,11 @@ const SPEC_1: RubricItem<SpecificationsContext> = {
                 message: 'The keyless ["knowledgeislands/ki-agentic-harness:ki-specifications"] marker is present.',
                 subject: '.ki-config.toml'
               }
-            : { status: 'VIOLATION', message: `The keyless marker contains unknown keys: ${keys.join(', ')}.`, subject: '.ki-config.toml' }
+            : {
+                status: 'VIOLATION',
+                message: `The keyless marker contains unknown keys: ${keys.join(', ')}.`,
+                subject: '.ki-config.toml'
+              }
         ]
       }
     },
@@ -67,15 +74,21 @@ const SPEC_2: RubricItem<SpecificationsContext> = {
     level: 'FAIL',
     remediation: {
       class: 'diagnostic',
-      guidance: 'Create the missing authority area only after confirming that the repository is intended to carry this specification responsibility.'
+      guidance:
+        'Create the missing authority area only after confirming that the repository is intended to carry this specification responsibility.'
     },
     audit: {
       phase: 'INSPECT',
       run: (context): readonly AuditOutcome[] => {
-        if (!context.targetExists) return [{ status: 'VIOLATION', message: `Audit target must be an existing physical directory: ${context.target}.` }]
+        if (!context.targetExists)
+          return [
+            { status: 'VIOLATION', message: `Audit target must be an existing physical directory: ${context.target}.` }
+          ]
         if (!context.applicable) return [{ status: 'NOT_APPLICABLE', message: 'ki-specifications is not applicable.' }]
         return context.core.map(({ path, exists }) =>
-          exists ? { status: 'PASS', message: `${path}/ is present.`, subject: path } : { status: 'VIOLATION', message: `${path}/ is absent.`, subject: path }
+          exists
+            ? { status: 'PASS', message: `${path}/ is present.`, subject: path }
+            : { status: 'VIOLATION', message: `${path}/ is absent.`, subject: path }
         )
       }
     }
@@ -91,14 +104,17 @@ const SPEC_3: RubricItem<SpecificationsContext> = {
     level: 'WARN',
     remediation: {
       class: 'diagnostic',
-      guidance: 'Create the missing supporting area when its documented responsibility applies, or record why the repository intentionally omits it.'
+      guidance:
+        'Create the missing supporting area when its documented responsibility applies, or record why the repository intentionally omits it.'
     },
     audit: {
       phase: 'INSPECT',
       run: (context): readonly AuditOutcome[] => {
         if (!context.applicable) return [{ status: 'NOT_APPLICABLE', message: 'ki-specifications is not applicable.' }]
         return context.supporting.map(({ path, exists }) =>
-          exists ? { status: 'PASS', message: `${path}/ is present.`, subject: path } : { status: 'VIOLATION', message: `${path}/ is absent.`, subject: path }
+          exists
+            ? { status: 'PASS', message: `${path}/ is present.`, subject: path }
+            : { status: 'VIOLATION', message: `${path}/ is absent.`, subject: path }
         )
       }
     }
@@ -114,20 +130,23 @@ const SPEC_J1: RubricItem<SpecificationsContext> = {
     scope: 'Each asserted repository structure and the evidence of its sustained use.',
     prompt: 'Has every asserted structure proved stable enough to govern across time?',
     outcomes: ['conforming', 'reduce the floor', 'stability evidence required'],
-    guidance: 'Remove speculative structure from the governed floor, or record the sustained repository evidence that makes the assertion stable.'
+    guidance:
+      'Remove speculative structure from the governed floor, or record the sustained repository evidence that makes the assertion stable.'
   }
 }
 
 const SPEC_J2: RubricItem<SpecificationsContext> = {
   code: 'SPEC-J2',
   title: 'Authority boundary',
-  description: 'The skill checks repository shape without claiming canonical ownership of normative specification meaning.',
+  description:
+    'The skill checks repository shape without claiming canonical ownership of normative specification meaning.',
   sources: SOURCE,
   judgment: {
     scope: 'The skill guidance, rubric criteria, and any proposed repository changes.',
     prompt: 'Does the skill preserve the authority boundary around normative specification meaning?',
     outcomes: ['conforming', 'boundary correction required', 'authority decision required'],
-    guidance: 'Limit this skill to repository structure and route normative specification meaning to its canonical authority; record an authority decision where the boundary is disputed.'
+    guidance:
+      'Limit this skill to repository structure and route normative specification meaning to its canonical authority; record an authority decision where the boundary is disputed.'
   }
 }
 

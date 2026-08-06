@@ -6,7 +6,10 @@ import type { RubricContextOptions, RubricPublicationContext, RubricSession } fr
 declare const Bun: { YAML: { parse(input: string): unknown } }
 
 export type ServerEntry = { name?: string; clients?: string[]; url?: string; command?: string }
-export type SourceState = { kind: 'absent' } | { kind: 'invalid'; message: string } | { kind: 'valid'; entries: readonly ServerEntry[] }
+export type SourceState =
+  | { kind: 'absent' }
+  | { kind: 'invalid'; message: string }
+  | { kind: 'valid'; entries: readonly ServerEntry[] }
 export type BindingRubricContext = {
   rubric: RubricPublicationContext
   source: string
@@ -17,7 +20,8 @@ export type BindingRubricContext = {
 
 export const RECOGNISED = new Set(['mcporter', 'claude-code', 'claude-desktop', 'chatgpt-codex'])
 
-const physicalFile = (path: string): boolean => existsSync(path) && lstatSync(path).isFile() && !lstatSync(path).isSymbolicLink()
+const physicalFile = (path: string): boolean =>
+  existsSync(path) && lstatSync(path).isFile() && !lstatSync(path).isSymbolicLink()
 
 const readSource = (path: string): SourceState => {
   if (!existsSync(path)) return { kind: 'absent' }
@@ -32,7 +36,9 @@ const readSource = (path: string): SourceState => {
         const value = entry as Record<string, unknown>
         return {
           ...(typeof value.name === 'string' ? { name: value.name } : {}),
-          ...(Array.isArray(value.clients) ? { clients: value.clients.filter((client): client is string => typeof client === 'string') } : {}),
+          ...(Array.isArray(value.clients)
+            ? { clients: value.clients.filter((client): client is string => typeof client === 'string') }
+            : {}),
           ...(typeof value.url === 'string' ? { url: value.url } : {}),
           ...(typeof value.command === 'string' ? { command: value.command } : {})
         }
@@ -47,13 +53,19 @@ const mcporterKeys = (path: string): ReadonlySet<string> | null => {
   if (!physicalFile(path)) return null
   try {
     const parsed = JSON.parse(readFileSync(path, 'utf8')) as { mcpServers?: unknown }
-    return parsed.mcpServers && typeof parsed.mcpServers === 'object' ? new Set(Object.keys(parsed.mcpServers as Record<string, unknown>)) : new Set()
+    return parsed.mcpServers && typeof parsed.mcpServers === 'object'
+      ? new Set(Object.keys(parsed.mcpServers as Record<string, unknown>))
+      : new Set()
   } catch {
     return null
   }
 }
 
-export const createBindingSession = ({ repository, userHome, publication }: RubricContextOptions): RubricSession<BindingRubricContext> => {
+export const createBindingSession = ({
+  repository,
+  userHome,
+  publication
+}: RubricContextOptions): RubricSession<BindingRubricContext> => {
   const project = resolve(repository)
   const home = resolve(userHome)
   const xdgRoot = home === resolve(homedir()) ? process.env.XDG_CONFIG_HOME : undefined

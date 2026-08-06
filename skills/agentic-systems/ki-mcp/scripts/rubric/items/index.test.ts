@@ -2,7 +2,20 @@ import { expect, test } from 'bun:test'
 import definition from './index.ts'
 
 const expectedFamilies = ['KI', 'LAY', 'DOC', 'CFG', 'UTIL', 'TEST', 'TOOL', 'PKG', 'SCR', 'CI', 'RUBRIC']
-const expectedItems = ['KI-CONFIG', 'LAY-1', 'DOC-1', 'CFG-1', 'UTIL-1', 'TEST-1', 'TOOL-1', 'PKG-1', 'SCR-1', 'CI-1', 'CI-2', 'RUBRIC-1']
+const expectedItems = [
+  'KI-CONFIG',
+  'LAY-1',
+  'DOC-1',
+  'CFG-1',
+  'UTIL-1',
+  'TEST-1',
+  'TOOL-1',
+  'PKG-1',
+  'SCR-1',
+  'CI-1',
+  'CI-2',
+  'RUBRIC-1'
+]
 
 test('the catalogue exposes every ordered MCP family and criterion', () => {
   expect(definition.contract).toBe(1)

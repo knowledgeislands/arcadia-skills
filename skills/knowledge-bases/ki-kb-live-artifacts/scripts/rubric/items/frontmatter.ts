@@ -10,7 +10,10 @@ const LA_F_1: RubricItem<LiveArtifactsFrontmatterContext> = {
   sources: [SOURCE],
   mechanical: {
     level: 'WARN',
-    remediation: { class: 'diagnostic', guidance: 'Correct the artifact status from authoritative live-artifact evidence.' },
+    remediation: {
+      class: 'diagnostic',
+      guidance: 'Correct the artifact status from authoritative live-artifact evidence.'
+    },
     audit: { phase: 'INSPECT', run: (context) => context.status }
   }
 }

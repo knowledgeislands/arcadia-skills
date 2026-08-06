@@ -44,7 +44,8 @@ const FILES_3: RubricItem<FilesRubricContext> = {
 const FILES_4: RubricItem<FilesRubricContext> = {
   code: 'FILES-4',
   title: 'Runtime skill ignore contract',
-  description: 'Generated skill links are ignored for each declared runtime, while a repository-local .agents/skills/ki-self source remains committed.',
+  description:
+    'Generated skill links are ignored for each declared runtime, while a repository-local .agents/skills/ki-self source remains committed.',
   sources: [SOURCE],
   mechanical: {
     level: 'FAIL',
@@ -67,7 +68,10 @@ const FILES_2: RubricItem<FilesRubricContext> = {
   sources: [SOURCE],
   mechanical: {
     level: 'FAIL',
-    remediation: { class: 'diagnostic', guidance: 'Correct the declared repository identity, README H1, or roadmap code, then rerun the audit.' },
+    remediation: {
+      class: 'diagnostic',
+      guidance: 'Correct the declared repository identity, README H1, or roadmap code, then rerun the audit.'
+    },
     audit: { phase: 'INSPECT', run: (context) => auditEvidence(context.files2, 'FAIL') }
   }
 }
@@ -88,7 +92,8 @@ const FILES_J1: RubricItem<FilesRubricContext> = {
 export const FILES: RubricFamily<RepoRubricContext, FilesRubricContext> = {
   code: 'FILES',
   title: 'Repository files',
-  description: 'Required repository files and document quality, using a local checkout when available or GitHub default-branch evidence for remote-only runs.',
+  description:
+    'Required repository files and document quality, using a local checkout when available or GitHub default-branch evidence for remote-only runs.',
   standard: SOURCE,
   selectContext: (context) => context.files,
   items: [FILES_1, FILES_2, FILES_3, FILES_4, FILES_J1]

@@ -15,9 +15,15 @@ export const scenarios: Scenario[] = [
     prompt:
       'What are the defining invariants of our Knowledge Islands 11ty website standard — specifically how Tailwind is configured, and how the build makes `dist/` portable?',
     assertions: [
-      { name: 'config-less Tailwind (no tailwind.config)', re: /config-less|no tailwind\.config|without a tailwind\.config/i },
+      {
+        name: 'config-less Tailwind (no tailwind.config)',
+        re: /config-less|no tailwind\.config|without a tailwind\.config/i
+      },
       { name: 'import tailwindcss in main.css', re: /@import ["']?tailwindcss|tailwindcss["']? (then|import)/i },
-      { name: 'portable dist via URL transform', re: /(addTransform|relative)[^.\n]{0,40}(url|link)|absolute[^.\n]{0,20}relative/i }
+      {
+        name: 'portable dist via URL transform',
+        re: /(addTransform|relative)[^.\n]{0,40}(url|link)|absolute[^.\n]{0,20}relative/i
+      }
     ],
     rubric:
       'House invariants: (1) **config-less Tailwind 4** — there is NO `tailwind.config.*`; `main.css` is `@import "tailwindcss"` then `tokens.css`, whose semantic CSS vars reach utilities via `@theme inline`. (2) The build emits a **portable `dist/`** — an `addTransform` rewrites absolute internal URLs to relative ones so `dist/` serves from any root (this is the seam the hosting skill consumes). A correct answer states the no-config-file Tailwind setup and the absolute→relative URL transform that makes dist/ portable.'
@@ -25,14 +31,15 @@ export const scenarios: Scenario[] = [
   {
     skill: 'ki-website',
     id: 'web-ts-native',
-    prompt: 'In our 11ty sites, how is the TypeScript (`eleventy.config.ts`, `_data/*.ts`) executed at build time, and what role does `tsc` play?',
+    prompt:
+      'In our 11ty sites, how is the TypeScript (`eleventy.config.ts`, `_data/*.ts`) executed at build time, and what role does `tsc` play?',
     assertions: [
       { name: 'runs natively under Bun, no transpile', re: /nativ|no transpile|without transpil|run.{0,12}under bun/i },
       { name: 'tsc is type-check only', re: /tsc[^.\n]{0,30}(type-check|--noEmit|check only|noEmit)|type-check only/i },
       { name: 'tsx is legacy', re: /tsx[^.\n]{0,20}legacy|legacy[^.\n]{0,12}tsx/i }
     ],
     rubric:
-      'House rule: TypeScript **runs natively — no transpile step**. `eleventy.config.ts` and `_data/*.ts` execute directly under Bun, with `.ts` + `.json5` data extensions registered in the config. `tsc` is **type-check only** (`--noEmit`, engineering\'s layer), never a build/transpile step; `tsx` is **legacy**. A correct answer states TS runs natively under Bun (no transpile), tsc is type-check only, and tsx is legacy.'
+      "House rule: TypeScript **runs natively — no transpile step**. `eleventy.config.ts` and `_data/*.ts` execute directly under Bun, with `.ts` + `.json5` data extensions registered in the config. `tsc` is **type-check only** (`--noEmit`, engineering's layer), never a build/transpile step; `tsx` is **legacy**. A correct answer states TS runs natively under Bun (no transpile), tsc is type-check only, and tsx is legacy."
   },
   {
     skill: 'ki-website',

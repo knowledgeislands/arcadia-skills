@@ -59,7 +59,10 @@ const runWorkingAreasConform = (context: WorkingAreasRubricContext): void => {
   for (const item of WORK.items) item.mechanical?.conform?.run(context)
 }
 
-const applyWrites = (root: string, writes: ReturnType<ReturnType<typeof createRepoSession>['proposal']>['writes']): void => {
+const applyWrites = (
+  root: string,
+  writes: ReturnType<ReturnType<typeof createRepoSession>['proposal']>['writes']
+): void => {
   for (const write of writes) {
     const path = join(root, write.path)
     mkdirSync(dirname(path), { recursive: true })
@@ -97,7 +100,10 @@ describe('ki-repo session', () => {
 
   test('replaces legacy runtime-skill ignores with the canonical ki-self exception', () => {
     const root = repository()
-    writeFileSync(join(root, '.ki-config.toml'), '["knowledgeislands/ki-agentic-harness:ki-repo"]\nsupported_runtimes = ["claude-code", "chatgpt-codex"]\n')
+    writeFileSync(
+      join(root, '.ki-config.toml'),
+      '["knowledgeislands/ki-agentic-harness:ki-repo"]\nsupported_runtimes = ["claude-code", "chatgpt-codex"]\n'
+    )
     mkdirSync(join(root, '.agents', 'skills', 'ki-self'), { recursive: true })
     writeFileSync(join(root, '.agents', 'skills', 'ki-self', 'SKILL.md'), '# KI Self\n')
     writeFileSync(join(root, '.gitignore'), 'node_modules/\n.claude/skills/*\n.agents/skills/\n')
@@ -113,7 +119,10 @@ describe('ki-repo session', () => {
 
   test('derives runtime-skill ignores from supported runtimes while reserving ki-self', () => {
     const root = repository()
-    writeFileSync(join(root, '.ki-config.toml'), '["knowledgeislands/ki-agentic-harness:ki-repo"]\nsupported_runtimes = ["claude-code"]\n')
+    writeFileSync(
+      join(root, '.ki-config.toml'),
+      '["knowledgeislands/ki-agentic-harness:ki-repo"]\nsupported_runtimes = ["claude-code"]\n'
+    )
     writeFileSync(join(root, '.gitignore'), '.agents/skills/*\n')
 
     expect(collectAuditFindings([root]).findings).toContainEqual(
@@ -128,7 +137,10 @@ describe('ki-repo session', () => {
     writeFileSync(join(root, '.gitignore'), '.claude/skills/*\n!.agents/skills/ki-self/\n!.agents/skills/ki-self/**\n')
     expect(collectAuditFindings([root]).findings).not.toContainEqual(expect.objectContaining({ code: 'FILES-4' }))
 
-    writeFileSync(join(root, '.ki-config.toml'), '["knowledgeislands/ki-agentic-harness:ki-repo"]\nsupported_runtimes = ["chatgpt-codex"]\n')
+    writeFileSync(
+      join(root, '.ki-config.toml'),
+      '["knowledgeislands/ki-agentic-harness:ki-repo"]\nsupported_runtimes = ["chatgpt-codex"]\n'
+    )
     writeFileSync(join(root, '.gitignore'), '.agents/skills/*\n!.agents/skills/ki-self/\n!.agents/skills/ki-self/**\n')
     expect(collectAuditFindings([root]).findings).not.toContainEqual(expect.objectContaining({ code: 'FILES-4' }))
   })
@@ -159,7 +171,9 @@ describe('ki-repo session', () => {
     applyWrites(root, writes)
     const audit = createRepoSession(options(root, 'audit'), inspect)
     const [item] = WORK.items
-    expect(item?.mechanical?.audit.run(workingAreasContext(audit))).toEqual([{ status: 'PASS', message: 'working-area scaffold is present and conformed' }])
+    expect(item?.mechanical?.audit.run(workingAreasContext(audit))).toEqual([
+      { status: 'PASS', message: 'working-area scaffold is present and conformed' }
+    ])
   })
 
   test('repairs a drifted working-area README without recreating it', () => {
@@ -197,11 +211,17 @@ describe('runtime environment coverage', () => {
   const runtimeFindings = (configuration: string) => {
     const root = repository()
     writeFileSync(join(root, '.ki-config.toml'), configuration)
-    return collectAuditFindings([root]).findings.filter(({ code }) => code === 'RUNTIMES-1' || code === 'RUNTIMES-2' || code === 'RUNTIMES-3')
+    return collectAuditFindings([root]).findings.filter(
+      ({ code }) => code === 'RUNTIMES-1' || code === 'RUNTIMES-2' || code === 'RUNTIMES-3'
+    )
   }
 
   test('requires the portable and runtime-specific environment tables', () => {
-    expect(runtimeFindings('["knowledgeislands/ki-agentic-harness:ki-repo"]\nsupported_runtimes = ["claude-code", "chatgpt-codex"]\n')).toEqual([
+    expect(
+      runtimeFindings(
+        '["knowledgeislands/ki-agentic-harness:ki-repo"]\nsupported_runtimes = ["claude-code", "chatgpt-codex"]\n'
+      )
+    ).toEqual([
       {
         level: 'FAIL',
         code: 'RUNTIMES-2',
@@ -229,11 +249,14 @@ supported_runtimes = ["claude-code", "chatgpt-codex"]
   })
 
   test('rejects the retired Codex runtime identifier with recovery guidance', () => {
-    expect(runtimeFindings('["knowledgeislands/ki-agentic-harness:ki-repo"]\nsupported_runtimes = ["codex"]\n')).toEqual([
+    expect(
+      runtimeFindings('["knowledgeislands/ki-agentic-harness:ki-repo"]\nsupported_runtimes = ["codex"]\n')
+    ).toEqual([
       {
         level: 'FAIL',
         code: 'RUNTIMES-1',
-        message: '[knowledgeislands/ki-agentic-harness:ki-repo] supported_runtimes uses retired runtime(s): codex; use chatgpt-codex',
+        message:
+          '[knowledgeislands/ki-agentic-harness:ki-repo] supported_runtimes uses retired runtime(s): codex; use chatgpt-codex',
         subject: expect.any(String)
       }
     ])
@@ -245,7 +268,10 @@ supported_runtimes = ["claude-code", "chatgpt-codex"]
     writeFileSync(join(root, '.agents', 'skills', 'ki-self', 'SKILL.md'), '# KI Self\n')
     mkdirSync(join(root, '.claude', 'skills'), { recursive: true })
     symlinkSync('../../.agents/skills/ki-self', join(root, '.claude', 'skills', 'ki-self'), 'dir')
-    writeFileSync(join(root, '.ki-config.toml'), '["knowledgeislands/ki-agentic-harness:ki-repo"]\nsupported_runtimes = ["claude-code", "chatgpt-codex"]\n')
+    writeFileSync(
+      join(root, '.ki-config.toml'),
+      '["knowledgeislands/ki-agentic-harness:ki-repo"]\nsupported_runtimes = ["claude-code", "chatgpt-codex"]\n'
+    )
 
     expect(collectAuditFindings([root]).findings.filter(({ code }) => code === 'RUNTIMES-3')).toEqual([])
   })
@@ -254,10 +280,16 @@ supported_runtimes = ["claude-code", "chatgpt-codex"]
     const root = repository()
     mkdirSync(join(root, '.agents', 'skills', 'ki-self'), { recursive: true })
     writeFileSync(join(root, '.agents', 'skills', 'ki-self', 'SKILL.md'), '# KI Self\n')
-    writeFileSync(join(root, '.ki-config.toml'), '["knowledgeislands/ki-agentic-harness:ki-repo"]\nsupported_runtimes = ["claude-code"]\n')
+    writeFileSync(
+      join(root, '.ki-config.toml'),
+      '["knowledgeislands/ki-agentic-harness:ki-repo"]\nsupported_runtimes = ["claude-code"]\n'
+    )
 
     expect(collectAuditFindings([root]).findings).toContainEqual(
-      expect.objectContaining({ code: 'RUNTIMES-3', message: expect.stringContaining('declares claude-code but lacks') })
+      expect.objectContaining({
+        code: 'RUNTIMES-3',
+        message: expect.stringContaining('declares claude-code but lacks')
+      })
     )
   })
 
@@ -267,16 +299,25 @@ supported_runtimes = ["claude-code", "chatgpt-codex"]
     mkdirSync(join(root, '.claude', 'skills', 'ki-self'), { recursive: true })
     writeFileSync(join(root, '.agents', 'skills', 'ki-self', 'SKILL.md'), '# KI Self\n')
     writeFileSync(join(root, '.claude', 'skills', 'ki-self', 'SKILL.md'), '# KI Self\n')
-    writeFileSync(join(root, '.ki-config.toml'), '["knowledgeislands/ki-agentic-harness:ki-repo"]\nsupported_runtimes = ["claude-code"]\n')
+    writeFileSync(
+      join(root, '.ki-config.toml'),
+      '["knowledgeislands/ki-agentic-harness:ki-repo"]\nsupported_runtimes = ["claude-code"]\n'
+    )
 
     expect(collectAuditFindings([root]).findings).toContainEqual(
-      expect.objectContaining({ code: 'RUNTIMES-3', message: expect.stringContaining('must be a relative symbolic link') })
+      expect.objectContaining({
+        code: 'RUNTIMES-3',
+        message: expect.stringContaining('must be a relative symbolic link')
+      })
     )
 
     rmSync(join(root, '.claude'), { recursive: true, force: true })
     mkdirSync(join(root, '.claude', 'skills'), { recursive: true })
     symlinkSync('../../.agents/skills/ki-self', join(root, '.claude', 'skills', 'ki-self'), 'dir')
-    writeFileSync(join(root, '.ki-config.toml'), '["knowledgeislands/ki-agentic-harness:ki-repo"]\nsupported_runtimes = ["chatgpt-codex"]\n')
+    writeFileSync(
+      join(root, '.ki-config.toml'),
+      '["knowledgeislands/ki-agentic-harness:ki-repo"]\nsupported_runtimes = ["chatgpt-codex"]\n'
+    )
 
     expect(collectAuditFindings([root]).findings).toContainEqual(
       expect.objectContaining({ code: 'RUNTIMES-3', message: expect.stringContaining('claude-code is not declared') })
@@ -308,14 +349,18 @@ store_roles = ["notes", "sources"]
 repo_type = "kb"
 store_roles = ["sources"]
 `)
-    ).toContainEqual(expect.objectContaining({ code: 'KIND-1', message: expect.stringContaining('must include notes') }))
+    ).toContainEqual(
+      expect.objectContaining({ code: 'KIND-1', message: expect.stringContaining('must include notes') })
+    )
     expect(
       kindFindings(`['knowledgeislands/ki-agentic-harness:ki-repo']
 repo_type = "repository"
 
 ['knowledgeislands/ki-agentic-harness:ki-kb']
 `)
-    ).toContainEqual(expect.objectContaining({ code: 'KIND-2', message: expect.stringContaining('requires repo_type = "kb"') }))
+    ).toContainEqual(
+      expect.objectContaining({ code: 'KIND-2', message: expect.stringContaining('requires repo_type = "kb"') })
+    )
   })
 
   test('does not accept a legacy kind declaration outside ki-repo', () => {
@@ -327,7 +372,9 @@ repo_type = "repository"
 ['knowledgeislands/ki-agentic-harness:ki-decision-records']
 repo_type = "kb"
 `)
-    ).toContainEqual(expect.objectContaining({ code: 'KIND-2', message: expect.stringContaining('requires repo_type = "kb"') }))
+    ).toContainEqual(
+      expect.objectContaining({ code: 'KIND-2', message: expect.stringContaining('requires repo_type = "kb"') })
+    )
   })
 })
 
@@ -361,8 +408,12 @@ describe('local repository evidence', () => {
     )
 
     const findings = collectAuditFindings([root]).findings.filter((finding) => finding.code === 'FILES-2')
-    expect(findings).toContainEqual(expect.objectContaining({ message: expect.stringContaining('README.md H1 must equal') }))
-    expect(findings).toContainEqual(expect.objectContaining({ message: expect.stringContaining('repo_code must be a stable uppercase identifier') }))
+    expect(findings).toContainEqual(
+      expect.objectContaining({ message: expect.stringContaining('README.md H1 must equal') })
+    )
+    expect(findings).toContainEqual(
+      expect.objectContaining({ message: expect.stringContaining('repo_code must be a stable uppercase identifier') })
+    )
   })
 
   test('detects the optional checkpoints subarea without creating or interpreting it', () => {
@@ -372,9 +423,14 @@ describe('local repository evidence', () => {
     writeFileSync(join(root, '.ki-config.toml'), '["knowledgeislands/ki-agentic-harness:ki-repo"]\n')
 
     const findings = collectAuditFindings([root]).findings.filter((finding) => finding.code === 'COV-1')
-    expect(findings).toContainEqual(expect.objectContaining({ message: expect.stringContaining('looks governed by ki-checkpoints') }))
+    expect(findings).toContainEqual(
+      expect.objectContaining({ message: expect.stringContaining('looks governed by ki-checkpoints') })
+    )
 
-    writeFileSync(join(root, '.ki-config.toml'), '["knowledgeislands/ki-agentic-harness:ki-repo"]\n\n["knowledgeislands/ki-agentic-harness:ki-checkpoints"]\n')
+    writeFileSync(
+      join(root, '.ki-config.toml'),
+      '["knowledgeislands/ki-agentic-harness:ki-repo"]\n\n["knowledgeislands/ki-agentic-harness:ki-checkpoints"]\n'
+    )
     expect(collectAuditFindings([root]).findings.filter((finding) => finding.code === 'COV-1')).toEqual([])
   })
 

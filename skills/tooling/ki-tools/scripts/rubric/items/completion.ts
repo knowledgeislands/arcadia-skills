@@ -14,7 +14,8 @@ const COMPLETION_SURFACE = {
     prompt:
       'The CLI exposes exactly one documented completion <shell> action at a stable command path; it accepts bash and zsh, prints only the selected definition to standard output, and rejects unsupported shells as owned invalid syntax.',
     outcomes: ['conforming', 'surface revision required', 'compatibility decision required'],
-    guidance: 'Revise the documented completion surface and its validation tests, or record the owning compatibility decision before changing command behaviour.'
+    guidance:
+      'Revise the documented completion surface and its validation tests, or record the owning compatibility decision before changing command behaviour.'
   }
 } satisfies RubricItem<ToolRepositoryContext>
 
@@ -29,7 +30,8 @@ const COMPLETION_INTEGRATION = {
     prompt:
       'The Bash definition registers the executable with complete; the Zsh definition is an autoloadable _<tool> artifact with #compdef and compdef registration that does not invoke itself while loading. Tests cover both emitted forms and Zsh registration under compinit.',
     outcomes: ['conforming', 'definition revision required', 'test evidence required'],
-    guidance: 'Correct the emitted definition and add or update the shell integration evidence without changing user persistence ownership.'
+    guidance:
+      'Correct the emitted definition and add or update the shell integration evidence without changing user persistence ownership.'
   }
 } satisfies RubricItem<ToolRepositoryContext>
 
@@ -44,7 +46,8 @@ const COMPLETION_OWNERSHIP = {
     prompt:
       'The tool does not edit shell startup files or personal completion directories. A shell configuration, package manager, or configuration manager persists the generated artifact and arranges fpath before compinit for Zsh.',
     outcomes: ['conforming', 'ownership correction required', 'integration decision required'],
-    guidance: 'Keep persistent shell configuration outside the tool installer and route any integration change to its owning shell or configuration layer.'
+    guidance:
+      'Keep persistent shell configuration outside the tool installer and route any integration change to its owning shell or configuration layer.'
   }
 } satisfies RubricItem<ToolRepositoryContext>
 

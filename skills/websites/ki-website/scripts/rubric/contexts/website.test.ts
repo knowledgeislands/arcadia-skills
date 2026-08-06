@@ -99,7 +99,9 @@ test('existing physical files are preserved around bounded repairs', () => {
     },
     { path: '.gitignore', content: '# generated\n/site/dist/\n' }
   ])
-  expect(readFileSync(join(repository, '.ki-config.toml'), 'utf8')).toBe('["knowledgeislands/ki-agentic-harness:ki-repo"]\n')
+  expect(readFileSync(join(repository, '.ki-config.toml'), 'utf8')).toBe(
+    '["knowledgeislands/ki-agentic-harness:ki-repo"]\n'
+  )
   expect(readFileSync(join(repository, '.gitignore'), 'utf8')).toBe('# generated\n/dist/\n')
 })
 

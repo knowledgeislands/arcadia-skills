@@ -16,7 +16,10 @@ const NAME_1: RubricItem<NameRubricContext> = {
     remediation: DIAGNOSTIC_REMEDIATION,
     audit: {
       phase: 'INSPECT',
-      run: ({ name }) => (!name ? [{ status: 'VIOLATION', message: '`name` is missing from frontmatter' }] : [{ status: 'PASS', message: 'name is present' }])
+      run: ({ name }) =>
+        !name
+          ? [{ status: 'VIOLATION', message: '`name` is missing from frontmatter' }]
+          : [{ status: 'PASS', message: 'name is present' }]
     }
   }
 }
@@ -55,7 +58,12 @@ const NAME_3: RubricItem<NameRubricContext> = {
         !name
           ? [{ status: 'NOT_APPLICABLE', message: 'name is not present' }]
           : !/^[a-z0-9-]+$/.test(name)
-            ? [{ status: 'VIOLATION', message: `\`name\` "${name}" must be lowercase letters, digits, and hyphens only` }]
+            ? [
+                {
+                  status: 'VIOLATION',
+                  message: `\`name\` "${name}" must be lowercase letters, digits, and hyphens only`
+                }
+              ]
             : [{ status: 'PASS', message: 'name uses lowercase letters, digits, and hyphens only' }]
     }
   }
@@ -96,7 +104,12 @@ const NAME_5: RubricItem<NameRubricContext> = {
         !name
           ? [{ status: 'NOT_APPLICABLE', message: 'name is not present' }]
           : name !== directoryName
-            ? [{ status: 'VIOLATION', message: `\`name\` "${name}" does not match the directory name "${directoryName}"` }]
+            ? [
+                {
+                  status: 'VIOLATION',
+                  message: `\`name\` "${name}" does not match the directory name "${directoryName}"`
+                }
+              ]
             : [
                 {
                   status: 'PASS',
@@ -128,7 +141,9 @@ const NAME_6: RubricItem<NameRubricContext> = {
       phase: 'INSPECT',
       run: ({ name, reservedVendorNameAllowed }) => {
         if (!name) return [{ status: 'NOT_APPLICABLE', message: 'name is not present' }]
-        const violations = containsXmlTag(name) ? [{ status: 'VIOLATION' as const, message: '`name` contains an XML tag' }] : []
+        const violations = containsXmlTag(name)
+          ? [{ status: 'VIOLATION' as const, message: '`name` contains an XML tag' }]
+          : []
         for (const word of RESERVED_WORDS)
           if (name.includes(word) && !reservedVendorNameAllowed)
             violations.push({ status: 'VIOLATION', message: `\`name\` contains the reserved word "${word}"` })

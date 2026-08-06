@@ -17,7 +17,8 @@ export const KI_INVOKE: RubricFamily<KiSkillsRubricContext, KiSkillsRubricContex
   code: 'KI-INVOKE',
   title: 'Invocation protocol',
   description: 'Safe invocation for a skill with named modes.',
-  standard: '../../../../docs/decisions/ADR-KI-HARNESS-SKILLS-001-audit-conform-educate-refresh-canonical-modes-help.md',
+  standard:
+    '../../../../docs/decisions/ADR-KI-HARNESS-SKILLS-001-audit-conform-educate-refresh-canonical-modes-help.md',
   selectContext: (context: KiSkillsRubricContext) => context,
   items: [KI_INVOKE_1]
 }

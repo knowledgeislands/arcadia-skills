@@ -44,7 +44,9 @@ const OPT_2: RubricItem<OptionalRubricContext> = {
         if (!metadataPresent) return [{ status: 'NOT_APPLICABLE', message: 'metadata is not present' }]
         if (!metadata || typeof metadata !== 'object' || Array.isArray(metadata))
           return [{ status: 'VIOLATION', message: '`metadata` must be a string-to-string map' }]
-        const invalid = Object.entries(metadata as Record<string, unknown>).find(([, value]) => typeof value !== 'string')
+        const invalid = Object.entries(metadata as Record<string, unknown>).find(
+          ([, value]) => typeof value !== 'string'
+        )
         return invalid
           ? [{ status: 'VIOLATION', message: `\`metadata.${invalid[0]}\` must be a string` }]
           : [{ status: 'PASS', message: 'metadata is a string-to-string map when present' }]
@@ -56,7 +58,8 @@ const OPT_2: RubricItem<OptionalRubricContext> = {
 const OPT_3: RubricItem<OptionalRubricContext> = {
   code: 'OPT-3',
   title: 'tool declarations use valid tool specifications',
-  description: '`allowed-tools` / `disallowed-tools`, if present, are valid tool specs (`allowed-tools` is **experimental**).',
+  description:
+    '`allowed-tools` / `disallowed-tools`, if present, are valid tool specs (`allowed-tools` is **experimental**).',
   sources: ['SPEC', 'CC'],
   mechanical: {
     level: 'FAIL',
@@ -64,7 +67,8 @@ const OPT_3: RubricItem<OptionalRubricContext> = {
     audit: {
       phase: 'INSPECT',
       run: ({ allowedToolsPresent, allowedTools, disallowedToolsPresent, disallowedTools }) => {
-        if (!allowedToolsPresent && !disallowedToolsPresent) return [{ status: 'NOT_APPLICABLE', message: 'tool declarations are not present' }]
+        if (!allowedToolsPresent && !disallowedToolsPresent)
+          return [{ status: 'NOT_APPLICABLE', message: 'tool declarations are not present' }]
         const violations = [
           ...(allowedToolsPresent ? toolDeclarationFindings('allowed-tools', allowedTools) : []),
           ...(disallowedToolsPresent ? toolDeclarationFindings('disallowed-tools', disallowedTools) : [])
@@ -80,7 +84,8 @@ const OPT_3: RubricItem<OptionalRubricContext> = {
 const OPT_4: RubricItem<OptionalRubricContext> = {
   code: 'OPT-4',
   title: 'license declarations are non-empty YAML string scalars',
-  description: '`license`, if present, is a non-empty YAML string scalar. Prefer a short name or bundled-file reference.',
+  description:
+    '`license`, if present, is a non-empty YAML string scalar. Prefer a short name or bundled-file reference.',
   sources: ['SPEC'],
   mechanical: {
     level: 'FAIL',
@@ -100,7 +105,9 @@ const OPT_4: RubricItem<OptionalRubricContext> = {
 const toolDeclarationFindings = (field: 'allowed-tools' | 'disallowed-tools', value: unknown) => {
   if (typeof value === 'string') {
     const rules = splitToolRules(value)
-    return validToolRules(rules) ? [] : [{ status: 'VIOLATION' as const, message: `\`${field}\` must contain non-empty valid tool rules` }]
+    return validToolRules(rules)
+      ? []
+      : [{ status: 'VIOLATION' as const, message: `\`${field}\` must contain non-empty valid tool rules` }]
   }
   if (Array.isArray(value) && value.every((rule) => typeof rule === 'string' && validToolRule(rule))) return []
   return [
@@ -132,7 +139,8 @@ const splitToolRules = (value: string): string[] | null => {
   return rules
 }
 
-const validToolRules = (rules: string[] | null): boolean => rules !== null && rules.length > 0 && rules.every(validToolRule)
+const validToolRules = (rules: string[] | null): boolean =>
+  rules !== null && rules.length > 0 && rules.every(validToolRule)
 
 /** A rule is `Tool` or `Tool(specifier)`; specifier text may contain balanced nested parentheses. */
 const validToolRule = (rule: string): boolean => {
@@ -161,15 +169,19 @@ const OPT_5: RubricItem<OptionalRubricContext> = {
 const OPT_6: RubricItem<OptionalRubricContext> = {
   code: 'OPT-6',
   title: 'manually timed side effects disable model invocation',
-  description: 'Side-effecting / manually-timed workflows set `disable-model-invocation: true` (contrast `user-invocable: false`).',
+  description:
+    'Side-effecting / manually-timed workflows set `disable-model-invocation: true` (contrast `user-invocable: false`).',
   sources: ['CC'],
-  judgment: judgment('Do side-effecting or manually timed workflows set disable-model-invocation: true where appropriate?')
+  judgment: judgment(
+    'Do side-effecting or manually timed workflows set disable-model-invocation: true where appropriate?'
+  )
 }
 
 const OPT_7: RubricItem<OptionalRubricContext> = {
   code: 'OPT-7',
   title: 'discrete modes have an ordered argument hint',
-  description: 'A skill with discrete modes sets `argument-hint`; modes are **named** (not lettered) and **alphabetically ordered**.',
+  description:
+    'A skill with discrete modes sets `argument-hint`; modes are **named** (not lettered) and **alphabetically ordered**.',
   sources: ['CC', 'COMMUNITY'],
   judgment: judgment('Where the skill has discrete modes, are they named and alphabetically ordered in argument-hint?')
 }

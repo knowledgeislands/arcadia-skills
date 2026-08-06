@@ -15,7 +15,10 @@ const mechanical = (
   sources: [SOURCE],
   mechanical: {
     level: 'WARN',
-    remediation: { class: 'diagnostic', guidance: 'Add the required Admin evidence or correct its local structure, then rerun the audit.' },
+    remediation: {
+      class: 'diagnostic',
+      guidance: 'Add the required Admin evidence or correct its local structure, then rerun the audit.'
+    },
     audit: { phase: 'INSPECT', run: evidence }
   }
 })
@@ -26,7 +29,12 @@ const ADMIN_1 = mechanical(
   'When Governance/ or Operations/ is active, it has its same-name index; absent subdivisions warn only.',
   (context) => context.subdivisions
 )
-const ADMIN_2 = mechanical('ADMIN-2', 'governance charter', 'An active Admin/Governance/ directory carries Charter.md.', (context) => context.charter)
+const ADMIN_2 = mechanical(
+  'ADMIN-2',
+  'governance charter',
+  'An active Admin/Governance/ directory carries Charter.md.',
+  (context) => context.charter
+)
 const ADMIN_3 = mechanical(
   'ADMIN-3',
   'governance conformance record',

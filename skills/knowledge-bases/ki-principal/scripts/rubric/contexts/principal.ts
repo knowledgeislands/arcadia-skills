@@ -10,11 +10,19 @@ const REQUIRED = [
   'Admin/Operations/Processes/Enactment Process.md'
 ] as const
 
-export type PrincipalContext = { readonly rubric: RubricPublicationContext; readonly missing: readonly string[]; readonly enactmentAnchor: boolean }
+export type PrincipalContext = {
+  readonly rubric: RubricPublicationContext
+  readonly missing: readonly string[]
+  readonly enactmentAnchor: boolean
+}
 
-const regular = (path: string): boolean => existsSync(path) && !lstatSync(path).isSymbolicLink() && lstatSync(path).isFile()
+const regular = (path: string): boolean =>
+  existsSync(path) && !lstatSync(path).isSymbolicLink() && lstatSync(path).isFile()
 
-export const createPrincipalSession = ({ repository, publication }: RubricContextOptions): RubricSession<PrincipalContext> => {
+export const createPrincipalSession = ({
+  repository,
+  publication
+}: RubricContextOptions): RubricSession<PrincipalContext> => {
   const root = resolve(repository)
   const orientation = ['CLAUDE.md', 'AGENTS.md']
     .filter((file) => regular(join(root, file)))

@@ -1,5 +1,10 @@
 import type { RubricFamily, RubricItem, ViolationLevel } from '../../shared/rubric.ts'
-import { auditEvidence, type EngineeringEvidence, type EngineeringRubricContext, type PackageRubricContext } from '../contexts/engineering.ts'
+import {
+  auditEvidence,
+  type EngineeringEvidence,
+  type EngineeringRubricContext,
+  type PackageRubricContext
+} from '../contexts/engineering.ts'
 
 const mechanical = (
   code: string,
@@ -18,7 +23,11 @@ const mechanical = (
     ...(options.overrideLevels ? { overrideLevels: options.overrideLevels } : {}),
     remediation: options.conform
       ? { class: 'automatic' }
-      : { class: 'diagnostic', guidance: 'Correct the package manifest structure or declare the missing ownership before rerunning the audit.' },
+      : {
+          class: 'diagnostic',
+          guidance:
+            'Correct the package manifest structure or declare the missing ownership before rerunning the audit.'
+        },
     audit: { phase: 'INSPECT', run: (context) => auditEvidence(evidence(context), level, options.overrideLevels) },
     ...(options.conform ? { conform: { phase: 'PRIMARY' as const, run: options.conform } } : {})
   }
@@ -36,9 +45,16 @@ export const PACKAGE: RubricFamily<EngineeringRubricContext, PackageRubricContex
     mechanical('PKG-1', 'Module package type', '`"type": "module"`.', 'WARN', (context) => context.pkg1, {
       conform: synchronise
     }),
-    mechanical('PKG-2', 'Bun package-manager pin', '`"packageManager"` starts with `bun@` (pinned patch).', 'WARN', (context) => context.pkg2, {
-      conform: synchronise
-    }),
+    mechanical(
+      'PKG-2',
+      'Bun package-manager pin',
+      '`"packageManager"` starts with `bun@` (pinned patch).',
+      'WARN',
+      (context) => context.pkg2,
+      {
+        conform: synchronise
+      }
+    ),
     mechanical('PKG-3', 'Node engine floor', '`"engines.node"` floor is `>= 22`.', 'WARN', (context) => context.pkg3, {
       conform: synchronise
     }),

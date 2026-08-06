@@ -93,7 +93,8 @@ export const auditEvidence = (
   })
 
 const directory = (path: string): boolean => existsSync(path) && lstatSync(path).isDirectory()
-const regularFile = (path: string): boolean => existsSync(path) && lstatSync(path).isFile() && !lstatSync(path).isSymbolicLink()
+const regularFile = (path: string): boolean =>
+  existsSync(path) && lstatSync(path).isFile() && !lstatSync(path).isSymbolicLink()
 
 const directories = (path: string): string[] =>
   directory(path)
@@ -154,7 +155,9 @@ const sample = (values: readonly string[]): string => values.slice(0, 10).join('
 const escapeRegularExpression = (value: string): string => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
 
 const bareToken = (value: string, vocabulary: readonly string[]): string | undefined =>
-  vocabulary.includes(value) ? undefined : vocabulary.find((token) => value.startsWith(token) && /[\s,;.()-]/.test(value.charAt(token.length)))
+  vocabulary.includes(value)
+    ? undefined
+    : vocabulary.find((token) => value.startsWith(token) && /[\s,;.()-]/.test(value.charAt(token.length)))
 
 const proposalDocument = (document: MarkdownDocument): boolean => {
   const values = document.frontmatter?.values
@@ -201,7 +204,11 @@ const unavailableContext = (
   }
 }
 
-export const createStreamsSession = ({ mode, repository, publication }: RubricContextOptions): RubricSession<StreamsRubricContext> => {
+export const createStreamsSession = ({
+  mode,
+  repository,
+  publication
+}: RubricContextOptions): RubricSession<StreamsRubricContext> => {
   const root = resolve(repository)
   if (!directory(root)) {
     const context = unavailableContext(publication, 'FAIL', 'Target is not a directory.', root)
@@ -218,7 +225,11 @@ export const createStreamsSession = ({ mode, repository, publication }: RubricCo
   const configuration = parseConfiguration(regularFile(configPath) ? readFileSync(configPath, 'utf8') : '')
   const streamsPath = join(root, configuration.streams)
   if (!directory(streamsPath)) {
-    const context = unavailableContext(publication, 'NOT_APPLICABLE', `No ${configuration.streams}/ zone; its presence is owned by ki-kb.`)
+    const context = unavailableContext(
+      publication,
+      'NOT_APPLICABLE',
+      `No ${configuration.streams}/ zone; its presence is owned by ki-kb.`
+    )
     return {
       subjects: [
         { families: ['RUBRIC'], context: () => context },
@@ -291,9 +302,12 @@ export const createStreamsSession = ({ mode, repository, publication }: RubricCo
       malformed.push(document.relativePath)
       continue
     }
-    for (const key of ['status', 'priority', 'dependencies']) if (!(key in frontmatter.values)) missing.push(`${document.relativePath} (${key})`)
-    if (frontmatter.values.status && !STATUS.includes(frontmatter.values.status as (typeof STATUS)[number])) badStatus.push(document.relativePath)
-    if (frontmatter.values.priority && !PRIORITY.includes(frontmatter.values.priority as (typeof PRIORITY)[number])) badPriority.push(document.relativePath)
+    for (const key of ['status', 'priority', 'dependencies'])
+      if (!(key in frontmatter.values)) missing.push(`${document.relativePath} (${key})`)
+    if (frontmatter.values.status && !STATUS.includes(frontmatter.values.status as (typeof STATUS)[number]))
+      badStatus.push(document.relativePath)
+    if (frontmatter.values.priority && !PRIORITY.includes(frontmatter.values.priority as (typeof PRIORITY)[number]))
+      badPriority.push(document.relativePath)
   }
   const proposalFrontmatter: StreamsEvidence[] = [
     {
@@ -339,7 +353,9 @@ export const createStreamsSession = ({ mode, repository, publication }: RubricCo
   const knownKeys: StreamsEvidence[] = [
     {
       level: unknownKeys.length ? 'WARN' : 'PASS',
-      message: unknownKeys.length ? `Unrecognised ki-kb-streams key(s): ${unknownKeys.join(', ')}.` : 'Only recognised ki-kb-streams keys are present.',
+      message: unknownKeys.length
+        ? `Unrecognised ki-kb-streams key(s): ${unknownKeys.join(', ')}.`
+        : 'Only recognised ki-kb-streams keys are present.',
       subject: '.ki-config.toml'
     }
   ]
@@ -347,7 +363,10 @@ export const createStreamsSession = ({ mode, repository, publication }: RubricCo
   const noteTypeScheme: StreamsEvidence[] = [
     {
       level: scheme && !['type', 'tags'].includes(scheme) ? 'WARN' : 'PASS',
-      message: scheme && !['type', 'tags'].includes(scheme) ? `Invalid note_type_scheme: ${scheme}.` : 'Note type scheme is canonical or absent.',
+      message:
+        scheme && !['type', 'tags'].includes(scheme)
+          ? `Invalid note_type_scheme: ${scheme}.`
+          : 'Note type scheme is canonical or absent.',
       subject: '.ki-config.toml'
     }
   ]

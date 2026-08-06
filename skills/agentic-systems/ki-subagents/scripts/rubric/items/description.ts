@@ -5,17 +5,24 @@ const STANDARD = 'standards-subagent-definitions.md'
 const DESCRIPTION_MAX = 1024
 const DIAGNOSTIC = {
   class: 'diagnostic' as const,
-  guidance: 'Revise the agent description through its responsible author; do not rewrite the agent role or delegation boundary automatically.'
+  guidance:
+    'Revise the agent description through its responsible author; do not rewrite the agent role or delegation boundary automatically.'
 }
 const judgment = (prompt: string) => ({
   scope: 'The target agent description and the role, delegation, and request cues it communicates.',
   prompt,
   outcomes: ['conforming', 'gap', 'exclusion'] as const,
-  guidance: 'Revise the description through its responsible author, record a named gap, or record an explicit justified exclusion.'
+  guidance:
+    'Revise the description through its responsible author, record a named gap, or record an explicit justified exclusion.'
 })
 const stripCode = (markdown: string): string => markdown.replace(/```[\s\S]*?```/g, '').replace(/`[^`\n]*`/g, '')
-const inspect = (context: AgentFileContext, run: (agent: NonNullable<AgentFileContext['agent']>) => readonly AuditOutcome[]): readonly AuditOutcome[] =>
-  context.agent ? run(context.agent) : [{ status: 'NOT_APPLICABLE', message: 'No physical agent definition is available.' }]
+const inspect = (
+  context: AgentFileContext,
+  run: (agent: NonNullable<AgentFileContext['agent']>) => readonly AuditOutcome[]
+): readonly AuditOutcome[] =>
+  context.agent
+    ? run(context.agent)
+    : [{ status: 'NOT_APPLICABLE', message: 'No physical agent definition is available.' }]
 
 const DESC_1: RubricItem<AgentFileContext> = {
   code: 'DESC-1',

@@ -104,7 +104,10 @@ describe('ki-website-cloudflare session', () => {
     const repository = makeRoot()
     const outside = makeRoot()
     mkdirSync(join(repository, 'site'))
-    writeFileSync(join(repository, '.ki-config.toml'), '["knowledgeislands/ki-agentic-harness:ki-website-cloudflare"]\n')
+    writeFileSync(
+      join(repository, '.ki-config.toml'),
+      '["knowledgeislands/ki-agentic-harness:ki-website-cloudflare"]\n'
+    )
     const outsideConfig = join(outside, 'wrangler.jsonc')
     const content = '{"assets":{"directory":"dist"}}\n'
     writeFileSync(outsideConfig, content)

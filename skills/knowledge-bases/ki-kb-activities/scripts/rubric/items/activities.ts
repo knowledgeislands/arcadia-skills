@@ -20,7 +20,8 @@ const unavailable = (context: ActivitiesContext): RubricOutcomes<AuditOutcome> |
           ]
         : null
 
-const notesWithFrontmatter = (context: ActivitiesContext): readonly ActivityNote[] => context.notes.filter((note) => note.frontmatter !== null)
+const notesWithFrontmatter = (context: ActivitiesContext): readonly ActivityNote[] =>
+  context.notes.filter((note) => note.frontmatter !== null)
 
 const oneOrMore = <Outcome>(values: readonly Outcome[]): RubricOutcomes<Outcome> => {
   if (values.length === 0) throw new Error('expected one or more rubric outcomes')
@@ -40,7 +41,8 @@ const ACT_S_1: RubricItem<ActivitiesContext> = {
       run: (context) => {
         const stop = unavailable(context)
         if (stop) return stop
-        if (context.notes.length === 0) return [{ status: 'NOT_APPLICABLE', message: 'no activity notes found — index check not applicable' }]
+        if (context.notes.length === 0)
+          return [{ status: 'NOT_APPLICABLE', message: 'no activity notes found — index check not applicable' }]
         if (context.index.unsafeEntry)
           return [
             {
@@ -86,7 +88,8 @@ const ACT_S_1: RubricItem<ActivitiesContext> = {
     scope: 'The Activities index, its note entries, ordering, and reader-facing descriptions.',
     prompt: 'Is the index current, well ordered, and informative rather than merely mechanically complete?',
     outcomes: ['conforming', 'index revision required', 'index structure decision required'],
-    guidance: 'Revise the index ordering or descriptions so a reader can understand and navigate the active activity set; record a structure decision for a material reorganisation.'
+    guidance:
+      'Revise the index ordering or descriptions so a reader can understand and navigate the active activity set; record a structure decision for a material reorganisation.'
   }
 }
 
@@ -99,7 +102,8 @@ const ACT_S_2: RubricItem<ActivitiesContext> = {
     level: 'FAIL',
     remediation: {
       class: 'diagnostic',
-      guidance: 'Correct activities_dir so it resolves safely beneath the selected base, or repair the unsafe collection entry without following links.'
+      guidance:
+        'Correct activities_dir so it resolves safely beneath the selected base, or repair the unsafe collection entry without following links.'
     },
     audit: {
       phase: 'PREPARE',
@@ -143,13 +147,15 @@ const ACT_S_2: RubricItem<ActivitiesContext> = {
 const ACT_S_3: RubricItem<ActivitiesContext> = {
   code: 'ACT-S-3',
   title: 'known Activity configuration',
-  description: 'Only activities_dir and harness are recognized under ["knowledgeislands/ki-agentic-harness:ki-kb-activities"].',
+  description:
+    'Only activities_dir and harness are recognized under ["knowledgeislands/ki-agentic-harness:ki-kb-activities"].',
   sources: [SOURCE],
   mechanical: {
     level: 'WARN',
     remediation: {
       class: 'diagnostic',
-      guidance: 'Remove or document unsupported configuration keys after confirming the activity collection contract they were intended to express.'
+      guidance:
+        'Remove or document unsupported configuration keys after confirming the activity collection contract they were intended to express.'
     },
     audit: {
       phase: 'INSPECT',
@@ -193,7 +199,12 @@ const ACT_F_1: RubricItem<ActivitiesContext> = {
         if (stop) return stop
         const outcomes: AuditOutcome[] = []
         for (const note of context.notes) {
-          if (!note.frontmatter) outcomes.push({ status: 'INFO', message: 'no frontmatter block — judgment check only', subject: note.relative })
+          if (!note.frontmatter)
+            outcomes.push({
+              status: 'INFO',
+              message: 'no frontmatter block — judgment check only',
+              subject: note.relative
+            })
           else if (!note.frontmatter.status)
             outcomes.push({
               status: 'VIOLATION',
@@ -206,9 +217,16 @@ const ACT_F_1: RubricItem<ActivitiesContext> = {
               message: `status '${note.frontmatter.status}' is not one of active / paused / retired`,
               subject: note.relative
             })
-          else outcomes.push({ status: 'PASS', message: `status '${note.frontmatter.status}' is valid`, subject: note.relative })
+          else
+            outcomes.push({
+              status: 'PASS',
+              message: `status '${note.frontmatter.status}' is valid`,
+              subject: note.relative
+            })
         }
-        return outcomes.length ? oneOrMore(outcomes) : [{ status: 'NOT_APPLICABLE', message: 'no activity notes found' }]
+        return outcomes.length
+          ? oneOrMore(outcomes)
+          : [{ status: 'NOT_APPLICABLE', message: 'no activity notes found' }]
       }
     }
   }
@@ -234,10 +252,16 @@ const ACT_F_2: RubricItem<ActivitiesContext> = {
         for (const note of notesWithFrontmatter(context))
           outcomes.push(
             note.frontmatter?.realization
-              ? { status: 'PASS', message: `realization '${note.frontmatter.realization}' declared`, subject: note.relative }
+              ? {
+                  status: 'PASS',
+                  message: `realization '${note.frontmatter.realization}' declared`,
+                  subject: note.relative
+                }
               : { status: 'VIOLATION', message: "missing required field 'realization'", subject: note.relative }
           )
-        return outcomes.length ? oneOrMore(outcomes) : [{ status: 'NOT_APPLICABLE', message: 'no frontmatter-bearing activity notes found' }]
+        return outcomes.length
+          ? oneOrMore(outcomes)
+          : [{ status: 'NOT_APPLICABLE', message: 'no frontmatter-bearing activity notes found' }]
       }
     }
   }
@@ -252,7 +276,8 @@ const ACT_F_3: RubricItem<ActivitiesContext> = {
     level: 'WARN',
     remediation: {
       class: 'diagnostic',
-      guidance: 'Document an unknown realization in the agentic environment or select a known realization only when it accurately describes the activity.'
+      guidance:
+        'Document an unknown realization in the agentic environment or select a known realization only when it accurately describes the activity.'
     },
     audit: {
       phase: 'INSPECT',
@@ -263,14 +288,20 @@ const ACT_F_3: RubricItem<ActivitiesContext> = {
           .filter((note) => note.frontmatter?.realization)
           .map((note) =>
             KNOWN_REALIZATIONS.includes(note.frontmatter?.realization as (typeof KNOWN_REALIZATIONS)[number])
-              ? { status: 'PASS' as const, message: `realization '${note.frontmatter?.realization}' is known`, subject: note.relative }
+              ? {
+                  status: 'PASS' as const,
+                  message: `realization '${note.frontmatter?.realization}' is known`,
+                  subject: note.relative
+                }
               : {
                   status: 'INFO' as const,
                   message: `realization '${note.frontmatter?.realization}' is not in the known list — ensure the agentic environment is documented`,
                   subject: note.relative
                 }
           )
-        return outcomes.length ? oneOrMore(outcomes) : [{ status: 'NOT_APPLICABLE', message: 'no realized activity notes found' }]
+        return outcomes.length
+          ? oneOrMore(outcomes)
+          : [{ status: 'NOT_APPLICABLE', message: 'no realized activity notes found' }]
       }
     }
   }
@@ -294,10 +325,16 @@ const ACT_F_4: RubricItem<ActivitiesContext> = {
         if (stop) return stop
         const outcomes = notesWithFrontmatter(context).map((note) =>
           note.frontmatter?.author
-            ? { status: 'PASS' as const, message: `author '${note.frontmatter.author}' declared`, subject: note.relative }
+            ? {
+                status: 'PASS' as const,
+                message: `author '${note.frontmatter.author}' declared`,
+                subject: note.relative
+              }
             : { status: 'VIOLATION' as const, message: "missing required field 'author'", subject: note.relative }
         )
-        return outcomes.length ? oneOrMore(outcomes) : [{ status: 'NOT_APPLICABLE', message: 'no frontmatter-bearing activity notes found' }]
+        return outcomes.length
+          ? oneOrMore(outcomes)
+          : [{ status: 'NOT_APPLICABLE', message: 'no frontmatter-bearing activity notes found' }]
       }
     }
   }
@@ -312,7 +349,8 @@ const ACT_R_1: RubricItem<ActivitiesContext> = {
     level: 'WARN',
     remediation: {
       class: 'diagnostic',
-      guidance: 'Declare the owning SKILL.md for the slash-command activity after confirming the command’s intended capability.'
+      guidance:
+        'Declare the owning SKILL.md for the slash-command activity after confirming the command’s intended capability.'
     },
     audit: {
       phase: 'INSPECT',
@@ -324,7 +362,11 @@ const ACT_R_1: RubricItem<ActivitiesContext> = {
         return oneOrMore(
           notes.map((note) =>
             note.frontmatter?.skill
-              ? { status: 'PASS' as const, message: `skill '${note.frontmatter.skill}' declared`, subject: note.relative }
+              ? {
+                  status: 'PASS' as const,
+                  message: `skill '${note.frontmatter.skill}' declared`,
+                  subject: note.relative
+                }
               : {
                   status: 'VIOLATION' as const,
                   message: "slash-command requires a 'skill' field naming the SKILL.md",
@@ -346,14 +388,17 @@ const ACT_R_2: RubricItem<ActivitiesContext> = {
     level: 'WARN',
     remediation: {
       class: 'diagnostic',
-      guidance: 'Correct the declared skill or configure the intended harness path; do not infer a substitute capability automatically.'
+      guidance:
+        'Correct the declared skill or configure the intended harness path; do not infer a substitute capability automatically.'
     },
     audit: {
       phase: 'INSPECT',
       run: (context) => {
         const stop = unavailable(context)
         if (stop) return stop
-        const notes = notesWithFrontmatter(context).filter((note) => note.frontmatter?.realization === 'slash-command' && note.frontmatter.skill)
+        const notes = notesWithFrontmatter(context).filter(
+          (note) => note.frontmatter?.realization === 'slash-command' && note.frontmatter.skill
+        )
         if (notes.length === 0) return [{ status: 'NOT_APPLICABLE', message: 'no declared slash-command skills found' }]
         if (!context.harness)
           return oneOrMore(
@@ -366,7 +411,11 @@ const ACT_R_2: RubricItem<ActivitiesContext> = {
         return oneOrMore(
           notes.map((note) =>
             context.harness?.hasSkill(note.frontmatter?.skill ?? '')
-              ? { status: 'PASS' as const, message: `skill '${note.frontmatter?.skill}' exists in the harness`, subject: note.relative }
+              ? {
+                  status: 'PASS' as const,
+                  message: `skill '${note.frontmatter?.skill}' exists in the harness`,
+                  subject: note.relative
+                }
               : {
                   status: 'VIOLATION' as const,
                   message: `skill '${note.frontmatter?.skill}' is absent from the harness`,
@@ -400,8 +449,16 @@ const ACT_R_3: RubricItem<ActivitiesContext> = {
         return oneOrMore(
           notes.map((note) =>
             note.frontmatter?.schedule_name
-              ? { status: 'PASS' as const, message: `schedule '${note.frontmatter.schedule_name}' declared`, subject: note.relative }
-              : { status: 'VIOLATION' as const, message: "scheduled-task requires a 'schedule_name' field", subject: note.relative }
+              ? {
+                  status: 'PASS' as const,
+                  message: `schedule '${note.frontmatter.schedule_name}' declared`,
+                  subject: note.relative
+                }
+              : {
+                  status: 'VIOLATION' as const,
+                  message: "scheduled-task requires a 'schedule_name' field",
+                  subject: note.relative
+                }
           )
         )
       }
@@ -418,15 +475,19 @@ const ACT_R_4: RubricItem<ActivitiesContext> = {
     level: 'WARN',
     remediation: {
       class: 'diagnostic',
-      guidance: 'Verify the named task in its external scheduler and update the activity note or scheduler registration through the owning environment.'
+      guidance:
+        'Verify the named task in its external scheduler and update the activity note or scheduler registration through the owning environment.'
     },
     audit: {
       phase: 'INSPECT',
       run: (context) => {
         const stop = unavailable(context)
         if (stop) return stop
-        const notes = notesWithFrontmatter(context).filter((note) => note.frontmatter?.realization === 'scheduled-task' && note.frontmatter.schedule_name)
-        if (notes.length === 0) return [{ status: 'NOT_APPLICABLE', message: 'no named scheduled-task activities found' }]
+        const notes = notesWithFrontmatter(context).filter(
+          (note) => note.frontmatter?.realization === 'scheduled-task' && note.frontmatter.schedule_name
+        )
+        if (notes.length === 0)
+          return [{ status: 'NOT_APPLICABLE', message: 'no named scheduled-task activities found' }]
         return oneOrMore(
           notes.map((note) => ({
             status: 'INFO' as const,
@@ -448,7 +509,8 @@ const ACT_J_1: RubricItem<ActivitiesContext> = {
     scope: 'Every activity note body and its stated purpose, trigger, and adoption rationale.',
     prompt: 'Does each activity note clearly explain what it does, when it runs, and why it was adopted?',
     outcomes: ['conforming', 'narrative revision required', 'rationale required'],
-    guidance: 'Add a concise explanation of behaviour, trigger or cadence, and adoption rationale while retaining the note’s operational focus.'
+    guidance:
+      'Add a concise explanation of behaviour, trigger or cadence, and adoption rationale while retaining the note’s operational focus.'
   }
 }
 
@@ -461,7 +523,8 @@ const ACT_J_2: RubricItem<ActivitiesContext> = {
     scope: 'The Activities index and its ordering, descriptions, and current activity coverage.',
     prompt: 'Is the activity index current, ordered, and useful rather than just mechanically complete?',
     outcomes: ['conforming', 'index revision required', 'organisation decision required'],
-    guidance: 'Revise ordering and descriptions to aid a reader, or record the organisation decision that explains a non-obvious index structure.'
+    guidance:
+      'Revise ordering and descriptions to aid a reader, or record the organisation decision that explains a non-obvious index structure.'
   }
 }
 
@@ -474,7 +537,8 @@ const ACT_J_3: RubricItem<ActivitiesContext> = {
     scope: 'Every retired activity note and its lifecycle history.',
     prompt: 'Do retired activities document a clear retirement rationale?',
     outcomes: ['conforming', 'rationale required', 'status correction required'],
-    guidance: 'Record why the activity was retired and the relevant replacement or cessation context, or correct a status that does not reflect retirement.'
+    guidance:
+      'Record why the activity was retired and the relevant replacement or cessation context, or correct a status that does not reflect retirement.'
   }
 }
 
@@ -487,7 +551,8 @@ const ACT_J_4: RubricItem<ActivitiesContext> = {
     scope: 'Every slash-command activity and its linked skill documentation or trigger guidance.',
     prompt: 'Does every slash-command activity link to useful skill documentation or trigger guidance?',
     outcomes: ['conforming', 'documentation link required', 'trigger guidance required'],
-    guidance: 'Link the activity to its authoritative skill documentation or add clear trigger guidance that explains how it is invoked.'
+    guidance:
+      'Link the activity to its authoritative skill documentation or add clear trigger guidance that explains how it is invoked.'
   }
 }
 
@@ -500,7 +565,8 @@ const ACT_J_5: RubricItem<ActivitiesContext> = {
     scope: 'Every scheduled-task activity note, its cadence, and expected outcome.',
     prompt: 'Does every scheduled-task note state its cadence and expected outcome?',
     outcomes: ['conforming', 'cadence required', 'outcome required'],
-    guidance: 'State the scheduler cadence and the expected observable outcome so operators can distinguish normal execution from drift.'
+    guidance:
+      'State the scheduler cadence and the expected observable outcome so operators can distinguish normal execution from drift.'
   }
 }
 
@@ -510,5 +576,22 @@ export const ACT: RubricFamily<ActivitiesRubricContext, ActivitiesContext> = {
   description: 'Activity note structure, frontmatter, realization-specific declarations, and safe index maintenance.',
   standard: SOURCE,
   selectContext: (context) => context.activities,
-  items: [ACT_S_1, ACT_S_2, ACT_S_3, ACT_F_1, ACT_F_2, ACT_F_3, ACT_F_4, ACT_R_1, ACT_R_2, ACT_R_3, ACT_R_4, ACT_J_1, ACT_J_2, ACT_J_3, ACT_J_4, ACT_J_5]
+  items: [
+    ACT_S_1,
+    ACT_S_2,
+    ACT_S_3,
+    ACT_F_1,
+    ACT_F_2,
+    ACT_F_3,
+    ACT_F_4,
+    ACT_R_1,
+    ACT_R_2,
+    ACT_R_3,
+    ACT_R_4,
+    ACT_J_1,
+    ACT_J_2,
+    ACT_J_3,
+    ACT_J_4,
+    ACT_J_5
+  ]
 }

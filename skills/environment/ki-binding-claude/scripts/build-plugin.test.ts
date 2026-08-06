@@ -1,9 +1,26 @@
 import { afterEach, describe, expect, test } from 'bun:test'
 import type { Stats } from 'node:fs'
-import { lstatSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, realpathSync, renameSync, rmSync, symlinkSync, unlinkSync, writeFileSync } from 'node:fs'
+import {
+  lstatSync,
+  mkdirSync,
+  mkdtempSync,
+  readdirSync,
+  readFileSync,
+  realpathSync,
+  renameSync,
+  rmSync,
+  symlinkSync,
+  unlinkSync,
+  writeFileSync
+} from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
-import { type BuildPluginOptions, type BuildPluginTestHooks, parseBuildPluginArgs, runBuildPlugin } from './build-plugin.ts'
+import {
+  type BuildPluginOptions,
+  type BuildPluginTestHooks,
+  parseBuildPluginArgs,
+  runBuildPlugin
+} from './build-plugin.ts'
 
 const temporaryDirectories: string[] = []
 const noOutput = { output: () => {} }
@@ -47,7 +64,9 @@ const createPreviousPair = (outDir: string): void => {
 }
 
 const expectPreviousPair = (outDir: string): void => {
-  expect(readFileSync(join(outDir, '.claude-plugin', 'previous-marketplace.txt'), 'utf8')).toBe('previous marketplace\n')
+  expect(readFileSync(join(outDir, '.claude-plugin', 'previous-marketplace.txt'), 'utf8')).toBe(
+    'previous marketplace\n'
+  )
   expect(readFileSync(join(outDir, 'test-plugin', 'previous-plugin.txt'), 'utf8')).toBe('previous plugin\n')
   expectPathAbsent(join(outDir, '.claude-plugin', 'marketplace.json'))
   expectPathAbsent(join(outDir, 'test-plugin', '.claude-plugin', 'plugin.json'))
@@ -132,7 +151,9 @@ describe.each([
           if (index === renameIndex) throw new Error(`injected failure after ${label} rename`)
         }
       })
-    ).toThrow(`publication failed: injected failure after ${label} rename; exact pre-run generated paths restored and verified`)
+    ).toThrow(
+      `publication failed: injected failure after ${label} rename; exact pre-run generated paths restored and verified`
+    )
 
     expectPreviousPair(outDir)
     expectNoRunArtifacts(outDir)
@@ -271,7 +292,9 @@ test('a callback does not execute when its pinned root is already invalid', () =
   })
 
   try {
-    expect(() => runBuildPlugin(optionsFor(outDir), hooks)).toThrow('output root identity changed or is no longer a physical directory')
+    expect(() => runBuildPlugin(optionsFor(outDir), hooks)).toThrow(
+      'output root identity changed or is no longer a physical directory'
+    )
     expect(callbackRan).toBe(false)
     expect(readdirSync(alternateRoot).sort()).toEqual(['alternate-marker.txt'])
     expectPreviousPair(movedRoot)
@@ -312,8 +335,15 @@ test('a root swap during publication refuses unsafe rollback and retains recover
     expect(failure).not.toContain(`recovery artifacts retained beneath ${outDir}`)
     expect(readdirSync(alternateRoot).sort()).toEqual(['alternate-marker.txt'])
     expect(lstatSync(outDir).isSymbolicLink()).toBe(true)
-    expect(readFileSync(join(movedRoot, `.test-plugin.build-${token}.backup-marketplace`, 'previous-marketplace.txt'), 'utf8')).toBe('previous marketplace\n')
-    expect(readFileSync(join(movedRoot, `.test-plugin.build-${token}.backup-plugin`, 'previous-plugin.txt'), 'utf8')).toBe('previous plugin\n')
+    expect(
+      readFileSync(
+        join(movedRoot, `.test-plugin.build-${token}.backup-marketplace`, 'previous-marketplace.txt'),
+        'utf8'
+      )
+    ).toBe('previous marketplace\n')
+    expect(
+      readFileSync(join(movedRoot, `.test-plugin.build-${token}.backup-plugin`, 'previous-plugin.txt'), 'utf8')
+    ).toBe('previous plugin\n')
     expect(lstatSync(join(movedRoot, `.test-plugin.build-${token}.stage-plugin`)).isDirectory()).toBe(true)
   } finally {
     if (lstatOrAbsent(outDir)?.isSymbolicLink()) unlinkSync(outDir)
@@ -347,7 +377,9 @@ test('backup tampering reports primary and restoration failures and retains reco
   expect(failure).toContain('publication failed: injected primary publication failure; restoration failed:')
   expect(failure).toContain('captured backup changed after preflight')
 
-  expect(readFileSync(join(outDir, '.claude-plugin', 'previous-marketplace.txt'), 'utf8')).toBe('previous marketplace\n')
+  expect(readFileSync(join(outDir, '.claude-plugin', 'previous-marketplace.txt'), 'utf8')).toBe(
+    'previous marketplace\n'
+  )
   expectPathAbsent(join(outDir, 'test-plugin'))
   expect(readFileSync(join(backupPlugin, 'previous-plugin.txt'), 'utf8')).toBe('tampered backup\n')
   expect(lstatSync(stagedPlugin).isDirectory()).toBe(true)
@@ -361,7 +393,9 @@ test('unsafe roots, generated paths, and token-scoped run paths are rejected wit
 
   const generatedFileRoot = temporaryOutput()
   writeFileSync(join(generatedFileRoot, '.claude-plugin'), 'unsafe\n')
-  expect(() => runBuildPlugin(optionsFor(generatedFileRoot), noOutput)).toThrow('generated path that is not a directory')
+  expect(() => runBuildPlugin(optionsFor(generatedFileRoot), noOutput)).toThrow(
+    'generated path that is not a directory'
+  )
   expect(readFileSync(join(generatedFileRoot, '.claude-plugin'), 'utf8')).toBe('unsafe\n')
 
   const generatedLinkRoot = temporaryOutput()

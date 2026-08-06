@@ -4,7 +4,8 @@ import type { GitRubricContext } from '../contexts/git.ts'
 const COMMIT_1: RubricItem<GitRubricContext> = {
   code: 'COMMIT-1',
   title: 'commit shape expresses the completed unit',
-  description: 'A commit uses the portable Conventional Commit shape and accurately represents one completed unit of work.',
+  description:
+    'A commit uses the portable Conventional Commit shape and accurately represents one completed unit of work.',
   sources: ['standards-git.md'],
   judgment: {
     scope: 'Each proposed commit and the changes it contains.',

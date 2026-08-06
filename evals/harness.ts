@@ -78,7 +78,15 @@ const ALL: Scenario[] = [
   ...pluginsScenarios
 ]
 
-const C = { reset: '\x1b[0m', dim: '\x1b[2m', green: '\x1b[32m', yellow: '\x1b[33m', red: '\x1b[31m', cyan: '\x1b[36m', bold: '\x1b[1m' }
+const C = {
+  reset: '\x1b[0m',
+  dim: '\x1b[2m',
+  green: '\x1b[32m',
+  yellow: '\x1b[33m',
+  red: '\x1b[31m',
+  cyan: '\x1b[36m',
+  bold: '\x1b[1m'
+}
 const paint = (c: string, s: string): string => `${c}${s}${C.reset}`
 
 const CALL_TIMEOUT_MS = 240_000
@@ -99,9 +107,18 @@ function runClaude(prompt: string, model: string, cwd: string, skill?: string): 
   if (skill) args.push('--add-dir', SKILLS_DIR)
   else args.push('--disallowed-tools', 'Skill')
   try {
-    const out = execFileSync('claude', args, { cwd, encoding: 'utf8', timeout: CALL_TIMEOUT_MS, maxBuffer: 64 * 1024 * 1024 })
+    const out = execFileSync('claude', args, {
+      cwd,
+      encoding: 'utf8',
+      timeout: CALL_TIMEOUT_MS,
+      maxBuffer: 64 * 1024 * 1024
+    })
     const j = JSON.parse(out) as { result?: unknown; total_cost_usd?: number; is_error?: boolean; subtype?: string }
-    return { text: typeof j.result === 'string' ? j.result : '', costUsd: j.total_cost_usd ?? 0, error: j.is_error ? (j.subtype ?? 'error') : null }
+    return {
+      text: typeof j.result === 'string' ? j.result : '',
+      costUsd: j.total_cost_usd ?? 0,
+      error: j.is_error ? (j.subtype ?? 'error') : null
+    }
   } catch (e) {
     return { text: '', costUsd: 0, error: String((e as Error).message ?? e).split('\n')[0] }
   }
@@ -132,7 +149,12 @@ ${treatment || '(empty)'}`
   try {
     const j = JSON.parse(extractJson(r.text)) as { baseline?: number; treatment?: number; note?: string }
     const clamp = (n: unknown): number => (typeof n === 'number' && n >= 0 && n <= 5 ? n : -1)
-    return { baseline: clamp(j.baseline), treatment: clamp(j.treatment), note: String(j.note ?? ''), costUsd: r.costUsd }
+    return {
+      baseline: clamp(j.baseline),
+      treatment: clamp(j.treatment),
+      note: String(j.note ?? ''),
+      costUsd: r.costUsd
+    }
   } catch {
     return { baseline: -1, treatment: -1, note: 'judge parse failed', costUsd: r.costUsd }
   }
@@ -160,8 +182,18 @@ const cwd = mkdtempSync(join(tmpdir(), 'ki-eval-'))
 const mean = (xs: number[]): number => (xs.length ? xs.reduce((a, b) => a + b, 0) / xs.length : -1)
 const fmt = (x: number): string => (runs === 1 ? String(x) : x.toFixed(1))
 
-console.log(paint(C.dim, `model: ${model} · judge: ${judgeModel} · scenarios: ${scenarios.length} · runs/arm: ${runs} · isolated cwd: ${cwd}`))
-console.log(paint(C.dim, 'baseline = skills off · treatment = skill loaded · in-situ (ambient CLAUDE.md in both) · non-deterministic, advisory'))
+console.log(
+  paint(
+    C.dim,
+    `model: ${model} · judge: ${judgeModel} · scenarios: ${scenarios.length} · runs/arm: ${runs} · isolated cwd: ${cwd}`
+  )
+)
+console.log(
+  paint(
+    C.dim,
+    'baseline = skills off · treatment = skill loaded · in-situ (ambient CLAUDE.md in both) · non-deterministic, advisory'
+  )
+)
 
 let totalCost = 0
 let helped = 0
@@ -213,7 +245,11 @@ for (const s of scenarios) {
   )
   s.assertions.forEach((a, idx) => {
     const cell = (hits: number): string =>
-      runs === 1 ? (hits ? paint(C.green, '✓') : paint(C.red, '✗')) : paint(hits === runs ? C.green : hits === 0 ? C.red : C.yellow, `${hits}/${runs}`)
+      runs === 1
+        ? hits
+          ? paint(C.green, '✓')
+          : paint(C.red, '✗')
+        : paint(hits === runs ? C.green : hits === 0 ? C.red : C.yellow, `${hits}/${runs}`)
     console.log(`    ${cell(bHits[idx])} ${cell(tHits[idx])}  ${paint(C.dim, a.name)}`)
   })
 
@@ -243,5 +279,10 @@ for (const s of scenarios) {
 console.log(
   `\n${paint(C.cyan, 'summary')}: ${scenarios.length} scenario(s) × ${runs} run(s) · ${paint(C.green, `${helped} helped`)} · ${paint(C.red, `${regressed} regressed`)} · ${paint(C.dim, `~$${totalCost.toFixed(2)} on ${model}`)}`
 )
-console.log(paint(C.dim, 'advisory (PROC-1/2) — non-deterministic; raise --runs to stabilise. Marginal value over the ambient baseline.'))
+console.log(
+  paint(
+    C.dim,
+    'advisory (PROC-1/2) — non-deterministic; raise --runs to stabilise. Marginal value over the ambient baseline.'
+  )
+)
 process.exit(0)

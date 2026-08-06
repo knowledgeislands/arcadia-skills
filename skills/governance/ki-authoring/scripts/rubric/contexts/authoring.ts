@@ -2,10 +2,16 @@ import { spawnSync } from 'node:child_process'
 import { createHash } from 'node:crypto'
 import { existsSync, lstatSync, readdirSync, readFileSync } from 'node:fs'
 import { join, resolve } from 'node:path'
-import type { ConformCommand, ConformWrite, RubricContextOptions, RubricPublicationContext, RubricSession } from '../../shared/rubric.ts'
+import type {
+  ConformCommand,
+  ConformWrite,
+  RubricContextOptions,
+  RubricPublicationContext,
+  RubricSession
+} from '../../shared/rubric.ts'
 
 export const PRETTIER_DEFAULT = `{
-  "printWidth": 160,
+  "printWidth": 120,
   "tabWidth": 2,
   "useTabs": false,
   "semi": false,
@@ -91,12 +97,34 @@ const MARKDOWN_PATHS = [
 ] as const
 
 const MARKDOWN_AUDIT_COMMANDS: readonly ConformCommand[] = [
-  { program: 'bunx', arguments: ['prettier', '--check', ...MARKDOWN_PATHS, '--ignore-path', '.gitignore', '--ignore-path', '.prettierignore'] },
+  {
+    program: 'bunx',
+    arguments: [
+      'prettier',
+      '--check',
+      ...MARKDOWN_PATHS,
+      '--ignore-path',
+      '.gitignore',
+      '--ignore-path',
+      '.prettierignore'
+    ]
+  },
   { program: 'bunx', arguments: ['markdownlint-cli2', '**/*.md'] }
 ]
 
 const MARKDOWN_CONFORM_COMMANDS: readonly ConformCommand[] = [
-  { program: 'bunx', arguments: ['prettier', '--write', ...MARKDOWN_PATHS, '--ignore-path', '.gitignore', '--ignore-path', '.prettierignore'] },
+  {
+    program: 'bunx',
+    arguments: [
+      'prettier',
+      '--write',
+      ...MARKDOWN_PATHS,
+      '--ignore-path',
+      '.gitignore',
+      '--ignore-path',
+      '.prettierignore'
+    ]
+  },
   { program: 'bunx', arguments: ['markdownlint-cli2', '--fix'] }
 ]
 
@@ -157,23 +185,33 @@ const canonical: Record<OwnedFile, string> = {
 const sha256 = (content: string): string => createHash('sha256').update(content).digest('hex')
 
 const FRONTMATTER_IGNORED_DIRECTORIES = new Set(['.git', 'dist', 'node_modules'])
-const FRONTMATTER_IGNORED_PATHS = ['src/generated', '.claude/commands', '.claude/skills', '.claude/agents', '.agents/skills']
+const FRONTMATTER_IGNORED_PATHS = [
+  'src/generated',
+  '.claude/commands',
+  '.claude/skills',
+  '.claude/agents',
+  '.agents/skills'
+]
 const YAML_SIGNIFICANT_SCALARS = /^(?:true|false|null|y|n|yes|no|on|off|\.nan|\.inf)$/i
 const BARE_SAFE_SCALAR = /^[A-Za-z_][A-Za-z0-9_-]*$/
 
-const submittedTradeRecordPathIsIgnored = (path: string): boolean => /^[+-]\/_TRADES\/[^/]+\/[^/]+\/TRD-[^/]+\.md$/.test(path)
+const submittedTradeRecordPathIsIgnored = (path: string): boolean =>
+  /^[+-]\/_TRADES\/[^/]+\/[^/]+\/TRD-[^/]+\.md$/.test(path)
 
 const frontmatterPathIsIgnored = (path: string): boolean =>
-  submittedTradeRecordPathIsIgnored(path) || FRONTMATTER_IGNORED_PATHS.some((ignored) => path === ignored || path.startsWith(`${ignored}/`))
+  submittedTradeRecordPathIsIgnored(path) ||
+  FRONTMATTER_IGNORED_PATHS.some((ignored) => path === ignored || path.startsWith(`${ignored}/`))
 
 const markdownFiles = (repository: string, directory = '', files: string[] = []): readonly string[] => {
   for (const entry of readdirSync(join(repository, directory), { withFileTypes: true })) {
     const path = directory ? `${directory}/${entry.name}` : entry.name
     if (entry.isDirectory()) {
-      if (!FRONTMATTER_IGNORED_DIRECTORIES.has(entry.name) && !frontmatterPathIsIgnored(path)) markdownFiles(repository, path, files)
+      if (!FRONTMATTER_IGNORED_DIRECTORIES.has(entry.name) && !frontmatterPathIsIgnored(path))
+        markdownFiles(repository, path, files)
       continue
     }
-    if (entry.isFile() && !entry.isSymbolicLink() && path.endsWith('.md') && !frontmatterPathIsIgnored(path)) files.push(path)
+    if (entry.isFile() && !entry.isSymbolicLink() && path.endsWith('.md') && !frontmatterPathIsIgnored(path))
+      files.push(path)
   }
   return files
 }
@@ -182,12 +220,17 @@ const normaliseFrontmatter = (content: string): { content: string; count: number
   const frontmatter = /^(---\n)([\s\S]*?)(\n---(?:\n|$))/.exec(content)
   if (!frontmatter) return { content, count: 0 }
   let count = 0
-  const fields = frontmatter[2].replace(/^([a-z][a-z0-9-]*: )(['"])([A-Za-z_][A-Za-z0-9_-]*)\2$/gm, (line, prefix, _quote, value) => {
-    if (!BARE_SAFE_SCALAR.test(value) || YAML_SIGNIFICANT_SCALARS.test(value)) return line
-    count += 1
-    return `${prefix}${value}`
-  })
-  return count === 0 ? { content, count } : { content: `${frontmatter[1]}${fields}${frontmatter[3]}${content.slice(frontmatter[0].length)}`, count }
+  const fields = frontmatter[2].replace(
+    /^([a-z][a-z0-9-]*: )(['"])([A-Za-z_][A-Za-z0-9_-]*)\2$/gm,
+    (line, prefix, _quote, value) => {
+      if (!BARE_SAFE_SCALAR.test(value) || YAML_SIGNIFICANT_SCALARS.test(value)) return line
+      count += 1
+      return `${prefix}${value}`
+    }
+  )
+  return count === 0
+    ? { content, count }
+    : { content: `${frontmatter[1]}${fields}${frontmatter[3]}${content.slice(frontmatter[0].length)}`, count }
 }
 
 const createFrontmatterDrafts = (repository: string, mutable: boolean): readonly FrontmatterFileDraft[] =>

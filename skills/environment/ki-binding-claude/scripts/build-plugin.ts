@@ -12,7 +12,19 @@
 
 import { createHash, randomUUID } from 'node:crypto'
 import type { Stats } from 'node:fs'
-import { cpSync, lstatSync, mkdirSync, readdirSync, readFileSync, readlinkSync, realpathSync, renameSync, rmSync, statSync, writeFileSync } from 'node:fs'
+import {
+  cpSync,
+  lstatSync,
+  mkdirSync,
+  readdirSync,
+  readFileSync,
+  readlinkSync,
+  realpathSync,
+  renameSync,
+  rmSync,
+  statSync,
+  writeFileSync
+} from 'node:fs'
 import { homedir } from 'node:os'
 import { basename, dirname, isAbsolute, join, relative, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -182,16 +194,27 @@ const assertState = (path: string, expected: DirectoryState, label: string): voi
     if (actual.kind !== 'absent') throw new Error(`${label} changed after preflight (expected absent): ${path}`)
     return
   }
-  if (actual.kind !== 'directory' || actual.device !== expected.device || actual.inode !== expected.inode || actual.sha256 !== expected.sha256) {
+  if (
+    actual.kind !== 'directory' ||
+    actual.device !== expected.device ||
+    actual.inode !== expected.inode ||
+    actual.sha256 !== expected.sha256
+  ) {
     throw new Error(`${label} changed after preflight: ${path}`)
   }
 }
 
-const assertDirectoryIdentity = (path: string, expected: Extract<DirectoryState, { kind: 'directory' }>, label: string): void => {
+const assertDirectoryIdentity = (
+  path: string,
+  expected: Extract<DirectoryState, { kind: 'directory' }>,
+  label: string
+): void => {
   const metadata = lstatOrAbsent(path)
   if (!metadata) throw new Error(`${label} is absent: ${path}`)
-  if (metadata.isSymbolicLink() || !metadata.isDirectory()) throw new Error(`${label} is not the run-owned directory: ${path}`)
-  if (metadata.dev !== expected.device || metadata.ino !== expected.inode) throw new Error(`${label} identity changed: ${path}`)
+  if (metadata.isSymbolicLink() || !metadata.isDirectory())
+    throw new Error(`${label} is not the run-owned directory: ${path}`)
+  if (metadata.dev !== expected.device || metadata.ino !== expected.inode)
+    throw new Error(`${label} identity changed: ${path}`)
 }
 
 const assertOutputRoot = (root: OutputRoot): void => {
@@ -206,15 +229,18 @@ const assertSafeOutput = (outDir: string, plugin: string): OutputRoot => {
   const requestedRoot = resolve(outDir)
   const rootMetadata = lstatOrAbsent(requestedRoot)
   if (!rootMetadata) throw new Error(`output root must already exist as a physical directory: ${requestedRoot}`)
-  if (rootMetadata.isSymbolicLink() || !rootMetadata.isDirectory()) throw new Error(`output root must be a physical directory: ${requestedRoot}`)
+  if (rootMetadata.isSymbolicLink() || !rootMetadata.isDirectory())
+    throw new Error(`output root must be a physical directory: ${requestedRoot}`)
   const root = realpathSync(requestedRoot)
   const protectedPaths = new Set([realpathSync('/'), realpathSync(homedir()), realpathSync(HARNESS_ROOT)])
   if (protectedPaths.has(root)) throw new Error(`refusing broad output directory: ${root}`)
   const fromHarness = relative(realpathSync(HARNESS_ROOT), root)
-  if (!fromHarness.startsWith('..') && !isAbsolute(fromHarness)) throw new Error(`refusing output inside the source harness: ${root}`)
+  if (!fromHarness.startsWith('..') && !isAbsolute(fromHarness))
+    throw new Error(`refusing output inside the source harness: ${root}`)
   const pluginRoot = resolve(root, plugin)
   const fromRoot = relative(root, pluginRoot)
-  if (fromRoot.startsWith('..') || isAbsolute(fromRoot)) throw new Error(`plugin path escapes output directory: ${pluginRoot}`)
+  if (fromRoot.startsWith('..') || isAbsolute(fromRoot))
+    throw new Error(`plugin path escapes output directory: ${pluginRoot}`)
   directoryState(join(root, '.claude-plugin'))
   directoryState(pluginRoot)
   const physicalMetadata = lstatSync(root)
@@ -242,11 +268,17 @@ export const createBuildPluginManifest = ({ outDir, marketplace, plugin }: Build
       if (!statSync(groupPath).isDirectory()) return []
       return readdirSync(groupPath)
         .map((name) => ({ name, source: join(groupPath, name) }))
-        .filter(({ source }) => statSync(source).isDirectory() && lstatOrAbsent(join(source, 'SKILL.md')) !== undefined && supportsClaude(source))
+        .filter(
+          ({ source }) =>
+            statSync(source).isDirectory() &&
+            lstatOrAbsent(join(source, 'SKILL.md')) !== undefined &&
+            supportsClaude(source)
+        )
     })
     .sort(({ name: left }, { name: right }) => left.localeCompare(right))
   for (let index = 1; index < skillSources.length; index++) {
-    if (skillSources[index - 1]?.name === skillSources[index]?.name) throw new Error(`duplicate projected skill name: ${skillSources[index]?.name}`)
+    if (skillSources[index - 1]?.name === skillSources[index]?.name)
+      throw new Error(`duplicate projected skill name: ${skillSources[index]?.name}`)
   }
   const agentSources = lstatOrAbsent(AGENTS_DIR)
     ? readdirSync(AGENTS_DIR)
@@ -287,31 +319,48 @@ const assertEntries = (path: string, expected: readonly string[], label: string)
   const actual = sortedEntries(path)
   const sortedExpected = [...expected].sort((left, right) => left.localeCompare(right))
   if (JSON.stringify(actual) !== JSON.stringify(sortedExpected))
-    throw new Error(`${label} entries differ: expected ${sortedExpected.join(', ') || '(none)'}, found ${actual.join(', ') || '(none)'}`)
+    throw new Error(
+      `${label} entries differ: expected ${sortedExpected.join(', ') || '(none)'}, found ${actual.join(', ') || '(none)'}`
+    )
 }
 
 const assertPhysicalDirectory = (path: string, label: string): void => {
   const metadata = lstatOrAbsent(path)
-  if (!metadata || metadata.isSymbolicLink() || !metadata.isDirectory()) throw new Error(`${label} is missing or not a physical directory: ${path}`)
+  if (!metadata || metadata.isSymbolicLink() || !metadata.isDirectory())
+    throw new Error(`${label} is missing or not a physical directory: ${path}`)
 }
 
 const assertFile = (path: string, expected: string, label: string): void => {
   const metadata = lstatOrAbsent(path)
-  if (!metadata || metadata.isSymbolicLink() || !metadata.isFile()) throw new Error(`${label} is missing or not a physical file: ${path}`)
+  if (!metadata || metadata.isSymbolicLink() || !metadata.isFile())
+    throw new Error(`${label} is missing or not a physical file: ${path}`)
   if (readFileSync(path, 'utf8') !== expected) throw new Error(`${label} differs from the pre-write manifest: ${path}`)
 }
 
-const verifyProjection = (manifest: BuildPluginManifest, marketplaceRoot: string, pluginRoot: string, label: string): void => {
+const verifyProjection = (
+  manifest: BuildPluginManifest,
+  marketplaceRoot: string,
+  pluginRoot: string,
+  label: string
+): void => {
   directoryState(marketplaceRoot, `${label} marketplace path`)
   directoryState(pluginRoot, `${label} plugin path`)
   assertEntries(marketplaceRoot, ['marketplace.json'], `${label} marketplace`)
-  assertFile(join(marketplaceRoot, 'marketplace.json'), expectedJson(manifest.marketplaceManifest), `${label} marketplace manifest`)
+  assertFile(
+    join(marketplaceRoot, 'marketplace.json'),
+    expectedJson(manifest.marketplaceManifest),
+    `${label} marketplace manifest`
+  )
   assertEntries(pluginRoot, ['.claude-plugin', 'agents', 'skills'], `${label} plugin`)
   assertPhysicalDirectory(join(pluginRoot, '.claude-plugin'), `${label} plugin metadata directory`)
   assertPhysicalDirectory(join(pluginRoot, 'skills'), `${label} skills directory`)
   assertPhysicalDirectory(join(pluginRoot, 'agents'), `${label} agents directory`)
   assertEntries(join(pluginRoot, '.claude-plugin'), ['plugin.json'], `${label} plugin metadata`)
-  assertFile(join(pluginRoot, '.claude-plugin', 'plugin.json'), expectedJson(manifest.pluginManifest), `${label} plugin manifest`)
+  assertFile(
+    join(pluginRoot, '.claude-plugin', 'plugin.json'),
+    expectedJson(manifest.pluginManifest),
+    `${label} plugin manifest`
+  )
   assertEntries(
     join(pluginRoot, 'skills'),
     manifest.skills.map(({ name }) => name),
@@ -358,12 +407,20 @@ const writeProjection = (manifest: BuildPluginManifest, marketplaceRoot: string,
   mutateAtOutputRoot(root, () => mkdirSync(join(pluginRoot, '.claude-plugin')))
   mutateAtOutputRoot(root, () => mkdirSync(join(pluginRoot, 'skills')))
   mutateAtOutputRoot(root, () => mkdirSync(join(pluginRoot, 'agents')))
-  mutateAtOutputRoot(root, () => writeFileSync(join(marketplaceRoot, 'marketplace.json'), expectedJson(manifest.marketplaceManifest)))
-  mutateAtOutputRoot(root, () => writeFileSync(join(pluginRoot, '.claude-plugin', 'plugin.json'), expectedJson(manifest.pluginManifest)))
+  mutateAtOutputRoot(root, () =>
+    writeFileSync(join(marketplaceRoot, 'marketplace.json'), expectedJson(manifest.marketplaceManifest))
+  )
+  mutateAtOutputRoot(root, () =>
+    writeFileSync(join(pluginRoot, '.claude-plugin', 'plugin.json'), expectedJson(manifest.pluginManifest))
+  )
   for (const source of manifest.skills)
-    mutateAtOutputRoot(root, () => cpSync(source.source, join(pluginRoot, 'skills', source.name), { recursive: true, verbatimSymlinks: true }))
+    mutateAtOutputRoot(root, () =>
+      cpSync(source.source, join(pluginRoot, 'skills', source.name), { recursive: true, verbatimSymlinks: true })
+    )
   for (const source of manifest.agents)
-    mutateAtOutputRoot(root, () => cpSync(source.source, join(pluginRoot, 'agents', source.name), { verbatimSymlinks: true }))
+    mutateAtOutputRoot(root, () =>
+      cpSync(source.source, join(pluginRoot, 'agents', source.name), { verbatimSymlinks: true })
+    )
 }
 
 const publicationPaths = (manifest: BuildPluginManifest, token: string): PublicationPaths => {
@@ -379,7 +436,8 @@ const publicationPaths = (manifest: BuildPluginManifest, token: string): Publica
 
 const assertRunPathsAbsent = (manifest: BuildPluginManifest, paths: PublicationPaths): void => {
   for (const path of Object.values(paths)) {
-    if (dirname(path) !== manifest.outDir) throw new Error(`publication path is not a direct child of output root: ${path}`)
+    if (dirname(path) !== manifest.outDir)
+      throw new Error(`publication path is not a direct child of output root: ${path}`)
     const state = directoryState(path, 'token-scoped publication path')
     if (state.kind !== 'absent') throw new Error(`token-scoped publication path already exists: ${path}`)
   }
@@ -436,7 +494,11 @@ const recoveryArtifactReport = (root: OutputRoot, paths: PublicationPaths): stri
   }
 }
 
-const presentManifest = (manifest: BuildPluginManifest, options: BuildPluginOptions, output: (body: string) => void): void => {
+const presentManifest = (
+  manifest: BuildPluginManifest,
+  options: BuildPluginOptions,
+  output: (body: string) => void
+): void => {
   if (options.json) {
     output(`${JSON.stringify(manifest, null, 2)}\n`)
     return
@@ -457,7 +519,10 @@ const presentManifest = (manifest: BuildPluginManifest, options: BuildPluginOpti
 export const runBuildPlugin = (options: BuildPluginOptions, hooks: BuildPluginTestHooks = {}): BuildPluginManifest => {
   const manifest = createBuildPluginManifest(options)
   const root = manifest.outputRoot
-  const initialStates = [directoryState(manifest.generatedPaths.marketplace), directoryState(manifest.generatedPaths.plugin)] as const
+  const initialStates = [
+    directoryState(manifest.generatedPaths.marketplace),
+    directoryState(manifest.generatedPaths.plugin)
+  ] as const
   const output = hooks.output ?? ((body: string) => process.stdout.write(body))
   invokeAndRevalidateRoot(root, () => presentManifest(manifest, options, output), 'output callback')
   if (options.dryRun) return manifest
@@ -481,17 +546,26 @@ export const runBuildPlugin = (options: BuildPluginOptions, hooks: BuildPluginTe
       state: directoryState(stagePaths[1], 'staged plugin path') as RunPath['state']
     })
     writeProjection(manifest, stagePaths[0], stagePaths[1])
-    stagedOwned[0] = { path: stagePaths[0], state: directoryState(stagePaths[0], 'staged marketplace path') as RunPath['state'] }
-    stagedOwned[1] = { path: stagePaths[1], state: directoryState(stagePaths[1], 'staged plugin path') as RunPath['state'] }
+    stagedOwned[0] = {
+      path: stagePaths[0],
+      state: directoryState(stagePaths[0], 'staged marketplace path') as RunPath['state']
+    }
+    stagedOwned[1] = {
+      path: stagePaths[1],
+      state: directoryState(stagePaths[1], 'staged plugin path') as RunPath['state']
+    }
     verifyProjection(manifest, stagePaths[0], stagePaths[1], 'staged projection')
   } catch (error) {
     const cleanupFailures = cleanupOwnedPaths(root, stagedOwned)
-    throw new Error(`staging failed: ${errorMessage(error)}${cleanupFailures.length > 0 ? `; staging cleanup failed: ${cleanupFailures.join('; ')}` : ''}`)
+    throw new Error(
+      `staging failed: ${errorMessage(error)}${cleanupFailures.length > 0 ? `; staging cleanup failed: ${cleanupFailures.join('; ')}` : ''}`
+    )
   }
 
   try {
     assertOutputRoot(root)
-    for (let index = 0; index < finalPaths.length; index++) assertState(finalPaths[index], initialStates[index], 'generated path')
+    for (let index = 0; index < finalPaths.length; index++)
+      assertState(finalPaths[index], initialStates[index], 'generated path')
   } catch (error) {
     const cleanupFailures = cleanupOwnedPaths(root, stagedOwned)
     throw new Error(
@@ -515,10 +589,12 @@ export const runBuildPlugin = (options: BuildPluginOptions, hooks: BuildPluginTe
       mutateAtOutputRoot(root, () => renameSync(stagePaths[index], finalPaths[index]))
       publishedOwned.push({ path: finalPaths[index], state: stage.state })
       const afterFinalRename = hooks.afterFinalRename
-      if (afterFinalRename) invokeAndRevalidateRoot(root, () => afterFinalRename(index, finalPaths[index]), 'after-final-rename hook')
+      if (afterFinalRename)
+        invokeAndRevalidateRoot(root, () => afterFinalRename(index, finalPaths[index]), 'after-final-rename hook')
     }
     const beforeFinalVerification = hooks.beforeFinalVerification
-    if (beforeFinalVerification) invokeAndRevalidateRoot(root, () => beforeFinalVerification(manifest), 'before-final-verification hook')
+    if (beforeFinalVerification)
+      invokeAndRevalidateRoot(root, () => beforeFinalVerification(manifest), 'before-final-verification hook')
     verifyProjection(manifest, finalPaths[0], finalPaths[1], 'published projection')
     for (let index = 0; index < finalPaths.length; index++) {
       const stage = stagedOwned[index]
@@ -559,7 +635,9 @@ export const runBuildPlugin = (options: BuildPluginOptions, hooks: BuildPluginTe
         `publication failed: ${errorMessage(primaryError)}; restoration failed: ${restorationFailures.join('; ')}; ${recoveryArtifactReport(root, paths)}`
       )
     }
-    throw new Error(`publication failed: ${errorMessage(primaryError)}; exact pre-run generated paths restored and verified`)
+    throw new Error(
+      `publication failed: ${errorMessage(primaryError)}; exact pre-run generated paths restored and verified`
+    )
   }
 
   const backupCleanupFailures: string[] = []

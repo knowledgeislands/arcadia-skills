@@ -10,11 +10,15 @@ const outcomes = (values: readonly AuditOutcome[], pass: string): RubricOutcomes
 const REQ_1: RubricItem<FeatureRequirementContext> = {
   code: 'REQ-1',
   title: 'requirements carry an RFC-2119 keyword',
-  description: 'Each active requirement contains an uppercase RFC-2119 keyword so its statement is normative and testable.',
+  description:
+    'Each active requirement contains an uppercase RFC-2119 keyword so its statement is normative and testable.',
   sources: [SOURCE],
   mechanical: {
     level: 'FAIL',
-    remediation: { class: 'diagnostic', guidance: 'Rewrite the affected requirement with the intended RFC-2119 keyword, then rerun the audit.' },
+    remediation: {
+      class: 'diagnostic',
+      guidance: 'Rewrite the affected requirement with the intended RFC-2119 keyword, then rerun the audit.'
+    },
     audit: {
       phase: 'INSPECT',
       run: (context) =>

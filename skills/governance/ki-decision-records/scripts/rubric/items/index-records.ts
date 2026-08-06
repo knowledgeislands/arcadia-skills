@@ -13,7 +13,10 @@ const INDEX_1: RubricItem<IndexRubricContext> = {
   sources: [SOURCE],
   mechanical: {
     level: 'FAIL',
-    remediation: { class: 'diagnostic', guidance: 'Create the canonical decision index for this repository or Knowledge Base.' },
+    remediation: {
+      class: 'diagnostic',
+      guidance: 'Create the canonical decision index for this repository or Knowledge Base.'
+    },
     audit: {
       phase: 'PREPARE',
       run: (context: IndexRubricContext) =>
@@ -39,7 +42,8 @@ const INDEX_2: RubricItem<IndexRubricContext> = {
     audit: {
       phase: 'DERIVED',
       run: (context: IndexRubricContext) => {
-        if (!context.indexExists) return [{ status: 'NOT_APPLICABLE', message: 'The index is absent.', subject: context.indexFile }] as const
+        if (!context.indexExists)
+          return [{ status: 'NOT_APPLICABLE', message: 'The index is absent.', subject: context.indexFile }] as const
         return outcomes(
           context.records
             .filter((record) => (context.indexCounts.get(record.id) ?? 0) !== 1)
@@ -70,11 +74,15 @@ const INDEX_3: RubricItem<IndexRubricContext> = {
   sources: [SOURCE],
   mechanical: {
     level: 'FAIL',
-    remediation: { class: 'diagnostic', guidance: 'Remove or correct each stale index entry after confirming the record history.' },
+    remediation: {
+      class: 'diagnostic',
+      guidance: 'Remove or correct each stale index entry after confirming the record history.'
+    },
     audit: {
       phase: 'DERIVED',
       run: (context: IndexRubricContext) => {
-        if (!context.indexExists) return [{ status: 'NOT_APPLICABLE', message: 'The index is absent.', subject: context.indexFile }] as const
+        if (!context.indexExists)
+          return [{ status: 'NOT_APPLICABLE', message: 'The index is absent.', subject: context.indexFile }] as const
         const ids = new Set(context.records.map((record) => record.id))
         return outcomes(
           context.indexIds
@@ -96,7 +104,8 @@ const INDEX_3: RubricItem<IndexRubricContext> = {
 const INDEX_6: RubricItem<IndexRubricContext> = {
   code: 'INDEX-6',
   title: 'Reveal order',
-  description: 'Entries are in a sensible reveal order: a from-scratch build narrative with roots first, then dependents, weaving sub-scopes in.',
+  description:
+    'Entries are in a sensible reveal order: a from-scratch build narrative with roots first, then dependents, weaving sub-scopes in.',
   sources: [SOURCE],
   judgment: {
     scope: 'The ordered entries of the active decision index.',
@@ -127,7 +136,10 @@ const INDEX_8: RubricItem<IndexRubricContext> = {
   sources: [SOURCE],
   mechanical: {
     level: 'WARN',
-    remediation: { class: 'diagnostic', guidance: 'Renumber the affected records and citations rather than reordering serials out of sequence.' },
+    remediation: {
+      class: 'diagnostic',
+      guidance: 'Renumber the affected records and citations rather than reordering serials out of sequence.'
+    },
     audit: {
       phase: 'DERIVED',
       run: (context: IndexRubricContext) =>

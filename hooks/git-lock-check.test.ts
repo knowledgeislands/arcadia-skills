@@ -176,7 +176,11 @@ esac
     check('unrelated active Git → stale lock removed', whileUnrelated.status === 0 && !existsSync(lock))
 
     writeFileSync(lock, 'uncertain')
-    const inspectionFailure = run(repo, '', { ...wrapperEnv, FAKE_GIT_CWD: realpathSync(otherRepo), FAKE_PGREP_STATUS: '2' })
+    const inspectionFailure = run(repo, '', {
+      ...wrapperEnv,
+      FAKE_GIT_CWD: realpathSync(otherRepo),
+      FAKE_PGREP_STATUS: '2'
+    })
     check('process enumeration failure → exit 0', inspectionFailure.status === 0)
     check('process enumeration failure → fail-safe lock preservation', existsSync(lock))
   } finally {

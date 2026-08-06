@@ -1,6 +1,12 @@
 import { existsSync, lstatSync, readdirSync, readFileSync } from 'node:fs'
 import { basename, extname, isAbsolute, join, relative, resolve } from 'node:path'
-import type { AuditOutcome, ConformWrite, RubricContextOptions, RubricPublicationContext, RubricSession } from '../../shared/rubric.ts'
+import type {
+  AuditOutcome,
+  ConformWrite,
+  RubricContextOptions,
+  RubricPublicationContext,
+  RubricSession
+} from '../../shared/rubric.ts'
 
 const INDEX_NOTE = 'Live Artifacts.md'
 const DEFAULT_ARTIFACTS_DIRECTORY = 'Admin/Operations/Live Artifacts'
@@ -43,9 +49,11 @@ type LiveArtifactsConfiguration = {
   thresholdHours: number
 }
 
-const isDirectory = (path: string): boolean => existsSync(path) && !lstatSync(path).isSymbolicLink() && lstatSync(path).isDirectory()
+const isDirectory = (path: string): boolean =>
+  existsSync(path) && !lstatSync(path).isSymbolicLink() && lstatSync(path).isDirectory()
 
-const isRegularFile = (path: string): boolean => existsSync(path) && !lstatSync(path).isSymbolicLink() && lstatSync(path).isFile()
+const isRegularFile = (path: string): boolean =>
+  existsSync(path) && !lstatSync(path).isSymbolicLink() && lstatSync(path).isFile()
 
 const parseFrontmatter = (text: string): Record<string, string> | null => {
   const lines = text.split(/\r?\n/)
@@ -69,7 +77,8 @@ const parseFrontmatter = (text: string): Record<string, string> | null => {
 
 const parseConfiguration = (repository: string): LiveArtifactsConfiguration => {
   const path = join(repository, '.ki-config.toml')
-  if (!isRegularFile(path)) return { artifactsDirectory: DEFAULT_ARTIFACTS_DIRECTORY, thresholdHours: DEFAULT_THRESHOLD_HOURS }
+  if (!isRegularFile(path))
+    return { artifactsDirectory: DEFAULT_ARTIFACTS_DIRECTORY, thresholdHours: DEFAULT_THRESHOLD_HOURS }
   try {
     const document = Bun.TOML.parse(readFileSync(path, 'utf8')) as Record<string, unknown>
     const value = document[CONFIG_TABLE]
@@ -93,7 +102,11 @@ const parseConfiguration = (repository: string): LiveArtifactsConfiguration => {
   }
 }
 
-const violationsOrPass = (violations: readonly AuditOutcome[], pass: string, notApplicable?: string): readonly AuditOutcome[] => {
+const violationsOrPass = (
+  violations: readonly AuditOutcome[],
+  pass: string,
+  notApplicable?: string
+): readonly AuditOutcome[] => {
   if (notApplicable) return [{ status: 'NOT_APPLICABLE', message: notApplicable }]
   return violations.length > 0 ? violations : [{ status: 'PASS', message: pass }]
 }
@@ -107,7 +120,11 @@ const addRendersDeclaration = (text: string): string => {
   return lines.join('\n')
 }
 
-export const createLiveArtifactsSession = ({ mode, repository, publication }: RubricContextOptions): RubricSession<LiveArtifactsRubricContext> => {
+export const createLiveArtifactsSession = ({
+  mode,
+  repository,
+  publication
+}: RubricContextOptions): RubricSession<LiveArtifactsRubricContext> => {
   const root = resolve(repository)
   const configuration = parseConfiguration(root)
   const artifactsDirectory = join(root, configuration.artifactsDirectory)
@@ -134,7 +151,11 @@ export const createLiveArtifactsSession = ({ mode, repository, publication }: Ru
       }
     })
     .sort((left, right) => left.relativePath.localeCompare(right.relativePath))
-  const htmlPaths = new Set(names.filter((entry) => entry.isFile() && extname(entry.name) === '.html').map((entry) => join(artifactsDirectory, entry.name)))
+  const htmlPaths = new Set(
+    names
+      .filter((entry) => entry.isFile() && extname(entry.name) === '.html')
+      .map((entry) => join(artifactsDirectory, entry.name))
+  )
   const absent = !directoryExists
   const noSources = directoryExists && sources.length === 0
   const unavailable = absent
@@ -143,8 +164,14 @@ export const createLiveArtifactsSession = ({ mode, repository, publication }: Ru
       ? 'No artifact sources exist.'
       : undefined
   const missingIndexSources =
-    indexText === null ? [] : sources.filter((source) => !indexText.includes(basename(source.relativePath)) && !indexText.includes(source.stem))
-  const missingRenders = sources.filter((source) => source.frontmatter !== null && !Object.hasOwn(source.frontmatter, 'renders'))
+    indexText === null
+      ? []
+      : sources.filter(
+          (source) => !indexText.includes(basename(source.relativePath)) && !indexText.includes(source.stem)
+        )
+  const missingRenders = sources.filter(
+    (source) => source.frontmatter !== null && !Object.hasOwn(source.frontmatter, 'renders')
+  )
   const originals = new Map<string, string | null>([
     [indexRelativePath, indexText],
     ...sources.map((source): [string, string] => [source.relativePath, source.text])
@@ -274,7 +301,8 @@ export const createLiveArtifactsSession = ({ mode, repository, publication }: Ru
       ...(mutable && directoryExists && sources.length > 0 && indexSafe
         ? {
             ensureIndex: () => {
-              const entry = (source: ArtifactSource): string => `- [${source.stem}](${basename(source.relativePath)}) — _(description — see manual TODO)_`
+              const entry = (source: ArtifactSource): string =>
+                `- [${source.stem}](${basename(source.relativePath)}) — _(description — see manual TODO)_`
               const current = drafts.get(indexRelativePath)
               if (current === null) {
                 drafts.set(
@@ -284,8 +312,11 @@ export const createLiveArtifactsSession = ({ mode, repository, publication }: Ru
                 return
               }
               if (current === undefined) return
-              const missing = sources.filter((source) => !current.includes(basename(source.relativePath)) && !current.includes(source.stem))
-              if (missing.length > 0) drafts.set(indexRelativePath, `${current.replace(/\n*$/, '\n')}${missing.map(entry).join('\n')}\n`)
+              const missing = sources.filter(
+                (source) => !current.includes(basename(source.relativePath)) && !current.includes(source.stem)
+              )
+              if (missing.length > 0)
+                drafts.set(indexRelativePath, `${current.replace(/\n*$/, '\n')}${missing.map(entry).join('\n')}\n`)
             }
           }
         : {})

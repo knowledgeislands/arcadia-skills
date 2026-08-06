@@ -7,11 +7,16 @@ const FORMAT = 'standards-work-item-format.md'
 const ITEM_1: RubricItem<RoadmapAuditContext> = {
   code: 'ITEM-1',
   title: 'flat work-item identity',
-  description: 'Each canonical item lives directly under docs/roadmap with a unique stable identifier, matching filename, and title of at most four words.',
+  description:
+    'Each canonical item lives directly under docs/roadmap with a unique stable identifier, matching filename, and title of at most four words.',
   sources: [SOURCE, FORMAT],
   mechanical: {
     level: 'FAIL',
-    remediation: { class: 'diagnostic', guidance: 'Correct the item filename, frontmatter identity, or title to match the canonical flat work-item contract.' },
+    remediation: {
+      class: 'diagnostic',
+      guidance:
+        'Correct the item filename, frontmatter identity, or title to match the canonical flat work-item contract.'
+    },
     audit: {
       phase: 'INSPECT',
       run: (context) => outcomesFor(context, 'ITEM-1', 'Every work item has a canonical identity and frontmatter.')
@@ -36,9 +41,13 @@ export const ITEM: RubricFamily<RoadmapRubricContext, RoadmapAuditContext> = {
         level: 'FAIL',
         remediation: {
           class: 'diagnostic',
-          guidance: 'Correct the item state fields or dependency declarations; do not choose a priority or lifecycle transition automatically.'
+          guidance:
+            'Correct the item state fields or dependency declarations; do not choose a priority or lifecycle transition automatically.'
         },
-        audit: { phase: 'INSPECT', run: (context) => outcomesFor(context, 'ITEM-2', 'Every item has valid state fields.') }
+        audit: {
+          phase: 'INSPECT',
+          run: (context) => outcomesFor(context, 'ITEM-2', 'Every item has valid state fields.')
+        }
       }
     },
     {
@@ -51,9 +60,13 @@ export const ITEM: RubricFamily<RoadmapRubricContext, RoadmapAuditContext> = {
         level: 'FAIL',
         remediation: {
           class: 'diagnostic',
-          guidance: 'Restore the lifecycle-appropriate canonical sections and task-list shape from the work-item format standard.'
+          guidance:
+            'Restore the lifecycle-appropriate canonical sections and task-list shape from the work-item format standard.'
         },
-        audit: { phase: 'INSPECT', run: (context) => outcomesFor(context, 'ITEM-3', 'Every item body matches its lifecycle state.') }
+        audit: {
+          phase: 'INSPECT',
+          run: (context) => outcomesFor(context, 'ITEM-3', 'Every item body matches its lifecycle state.')
+        }
       }
     },
     {
@@ -66,27 +79,35 @@ export const ITEM: RubricFamily<RoadmapRubricContext, RoadmapAuditContext> = {
         prompt:
           'Review that Goal explains the intended user or system outcome in plain language, while Context holds the supporting evidence and technical rationale.',
         outcomes: ['conforming', 'gap', 'exclusion'],
-        guidance: 'Rewrite the Goal or Context, record a named gap, or record an explicit exclusion in the item discussion.'
+        guidance:
+          'Rewrite the Goal or Context, record a named gap, or record an explicit exclusion in the item discussion.'
       }
     },
     {
       code: 'ITEM-5',
       title: 'item dependencies',
-      description: 'Dependencies name existing work items, are reverse-consistent and acyclic, and do not permit active blocked work.',
+      description:
+        'Dependencies name existing work items, are reverse-consistent and acyclic, and do not permit active blocked work.',
       sources: [SOURCE],
       mechanical: {
         level: 'FAIL',
         remediation: {
           class: 'guarded',
-          guidance: 'Correct only the evidenced dependency declarations after confirming the intended relationship; do not infer or create work dependencies.'
+          guidance:
+            'Correct only the evidenced dependency declarations after confirming the intended relationship; do not infer or create work dependencies.'
         },
-        audit: { phase: 'INSPECT', run: (context) => outcomesFor(context, 'ITEM-5', 'Every item dependency is valid and reciprocal.') }
+        audit: {
+          phase: 'INSPECT',
+          run: (context) => outcomesFor(context, 'ITEM-5', 'Every item dependency is valid and reciprocal.')
+        }
       },
       judgment: {
         scope: 'Every declared roadmap dependency and its reciprocal work item.',
-        prompt: 'Review whether each dependency represents a real execution relationship without hiding a priority or acceptance decision.',
+        prompt:
+          'Review whether each dependency represents a real execution relationship without hiding a priority or acceptance decision.',
         outcomes: ['conforming', 'gap', 'exclusion'],
-        guidance: 'Correct the declared relationship with the owning work-item decision, record a gap, or record an explicit exclusion.'
+        guidance:
+          'Correct the declared relationship with the owning work-item decision, record a gap, or record an explicit exclusion.'
       }
     }
   ]

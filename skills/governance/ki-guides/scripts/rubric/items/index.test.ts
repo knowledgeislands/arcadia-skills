@@ -6,13 +6,11 @@ test('the catalogue exposes the ordered Guides criteria', () => {
   expect(definition.name).toBe('ki-guides')
   expect(definition.createSession).toBeFunction()
   expect(definition.families.map((family) => family.code)).toEqual(['RUBRIC', 'GUIDE', 'ROUTE'])
-  expect(definition.families.filter((family) => family.code !== 'RUBRIC').flatMap((family) => family.items.map((item) => item.code))).toEqual([
-    'GUIDE-1',
-    'GUIDE-2',
-    'GUIDE-3',
-    'ROUTE-1',
-    'ROUTE-2'
-  ])
+  expect(
+    definition.families
+      .filter((family) => family.code !== 'RUBRIC')
+      .flatMap((family) => family.items.map((item) => item.code))
+  ).toEqual(['GUIDE-1', 'GUIDE-2', 'GUIDE-3', 'ROUTE-1', 'ROUTE-2'])
 })
 
 test('the catalogue and family modules keep their public surfaces narrow', async () => {
@@ -30,7 +28,9 @@ test('only derived publication is automatic; authoring and routing remain non-ex
     judgment?: { scope: string; prompt: string; outcomes: readonly string[]; guidance: string }
   }[]
 
-  expect(items.filter((item) => item.mechanical?.remediation.class === 'automatic').map((item) => item.code)).toEqual(['RUBRIC-1'])
+  expect(items.filter((item) => item.mechanical?.remediation.class === 'automatic').map((item) => item.code)).toEqual([
+    'RUBRIC-1'
+  ])
   expect(items.filter((item) => item.mechanical?.remediation.class === 'diagnostic').map((item) => item.code)).toEqual([
     'GUIDE-1',
     'GUIDE-2',

@@ -9,8 +9,21 @@ const LIFECYCLE_1: RubricItem<LifecycleContext> = {
   description:
     'An active path carries state active, a retired path carries state retired and retired_at, no thread is simultaneously active and retired, and UTC timestamps are chronologically coherent. Retired records never count as active resume candidates.',
   sources: [SOURCE],
-  mechanical: { level: 'FAIL', remediation: { class: 'guarded', guidance: 'Correct lifecycle metadata only through an explicit UPDATE or RETIRE request.' }, audit: { phase: 'INSPECT', run: (context) => context.mechanical } },
-  judgment: { scope: 'Every active and retired record location, state, and timestamp.', prompt: 'Does the proposed lifecycle correction preserve explicit user authority and the single active snapshot rule?', outcomes: ['conforming', 'explicit update required', 'explicit retirement required'], guidance: 'Do not change state or timestamps until the user supplies the required UPDATE or RETIRE direction.' }
+  mechanical: {
+    level: 'FAIL',
+    remediation: {
+      class: 'guarded',
+      guidance: 'Correct lifecycle metadata only through an explicit UPDATE or RETIRE request.'
+    },
+    audit: { phase: 'INSPECT', run: (context) => context.mechanical }
+  },
+  judgment: {
+    scope: 'Every active and retired record location, state, and timestamp.',
+    prompt:
+      'Does the proposed lifecycle correction preserve explicit user authority and the single active snapshot rule?',
+    outcomes: ['conforming', 'explicit update required', 'explicit retirement required'],
+    guidance: 'Do not change state or timestamps until the user supplies the required UPDATE or RETIRE direction.'
+  }
 }
 
 const LIFECYCLE_2: RubricItem<LifecycleContext> = {
@@ -21,9 +34,11 @@ const LIFECYCLE_2: RubricItem<LifecycleContext> = {
   sources: [SOURCE],
   judgment: {
     scope: 'Every checkpoint snapshot, its named durable owners, and retirement evidence.',
-    prompt: 'Is each active snapshot current and concise, with durable facts promoted to their canonical owners and any retirement grounded in explicit user direction rather than inferred completion?',
+    prompt:
+      'Is each active snapshot current and concise, with durable facts promoted to their canonical owners and any retirement grounded in explicit user direction rather than inferred completion?',
     outcomes: ['conforming', 'explicit update required', 'promote durable fact'],
-    guidance: 'Promote facts through their owning lifecycle and update or retire a checkpoint only with explicit authority.'
+    guidance:
+      'Promote facts through their owning lifecycle and update or retire a checkpoint only with explicit authority.'
   }
 }
 

@@ -1,6 +1,11 @@
 import { existsSync, lstatSync, readdirSync } from 'node:fs'
 import { join, resolve } from 'node:path'
-import type { AuditOutcome, RubricContextOptions, RubricPublicationContext, RubricSession } from '../../shared/rubric.ts'
+import type {
+  AuditOutcome,
+  RubricContextOptions,
+  RubricPublicationContext,
+  RubricSession
+} from '../../shared/rubric.ts'
 
 const physical = (path: string) => existsSync(path) && !lstatSync(path).isSymbolicLink()
 const directoryEntries = (path: string) =>
@@ -15,10 +20,17 @@ const presence = (label: string, path: string) =>
     ? result('PASS', `${label} is present at ${path}; values are not read or reported.`)
     : result('NOT_APPLICABLE', `${label} is absent at ${path}.`)
 
-export type CodexEvidenceContext = { readonly surfaces: readonly AuditOutcome[]; readonly unavailableMetrics: readonly AuditOutcome[] }
+export type CodexEvidenceContext = {
+  readonly surfaces: readonly AuditOutcome[]
+  readonly unavailableMetrics: readonly AuditOutcome[]
+}
 export type CodexRubricContext = { readonly rubric: RubricPublicationContext; readonly codex: CodexEvidenceContext }
 
-export const createCodexSession = ({ repository, userHome, publication }: RubricContextOptions): RubricSession<CodexRubricContext> => {
+export const createCodexSession = ({
+  repository,
+  userHome,
+  publication
+}: RubricContextOptions): RubricSession<CodexRubricContext> => {
   const repo = resolve(repository)
   const home = resolve(userHome)
   const codex = join(home, '.codex')
@@ -34,10 +46,18 @@ export const createCodexSession = ({ repository, userHome, publication }: Rubric
         result('INFO', `Selected repository agent skills: ${repoSkills.length ? repoSkills.join(', ') : 'none'}.`),
         result('INFO', `Bounded user Codex skills: ${codexSkills.length ? codexSkills.join(', ') : 'none'}.`),
         result('INFO', `Shared user agent skills: ${sharedUserSkills.length ? sharedUserSkills.join(', ') : 'none'}.`),
-        result('NOT_APPLICABLE', 'No documented selected-repository Codex persistent-memory directory is asserted by this contract.'),
+        result(
+          'NOT_APPLICABLE',
+          'No documented selected-repository Codex persistent-memory directory is asserted by this contract.'
+        ),
         presence('Selected repository subagent surface', join(repo, '.agents', 'agents'))
       ],
-      unavailableMetrics: ['Actual billing metrics', 'Tool-schema token weights', 'Compaction metrics', 'Transcript metrics'].map((metric) =>
+      unavailableMetrics: [
+        'Actual billing metrics',
+        'Tool-schema token weights',
+        'Compaction metrics',
+        'Transcript metrics'
+      ].map((metric) =>
         result('NOT_APPLICABLE', `${metric} are not available from documented safe Codex filesystem evidence.`)
       )
     }

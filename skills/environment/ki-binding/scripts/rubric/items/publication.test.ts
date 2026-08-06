@@ -3,7 +3,12 @@ import { createBindingSession } from '../contexts/binding.ts'
 import { RUBRIC } from './publication.ts'
 
 test('the session supplies one focused generated-rubric publication subject', () => {
-  const publication = { target: 'references/rubric.md', rendered: '', state: 'stale' as const, propose: () => undefined }
+  const publication = {
+    target: 'references/rubric.md',
+    rendered: '',
+    state: 'stale' as const,
+    propose: () => undefined
+  }
   const session = createBindingSession({
     mode: 'audit',
     repository: process.cwd(),

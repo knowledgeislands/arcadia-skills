@@ -2,11 +2,11 @@
 
 **Refresh:** canonical · on-change
 
-| Source                                | Last reviewed | Governs                                                                  |
-| ------------------------------------- | ------------- | ------------------------------------------------------------------------ |
-| Knowledge Islands checkpoint practice | 2026-08-06    | Flat per-thread snapshots, in-place updates, Git history, and retirement |
-| `ki-recap`                            | 2026-08-06    | User-facing recap and durable learning boundary                          |
-| `ki-repo`                             | 2026-08-06    | Optional capability declaration and generic working-area ownership       |
+| Source | Last reviewed | Governs |
+| --- | --- | --- |
+| Knowledge Islands checkpoint practice | 2026-08-06 | Flat per-thread snapshots, in-place updates, Git history, and retirement |
+| `ki-recap` | 2026-08-06 | User-facing recap and durable learning boundary |
+| `ki-repo` | 2026-08-06 | Optional capability declaration and generic working-area ownership |
 
 ## Last review
 

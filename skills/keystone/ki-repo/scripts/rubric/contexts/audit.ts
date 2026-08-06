@@ -153,7 +153,8 @@ function rootPaths(nwo: string, branch: string): Set<string> {
   }
 }
 
-const topicNames = (t: unknown): string[] => (Array.isArray(t) ? t.map((x) => (typeof x === 'string' ? x : (x?.name ?? x?.topic?.name))).filter(Boolean) : [])
+const topicNames = (t: unknown): string[] =>
+  Array.isArray(t) ? t.map((x) => (typeof x === 'string' ? x : (x?.name ?? x?.topic?.name))).filter(Boolean) : []
 
 // The repo's parsed package.json (or null if absent / unparseable), read once from
 // the selected local checkout or GitHub default branch and reused for the
@@ -185,9 +186,11 @@ function readRemotePkg(nwo: string, files: Set<string>): Pkg | null {
 }
 // package.json `description` (the in-repo source of truth the GitHub description must
 // be SYNCED with), or null when there is none / it isn't a non-empty string.
-const pkgDescription = (pkg: Pkg | null): string | null => (typeof pkg?.description === 'string' && pkg.description.trim() ? pkg.description.trim() : null)
+const pkgDescription = (pkg: Pkg | null): string | null =>
+  typeof pkg?.description === 'string' && pkg.description.trim() ? pkg.description.trim() : null
 // Does package.json declare `name` among its dependencies or devDependencies?
-const pkgHasDep = (pkg: Pkg | null, name: string): boolean => Boolean(pkg?.dependencies?.[name] ?? pkg?.devDependencies?.[name])
+const pkgHasDep = (pkg: Pkg | null, name: string): boolean =>
+  Boolean(pkg?.dependencies?.[name] ?? pkg?.devDependencies?.[name])
 
 // The repo's full tree (recursive) as a set of paths, for the coverage signals that
 // look below the root (`site/wrangler.jsonc`, `skills/*/SKILL.md`, `subagents/**/*.md`).
@@ -272,7 +275,8 @@ export type RepositoryConfiguration = {
 }
 const REPOSITORY_TYPES = new Set<RepositoryType>(['repository', 'kb'])
 const KB_STORE_ROLES = ['notes', 'sources', 'legacy'] as const
-const GITHUB_REPOSITORY = /^https:\/\/github\.com\/([a-z0-9](?:[a-z0-9._-]*[a-z0-9])?)\/([a-z0-9](?:[a-z0-9._-]*[a-z0-9])?)$/
+const GITHUB_REPOSITORY =
+  /^https:\/\/github\.com\/([a-z0-9](?:[a-z0-9._-]*[a-z0-9])?)\/([a-z0-9](?:[a-z0-9._-]*[a-z0-9])?)$/
 const CHECKS_SECTION = `${KI_SECTION}.checks`
 const TOML = (globalThis as unknown as { Bun: { TOML: { parse(text: string): unknown } } }).Bun.TOML
 function parseKiConfig(text: string): KiConfig | null {
@@ -332,18 +336,27 @@ export function parseRepositoryConfiguration(text: string): RepositoryConfigurat
   const repositoryType = (rawType ?? 'repository') as RepositoryType
   const rawRoles = table.store_roles
   if (rawRoles === undefined) {
-    if (repositoryType === 'kb') return { repositoryType, storeRoles: [], rootTables, issue: 'KB repo_type requires store_roles including notes' }
+    if (repositoryType === 'kb')
+      return { repositoryType, storeRoles: [], rootTables, issue: 'KB repo_type requires store_roles including notes' }
     return { repositoryType, storeRoles: [], rootTables }
   }
   if (!Array.isArray(rawRoles) || rawRoles.some((role) => typeof role !== 'string'))
     return { repositoryType, storeRoles: [], rootTables, issue: 'store_roles must be an array of role names' }
   const storeRoles = rawRoles as string[]
-  if (new Set(storeRoles).size !== storeRoles.length) return { repositoryType, storeRoles, rootTables, issue: 'store_roles must not repeat a role' }
+  if (new Set(storeRoles).size !== storeRoles.length)
+    return { repositoryType, storeRoles, rootTables, issue: 'store_roles must not repeat a role' }
   const unknown = storeRoles.filter((role) => !(KB_STORE_ROLES as readonly string[]).includes(role))
   if (unknown.length)
-    return { repositoryType, storeRoles, rootTables, issue: `store_roles names unknown role(s): ${unknown.join(', ')} (known: ${KB_STORE_ROLES.join(', ')})` }
-  if (repositoryType !== 'kb' && storeRoles.length) return { repositoryType, storeRoles, rootTables, issue: 'store_roles is only valid when repo_type is kb' }
-  if (repositoryType === 'kb' && !storeRoles.includes('notes')) return { repositoryType, storeRoles, rootTables, issue: 'KB store_roles must include notes' }
+    return {
+      repositoryType,
+      storeRoles,
+      rootTables,
+      issue: `store_roles names unknown role(s): ${unknown.join(', ')} (known: ${KB_STORE_ROLES.join(', ')})`
+    }
+  if (repositoryType !== 'kb' && storeRoles.length)
+    return { repositoryType, storeRoles, rootTables, issue: 'store_roles is only valid when repo_type is kb' }
+  if (repositoryType === 'kb' && !storeRoles.includes('notes'))
+    return { repositoryType, storeRoles, rootTables, issue: 'KB store_roles must include notes' }
   return { repositoryType, storeRoles, rootTables }
 }
 
@@ -419,25 +432,37 @@ function remoteContentEvidence(nwo: string, branch: string): ContentEvidence {
 }
 
 const COVERAGE: { skill: string; table: string; artifact: string; detect: (s: Signals) => boolean }[] = [
-  { skill: 'engineering', table: skillTable('ki-engineering'), artifact: 'package.json', detect: (s) => s.root.has('package.json') },
+  {
+    skill: 'engineering',
+    table: skillTable('ki-engineering'),
+    artifact: 'package.json',
+    detect: (s) => s.root.has('package.json')
+  },
   {
     skill: 'kb',
     table: skillTable('ki-kb'),
     artifact: 'KB zones (Pillars/ + Resources/)',
     detect: (s) => s.root.has('Pillars') && s.root.has('Resources')
   },
-  { skill: 'streams', table: skillTable('ki-kb-streams'), artifact: 'Streams/ zone', detect: (s) => s.root.has('Streams') },
+  {
+    skill: 'streams',
+    table: skillTable('ki-kb-streams'),
+    artifact: 'Streams/ zone',
+    detect: (s) => s.root.has('Streams')
+  },
   {
     skill: 'website',
     table: skillTable('ki-website'),
     artifact: 'eleventy.config.*',
-    detect: (s) => ELEVENTY.some((f) => s.root.has(f)) || [...s.tree].some((p) => ELEVENTY.some((f) => p.endsWith(`/${f}`)))
+    detect: (s) =>
+      ELEVENTY.some((f) => s.root.has(f)) || [...s.tree].some((p) => ELEVENTY.some((f) => p.endsWith(`/${f}`)))
   },
   {
     skill: 'website-cloudflare',
     table: skillTable('ki-website-cloudflare'),
     artifact: 'wrangler config',
-    detect: (s) => WRANGLER.some((f) => s.root.has(f)) || [...s.tree].some((p) => WRANGLER.some((f) => p.endsWith(`/${f}`)))
+    detect: (s) =>
+      WRANGLER.some((f) => s.root.has(f)) || [...s.tree].some((p) => WRANGLER.some((f) => p.endsWith(`/${f}`)))
   },
   {
     skill: 'mcp',
@@ -449,7 +474,9 @@ const COVERAGE: { skill: string; table: string; artifact: string; detect: (s: Si
     skill: 'plugins',
     table: skillTable('ki-plugins'),
     artifact: '.claude-plugin/marketplace.json',
-    detect: (s) => s.tree.has('.claude-plugin/marketplace.json') || [...s.tree].some((p) => p.endsWith('/.claude-plugin/marketplace.json'))
+    detect: (s) =>
+      s.tree.has('.claude-plugin/marketplace.json') ||
+      [...s.tree].some((p) => p.endsWith('/.claude-plugin/marketplace.json'))
   },
   {
     skill: 'specifications',
@@ -552,12 +579,20 @@ function declaredTables(text: string): Array<{ root: string; exact: boolean }> {
   return tables
 }
 
-const declaresTable = (kiText: string, table: string): boolean => declaredTables(kiText).some(({ root }) => root === table)
-export const declaresRootTable = (kiText: string, table: string): boolean => declaredTables(kiText).some(({ root, exact }) => root === table && exact)
+const declaresTable = (kiText: string, table: string): boolean =>
+  declaredTables(kiText).some(({ root }) => root === table)
+export const declaresRootTable = (kiText: string, table: string): boolean =>
+  declaredTables(kiText).some(({ root, exact }) => root === table && exact)
 
-const readmeTitle = (text: string | null): string | null => text?.match(/^#\s+(.+?)(?:\s+#+)?\s*$/m)?.[1]?.trim() || null
+const readmeTitle = (text: string | null): string | null =>
+  text?.match(/^#\s+(.+?)(?:\s+#+)?\s*$/m)?.[1]?.trim() || null
 
-const RUNTIME_SKILL_IGNORE_RULES = ['.claude/skills/*', '.agents/skills/*', '!.agents/skills/ki-self/', '!.agents/skills/ki-self/**']
+const RUNTIME_SKILL_IGNORE_RULES = [
+  '.claude/skills/*',
+  '.agents/skills/*',
+  '!.agents/skills/ki-self/',
+  '!.agents/skills/ki-self/**'
+]
 
 function hasRuntimeSkillIgnoreRules(gitignore: string | null, expected: readonly string[]): boolean {
   if (gitignore == null) return false
@@ -594,11 +629,17 @@ function auditRepo(
   // ── layer 1: runtime skill ignore contract (gated on the ki-repo marker) ── FILES-4
   const runtimeDeclaration = kiText == null ? undefined : parseSupportedRuntimes(kiText)
   const runtimeRules =
-    runtimeDeclaration && !runtimeDeclaration.issue && runtimeDeclaration.runtimes.every((runtime) => KNOWN_RUNTIMES.includes(runtime))
+    runtimeDeclaration &&
+    !runtimeDeclaration.issue &&
+    runtimeDeclaration.runtimes.every((runtime) => KNOWN_RUNTIMES.includes(runtime))
       ? runtimeSkillIgnoreRules(runtimeDeclaration.runtimes)
       : undefined
   if (files.has(KI_CONFIG) && runtimeRules && !hasRuntimeSkillIgnoreRules(gitignore, runtimeRules))
-    fail('FILES-4', `.gitignore must declare the generated skill rules for supported_runtimes: ${runtimeRules.join(', ')}`, '.gitignore')
+    fail(
+      'FILES-4',
+      `.gitignore must declare the generated skill rules for supported_runtimes: ${runtimeRules.join(', ')}`,
+      '.gitignore'
+    )
   // ── layer 1: declared authoring baseline (gated on the ki-repo marker) ── FILES-3
   // A confirmed ki-repo declares the baseline authoring standard explicitly.
   // Native self-check resolution is a host precondition, not repository-local evidence.
@@ -618,10 +659,15 @@ function auditRepo(
     else if (`https://github.com/${r.nameWithOwner.toLowerCase()}` !== ki.repository)
       fail('FILES-2', `${KI_CONFIG} repository must equal the canonical GitHub home for ${r.nameWithOwner}`, KI_CONFIG)
     if (!ki.title?.trim()) fail('FILES-2', `${KI_CONFIG} must declare a non-empty \`title\``, KI_CONFIG)
-    else if (readmeTitle(readme) !== ki.title.trim()) fail('FILES-2', `README.md H1 must equal ${KI_CONFIG} title`, 'README.md')
+    else if (readmeTitle(readme) !== ki.title.trim())
+      fail('FILES-2', `README.md H1 must equal ${KI_CONFIG} title`, 'README.md')
     if (!ki.description?.trim()) fail('FILES-2', `${KI_CONFIG} must declare a non-empty \`description\``, KI_CONFIG)
     if (declaresRootTable(kiText ?? '', skillTable('ki-roadmap')) && !/^[A-Z][A-Z0-9-]{1,23}$/.test(ki.repoCode ?? ''))
-      fail('FILES-2', `${KI_CONFIG} ki-repo repo_code must be a stable uppercase identifier when ki-roadmap is declared`, KI_CONFIG)
+      fail(
+        'FILES-2',
+        `${KI_CONFIG} ki-repo repo_code must be a stable uppercase identifier when ki-roadmap is declared`,
+        KI_CONFIG
+      )
   }
 
   // ── repository kind and named KB store roles ── KIND-1/2
@@ -630,7 +676,11 @@ function auditRepo(
     if (configuration.issue) fail('KIND-1', `[${KI_SECTION}] ${configuration.issue}`, KI_CONFIG)
     else if (configuration.repositoryType === 'kb') {
       if (!declaresRootTable(kiText, skillTable('ki-kb')))
-        fail('KIND-2', 'repo_type = "kb" requires the [knowledgeislands/ki-agentic-harness:ki-kb] structure declaration', KI_CONFIG)
+        fail(
+          'KIND-2',
+          'repo_type = "kb" requires the [knowledgeislands/ki-agentic-harness:ki-kb] structure declaration',
+          KI_CONFIG
+        )
       if (declaresRootTable(kiText, skillTable('ki-roadmap')))
         fail('KIND-2', 'repo_type = "kb" cannot declare ki-roadmap; Knowledge Bases use ki-kb-streams', KI_CONFIG)
     } else if (declaresRootTable(kiText, skillTable('ki-kb')))
@@ -638,7 +688,8 @@ function auditRepo(
   }
 
   // ── layer 2: core GitHub ── GH-1
-  if (r.defaultBranchRef?.name !== DEFAULT_BRANCH) fail('GH-1', `default branch is "${r.defaultBranchRef?.name ?? '?'}" (want ${DEFAULT_BRANCH})`)
+  if (r.defaultBranchRef?.name !== DEFAULT_BRANCH)
+    fail('GH-1', `default branch is "${r.defaultBranchRef?.name ?? '?'}" (want ${DEFAULT_BRANCH})`)
   // License is the declared SPDX id from `["knowledgeislands/ki-agentic-harness:ki-repo"] license` (default MIT), decoupled
   // from visibility. The live GitHub license and package.json "license" must match the
   // declared id. A proprietary declaration (`UNLICENSED`/`proprietary`/`none`) expects
@@ -649,7 +700,8 @@ function auditRepo(
   const liveKey = r.licenseInfo?.key ?? null
   // GH-2: declared license, cross-checked against live GitHub + package.json
   if (proprietary) {
-    if (liveKey && !['other', 'noassertion'].includes(liveKey)) fail('GH-2', `${KI_CONFIG} declares a proprietary license but GitHub reports "${liveKey}"`)
+    if (liveKey && !['other', 'noassertion'].includes(liveKey))
+      fail('GH-2', `${KI_CONFIG} declares a proprietary license but GitHub reports "${liveKey}"`)
   } else if (liveKey !== declaredKey) {
     fail('GH-2', `license is "${liveKey ?? 'none'}" (want ${declaredLicense} per ${KI_CONFIG})`)
   }
@@ -657,7 +709,11 @@ function auditRepo(
     const pkgLicense = typeof signals.pkg.license === 'string' ? signals.pkg.license : null
     const wantPkg = proprietary ? 'UNLICENSED' : declaredLicense
     if (pkgLicense !== wantPkg)
-      fail('GH-2', `package.json "license" is ${JSON.stringify(pkgLicense)} (want ${JSON.stringify(wantPkg)} per ${KI_CONFIG})`, 'package.json')
+      fail(
+        'GH-2',
+        `package.json "license" is ${JSON.stringify(pkgLicense)} (want ${JSON.stringify(wantPkg)} per ${KI_CONFIG})`,
+        'package.json'
+      )
   }
   // ── layer 2: package.json identity & metadata (the repo skill's manifest keys) ── PKG-1
   // engineering's coverage manifest assigns the identity/metadata keys to this skill;
@@ -666,20 +722,29 @@ function auditRepo(
   if (signals.pkg != null) {
     const p = signals.pkg
     const isStr = (v: unknown): v is string => typeof v === 'string' && v.trim().length > 0
-    const urlOf = (v: unknown): string | null => (isStr(v) ? v : v && typeof v === 'object' ? ((v as { url?: unknown }).url as string) : null)
+    const urlOf = (v: unknown): string | null =>
+      isStr(v) ? v : v && typeof v === 'object' ? ((v as { url?: unknown }).url as string) : null
     if (!isStr(p.name)) fail('PKG-1', 'package.json "name" missing', 'package.json')
     if (typeof p.version !== 'string' || !/^\d+\.\d+\.\d+/.test(p.version))
       fail('PKG-1', `package.json "version" must be semver, got ${JSON.stringify(p.version)}`, 'package.json')
-    if (!isStr(p.author) && !(p.author != null && typeof p.author === 'object')) fail('PKG-1', 'package.json "author" missing', 'package.json')
+    if (!isStr(p.author) && !(p.author != null && typeof p.author === 'object'))
+      fail('PKG-1', 'package.json "author" missing', 'package.json')
     const repoUrl = urlOf(p.repository)
     if (!isStr(repoUrl)) fail('PKG-1', 'package.json "repository" missing a url', 'package.json')
     else if (!repoUrl.includes(r.nameWithOwner))
-      warn('PKG-1', `package.json "repository" url should reference ${r.nameWithOwner}\n      got: ${repoUrl}`, 'package.json')
-    if (r.visibility === 'PRIVATE' && p.private !== true) fail('PKG-1', 'private repo: package.json must set "private": true', 'package.json')
-    if (r.visibility === 'PUBLIC' && p.private === true) fail('PKG-1', 'public repo: package.json must not set "private": true', 'package.json')
+      warn(
+        'PKG-1',
+        `package.json "repository" url should reference ${r.nameWithOwner}\n      got: ${repoUrl}`,
+        'package.json'
+      )
+    if (r.visibility === 'PRIVATE' && p.private !== true)
+      fail('PKG-1', 'private repo: package.json must set "private": true', 'package.json')
+    if (r.visibility === 'PUBLIC' && p.private === true)
+      fail('PKG-1', 'public repo: package.json must not set "private": true', 'package.json')
     if (!isStr(urlOf(p.bugs))) warn('PKG-1', 'package.json "bugs" should carry a url', 'package.json')
     if (!isStr(p.homepage)) warn('PKG-1', 'package.json "homepage" missing', 'package.json')
-    if (!Array.isArray(p.keywords) || p.keywords.length === 0) warn('PKG-1', 'package.json "keywords" should be a non-empty array', 'package.json')
+    if (!Array.isArray(p.keywords) || p.keywords.length === 0)
+      warn('PKG-1', 'package.json "keywords" should be a non-empty array', 'package.json')
   }
   // GH-3: description is declared in the ki-repo table, then synchronised with
   // GitHub and package.json when each surface exists.
@@ -710,7 +775,8 @@ function auditRepo(
   if (!ki) fail('VIS-1', `cannot verify visibility — ${KI_CONFIG} has no [${KI_SECTION}] table (run --educate)`)
   else if (declared !== 'PUBLIC' && declared !== 'PRIVATE')
     fail('VIS-1', `${KI_CONFIG} does not declare a valid \`visibility\` (got ${JSON.stringify(ki.visibility)})`)
-  else if (declared !== r.visibility) fail('VIS-1', `visibility is ${r.visibility} but ${KI_CONFIG} declares ${declared}`)
+  else if (declared !== r.visibility)
+    fail('VIS-1', `visibility is ${r.visibility} but ${KI_CONFIG} declares ${declared}`)
 
   // CHECKS-1 / COV-1 / BP-1 / TOGGLE-1 / TOPICS-1 / SEC-1: per-repo overrides — a check's
   // effective state is its [..checks] value, else the org default. Surface every active
@@ -733,14 +799,25 @@ function auditRepo(
   for (const [id, v] of Object.entries(ki?.checks ?? {})) {
     if (id.startsWith('coverage-')) {
       const sk = id.slice('coverage-'.length)
-      if (!COVERAGE_SKILLS.has(sk)) warn('CHECKS-1', `"${id}" names no coverage skill (one of: ${[...COVERAGE_SKILLS].join(', ')})`)
+      if (!COVERAGE_SKILLS.has(sk))
+        warn('CHECKS-1', `"${id}" names no coverage skill (one of: ${[...COVERAGE_SKILLS].join(', ')})`)
       else if (!v) note('COV-1', `override: ki-${sk} coverage not enforced for this repo`)
       else note('COV-1', `redundant: coverage-${sk} is enforced by default — can be dropped from [${CHECKS_SECTION}]`)
     } else if (!(id in CHECK_DEFAULTS))
-      warn('CHECKS-1', `"${id}" is not an overridable check (overridable: ${Object.keys(CHECK_DEFAULTS).join(', ')}, or coverage-<skill>)`)
+      warn(
+        'CHECKS-1',
+        `"${id}" is not an overridable check (overridable: ${Object.keys(CHECK_DEFAULTS).join(', ')}, or coverage-<skill>)`
+      )
     else if (v !== CHECK_DEFAULTS[id])
-      note(AREA_FOR_CHECK[id] ?? 'CHECKS-1', `override: ${v ? 'enforced' : 'not enforced'} for this repo (org default: ${CHECK_DEFAULTS[id] ? 'on' : 'off'})`)
-    else note(AREA_FOR_CHECK[id] ?? 'CHECKS-1', `redundant: matches the org default (${v ? 'on' : 'off'}) — can be dropped from [${CHECKS_SECTION}]`)
+      note(
+        AREA_FOR_CHECK[id] ?? 'CHECKS-1',
+        `override: ${v ? 'enforced' : 'not enforced'} for this repo (org default: ${CHECK_DEFAULTS[id] ? 'on' : 'off'})`
+      )
+    else
+      note(
+        AREA_FOR_CHECK[id] ?? 'CHECKS-1',
+        `redundant: matches the org default (${v ? 'on' : 'off'}) — can be dropped from [${CHECKS_SECTION}]`
+      )
   }
 
   // ── coverage cascade (gated on the ki-repo marker) ──
@@ -755,7 +832,10 @@ function auditRepo(
       const declared = declaresTable(text, c.table)
       const detected = c.detect(signals)
       if (detected && !declared)
-        warn('COV-1', `looks governed by ki-${c.skill} (${c.artifact}) but declares no [${c.table}] — opt in, or set coverage-${c.skill} = false`)
+        warn(
+          'COV-1',
+          `looks governed by ki-${c.skill} (${c.artifact}) but declares no [${c.table}] — opt in, or set coverage-${c.skill} = false`
+        )
       else if (declared && !detected) warn('COV-1', `declares [${c.table}] but no ${c.artifact} found — stale opt-in?`)
     }
 
@@ -803,7 +883,8 @@ function auditRepo(
     if (!bp) fail('BP-1', `no branch protection on ${DEFAULT_BRANCH}`)
     else {
       if (bp.required_pull_request_reviews == null) fail('BP-1', 'does not require a pull request')
-      const presentChecks = bp.required_status_checks?.checks?.map((c) => c.context) ?? bp.required_status_checks?.contexts ?? []
+      const presentChecks =
+        bp.required_status_checks?.checks?.map((c) => c.context) ?? bp.required_status_checks?.contexts ?? []
       if (!presentChecks.includes(REQUIRED_CHECK)) fail('BP-1', `required checks omit "${REQUIRED_CHECK}"`)
       if (bp.required_linear_history?.enabled !== true) fail('BP-1', 'does not require linear history')
     }
@@ -831,11 +912,16 @@ function auditRepo(
     try {
       const sa = (
         ghJSON(`repos/${r.nameWithOwner}`) as {
-          security_and_analysis?: { secret_scanning?: { status?: string }; secret_scanning_push_protection?: { status?: string } }
+          security_and_analysis?: {
+            secret_scanning?: { status?: string }
+            secret_scanning_push_protection?: { status?: string }
+          }
         }
       ).security_and_analysis
-      if (enforced('secret-scanning') && sa?.secret_scanning?.status !== 'enabled') fail('SEC-1', 'secret scanning is off')
-      if (enforced('push-protection') && sa?.secret_scanning_push_protection?.status !== 'enabled') fail('SEC-1', 'secret-scanning push protection is off')
+      if (enforced('secret-scanning') && sa?.secret_scanning?.status !== 'enabled')
+        fail('SEC-1', 'secret scanning is off')
+      if (enforced('push-protection') && sa?.secret_scanning_push_protection?.status !== 'enabled')
+        fail('SEC-1', 'secret-scanning push protection is off')
     } catch {
       warn('SEC-1', 'could not read security_and_analysis')
     }
@@ -879,12 +965,14 @@ export function parseSupportedRuntimes(text: string): { runtimes: string[]; root
     .filter(([, value]) => value && typeof value === 'object' && !Array.isArray(value))
     .map(([name]) => name)
   const table = document[KI_SECTION]
-  if (!table || typeof table !== 'object' || Array.isArray(table)) return { runtimes: [], rootTables, issue: `must contain a [${KI_SECTION}] table` }
+  if (!table || typeof table !== 'object' || Array.isArray(table))
+    return { runtimes: [], rootTables, issue: `must contain a [${KI_SECTION}] table` }
   const runtimes = (table as Record<string, unknown>).supported_runtimes
   if (runtimes === undefined) return { runtimes: [], rootTables, issue: 'is required' }
   if (!Array.isArray(runtimes)) return { runtimes: [], rootTables, issue: 'must be an array of runtime names' }
   if (runtimes.length === 0) return { runtimes: [], rootTables, issue: 'must not be empty' }
-  if (runtimes.some((runtime) => typeof runtime !== 'string')) return { runtimes: [], rootTables, issue: 'must contain only runtime names' }
+  if (runtimes.some((runtime) => typeof runtime !== 'string'))
+    return { runtimes: [], rootTables, issue: 'must contain only runtime names' }
   const list = runtimes as string[]
   if (new Set(list).size !== list.length) return { runtimes: [], rootTables, issue: 'must not repeat a runtime' }
   return { runtimes: list, rootTables }
@@ -910,7 +998,9 @@ const localKiSelfFindings = (dir: string, runtimes: readonly string[]): Finding[
   if (!sourceState && !projectionState) return f
 
   const sourceSkill = join(source, 'SKILL.md')
-  const sourceIsCanonical = Boolean(sourceState?.isDirectory() && !sourceState.isSymbolicLink() && localState(sourceSkill)?.isFile())
+  const sourceIsCanonical = Boolean(
+    sourceState?.isDirectory() && !sourceState.isSymbolicLink() && localState(sourceSkill)?.isFile()
+  )
   if (!sourceIsCanonical) {
     fail('RUNTIMES-3', `${LOCAL_SELF_SOURCE}/ must be a physical directory containing SKILL.md`, LOCAL_SELF_SOURCE)
     return f
@@ -918,26 +1008,46 @@ const localKiSelfFindings = (dir: string, runtimes: readonly string[]): Finding[
 
   if (runtimes.includes('claude-code')) {
     if (!projectionState) {
-      fail('RUNTIMES-3', `declares claude-code but lacks the ${CLAUDE_SELF_PROJECTION} projection`, CLAUDE_SELF_PROJECTION)
+      fail(
+        'RUNTIMES-3',
+        `declares claude-code but lacks the ${CLAUDE_SELF_PROJECTION} projection`,
+        CLAUDE_SELF_PROJECTION
+      )
       return f
     }
     if (!projectionState.isSymbolicLink()) {
-      fail('RUNTIMES-3', `${CLAUDE_SELF_PROJECTION} must be a relative symbolic link to ${LOCAL_SELF_SOURCE}`, CLAUDE_SELF_PROJECTION)
+      fail(
+        'RUNTIMES-3',
+        `${CLAUDE_SELF_PROJECTION} must be a relative symbolic link to ${LOCAL_SELF_SOURCE}`,
+        CLAUDE_SELF_PROJECTION
+      )
       return f
     }
     const target = readlinkSync(projection)
     if (isAbsolute(target)) {
-      fail('RUNTIMES-3', `${CLAUDE_SELF_PROJECTION} must use a relative symbolic link to ${LOCAL_SELF_SOURCE}`, CLAUDE_SELF_PROJECTION)
+      fail(
+        'RUNTIMES-3',
+        `${CLAUDE_SELF_PROJECTION} must use a relative symbolic link to ${LOCAL_SELF_SOURCE}`,
+        CLAUDE_SELF_PROJECTION
+      )
       return f
     }
     try {
       if (realpathSync(projection) !== realpathSync(source))
         fail('RUNTIMES-3', `${CLAUDE_SELF_PROJECTION} must resolve to ${LOCAL_SELF_SOURCE}`, CLAUDE_SELF_PROJECTION)
     } catch {
-      fail('RUNTIMES-3', `${CLAUDE_SELF_PROJECTION} must be a non-broken relative symbolic link to ${LOCAL_SELF_SOURCE}`, CLAUDE_SELF_PROJECTION)
+      fail(
+        'RUNTIMES-3',
+        `${CLAUDE_SELF_PROJECTION} must be a non-broken relative symbolic link to ${LOCAL_SELF_SOURCE}`,
+        CLAUDE_SELF_PROJECTION
+      )
     }
   } else if (projectionState) {
-    fail('RUNTIMES-3', `${CLAUDE_SELF_PROJECTION} is present but claude-code is not declared in supported_runtimes`, CLAUDE_SELF_PROJECTION)
+    fail(
+      'RUNTIMES-3',
+      `${CLAUDE_SELF_PROJECTION} is present but claude-code is not declared in supported_runtimes`,
+      CLAUDE_SELF_PROJECTION
+    )
   }
 
   return f
@@ -956,11 +1066,20 @@ function localConfigFindings(dir: string): Finding[] {
     return f
   }
   const retired = parsed.runtimes.filter((rt) => rt === 'codex')
-  if (retired.length) fail('RUNTIMES-1', `[${KI_SECTION}] supported_runtimes uses retired runtime(s): ${retired.join(', ')}; use chatgpt-codex`, KI_CONFIG)
+  if (retired.length)
+    fail(
+      'RUNTIMES-1',
+      `[${KI_SECTION}] supported_runtimes uses retired runtime(s): ${retired.join(', ')}; use chatgpt-codex`,
+      KI_CONFIG
+    )
   if (retired.length) return f
   const unknown = parsed.runtimes.filter((rt) => !KNOWN_RUNTIMES.includes(rt))
   if (unknown.length)
-    fail('RUNTIMES-1', `[${KI_SECTION}] supported_runtimes names unknown runtime(s): ${unknown.join(', ')} (known: ${KNOWN_RUNTIMES.join(', ')})`, KI_CONFIG)
+    fail(
+      'RUNTIMES-1',
+      `[${KI_SECTION}] supported_runtimes names unknown runtime(s): ${unknown.join(', ')} (known: ${KNOWN_RUNTIMES.join(', ')})`,
+      KI_CONFIG
+    )
   if (unknown.length) return f
 
   const required = new Set([skillTable('ki-tokenomics')])
@@ -971,7 +1090,12 @@ function localConfigFindings(dir: string): Finding[] {
   if (parsed.runtimes.includes('chatgpt-codex')) required.add(skillTable('ki-tokenomics-codex'))
   const declared = new Set(parsed.rootTables)
   const missing = [...required].filter((skill) => !declared.has(skill)).sort()
-  if (missing.length) fail('RUNTIMES-2', `supported runtime coverage requires missing table(s): ${missing.map((skill) => `[${skill}]`).join(', ')}`, KI_CONFIG)
+  if (missing.length)
+    fail(
+      'RUNTIMES-2',
+      `supported runtime coverage requires missing table(s): ${missing.map((skill) => `[${skill}]`).join(', ')}`,
+      KI_CONFIG
+    )
   f.push(...localKiSelfFindings(dir, parsed.runtimes))
   return f
 }
@@ -981,7 +1105,10 @@ type Target = { label: string; nameWithOwner: string | null; dir?: string; note?
 const GH_REMOTE = /github\.com[:/]([^/]+)\/(.+?)(?:\.git)?$/
 const gitOrigin = (dir: string): string | null => {
   try {
-    return execFileSync('git', ['-C', dir, 'remote', 'get-url', 'origin'], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] }).trim()
+    return execFileSync('git', ['-C', dir, 'remote', 'get-url', 'origin'], {
+      encoding: 'utf8',
+      stdio: ['ignore', 'pipe', 'pipe']
+    }).trim()
   } catch {
     return null
   }
@@ -1001,12 +1128,18 @@ function localTargets(path: string): Target[] {
   return dirs.map((dir) => {
     const label = dir.split('/').pop() ?? dir
     const m = gitOrigin(dir)?.match(GH_REMOTE)
-    return m ? { label, nameWithOwner: `${m[1]}/${m[2]}`, dir } : { label, nameWithOwner: null, dir, note: 'origin not on github.com' }
+    return m
+      ? { label, nameWithOwner: `${m[1]}/${m[2]}`, dir }
+      : { label, nameWithOwner: null, dir, note: 'origin not on github.com' }
   })
 }
 function orgTargets(org: string): Target[] {
-  const repos: { nameWithOwner: string }[] = JSON.parse(gh(['repo', 'list', org, '--limit', '200', '--json', 'nameWithOwner']))
-  return repos.map((r) => ({ label: r.nameWithOwner, nameWithOwner: r.nameWithOwner })).sort((a, b) => a.label.localeCompare(b.label))
+  const repos: { nameWithOwner: string }[] = JSON.parse(
+    gh(['repo', 'list', org, '--limit', '200', '--json', 'nameWithOwner'])
+  )
+  return repos
+    .map((r) => ({ label: r.nameWithOwner, nameWithOwner: r.nameWithOwner }))
+    .sort((a, b) => a.label.localeCompare(b.label))
 }
 
 export type RepoAuditCollection = {
@@ -1017,7 +1150,18 @@ export type RepoAuditCollection = {
 
 const evidenceLevel = (level: Level): RepoEvidenceLevel => level
 
-const LIVE_GITHUB_AREAS = new Set(['ACCESS-1', 'GH-1', 'MERGE-1', 'TOGGLE-1', 'VIS-1', 'TOPICS-1', 'BP-1', 'DEP-1', 'SEC-1', 'ACT-1'])
+const LIVE_GITHUB_AREAS = new Set([
+  'ACCESS-1',
+  'GH-1',
+  'MERGE-1',
+  'TOGGLE-1',
+  'VIS-1',
+  'TOPICS-1',
+  'BP-1',
+  'DEP-1',
+  'SEC-1',
+  'ACT-1'
+])
 const MIXED_EVIDENCE_AREAS = new Set(['GH-2', 'GH-3', 'PKG-1'])
 const CONTENT_AREAS = new Set([
   'FILES-1',
@@ -1065,9 +1209,15 @@ const auditLocalContent = (nwo: string, content: ContentEvidence): Finding[] => 
     licenseInfo: { key: license },
     description
   }
-  return auditRepo(virtualRepo, content.files, content.ki, content.kiText, content.readme, content.gitignore, content.signals).filter((finding) =>
-    CONTENT_AREAS.has(finding.area)
-  )
+  return auditRepo(
+    virtualRepo,
+    content.files,
+    content.ki,
+    content.kiText,
+    content.readme,
+    content.gitignore,
+    content.signals
+  ).filter((finding) => CONTENT_AREAS.has(finding.area))
 }
 
 // ── evidence collection ───────────────────────────────────────────────────
@@ -1123,12 +1273,25 @@ export const collectAuditFindings = (argv: readonly string[]): RepoAuditCollecti
       }
     }
     if (!t.nameWithOwner) {
-      all.push({ level: 'NOT_APPLICABLE', area: 'ACCESS-1', msg: t.note ?? 'GitHub checks skipped', ref: STD, file: t.label })
+      all.push({
+        level: 'NOT_APPLICABLE',
+        area: 'ACCESS-1',
+        msg: t.note ?? 'GitHub checks skipped',
+        ref: STD,
+        file: t.label
+      })
       if (localContent) {
         for (const x of auditLocalContent(t.label, localContent))
-          all.push({ level: x.level, area: x.area, msg: x.msg, ref: x.ref, file: scoped(t.label, x, localContent.source, false) })
+          all.push({
+            level: x.level,
+            area: x.area,
+            msg: x.msg,
+            ref: x.ref,
+            file: scoped(t.label, x, localContent.source, false)
+          })
       }
-      for (const x of localFindings) all.push({ level: x.level, area: x.area, msg: x.msg, ref: x.ref, file: scoped(t.label, x, 'local checkout') })
+      for (const x of localFindings)
+        all.push({ level: x.level, area: x.area, msg: x.msg, ref: x.ref, file: scoped(t.label, x, 'local checkout') })
       continue
     }
     // gh unauthenticated (typically CI): every GitHub-touching check is impossible, so skip
@@ -1147,7 +1310,14 @@ export const collectAuditFindings = (argv: readonly string[]): RepoAuditCollecti
             file: scoped(t.nameWithOwner, x, localContent.source, false)
           })
       }
-      for (const x of localFindings) all.push({ level: x.level, area: x.area, msg: x.msg, ref: x.ref, file: scoped(t.nameWithOwner, x, 'local checkout') })
+      for (const x of localFindings)
+        all.push({
+          level: x.level,
+          area: x.area,
+          msg: x.msg,
+          ref: x.ref,
+          file: scoped(t.nameWithOwner, x, 'local checkout')
+        })
       continue
     }
     let findings: Finding[]
@@ -1157,8 +1327,18 @@ export const collectAuditFindings = (argv: readonly string[]): RepoAuditCollecti
       const content = localContent ?? remoteContentEvidence(t.nameWithOwner, branch)
       // overrides are applied inside auditRepo: a not-enforced check simply does not fail
       // and is reported as INFO. No post-filtering here.
-      findings = [...auditRepo(r, content.files, content.ki, content.kiText, content.readme, content.gitignore, content.signals), ...localFindings]
-      for (const x of findings) all.push({ level: x.level, area: x.area, msg: x.msg, ref: x.ref, file: scoped(t.nameWithOwner, x, content.source) })
+      findings = [
+        ...auditRepo(r, content.files, content.ki, content.kiText, content.readme, content.gitignore, content.signals),
+        ...localFindings
+      ]
+      for (const x of findings)
+        all.push({
+          level: x.level,
+          area: x.area,
+          msg: x.msg,
+          ref: x.ref,
+          file: scoped(t.nameWithOwner, x, content.source)
+        })
     } catch {
       findings = [
         {

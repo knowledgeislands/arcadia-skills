@@ -7,10 +7,16 @@ const HYGIENE_1: RubricItem<GitRubricContext> = {
   description: 'Git work preserves shared state through explicit paths, worker-local indexes, and serialized commits.',
   sources: ['standards-git.md'],
   judgment: {
-    scope: 'The shared working tree, worker-local Git indexes, staged paths, and Git write operations for the selected work.',
+    scope:
+      'The shared working tree, worker-local Git indexes, staged paths, and Git write operations for the selected work.',
     prompt:
       'Assess whether the working tree was inspected, each delegated worker used its assigned Git index, staging is limited to intended paths, unrelated changes remain untouched, and shared-HEAD commits are safely serialised.',
-    outcomes: ['conforming', 'state inspection required', 'staging correction required', 'operation coordination required'],
+    outcomes: [
+      'conforming',
+      'state inspection required',
+      'staging correction required',
+      'operation coordination required'
+    ],
     guidance:
       'Inspect the working tree, pass the assigned `GIT_INDEX_FILE` on every worker Git write, stage only explicit intended paths, leave unrelated work untouched, and have the orchestrator serialize commits after re-checking HEAD.'
   }

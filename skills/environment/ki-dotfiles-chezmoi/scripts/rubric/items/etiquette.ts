@@ -10,7 +10,8 @@ const ETIQ_J1: RubricItem<ReviewContext> = {
     scope: 'Each audit finding and any subsequent proposed or applied change.',
     prompt: 'Were findings reported with a file, concise problem statement, and options before a change was applied?',
     outcomes: ['conforming', 'reporting correction required', 'change deferral required'],
-    guidance: 'Report the affected file, concise problem, and available options before proposing or applying a change; defer action where that evidence is absent.'
+    guidance:
+      'Report the affected file, concise problem, and available options before proposing or applying a change; defer action where that evidence is absent.'
   }
 }
 

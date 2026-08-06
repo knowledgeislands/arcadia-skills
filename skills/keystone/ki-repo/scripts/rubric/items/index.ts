@@ -28,5 +28,28 @@ export default {
   name: 'ki-repo',
   concern: 'Knowledge Islands repositories',
   createSession: createRepoSession,
-  families: [RUBRIC, FILES, GH, PKG, MERGE, TOGGLE, VIS, TOPICS, BP, DEP, SEC, ACT, CHECKS, COV, STRUCT, ACCESS, KIND, RUNTIMES, DESCFIT, OVR, SYNC, WORK]
+  families: [
+    RUBRIC,
+    FILES,
+    GH,
+    PKG,
+    MERGE,
+    TOGGLE,
+    VIS,
+    TOPICS,
+    BP,
+    DEP,
+    SEC,
+    ACT,
+    CHECKS,
+    COV,
+    STRUCT,
+    ACCESS,
+    KIND,
+    RUNTIMES,
+    DESCFIT,
+    OVR,
+    SYNC,
+    WORK
+  ]
 } satisfies SkillRubricDefinition<RepoRubricContext>

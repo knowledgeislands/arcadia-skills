@@ -16,7 +16,11 @@ const item = (
   mechanical: {
     level,
     ...(overrideLevels ? { overrideLevels } : {}),
-    remediation: { class: 'diagnostic', guidance: 'Align the CI workflow with the declared toolchain and canonical repository gates, then rerun the audit.' },
+    remediation: {
+      class: 'diagnostic',
+      guidance:
+        'Align the CI workflow with the declared toolchain and canonical repository gates, then rerun the audit.'
+    },
     audit: { phase: 'INSPECT', run: (context) => auditEvidence(evidence(context), level, overrideLevels) }
   }
 })

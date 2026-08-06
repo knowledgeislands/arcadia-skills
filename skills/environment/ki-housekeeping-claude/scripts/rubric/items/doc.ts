@@ -6,7 +6,8 @@ const SOURCE = 'standards-auto-memory.md'
 const DOC_1: RubricItem<HousekeepingDocContext> = {
   code: 'DOC-1',
   title: 'Content doctrine',
-  description: '`feedback` and `project` memories carry the rule/fact, then a **Why:** line and a **How to apply:** line — not just a bare assertion.',
+  description:
+    '`feedback` and `project` memories carry the rule/fact, then a **Why:** line and a **How to apply:** line — not just a bare assertion.',
   sources: [SOURCE],
   judgment: judgment('Do feedback and project memories carry their rule or fact, Why, and How to apply?')
 }
@@ -25,13 +26,16 @@ const DOC_3: RubricItem<HousekeepingDocContext> = {
   description:
     'No memory duplicates content that belongs in a `CLAUDE.md` (codebase conventions, file layout, architecture, anything derivable from the repo or git history). Flag promotion candidates instead of leaving them to drift from the code.',
   sources: [SOURCE],
-  judgment: judgment('Do memories avoid duplicating content that belongs in CLAUDE.md or is derivable from current repository evidence?')
+  judgment: judgment(
+    'Do memories avoid duplicating content that belongs in CLAUDE.md or is derivable from current repository evidence?'
+  )
 }
 
 const DOC_4: RubricItem<HousekeepingDocContext> = {
   code: 'DOC-4',
   title: 'Content doctrine',
-  description: '`user`-type memories describe role/preferences/knowledge neutrally — no content that reads as a negative judgment of the user.',
+  description:
+    '`user`-type memories describe role/preferences/knowledge neutrally — no content that reads as a negative judgment of the user.',
   sources: [SOURCE],
   judgment: judgment('Do user memories describe role, preferences, and knowledge neutrally?')
 }

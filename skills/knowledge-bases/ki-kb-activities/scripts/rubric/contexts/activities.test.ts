@@ -18,7 +18,11 @@ const temporaryDirectory = (prefix: string): string => {
   return directory
 }
 
-const options = (repository: string, mode: 'audit' | 'conform', configuration: Readonly<Record<string, unknown>> = {}): RubricContextOptions => ({
+const options = (
+  repository: string,
+  mode: 'audit' | 'conform',
+  configuration: Readonly<Record<string, unknown>> = {}
+): RubricContextOptions => ({
   mode,
   repository,
   userHome: tmpdir(),
@@ -31,7 +35,16 @@ const activityBase = (): string => {
   mkdirSync(activities, { recursive: true })
   writeFileSync(
     join(activities, 'Morning Briefing.md'),
-    ['---', 'status: active', 'realization: scheduled-task', 'schedule_name: Morning Briefing', 'author: Test', '---', '# Morning Briefing', ''].join('\n')
+    [
+      '---',
+      'status: active',
+      'realization: scheduled-task',
+      'schedule_name: Morning Briefing',
+      'author: Test',
+      '---',
+      '# Morning Briefing',
+      ''
+    ].join('\n')
   )
   return repository
 }
@@ -86,7 +99,9 @@ test('a configured collection path produces one bounded index proposal', () => {
   const activities = join(repository, 'Operations', 'Activity Register')
   mkdirSync(activities, { recursive: true })
   writeFileSync(join(activities, 'Manual Review.md'), '# Manual Review\n')
-  const session = createActivitiesSession(options(repository, 'conform', { activities_dir: 'Operations/Activity Register' }))
+  const session = createActivitiesSession(
+    options(repository, 'conform', { activities_dir: 'Operations/Activity Register' })
+  )
 
   indexItem().conform?.run(activityContext(session))
 

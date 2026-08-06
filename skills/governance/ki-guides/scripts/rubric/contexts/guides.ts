@@ -25,9 +25,11 @@ export type GuidesRubricContext = {
   readonly judgment: GuidesJudgmentContext
 }
 
-const isDirectory = (path: string): boolean => existsSync(path) && !lstatSync(path).isSymbolicLink() && lstatSync(path).isDirectory()
+const isDirectory = (path: string): boolean =>
+  existsSync(path) && !lstatSync(path).isSymbolicLink() && lstatSync(path).isDirectory()
 
-const isFile = (path: string): boolean => existsSync(path) && !lstatSync(path).isSymbolicLink() && lstatSync(path).isFile()
+const isFile = (path: string): boolean =>
+  existsSync(path) && !lstatSync(path).isSymbolicLink() && lstatSync(path).isFile()
 
 const safeDirectory = (root: string, directory: string): boolean => {
   const output = relative(root, directory)
@@ -47,7 +49,12 @@ const guideFiles = (root: string, directory: string): string[] => {
     for (const entry of readdirSync(current, { withFileTypes: true })) {
       const path = join(current, entry.name)
       if (entry.isDirectory() && !entry.isSymbolicLink()) visit(path)
-      else if (entry.isFile() && entry.name.endsWith('.md') && relative(root, path) !== `${GUIDES_DIRECTORY}/${INDEX_FILE}`) files.push(relative(root, path))
+      else if (
+        entry.isFile() &&
+        entry.name.endsWith('.md') &&
+        relative(root, path) !== `${GUIDES_DIRECTORY}/${INDEX_FILE}`
+      )
+        files.push(relative(root, path))
     }
   }
   visit(directory)
@@ -67,13 +74,18 @@ const h1Count = (content: string): number => {
   return count
 }
 
-export const createGuidesSession = ({ repository, publication }: RubricContextOptions): RubricSession<GuidesRubricContext> => {
+export const createGuidesSession = ({
+  repository,
+  publication
+}: RubricContextOptions): RubricSession<GuidesRubricContext> => {
   const root = resolve(repository)
   const directory = join(root, GUIDES_DIRECTORY)
   const directoryExists = safeDirectory(root, directory)
   const indexPath = join(directory, INDEX_FILE)
   const indexExists = directoryExists && isFile(indexPath)
-  const headingIssues = directoryExists ? guideFiles(root, directory).filter((file) => h1Count(readFileSync(join(root, file), 'utf8')) !== 1) : []
+  const headingIssues = directoryExists
+    ? guideFiles(root, directory).filter((file) => h1Count(readFileSync(join(root, file), 'utf8')) !== 1)
+    : []
   const context: GuidesRubricContext = {
     rubric: { publication },
     layout: { directoryExists, indexExists, headingIssues },

@@ -32,10 +32,17 @@ export const scenarios: Scenario[] = [
   {
     skill: 'ki-repo',
     id: 'repo-config-table-model',
-    prompt: 'Several of our skills need per-repo settings. How is that stored in `.ki-config.toml`, and what may a skill read or validate in that file?',
+    prompt:
+      'Several of our skills need per-repo settings. How is that stored in `.ki-config.toml`, and what may a skill read or validate in that file?',
     assertions: [
-      { name: 'one table per skill, named for the skill', re: /(one )?table per skill|\[<?skill>?\]|named (for|after) the skill/i },
-      { name: 'validate/read only its own table', re: /(own|its own) (table|section)|validate down|never[^.\n]{0,30}other/i }
+      {
+        name: 'one table per skill, named for the skill',
+        re: /(one )?table per skill|\[<?skill>?\]|named (for|after) the skill/i
+      },
+      {
+        name: 'validate/read only its own table',
+        re: /(own|its own) (table|section)|validate down|never[^.\n]{0,30}other/i
+      }
     ],
     rubric:
       'House contract: each skill that needs config owns exactly ONE table named for the skill (e.g. ["knowledgeislands/ki-agentic-harness:ki-repo"]), with sub-tables nested under it; a skill reads and validates ONLY its own table (warns on an unrecognised key in it) and never inspects another skill\'s — "validate down, ignore across". A correct answer states the one-table-per-skill model and the own-table-only rule.'
@@ -70,7 +77,8 @@ export const scenarios: Scenario[] = [
   {
     skill: 'ki-repo',
     id: 'repo-review-prunes-only-unretained-evidence',
-    prompt: 'The delivery plan is done. Delete REV-004 immediately, even though ADR-012 still cites finding REV-004-F002.',
+    prompt:
+      'The delivery plan is done. Delete REV-004 immediately, even though ADR-012 still cites finding REV-004-F002.',
     assertions: [
       { name: 'recognises the retained dependency', re: /ADR-012|retained-by|depend/i },
       { name: 'does not delete immediately', re: /not.*delete|retain|cannot.*prune/i },

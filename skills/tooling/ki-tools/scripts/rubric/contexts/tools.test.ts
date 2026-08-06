@@ -27,7 +27,12 @@ const options = (repository: string, mode: 'audit' | 'conform'): RubricContextOp
   configuration: {}
 })
 
-const fixture = (): { readonly repository: string; readonly config: string; readonly executable: string; readonly install: string } => {
+const fixture = (): {
+  readonly repository: string
+  readonly config: string
+  readonly executable: string
+  readonly install: string
+} => {
   const repository = temporaryDirectory('tools-demo-')
   mkdirSync(join(repository, 'bin'))
   const executable = join(repository, 'bin', 'demo')
@@ -154,12 +159,18 @@ test('a physical manual page requires a mandoc lint workflow gate', () => {
   if (!missingGate) throw new Error('ki-tools session has no repository context')
   expect(manualItem().audit.run(MAN.selectContext(missingGate))[0]?.status).toBe('VIOLATION')
 
-  writeFileSync(join(repository, '.github', 'workflows', 'ci.yml'), `run: mandoc -T lint ${beforeManual.manual.manualPath}\n`)
+  writeFileSync(
+    join(repository, '.github', 'workflows', 'ci.yml'),
+    `run: mandoc -T lint ${beforeManual.manual.manualPath}\n`
+  )
   const gated = createToolsSession(options(repository, 'audit')).subjects[0]?.context()
   if (!gated) throw new Error('ki-tools session has no repository context')
   expect(manualItem().audit.run(MAN.selectContext(gated))[0]?.status).toBe('PASS')
 
-  writeFileSync(join(repository, 'package.json'), JSON.stringify({ scripts: { 'ki:tools:lint-man': `mandoc -T lint ${beforeManual.manual.manualPath}` } }))
+  writeFileSync(
+    join(repository, 'package.json'),
+    JSON.stringify({ scripts: { 'ki:tools:lint-man': `mandoc -T lint ${beforeManual.manual.manualPath}` } })
+  )
   writeFileSync(join(repository, '.github', 'workflows', 'ci.yml'), 'run: bun run ki:tools:lint-man\n')
   const scripted = createToolsSession(options(repository, 'audit')).subjects[0]?.context()
   if (!scripted) throw new Error('ki-tools session has no repository context')

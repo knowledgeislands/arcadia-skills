@@ -1,6 +1,11 @@
 import { type Dirent, lstatSync, readdirSync, readFileSync } from 'node:fs'
 import { basename, dirname, join, relative, resolve } from 'node:path'
-import type { ConformWrite, RubricContextOptions, RubricPublicationContext, RubricSession } from '../../shared/rubric.ts'
+import type {
+  ConformWrite,
+  RubricContextOptions,
+  RubricPublicationContext,
+  RubricSession
+} from '../../shared/rubric.ts'
 
 export type AgentFrontmatter = {
   keys: ReadonlyMap<string, string>
@@ -56,7 +61,8 @@ const pathState = (path: string): 'missing' | 'file' | 'directory' | 'unsafe' =>
 
 const stripQuotes = (value: string): string => {
   const trimmed = value.trim()
-  if ((trimmed.startsWith('"') && trimmed.endsWith('"')) || (trimmed.startsWith("'") && trimmed.endsWith("'"))) return trimmed.slice(1, -1)
+  if ((trimmed.startsWith('"') && trimmed.endsWith('"')) || (trimmed.startsWith("'") && trimmed.endsWith("'")))
+    return trimmed.slice(1, -1)
   return trimmed
 }
 
@@ -83,7 +89,13 @@ const parseFrontmatter = (content: string): AgentFrontmatter => {
     const key = keyValue[1] as string
     const remainder = (keyValue[2] as string).trim()
     present.add(key)
-    if (remainder === '>' || remainder === '|' || remainder.startsWith('> ') || remainder.startsWith('| ') || /^[>|][-+]?\d*\s*$/.test(remainder)) {
+    if (
+      remainder === '>' ||
+      remainder === '|' ||
+      remainder.startsWith('> ') ||
+      remainder.startsWith('| ') ||
+      /^[>|][-+]?\d*\s*$/.test(remainder)
+    ) {
       const folded = remainder[0] === '>'
       const collected: string[] = []
       index++
@@ -108,7 +120,8 @@ const parseFrontmatter = (content: string): AgentFrontmatter => {
   return { keys, present, raw: block }
 }
 
-const bodyAfterFrontmatter = (content: string): string => content.slice((content.match(/^---\r?\n[\s\S]*?\r?\n---\r?\n?/) ?? [''])[0].length)
+const bodyAfterFrontmatter = (content: string): string =>
+  content.slice((content.match(/^---\r?\n[\s\S]*?\r?\n---\r?\n?/) ?? [''])[0].length)
 
 const readAgent = (file: string): AgentDefinition => {
   const content = readFileSync(file, 'utf8')
@@ -163,11 +176,16 @@ const alignedNameContent = (agent: AgentDefinition): string | null => {
   return `${frontmatter.replace(/^name:[^\r\n]*$/m, `name: ${agent.stem}`)}${agent.content.slice(frontmatterEnd)}`
 }
 
-export const createAgentsSession = ({ mode, repository, publication }: RubricContextOptions): RubricSession<AgentsRubricContext> => {
+export const createAgentsSession = ({
+  mode,
+  repository,
+  publication
+}: RubricContextOptions): RubricSession<AgentsRubricContext> => {
   const root = resolve(repository)
   const agentsRoot = join(root, 'subagents')
   const rawRootState = pathState(agentsRoot)
-  const scopeState: ScopeState = rawRootState === 'missing' ? 'absent' : rawRootState === 'directory' ? 'physical' : 'unsafe'
+  const scopeState: ScopeState =
+    rawRootState === 'missing' ? 'absent' : rawRootState === 'directory' ? 'physical' : 'unsafe'
   const inspected = scopeState === 'physical' ? inspectAgentFiles(root, agentsRoot) : { files: [], unsafePaths: [] }
   if (scopeState === 'unsafe') inspected.unsafePaths.push('subagents')
 
@@ -249,7 +267,9 @@ export const createAgentsSession = ({ mode, repository, publication }: RubricCon
       { families: ['RUBRIC'], context: () => collectionContext, subject: root }
     ],
     proposal: () => ({
-      writes: [...requestedDrafts.entries()].sort(([left], [right]) => left.localeCompare(right)).map(([path, content]): ConformWrite => ({ path, content }))
+      writes: [...requestedDrafts.entries()]
+        .sort(([left], [right]) => left.localeCompare(right))
+        .map(([path, content]): ConformWrite => ({ path, content }))
     })
   }
 }

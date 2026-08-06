@@ -1,6 +1,12 @@
 import { existsSync, lstatSync, readdirSync, readFileSync, realpathSync } from 'node:fs'
 import { isAbsolute, join, relative, resolve, sep } from 'node:path'
-import type { AuditOutcome, ConformWrite, RubricContextOptions, RubricPublicationContext, RubricSession } from '../../shared/rubric.ts'
+import type {
+  AuditOutcome,
+  ConformWrite,
+  RubricContextOptions,
+  RubricPublicationContext,
+  RubricSession
+} from '../../shared/rubric.ts'
 
 const CONFIG_TABLE = 'knowledgeislands/ki-agentic-harness:ki-trades'
 const REPOSITORY_TABLE = 'knowledgeislands/ki-agentic-harness:ki-repo'
@@ -11,7 +17,17 @@ const UTC_TIMESTAMP = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/
 const FULL_COMMIT = /^[0-9a-f]{40}$/
 const TRADE_KINDS = ['work', 'knowledge'] as const
 const OBSERVATION_POLICIES = ['unattended', 'receipt', 'decision', 'completion'] as const
-const DECISION_STATUSES = ['unconsidered', 'in_progress', 'parked', 'clarify', 'applied', 'adopted', 'retained', 'declined', 'superseded'] as const
+const DECISION_STATUSES = [
+  'unconsidered',
+  'in_progress',
+  'parked',
+  'clarify',
+  'applied',
+  'adopted',
+  'retained',
+  'declined',
+  'superseded'
+] as const
 const TERMINAL_DECISION_STATUSES = new Set<DecisionStatus>(['applied', 'adopted', 'retained', 'declined', 'superseded'])
 const SENDER_FIELDS = ['id', 'title', 'created_at', 'sender', 'receiver', 'kind', 'source_ref', 'observation'] as const
 const RECEIVER_FIELDS = [
@@ -121,7 +137,8 @@ const physicalFile = (path: string): boolean => {
 
 const containedPhysical = (root: string, path: string, kind: 'file' | 'directory'): boolean => {
   const remainder = relative(root, path)
-  if (isAbsolute(remainder) || remainder === '..' || remainder.startsWith('../') || !physicalDirectory(root)) return false
+  if (isAbsolute(remainder) || remainder === '..' || remainder.startsWith('../') || !physicalDirectory(root))
+    return false
   let cursor = root
   for (const segment of remainder.split(sep).filter(Boolean)) {
     cursor = join(cursor, segment)
@@ -145,28 +162,54 @@ const parseConfiguration = (
 ): { configuration: TradeConfiguration; outcomes: AuditOutcome[] } => {
   const outcomes: AuditOutcome[] = []
   const unknown = Object.keys(value).filter((key) => key !== 'exports_to' && key !== 'imports_from')
-  for (const key of unknown) outcomes.push({ status: 'VIOLATION', level: 'WARN', message: `unrecognised ki-trades configuration key ${key}`, subject })
+  for (const key of unknown)
+    outcomes.push({
+      status: 'VIOLATION',
+      level: 'WARN',
+      message: `unrecognised ki-trades configuration key ${key}`,
+      subject
+    })
 
   const local = repositoryIdentity(repository)
-  if (!local.repository || !local.identity) outcomes.push({ status: 'VIOLATION', message: 'ki-repo repository must be a canonical HTTPS GitHub home', subject })
+  if (!local.repository || !local.identity)
+    outcomes.push({ status: 'VIOLATION', message: 'ki-repo repository must be a canonical HTTPS GitHub home', subject })
 
   const parseRoutes = (key: 'exports_to' | 'imports_from'): Readonly<Record<TradeKind, readonly string[]>> => {
     const raw = value[key]
     const routes = table(raw)
     const result: Record<TradeKind, readonly string[]> = { work: [], knowledge: [] }
-    if (!routes) outcomes.push({ status: 'VIOLATION', message: `${key} must map every trade kind to canonical HTTPS GitHub repository URL arrays`, subject })
+    if (!routes)
+      outcomes.push({
+        status: 'VIOLATION',
+        message: `${key} must map every trade kind to canonical HTTPS GitHub repository URL arrays`,
+        subject
+      })
     for (const kind of TRADE_KINDS) {
       const values = routes?.[kind]
-      const entries = Array.isArray(values) && values.every((route) => typeof route === 'string') ? (values as string[]) : []
+      const entries =
+        Array.isArray(values) && values.every((route) => typeof route === 'string') ? (values as string[]) : []
       result[kind] = entries
       if (!Array.isArray(values) || values.some((route) => typeof route !== 'string'))
-        outcomes.push({ status: 'VIOLATION', message: `${key}.${kind} must be an array of canonical HTTPS GitHub repository URLs`, subject })
+        outcomes.push({
+          status: 'VIOLATION',
+          message: `${key}.${kind} must be an array of canonical HTTPS GitHub repository URLs`,
+          subject
+        })
       else {
         for (const route of entries.filter((route) => !REPOSITORY.test(route)))
-          outcomes.push({ status: 'VIOLATION', message: `${key}.${kind} entry ${route} is not a canonical HTTPS GitHub repository URL`, subject })
-        if (new Set(entries).size !== entries.length) outcomes.push({ status: 'VIOLATION', message: `${key}.${kind} must not repeat a repository`, subject })
+          outcomes.push({
+            status: 'VIOLATION',
+            message: `${key}.${kind} entry ${route} is not a canonical HTTPS GitHub repository URL`,
+            subject
+          })
+        if (new Set(entries).size !== entries.length)
+          outcomes.push({ status: 'VIOLATION', message: `${key}.${kind} must not repeat a repository`, subject })
         if (entries.some((route) => route === local.repository))
-          outcomes.push({ status: 'VIOLATION', message: `${key}.${kind} must not contain the local repository`, subject })
+          outcomes.push({
+            status: 'VIOLATION',
+            message: `${key}.${kind} must not contain the local repository`,
+            subject
+          })
         if (entries.join('\n') !== [...entries].sort((left, right) => left.localeCompare(right)).join('\n'))
           outcomes.push({ status: 'VIOLATION', message: `${key}.${kind} must be normalized in lexical order`, subject })
       }
@@ -191,7 +234,12 @@ const parseConfiguration = (
 const parseRepositoryConfiguration = (root: string): TradeConfiguration => {
   const path = join(root, '.ki-config.toml')
   if (!containedPhysical(root, path, 'file'))
-    return { exportsTo: { work: [], knowledge: [] }, importsFrom: { work: [], knowledge: [] }, participates: false, valid: false }
+    return {
+      exportsTo: { work: [], knowledge: [] },
+      importsFrom: { work: [], knowledge: [] },
+      participates: false,
+      valid: false
+    }
   try {
     const document = Bun.TOML.parse(readFileSync(path, 'utf8')) as Record<string, unknown>
     const owned = table(document[CONFIG_TABLE])
@@ -206,7 +254,12 @@ const parseRepositoryConfiguration = (root: string): TradeConfiguration => {
       }
     return parseConfiguration(owned, repository, path).configuration
   } catch {
-    return { exportsTo: { work: [], knowledge: [] }, importsFrom: { work: [], knowledge: [] }, participates: true, valid: false }
+    return {
+      exportsTo: { work: [], knowledge: [] },
+      importsFrom: { work: [], knowledge: [] },
+      participates: true,
+      valid: false
+    }
   }
 }
 
@@ -239,7 +292,12 @@ const routeEvidence = (
   local: TradeConfiguration
 ): { outcomes: readonly AuditOutcome[]; active: ReadonlyMap<string, RegisteredRepository> } => {
   if (!local.valid || !local.identity || !local.repository)
-    return { outcomes: [{ status: 'NOT_APPLICABLE', message: 'trade routes require a valid local ki-repo repository identity' }], active: new Map() }
+    return {
+      outcomes: [
+        { status: 'NOT_APPLICABLE', message: 'trade routes require a valid local ki-repo repository identity' }
+      ],
+      active: new Map()
+    }
   if (TRADE_KINDS.every((kind) => local.exportsTo[kind].length === 0 && local.importsFrom[kind].length === 0))
     return { outcomes: pass('No trade routes are declared.'), active: new Map() }
 
@@ -248,14 +306,22 @@ const routeEvidence = (
   const outcomes: AuditOutcome[] = []
   const physicalRoot = realpathSync(root)
   if (!registered.some((candidate) => candidate.root === physicalRoot)) {
-    outcomes.push({ status: 'VIOLATION', message: `local repository ${local.identity} is not present in the KI repository registry`, subject: local.identity })
+    outcomes.push({
+      status: 'VIOLATION',
+      message: `local repository ${local.identity} is not present in the KI repository registry`,
+      subject: local.identity
+    })
   }
 
   const validateRoute = (peer: string, direction: 'export' | 'import', kind: TradeKind): void => {
     const matches = registered.filter((candidate) => candidate.configuration.repository === peer)
     const otherParty = direction === 'export' ? 'receiver' : 'sender'
     if (matches.length === 0) {
-      outcomes.push({ status: 'INFO', message: `declared ${direction} route ${peer} awaits ${otherParty} registration`, subject: peer })
+      outcomes.push({
+        status: 'INFO',
+        message: `declared ${direction} route ${peer} awaits ${otherParty} registration`,
+        subject: peer
+      })
       return
     }
     if (matches.length > 1) {
@@ -268,14 +334,23 @@ const routeEvidence = (
     }
     const [candidate] = matches
     if (!candidate?.configuration.participates) {
-      outcomes.push({ status: 'INFO', message: `declared ${direction} route ${peer} awaits ${otherParty} ki-trades participation`, subject: peer })
+      outcomes.push({
+        status: 'INFO',
+        message: `declared ${direction} route ${peer} awaits ${otherParty} ki-trades participation`,
+        subject: peer
+      })
       return
     }
     if (!candidate.configuration.valid) {
-      outcomes.push({ status: 'VIOLATION', message: `registered route endpoint ${peer} has malformed ki-trades configuration`, subject: peer })
+      outcomes.push({
+        status: 'VIOLATION',
+        message: `registered route endpoint ${peer} has malformed ki-trades configuration`,
+        subject: peer
+      })
       return
     }
-    const reciprocal = direction === 'export' ? candidate.configuration.importsFrom[kind] : candidate.configuration.exportsTo[kind]
+    const reciprocal =
+      direction === 'export' ? candidate.configuration.importsFrom[kind] : candidate.configuration.exportsTo[kind]
     if (!reciprocal.includes(local.repository ?? '')) {
       outcomes.push({
         status: 'INFO',
@@ -307,7 +382,8 @@ const readMarkdownFiles = (root: string, directory: string): readonly string[] =
       const path = join(current, entry.name)
       if (entry.isSymbolicLink()) continue
       if (entry.isDirectory()) visit(path)
-      else if (entry.isFile() && entry.name.endsWith('.md') && entry.name !== 'README.md') files.push(relative(root, path))
+      else if (entry.isFile() && entry.name.endsWith('.md') && entry.name !== 'README.md')
+        files.push(relative(root, path))
     }
   }
   visit(path)
@@ -328,7 +404,11 @@ const parseRecord = (root: string, path: string, direction: Direction, outcomes:
   const source = containedPhysical(root, absolute, 'file') ? readFileSync(absolute, 'utf8') : ''
   const match = source.match(/^---\n([\s\S]*?)\n---\n([\s\S]*)$/)
   if (!match) {
-    outcomes.push({ status: 'VIOLATION', message: 'trade record must have YAML frontmatter and a Markdown payload', subject: path })
+    outcomes.push({
+      status: 'VIOLATION',
+      message: 'trade record must have YAML frontmatter and a Markdown payload',
+      subject: path
+    })
     return { direction, path, fields: {}, body: '', rawSenderProjection: source }
   }
 
@@ -354,27 +434,56 @@ const parseRecord = (root: string, path: string, direction: Direction, outcomes:
   const id = typeof fields.id === 'string' ? fields.id : undefined
 
   if (!peer || !IDENTITY.test(peer))
-    outcomes.push({ status: 'VIOLATION', message: 'record path must use exactly two canonical owner/repo peer directories', subject: path })
+    outcomes.push({
+      status: 'VIOLATION',
+      message: 'record path must use exactly two canonical owner/repo peer directories',
+      subject: path
+    })
   if (!id || !TRADE_ID.test(id))
-    outcomes.push({ status: 'VIOLATION', message: 'id must use canonical TRD plus eight lower-case hexadecimal characters', subject: path })
-  if (id && filename !== `${id}.md`) outcomes.push({ status: 'VIOLATION', message: 'filename must exactly repeat the frontmatter trade id', subject: path })
+    outcomes.push({
+      status: 'VIOLATION',
+      message: 'id must use canonical TRD plus eight lower-case hexadecimal characters',
+      subject: path
+    })
+  if (id && filename !== `${id}.md`)
+    outcomes.push({
+      status: 'VIOLATION',
+      message: 'filename must exactly repeat the frontmatter trade id',
+      subject: path
+    })
   const allowedFields = preparation ? ALLOWED_PREPARATION_FIELDS : ALLOWED_SUBMITTED_FIELDS
   for (const key of Object.keys(fields).filter((key) => !allowedFields.has(key)))
-    outcomes.push({ status: 'VIOLATION', message: `frontmatter key ${key} is outside the trade record contract`, subject: path })
+    outcomes.push({
+      status: 'VIOLATION',
+      message: `frontmatter key ${key} is outside the trade record contract`,
+      subject: path
+    })
   for (const key of SENDER_FIELDS)
     if (typeof fields[key] !== 'string' || !fields[key])
       outcomes.push({ status: 'VIOLATION', message: `${key} must be a non-empty sender field`, subject: path })
-  if (preparation && fields.phase !== 'preparing') outcomes.push({ status: 'VIOLATION', message: 'a preparation must declare phase: preparing', subject: path })
+  if (preparation && fields.phase !== 'preparing')
+    outcomes.push({ status: 'VIOLATION', message: 'a preparation must declare phase: preparing', subject: path })
   if (typeof fields.created_at === 'string' && !UTC_TIMESTAMP.test(fields.created_at))
-    outcomes.push({ status: 'VIOLATION', message: 'created_at must be a UTC YYYY-MM-DDTHH:MM:SSZ timestamp', subject: path })
+    outcomes.push({
+      status: 'VIOLATION',
+      message: 'created_at must be a UTC YYYY-MM-DDTHH:MM:SSZ timestamp',
+      subject: path
+    })
   if (typeof fields.sender === 'string' && !IDENTITY.test(fields.sender))
     outcomes.push({ status: 'VIOLATION', message: 'sender must be a canonical owner/repo identity', subject: path })
   if (typeof fields.receiver === 'string' && !IDENTITY.test(fields.receiver))
     outcomes.push({ status: 'VIOLATION', message: 'receiver must be a canonical owner/repo identity', subject: path })
   if (typeof fields.kind !== 'string' || !TRADE_KINDS.includes(fields.kind as TradeKind))
     outcomes.push({ status: 'VIOLATION', message: `kind must be one of ${TRADE_KINDS.join(', ')}`, subject: path })
-  if (fields.observation !== undefined && (typeof fields.observation !== 'string' || !OBSERVATION_POLICIES.includes(fields.observation as ObservationPolicy)))
-    outcomes.push({ status: 'VIOLATION', message: `observation must be one of ${OBSERVATION_POLICIES.join(', ')}`, subject: path })
+  if (
+    fields.observation !== undefined &&
+    (typeof fields.observation !== 'string' || !OBSERVATION_POLICIES.includes(fields.observation as ObservationPolicy))
+  )
+    outcomes.push({
+      status: 'VIOLATION',
+      message: `observation must be one of ${OBSERVATION_POLICIES.join(', ')}`,
+      subject: path
+    })
 
   const expectedH1 = id && typeof fields.title === 'string' ? `# ${id}: ${fields.title}` : ''
   const content = body.replace(/^(?:\r?\n)+/, '')
@@ -382,17 +491,27 @@ const parseRecord = (root: string, path: string, direction: Direction, outcomes:
     outcomes.push({ status: 'VIOLATION', message: 'H1 must exactly repeat the trade id and title', subject: path })
   for (const heading of ['Context', 'Submission', 'Constraints']) {
     const section = body.match(new RegExp(`(?:^|\\n)## ${heading}\\n\\n([\\s\\S]*?)(?=\\n## |$)`))
-    if (!section?.[1]?.trim()) outcomes.push({ status: 'VIOLATION', message: `payload section ${heading} is required and non-empty`, subject: path })
+    if (!section?.[1]?.trim())
+      outcomes.push({
+        status: 'VIOLATION',
+        message: `payload section ${heading} is required and non-empty`,
+        subject: path
+      })
   }
 
   const rawDecisionStatus = fields.decision_status
   const decisionStatus =
-    typeof rawDecisionStatus === 'string' && DECISION_STATUSES.includes(rawDecisionStatus as DecisionStatus) ? (rawDecisionStatus as DecisionStatus) : undefined
+    typeof rawDecisionStatus === 'string' && DECISION_STATUSES.includes(rawDecisionStatus as DecisionStatus)
+      ? (rawDecisionStatus as DecisionStatus)
+      : undefined
   const rawObservation = fields.observation
   const observation =
-    typeof rawObservation === 'string' && OBSERVATION_POLICIES.includes(rawObservation as ObservationPolicy) ? (rawObservation as ObservationPolicy) : undefined
+    typeof rawObservation === 'string' && OBSERVATION_POLICIES.includes(rawObservation as ObservationPolicy)
+      ? (rawObservation as ObservationPolicy)
+      : undefined
   const rawKind = fields.kind
-  const kind = typeof rawKind === 'string' && TRADE_KINDS.includes(rawKind as TradeKind) ? (rawKind as TradeKind) : undefined
+  const kind =
+    typeof rawKind === 'string' && TRADE_KINDS.includes(rawKind as TradeKind) ? (rawKind as TradeKind) : undefined
   const senderFrontmatter = direction === 'inbound' ? stripReceiverFields(frontmatter) : frontmatter
   return {
     direction,
@@ -449,7 +568,9 @@ const recordEvidence = (
   const status: AuditOutcome[] = []
   const release: AuditOutcome[] = []
   const parsed = [
-    ...readMarkdownFiles(root, '-/_TRADES/_PREPARATIONS').map((path) => parseRecord(root, path, 'preparation', records)),
+    ...readMarkdownFiles(root, '-/_TRADES/_PREPARATIONS').map((path) =>
+      parseRecord(root, path, 'preparation', records)
+    ),
     ...readMarkdownFiles(root, '+/_TRADES').map((path) => parseRecord(root, path, 'inbound', records)),
     ...readMarkdownFiles(root, '-/_TRADES')
       .filter((path) => !path.startsWith('-/_TRADES/_PREPARATIONS/'))
@@ -460,16 +581,29 @@ const recordEvidence = (
   for (const record of parsed) {
     if (record.id) {
       const previous = seen.get(record.id)
-      if (previous) records.push({ status: 'VIOLATION', message: `${record.id} repeats the record identity already used by ${previous}`, subject: record.path })
+      if (previous)
+        records.push({
+          status: 'VIOLATION',
+          message: `${record.id} repeats the record identity already used by ${previous}`,
+          subject: record.path
+        })
       else seen.set(record.id, record.path)
     }
     if (!local.identity || !record.peer || !record.id || !record.kind) continue
     const expectedLocal = record.direction === 'inbound' ? record.fields.receiver : record.fields.sender
     const expectedPeer = record.direction === 'inbound' ? record.fields.sender : record.fields.receiver
     if (expectedLocal !== local.identity)
-      authority.push({ status: 'VIOLATION', message: `${record.direction} record local identity does not match ${local.identity}`, subject: record.path })
+      authority.push({
+        status: 'VIOLATION',
+        message: `${record.direction} record local identity does not match ${local.identity}`,
+        subject: record.path
+      })
     if (expectedPeer !== record.peer)
-      authority.push({ status: 'VIOLATION', message: `${record.direction} record peer identity does not match its two-level path`, subject: record.path })
+      authority.push({
+        status: 'VIOLATION',
+        message: `${record.direction} record peer identity does not match its two-level path`,
+        subject: record.path
+      })
     const permitted = record.direction === 'inbound' ? local.importsFrom[record.kind] : local.exportsTo[record.kind]
     const peerRepository = `https://github.com/${record.peer}`
     if (!permitted.includes(peerRepository)) {
@@ -483,73 +617,150 @@ const recordEvidence = (
 
     const peer = active.get(`${record.kind}:${record.peer}`)
     if (record.direction === 'inbound' && !peer) {
-      authority.push({ status: 'VIOLATION', message: `inbound record has no active reciprocal route to ${record.peer}`, subject: record.path })
+      authority.push({
+        status: 'VIOLATION',
+        message: `inbound record has no active reciprocal route to ${record.peer}`,
+        subject: record.path
+      })
       continue
     }
 
     if (record.direction === 'preparation') {
       for (const field of RECEIVER_FIELDS)
         if (record.fields[field] !== undefined)
-          authority.push({ status: 'VIOLATION', message: `sender-owned preparation must not set receiver-local field ${field}`, subject: record.path })
+          authority.push({
+            status: 'VIOLATION',
+            message: `sender-owned preparation must not set receiver-local field ${field}`,
+            subject: record.path
+          })
       continue
     }
 
     if (record.direction === 'outbound') {
       for (const field of RECEIVER_FIELDS)
         if (record.fields[field] !== undefined)
-          authority.push({ status: 'VIOLATION', message: `sender-owned outbound record must not set receiver-local field ${field}`, subject: record.path })
+          authority.push({
+            status: 'VIOLATION',
+            message: `sender-owned outbound record must not set receiver-local field ${field}`,
+            subject: record.path
+          })
     } else {
       if (!record.decisionStatus)
-        status.push({ status: 'VIOLATION', message: `decision_status must be one of ${DECISION_STATUSES.join(', ')}`, subject: record.path })
+        status.push({
+          status: 'VIOLATION',
+          message: `decision_status must be one of ${DECISION_STATUSES.join(', ')}`,
+          subject: record.path
+        })
       if (
         record.fields.received_from_ref !== undefined &&
         (typeof record.fields.received_from_ref !== 'string' || !FULL_COMMIT.test(record.fields.received_from_ref))
       )
-        status.push({ status: 'VIOLATION', message: 'received_from_ref must be a full 40-character lower-case hexadecimal commit', subject: record.path })
+        status.push({
+          status: 'VIOLATION',
+          message: 'received_from_ref must be a full 40-character lower-case hexadecimal commit',
+          subject: record.path
+        })
       if (typeof record.fields.reviewed_at === 'string' && !UTC_TIMESTAMP.test(record.fields.reviewed_at))
-        status.push({ status: 'VIOLATION', message: 'reviewed_at must be a UTC YYYY-MM-DDTHH:MM:SSZ timestamp', subject: record.path })
+        status.push({
+          status: 'VIOLATION',
+          message: 'reviewed_at must be a UTC YYYY-MM-DDTHH:MM:SSZ timestamp',
+          subject: record.path
+        })
       if (
         record.decisionStatus &&
         ['parked', 'clarify', 'declined', 'superseded'].includes(record.decisionStatus) &&
         typeof record.fields.rationale !== 'string'
       )
-        status.push({ status: 'VIOLATION', message: `${record.decisionStatus} requires receiver-local rationale`, subject: record.path })
+        status.push({
+          status: 'VIOLATION',
+          message: `${record.decisionStatus} requires receiver-local rationale`,
+          subject: record.path
+        })
       if (record.decisionStatus === 'adopted' && typeof record.fields.adopted_as !== 'string')
-        status.push({ status: 'VIOLATION', message: 'adopted requires receiver-local adopted_as linkage', subject: record.path })
-      if (record.decisionStatus === 'applied' && (typeof record.fields.applied_commit !== 'string' || !FULL_COMMIT.test(record.fields.applied_commit)))
-        status.push({ status: 'VIOLATION', message: 'applied requires a full verified local applied_commit', subject: record.path })
+        status.push({
+          status: 'VIOLATION',
+          message: 'adopted requires receiver-local adopted_as linkage',
+          subject: record.path
+        })
+      if (
+        record.decisionStatus === 'applied' &&
+        (typeof record.fields.applied_commit !== 'string' || !FULL_COMMIT.test(record.fields.applied_commit))
+      )
+        status.push({
+          status: 'VIOLATION',
+          message: 'applied requires a full verified local applied_commit',
+          subject: record.path
+        })
       if (record.decisionStatus === 'applied' && record.kind !== 'work')
         status.push({ status: 'VIOLATION', message: 'applied is valid only for work trades', subject: record.path })
       if (record.decisionStatus === 'adopted' && record.kind !== 'work')
         status.push({ status: 'VIOLATION', message: 'adopted is valid only for work trades', subject: record.path })
       if (record.decisionStatus === 'retained' && record.kind !== 'knowledge')
-        status.push({ status: 'VIOLATION', message: 'retained is valid only for knowledge trades', subject: record.path })
+        status.push({
+          status: 'VIOLATION',
+          message: 'retained is valid only for knowledge trades',
+          subject: record.path
+        })
       if (record.decisionStatus === 'retained' && typeof record.fields.retained_as !== 'string')
-        status.push({ status: 'VIOLATION', message: 'retained requires receiver-local retained_as linkage', subject: record.path })
+        status.push({
+          status: 'VIOLATION',
+          message: 'retained requires receiver-local retained_as linkage',
+          subject: record.path
+        })
       if (record.decisionStatus !== 'adopted' && record.fields.adopted_as !== undefined)
-        status.push({ status: 'VIOLATION', message: 'adopted_as is valid only for adopted status', subject: record.path })
+        status.push({
+          status: 'VIOLATION',
+          message: 'adopted_as is valid only for adopted status',
+          subject: record.path
+        })
       if (record.decisionStatus !== 'applied' && record.fields.applied_commit !== undefined)
-        status.push({ status: 'VIOLATION', message: 'applied_commit is valid only for applied status', subject: record.path })
+        status.push({
+          status: 'VIOLATION',
+          message: 'applied_commit is valid only for applied status',
+          subject: record.path
+        })
       if (record.decisionStatus !== 'retained' && record.fields.retained_as !== undefined)
-        status.push({ status: 'VIOLATION', message: 'retained_as is valid only for retained status', subject: record.path })
+        status.push({
+          status: 'VIOLATION',
+          message: 'retained_as is valid only for retained status',
+          subject: record.path
+        })
       if (record.decisionStatus === 'superseded' && typeof record.fields.superseded_by !== 'string')
-        status.push({ status: 'VIOLATION', message: 'superseded requires receiver-local superseded_by linkage', subject: record.path })
+        status.push({
+          status: 'VIOLATION',
+          message: 'superseded requires receiver-local superseded_by linkage',
+          subject: record.path
+        })
       if (record.decisionStatus !== 'superseded' && record.fields.superseded_by !== undefined)
-        status.push({ status: 'VIOLATION', message: 'superseded_by is valid only for superseded status', subject: record.path })
+        status.push({
+          status: 'VIOLATION',
+          message: 'superseded_by is valid only for superseded status',
+          subject: record.path
+        })
     }
 
     const counterpartPath =
       record.direction === 'inbound'
         ? join('-/_TRADES', ...local.identity.split('/'), `${record.id}.md`)
         : join('+/_TRADES', ...local.identity.split('/'), `${record.id}.md`)
-    const counterpart = peer ? remoteRecord(peer.root, counterpartPath, record.direction === 'inbound' ? 'outbound' : 'inbound') : undefined
+    const counterpart = peer
+      ? remoteRecord(peer.root, counterpartPath, record.direction === 'inbound' ? 'outbound' : 'inbound')
+      : undefined
     if (counterpart && counterpart.rawSenderProjection !== record.rawSenderProjection)
-      authority.push({ status: 'VIOLATION', message: 'raw sender projection differs between outbound and inbound copies', subject: record.path })
+      authority.push({
+        status: 'VIOLATION',
+        message: 'raw sender projection differs between outbound and inbound copies',
+        subject: record.path
+      })
 
     if (record.direction === 'inbound') {
       if (counterpart) {
         if (releaseEligible(record, true, root))
-          release.push({ status: 'INFO', message: `${record.observation} observation policy permits sender release`, subject: record.path })
+          release.push({
+            status: 'INFO',
+            message: `${record.observation} observation policy permits sender release`,
+            subject: record.path
+          })
         else
           release.push({
             status: 'PASS',
@@ -557,7 +768,11 @@ const recordEvidence = (
             subject: record.path
           })
       } else if (releaseEligible(record, true, root)) {
-        release.push({ status: 'INFO', message: 'eligible sender release is observable; receiver may prune this inbound copy', subject: record.path })
+        release.push({
+          status: 'INFO',
+          message: 'eligible sender release is observable; receiver may prune this inbound copy',
+          subject: record.path
+        })
       } else {
         release.push({
           status: 'VIOLATION',
@@ -566,9 +781,17 @@ const recordEvidence = (
         })
       }
     } else if (!counterpart) {
-      release.push({ status: 'PASS', message: 'receiver has not created an inbound copy; sender retains the outbound record', subject: record.path })
+      release.push({
+        status: 'PASS',
+        message: 'receiver has not created an inbound copy; sender retains the outbound record',
+        subject: record.path
+      })
     } else if (releaseEligible(counterpart, true, peer?.root ?? root)) {
-      release.push({ status: 'INFO', message: `${counterpart.observation} observation policy permits sender release`, subject: record.path })
+      release.push({
+        status: 'INFO',
+        message: `${counterpart.observation} observation policy permits sender release`,
+        subject: record.path
+      })
     } else {
       release.push({
         status: 'PASS',
@@ -587,10 +810,19 @@ const scaffoldEvidence = (root: string): readonly AuditOutcome[] => {
     const directory = join(root, readme.path, '..')
     const path = join(root, readme.path)
     if (!containedPhysical(root, directory, 'directory'))
-      outcomes.push({ status: 'VIOLATION', message: `${relative(root, directory)}/ is absent or unsafe`, subject: readme.path })
-    else if (!containedPhysical(root, path, 'file')) outcomes.push({ status: 'VIOLATION', message: `${readme.path} is absent or unsafe`, subject: readme.path })
+      outcomes.push({
+        status: 'VIOLATION',
+        message: `${relative(root, directory)}/ is absent or unsafe`,
+        subject: readme.path
+      })
+    else if (!containedPhysical(root, path, 'file'))
+      outcomes.push({ status: 'VIOLATION', message: `${readme.path} is absent or unsafe`, subject: readme.path })
     else if (readFileSync(path, 'utf8') !== readme.content)
-      outcomes.push({ status: 'VIOLATION', message: `${readme.path} differs from the canonical ki-trades orientation`, subject: readme.path })
+      outcomes.push({
+        status: 'VIOLATION',
+        message: `${readme.path} differs from the canonical ki-trades orientation`,
+        subject: readme.path
+      })
   }
   return outcomes
 }
@@ -603,33 +835,64 @@ const canConformScaffold = (root: string): boolean =>
     return (!existsSync(directory) || physicalDirectory(directory)) && (!existsSync(path) || physicalFile(path))
   })
 
-export const createTradesSession = ({ mode, repository, userHome, configuration, publication }: RubricContextOptions): RubricSession<TradesRubricContext> => {
+export const createTradesSession = ({
+  mode,
+  repository,
+  userHome,
+  configuration,
+  publication
+}: RubricContextOptions): RubricSession<TradesRubricContext> => {
   const root = resolve(repository)
-  const parsedConfiguration = parseConfiguration(configuration, parseRepositoryConfiguration(root).repository, '.ki-config.toml')
+  const parsedConfiguration = parseConfiguration(
+    configuration,
+    parseRepositoryConfiguration(root).repository,
+    '.ki-config.toml'
+  )
   const routes = routeEvidence(root, userHome, parsedConfiguration.configuration)
   const evidence = recordEvidence(root, parsedConfiguration.configuration, routes.active)
   let scaffoldRequested = false
   const context: TradesRubricContext = {
     rubric: { publication },
     configuration: {
-      outcomes: parsedConfiguration.outcomes.length ? parsedConfiguration.outcomes : pass('Trade route declarations are canonical.')
+      outcomes: parsedConfiguration.outcomes.length
+        ? parsedConfiguration.outcomes
+        : pass('Trade route declarations are canonical.')
     },
     routes: { outcomes: routes.outcomes },
     scaffold: {
-      outcomes: scaffoldEvidence(root).length ? scaffoldEvidence(root) : pass('Owned trade scaffold is present and conformed.'),
+      outcomes: scaffoldEvidence(root).length
+        ? scaffoldEvidence(root)
+        : pass('Owned trade scaffold is present and conformed.'),
       ...(mode === 'conform' && canConformScaffold(root) ? { ensureScaffold: () => (scaffoldRequested = true) } : {})
     },
-    records: { outcomes: evidence.records.length ? evidence.records : pass('Trade record identity and payload shape are valid.') },
-    authority: { outcomes: evidence.authority.length ? evidence.authority : pass('Trade records preserve sender and receiver write boundaries.') },
-    status: { outcomes: evidence.status.length ? evidence.status : pass('Receiver decision statuses and local linkage are valid.') },
-    release: { outcomes: evidence.release.length ? evidence.release : pass('No trade release or pruning violation is observable.') },
+    records: {
+      outcomes: evidence.records.length ? evidence.records : pass('Trade record identity and payload shape are valid.')
+    },
+    authority: {
+      outcomes: evidence.authority.length
+        ? evidence.authority
+        : pass('Trade records preserve sender and receiver write boundaries.')
+    },
+    status: {
+      outcomes: evidence.status.length
+        ? evidence.status
+        : pass('Receiver decision statuses and local linkage are valid.')
+    },
+    release: {
+      outcomes: evidence.release.length
+        ? evidence.release
+        : pass('No trade release or pruning violation is observable.')
+    },
     judgment: {}
   }
 
   return {
     subjects: [
       { families: ['RUBRIC'], context: () => context },
-      { families: ['CONFIG', 'ROUTE', 'SCAFFOLD', 'RECORD', 'AUTH', 'STATUS', 'RELEASE', 'ADOPTION'], context: () => context }
+      {
+        families: ['CONFIG', 'ROUTE', 'SCAFFOLD', 'RECORD', 'AUTH', 'STATUS', 'RELEASE', 'ADOPTION'],
+        context: () => context
+      }
     ],
     proposal: () => {
       const writes: ConformWrite[] = []

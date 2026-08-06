@@ -12,7 +12,10 @@ const CONFIG_1: RubricItem<OutcomeContext> = {
   mechanical: {
     level: 'FAIL',
     overrideLevels: ['WARN'],
-    remediation: { class: 'diagnostic', guidance: 'Correct the local ki-trades route declaration, then rerun the audit.' },
+    remediation: {
+      class: 'diagnostic',
+      guidance: 'Correct the local ki-trades route declaration, then rerun the audit.'
+    },
     audit: { phase: 'INSPECT', run: ({ outcomes }) => outcomes }
   }
 }

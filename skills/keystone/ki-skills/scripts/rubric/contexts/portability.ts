@@ -53,7 +53,13 @@ export const unqualifiedRuntimeAssumptions = ({
     if (/^>\s*(?:\*\*)?Source(?:\*\*)?:\s+/i.test(line)) attributedQuote = true
     else if (!line.startsWith('>')) attributedQuote = false
 
-    if (runtimeBindingHeadingDepth !== null || attributedQuote || runtimeComparison(line) || explicitlyQualifiedRuntimeBinding(line)) continue
+    if (
+      runtimeBindingHeadingDepth !== null ||
+      attributedQuote ||
+      runtimeComparison(line) ||
+      explicitlyQualifiedRuntimeBinding(line)
+    )
+      continue
 
     const references = new Set<string>()
     for (const [reference, pattern] of RUNTIME_REFERENCES) {

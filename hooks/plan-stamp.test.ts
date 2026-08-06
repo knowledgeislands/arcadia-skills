@@ -1,7 +1,19 @@
 #!/usr/bin/env bun
 /** Run-based security and behaviour tests for `plan-stamp.sh`. */
 import { spawnSync } from 'node:child_process'
-import { chmodSync, existsSync, lstatSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, realpathSync, rmSync, symlinkSync, writeFileSync } from 'node:fs'
+import {
+  chmodSync,
+  existsSync,
+  lstatSync,
+  mkdirSync,
+  mkdtempSync,
+  readdirSync,
+  readFileSync,
+  realpathSync,
+  rmSync,
+  symlinkSync,
+  writeFileSync
+} from 'node:fs'
 import { tmpdir } from 'node:os'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -62,18 +74,30 @@ function payload(sessionId: string, planFile: string, cwd: string): unknown {
     const physicalCwd = realpathSync(cwd)
     const closingFence = stamped.indexOf('\n---\n', 4)
     const frontmatter = Bun.YAML.parse(stamped.slice(4, closingFence)) as Record<string, unknown>
-    check('stamp → frontmatter/status/date', stamped.startsWith('---\nstatus: open\n') && /^created: \d{4}-\d{2}-\d{2}$/m.test(stamped))
-    check('stamp → frontmatter parses as YAML', closingFence > 4 && frontmatter.status === 'open' && frontmatter.cwd === physicalCwd)
+    check(
+      'stamp → frontmatter/status/date',
+      stamped.startsWith('---\nstatus: open\n') && /^created: \d{4}-\d{2}-\d{2}$/m.test(stamped)
+    )
+    check(
+      'stamp → frontmatter parses as YAML',
+      closingFence > 4 && frontmatter.status === 'open' && frontmatter.cwd === physicalCwd
+    )
     check('stamp → cwd is one JSON-quoted YAML scalar', stamped.includes(`cwd: ${JSON.stringify(physicalCwd)}\n---\n`))
     check('stamp → hostile cwd cannot add a YAML line', !stamped.includes(`cwd: ${physicalCwd}\n`))
     check('stamp → original content preserved', stamped.includes(original.trim()))
 
     const stateFile = join(env.state, sessionId)
     const state = JSON.parse(readFileSync(stateFile, 'utf8')) as Record<string, unknown>
-    check('state → exact v1 keys', JSON.stringify(Object.keys(state)) === JSON.stringify(['version', 'session_id', 'plan_file', 'cwd']))
+    check(
+      'state → exact v1 keys',
+      JSON.stringify(Object.keys(state)) === JSON.stringify(['version', 'session_id', 'plan_file', 'cwd'])
+    )
     check(
       'state → exact provenance values',
-      state.version === 1 && state.session_id === sessionId && state.plan_file === realpathSync(planFile) && state.cwd === physicalCwd
+      state.version === 1 &&
+        state.session_id === sessionId &&
+        state.plan_file === realpathSync(planFile) &&
+        state.cwd === physicalCwd
     )
     check('state → private file mode', (lstatSync(stateFile).mode & 0o077) === 0)
     check('state → created directory mode is 0700', (lstatSync(env.state).mode & 0o777) === 0o700)
@@ -140,7 +164,10 @@ exec "$REAL_MV" "$@"
       REAL_MV: '/bin/mv'
     })
     check('scratch leaf race → wrapper executed', existsSync(marker))
-    check('scratch leaf race → destination is a regular stamped file', lstatSync(planFile).isFile() && readFileSync(planFile, 'utf8').startsWith('---\n'))
+    check(
+      'scratch leaf race → destination is a regular stamped file',
+      lstatSync(planFile).isFile() && readFileSync(planFile, 'utf8').startsWith('---\n')
+    )
     check('scratch leaf race → directory target remains empty', readdirSync(outsideDir).length === 0)
   } finally {
     rmSync(env.root, { recursive: true, force: true })
@@ -183,7 +210,10 @@ exec "$REAL_LN" "$@"
       REAL_LN: '/bin/ln'
     })
     check('state leaf race → wrapper executed', existsSync(marker))
-    check('state leaf race → planted leaf not followed', lstatSync(stateFile).isSymbolicLink() && readdirSync(outsideDir).length === 0)
+    check(
+      'state leaf race → planted leaf not followed',
+      lstatSync(stateFile).isSymbolicLink() && readdirSync(outsideDir).length === 0
+    )
     check('state leaf race → no temporary file remains', readdirSync(env.state).length === 1)
   } finally {
     rmSync(env.root, { recursive: true, force: true })
@@ -221,7 +251,10 @@ for (const [label, sessionId] of [
     const planFile = join(env.plans, 'plan.md')
     writeFileSync(planFile, '# Plan\n')
     run(env.home, payload(sessionId, planFile, env.root))
-    check(`session allowlist → rejects ${label}`, readFileSync(planFile, 'utf8') === '# Plan\n' && !existsSync(env.state))
+    check(
+      `session allowlist → rejects ${label}`,
+      readFileSync(planFile, 'utf8') === '# Plan\n' && !existsSync(env.state)
+    )
   } finally {
     rmSync(env.root, { recursive: true, force: true })
   }
@@ -275,7 +308,10 @@ for (const [label, sessionId] of [
     writeFileSync(planFile, '# Plan\n')
     run(env.home, payload('leaf-session', planFile, env.root))
     check('state leaf symlink → external target untouched', readFileSync(outside, 'utf8') === 'do not replace\n')
-    check('state leaf symlink → replaced by regular v1 state', !lstatSync(join(env.state, 'leaf-session')).isSymbolicLink())
+    check(
+      'state leaf symlink → replaced by regular v1 state',
+      !lstatSync(join(env.state, 'leaf-session')).isSymbolicLink()
+    )
   } finally {
     rmSync(env.root, { recursive: true, force: true })
   }
@@ -315,7 +351,10 @@ for (const [label, sessionId] of [
     const planFile = join(env.plans, 'plan.md')
     writeFileSync(planFile, '# Plan\n')
     run(env.home, payload('bad-cwd', planFile, 'relative/path'))
-    check('relative cwd → scratch untouched and no state', readFileSync(planFile, 'utf8') === '# Plan\n' && !existsSync(join(env.state, 'bad-cwd')))
+    check(
+      'relative cwd → scratch untouched and no state',
+      readFileSync(planFile, 'utf8') === '# Plan\n' && !existsSync(join(env.state, 'bad-cwd'))
+    )
 
     run(env.home, { session_id: 'missing-plan', cwd: env.root, tool_input: {} })
     check('missing plan path → no state', !existsSync(join(env.state, 'missing-plan')))

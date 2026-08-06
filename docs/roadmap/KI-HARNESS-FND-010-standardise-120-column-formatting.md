@@ -3,7 +3,7 @@ id: KI-HARNESS-FND-010
 title: Standardise 120-column formatting
 theme: foundation-tooling
 horizon: next
-status: in-progress
+status: awaiting-review
 blocks: []
 blocked-by: []
 baseline-ref: 19656a1fbe8b4fcab67a9a25f61c2e32aba9b65b
@@ -27,11 +27,11 @@ Prettier `printWidth` and Biome `lineWidth` are both `160`; `.editorconfig` exis
 
 ## Steps
 
-- [ ] Set Prettier `printWidth` to `120`.
-- [ ] Set Biome `lineWidth` to `120` wherever the shared engineering configuration and its fixtures define the formatter contract.
-- [ ] Add `max_line_length = 120` to the existing `.editorconfig` without overriding language-specific indentation or line-ending policy.
-- [ ] Run Prettier and Biome over the repository and retain only mechanical formatting changes.
-- [ ] Update every applicable repository guidance, rubric evidence, and fixture that states the former 160-column convention.
+- [x] Set Prettier `printWidth` to `120`.
+- [x] Set Biome `lineWidth` to `120` wherever the shared engineering configuration and its fixtures define the formatter contract.
+- [x] Add `max_line_length = 120` to the existing `.editorconfig` without overriding language-specific indentation or line-ending policy.
+- [x] Run Prettier and Biome over the repository and retain only mechanical formatting changes.
+- [x] Update every applicable repository guidance, rubric evidence, and fixture that states the former 160-column convention.
 
 ## Files touched
 
@@ -51,6 +51,23 @@ Prettier `printWidth` and Biome `lineWidth` are both `160`; `.editorconfig` exis
 ## Dependencies / blocks
 
 The active rubric-metadata migration is complete and repository-wide gates are clean. The user approved the shared 120-column policy, including Biome and governing guidance, on 2026-08-06.
+
+## Review
+
+### Delivered boundary
+
+The repository now uses 120 columns in Prettier, EditorConfig, and Biome. The authoring and engineering standards, their rubric evidence, and their fixtures use the same policy. Prettier reformatted Markdown and Biome reformatted TypeScript and JSON mechanically under the new width.
+
+### Evidence
+
+- Baseline: `19656a1fbe8b4fcab67a9a25f61c2e32aba9b65b`.
+- Planning and delivery start: `7f369550` and `a02779eb`.
+- Verification: `bunx prettier --write '**/*.md'`; `bunx biome check --write .`; clean follow-up Biome check; `bun run test` (309 passing); `bunx tsc --noEmit`; and focused `ki-authoring`, `ki-engineering`, and `ki-roadmap` audits all pass.
+- The only tool notice is Biome's non-blocking schema URL advisory (`2.5.6` configuration versus `2.5.7` CLI); it does not affect formatting or validation.
+
+### Decision
+
+No scope deviation or unresolved concern remains. The policy and mechanical reformat await user review.
 
 ## Discussion
 

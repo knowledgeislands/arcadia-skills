@@ -10,9 +10,11 @@ const SPLIT_1: RubricItem<FeatureJudgmentContext> = {
   sources: [SOURCE],
   judgment: {
     scope: 'Every numbered requirement and its stated behaviours and verification hooks.',
-    prompt: 'Assess whether a requirement bundles unrelated behaviours that should have separate IDs and verification hooks.',
+    prompt:
+      'Assess whether a requirement bundles unrelated behaviours that should have separate IDs and verification hooks.',
     outcomes: ['conforming', 'gap', 'exclusion'],
-    guidance: 'Split independently verifiable behaviours into new requirements, record a named Gap, or record an explicit area-level exclusion.'
+    guidance:
+      'Split independently verifiable behaviours into new requirements, record a named Gap, or record an explicit area-level exclusion.'
   }
 }
 

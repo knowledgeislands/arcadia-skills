@@ -1,7 +1,12 @@
 import { existsSync, readdirSync, readFileSync } from 'node:fs'
 import { basename, dirname, join, relative, resolve } from 'node:path'
 import type { RubricPublication } from '../../shared/rubric.ts'
-import { createKiShapeContext, createKiShapeFrontmatterEvidence, type KiShapeSkillContext, type KiSkillsRubricContext } from './contexts.ts'
+import {
+  createKiShapeContext,
+  createKiShapeFrontmatterEvidence,
+  type KiShapeSkillContext,
+  type KiSkillsRubricContext
+} from './contexts.ts'
 import { type ParsedFrontmatter, parseFrontmatter } from './frontmatter.ts'
 import { scriptHelpEvidence } from './scripts.ts'
 import { listMarkdownFiles } from './skill-files.ts'
@@ -30,10 +35,14 @@ type SkillRubricContext = {
 }
 
 const isLocalGovernanceSource = (directory: string): boolean =>
-  basename(directory) === 'ki-self' && basename(dirname(directory)) === 'skills' && basename(dirname(dirname(directory))) === '.agents'
+  basename(directory) === 'ki-self' &&
+  basename(dirname(directory)) === 'skills' &&
+  basename(dirname(dirname(directory))) === '.agents'
 
 const relativeImportSpecifiers = (source: string): string[] =>
-  [...source.matchAll(/\b(?:from\s+|import\s*\(\s*|require\s*\(\s*)['"](\.\.?\/[^'"]+)['"]/g)].map((match) => match[1] as string)
+  [...source.matchAll(/\b(?:from\s+|import\s*\(\s*|require\s*\(\s*)['"](\.\.?\/[^'"]+)['"]/g)].map(
+    (match) => match[1] as string
+  )
 
 const listScriptFiles = (scriptsDirectory: string): string[] => {
   if (!existsSync(scriptsDirectory)) return []
@@ -42,7 +51,8 @@ const listScriptFiles = (scriptsDirectory: string): string[] => {
     for (const entry of readdirSync(path, { withFileTypes: true })) {
       const entryPath = join(path, entry.name)
       if (entry.isDirectory()) walk(entryPath)
-      else if (entry.isFile() && entry.name.endsWith('.ts') && !entry.name.endsWith('.test.ts')) scriptFiles.push(entryPath)
+      else if (entry.isFile() && entry.name.endsWith('.ts') && !entry.name.endsWith('.test.ts'))
+        scriptFiles.push(entryPath)
     }
   }
   walk(scriptsDirectory)
@@ -94,16 +104,28 @@ const rubricFamilyModules = (
     const specifier = imports.get(collection)
     const modulePath = specifier ? resolve(dirname(indexPath), `${specifier.replace(/\.ts$/, '')}.ts`) : null
     const source = modulePath && existsSync(modulePath) ? readFileSync(modulePath, 'utf8') : null
-    const collectionMatch = source?.match(new RegExp(`export\\s+const\\s+${collection}\\b[\\s\\S]*?=\\s*\\{[\\s\\S]*?\\bitems:\\s*\\[([\\s\\S]*?)]`, 'm'))
+    const collectionMatch = source?.match(
+      new RegExp(`export\\s+const\\s+${collection}\\b[\\s\\S]*?=\\s*\\{[\\s\\S]*?\\bitems:\\s*\\[([\\s\\S]*?)]`, 'm')
+    )
     const members = collectionMatch
-      ? [...new Set([...(collectionMatch[1] as string).matchAll(/\b([A-Z][A-Z0-9_]+)\b/g)].map((match) => match[1] as string))]
+      ? [
+          ...new Set(
+            [...(collectionMatch[1] as string).matchAll(/\b([A-Z][A-Z0-9_]+)\b/g)].map((match) => match[1] as string)
+          )
+        ]
       : []
-    const factoryFamily = new RegExp(`export\\s+const\\s+${collection}\\b[\\s\\S]*?=\\s*createRubricPublicationFamily\\b`, 'm').test(source ?? '')
-    const exportsOrderedCollection = (collectionMatch !== null && collectionMatch !== undefined && members.length > 0) || factoryFamily
+    const factoryFamily = new RegExp(
+      `export\\s+const\\s+${collection}\\b[\\s\\S]*?=\\s*createRubricPublicationFamily\\b`,
+      'm'
+    ).test(source ?? '')
+    const exportsOrderedCollection =
+      (collectionMatch !== null && collectionMatch !== undefined && members.length > 0) || factoryFamily
     const publicExports = source
-      ? [...source.matchAll(/^export\s+(?:const|function|class|interface|type|enum)\s+([A-Za-z_$][A-Za-z0-9_$]*)|^export\s+default\b/gm)].map(
-          (match) => match[1] ?? 'default'
-        )
+      ? [
+          ...source.matchAll(
+            /^export\s+(?:const|function|class|interface|type|enum)\s+([A-Za-z_$][A-Za-z0-9_$]*)|^export\s+default\b/gm
+          )
+        ].map((match) => match[1] ?? 'default')
       : []
     const unexpectedExports = publicExports.filter((name) => name !== collection)
     return { collection, source, exportsOrderedCollection, unexpectedExports }
@@ -149,16 +171,26 @@ const extractBodyModes = (section: string | null): Set<string> => {
   return modes
 }
 
-const ENDORSE_EXTENSION_RES = [/\bprefer that (extension )?skill\b/i, /delegat\w*[^.\n]*\bmodes?\b[^.\n]*\bback\b/i, /\bextends this one\b/i]
+const ENDORSE_EXTENSION_RES = [
+  /\bprefer that (extension )?skill\b/i,
+  /delegat\w*[^.\n]*\bmodes?\b[^.\n]*\bback\b/i,
+  /\bextends this one\b/i
+]
 const DISAVOWAL_CUE = /retir|never|forbid|\bflag|heurist|anti-pattern|disavow|must not|do not/i
 
 const endorsesRetiredExtension = (markdown: string): boolean => {
   const stripped = stripCode(markdown).replace(/"[^"\n]*"/g, '')
-  return stripped.split(/\r?\n/).some((line) => !DISAVOWAL_CUE.test(line) && ENDORSE_EXTENSION_RES.some((pattern) => pattern.test(line)))
+  return stripped
+    .split(/\r?\n/)
+    .some((line) => !DISAVOWAL_CUE.test(line) && ENDORSE_EXTENSION_RES.some((pattern) => pattern.test(line)))
 }
 
 /** Build the complete KI shape evidence used by both AUDIT and CONFORM fallback checks. */
-const createKiShapeEvidence = (skillDirectory: string, frontmatter: ParsedFrontmatter, body: string): KiShapeSkillContext => {
+const createKiShapeEvidence = (
+  skillDirectory: string,
+  frontmatter: ParsedFrontmatter,
+  body: string
+): KiShapeSkillContext => {
   const localGovernanceSource = isLocalGovernanceSource(skillDirectory)
   const section = extractSection(body, 'Operating modes')
   const markdownFiles = listMarkdownFiles(skillDirectory)
@@ -186,16 +218,22 @@ const createKiShapeEvidence = (skillDirectory: string, frontmatter: ParsedFrontm
     bodyModes: extractBodyModes(section),
     operatingModesIntro: section?.split(/^###\s+|^\s*\|/m)[0] ?? '',
     flatModeHeadings: [...stripCode(body).matchAll(/^##\s+Mode\s+(\w+)/gim)].map((match) => match[1] as string),
-    bareModeHeadings: section ? [...stripCode(section).matchAll(/^###\s+(?!Mode\b)(\S[^\n]*)/gim)].map((match) => (match[1] as string).trim()) : [],
+    bareModeHeadings: section
+      ? [...stripCode(section).matchAll(/^###\s+(?!Mode\b)(\S[^\n]*)/gim)].map((match) => (match[1] as string).trim())
+      : [],
     refreshText: `${refreshSection}${existsSync(refreshReference) ? `\n${readFileSync(refreshReference, 'utf8')}` : ''}`,
     retiredExtensionFiles: markdownFiles
       .filter((file) => endorsesRetiredExtension(basename(file) === 'SKILL.md' ? body : readFileSync(file, 'utf8')))
       .map((file) => file.slice(skillDirectory.length + 1)),
-    strongGate: /do not edit[^.\n]*directly|go through (a )?proposal|standing directive|installing the gate/i.test(stripCode(skillText)),
+    strongGate: /do not edit[^.\n]*directly|go through (a )?proposal|standing directive|installing the gate/i.test(
+      stripCode(skillText)
+    ),
     anchorMentioned: /CLAUDE\.md|AGENTS\.md|always-loaded|installing the gate|\banchor/i.test(skillText),
     rubricReadsAnchor: /CLAUDE\.md|AGENTS\.md/.test(implementationSource),
     mechanicalRubricCount: (rubricItemSources.match(/\bmechanical\s*:/g) ?? []).length,
-    hasMechanicalImplementation: scriptNames.some((name) => name.endsWith('.ts')) || existsSync(join(scriptsDirectory, 'rubric', 'items', 'index.ts')),
+    hasMechanicalImplementation:
+      scriptNames.some((name) => name.endsWith('.ts')) ||
+      existsSync(join(scriptsDirectory, 'rubric', 'items', 'index.ts')),
     documentsMechanicalDelegation: /lint:md|toolchain (?:already )?enforces/i.test(skillText),
     dependsOnPresent: frontmatter.present.has('ki-depends-on'),
     dependsOn: (frontmatter.keys.get('ki-depends-on') ?? '').trim(),
@@ -224,7 +262,8 @@ export const createSkillRubricContext = (
     .map((entry) => entry.name)
   const frontmatterContext = { hasBlock: frontmatter.raw !== null, isMapping: frontmatter.isMapping }
 
-  if (!frontmatter.isMapping) return { validFrontmatter, context: { layout: { supportDirectories }, frontmatter: frontmatterContext } }
+  if (!frontmatter.isMapping)
+    return { validFrontmatter, context: { layout: { supportDirectories }, frontmatter: frontmatterContext } }
 
   const name = frontmatter.keys.get('name')
   const description = frontmatter.keys.get('description')

@@ -8,7 +8,10 @@ const TOPICS_1: RubricItem<EvidenceRubricContext> = {
   sources: ['standards-repository.md'],
   mechanical: {
     level: 'FAIL',
-    remediation: { class: 'diagnostic', guidance: 'Set the required public topics or record an explicit override, then rerun the audit.' },
+    remediation: {
+      class: 'diagnostic',
+      guidance: 'Set the required public topics or record an explicit override, then rerun the audit.'
+    },
     audit: { phase: 'INSPECT', run: (context) => auditEvidence(context.evidence, 'FAIL') }
   }
 }

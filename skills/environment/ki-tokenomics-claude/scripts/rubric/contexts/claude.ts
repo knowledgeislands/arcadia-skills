@@ -1,6 +1,11 @@
 import { existsSync, lstatSync, readdirSync, readFileSync } from 'node:fs'
 import { join, relative, resolve } from 'node:path'
-import type { AuditOutcome, RubricContextOptions, RubricPublicationContext, RubricSession } from '../../shared/rubric.ts'
+import type {
+  AuditOutcome,
+  RubricContextOptions,
+  RubricPublicationContext,
+  RubricSession
+} from '../../shared/rubric.ts'
 
 const physical = (path: string) => existsSync(path) && !lstatSync(path).isSymbolicLink()
 const text = (path: string) => (physical(path) && lstatSync(path).isFile() ? readFileSync(path, 'utf8') : undefined)
@@ -14,7 +19,9 @@ const json = (path: string): Record<string, unknown> | undefined => {
   try {
     const value = text(path)
     const parsed: unknown = value === undefined ? undefined : JSON.parse(value)
-    return parsed && typeof parsed === 'object' && !Array.isArray(parsed) ? (parsed as Record<string, unknown>) : undefined
+    return parsed && typeof parsed === 'object' && !Array.isArray(parsed)
+      ? (parsed as Record<string, unknown>)
+      : undefined
   } catch {
     return undefined
   }
@@ -38,7 +45,8 @@ const instructions = (root: string, path: string, seen = new Set<string>()): rea
   const values: AuditOutcome[] = [result('PASS', `${path} ~${estimate(source)} tok`, path)]
   for (const found of source.matchAll(/(?:^|\s)@([./][^\s)]*)/g)) {
     const next = resolve(root, found[1] as string)
-    if (!contained(root, next) || !physical(next)) values.push(result('VIOLATION', `Unresolved or out-of-scope @import ${found[1]}`, path))
+    if (!contained(root, next) || !physical(next))
+      values.push(result('VIOLATION', `Unresolved or out-of-scope @import ${found[1]}`, path))
     else values.push(...instructions(root, next, seen))
   }
   return values
@@ -49,7 +57,8 @@ const skills = (root: string): number => {
   const directory = join(root, 'skills')
   return physical(directory) && lstatSync(directory).isDirectory()
     ? readdirSync(directory, { withFileTypes: true }).filter(
-        (entry) => entry.isDirectory() && !entry.isSymbolicLink() && text(join(directory, entry.name, 'SKILL.md')) !== undefined
+        (entry) =>
+          entry.isDirectory() && !entry.isSymbolicLink() && text(join(directory, entry.name, 'SKILL.md')) !== undefined
       ).length
     : 0
 }
@@ -59,7 +68,11 @@ export type ClaudeContext = {
   readonly headroom: readonly AuditOutcome[]
 }
 export type ClaudeRubricContext = { readonly rubric: RubricPublicationContext; readonly claude: ClaudeContext }
-export const createClaudeSession = ({ repository, userHome, publication }: RubricContextOptions): RubricSession<ClaudeRubricContext> => {
+export const createClaudeSession = ({
+  repository,
+  userHome,
+  publication
+}: RubricContextOptions): RubricSession<ClaudeRubricContext> => {
   const repo = resolve(repository)
   const user = join(resolve(userHome), '.claude')
   const userSettings = json(join(user, 'settings.json'))
@@ -78,12 +91,23 @@ export const createClaudeSession = ({ repository, userHome, publication }: Rubri
         ...instructions(user, join(user, 'CLAUDE.md')),
         ...instructions(repo, join(repo, 'CLAUDE.md')),
         result('INFO', `Selected Claude project memory files: ${memoryFiles.length}.`),
-        result('INFO', `Installed Claude skills: user ${skills(user)}, selected repository ${skills(join(repo, '.claude'))}.`),
+        result(
+          'INFO',
+          `Installed Claude skills: user ${skills(user)}, selected repository ${skills(join(repo, '.claude'))}.`
+        ),
         result('INFO', `Configured Claude MCP servers: ${allServers.length ? allServers.join(', ') : 'none'}.`)
       ],
       models: [
-        result('INFO', defaultModel ? `Configured user default model: ${defaultModel}.` : 'No configured user default model.'),
-        result('INFO', effectiveModel ? `Effective selected-repository model: ${effectiveModel}.` : 'Effective selected-repository model is unavailable.')
+        result(
+          'INFO',
+          defaultModel ? `Configured user default model: ${defaultModel}.` : 'No configured user default model.'
+        ),
+        result(
+          'INFO',
+          effectiveModel
+            ? `Effective selected-repository model: ${effectiveModel}.`
+            : 'Effective selected-repository model is unavailable.'
+        )
       ],
       headroom: [
         result(

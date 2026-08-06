@@ -65,13 +65,13 @@ The OpenAI News page is a discovery source, not a normative standard. On each RE
 
 ## Community
 
-| Tag       | Source                                               | Scope                                                    | Last reviewed |
-| --------- | ---------------------------------------------------- | -------------------------------------------------------- | ------------- |
-| COMMUNITY | [Skill Authoring Patterns][patterns]                 | Patterns and feedback                                    | 2026-07-04    |
-| COMMUNITY | [obra/superpowers writing-skills][superpowers]†      | Convergent conventions                                   | 2026-06-18    |
-| COMMUNITY | [skills.sh — Open Agent Skills Ecosystem][skills-sh] | Registry and security                                    | 2026-07-04    |
-| GASTOWN   | [Gas Town Hall][gastown-hall]                        | Multi-agent orchestration and harness-practice discovery | 2026-07-29    |
-| FAFF      | [shftwst/faff][faff]                                 | Claude Code delivery-harness and autonomy-gate discovery | 2026-07-29    |
+| Tag | Source | Scope | Last reviewed |
+| --- | --- | --- | --- |
+| COMMUNITY | [Skill Authoring Patterns][patterns] | Patterns and feedback | 2026-07-04 |
+| COMMUNITY | [obra/superpowers writing-skills][superpowers]† | Convergent conventions | 2026-06-18 |
+| COMMUNITY | [skills.sh — Open Agent Skills Ecosystem][skills-sh] | Registry and security | 2026-07-04 |
+| GASTOWN | [Gas Town Hall][gastown-hall] | Multi-agent orchestration and harness-practice discovery | 2026-07-29 |
+| FAFF | [shftwst/faff][faff] | Claude Code delivery-harness and autonomy-gate discovery | 2026-07-29 |
 
 † Community restatement of the best-practices document.
 

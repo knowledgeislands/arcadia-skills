@@ -31,12 +31,12 @@ The standard applies to any repo carrying a `["knowledgeislands/ki-agentic-harne
 
 The capability markers, and what each unlocks:
 
-| Capability     | Marker in the repo                                              | Adds (this standard)                                        |
-| -------------- | --------------------------------------------------------------- | ----------------------------------------------------------- |
-| Tests          | `vitest.config.*` present, or a `test` script                   | §6 — bare entrypoint; strict Vitest profile when configured |
-| Compiled build | `tsconfig.build.json` present, or `build` is a `tsc` invocation | §7 — `build`/`files`/`tsconfig.build.json`                  |
-| Env config     | `.env*.example` present, or `process.loadEnvFile` used          | §8 — `.env` discipline + `NODE_ENV`-in-dev                  |
-| CLI binary     | `src/cli/` present                                              | §7 — `build` chmods `dist/cli/cli.js`                       |
+| Capability | Marker in the repo | Adds (this standard) |
+| --- | --- | --- |
+| Tests | `vitest.config.*` present, or a `test` script | §6 — bare entrypoint; strict Vitest profile when configured |
+| Compiled build | `tsconfig.build.json` present, or `build` is a `tsc` invocation | §7 — `build`/`files`/`tsconfig.build.json` |
+| Env config | `.env*.example` present, or `process.loadEnvFile` used | §8 — `.env` discipline + `NODE_ENV`-in-dev |
+| CLI binary | `src/cli/` present | §7 — `build` chmods `dist/cli/cli.js` |
 
 ## 0. Repo shapes — flat vs monorepo (core)
 
@@ -146,7 +146,7 @@ Install and dev use **Bun (≥ 1.3)**; the compiled `dist/` runs under **Node (�
 
 ## 5. biome.json & prettier config (core)
 
-**`biome.json`** present and matching the shared config: git VCS + `useIgnoreFile`; formatter `indentStyle: space`, `indentWidth: 2`, `lineWidth: 160`; JS formatter `quoteStyle: single`, `semicolons: asNeeded`, `trailingCommas: none`; linter `preset: recommended` with `suspicious.noExplicitAny: off`; `assist.source.organizeImports: on`. The `$schema` pins the Biome version — bump it on the house Biome upgrade.
+**`biome.json`** present and matching the shared config: git VCS + `useIgnoreFile`; formatter `indentStyle: space`, `indentWidth: 2`, `lineWidth: 120`; JS formatter `quoteStyle: single`, `semicolons: asNeeded`, `trailingCommas: none`; linter `preset: recommended` with `suspicious.noExplicitAny: off`; `assist.source.organizeImports: on`. The `$schema` pins the Biome version — bump it on the house Biome upgrade.
 
 **Generated and managed discovery surfaces stay out of every mechanical tool.** `src/generated/`, `.claude/skills/`, `.claude/agents/`, and `.agents/skills/` are copied or generated artifacts, not local source. Each must be excluded from Biome's `files.includes`, knip's `ignore`, and the Markdown gate's ignores. A parent exclusion such as `.claude/**` is valid for its generated children, but do not exclude the whole directory from Biome when it contains authored material such as `.claude/workflows/`. The Markdown configuration remains owned by `ki-authoring`; this standard owns the cross-tool agreement. See [ADR-KI-HARNESS-TOOLCHAIN-005](../../../../docs/decisions/ADR-KI-HARNESS-TOOLCHAIN-005-generated-and-vendored-code-is-excluded-from-linting-and-knip.md).
 

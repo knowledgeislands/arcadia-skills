@@ -17,8 +17,14 @@ export const scenarios: Scenario[] = [
     prompt:
       "In this skill collection we distinguish a 'standard' skill from a 'base-coupled extension'. What is each, and how does an extension reuse a standard skill's shared modes?",
     assertions: [
-      { name: 'standard resolves base bindings at runtime / no hard-coded base', re: /(resolv|bind)[^.\n]{0,40}runtime|hard.?codes? no|no (single )?(hard.?coded )?base/i },
-      { name: 'extension supplies base bindings / delegates shared modes', re: /(supplies|provides|carries|holds)[^.\n]{0,30}base|delegat/i },
+      {
+        name: 'standard resolves base bindings at runtime / no hard-coded base',
+        re: /(resolv|bind)[^.\n]{0,40}runtime|hard.?codes? no|no (single )?(hard.?coded )?base/i
+      },
+      {
+        name: 'extension supplies base bindings / delegates shared modes',
+        re: /(supplies|provides|carries|holds)[^.\n]{0,30}base|delegat/i
+      },
       { name: 'reuses the standard skill by name', re: /by (its )?`?name`?|reference[^.\n]{0,20}name/i }
     ],
     rubric:
@@ -39,12 +45,16 @@ export const scenarios: Scenario[] = [
   {
     skill: 'ki-skills',
     id: 'skills-linking',
-    prompt: 'Inside a SKILL.md, should I link with Obsidian [[wikilinks]] or relative markdown links, and how should I refer to another skill?',
+    prompt:
+      'Inside a SKILL.md, should I link with Obsidian [[wikilinks]] or relative markdown links, and how should I refer to another skill?',
     assertions: [
-      { name: 'relative markdown links, not wikilinks', re: /relative[^.\n]{0,30}(markdown )?link|(not|never|avoid)[^.\n]{0,20}wikilink/i },
+      {
+        name: 'relative markdown links, not wikilinks',
+        re: /relative[^.\n]{0,30}(markdown )?link|(not|never|avoid)[^.\n]{0,20}wikilink/i
+      },
       { name: 'refer to another skill by name', re: /by (its )?name|by `?name`?/i }
     ],
     rubric:
-      'House rubric (LINK): a SKILL.md uses standard relative markdown links, NEVER wikilinks; it refers to another skill by its `name` (not a file path), because a skill\'s on-disk location is not stable but its name is how it loads. A correct answer says relative-not-wikilinks and refer-to-skills-by-name.'
+      "House rubric (LINK): a SKILL.md uses standard relative markdown links, NEVER wikilinks; it refers to another skill by its `name` (not a file path), because a skill's on-disk location is not stable but its name is how it loads. A correct answer says relative-not-wikilinks and refer-to-skills-by-name."
   }
 ]

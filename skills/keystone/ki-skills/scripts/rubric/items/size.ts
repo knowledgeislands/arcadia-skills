@@ -16,7 +16,8 @@ const SIZE_1: RubricItem<SizeRubricContext> = {
     audit: {
       phase: 'INSPECT',
       run: ({ bodyLines }) => {
-        if (bodyLines === undefined) return [{ status: 'NOT_APPLICABLE', message: 'SKILL.md body line count is unavailable' }]
+        if (bodyLines === undefined)
+          return [{ status: 'NOT_APPLICABLE', message: 'SKILL.md body line count is unavailable' }]
         return bodyLines > BODY_MAX_LINES
           ? [
               {
@@ -41,9 +42,15 @@ const SIZE_2: RubricItem<SizeRubricContext> = {
     audit: {
       phase: 'INSPECT',
       run: ({ bodyTokens }) => {
-        if (bodyTokens === undefined) return [{ status: 'NOT_APPLICABLE', message: 'SKILL.md body token count is unavailable' }]
+        if (bodyTokens === undefined)
+          return [{ status: 'NOT_APPLICABLE', message: 'SKILL.md body token count is unavailable' }]
         return bodyTokens > BODY_MAX_TOKENS
-          ? [{ status: 'VIOLATION', message: `SKILL.md body is ~${bodyTokens} tokens (recommended < ${BODY_MAX_TOKENS})` }]
+          ? [
+              {
+                status: 'VIOLATION',
+                message: `SKILL.md body is ~${bodyTokens} tokens (recommended < ${BODY_MAX_TOKENS})`
+              }
+            ]
           : [{ status: 'PASS', message: 'body stays below approximately 5,000 tokens' }]
       }
     }
