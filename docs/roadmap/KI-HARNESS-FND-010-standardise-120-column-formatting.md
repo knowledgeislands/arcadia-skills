@@ -3,10 +3,10 @@ id: KI-HARNESS-FND-010
 title: Standardise 120-column formatting
 theme: foundation-tooling
 horizon: next
-status: draft
+status: ready
 blocks: []
 blocked-by: []
-baseline-ref: null
+baseline-ref: 19656a1fbe8b4fcab67a9a25f61c2e32aba9b65b
 ---
 
 ## Goal
@@ -15,40 +15,42 @@ Use 120 columns as the repository's shared formatting width in both Prettier and
 
 ## Context
 
-Prettier currently uses a 160-column `printWidth`, while the repository has no matching EditorConfig width. A single 120-column policy gives formatters, editors, reviews, generated Markdown, and the documented authoring convention one predictable line-length target.
+Prettier and Biome currently use a 160-column width, while the repository `.editorconfig` has no maximum line length. A single 120-column policy gives formatters, editors, reviews, generated Markdown, and the documented authoring convention one predictable line-length target.
 
 ## Boundary
 
-This changes formatting policy only. It does not alter Markdown semantic structure, relax Markdown table guidance, or impose a hard lint rule where the tools do not support one. Reformat only files changed by the formatter under the new policy; do not use the policy change to make unrelated prose edits.
+This changes formatting policy only. It does not alter Markdown semantic structure or relax Markdown table guidance. Reformat only files changed by the formatter under the new policy; do not use the policy change to make unrelated prose edits.
 
 ## Current state
 
-Prettier is configured with `printWidth: 160`; no repository `.editorconfig` currently supplies a matching maximum line length.
+Prettier `printWidth` and Biome `lineWidth` are both `160`; `.editorconfig` exists but has no `max_line_length`. The authoring and engineering standards repeat the 160-column convention, so changing only one formatter would leave the repository internally inconsistent.
 
 ## Steps
 
 - [ ] Set Prettier `printWidth` to `120`.
-- [ ] Add or update `.editorconfig` with `max_line_length = 120` for the applicable text formats, without overriding language-specific indentation or line-ending policy.
-- [ ] Run Prettier over the repository and retain only mechanical formatting changes.
-- [ ] Update any repository guidance that states the former 160-column convention.
+- [ ] Set Biome `lineWidth` to `120` wherever the shared engineering configuration and its fixtures define the formatter contract.
+- [ ] Add `max_line_length = 120` to the existing `.editorconfig` without overriding language-specific indentation or line-ending policy.
+- [ ] Run Prettier and Biome over the repository and retain only mechanical formatting changes.
+- [ ] Update every applicable repository guidance, rubric evidence, and fixture that states the former 160-column convention.
 
 ## Files touched
 
 - `.prettierrc.json`
 - `.editorconfig`
+- `biome.json` and its governing engineering fixtures
 - Formatter-changed repository files
 - Applicable formatting or authoring guidance
 - This roadmap item
 
 ## Verify
 
-- Prettier reports the repository in sync at 120 columns.
+- Prettier and Biome report the repository in sync at 120 columns.
 - EditorConfig resolves a 120-column maximum line length for Markdown, JSON, TypeScript, and JavaScript editors.
 - `bun run test`, `bunx tsc --noEmit`, and the relevant repository audits pass.
 
 ## Dependencies / blocks
 
-This change is independently executable after the active rubric-metadata migration restores clean repository-wide audits.
+The active rubric-metadata migration is complete and repository-wide gates are clean. The user approved the shared 120-column policy, including Biome and governing guidance, on 2026-08-06.
 
 ## Discussion
 
