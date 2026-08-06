@@ -24,6 +24,20 @@ test('the structured catalogue preserves the specifications structural floor', (
   expect(items.every((item) => item.sources.includes('standards-specifications.md'))).toBe(true)
 })
 
+test('criteria declare complete v1 remediation and review metadata', () => {
+  const mechanicalItems = catalogue.families.flatMap((family) => family.items).filter((item) => item.mechanical)
+  const judgmentItems = items.filter((item) => item.judgment)
+
+  expect(mechanicalItems).toHaveLength(4)
+  expect(mechanicalItems.every((item) => item.mechanical?.remediation)).toBe(true)
+  expect(judgmentItems).toHaveLength(3)
+  for (const item of judgmentItems) {
+    expect(item.judgment?.scope).not.toBeEmpty()
+    expect(item.judgment?.outcomes.length).toBeGreaterThan(0)
+    expect(item.judgment?.guidance).not.toBeEmpty()
+  }
+})
+
 test('each family module exports one complete family', async () => {
   expect(familyModules).toEqual(['publication.ts', 'specifications.ts', 'sync.ts'])
   for (const file of familyModules) {

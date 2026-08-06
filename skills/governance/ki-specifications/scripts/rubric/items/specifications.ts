@@ -12,6 +12,7 @@ const SPEC_1: RubricItem<SpecificationsContext> = {
   mechanical: {
     level: 'WARN',
     overrideLevels: ['FAIL'],
+    remediation: { class: 'automatic' },
     audit: {
       phase: 'INSPECT',
       run: (context): readonly AuditOutcome[] => {
@@ -64,6 +65,10 @@ const SPEC_2: RubricItem<SpecificationsContext> = {
   sources: SOURCE,
   mechanical: {
     level: 'FAIL',
+    remediation: {
+      class: 'diagnostic',
+      guidance: 'Create the missing authority area only after confirming that the repository is intended to carry this specification responsibility.'
+    },
     audit: {
       phase: 'INSPECT',
       run: (context): readonly AuditOutcome[] => {
@@ -84,6 +89,10 @@ const SPEC_3: RubricItem<SpecificationsContext> = {
   sources: SOURCE,
   mechanical: {
     level: 'WARN',
+    remediation: {
+      class: 'diagnostic',
+      guidance: 'Create the missing supporting area when its documented responsibility applies, or record why the repository intentionally omits it.'
+    },
     audit: {
       phase: 'INSPECT',
       run: (context): readonly AuditOutcome[] => {
@@ -101,7 +110,12 @@ const SPEC_J1: RubricItem<SpecificationsContext> = {
   title: 'Minimal floor',
   description: 'Every asserted structure has proved stable enough to govern across time.',
   sources: SOURCE,
-  judgment: { prompt: 'Has every asserted structure proved stable enough to govern across time?' }
+  judgment: {
+    scope: 'Each asserted repository structure and the evidence of its sustained use.',
+    prompt: 'Has every asserted structure proved stable enough to govern across time?',
+    outcomes: ['conforming', 'reduce the floor', 'stability evidence required'],
+    guidance: 'Remove speculative structure from the governed floor, or record the sustained repository evidence that makes the assertion stable.'
+  }
 }
 
 const SPEC_J2: RubricItem<SpecificationsContext> = {
@@ -109,7 +123,12 @@ const SPEC_J2: RubricItem<SpecificationsContext> = {
   title: 'Authority boundary',
   description: 'The skill checks repository shape without claiming canonical ownership of normative specification meaning.',
   sources: SOURCE,
-  judgment: { prompt: 'Does the skill preserve the authority boundary around normative specification meaning?' }
+  judgment: {
+    scope: 'The skill guidance, rubric criteria, and any proposed repository changes.',
+    prompt: 'Does the skill preserve the authority boundary around normative specification meaning?',
+    outcomes: ['conforming', 'boundary correction required', 'authority decision required'],
+    guidance: 'Limit this skill to repository structure and route normative specification meaning to its canonical authority; record an authority decision where the boundary is disputed.'
+  }
 }
 
 export const SPEC: RubricFamily<SpecificationsContext, SpecificationsContext> = {
