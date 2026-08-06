@@ -12,6 +12,8 @@ argument-hint: 'audit <repo> | conform <repo> | help | educate <repo> | refresh'
 
 `ki-git` is the portable policy owner for Git and commit practice across Knowledge Islands repositories.
 
+For concurrent delegated work in one worktree, it also owns the split between worker-local staging and coordinated commits: a worker uses its assigned `GIT_INDEX_FILE` on each Git write command, while the orchestrator serialises commits that advance shared `HEAD`.
+
 Read [the Git standard](references/standards-git.md) before preparing a commit, choosing a branch boundary, or assessing a stale lock.
 
 The hosted native rubric records the portable review prompts below. It deliberately has no mechanical policy checks yet.

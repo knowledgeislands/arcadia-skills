@@ -4,15 +4,15 @@ import type { GitRubricContext } from '../contexts/git.ts'
 const HYGIENE_1: RubricItem<GitRubricContext> = {
   code: 'HYGIENE-1',
   title: 'Git working hygiene preserves unrelated state',
-  description: 'Git work inspects shared state, stages intended paths only, and serialises write-mode operations safely.',
+  description: 'Git work preserves shared state through explicit paths, worker-local indexes, and serialized commits.',
   sources: ['standards-git.md'],
   judgment: {
-    scope: 'The shared working tree, staged paths, and Git write operations for the selected work.',
+    scope: 'The shared working tree, worker-local Git indexes, staged paths, and Git write operations for the selected work.',
     prompt:
-      'Assess whether the working tree was inspected, staging is limited to intended paths, unrelated changes remain untouched, and write-mode Git activity is safely serialised.',
+      'Assess whether the working tree was inspected, each delegated worker used its assigned Git index, staging is limited to intended paths, unrelated changes remain untouched, and shared-HEAD commits are safely serialised.',
     outcomes: ['conforming', 'state inspection required', 'staging correction required', 'operation coordination required'],
     guidance:
-      'Inspect the working tree, stage only explicit intended paths, leave unrelated work untouched, and coordinate concurrent Git writes before continuing.'
+      'Inspect the working tree, pass the assigned `GIT_INDEX_FILE` on every worker Git write, stage only explicit intended paths, leave unrelated work untouched, and have the orchestrator serialize commits after re-checking HEAD.'
   }
 }
 

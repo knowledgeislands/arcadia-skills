@@ -38,7 +38,9 @@ Do not invent a branch or pull-request requirement where the target repository h
 
 Treat the working tree as shared state: inspect it before staging, stage only the intended paths, and keep unrelated changes out of a commit.
 
-Read-only Git commands may run independently; serialise write-mode Git operations that affect the same worktree.
+Read-only Git commands may run independently. For concurrent delegated work in one worktree, assign each worker a unique temporary index path and pass it explicitly on every Git write command: `GIT_INDEX_FILE=<worker-index> git <write-command>`. This isolates staging and permits each worker to inspect its own intended commit without changing another worker's index.
+
+Separate indexes do not serialize shared `HEAD`. The orchestrator must serialize commits, re-check the expected `HEAD` before each commit, and integrate one verified explicit-path commit at a time. A worker must stop and report if its expected baseline changes; it must not rebase, reset, or repair another worker's index or history.
 
 Prefer recoverable, explicit-path commits after independently verified work.
 
