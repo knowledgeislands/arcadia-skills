@@ -23,7 +23,7 @@ We adopt `ki-trades` as the portable governance owner for optional cross-reposit
 
 Each trade has one concise `TRD-` identity. A sender may commit a mutable preparation that is silently observable through Git but creates no receiver state. Submission atomically moves that identity to its outbound path and freezes the raw sender projection. The receiver creates an inbound copy only on an active route and may add only receiver-local receipt, review, decision, and linkage evidence. Receipt means delivery, not acceptance. Directly applied work requires a verified local commit; adopted work links to a local item whose lifecycle owns completion.
 
-Every preparation and submission declares whether the sender observes only receipt, a terminal receiver decision, or completion of adopted local work; an unattended submission still remains until receipt. The policy grants no deadline, priority, response guarantee, or receiver authority. Existing submissions retain their former decision-waiting behaviour.
+Every preparation and submission declares whether the sender observes only receipt, a terminal receiver decision, or completion of adopted local work; an unattended submission still remains until receipt. The policy grants no deadline, priority, response guarantee, or receiver authority. The observation declaration is mandatory for every trade record.
 
 The receiver chooses between bounded direct application and separately confirmed local work or knowledge retention. The sender releases only its outbound copy when its observation condition is satisfied; the receiver prunes only after observing eligible release. Neither preparation visibility, receipt, silence, nor elapsed time implies review or a decision.
 

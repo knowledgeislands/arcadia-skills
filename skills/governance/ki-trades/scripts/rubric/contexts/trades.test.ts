@@ -259,6 +259,19 @@ test('legacy or extended record identities are rejected', () => {
   })
 })
 
+test('every submitted trade declares an observation policy', () => {
+  const { home, local } = fixture()
+  const id = 'TRD-00000006'
+  writeRecord(local, '-', 'peer/repo', id, record(id, 'local/repo', 'peer/repo').replace('observation: decision\n', ''))
+
+  const session = createTradesSession(options(local, home, tradeConfiguration('local/repo', ['peer/repo'])))
+  expect(mechanicalOutcomes(session, RECORD)).toContainEqual({
+    status: 'VIOLATION',
+    message: 'observation must be a non-empty sender field',
+    subject: `-/_TRADES/peer/repo/${id}.md`
+  })
+})
+
 test('sender and receiver write boundaries reject receiver fields outbound and changed inbound payload', () => {
   const { home, local, peer } = fixture()
   const outboundId = 'TRD-00000001'

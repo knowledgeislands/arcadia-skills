@@ -62,7 +62,7 @@ Promote when the lifecycle, observation policies, route guards, raw-byte copy ru
 
 ## Current state
 
-The Harness contract, process guidance, route guards, formatter boundary, and roadmap integration are implemented and verified. Existing submitted records without `observation` are migration-equivalent to `decision`, preserving current release behaviour. The receiver-owned host implementation is submitted to `tools-ki` as [TRD-4a0f42a2](../../-/_TRADES/knowledgeislands/tools-ki/TRD-4a0f42a2.md); this item cannot complete its end-to-end evidence until that work is observable.
+The Harness contract, process guidance, route guards, formatter boundary, and roadmap integration are implemented and verified. `observation` is mandatory: active records are migrated in matched sender and receiver copies, while terminal release-eligible records follow normal sender release and receiver pruning. The receiver-owned host implementation is submitted to `tools-ki` as [TRD-4a0f42a2](../../-/_TRADES/knowledgeislands/tools-ki/TRD-4a0f42a2.md); this item cannot complete its end-to-end evidence until that work is observable.
 
 ## Steps
 

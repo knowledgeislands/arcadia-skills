@@ -14,7 +14,6 @@ const OBSERVATION_POLICIES = ['unattended', 'receipt', 'decision', 'completion']
 const DECISION_STATUSES = ['unconsidered', 'in_progress', 'parked', 'clarify', 'applied', 'adopted', 'retained', 'declined', 'superseded'] as const
 const TERMINAL_DECISION_STATUSES = new Set<DecisionStatus>(['applied', 'adopted', 'retained', 'declined', 'superseded'])
 const SENDER_FIELDS = ['id', 'title', 'created_at', 'sender', 'receiver', 'kind', 'source_ref', 'observation'] as const
-const LEGACY_SENDER_FIELDS = SENDER_FIELDS.filter((field) => field !== 'observation')
 const RECEIVER_FIELDS = [
   'decision_status',
   'received_from_ref',
@@ -362,7 +361,7 @@ const parseRecord = (root: string, path: string, direction: Direction, outcomes:
   const allowedFields = preparation ? ALLOWED_PREPARATION_FIELDS : ALLOWED_SUBMITTED_FIELDS
   for (const key of Object.keys(fields).filter((key) => !allowedFields.has(key)))
     outcomes.push({ status: 'VIOLATION', message: `frontmatter key ${key} is outside the trade record contract`, subject: path })
-  for (const key of preparation ? SENDER_FIELDS : LEGACY_SENDER_FIELDS)
+  for (const key of SENDER_FIELDS)
     if (typeof fields[key] !== 'string' || !fields[key])
       outcomes.push({ status: 'VIOLATION', message: `${key} must be a non-empty sender field`, subject: path })
   if (preparation && fields.phase !== 'preparing') outcomes.push({ status: 'VIOLATION', message: 'a preparation must declare phase: preparing', subject: path })
@@ -376,8 +375,6 @@ const parseRecord = (root: string, path: string, direction: Direction, outcomes:
     outcomes.push({ status: 'VIOLATION', message: `kind must be one of ${TRADE_KINDS.join(', ')}`, subject: path })
   if (fields.observation !== undefined && (typeof fields.observation !== 'string' || !OBSERVATION_POLICIES.includes(fields.observation as ObservationPolicy)))
     outcomes.push({ status: 'VIOLATION', message: `observation must be one of ${OBSERVATION_POLICIES.join(', ')}`, subject: path })
-  if (preparation && fields.observation === undefined)
-    outcomes.push({ status: 'VIOLATION', message: 'a preparation must declare an observation policy', subject: path })
 
   const expectedH1 = id && typeof fields.title === 'string' ? `# ${id}: ${fields.title}` : ''
   const content = body.replace(/^(?:\r?\n)+/, '')
@@ -393,11 +390,7 @@ const parseRecord = (root: string, path: string, direction: Direction, outcomes:
     typeof rawDecisionStatus === 'string' && DECISION_STATUSES.includes(rawDecisionStatus as DecisionStatus) ? (rawDecisionStatus as DecisionStatus) : undefined
   const rawObservation = fields.observation
   const observation =
-    typeof rawObservation === 'string' && OBSERVATION_POLICIES.includes(rawObservation as ObservationPolicy)
-      ? (rawObservation as ObservationPolicy)
-      : !preparation && rawObservation === undefined
-        ? 'decision'
-        : undefined
+    typeof rawObservation === 'string' && OBSERVATION_POLICIES.includes(rawObservation as ObservationPolicy) ? (rawObservation as ObservationPolicy) : undefined
   const rawKind = fields.kind
   const kind = typeof rawKind === 'string' && TRADE_KINDS.includes(rawKind as TradeKind) ? (rawKind as TradeKind) : undefined
   const senderFrontmatter = direction === 'inbound' ? stripReceiverFields(frontmatter) : frontmatter
