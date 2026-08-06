@@ -9,6 +9,7 @@ const CLAUDEBIND_1: RubricItem<ClaudeBindingContext> = {
   sources: source,
   mechanical: {
     level: 'WARN',
+    remediation: { class: 'diagnostic', guidance: 'Reconcile the affected Claude JSON surface with the canonical targeted server set, then rerun the audit.' },
     audit: {
       phase: 'INSPECT',
       run: ({ codePath, desktopPath, codeServers, desktopServers, expectedCode, expectedDesktop }) =>
@@ -36,6 +37,7 @@ const CLAUDEBIND_2: RubricItem<ClaudeBindingContext> = {
   sources: source,
   mechanical: {
     level: 'WARN',
+    remediation: { class: 'automatic' },
     audit: {
       phase: 'INSPECT',
       run: ({ cowork, coworkBase }) =>
@@ -65,7 +67,12 @@ const CLAUDEBIND_J1: RubricItem<ClaudeBindingContext> = {
   title: 'Web convention is intentional',
   description: 'claude.ai web use is documented as a convention rather than a local render target.',
   sources: source,
-  judgment: { prompt: 'Is the web convention explicit without claiming a local file or renderer exists?' }
+  judgment: {
+    scope: 'The documented claude.ai web convention and every claimed Claude runtime surface.',
+    prompt: 'Is the web convention explicit without claiming a local file or renderer exists?',
+    outcomes: ['conforming', 'documentation revision', 'route to binding owner'],
+    guidance: 'Clarify the convention or route a claimed renderer to its owning binding; do not invent a local web configuration surface.'
+  }
 }
 export const CLAUDEBIND: RubricFamily<ClaudeBindingContext, ClaudeBindingContext> = {
   code: 'CLAUDEBIND',
