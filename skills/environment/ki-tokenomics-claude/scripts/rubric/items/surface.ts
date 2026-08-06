@@ -7,7 +7,14 @@ const SURF_1: RubricItem<ClaudeContext> = {
   title: 'Selected Claude surfaces are bounded',
   description: 'Instruction, skill, and MCP evidence comes only from the selected repository and bounded physical user layer; out-of-scope imports FAIL.',
   sources: [SOURCE],
-  mechanical: { level: 'FAIL', audit: { phase: 'INSPECT', run: (context) => context.surface } }
+  mechanical: {
+    level: 'FAIL',
+    remediation: {
+      class: 'diagnostic',
+      guidance: 'Remove out-of-scope imports from the selected evidence set or explicitly narrow the requested repository and physical user-layer boundary.'
+    },
+    audit: { phase: 'INSPECT', run: (context) => context.surface }
+  }
 }
 export const SURF: RubricFamily<ClaudeRubricContext, ClaudeContext> = {
   code: 'SURF',
