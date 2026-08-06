@@ -3,7 +3,7 @@ id: KI-HARNESS-RTP-005
 title: Define portable checkpoints
 theme: runtime-portability
 horizon: now
-status: in-progress
+status: done
 blocks: [KI-HARNESS-RTP-006]
 blocked-by: []
 baseline-ref: a4c10e775a3f7c5a42b2c72c061de5c9ab0c409f
@@ -57,11 +57,11 @@ The Harness has no `ki-checkpoints` skill, checkpoint schema, owned scaffold, ch
 
 ## Steps
 
-- [ ] Add the `ki-checkpoints` governance capability with the selected active and retired record contract, update/retirement operations, resume guidance, and an explicit no-transcript/no-session-continuity boundary.
-- [ ] Extend `ki-repo` coverage detection only for an opted-in `_CHECKPOINTS` subarea, retaining its generic `+/` ownership and leaving absent capability directories untouched.
-- [ ] Add a native checker and fixtures for valid active and retired records, duplicate or invalid thread names, unsupported state/section/frontmatter, stale checkpoint evidence, and vendor-session-dependent data; CONFORM must not create content, choose a thread, or retire a record.
-- [ ] Document a Legal-owned recovery migration from `+/_RESUME/`: inventory current flat and legacy nested records, confirm active records with the owner, migrate or explicitly retire each, update local readers, and remove legacy orientation only after validation. Do not write to Legal in this item.
-- [ ] Prove the manual runtime-neutral resume flow from a fresh context and verify that an absent optional subarea is quiet, a retired record is never selected as active, and runtime-specific adapters remain out of scope.
+- [x] Add the `ki-checkpoints` governance capability with the selected active and retired record contract, update/retirement operations, resume guidance, and an explicit no-transcript/no-session-continuity boundary.
+- [x] Extend `ki-repo` coverage detection only for an opted-in `_CHECKPOINTS` subarea, retaining its generic `+/` ownership and leaving absent capability directories untouched.
+- [x] Add a native checker and fixtures for valid active and retired records, duplicate or invalid thread names, unsupported state/section/frontmatter, stale checkpoint evidence, and vendor-session-dependent data; CONFORM must not create content, choose a thread, or retire a record.
+- [x] Document a Legal-owned recovery migration from `+/_RESUME/`: inventory current flat and legacy nested records, confirm active records with the owner, migrate or explicitly retire each, update local readers, and remove legacy orientation only after validation. Do not write to Legal in this item.
+- [x] Prove the manual runtime-neutral resume flow from a fresh context and verify that an absent optional subarea is quiet, a retired record is never selected as active, and runtime-specific adapters remain out of scope.
 
 ## Files touched
 
@@ -111,6 +111,26 @@ This item blocks any claim of a standard `ki-checkpoints` capability or runtime-
 - **Model:** high-reasoning — new governance capability authoring.
 - **Verify:** Orchestrator runs the `ki-skills` audit and checks every contract statement against RTP-005 before integration.
 - **Checkpoint:** Return after source scaffolding, before generated publication or shared configuration work.
+
+## Review
+
+### Delivered boundary
+
+The portable `ki-checkpoints` capability, optional `_CHECKPOINTS` coverage detection, native validation, and runtime-neutral resume contract are implemented. The active `rubric-v1-migration` record demonstrates the live overwrite-in-place recovery flow without storing a transcript or vendor session identifier.
+
+### Evidence
+
+- Baseline: `a4c10e775a3f7c5a42b2c72c061de5c9ab0c409f`.
+- Delivery: `24dc2d0d` adds the capability; `4e8bdbb1` adds repository coverage detection; `2ae7e42c` completes its strict rubric evidence migration.
+- Verification: `bun run test` passes 309 tests; `bunx tsc --noEmit` passes; `ki repo audit --skill ki-checkpoints --repo .` passes; the completed migration checkpoint is retained in `+/_CHECKPOINTS/rubric-v1-migration.md`.
+
+### Decision
+
+No runtime-specific hook or Legal repository write was added. The user approved closure on 2026-08-06.
+
+## Done
+
+Accepted by the user on 2026-08-06 after review of the recorded evidence.
 
 ## Discussion
 
