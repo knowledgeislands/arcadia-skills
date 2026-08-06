@@ -15,8 +15,14 @@ export const BIOME: RubricFamily<EngineeringRubricContext, BiomeRubricContext> =
       sources: ['standards-engineering.md'],
       mechanical: {
         level: 'FAIL',
-        audit: { phase: 'INSPECT', run: (context) => auditEvidence(context.bio1, 'FAIL') },
-        conform: { phase: 'NORMALISE', run: (context) => context.normalise?.() }
+        remediation: { class: 'guarded', guidance: 'Review the reported Biome findings and apply the appropriate source changes, then rerun the gate.' },
+        audit: { phase: 'INSPECT', run: (context) => auditEvidence(context.bio1, 'FAIL') }
+      },
+      judgment: {
+        scope: 'Every reported Biome finding and its proposed source change.',
+        prompt: 'Would the proposed formatting, lint, or unsafe correction preserve the intended behaviour and public surface?',
+        outcomes: ['apply', 'manual-fix', 'exclusion'],
+        guidance: 'Apply only a reviewed safe correction, make the intended manual fix, or record an explicit exclusion.'
       }
     },
     {
@@ -27,6 +33,7 @@ export const BIOME: RubricFamily<EngineeringRubricContext, BiomeRubricContext> =
       mechanical: {
         level: 'FAIL',
         overrideLevels: ['WARN'],
+        remediation: { class: 'automatic' },
         audit: { phase: 'INSPECT', run: (context) => auditEvidence(context.bio2, 'FAIL', ['WARN']) },
         conform: { phase: 'PREPARE', run: (context) => context.scaffold?.() }
       }

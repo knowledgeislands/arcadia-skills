@@ -52,7 +52,6 @@ export type TypescriptRubricContext = {
 export type BiomeRubricContext = {
   bio1: EngineeringEvidence
   bio2: EngineeringEvidence
-  normalise?: () => void
   scaffold?: () => void
 }
 export type KnipRubricContext = {
@@ -60,10 +59,9 @@ export type KnipRubricContext = {
   knip2: EngineeringEvidence
   knip3: EngineeringEvidence
   scaffold?: () => void
-  repair?: () => void
 }
 export type SyncRubricContext = { sync1: EngineeringEvidence; normalise?: () => void }
-export type DependenciesRubricContext = { deps1: EngineeringEvidence; update?: () => void }
+export type DependenciesRubricContext = { deps1: EngineeringEvidence }
 export type GeneratedRubricContext = { gen1: EngineeringEvidence }
 export type TestRubricContext = {
   test1: EngineeringEvidence
@@ -351,11 +349,6 @@ export const createEngineeringSession = (
       bio2: evidence('BIO-2'),
       ...(mutable
         ? {
-            normalise: () =>
-              requestCommands([
-                { program: 'bunx', arguments: ['@biomejs/biome', 'check', '--write', '--unsafe'] },
-                { program: 'bunx', arguments: ['@biomejs/biome', 'format', '--write'] }
-              ]),
             scaffold: () => requestScaffold('biome.json')
           }
         : {})
@@ -366,8 +359,7 @@ export const createEngineeringSession = (
       knip3: evidence('KNIP-3'),
       ...(mutable
         ? {
-            scaffold: () => requestScaffold('knip.json'),
-            repair: () => requestCommands([{ program: 'bunx', arguments: ['knip', '--fix', '--no-config-hints'] }])
+            scaffold: () => requestScaffold('knip.json')
           }
         : {})
     },
@@ -375,18 +367,7 @@ export const createEngineeringSession = (
       sync1: evidence('SYNC-1'),
       ...(mutable ? { normalise: () => requestCommands([{ program: 'bunx', arguments: ['syncpack', 'format'] }]) } : {})
     },
-    dependencies: {
-      deps1: evidence('DEPS-1'),
-      ...(mutable
-        ? {
-            update: () =>
-              requestCommands([
-                { program: 'bun', arguments: ['update', '--latest'] },
-                { program: 'bun', arguments: ['install'] }
-              ])
-          }
-        : {})
-    },
+    dependencies: { deps1: evidence('DEPS-1') },
     generated: { gen1: evidence('GEN-1') },
     test: {
       test1: evidence('TEST-1'),

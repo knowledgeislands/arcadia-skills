@@ -4,7 +4,6 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import type { RubricFamily } from '../../shared/rubric.ts'
 import {
-  type BiomeRubricContext,
   createEngineeringSession,
   type EngineeringRubricContext,
   type KnipRubricContext,
@@ -108,23 +107,24 @@ test('SCR-2 proposes removal for any whole-repository or focused native governan
   expect(scripts).toEqual({ 'ki:deps:update': 'bun update --latest', 'ki:eval': 'bun evals/harness.ts', clean: 'rm -rf dist node_modules', prepare: 'husky' })
 })
 
-test('formatter commands are bounded arrays and coalesced', () => {
+test('guarded remedies do not expose unsafe command conform actions', () => {
   const repository = mkdtempSync(join(tmpdir(), 'ki-engineering-'))
   temporaryDirectories.push(repository)
   writeFileSync(join(repository, 'package.json'), '{}\n')
   const session = createEngineeringSession({ mode: 'conform', repository, userHome: tmpdir(), configuration: {} }, () => [
-    { level: 'FAIL', code: 'BIO-1', message: 'formatting drift' }
+    { level: 'FAIL', code: 'BIO-1', message: 'formatting drift' },
+    { level: 'FAIL', code: 'KNIP-2', message: 'unused export' },
+    { level: 'WARN', code: 'DEPS-1', message: 'dependency update available' }
   ])
-  const root = session.subjects[1]?.context() as EngineeringRubricContext
-  const family = catalogue.families.find((candidate) => candidate.code === 'BIO') as RubricFamily<EngineeringRubricContext, BiomeRubricContext>
-  const context = family.selectContext(root)
-  family.items[0]?.mechanical?.conform?.run(context)
-  family.items[0]?.mechanical?.conform?.run(context)
-
-  expect(session.proposal().commands).toEqual([
-    { program: 'bunx', arguments: ['@biomejs/biome', 'check', '--write', '--unsafe'] },
-    { program: 'bunx', arguments: ['@biomejs/biome', 'format', '--write'] }
-  ])
+  for (const [familyCode, itemCode] of [
+    ['BIO', 'BIO-1'],
+    ['KNIP', 'KNIP-2'],
+    ['DEPS', 'DEPS-1']
+  ] as const) {
+    const family = catalogue.families.find((candidate) => candidate.code === familyCode)
+    expect(family?.items.find((item) => item.code === itemCode)?.mechanical?.conform).toBeUndefined()
+  }
+  expect(session.proposal().commands).toBeUndefined()
 })
 
 test('conform never replaces a symlinked contributed package file', () => {

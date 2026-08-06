@@ -16,6 +16,10 @@ const item = (
   mechanical: {
     level,
     ...(overrideLevels ? { overrideLevels } : {}),
+    remediation: {
+      class: 'diagnostic',
+      guidance: 'Align the compiled-build configuration and package surface with the declared build capability, then rerun the audit.'
+    },
     audit: { phase: 'INSPECT', run: (context) => auditEvidence(evidence(context), level, overrideLevels) }
   }
 })

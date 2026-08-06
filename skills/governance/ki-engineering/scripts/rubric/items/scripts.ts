@@ -16,6 +16,9 @@ const mechanical = (
   mechanical: {
     level,
     ...(options.overrideLevels ? { overrideLevels: options.overrideLevels } : {}),
+    remediation: options.conform
+      ? { class: 'automatic' }
+      : { class: 'diagnostic', guidance: 'Revise the package scripts to meet the governed script surface, then rerun the audit.' },
     audit: { phase: 'INSPECT', run: (context) => auditEvidence(evidence(context), level, options.overrideLevels) },
     ...(options.conform
       ? {
@@ -28,12 +31,12 @@ const mechanical = (
   }
 })
 
-const judgment = (code: string, title: string, description: string, prompt: string): RubricItem<ScriptsRubricContext> => ({
+const judgment = (code: string, title: string, description: string, scope: string, prompt: string, guidance: string): RubricItem<ScriptsRubricContext> => ({
   code,
   title,
   description,
   sources: ['standards-engineering.md'],
-  judgment: { prompt }
+  judgment: { scope, prompt, outcomes: ['conforming', 'gap', 'exclusion'], guidance }
 })
 
 export const SCRIPTS: RubricFamily<EngineeringRubricContext, ScriptsRubricContext> = {
@@ -100,13 +103,17 @@ export const SCRIPTS: RubricFamily<EngineeringRubricContext, ScriptsRubricContex
       'SCR-8',
       'Repo-specific scripts retain clear ownership',
       'Repo-specific scripts beyond the governance surface are valid only when an owning skill governs them and they do not shadow a governed entrypoint.',
-      'Do repo-specific scripts have a clear owner and avoid divergent shadows of governed entrypoints?'
+      'Every repo-specific script outside the governed lifecycle and `ki:` surface.',
+      'Do repo-specific scripts have a clear owner and avoid divergent shadows of governed entrypoints?',
+      'Assign the script to an owning capability, remove a divergent shadow, record a named Gap, or record an explicit exclusion.'
     ),
     judgment(
       'SCR-9',
       'Clean-end-state cutovers',
       'Repository-footprint replacements cut directly to the intended contract, remove the superseded implementation, and verify the result without compatibility code that exists only for an intermediate state.',
-      'Did the cutover reach and verify the correct clean end state without retaining transitional compatibility code?'
+      'Every current or recently completed repository-footprint replacement.',
+      'Did the cutover reach and verify the correct clean end state without retaining transitional compatibility code?',
+      'Complete the clean cutover, record a named Gap with its owner, or record an explicit exclusion.'
     )
   ]
 }

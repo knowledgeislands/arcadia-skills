@@ -16,6 +16,9 @@ const mechanical = (
   mechanical: {
     level,
     ...(options.overrideLevels ? { overrideLevels: options.overrideLevels } : {}),
+    remediation: options.conform
+      ? { class: 'automatic' }
+      : { class: 'diagnostic', guidance: 'Correct the package manifest structure or declare the missing ownership before rerunning the audit.' },
     audit: { phase: 'INSPECT', run: (context) => auditEvidence(evidence(context), level, options.overrideLevels) },
     ...(options.conform ? { conform: { phase: 'PRIMARY' as const, run: options.conform } } : {})
   }

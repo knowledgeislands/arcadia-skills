@@ -15,6 +15,7 @@ export const TYPESCRIPT: RubricFamily<EngineeringRubricContext, TypescriptRubric
       sources: ['standards-engineering.md'],
       mechanical: {
         level: 'FAIL',
+        remediation: { class: 'diagnostic', guidance: 'Resolve the reported TypeScript errors in the affected project, then rerun the type-check.' },
         audit: { phase: 'INSPECT', run: (context) => auditEvidence(context.tsc1, 'FAIL') }
       }
     },
@@ -25,6 +26,7 @@ export const TYPESCRIPT: RubricFamily<EngineeringRubricContext, TypescriptRubric
       sources: ['standards-engineering.md'],
       mechanical: {
         level: 'FAIL',
+        remediation: { class: 'automatic' },
         audit: { phase: 'INSPECT', run: (context) => auditEvidence(context.tsc2, 'FAIL') },
         conform: { phase: 'PREPARE', run: (context) => context.scaffold?.() }
       }
@@ -34,7 +36,12 @@ export const TYPESCRIPT: RubricFamily<EngineeringRubricContext, TypescriptRubric
       title: 'Strictness is not weakened',
       description: 'No repo loosens `strict` or the `noUnused*` and `noImplicit*` flags.',
       sources: ['standards-engineering.md'],
-      judgment: { prompt: 'Does the effective TypeScript configuration preserve the required strictness flags?' }
+      judgment: {
+        scope: 'The effective root and workspace TypeScript configurations.',
+        prompt: 'Does the effective TypeScript configuration preserve the required strictness flags?',
+        outcomes: ['conforming', 'gap', 'exclusion'],
+        guidance: 'Restore the required strictness flags, record a named Gap, or record an explicit capability exclusion.'
+      }
     }
   ] satisfies readonly RubricItem<TypescriptRubricContext>[]
 }

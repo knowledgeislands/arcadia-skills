@@ -16,6 +16,10 @@ const mechanical = (
   mechanical: {
     level,
     ...(overrideLevels ? { overrideLevels } : {}),
+    remediation: {
+      class: 'diagnostic',
+      guidance: 'Align the test runner or Vitest coverage configuration with the declared test capability, then rerun the audit.'
+    },
     audit: { phase: 'INSPECT', run: (context) => auditEvidence(evidence(context), level, overrideLevels) }
   }
 })
@@ -62,7 +66,12 @@ export const TEST: RubricFamily<EngineeringRubricContext, TestRubricContext> = {
       title: 'Tests are colocated and genuinely complete',
       description: 'Under the Vitest profile, tests are colocated with the source they cover and genuinely reach the 100% bar.',
       sources: ['standards-engineering.md'],
-      judgment: { prompt: 'Are tests colocated with their source and does their coverage evidence substantiate the 100% claim?' }
+      judgment: {
+        scope: 'The Vitest test files, covered source files, and coverage evidence.',
+        prompt: 'Are tests colocated with their source and does their coverage evidence substantiate the 100% claim?',
+        outcomes: ['conforming', 'gap', 'exclusion'],
+        guidance: 'Colocate or strengthen the tests, record a named Gap, or record an explicit capability exclusion.'
+      }
     }
   ]
 }

@@ -15,6 +15,7 @@ export const TOML: RubricFamily<EngineeringRubricContext, TomlRubricContext> = {
       sources: ['standards-engineering.md'],
       mechanical: {
         level: 'WARN',
+        remediation: { class: 'automatic' },
         audit: { phase: 'INSPECT', run: (context) => auditEvidence(context.toml1, 'WARN') },
         conform: { phase: 'PRIMARY', run: (context) => context.declare?.() }
       }
@@ -26,6 +27,7 @@ export const TOML: RubricFamily<EngineeringRubricContext, TomlRubricContext> = {
       sources: ['standards-engineering.md'],
       mechanical: {
         level: 'WARN',
+        remediation: { class: 'diagnostic', guidance: 'Remove or correct the unknown engineering configuration key, then rerun the audit.' },
         audit: { phase: 'INSPECT', run: (context) => auditEvidence(context.toml2, 'WARN') }
       }
     }
