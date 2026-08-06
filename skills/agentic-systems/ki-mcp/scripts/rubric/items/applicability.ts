@@ -15,6 +15,7 @@ const KI_CONFIG: RubricItem<McpApplicabilityContext> = {
   mechanical: {
     level: 'WARN',
     overrideLevels: ['FAIL'],
+    remediation: { class: 'automatic' },
     audit: {
       phase: 'INSPECT',
       run: (context) => {

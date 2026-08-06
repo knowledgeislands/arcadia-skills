@@ -13,6 +13,7 @@ const CI_1: RubricItem<McpCiContext> = {
   sources: [STANDARD],
   mechanical: {
     level: 'FAIL',
+    remediation: { class: 'diagnostic', guidance: 'Add the smoke invocation to the CI workflow when the declared smoke script exists.' },
     audit: {
       phase: 'INSPECT',
       run: (context) =>
@@ -34,6 +35,7 @@ const CI_2: RubricItem<McpCiContext> = {
   sources: [STANDARD],
   mechanical: {
     level: 'FAIL',
+    remediation: { class: 'diagnostic', guidance: 'Run the declared smoke script explicitly and investigate its result outside hosted audit or conform.' },
     audit: {
       phase: 'INSPECT',
       run: (context) =>

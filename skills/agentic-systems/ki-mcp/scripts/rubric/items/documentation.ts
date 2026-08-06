@@ -11,6 +11,7 @@ const DOC_1: RubricItem<McpDocumentationContext> = {
   mechanical: {
     level: 'FAIL',
     overrideLevels: ['WARN'],
+    remediation: { class: 'diagnostic', guidance: 'Add or repair the required root documentation using current repository evidence.' },
     audit: {
       phase: 'INSPECT',
       run: (context) => {
@@ -38,7 +39,10 @@ const DOC_1: RubricItem<McpDocumentationContext> = {
     }
   },
   judgment: {
-    prompt: 'Review CLAUDE.md for drift against the code and README setup documentation for current client and configuration instructions.'
+    scope: 'CLAUDE.md, README setup instructions, and the current MCP implementation.',
+    prompt: 'Review CLAUDE.md for drift against the code and README setup documentation for current client and configuration instructions.',
+    outcomes: ['conforming', 'gap', 'exclusion'],
+    guidance: 'Update the affected documentation from verified implementation evidence, or record a gap or explicit exclusion.'
   }
 }
 

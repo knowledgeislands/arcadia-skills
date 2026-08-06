@@ -11,6 +11,7 @@ const CFG_1: RubricItem<McpConfigurationContext> = {
   sources: [STANDARD],
   mechanical: {
     level: 'WARN',
+    remediation: { class: 'diagnostic', guidance: 'Correct the configuration surface and ambient reads with the owning implementation decision.' },
     audit: {
       phase: 'INSPECT',
       run: (context) => {
@@ -53,8 +54,11 @@ const CFG_1: RubricItem<McpConfigurationContext> = {
     }
   },
   judgment: {
+    scope: 'Configuration loading, injection boundaries, and configuration-dependent tests across the MCP implementation.',
     prompt:
-      'Verify loadConfig(env?) is the only environmental reader, no module-level config singleton exists, config is the first argument of every main/utils entry point, Config contains the standard audit and access fields, and tests use literal config rather than environment mutation.'
+      'Verify loadConfig(env?) is the only environmental reader, no module-level config singleton exists, config is the first argument of every main/utils entry point, Config contains the standard audit and access fields, and tests use literal config rather than environment mutation.',
+    outcomes: ['conforming', 'gap', 'exclusion'],
+    guidance: 'Refactor only with the owning implementation decision, or record a named gap or explicit justified exclusion.'
   }
 }
 

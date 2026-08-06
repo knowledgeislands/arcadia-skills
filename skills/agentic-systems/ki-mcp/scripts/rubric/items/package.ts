@@ -11,6 +11,7 @@ const PKG_1: RubricItem<McpPackageContext> = {
   sources: [STANDARD],
   mechanical: {
     level: 'FAIL',
+    remediation: { class: 'automatic' },
     audit: {
       phase: 'INSPECT',
       run: (context) => {

@@ -12,6 +12,7 @@ const SCR_1: RubricItem<McpScriptsContext> = {
   mechanical: {
     level: 'FAIL',
     overrideLevels: ['WARN'],
+    remediation: { class: 'diagnostic', guidance: 'Add or correct the declared scripts with the owning runtime and release decision.' },
     audit: {
       phase: 'INSPECT',
       run: (context) => {
@@ -54,8 +55,11 @@ const SCR_1: RubricItem<McpScriptsContext> = {
     }
   },
   judgment: {
+    scope: 'Generated client outputs and the explicit generation and smoke commands declared by the package.',
     prompt:
-      'Verify generated typed-client files are committed and current; where generation is needed, run bun run ki:generate:client explicitly outside hosted conform.'
+      'Verify generated typed-client files are committed and current; where generation is needed, run bun run ki:generate:client explicitly outside hosted conform.',
+    outcomes: ['conforming', 'gap', 'exclusion'],
+    guidance: 'Run the explicit command, update reviewed generated outputs, or record a named gap or explicit exclusion.'
   }
 }
 

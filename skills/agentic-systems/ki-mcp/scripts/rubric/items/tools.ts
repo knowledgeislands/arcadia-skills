@@ -19,6 +19,7 @@ const TOOL_1: RubricItem<McpToolsContext> = {
   sources: [STANDARD, RESULT_STANDARD],
   mechanical: {
     level: 'WARN',
+    remediation: { class: 'diagnostic', guidance: 'Correct the observed tool surface with the owning API and security decisions.' },
     audit: {
       phase: 'INSPECT',
       run: (context) => {
@@ -67,8 +68,11 @@ const TOOL_1: RubricItem<McpToolsContext> = {
     }
   },
   judgment: {
+    scope: 'The full public MCP tool surface, result envelopes, annotations, documentation, and applicable OAuth requirements.',
     prompt:
-      'Review plural/singular resource choices, CLI mirroring and README catalogues; confirm the annotation-driven access gate, annotation presets, dry-run defaults, read default, audit/error envelopes, path and subprocess hardening, bounded schemas, error aggregation, output sanitisation, and the applicable OAuth security requirements. Optional metadata remains opt-in.'
+      'Review plural/singular resource choices, CLI mirroring and README catalogues; confirm the annotation-driven access gate, annotation presets, dry-run defaults, read default, audit/error envelopes, path and subprocess hardening, bounded schemas, error aggregation, output sanitisation, and the applicable OAuth security requirements. Optional metadata remains opt-in.',
+    outcomes: ['conforming', 'gap', 'exclusion'],
+    guidance: 'Make API or security changes only with the owning authority; otherwise record a named gap or explicit justified exclusion.'
   }
 }
 

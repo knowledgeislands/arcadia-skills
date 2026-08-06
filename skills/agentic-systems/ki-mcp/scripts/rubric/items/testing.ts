@@ -13,6 +13,7 @@ const TEST_1: RubricItem<McpTestingContext> = {
   sources: [STANDARD],
   mechanical: {
     level: 'WARN',
+    remediation: { class: 'diagnostic', guidance: 'Adjust the Vitest coverage exclusions using the repository test-policy decision.' },
     audit: {
       phase: 'INSPECT',
       run: (context) => {

@@ -10,6 +10,10 @@ const LAY_1: RubricItem<McpLayoutContext> = {
   sources: [STANDARD],
   mechanical: {
     level: 'FAIL',
+    remediation: {
+      class: 'diagnostic',
+      guidance: 'Restore the required source layout without moving implementation across ownership boundaries automatically.'
+    },
     audit: {
       phase: 'INSPECT',
       run: (context) => {
@@ -37,8 +41,11 @@ const LAY_1: RubricItem<McpLayoutContext> = {
     }
   },
   judgment: {
+    scope: 'MCP tool shells, main implementation, utilities, and optional CLI layers.',
     prompt:
-      'Review tools/ for thin validation-and-envelope shells, main/ for concern-grouped implementation, no console output in main/utils, and cli/ as a shared-main human shell rather than a second implementation.'
+      'Review tools/ for thin validation-and-envelope shells, main/ for concern-grouped implementation, no console output in main/utils, and cli/ as a shared-main human shell rather than a second implementation.',
+    outcomes: ['conforming', 'gap', 'exclusion'],
+    guidance: 'Refactor only through the owning architecture decision, or record a named gap or explicit exclusion.'
   }
 }
 
