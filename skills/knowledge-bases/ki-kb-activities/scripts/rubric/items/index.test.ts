@@ -32,12 +32,18 @@ test('the catalogue entrypoint and family module keep their public surfaces narr
 })
 
 test('criteria expose complete v1 remediation and review metadata', () => {
-  const items = definition.families.flatMap((family) => family.items)
+  const families = definition.families as unknown as readonly {
+    items: readonly {
+      mechanical?: { remediation?: unknown }
+      judgment?: { scope?: string; outcomes?: readonly string[]; guidance?: string }
+    }[]
+  }[]
+  const items = families.flatMap((family) => family.items)
   const mechanical = items.filter((item) => item.mechanical)
   const judgment = items.filter((item) => item.judgment)
 
   expect(mechanical).toHaveLength(12)
   expect(mechanical.every((item) => item.mechanical?.remediation)).toBe(true)
   expect(judgment).toHaveLength(6)
-  expect(judgment.every((item) => item.judgment?.scope && item.judgment.outcomes.length && item.judgment.guidance)).toBe(true)
+  expect(judgment.every((item) => item.judgment?.scope && item.judgment.outcomes?.length && item.judgment.guidance)).toBe(true)
 })
