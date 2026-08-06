@@ -87,7 +87,30 @@ This item blocks any claim of a standard `ki-checkpoints` capability or runtime-
 
 ## Delegation
 
-Keep the portable record contract, `ki-repo` coverage boundary, checker, and documentation under one orchestrator. They share one new capability and an unsettled schema, so parallel implementation would create overlapping decisions rather than an independent delivery advantage. The Legal migration is a separate receiver-owned follow-up and is not delegated or implemented here.
+### Locked decisions
+
+- The active record remains a flat `+/_CHECKPOINTS/<thread>.md` snapshot; retired records are never selected as active.
+- A checkpoint is portable reconstruction state, never a transcript, session-continuity handle, or completion signal.
+- Legal migration is receiver-owned follow-up work and remains read-only here.
+
+### Escalate
+
+- Stop before adding a runtime-specific hook, a session identifier, automatic checkpoint creation, or any Legal write.
+- Stop if the capability cannot remain optional without broadening `ki-repo` beyond coverage detection.
+
+### Rounds
+
+- Round 1: `checkpoint-capability` scaffolds the new skill and its local contract only.
+- Round 2: the orchestrator integrates the `ki-repo` coverage signal, fixtures, and publication, then verifies the complete capability.
+
+### Worker: checkpoint-capability
+
+- **Deliverable:** The new `skills/change-management/ki-checkpoints/` source with portable contract, mode boundaries, and a candidate structured rubric shape.
+- **Files:** `skills/change-management/ki-checkpoints/` only; do not edit configuration, `ki-repo`, generated publications, or sibling repositories.
+- **Definition of done:** The skill is cold-agent readable, preserves the selected active/retired contract, and identifies the exact checker fixtures required for integration.
+- **Model:** high-reasoning — new governance capability authoring.
+- **Verify:** Orchestrator runs the `ki-skills` audit and checks every contract statement against RTP-005 before integration.
+- **Checkpoint:** Return after source scaffolding, before generated publication or shared configuration work.
 
 ## Discussion
 

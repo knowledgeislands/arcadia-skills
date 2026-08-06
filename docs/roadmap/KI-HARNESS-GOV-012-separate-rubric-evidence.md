@@ -161,6 +161,29 @@ The complete initial catalogue audit and two-vendor review establish the impleme
 - Stop if an item’s evidence cannot distinguish a deterministic defect from a reviewer judgment; retain or split the judgment aspect rather than inventing a weak check.
 - The accepted `KI-TOOL-CLI-020` host item remains blocked on the published Harness contract; this item owns the standard and catalogue migration, not an unapproved cross-repository write.
 
+### Rounds
+
+- Round 1: `rubric-fleet-inventory` and `rubric-host-boundary` perform independent read-only analysis.
+- Round 2: the orchestrator integrates the inventory, then implements the Harness contract and pilots without overlapping catalogue writes.
+
+### Worker: rubric-fleet-inventory
+
+- **Deliverable:** A complete 35-catalogue inventory of mechanical and judgment shapes, remediation candidates, and mandatory split cases.
+- **Files:** Read-only `skills/**/scripts/rubric/` and generated rubric publications; do not edit files.
+- **Definition of done:** Every catalogue is classified with concrete evidence, and every ambiguous or mixed-remediation criterion is identified for the orchestrator.
+- **Model:** high-reasoning — fleet-wide structural classification.
+- **Verify:** Orchestrator spot-checks the inventory against source catalogues before any migration edit.
+- **Checkpoint:** Return the inventory and unresolved classification decisions; make no writes.
+
+### Worker: rubric-host-boundary
+
+- **Deliverable:** A read-only map of the Harness catalogue contract versus the receiver-owned `tools-ki` host work, including the minimum compatible metadata shape.
+- **Files:** Read-only Harness shared rubric modules and `tools-ki` host sources; do not edit either repository.
+- **Definition of done:** The report separates Harness-owned type/publication changes from receiver-owned host validation and rendering work, with no hidden cross-repository dependency.
+- **Model:** high-reasoning — interface and authority analysis.
+- **Verify:** Orchestrator verifies each claimed owner and source location.
+- **Checkpoint:** Return before proposing any `tools-ki` edit.
+
 ## Discussion
 
 ### Why audit-only mechanics need a classification
