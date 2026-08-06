@@ -16,6 +16,7 @@ const mechanical = (
   sources: [SOURCE],
   mechanical: {
     level,
+    remediation: { class: 'diagnostic', guidance: 'Correct the required zone layout or placement, then rerun the audit.' },
     audit: { phase: 'INSPECT', run: evidence }
   }
 })
@@ -35,6 +36,7 @@ const ZONE_2: RubricItem<KbZoneContext> = {
   sources: [SOURCE],
   mechanical: {
     level: 'WARN',
+    remediation: { class: 'automatic' },
     audit: { phase: 'INSPECT', run: (context) => context.zoneIndexes },
     conform: { phase: 'DERIVED', run: (context) => context.scaffoldZoneIndexes?.() }
   }
@@ -47,6 +49,7 @@ const ZONE_3: RubricItem<KbZoneContext> = {
   sources: [SOURCE],
   mechanical: {
     level: 'FAIL',
+    remediation: { class: 'automatic' },
     audit: { phase: 'INSPECT', run: (context) => context.memoryIndex },
     conform: { phase: 'DERIVED', run: (context) => context.scaffoldMemoryIndex?.() }
   }

@@ -8,7 +8,7 @@ const ROUTE_1: RubricItem<KbRoutingContext> = {
   title: 'notes follow the routing test',
   description: 'Notes are placed in the zone selected by their time-bound, active-work, settled-knowledge, or external-reference role.',
   sources: [SOURCE],
-  judgment: { prompt: 'Does each sampled note sit in the zone selected by the routing test?' }
+  judgment: { scope: 'Sampled notes, their current zones, and the routing test.', prompt: 'Does each sampled note sit in the zone selected by the routing test?', outcomes: ['conforming', 'move note', 'routing clarification'], guidance: 'Move a note only through the base owner’s routing decision; preserve staged records and established owners.' }
 }
 
 export const ROUTE: RubricFamily<KbRubricContext, KbRoutingContext> = {

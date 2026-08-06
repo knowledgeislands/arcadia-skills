@@ -15,6 +15,7 @@ const mechanical = (
   sources: [SOURCE],
   mechanical: {
     level: 'WARN',
+    remediation: { class: 'diagnostic', guidance: 'Correct the selected ki-kb configuration evidence, then rerun the audit.' },
     audit: { phase: 'INSPECT', run: evidence }
   }
 })

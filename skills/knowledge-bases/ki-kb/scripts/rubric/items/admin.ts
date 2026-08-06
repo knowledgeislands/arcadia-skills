@@ -15,6 +15,7 @@ const mechanical = (
   sources: [SOURCE],
   mechanical: {
     level: 'WARN',
+    remediation: { class: 'diagnostic', guidance: 'Add the required Admin evidence or correct its local structure, then rerun the audit.' },
     audit: { phase: 'INSPECT', run: evidence }
   }
 })
