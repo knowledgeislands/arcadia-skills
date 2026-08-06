@@ -3,7 +3,7 @@ id: KI-HARNESS-GOV-014
 title: Add trade operations
 theme: governance-consistency
 horizon: now
-status: awaiting-review
+status: done
 blocks: []
 blocked-by: []
 baseline-ref: a30b91707f7460a7bbcc8d5f4ee608594f8824aa
@@ -183,11 +183,15 @@ None for this bounded lifecycle rollout. Future trade work can use the strict ma
 
 ### Post-change review
 
-Ready for explicit user acceptance.
+Approved by the user on 2026-08-06 after review of the strict contract, fleet migration, lifecycle cleanup, and host implementation evidence.
 
 ### Mini recap
 
 The migration confirmed that release and receiver pruning are the correct path for terminal immutable submissions; no persistent compatibility rule is required.
+
+## Done
+
+Accepted with the review evidence above. The completed roadmap record is retained as the durable account of the trade-lifecycle rollout.
 
 ## Discussion
 
