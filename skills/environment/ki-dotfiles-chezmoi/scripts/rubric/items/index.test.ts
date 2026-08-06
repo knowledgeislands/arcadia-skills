@@ -33,7 +33,7 @@ test('the catalogue preserves every chezmoi criterion in family order', () => {
   expect(catalogue.name).toBe('ki-dotfiles-chezmoi')
   expect(catalogue.createSession).toBeFunction()
   expect(catalogue.families.map((family) => family.code)).toEqual(['CHEZMOI', 'BIN', 'GIT', 'PATTERN', 'CONFIG', 'LAYER', 'SHELL', 'ETIQ', 'SYNC', 'RUBRIC'])
-  const codes = catalogue.families.flatMap((family) => family.items.map((item) => item.code))
+  const codes = catalogue.families.flatMap((family) => (family.items as readonly { code: string }[]).map((item) => item.code))
   expect(codes).toEqual([
     'CHEZMOI-1',
     'CHEZMOI-2',
@@ -53,7 +53,10 @@ test('the catalogue preserves every chezmoi criterion in family order', () => {
 })
 
 test('criteria declare complete v1 remediation and review metadata', () => {
-  const items = catalogue.families.flatMap((family) => family.items)
+  const items = catalogue.families.flatMap((family) => family.items as readonly unknown[]) as readonly {
+    mechanical?: { remediation: unknown }
+    judgment?: { scope: string; outcomes: readonly string[]; guidance: string }
+  }[]
   const mechanical = items.filter((item) => item.mechanical)
   const judgment = items.filter((item) => item.judgment)
 
