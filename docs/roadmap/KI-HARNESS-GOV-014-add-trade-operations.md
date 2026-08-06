@@ -62,15 +62,15 @@ Promote when the lifecycle, observation policies, route guards, raw-byte copy ru
 
 ## Current state
 
-The host has the first local operation surface, but it still treats `received` as both delivery and acceptance; defaults to bulk receive; compares parsed sender fields rather than the full raw sender projection; and has no preparation observation or observation-policy model. Existing submitted records have no observation field and must migrate as `decision`, preserving current release behaviour.
+The Harness contract, process guidance, route guards, formatter boundary, and roadmap integration are implemented and verified. Existing submitted records without `observation` are migration-equivalent to `decision`, preserving current release behaviour. The receiver-owned host implementation is submitted to `tools-ki` as [TRD-4a0f42a2](../../-/_TRADES/knowledgeislands/tools-ki/TRD-4a0f42a2.md); this item cannot complete its end-to-end evidence until that work is observable.
 
 ## Steps
 
-- [ ] Amend the GDR and `ki-trades` contract for preparation, submission, delivery, decision, observation policy, receipt-eligible release, and direct `applied` work.
-- [ ] Replace parsed copy comparison with raw sender-projection equality; record `received_from_ref` locally when available; and add the immutable-record formatter and lint boundary.
-- [ ] Add the `ki-trade` process skill, `ki-next` disposition rules, and roadmap `waiting-on-trades` field without extending local work-item dependency arrays.
-- [ ] Specify host `prepare`, `observe`, `submit`, `abandon`, exact `receive`, release, prune, and route commands, with local observation cursors and no peer write.
-- [ ] Submit one bounded work trade to `tools-ki` for host implementation, including route mutation guards, committed-ref observation, command migration, byte preservation, and fixtures.
+- [x] Amend the GDR and `ki-trades` contract for preparation, submission, delivery, decision, observation policy, receipt-eligible release, and direct `applied` work.
+- [x] Replace parsed copy comparison with raw sender-projection equality; record `received_from_ref` locally when available; and add the immutable-record formatter and lint boundary.
+- [x] Add the `ki-trade` process skill, `ki-next` disposition rules, and roadmap `waiting-on-trades` field without extending local work-item dependency arrays.
+- [x] Specify host `prepare`, `observe`, `submit`, `abandon`, exact `receive`, release, prune, and route commands, with local observation cursors and no peer write.
+- [x] Submit one bounded work trade to `tools-ki` for host implementation, including route mutation guards, committed-ref observation, command migration, byte preservation, and fixtures.
 - [ ] Prove preparation observation, receipt, each observation policy, terminal disposition, sender release, receiver pruning, direct application, no-history fallback, and every no-write route failure.
 
 ## Files touched
