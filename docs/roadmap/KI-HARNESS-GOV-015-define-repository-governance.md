@@ -3,7 +3,7 @@ id: KI-HARNESS-GOV-015
 title: Define repository governance
 theme: governance-consistency
 horizon: next
-status: awaiting-review
+status: done
 blocks: [KI-HARNESS-GOV-016]
 blocked-by: []
 baseline-ref: 01a9a0d8a3a2ac4638553f2798be4d713e3764ec
@@ -68,6 +68,10 @@ Keep the schema and authority wording under one orchestrator in the first round.
 ## Review
 
 Awaiting review of the portable KB kind/store contract, selected-repository authority boundary, and the two existing Knowledge Base migrations.
+
+## Done
+
+Accepted by the user on 2026-08-06. The portable contract, authority boundary, and Knowledge Base migrations are approved for retained completion.
 
 ## Discussion
 
