@@ -19,6 +19,7 @@ const LAY_1: RubricItem<AgentFileContext> = {
   sources: [`${STANDARD}#2-layout`, 'CC'],
   mechanical: {
     level: 'FAIL',
+    remediation: { class: 'diagnostic', guidance: 'Correct the physical agent-file or frontmatter structure through the responsible author.' },
     audit: {
       phase: 'INSPECT',
       run: (context) => {
@@ -56,6 +57,7 @@ const LAY_3: RubricItem<AgentFileContext> = {
   sources: [`${STANDARD}#2-layout`, 'HOUSE'],
   mechanical: {
     level: 'WARN',
+    remediation: { class: 'diagnostic', guidance: 'Align filename and declared name only after the responsible author confirms the agent identity.' },
     audit: {
       phase: 'INSPECT',
       run: (context) => {
@@ -72,12 +74,6 @@ const LAY_3: RubricItem<AgentFileContext> = {
             subject: agent.file
           }
         ]
-      }
-    },
-    conform: {
-      phase: 'NORMALISE',
-      run: (context) => {
-        context.requestNameAlignment?.()
       }
     }
   }

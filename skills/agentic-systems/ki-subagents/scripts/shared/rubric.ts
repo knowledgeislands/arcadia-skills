@@ -57,6 +57,7 @@ export type MechanicalRubric<Context> = {
   level: ViolationLevel
   overrideLevels?: readonly ViolationLevel[]
   heuristic?: boolean
+  remediation?: MechanicalRemediation
   audit: RubricExecution<Context, RubricOutcomes<AuditOutcome>>
   /**
    * The canonical CONFORM action. It changes only the operation-scoped
@@ -67,8 +68,13 @@ export type MechanicalRubric<Context> = {
   conformOn?: readonly Extract<AuditOutcomeStatus, 'INFO'>[]
 }
 
+export type MechanicalRemediation = { class: 'automatic' } | { class: 'diagnostic' | 'guarded'; guidance: string }
+
 export type JudgmentRubric = {
+  scope?: string
   prompt: string
+  outcomes?: NonEmptyReadonlyArray<string>
+  guidance?: string
 }
 
 export type RubricItemBase = {
@@ -165,6 +171,40 @@ export type SkillRubricDefinition<RootContext> = RubricDefinition<RootContext> &
 export const defineRubricFamily = <RootContext, FamilyContext>(family: RubricFamily<RootContext, FamilyContext>): RubricFamily<RootContext, FamilyContext> =>
   family
 
+/** Supplies strict v1 evidence without allowing semantic agent rewrites in CONFORM. */
+export const enrichV1Metadata = <RootContext>(definition: SkillRubricDefinition<RootContext>): SkillRubricDefinition<RootContext> => ({
+  ...definition,
+  families: definition.families.map((family) => ({
+    ...family,
+    items: family.items.map((item) => ({
+      ...item,
+      ...(item.mechanical
+        ? {
+            mechanical: {
+              ...item.mechanical,
+              remediation: item.mechanical.remediation ?? {
+                class: 'diagnostic' as const,
+                guidance:
+                  'Correct the evidenced agent-definition issue through the responsible author; do not rewrite an agent role, prompt, authority, or runtime setting automatically.'
+              }
+            }
+          }
+        : {}),
+      ...(item.judgment
+        ? {
+            judgment: {
+              ...item.judgment,
+              scope: item.judgment.scope ?? 'The target agent definition and the evidence named by this criterion.',
+              outcomes: item.judgment.outcomes ?? ['conforming', 'gap', 'exclusion'],
+              guidance:
+                item.judgment.guidance ?? 'Revise the definition through its responsible author, record a named gap, or record an explicit justified exclusion.'
+            }
+          }
+        : {})
+    }))
+  }))
+})
+
 /**
  * The uniform derived-publication policy for a structured rubric catalogue.
  *
@@ -190,6 +230,7 @@ export const createRubricPublicationFamily = <RootContext>(
       sources,
       mechanical: {
         level: 'FAIL',
+        remediation: { class: 'automatic' },
         audit: {
           phase: 'DERIVED',
           run: ({ publication }) => {

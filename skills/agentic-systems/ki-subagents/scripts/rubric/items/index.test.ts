@@ -103,6 +103,17 @@ test('the structured catalogue preserves the complete ki-subagents rule surface'
   })
   expect(items.filter((item) => item.judgment)).toHaveLength(33)
   expect(items.filter((item) => item.judgment).every((item) => Boolean(item.judgment?.prompt.trim()))).toBe(true)
+  for (const item of items) {
+    if (item.mechanical) {
+      expect(item.mechanical.remediation?.class).toBeDefined()
+      if (item.code !== 'RUBRIC-1') expect(item.mechanical.conform).toBeUndefined()
+    }
+    if (item.judgment) {
+      expect(item.judgment.scope).not.toBe('')
+      expect(item.judgment.outcomes?.length).toBeGreaterThan(0)
+      expect(item.judgment.guidance).not.toBe('')
+    }
+  }
 })
 
 test('each family module exports one complete family', async () => {
@@ -125,7 +136,7 @@ test('the session creates stable per-agent subjects and one set subject', () => 
   expect(session.proposal().writes).toEqual([])
 })
 
-test('filename alignment is item-owned, coalesced, and preserves surrounding bytes', () => {
+test('filename alignment remains a diagnostic author decision', () => {
   const repository = fixture()
   const session = catalogue.createSession({ mode: 'conform', repository, userHome: tmpdir(), configuration: {} })
   const subject = session.subjects[0]
@@ -135,14 +146,9 @@ test('filename alignment is item-owned, coalesced, and preserves surrounding byt
   if (!family || !item) throw new Error('LAY-3 is missing')
   const context = family.selectContext(root)
   expect(item.mechanical?.audit.run(context)[0]?.status).toBe('VIOLATION')
-  item.mechanical?.conform?.run(context)
-  item.mechanical?.conform?.run(context)
-  expect(session.proposal().writes).toEqual([
-    {
-      path: 'subagents/governance/reviewer.md',
-      content: '---\r\nname: reviewer\r\ndescription: "Reviews code" when review is requested.\r\nmodel: inherit\r\n---\r\n\r\nReview carefully.\r\n'
-    }
-  ])
+  expect(item.mechanical?.remediation?.class).toBe('diagnostic')
+  expect(item.mechanical?.conform).toBeUndefined()
+  expect(session.proposal().writes).toEqual([])
 })
 
 test('symlinked agent paths are refused without traversal or conform capability', () => {
