@@ -10,6 +10,7 @@ const LA_F_1: RubricItem<LiveArtifactsFrontmatterContext> = {
   sources: [SOURCE],
   mechanical: {
     level: 'WARN',
+    remediation: { class: 'diagnostic', guidance: 'Correct the artifact status from authoritative live-artifact evidence.' },
     audit: { phase: 'INSPECT', run: (context) => context.status }
   }
 }
@@ -21,6 +22,7 @@ const LA_F_2: RubricItem<LiveArtifactsFrontmatterContext> = {
   sources: [SOURCE],
   mechanical: {
     level: 'WARN',
+    remediation: { class: 'automatic' },
     audit: { phase: 'INSPECT', run: (context) => context.renders },
     conform: {
       phase: 'NORMALISE',
@@ -38,6 +40,7 @@ const LA_F_3: RubricItem<LiveArtifactsFrontmatterContext> = {
   sources: [SOURCE],
   mechanical: {
     level: 'WARN',
+    remediation: { class: 'diagnostic', guidance: 'Correct the artifact owner through the responsible author.' },
     audit: { phase: 'INSPECT', run: (context) => context.author }
   }
 }
