@@ -10,6 +10,7 @@ const BINDCHEZ_1: RubricItem<BindingChezMoiContext> = {
   sources: STANDARD,
   mechanical: {
     level: 'WARN',
+    remediation: { class: 'diagnostic', guidance: 'Select a safe chezmoi source repository or remove unsafe evidence before re-running the audit.' },
     audit: {
       phase: 'PREPARE',
       run: ({ repository, repositoryState, unsafePaths }) => {
@@ -48,6 +49,7 @@ const BINDCHEZ_2: RubricItem<BindingChezMoiContext> = {
   sources: STANDARD,
   mechanical: {
     level: 'WARN',
+    remediation: { class: 'diagnostic', guidance: 'Run the preceding ki-binding audit; its renderer-neutral findings own surface agreement.' },
     audit: {
       phase: 'DERIVED',
       run: () => [
@@ -67,6 +69,7 @@ const BINDCHEZ_3: RubricItem<BindingChezMoiContext> = {
   sources: STANDARD,
   mechanical: {
     level: 'WARN',
+    remediation: { class: 'diagnostic', guidance: 'Add or correct the explicitly chosen MCP data pattern through the repository owner.' },
     audit: {
       phase: 'INSPECT',
       run: ({ repositoryState, data }) => {
@@ -95,6 +98,7 @@ const BINDCHEZ_4: RubricItem<BindingChezMoiContext> = {
   sources: STANDARD,
   mechanical: {
     level: 'WARN',
+    remediation: { class: 'diagnostic', guidance: 'Add or correct the render partial through the repository owner.' },
     audit: {
       phase: 'INSPECT',
       run: ({ repositoryState, templates }) => {
@@ -114,6 +118,7 @@ const BINDCHEZ_5: RubricItem<BindingChezMoiContext> = {
   sources: STANDARD,
   mechanical: {
     level: 'WARN',
+    remediation: { class: 'diagnostic', guidance: 'Wire the render partial into an intended surface target through the repository owner.' },
     audit: {
       phase: 'DERIVED',
       run: ({ repositoryState, wiredTargets }) => {
@@ -135,7 +140,12 @@ const BINDCHEZ_6: RubricItem<BindingChezMoiContext> = {
   title: 'Render parity',
   description: 'A previewed chezmoi apply reproduces the surfaces that ki-binding audits.',
   sources: STANDARD,
-  judgment: { prompt: 'Does a reviewed chezmoi diff reproduce exactly the intended renderer-neutral surface state?' }
+  judgment: {
+    scope: 'The reviewed chezmoi preview and the intended renderer-neutral surface state.',
+    prompt: 'Does a reviewed chezmoi diff reproduce exactly the intended renderer-neutral surface state?',
+    outcomes: ['conforming', 'gap', 'exclusion'],
+    guidance: 'Revise the source data or templates through the responsible owner, record a named gap, or record an explicit justified exclusion.'
+  }
 }
 
 const BINDCHEZ_7: RubricItem<BindingChezMoiContext> = {
@@ -144,7 +154,10 @@ const BINDCHEZ_7: RubricItem<BindingChezMoiContext> = {
   description: 'The render standard, structured rubric, provenance, and sibling ownership boundaries remain coherent.',
   sources: STANDARD,
   judgment: {
-    prompt: 'Do the standard, rubric, sources, and composition instructions describe the same render contract without duplicating sibling policy?'
+    scope: 'The render standard, structured rubric, source list, and sibling composition instructions.',
+    prompt: 'Do the standard, rubric, sources, and composition instructions describe the same render contract without duplicating sibling policy?',
+    outcomes: ['conforming', 'gap', 'exclusion'],
+    guidance: 'Reconcile the authoritative documents with their owners, record a named gap, or record an explicit justified exclusion.'
   }
 }
 

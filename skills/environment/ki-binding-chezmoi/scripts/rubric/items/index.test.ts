@@ -42,6 +42,23 @@ test('the catalogue preserves the complete chezmoi binding rubric', () => {
     'BINDCHEZ-7'
   ])
   expect(catalogue.families[1]?.items.map((item) => item.code)).toEqual(['RUBRIC-1'])
+  const families = catalogue.families as unknown as readonly {
+    items: readonly {
+      mechanical?: { remediation: { class: string }; conform?: unknown }
+      judgment?: { scope: string; outcomes: readonly string[]; guidance: string }
+    }[]
+  }[]
+  for (const item of families.flatMap((family) => family.items)) {
+    if (item.mechanical) {
+      expect(item.mechanical.remediation.class).not.toBe('')
+      if (item.mechanical.conform) expect(item.mechanical.remediation.class).toBe('automatic')
+    }
+    if (item.judgment) {
+      expect(item.judgment.scope).not.toBe('')
+      expect(item.judgment.outcomes.length).toBeGreaterThan(0)
+      expect(item.judgment.guidance).not.toBe('')
+    }
+  }
 })
 
 test('each family module exports one complete family', async () => {
