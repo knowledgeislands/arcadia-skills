@@ -9,8 +9,10 @@ source_ref: 'KI-TOOL-CLI-017'
 observation: receipt
 phase: received
 received_from_ref: fb8e0bf5914439fee661fa10bffdec97c661887a
-decision_status: in_progress
-rationale: 'Adopted as the Knowledge Base stream-codes roadmap item.'
+decision_status: retained
+retained_as: docs/roadmap/KI-HARNESS-GOV-018-define-kb-stream-codes.md
+reviewed_at: 2026-08-07T18:00:00Z
+rationale: 'The stream code contract is carried by the KB stream codes item, which cites this trade.'
 ---
 
 # TRD-c8a23b80: Define stable Knowledge Base stream codes

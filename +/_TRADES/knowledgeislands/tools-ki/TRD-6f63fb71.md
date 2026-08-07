@@ -9,8 +9,10 @@ source_ref: KI-TOOL-CLI-019
 observation: receipt
 phase: received
 received_from_ref: fb8e0bf5914439fee661fa10bffdec97c661887a
-decision_status: in_progress
-rationale: 'Consolidated into documentation-topology governance work.'
+decision_status: retained
+retained_as: docs/roadmap/KI-HARNESS-GOV-016-govern-documentation-topology.md
+reviewed_at: 2026-08-07T18:00:00Z
+rationale: 'Documentation governance boundaries are carried by the documentation topology item, which cites this trade.'
 ---
 
 # TRD-6f63fb71: Assign documentation governance boundaries

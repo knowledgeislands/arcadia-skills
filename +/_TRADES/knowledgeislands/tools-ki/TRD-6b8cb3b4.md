@@ -9,8 +9,10 @@ source_ref: 'KI-TOOL-CLI-017'
 observation: receipt
 phase: received
 received_from_ref: fb8e0bf5914439fee661fa10bffdec97c661887a
-decision_status: in_progress
-rationale: 'Adopted as the verification-boundaries roadmap item.'
+decision_status: retained
+retained_as: docs/roadmap/KI-HARNESS-GOV-017-improve-verification-boundaries.md
+reviewed_at: 2026-08-07T18:00:00Z
+rationale: 'Observable CLI boundary testing is carried by the verification boundaries item, which cites this trade.'
 ---
 
 # TRD-6b8cb3b4: Define observable CLI boundary testing
