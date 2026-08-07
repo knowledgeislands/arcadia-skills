@@ -3,10 +3,10 @@ id: KI-HARNESS-GOV-023
 title: Verify trade record integrity
 theme: governance-consistency
 horizon: now
-status: draft
+status: done
 blocks: []
 blocked-by: [KI-HARNESS-GOV-022]
-baseline-ref: null
+baseline-ref: 8023f16ce3cedf7505871dbaae0eb33b96bd39e1
 ---
 
 ## Goal
@@ -33,13 +33,13 @@ This item does not change the trade record format, the phase vocabulary, or the 
 
 ## Steps
 
-- [ ] Specify the comparison in `references/standards-trades.md`: which receiver-local fields are stripped, what formatting insensitivity covers, and that the result is a report, never a repair.
-- [ ] Add a `ki-trades` rubric criterion in the appropriate family that derives the sender projection from a local inbound copy, compares it against the corresponding outbound copy when one is present locally, and reports a clear unavailable outcome when it is not.
-- [ ] State explicitly in the criterion's remediation guidance that no receiver-local re-conforming of a sender-owned record is ever the fix, and that a mismatch is escalated rather than normalised.
-- [ ] Regenerate the `ki-trades` rubric publication and confirm the new criterion appears.
-- [ ] Run the criterion against the seven local inbound copies and record any pre-existing mismatch as evidence before changing anything.
-- [ ] Remove the two `_TRADES` glob exclusions from `.prettierignore` and `.markdownlint-cli2.jsonc`, and remove `SUBMITTED_TRADE_PATHS`, its assertions, and its path predicate from the `ki-authoring` OWN-1 criterion and its context module.
-- [ ] Re-run the full formatter and lint pass plus the new criterion together, proving that formatters now touching the records do not change them in a way the criterion reports.
+- [x] Specify the comparison in `references/standards-trades.md`: which receiver-local fields are stripped, what formatting insensitivity covers, and that the result is a report, never a repair.
+- [x] Add a `ki-trades` rubric criterion in the appropriate family that derives the sender projection from a local inbound copy, compares it against the corresponding outbound copy when one is present locally, and reports a clear unavailable outcome when it is not.
+- [x] State explicitly in the criterion's remediation guidance that no receiver-local re-conforming of a sender-owned record is ever the fix, and that a mismatch is escalated rather than normalised.
+- [x] Regenerate the `ki-trades` rubric publication and confirm the new criterion appears.
+- [x] Run the criterion against the seven local inbound copies and record any pre-existing mismatch as evidence before changing anything.
+- [x] Remove the two `_TRADES` glob exclusions from `.prettierignore` and `.markdownlint-cli2.jsonc`, and remove `SUBMITTED_TRADE_PATHS`, its assertions, and its path predicate from the `ki-authoring` OWN-1 criterion and its context module.
+- [x] Re-run the full formatter and lint pass plus the new criterion together, proving that formatters now touching the records do not change them in a way the criterion reports.
 
 ## Files touched
 
@@ -61,6 +61,18 @@ This item does not change the trade record format, the phase vocabulary, or the 
 This item is blocked by `KI-HARNESS-GOV-022`. That item migrates ten existing records by adding a phase line to copies whose sender projection is nominally frozen — a sanctioned one-off rewrite. Landing the integrity criterion first would either fail on that migration or force the migration to be exempted, so the criterion is written against the post-migration shape and runs on records already carrying their phase.
 
 Within this item, the criterion blocks the removal of the OWN-1 exclusions: the exclusions come out only after the replacement check exists, executes, and passes, so no window exists in which neither mechanism protects the records.
+
+## Review
+
+The comparison was proven against live records rather than fixtures alone: a whitespace-only edit to an inbound copy is not reported, and a one-word edit to the same copy fails `AUTH-1`. After the exclusions came out, the four inbound copies were formatted for the first time while their `tools-ki` sender copies stayed unformatted, and `ki repo audit --skill ki-trades` still passes — which is the property that made removing the exclusions safe.
+
+Two premises in this item turned out to be wrong and were corrected in place. The byte comparison was already executed, not merely described, so the work was to change how it compares rather than to add a criterion. And the rubric already resolves registered peer roots to validate routes, so reading the sender's copy needed no new cross-repository authority.
+
+`PKG-6` in `ki-engineering` also required the exclusions and was updated with them; it was not named in this item.
+
+## Done
+
+`bun run test` 313 pass, `bunx tsc --noEmit` clean, `ki repo audit` `FAIL=0 WARN=0`.
 
 ## Discussion
 
