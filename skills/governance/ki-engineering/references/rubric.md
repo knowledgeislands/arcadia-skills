@@ -50,7 +50,7 @@ The shared package metadata and toolchain dependency surface.
   - _Remediation:_ diagnostic — Correct the package manifest structure or declare the missing ownership before rerunning the audit.
 - **PKG-5 [M] — Toolchain dependencies declared** — The toolchain devDependencies `@biomejs/biome`, `knip`, `prettier`, `husky`, `lint-staged`, `markdownlint-cli2`, `syncpack`, and `typescript` are declared rather than implied. (standards-engineering.md)
   - _Remediation:_ automatic
-- **PKG-6 [M] — Lint-staged fan-out** — `lint-staged` is present and fans out to Biome on code and Prettier plus `markdownlint-cli2 --no-globs` on staged authored Markdown only; `.prettierignore` and markdownlint exclude immutable submitted trade projections while leaving README and `_PREPARATIONS` Markdown checked. (standards-engineering.md)
+- **PKG-6 [M] — Lint-staged fan-out** — `lint-staged` is present and fans out to Biome on code and Prettier plus `markdownlint-cli2 --no-globs` on staged authored Markdown only. (standards-engineering.md)
   - _Remediation:_ automatic
 
 ## MISE — Toolchain pins

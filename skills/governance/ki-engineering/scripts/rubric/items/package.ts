@@ -76,7 +76,7 @@ export const PACKAGE: RubricFamily<EngineeringRubricContext, PackageRubricContex
     mechanical(
       'PKG-6',
       'Lint-staged fan-out',
-      '`lint-staged` is present and fans out to Biome on code and Prettier plus `markdownlint-cli2 --no-globs` on staged authored Markdown only; `.prettierignore` and markdownlint exclude immutable submitted trade projections while leaving README and `_PREPARATIONS` Markdown checked.',
+      '`lint-staged` is present and fans out to Biome on code and Prettier plus `markdownlint-cli2 --no-globs` on staged authored Markdown only.',
       'FAIL',
       (context) => context.pkg6,
       { overrideLevels: ['WARN'], conform: synchronise }
