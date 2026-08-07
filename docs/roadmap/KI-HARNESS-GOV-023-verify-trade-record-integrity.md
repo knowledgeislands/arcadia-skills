@@ -25,7 +25,7 @@ Formatting insensitivity must not become a licence to re-conform. A receiver mus
 
 ## Boundary
 
-This item does not change the trade record format, the phase vocabulary, or the routes. It does not grant cross-repository read or write authority: the comparison is between two copies that already exist locally, or is reported as unavailable. It does not add a conformable write to `ki-trades`, whose only conformable write remains the local owned README scaffold. It does not permit re-conforming, reformatting, or normalising a sender-owned record under any circumstance, and it does not add a Biome exclusion as a substitute for the check.
+This item does not change the trade record format, the phase vocabulary, or the routes. It grants no new cross-repository authority and no write authority anywhere: the rubric already resolves registered peer roots from the local registry to validate routes, and this criterion reads the sender's outbound copy through that same existing path. Where the peer is unregistered or its copy is gone, the result is reported as unavailable. It does not add a conformable write to `ki-trades`, whose only conformable write remains the local owned README scaffold. It does not permit re-conforming, reformatting, or normalising a sender-owned record under any circumstance, and it does not add a Biome exclusion as a substitute for the check.
 
 ## Current state
 

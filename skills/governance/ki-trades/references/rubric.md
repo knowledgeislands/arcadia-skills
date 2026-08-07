@@ -71,7 +71,7 @@ One concise identity moves from mutable preparation to immutable submitted recor
 
 A trade remains a local copy protocol with an immutable raw sender projection and receiver-only local fields.
 
-- **AUTH-1 [M] — sender and receiver write boundaries are preserved** — Preparations and outbound records belong to the local sender, retain their declared export route, and contain no receiver-local fields; inbound records belong to the local receiver, retain an active receipt route, and preserve the complete raw submitted sender projection byte-for-byte. (standards-trades.md)
+- **AUTH-1 [M] — sender and receiver write boundaries are preserved** — Preparations and outbound records belong to the local sender, retain their declared export route, and contain no receiver-local fields; inbound records belong to the local receiver, retain an active receipt route, and preserve the submitted sender projection. That projection is compared against the registered peer's counterpart by meaning rather than by byte, so a formatter run is not reported as tampering while any change to the words is; where no registered peer holds the counterpart, the comparison reports as unverifiable rather than passing silently. (standards-trades.md)
   - _Remediation:_ diagnostic — Correct only the locally owned record or route; do not alter a peer repository or the immutable sender projection.
 
 ## STATUS — Delivery and receiver decision

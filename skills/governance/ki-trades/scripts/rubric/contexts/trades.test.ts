@@ -455,10 +455,10 @@ test('sender and receiver write boundaries reject receiver fields outbound and c
   const session = createTradesSession(options(local, home, tradeConfiguration('local/repo', ['peer/repo'])))
   const messages = mechanicalOutcomes(session, AUTH).map((outcome) => outcome.message)
   expect(messages).toContain('sender-owned outbound record must not set receiver-local field decision_status')
-  expect(messages).toContain('raw sender projection differs between outbound and inbound copies')
+  expect(messages).toContain('sender projection differs in meaning between outbound and inbound copies')
 })
 
-test('raw sender projection comparison rejects formatting drift with the same parsed values', () => {
+test('sender projection comparison accepts formatting drift with the same parsed values', () => {
   const { home, local, peer } = fixture()
   const id = 'TRD-00000006'
   const outbound = record(id, 'peer/repo', 'local/repo')
@@ -473,12 +473,11 @@ test('raw sender projection comparison rejects formatting drift with the same pa
       .replace('observation: decision', 'observation: decision\ndecision_status: unconsidered')
   )
 
+  // A formatter may requote a scalar without changing what the record says, so this must
+  // not read as tampering; only a change to the words may.
   const session = createTradesSession(options(local, home, tradeConfiguration('local/repo', ['peer/repo'])))
-  expect(mechanicalOutcomes(session, AUTH)).toContainEqual({
-    status: 'VIOLATION',
-    message: 'raw sender projection differs between outbound and inbound copies',
-    subject: `+/_TRADES/peer/repo/${id}.md`
-  })
+  const messages = mechanicalOutcomes(session, AUTH).map((outcome) => outcome.message)
+  expect(messages).not.toContain('sender projection differs in meaning between outbound and inbound copies')
 })
 
 test('all receiver decision statuses are accepted with their required rationale and linkage', () => {

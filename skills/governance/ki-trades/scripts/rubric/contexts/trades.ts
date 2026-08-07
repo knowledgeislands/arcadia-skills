@@ -397,6 +397,27 @@ const readMarkdownFiles = (root: string, directory: string): readonly string[] =
 }
 
 /** `phase` states the copy's own lifecycle, so both copies drop it before the immutable sender projection is compared. */
+/**
+ * Compare sender projections by meaning rather than by byte, so a formatter run over a
+ * record is not reported as tampering while any change to its words still is. A formatter
+ * may rewrap prose, reindent, and requote a scalar without altering what the record says,
+ * so frontmatter values are unquoted and all whitespace is collapsed before comparing.
+ */
+const comparableProjection = (projection: string): string => {
+  const match = /^---\n([\s\S]*?)\n---\n([\s\S]*)$/u.exec(projection)
+  if (!match) return projection.replace(/\s+/gu, ' ').trim()
+  const frontmatter = (match[1] as string)
+    .split('\n')
+    .map((line) => {
+      const field = /^([A-Za-z][A-Za-z0-9_]*):\s*(.*)$/u.exec(line)
+      if (!field) return line.trim()
+      const value = (field[2] as string).trim().replace(/^(['"])([\s\S]*)\1$/u, '$2')
+      return `${field[1]}: ${value}`
+    })
+    .join('\n')
+  return `${frontmatter}\n${match[2] as string}`.replace(/\s+/gu, ' ').trim()
+}
+
 const stripCopyLocalFields = (frontmatter: string, inbound: boolean): string =>
   frontmatter
     .split('\n')
@@ -793,10 +814,23 @@ const recordEvidence = (
     const counterpart = peer
       ? remoteRecord(peer.root, counterpartPath, record.direction === 'inbound' ? 'outbound' : 'inbound')
       : undefined
-    if (counterpart && counterpart.rawSenderProjection !== record.rawSenderProjection)
+    // Only an inbound copy makes a claim about someone else's bytes. An outbound record
+    // without a counterpart is simply awaiting receipt, which RELEASE already reports.
+    if (record.direction === 'inbound' && !counterpart)
+      authority.push({
+        status: 'INFO',
+        message: peer
+          ? 'sender projection is unverifiable: the counterpart copy is gone, as after a sender release'
+          : 'sender projection is unverifiable: no registered peer holds the counterpart copy',
+        subject: record.path
+      })
+    else if (
+      counterpart &&
+      comparableProjection(counterpart.rawSenderProjection) !== comparableProjection(record.rawSenderProjection)
+    )
       authority.push({
         status: 'VIOLATION',
-        message: 'raw sender projection differs between outbound and inbound copies',
+        message: 'sender projection differs in meaning between outbound and inbound copies',
         subject: record.path
       })
 
