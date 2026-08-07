@@ -7,6 +7,7 @@ receiver: knowledgeislands/ki-agentic-harness
 kind: knowledge
 source_ref: '.ki-config.toml'
 observation: decision
+phase: received
 decision_status: in_progress
 received_from_ref: 5128bcef2b39e16b56ad9bca1403b41040be8a29
 ---
