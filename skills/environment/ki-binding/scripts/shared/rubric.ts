@@ -55,6 +55,14 @@ export type ConformProposal = {
 
 export type MechanicalRubric<Context> = {
   level: ViolationLevel
+  /**
+   * Relative expected effort against the other criteria in the same catalogue, used to
+   * weight progress. Unset means one unit, so a rubric declares this only where an item is
+   * materially cheaper or dearer than its siblings — a subprocess-backed check beside a
+   * single `lstat`. It is the item's own estimate of itself, not a measurement, and it means
+   * nothing except as a ratio.
+   */
+  cost?: number
   overrideLevels?: readonly ViolationLevel[]
   heuristic?: boolean
   remediation: MechanicalRemediation
@@ -70,12 +78,29 @@ export type MechanicalRubric<Context> = {
 
 export type MechanicalRemediation = { class: 'automatic' } | { class: 'diagnostic' | 'guarded'; guidance: string }
 
+/** A deterministic finding whose correct repair needs authorship or a local decision. */
+export const DIAGNOSTIC_REMEDIATION = {
+  class: 'diagnostic',
+  guidance: 'Use the finding and this criterion to make the appropriate local change, then rerun the audit.'
+} as const
+
+/** A deterministic finding with a safe, idempotent host-executed repair. */
+export const AUTOMATIC_REMEDIATION = { class: 'automatic' } as const
+
 export type JudgmentRubric = {
   scope: string
   prompt: string
   outcomes: NonEmptyReadonlyArray<string>
   guidance: string
 }
+
+/** Common review metadata for criteria that differ only by their question. */
+export const judgment = (prompt: string): JudgmentRubric => ({
+  scope: 'The target skill and the evidence named by this criterion.',
+  prompt,
+  outcomes: ['conforming', 'gap', 'exclusion'],
+  guidance: 'Record the review as conforming, a named Gap with its next action, or an explicit justified exclusion.'
+})
 
 export type RubricItemBase = {
   code: string
@@ -126,9 +151,28 @@ export type RubricContextOptions = {
   repository: string
   userHome: string
   configuration: Readonly<Record<string, unknown>>
+  /**
+   * Reports progress while the session works. Absent when the host is not displaying
+   * progress; a rubric must produce identical findings either way and must never depend on
+   * an emitted event being observed.
+   */
+  emit?: RubricEmitter
   /** Host-validated generated-publication evidence for this skill's catalogue, when requested. */
   publication?: RubricPublication
 }
+
+/**
+ * A progress report from inside a rubric session.
+ *
+ * `stage` brackets a named span of work — gathering evidence for a subject, or executing one
+ * criterion — and `step` reports movement within the current span. `completed` and `total`
+ * are supplied together or not at all and describe countable work such as files scanned.
+ */
+export type RubricProgressEvent =
+  | { kind: 'stage'; edge: 'start' | 'end'; label: string; code?: string }
+  | { kind: 'step'; label: string; code?: string; completed?: number; total?: number }
+
+export type RubricEmitter = (event: RubricProgressEvent) => void
 
 export type RubricPublicationState = 'in-sync' | 'missing' | 'stale'
 
@@ -197,7 +241,7 @@ export const createRubricPublicationFamily = <RootContext>(
       sources,
       mechanical: {
         level: 'FAIL',
-        remediation: { class: 'automatic' },
+        remediation: AUTOMATIC_REMEDIATION,
         audit: {
           phase: 'DERIVED',
           run: ({ publication }) => {

@@ -55,6 +55,14 @@ export type ConformProposal = {
 
 export type MechanicalRubric<Context> = {
   level: ViolationLevel
+  /**
+   * Relative expected effort against the other criteria in the same catalogue, used to
+   * weight progress. Unset means one unit, so a rubric declares this only where an item is
+   * materially cheaper or dearer than its siblings — a subprocess-backed check beside a
+   * single `lstat`. It is the item's own estimate of itself, not a measurement, and it means
+   * nothing except as a ratio.
+   */
+  cost?: number
   overrideLevels?: readonly ViolationLevel[]
   heuristic?: boolean
   remediation: MechanicalRemediation
@@ -143,9 +151,28 @@ export type RubricContextOptions = {
   repository: string
   userHome: string
   configuration: Readonly<Record<string, unknown>>
+  /**
+   * Reports progress while the session works. Absent when the host is not displaying
+   * progress; a rubric must produce identical findings either way and must never depend on
+   * an emitted event being observed.
+   */
+  emit?: RubricEmitter
   /** Host-validated generated-publication evidence for this skill's catalogue, when requested. */
   publication?: RubricPublication
 }
+
+/**
+ * A progress report from inside a rubric session.
+ *
+ * `stage` brackets a named span of work — gathering evidence for a subject, or executing one
+ * criterion — and `step` reports movement within the current span. `completed` and `total`
+ * are supplied together or not at all and describe countable work such as files scanned.
+ */
+export type RubricProgressEvent =
+  | { kind: 'stage'; edge: 'start' | 'end'; label: string; code?: string }
+  | { kind: 'step'; label: string; code?: string; completed?: number; total?: number }
+
+export type RubricEmitter = (event: RubricProgressEvent) => void
 
 export type RubricPublicationState = 'in-sync' | 'missing' | 'stale'
 
