@@ -3,7 +3,7 @@ id: KI-HARNESS-GOV-022
 title: Carry trade phase explicitly
 theme: governance-consistency
 horizon: now
-status: in-progress
+status: done
 blocks: [KI-HARNESS-GOV-023]
 blocked-by: []
 baseline-ref: 6c63ce419b28311b87780c5da5559eeb2bdd51dc
@@ -35,14 +35,14 @@ Adding a phase line to an already-submitted record is a deliberate, one-off exce
 
 ## Steps
 
-- [ ] Define the closed `phase` vocabulary — `preparing`, `submitted`, `received` — in `references/standards-trades.md`, making the field required on every copy and naming which value each copy holds.
-- [ ] Rewrite the storage layout in the same standard to remove the `_PREPARATIONS` segment, so a preparation and its submitted successor share one path under `-/_TRADES/<owner>/<name>/`.
-- [ ] Restate submission as a field rewrite from `preparing` to `submitted` at a stable path, and delete the text-substitution rule that depends on `phase` being the last frontmatter key.
-- [ ] Add `phase: received` to the inbound receiver copy's permitted fields, and state explicitly that it is the copy's own state while `decision_status` remains the receiver's disposition.
-- [ ] Update the `ki-trades` rubric criteria and generated publication to require a valid phase on every record, reject the reserved directory name, and drop the reserved-name skip from the outbound scan rule.
-- [ ] Migrate the seven inbound copies here, adding `phase: received`, in one clearly-labelled commit.
-- [ ] Coordinate the three paired trades with `tools-ki` so both sides of `TRD-094f7987`, `TRD-961f5d5a`, and `TRD-aacc8a12` gain identical sender-owned content, since a one-sided migration would leave them permanently divergent under `KI-HARNESS-GOV-023`.
-- [ ] Raise the corresponding host implementation item in `tools-ki` and confirm its sequencing against this repository's migration.
+- [x] Define the closed `phase` vocabulary — `preparing`, `submitted`, `received` — in `references/standards-trades.md`, making the field required on every copy and naming which value each copy holds.
+- [x] Rewrite the storage layout in the same standard to remove the `_PREPARATIONS` segment, so a preparation and its submitted successor share one path under `-/_TRADES/<owner>/<name>/`.
+- [x] Restate submission as a field rewrite from `preparing` to `submitted` at a stable path, and delete the text-substitution rule that depends on `phase` being the last frontmatter key.
+- [x] Add `phase: received` to the inbound receiver copy's permitted fields, and state explicitly that it is the copy's own state while `decision_status` remains the receiver's disposition.
+- [x] Update the `ki-trades` rubric criteria and generated publication to require a valid phase on every record, reject the reserved directory name, and drop the reserved-name skip from the outbound scan rule.
+- [x] Migrate the seven inbound copies here, adding `phase: received`, in one clearly-labelled commit.
+- [x] Coordinate the three paired trades with `tools-ki` so both sides of `TRD-094f7987`, `TRD-961f5d5a`, and `TRD-aacc8a12` gain identical sender-owned content, since a one-sided migration would leave them permanently divergent under `KI-HARNESS-GOV-023`.
+- [x] Raise the corresponding host implementation item in `tools-ki` and confirm its sequencing against this repository's migration.
 
 ## Files touched
 
@@ -63,6 +63,18 @@ Adding a phase line to an already-submitted record is a deliberate, one-off exce
 The host implementation of preparation, submission, and receipt against the new field and path lands in `tools-ki` as `KI-TOOL-CLI-026`, authored in parallel with this item. That repository owns its own priority, plan, and execution; this item does not block on it, and the two repositories coordinate their cutover explicitly rather than through a blocking dependency.
 
 This item blocks `KI-HARNESS-GOV-023`, because the integrity criterion that item introduces must compare records in their post-migration shape, and because the one-off addition of a phase line to already-submitted copies is exactly the kind of rewrite that criterion is designed to reject once it exists.
+
+## Review
+
+The contract, the host implementation in `tools-ki` (`KI-TOOL-CLI-026`), and the migration of all ten records landed together. Direction is now read from the record's `phase` rather than inferred from its path, so a preparation and its submitted successor share one path and submission is an ordinary field update.
+
+Two consequences were accepted rather than avoided. The three paired trades were knowingly divergent between their harness and `tools-ki` copies for the duration of the two-repository migration, because the two sides cannot be written atomically. And version control now shows a submission as a content change rather than a rename, which the source trade flagged without arguing either way.
+
+Removing `_PREPARATIONS` also made two host guards unreachable rather than relaxed: an outbound destination can no longer already exist, and a preparation can no longer be orphaned by deleting a separate outbound file.
+
+## Done
+
+All ten records across both repositories declare a phase; no `_PREPARATIONS` directory exists anywhere; the standard no longer makes submission depend on frontmatter key order. `bun run test` 313 pass, `bunx tsc --noEmit` clean, `ki repo audit` `FAIL=0 WARN=0`.
 
 ## Discussion
 

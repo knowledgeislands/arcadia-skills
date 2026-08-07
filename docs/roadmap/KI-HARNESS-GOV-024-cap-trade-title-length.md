@@ -3,7 +3,7 @@ id: KI-HARNESS-GOV-024
 title: Cap trade title length
 theme: governance-consistency
 horizon: now
-status: in-progress
+status: done
 blocks: []
 blocked-by: []
 baseline-ref: 6c63ce419b28311b87780c5da5559eeb2bdd51dc
@@ -31,13 +31,13 @@ This item adds one criterion and its supporting standard text. It does not chang
 
 ## Steps
 
-- [ ] State the six-word `title` cap in `references/standards-trades.md`, alongside the reasoning that a trade record is read without the surrounding context a roadmap item enjoys.
-- [ ] State in the same place that the cap binds at preparation only, and that no submitted or received copy is ever assessed against it, with the immutability reason given explicitly.
-- [ ] Replace the template's `title: 'Short submission title'` with an example that demonstrates the cap rather than merely gesturing at brevity.
-- [ ] Add a `ki-trades` rubric criterion in the record family that FAILs a preparation whose title exceeds six words and produces no outcome for a record in any other phase.
-- [ ] Give the criterion a remediation that edits the preparation's title, and state that it is unavailable once the record is submitted.
-- [ ] Regenerate the `ki-trades` rubric publication and confirm the criterion and its phase restriction both appear.
-- [ ] Add a test proving both halves: a seven-word preparation fails, and a seven-word submitted or received record produces no finding.
+- [x] State the six-word `title` cap in `references/standards-trades.md`, alongside the reasoning that a trade record is read without the surrounding context a roadmap item enjoys.
+- [x] State in the same place that the cap binds at preparation only, and that no submitted or received copy is ever assessed against it, with the immutability reason given explicitly.
+- [x] Replace the template's `title: 'Short submission title'` with an example that demonstrates the cap rather than merely gesturing at brevity.
+- [x] Add a `ki-trades` rubric criterion in the record family that FAILs a preparation whose title exceeds six words and produces no outcome for a record in any other phase.
+- [x] Give the criterion a remediation that edits the preparation's title, and state that it is unavailable once the record is submitted.
+- [x] Regenerate the `ki-trades` rubric publication and confirm the criterion and its phase restriction both appear.
+- [x] Add a test proving both halves: a seven-word preparation fails, and a seven-word submitted or received record produces no finding.
 
 ## Files touched
 
@@ -57,6 +57,16 @@ This item adds one criterion and its supporting standard text. It does not chang
 This item is independent. It touches the `title` field alone and shares no contract surface with the configuration layout, the phase vocabulary, or the integrity comparison, so it can be delivered in any order relative to the other three items in this group.
 
 It has no cross-repository counterpart. The cap is a standard and a rubric criterion authored here; no host behaviour changes, because preparation authoring already writes whatever title the author supplies and the criterion assesses the result.
+
+## Review
+
+The `title` channel existed in the rubric plumbing but nothing populated or consumed it, so nothing constrained a trade title at all — which is how a ten-word one was accepted. `RECORD-3` now caps a preparation at six words.
+
+The cap binds only on a preparation. Enforcing it on a submitted or received copy would require retitling immutable evidence, which is precisely the rewrite `AUTH-1` exists to detect, so the existing ten-word title on `TRD-961f5d5a` is deliberately not corrected. With zero local preparations, correctness rests on tests rather than live data: a seven-word preparation fails, the same title on a submitted copy and on a received copy does not, and six words passes the boundary.
+
+## Done
+
+`bun run test` 313 pass, `bunx tsc --noEmit` clean, `ki repo audit` `FAIL=0 WARN=0`.
 
 ## Discussion
 
