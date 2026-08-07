@@ -29,7 +29,7 @@ This item owns the record contract, the phase vocabulary, the directory-layout c
 
 ## Current state
 
-`references/standards-trades.md` in `ki-trades` documents the `_PREPARATIONS/<receiver-owner>/<receiver-repository>/` path, states that a preparation carries `phase: preparing`, and states that submission atomically moves the identity to the canonical outbound path and removes `phase`. The submitted record format lists eight required sender fields and does not include `phase`. Ten trade records exist in this repository today and zero preparations, so migration adds `phase: submitted` or `phase: received` to ten records and moves no directories.
+`references/standards-trades.md` in `ki-trades` documents the `_PREPARATIONS/<receiver-owner>/<receiver-repository>/` path, states that a preparation carries `phase: preparing`, and states that submission atomically moves the identity to the canonical outbound path and removes `phase`. The submitted record format lists eight required sender fields and does not include `phase`. Ten trade records exist across the estate and zero preparations, so migration adds an explicit phase line and moves no directories. Seven inbound copies live here under `+/_TRADES/`; the remaining three are outbound copies in `tools-ki` under `-/_TRADES/`. Three trades — `TRD-094f7987`, `TRD-961f5d5a`, and `TRD-aacc8a12` — hold both copies, so their two sides must be migrated to identical sender-owned content or `KI-HARNESS-GOV-023` will report them as divergent forever. The other four inbound copies have no surviving sender copy, their senders having released.
 
 Adding a phase line to an already-submitted record is a deliberate, one-off exception to the immutability of the sender projection, authorised by this contract change and performed as a single migration commit rather than by any ongoing operation.
 
@@ -40,7 +40,8 @@ Adding a phase line to an already-submitted record is a deliberate, one-off exce
 - [ ] Restate submission as a field rewrite from `preparing` to `submitted` at a stable path, and delete the text-substitution rule that depends on `phase` being the last frontmatter key.
 - [ ] Add `phase: received` to the inbound receiver copy's permitted fields, and state explicitly that it is the copy's own state while `decision_status` remains the receiver's disposition.
 - [ ] Update the `ki-trades` rubric criteria and generated publication to require a valid phase on every record, reject the reserved directory name, and drop the reserved-name skip from the outbound scan rule.
-- [ ] Migrate the ten existing records in this repository, adding `phase: submitted` to outbound copies and `phase: received` to inbound copies in one clearly-labelled commit.
+- [ ] Migrate the seven inbound copies here, adding `phase: received`, in one clearly-labelled commit.
+- [ ] Coordinate the three paired trades with `tools-ki` so both sides of `TRD-094f7987`, `TRD-961f5d5a`, and `TRD-aacc8a12` gain identical sender-owned content, since a one-sided migration would leave them permanently divergent under `KI-HARNESS-GOV-023`.
 - [ ] Raise the corresponding host implementation item in `tools-ki` and confirm its sequencing against this repository's migration.
 
 ## Files touched

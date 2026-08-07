@@ -29,7 +29,7 @@ This item does not change the trade record format, the phase vocabulary, or the 
 
 ## Current state
 
-`ki-authoring` OWN-1 asserts the two `_TRADES` glob exclusions in `.prettierignore` and `.markdownlint-cli2.jsonc`, with `SUBMITTED_TRADE_PATHS` and a matching path predicate defined in `skills/governance/ki-authoring/scripts/rubric/contexts/authoring.ts`. No Biome exclusion exists. `ki-trades` carries rubric families `ADOPTION`, `AUTH`, `CONFIG`, `RECORD`, `RELEASE`, `ROUTE`, `SCAFFOLD`, and `STATUS`; the byte-comparison rule is described in `references/standards-trades.md` under copy and write authority but has no executing criterion. Ten records exist locally, so the criterion has real data to run against on the first pass.
+`ki-authoring` OWN-1 asserts the two `_TRADES` glob exclusions in `.prettierignore` and `.markdownlint-cli2.jsonc`, with `SUBMITTED_TRADE_PATHS` and a matching path predicate defined in `skills/governance/ki-authoring/scripts/rubric/contexts/authoring.ts`. No Biome exclusion exists. `ki-trades` carries rubric families `ADOPTION`, `AUTH`, `CONFIG`, `RECORD`, `RELEASE`, `ROUTE`, `SCAFFOLD`, and `STATUS`; the byte-comparison rule is described in `references/standards-trades.md` under copy and write authority but has no executing criterion. Seven inbound copies exist locally and three outbound copies live in `tools-ki`, so only three trades — `TRD-094f7987`, `TRD-961f5d5a`, and `TRD-aacc8a12` — hold both sides anywhere in the estate. The remaining four inbound copies have no surviving sender copy, their senders having released, so the criterion must report those as unavailable rather than failing them: a released sender is the normal end of a trade's life, not an integrity defect. The comparison also has to normalise `phase` out of both projections once `KI-HARNESS-GOV-022` lands, since a sender copy reading `submitted` and a receiver copy reading `received` are correctly divergent on that field alone.
 
 ## Steps
 
@@ -37,7 +37,7 @@ This item does not change the trade record format, the phase vocabulary, or the 
 - [ ] Add a `ki-trades` rubric criterion in the appropriate family that derives the sender projection from a local inbound copy, compares it against the corresponding outbound copy when one is present locally, and reports a clear unavailable outcome when it is not.
 - [ ] State explicitly in the criterion's remediation guidance that no receiver-local re-conforming of a sender-owned record is ever the fix, and that a mismatch is escalated rather than normalised.
 - [ ] Regenerate the `ki-trades` rubric publication and confirm the new criterion appears.
-- [ ] Run the criterion against all ten existing records and record any pre-existing mismatch as evidence before changing anything.
+- [ ] Run the criterion against the seven local inbound copies and record any pre-existing mismatch as evidence before changing anything.
 - [ ] Remove the two `_TRADES` glob exclusions from `.prettierignore` and `.markdownlint-cli2.jsonc`, and remove `SUBMITTED_TRADE_PATHS`, its assertions, and its path predicate from the `ki-authoring` OWN-1 criterion and its context module.
 - [ ] Re-run the full formatter and lint pass plus the new criterion together, proving that formatters now touching the records do not change them in a way the criterion reports.
 
@@ -50,7 +50,7 @@ This item does not change the trade record format, the phase vocabulary, or the 
 
 ## Verify
 
-- `ki repo audit --skill ki-trades` executes the new criterion against all ten local records and passes clean.
+- `ki repo audit --skill ki-trades` executes the new criterion against the seven local inbound copies and passes clean.
 - `ki repo audit --skill ki-authoring` passes clean with no `_TRADES` exclusion asserted anywhere.
 - A deliberate meaning-changing edit to a local inbound record's sender projection, made in a scratch working copy, is reported as a mismatch; a whitespace-only difference is not.
 - No `_TRADES` glob remains in `.prettierignore`, `.markdownlint-cli2.jsonc`, or the `ki-authoring` context module.
