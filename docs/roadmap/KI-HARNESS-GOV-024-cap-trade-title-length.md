@@ -3,10 +3,10 @@ id: KI-HARNESS-GOV-024
 title: Cap trade title length
 theme: governance-consistency
 horizon: now
-status: draft
+status: in-progress
 blocks: []
 blocked-by: []
-baseline-ref: null
+baseline-ref: 6c63ce419b28311b87780c5da5559eeb2bdd51dc
 ---
 
 ## Goal

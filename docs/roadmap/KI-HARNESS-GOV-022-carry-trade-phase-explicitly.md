@@ -3,10 +3,10 @@ id: KI-HARNESS-GOV-022
 title: Carry trade phase explicitly
 theme: governance-consistency
 horizon: now
-status: draft
+status: in-progress
 blocks: [KI-HARNESS-GOV-023]
 blocked-by: []
-baseline-ref: null
+baseline-ref: 6c63ce419b28311b87780c5da5559eeb2bdd51dc
 ---
 
 ## Goal
