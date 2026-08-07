@@ -22,9 +22,11 @@
  *
  * The native rubric host owns execution, reporting, and exit status.
  */
-import { execSync } from 'node:child_process'
+import { execFile } from 'node:child_process'
 import { existsSync, readFileSync, statSync } from 'node:fs'
 import { join } from 'node:path'
+import { promisify } from 'node:util'
+import type { RubricEmitter } from '../../shared/rubric.ts'
 
 // Unified severity ladder — shared by every KI checker (checker-contract).
 // area is the minted rubric code (references/rubric.md); ref is its
@@ -59,7 +61,12 @@ const declaredSkillNames = (configuration: string): ReadonlySet<string> =>
   new Set([...configuration.matchAll(/^\["[^"\n]+:(ki-[a-z-]+)"\]/gm)].map((match) => match[1] as string))
 
 /** Inspect the repository once and return the complete engineering evidence set. */
-export const collectAuditEvidence = (repo: string): readonly EngineeringEvidenceFinding[] => {
+const run = promisify(execFile)
+
+export const collectAuditEvidence = async (
+  repo: string,
+  emit?: RubricEmitter
+): Promise<readonly EngineeringEvidenceFinding[]> => {
   const findings: Finding[] = []
   const add = (level: Level, area: string, msg: string, ref?: string, file?: string): void => {
     findings.push({ level, area, msg, ref, file })
@@ -74,9 +81,13 @@ export const collectAuditEvidence = (repo: string): readonly EngineeringEvidence
     }))
   }
   const at = (...p: string[]) => join(repo, ...p)
-  function runCheck(area: string, label: string, cmd: string, ref?: string, file?: string) {
+  // Awaited rather than synchronous so the session yields between external commands: these
+  // are the longest spans in a run, and a blocked event loop starves the host's progress
+  // refresh, leaving a live audit indistinguishable from a hang.
+  async function runCheck(area: string, label: string, cmd: string, ref?: string, file?: string): Promise<void> {
+    emit?.({ kind: 'step', label, code: area })
     try {
-      execSync(cmd, { cwd: repo, encoding: 'utf8', stdio: ['pipe', 'pipe', 'pipe'] })
+      await run('/bin/sh', ['-c', cmd], { cwd: repo, encoding: 'utf8' })
       add('PASS', area, `${label} exits 0`, ref, file)
     } catch (e: unknown) {
       const err = e as { stderr?: string; stdout?: string }
@@ -381,18 +392,18 @@ export const collectAuditEvidence = (repo: string): readonly EngineeringEvidence
   // The native ki-engineering rubric runs all read-only tool checks itself. The tools
   // are not hidden behind package scripts. The Markdown gate remains ki-authoring's
   // responsibility and is orchestrated by `ki repo audit`.
-  runCheck('BIO-1', 'biome check', 'bunx @biomejs/biome check', STD)
+  await runCheck('BIO-1', 'biome check', 'bunx @biomejs/biome check', STD)
   if (workspaces.length) {
     const noTsconfig = workspaces.filter((p) => !read(`${p}/tsconfig.json`))
     if (noTsconfig.length)
       add('FAIL', 'TSC-1', `workspaces names dir(s) without a tsconfig.json: ${noTsconfig.join(', ')}`, STD)
     for (const ws of workspaces.filter((p) => read(`${p}/tsconfig.json`)))
-      runCheck('TSC-1', `tsc ${ws}`, `tsc --noEmit -p ${ws}/tsconfig.json`, STD)
+      await runCheck('TSC-1', `tsc ${ws}`, `tsc --noEmit -p ${ws}/tsconfig.json`, STD)
   } else {
-    runCheck('TSC-1', 'tsc --noEmit', 'tsc --noEmit', STD)
+    await runCheck('TSC-1', 'tsc --noEmit', 'tsc --noEmit', STD)
   }
-  runCheck('SYNC-1', 'syncpack format (check)', 'bunx syncpack format --check', STD)
-  runCheck('KNIP-2', 'knip', 'bunx knip --no-config-hints', STD)
+  await runCheck('SYNC-1', 'syncpack format (check)', 'bunx syncpack format --check', STD)
+  await runCheck('KNIP-2', 'knip', 'bunx knip --no-config-hints', STD)
 
   // ── core: native CLI ownership + retired-key drift ────────────────────────────
   const nativeGovernanceAliases = Object.entries(scripts)
@@ -488,7 +499,7 @@ export const collectAuditEvidence = (repo: string): readonly EngineeringEvidence
 
   // ── advisory: dependency freshness (bun outdated) ────────────────────────────
   try {
-    const out = execSync('bun outdated', { cwd: repo, encoding: 'utf8', stdio: ['pipe', 'pipe', 'pipe'] }).trim()
+    const out = (await run('/bin/sh', ['-c', 'bun outdated'], { cwd: repo, encoding: 'utf8' })).stdout.trim()
     const pkgRows = out.split('\n').filter((l) => l.includes('│') && !l.includes('Package') && !l.includes('Current'))
     if (pkgRows.length === 0) {
       add('PASS', 'DEPS-1', 'all packages up to date (bun outdated)', STD)
@@ -1165,7 +1176,7 @@ export const collectAuditEvidence = (repo: string): readonly EngineeringEvidence
           )
       }
     }
-    if (scripts['test:coverage']) runCheck('TEST-5', 'test:coverage', 'bun run test:coverage', STD)
+    if (scripts['test:coverage']) await runCheck('TEST-5', 'test:coverage', 'bun run test:coverage', STD)
   } else if (scripts.test) {
     add(
       'INFO',

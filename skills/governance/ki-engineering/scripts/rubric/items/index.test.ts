@@ -21,7 +21,7 @@ afterEach(() => {
   for (const directory of temporaryDirectories.splice(0)) rmSync(directory, { recursive: true, force: true })
 })
 
-test('the structured catalogue preserves the engineering criteria', () => {
+test('the structured catalogue preserves the engineering criteria', async () => {
   expect(catalogue.contract).toBe(1)
   expect(catalogue.name).toBe('ki-engineering')
   expect(catalogue.createSession).toBeFunction()
@@ -62,14 +62,14 @@ test('each family module exports one complete family', async () => {
   }
 })
 
-test('the session keeps stable focused context and coalesces package drafts', () => {
+test('the session keeps stable focused context and coalesces package drafts', async () => {
   const repository = mkdtempSync(join(tmpdir(), 'ki-engineering-'))
   temporaryDirectories.push(repository)
   writeFileSync(
     join(repository, 'package.json'),
     '{"name":"example","scripts":{"ki:all":"ki repo audit","ki:engineering:check":"ki repo audit --skill ki-engineering","ki:authoring:fix":"ki repo conform --skill ki-authoring","ki:eval":"bun evals/harness.ts"}}\n'
   )
-  const session = createEngineeringSession(
+  const session = await createEngineeringSession(
     { mode: 'conform', repository, userHome: tmpdir(), configuration: {} },
     () => [
       { level: 'FAIL', code: 'PKG-1', message: 'type missing', subject: 'package.json' },
@@ -97,14 +97,14 @@ test('the session keeps stable focused context and coalesces package drafts', ()
   expect(JSON.parse(writes[0]?.content ?? '{}').type).toBe('module')
 })
 
-test('SCR-2 proposes removal for any whole-repository or focused native governance wrapper', () => {
+test('SCR-2 proposes removal for any whole-repository or focused native governance wrapper', async () => {
   const repository = mkdtempSync(join(tmpdir(), 'ki-engineering-'))
   temporaryDirectories.push(repository)
   writeFileSync(
     join(repository, 'package.json'),
     '{"scripts":{"ki:all":"ki repo audit","ki:engineering:check":"ki repo audit --skill ki-engineering","ki:authoring:fix":"ki repo conform --skill ki-authoring","ki:eval":"bun evals/harness.ts"}}\n'
   )
-  const session = createEngineeringSession(
+  const session = await createEngineeringSession(
     { mode: 'conform', repository, userHome: tmpdir(), configuration: {} },
     () => [{ level: 'FAIL', code: 'SCR-2', message: 'native governance wrappers present', subject: 'package.json' }]
   )
@@ -124,11 +124,11 @@ test('SCR-2 proposes removal for any whole-repository or focused native governan
   })
 })
 
-test('guarded remedies do not expose unsafe command conform actions', () => {
+test('guarded remedies do not expose unsafe command conform actions', async () => {
   const repository = mkdtempSync(join(tmpdir(), 'ki-engineering-'))
   temporaryDirectories.push(repository)
   writeFileSync(join(repository, 'package.json'), '{}\n')
-  const session = createEngineeringSession(
+  const session = await createEngineeringSession(
     { mode: 'conform', repository, userHome: tmpdir(), configuration: {} },
     () => [
       { level: 'FAIL', code: 'BIO-1', message: 'formatting drift' },
@@ -147,13 +147,13 @@ test('guarded remedies do not expose unsafe command conform actions', () => {
   expect(session.proposal().commands).toBeUndefined()
 })
 
-test('conform never replaces a symlinked contributed package file', () => {
+test('conform never replaces a symlinked contributed package file', async () => {
   const repository = mkdtempSync(join(tmpdir(), 'ki-engineering-'))
   temporaryDirectories.push(repository)
   const source = join(repository, 'package-source.json')
   writeFileSync(source, '{}\n')
   symlinkSync(source, join(repository, 'package.json'))
-  const session = createEngineeringSession(
+  const session = await createEngineeringSession(
     { mode: 'conform', repository, userHome: tmpdir(), configuration: {} },
     () => [{ level: 'FAIL', code: 'PKG-1', message: 'type missing' }]
   )
@@ -163,11 +163,11 @@ test('conform never replaces a symlinked contributed package file', () => {
   expect(readFileSync(source, 'utf8')).toBe('{}\n')
 })
 
-test('knip export coverage is audited without offering a repair', () => {
+test('knip export coverage is audited without offering a repair', async () => {
   const repository = mkdtempSync(join(tmpdir(), 'ki-engineering-'))
   temporaryDirectories.push(repository)
   writeFileSync(join(repository, 'package.json'), '{}\n')
-  const session = createEngineeringSession(
+  const session = await createEngineeringSession(
     { mode: 'conform', repository, userHome: tmpdir(), configuration: {} },
     () => [{ level: 'FAIL', code: 'KNIP-3', message: 'export "./cli" is unreachable', subject: 'knip.json' }]
   )

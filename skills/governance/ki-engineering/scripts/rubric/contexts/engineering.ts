@@ -5,6 +5,7 @@ import type {
   ConformCommand,
   ConformWrite,
   RubricContextOptions,
+  RubricEmitter,
   RubricPublicationContext,
   RubricSession,
   ViolationLevel
@@ -102,7 +103,10 @@ export type EngineeringRubricContext = {
   toml: TomlRubricContext
 }
 
-export type EngineeringEvidenceInspector = (repository: string) => readonly EngineeringEvidenceFinding[]
+export type EngineeringEvidenceInspector = (
+  repository: string,
+  emit?: RubricEmitter
+) => readonly EngineeringEvidenceFinding[] | Promise<readonly EngineeringEvidenceFinding[]>
 
 export const auditEvidence = (
   evidence: EngineeringEvidence,
@@ -296,13 +300,15 @@ const evidenceByCode = (
   return (code) => grouped.get(code) ?? []
 }
 
-export const createEngineeringSession = (
-  { mode, repository, publication }: RubricContextOptions,
+export const createEngineeringSession = async (
+  { mode, repository, publication, emit }: RubricContextOptions,
   inspect: EngineeringEvidenceInspector = collectAuditEvidence
-): RubricSession<EngineeringRubricContext> => {
+): Promise<RubricSession<EngineeringRubricContext>> => {
   const target = resolve(repository)
   const mutable = mode === 'conform'
-  const evidence = evidenceByCode(inspect(target))
+  emit?.({ kind: 'stage', edge: 'start', label: 'engineering evidence' })
+  const evidence = evidenceByCode(await inspect(target, emit))
+  emit?.({ kind: 'stage', edge: 'end', label: 'engineering evidence' })
   const packagePath = join(target, 'package.json')
   const packageSource = isSafeRegularFile(packagePath) ? readFileSync(packagePath, 'utf8') : undefined
   let synchronisePackage = false
