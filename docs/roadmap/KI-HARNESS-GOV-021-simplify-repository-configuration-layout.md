@@ -25,7 +25,7 @@ The same repetition appears inside the trade route declaration, which keys route
 
 ## Boundary
 
-This item owns the contract text, the rubric criteria, and the migration of every existing `.ki-config.toml` in the estate. It does not change the host parser, skill resolution, capability status reporting, or the declare/undeclare paths in `tools-ki`; that implementation lands as a separate item in that repository. It does not introduce a compatibility shim, dual-path parser, or transition period: an unmigrated file already fails loudly because a bare table name is rejected as unqualified, which makes a single clean cutover safe. It does not change which skills any repository declares, nor the meaning of any skill's own configuration keys.
+This item owns the contract text, the rubric criteria, and the migration of every existing `.ki-config.toml` in the estate. It does not change the host parser, skill resolution, capability status reporting, or the declare/undeclare paths in `tools-ki`; that implementation lands as a separate item in that repository. It does not introduce a compatibility shim, dual-path parser, or transition period. The cutover is nonetheless ordered rather than arbitrary, because the two directions fail differently and only one of them is safe. An unmigrated file under the new parser fails loudly, as a bare table name is rejected as unqualified. A migrated file under the old parser does not: `looksLikeSkill` accepts a key only when it begins `ki-` or contains a colon, so `repo` and `skills` match neither and every declaration is silently dropped — verified as `0 skills selected`, `FAIL=0`, exit `0`, a green audit that checked nothing. The host parser must therefore land before any `.ki-config.toml` is migrated, and a repository must never be left migrated against an older executable. It does not change which skills any repository declares, nor the meaning of any skill's own configuration keys.
 
 ## Current state
 
@@ -40,6 +40,8 @@ Two shape questions the source trade explicitly hands to this repository are sti
 - [ ] State the resolution rule in the contract: a bare name binds exactly one declared provider, no provider is an error, more than one provider requires explicit qualification, and resolution consults the declared list rather than installed harnesses.
 - [ ] Rewrite the `ki-trades` route declaration in its standard to the partner-keyed `[skills.ki-trades.routes]` shape with `export` and `import` kind arrays, and remove the now-redundant hand-written uniqueness and lexical-ordering requirement that TOML's duplicate-key prohibition supersedes.
 - [ ] Update the `ki-repo` and `ki-trades` rubric criteria and their generated publications to check the new shape, and delete every criterion that asserts the qualified-key form.
+- [ ] Decide how a rubric context locates its configuration, and record the choice under Discussion. Sixteen contexts today re-parse `.ki-config.toml` themselves and index it by a hard-coded qualified constant, several also reading another skill's table — `ki-trades` reads `ki-repo`'s to obtain the repository identity. Either each context indexes `skills.<name>` directly, or the host resolves the declared list once and hands each session its own table plus a way to reach a sibling's. The second removes the harness identity from skill code entirely and is the reason to prefer it; the first is a smaller change.
+- [ ] Apply that decision to all sixteen contexts, including their cross-skill reads, so no skill hard-codes a harness identity to find configuration.
 - [ ] Update every example, snippet, and cross-reference in the skill catalogue and repository documentation that shows a qualified declaration key.
 - [ ] Migrate all twenty-four `.ki-config.toml` files in the estate to the new layout, giving each implicitly-declared skill an explicit root table.
 - [ ] Raise the corresponding host implementation item in `tools-ki` and confirm its sequencing against this repository's migration.
@@ -48,6 +50,7 @@ Two shape questions the source trade explicitly hands to this repository are sti
 
 - `skills/keystone/ki-repo/` — the `.ki-config.toml` contract text, its rubric criteria, and generated publication.
 - `skills/governance/ki-trades/` — the route declaration shape in `references/standards-trades.md`, its rubric criteria, and generated publication.
+- `skills/*/*/scripts/rubric/contexts/` in sixteen skills — `ki-checkpoints`, `ki-decision-records`, `ki-engineering`, `ki-homebrew-tap`, `ki-housekeeping`, `ki-kb`, `ki-kb-live-artifacts`, `ki-kb-streams`, `ki-mcp`, `ki-plugins`, `ki-repo`, `ki-roadmap`, `ki-specifications`, `ki-trades`, `ki-website`, and `ki-website-cloudflare` — each of which hard-codes its own qualified table name as a string constant and uses it to locate its configuration at runtime. These are executable lookups, not examples, and every one stops resolving the moment the key shape changes.
 - Every other skill or document in this repository that reproduces a qualified declaration key in an example.
 - `.ki-config.toml` in this repository and in the twenty-three other repositories named under Current state.
 
@@ -65,6 +68,10 @@ The host parser, skill resolution, capability status reporting, and declare/unde
 The consumer cost belongs in that counterpart's assessment rather than here: today a declaration's identity is read literally from the table header, and under a bare-name layout it can only be derived once resolution has bound a provider, so the parsed declaration and the resolved skill become distinct shapes. The parser, skill declaration, and skill undeclaration each become simpler, so the cost concentrates in identity derivation rather than spreading across the consumer.
 
 ## Discussion
+
+### Why the context lookup is the substantial half
+
+The contract change is small — a key shape and a resolution rule. The cost sits in the sixteen rubric contexts that locate configuration by a hard-coded qualified string, because each is an executable lookup that silently resolves to nothing the moment the key changes: a skill would not fail loudly, it would behave as though it had no configuration at all. That failure mode is the argument for the host-resolved option, which makes the harness identity unreachable from skill code rather than merely unused.
 
 ### Source
 
