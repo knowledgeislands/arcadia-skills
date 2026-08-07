@@ -58,7 +58,7 @@ The required distinction is judgmental. A catalogue can ask a reviewer for evide
 
 ## Dependencies / blocks
 
-This work is independently executable. `KI-HARNESS-GOV-012` may later enrich the judgment metadata model, but it does not block adding a judgment-only criterion under the current catalogue contract. If that item changes the shared contract first, implement this criterion directly in the new shape rather than adding a compatibility form.
+This work is independently executable. The rubric evidence separation that enriched the judgment metadata model has already landed, so implement this criterion directly in the current catalogue shape rather than adding a compatibility form.
 
 Escalate before expanding scope if applying the rule would require an artifact-specific definition of a public boundary, a cross-repository code change, or a mechanical reachability heuristic. Artifact skills own their concrete interfaces; this item owns only the portable engineering principle and reviewer prompt.
 

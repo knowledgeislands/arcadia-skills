@@ -5,7 +5,7 @@ theme: runtime-portability
 horizon: next
 status: draft
 blocks: []
-blocked-by: [KI-HARNESS-RTP-005]
+blocked-by: []
 baseline-ref: null
 ---
 
@@ -19,7 +19,7 @@ The capability must improve resumability without treating a Stop event as proof 
 
 The harness currently has one Stop handler, `hooks/git-lock-check.sh`, which only removes proven-stale Git locks and exits quietly when safety cannot be established.
 
-`ki-recap` provides a deliberate, in-context recap and grounding procedure, while `KI-HARNESS-RTP-005` proposes the portable checkpoint record and lifecycle.
+`ki-recap` provides a deliberate, in-context recap and grounding procedure. The portable checkpoint record and lifecycle it builds on are already delivered by the `ki-checkpoints` capability.
 
 A Stop event may fire repeatedly, after an interruption, or at a runtime-specific boundary whose meaning does not establish that the user has finished the thread.
 
@@ -37,9 +37,7 @@ Do not fold response-verbosity preferences into the checkpoint hook; that is a s
 
 The existing Git-lock guard is a fail-safe, non-interactive recovery hook and has no checkpoint or recap behaviour.
 
-There is no portable checkpoint schema, selected-checkpoint marker, Stop-event contract, runtime-adapter implementation, or fixture coverage for this capability.
-
-`KI-HARNESS-RTP-005` is the necessary schema and lifecycle predecessor.
+The portable checkpoint schema and lifecycle exist in `ki-checkpoints`. What is missing is the selected-checkpoint marker, the Stop-event contract, the runtime-adapter implementation, and fixture coverage for this capability.
 
 ## Steps
 
@@ -54,7 +52,7 @@ There is no portable checkpoint schema, selected-checkpoint marker, Stop-event c
 
 - `hooks/` and its runtime-specific registration guidance
 - `skills/change-management/ki-recap/`
-- The portable checkpoint capability introduced by `KI-HARNESS-RTP-005`
+- The `ki-checkpoints` portable checkpoint capability
 - Runtime-specific environment adapters and their tests
 - `docs/decisions/` if the event or ownership model needs a durable decision
 - This roadmap item and any receiver-owned implementation record
@@ -68,7 +66,7 @@ There is no portable checkpoint schema, selected-checkpoint marker, Stop-event c
 
 ## Dependencies / blocks
 
-`KI-HARNESS-RTP-005` blocks this item because a hook cannot safely select, update, or retire a checkpoint before the portable record, lifecycle, and authority boundaries exist.
+Nothing blocks this item. The portable record, lifecycle, and authority boundaries a hook needs before it can safely select, update, or retire a checkpoint are already established by `ki-checkpoints`.
 
 The runtime-portability decision and runtime adapters define event-specific evidence; `ki-recap` retains its explicit in-session judgment and grounding role.
 
