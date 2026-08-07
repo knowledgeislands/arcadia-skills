@@ -40,8 +40,10 @@ const RECEIVER_FIELDS = [
   'retained_as',
   'superseded_by'
 ] as const
-const ALLOWED_SUBMITTED_FIELDS = new Set<string>([...SENDER_FIELDS, ...RECEIVER_FIELDS])
-const ALLOWED_PREPARATION_FIELDS = new Set<string>([...SENDER_FIELDS, 'phase'])
+const PHASES = ['preparing', 'submitted', 'received'] as const
+const ALLOWED_SENDER_FIELDS = new Set<string>([...SENDER_FIELDS, 'phase'])
+const ALLOWED_INBOUND_FIELDS = new Set<string>([...SENDER_FIELDS, 'phase', ...RECEIVER_FIELDS])
+const PREPARATIONS_DIRECTORY = '-/_TRADES/_PREPARATIONS'
 
 const TRADE_READMES = [
   {
@@ -57,7 +59,7 @@ Only this repository may change receiver-local receipt evidence, decision status
     path: '-/_TRADES/README.md',
     content: `# Outgoing trades
 
-This directory holds sender-owned cross-repository work and knowledge preparations and submitted trades, grouped by the receiver's canonical \`owner/repo\` identity. Mutable preparations live beneath \`_PREPARATIONS/\`; submission atomically moves one to the peer path and freezes it.
+This directory holds sender-owned cross-repository work and knowledge preparations and submitted trades, grouped by the receiver's canonical \`owner/repo\` identity. A record's own \`phase\` field carries its state: a mutable preparation declares \`phase: preparing\`, and submission rewrites that field to \`phase: submitted\` in place and freezes the record.
 
 Only this repository writes or removes these records. A submitted trade's observation policy determines whether receipt, a terminal decision, or completion of adopted local work permits release.
 
@@ -102,6 +104,10 @@ export type OutcomeContext = {
   readonly outcomes: readonly AuditOutcome[]
 }
 
+export type RecordsContext = OutcomeContext & {
+  readonly phaseOutcomes: readonly AuditOutcome[]
+}
+
 export type ScaffoldContext = OutcomeContext & {
   readonly ensureScaffold?: () => void
 }
@@ -113,7 +119,7 @@ export type TradesRubricContext = {
   readonly configuration: OutcomeContext
   readonly routes: OutcomeContext
   readonly scaffold: ScaffoldContext
-  readonly records: OutcomeContext
+  readonly records: RecordsContext
   readonly authority: OutcomeContext
   readonly status: OutcomeContext
   readonly release: OutcomeContext
@@ -390,16 +396,41 @@ const readMarkdownFiles = (root: string, directory: string): readonly string[] =
   return files.sort((left, right) => left.localeCompare(right))
 }
 
-const stripReceiverFields = (frontmatter: string): string =>
+/** `phase` states the copy's own lifecycle, so both copies drop it before the immutable sender projection is compared. */
+const stripCopyLocalFields = (frontmatter: string, inbound: boolean): string =>
   frontmatter
     .split('\n')
     .filter((line) => {
       const key = line.match(/^([A-Za-z][A-Za-z0-9_]*):/)?.[1]
-      return !key || !RECEIVER_FIELDS.includes(key as (typeof RECEIVER_FIELDS)[number])
+      if (!key) return true
+      if (key === 'phase') return false
+      return !inbound || !RECEIVER_FIELDS.includes(key as (typeof RECEIVER_FIELDS)[number])
     })
     .join('\n')
 
-const parseRecord = (root: string, path: string, direction: Direction, outcomes: AuditOutcome[]): TradeRecord => {
+const declaredPhase = (root: string, path: string): string | undefined => {
+  const absolute = join(root, path)
+  if (!containedPhysical(root, absolute, 'file')) return undefined
+  const frontmatter = readFileSync(absolute, 'utf8').match(/^---\n([\s\S]*?)\n---\n/)?.[1]
+  if (!frontmatter) return undefined
+  try {
+    const phase = table(Bun.YAML.parse(frontmatter))?.phase
+    return typeof phase === 'string' ? phase : undefined
+  } catch {
+    return undefined
+  }
+}
+
+type RecordChannels = {
+  readonly records: AuditOutcome[]
+  readonly phase: AuditOutcome[]
+  readonly title: AuditOutcome[]
+}
+
+const emptyChannels = (): RecordChannels => ({ records: [], phase: [], title: [] })
+
+const parseRecord = (root: string, path: string, direction: Direction, channels: RecordChannels): TradeRecord => {
+  const outcomes = channels.records
   const absolute = join(root, path)
   const source = containedPhysical(root, absolute, 'file') ? readFileSync(absolute, 'utf8') : ''
   const match = source.match(/^---\n([\s\S]*?)\n---\n([\s\S]*)$/)
@@ -422,14 +453,7 @@ const parseRecord = (root: string, path: string, direction: Direction, outcomes:
   const body = match[2] ?? ''
   const relativeTrades = path.replace(/^.*?_TRADES\//, '')
   const segments = relativeTrades.split('/')
-  const preparation = direction === 'preparation'
-  const peer = preparation
-    ? segments.length === 4 && segments[0] === '_PREPARATIONS'
-      ? `${segments[1]}/${segments[2]}`
-      : undefined
-    : segments.length === 3
-      ? `${segments[0]}/${segments[1]}`
-      : undefined
+  const peer = segments.length === 3 ? `${segments[0]}/${segments[1]}` : undefined
   const filename = segments.at(-1) ?? ''
   const id = typeof fields.id === 'string' ? fields.id : undefined
 
@@ -451,7 +475,7 @@ const parseRecord = (root: string, path: string, direction: Direction, outcomes:
       message: 'filename must exactly repeat the frontmatter trade id',
       subject: path
     })
-  const allowedFields = preparation ? ALLOWED_PREPARATION_FIELDS : ALLOWED_SUBMITTED_FIELDS
+  const allowedFields = direction === 'inbound' ? ALLOWED_INBOUND_FIELDS : ALLOWED_SENDER_FIELDS
   for (const key of Object.keys(fields).filter((key) => !allowedFields.has(key)))
     outcomes.push({
       status: 'VIOLATION',
@@ -461,8 +485,20 @@ const parseRecord = (root: string, path: string, direction: Direction, outcomes:
   for (const key of SENDER_FIELDS)
     if (typeof fields[key] !== 'string' || !fields[key])
       outcomes.push({ status: 'VIOLATION', message: `${key} must be a non-empty sender field`, subject: path })
-  if (preparation && fields.phase !== 'preparing')
-    outcomes.push({ status: 'VIOLATION', message: 'a preparation must declare phase: preparing', subject: path })
+
+  const expectedPhase = direction === 'preparation' ? 'preparing' : direction === 'outbound' ? 'submitted' : 'received'
+  if (typeof fields.phase !== 'string' || !PHASES.includes(fields.phase as (typeof PHASES)[number]))
+    channels.phase.push({
+      status: 'VIOLATION',
+      message: `phase must be one of ${PHASES.join(', ')}`,
+      subject: path
+    })
+  else if (fields.phase !== expectedPhase)
+    channels.phase.push({
+      status: 'VIOLATION',
+      message: `${direction === 'preparation' ? 'a' : 'an'} ${direction} record must declare phase: ${expectedPhase}`,
+      subject: path
+    })
   if (typeof fields.created_at === 'string' && !UTC_TIMESTAMP.test(fields.created_at))
     outcomes.push({
       status: 'VIOLATION',
@@ -512,7 +548,7 @@ const parseRecord = (root: string, path: string, direction: Direction, outcomes:
   const rawKind = fields.kind
   const kind =
     typeof rawKind === 'string' && TRADE_KINDS.includes(rawKind as TradeKind) ? (rawKind as TradeKind) : undefined
-  const senderFrontmatter = direction === 'inbound' ? stripReceiverFields(frontmatter) : frontmatter
+  const senderFrontmatter = stripCopyLocalFields(frontmatter, direction === 'inbound')
   return {
     direction,
     path,
@@ -529,7 +565,7 @@ const parseRecord = (root: string, path: string, direction: Direction, outcomes:
 
 const remoteRecord = (root: string, path: string, direction: Direction): TradeRecord | undefined => {
   if (!containedPhysical(root, join(root, path), 'file')) return undefined
-  return parseRecord(root, path, direction, [])
+  return parseRecord(root, path, direction, emptyChannels())
 }
 
 const linkedWorkIsDone = (root: string, identity: unknown): boolean => {
@@ -562,19 +598,30 @@ const recordEvidence = (
   root: string,
   local: TradeConfiguration,
   active: ReadonlyMap<string, RegisteredRepository>
-): { records: AuditOutcome[]; authority: AuditOutcome[]; status: AuditOutcome[]; release: AuditOutcome[] } => {
-  const records: AuditOutcome[] = []
+): {
+  records: AuditOutcome[]
+  phase: AuditOutcome[]
+  title: AuditOutcome[]
+  authority: AuditOutcome[]
+  status: AuditOutcome[]
+  release: AuditOutcome[]
+} => {
+  const channels = emptyChannels()
+  const records = channels.records
   const authority: AuditOutcome[] = []
   const status: AuditOutcome[] = []
   const release: AuditOutcome[] = []
+  if (containedPhysical(root, join(root, PREPARATIONS_DIRECTORY), 'directory'))
+    channels.phase.push({
+      status: 'VIOLATION',
+      message: `the reserved ${PREPARATIONS_DIRECTORY}/ directory is retired; a preparation shares the submitted record peer path and declares phase: preparing`,
+      subject: `${PREPARATIONS_DIRECTORY}/`
+    })
   const parsed = [
-    ...readMarkdownFiles(root, '-/_TRADES/_PREPARATIONS').map((path) =>
-      parseRecord(root, path, 'preparation', records)
-    ),
-    ...readMarkdownFiles(root, '+/_TRADES').map((path) => parseRecord(root, path, 'inbound', records)),
-    ...readMarkdownFiles(root, '-/_TRADES')
-      .filter((path) => !path.startsWith('-/_TRADES/_PREPARATIONS/'))
-      .map((path) => parseRecord(root, path, 'outbound', records))
+    ...readMarkdownFiles(root, '+/_TRADES').map((path) => parseRecord(root, path, 'inbound', channels)),
+    ...readMarkdownFiles(root, '-/_TRADES').map((path) =>
+      parseRecord(root, path, declaredPhase(root, path) === 'preparing' ? 'preparation' : 'outbound', channels)
+    )
   ]
   const seen = new Map<string, string>()
 
@@ -801,7 +848,7 @@ const recordEvidence = (
     }
   }
 
-  return { records, authority, status, release }
+  return { records, phase: channels.phase, title: channels.title, authority, status, release }
 }
 
 const scaffoldEvidence = (root: string): readonly AuditOutcome[] => {
@@ -866,7 +913,10 @@ export const createTradesSession = ({
       ...(mode === 'conform' && canConformScaffold(root) ? { ensureScaffold: () => (scaffoldRequested = true) } : {})
     },
     records: {
-      outcomes: evidence.records.length ? evidence.records : pass('Trade record identity and payload shape are valid.')
+      outcomes: evidence.records.length ? evidence.records : pass('Trade record identity and payload shape are valid.'),
+      phaseOutcomes: evidence.phase.length
+        ? evidence.phase
+        : pass('Every trade record declares the phase its copy holds.')
     },
     authority: {
       outcomes: evidence.authority.length

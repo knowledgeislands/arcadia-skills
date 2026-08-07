@@ -143,19 +143,24 @@ const record = (
     ''
   ].join('\n')
 
+/** A record declares the phase of the copy it is; the fixture supplies the resting value unless a test states one. */
 const writeRecord = (root: string, direction: '+' | '-', peerIdentity: string, id: string, content: string): void => {
   const directory = join(root, direction, '_TRADES', ...peerIdentity.split('/'))
   mkdirSync(directory, { recursive: true })
-  writeFileSync(join(directory, `${id}.md`), content)
+  const phased = /^phase: /m.test(content)
+    ? content
+    : content.replace('\n---\n', `\nphase: ${direction === '+' ? 'received' : 'submitted'}\n---\n`)
+  writeFileSync(join(directory, `${id}.md`), phased)
 }
 
 const mechanicalOutcomes = (
   session: ReturnType<typeof createTradesSession>,
-  family: typeof CONFIG | typeof ROUTE | typeof SCAFFOLD | typeof RECORD | typeof AUTH | typeof STATUS | typeof RELEASE
+  family: typeof CONFIG | typeof ROUTE | typeof SCAFFOLD | typeof RECORD | typeof AUTH | typeof STATUS | typeof RELEASE,
+  code?: string
 ) => {
-  const item = family.items[0]
-  if (!item?.mechanical) throw new Error(`${family.code} has no mechanical item`)
-  return item.mechanical.audit.run(family.selectContext(session.subjects[0]?.context() as never))
+  const item = code ? family.items.find((candidate) => candidate.code === code) : family.items[0]
+  if (!item?.mechanical) throw new Error(`${family.code} has no mechanical item ${code ?? ''}`)
+  return item.mechanical.audit.run(family.selectContext(session.subjects[0]?.context() as never) as never)
 }
 
 test('malformed, duplicated, and non-normalized declarations are refused', () => {
@@ -238,7 +243,7 @@ test('a committed preparation is valid on a sender-declared export and is not re
   writeRecord(
     local,
     '-',
-    '_PREPARATIONS/peer/repo',
+    'peer/repo',
     id,
     record(id, 'local/repo', 'peer/repo', [], undefined, 'work', 'receipt', true)
   )
@@ -251,6 +256,105 @@ test('a committed preparation is valid on a sender-declared export and is not re
   expect(mechanicalOutcomes(session, RECORD)).toEqual([
     { status: 'PASS', message: 'Trade record identity and payload shape are valid.' }
   ])
+  expect(mechanicalOutcomes(session, AUTH)).toEqual([
+    { status: 'PASS', message: 'Trade records preserve sender and receiver write boundaries.' }
+  ])
+  expect(mechanicalOutcomes(session, RECORD, 'RECORD-2')).toEqual([
+    { status: 'PASS', message: 'Every trade record declares the phase its copy holds.' }
+  ])
+})
+
+test('a preparation and its submitted successor share one peer path and differ only by phase', () => {
+  const { home, local } = fixture()
+  const preparingId = 'TRD-000000ac'
+  const submittedId = 'TRD-000000ad'
+  writeRecord(
+    local,
+    '-',
+    'peer/repo',
+    preparingId,
+    record(preparingId, 'local/repo', 'peer/repo', [], undefined, 'work', 'decision', true)
+  )
+  writeRecord(local, '-', 'peer/repo', submittedId, record(submittedId, 'local/repo', 'peer/repo'))
+
+  const session = createTradesSession(options(local, home, tradeConfiguration('local/repo', ['peer/repo'])))
+  expect(mechanicalOutcomes(session, RECORD, 'RECORD-2')).toEqual([
+    { status: 'PASS', message: 'Every trade record declares the phase its copy holds.' }
+  ])
+  expect(mechanicalOutcomes(session, RECORD)).toEqual([
+    { status: 'PASS', message: 'Trade record identity and payload shape are valid.' }
+  ])
+})
+
+test('a missing, invalid, or misplaced phase is refused on every copy', () => {
+  const { home, local, peer } = fixture()
+  const absentId = 'TRD-000000b0'
+  writeRecord(
+    local,
+    '-',
+    'peer/repo',
+    absentId,
+    record(absentId, 'local/repo', 'peer/repo').replace('\n---\n', '\nphase: \n---\n')
+  )
+  const invalidId = 'TRD-000000b1'
+  writeRecord(
+    local,
+    '-',
+    'peer/repo',
+    invalidId,
+    record(invalidId, 'local/repo', 'peer/repo').replace('\n---\n', '\nphase: released\n---\n')
+  )
+  const misplacedId = 'TRD-000000b2'
+  writeRecord(peer, '-', 'local/repo', misplacedId, record(misplacedId, 'peer/repo', 'local/repo'))
+  writeRecord(
+    local,
+    '+',
+    'peer/repo',
+    misplacedId,
+    record(misplacedId, 'peer/repo', 'local/repo', ['decision_status: unconsidered']).replace(
+      '\n---\n',
+      '\nphase: submitted\n---\n'
+    )
+  )
+
+  const session = createTradesSession(options(local, home, tradeConfiguration('local/repo', ['peer/repo'])))
+  expect(mechanicalOutcomes(session, RECORD, 'RECORD-2')).toContainEqual({
+    status: 'VIOLATION',
+    message: 'phase must be one of preparing, submitted, received',
+    subject: `-/_TRADES/peer/repo/${absentId}.md`
+  })
+  expect(mechanicalOutcomes(session, RECORD, 'RECORD-2')).toContainEqual({
+    status: 'VIOLATION',
+    message: 'phase must be one of preparing, submitted, received',
+    subject: `-/_TRADES/peer/repo/${invalidId}.md`
+  })
+  expect(mechanicalOutcomes(session, RECORD, 'RECORD-2')).toContainEqual({
+    status: 'VIOLATION',
+    message: 'an inbound record must declare phase: received',
+    subject: `+/_TRADES/peer/repo/${misplacedId}.md`
+  })
+})
+
+test('the retired _PREPARATIONS directory is refused', () => {
+  const { home, local } = fixture()
+  mkdirSync(join(local, '-', '_TRADES', '_PREPARATIONS'), { recursive: true })
+
+  const session = createTradesSession(options(local, home, tradeConfiguration('local/repo', ['peer/repo'])))
+  expect(mechanicalOutcomes(session, RECORD, 'RECORD-2')).toContainEqual({
+    status: 'VIOLATION',
+    message:
+      'the reserved -/_TRADES/_PREPARATIONS/ directory is retired; a preparation shares the submitted record peer path and declares phase: preparing',
+    subject: '-/_TRADES/_PREPARATIONS/'
+  })
+})
+
+test('phase carries the copy state without disturbing the immutable sender projection', () => {
+  const { home, local, peer } = fixture()
+  const id = 'TRD-000000b3'
+  writeRecord(peer, '-', 'local/repo', id, record(id, 'peer/repo', 'local/repo'))
+  writeRecord(local, '+', 'peer/repo', id, record(id, 'peer/repo', 'local/repo', ['decision_status: unconsidered']))
+
+  const session = createTradesSession(options(local, home, tradeConfiguration('local/repo', ['peer/repo'])))
   expect(mechanicalOutcomes(session, AUTH)).toEqual([
     { status: 'PASS', message: 'Trade records preserve sender and receiver write boundaries.' }
   ])

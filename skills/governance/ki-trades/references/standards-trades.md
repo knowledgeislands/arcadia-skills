@@ -40,21 +40,28 @@ The generic `+` and `-` working areas remain owned by `ki-repo`. A repository de
 +/_TRADES/
 └── <sender-owner>/<sender-repository>/TRD-<eight-hex>.md
 -/_TRADES/
-├── _PREPARATIONS/<receiver-owner>/<receiver-repository>/TRD-<eight-hex>.md
 └── <receiver-owner>/<receiver-repository>/TRD-<eight-hex>.md
 ```
 
-Each `_TRADES` directory retains its skill-owned README when empty. The two peer path segments match the record's sender for inbound records and receiver for preparations and outbound records.
+Each `_TRADES` directory retains its skill-owned README when empty. The two peer path segments match the record's sender for inbound records and receiver for preparations and outbound records. Every path segment encodes a counterpart and none encodes state, so a preparation and its submitted successor share one path. `_PREPARATIONS` is retired and a directory of that name is refused: a reserved name inside the owner namespace it sits in cannot be distinguished from an owner.
 
-The canonical identity grammar is `TRD-[0-9a-f]{8}`. Generation uses eight lower-case hexadecimal characters from a random UUID and deliberately accepts the short form's collision risk. One identity appears in at most one local phase: submitting moves the preparation rather than copying it. Filename, `id`, and H1 must agree.
+The canonical identity grammar is `TRD-[0-9a-f]{8}`. Generation uses eight lower-case hexadecimal characters from a random UUID and deliberately accepts the short form's collision risk. One identity appears at most once locally: submitting rewrites the preparation in place rather than copying it. Filename, `id`, and H1 must agree.
+
+Every copy of a record declares its own `phase`, drawn from a closed vocabulary that names every state a copy can hold rather than only the first one:
+
+- `preparing` — a mutable sender-local preparation under `-/_TRADES/<receiver-owner>/<receiver-repository>/`.
+- `submitted` — a frozen outbound copy at that same path.
+- `received` — a receiver-owned inbound copy under `+/_TRADES/<sender-owner>/<sender-repository>/`.
+
+`phase` is required on every record and its value must match the copy the record is. It states the state of that copy, not the disposition of the receiver towards the trade: `decision_status` is a separate field on its own axis, and the two advance independently. `phase` is the one field each side writes for its own copy, so audit excludes it from the immutable sender projection alongside the receiver-local fields.
 
 ## Preparation and observation
 
-A preparation uses the submitted sender envelope and body described below, plus `phase: preparing`. It must declare `observation` explicitly. It is mutable only at its sender-local `_PREPARATIONS` path and is not receivable. Committing it makes it available for silent inspection through the sender's registered repository root but creates no receiver copy, acknowledgement, decision, response expectation, or dialogue record.
+A preparation uses the submitted sender envelope and body described below with `phase: preparing`. It must declare `observation` explicitly. It is mutable at its sender-local outbound path and is not receivable. Committing it makes it available for silent inspection through the sender's registered repository root but creates no receiver copy, acknowledgement, decision, response expectation, or dialogue record.
 
 Preparation history is Git history. Observation compares the current committed record with one host-local last-observed full commit reference. When those commits are comparable it presents their diff; on first view, shallow or rewritten history, or a repository without usable history, it presents the current preparation verbatim and explains why comparison is unavailable. Observation writes only that disclosed host-local cursor. Abandonment removes only the local preparation.
 
-Submission atomically moves the identity to the canonical outbound path, removes `phase`, and freezes the raw sender projection. It does not require receiver registration or reciprocity. A submitted record is self-contained and survives sender disconnection.
+Submission rewrites `phase` from `preparing` to `submitted` on a stable path and freezes the raw sender projection. It is an ordinary field update, not a file move and not a text substitution that depends on `phase` being the last key in the block, so reordering the frontmatter cannot leave a submitted record still declaring itself as preparing. It does not require receiver registration or reciprocity. A submitted record is self-contained and survives sender disconnection.
 
 ## Submitted record format
 
@@ -70,6 +77,7 @@ receiver: receiver-owner/receiver-repository
 kind: work
 source_ref: KI-SENDER-FND-001
 observation: decision
+phase: submitted
 ---
 
 # TRD-01234567: Short submission title
@@ -87,13 +95,13 @@ The outcome proposed to the receiver.
 Authority, safety, dependency, and verification boundaries the receiver must retain when evaluating it.
 ```
 
-The eight sender fields are required strings. `kind` is `work` or `knowledge`; `observation` is `unattended`, `receipt`, `decision`, or `completion`. `created_at` is a UTC `YYYY-MM-DDTHH:MM:SSZ` timestamp. `source_ref` is provenance only and transfers no lifecycle authority. The three payload sections are required and non-empty. The H1 is the first non-blank body line and exactly repeats `id` and `title`.
+The eight sender fields and `phase` are required strings. `kind` is `work` or `knowledge`; `observation` is `unattended`, `receipt`, `decision`, or `completion`; `phase` is `preparing`, `submitted`, or `received`. `created_at` is a UTC `YYYY-MM-DDTHH:MM:SSZ` timestamp. `source_ref` is provenance only and transfers no lifecycle authority. The three payload sections are required and non-empty. The H1 is the first non-blank body line and exactly repeats `id` and `title`.
 
-An inbound receiver copy adds `decision_status: unconsidered` and, when the committed sender reference is available, `received_from_ref: <full-commit>`. It may also carry receiver-local `reviewed_at`, `rationale`, `applied_commit`, `adopted_as`, `retained_as`, or `superseded_by`. Receiver-local commit references are 40 lower-case hexadecimal characters. No other frontmatter key is valid.
+An inbound receiver copy sets `phase: received` and adds `decision_status: unconsidered` and, when the committed sender reference is available, `received_from_ref: <full-commit>`. It may also carry receiver-local `reviewed_at`, `rationale`, `applied_commit`, `adopted_as`, `retained_as`, or `superseded_by`. Receiver-local commit references are 40 lower-case hexadecimal characters. No other frontmatter key is valid.
 
 ## Copy and write authority
 
-The sender writes and removes only its preparation and outbound record and never sets receiver-local fields. The receiver creates and changes only its inbound copy. The complete sender projection—every sender frontmatter byte, delimiters, spacing, and body byte—is immutable after submission. Audit derives the inbound sender projection by removing only recognised single-line receiver-local fields and compares the remaining raw bytes with the outbound record; it does not reconstruct either copy from parsed values.
+The sender writes and removes only its preparation and outbound record and never sets receiver-local fields. The receiver creates and changes only its inbound copy. The complete sender projection—every sender frontmatter byte, delimiters, spacing, and body byte—is immutable after submission. `phase` is excluded from it, because it states what each copy is rather than what the sender asserted. Audit derives each sender projection by removing only the recognised single-line `phase` field and, on an inbound copy, the recognised single-line receiver-local fields, and compares the remaining raw bytes with the outbound record; it does not reconstruct either copy from parsed values.
 
 `received_from_ref`, when present, identifies the committed sender version received. `reviewed_at` is a UTC timestamp. `rationale` records receiver reasoning. `applied_commit` is valid only for `applied`; `adopted_as`, `retained_as`, and `superseded_by` are valid only for their matching decisions. These are local evidence, not priority or acceptance authority.
 

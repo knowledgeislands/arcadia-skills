@@ -22,6 +22,7 @@ test('the catalogue exposes the complete ordered trade contract', () => {
     'ROUTE-1',
     'SCAFFOLD-1',
     'RECORD-1',
+    'RECORD-2',
     'AUTH-1',
     'STATUS-1',
     'RELEASE-1',

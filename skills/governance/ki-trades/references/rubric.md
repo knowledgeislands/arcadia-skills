@@ -58,10 +58,12 @@ The optional capability owns only its `_TRADES` directories and README files.
 
 → [standard](standards-trades.md)
 
-One concise identity moves atomically from mutable preparation to immutable submitted record.
+One concise identity moves from mutable preparation to immutable submitted record on a stable path.
 
-- **RECORD-1 [M] — preparation and submission shape is canonical** — Every trade uses one `TRD-` eight lower-case hexadecimal identity repeated in filename, metadata, and H1, a closed sender envelope with kind and observation policy, and non-empty payload sections. A mutable preparation alone uses the `_PREPARATIONS` peer layout and `phase: preparing`; a submitted record uses the canonical peer layout without phase. (standards-trades.md)
+- **RECORD-1 [M] — preparation and submission shape is canonical** — Every trade uses one `TRD-` eight lower-case hexadecimal identity repeated in filename, metadata, and H1, a closed sender envelope with kind and observation policy, and non-empty payload sections. A preparation and its submitted successor share one peer path, so shape is judged identically on both sides of submission. (standards-trades.md)
   - _Remediation:_ diagnostic — Correct the locally owned trade record, then rerun the audit.
+- **RECORD-2 [M] — every copy declares its own phase explicitly** — Every trade record carries a required `phase` drawn from `preparing`, `submitted`, and `received`, and the value matches the copy the record actually is: a preparation or a submitted outbound record beneath `-/_TRADES/<owner>/<name>/`, a received copy beneath `+/_TRADES/<owner>/<name>/`. Submission rewrites the field on a stable path rather than moving the file, so no state is expressed by an absent marker. The retired reserved `-/_TRADES/_PREPARATIONS/` directory is refused. `phase` records the state of the copy and `decision_status` records the disposition of the receiver, on separate axes. (standards-trades.md)
+  - _Remediation:_ diagnostic — Set the phase of the locally owned record to the value its copy holds, move any record out of a retired `_PREPARATIONS/` directory to its peer path, then rerun the audit.
 
 ## AUTH — Write authority
 
