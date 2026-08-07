@@ -43,15 +43,14 @@ insert_final_newline = true
 trim_trailing_whitespace = false
 `
 
-// Submitted records are immutable sender projections. The two peer segments are
-// deliberate: preparations live under -/_TRADES/_PREPARATIONS/<owner>/<repo>/ and
-// remain authored Markdown, as do the README files at either trade root.
-export const SUBMITTED_TRADE_PATHS = ['+/_TRADES/*/*/TRD-*.md', '-/_TRADES/*/*/TRD-*.md'] as const
+// Trade records are formatted like any other Markdown. Their integrity is proven by the
+// ki-trades AUTH-1 comparison against the sender's copy, which is insensitive to formatting
+// and sensitive to meaning — an exclusion list only avoided touching them and never checked
+// them, and it never covered Biome at all.
+export const PRETTIER_IGNORE_DEFAULT = `# Generated output and dependencies are never formatted.
 
-export const PRETTIER_IGNORE_DEFAULT = `# Submitted trade records are immutable sender projections.
-
-+/_TRADES/*/*/TRD-*.md
--/_TRADES/*/*/TRD-*.md
+dist/
+node_modules/
 `
 
 export const MARKDOWNLINT_DEFAULT = `{
@@ -78,9 +77,9 @@ export const MARKDOWNLINT_DEFAULT = `{
   // Skill bodies, references, and repo docs are all markdown content.
   "globs": ["**/*.md"],
 
-  // Never lint generated output, dependencies, runtime projections, or submitted
-  // trade projections. Submitted records are byte-immutable evidence; authored
-  // trade READMEs and mutable _PREPARATIONS remain in scope.
+  // Never lint generated output, dependencies, or runtime projections. Trade records
+  // are in scope like any other Markdown: ki-trades AUTH-1 proves their integrity by
+  // comparing meaning against the sender's copy, so formatting them is safe.
   "ignores": [
     "dist/**",
     "**/node_modules/**",
@@ -88,9 +87,7 @@ export const MARKDOWNLINT_DEFAULT = `{
     ".claude/commands/**",
     ".claude/skills/**",
     ".claude/agents/**",
-    ".agents/skills/**",
-    "+/_TRADES/*/*/TRD-*.md",
-    "-/_TRADES/*/*/TRD-*.md"
+    ".agents/skills/**"
   ]
 }
 `
@@ -101,9 +98,7 @@ const MARKDOWN_PATHS = [
   '!.claude/commands/**',
   '!.claude/skills/**',
   '!.claude/agents/**',
-  '!.agents/skills/**',
-  '!+/_TRADES/*/*/TRD-*.md',
-  '!-/_TRADES/*/*/TRD-*.md'
+  '!.agents/skills/**'
 ] as const
 
 const MARKDOWN_AUDIT_COMMANDS: readonly ConformCommand[] = [
@@ -205,11 +200,7 @@ const FRONTMATTER_IGNORED_PATHS = [
 const YAML_SIGNIFICANT_SCALARS = /^(?:true|false|null|y|n|yes|no|on|off|\.nan|\.inf)$/i
 const BARE_SAFE_SCALAR = /^[A-Za-z_][A-Za-z0-9_-]*$/
 
-const submittedTradeRecordPathIsIgnored = (path: string): boolean =>
-  /^[+-]\/_TRADES\/[^/]+\/[^/]+\/TRD-[^/]+\.md$/.test(path)
-
 const frontmatterPathIsIgnored = (path: string): boolean =>
-  submittedTradeRecordPathIsIgnored(path) ||
   FRONTMATTER_IGNORED_PATHS.some((ignored) => path === ignored || path.startsWith(`${ignored}/`))
 
 const markdownFiles = (repository: string, directory = '', files: string[] = []): readonly string[] => {

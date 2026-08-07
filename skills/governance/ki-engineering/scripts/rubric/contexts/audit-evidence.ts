@@ -229,26 +229,15 @@ export const collectAuditEvidence = (repo: string): readonly EngineeringEvidence
     const ls = JSON.stringify(lintStaged)
     const fanOut = ls.includes('@biomejs/biome') && ls.includes('prettier') && ls.includes('markdownlint')
     const stagedMarkdownOnly = ls.includes('markdownlint-cli2 --no-globs')
-    const submittedTradePaths = ['+/_TRADES/*/*/TRD-*.md', '-/_TRADES/*/*/TRD-*.md']
-    const prettierIgnore = read('.prettierignore')
-    const markdownlint = read('.markdownlint-cli2.jsonc')
-    const hasIgnoreEntry = (content: string, path: string): boolean =>
-      content.split(/\r?\n/).some((line) => line.trim() === path)
-    const immutableTradeBoundary =
-      submittedTradePaths.every((path) => hasIgnoreEntry(prettierIgnore, path) && markdownlint.includes(`"${path}"`)) &&
-      !ls.includes('prettier --write --ignore-path')
-    fanOut && stagedMarkdownOnly && immutableTradeBoundary
-      ? add(
-          'PASS',
-          'PKG-6',
-          'lint-staged fans out to biome and staged-only prettier/markdownlint while preserving immutable submitted trade records',
-          STD,
-          'package.json'
-        )
+    // Trade records are no longer excluded from formatting: ki-trades AUTH-1 proves their
+    // integrity by comparing meaning against the sender's copy, so the boundary is a check
+    // rather than an exclusion list.
+    fanOut && stagedMarkdownOnly
+      ? add('PASS', 'PKG-6', 'lint-staged fans out to biome and staged-only prettier/markdownlint', STD, 'package.json')
       : add(
           'WARN',
           'PKG-6',
-          'lint-staged should run biome and staged-only prettier + markdownlint-cli2 --no-globs, while .prettierignore and markdownlint exclude submitted +/_TRADES/*/*/TRD-*.md and -/_TRADES/*/*/TRD-*.md records',
+          'lint-staged should run biome and staged-only prettier + markdownlint-cli2 --no-globs',
           STD,
           'package.json'
         )
