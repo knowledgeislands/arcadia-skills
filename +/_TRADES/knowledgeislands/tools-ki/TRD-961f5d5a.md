@@ -8,7 +8,10 @@ kind: knowledge
 source_ref: '-/_TRADES/_PREPARATIONS'
 observation: decision
 phase: received
-decision_status: in_progress
+decision_status: retained
+reviewed_at: 2026-08-07T18:00:00Z
+retained_as: skills/governance/ki-trades/references/standards-trades.md
+rationale: 'The explicit phase vocabulary, the retired _PREPARATIONS level and submission as an in-place field rewrite are now the ki-trades contract.'
 received_from_ref: 5128bcef2b39e16b56ad9bca1403b41040be8a29
 ---
 
