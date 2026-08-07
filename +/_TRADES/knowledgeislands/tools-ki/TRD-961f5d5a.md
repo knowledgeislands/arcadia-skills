@@ -1,16 +1,17 @@
 ---
 id: TRD-961f5d5a
-title: "Encode trade lifecycle in the record rather than its directory"
+title: 'Encode trade lifecycle in the record rather than its directory'
 created_at: 2026-08-07T06:34:52Z
 sender: knowledgeislands/tools-ki
 receiver: knowledgeislands/ki-agentic-harness
 kind: knowledge
-source_ref: "-/_TRADES/_PREPARATIONS"
+source_ref: '-/_TRADES/_PREPARATIONS'
 observation: decision
 phase: received
 decision_status: in_progress
 received_from_ref: 5128bcef2b39e16b56ad9bca1403b41040be8a29
 ---
+
 # TRD-961f5d5a: Encode trade lifecycle in the record rather than its directory
 
 ## Context

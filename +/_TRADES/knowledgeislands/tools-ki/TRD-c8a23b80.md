@@ -1,17 +1,18 @@
 ---
 id: TRD-c8a23b80
-title: "Define stable Knowledge Base stream codes"
+title: 'Define stable Knowledge Base stream codes'
 created_at: 2026-08-06T07:28:32Z
 sender: knowledgeislands/tools-ki
 receiver: knowledgeislands/ki-agentic-harness
 kind: knowledge
-source_ref: "KI-TOOL-CLI-017"
+source_ref: 'KI-TOOL-CLI-017'
 observation: receipt
 phase: received
 received_from_ref: fb8e0bf5914439fee661fa10bffdec97c661887a
 decision_status: in_progress
 rationale: 'Adopted as the Knowledge Base stream-codes roadmap item.'
 ---
+
 # TRD-c8a23b80: Define stable Knowledge Base stream codes
 
 ## Context

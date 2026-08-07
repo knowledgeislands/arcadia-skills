@@ -1,17 +1,18 @@
 ---
 id: TRD-6b8cb3b4
-title: "Define observable CLI boundary testing"
+title: 'Define observable CLI boundary testing'
 created_at: 2026-08-06T07:10:45Z
 sender: knowledgeislands/tools-ki
 receiver: knowledgeislands/ki-agentic-harness
 kind: knowledge
-source_ref: "KI-TOOL-CLI-017"
+source_ref: 'KI-TOOL-CLI-017'
 observation: receipt
 phase: received
 received_from_ref: fb8e0bf5914439fee661fa10bffdec97c661887a
 decision_status: in_progress
 rationale: 'Adopted as the verification-boundaries roadmap item.'
 ---
+
 # TRD-6b8cb3b4: Define observable CLI boundary testing
 
 ## Context
