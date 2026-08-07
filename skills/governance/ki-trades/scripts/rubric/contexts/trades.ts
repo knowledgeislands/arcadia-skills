@@ -44,6 +44,9 @@ const PHASES = ['preparing', 'submitted', 'received'] as const
 const ALLOWED_SENDER_FIELDS = new Set<string>([...SENDER_FIELDS, 'phase'])
 const ALLOWED_INBOUND_FIELDS = new Set<string>([...SENDER_FIELDS, 'phase', ...RECEIVER_FIELDS])
 const PREPARATIONS_DIRECTORY = '-/_TRADES/_PREPARATIONS'
+// Looser than ki-roadmap's four: a trade lands alone in another repository, where the title
+// carries the whole meaning to a reader with none of the surrounding item context.
+const TITLE_WORD_LIMIT = 6
 
 const TRADE_READMES = [
   {
@@ -106,6 +109,7 @@ export type OutcomeContext = {
 
 export type RecordsContext = OutcomeContext & {
   readonly phaseOutcomes: readonly AuditOutcome[]
+  readonly titleOutcomes: readonly AuditOutcome[]
 }
 
 export type ScaffoldContext = OutcomeContext & {
@@ -520,6 +524,18 @@ const parseRecord = (root: string, path: string, direction: Direction, channels:
       message: `${direction === 'preparation' ? 'a' : 'an'} ${direction} record must declare phase: ${expectedPhase}`,
       subject: path
     })
+  // The cap binds only while the record is still the sender's to change. A submitted or
+  // received copy is immutable evidence, so enforcing it there would demand the very
+  // rewrite AUTH-1 exists to detect.
+  if (direction === 'preparation' && typeof fields.title === 'string') {
+    const words = fields.title.trim().split(/\s+/u).filter(Boolean).length
+    if (words > TITLE_WORD_LIMIT)
+      channels.title.push({
+        status: 'VIOLATION',
+        message: `title must be at most ${TITLE_WORD_LIMIT} words; this one has ${words}`,
+        subject: path
+      })
+  }
   if (typeof fields.created_at === 'string' && !UTC_TIMESTAMP.test(fields.created_at))
     outcomes.push({
       status: 'VIOLATION',
@@ -950,7 +966,8 @@ export const createTradesSession = ({
       outcomes: evidence.records.length ? evidence.records : pass('Trade record identity and payload shape are valid.'),
       phaseOutcomes: evidence.phase.length
         ? evidence.phase
-        : pass('Every trade record declares the phase its copy holds.')
+        : pass('Every trade record declares the phase its copy holds.'),
+      titleOutcomes: evidence.title.length ? evidence.title : pass('Every preparation title is within the word limit.')
     },
     authority: {
       outcomes: evidence.authority.length

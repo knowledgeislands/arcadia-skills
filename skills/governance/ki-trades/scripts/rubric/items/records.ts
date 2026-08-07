@@ -33,11 +33,28 @@ const RECORD_2: RubricItem<RecordsContext> = {
   }
 }
 
+const RECORD_3: RubricItem<RecordsContext> = {
+  code: 'RECORD-3',
+  title: 'a preparation title stays concise',
+  description:
+    "A trade title is at most six words. The limit is deliberately looser than the four `ki-roadmap` allows a work item, because a work item title sits beside its theme, repository-coded identifier, and horizon, while a trade lands alone in another repository and carries its whole meaning to a reader with none of that context. The criterion binds only on a preparation, which is still the sender's to change; a submitted or received copy is immutable evidence, so enforcing a local convention there would demand exactly the rewrite `AUTH-1` exists to detect.",
+  sources: [SOURCE],
+  mechanical: {
+    level: 'FAIL',
+    remediation: {
+      class: 'diagnostic',
+      guidance:
+        'Shorten the title of the local preparation before submitting it; never retitle a submitted or received copy.'
+    },
+    audit: { phase: 'INSPECT', run: ({ titleOutcomes }) => titleOutcomes }
+  }
+}
+
 export const RECORD: RubricFamily<TradesRubricContext, RecordsContext> = {
   code: 'RECORD',
   title: 'Record shape',
   description: 'One concise identity moves from mutable preparation to immutable submitted record on a stable path.',
   standard: SOURCE,
   selectContext: (context) => context.records,
-  items: [RECORD_1, RECORD_2]
+  items: [RECORD_1, RECORD_2, RECORD_3]
 }

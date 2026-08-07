@@ -697,3 +697,60 @@ test('conform proposes only the local owned README scaffold and never writes a p
   expect(session.proposal().writes.map((write) => write.path)).toEqual(['+/_TRADES/README.md'])
   expect(readFileSync(join(peer, '+', '_TRADES', 'README.md'), 'utf8')).toBe(peerBefore)
 })
+
+test('a preparation title is capped at six words, while submitted and received copies are exempt', () => {
+  const { home, local, peer } = fixture()
+  const seven = 'One two three four five six seven'
+  const retitle = (contents: string, id: string, title: string): string =>
+    contents
+      .replace("title: 'Submission title'", `title: '${title}'`)
+      .replace(`# ${id}: Submission title`, `# ${id}: ${title}`)
+  const preparation = retitle(
+    record('TRD-00000010', 'local/repo', 'peer/repo', [], undefined, 'work', 'decision', true),
+    'TRD-00000010',
+    seven
+  )
+  writeRecord(local, '-', 'peer/repo', 'TRD-00000010', preparation)
+
+  const messages = () =>
+    mechanicalOutcomes(
+      createTradesSession(options(local, home, tradeConfiguration('local/repo', ['peer/repo']))),
+      RECORD,
+      'RECORD-3'
+    ).map((outcome) => outcome.message)
+
+  expect(messages()).toContain('title must be at most 6 words; this one has 7')
+
+  // The same over-long title on a frozen copy must not be reported: retitling it would be
+  // exactly the rewrite AUTH-1 exists to detect.
+  writeRecord(local, '-', 'peer/repo', 'TRD-00000010', preparation.replace('phase: preparing', 'phase: submitted'))
+  expect(messages()).not.toContain('title must be at most 6 words; this one has 7')
+
+  const inbound = retitle(
+    record('TRD-00000011', 'peer/repo', 'local/repo', ['decision_status: unconsidered']),
+    'TRD-00000011',
+    seven
+  )
+  writeRecord(
+    peer,
+    '-',
+    'local/repo',
+    'TRD-00000011',
+    retitle(record('TRD-00000011', 'peer/repo', 'local/repo'), 'TRD-00000011', seven)
+  )
+  writeRecord(local, '+', 'peer/repo', 'TRD-00000011', inbound)
+  expect(messages()).not.toContain('title must be at most 6 words; this one has 7')
+
+  // Exactly six words is the boundary and passes.
+  writeRecord(
+    local,
+    '-',
+    'peer/repo',
+    'TRD-00000010',
+    retitle(preparation, 'TRD-00000010', 'One two three four five six').replace(
+      `# TRD-00000010: ${seven}`,
+      '# TRD-00000010: One two three four five six'
+    )
+  )
+  expect(messages()).not.toContain('title must be at most 6 words; this one has 6')
+})
