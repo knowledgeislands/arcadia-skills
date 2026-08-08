@@ -15,7 +15,9 @@ export const TYPESCRIPT: RubricFamily<EngineeringRubricContext, TypescriptRubric
         '`tsc --noEmit` exits clean at the root, or each declared workspace has a clean `tsc --noEmit -p <workspace>/tsconfig.json`.',
       sources: ['standards-engineering.md'],
       mechanical: {
+        // Dearer than the gates above it in a workspace repo, where it runs once per project.
         level: 'FAIL',
+        cost: 5,
         remediation: {
           class: 'diagnostic',
           guidance: 'Resolve the reported TypeScript errors in the affected project, then rerun the type-check.'

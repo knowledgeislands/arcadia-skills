@@ -27,6 +27,7 @@ export const KNIP: RubricFamily<EngineeringRubricContext, KnipRubricContext> = {
       sources: ['standards-engineering.md'],
       mechanical: {
         level: 'FAIL',
+        cost: 8,
         remediation: {
           class: 'guarded',
           guidance:

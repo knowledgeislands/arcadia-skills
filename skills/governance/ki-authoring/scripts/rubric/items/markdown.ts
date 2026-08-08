@@ -31,6 +31,7 @@ const MD_MECH: RubricItem<MarkdownRubricContext> = {
   sources: ['standards-authoring.md#markdown-gate', 'standards-markdown.md#what-to-leave-to-the-linter'],
   mechanical: {
     level: 'FAIL',
+    cost: 2,
     remediation: { class: 'automatic' },
     audit: { phase: 'INSPECT', run: markdownMechanicalAudit },
     conform: {

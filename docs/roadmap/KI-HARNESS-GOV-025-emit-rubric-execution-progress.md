@@ -29,7 +29,11 @@ This item owns the shared rubric contract, its vendored copies, and the evidence
 
 The contract now carries `emit` and `cost`, `createSession` may return a promise, and `ki-engineering` awaits its external commands and emits a step for each, so the frozen display is addressed at its source. `shared/rubric.ts` is vendored into thirty-five skills and is converged; it had drifted into two variants, nine copies carrying remediation and judgment helpers the other twenty-six lacked.
 
-What remains is that nothing uses the cost channel: every criterion still weighs the same, which is the defect `KI-TOOL-CLI-022` describes from the other side, and `ki-engineering` is the only context that emits. `RubricExecution.run` and `RubricSubject.context` remain synchronous, which costs nothing while evidence is gathered in contexts.
+The cost channel now carries the six criteria whose evidence is a subprocess: `SYNC-1`, `BIO-1`, `TSC-1`, and `KNIP-2` in `ki-engineering` at 2, 4, 5, and 8 against measured wall-clock spans of 0.1s, 0.3s, 0.4s, and 0.6s in this repository; `TEST-5` at 60 for a full suite under coverage instrumentation; and `MD-mech` in `ki-authoring` at 2 for a whole-repository rumdl run measured at 0.24s. Every other criterion is a pure reader and keeps the default unit. The declared numbers are a ratio between subprocess-backed siblings, not a ratio against an `lstat`, which would be four orders of magnitude and would weight a bar into uselessness.
+
+What remains is that `ki-engineering` is the only context that emits. `RubricExecution.run` and `RubricSubject.context` remain synchronous, which costs nothing while evidence is gathered in contexts.
+
+`ki-repo` is the outstanding candidate and the dearest in the estate, because its evidence is `gh` network calls rather than local subprocesses. It is deliberately left to the conversion step rather than costed here: its GitHub evidence is gathered in one bulk `execFileSync` pass that no single criterion owns, so a per-criterion cost cannot be assigned honestly until that gathering is converted and its spans are attributable.
 
 Two migration routes were measured rather than argued. Widening the inner seams — `RubricSubject.context` and `RubricExecution.run` — produces 238 type errors across sixty-one files, because 121 call sites in twenty-eight test files consume a result synchronously, most inline as `item.audit.run(context)[0]?.message`. Widening only `createSession` instead reaches the same capability and touches twenty-eight test files by one line each, none of them for async. The entry point is therefore the seam to move: a concrete synchronous `createSession` stays assignable to the widened type, so no skill breaks until it chooses to become async.
 
@@ -42,7 +46,7 @@ The contract version does not move. Every addition here is source-compatible, an
 - [x] Add an optional `cost` to `MechanicalRubric` as a relative estimate against its siblings, defaulting to a unit when unset.
 - [x] Widen `createSession` to return a session or a promise of one, which is the seam that restores the refresh.
 - [x] Convert `collectAuditEvidence` in `ki-engineering` from `execSync` to awaited subprocesses, emitting a step per external command.
-- [ ] Declare a cost on the subprocess-backed criteria in `ki-engineering` and any sibling whose expense is comparable, so weighting stops being item count.
+- [x] Declare a cost on the subprocess-backed criteria in `ki-engineering` and any sibling whose expense is comparable, so weighting stops being item count.
 - [ ] Convert the remaining contexts that gather evidence expensively, one skill at a time, as each earns it.
 
 ## Files touched

@@ -12,7 +12,7 @@ const mechanical = (
   description: string,
   level: ViolationLevel,
   evidence: (context: TestRubricContext) => EngineeringEvidence,
-  overrideLevels?: readonly ViolationLevel[]
+  { overrideLevels, cost }: { overrideLevels?: readonly ViolationLevel[]; cost?: number } = {}
 ): RubricItem<TestRubricContext> => ({
   code,
   title,
@@ -21,6 +21,7 @@ const mechanical = (
   mechanical: {
     level,
     ...(overrideLevels ? { overrideLevels } : {}),
+    ...(cost ? { cost } : {}),
     remediation: {
       class: 'diagnostic',
       guidance:
@@ -43,7 +44,7 @@ export const TEST: RubricFamily<EngineeringRubricContext, TestRubricContext> = {
       'Test-capable repos expose bare `test`; a recognised root Vitest config requires the canonical test, coverage, and watch scripts, while no capability is not applicable.',
       'WARN',
       (context) => context.test1,
-      ['FAIL']
+      { overrideLevels: ['FAIL'] }
     ),
     mechanical(
       'TEST-2',
@@ -71,7 +72,10 @@ export const TEST: RubricFamily<EngineeringRubricContext, TestRubricContext> = {
       'Vitest coverage command passes',
       'Under the Vitest profile, `bun run test:coverage` exits clean when the companion script exists.',
       'FAIL',
-      (context) => context.test5
+      (context) => context.test5,
+      // The dearest criterion in the catalogue by an order of magnitude: a full suite under
+      // coverage instrumentation, against the sub-second gates that are its nearest siblings.
+      { cost: 60 }
     ),
     {
       code: 'TEST-6',

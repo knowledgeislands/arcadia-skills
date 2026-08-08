@@ -15,6 +15,7 @@ export const BIOME: RubricFamily<EngineeringRubricContext, BiomeRubricContext> =
       sources: ['standards-engineering.md'],
       mechanical: {
         level: 'FAIL',
+        cost: 4,
         remediation: {
           class: 'guarded',
           guidance: 'Review the reported Biome findings and apply the appropriate source changes, then rerun the gate.'
