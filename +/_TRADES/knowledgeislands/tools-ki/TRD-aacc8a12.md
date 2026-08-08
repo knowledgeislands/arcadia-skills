@@ -8,8 +8,11 @@ kind: knowledge
 source_ref: '.ki-config.toml'
 observation: decision
 phase: received
-decision_status: in_progress
+decision_status: retained
 received_from_ref: 5128bcef2b39e16b56ad9bca1403b41040be8a29
+reviewed_at: 2026-08-09T00:00:00Z
+retained_as: skills/keystone/ki-repo/references/standards-configuration.md
+rationale: 'Retained in full through KI-HARNESS-GOV-021, accepted 2026-08-09. The contract now declares harnesses once in [repo] and each skill by bare name under [skills], with a quoted qualified key kept only for a skill from an undeclared harness; the route half is retained alongside it in the ki-trades standard as one inline table per partner keyed owner/name. Both shape questions the sender deferred were settled by the receiver: routes key on owner/name, and a route is an inline table. All twenty-four .ki-config.toml files in the estate were migrated and each verified equivalent to the file it replaced.'
 ---
 
 # TRD-aacc8a12: Reduce repetition in the repository configuration contract
