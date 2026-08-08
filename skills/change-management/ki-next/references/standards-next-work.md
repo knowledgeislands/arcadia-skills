@@ -19,7 +19,7 @@ Its responsibility ends at selecting, promoting, deferring, or spawning due work
 
 ## 1. Ground
 
-When a preceding `ki-recap` records high context pressure, require its safe handoff/compaction boundary before starting a new selection cycle. After compaction, treat the digest as orientation only and re-ground every repository fact below.
+When a `ki-recap` precedes this cycle, require its handoff/compaction boundary to have been reached before starting a new selection cycle. After compaction, treat the digest as orientation only and re-ground every repository fact below.
 
 1. Resolve the current git repository physically and read `.ki-config.toml`.
 2. In a non-KB repository, run `ki repo audit --skill ki-roadmap --repo <git-root>` and stop on any FAIL or WARN. Read the generated `ROADMAP.md`, every canonical item directly below `docs/roadmap/`, and active `docs/housekeeping/` templates; derive lifecycle status and dependencies from frontmatter.
@@ -148,3 +148,7 @@ Report each confirmed handoff disposition, synergy decision (including excluded 
 Identify `done` records that are eligible for pruning when useful, but do not delete them; path- or glob-selected pruning belongs to `ki-accept`, while `ki repo roadmap prune` is the separate deterministic selected-repository sweep.
 
 If no work is eligible, identify the missing condition or scoping decision plainly.
+
+Then treat this point as a compaction boundary. Selection has just resolved a broad survey — roadmap items, inbound trades, near-matches, ranking rationale — into one confirmed choice, and the plan or implementation cycle that follows needs the selected item, not the survey that produced it. Compact by default here, retaining the selected work, its confirmed disposition, and any writes made during this cycle.
+
+Two conditions withhold the default, matching [the session-recap standard](../../ki-recap/references/standards-session-recap.md). **Safety:** do not compact with a pending user decision, an unfinished tool operation, or a cycle write not yet recorded. **Minimum footprint:** do not compact when no substantive work has entered context since the last compaction — a `ki-recap` running straight into this cycle compacts once here rather than at both boundaries. Judge the floor by work done, not by a token count or a context-use percentage; no runtime adapter is required to expose one. Claude Code exposes an invocable mechanism; Codex compacts only automatically, so there the boundary is stated and passed without invocation.

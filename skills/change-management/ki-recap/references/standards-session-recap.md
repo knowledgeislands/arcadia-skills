@@ -12,7 +12,7 @@ _On-demand procedure for `ki-recap`. The kind, scope, and leg summary live in [`
   - [4. Harvest the learnings, and route each](#4-harvest-the-learnings-and-route-each)
   - [5. Actions](#5-actions)
   - [6. Route future-work selection to `ki-next`](#6-route-future-work-selection-to-ki-next)
-  - [7. Preserve the handoff and compact when needed](#7-preserve-the-handoff-and-compact-when-needed)
+  - [7. Preserve the handoff and compact at the boundary](#7-preserve-the-handoff-and-compact-at-the-boundary)
 
 **Ground every claim in reality, not memory.** Warm in-session context, compaction summaries, and recalled memory entries are hypotheses about state, not evidence of it — concurrent sessions, background processes, and elapsed time all make them stale. Before the recap asserts a checkable fact — a commit landed, a gate passed, a file contains something, a plan is open — check it now (`git log`, re-run the read-only gate, read the file). What cannot be cheaply re-checked, state as recollection ("as of when it ran"), not as fact.
 
@@ -100,17 +100,15 @@ Apply these scenario checks when offering it:
 | Deferred work was already parked on the roadmap | Record it as what happened, not outstanding. |
 | Learning route is unapproved | Label it as a proposal; neither recap nor `ki-next` writes it. |
 
-## 7. Preserve the handoff and compact when needed
+## 7. Preserve the handoff and compact at the boundary
 
-At the end of a recap, decide whether the next request will begin a distinct work cycle after a long, now-resolved span.
+The end of a recap is a compaction boundary, not a place to measure headroom. Compaction is the default action there — the recap has just recorded the durable outcome, so the span it summarised is the material the next cycle no longer needs. Do not gate the decision on a context-use percentage or a remaining-headroom figure: no runtime adapter is required to expose one, and a threshold that cannot be read is a rule that never fires.
 
-Use the runtime's context signal where one is exposed; do not invent a portable token count or threshold where none exists.
+Identify the next work cycle's scope first. The goal is to reduce active context to the information that cycle needs, not merely to preserve a record of the finished session. Preserve only the scoped digest below, then invoke the documented runtime- or vendor-specific compaction mechanism before beginning `ki-next`, planning, or implementation work. The applicable `ki-tokenomics` runtime adapter owns the mechanism's documented evidence boundary.
 
-Identify the next work cycle's scope first. The goal is to reduce active context to the information that cycle needs, not merely to preserve a record of the finished session. When the runtime reports high context use or low remaining headroom, preserve only that scoped digest below and then invoke the documented runtime- or vendor-specific compaction mechanism before beginning `ki-next`, planning, or implementation work. The applicable `ki-tokenomics` runtime adapter owns the mechanism's documented evidence boundary.
+Two conditions withhold the default. **Safety:** do not compact in the middle of an active implementation unit, a pending user decision, an unfinished tool operation, or uncommitted work whose recovery information is not yet recorded. **Minimum footprint:** do not compact when no substantive work has entered context since the last compaction. Judge that by work done, not by tokens counted — a recap that runs immediately after a compaction, or a recap followed straight into `ki-next`, compacts once at the later boundary rather than twice across an unchanged span. This floor exists to stop thrashing; it is not licence to defer compaction across real work.
 
-Do not compact in the middle of an active implementation unit, a pending user decision, an unfinished tool operation, or uncommitted work whose recovery information is not yet recorded.
-
-If compaction is unavailable in the current runtime, state that plainly and continue with the digest as the bounded handoff; it is not a substitute for reducing the live context.
+Runtimes differ in what they expose. Claude Code offers an invocable compaction mechanism, so the default action is available at this boundary. Codex compacts automatically around its own `PreCompact` / `PostCompact` events but exposes no equivalent command to invoke, so there the boundary is reached, stated, and passed without invocation. Where no mechanism can be invoked, say so plainly and continue with the digest as the bounded handoff; it is not a substitute for reducing the live context.
 
 Write a carry-forward digest of the recapped span:
 
@@ -144,4 +142,4 @@ Write a carry-forward digest of the recapped span:
 <comma-separated terms for future retrieval>
 ```
 
-State plainly that this digest is a **carry-forward artefact**, not a context-window reduction. Runtime- or vendor-specific compaction remains the applicable `ki-tokenomics` adapter's boundary; this procedure invokes the documented mechanism only at the safe recap-to-new-work boundary, with the aim of retaining only the next cycle's scope.
+State plainly that this digest is a **carry-forward artefact**, not a context-window reduction. Runtime- or vendor-specific compaction remains the applicable `ki-tokenomics` adapter's boundary; this procedure invokes the documented mechanism at the safe recap-to-new-work boundary, with the aim of retaining only the next cycle's scope.

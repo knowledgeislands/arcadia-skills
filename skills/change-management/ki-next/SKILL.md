@@ -45,7 +45,9 @@ ki-kb-streams governs the KB Streams adapter and Enactment gate.
 
 `ki-next` works without it and never mines historical transcripts.
 
-When a preceding recap records context pressure, `ki-next` begins only after that recap has preserved its bounded handoff and the runtime has compacted where it can. It then re-grounds the repository rather than trusting the carry-forward digest as current state.
+When a recap precedes it, `ki-next` begins only after that recap has preserved its bounded handoff and reached its compaction boundary. It then re-grounds the repository rather than trusting the carry-forward digest as current state.
+
+Selection is itself a compaction boundary. Once the selected work and its confirmed disposition are recorded, `ki-next` compacts by default so the following plan or implementation cycle starts on a clean slate carrying the selected item and nothing else. The same two conditions withhold it as in `ki-recap`: an unsafe boundary, or no substantive work entering context since the last compaction — a recap running straight into `ki-next` compacts once here, not twice.
 
 `ki-batch` prepares and coordinates an explicitly authorised independent Ready set. It does not change `ki-next` ownership of selection, priority, or an individual item's lifecycle.
 
