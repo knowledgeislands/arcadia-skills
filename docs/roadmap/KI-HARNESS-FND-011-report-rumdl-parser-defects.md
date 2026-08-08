@@ -1,0 +1,100 @@
+---
+id: KI-HARNESS-FND-011
+title: Report rumdl parser defects
+theme: foundation-tooling
+horizon: now
+status: proposed
+blocks: []
+blocked-by: []
+baseline-ref: 4d7f80f1d3581a56db4dbc22bc8054800b1ba77c
+---
+
+## Goal
+
+Report the rumdl defects found during the estate migration upstream, with a minimal reproduction and a fix for each, so the rules currently disabled across the estate can be re-enabled rather than carried indefinitely.
+
+## Context
+
+`KI-HARNESS-FND-010` adopted rumdl across twenty-two repositories and disabled seven rules along the way. A disabled rule is a standing cost: it is off because of a specific defect, and left unexamined a defensive setting outlives its defect and silently loses the coverage it was meant to protect. Every one of these was found by reading a diff, never by the gate — in each case `rumdl check` reported the corrupted result clean.
+
+The defects share two root causes rather than being seven unrelated bugs.
+
+The first is that block-level constructs are recognised on soft-wrapped continuation lines. A paragraph line beginning `##]` is admitted as an ATX heading although CommonMark requires a space after the hash run, and `MD022`, `MD018` and `MD026` then act on the phantom, splitting the paragraph and deleting its full stop. An empty list item following a wrapped line is read as a setext heading, and `MD003`'s fix injects a literal `##` into the middle of a sentence. `MD030` reads `8.Does ownership...` as a list marker with no space and inserts one, though CommonMark does not read that line as a list item at all. The reference CommonMark implementation disagrees with rumdl in every one of these cases.
+
+The second is that `|` is treated as a cell separator regardless of context. `MD075` merges a paragraph containing a pipe into a preceding table and splits it at that pipe, losing the prose. `MD056` counts a wikilink alias in a table cell as a separator and resolves the resulting cell-count mismatch by truncating the row. `MD013`'s reflow silently skips any paragraph containing a pipe, so a wikilink-heavy knowledge base is less normalised than its clean gate suggests.
+
+`MD005` and `MD060` sit outside both groups and are recorded separately: `MD005` de-indents a blockquote out of its enclosing list item, and `MD060` has no style reproducing the former conditional table padding while still misfiring on a placeholder table whose only body row holds `-` cells.
+
+## Boundary
+
+This item owns the upstream contribution: the fork, the fixes, the tests, and the pull requests. It does not own the estate's configuration — re-enabling a rule once a fix is released belongs to `ki-authoring`'s REFRESH mode, which already carries the instruction to re-test each disabled rule against its recorded reproduction rather than trusting a changelog.
+
+Contributions follow the upstream project's conventions and stay minimal. The aim is acceptance, not improvement of surrounding code: no refactors, no adjacent tidying, one defect per pull request.
+
+Reproductions must carry no content from this estate. Test fixtures use neutral public-domain prose rather than reduced copies of the documents where each defect was found.
+
+## Current state
+
+Seven defects, each with a reproduction verified during the migration:
+
+| Defect | Effect | Verified against |
+| --- | --- | --- |
+| `MD075` merges a paragraph into a table | Prose lost | Reproduction †     |
+| `MD056` truncates a table row | Cells deleted | Reproduction ‡     |
+| Empty list item read as setext heading | `##` injected mid-sentence | Reference CommonMark |
+| `##]` continuation read as ATX heading | Paragraph split, full stop deleted | Reference CommonMark |
+| `MD030` inserts a space into `8.Does` | Quoted text edited | Reference CommonMark |
+| `MD005` de-indents a nested blockquote | Quote split across two nestings | Reproduction §     |
+| `MD013` reflow skips paragraphs with `\|` | Silent under-normalisation | Reproduction ‖     |
+
+† Caught in `ki-plugins` and `ki-arcadia-principal` during rollout; both reverted before landing.
+
+‡ Caught in `ki-agentic-harness`, where a wikilink alias in a table cell lost its second half.
+
+§ Caught in `kit-pkb`; reverted before landing.
+
+‖ Non-destructive, and the weakest of the seven as a report — it is a behavioural gap rather than corruption.
+
+`MD060`'s placeholder-table misfire is recorded in `KI-HARNESS-FND-010` and is the weakest case of all: the rule is opt-in and off by default, so it costs the estate nothing. It is carried here for completeness rather than as work.
+
+The `MD018` heuristic itself is not a defect and is not challenged. markdownlint flags `##].` too, and rumdl aims for parity with it. The difference is that markdownlint reports one finding and stops, whereas rumdl admits the candidate into its document model so four rules fire and their combined fixes corrupt the paragraph. The report is about the amplification, not the heuristic.
+
+Upstream is at 0.2.52, uses conventional commits with a `fix(rules)` scope, generates its changelog from commit messages with git-cliff, and runs its tests through `cargo-nextest`. `CONTRIBUTING.md` asks contributors not to hand-edit `CHANGELOG.md`.
+
+## Steps
+
+- [ ] Install the Rust toolchain the project pins and confirm the test suite passes before any change.
+- [ ] Reproduce each defect as a failing test using neutral public-domain prose, so no estate content reaches the fixtures.
+- [ ] Fix the ATX and setext misparses, which are one root cause and may be one pull request.
+- [ ] Fix the pipe-context defects: `MD075`, `MD056`, and the `MD013` reflow gap.
+- [ ] Fix `MD005`'s blockquote de-indentation.
+- [ ] Open one pull request per defect, each carrying its reproduction, and record the references under Discussion.
+- [ ] Once a fix is released, re-test the rule against its recorded reproduction and re-enable it across the estate through `ki-authoring` REFRESH.
+
+## Files touched
+
+No file in this repository changes except this item and the record of the pull requests under Discussion. The work lands in a fork of `rvben/rumdl` in a scratch checkout outside the estate.
+
+`skills/governance/ki-authoring/scripts/rubric/contexts/authoring.ts` and `references/sources.md` change only later, when a released fix allows a rule to come back on.
+
+## Verify
+
+Each pull request carries a test that fails before its fix and passes after, and the project's own suite passes unchanged otherwise.
+
+No test fixture contains text originating in this estate. This is a hard condition, not a preference: the defects were found in a repository holding legal evidence and in personal knowledge bases, and a reduced reproduction that keeps the original wording would publish it.
+
+A fix is only proven by re-running the original reproduction, not by the rule reporting clean. That is the lesson `MD075` taught: it corrupted two files and reported both clean.
+
+## Dependencies / blocks
+
+Nothing blocks this item, and it blocks nothing. The estate is stable with the rules disabled; this recovers coverage rather than unblocking work.
+
+## Discussion
+
+### Why fix rather than only report
+
+An issue leaves the estate carrying seven disabled rules for as long as a single maintainer takes to reach them. A patch with a failing test attached is both a better report and a plausible path to getting the coverage back, and the reproductions already exist from the migration.
+
+### Why one pull request per defect
+
+The defects group into two root causes, which argues for two changes. They are being sent to a single-maintainer project, where a large diff touching several rules is harder to accept than a small one touching a single rule with an obvious test. Where two defects genuinely share one code path, they share one pull request; otherwise they are separate.
