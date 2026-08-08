@@ -3,7 +3,7 @@ id: KI-HARNESS-GOV-021
 title: Simplify repository configuration layout
 theme: governance-consistency
 horizon: now
-status: in-progress
+status: awaiting-review
 blocks: []
 blocked-by: []
 baseline-ref: 729cfb8772d06e44b88d8c221950f5fd2fd2a774
@@ -37,9 +37,13 @@ The harness half is delivered. The contract, the trade route shape, the rubric c
 
 `KI-TOOL-CLI-025` landed in `tools-ki` while this was in progress, which reordered the work rather than blocking it: the parser began rejecting the old shape mid-change, so this repository's migration became required to commit at all rather than a step to schedule.
 
-All fifteen Knowledge Islands repositories under `workspaces/kit/knowledgeislands` are migrated and committed, each in its own repository. Ten audit clean. Four carry findings that predate this change and are untouched by it — a trade-scaffold README drift in `ki-website` and `tools-mgit`, a retired `ki:lint:rules` script and a failing coverage gate in `mcp-m365`, and two advisory Homebrew warnings in `homebrew-tap`; in every case the migration's diff is `.ki-config.toml` alone. The nine repositories outside that parent remain.
+All twenty-four `.ki-config.toml` files in the estate are migrated and committed, each in its own repository: fifteen under `workspaces/kit/knowledgeislands`, and nine elsewhere in `kit-hnr`, `kit-legal`, `kit-pkb`, `kit-midnight.ninja`, `er-research`, `kit-techmedix`, `vallearmonia-principal`, `vallearmonia-website`, and chezmoi.
 
 The migration was applied by a line-based script rather than by re-serialising through a TOML library, because re-serialising discards the comments and blank-line grouping these files carry, and those are the part a person reads. It refuses to write a result that does not parse.
+
+Every migration is verified equivalent to the file it replaced rather than merely parsed: a second script compares the committed original against the result and requires the same skill set, the same settings under each skill, and the same `(partner, direction, kind)` route triples once both spellings are normalised. All twenty-four pass. This was worth doing because the audit findings alone could not have distinguished a dropped key from a pre-existing gap — `kit-pkb` and `vallearmonia-principal` both report a missing `repository` or `repo_type` that their originals never declared either.
+
+Several repositories carry findings that predate this change and are untouched by it, and the migration's diff is `.ki-config.toml` alone in every one. They were invisible while `ki` refused to parse the old shape, so this change surfaced them rather than caused them; they belong to their own repositories to address.
 
 Three lookups turned out to be regex literals rather than the indexed constants the survey found — `declaredTables` in `ki-repo`, `declaredSkillNames` in `ki-engineering`, and the `ki-harness` marker probe. Each matched the qualified spelling textually, and each failed by reporting nothing rather than by erroring, which is the same quiet-miss class this contract exists to remove.
 
@@ -55,7 +59,7 @@ Three lookups turned out to be regex literals rather than the indexed constants 
 - [x] Update every example, snippet, and cross-reference in the skill catalogue and repository documentation that shows a qualified declaration key.
 - [x] Migrate this repository's own `.ki-config.toml`, giving each implicitly-declared skill an explicit root table and naming each trade partner once.
 - [x] Migrate the fourteen other Knowledge Islands repositories under `workspaces/kit/knowledgeislands`, each committed in its own repository.
-- [ ] Migrate the nine repositories outside that parent — `kit-hnr`, `kit-legal`, `kit-pkb`, `kit-midnight.ninja`, `er-research`, `kit-techmedix`, `vallearmonia-principal`, `vallearmonia-website`, and the chezmoi repository. Each fails loudly under the landed parser until it is, so the state is recoverable rather than silent, but those repositories are unusable through `ki` meanwhile.
+- [x] Migrate the nine repositories outside that parent — `kit-hnr`, `kit-legal`, `kit-pkb`, `kit-midnight.ninja`, `er-research`, `kit-techmedix`, `vallearmonia-principal`, `vallearmonia-website`, and the chezmoi repository.
 - [x] Raise the corresponding host implementation item in `tools-ki` and confirm its sequencing against this repository's migration.
 
 ## Files touched
@@ -84,6 +88,46 @@ The first is an ordering gate rather than a blocking dependency, and it is opera
 The second was the sixth step's context-lookup decision, now settled under Discussion.
 
 The consumer cost belongs in that counterpart's assessment rather than here: today a declaration's identity is read literally from the table header, and under a bare-name layout it can only be derived once resolution has bound a provider, so the parsed declaration and the resolved skill become distinct shapes. The parser, skill declaration, and skill undeclaration each become simpler, so the cost concentrates in identity derivation rather than spreading across the consumer.
+
+## Review
+
+### Delivered
+
+All ten steps. The `.ki-config.toml` contract names harnesses once in `[repo]` and declares each skill by bare name under `[skills]`; trade routes are keyed by partner; every rubric context, criterion, generated publication and guidance document follows; and all twenty-four `.ki-config.toml` files in the estate are migrated and committed, each in its own repository.
+
+### Summary of changes
+
+| Commit | Change |
+| --- | --- |
+| `1bb5b865` | contract text in `ki-repo`, route shape in `ki-trades`, and the first context |
+| `e1d0315a` | every rubric context's lookup, and this repository's own migration |
+| `07876a02` | seventy-six guidance documents, twelve catalogues, and regenerated publications |
+| `ee594b5a`, `6b04488a`, this change | the record of each stage |
+| 23 commits elsewhere | one per migrated repository, in that repository |
+
+### Verification
+
+`bunx tsc --noEmit` clean, `bun run test` 316 pass and 0 fail, and `ki repo audit` `PASS=21 WARN=0 FAIL=0` here. `ki repo audit --skill ki-repo` and `--skill ki-trades` both pass clean against the migrated file, and no tracked TOML anywhere carries a qualified declaration header.
+
+Each of the twenty-four migrations is verified equivalent to the file it replaced, not merely valid: a comparison script requires the same skill set, the same settings under each skill, and the same `(partner, direction, kind)` route triples once both spellings are normalised. All twenty-four pass.
+
+### Outstanding concerns
+
+Repositories outside this one carry pre-existing findings that this change made visible by restoring their ability to run `ki` at all — trade-scaffold README drift, a retired script key, missing `repository` and `repo_type` declarations, a failing coverage gate. None is caused here and each belongs to its own repository.
+
+The nine repositories outside `workspaces/kit/knowledgeislands` were migrated on the same evidence as the rest, but their own gates were not run beyond `ki repo audit`; several are content repositories with no test suite.
+
+### Post-change review
+
+Not yet performed.
+
+### Mini recap
+
+The plan's sequencing assumption inverted mid-change. `KI-TOOL-CLI-025` landed in `tools-ki` while this was in progress and `ki` runs directly from that checkout, so the new parser went live immediately and this repository's migration became required to commit at all rather than a step to schedule for later.
+
+The most useful finding was that three lookups were regex literals rather than the indexed constants a grep had found — `declaredTables`, `declaredSkillNames`, and the `ki-harness` marker probe. Each matched the old spelling as text and each failed by reporting nothing rather than erroring. `ki-engineering` claimed no `[skills.ki-engineering]` table against a file that plainly had one. That is the same quiet-miss class this contract exists to remove, found inside the change that removes it.
+
+Verifying equivalence rather than validity earned its cost immediately: `kit-pkb` and `vallearmonia-principal` both audit with a missing `repository` or `repo_type`, which looks exactly like a dropped key and is not — their originals never declared either.
 
 ## Discussion
 

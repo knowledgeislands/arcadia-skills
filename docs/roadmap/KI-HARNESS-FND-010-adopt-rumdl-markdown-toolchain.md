@@ -3,7 +3,7 @@ id: KI-HARNESS-FND-010
 title: Adopt rumdl markdown toolchain
 theme: foundation-tooling
 horizon: now
-status: in-progress
+status: awaiting-review
 blocks: []
 blocked-by: []
 baseline-ref: 3d354b9a6de1d7e6aed62a3b44a73e272b1ff75e
@@ -111,6 +111,64 @@ Running `rumdl fmt` twice must be a fixed point, since a formatter that does not
 ## Dependencies / blocks
 
 Nothing blocks this item. It subsumes the outstanding OWN-1 re-conform across the estate, because `.prettierignore` is retired rather than corrected, and it dissolves the separately proposed `.prettierrc.json` dead-option cleanup, because that file ceases to exist.
+
+## Review
+
+### Delivered
+
+rumdl replaces Prettier and markdownlint-cli2 across the estate. Twenty-two repositories carry `.rumdl.toml`, none retains `.prettierrc.json`, `.prettierignore`, `prettier.config.ts` or `.markdownlint-cli2.jsonc`, and `rumdl check` reports no findings in any of them. `ki-authoring` owns two files rather than four, its audit and conform command lists invoke `rumdl` alone, and `ki-engineering` requires `rumdl` in `devDependencies` with `*.md` staged through it.
+
+`MD057` is triaged rather than merely disabled, and this repository's own eleven findings are fixed. `kit-legal` adopted the toolchain, which was the open decision, and `tools-ki` is migrated.
+
+### Summary of changes
+
+`skills/governance/ki-authoring/scripts/rubric/contexts/authoring.ts` carries `RUMDL_DEFAULT` in place of the three retired templates, and `OWN-2` removes the retired files. `references/sources.md` tracks rumdl as a source with a REFRESH watch-item per disabled rule, each carrying the reproduction that justifies it. `skills/governance/ki-engineering` follows for the dependency and `lint-staged` entries.
+
+In this repository, four links pointed at renamed reference files, one at a pruned roadmap item, and six at trade records pruned after release; all eleven are repaired, the trade citations now using the backticked-ID form the roadmap already used elsewhere.
+
+Across the estate, eighteen repositories took the `MD056` template change as a single-line configuration commit. `kit-legal` took the migration in two commits and a repair, described under Outstanding concerns.
+
+### Verification
+
+`rumdl check` returns no findings across all twenty-two repositories, measured after the final template change rather than assumed from the rollout.
+
+`bun run test` passes 315 tests over 83 files, `bunx tsc --noEmit` is clean, and `ki repo audit --skill ki-authoring` and `--skill ki-skills` both PASS with no findings.
+
+Rule selection was proven before each measurement rather than trusted. `--enable` and `enable` are exclusive in rumdl, and an early sweep run with `--enable MD060` executed that rule alone; its clean result across the estate proved only that tables were aligned. Every subsequent measurement confirmed the rules claimed to be running were running, and `MD057` was measured by removing it from `disable` rather than by `--extend-enable`, which `disable` overrides.
+
+Content preservation in `kit-legal` was verified mechanically, by comparing normalised word streams for all 4,060 changed files against the previous commit, not by sampling diffs.
+
+### Outstanding concerns
+
+**A clean gate is not the same as a clean repository.** `kit-legal` reports no findings while seven rules are disabled, behind which sit 593 real findings: 415 `MD036`, 107 `MD028`, 28 `MD030`, 20 `MD029`, 20 `MD075`, 6 `MD057` and 1 `MD033`. The inventory is written up for a repository-grounded agent to work through. Two of those rules must never be blanket-fixed: all 48 `MD029` and `MD030` findings fall inside `Pillars/Evidence/` or `*/Correspondence/`, where the reported error is what a correspondent actually typed, and both rules are fully autofixable, so a single `--fix` run would rewrite quoted evidence.
+
+**`kit-legal` diverges from the house template, and neither position is recorded as deliberate.** It enables `MD005` and `MD056`, which the template disables, because its content was fixed instead — two malformed delimiter rows repaired and three aliased wikilinks escaped as `[[Target\|Label]]`. It additionally disables `MD028`, `MD029` and `MD030`, which the template enables.
+
+**`OWN-1` assumes `.rumdl.toml` has no legitimate per-repository content, and `kit-legal` disproves it.** `ki repo conform --skill ki-authoring` would transactionally overwrite that file and remove the `MD029` and `MD030` disables protecting quoted evidence. The audit already reports the drift as a WARN, so the next routine conform there silently removes the protection. This is a live hazard in the ownership contract rather than part of this migration, and belongs in its own item.
+
+**`MD057` cannot be enabled estate-wide.** Twenty-five of its findings are in `ki-plugins`, where published skill copies retain links that resolve in this repository and dangle in the publication. No link edit fixes that; the publication tooling has to rewrite them. Findings in six other repositories are genuinely broken links, each that repository's own to fix.
+
+**One file was corrupted during the rollout and is repaired.** In `kit-pkb`, `MD075`'s autofix appended eighteen table rows to the preceding paragraph, turning a table into a single line of prose. It survived because the rule reports the merged result clean. An estate-wide scan for the signature found exactly one occurrence, now restored. The underlying content defect it detected — rows orphaned from their header by an interrupting blockquote — pre-dates the migration and is unfixed.
+
+### Post-change review
+
+The migration's stated boundary held on content: no tracked Markdown changed meaning, and the word-stream check is what established that rather than inspection.
+
+The boundary did not hold on findings, and the item said so in advance: sixty-seven of the seventy-one initial findings were new signal rather than formatter disagreement. What the item did not anticipate is how much of that signal would be resolved by disabling rules. Seven rules are off in `kit-legal` and five in the house template. Each carries a recorded reason and a REFRESH reproduction, which is the right mechanism, but the aggregate is a large suppressed surface for a migration whose purpose was to consolidate enforcement.
+
+Two of those disables have since been retired the right way, by fixing the documents rather than the configuration. `MD056` and `MD005` are back on in `kit-legal` against stock rumdl, and the defects they had been hiding were real: malformed table delimiter rows, and list items at inconsistent indents. `Markdown Conventions.md` had already warned that aliased wikilinks break table parsing; the documents simply had not followed it. That is the pattern the remaining disables should be held to.
+
+Seven upstream defects were found, all by reading diffs and none by the gate, which reported every corrupted result clean. Three are fixed on branches in a fork and tracked in `KI-HARNESS-FND-011`. That item's claims need correcting before it proceeds: its `MD056` fix has been superseded by the content fix, and its `MD075` fix does not address the variant our estate actually hits.
+
+The measurement discipline this item adopted after the `MD060` error — prove the rule ran before believing the result — should have extended to the fixes. It did not, and two fork fixes were reported as recovering rules without that being measured.
+
+### Mini recap
+
+`KI-HARNESS-FND-010` delivered a single Markdown toolchain across twenty-two repositories, retired the two it replaced, and left the estate's gate clean and materially faster.
+
+Outstanding from this item: `kit-legal`'s 593 suppressed findings, its template divergence, and the `OWN-1` contract gap, which needs its own item before the next conform runs in that repository.
+
+The durable learning is recorded in `ki-authoring`: a clean gate says the result satisfies the rules, not that the fix preserved meaning. Every destructive defect in this migration was found by reading a diff, and the one that reached a commit did so because nobody read that one.
 
 ## Discussion
 
