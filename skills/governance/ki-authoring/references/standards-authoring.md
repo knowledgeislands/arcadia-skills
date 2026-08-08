@@ -17,6 +17,14 @@ The `ki-authoring` skill wholly owns `.editorconfig` and `.rumdl.toml`. A reposi
 
 A path that exists but is not a regular non-symlink file is a violation and is not proposed for replacement. This makes the ownership rule explicit without following a link or replacing a directory, device, or other unsafe target.
 
+## Adopting a mechanical tool
+
+A gate reporting clean is not evidence that a fix was safe. It says the result satisfies the rules, which is a different claim, and the gap between the two is where a formatter does its worst damage: an autofix that corrupts a document usually produces something the same tool then accepts, so the corruption is invisible to exactly the check meant to catch it.
+
+Adopting or upgrading a formatter or linter therefore means reading the diff, not reading the exit code. Sample the files it rewrote, in each shape the estate actually contains — nested lists, blockquotes inside list items, tables followed by prose, and any content whose meaning depends on layout. A rule that damages one of those is disabled with its reason and its reproduction recorded, so the decision can be revisited rather than rediscovered.
+
+The same caution applies to a rule-selection flag. Confirm the tool is running the rules being claimed, because the failure mode there is also a clean report rather than an error.
+
 Every canonical template must be stored already formatted to the house width, so that CONFORM's output is a fixed point of the formatter that governs that file type. A template the repository's own rumdl or Biome would rewrite makes CONFORM non-idempotent: the write lands, the next formatter pass — `lint-staged` on commit is enough — reformats it, and the following AUDIT reports drift again, in every repository the template reaches. Round-trip each template when adding or editing one: write it, run the governing formatter, and confirm the diff is empty.
 
 ## Markdown gate
