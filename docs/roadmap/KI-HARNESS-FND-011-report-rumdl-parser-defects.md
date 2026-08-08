@@ -15,11 +15,13 @@ Report the rumdl defects found during the estate migration upstream, with a mini
 
 ## Context
 
-`KI-HARNESS-FND-010` adopted rumdl across twenty-two repositories and disabled seven rules along the way. A disabled rule is a standing cost: it is off because of a specific defect, and left unexamined a defensive setting outlives its defect and silently loses the coverage it was meant to protect. Every one of these was found by reading a diff, never by the gate — in each case `rumdl check` reported the corrupted result clean.
+`KI-HARNESS-FND-010` adopted rumdl across twenty-two repositories and disabled several rules along the way. A disabled rule is a standing cost: it is off because of a specific defect, and left unexamined a defensive setting outlives its defect and silently loses the coverage it was meant to protect. Every one of these was found by reading a diff, never by the gate — in each case `rumdl check` reported the corrupted result clean.
 
 The defects share two root causes rather than being seven unrelated bugs.
 
-The first is that block-level constructs are recognised on soft-wrapped continuation lines. A paragraph line beginning `##]` is admitted as an ATX heading although CommonMark requires a space after the hash run, and `MD022`, `MD018` and `MD026` then act on the phantom, splitting the paragraph and deleting its full stop. An empty list item following a wrapped line is read as a setext heading, and `MD003`'s fix injects a literal `##` into the middle of a sentence. `MD030` reads `8.Does ownership...` as a list marker with no space and inserts one, though CommonMark does not read that line as a list item at all. The reference CommonMark implementation disagrees with rumdl in every one of these cases.
+The first is that block-level constructs are recognised on soft-wrapped continuation lines. A paragraph line beginning `##]` is admitted as an ATX heading although CommonMark requires a space after the hash run, and `MD022`, `MD018` and `MD026` then act on the phantom, splitting the paragraph and deleting its full stop. An empty list item following a wrapped line is read as a setext heading, and `MD003`'s fix injects a literal `##` into the middle of a sentence. The reference CommonMark implementation disagrees with rumdl in both of these cases.
+
+`MD030` was investigated and is **not** a defect. It inserts a space into `8.Does ownership...`, which CommonMark reads as paragraph text and markdownlint does not flag, but rumdl reaches that line through a deliberate heuristic rather than a misparse: an unrecognised `<digits>.` marker followed by a capital letter, `[`, or `(` is taken as a list item the author meant to write. Its shared list parser already declines the line correctly. That is a design choice like `MD018`'s, so the response is to disable the rule where quoted material must not be edited, which `kit-legal` now does.
 
 The second is that `|` is treated as a cell separator regardless of context. `MD075` merges a paragraph containing a pipe into a preceding table and splits it at that pipe, losing the prose. `MD056` counts a wikilink alias in a table cell as a separator and resolves the resulting cell-count mismatch by truncating the row. `MD013`'s reflow silently skips any paragraph containing a pipe, so a wikilink-heavy knowledge base is less normalised than its clean gate suggests.
 
@@ -35,7 +37,7 @@ Reproductions must carry no content from this estate. Test fixtures use neutral 
 
 ## Current state
 
-Seven defects, each with a reproduction verified during the migration:
+Six defects, each with a reproduction verified during the migration:
 
 | Defect | Effect | Verified against |
 | --- | --- | --- |
@@ -43,7 +45,6 @@ Seven defects, each with a reproduction verified during the migration:
 | `MD056` truncates a table row | Cells deleted | Reproduction ‡     |
 | Empty list item read as setext heading | `##` injected mid-sentence | Reference CommonMark |
 | `##]` continuation read as ATX heading | Paragraph split, full stop deleted | Reference CommonMark |
-| `MD030` inserts a space into `8.Does` | Quoted text edited | Reference CommonMark |
 | `MD005` de-indents a nested blockquote | Quote split across two nestings | Reproduction §     |
 | `MD013` reflow skips paragraphs with `\|` | Silent under-normalisation | Reproduction ‖     |
 
@@ -63,12 +64,13 @@ Upstream is at 0.2.52, uses conventional commits with a `fix(rules)` scope, gene
 
 ## Steps
 
-- [ ] Install the Rust toolchain the project pins and confirm the test suite passes before any change.
-- [ ] Reproduce each defect as a failing test using neutral public-domain prose, so no estate content reaches the fixtures.
+- [x] Install the Rust toolchain the project pins and confirm the test suite passes before any change.
+- [x] Fix `MD056`'s table-row truncation, on branch `fix-obsidian-wikilink-table-cells`.
+- [x] Fix `MD075`'s paragraph merge, on branch `fix-obsidian-wikilink-orphaned-rows`, which builds on the branch above.
+- [x] Fix `MD005`'s blockquote de-indentation, on branch `fix-md005-indented-blockquote-lists`.
 - [ ] Fix the ATX and setext misparses, which are one root cause and may be one pull request.
-- [ ] Fix the pipe-context defects: `MD075`, `MD056`, and the `MD013` reflow gap.
-- [ ] Fix `MD005`'s blockquote de-indentation.
-- [ ] Open one pull request per defect, each carrying its reproduction, and record the references under Discussion.
+- [ ] Fix the `MD013` reflow gap, the last of the pipe-context defects.
+- [ ] Open one pull request per branch, each carrying its reproduction, and record the references under Discussion.
 - [ ] Once a fix is released, re-test the rule against its recorded reproduction and re-enable it across the estate through `ki-authoring` REFRESH.
 
 ## Files touched
@@ -94,6 +96,14 @@ Nothing blocks this item, and it blocks nothing. The estate is stable with the r
 ### Why fix rather than only report
 
 An issue leaves the estate carrying seven disabled rules for as long as a single maintainer takes to reach them. A patch with a failing test attached is both a better report and a plausible path to getting the coverage back, and the reproductions already exist from the migration.
+
+### The wikilink fixes are flavor-scoped
+
+The first attempt at `MD056` made its truncating fix non-destructive outright. Three existing tests assert the truncation, so it is behaviour upstream chose rather than an oversight, and inverting it means asking a maintainer to accept a changed contract.
+
+rumdl already carries an Obsidian flavor that simply does not know about wikilinks in tables, so both pipe fixes became additions to an existing feature instead: masking wikilink pipes when the flavor is Obsidian, alongside the masking already applied to escaped pipes and inline code. No existing test changes, and GFM semantics are untouched — under `standard` an unescaped pipe remains a delimiter, which is correct per spec.
+
+The consequence for the estate is that recovering these rules means setting `flavor = "obsidian"` in the knowledge-base repositories, not merely upgrading. Measured separately: the flavor's own adjustments to `MD028`, `MD034`, `MD030` and `MD064` apply to callouts and `%%comments%%`, and do **not** cover the cases `kit-legal` disables, so the flavor is not a route to re-enabling those.
 
 ### Why one pull request per defect
 
