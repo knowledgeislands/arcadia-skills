@@ -3,10 +3,10 @@ id: KI-HARNESS-GOV-021
 title: Simplify repository configuration layout
 theme: governance-consistency
 horizon: now
-status: ready
+status: in-progress
 blocks: []
 blocked-by: []
-baseline-ref: null
+baseline-ref: 729cfb8772d06e44b88d8c221950f5fd2fd2a774
 ---
 
 ## Goal
@@ -31,20 +31,27 @@ This item owns the contract text, the rubric criteria, and the migration of ever
 
 `ki-repo` defines the `.ki-config.toml` contract in terms of the fully-qualified quoted key, and `ki-trades` documents its routes as `exports_to` and `imports_from` sub-tables of that key. Twenty-four `.ki-config.toml` files exist across the estate: fifteen under `knowledgeislands`, and nine outside it in `kit-hnr`, `kit-legal`, `kit-pkb`, `kit-midnight.ninja`, `er-research`, `kit-techmedix`, `vallearmonia-principal`, `vallearmonia-website`, and the chezmoi repository. Every one of them uses the current form and must be rewritten in the same pass.
 
-The two shape questions the source trade explicitly handed to this repository are now settled under Discussion: routes key on `owner/name`, and a route is an inline table. Nothing else in the item is started, and nothing may start on the estate migration until the host parser lands.
+The two shape questions the source trade explicitly handed to this repository are settled under Discussion: routes key on `owner/name`, and a route is an inline table.
+
+The harness half is delivered. The contract, the trade route shape, the rubric criteria and their regenerated publications, every rubric context's lookup, seventy-six guidance documents, and this repository's own `.ki-config.toml` are all on the new layout, and `ki repo audit` reports `PASS=21 WARN=0 FAIL=0` against it under the landed parser.
+
+`KI-TOOL-CLI-025` landed in `tools-ki` while this was in progress, which reordered the work rather than blocking it: the parser began rejecting the old shape mid-change, so this repository's migration became required to commit at all rather than a step to schedule. What remains is the other twenty-three repositories, each of which now fails loudly under `ki` until it is migrated.
+
+Three lookups turned out to be regex literals rather than the indexed constants the survey found — `declaredTables` in `ki-repo`, `declaredSkillNames` in `ki-engineering`, and the `ki-harness` marker probe. Each matched the qualified spelling textually, and each failed by reporting nothing rather than by erroring, which is the same quiet-miss class this contract exists to remove.
 
 ## Steps
 
 - [x] Settle the two open shape questions — route key form and inline versus nested route table — and record the decision and its reasoning under Discussion.
-- [ ] Rewrite the `.ki-config.toml` contract in `ki-repo` to specify `[repo].harnesses`, bare `[skills.<name>]` declarations, nested `[skills.<name>.<sub>]` configuration, and quoted `[skills."<harness-id>:<name>"]` only for a provider outside the declared list.
-- [ ] State the resolution rule in the contract: a bare name binds exactly one declared provider, no provider is an error, more than one provider requires explicit qualification, and resolution consults the declared list rather than installed harnesses.
-- [ ] Rewrite the `ki-trades` route declaration in its standard to the partner-keyed `[skills.ki-trades.routes]` shape with `export` and `import` kind arrays, and remove the now-redundant hand-written uniqueness and lexical-ordering requirement that TOML's duplicate-key prohibition supersedes.
-- [ ] Update the `ki-repo` and `ki-trades` rubric criteria and their generated publications to check the new shape, and delete every criterion that asserts the qualified-key form.
+- [x] Rewrite the `.ki-config.toml` contract in `ki-repo` to specify `[repo].harnesses`, bare `[skills.<name>]` declarations, nested `[skills.<name>.<sub>]` configuration, and quoted `[skills."<harness-id>:<name>"]` only for a provider outside the declared list.
+- [x] State the resolution rule in the contract: a bare name binds exactly one declared provider, no provider is an error, more than one provider requires explicit qualification, and resolution consults the declared list rather than installed harnesses.
+- [x] Rewrite the `ki-trades` route declaration in its standard to the partner-keyed `[skills.ki-trades.routes]` shape with `export` and `import` kind arrays, and remove the now-redundant hand-written uniqueness and lexical-ordering requirement that TOML's duplicate-key prohibition supersedes.
+- [x] Update the `ki-repo` and `ki-trades` rubric criteria and their generated publications to check the new shape, and delete every criterion that asserts the qualified-key form.
 - [x] Decide how a rubric context locates its configuration, and record the choice under Discussion. Sixteen contexts today re-parse `.ki-config.toml` themselves and index it by a hard-coded qualified constant, several also reading another skill's table — `ki-trades` reads `ki-repo`'s to obtain the repository identity. Settled: each context indexes `skills.<name>` directly.
-- [ ] Apply that decision to all sixteen contexts, including their cross-skill reads, so no skill hard-codes a harness identity to find configuration.
-- [ ] Update every example, snippet, and cross-reference in the skill catalogue and repository documentation that shows a qualified declaration key.
-- [ ] Migrate all twenty-four `.ki-config.toml` files in the estate to the new layout, giving each implicitly-declared skill an explicit root table.
-- [ ] Raise the corresponding host implementation item in `tools-ki` and confirm its sequencing against this repository's migration.
+- [x] Apply that decision to all sixteen contexts, including their cross-skill reads, so no skill hard-codes a harness identity to find configuration.
+- [x] Update every example, snippet, and cross-reference in the skill catalogue and repository documentation that shows a qualified declaration key.
+- [x] Migrate this repository's own `.ki-config.toml`, giving each implicitly-declared skill an explicit root table and naming each trade partner once.
+- [ ] Migrate the remaining twenty-three `.ki-config.toml` files in the estate. Each fails loudly under the landed parser until it is, so this is recoverable rather than silent, but every one of those repositories is unusable through `ki` meanwhile.
+- [x] Raise the corresponding host implementation item in `tools-ki` and confirm its sequencing against this repository's migration.
 
 ## Files touched
 
