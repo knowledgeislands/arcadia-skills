@@ -128,7 +128,7 @@ describe('ki-kb-live-artifacts session', () => {
     const root = repository()
     writeFileSync(
       join(root, '.ki-config.toml'),
-      '["knowledgeislands/ki-agentic-harness:ki-kb-live-artifacts"]\nartifacts_dir = "Operational/Boards"\n'
+      '[skills.ki-kb-live-artifacts]\nartifacts_dir = "Operational/Boards"\n'
     )
     mkdirSync(join(root, 'Operational', 'Boards'), { recursive: true })
     writeFileSync(

@@ -9,7 +9,7 @@ import type {
 
 const CODE_DIR = 'docs/decisions'
 const KB_DIR = 'Admin/Governance/Decisions'
-const REPO_CONFIG = 'knowledgeislands/ki-agentic-harness:ki-repo'
+const REPO_CONFIG = 'ki-repo'
 const TOML = (globalThis as unknown as { Bun: { TOML: { parse(text: string): unknown } } }).Bun.TOML
 const PREFIX_TO_TYPE: Record<string, { decisionType: string; type: string; typeUrl: string }> = {
   SDR: {
@@ -153,7 +153,8 @@ const isKb = (target: string): boolean => {
   if (!config) return false
   try {
     const parsed = TOML.parse(readFileSync(config, 'utf8')) as Record<string, unknown>
-    const table = parsed[REPO_CONFIG]
+    const skills = parsed.skills
+    const table = skills && typeof skills === 'object' ? (skills as Record<string, unknown>)[REPO_CONFIG] : undefined
     return (
       typeof table === 'object' &&
       table !== null &&

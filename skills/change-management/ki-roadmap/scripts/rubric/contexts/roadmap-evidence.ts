@@ -46,8 +46,8 @@ const IMMEDIATE = new Set<Horizon>(['now', 'next'])
 const STANDARD = 'references/standards-repository-roadmaps.md'
 const FORMAT = 'references/standards-work-item-format.md'
 const RUBRIC = 'references/rubric.md'
-const ROADMAP_CONFIG = 'knowledgeislands/ki-agentic-harness:ki-roadmap'
-const REPO_CONFIG = 'knowledgeislands/ki-agentic-harness:ki-repo'
+const ROADMAP_CONFIG = 'ki-roadmap'
+const REPO_CONFIG = 'ki-repo'
 const TOML = (globalThis as unknown as { Bun: { TOML: { parse(text: string): unknown } } }).Bun.TOML
 
 let findings: Finding[] = []
@@ -99,7 +99,7 @@ const isKb = (repository: string): boolean => {
   if (!existsSync(config)) return false
   try {
     const parsed = TOML.parse(readFileSync(config, 'utf8')) as Record<string, unknown>
-    const table = parsed[REPO_CONFIG]
+    const table = (parsed.skills as Record<string, unknown> | undefined)?.[REPO_CONFIG]
     return (
       typeof table === 'object' &&
       table !== null &&
@@ -119,7 +119,7 @@ const roadmapConfiguration = (repository: string): RoadmapConfiguration | undefi
   }
   try {
     const parsed = TOML.parse(readFileSync(config, 'utf8')) as Record<string, unknown>
-    const repoTable = parsed[REPO_CONFIG]
+    const repoTable = (parsed.skills as Record<string, unknown> | undefined)?.[REPO_CONFIG]
     const repoValues =
       typeof repoTable === 'object' && repoTable !== null && !Array.isArray(repoTable)
         ? (repoTable as Record<string, unknown>)
@@ -135,7 +135,7 @@ const roadmapConfiguration = (repository: string): RoadmapConfiguration | undefi
       )
       return undefined
     }
-    const table = parsed[ROADMAP_CONFIG]
+    const table = (parsed.skills as Record<string, unknown> | undefined)?.[ROADMAP_CONFIG]
     const values =
       typeof table === 'object' && table !== null && !Array.isArray(table)
         ? (table as Record<string, unknown>)

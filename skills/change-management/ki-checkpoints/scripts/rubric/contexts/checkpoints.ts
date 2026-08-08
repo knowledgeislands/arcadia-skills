@@ -7,7 +7,7 @@ import type {
   RubricSession
 } from '../../shared/rubric.ts'
 
-const CONFIG_TABLE = 'knowledgeislands/ki-agentic-harness:ki-checkpoints'
+const CONFIG_TABLE = 'ki-checkpoints'
 const ACTIVE_FIELDS = ['type', 'thread', 'state', 'created_at', 'updated_at'] as const
 const RETIRED_FIELDS = [...ACTIVE_FIELDS, 'retired_at'] as const
 const UTC_TIMESTAMP = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/
@@ -319,7 +319,7 @@ export const createCheckpointsSession = ({
     }
   }
 
-  const configured = table(configuration[CONFIG_TABLE])
+  const configured = table(table(configuration.skills)?.[CONFIG_TABLE])
   const configOutcomes: AuditOutcome[] = configured
     ? Object.keys(configured).map((key) => ({
         status: 'VIOLATION' as const,

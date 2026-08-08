@@ -47,7 +47,7 @@ const fixture = (): {
   mkdirSync(join(repository, 'tests'))
   writeFileSync(join(repository, 'tests', 'demo.bats'), '@test "version" { run bin/demo --version; }\n')
   const config = join(repository, '.ki-config.toml')
-  writeFileSync(config, '["knowledgeislands/ki-agentic-harness:ki-repo"]\n')
+  writeFileSync(config, '[skills.ki-repo]\n')
   return { repository, config, executable, install }
 }
 
@@ -85,7 +85,7 @@ test('audit is read-only and prepares one stable focused repository context', ()
   expect(session.proposal()).toEqual({ writes: [] })
   expect(lstatSync(executable).mode & 0o111).toBe(0)
   expect(lstatSync(install).mode & 0o111).toBe(0)
-  expect(readFileSync(config, 'utf8')).toBe('["knowledgeislands/ki-agentic-harness:ki-repo"]\n')
+  expect(readFileSync(config, 'utf8')).toBe('[skills.ki-repo]\n')
 })
 
 test('item-owned actions coalesce bounded chmod commands and one marker draft', () => {
@@ -106,7 +106,7 @@ test('item-owned actions coalesce bounded chmod commands and one marker draft', 
     writes: [
       {
         path: '.ki-config.toml',
-        content: '["knowledgeislands/ki-agentic-harness:ki-repo"]\n\n["knowledgeislands/ki-agentic-harness:ki-tools"]\n'
+        content: '[skills.ki-repo]\n\n[skills.ki-tools]\n'
       }
     ],
     commands: [
@@ -116,7 +116,7 @@ test('item-owned actions coalesce bounded chmod commands and one marker draft', 
   })
   expect(lstatSync(executable).mode & 0o111).toBe(0)
   expect(lstatSync(install).mode & 0o111).toBe(0)
-  expect(readFileSync(config, 'utf8')).toBe('["knowledgeislands/ki-agentic-harness:ki-repo"]\n')
+  expect(readFileSync(config, 'utf8')).toBe('[skills.ki-repo]\n')
 })
 
 test('version evidence invokes the executable and accepts a physical src/tests directory', () => {
@@ -182,7 +182,7 @@ test('symlinked governed paths remain report-only and are never traversed', () =
   const outside = temporaryDirectory('tools-outside-')
   mkdirSync(join(outside, 'bin'))
   writeFileSync(join(outside, 'bin', 'unsafe'), '#!/bin/sh\n')
-  writeFileSync(join(outside, 'config.toml'), '["knowledgeislands/ki-agentic-harness:ki-repo"]\n')
+  writeFileSync(join(outside, 'config.toml'), '[skills.ki-repo]\n')
   symlinkSync(join(outside, 'bin'), join(repository, 'bin'))
   symlinkSync(join(outside, 'config.toml'), join(repository, '.ki-config.toml'))
   symlinkSync(outside, join(repository, '.github'))
@@ -199,7 +199,7 @@ test('symlinked governed paths remain report-only and are never traversed', () =
   expect(context.tool.requestBinExecutables).toBeUndefined()
   expect(context.config.requestMarker).toBeUndefined()
   expect(session.proposal()).toEqual({ writes: [] })
-  expect(readFileSync(join(outside, 'config.toml'), 'utf8')).toBe('["knowledgeislands/ki-agentic-harness:ki-repo"]\n')
+  expect(readFileSync(join(outside, 'config.toml'), 'utf8')).toBe('[skills.ki-repo]\n')
 })
 
 test('an unrelated physical repository is not applicable', () => {

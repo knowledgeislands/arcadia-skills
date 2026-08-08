@@ -133,10 +133,9 @@ const inspectSkills = (
   }
 }
 
-const HARNESS_ID = 'knowledgeislands/ki-agentic-harness'
-const tableIdentity = (name: string): string => `${HARNESS_ID}:${name}`
+const tableIdentity = (name: string): string => name
 const hasTomlTable = (toml: string, name: string): boolean =>
-  new RegExp(`^\\["${tableIdentity(name)}"\\]`, 'm').test(toml)
+  new RegExp(`^\\[skills\\.${tableIdentity(name)}\\]`, 'm').test(toml)
 
 export const createHarnessSession = ({
   mode,
@@ -215,7 +214,7 @@ export const createHarnessSession = ({
       if (markerRequested && configContent !== null)
         writes.push({
           path: '.ki-config.toml',
-          content: `${configContent.replace(/\n*$/, '\n')}\n["${tableIdentity('ki-harness')}"]\n`
+          content: `${configContent.replace(/\n*$/, '\n')}\n[skills.${tableIdentity('ki-harness')}]\n`
         })
       return { writes }
     }

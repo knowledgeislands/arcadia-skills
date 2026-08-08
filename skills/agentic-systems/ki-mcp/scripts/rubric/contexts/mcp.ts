@@ -8,7 +8,7 @@ import type {
 } from '../../shared/rubric.ts'
 
 const CONFIG_FILE = '.ki-config.toml'
-const CONFIG_SECTION = 'knowledgeislands/ki-agentic-harness:ki-mcp'
+const CONFIG_SECTION = 'ki-mcp'
 const PACKAGE_FILE = 'package.json'
 const MCP_MAIN = 'dist/mcp-server/index.js'
 const FAMILY_CODES = ['KI', 'LAY', 'DOC', 'CFG', 'UTIL', 'TEST', 'TOOL', 'PKG', 'SCR', 'CI'] as const
@@ -136,7 +136,7 @@ const inspectConfig = (
   const content = readFileSync(path, 'utf8')
   try {
     const document = Bun.TOML.parse(content) as Record<string, unknown>
-    const table = asTable(document[CONFIG_SECTION])
+    const table = asTable(asTable(document.skills)?.[CONFIG_SECTION])
     return table ? { state: 'present', keys: Object.keys(table), content } : { state: 'absent', keys: [], content }
   } catch {
     return { state: 'malformed', keys: [], content }
@@ -269,7 +269,7 @@ export const createMcpSession = ({
         ? {
             addMarker: () => {
               if (configDraft !== originalConfig) return
-              configDraft = `${originalConfig.replace(/\n*$/, '\n')}\n["${CONFIG_SECTION}"]\n`
+              configDraft = `${originalConfig.replace(/\n*$/, '\n')}\n[skills.${CONFIG_SECTION}]\n`
             }
           }
         : {})

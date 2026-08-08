@@ -17,8 +17,7 @@ type ExecutableState = 'missing' | 'executable' | 'non-executable' | 'unsafe'
 type ConfigState = 'missing' | 'unsafe' | 'malformed' | 'absent' | 'present'
 type VersionState = 'passed' | 'failed' | 'unavailable'
 
-const HARNESS_ID = 'knowledgeislands/ki-agentic-harness'
-const TOOLS_TABLE = `${HARNESS_ID}:ki-tools`
+const TOOLS_TABLE = 'ki-tools'
 
 export type ToolBinary = {
   readonly name: string
@@ -131,7 +130,7 @@ const inspectConfig = (
   if (content === null) return { state: 'unsafe', keys: [], content: null }
   try {
     const parsed = Bun.TOML.parse(content) as Record<string, unknown>
-    const candidate = parsed[TOOLS_TABLE]
+    const candidate = (parsed.skills as Record<string, unknown> | undefined)?.[TOOLS_TABLE]
     if (candidate && typeof candidate === 'object' && !Array.isArray(candidate))
       return { state: 'present', keys: Object.keys(candidate as Record<string, unknown>), content }
     return { state: 'absent', keys: [], content }
@@ -376,7 +375,7 @@ export const createToolsSession = ({
         .map((path): ConformCommand => ({ program: 'chmod', arguments: ['+x', path] }))
       const writes: ConformWrite[] =
         markerRequested && originalConfig !== null
-          ? [{ path: '.ki-config.toml', content: `${originalConfig.replace(/\n*$/, '\n')}\n["${TOOLS_TABLE}"]\n` }]
+          ? [{ path: '.ki-config.toml', content: `${originalConfig.replace(/\n*$/, '\n')}\n[skills.${TOOLS_TABLE}]\n` }]
           : []
       return { writes, ...(commands.length > 0 ? { commands } : {}) }
     }

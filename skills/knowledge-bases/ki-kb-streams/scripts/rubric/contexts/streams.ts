@@ -14,8 +14,8 @@ const FOCI = ['Now', 'Next', 'Soon', 'Waiting for', 'Parked', 'Future', 'Houseke
 const STATUS = ['draft', 'ready', 'in-progress', 'awaiting-review', 'done'] as const
 const PRIORITY = ['urgent', 'high', 'medium', 'low'] as const
 const SUFFIX = ' Proposal'
-const STREAMS_TABLE = 'knowledgeislands/ki-agentic-harness:ki-kb-streams'
-const KB_TABLE = 'knowledgeislands/ki-agentic-harness:ki-kb'
+const STREAMS_TABLE = 'ki-kb-streams'
+const KB_TABLE = 'ki-kb'
 
 export type StreamsEvidence = {
   level: 'FAIL' | 'WARN' | 'INFO' | 'NOT_APPLICABLE' | 'PASS'
@@ -116,8 +116,12 @@ const markdownPaths = (path: string, values: string[] = []): string[] => {
 const parseConfiguration = (text: string): StreamsConfiguration => {
   try {
     const document = Bun.TOML.parse(text) as Record<string, unknown>
-    const own = document[STREAMS_TABLE] as Record<string, unknown> | undefined
-    const kb = document[KB_TABLE] as Record<string, unknown> | undefined
+    const own = (document.skills as Record<string, unknown> | undefined)?.[STREAMS_TABLE] as
+      | Record<string, unknown>
+      | undefined
+    const kb = (document.skills as Record<string, unknown> | undefined)?.[KB_TABLE] as
+      | Record<string, unknown>
+      | undefined
     const zones = kb?.zones as Record<string, unknown> | undefined
     return {
       keys: Object.fromEntries(

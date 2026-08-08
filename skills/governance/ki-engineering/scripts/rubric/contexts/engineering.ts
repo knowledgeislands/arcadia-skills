@@ -12,7 +12,7 @@ import type {
 } from '../../shared/rubric.ts'
 import { collectAuditEvidence, type EngineeringEvidenceFinding } from './audit-evidence.ts'
 
-const ENGINEERING_TABLE = 'knowledgeislands/ki-agentic-harness:ki-engineering'
+const ENGINEERING_TABLE = 'ki-engineering'
 
 export type EngineeringEvidence = readonly EngineeringEvidenceFinding[]
 
@@ -448,13 +448,13 @@ export const createEngineeringSession = async (
       if (declareEngineering) {
         const path = join(target, '.ki-config.toml')
         if (!existsSync(path))
-          writes.push({ path: '.ki-config.toml', content: `["${ENGINEERING_TABLE}"]\n`, create: true })
+          writes.push({ path: '.ki-config.toml', content: `[skills.${ENGINEERING_TABLE}]\n`, create: true })
         else {
           const source = readFileSync(path, 'utf8')
-          if (!new RegExp(`^\\["${ENGINEERING_TABLE}"\\]`, 'm').test(source))
+          if (!new RegExp(`^\\[skills\\.${ENGINEERING_TABLE}\\]`, 'm').test(source))
             writes.push({
               path: '.ki-config.toml',
-              content: `${source.replace(/\n*$/, '\n\n')}["${ENGINEERING_TABLE}"]\n`
+              content: `${source.replace(/\n*$/, '\n\n')}[skills.${ENGINEERING_TABLE}]\n`
             })
         }
       }

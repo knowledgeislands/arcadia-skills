@@ -9,7 +9,7 @@ import type {
 
 const FORMULA_DIRECTORY = 'Formula'
 const CONFIG_FILE = '.ki-config.toml'
-const CONFIG_SECTION = 'knowledgeislands/ki-agentic-harness:ki-homebrew-tap'
+const CONFIG_SECTION = 'ki-homebrew-tap'
 
 type NodeKind = 'missing' | 'file' | 'directory' | 'unsafe'
 type FormulaDirectoryState = 'missing' | 'present' | 'unsafe'
@@ -64,7 +64,7 @@ const inspectConfig = (
   const content = readFileSync(path, 'utf8')
   try {
     const parsed = Bun.TOML.parse(content) as Record<string, unknown>
-    const candidate = parsed[CONFIG_SECTION]
+    const candidate = (parsed.skills as Record<string, unknown> | undefined)?.[CONFIG_SECTION]
     if (candidate && typeof candidate === 'object' && !Array.isArray(candidate))
       return { state: 'present', keys: Object.keys(candidate as Record<string, unknown>), content }
     return { state: 'absent', keys: [], content }
@@ -131,7 +131,7 @@ export const createHomebrewTapSession = ({
         ? {
             addMarker: () => {
               if (configDraft !== originalConfig) return
-              configDraft = `${originalConfig.replace(/\n*$/, '\n')}\n# This repo is a Knowledge Islands Homebrew tap.\n["${CONFIG_SECTION}"]\n`
+              configDraft = `${originalConfig.replace(/\n*$/, '\n')}\n# This repo is a Knowledge Islands Homebrew tap.\n[skills.${CONFIG_SECTION}]\n`
             }
           }
         : {})

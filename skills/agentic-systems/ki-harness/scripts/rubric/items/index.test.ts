@@ -24,7 +24,7 @@ const fixture = (): string => {
   }
   writeFileSync(join(repository, 'CLAUDE.md'), '# Harness\n')
   writeFileSync(join(repository, 'ROADMAP.md'), '# Roadmap\n')
-  writeFileSync(join(repository, '.ki-config.toml'), '["knowledgeislands/ki-agentic-harness:ki-repo"]\n')
+  writeFileSync(join(repository, '.ki-config.toml'), '[skills.ki-repo]\n')
   mkdirSync(join(repository, 'skills', 'group', 'example'), { recursive: true })
   writeFileSync(join(repository, 'skills', 'group', 'example', 'SKILL.md'), '---\nname: example\n---\n\n# Example\n')
   return repository
@@ -104,17 +104,14 @@ test('the session discovers grouped skills once and coalesces marker requests', 
   expect(session.proposal().writes).toEqual([
     {
       path: '.ki-config.toml',
-      content: '["knowledgeislands/ki-agentic-harness:ki-repo"]\n\n["knowledgeislands/ki-agentic-harness:ki-harness"]\n'
+      content: '[skills.ki-repo]\n\n[skills.ki-harness]\n'
     }
   ])
 })
 
 test('audit is read-only and an existing marker produces no proposal', () => {
   const repository = fixture()
-  writeFileSync(
-    join(repository, '.ki-config.toml'),
-    '["knowledgeislands/ki-agentic-harness:ki-repo"]\n\n["knowledgeislands/ki-agentic-harness:ki-harness"]\n'
-  )
+  writeFileSync(join(repository, '.ki-config.toml'), '[skills.ki-repo]\n\n[skills.ki-harness]\n')
   const session = catalogue.createSession({ mode: 'audit', repository, userHome: tmpdir(), configuration: {} })
   const context = session.subjects[0]?.context() as HarnessRubricContext
   expect(context.config.hasHarnessTable).toBe(true)
@@ -127,7 +124,7 @@ test('conform refuses a symlinked or dangling configuration path', () => {
     const repository = fixture()
     rmSync(join(repository, '.ki-config.toml'))
     const target = join(repository, dangling ? 'missing-config' : 'config-source')
-    if (!dangling) writeFileSync(target, '["knowledgeislands/ki-agentic-harness:ki-repo"]\n')
+    if (!dangling) writeFileSync(target, '[skills.ki-repo]\n')
     symlinkSync(target, join(repository, '.ki-config.toml'))
     const session = catalogue.createSession({ mode: 'conform', repository, userHome: tmpdir(), configuration: {} })
     const context = session.subjects[0]?.context() as HarnessRubricContext

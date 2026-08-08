@@ -56,7 +56,7 @@ test('each family module exports one complete family', async () => {
 test('the session keeps one configuration draft and proposes the marker once', () => {
   const repository = mkdtempSync(join(tmpdir(), 'ki-specifications-'))
   temporaryDirectories.push(repository)
-  writeFileSync(join(repository, '.ki-config.toml'), '["knowledgeislands/ki-agentic-harness:ki-repo"]\n')
+  writeFileSync(join(repository, '.ki-config.toml'), '[skills.ki-repo]\n')
   for (const directory of ['proposals', 'specifications', 'schemas']) mkdirSync(join(repository, directory))
 
   const session = catalogue.createSession({ mode: 'conform', repository, userHome: tmpdir(), configuration: {} })
@@ -75,10 +75,8 @@ test('the session keeps one configuration draft and proposes the marker once', (
   expect(session.proposal().writes).toEqual([
     {
       path: '.ki-config.toml',
-      content: expect.stringContaining('["knowledgeislands/ki-agentic-harness:ki-specifications"]')
+      content: expect.stringContaining('[skills.ki-specifications]')
     }
   ])
-  expect(
-    session.proposal().writes[0]?.content.match(/\["knowledgeislands\/ki-agentic-harness:ki-specifications"\]/g)
-  ).toHaveLength(1)
+  expect(session.proposal().writes[0]?.content.match(/\[skills\.ki-specifications\]/g)).toHaveLength(1)
 })

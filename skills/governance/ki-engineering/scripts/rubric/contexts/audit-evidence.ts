@@ -57,8 +57,14 @@ const scriptOwner = (key: string): string | undefined => {
   return undefined
 }
 
+// A declaration is a bare name under `[skills]`; the quoted form survives only for a skill drawn
+// from a harness outside the declared list, so both spellings are read here.
 const declaredSkillNames = (configuration: string): ReadonlySet<string> =>
-  new Set([...configuration.matchAll(/^\["[^"\n]+:(ki-[a-z-]+)"\]/gm)].map((match) => match[1] as string))
+  new Set(
+    [...configuration.matchAll(/^\[skills\.(?:"[^"\n]+:(ki-[a-z0-9-]+)"|(ki-[a-z0-9-]+))\]/gm)].map(
+      (match) => (match[1] ?? match[2]) as string
+    )
+  )
 
 /** Inspect the repository once and return the complete engineering evidence set. */
 const run = promisify(execFile)
@@ -1275,9 +1281,9 @@ export const collectAuditEvidence = async (
 
   // ── core: .ki-config.toml qualified ki-engineering table ────────
   const ki = read('.ki-config.toml')
-  const engineeringHeader = '["knowledgeislands/ki-agentic-harness:ki-engineering"]'
+  const engineeringHeader = '[skills.ki-engineering]'
   if (!ki) add('WARN', 'TOML-1', '.ki-config.toml missing (ki-repo owns the contract)', STD, '.ki-config.toml')
-  else if (!/^\["knowledgeislands\/ki-agentic-harness:ki-engineering"\]/m.test(ki)) {
+  else if (!/^\[skills\.ki-engineering\]/m.test(ki)) {
     add(
       'WARN',
       'TOML-1',
@@ -1290,8 +1296,8 @@ export const collectAuditEvidence = async (
     // validate-down: the table is a conformance marker only — it carries no keys. Repo
     // shape (flat vs monorepo) is read from package.json `workspaces` (§0), a standard Bun
     // convention, not a bespoke key here. Any key directly under the table is drift.
-    const body = ki.split(/^\["knowledgeislands\/ki-agentic-harness:ki-engineering"\]/m)[1]?.split(/^\[/m)[0] ?? ''
-    const KNOWN = new Set<string>() // no keys defined; only a ["knowledgeislands/ki-agentic-harness:ki-engineering".checks] sub-table is allowed
+    const body = ki.split(/^\[skills\.ki-engineering\]/m)[1]?.split(/^\[/m)[0] ?? ''
+    const KNOWN = new Set<string>() // no keys defined; only a [skills.ki-engineering.checks] sub-table is allowed
     for (const m of body.matchAll(/^\s*([A-Za-z0-9_-]+)\s*=/gm)) {
       KNOWN.has(m[1])
         ? add('PASS', 'TOML-2', `known key ${m[1]}`, STD, '.ki-config.toml')

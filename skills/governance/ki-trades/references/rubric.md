@@ -33,7 +33,7 @@ The tracked readable rubric is the exact publication of the structured catalogue
 
 Typed trade routes are explicit, canonical, and owned locally.
 
-- **CONFIG-1 [M] — typed routes are canonical** — A participating repository declares every closed trade kind as a lexically ordered, duplicate-free canonical HTTPS GitHub repository URL array under each of its own `exports_to` and `imports_from` tables; its identity comes only from `ki-repo.repository`. (standards-trades.md)
+- **CONFIG-1 [M] — typed routes are canonical** — A participating repository names each trade partner exactly once under its own `[skills.ki-trades.routes]` table, keyed by `owner/name`, as an inline table whose `export` and `import` arrays are duplicate-free and drawn from the closed trade-kind set; a direction carrying no kinds is absent rather than empty, and the repository identity comes only from `ki-repo.repository`. (standards-trades.md)
   - _Remediation:_ diagnostic — Correct the local ki-trades route declaration, then rerun the audit.
 
 ## ROUTE — Typed reciprocal routes

@@ -26,7 +26,7 @@
  *                (public); Actions allowed-actions = all.
  *
  * Each repo's `.ki-config.toml` declares its `visibility` and, in a
- * `["knowledgeislands/ki-agentic-harness:ki-repo".checks]` sub-table, per-repo overrides — one
+ * `[skills.ki-repo.checks]` sub-table, per-repo overrides — one
  * boolean per overridable check (`true` = enforce, `false` = don't). A check it
  * omits takes the org default (CHECK_DEFAULTS), so a fully-conforming repo writes
  * no overrides; `branch-protection` defaults off, so `main` is open unless opted in.
@@ -48,7 +48,7 @@ import type { RubricEmitter } from '../../shared/rubric.ts'
 
 // ── the standard (keep in sync with references/standards-repository.md) ──────
 const DEFAULT_BRANCH = 'main'
-// The declared license defaults to MIT when `["knowledgeislands/ki-agentic-harness:ki-repo"] license` is unset. Decoupled
+// The declared license defaults to MIT when `[skills.ki-repo] license` is unset. Decoupled
 // from visibility (a private repo may be MIT; a public repo may be proprietary).
 const DEFAULT_LICENSE = 'MIT'
 const TOPICS = ['mcp', 'model-context-protocol', 'claude', 'typescript', 'bun']
@@ -57,7 +57,7 @@ const ALLOWED_ACTIONS = 'all'
 // Reference-doc pointer carried on every mechanical finding.
 const STD = 'references/standards-repository.md'
 // Overridable checks and the org default for each — `true` = enforced by default.
-// A repo overrides any of these per-repo in ["knowledgeislands/ki-agentic-harness:ki-repo".checks];
+// A repo overrides any of these per-repo in [skills.ki-repo.checks];
 // a check it omits takes the default here, so a fully-conforming repo writes none.
 // (The other checks — file presence, default branch, license, description, merge,
 // delete-branch, visibility, Dependabot — are bedrock: always enforced, no override.)
@@ -241,12 +241,18 @@ const localRaw = (dir: string, path: string): string | null => {
 }
 
 // `.ki-config.toml` is a shared per-repo file; each skill reads its own [table].
-// This skill owns the ["knowledgeislands/ki-agentic-harness:ki-repo"] table. The default block
+// This skill owns the [skills.ki-repo] table. The default block
 // (written by `--educate`) is the authoritative key list — authoring a repo emits it.
-const HARNESS_ID = 'knowledgeislands/ki-agentic-harness'
-const skillTable = (name: string): string => `${HARNESS_ID}:${name}`
+// A declaration is a bare skill name under `[skills]`; the providing harness is resolved from
+// `[repo] harnesses` rather than repeated in every key.
+const skillTable = (name: string): string => name
+/** The declared skill tables, or an empty map where the file declares none. */
+const declaredSkills = (document: Record<string, unknown>): Record<string, unknown> => {
+  const skills = document.skills
+  return skills && typeof skills === 'object' && !Array.isArray(skills) ? (skills as Record<string, unknown>) : {}
+}
 const KI_SECTION = skillTable('ki-repo')
-const KI_REPO_DEFAULT = `["${KI_SECTION}"]
+const KI_REPO_DEFAULT = `[skills.${KI_SECTION}]
 repository = ""         # required — canonical HTTPS GitHub home, for example https://github.com/owner/repository
 title = ""              # required — exact README.md H1
 description = ""        # required — exact GitHub and package.json description where present
@@ -256,20 +262,20 @@ supported_runtimes = ["claude-code", "chatgpt-codex"] # required agent-runtime s
 
 # Per-repo check overrides — true = enforce, false = don't. Omit any check to take
 # the org default; a repo that fully conforms needs nothing here.
-# ["${KI_SECTION}".checks]
+# [skills.${KI_SECTION}.checks]
 # branch-protection = true   # default off — protect \`main\` on this repo
 # wiki = false               # default on  — allow this repo's Wiki
 `
 
 const KI_AUTHORING_DEFAULT = `# The authoring standard (Markdown/TOML house style) is baseline — every KI repo is
 # governed by it. Declared explicitly, not assumed; its presence is the compliance marker.
-["${skillTable('ki-authoring')}"]
+[skills.${skillTable('ki-authoring')}]
 `
 const KI_DEFAULT = `${KI_REPO_DEFAULT}\n${KI_AUTHORING_DEFAULT}`
 
 // Parse the owned table with Bun's TOML parser so quoted table keys, comments,
 // and multiline strings cannot be mistaken for schema. Returns null when the
-// document is invalid or has no object-valued ["knowledgeislands/ki-agentic-harness:ki-repo"] table.
+// document is invalid or has no object-valued [skills.ki-repo] table.
 type KiConfig = {
   repository?: string
   title?: string
@@ -299,7 +305,7 @@ function parseKiConfig(text: string): KiConfig | null {
   } catch {
     return null
   }
-  const value = document[KI_SECTION]
+  const value = declaredSkills(document)[KI_SECTION]
   if (!value || typeof value !== 'object' || Array.isArray(value)) return null
   const table = value as Record<string, unknown>
   const out: KiConfig = { checks: {} }
@@ -331,12 +337,17 @@ export function parseRepositoryConfiguration(text: string): RepositoryConfigurat
   } catch {
     return { repositoryType: 'repository', storeRoles: [], rootTables: [], issue: 'must be valid TOML' }
   }
-  const rootTables = Object.entries(document)
+  const rootTables = Object.entries(declaredSkills(document))
     .filter(([, value]) => value && typeof value === 'object' && !Array.isArray(value))
     .map(([name]) => name)
-  const value = document[KI_SECTION]
+  const value = declaredSkills(document)[KI_SECTION]
   if (!value || typeof value !== 'object' || Array.isArray(value))
-    return { repositoryType: 'repository', storeRoles: [], rootTables, issue: `must contain a [${KI_SECTION}] table` }
+    return {
+      repositoryType: 'repository',
+      storeRoles: [],
+      rootTables,
+      issue: `must contain a [skills.${KI_SECTION}] table`
+    }
   const table = value as Record<string, unknown>
   const rawType = table.repo_type
   if (rawType !== undefined && (typeof rawType !== 'string' || !REPOSITORY_TYPES.has(rawType as RepositoryType)))
@@ -593,7 +604,9 @@ function declaredTables(text: string): Array<{ root: string; exact: boolean }> {
         escaped = false
       }
     }
-    const match = code.trim().match(/^\[\s*(?:"([^"\\]+)"|'([^']+)'|([A-Za-z0-9_-]+))\s*(\.|\])/)
+    // A declaration is the key beneath `[skills]`; the namespace itself is not a declared table, so
+    // a header that names anything else (`[repo]`, say) contributes nothing here.
+    const match = code.trim().match(/^\[\s*skills\s*\.\s*(?:"([^"\\]+)"|'([^']+)'|([A-Za-z0-9_-]+))\s*(\.|\])/)
     const root = match?.[1] ?? match?.[2] ?? match?.[3]
     if (root) tables.push({ root, exact: match?.[4] === ']' })
   }
@@ -668,12 +681,12 @@ async function auditRepo(
     if (!declaresRootTable(kiText ?? '', skillTable('ki-authoring')))
       fail(
         'FILES-3',
-        `${KI_CONFIG} does not declare ["knowledgeislands/ki-agentic-harness:ki-authoring"] — the authoring standard is baseline (run --educate)`,
+        `${KI_CONFIG} does not declare [skills.ki-authoring] — the authoring standard is baseline (run --educate)`,
         KI_CONFIG
       )
   }
   // ── layer 1: declared repository identity ── FILES-2
-  if (!ki) fail('FILES-2', `${KI_CONFIG} has no [${KI_SECTION}] table`, KI_CONFIG)
+  if (!ki) fail('FILES-2', `${KI_CONFIG} has no [skills.${KI_SECTION}] table`, KI_CONFIG)
   else {
     if (!ki.repository || !GITHUB_REPOSITORY.test(ki.repository))
       fail('FILES-2', `${KI_CONFIG} must declare a canonical HTTPS GitHub \`repository\` URL`, KI_CONFIG)
@@ -694,24 +707,20 @@ async function auditRepo(
   // ── repository kind and named KB store roles ── KIND-1/2
   if (kiText != null) {
     const configuration = parseRepositoryConfiguration(kiText)
-    if (configuration.issue) fail('KIND-1', `[${KI_SECTION}] ${configuration.issue}`, KI_CONFIG)
+    if (configuration.issue) fail('KIND-1', `[skills.${KI_SECTION}] ${configuration.issue}`, KI_CONFIG)
     else if (configuration.repositoryType === 'kb') {
       if (!declaresRootTable(kiText, skillTable('ki-kb')))
-        fail(
-          'KIND-2',
-          'repo_type = "kb" requires the [knowledgeislands/ki-agentic-harness:ki-kb] structure declaration',
-          KI_CONFIG
-        )
+        fail('KIND-2', 'repo_type = "kb" requires the [skills.ki-kb] structure declaration', KI_CONFIG)
       if (declaresRootTable(kiText, skillTable('ki-roadmap')))
         fail('KIND-2', 'repo_type = "kb" cannot declare ki-roadmap; Knowledge Bases use ki-kb-streams', KI_CONFIG)
     } else if (declaresRootTable(kiText, skillTable('ki-kb')))
-      fail('KIND-2', '[knowledgeislands/ki-agentic-harness:ki-kb] requires repo_type = "kb"', KI_CONFIG)
+      fail('KIND-2', '[skills.ki-kb] requires repo_type = "kb"', KI_CONFIG)
   }
 
   // ── layer 2: core GitHub ── GH-1
   if (r.defaultBranchRef?.name !== DEFAULT_BRANCH)
     fail('GH-1', `default branch is "${r.defaultBranchRef?.name ?? '?'}" (want ${DEFAULT_BRANCH})`)
-  // License is the declared SPDX id from `["knowledgeislands/ki-agentic-harness:ki-repo"] license` (default MIT), decoupled
+  // License is the declared SPDX id from `[skills.ki-repo] license` (default MIT), decoupled
   // from visibility. The live GitHub license and package.json "license" must match the
   // declared id. A proprietary declaration (`UNLICENSED`/`proprietary`/`none`) expects
   // no recognised OSI license on GitHub and `"UNLICENSED"` in package.json.
@@ -793,7 +802,7 @@ async function auditRepo(
 
   // VIS-1: visibility declared in .ki-config.toml, checked against live GitHub
   const declared = ki?.visibility?.toUpperCase()
-  if (!ki) fail('VIS-1', `cannot verify visibility — ${KI_CONFIG} has no [${KI_SECTION}] table (run --educate)`)
+  if (!ki) fail('VIS-1', `cannot verify visibility — ${KI_CONFIG} has no [skills.${KI_SECTION}] table (run --educate)`)
   else if (declared !== 'PUBLIC' && declared !== 'PRIVATE')
     fail('VIS-1', `${KI_CONFIG} does not declare a valid \`visibility\` (got ${JSON.stringify(ki.visibility)})`)
   else if (declared !== r.visibility)
@@ -823,7 +832,11 @@ async function auditRepo(
       if (!COVERAGE_SKILLS.has(sk))
         warn('CHECKS-1', `"${id}" names no coverage skill (one of: ${[...COVERAGE_SKILLS].join(', ')})`)
       else if (!v) note('COV-1', `override: ki-${sk} coverage not enforced for this repo`)
-      else note('COV-1', `redundant: coverage-${sk} is enforced by default — can be dropped from [${CHECKS_SECTION}]`)
+      else
+        note(
+          'COV-1',
+          `redundant: coverage-${sk} is enforced by default — can be dropped from [skills.${CHECKS_SECTION}]`
+        )
     } else if (!(id in CHECK_DEFAULTS))
       warn(
         'CHECKS-1',
@@ -837,7 +850,7 @@ async function auditRepo(
     else
       note(
         AREA_FOR_CHECK[id] ?? 'CHECKS-1',
-        `redundant: matches the org default (${v ? 'on' : 'off'}) — can be dropped from [${CHECKS_SECTION}]`
+        `redundant: matches the org default (${v ? 'on' : 'off'}) — can be dropped from [skills.${CHECKS_SECTION}]`
       )
   }
 
@@ -855,9 +868,10 @@ async function auditRepo(
       if (detected && !declared)
         warn(
           'COV-1',
-          `looks governed by ki-${c.skill} (${c.artifact}) but declares no [${c.table}] — opt in, or set coverage-${c.skill} = false`
+          `looks governed by ki-${c.skill} (${c.artifact}) but declares no [skills.${c.table}] — opt in, or set coverage-${c.skill} = false`
         )
-      else if (declared && !detected) warn('COV-1', `declares [${c.table}] but no ${c.artifact} found — stale opt-in?`)
+      else if (declared && !detected)
+        warn('COV-1', `declares [skills.${c.table}] but no ${c.artifact} found — stale opt-in?`)
     }
 
     // ── repo-structure cardinality: exactly one structural identity per repo ── STRUCT-1/2
@@ -869,12 +883,12 @@ async function auditRepo(
     if (declaredStructure.length > 1)
       fail(
         'STRUCT-1',
-        `declares ${declaredStructure.length} repo-structure tables (${declaredStructure.map((t) => `[${t}]`).join(', ')}) — a repo has exactly one structural identity; keep one`
+        `declares ${declaredStructure.length} repo-structure tables (${declaredStructure.map((t) => `[skills.${t}]`).join(', ')}) — a repo has exactly one structural identity; keep one`
       )
     else if (declaredStructure.length === 0 && enforced('structure'))
       warn(
         'STRUCT-2',
-        'declares no repo-structure table — pick the one that matches its layout (ki-harness/ki-kb/ki-website/ki-mcp/ki-plugins/ki-specifications/ki-tools/ki-homebrew-tap/ki-dotfiles-chezmoi), or set `structure = false` in ["knowledgeislands/ki-agentic-harness:ki-repo".checks] if this repo genuinely has none'
+        'declares no repo-structure table — pick the one that matches its layout (ki-harness/ki-kb/ki-website/ki-mcp/ki-plugins/ki-specifications/ki-tools/ki-homebrew-tap/ki-dotfiles-chezmoi), or set `structure = false` in [skills.ki-repo.checks] if this repo genuinely has none'
       )
   }
 
@@ -959,7 +973,7 @@ async function auditRepo(
 }
 
 // The agent runtimes the bootstrap linkers know how to install for. A repo may
-// declare a subset in `["knowledgeislands/ki-agentic-harness:ki-repo"] supported_runtimes`; anything outside this set has no
+// declare a subset in `[skills.ki-repo] supported_runtimes`; anything outside this set has no
 // discovery path, so the linker would silently do nothing for it (RUNTIMES-1).
 export const KNOWN_RUNTIMES = ['claude-code', 'chatgpt-codex']
 const LOCAL_SELF_SOURCE = '.agents/skills/ki-self'
@@ -972,7 +986,7 @@ export const runtimeSkillIgnoreRules = (runtimes: readonly string[]): string[] =
   '!.agents/skills/ki-self/**'
 ]
 
-// Parse `supported_runtimes = ["a", "b"]` from the ["knowledgeislands/ki-agentic-harness:ki-repo"] table only (the documented
+// Parse `supported_runtimes = ["a", "b"]` from the [skills.ki-repo] table only (the documented
 // home of the key — table-aware, unlike the bootstrap resolver's tolerant match).
 // Returns null when the key is absent (the ["claude-code"] default applies, nothing to
 // check), else the declared list (possibly empty).
@@ -983,12 +997,12 @@ export function parseSupportedRuntimes(text: string): { runtimes: string[]; root
   } catch {
     return { runtimes: [], rootTables: [], issue: 'must be valid TOML' }
   }
-  const rootTables = Object.entries(document)
+  const rootTables = Object.entries(declaredSkills(document))
     .filter(([, value]) => value && typeof value === 'object' && !Array.isArray(value))
     .map(([name]) => name)
-  const table = document[KI_SECTION]
+  const table = declaredSkills(document)[KI_SECTION]
   if (!table || typeof table !== 'object' || Array.isArray(table))
-    return { runtimes: [], rootTables, issue: `must contain a [${KI_SECTION}] table` }
+    return { runtimes: [], rootTables, issue: `must contain a [skills.${KI_SECTION}] table` }
   const runtimes = (table as Record<string, unknown>).supported_runtimes
   if (runtimes === undefined) return { runtimes: [], rootTables, issue: 'is required' }
   if (!Array.isArray(runtimes)) return { runtimes: [], rootTables, issue: 'must be an array of runtime names' }
@@ -1075,7 +1089,7 @@ const localKiSelfFindings = (dir: string, runtimes: readonly string[]): Finding[
   return f
 }
 
-// RUNTIMES-1: validate the required `["knowledgeislands/ki-agentic-harness:ki-repo"] supported_runtimes` declaration. A pure
+// RUNTIMES-1: validate the required `[skills.ki-repo] supported_runtimes` declaration. A pure
 // local .ki-config.toml read — offline-safe, sitting beside vendor-integrity. Every
 // name must be a runtime the linkers recognise; the support surface is never inferred.
 function localConfigFindings(dir: string): Finding[] {
@@ -1084,14 +1098,14 @@ function localConfigFindings(dir: string): Finding[] {
   if (!existsSync(cfgPath)) return f
   const parsed = parseSupportedRuntimes(readFileSync(cfgPath, 'utf8'))
   if (parsed.issue) {
-    fail('RUNTIMES-1', `[${KI_SECTION}] supported_runtimes ${parsed.issue}`, KI_CONFIG)
+    fail('RUNTIMES-1', `[skills.${KI_SECTION}] supported_runtimes ${parsed.issue}`, KI_CONFIG)
     return f
   }
   const retired = parsed.runtimes.filter((rt) => rt === 'codex')
   if (retired.length)
     fail(
       'RUNTIMES-1',
-      `[${KI_SECTION}] supported_runtimes uses retired runtime(s): ${retired.join(', ')}; use chatgpt-codex`,
+      `[skills.${KI_SECTION}] supported_runtimes uses retired runtime(s): ${retired.join(', ')}; use chatgpt-codex`,
       KI_CONFIG
     )
   if (retired.length) return f
@@ -1099,7 +1113,7 @@ function localConfigFindings(dir: string): Finding[] {
   if (unknown.length)
     fail(
       'RUNTIMES-1',
-      `[${KI_SECTION}] supported_runtimes names unknown runtime(s): ${unknown.join(', ')} (known: ${KNOWN_RUNTIMES.join(', ')})`,
+      `[skills.${KI_SECTION}] supported_runtimes names unknown runtime(s): ${unknown.join(', ')} (known: ${KNOWN_RUNTIMES.join(', ')})`,
       KI_CONFIG
     )
   if (unknown.length) return f
@@ -1115,7 +1129,7 @@ function localConfigFindings(dir: string): Finding[] {
   if (missing.length)
     fail(
       'RUNTIMES-2',
-      `supported runtime coverage requires missing table(s): ${missing.map((skill) => `[${skill}]`).join(', ')}`,
+      `supported runtime coverage requires missing table(s): ${missing.map((skill) => `[skills.${skill}]`).join(', ')}`,
       KI_CONFIG
     )
   f.push(...localKiSelfFindings(dir, parsed.runtimes))
@@ -1258,7 +1272,7 @@ export const collectAuditFindings = async (
 }
 
 const collect = async (argv: readonly string[]): Promise<RepoAuditCollection> => {
-  // `--educate` prints the default ["knowledgeislands/ki-agentic-harness:ki-repo"] block for a new repo's
+  // `--educate` prints the default [skills.ki-repo] block for a new repo's
   // .ki-config.toml (authoring creates the keys; the author edits the values).
   if (argv.includes('--educate')) {
     return { target: resolve('.'), findings: [], educate: KI_DEFAULT }

@@ -32,7 +32,7 @@ afterEach(() => {
 const createBase = (): string => {
   const repository = mkdtempSync(join(tmpdir(), 'ki-kb-session-'))
   temporaryDirectories.push(repository)
-  writeFileSync(join(repository, '.ki-config.toml'), '["knowledgeislands/ki-agentic-harness:ki-kb"]\n')
+  writeFileSync(join(repository, '.ki-config.toml'), '[skills.ki-kb]\n')
   writeFileSync(join(repository, 'AGENTS.md'), '# Base guidance\n\nLoad Admin/MEMORY.md before work.\n')
   for (const zone of ZONES) mkdirSync(join(repository, zone), { recursive: true })
   return repository
@@ -154,13 +154,7 @@ test('a zone alias cannot propose a create through an intermediate symlink', () 
   symlinkSync(outside, join(repository, 'linked'))
   writeFileSync(
     join(repository, '.ki-config.toml'),
-    [
-      '["knowledgeislands/ki-agentic-harness:ki-kb"]',
-      '',
-      '["knowledgeislands/ki-agentic-harness:ki-kb".zones]',
-      'Resources = "linked/Resources"',
-      ''
-    ].join('\n')
+    ['[skills.ki-kb]', '', '[skills.ki-kb.zones]', 'Resources = "linked/Resources"', ''].join('\n')
   )
   const session = catalogue.createSession({ mode: 'conform', repository, userHome: tmpdir(), configuration: {} })
   const context = session.subjects[1]?.context() as KbRubricContext

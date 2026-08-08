@@ -9,10 +9,10 @@ import type {
 
 const CONFIG_NAMES = ['eleventy.config.ts', 'eleventy.config.js', 'eleventy.config.mjs', 'eleventy.config.cjs'] as const
 const SKILL_NAME = 'ki-website'
-const KI_SECTION = 'knowledgeislands/ki-agentic-harness:ki-website'
+const KI_SECTION = 'ki-website'
 const KI_DEFAULT = `# ${SKILL_NAME} — opt-in marker: presence of this table opts the repo into the
 # Eleventy + Tailwind site-build standard. It takes no per-repo keys today.
-["${KI_SECTION}"]
+[skills.${KI_SECTION}]
 `
 
 type Draft = {
@@ -98,7 +98,7 @@ export const createWebsiteSession = ({
   const configSafe = !configExists || containedPhysical(root, configPath, 'file')
   const configRaw = configSafe && configExists ? read('.ki-config.toml') : ''
   const ki = configSafe ? parseToml(configRaw) : { document: null, malformed: true }
-  const kiWebsiteTable = asTable(ki.document?.[KI_SECTION])
+  const kiWebsiteTable = asTable(asTable(ki.document?.skills)?.[KI_SECTION])
   const applicable = available && (kiWebsiteTable !== null || ki.malformed || structuralMarker)
 
   const packageSource = read('package.json')

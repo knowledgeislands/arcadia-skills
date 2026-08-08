@@ -7,7 +7,7 @@ import type {
   RubricSession
 } from '../../shared/rubric.ts'
 
-const SECTION = 'knowledgeislands/ki-agentic-harness:ki-specifications'
+const SECTION = 'ki-specifications'
 const core = ['proposals', 'specifications', 'schemas'] as const
 const supporting = ['templates', 'examples', 'docs', 'tooling'] as const
 
@@ -57,7 +57,7 @@ export const createSpecificationsSession = ({
   if (configExists)
     try {
       document = Bun.TOML.parse(configSource) as Readonly<Record<string, unknown>>
-      table = asTable(document[SECTION])
+      table = asTable(asTable(document.skills)?.[SECTION])
     } catch {
       malformed = true
     }
@@ -73,8 +73,8 @@ export const createSpecificationsSession = ({
     draft === undefined
       ? undefined
       : (): void => {
-          if (document?.[SECTION] !== undefined || draft === undefined || markerAdded) return
-          draft = `${draft.trimEnd()}\n\n# This repo carries the KI Specifications repository structure.\n["${SECTION}"]\n`
+          if (asTable(document?.skills)?.[SECTION] !== undefined || draft === undefined || markerAdded) return
+          draft = `${draft.trimEnd()}\n\n# This repo carries the KI Specifications repository structure.\n[skills.${SECTION}]\n`
           markerAdded = true
         }
 

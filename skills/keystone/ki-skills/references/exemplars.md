@@ -86,7 +86,7 @@ Coverage-selected governance is different: if two independently declared standar
 ```yaml
 ---
 name: ki-website-cloudflare
-ki-depends-on: ['knowledgeislands/ki-agentic-harness:ki-website']
+ki-depends-on: [skills.ki-website]
 ---
 ```
 

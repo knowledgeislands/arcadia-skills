@@ -11,7 +11,7 @@ import type {
 const INDEX_NOTE = 'Live Artifacts.md'
 const DEFAULT_ARTIFACTS_DIRECTORY = 'Admin/Operations/Live Artifacts'
 const DEFAULT_THRESHOLD_HOURS = 24
-const CONFIG_TABLE = 'knowledgeislands/ki-agentic-harness:ki-kb-live-artifacts'
+const CONFIG_TABLE = 'ki-kb-live-artifacts'
 
 type ArtifactSource = {
   relativePath: string
@@ -81,7 +81,8 @@ const parseConfiguration = (repository: string): LiveArtifactsConfiguration => {
     return { artifactsDirectory: DEFAULT_ARTIFACTS_DIRECTORY, thresholdHours: DEFAULT_THRESHOLD_HOURS }
   try {
     const document = Bun.TOML.parse(readFileSync(path, 'utf8')) as Record<string, unknown>
-    const value = document[CONFIG_TABLE]
+    const skills = document.skills
+    const value = skills && typeof skills === 'object' ? (skills as Record<string, unknown>)[CONFIG_TABLE] : undefined
     const table = value && typeof value === 'object' && !Array.isArray(value) ? (value as Record<string, unknown>) : {}
     const configuredDirectory = table.artifacts_dir
     const artifactsDirectory =

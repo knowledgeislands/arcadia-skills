@@ -19,10 +19,9 @@ import {
   runtimeSkillIgnoreRules
 } from './audit.ts'
 
-const HARNESS_ID = 'knowledgeislands/ki-agentic-harness'
-const KI_REPO_TABLE = `${HARNESS_ID}:ki-repo`
-const KI_AUTHORING_TABLE = `${HARNESS_ID}:ki-authoring`
-const KI_REPO_DEFAULT = `["${KI_REPO_TABLE}"]
+const KI_REPO_TABLE = 'ki-repo'
+const KI_AUTHORING_TABLE = 'ki-authoring'
+const KI_REPO_DEFAULT = `[skills.${KI_REPO_TABLE}]
 title = ""              # required — exact README.md H1
 description = ""        # required — exact GitHub and package.json description where present
 visibility = "private"   # "public" | "private" — must match the repo's actual GitHub visibility
@@ -31,14 +30,14 @@ supported_runtimes = ["claude-code", "chatgpt-codex"] # required agent-runtime s
 
 # Per-repo check overrides — true = enforce, false = don't. Omit any check to take
 # the org default; a repo that fully conforms needs nothing here.
-# ["${KI_REPO_TABLE}".checks]
+# [skills.${KI_REPO_TABLE}.checks]
 # branch-protection = true   # default off — protect \`main\` on this repo
 # wiki = false               # default on  — allow this repo's Wiki
 `
 
 const KI_AUTHORING_DEFAULT = `# The authoring standard (Markdown/TOML house style) is baseline — every KI repo is
 # governed by it. Declared explicitly, not assumed; its presence is the compliance marker.
-["${KI_AUTHORING_TABLE}"]
+[skills.${KI_AUTHORING_TABLE}]
 `
 
 const RUNTIME_SKILL_GITIGNORE = (

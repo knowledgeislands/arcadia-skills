@@ -6,7 +6,7 @@ const TEMPLATE_ID = /^[A-Z][A-Z0-9-]{1,23}-HK-\d{3,}$/
 const CADENCE = /^P[1-9]\d*[DWM]$/
 const DATE = /^\d{4}-\d{2}-\d{2}$/
 const HORIZONS = new Set(['now', 'next', 'soon', 'future', 'waiting-for', 'parked'])
-const REPO_CONFIG = 'knowledgeislands/ki-agentic-harness:ki-repo'
+const REPO_CONFIG = 'ki-repo'
 const TOML = (globalThis as unknown as { Bun: { TOML: { parse(text: string): unknown } } }).Bun.TOML
 
 export type HousekeepingRubricContext = {
@@ -34,7 +34,8 @@ const isKb = (root: string): boolean => {
   if (!file(config)) return false
   try {
     const parsed = TOML.parse(readFileSync(config, 'utf8')) as Record<string, unknown>
-    const table = parsed[REPO_CONFIG]
+    const skills = parsed.skills
+    const table = skills && typeof skills === 'object' ? (skills as Record<string, unknown>)[REPO_CONFIG] : undefined
     return (
       typeof table === 'object' &&
       table !== null &&

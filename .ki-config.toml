@@ -1,4 +1,7 @@
-["knowledgeislands/ki-agentic-harness:ki-repo"]
+[repo]
+harnesses = ["knowledgeislands/ki-agentic-harness"]
+
+[skills.ki-repo]
 repository = "https://github.com/knowledgeislands/ki-agentic-harness"
 title = "ki-agentic-harness"
 description = "Knowledge Islands agentic harness — canonical home for Agent Skills, Agents, MCP servers, and Evals across the Knowledge Islands ecosystem."
@@ -7,62 +10,63 @@ visibility = "public"
 license = "MIT"
 supported_runtimes = ["claude-code", "chatgpt-codex"]
 
-["knowledgeislands/ki-agentic-harness:ki-repo".checks]
+[skills.ki-repo.checks]
 coverage-checkpoints = false # source repository publishes the optional capability without adopting a checkpoint subarea
 
-["knowledgeislands/ki-agentic-harness:ki-authoring"]
+[skills.ki-authoring]
 
-["knowledgeislands/ki-agentic-harness:ki-engineering"]
+[skills.ki-engineering]
 
-["knowledgeislands/ki-agentic-harness:ki-binding"]
+[skills.ki-binding]
 
-["knowledgeislands/ki-agentic-harness:ki-binding-claude"]
+[skills.ki-binding-claude]
 
-["knowledgeislands/ki-agentic-harness:ki-harness"]
+[skills.ki-harness]
 
-["knowledgeislands/ki-agentic-harness:ki-skills"]
+[skills.ki-skills]
 
-["knowledgeislands/ki-agentic-harness:ki-subagents"]
+[skills.ki-subagents]
 
-["knowledgeislands/ki-agentic-harness:ki-decision-records"]
+[skills.ki-decision-records]
 
-["knowledgeislands/ki-agentic-harness:ki-delegation"]
+[skills.ki-delegation]
 
-["knowledgeislands/ki-agentic-harness:ki-feature-definitions"]
+[skills.ki-feature-definitions]
 
-["knowledgeislands/ki-agentic-harness:ki-guides"]
+[skills.ki-guides]
 
-["knowledgeislands/ki-agentic-harness:ki-trades".exports_to]
-work = ["https://github.com/knowledgeislands/ki-website", "https://github.com/knowledgeislands/tools-ki", "https://github.com/knowledgeislands/tools-mgit", "https://github.com/krisb/dotfiles"]
-knowledge = ["https://github.com/knowledgeislands/ki-website", "https://github.com/knowledgeislands/tools-mgit"]
+[skills.ki-trades]
 
-["knowledgeislands/ki-agentic-harness:ki-trades".imports_from]
-work = ["https://github.com/knowledgeislands/tools-ki", "https://github.com/knowledgeislands/tools-mgit"]
-knowledge = ["https://github.com/knowledgeislands/tools-ki", "https://github.com/knowledgeislands/tools-mgit"]
+[skills.ki-trades.routes]
+"knowledgeislands/ki-website" = { export = ["work", "knowledge"] }
+"knowledgeislands/tools-ki" = { export = ["work"], import = ["work", "knowledge"] }
+"knowledgeislands/tools-mgit" = { export = ["work", "knowledge"], import = ["work", "knowledge"] }
+"krisb/dotfiles" = { export = ["work"] }
 
-["knowledgeislands/ki-agentic-harness:ki-git"]
+[skills.ki-git]
 
-["knowledgeislands/ki-agentic-harness:ki-housekeeping-claude"]
+[skills.ki-housekeeping-claude]
 
-["knowledgeislands/ki-agentic-harness:ki-housekeeping"]
+[skills.ki-housekeeping]
 
-["knowledgeislands/ki-agentic-harness:ki-roadmap"]
-["knowledgeislands/ki-agentic-harness:ki-roadmap".themes]
+[skills.ki-roadmap]
+
+[skills.ki-roadmap.themes]
 FND = "foundation-tooling"
 GOV = "governance-consistency"
 OPS = "operations"
 RTP = "runtime-portability"
 
-["knowledgeislands/ki-agentic-harness:ki-checkpoints"]
+[skills.ki-checkpoints]
 
-["knowledgeislands/ki-agentic-harness:ki-tokenomics"]
+[skills.ki-tokenomics]
 headroom = "recommended"
 # Cross-skill governance benefits from the higher-reasoning project default.
 preferred_model_type = "reasoning"
 
-["knowledgeislands/ki-agentic-harness:ki-tokenomics".budgets]
+[skills.ki-tokenomics.budgets]
 mcp_servers = 20 # User-scoped; revisit if the global MCP set is pruned.
 
-["knowledgeislands/ki-agentic-harness:ki-tokenomics-claude"]
+[skills.ki-tokenomics-claude]
 
-["knowledgeislands/ki-agentic-harness:ki-tokenomics-codex"]
+[skills.ki-tokenomics-codex]

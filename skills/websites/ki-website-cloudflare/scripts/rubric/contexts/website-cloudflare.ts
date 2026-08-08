@@ -3,7 +3,7 @@ import { dirname, join, resolve } from 'node:path'
 import type { RubricContextOptions, RubricPublicationContext, RubricSession } from '../../shared/rubric.ts'
 
 const CONFIG_FILE = '.ki-config.toml'
-const CONFIG_SECTION = 'knowledgeislands/ki-agentic-harness:ki-website-cloudflare'
+const CONFIG_SECTION = 'ki-website-cloudflare'
 const WRANGLER_FILES = ['wrangler.jsonc', 'wrangler.json', 'wrangler.toml'] as const
 const SKIPPED_DIRECTORIES = new Set(['.git', '.wrangler', 'dist', 'node_modules'])
 
@@ -126,7 +126,7 @@ const inspectConfiguration = (
   if (text === null) return { state: 'unsafe', keys: [], siteRoot: null }
   try {
     const parsed = Bun.TOML.parse(text) as Record<string, unknown>
-    const candidate = parsed[CONFIG_SECTION]
+    const candidate = (parsed.skills as Record<string, unknown> | undefined)?.[CONFIG_SECTION]
     if (candidate === undefined) return { state: 'absent', keys: [], siteRoot: null }
     if (!candidate || typeof candidate !== 'object' || Array.isArray(candidate))
       return { state: 'malformed', keys: [], siteRoot: null }
