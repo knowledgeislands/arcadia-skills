@@ -3,7 +3,7 @@ id: KI-HARNESS-FND-011
 title: Report rumdl parser defects
 theme: foundation-tooling
 horizon: now
-status: proposed
+status: draft
 blocks: []
 blocked-by: []
 baseline-ref: 4d7f80f1d3581a56db4dbc22bc8054800b1ba77c
