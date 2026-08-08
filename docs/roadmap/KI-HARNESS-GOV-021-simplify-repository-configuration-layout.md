@@ -31,11 +31,11 @@ This item owns the contract text, the rubric criteria, and the migration of ever
 
 `ki-repo` defines the `.ki-config.toml` contract in terms of the fully-qualified quoted key, and `ki-trades` documents its routes as `exports_to` and `imports_from` sub-tables of that key. Twenty-four `.ki-config.toml` files exist across the estate: fifteen under `knowledgeislands`, and nine outside it in `kit-hnr`, `kit-legal`, `kit-pkb`, `kit-midnight.ninja`, `er-research`, `kit-techmedix`, `vallearmonia-principal`, `vallearmonia-website`, and the chezmoi repository. Every one of them uses the current form and must be rewritten in the same pass.
 
-Two shape questions the source trade explicitly hands to this repository are still open: whether routes key on the canonical HTTPS URL or on the `owner/name` form that trade records already use, and whether a route uses an inline table now and converts to a nested header if it ever gains a per-partner property, or adopts the longer header immediately.
+The two shape questions the source trade explicitly handed to this repository are now settled under Discussion: routes key on `owner/name`, and a route is an inline table. Nothing else in the item is started, and nothing may start on the estate migration until the host parser lands.
 
 ## Steps
 
-- [ ] Settle the two open shape questions — route key form and inline versus nested route table — and record the decision and its reasoning under Discussion.
+- [x] Settle the two open shape questions — route key form and inline versus nested route table — and record the decision and its reasoning under Discussion.
 - [ ] Rewrite the `.ki-config.toml` contract in `ki-repo` to specify `[repo].harnesses`, bare `[skills.<name>]` declarations, nested `[skills.<name>.<sub>]` configuration, and quoted `[skills."<harness-id>:<name>"]` only for a provider outside the declared list.
 - [ ] State the resolution rule in the contract: a bare name binds exactly one declared provider, no provider is an error, more than one provider requires explicit qualification, and resolution consults the declared list rather than installed harnesses.
 - [ ] Rewrite the `ki-trades` route declaration in its standard to the partner-keyed `[skills.ki-trades.routes]` shape with `export` and `import` kind arrays, and remove the now-redundant hand-written uniqueness and lexical-ordering requirement that TOML's duplicate-key prohibition supersedes.
@@ -79,12 +79,27 @@ This item adopts `TRD-aacc8a12`.
 
 ### Why no compatibility period
 
-Per this repository's current-state migration rule, the contract is made correct and every existing footprint is conformed to it in the same pass. The cutover is unusually safe here because the failure mode is loud rather than silent: a bare table name is already rejected as unqualified by the current parser, so a partially-migrated estate cannot quietly misbehave.
+Per this repository's current-state migration rule, the contract is made correct and every existing footprint is conformed to it in the same pass. No compatibility period is not the same as no ordering, and an earlier draft of this section conflated them: it claimed a partially-migrated estate cannot quietly misbehave, on the strength of the unmigrated-file-under-new-parser direction failing loudly. That is only one of the two directions, and the other is the dangerous one. The Boundary records the verified behaviour — a migrated file under the old parser drops every declaration silently and reports a green audit that checked nothing. So the estate can quietly misbehave, in exactly one direction, which is why the parser lands first and why no repository is ever left migrated against an older executable.
 
 ### Declaring a skill separately from configuring it
 
 TOML creates a super-table implicitly, so `[skills.ki-roadmap]` before `[skills.ki-roadmap.themes]` is optional. Stating it explicitly is a convention this contract adopts anyway, because it is precisely what makes a declaration independent of whether the skill happens to carry configuration — the distinction the current `ki-trades` implicit declaration loses.
 
-### Open shape questions
+### Settled shape questions
 
-Trade records identify a repository as `owner/name` while route declarations use a canonical HTTPS URL, so keying routes by repository forces a choice between matching the record form and keeping the host inside the key. Separately, an inline table suits a route that carries only its kinds, but the specification intends an inline table to occupy a single line and discourages breaking one across lines in favour of a standard table, so a route that later gained a per-partner property would have to convert to a nested table header whose key is a full URL. Both are decided in the first Step rather than assumed here.
+Trade records identify a repository as `owner/name` while route declarations use a canonical HTTPS URL, so keying routes by repository forced a choice between matching the record form and keeping the host inside the key. Separately, an inline table suits a route that carries only its kinds, but the specification intends an inline table to occupy a single line and discourages breaking one across lines in favour of a standard table, so a route that later gained a per-partner property would have to convert to a nested table header. Both are settled here, and they turn out to interlock: the first defuses the objection to the second.
+
+**Routes key on `owner/name`.** This is the form trade records already use, and it is the form the working areas already lay out on disk — an outbound record for this partner lives at `+/_TRADES/knowledgeislands/tools-ki/`, so the key and the path become the same string rather than two spellings of one fact that can drift apart. A host is how a repository is reached, not who it is, and putting it inside an identity key means a partner that moves host acquires a new identity. Nothing new is needed to make this work, because the estate already treats `owner/name` as sufficient identity: a trade record names its `sender` and `receiver` in exactly that form and carries no host at all, so a route key in the same form is resolved by the machinery that already resolves those. A partner that genuinely sits elsewhere keeps a full URL as its key, which is the same exception shape the skill list already uses for a provider outside the declared harnesses — the exceptional case stays visibly exceptional, and it stays exceptional in exactly one way across both parts of the contract.
+
+**Routes are inline tables.** A route carries only its kinds, and naming the whole relationship with one repository on a single line is the stated point of keying by partner; a nested header per partner spends three lines to say what one says. The objection was that a later per-partner property would force conversion to a standard table whose header key is a full URL — but under the decision above that header is `[skills.ki-trades.routes."knowledgeislands/tools-ki"]`, which is ordinary rather than unwieldy. The conversion is also mechanical and local to one partner, and it is the conversion TOML intends rather than a workaround. Choosing the short form now and paying a small, well-signposted cost later is better than paying the long form on every partner forever against a property that may never arrive.
+
+Together these give the route shape below, where TOML's own prohibition on defining a key twice rejects a duplicated partner, and a direction that carries no kinds is simply absent rather than declared empty.
+
+```toml
+[repo]
+harnesses = ["knowledgeislands/ki-agentic-harness"]
+
+[skills.ki-trades.routes]
+"knowledgeislands/tools-ki" = { export = ["work"], import = ["work", "knowledge"] }
+"knowledgeislands/ki-specifications" = { import = ["knowledge"] }
+```
