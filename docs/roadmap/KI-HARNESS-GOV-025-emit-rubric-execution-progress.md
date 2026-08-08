@@ -3,10 +3,10 @@ id: KI-HARNESS-GOV-025
 title: Emit rubric execution progress
 theme: governance-consistency
 horizon: now
-status: draft
+status: awaiting-review
 blocks: []
 blocked-by: []
-baseline-ref: null
+baseline-ref: 8c06ae91a781efc72ba4c1ff4a7478481cbe7970
 ---
 
 ## Goal
@@ -35,7 +35,7 @@ The cost channel now carries the six criteria whose evidence is a subprocess: `S
 
 `RubricExecution.run` and `RubricSubject.context` remain synchronous, which costs nothing while evidence is gathered in contexts.
 
-Emission is now proven inert rather than asserted to be: `ki-repo` carries a test that runs the same session with and without a recording emitter and compares both the outcomes and the proposal, and that also confirms the emitter reaches the evidence gathering rather than stopping at the session. `ki-engineering` has no equivalent test, which is a gap in the earlier step rather than in this one.
+Emission is now proven inert rather than asserted to be, in both converted skills. Each carries a test that runs the same session with and without a recording emitter and compares both the outcomes and the proposal, and that also confirms the emitter reaches the evidence gathering rather than stopping at the session, by recording what the injected inspector was handed. `ki-engineering` sweeps every criterion in all thirteen non-`RUBRIC` families rather than one family, reading them through the erased `RubricFamily<EngineeringRubricContext, unknown>` because the focused contexts are heterogeneous and their union is not assignable to any one of them.
 
 Two migration routes were measured rather than argued. Widening the inner seams — `RubricSubject.context` and `RubricExecution.run` — produces 238 type errors across sixty-one files, because 121 call sites in twenty-eight test files consume a result synchronously, most inline as `item.audit.run(context)[0]?.message`. Widening only `createSession` instead reaches the same capability and touches twenty-eight test files by one line each, none of them for async. The entry point is therefore the seam to move: a concrete synchronous `createSession` stays assignable to the widened type, so no skill breaks until it chooses to become async.
 
@@ -50,7 +50,7 @@ The contract version does not move. Every addition here is source-compatible, an
 - [x] Convert `collectAuditEvidence` in `ki-engineering` from `execSync` to awaited subprocesses, emitting a step per external command.
 - [x] Declare a cost on the subprocess-backed criteria in `ki-engineering` and any sibling whose expense is comparable, so weighting stops being item count.
 - [x] Convert the remaining contexts that gather evidence expensively, one skill at a time, as each earns it. `ki-repo` earned it and is converted. `ki-authoring` runs rumdl in 0.24s and `ki-tools` spawns `--version`; neither blocks long enough to justify the change, and both stay synchronous until they do.
-- [ ] Add the emitter-inertness test to `ki-engineering` that `ki-repo` now carries, closing the one place where the Verify claim rests on reading rather than on a test.
+- [x] Add the emitter-inertness test to `ki-engineering` that `ki-repo` now carries, closing the one place where the Verify claim rests on reading rather than on a test.
 
 ## Files touched
 
@@ -70,6 +70,51 @@ A session created without an emitter must produce byte-identical findings to one
 ## Dependencies / blocks
 
 Nothing blocks this item. It supersedes the local half of `TRD-d7d00505` and supplies what `KI-TOOL-CLI-022` needs to weight its progress bar by anything other than item count; that item is `tools-ki`'s to sequence, and this repository does not block on it.
+
+## Review
+
+### Delivered
+
+All eight steps. The contract carries `emit` and `cost` across its thirty-five converged vendored copies, `createSession` may return a promise, and the two skills whose evidence blocked the loop measurably — `ki-engineering` on local subprocesses and `ki-repo` on `gh` network calls — now await that work and report each external command as a step. Six subprocess-backed criteria in `ki-engineering` and `ki-authoring` and four `gh`-backed criteria in `ki-repo` declare a cost. Both converted skills carry a test proving emission observational.
+
+### Summary of changes
+
+| Commit | Change |
+| --- | --- |
+| `a6f7b2c3` | `emit` and `cost` added to the contract, across the thirty-five vendored copies converged first |
+| `19c5976a` | `createSession` widened to return a session or a promise of one |
+| `b0cdf90a` | `ki-engineering` evidence gathering converted from `execSync` to awaited subprocesses |
+| `4d7f80f1` | cost declared on `SYNC-1`, `BIO-1`, `TSC-1`, `KNIP-2`, `TEST-5`, and `MD-mech` |
+| `7bfdf1fd` | `ki-repo` `gh` layer awaited and emitting, with `Promise.all` over independent content reads |
+| this change | the `ki-engineering` emitter-inertness test, and this record |
+
+### Verification
+
+`bunx tsc --noEmit` is clean and `bun run test` reports 316 pass, 0 fail across 83 files.
+
+`ki repo audit --skill ki-engineering` completes in 2.07s wall against 3.89s of CPU — 188% — where the pre-change run spent its time on a blocked loop. `ki-repo` was measured at 3.17s wall and 38% CPU before conversion, roughly two seconds of it inert. CPU exceeding wall clock is the direct evidence that the loop is no longer parked, and it is what makes the host's refresh timer deliverable.
+
+The full `ki repo audit` reports `FAIL=0 WARN=0` for every skill this item touches. Two unrelated `ki-roadmap` failures against `FND-010` and `FND-011` were found in the same sweep and are recorded as outstanding below rather than absorbed here.
+
+Emission is proven inert in both skills by a test that runs one session silent and one watched against the same injected inspector, and compares outcomes and proposal. Each also records what the inspector was handed, so the test fails if the emitter stops at the session and never reaches the evidence gathering.
+
+### Outstanding concerns
+
+`RubricExecution.run` and `RubricSubject.context` remain synchronous. That is deliberate and costs nothing while evidence is gathered in contexts, but a criterion that ever wants to shell out directly will need the inner seams, and widening them was measured at 238 type errors across sixty-one files.
+
+`ki-authoring` and `ki-tools` are not converted, on the measurement that 0.24s and a `--version` spawn do not block long enough to earn it. If either grows, the judgment should be re-taken rather than inherited.
+
+### Post-change review
+
+Not yet performed.
+
+### Mini recap
+
+The trade's diagnosis had to be relocated before anything could be built: it named "items that shell out", but under the house evidence pattern the subprocesses run when the context is built, ahead of the first item edge the host reports. Accepting it verbatim would have widened the inner seams, paid 121 test edits, and left the display frozen.
+
+The lasting judgment is that cost is a ratio between subprocess-backed siblings and never a ratio against an `lstat`, which would be four orders of magnitude and would weight a bar into uselessness. TypeScript 7.0.2 inverted the usual intuition here — `tsc --noEmit` runs in 0.4s at 400% CPU, so `tsc` is no longer the expensive gate and its cost is 5 rather than the largest.
+
+Writing the `ki-repo` inertness test is what revealed that `ki-engineering` had none, which was raised as a step rather than papered over, and is the step this change closes.
 
 ## Discussion
 

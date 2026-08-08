@@ -2,9 +2,10 @@ import { afterEach, expect, test } from 'bun:test'
 import { mkdtempSync, readdirSync, readFileSync, rmSync, symlinkSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
-import type { RubricFamily } from '../../shared/rubric.ts'
+import type { RubricEmitter, RubricFamily } from '../../shared/rubric.ts'
 import {
   createEngineeringSession,
+  type EngineeringEvidenceInspector,
   type EngineeringRubricContext,
   type KnipRubricContext,
   type PackageRubricContext,
@@ -186,4 +187,48 @@ test('knip export coverage is audited without offering a repair', async () => {
     { status: 'VIOLATION', message: 'export "./cli" is unreachable', subject: 'knip.json' }
   ])
   expect(session.proposal().commands).toBeUndefined()
+})
+
+// Emission is observational: a rubric that reported differently when watched would make
+// progress part of the contract under audit, and a finding that turned on whether a display
+// was attached could not be defended. The inspector is recorded rather than asserted on
+// directly, because the emitter must also reach the evidence gathering, not just the session.
+test('a recording emitter changes no outcome and still observes the evidence stage', async () => {
+  const repository = mkdtempSync(join(tmpdir(), 'ki-engineering-'))
+  temporaryDirectories.push(repository)
+  writeFileSync(join(repository, 'package.json'), '{"name":"example"}\n')
+
+  const events: unknown[] = []
+  const seen: (RubricEmitter | undefined)[] = []
+  const recording: EngineeringEvidenceInspector = (_target, emit) => {
+    seen.push(emit)
+    return [
+      { level: 'FAIL', code: 'PKG-1', message: 'type missing', subject: 'package.json' },
+      { level: 'WARN', code: 'DEPS-1', message: 'dependency update available' }
+    ]
+  }
+
+  const options = { mode: 'audit', repository, userHome: tmpdir(), configuration: {} } as const
+  const silent = await createEngineeringSession(options, recording)
+  const watched = await createEngineeringSession({ ...options, emit: (event) => void events.push(event) }, recording)
+
+  const outcomes = (session: Awaited<ReturnType<typeof createEngineeringSession>>) =>
+    catalogue.families
+      .filter((family) => family.code !== 'RUBRIC')
+      .flatMap((candidate) => {
+        // The catalogue's families are heterogeneous in their focused context, so the sweep
+        // reads them through the erased contract rather than the union of their thirteen shapes.
+        const family = candidate as RubricFamily<EngineeringRubricContext, unknown>
+        const root = session.subjects[1]?.context() as EngineeringRubricContext
+        return family.items.map((item) => item.mechanical?.audit.run(family.selectContext(root)))
+      })
+  expect(outcomes(watched)).toEqual(outcomes(silent))
+  expect(watched.proposal()).toEqual(silent.proposal())
+
+  expect(seen[0]).toBeUndefined()
+  expect(seen[1]).toBeInstanceOf(Function)
+  expect(events).toEqual([
+    { kind: 'stage', edge: 'start', label: 'engineering evidence' },
+    { kind: 'stage', edge: 'end', label: 'engineering evidence' }
+  ])
 })
