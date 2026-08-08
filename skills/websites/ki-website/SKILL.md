@@ -15,7 +15,7 @@ argument-hint: 'audit <repo> | conform <repo> | help | educate <repo> | refresh'
 
 You are applying the **Knowledge Islands 11ty website standard** — the shared way every static website in this work is built: **Eleventy 3, Nunjucks and Markdown; TypeScript run natively on Bun; Tailwind 4 config-less with design tokens**, compiling to a **portable `dist/`**. A new site is scaffolded to it; an existing one is audited and conformed against it. This skill carries that standard and the procedure.
 
-This is a **base-agnostic governance skill**. It hard-codes no single repo; it applies to any repo carrying a `["knowledgeislands/ki-agentic-harness:ki-website"]` table in its `.ki-config.toml`. How it sits beside the other skills, and where it must not overlap them, is documented once in the ki-agentic-harness `README.md`.
+This is a **base-agnostic governance skill**. It hard-codes no single repo; it applies to any repo carrying a `[skills.ki-website]` table in its `.ki-config.toml`. How it sits beside the other skills, and where it must not overlap them, is documented once in the ki-agentic-harness `README.md`.
 
 This skill owns the **site-build delta** only. The generic toolchain (Bun mandate, aggregate/scoped audit wiring, and direct `tsconfig`/Biome/TypeScript checks) is `ki-engineering`'s; Markdown/TOML style is `ki-authoring`'s; **serving the built `dist/`** on Cloudflare is `ki-website-cloudflare`'s. Those independently selected standards are audited alongside this one rather than restated here.
 
@@ -58,7 +58,7 @@ ki repo audit --repo <repo> --skill ki-engineering          → common toolchain
   then ki repo audit --repo <repo> --skill ki-website-cloudflare → serving the dist/ (if deployed to Cloudflare)
 ```
 
-A repo is "clean" only when **every applicable** skill's audit passes. The `.ki-config.toml` tables are the selector: `["knowledgeislands/ki-agentic-harness:ki-engineering"]` marks the common layer; `["knowledgeislands/ki-agentic-harness:ki-website"]` marks this one; `["knowledgeislands/ki-agentic-harness:ki-website-cloudflare"]` marks the hosting layer.
+A repo is "clean" only when **every applicable** skill's audit passes. The `.ki-config.toml` tables are the selector: `[skills.ki-engineering]` marks the common layer; `[skills.ki-website]` marks this one; `[skills.ki-website-cloudflare]` marks the hosting layer.
 
 ## The `dist/` contract (the seam to hosting)
 

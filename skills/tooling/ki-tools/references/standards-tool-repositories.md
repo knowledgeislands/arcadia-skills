@@ -20,7 +20,7 @@ The full, quotable standard behind the `ki-tools` skill. A `tools-*` repo holds 
 
 This standard judges the **container** (the repo's shape) and a small shared public interface — it does **not** judge the quality of tool-specific operations. A shell tool must be shellcheck-clean and carry a bats suite; this standard checks those are **wired into CI**, not what they report. Whether a tool's own operations are correct, well-factored, or fast is its author's concern.
 
-Applicability is declaration or structure: `["knowledgeislands/ki-agentic-harness:ki-tools"]` in `.ki-config.toml` or a root `bin/` directory activates the complete audit. With neither, `ki repo audit --skill ki-tools` reports one `NA` and stops. A declared repository without `bin/` and an undeclared repository with `bin/` remain applicable; the former fails the executable-container requirement and the latter is audited for the missing declaration.
+Applicability is declaration or structure: `[skills.ki-tools]` in `.ki-config.toml` or a root `bin/` directory activates the complete audit. With neither, `ki repo audit --skill ki-tools` reports one `NA` and stops. A declared repository without `bin/` and an undeclared repository with `bin/` remain applicable; the former fails the executable-container requirement and the latter is audited for the missing declaration.
 
 One tool per repo. A repo that would ship two distinct tools is two repos.
 
@@ -83,7 +83,7 @@ What the repo _is_ decides which checks apply — the same standard covers a bas
 | Capability signal | Requirement it turns on |
 | --- | --- |
 | Primary bin has a `bash`/`sh` shebang (SHELL) | A CI workflow references **shellcheck** (the tool is shellcheck-clean); `tests/` holds a **`*.bats`** suite CI runs (references `bats`). |
-| A `package.json` appears (TS/Bun tool) | The repo defers lint/test to **`ki-engineering`** and MUST also declare `["knowledgeislands/ki-agentic-harness:ki-engineering"]` in `.ki-config.toml`. Shell checks don't apply. |
+| A `package.json` appears (TS/Bun tool) | The repo defers lint/test to **`ki-engineering`** and MUST also declare `[skills.ki-engineering]` in `.ki-config.toml`. Shell checks don't apply. |
 | A physical `man/<tool>.1` page appears | CI runs `mandoc -T lint man/<tool>.1`, directly or through the repository's native task runner. The installer publishes it and `--link` links it alongside the executable. |
 | Another language (Python, Go, …) | Defer to that language's own toolchain. The container checks (bin, install.sh, versioning, changelog, CI, tests) still apply. |
 
@@ -113,7 +113,7 @@ A physical `man/<tool>.1` is the installed command reference. It stays aligned w
 
 ## The qualified `ki-tools` marker
 
-A `tools-*` repo opts in by declaring a **keyless** `["knowledgeislands/ki-agentic-harness:ki-tools"]` table in its `.ki-config.toml`. It is validated **down**: the checker reads only this table and warns on any unknown key inside it (there are none today), never reading another skill's table. `ki repo conform --skill ki-tools` adds it to an existing parseable configuration when it is safe to do so.
+A `tools-*` repo opts in by declaring a **keyless** `[skills.ki-tools]` table in its `.ki-config.toml`. It is validated **down**: the checker reads only this table and warns on any unknown key inside it (there are none today), never reading another skill's table. `ki repo conform --skill ki-tools` adds it to an existing parseable configuration when it is safe to do so.
 
 A language conditional is declared as its **own** table, not a key here: a TS/Bun tool carries both `ki-tools` and `ki-engineering` qualified declarations.
 

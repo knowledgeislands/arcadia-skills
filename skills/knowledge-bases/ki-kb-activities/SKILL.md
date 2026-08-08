@@ -50,10 +50,10 @@ Modes: **AUDIT · CONFORM · EDUCATE · NEW · REFRESH** (named, alphabetical). 
 
 ## Project bindings
 
-Declare in the base's `.ki-config.toml` `["knowledgeislands/ki-agentic-harness:ki-kb-activities"]` table:
+Declare in the base's `.ki-config.toml` `[skills.ki-kb-activities]` table:
 
 ```toml
-["knowledgeislands/ki-agentic-harness:ki-kb-activities"]
+[skills.ki-kb-activities]
 # Path to a harness root (absolute or relative to the base). Used to resolve skill names.
 # harness = "../ki-agentic-harness"
 #

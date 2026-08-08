@@ -120,10 +120,10 @@ site/.wrangler/
 
 ## 5. Mark the repo with `.ki-config.toml`
 
-Add the `["knowledgeislands/ki-agentic-harness:ki-website-cloudflare"]` table so the mechanical checker can find the repo:
+Add the `[skills.ki-website-cloudflare]` table so the mechanical checker can find the repo:
 
 ```toml
-["knowledgeislands/ki-agentic-harness:ki-website-cloudflare"]
+[skills.ki-website-cloudflare]
 # site-root is the path (relative to the repo root) where wrangler.jsonc lives.
 # "site" for the subfolder layout; "." for flat.
 site-root = "site"

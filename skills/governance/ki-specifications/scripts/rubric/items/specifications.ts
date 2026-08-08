@@ -7,7 +7,7 @@ const SPEC_1: RubricItem<SpecificationsContext> = {
   code: 'SPEC-1',
   title: 'Repository identity marker',
   description:
-    '`.ki-config.toml` declares a keyless `["knowledgeislands/ki-agentic-harness:ki-specifications"]` table. Unknown keys WARN because the marker has no options yet.',
+    '`.ki-config.toml` declares a keyless `[skills.ki-specifications]` table. Unknown keys WARN because the marker has no options yet.',
   sources: SOURCE,
   mechanical: {
     level: 'WARN',
@@ -38,7 +38,7 @@ const SPEC_1: RubricItem<SpecificationsContext> = {
           return [
             {
               status: 'VIOLATION',
-              message: '["knowledgeislands/ki-agentic-harness:ki-specifications"] is absent from .ki-config.toml.',
+              message: '[skills.ki-specifications] is absent from .ki-config.toml.',
               subject: '.ki-config.toml'
             }
           ]
@@ -47,7 +47,7 @@ const SPEC_1: RubricItem<SpecificationsContext> = {
           keys.length === 0
             ? {
                 status: 'PASS',
-                message: 'The keyless ["knowledgeislands/ki-agentic-harness:ki-specifications"] marker is present.',
+                message: 'The keyless [skills.ki-specifications] marker is present.',
                 subject: '.ki-config.toml'
               }
             : {

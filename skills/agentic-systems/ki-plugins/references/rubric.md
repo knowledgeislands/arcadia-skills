@@ -51,7 +51,7 @@ The marketplace manifest, generated plugin projection, and repository scaffold.
   - _Remediation:_ diagnostic — Correct the marketplace projection from its authoritative harness inputs; do not infer or rewrite generated projection semantics automatically.
 - **PLUG-14 [M] — Generated-content warning** — `CLAUDE.md` states the generated-not-hand-edited invariant. (standards-plugin-marketplace.md)
   - _Remediation:_ diagnostic — Correct the marketplace projection from its authoritative harness inputs; do not infer or rewrite generated projection semantics automatically.
-- **PLUG-15 [M] — Governance declaration** — Applicable repositories declare `["knowledgeislands/ki-agentic-harness:ki-plugins"]` and no unknown keys. (standards-plugin-marketplace.md)
+- **PLUG-15 [M] — Governance declaration** — Applicable repositories declare `[skills.ki-plugins]` and no unknown keys. (standards-plugin-marketplace.md)
   - _Remediation:_ diagnostic — Correct the marketplace projection from its authoritative harness inputs; do not infer or rewrite generated projection semantics automatically.
 - **PLUG-16 [J] — Projection documentation** — `README.md` and `CLAUDE.md` describe the projection model without drift and the licence exception remains deliberate. (standards-plugin-marketplace.md)
   - _Evidence scope:_ The generated marketplace projection and its authoritative harness inputs.

@@ -6,7 +6,7 @@ const CFG_1: RubricItem<TokenomicsConfigContext> = {
   code: 'CFG-1',
   title: 'Selected configuration validates down',
   description:
-    'Only the selected repository’s ["knowledgeislands/ki-agentic-harness:ki-tokenomics"] table is validated; malformed recognised values FAIL and unknown keys WARN.',
+    'Only the selected repository’s [skills.ki-tokenomics] table is validated; malformed recognised values FAIL and unknown keys WARN.',
   sources: [SOURCE],
   mechanical: {
     level: 'FAIL',

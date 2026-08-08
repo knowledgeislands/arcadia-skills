@@ -4,7 +4,7 @@ ki-kind: governance
 ki-depends-on: []
 ki-shared-dependencies: [ki-skills:rubric]
 description: >
-  Codify and audit portable agent-context tokenomics: repository-selected standing-surface attribution, budget guide-rails, portable model-purpose taxonomy, and the `["knowledgeislands/ki-agentic-harness:ki-tokenomics"]` configuration table. Use when a repository needs a runtime-neutral context-cost policy, model-purpose choice, or token budget. Triggers: "set a context budget", "audit our tokenomics policy", "which model type should this work use", "configure tokenomics". Runtime evidence belongs to `ki-tokenomics-claude` or `ki-tokenomics-codex`; MCP server design belongs to `ki-mcp`; skill-description quality belongs to `ki-skills`.
+  Codify and audit portable agent-context tokenomics: repository-selected standing-surface attribution, budget guide-rails, portable model-purpose taxonomy, and the `[skills.ki-tokenomics]` configuration table. Use when a repository needs a runtime-neutral context-cost policy, model-purpose choice, or token budget. Triggers: "set a context budget", "audit our tokenomics policy", "which model type should this work use", "configure tokenomics". Runtime evidence belongs to `ki-tokenomics-claude` or `ki-tokenomics-codex`; MCP server design belongs to `ki-mcp`; skill-description quality belongs to `ki-skills`.
 argument-hint: 'audit | conform | help | educate | refresh'
 ---
 
@@ -14,22 +14,22 @@ argument-hint: 'audit | conform | help | educate | refresh'
 
 The standing surface is the selected repository's instructions, memory, installed-skill descriptions, MCP tool definitions, and settings or output configuration. An audit attributes each measured cost to its repository or runtime-user layer and routes an artifact fix to its owner: `ki-mcp` for an MCP server, `ki-skills` for a skill description, and the relevant runtime adapter for runtime configuration.
 
-Budgets are guide-rails, not gates: every measured budget overage is a **WARN**, never a FAIL. FAIL is reserved for a malformed selected-repository `["knowledgeislands/ki-agentic-harness:ki-tokenomics"]` table or an explicitly required runtime integration that is missing. Estimates are labelled `~`; they are not billing or provider token counts.
+Budgets are guide-rails, not gates: every measured budget overage is a **WARN**, never a FAIL. FAIL is reserved for a malformed selected-repository `[skills.ki-tokenomics]` table or an explicitly required runtime integration that is missing. Estimates are labelled `~`; they are not billing or provider token counts.
 
 ## Portable configuration
 
 The selected repository may declare only this skill's table. It is read validate-down: unknown keys WARN, recognised keys must have the documented shape, and no other skill table is inspected.
 
 ```toml
-["knowledgeislands/ki-agentic-harness:ki-tokenomics"]
+[skills.ki-tokenomics]
 headroom = "recommended" # "required" | "recommended" | "off"
 context_window_tokens = 200000
 preferred_model_type = "standard" # frontier | reasoning | standard | fast
 
-["knowledgeislands/ki-agentic-harness:ki-tokenomics".model_tier_bindings]
+[skills.ki-tokenomics.model_tier_bindings]
 frontier = "runtime-specific preference"
 
-["knowledgeislands/ki-agentic-harness:ki-tokenomics".budgets]
+[skills.ki-tokenomics.budgets]
 instructions = 2500
 memory_index = 1000
 skills_surface = 4000

@@ -74,10 +74,10 @@ Modes: **AUDIT · CONFORM · EDUCATE · NEW · REFRESH** (named, alphabetical). 
 
 ## Project bindings
 
-Declare in the base's `.ki-config.toml` `["knowledgeislands/ki-agentic-harness:ki-kb-live-artifacts"]` table:
+Declare in the base's `.ki-config.toml` `[skills.ki-kb-live-artifacts]` table:
 
 ```toml
-["knowledgeislands/ki-agentic-harness:ki-kb-live-artifacts"]
+[skills.ki-kb-live-artifacts]
 # Directory holding artifact pairs, relative to the base.
 # Default: Admin/Operations/Live Artifacts
 # artifacts_dir = "Admin/Operations/Live Artifacts"

@@ -47,13 +47,13 @@ Required zones, indexes, staging, and output placement.
 
 → [standard](standards-knowledge-base.md)
 
-Validate-down `["knowledgeislands/ki-agentic-harness:ki-kb"]` configuration and zone aliases.
+Validate-down `[skills.ki-kb]` configuration and zone aliases.
 
-- **CONFIG-1 [M] — known configuration keys** — Only required_frontmatter, preflight, zones, and templates are recognised beneath ["knowledgeislands/ki-agentic-harness:ki-kb"]. (standards-knowledge-base.md)
+- **CONFIG-1 [M] — known configuration keys** — Only required_frontmatter, preflight, zones, and templates are recognised beneath [skills.ki-kb]. (standards-knowledge-base.md)
   - _Remediation:_ diagnostic — Correct the selected ki-kb configuration evidence, then rerun the audit.
 - **CONFIG-2 [M] — non-redundant zone aliases** — A zone alias does not restate its canonical folder name. (standards-knowledge-base.md)
   - _Remediation:_ diagnostic — Correct the selected ki-kb configuration evidence, then rerun the audit.
-- **CONFIG-3 [M] — canonical zone alias keys** — Every ["knowledgeislands/ki-agentic-harness:ki-kb".zones] key names a canonical zone or staging area. (standards-knowledge-base.md)
+- **CONFIG-3 [M] — canonical zone alias keys** — Every [skills.ki-kb.zones] key names a canonical zone or staging area. (standards-knowledge-base.md)
   - _Remediation:_ diagnostic — Correct the selected ki-kb configuration evidence, then rerun the audit.
 - **CONFIG-4 [M] — KB configuration boundary** — The checker reads and validates only the ki-kb table, leaving every sibling table untouched. (standards-knowledge-base.md)
   - _Remediation:_ diagnostic — Correct the selected ki-kb configuration evidence, then rerun the audit.

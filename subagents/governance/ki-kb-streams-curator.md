@@ -33,7 +33,7 @@ Use knowledge-base tools to read these and cite them with `[[wikilinks]]`.
 ## What you own vs defer
 
 - **Own**: streams state (Active / Background / Future / Archive); enactment process rules and in/out-of-scope assessment; governance footer conformance; pipeline visibility and triage.
-- **Defer**: DR authoring for decisions surfaced by a proposal → [["knowledgeislands/ki-agentic-harness:ki-decision-author"]]; skill changes in a proposal → [["knowledgeislands/ki-agentic-harness:ki-skills-lead"]]; KB structural changes → [["knowledgeislands/ki-agentic-harness:ki-kb-curator"]]; toolchain/repo changes → [["knowledgeislands/ki-agentic-harness:ki-engineering-lead"]].
+- **Defer**: DR authoring for decisions surfaced by a proposal → [[skills.ki-decision-author]]; skill changes in a proposal → [[skills.ki-skills-lead]]; KB structural changes → [[skills.ki-kb-curator]]; toolchain/repo changes → [[skills.ki-engineering-lead]].
 
 ## Moving proposals
 

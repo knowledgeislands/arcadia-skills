@@ -1,6 +1,6 @@
 # Homebrew tap standard
 
-The quotable standard behind the ["knowledgeislands/ki-agentic-harness:ki-homebrew-tap"](../SKILL.md) skill and its [Audit Rubric](rubric.md). This skill **wraps Homebrew's external standard** — the [Formula Cookbook][cookbook], `brew audit`, and `brew style` — rather than inventing a house one. What this document adds on top of Homebrew is only the **tap-shape** conventions: the layout every Knowledge Islands tap shares and the sourcing rule. Where a rule is Homebrew's own, it is labelled _(spec)_; where it is a KI tap-shape convention, _(shape)_. The tracked upstream sources are in [sources.md](sources.md).
+The quotable standard behind the [skills.ki-homebrew-tap](../SKILL.md) skill and its [Audit Rubric](rubric.md). This skill **wraps Homebrew's external standard** — the [Formula Cookbook][cookbook], `brew audit`, and `brew style` — rather than inventing a house one. What this document adds on top of Homebrew is only the **tap-shape** conventions: the layout every Knowledge Islands tap shares and the sourcing rule. Where a rule is Homebrew's own, it is labelled _(spec)_; where it is a KI tap-shape convention, _(shape)_. The tracked upstream sources are in [sources.md](sources.md).
 
 ## Contents
 
@@ -18,7 +18,7 @@ The quotable standard behind the ["knowledgeislands/ki-agentic-harness:ki-homebr
 
 A Homebrew **tap** is a git repository of formulae. A repo becomes a tap by carrying a `Formula/` directory with one or more `*.rb` formula files _(spec)_. Knowledge Islands keeps a single tap, `homebrew-tap`, that distributes the `tools-*` command-line tools; each tool gets one formula _(shape)_. An applicable tap with no `Formula/*.rb` fails rather than warns.
 
-Checker applicability is declaration or structure: `["knowledgeislands/ki-agentic-harness:ki-homebrew-tap"]` in `.ki-config.toml` or a root `Formula/` directory activates the complete audit. With neither, the checker reports one `NA` and stops. A declared repository with no `Formula/`, and a structurally marked but empty `Formula/`, remain applicable failures; an undeclared repository with `Formula/` remains applicable and surfaces the missing marker.
+Checker applicability is declaration or structure: `[skills.ki-homebrew-tap]` in `.ki-config.toml` or a root `Formula/` directory activates the complete audit. With neither, the checker reports one `NA` and stops. A declared repository with no `Formula/`, and a structurally marked but empty `Formula/`, remain applicable failures; an undeclared repository with `Formula/` remains applicable and surfaces the missing marker.
 
 ## The name is fixed by Homebrew
 
@@ -33,7 +33,7 @@ homebrew-tap/
 ├── README.md               # a "## Formulae" table (shape)
 ├── .github/workflows/      # OPTIONAL brew test-bot (shape)
 ├── LICENSE                 # ki-repo's
-└── .ki-config.toml          # ["knowledgeislands/ki-agentic-harness:ki-repo"] + ["knowledgeislands/ki-agentic-harness:ki-homebrew-tap"] (shape)
+└── .ki-config.toml          # [skills.ki-repo] + [skills.ki-homebrew-tap] (shape)
 ```
 
 The README, LICENSE, `.gitignore`, and GitHub settings are **`ki-repo`'s**, not this skill's — this skill checks only the tap-specific delta (the `Formula/` dir, the formula shape, the formulae table, the sourcing rule).
@@ -77,11 +77,11 @@ A tap MAY carry a `.github/workflows/` job running [`brew test-bot`][testbot] �
 
 ## Config marker
 
-The tap opts into governance with a keyless `["knowledgeislands/ki-agentic-harness:ki-homebrew-tap"]` table in `.ki-config.toml`, alongside `["knowledgeislands/ki-agentic-harness:ki-repo"]` _(shape)_. It is **validate-down**: presence is the whole config, any key under it is unknown and WARNed (the tap's shape is fixed by Homebrew, so there is nothing to tune). Run `ki repo conform --skill ki-homebrew-tap <tap-path>` to add the marker safely after `ki-repo` has created the shared config file.
+The tap opts into governance with a keyless `[skills.ki-homebrew-tap]` table in `.ki-config.toml`, alongside `[skills.ki-repo]` _(shape)_. It is **validate-down**: presence is the whole config, any key under it is unknown and WARNed (the tap's shape is fixed by Homebrew, so there is nothing to tune). Run `ki repo conform --skill ki-homebrew-tap <tap-path>` to add the marker safely after `ki-repo` has created the shared config file.
 
 ## What `brew` checks that this skill does not
 
-The hosted audit never invokes `brew`. `TAP-7` reports `brew style <formula>` and `brew audit --strict <formula>` as explicit work for every formula, keeping external package-manager state outside a read-only audit and outside conform transactions. Those commands own the deep formula rules—dependency correctness, `bin`/`libexec` conventions, deprecated DSL, mirror/livecheck hygiene, and RuboCop style—rather than this skill restating them. This skill's local checks cover what `brew` cannot: that the tap has a `Formula/` directory, that a versioned tarball rather than HEAD is used, that the README lists the formula, and that the `["knowledgeislands/ki-agentic-harness:ki-homebrew-tap"]` marker is present. When local Homebrew is unavailable, the tap's test-bot CI remains the backstop.
+The hosted audit never invokes `brew`. `TAP-7` reports `brew style <formula>` and `brew audit --strict <formula>` as explicit work for every formula, keeping external package-manager state outside a read-only audit and outside conform transactions. Those commands own the deep formula rules—dependency correctness, `bin`/`libexec` conventions, deprecated DSL, mirror/livecheck hygiene, and RuboCop style—rather than this skill restating them. This skill's local checks cover what `brew` cannot: that the tap has a `Formula/` directory, that a versioned tarball rather than HEAD is used, that the README lists the formula, and that the `[skills.ki-homebrew-tap]` marker is present. When local Homebrew is unavailable, the tap's test-bot CI remains the backstop.
 
 [cookbook]: https://docs.brew.sh/Formula-Cookbook
 [testbot]: https://docs.brew.sh/Brew-Test-Bot

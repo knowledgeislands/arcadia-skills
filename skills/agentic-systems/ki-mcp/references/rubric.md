@@ -26,7 +26,7 @@ Line-by-line criteria for auditing ki-mcp. Classifications are derived from item
 
 Scope activation and the keyless ki-mcp governance declaration.
 
-- **KI-CONFIG [M] — MCP applicability and declaration** — A repository is applicable when it declares ["knowledgeislands/ki-agentic-harness:ki-mcp"] or contains src/mcp-server/. Otherwise the audit emits one NOT_APPLICABLE finding and stops; declared keys are rejected because this skill has no configuration options. (standards-mcp-servers.md#applicability)
+- **KI-CONFIG [M] — MCP applicability and declaration** — A repository is applicable when it declares [skills.ki-mcp] or contains src/mcp-server/. Otherwise the audit emits one NOT_APPLICABLE finding and stops; declared keys are rejected because this skill has no configuration options. (standards-mcp-servers.md#applicability)
   - _Remediation:_ automatic
 
 ## LAY — Source layout

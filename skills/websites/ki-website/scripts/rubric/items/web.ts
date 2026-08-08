@@ -11,7 +11,7 @@ const inactive = (context: WebsiteContext): readonly AuditOutcome[] | null =>
           {
             status: 'NOT_APPLICABLE',
             message:
-              'ki-website not applicable: no ["knowledgeislands/ki-agentic-harness:ki-website"] declaration or Eleventy config structural marker'
+              'ki-website not applicable: no [skills.ki-website] declaration or Eleventy config structural marker'
           }
         ]
       : null
@@ -596,14 +596,14 @@ const WEB_40 = mechanical(
 const WEB_41 = mechanical(
   'WEB-41',
   'Website opt-in',
-  'Applicable sites declare `["knowledgeislands/ki-agentic-harness:ki-website"]`.',
+  'Applicable sites declare `[skills.ki-website]`.',
   'WARN',
   (context) =>
     inactive(context) ??
     one(
       Boolean(context.kiWebsiteTable),
-      '["knowledgeislands/ki-agentic-harness:ki-website"] table present',
-      'no ["knowledgeislands/ki-agentic-harness:ki-website"] table in .ki-config.toml',
+      '[skills.ki-website] table present',
+      'no [skills.ki-website] table in .ki-config.toml',
       '.ki-config.toml'
     ),
   { conform: (context) => context.addOptIn?.() }
@@ -617,21 +617,18 @@ const WEB_42 = mechanical(
   (context) => {
     const stop = inactive(context)
     if (stop) return stop
-    if (!context.kiWebsiteTable)
-      return [
-        { status: 'NOT_APPLICABLE', message: '["knowledgeislands/ki-agentic-harness:ki-website"] table is absent' }
-      ]
+    if (!context.kiWebsiteTable) return [{ status: 'NOT_APPLICABLE', message: '[skills.ki-website] table is absent' }]
     const keys = Object.keys(context.kiWebsiteTable)
     return keys.length
       ? keys.map((key) => ({
           status: 'VIOLATION' as const,
-          message: `unknown key under ["knowledgeislands/ki-agentic-harness:ki-website"]: ${key}`,
+          message: `unknown key under [skills.ki-website]: ${key}`,
           subject: '.ki-config.toml'
         }))
       : [
           {
             status: 'PASS',
-            message: '["knowledgeislands/ki-agentic-harness:ki-website"] contains no unknown keys',
+            message: '[skills.ki-website] contains no unknown keys',
             subject: '.ki-config.toml'
           }
         ]

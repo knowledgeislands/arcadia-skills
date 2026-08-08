@@ -1,6 +1,6 @@
 # KI Specifications repository-structure standard
 
-KI Specifications is a normal Knowledge Islands repository with one additional structural identity. It declares a keyless `["knowledgeislands/ki-agentic-harness:ki-specifications"]` table and exposes seven stable top-level areas:
+KI Specifications is a normal Knowledge Islands repository with one additional structural identity. It declares a keyless `[skills.ki-specifications]` table and exposes seven stable top-level areas:
 
 - `proposals/` for deliberative KIPs;
 - `specifications/` for normative KIS documents;

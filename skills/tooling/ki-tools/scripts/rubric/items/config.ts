@@ -2,7 +2,7 @@ import type { RubricFamily, RubricItem } from '../../shared/rubric.ts'
 import type { ToolsConfigContext, ToolsRubricContext } from '../contexts/tools.ts'
 
 const STANDARD = 'standards-tool-repositories.md'
-const TABLE = 'knowledgeislands/ki-agentic-harness:ki-tools'
+const TABLE = 'ki-tools'
 
 const CONFIG_1: RubricItem<ToolsConfigContext> = {
   code: 'CONFIG-1',
@@ -22,7 +22,10 @@ const CONFIG_1: RubricItem<ToolsConfigContext> = {
           return [{ status: 'VIOLATION', level: 'FAIL', message: 'Audit target is not a physical directory.' }]
         if (!context.applicable)
           return [
-            { status: 'NOT_APPLICABLE', message: `No ["${TABLE}"] declaration or bin/ structural marker is present.` }
+            {
+              status: 'NOT_APPLICABLE',
+              message: `No [skills.${TABLE}] declaration or bin/ structural marker is present.`
+            }
           ]
         if (context.config === 'unsafe')
           return [
@@ -38,11 +41,19 @@ const CONFIG_1: RubricItem<ToolsConfigContext> = {
           return [{ status: 'VIOLATION', message: '.ki-config.toml is malformed.', subject: '.ki-config.toml' }]
         if (context.config === 'absent')
           return [
-            { status: 'VIOLATION', message: `["${TABLE}"] is absent from .ki-config.toml.`, subject: '.ki-config.toml' }
+            {
+              status: 'VIOLATION',
+              message: `[skills.${TABLE}] is absent from .ki-config.toml.`,
+              subject: '.ki-config.toml'
+            }
           ]
         return [
           context.configKeys.length === 0
-            ? { status: 'PASS', message: `The keyless ["${TABLE}"] marker is present.`, subject: '.ki-config.toml' }
+            ? {
+                status: 'PASS',
+                message: `The keyless [skills.${TABLE}] marker is present.`,
+                subject: '.ki-config.toml'
+              }
             : {
                 status: 'VIOLATION',
                 message: `The keyless marker contains unknown keys: ${context.configKeys.join(', ')}.`,

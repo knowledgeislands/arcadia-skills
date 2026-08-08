@@ -29,7 +29,7 @@ The universal modes are **AUDIT · CONFORM · EDUCATE · REFRESH**.
 ### Mode CONFORM — apply the one safe harness repair
 
 1. Run AUDIT first.
-2. Run `ki repo conform --skill ki-harness --repo <path>`. If a physical readable `.ki-config.toml` lacks `["knowledgeislands/ki-agentic-harness:ki-harness"]`, the item requests one append and the session emits one coalesced host proposal.
+2. Run `ki repo conform --skill ki-harness --repo <path>`. If a physical readable `.ki-config.toml` lacks `[skills.ki-harness]`, the item requests one append and the session emits one coalesced host proposal.
 3. Missing shelves, shelf READMEs, root files, unsafe paths, identity conflicts, and orientation changes remain report-only because their content or replacement intent cannot be inferred safely.
 4. Re-run AUDIT and apply the judgment criteria.
 
@@ -52,6 +52,6 @@ Invoked as `help`, `-h`, or `?`, explain the skill, invocation, modes, source-ve
 
 ## Ownership summary
 
-- This skill owns source-container shape, compatible-payload semantics, and the safe `["knowledgeislands/ki-agentic-harness:ki-harness"]` marker append.
+- This skill owns source-container shape, compatible-payload semantics, and the safe `[skills.ki-harness]` marker append.
 - `tools-ki` owns harness acquisition, verification, registry state, installation paths, activation links, public commands, and generic rubric execution.
 - A top-level skill script is not an activation escape hatch. This skill intentionally carries no public command: all governed execution is hosted directly by `ki`.

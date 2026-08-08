@@ -25,7 +25,7 @@ homebrew-tap/            # named homebrew-<x> — Homebrew requires the prefix f
 │   └── <tool>.rb
 ├── README.md            # a "## Formulae" table listing every formula + its source repo
 ├── .github/workflows/   # OPTIONAL brew test-bot CI (brew audit/style/install on PR)
-└── .ki-config.toml      # ["knowledgeislands/ki-agentic-harness:ki-repo"] + ["knowledgeislands/ki-agentic-harness:ki-homebrew-tap"] (keyless opt-in marker)
+└── .ki-config.toml      # [skills.ki-repo] + [skills.ki-homebrew-tap] (keyless opt-in marker)
 ```
 
 A single formula (`Formula/mgit.rb`) is a Ruby class Homebrew evaluates:
@@ -82,7 +82,7 @@ The four procedures remain on demand because each coordinates work outside the h
 
 ## Coverage — what this skill rides and what it defers
 
-This skill **rides `ki-repo`** (the tap is first a git repo: README, LICENSE, `.gitignore`, GitHub settings, security—all `ki-repo`'s) through explicit audit and conform sequencing. It does **not** ride `ki-engineering`: a tap has no `package.json`/TypeScript toolchain, so a bare `["knowledgeislands/ki-agentic-harness:ki-repo"]` + `["knowledgeislands/ki-agentic-harness:ki-homebrew-tap"]` config is complete (the `ki-plugins` precedent). As recorded by the repo-structure decision, that separate repository coverage is not a catalogue dependency, so frontmatter remains `ki-depends-on: []`.
+This skill **rides `ki-repo`** (the tap is first a git repo: README, LICENSE, `.gitignore`, GitHub settings, security—all `ki-repo`'s) through explicit audit and conform sequencing. It does **not** ride `ki-engineering`: a tap has no `package.json`/TypeScript toolchain, so a bare `[skills.ki-repo]` + `[skills.ki-homebrew-tap]` config is complete (the `ki-plugins` precedent). As recorded by the repo-structure decision, that separate repository coverage is not a catalogue dependency, so frontmatter remains `ki-depends-on: []`.
 
 - The **tools** whose formulae live here — the `tools-*` CLI repos, their `bin/<exe>`, installer, versioning, and releases — are `ki-tools`'. This skill checks that a formula _exists and is well-formed_; whether the tool it installs is a conformant `tools-*` repo is `ki-tools`' audit.
 - A tap **repo's** GitHub configuration and standard files (merge policy, topics, secret scanning, README/LICENSE presence) are `ki-repo`'s. This skill checks the tap-specific delta on top.
@@ -91,5 +91,5 @@ This skill **rides `ki-repo`** (the tap is first a git repo: README, LICENSE, `.
 
 - The standard sits on top of a **moving external spec** (Homebrew's Formula Cookbook, `brew audit`, `brew style`/rubocop). When citing a formula requirement, know whether it is **spec-driven** (traces to a Homebrew source in [the source list](references/sources.md)) or **house shape**—never present a tap-shape preference as a Homebrew "MUST". Run Mode REFRESH when in doubt.
 - Hosted execution is deliberately shell-free. `TAP-7` reports the exact `brew style` and `brew audit --strict` commands for every formula; an operator runs them explicitly, or verifies the tap's `brew test-bot` CI when Homebrew is unavailable locally.
-- Marker `["knowledgeislands/ki-agentic-harness:ki-homebrew-tap"]` is a **keyless opt-in table**, validate-down (like `["knowledgeislands/ki-agentic-harness:ki-mcp"]`): its presence is the whole config; any key under it is unknown and WARNed.
+- Marker `[skills.ki-homebrew-tap]` is a **keyless opt-in table**, validate-down (like `[skills.ki-mcp]`): its presence is the whole config; any key under it is unknown and WARNed.
 - No `exemplars.md` is bundled: the compact complete formula above and the README table in the standard already illustrate the only reusable output shapes, so a separate exemplar would duplicate them.

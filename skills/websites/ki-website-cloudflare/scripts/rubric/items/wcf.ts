@@ -406,7 +406,7 @@ const WCF_20: RubricItem<WebsiteCloudflareContext> = {
           ? [
               {
                 status: 'PASS',
-                message: 'The ["knowledgeislands/ki-agentic-harness:ki-website-cloudflare"] table is present.',
+                message: 'The [skills.ki-website-cloudflare] table is present.',
                 subject: '.ki-config.toml'
               }
             ]
@@ -418,7 +418,7 @@ const WCF_20: RubricItem<WebsiteCloudflareContext> = {
                     ? '.ki-config.toml is not a safely readable regular file.'
                     : state === 'malformed'
                       ? '.ki-config.toml is malformed.'
-                      : 'The ["knowledgeislands/ki-agentic-harness:ki-website-cloudflare"] table is absent.',
+                      : 'The [skills.ki-website-cloudflare] table is absent.',
                 subject: '.ki-config.toml'
               }
             ]

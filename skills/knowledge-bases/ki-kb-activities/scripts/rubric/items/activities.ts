@@ -147,8 +147,7 @@ const ACT_S_2: RubricItem<ActivitiesContext> = {
 const ACT_S_3: RubricItem<ActivitiesContext> = {
   code: 'ACT-S-3',
   title: 'known Activity configuration',
-  description:
-    'Only activities_dir and harness are recognized under ["knowledgeislands/ki-agentic-harness:ki-kb-activities"].',
+  description: 'Only activities_dir and harness are recognized under [skills.ki-kb-activities].',
   sources: [SOURCE],
   mechanical: {
     level: 'WARN',
@@ -165,14 +164,14 @@ const ACT_S_3: RubricItem<ActivitiesContext> = {
           ? [
               {
                 status: 'VIOLATION',
-                message: `unrecognized ["knowledgeislands/ki-agentic-harness:ki-kb-activities"] key(s): ${unknown.join(', ')}`,
+                message: `unrecognized [skills.ki-kb-activities] key(s): ${unknown.join(', ')}`,
                 subject: '.ki-config.toml'
               }
             ]
           : [
               {
                 status: 'PASS',
-                message: 'only recognized ["knowledgeislands/ki-agentic-harness:ki-kb-activities"] keys are present',
+                message: 'only recognized [skills.ki-kb-activities] keys are present',
                 subject: '.ki-config.toml'
               }
             ]
@@ -404,7 +403,7 @@ const ACT_R_2: RubricItem<ActivitiesContext> = {
           return oneOrMore(
             notes.map((note) => ({
               status: 'INFO' as const,
-              message: `skill '${note.frontmatter?.skill}' declared but no harness path is configured under ["knowledgeislands/ki-agentic-harness:ki-kb-activities"]`,
+              message: `skill '${note.frontmatter?.skill}' declared but no harness path is configured under [skills.ki-kb-activities]`,
               subject: note.relative
             }))
           )

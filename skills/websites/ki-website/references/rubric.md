@@ -160,7 +160,7 @@ The static-site stack, workspace layout, generated output, and sustainable opera
   - _Remediation:_ diagnostic — Inspect the affected website surface and apply the standard through a reviewable, site-owned change.
 - **WEB-40 [M] — Tailwind CLI dependency** — `@tailwindcss/cli` is a dependency. (standards-eleventy-site.md)
   - _Remediation:_ diagnostic — Inspect the affected website surface and apply the standard through a reviewable, site-owned change.
-- **WEB-41 [M] — Website opt-in** — Applicable sites declare `["knowledgeislands/ki-agentic-harness:ki-website"]`. (standards-eleventy-site.md)
+- **WEB-41 [M] — Website opt-in** — Applicable sites declare `[skills.ki-website]`. (standards-eleventy-site.md)
   - _Remediation:_ automatic
 - **WEB-42 [M] — Website opt-in validation** — The marker table has no unknown keys. (standards-eleventy-site.md)
   - _Remediation:_ diagnostic — Inspect the affected website surface and apply the standard through a reviewable, site-owned change.

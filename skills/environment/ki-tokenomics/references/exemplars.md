@@ -1,10 +1,10 @@
 # Tokenomics exemplars
 
 ```toml
-["knowledgeislands/ki-agentic-harness:ki-tokenomics"]
+[skills.ki-tokenomics]
 preferred_model_type = "standard"
 
-["knowledgeislands/ki-agentic-harness:ki-tokenomics".budgets]
+[skills.ki-tokenomics.budgets]
 total = 30000
 ```
 

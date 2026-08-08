@@ -5,7 +5,7 @@ ki-depends-on: []
 ki-shared-dependencies: [ki-skills:rubric]
 contributes: [.ki-config.toml]
 description: >-
-  Audits, conforms, and scaffolds the deliberately minimal repository structure for KI Specifications: a keyless `["knowledgeislands/ki-agentic-harness:ki-specifications"]` marker plus the top-level proposals, specifications, schemas, templates, examples, docs, and tooling areas. Use when bootstrapping KI Specifications, checking its repository shape, or evolving that shape as the specification system matures. Triggers: "audit KI Specifications", "bootstrap the specifications repo", "check the KIP/KIS repository structure", "conform the specifications repository". It adds only the specifications-specific structural delta; use `ki-repo` for universal repository files and GitHub settings, `ki-decision-records` for decisions, and `ki-roadmap` for planning.
+  Audits, conforms, and scaffolds the deliberately minimal repository structure for KI Specifications: a keyless `[skills.ki-specifications]` marker plus the top-level proposals, specifications, schemas, templates, examples, docs, and tooling areas. Use when bootstrapping KI Specifications, checking its repository shape, or evolving that shape as the specification system matures. Triggers: "audit KI Specifications", "bootstrap the specifications repo", "check the KIP/KIS repository structure", "conform the specifications repository". It adds only the specifications-specific structural delta; use `ki-repo` for universal repository files and GitHub settings, `ki-decision-records` for decisions, and `ki-roadmap` for planning.
 argument-hint: 'audit <repo> | conform <repo> | educate <repo> | help | refresh'
 ---
 
@@ -30,7 +30,7 @@ ki-specifications/
 ├── examples/
 ├── docs/
 ├── tooling/
-└── .ki-config.toml  # ["knowledgeislands/ki-agentic-harness:ki-repo"] + keyless ["knowledgeislands/ki-agentic-harness:ki-specifications"]
+└── .ki-config.toml  # [skills.ki-repo] + keyless [skills.ki-specifications]
 ```
 
 ## Operating modes
@@ -38,7 +38,7 @@ ki-specifications/
 ### Mode AUDIT
 
 1. Run `ki repo audit --repo <repo> --skill ki-specifications` and capture its findings.
-2. Confirm the repository declares `["knowledgeislands/ki-agentic-harness:ki-specifications"]` and retains the seven top-level areas without judging their evolving internal contents.
+2. Confirm the repository declares `[skills.ki-specifications]` and retains the seven top-level areas without judging their evolving internal contents.
 3. Apply the judgment criteria in [the rubric](references/rubric.md), especially whether a proposed new invariant is mature enough to belong here.
 
 ### Mode CONFORM

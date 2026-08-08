@@ -28,9 +28,9 @@ _Verify:_ `audit-harness.ts` LAY-3 (`CLAUDE.md`) and LAY-5 (`.ki-config.toml`) F
 
 ### HARN-004 — Harness compliance table
 
-`.ki-config.toml` MUST contain a `["knowledgeislands/ki-agentic-harness:ki-harness"]` table marking the repo as a harness, and MUST contain a `["knowledgeislands/ki-agentic-harness:ki-repo"]` table opting into KI governance, per [ADR-KI-HARNESS-005](../decisions/ADR-KI-HARNESS-005-validate-down-ki-config-toml-contract.md).
+`.ki-config.toml` MUST contain a `[skills.ki-harness]` table marking the repo as a harness, and MUST contain a `[skills.ki-repo]` table opting into KI governance, per [ADR-KI-HARNESS-005](../decisions/ADR-KI-HARNESS-005-validate-down-ki-config-toml-contract.md).
 
-_Verify:_ `audit-harness.ts` CONFIG-1 (`["knowledgeislands/ki-agentic-harness:ki-harness"]`, FAIL if absent) and CONFIG-2 (`["knowledgeislands/ki-agentic-harness:ki-repo"]`, WARN if absent).
+_Verify:_ `audit-harness.ts` CONFIG-1 (`[skills.ki-harness]`, FAIL if absent) and CONFIG-2 (`[skills.ki-repo]`, WARN if absent).
 
 ## Toolchain surface
 

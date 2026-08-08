@@ -10,7 +10,7 @@ The default component budgets are `instructions = 2500`, `memory_index = 1000`, 
 
 ## Selected-repository configuration
 
-Only `["knowledgeislands/ki-agentic-harness:ki-tokenomics"]` is read, validate-down. Recognised scalar keys are `headroom` (`required`, `recommended`, or `off`), positive integer `context_window_tokens`, and `preferred_model_type` (`frontier`, `reasoning`, `standard`, or `fast`). `budgets` may contain only positive numeric values for the default budget categories. `model_tier_bindings` may contain only portable model-type keys with non-empty strings. Unknown keys WARN; malformed recognised values FAIL.
+Only `[skills.ki-tokenomics]` is read, validate-down. Recognised scalar keys are `headroom` (`required`, `recommended`, or `off`), positive integer `context_window_tokens`, and `preferred_model_type` (`frontier`, `reasoning`, `standard`, or `fast`). `budgets` may contain only positive numeric values for the default budget categories. `model_tier_bindings` may contain only portable model-type keys with non-empty strings. Unknown keys WARN; malformed recognised values FAIL.
 
 ## Model purpose
 

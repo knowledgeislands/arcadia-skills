@@ -89,12 +89,12 @@ A source harness carries `ROADMAP.md` as its open-work register. The `ki-roadmap
 
 ## Harness declaration
 
-The source root carries `.ki-config.toml` with a keyless `["knowledgeislands/ki-agentic-harness:ki-harness"]` table as its compliance marker. It also declares `["knowledgeislands/ki-agentic-harness:ki-repo"]`, and a populated skills shelf declares `["knowledgeislands/ki-agentic-harness:ki-skills"]`.
+The source root carries `.ki-config.toml` with a keyless `[skills.ki-harness]` table as its compliance marker. It also declares `[skills.ki-repo]`, and a populated skills shelf declares `[skills.ki-skills]`.
 
-If a physical readable `.ki-config.toml` exists without `["knowledgeislands/ki-agentic-harness:ki-harness"]`, CONFORM may append exactly one keyless marker while preserving all existing bytes apart from normalising the trailing newline before the append:
+If a physical readable `.ki-config.toml` exists without `[skills.ki-harness]`, CONFORM may append exactly one keyless marker while preserving all existing bytes apart from normalising the trailing newline before the append:
 
 ```toml
-["knowledgeislands/ki-agentic-harness:ki-harness"]
+[skills.ki-harness]
 ```
 
 CONFORM does not create a missing configuration and never replaces or follows a symlink, directory, dangling link, special file, or unreadable path. The session coalesces repeated marker requests into one host-published proposal. The host owns dry-run, transaction validation, atomic publication, rollback, and post-write re-audit.

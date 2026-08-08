@@ -18,7 +18,7 @@ Complete these checks before changing the repository:
 4. The repository has a role map for every `.ki/` or `.ki-meta/` consumer: aggregate commands, package scripts, CI, pre-commit, bootstrap fixtures, guide suites, generated manifests, and runtime skill copies.
 5. No declared native rubric still reads, writes, validates, or restores the repository executor. In particular, `ki-engineering` must use the native current-state command model before its old aliases are removed.
 6. The working tree is clean apart from the deliberate migration change, and the legacy footprint is wholly recognised generated state.
-7. `["knowledgeislands/ki-agentic-harness:ki-repo"].supported_runtimes` honestly names the runtimes whose repository discovery locations will be reconciled.
+7. `[skills.ki-repo].supported_runtimes` honestly names the runtimes whose repository discovery locations will be reconciled.
 
 Stop if any condition is false.
 

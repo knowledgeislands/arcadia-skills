@@ -15,7 +15,7 @@ Check one repository's static-site hosting without launching Wrangler or changin
    ki repo audit --skill ki-website-cloudflare --repo <repo>
    ```
 
-   It discovers a root or one-level `wrangler` configuration, distinguishes the site Worker from companions, validates the `dist/` seam, scripts, ignores, identity, observability, routes, and `["knowledgeislands/ki-agentic-harness:ki-website-cloudflare"]` table, and never follows symlinked governed files.
+   It discovers a root or one-level `wrangler` configuration, distinguishes the site Worker from companions, validates the `dist/` seam, scripts, ignores, identity, observability, routes, and `[skills.ki-website-cloudflare]` table, and never follows symlinked governed files.
 
 3. Apply the judgment aspects in the [generated rubric](rubric.md): confirm the `dist/` matches the separately audited build, routes name the intended apex and `www`, preview and deployment build first, companion classification is correct, and Workers Builds/account/domain state agrees with the repository.
 

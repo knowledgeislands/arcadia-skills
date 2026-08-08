@@ -47,7 +47,7 @@ REFRESH last run **2026-07-04**. Cadence: monthly, alongside the other governanc
 - **Open watch-items:**
   - **TypeScript 7.0** (Go native port) reached **Release Candidate 2026-06-18**, GA estimated ~July 2026 (no longer "mid-to-late 2026"). Type-checking is structurally identical to 6.0. When 7.0 GAs, decide whether the `^6.0` pin tracks it or holds on 6.x — re-check next refresh.
   - **Node v27** schedule change (one major/year, every release LTS, odd/even dropped) still lands with v27; v26 is the last under the current model. Re-check the `>=22` floor and Node source wording at the first refresh after October 2026.
-  - **Repo-set count:** the "10 TS/Bun repos / seven `mcp-*` servers" claim overcounts — 6 `mcp-*` on disk (9 total), and only 4 repos carry a `["knowledgeislands/ki-agentic-harness:ki-engineering"]` table so far. Reconcile the count in SKILL.md, this footnote, README, and CLAUDE.md centrally.
+  - **Repo-set count:** the "10 TS/Bun repos / seven `mcp-*` servers" claim overcounts — 6 `mcp-*` on disk (9 total), and only 4 repos carry a `[skills.ki-engineering]` table so far. Reconcile the count in SKILL.md, this footnote, README, and CLAUDE.md centrally.
   - Bun and Biome both move fast; re-pin on the next house upgrade.
 
 [bun]: https://bun.sh/blog

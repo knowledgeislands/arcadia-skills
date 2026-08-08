@@ -263,7 +263,7 @@ Environment templates, development-mode confinement, and portable paths.
 
 The repository selector and validate-down configuration boundary.
 
-- **TOML-1 [M] — Engineering selector table** — A `["knowledgeislands/ki-agentic-harness:ki-engineering"]` table is present. (standards-engineering.md)
+- **TOML-1 [M] — Engineering selector table** — A `[skills.ki-engineering]` table is present. (standards-engineering.md)
   - _Remediation:_ automatic
-- **TOML-2 [M] — Engineering configuration validates down** — Every key under `["knowledgeislands/ki-agentic-harness:ki-engineering"]` is known to the checker; an unknown key is drift. (standards-engineering.md)
+- **TOML-2 [M] — Engineering configuration validates down** — Every key under `[skills.ki-engineering]` is known to the checker; an unknown key is drift. (standards-engineering.md)
   - _Remediation:_ diagnostic — Remove or correct the unknown engineering configuration key, then rerun the audit.

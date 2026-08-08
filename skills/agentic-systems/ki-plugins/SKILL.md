@@ -27,7 +27,7 @@ ki-plugins/                           # a generated Claude plugin marketplace (N
 │   ├── .claude-plugin/plugin.json    # plugin manifest — name / version / description / author
 │   ├── skills/<name>/                # every harness skill, copied VERBATIM (each carries a SKILL.md)
 │   └── agents/<name>.md              # governance agents, FLATTENED from harness agents/governance/
-├── .ki-config.toml                   # declares ["knowledgeislands/ki-agentic-harness:ki-plugins"] (+ ["knowledgeislands/ki-agentic-harness:ki-repo"]); NO TypeScript toolchain
+├── .ki-config.toml                   # declares [skills.ki-plugins] (+ [skills.ki-repo]); NO TypeScript toolchain
 ├── CLAUDE.md  README.md  LICENSE  .gitignore  .editorconfig   # repo scaffold — untouched by regen
 ```
 

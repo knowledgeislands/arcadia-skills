@@ -12,7 +12,7 @@ argument-hint: 'audit <repo> | conform <repo> | help | educate <repo> | refresh'
 
 You are helping audit, conform, or scaffold a **`tools-*` repo** — a repo holding exactly **one** standalone command-line tool, distributed two ways: a `curl | bash` installer at the repo root, and a companion Homebrew formula that lives in the tap. [`tools-mgit`](https://github.com/knowledgeislands/tools-mgit) (Bash) and [`tools-ki`](https://github.com/knowledgeislands/tools-ki) (TypeScript/Bun) are the reference implementations. The standard governs shared shape and public interface conventions, not a language or the tools' individual behaviour.
 
-This skill rides on `ki-repo` (local files, GitHub settings) but **not** `ki-engineering` — a bash tool has no TypeScript/Bun toolchain to govern, so no `ki-engineering` declaration is assumed (the same pattern `ki-kb` follows). If the tool grows a `package.json`, that changes: it then declares `["knowledgeislands/ki-agentic-harness:ki-engineering"]` too and defers its lint/test there (see the capability rule below).
+This skill rides on `ki-repo` (local files, GitHub settings) but **not** `ki-engineering` — a bash tool has no TypeScript/Bun toolchain to govern, so no `ki-engineering` declaration is assumed (the same pattern `ki-kb` follows). If the tool grows a `package.json`, that changes: it then declares `[skills.ki-engineering]` too and defers its lint/test there (see the capability rule below).
 
 The full, quotable standard lives in [the tool-repository standard](references/standards-tool-repositories.md); the line-by-line pass/fail items live in [the generated rubric](references/rubric.md). `ki repo audit` and `ki repo conform` execute the structured mechanical contract directly through the host.
 
@@ -45,13 +45,13 @@ tools-<name>/
 Mirrors `ki-engineering`'s capability-conditional pattern: what the repo _is_ decides which checks apply, so the same standard covers a bash tool and a TS tool without forking.
 
 - **Shell entrypoint** (the primary `bin/` file has a `bash`/`sh` shebang): it MUST be shellcheck-clean in CI (a workflow references `shellcheck`) and ship a `bats` suite that CI runs (a `*.bats` file under `tests/` and a workflow that references `bats`).
-- **A `package.json` appears** (a TS/Bun tool): the repo defers lint/test to `ki-engineering` and MUST also declare `["knowledgeislands/ki-agentic-harness:ki-engineering"]` in its `.ki-config.toml`. The shell checks don't apply.
+- **A `package.json` appears** (a TS/Bun tool): the repo defers lint/test to `ki-engineering` and MUST also declare `[skills.ki-engineering]` in its `.ki-config.toml`. The shell checks don't apply.
 - **A physical `man/<tool>.1` page appears**: CI MUST run `mandoc -T lint man/<tool>.1`, directly or through the repository's native task runner. The release installer and its `--link` mode publish or link that manual alongside the executable.
 - **Another language** (Python, Go, …): defer to that language's own toolchain; the container checks (bin, install.sh, versioning, changelog, CI, tests) still apply.
 
 ## The qualified `ki-tools` marker
 
-A `tools-*` repo opts into this standard by declaring a **keyless** `["knowledgeislands/ki-agentic-harness:ki-tools"]` table in its `.ki-config.toml`. The table is validated **down** (this skill reads only its own table and warns on any unknown key inside it). `ki repo conform --skill ki-tools` may add the marker to an existing physical, parseable configuration. It may also set executable bits on verified physical `bin/*` files and `install.sh`; missing content, malformed or unsafe paths, external releases, and Homebrew operations remain report-only.
+A `tools-*` repo opts into this standard by declaring a **keyless** `[skills.ki-tools]` table in its `.ki-config.toml`. The table is validated **down** (this skill reads only its own table and warns on any unknown key inside it). `ki repo conform --skill ki-tools` may add the marker to an existing physical, parseable configuration. It may also set executable bits on verified physical `bin/*` files and `install.sh`; missing content, malformed or unsafe paths, external releases, and Homebrew operations remain report-only.
 
 ## Operating modes
 

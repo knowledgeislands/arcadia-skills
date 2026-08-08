@@ -8,5 +8,5 @@ This file owns only the **formatting** (how the TOML reads). The `.ki-config.tom
 
 - **Keys** are lowercase; use `snake_case` for multi-word keys (the prevailing TOML convention). Keep them to the noun the value holds (`visibility`, not `repo_visibility_setting`).
 - **Strings** are double-quoted; **arrays** use the inline `["a", "b"]` form for short lists.
-- **One table per skill, named for the skill** (`["knowledgeislands/ki-agentic-harness:ki-repo"]`), with sub-tables nested under it (`["knowledgeislands/ki-agentic-harness:ki-repo".checks]`) — the file reads as a map of skill → its settings. The ownership rules behind this live in the contract (above).
+- **One table per skill, named for the skill** (`[skills.ki-repo]`), with sub-tables nested under it (`[skills.ki-repo.checks]`) — the file reads as a map of skill → its settings. The ownership rules behind this live in the contract (above).
 - **Comment non-obvious keys** with a `#` line above them — a declared value whose meaning isn't self-evident (why a value is set, what a flag gates) carries its _why_ inline, the same rule as everywhere else.

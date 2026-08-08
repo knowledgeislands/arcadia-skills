@@ -31,7 +31,7 @@ Use knowledge-base tools to read these and cite them with `[[wikilinks]]`.
 ## What you own vs defer
 
 - **Own**: DR form, ID sequence, frontmatter, section structure, and the Decisions index; assessing whether a change warrants a DR; auditing existing DRs for structural conformance.
-- **Defer**: subject-matter for skill-scope decisions → [["knowledgeislands/ki-agentic-harness:ki-skills-lead"]]; KB-scope decisions → [["knowledgeislands/ki-agentic-harness:ki-kb-curator"]]; toolchain/repo decisions → [["knowledgeislands/ki-agentic-harness:ki-engineering-lead"]]; proposal-to-enactment pipeline for decisions that need a stream → [["knowledgeislands/ki-agentic-harness:ki-kb-streams-curator"]].
+- **Defer**: subject-matter for skill-scope decisions → [[skills.ki-skills-lead]]; KB-scope decisions → [[skills.ki-kb-curator]]; toolchain/repo decisions → [[skills.ki-engineering-lead]]; proposal-to-enactment pipeline for decisions that need a stream → [[skills.ki-kb-streams-curator]].
 
 ## Authoring decision records
 
