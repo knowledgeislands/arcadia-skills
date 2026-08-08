@@ -68,7 +68,7 @@ The orchestrator first fixes the topology ownership and exact `## Documentation 
 
 ### Consolidated sources
 
-This item adopts [TRD-6f63fb71](../../+/_TRADES/knowledgeislands/tools-ki/TRD-6f63fb71.md) and [TRD-24095e01](../../+/_TRADES/knowledgeislands/tools-ki/TRD-24095e01.md).
+This item adopts `TRD-6f63fb71` and `TRD-24095e01`.
 
 ### Documentation-impact shape
 

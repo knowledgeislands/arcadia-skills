@@ -99,7 +99,7 @@ Malformed, foreign, or unreachable trailer evidence is unavailable rather than a
 
 ### Relationship to recap grounding
 
-[FND-007](KI-HARNESS-FND-007-detect-change-since-recap-transcript.md) establishes how to measure whether a transcript remains representative. This item applies the same change-evidence idea to a different decision: whether a judgmental engineering review is worthwhile.
+FND-007, since completed and pruned from the roadmap, established how to measure whether a transcript remains representative. This item applies the same change-evidence idea to a different decision: whether a judgmental engineering review is worthwhile.
 
 ### Review boundary
 

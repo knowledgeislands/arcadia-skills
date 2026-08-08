@@ -66,7 +66,7 @@ Keep the procedure and router edits in one implementation lane so trigger, vocab
 
 ### Source
 
-This item adopts [TRD-cbef1f49](../../+/_TRADES/knowledgeislands/tools-ki/TRD-cbef1f49.md).
+This item adopts `TRD-cbef1f49`.
 
 ### Selected matrix model
 

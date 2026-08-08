@@ -70,7 +70,7 @@ Keep this as one implementation lane because the standard wording, criterion pro
 
 ### Source
 
-This item adopts [TRD-6b8cb3b4](../../+/_TRADES/knowledgeislands/tools-ki/TRD-6b8cb3b4.md).
+This item adopts `TRD-6b8cb3b4`.
 
 ### Selected rule
 

@@ -102,4 +102,4 @@ Applying codes to live Knowledge Bases is deliberately outside this Harness item
 
 ### Source
 
-This item adopts [TRD-c8a23b80](../../+/_TRADES/knowledgeislands/tools-ki/TRD-c8a23b80.md).
+This item adopts `TRD-c8a23b80`.

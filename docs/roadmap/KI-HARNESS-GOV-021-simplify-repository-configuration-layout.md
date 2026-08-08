@@ -75,7 +75,7 @@ The contract change is small — a key shape and a resolution rule. The cost sit
 
 ### Source
 
-This item adopts [TRD-aacc8a12](../../+/_TRADES/knowledgeislands/tools-ki/TRD-aacc8a12.md).
+This item adopts `TRD-aacc8a12`.
 
 ### Why no compatibility period
 

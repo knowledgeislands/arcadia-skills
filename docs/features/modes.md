@@ -58,13 +58,13 @@ _Verify:_ `lint-skills.ts` SHAPE-5 / SHAPE-11 pass a process skill (e.g. `ki-rec
 
 A collection governance skill that exposes NEW MUST use it to author exactly one new instance into the collection it governs, presupposing EDUCATE has established the collection and never substituting for EDUCATE, per [ADR-KI-HARNESS-SKILLS-001](../decisions/ADR-KI-HARNESS-SKILLS-001-audit-conform-educate-refresh-canonical-modes-help.md).
 
-_Verify:_ the collection skills exposing `### Mode NEW` (`ki-decision-records`, `ki-feature-definitions`, `ki-kb-activities`, `ki-kb-live-artifacts`) each also expose EDUCATE; the fixed meaning is pinned in [`skills/keystone/ki-skills/references/standards.md`](../../skills/keystone/ki-skills/references/standards.md).
+_Verify:_ the collection skills exposing `### Mode NEW` (`ki-decision-records`, `ki-feature-definitions`, `ki-kb-activities`, `ki-kb-live-artifacts`) each also expose EDUCATE; the fixed meaning is pinned in [`skills/keystone/ki-skills/references/standards-knowledge-islands.md`](../../skills/keystone/ki-skills/references/standards-knowledge-islands.md).
 
 ### MODE-009 — OPTIMISE pushes toward excellent
 
 A skill that exposes OPTIMISE MUST use it only to push an already-compliant artifact from the standard floor toward excellent, never to bring an off-standard one onto the floor (that is EDUCATE/CONFORM), per [ADR-KI-HARNESS-SKILLS-001](../decisions/ADR-KI-HARNESS-SKILLS-001-audit-conform-educate-refresh-canonical-modes-help.md).
 
-_Verify:_ `ki-skills`'s `### Mode OPTIMISE`; the fixed meaning is pinned in [`skills/keystone/ki-skills/references/standards.md`](../../skills/keystone/ki-skills/references/standards.md).
+_Verify:_ `ki-skills`'s `### Mode OPTIMISE`; the fixed meaning is pinned in [`skills/keystone/ki-skills/references/standards-knowledge-islands.md`](../../skills/keystone/ki-skills/references/standards-knowledge-islands.md).
 
 ## No-mode routing
 

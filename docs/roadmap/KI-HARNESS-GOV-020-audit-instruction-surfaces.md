@@ -110,4 +110,4 @@ Any remediation, including a change to canonical chezmoi sources, realised user 
 
 ### Source
 
-This item adopts [TRD-5875ee10](../../+/_TRADES/knowledgeislands/tools-ki/TRD-5875ee10.md).
+This item adopts `TRD-5875ee10`.
