@@ -16,19 +16,20 @@ This standard defines local, typed, directional trade routes between registered 
 
 ## Participation and routes
 
-A repository participates only by declaring its own table:
+A repository participates only by declaring its own table, naming each partner once with the kinds it trades:
 
 ```toml
-["knowledgeislands/ki-agentic-harness:ki-trades".exports_to]
-work = ["https://github.com/owner/receiver"]
-knowledge = []
+[skills.ki-trades]
 
-["knowledgeislands/ki-agentic-harness:ki-trades".imports_from]
-work = []
-knowledge = ["https://github.com/owner/sender"]
+[skills.ki-trades.routes]
+"owner/receiver" = { export = ["work"] }
+"owner/sender" = { import = ["knowledge"] }
+"owner/peer" = { export = ["work", "knowledge"], import = ["work"] }
 ```
 
-The repository's canonical endpoint is `ki-repo.repository`, a required HTTPS GitHub URI. `exports_to` and `imports_from` each declare the closed trade-kind set `work` and `knowledge`. Every route array is required, lexical, duplicate-free, and contains canonical repository URIs.
+The repository's canonical endpoint is `ki-repo.repository`, a required HTTPS GitHub URI. A route is keyed by the partner's `owner/name` — the same form a trade record uses for its `sender` and `receiver` — and is an inline table carrying `export` and `import`, each a duplicate-free array drawn from the closed trade-kind set `work` and `knowledge`. A direction the partner does not trade is **absent**, never an empty array. A partner outside the default host keeps a full canonical HTTPS URL as its key, so that exception stays visibly exceptional.
+
+Each partner appears exactly once: TOML's own prohibition on defining a key twice enforces that, so no hand-written uniqueness or lexical-ordering rule is needed. `[skills.ki-trades]` is declared explicitly rather than implied by its `routes` sub-table, because declaring a skill is separate from configuring it.
 
 A sender-declared export authorises only sender-local preparation and submission. It remains a pending observation route while the receiver is absent from the local registry, does not participate, or has not declared the matching import. Receipt requires an active reciprocal route: exactly one registered root declares the receiver's canonical home, the sender exports that kind, and the receiver imports the same kind from the sender. Filesystem visibility, one-sided declaration, or reciprocity for another kind never activates receipt. Route removal must refuse while a local preparation, submitted outbound, or retained inbound record depends on that typed route.
 

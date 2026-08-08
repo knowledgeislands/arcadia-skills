@@ -8,10 +8,11 @@ import type {
   RubricSession
 } from '../../shared/rubric.ts'
 
-const CONFIG_TABLE = 'knowledgeislands/ki-agentic-harness:ki-trades'
-const REPOSITORY_TABLE = 'knowledgeislands/ki-agentic-harness:ki-repo'
+const CONFIG_TABLE = 'ki-trades'
+const REPOSITORY_TABLE = 'ki-repo'
 const IDENTITY = /^[a-z0-9](?:[a-z0-9._-]*[a-z0-9])?\/[a-z0-9](?:[a-z0-9._-]*[a-z0-9])?$/
 const REPOSITORY = /^https:\/\/github\.com\/([a-z0-9](?:[a-z0-9._-]*[a-z0-9])?)\/([a-z0-9](?:[a-z0-9._-]*[a-z0-9])?)$/
+const PARTNER = /^[a-z0-9](?:[a-z0-9._-]*[a-z0-9])?\/[a-z0-9](?:[a-z0-9._-]*[a-z0-9])?$/
 const TRADE_ID = /^TRD-[0-9a-f]{8}$/
 const UTC_TIMESTAMP = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/
 const FULL_COMMIT = /^[0-9a-f]{40}$/
@@ -171,7 +172,7 @@ const parseConfiguration = (
   subject: string
 ): { configuration: TradeConfiguration; outcomes: AuditOutcome[] } => {
   const outcomes: AuditOutcome[] = []
-  const unknown = Object.keys(value).filter((key) => key !== 'exports_to' && key !== 'imports_from')
+  const unknown = Object.keys(value).filter((key) => key !== 'routes')
   for (const key of unknown)
     outcomes.push({
       status: 'VIOLATION',
@@ -184,50 +185,92 @@ const parseConfiguration = (
   if (!local.repository || !local.identity)
     outcomes.push({ status: 'VIOLATION', message: 'ki-repo repository must be a canonical HTTPS GitHub home', subject })
 
-  const parseRoutes = (key: 'exports_to' | 'imports_from'): Readonly<Record<TradeKind, readonly string[]>> => {
-    const raw = value[key]
-    const routes = table(raw)
-    const result: Record<TradeKind, readonly string[]> = { work: [], knowledge: [] }
-    if (!routes)
+  // Routes are declared partner-first — one inline table per peer, keyed by `owner/name` — while the
+  // rest of this skill reasons kind-first. Partner keys are unique by TOML's own prohibition on
+  // defining a key twice, and ordering is immaterial to a map, so neither is re-checked here; both
+  // were hand-written requirements the old direction-first arrays needed and this shape supersedes.
+  const partnerRepository = (partner: string): string | undefined => {
+    if (REPOSITORY.test(partner)) return partner
+    const home = `https://github.com/${partner}`
+    return PARTNER.test(partner) && REPOSITORY.test(home) ? home : undefined
+  }
+
+  const exportsTo: Record<TradeKind, string[]> = { work: [], knowledge: [] }
+  const importsFrom: Record<TradeKind, string[]> = { work: [], knowledge: [] }
+  const declared = table(value.routes)
+  if (value.routes !== undefined && !declared)
+    outcomes.push({ status: 'VIOLATION', message: 'routes must be a table of trade partners', subject })
+
+  for (const [partner, route] of Object.entries(declared ?? {})) {
+    const home = partnerRepository(partner)
+    if (!home) {
       outcomes.push({
         status: 'VIOLATION',
-        message: `${key} must map every trade kind to canonical HTTPS GitHub repository URL arrays`,
+        message: `route ${partner} must be keyed by owner/name or a canonical HTTPS GitHub repository URL`,
         subject
       })
-    for (const kind of TRADE_KINDS) {
-      const values = routes?.[kind]
-      const entries =
-        Array.isArray(values) && values.every((route) => typeof route === 'string') ? (values as string[]) : []
-      result[kind] = entries
-      if (!Array.isArray(values) || values.some((route) => typeof route !== 'string'))
+      continue
+    }
+    if (home === local.repository)
+      outcomes.push({ status: 'VIOLATION', message: `route ${partner} must not name the local repository`, subject })
+
+    const directions = table(route)
+    if (!directions) {
+      outcomes.push({
+        status: 'VIOLATION',
+        message: `route ${partner} must be a table declaring export and import kinds`,
+        subject
+      })
+      continue
+    }
+    for (const key of Object.keys(directions).filter((key) => key !== 'export' && key !== 'import'))
+      outcomes.push({
+        status: 'VIOLATION',
+        level: 'WARN',
+        message: `unrecognised route direction ${key} for ${partner}`,
+        subject
+      })
+
+    for (const [direction, target] of [
+      ['export', exportsTo],
+      ['import', importsFrom]
+    ] as const) {
+      const values = directions[direction]
+      if (values === undefined) continue
+      if (!Array.isArray(values) || values.some((kind) => typeof kind !== 'string')) {
         outcomes.push({
           status: 'VIOLATION',
-          message: `${key}.${kind} must be an array of canonical HTTPS GitHub repository URLs`,
+          message: `route ${partner} ${direction} must be an array of trade kinds`,
           subject
         })
-      else {
-        for (const route of entries.filter((route) => !REPOSITORY.test(route)))
+        continue
+      }
+      const kinds = values as string[]
+      if (kinds.length === 0)
+        outcomes.push({
+          status: 'VIOLATION',
+          message: `route ${partner} ${direction} carries no kinds and must be omitted rather than empty`,
+          subject
+        })
+      if (new Set(kinds).size !== kinds.length)
+        outcomes.push({ status: 'VIOLATION', message: `route ${partner} ${direction} must not repeat a kind`, subject })
+      for (const kind of kinds) {
+        if (!TRADE_KINDS.includes(kind as TradeKind)) {
           outcomes.push({
             status: 'VIOLATION',
-            message: `${key}.${kind} entry ${route} is not a canonical HTTPS GitHub repository URL`,
+            message: `route ${partner} ${direction} kind ${kind} is not a declared trade kind`,
             subject
           })
-        if (new Set(entries).size !== entries.length)
-          outcomes.push({ status: 'VIOLATION', message: `${key}.${kind} must not repeat a repository`, subject })
-        if (entries.some((route) => route === local.repository))
-          outcomes.push({
-            status: 'VIOLATION',
-            message: `${key}.${kind} must not contain the local repository`,
-            subject
-          })
-        if (entries.join('\n') !== [...entries].sort((left, right) => left.localeCompare(right)).join('\n'))
-          outcomes.push({ status: 'VIOLATION', message: `${key}.${kind} must be normalized in lexical order`, subject })
+          continue
+        }
+        target[kind as TradeKind].push(home)
       }
     }
-    return result
   }
-  const exportsTo = parseRoutes('exports_to')
-  const importsFrom = parseRoutes('imports_from')
+  for (const kind of TRADE_KINDS) {
+    exportsTo[kind].sort((left, right) => left.localeCompare(right))
+    importsFrom[kind].sort((left, right) => left.localeCompare(right))
+  }
 
   return {
     configuration: {
@@ -252,8 +295,9 @@ const parseRepositoryConfiguration = (root: string): TradeConfiguration => {
     }
   try {
     const document = Bun.TOML.parse(readFileSync(path, 'utf8')) as Record<string, unknown>
-    const owned = table(document[CONFIG_TABLE])
-    const repository = table(document[REPOSITORY_TABLE])?.repository
+    const skills = table(document.skills) ?? {}
+    const owned = table(skills[CONFIG_TABLE])
+    const repository = table(skills[REPOSITORY_TABLE])?.repository
     if (!owned)
       return {
         ...repositoryIdentity(repository),

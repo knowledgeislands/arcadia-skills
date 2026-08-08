@@ -7,7 +7,7 @@ const CONFIG_1: RubricItem<OutcomeContext> = {
   code: 'CONFIG-1',
   title: 'typed routes are canonical',
   description:
-    'A participating repository declares every closed trade kind as a lexically ordered, duplicate-free canonical HTTPS GitHub repository URL array under each of its own `exports_to` and `imports_from` tables; its identity comes only from `ki-repo.repository`.',
+    'A participating repository names each trade partner exactly once under its own `[skills.ki-trades.routes]` table, keyed by `owner/name`, as an inline table whose `export` and `import` arrays are duplicate-free and drawn from the closed trade-kind set; a direction carrying no kinds is absent rather than empty, and the repository identity comes only from `ki-repo.repository`.',
   sources: [SOURCE],
   mechanical: {
     level: 'FAIL',

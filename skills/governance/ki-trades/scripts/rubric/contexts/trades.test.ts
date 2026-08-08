@@ -25,21 +25,18 @@ const temporaryDirectory = (prefix: string): string => {
 }
 
 const repositoryUrl = (identity: string): string => `https://github.com/${identity}`
+// Routes are declared partner-first, so a fixture names each peer once carrying both directions.
 const routes = (
   peers: readonly string[],
   kinds: readonly ('work' | 'knowledge')[] = ['work', 'knowledge']
-): Record<string, readonly string[]> => ({
-  work: kinds.includes('work') ? peers.map(repositoryUrl) : [],
-  knowledge: kinds.includes('knowledge') ? peers.map(repositoryUrl) : []
-})
+): Record<string, unknown> =>
+  Object.fromEntries(peers.map((peer) => [peer, { export: [...kinds], import: [...kinds] }]))
+
 const tradeConfiguration = (
   _identity: string,
   peers: readonly string[],
   kinds?: readonly ('work' | 'knowledge')[]
-): Record<string, unknown> => ({
-  exports_to: routes(peers, kinds),
-  imports_from: routes(peers, kinds)
-})
+): Record<string, unknown> => ({ routes: routes(peers, kinds) })
 
 const writeRepositoryConfiguration = (
   root: string,
@@ -50,12 +47,13 @@ const writeRepositoryConfiguration = (
   writeFileSync(
     join(root, '.ki-config.toml'),
     [
-      '["knowledgeislands/ki-agentic-harness:ki-repo"]',
+      '[skills.ki-repo]',
       `repository = ${JSON.stringify(repositoryUrl(identity))}`,
       '',
-      '["knowledgeislands/ki-agentic-harness:ki-trades"]',
-      `exports_to = ${JSON.stringify(routes(peers, kinds))}`,
-      `imports_from = ${JSON.stringify(routes(peers, kinds))}`,
+      '[skills.ki-trades]',
+      '',
+      '[skills.ki-trades.routes]',
+      ...peers.map((peer) => `${JSON.stringify(peer)} = ${JSON.stringify(routes([peer], kinds)[peer])}`),
       ''
     ].join('\n')
   )
@@ -163,15 +161,29 @@ const mechanicalOutcomes = (
   return item.mechanical.audit.run(family.selectContext(session.subjects[0]?.context() as never) as never)
 }
 
-test('malformed, duplicated, and non-normalized declarations are refused', () => {
+// Partner uniqueness and ordering are no longer checked here — TOML rejects a repeated key itself,
+// and a map has no order. What remains checkable is the shape of each partner's own declaration.
+test('malformed route declarations are refused', () => {
   const { home, local } = fixture()
   const session = createTradesSession(
-    options(local, home, tradeConfiguration('Local/Repo', ['peer/repo', 'peer/repo', 'another/repo']))
+    options(local, home, {
+      routes: {
+        'not a repository': { export: ['work'] },
+        'peer/repo': { export: [], import: ['work', 'work'] },
+        'another/repo': { export: ['gossip'] },
+        'third/repo': 'work'
+      }
+    })
   )
   const messages = mechanicalOutcomes(session, CONFIG).map((outcome) => outcome.message)
 
-  expect(messages).toContain('exports_to.work must not repeat a repository')
-  expect(messages).toContain('exports_to.work must be normalized in lexical order')
+  expect(messages).toContain(
+    'route not a repository must be keyed by owner/name or a canonical HTTPS GitHub repository URL'
+  )
+  expect(messages).toContain('route peer/repo export carries no kinds and must be omitted rather than empty')
+  expect(messages).toContain('route peer/repo import must not repeat a kind')
+  expect(messages).toContain('route another/repo export kind gossip is not a declared trade kind')
+  expect(messages).toContain('route third/repo must be a table declaring export and import kinds')
 })
 
 test('declared routes remain pending until the other repository registers and reciprocates', () => {
@@ -216,7 +228,7 @@ test('outbound records are valid on a declared export route while receiver parti
   writeRecord(local, '-', 'peer/repo', id, record(id, 'local/repo', 'peer/repo'))
   writeFileSync(
     join(peer, '.ki-config.toml'),
-    ['["knowledgeislands/ki-agentic-harness:ki-repo"]', 'repository = "https://github.com/peer/repo"', ''].join('\n')
+    ['[skills.ki-repo]', 'repository = "https://github.com/peer/repo"', ''].join('\n')
   )
 
   const session = createTradesSession(options(local, home, tradeConfiguration('local/repo', ['peer/repo'])))
@@ -249,7 +261,7 @@ test('a committed preparation is valid on a sender-declared export and is not re
   )
   writeFileSync(
     join(peer, '.ki-config.toml'),
-    ['["knowledgeislands/ki-agentic-harness:ki-repo"]', 'repository = "https://github.com/peer/repo"', ''].join('\n')
+    ['[skills.ki-repo]', 'repository = "https://github.com/peer/repo"', ''].join('\n')
   )
 
   const session = createTradesSession(options(local, home, tradeConfiguration('local/repo', ['peer/repo'])))
