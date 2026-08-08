@@ -40,9 +40,11 @@
  * NOT_APPLICABLE evidence while offline local checks still run. The host owns
  * outcome validation, finding conversion, progress, and reporting.
  */
-import { execFileSync } from 'node:child_process'
+import { execFile, execFileSync } from 'node:child_process'
 import { existsSync, lstatSync, readdirSync, readFileSync, readlinkSync, realpathSync } from 'node:fs'
 import { isAbsolute, join, resolve } from 'node:path'
+import { promisify } from 'node:util'
+import type { RubricEmitter } from '../../shared/rubric.ts'
 
 // ── the standard (keep in sync with references/standards-repository.md) ──────
 const DEFAULT_BRANCH = 'main'
@@ -107,18 +109,29 @@ const mk = () => {
   }
 }
 
-function gh(args: string[]): string {
-  return execFileSync('gh', args, { encoding: 'utf8', maxBuffer: 16 * 1024 * 1024, stdio: ['ignore', 'pipe', 'pipe'] })
+// Awaited rather than synchronous: every call here is a network round trip to GitHub, and
+// they are the longest blocking spans in the estate. Held synchronous they starve the host's
+// progress refresh for the whole run, leaving a live audit indistinguishable from a hang.
+const run = promisify(execFile)
+
+// Reports each network round trip as it is made, so a run that is waiting on GitHub says so.
+// Set for the duration of a collection and cleared after it; unset means no host is watching.
+let ghEmit: RubricEmitter | undefined
+
+async function gh(args: string[]): Promise<string> {
+  ghEmit?.({ kind: 'step', label: `gh ${args[0] === 'api' ? (args[1] ?? 'api') : args.join(' ')}` })
+  const { stdout } = await run('gh', args, { encoding: 'utf8', maxBuffer: 16 * 1024 * 1024 })
+  return stdout
 }
 // gh authentication is a precondition for every GitHub-touching check. In CI there is
 // no token (the workflow runs this gate for its offline vendor-integrity value only —
 // see ci.yml), so an unauthenticated `gh` must degrade the GitHub checks to a skip, not
 // hard-FAIL. Cached: `gh auth status` is one process, and auth does not change mid-run.
 let ghAuthedCache: boolean | null = null
-function ghAuthed(): boolean {
+async function ghAuthed(): Promise<boolean> {
   if (ghAuthedCache === null) {
     try {
-      execFileSync('gh', ['auth', 'status'], { stdio: 'ignore' })
+      await run('gh', ['auth', 'status'])
       ghAuthedCache = true
     } catch {
       ghAuthedCache = false
@@ -126,27 +139,27 @@ function ghAuthed(): boolean {
   }
   return ghAuthedCache
 }
-const ghOk = (apiPath: string): boolean => {
+const ghOk = async (apiPath: string): Promise<boolean> => {
   try {
-    gh(['api', apiPath])
+    await gh(['api', apiPath])
     return true
   } catch {
     return false
   }
 }
-const ghJSON = (apiPath: string): unknown => JSON.parse(gh(['api', apiPath]))
+const ghJSON = async (apiPath: string): Promise<unknown> => JSON.parse(await gh(['api', apiPath]))
 // File content as raw text, or null on 404.
-const ghRaw = (nwo: string, path: string): string | null => {
+const ghRaw = async (nwo: string, path: string): Promise<string | null> => {
   try {
-    return gh(['api', `repos/${nwo}/contents/${path}`, '-H', 'Accept: application/vnd.github.raw'])
+    return await gh(['api', `repos/${nwo}/contents/${path}`, '-H', 'Accept: application/vnd.github.raw'])
   } catch {
     return null
   }
 }
 // Set of the repo's root-level paths (one call), for presence checks.
-function rootPaths(nwo: string, branch: string): Set<string> {
+async function rootPaths(nwo: string, branch: string): Promise<Set<string>> {
   try {
-    const t = ghJSON(`repos/${nwo}/git/trees/${branch}`) as { tree?: { path: string }[] }
+    const t = (await ghJSON(`repos/${nwo}/git/trees/${branch}`)) as { tree?: { path: string }[] }
     return new Set((t.tree ?? []).map((e) => e.path))
   } catch {
     return new Set()
@@ -181,8 +194,8 @@ function parsePkg(text: string | null): Pkg | null {
     return null
   }
 }
-function readRemotePkg(nwo: string, files: Set<string>): Pkg | null {
-  return files.has('package.json') ? parsePkg(ghRaw(nwo, 'package.json')) : null
+async function readRemotePkg(nwo: string, files: Set<string>): Promise<Pkg | null> {
+  return files.has('package.json') ? parsePkg(await ghRaw(nwo, 'package.json')) : null
 }
 // package.json `description` (the in-repo source of truth the GitHub description must
 // be SYNCED with), or null when there is none / it isn't a non-empty string.
@@ -196,9 +209,9 @@ const pkgHasDep = (pkg: Pkg | null, name: string): boolean =>
 // look below the root (`site/wrangler.jsonc`, `skills/*/SKILL.md`, `subagents/**/*.md`).
 // One API call; empty set on error or truncation. `rootPaths` stays the top-level
 // view the file-presence checks use.
-function treePaths(nwo: string, branch: string): Set<string> {
+async function treePaths(nwo: string, branch: string): Promise<Set<string>> {
   try {
-    const t = ghJSON(`repos/${nwo}/git/trees/${branch}?recursive=1`) as { tree?: { path: string }[] }
+    const t = (await ghJSON(`repos/${nwo}/git/trees/${branch}?recursive=1`)) as { tree?: { path: string }[] }
     return new Set((t.tree ?? []).map((e) => e.path))
   } catch {
     return new Set()
@@ -417,16 +430,24 @@ function localContentEvidence(dir: string): ContentEvidence {
   }
 }
 
-function remoteContentEvidence(nwo: string, branch: string): ContentEvidence {
-  const files = rootPaths(nwo, branch)
-  const kiText = files.has(KI_CONFIG) ? ghRaw(nwo, KI_CONFIG) : null
+async function remoteContentEvidence(nwo: string, branch: string): Promise<ContentEvidence> {
+  const files = await rootPaths(nwo, branch)
+  const kiText = files.has(KI_CONFIG) ? await ghRaw(nwo, KI_CONFIG) : null
+  // Independent round trips, so they overlap rather than queue: the content reads do not
+  // depend on one another, and the tree call is the slowest of them.
+  const [readme, gitignore, tree, pkg] = await Promise.all([
+    files.has('README.md') ? ghRaw(nwo, 'README.md') : null,
+    files.has('.gitignore') ? ghRaw(nwo, '.gitignore') : null,
+    treePaths(nwo, branch),
+    readRemotePkg(nwo, files)
+  ])
   return {
     files,
     kiText,
     ki: kiText == null ? null : parseKiConfig(kiText),
-    readme: files.has('README.md') ? ghRaw(nwo, 'README.md') : null,
-    gitignore: files.has('.gitignore') ? ghRaw(nwo, '.gitignore') : null,
-    signals: { root: files, tree: treePaths(nwo, branch), pkg: readRemotePkg(nwo, files) },
+    readme,
+    gitignore,
+    signals: { root: files, tree, pkg },
     source: 'GitHub default branch'
   }
 }
@@ -606,7 +627,7 @@ function hasRuntimeSkillIgnoreRules(gitignore: string | null, expected: readonly
   )
 }
 
-function auditRepo(
+async function auditRepo(
   r: Repo,
   files: Set<string>,
   ki: KiConfig | null,
@@ -614,7 +635,7 @@ function auditRepo(
   readme: string | null,
   gitignore: string | null,
   signals: Signals
-): Finding[] {
+): Promise<Finding[]> {
   const { f, fail, warn, note } = mk()
   const pkgDesc = pkgDescription(signals.pkg)
   if (r.isArchived) {
@@ -876,7 +897,7 @@ function auditRepo(
       required_linear_history?: { enabled?: boolean }
     } | null
     try {
-      bp = ghJSON(`repos/${r.nameWithOwner}/branches/${DEFAULT_BRANCH}/protection`) as typeof bp
+      bp = (await ghJSON(`repos/${r.nameWithOwner}/branches/${DEFAULT_BRANCH}/protection`)) as typeof bp
     } catch {
       bp = null
     }
@@ -891,9 +912,9 @@ function auditRepo(
   }
 
   // ── layer 3: deeper GitHub ── DEP-1: Dependabot alerts/updates + PR-branch freshness
-  if (!ghOk(`repos/${r.nameWithOwner}/vulnerability-alerts`)) fail('DEP-1', 'Dependabot alerts are off')
+  if (!(await ghOk(`repos/${r.nameWithOwner}/vulnerability-alerts`))) fail('DEP-1', 'Dependabot alerts are off')
   try {
-    if ((ghJSON(`repos/${r.nameWithOwner}/automated-security-fixes`) as { enabled?: boolean }).enabled !== true)
+    if (((await ghJSON(`repos/${r.nameWithOwner}/automated-security-fixes`)) as { enabled?: boolean }).enabled !== true)
       fail('DEP-1', 'Dependabot security updates are off')
   } catch {
     warn('DEP-1', 'could not read automated-security-fixes')
@@ -902,7 +923,7 @@ function auditRepo(
   // current with the base before merge, so a green PR is green against today's main.
   // REST-only: not exposed in the GraphQL `gh repo view` fields.
   try {
-    if ((ghJSON(`repos/${r.nameWithOwner}`) as { allow_update_branch?: boolean }).allow_update_branch !== true)
+    if (((await ghJSON(`repos/${r.nameWithOwner}`)) as { allow_update_branch?: boolean }).allow_update_branch !== true)
       fail('DEP-1', 'allow_update_branch is off ("Always suggest updating pull request branches")')
   } catch {
     warn('DEP-1', 'could not read allow_update_branch')
@@ -911,7 +932,7 @@ function auditRepo(
   if (r.visibility === 'PUBLIC' && (enforced('secret-scanning') || enforced('push-protection'))) {
     try {
       const sa = (
-        ghJSON(`repos/${r.nameWithOwner}`) as {
+        (await ghJSON(`repos/${r.nameWithOwner}`)) as {
           security_and_analysis?: {
             secret_scanning?: { status?: string }
             secret_scanning_push_protection?: { status?: string }
@@ -928,7 +949,8 @@ function auditRepo(
   }
   // ACT-1
   try {
-    const al = (ghJSON(`repos/${r.nameWithOwner}/actions/permissions`) as { allowed_actions?: string }).allowed_actions
+    const al = ((await ghJSON(`repos/${r.nameWithOwner}/actions/permissions`)) as { allowed_actions?: string })
+      .allowed_actions
     if (al && al !== ALLOWED_ACTIONS) warn('ACT-1', `allowed_actions is "${al}" (standard: ${ALLOWED_ACTIONS})`)
   } catch {
     /* not always readable */
@@ -1133,9 +1155,9 @@ function localTargets(path: string): Target[] {
       : { label, nameWithOwner: null, dir, note: 'origin not on github.com' }
   })
 }
-function orgTargets(org: string): Target[] {
+async function orgTargets(org: string): Promise<Target[]> {
   const repos: { nameWithOwner: string }[] = JSON.parse(
-    gh(['repo', 'list', org, '--limit', '200', '--json', 'nameWithOwner'])
+    await gh(['repo', 'list', org, '--limit', '200', '--json', 'nameWithOwner'])
   )
   return repos
     .map((r) => ({ label: r.nameWithOwner, nameWithOwner: r.nameWithOwner }))
@@ -1189,7 +1211,7 @@ const findingSource = (area: string, content: ContentSource, live = true): strin
 const scoped = (nwo: string, finding: Finding, content: ContentSource, live = true): string =>
   `${nwo} [${findingSource(finding.area, content, live)}]${finding.file ? `/${finding.file}` : ''}`
 
-const auditLocalContent = (nwo: string, content: ContentEvidence): Finding[] => {
+const auditLocalContent = async (nwo: string, content: ContentEvidence): Promise<Finding[]> => {
   const visibility = content.ki?.visibility?.toUpperCase() === 'PUBLIC' ? 'PUBLIC' : 'PRIVATE'
   const license = content.ki?.license?.toLowerCase() ?? DEFAULT_LICENSE.toLowerCase()
   const description = content.ki?.description?.trim() ?? ''
@@ -1209,19 +1231,33 @@ const auditLocalContent = (nwo: string, content: ContentEvidence): Finding[] => 
     licenseInfo: { key: license },
     description
   }
-  return auditRepo(
-    virtualRepo,
-    content.files,
-    content.ki,
-    content.kiText,
-    content.readme,
-    content.gitignore,
-    content.signals
+  return (
+    await auditRepo(
+      virtualRepo,
+      content.files,
+      content.ki,
+      content.kiText,
+      content.readme,
+      content.gitignore,
+      content.signals
+    )
   ).filter((finding) => CONTENT_AREAS.has(finding.area))
 }
 
 // ── evidence collection ───────────────────────────────────────────────────
-export const collectAuditFindings = (argv: readonly string[]): RepoAuditCollection => {
+export const collectAuditFindings = async (
+  argv: readonly string[],
+  emit?: RubricEmitter
+): Promise<RepoAuditCollection> => {
+  ghEmit = emit
+  try {
+    return await collect(argv)
+  } finally {
+    ghEmit = undefined
+  }
+}
+
+const collect = async (argv: readonly string[]): Promise<RepoAuditCollection> => {
   // `--educate` prints the default ["knowledgeislands/ki-agentic-harness:ki-repo"] block for a new repo's
   // .ki-config.toml (authoring creates the keys; the author edits the values).
   if (argv.includes('--educate')) {
@@ -1233,7 +1269,7 @@ export const collectAuditFindings = (argv: readonly string[]): RepoAuditCollecti
     if (orgIdx !== -1) {
       const org = argv[orgIdx + 1]
       if (!org) throw new Error('usage: audit.ts --org <org>')
-      targets = orgTargets(org)
+      targets = await orgTargets(org)
     } else {
       const path = argv.find((a) => !a.startsWith('-')) ?? '.'
       targets = localTargets(path)
@@ -1281,7 +1317,7 @@ export const collectAuditFindings = (argv: readonly string[]): RepoAuditCollecti
         file: t.label
       })
       if (localContent) {
-        for (const x of auditLocalContent(t.label, localContent))
+        for (const x of await auditLocalContent(t.label, localContent))
           all.push({
             level: x.level,
             area: x.area,
@@ -1297,11 +1333,11 @@ export const collectAuditFindings = (argv: readonly string[]): RepoAuditCollecti
     // gh unauthenticated (typically CI): every GitHub-touching check is impossible, so skip
     // them as NOT_APPLICABLE rather than emitting a spurious access-FAIL. The offline vendor-integrity
     // findings above still count — that is the value this gate carries in CI (see ci.yml).
-    if (!ghAuthed()) {
+    if (!(await ghAuthed())) {
       const note = 'gh not authenticated — GitHub checks skipped (gh auth login)'
       all.push({ level: 'NOT_APPLICABLE', area: 'ACCESS-1', msg: note, ref: STD, file: t.nameWithOwner })
       if (localContent) {
-        for (const x of auditLocalContent(t.nameWithOwner, localContent))
+        for (const x of await auditLocalContent(t.nameWithOwner, localContent))
           all.push({
             level: x.level,
             area: x.area,
@@ -1322,13 +1358,21 @@ export const collectAuditFindings = (argv: readonly string[]): RepoAuditCollecti
     }
     let findings: Finding[]
     try {
-      const r = JSON.parse(gh(['repo', 'view', t.nameWithOwner, '--json', REPO_FIELDS])) as Repo
+      const r = JSON.parse(await gh(['repo', 'view', t.nameWithOwner, '--json', REPO_FIELDS])) as Repo
       const branch = r.defaultBranchRef?.name ?? DEFAULT_BRANCH
-      const content = localContent ?? remoteContentEvidence(t.nameWithOwner, branch)
+      const content = localContent ?? (await remoteContentEvidence(t.nameWithOwner, branch))
       // overrides are applied inside auditRepo: a not-enforced check simply does not fail
       // and is reported as INFO. No post-filtering here.
       findings = [
-        ...auditRepo(r, content.files, content.ki, content.kiText, content.readme, content.gitignore, content.signals),
+        ...(await auditRepo(
+          r,
+          content.files,
+          content.ki,
+          content.kiText,
+          content.readme,
+          content.gitignore,
+          content.signals
+        )),
         ...localFindings
       ]
       for (const x of findings)
@@ -1350,7 +1394,7 @@ export const collectAuditFindings = (argv: readonly string[]): RepoAuditCollecti
         ...localFindings
       ]
       if (localContent) {
-        for (const x of auditLocalContent(t.nameWithOwner, localContent))
+        for (const x of await auditLocalContent(t.nameWithOwner, localContent))
           all.push({
             level: x.level,
             area: x.area,

@@ -43,13 +43,13 @@ const runFilesConform = (context: FilesRubricContext): void => {
   for (const item of FILES.items) item.mechanical?.conform?.run(context)
 }
 
-const filesContext = (session: ReturnType<typeof createRepoSession>): FilesRubricContext => {
+const filesContext = (session: Awaited<ReturnType<typeof createRepoSession>>): FilesRubricContext => {
   const [subject] = session.subjects
   if (!subject) throw new Error('ki-repo session did not expose its repository subject')
   return FILES.selectContext(subject.context())
 }
 
-const workingAreasContext = (session: ReturnType<typeof createRepoSession>): WorkingAreasRubricContext => {
+const workingAreasContext = (session: Awaited<ReturnType<typeof createRepoSession>>): WorkingAreasRubricContext => {
   const [subject] = session.subjects
   if (!subject) throw new Error('ki-repo session did not expose its repository subject')
   return WORK.selectContext(subject.context())
@@ -61,7 +61,7 @@ const runWorkingAreasConform = (context: WorkingAreasRubricContext): void => {
 
 const applyWrites = (
   root: string,
-  writes: ReturnType<ReturnType<typeof createRepoSession>['proposal']>['writes']
+  writes: ReturnType<Awaited<ReturnType<typeof createRepoSession>>['proposal']>['writes']
 ): void => {
   for (const write of writes) {
     const path = join(root, write.path)
@@ -71,9 +71,9 @@ const applyWrites = (
 }
 
 describe('ki-repo session', () => {
-  test('coalesces two item actions into one explicit config create plus one gitignore create', () => {
+  test('coalesces two item actions into one explicit config create plus one gitignore create', async () => {
     const root = repository()
-    const session = createRepoSession(options(root, 'conform'), inspect)
+    const session = await createRepoSession(options(root, 'conform'), inspect)
     const context = filesContext(session)
     runFilesConform(context)
 
@@ -84,11 +84,11 @@ describe('ki-repo session', () => {
     expect(proposal.writes[0]?.content).toContain('["knowledgeislands/ki-agentic-harness:ki-authoring"]')
   })
 
-  test('appends only a missing exact root marker and preserves the original bytes', () => {
+  test('appends only a missing exact root marker and preserves the original bytes', async () => {
     const root = repository()
     const original = '# retained\n["knowledgeislands/ki-agentic-harness:ki-repo".checks]\nwiki = false\n'
     writeFileSync(join(root, '.ki-config.toml'), original)
-    const session = createRepoSession(options(root, 'conform'), inspect)
+    const session = await createRepoSession(options(root, 'conform'), inspect)
     runFilesConform(filesContext(session))
 
     const config = session.proposal().writes.find((write) => write.path === '.ki-config.toml')
@@ -98,7 +98,7 @@ describe('ki-repo session', () => {
     expect(config?.content).toContain('\n["knowledgeislands/ki-agentic-harness:ki-authoring"]\n')
   })
 
-  test('replaces legacy runtime-skill ignores with the canonical ki-self exception', () => {
+  test('replaces legacy runtime-skill ignores with the canonical ki-self exception', async () => {
     const root = repository()
     writeFileSync(
       join(root, '.ki-config.toml'),
@@ -107,7 +107,7 @@ describe('ki-repo session', () => {
     mkdirSync(join(root, '.agents', 'skills', 'ki-self'), { recursive: true })
     writeFileSync(join(root, '.agents', 'skills', 'ki-self', 'SKILL.md'), '# KI Self\n')
     writeFileSync(join(root, '.gitignore'), 'node_modules/\n.claude/skills/*\n.agents/skills/\n')
-    const session = createRepoSession(options(root, 'conform'), inspect)
+    const session = await createRepoSession(options(root, 'conform'), inspect)
     runFilesConform(filesContext(session))
 
     const gitignore = session.proposal().writes.find((write) => write.path === '.gitignore')
@@ -117,7 +117,7 @@ describe('ki-repo session', () => {
     )
   })
 
-  test('derives runtime-skill ignores from supported runtimes while reserving ki-self', () => {
+  test('derives runtime-skill ignores from supported runtimes while reserving ki-self', async () => {
     const root = repository()
     writeFileSync(
       join(root, '.ki-config.toml'),
@@ -125,43 +125,78 @@ describe('ki-repo session', () => {
     )
     writeFileSync(join(root, '.gitignore'), '.agents/skills/*\n')
 
-    expect(collectAuditFindings([root]).findings).toContainEqual(
+    expect((await collectAuditFindings([root])).findings).toContainEqual(
       expect.objectContaining({ code: 'FILES-4', message: expect.stringContaining('.claude/skills/*') })
     )
 
     writeFileSync(join(root, '.gitignore'), '.claude/skills/*\n')
-    expect(collectAuditFindings([root]).findings).toContainEqual(
+    expect((await collectAuditFindings([root])).findings).toContainEqual(
       expect.objectContaining({ code: 'FILES-4', message: expect.stringContaining('!.agents/skills/ki-self/') })
     )
 
     writeFileSync(join(root, '.gitignore'), '.claude/skills/*\n!.agents/skills/ki-self/\n!.agents/skills/ki-self/**\n')
-    expect(collectAuditFindings([root]).findings).not.toContainEqual(expect.objectContaining({ code: 'FILES-4' }))
+    expect((await collectAuditFindings([root])).findings).not.toContainEqual(
+      expect.objectContaining({ code: 'FILES-4' })
+    )
 
     writeFileSync(
       join(root, '.ki-config.toml'),
       '["knowledgeislands/ki-agentic-harness:ki-repo"]\nsupported_runtimes = ["chatgpt-codex"]\n'
     )
     writeFileSync(join(root, '.gitignore'), '.agents/skills/*\n!.agents/skills/ki-self/\n!.agents/skills/ki-self/**\n')
-    expect(collectAuditFindings([root]).findings).not.toContainEqual(expect.objectContaining({ code: 'FILES-4' }))
+    expect((await collectAuditFindings([root])).findings).not.toContainEqual(
+      expect.objectContaining({ code: 'FILES-4' })
+    )
   })
 
-  test('audit is read-only and unsafe configuration leaves expose no write capability', () => {
+  // Emission is observational: a rubric that reported differently when watched would make
+  // progress part of the contract under audit, and a finding that turned on whether a display
+  // was attached could not be defended. The inspector is recorded rather than asserted on
+  // directly, because the emitter must also reach the evidence gathering, not just the session.
+  test('a recording emitter changes no outcome and still observes the evidence stage', async () => {
+    const root = repository()
+    const events: unknown[] = []
+    const seen: (unknown | undefined)[] = []
+    const recording = (target: string, emit?: unknown) => {
+      seen.push(emit)
+      return inspect(target)
+    }
+
+    const silent = await createRepoSession(options(root, 'audit'), recording)
+    const watched = await createRepoSession({ ...options(root, 'audit'), emit: (e) => void events.push(e) }, recording)
+
+    const outcomes = (session: Awaited<ReturnType<typeof createRepoSession>>) =>
+      session.subjects.flatMap((subject) =>
+        FILES.items.map((item) => item.mechanical?.audit.run(FILES.selectContext(subject.context())))
+      )
+    expect(outcomes(watched)).toEqual(outcomes(silent))
+    expect(watched.proposal()).toEqual(silent.proposal())
+
+    expect(seen[0]).toBeUndefined()
+    expect(seen[1]).toBeInstanceOf(Function)
+    expect(events).toEqual([
+      { kind: 'stage', edge: 'start', label: 'repository evidence' },
+      { kind: 'stage', edge: 'end', label: 'repository evidence' }
+    ])
+  })
+
+  test('audit is read-only and unsafe configuration leaves expose no write capability', async () => {
     const root = repository()
     writeFileSync(join(root, 'outside.toml'), '["knowledgeislands/ki-agentic-harness:ki-repo"]\n')
     symlinkSync('outside.toml', join(root, '.ki-config.toml'))
 
-    const audit = createRepoSession(options(root, 'audit'), inspect)
+    const audit = await createRepoSession(options(root, 'audit'), inspect)
     expect(audit.proposal()).toEqual({ writes: [] })
 
-    const conform = createRepoSession(options(root, 'conform'), inspect)
+    const conform = await createRepoSession(options(root, 'conform'), inspect)
     const context = filesContext(conform)
     expect(context.ensureRepoConfiguration).toBeUndefined()
     expect(context.ensureAuthoringConfiguration).toBeUndefined()
   })
 
-  test('conforms only the generic inbound and outbound working-area scaffold', () => {
+  test('conforms only the generic inbound and outbound working-area scaffold', async () => {
     const root = repository()
-    const session = createRepoSession(options(root, 'conform'), inspect)
+    const session = await createRepoSession(options(root, 'conform'), inspect)
     runWorkingAreasConform(workingAreasContext(session))
 
     const writes = session.proposal().writes
@@ -169,21 +204,21 @@ describe('ki-repo session', () => {
     expect(writes.every((write) => write.create)).toBe(true)
 
     applyWrites(root, writes)
-    const audit = createRepoSession(options(root, 'audit'), inspect)
+    const audit = await createRepoSession(options(root, 'audit'), inspect)
     const [item] = WORK.items
     expect(item?.mechanical?.audit.run(workingAreasContext(audit))).toEqual([
       { status: 'PASS', message: 'working-area scaffold is present and conformed' }
     ])
   })
 
-  test('repairs a drifted working-area README without recreating it', () => {
+  test('repairs a drifted working-area README without recreating it', async () => {
     const root = repository()
-    const initial = createRepoSession(options(root, 'conform'), inspect)
+    const initial = await createRepoSession(options(root, 'conform'), inspect)
     runWorkingAreasConform(workingAreasContext(initial))
     applyWrites(root, initial.proposal().writes)
     writeFileSync(join(root, '+', 'README.md'), '# drift\n')
 
-    const session = createRepoSession(options(root, 'conform'), inspect)
+    const session = await createRepoSession(options(root, 'conform'), inspect)
     runWorkingAreasConform(workingAreasContext(session))
     const [write] = session.proposal().writes
 
@@ -194,13 +229,13 @@ describe('ki-repo session', () => {
     expect(write?.content).not.toContain('_TRADES')
   })
 
-  test('does not write a working-area scaffold through an unsafe directory', () => {
+  test('does not write a working-area scaffold through an unsafe directory', async () => {
     const root = repository()
     const outside = join(root, 'outside')
     mkdirSync(outside)
     symlinkSync(outside, join(root, '+'), 'dir')
 
-    const session = createRepoSession(options(root, 'conform'), inspect)
+    const session = await createRepoSession(options(root, 'conform'), inspect)
     runWorkingAreasConform(workingAreasContext(session))
 
     expect(session.proposal().writes).toEqual([])
@@ -208,17 +243,17 @@ describe('ki-repo session', () => {
 })
 
 describe('runtime environment coverage', () => {
-  const runtimeFindings = (configuration: string) => {
+  const runtimeFindings = async (configuration: string) => {
     const root = repository()
     writeFileSync(join(root, '.ki-config.toml'), configuration)
-    return collectAuditFindings([root]).findings.filter(
+    return (await collectAuditFindings([root])).findings.filter(
       ({ code }) => code === 'RUNTIMES-1' || code === 'RUNTIMES-2' || code === 'RUNTIMES-3'
     )
   }
 
-  test('requires the portable and runtime-specific environment tables', () => {
+  test('requires the portable and runtime-specific environment tables', async () => {
     expect(
-      runtimeFindings(
+      await runtimeFindings(
         '["knowledgeislands/ki-agentic-harness:ki-repo"]\nsupported_runtimes = ["claude-code", "chatgpt-codex"]\n'
       )
     ).toEqual([
@@ -232,9 +267,9 @@ describe('runtime environment coverage', () => {
     ])
   })
 
-  test('accepts the complete environment matrix for both runtimes', () => {
+  test('accepts the complete environment matrix for both runtimes', async () => {
     expect(
-      runtimeFindings(`["knowledgeislands/ki-agentic-harness:ki-repo"]
+      await runtimeFindings(`["knowledgeislands/ki-agentic-harness:ki-repo"]
 supported_runtimes = ["claude-code", "chatgpt-codex"]
 
 ["knowledgeislands/ki-agentic-harness:ki-tokenomics"]
@@ -248,9 +283,9 @@ supported_runtimes = ["claude-code", "chatgpt-codex"]
     ).toEqual([])
   })
 
-  test('rejects the retired Codex runtime identifier with recovery guidance', () => {
+  test('rejects the retired Codex runtime identifier with recovery guidance', async () => {
     expect(
-      runtimeFindings('["knowledgeislands/ki-agentic-harness:ki-repo"]\nsupported_runtimes = ["codex"]\n')
+      await runtimeFindings('["knowledgeislands/ki-agentic-harness:ki-repo"]\nsupported_runtimes = ["codex"]\n')
     ).toEqual([
       {
         level: 'FAIL',
@@ -262,7 +297,7 @@ supported_runtimes = ["claude-code", "chatgpt-codex"]
     ])
   })
 
-  test('accepts a canonical ki-self with the Claude projection for declared runtimes', () => {
+  test('accepts a canonical ki-self with the Claude projection for declared runtimes', async () => {
     const root = repository()
     mkdirSync(join(root, '.agents', 'skills', 'ki-self'), { recursive: true })
     writeFileSync(join(root, '.agents', 'skills', 'ki-self', 'SKILL.md'), '# KI Self\n')
@@ -273,10 +308,10 @@ supported_runtimes = ["claude-code", "chatgpt-codex"]
       '["knowledgeislands/ki-agentic-harness:ki-repo"]\nsupported_runtimes = ["claude-code", "chatgpt-codex"]\n'
     )
 
-    expect(collectAuditFindings([root]).findings.filter(({ code }) => code === 'RUNTIMES-3')).toEqual([])
+    expect((await collectAuditFindings([root])).findings.filter(({ code }) => code === 'RUNTIMES-3')).toEqual([])
   })
 
-  test('requires a Claude projection only when Claude Code is declared', () => {
+  test('requires a Claude projection only when Claude Code is declared', async () => {
     const root = repository()
     mkdirSync(join(root, '.agents', 'skills', 'ki-self'), { recursive: true })
     writeFileSync(join(root, '.agents', 'skills', 'ki-self', 'SKILL.md'), '# KI Self\n')
@@ -285,7 +320,7 @@ supported_runtimes = ["claude-code", "chatgpt-codex"]
       '["knowledgeislands/ki-agentic-harness:ki-repo"]\nsupported_runtimes = ["claude-code"]\n'
     )
 
-    expect(collectAuditFindings([root]).findings).toContainEqual(
+    expect((await collectAuditFindings([root])).findings).toContainEqual(
       expect.objectContaining({
         code: 'RUNTIMES-3',
         message: expect.stringContaining('declares claude-code but lacks')
@@ -293,7 +328,7 @@ supported_runtimes = ["claude-code", "chatgpt-codex"]
     )
   })
 
-  test('rejects copied and undeclared Claude projections', () => {
+  test('rejects copied and undeclared Claude projections', async () => {
     const root = repository()
     mkdirSync(join(root, '.agents', 'skills', 'ki-self'), { recursive: true })
     mkdirSync(join(root, '.claude', 'skills', 'ki-self'), { recursive: true })
@@ -304,7 +339,7 @@ supported_runtimes = ["claude-code", "chatgpt-codex"]
       '["knowledgeislands/ki-agentic-harness:ki-repo"]\nsupported_runtimes = ["claude-code"]\n'
     )
 
-    expect(collectAuditFindings([root]).findings).toContainEqual(
+    expect((await collectAuditFindings([root])).findings).toContainEqual(
       expect.objectContaining({
         code: 'RUNTIMES-3',
         message: expect.stringContaining('must be a relative symbolic link')
@@ -319,22 +354,22 @@ supported_runtimes = ["claude-code", "chatgpt-codex"]
       '["knowledgeislands/ki-agentic-harness:ki-repo"]\nsupported_runtimes = ["chatgpt-codex"]\n'
     )
 
-    expect(collectAuditFindings([root]).findings).toContainEqual(
+    expect((await collectAuditFindings([root])).findings).toContainEqual(
       expect.objectContaining({ code: 'RUNTIMES-3', message: expect.stringContaining('claude-code is not declared') })
     )
   })
 })
 
 describe('repository kind and Knowledge Base stores', () => {
-  const kindFindings = (configuration: string) => {
+  const kindFindings = async (configuration: string) => {
     const root = repository()
     writeFileSync(join(root, '.ki-config.toml'), configuration)
-    return collectAuditFindings([root]).findings.filter(({ code }) => code === 'KIND-1' || code === 'KIND-2')
+    return (await collectAuditFindings([root])).findings.filter(({ code }) => code === 'KIND-1' || code === 'KIND-2')
   }
 
-  test('accepts a KB with the canonical notes role and KB structure', () => {
+  test('accepts a KB with the canonical notes role and KB structure', async () => {
     expect(
-      kindFindings(`['knowledgeislands/ki-agentic-harness:ki-repo']
+      await kindFindings(`['knowledgeislands/ki-agentic-harness:ki-repo']
 repo_type = "kb"
 store_roles = ["notes", "sources"]
 
@@ -343,9 +378,9 @@ store_roles = ["notes", "sources"]
     ).toEqual([])
   })
 
-  test('rejects invalid roles and incompatible structures', () => {
+  test('rejects invalid roles and incompatible structures', async () => {
     expect(
-      kindFindings(`['knowledgeislands/ki-agentic-harness:ki-repo']
+      await kindFindings(`['knowledgeislands/ki-agentic-harness:ki-repo']
 repo_type = "kb"
 store_roles = ["sources"]
 `)
@@ -353,7 +388,7 @@ store_roles = ["sources"]
       expect.objectContaining({ code: 'KIND-1', message: expect.stringContaining('must include notes') })
     )
     expect(
-      kindFindings(`['knowledgeislands/ki-agentic-harness:ki-repo']
+      await kindFindings(`['knowledgeislands/ki-agentic-harness:ki-repo']
 repo_type = "repository"
 
 ['knowledgeislands/ki-agentic-harness:ki-kb']
@@ -363,9 +398,9 @@ repo_type = "repository"
     )
   })
 
-  test('does not accept a legacy kind declaration outside ki-repo', () => {
+  test('does not accept a legacy kind declaration outside ki-repo', async () => {
     expect(
-      kindFindings(`['knowledgeislands/ki-agentic-harness:ki-repo']
+      await kindFindings(`['knowledgeislands/ki-agentic-harness:ki-repo']
 
 ['knowledgeislands/ki-agentic-harness:ki-kb']
 
@@ -379,7 +414,7 @@ repo_type = "kb"
 })
 
 describe('local repository evidence', () => {
-  test('uses the checkout tree, including unpushed content and excluding ignored dependencies', () => {
+  test('uses the checkout tree, including unpushed content and excluding ignored dependencies', async () => {
     const root = repository()
     mkdirSync(join(root, 'skills', 'ki-example'), { recursive: true })
     mkdirSync(join(root, 'node_modules', 'ignored'), { recursive: true })
@@ -391,15 +426,15 @@ describe('local repository evidence', () => {
     expect(localTreePaths(root)).toEqual(new Set(['.gitignore', 'README.md', 'skills/ki-example/SKILL.md']))
   })
 
-  test('labels local-content findings with their checkout source', () => {
+  test('labels local-content findings with their checkout source', async () => {
     const root = repository()
     writeFileSync(join(root, 'README.md'), '# Local\n')
 
-    const findings = collectAuditFindings([root]).findings
+    const findings = (await collectAuditFindings([root])).findings
     expect(findings.find((finding) => finding.code === 'FILES-1')?.subject).toContain('[local checkout]')
   })
 
-  test('requires declared identity and keeps roadmap repo_code in the ki-repo table', () => {
+  test('requires declared identity and keeps roadmap repo_code in the ki-repo table', async () => {
     const root = repository()
     writeFileSync(join(root, 'README.md'), '# Actual title\n')
     writeFileSync(
@@ -407,7 +442,7 @@ describe('local repository evidence', () => {
       '["knowledgeislands/ki-agentic-harness:ki-repo"]\ntitle = "Configured title"\ndescription = "Configured description."\n\n["knowledgeislands/ki-agentic-harness:ki-roadmap"]\n'
     )
 
-    const findings = collectAuditFindings([root]).findings.filter((finding) => finding.code === 'FILES-2')
+    const findings = (await collectAuditFindings([root])).findings.filter((finding) => finding.code === 'FILES-2')
     expect(findings).toContainEqual(
       expect.objectContaining({ message: expect.stringContaining('README.md H1 must equal') })
     )
@@ -416,13 +451,13 @@ describe('local repository evidence', () => {
     )
   })
 
-  test('detects the optional checkpoints subarea without creating or interpreting it', () => {
+  test('detects the optional checkpoints subarea without creating or interpreting it', async () => {
     const root = repository()
     mkdirSync(join(root, '+', '_CHECKPOINTS'), { recursive: true })
     writeFileSync(join(root, '+', '_CHECKPOINTS', 'Thread.md'), '# Thread\n')
     writeFileSync(join(root, '.ki-config.toml'), '["knowledgeislands/ki-agentic-harness:ki-repo"]\n')
 
-    const findings = collectAuditFindings([root]).findings.filter((finding) => finding.code === 'COV-1')
+    const findings = (await collectAuditFindings([root])).findings.filter((finding) => finding.code === 'COV-1')
     expect(findings).toContainEqual(
       expect.objectContaining({ message: expect.stringContaining('looks governed by ki-checkpoints') })
     )
@@ -431,15 +466,15 @@ describe('local repository evidence', () => {
       join(root, '.ki-config.toml'),
       '["knowledgeislands/ki-agentic-harness:ki-repo"]\n\n["knowledgeislands/ki-agentic-harness:ki-checkpoints"]\n'
     )
-    expect(collectAuditFindings([root]).findings.filter((finding) => finding.code === 'COV-1')).toEqual([])
+    expect((await collectAuditFindings([root])).findings.filter((finding) => finding.code === 'COV-1')).toEqual([])
   })
 
-  test('fails a selected local target rather than falling back to GitHub content', () => {
+  test('fails a selected local target rather than falling back to GitHub content', async () => {
     const root = mkdtempSync(join(tmpdir(), 'ki-repo-broken-local-'))
     roots.push(root)
     writeFileSync(join(root, '.git'), 'not a git directory\n')
 
-    expect(collectAuditFindings([root]).findings).toContainEqual(
+    expect((await collectAuditFindings([root])).findings).toContainEqual(
       expect.objectContaining({ level: 'FAIL', code: 'ACCESS-1', subject: expect.stringContaining('[local checkout]') })
     )
   })

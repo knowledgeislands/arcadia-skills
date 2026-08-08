@@ -31,9 +31,11 @@ The contract now carries `emit` and `cost`, `createSession` may return a promise
 
 The cost channel now carries the six criteria whose evidence is a subprocess: `SYNC-1`, `BIO-1`, `TSC-1`, and `KNIP-2` in `ki-engineering` at 2, 4, 5, and 8 against measured wall-clock spans of 0.1s, 0.3s, 0.4s, and 0.6s in this repository; `TEST-5` at 60 for a full suite under coverage instrumentation; and `MD-mech` in `ki-authoring` at 2 for a whole-repository rumdl run measured at 0.24s. Every other criterion is a pure reader and keeps the default unit. The declared numbers are a ratio between subprocess-backed siblings, not a ratio against an `lstat`, which would be four orders of magnitude and would weight a bar into uselessness.
 
-What remains is that `ki-engineering` is the only context that emits. `RubricExecution.run` and `RubricSubject.context` remain synchronous, which costs nothing while evidence is gathered in contexts.
+`ki-repo` is converted too, and it was the dearest context in the estate: its evidence is `gh` network calls rather than local subprocesses, and a full run measured 3.2 seconds of wall clock at 38% CPU — roughly two seconds of it blocked on the network with the loop frozen, the single longest inert span the display had to survive. The whole `gh` layer is now awaited, each round trip reports itself as a step, and the four criteria that own one — `BP-1`, `SEC-1`, and `ACT-1` at 4, with `DEP-1` at 12 for its three calls — carry a cost. The independent content reads in `remoteContentEvidence` now overlap through `Promise.all` rather than queueing, which only reaches an `--org` run, since a local checkout reads its content from disk.
 
-`ki-repo` is the outstanding candidate and the dearest in the estate, because its evidence is `gh` network calls rather than local subprocesses. It is deliberately left to the conversion step rather than costed here: its GitHub evidence is gathered in one bulk `execFileSync` pass that no single criterion owns, so a per-criterion cost cannot be assigned honestly until that gathering is converted and its spans are attributable.
+`RubricExecution.run` and `RubricSubject.context` remain synchronous, which costs nothing while evidence is gathered in contexts.
+
+Emission is now proven inert rather than asserted to be: `ki-repo` carries a test that runs the same session with and without a recording emitter and compares both the outcomes and the proposal, and that also confirms the emitter reaches the evidence gathering rather than stopping at the session. `ki-engineering` has no equivalent test, which is a gap in the earlier step rather than in this one.
 
 Two migration routes were measured rather than argued. Widening the inner seams — `RubricSubject.context` and `RubricExecution.run` — produces 238 type errors across sixty-one files, because 121 call sites in twenty-eight test files consume a result synchronously, most inline as `item.audit.run(context)[0]?.message`. Widening only `createSession` instead reaches the same capability and touches twenty-eight test files by one line each, none of them for async. The entry point is therefore the seam to move: a concrete synchronous `createSession` stays assignable to the widened type, so no skill breaks until it chooses to become async.
 
@@ -47,7 +49,8 @@ The contract version does not move. Every addition here is source-compatible, an
 - [x] Widen `createSession` to return a session or a promise of one, which is the seam that restores the refresh.
 - [x] Convert `collectAuditEvidence` in `ki-engineering` from `execSync` to awaited subprocesses, emitting a step per external command.
 - [x] Declare a cost on the subprocess-backed criteria in `ki-engineering` and any sibling whose expense is comparable, so weighting stops being item count.
-- [ ] Convert the remaining contexts that gather evidence expensively, one skill at a time, as each earns it.
+- [x] Convert the remaining contexts that gather evidence expensively, one skill at a time, as each earns it. `ki-repo` earned it and is converted. `ki-authoring` runs rumdl in 0.24s and `ki-tools` spawns `--version`; neither blocks long enough to justify the change, and both stay synchronous until they do.
+- [ ] Add the emitter-inertness test to `ki-engineering` that `ki-repo` now carries, closing the one place where the Verify claim rests on reading rather than on a test.
 
 ## Files touched
 

@@ -9,6 +9,7 @@ const BP_1: RubricItem<EvidenceRubricContext> = {
   sources: ['standards-repository.md'],
   mechanical: {
     level: 'FAIL',
+    cost: 4,
     remediation: {
       class: 'diagnostic',
       guidance: 'Configure the required branch-protection posture or record an explicit override, then rerun the audit.'

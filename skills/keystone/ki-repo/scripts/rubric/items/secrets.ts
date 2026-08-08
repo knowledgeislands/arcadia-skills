@@ -8,6 +8,7 @@ const SEC_1: RubricItem<EvidenceRubricContext> = {
   sources: ['standards-repository.md'],
   mechanical: {
     level: 'FAIL',
+    cost: 4,
     overrideLevels: ['WARN'],
     remediation: {
       class: 'diagnostic',

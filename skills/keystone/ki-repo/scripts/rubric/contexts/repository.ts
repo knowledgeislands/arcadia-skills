@@ -4,6 +4,7 @@ import type {
   AuditOutcome,
   ConformWrite,
   RubricContextOptions,
+  RubricEmitter,
   RubricPublicationContext,
   RubricSession,
   ViolationLevel
@@ -302,14 +303,19 @@ const findingsByCode = (findings: readonly RepoEvidenceFinding[]) => {
   }
 }
 
-export type RepoEvidenceInspector = (repository: string) => RepoAuditCollection
+export type RepoEvidenceInspector = (
+  repository: string,
+  emit?: RubricEmitter
+) => RepoAuditCollection | Promise<RepoAuditCollection>
 
-export const createRepoSession = (
-  { mode, repository, publication }: RubricContextOptions,
-  inspect: RepoEvidenceInspector = (target) => collectAuditFindings([target])
-): RubricSession<RepoRubricContext> => {
+export const createRepoSession = async (
+  { mode, repository, publication, emit }: RubricContextOptions,
+  inspect: RepoEvidenceInspector = (target, report) => collectAuditFindings([target], report)
+): Promise<RubricSession<RepoRubricContext>> => {
   const target = resolve(repository)
-  const evidence = findingsByCode(inspect(target).findings)
+  emit?.({ kind: 'stage', edge: 'start', label: 'repository evidence' })
+  const evidence = findingsByCode((await inspect(target, emit)).findings)
+  emit?.({ kind: 'stage', edge: 'end', label: 'repository evidence' })
   const mutable = mode === 'conform'
   const configPath = join(target, '.ki-config.toml')
   const configExists = existsSync(configPath)
