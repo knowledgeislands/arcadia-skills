@@ -40,7 +40,7 @@ The two shape questions the source trade explicitly handed to this repository ar
 - [ ] State the resolution rule in the contract: a bare name binds exactly one declared provider, no provider is an error, more than one provider requires explicit qualification, and resolution consults the declared list rather than installed harnesses.
 - [ ] Rewrite the `ki-trades` route declaration in its standard to the partner-keyed `[skills.ki-trades.routes]` shape with `export` and `import` kind arrays, and remove the now-redundant hand-written uniqueness and lexical-ordering requirement that TOML's duplicate-key prohibition supersedes.
 - [ ] Update the `ki-repo` and `ki-trades` rubric criteria and their generated publications to check the new shape, and delete every criterion that asserts the qualified-key form.
-- [ ] Decide how a rubric context locates its configuration, and record the choice under Discussion. Sixteen contexts today re-parse `.ki-config.toml` themselves and index it by a hard-coded qualified constant, several also reading another skill's table — `ki-trades` reads `ki-repo`'s to obtain the repository identity. Either each context indexes `skills.<name>` directly, or the host resolves the declared list once and hands each session its own table plus a way to reach a sibling's. The second removes the harness identity from skill code entirely and is the reason to prefer it; the first is a smaller change.
+- [x] Decide how a rubric context locates its configuration, and record the choice under Discussion. Sixteen contexts today re-parse `.ki-config.toml` themselves and index it by a hard-coded qualified constant, several also reading another skill's table — `ki-trades` reads `ki-repo`'s to obtain the repository identity. Settled: each context indexes `skills.<name>` directly.
 - [ ] Apply that decision to all sixteen contexts, including their cross-skill reads, so no skill hard-codes a harness identity to find configuration.
 - [ ] Update every example, snippet, and cross-reference in the skill catalogue and repository documentation that shows a qualified declaration key.
 - [ ] Migrate all twenty-four `.ki-config.toml` files in the estate to the new layout, giving each implicitly-declared skill an explicit root table.
@@ -69,11 +69,21 @@ The plan is approved and this item is `ready`, but two things are deliberately s
 
 The first is an ordering gate rather than a blocking dependency, and it is operational: the estate migration step must not run until `KI-TOOL-CLI-025` has landed and the machine's installed `ki` parses the new layout. Confirm that directly before migrating any file, because the failure mode in this direction is silent — a migrated file under an older executable selects nothing and reports a green audit. Every other step here is safe to take before the parser exists, because contract text, rubric criteria, and context lookups are all local and none of them changes a file the current parser reads.
 
-The second is the sixth step, which still carries a genuine decision rather than a settled one: whether each rubric context indexes `skills.<name>` itself or the host resolves the declared list once and hands each session its table. That choice is left open on purpose, because the host-resolved option adds plumbing to `tools-ki` and so changes the counterpart item's scope; it is a cross-repository call to make with that repository in view rather than one to settle unilaterally here.
+The second was the sixth step's context-lookup decision, now settled under Discussion.
 
 The consumer cost belongs in that counterpart's assessment rather than here: today a declaration's identity is read literally from the table header, and under a bare-name layout it can only be derived once resolution has bound a provider, so the parsed declaration and the resolved skill become distinct shapes. The parser, skill declaration, and skill undeclaration each become simpler, so the cost concentrates in identity derivation rather than spreading across the consumer.
 
 ## Discussion
+
+### How a rubric context locates its configuration
+
+Each context indexes `skills.<name>` directly, rather than the host resolving the declared list once and handing each session its own table.
+
+The argument for the host-resolved option was that it removes the harness identity from skill code entirely. It turns out the smaller change removes it just as completely, because the sixteen contexts already re-parse `.ki-config.toml` for themselves — none of them receives its configuration from the host today. So the constant each one holds goes from `'knowledgeislands/ki-agentic-harness:ki-mcp'` to `'ki-mcp'`, and the harness identity is gone from skill code either way. The distinguishing benefit was not distinguishing.
+
+What remains is cost, and it falls the other way. Host-resolved plumbing would have to reach every session, plus a second channel for the cross-skill reads — `ki-trades`, `ki-housekeeping`, `ki-decision-records`, and `ki-roadmap` all read `ki-repo`'s table for the repository identity — and all of it lands in `tools-ki`, widening the counterpart item for a benefit the local change already delivers. Direct indexing is a one-line change per context and keeps skill-side concerns skill-side.
+
+The failure mode argued for host resolution is unchanged by this choice and is answered elsewhere: a context that indexes a key the file no longer uses resolves to nothing silently. That is why `KI-TOOL-CLI-025` makes an unmigrated file a loud parse failure, so the window in which a lookup could silently miss is a window in which `ki` refuses to run at all.
 
 ### Why the context lookup is the substantial half
 
