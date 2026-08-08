@@ -35,7 +35,11 @@ The two shape questions the source trade explicitly handed to this repository ar
 
 The harness half is delivered. The contract, the trade route shape, the rubric criteria and their regenerated publications, every rubric context's lookup, seventy-six guidance documents, and this repository's own `.ki-config.toml` are all on the new layout, and `ki repo audit` reports `PASS=21 WARN=0 FAIL=0` against it under the landed parser.
 
-`KI-TOOL-CLI-025` landed in `tools-ki` while this was in progress, which reordered the work rather than blocking it: the parser began rejecting the old shape mid-change, so this repository's migration became required to commit at all rather than a step to schedule. What remains is the other twenty-three repositories, each of which now fails loudly under `ki` until it is migrated.
+`KI-TOOL-CLI-025` landed in `tools-ki` while this was in progress, which reordered the work rather than blocking it: the parser began rejecting the old shape mid-change, so this repository's migration became required to commit at all rather than a step to schedule.
+
+All fifteen Knowledge Islands repositories under `workspaces/kit/knowledgeislands` are migrated and committed, each in its own repository. Ten audit clean. Four carry findings that predate this change and are untouched by it — a trade-scaffold README drift in `ki-website` and `tools-mgit`, a retired `ki:lint:rules` script and a failing coverage gate in `mcp-m365`, and two advisory Homebrew warnings in `homebrew-tap`; in every case the migration's diff is `.ki-config.toml` alone. The nine repositories outside that parent remain.
+
+The migration was applied by a line-based script rather than by re-serialising through a TOML library, because re-serialising discards the comments and blank-line grouping these files carry, and those are the part a person reads. It refuses to write a result that does not parse.
 
 Three lookups turned out to be regex literals rather than the indexed constants the survey found — `declaredTables` in `ki-repo`, `declaredSkillNames` in `ki-engineering`, and the `ki-harness` marker probe. Each matched the qualified spelling textually, and each failed by reporting nothing rather than by erroring, which is the same quiet-miss class this contract exists to remove.
 
@@ -50,7 +54,8 @@ Three lookups turned out to be regex literals rather than the indexed constants 
 - [x] Apply that decision to all sixteen contexts, including their cross-skill reads, so no skill hard-codes a harness identity to find configuration.
 - [x] Update every example, snippet, and cross-reference in the skill catalogue and repository documentation that shows a qualified declaration key.
 - [x] Migrate this repository's own `.ki-config.toml`, giving each implicitly-declared skill an explicit root table and naming each trade partner once.
-- [ ] Migrate the remaining twenty-three `.ki-config.toml` files in the estate. Each fails loudly under the landed parser until it is, so this is recoverable rather than silent, but every one of those repositories is unusable through `ki` meanwhile.
+- [x] Migrate the fourteen other Knowledge Islands repositories under `workspaces/kit/knowledgeislands`, each committed in its own repository.
+- [ ] Migrate the nine repositories outside that parent — `kit-hnr`, `kit-legal`, `kit-pkb`, `kit-midnight.ninja`, `er-research`, `kit-techmedix`, `vallearmonia-principal`, `vallearmonia-website`, and the chezmoi repository. Each fails loudly under the landed parser until it is, so the state is recoverable rather than silent, but those repositories are unusable through `ki` meanwhile.
 - [x] Raise the corresponding host implementation item in `tools-ki` and confirm its sequencing against this repository's migration.
 
 ## Files touched
