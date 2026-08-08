@@ -48,8 +48,11 @@ Three different kinds of claim live in this standard, and they carry different c
 | Source                                                    | Governs                      | Last reviewed |
 | --------------------------------------------------------- | ---------------------------- | ------------- |
 | Inode comparison across a forced `chezmoi apply`, v2.72.0 | Apply-replaces-target claim§ | 2026-08-08    |
+| `rg -a` / `nm -a` over one shipped GUI application binary | Config-surface discovery¶    | 2026-08-08    |
 
 § That `chezmoi apply` replaces a target rather than editing it in place, and the consequence for an application watching its own config file. Measured on one target on macOS; chezmoi.io does not document the write mechanism, so re-measure before relying on it for another platform or a materially newer chezmoi.
+
+¶ Reading an application's own configuration surface — setting names, help text, and the defaults block — out of its shipped executable when vendor documentation does not cover it. Derived from one case (a Rust/`gpui` application on macOS, n=1); the technique's yield depends on the binary retaining readable strings and symbols, so treat a stripped or heavily optimized binary as a negative result rather than evidence the setting does not exist.
 
 ## Last review
 
