@@ -3,10 +3,10 @@ id: KI-HARNESS-FND-010
 title: Adopt rumdl markdown toolchain
 theme: foundation-tooling
 horizon: now
-status: draft
+status: in-progress
 blocks: []
 blocked-by: []
-baseline-ref: null
+baseline-ref: 3d354b9a
 ---
 
 ## Goal
@@ -33,9 +33,15 @@ This item owns the Markdown toolchain: the `ki-authoring` owned-file templates, 
 
 The markdownlint configuration enables every rule by default and disables five with stated reasons: `MD013` (Prettier owns line length), `MD024` (siblings only), `MD025` (frontmatter title), `MD033` (inline HTML, for `<br>` in table cells and angle-bracket placeholders), and `MD036` (intentional bold labels).
 
-A read-only sweep established the migration's true cost. rumdl 0.2.52, configured to mirror the current rule set, was run against all fifteen repositories under `knowledgeislands`: thirteen reported no issues at all, over 923 files. Two flagged, both exclusively `MD060` table alignment, with no prose, list, or emphasis divergence anywhere in the estate. So the swap is content-neutral in all but one file, and the toolchain change lands without a reformat.
+rumdl's rule-selection flags are exclusive, not additive, and this invalidated a first attempt to measure the migration. Both `--enable` on the command line and `enable` in configuration mean _enable only these_; a sweep run with `--enable MD060` therefore executed that one rule and nothing else, and its apparently clean result across the estate proved only that tables were aligned. The additive forms are `--extend-enable` and `extend-enable`, and a rule that is off by default additionally needs `enabled = true` in its own table. Any measurement of this migration must first confirm that the rules it claims to be running are actually running.
 
-The two exceptions differ in kind and only one is a divergence. `mcp-m365/fixtures/routing/example-rules.md` is flagged by Prettier as well — the file is simply unformatted today, a pre-existing gap in that repository's gate, and the two tools agree about it. `ki-arcadia-principal/Streams/Parked/Parked.md` is a genuine disagreement, and rumdl is wrong: given a placeholder table whose only body row is `| - | - | - |` padded to the header widths, rumdl strips the padding, leaving the table visually misaligned, then reports the result clean while Prettier reports it unformatted. Reduced to a minimum, a table whose sole body row holds `-` cells triggers `MD060` while the identical table with `a` and `b` cells of the same widths does not, so the trigger is the cell content rather than the column width.
+Re-measured correctly against the full rule set, eleven of fifteen repositories are clean and four report seventy-one findings across thirty-seven files: `ki-arcadia-principal` (13), `ki-plugins` (28), `mcp-m365` (22), and `tools-ki` (8). This repository is clean.
+
+Only four of those seventy-one are formatter-parity divergences — two `MD013` prose-reflow, one `MD049` emphasis, one `MD040` unlabelled code fence. The remaining sixty-seven are **new signal rather than disagreement**: rules rumdl applies that the current markdownlint configuration does not reach. The largest group is thirty-nine `MD057` relative links that resolve to no file, concentrated in `ki-plugins`, where published copies of harness skills retain links back into the harness's own `docs/` tree that does not exist in the publishing repository. Nineteen are `MD060` table alignment, and the rest are `MD071`, `MD075`, and `MD076`.
+
+So the migration is close to content-neutral on formatting but is not finding-neutral, and the sixty-seven new findings need triage on their own merits before the toolchain swap can be called complete.
+
+`MD060` needs care beyond enabling it. Its default `style` is `any`, which is the setting that reproduces Prettier's padding; setting `style = "aligned"` explicitly produces four hundred and eighteen findings in this repository alone, so the intuitive value is the wrong one. Separately, `ki-arcadia-principal/Streams/Parked/Parked.md` is a genuine defect: given a placeholder table whose only body row is `| - | - | - |` padded to the header widths, rumdl strips the padding, leaving the table visually misaligned, then reports the result clean while Prettier reports it unformatted. Reduced to a minimum, a table whose sole body row holds `-` cells is flagged while the identical table with `a` and `b` cells of the same widths is not, so the trigger is cell content rather than column width.
 
 The gate also gets substantially cheaper. Across this repository's 383 files, Prettier takes 3.6 seconds and markdownlint-cli2 a further 1.5 seconds, against 0.06 seconds for rumdl — a gate that runs on every audit and every pre-commit.
 
@@ -44,7 +50,8 @@ The gate also gets substantially cheaper. Across this repository's 383 files, Pr
 - [ ] Report the `MD060` placeholder-table defect upstream with the reduced repro, and record the issue reference under Discussion.
 - [ ] Decide and record how the `Parked.md` table is handled: whether the upstream fix is a precondition for migration, or the placeholder row is rewritten so the case does not arise.
 - [ ] Add `rumdl` as a development dependency and define the canonical `.rumdl.toml` template in `ki-authoring`, mapping every currently disabled markdownlint rule to its rumdl equivalent and setting `MD013` to `reflow = true` with `reflow-mode = "normalize"` and an effectively unbounded `line-length`, which is what reproduces `proseWrap: "never"`.
-- [ ] Enable `MD060` explicitly in the template with a comment recording why, since it is opt-in rather than on by default and is the one rule observed to misbehave.
+- [ ] Enable `MD060` in the template through `extend-enable` plus its own `enabled = true`, leaving `style` at its default `any`, with a comment recording that the additive form is required and that an explicit `aligned` style is wrong.
+- [ ] Triage the sixty-seven findings that are new signal rather than formatting divergence, deciding per rule whether to adopt it, configure it, or disable it with a stated reason — `MD057` in particular, where the published-skill link pattern in `ki-plugins` may be legitimate rather than broken.
 - [ ] Replace the Prettier and markdownlint entries in `MARKDOWN_AUDIT_COMMANDS` and `MARKDOWN_CONFORM_COMMANDS` with `rumdl check` and `rumdl fmt`, and drop the `MARKDOWN_PATHS` glob list and both `--ignore-path` flags in favour of rumdl's own `exclude` configuration.
 - [ ] Retire `.prettierrc.json`, `.prettierignore`, and `.markdownlint-cli2.jsonc` from the OWN-1 owned-file set, and remove the `OwnedFile` union members and template constants that define them.
 - [ ] Rewrite the Markdown gate description in `references/standards-authoring.md`, and update every cross-reference in the catalogue and repository documentation that names Prettier or markdownlint as the Markdown authority.
@@ -64,9 +71,11 @@ The gate also gets substantially cheaper. Across this repository's 383 files, Pr
 
 `ki repo audit --skill ki-authoring` passes clean in this repository, and `bun run test` and `bunx tsc --noEmit` pass.
 
-`rumdl check` reports no issues across all fifteen repositories, matching the read-only sweep already recorded under Current state.
+`rumdl check` reports no issues across all fifteen repositories, once the seventy-one findings recorded under Current state have each been adopted, configured, or disabled with a reason.
 
-The decisive check is that the migration changes no content: after conforming every repository, `git status` shows the three retired files deleted and `.rumdl.toml` added, and **no tracked `.md` file modified** other than the `mcp-m365` fixture handled as its own change. A Markdown diff in the migration commit means a rule mapping is wrong.
+Any measurement quoted as evidence must first prove its own rule selection, by confirming through `rumdl config` that the rules being claimed are enabled. The exclusive-`enable` trap already invalidated one sweep and would do so again silently, since the failure mode is a clean report rather than an error.
+
+The formatting half of the migration must change no content: the commit that swaps the toolchain shows the three retired files deleted and `.rumdl.toml` added, with **no tracked `.md` file modified**. Content changes arising from newly adopted rules land as their own separate commits, so a rule-mapping error stays distinguishable from a deliberate lint adoption.
 
 Running `rumdl fmt` twice must be a fixed point, since a formatter that does not converge would reintroduce the OWN-1 idempotency defect this repository has already paid for once.
 
@@ -87,3 +96,7 @@ rumdl is at 0.2.52 with a single maintainer, and replacing two widely-adopted to
 ### Why the one divergence does not block on its own
 
 The `MD060` defect is real and rumdl's output is worse than Prettier's, but it needs a placeholder table with no substantive rows and reaches exactly one file in the estate. It is recorded here, reported upstream, and settled explicitly in the second Step rather than discovered during the migration.
+
+### Why the retired files are removed by command
+
+`ConformWrite` carries `path`, `content`, and `create`, with no deletion primitive, so conform cannot express "this file should no longer exist". Adding one would change the shared rubric contract across its thirty-five vendored copies and would need the host to implement it — an unknown field is silently ignored, so a half-landed contract would delete nothing while appearing to. The retirement therefore issues a `ConformCommand`, which is an existing primitive, emitted only when the evidence shows a retired file present. A deletion primitive may still be worth adding later on its own merits; it is not worth coupling to this migration.
