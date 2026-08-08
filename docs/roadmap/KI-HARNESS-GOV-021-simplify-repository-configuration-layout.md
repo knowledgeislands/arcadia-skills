@@ -3,7 +3,7 @@ id: KI-HARNESS-GOV-021
 title: Simplify repository configuration layout
 theme: governance-consistency
 horizon: now
-status: awaiting-review
+status: done
 blocks: []
 blocked-by: []
 baseline-ref: 729cfb8772d06e44b88d8c221950f5fd2fd2a774
@@ -128,6 +128,16 @@ The plan's sequencing assumption inverted mid-change. `KI-TOOL-CLI-025` landed i
 The most useful finding was that three lookups were regex literals rather than the indexed constants a grep had found — `declaredTables`, `declaredSkillNames`, and the `ki-harness` marker probe. Each matched the old spelling as text and each failed by reporting nothing rather than erroring. `ki-engineering` claimed no `[skills.ki-engineering]` table against a file that plainly had one. That is the same quiet-miss class this contract exists to remove, found inside the change that removes it.
 
 Verifying equivalence rather than validity earned its cost immediately: `kit-pkb` and `vallearmonia-principal` both audit with a missing `repository` or `repo_type`, which looks exactly like a dropped key and is not — their originals never declared either.
+
+## Done
+
+Accepted by Kris Brown on 2026-08-09, on the review packet above, with this record selected for pruning in the same act.
+
+The packet's claims were re-checked from current repository state at acceptance rather than taken from the record: `bunx tsc --noEmit` clean, `bun run test` 316 pass and 0 fail across 83 files, and `ki repo audit` `PASS=21 WARN=0 FAIL=0`.
+
+The outstanding concerns are accepted as recorded rather than resolved. Pre-existing findings in other repositories — trade-scaffold drift, a retired script key, absent `repository` and `repo_type` declarations, a failing coverage gate — were surfaced by restoring those repositories' ability to run `ki` and belong to each of them to address. The nine repositories outside `workspaces/kit/knowledgeislands` were verified by equivalence and `ki repo audit` but not by their own gates.
+
+This item retains `TRD-aacc8a12`, whose knowledge is now held in the `ki-repo` configuration standard and the `ki-trades` route declaration.
 
 ## Discussion
 
