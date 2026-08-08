@@ -3,7 +3,7 @@ id: KI-HARNESS-GOV-025
 title: Emit rubric execution progress
 theme: governance-consistency
 horizon: now
-status: awaiting-review
+status: done
 blocks: []
 blocked-by: []
 baseline-ref: 8c06ae91a781efc72ba4c1ff4a7478481cbe7970
@@ -115,6 +115,16 @@ The trade's diagnosis had to be relocated before anything could be built: it nam
 The lasting judgment is that cost is a ratio between subprocess-backed siblings and never a ratio against an `lstat`, which would be four orders of magnitude and would weight a bar into uselessness. TypeScript 7.0.2 inverted the usual intuition here — `tsc --noEmit` runs in 0.4s at 400% CPU, so `tsc` is no longer the expensive gate and its cost is 5 rather than the largest.
 
 Writing the `ki-repo` inertness test is what revealed that `ki-engineering` had none, which was raised as a step rather than papered over, and is the step this change closes.
+
+## Done
+
+Accepted by Kris Brown on 2026-08-08, on the review packet above.
+
+The packet's claims were re-checked from current repository state at acceptance rather than taken from the record: `bunx tsc --noEmit` clean, `bun run test` 316 pass and 0 fail across 83 files, `ki repo audit` `PASS=21 WARN=0 FAIL=0` across the estate, and a clean tree at `93ebc1ef`.
+
+The two outstanding concerns are accepted as recorded rather than resolved. The inner seams — `RubricExecution.run` and `RubricSubject.context` — stay synchronous, and `ki-authoring` and `ki-tools` stay unconverted on their measurements. Neither is a defect in this delivery; both are judgments to re-take if a criterion ever needs to shell out directly, or if either skill's evidence grows expensive enough to block.
+
+This item supersedes the local half of `TRD-d7d00505`, and it supplies what `KI-TOOL-CLI-022` needs to weight its progress bar by something other than item count. That remains `tools-ki`'s to sequence.
 
 ## Discussion
 

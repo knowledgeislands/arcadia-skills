@@ -3,7 +3,7 @@ id: KI-HARNESS-GOV-021
 title: Simplify repository configuration layout
 theme: governance-consistency
 horizon: now
-status: draft
+status: ready
 blocks: []
 blocked-by: []
 baseline-ref: null
@@ -64,6 +64,12 @@ The two shape questions the source trade explicitly handed to this repository ar
 ## Dependencies / blocks
 
 The host parser, skill resolution, capability status reporting, and declare/undeclare implementation land in `tools-ki` as `KI-TOOL-CLI-025`, authored in parallel with this item. That repository owns its own priority, plan, and execution; this item does not block on it, because the contract, rubric, and estate migration are authored here and the two repositories coordinate their cutover explicitly rather than through a blocking dependency.
+
+The plan is approved and this item is `ready`, but two things are deliberately still open inside it and should not be mistaken for oversights at implementation time.
+
+The first is an ordering gate rather than a blocking dependency, and it is operational: the estate migration step must not run until `KI-TOOL-CLI-025` has landed and the machine's installed `ki` parses the new layout. Confirm that directly before migrating any file, because the failure mode in this direction is silent — a migrated file under an older executable selects nothing and reports a green audit. Every other step here is safe to take before the parser exists, because contract text, rubric criteria, and context lookups are all local and none of them changes a file the current parser reads.
+
+The second is the sixth step, which still carries a genuine decision rather than a settled one: whether each rubric context indexes `skills.<name>` itself or the host resolves the declared list once and hands each session its table. That choice is left open on purpose, because the host-resolved option adds plumbing to `tools-ki` and so changes the counterpart item's scope; it is a cross-repository call to make with that repository in view rather than one to settle unilaterally here.
 
 The consumer cost belongs in that counterpart's assessment rather than here: today a declaration's identity is read literally from the table header, and under a bare-name layout it can only be derived once resolution has bound a provider, so the parsed declaration and the resolved skill become distinct shapes. The parser, skill declaration, and skill undeclaration each become simpler, so the cost concentrates in identity derivation rather than spreading across the consumer.
 
