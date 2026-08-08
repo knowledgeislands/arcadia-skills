@@ -3,7 +3,7 @@ name: ki-authoring
 ki-kind: governance
 ki-depends-on: []
 ki-shared-dependencies: [ki-skills:rubric]
-owns: ['.prettierrc.json', '.editorconfig', '.prettierignore', '.markdownlint-cli2.jsonc']
+owns: ['.editorconfig', '.rumdl.toml']
 description: >
   The foundational authoring, formatting, and knowledge-placement conventions shared across every Knowledge Islands skill, repo, and base — the common style layer the others build on rather than restate. Covers Markdown and its canonical frontmatter, TOML formatting for the shared `.ki-config.toml`, and runtime-neutral knowledge promotion. Use when writing or editing Markdown or TOML, bringing a document or config to house style, deciding where a durable learning belongs, checking conventions, or refreshing them against their sources. Triggers: "format this to our style", "fix this markdown", "tidy this README", "audit this doc's formatting", "does this follow house style", "where should we record this learning". For KB note-writing use `ki-kb`; for a repo's configuration and `.ki-config.toml` contract use `ki-repo`; to judge a SKILL.md use `ki-skills`; for the build/lint/test toolchain use `ki-engineering`.
 argument-hint: 'audit <path> | conform <path> | educate <target> | help | refresh'
@@ -19,7 +19,7 @@ This is a **standard, base-agnostic governance skill** — it hard-codes no sing
 
 A convention is one of two kinds, and the distinction decides where it lives — never restate a mechanically-enforced rule here:
 
-- **Mechanical** — deterministically enforced by the house toolchain, so you never hand-apply it. This skill **owns `.prettierrc.json`, `.editorconfig`, `.prettierignore`, and `.markdownlint-cli2.jsonc` wholly** (SHAPE-16 `owns:` — CONFORM scaffolds any of them when missing and transactionally overwrites regular files on drift, since none has legitimate per-repository content; AUDIT hash-compares each against the house template and refuses unsafe file types). **Prettier + markdownlint-cli2** own authored Markdown (prose wrapping, bullet/quote characters, heading hierarchy, single H1, spacing — `proseWrap: "never"` means Prettier joins any broken prose lines back to single paragraphs). run `ki repo audit --skill ki-authoring` / `ki repo conform --skill ki-authoring`. **Biome** owns TS/JSON. Nothing in the toolchain formats **TOML**, so its conventions are entirely the judgment layer below.
+- **Mechanical** — deterministically enforced by the house toolchain, so you never hand-apply it. This skill **owns `.editorconfig` and `.rumdl.toml` wholly** (SHAPE-16 `owns:` — CONFORM scaffolds either when missing and transactionally overwrites regular files on drift, since neither has legitimate per-repository content; AUDIT hash-compares each against the house template and refuses unsafe file types). It also removes the retired `.prettierrc.json`, `.prettierignore`, and `.markdownlint-cli2.jsonc`, because a leftover configuration lets an editor extension reformat Markdown against a standard the repository no longer holds. **rumdl** owns authored Markdown, formatting and linting it in one pass (prose wrapping, bullet/quote characters, heading hierarchy, single H1, spacing — `MD013` with `reflow-mode = "normalize"` at an unbounded width joins any broken prose lines back to single paragraphs); run `ki repo audit --skill ki-authoring` / `ki repo conform --skill ki-authoring`. **Biome** owns TS/JSON. Nothing in the toolchain formats **TOML** or aligns a Markdown table, so those conventions are entirely the judgment layer below.
 - **Judgment** — needs a person or model deciding: when a wide table should spill into footnotes, whether link text is descriptive, how a `.ki-config.toml` reads. The toolchain cannot assess these. **This is what this skill carries.**
 
 So the workflow when authoring or tidying Markdown is: write to the judgment conventions, then run `ki repo conform --skill ki-authoring` to settle everything mechanical. TOML has no such mechanical pass — the convention is all there is.
@@ -32,7 +32,7 @@ Like every governance skill it carries the universal **AUDIT · CONFORM · EDUCA
 
 1. **Run the hosted structured checker** — `ki repo audit --skill ki-authoring --repo <repo-path>`. The catalogue prepares the formatter evidence with shell-free argument arrays, so the check is self-sufficient in a repository with or without `ki-engineering` or a `package.json`. The host owns findings, reporting, and the non-zero exit on any FAIL.
 2. Apply the **judgment** (`[J]`) criteria from [the rubric](references/rubric.md) — the response summary counts them as unevaluated but does not manufacture findings for work a reviewer has not performed. Wide tables that should spill to footnotes, non-descriptive link text, a `.ki-config.toml` that reads poorly. TOML has no mechanical pass — the rubric is all of it.
-3. **Report** by location → criterion → fix; lead with FAIL findings, then judgment findings. Submitted records at `+/_TRADES/<owner>/<repo>/TRD-*.md` and `-/_TRADES/<owner>/<repo>/TRD-*.md` are evidence, not authored Markdown: never format, lint-fix, or normalize their frontmatter.
+3. **Report** by location → criterion → fix; lead with FAIL findings, then judgment findings. Trade records under `+/_TRADES/` and `-/_TRADES/` are authored Markdown like any other and are formatted with the rest. Their integrity is a property of meaning, not bytes: `ki-trades` `AUTH-1` compares a record against the sender's copy through a projection that ignores formatting, so formatting them changes nothing it checks. An exclusion list was the weaker guarantee — it only avoided touching the records, never verified them, and never covered Biome at all.
 
 ### Mode CONFORM — bring a document into house style
 
@@ -42,7 +42,7 @@ Like every governance skill it carries the universal **AUDIT · CONFORM · EDUCA
 
 ### Mode EDUCATE — teach the conventions and their mechanical footprint
 
-Run `ki repo educate --skill ki-authoring --repo <repo-path>` to render the registered rubric's concern and convention families. EDUCATE explains the Markdown and TOML judgment boundaries and names the three wholly owned configuration files. CONFORM, not EDUCATE, transactionally scaffolds or corrects those files and requests the Markdown normalisation commands.
+Run `ki repo educate --skill ki-authoring --repo <repo-path>` to render the registered rubric's concern and convention families. EDUCATE explains the Markdown and TOML judgment boundaries and names the two wholly owned configuration files. CONFORM, not EDUCATE, transactionally scaffolds or corrects those files and requests the Markdown normalisation commands.
 
 ### Mode REFRESH — re-anchor the conventions to their sources
 

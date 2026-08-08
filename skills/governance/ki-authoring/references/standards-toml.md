@@ -1,6 +1,6 @@
 # TOML formatting style
 
-The **judgment-layer** formatting rules for the TOML written in Knowledge Islands repositories — in practice the shared **`.ki-config.toml`** file a repository carries. TOML is a distinct standard because it has no mechanical house formatter and governs configuration readability rather than Markdown documents. Nothing in the house toolchain formats TOML (Biome owns TS/JSON, Prettier + markdownlint own Markdown), so unlike Markdown there is no mechanical pass to fall back on: **these conventions are the whole of it**, applied by a person or model.
+The **judgment-layer** formatting rules for the TOML written in Knowledge Islands repositories — in practice the shared **`.ki-config.toml`** file a repository carries. TOML is a distinct standard because it has no mechanical house formatter and governs configuration readability rather than Markdown documents. Nothing in the house toolchain formats TOML (Biome owns TS/JSON, rumdl owns Markdown), so unlike Markdown there is no mechanical pass to fall back on: **these conventions are the whole of it**, applied by a person or model.
 
 This file owns only the **formatting** (how the TOML reads). The `.ki-config.toml` **contract** — what its presence means (the Knowledge Islands compliance marker), the one-table-per-skill model, the validate-your-own-table protocol, declared divergences, and scaffolding — is owned by the `ki-repo` skill.
 
