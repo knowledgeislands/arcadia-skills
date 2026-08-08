@@ -37,7 +37,7 @@ Like every governance skill it carries the universal **AUDIT · CONFORM · EDUCA
 ### Mode CONFORM — bring a document into house style
 
 1. Apply the judgment transforms in place — wide tables → footnotes (the marker series), descriptive link text, tidy TOML — per the Convention sets.
-2. Run `ki repo conform --skill ki-authoring --repo <repo-path>` to settle the mechanical layer (table alignment and transient `MD052`/`MD060` until references and alignment land). The owned-file item prepares early transactional writes; the Markdown item requests late formatter commands from the host.
+2. Run `ki repo conform --skill ki-authoring --repo <repo-path>` to settle the mechanical layer (transient `MD052` until reference definitions land). Table alignment is **not** mechanical — no rumdl setting reproduces the former conditional padding, so keeping a table readable is judgment work. The owned-file item prepares early transactional writes; the Markdown item requests late formatter commands from the host.
 3. Re-run AUDIT until the mechanical gate is clean and the judgment criteria pass.
 
 ### Mode EDUCATE — teach the conventions and their mechanical footprint
@@ -48,12 +48,13 @@ Run `ki repo educate --skill ki-authoring --repo <repo-path>` to render the regi
 
 **Precondition:** REFRESH edits this skill's own canonical files, which exist only in `ki-agentic-harness`. Invoked from an installed copy, it stops here and names the harness as where to run it — or, for a pattern recurring across bases, routes it through `ki-kb`'s IMPROVE mode instead.
 
-The house conventions sit on top of external tools and specs (CommonMark, Prettier, markdownlint, the TOML spec), which move. Run on its declared cadence (see `references/sources.md`), or when asked "are the authoring conventions current".
+The house conventions sit on top of external tools and specs (CommonMark, rumdl, the TOML spec), which move. Run on its declared cadence (see `references/sources.md`), or when asked "are the authoring conventions current".
 
 1. **Read [the source list](references/sources.md)** — each tracked source with its `last reviewed` date.
-2. **Re-fetch each** (WebFetch; fall back to WebSearch if a host is blocked or returns non-200) and diff against the convention references: a changed Prettier/markdownlint default that shifts what's mechanical, a CommonMark/TOML change, a rule worth adopting.
-3. **Propose a diff** to the convention references (and this skill); confirm before writing.
-4. **Update [the source list](references/sources.md)** — bump each `last reviewed` date and refresh the `## Last review` block (what's confirmed, open watch-items). What changed goes in the commit, not a changelog.
+2. **Re-fetch each** (WebFetch; fall back to WebSearch if a host is blocked or returns non-200) and diff against the convention references: a changed rumdl default that shifts what's mechanical, a CommonMark/TOML change, a rule worth adopting.
+3. **Re-test every disabled rule** against the reproduction recorded for it under the source list's open watch-items, and re-enable the ones upstream has fixed. A rule is disabled because of a specific defect or a specific decision, never as a permanent verdict — left unexamined, a defensive setting outlives its defect and silently costs the coverage it was meant to protect. Run the reproduction rather than trusting a changelog: `MD075` corrupted files while reporting them clean, so upstream's own signal is not sufficient evidence.
+4. **Propose a diff** to the convention references (and this skill); confirm before writing.
+5. **Update [the source list](references/sources.md)** — bump each `last reviewed` date and refresh the `## Last review` block (what's confirmed, open watch-items). What changed goes in the commit, not a changelog.
 
 ## Convention sets
 
