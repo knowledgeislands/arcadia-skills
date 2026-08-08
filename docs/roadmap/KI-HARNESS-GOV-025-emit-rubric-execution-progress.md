@@ -23,35 +23,34 @@ Three capabilities are missing, and they are worth taking together because they 
 
 ## Boundary
 
-This item owns the shared rubric contract, its vendored copies, and the evidence gathering inside this repository's skills. It does not change the host's renderer, its refresh interval, or its progress vocabulary; `tools-ki` owns those and consumes what this contract emits. It does not introduce a compatibility path: the contract version moves and every catalogue moves with it. It does not make emission load-bearing — a rubric must behave identically when no emitter is supplied, and must never depend on an event being observed.
+This item owns the shared rubric contract, its vendored copies, and the evidence gathering inside this repository's skills. It does not change the host's renderer, its refresh interval, or its progress vocabulary; `tools-ki` owns those and consumes what this contract emits. It does not move the contract version, and it does not widen the inner execution seams — a criterion that wants to shell out directly is a later question, and the evidence today sits in contexts. It does not make emission load-bearing — a rubric must behave identically when no emitter is supplied, and must never depend on an event being observed.
 
 ## Current state
 
-`RubricExecution.run` returns `Result`, and `RubricSubject.context` returns `RootContext`; neither may be a promise, so nothing in a session can await. `MechanicalRubric` has no cost or weight field, so the host weights every criterion equally — the defect `KI-TOOL-CLI-022` describes from the other side. `RubricContextOptions` carries `mode`, `repository`, `userHome`, `configuration`, and an optional `publication`, with no channel for progress.
+The contract now carries `emit` and `cost`, `createSession` may return a promise, and `ki-engineering` awaits its external commands and emits a step for each, so the frozen display is addressed at its source. `shared/rubric.ts` is vendored into thirty-five skills and is converged; it had drifted into two variants, nine copies carrying remediation and judgment helpers the other twenty-six lacked.
 
-`shared/rubric.ts` is vendored into thirty-five skills and has already drifted into two variants: nine copies carry `DIAGNOSTIC_REMEDIATION`, `AUTOMATIC_REMEDIATION`, and a `judgment()` helper that the other twenty-six lack. The nine are a strict superset, so convergence has a direction and this item should settle it rather than propagate the split.
+What remains is that nothing uses the cost channel: every criterion still weighs the same, which is the defect `KI-TOOL-CLI-022` describes from the other side, and `ki-engineering` is the only context that emits. `RubricExecution.run` and `RubricSubject.context` remain synchronous, which costs nothing while evidence is gathered in contexts.
 
-A trial migration measured the cost precisely. Widening both seams to `Result | Promise<Result>` leaves the runtime correct — the host already awaits each item — but produces 238 type errors across sixty-one files, because 121 call sites in twenty-eight test files consume a result synchronously, most inline as `item.audit.run(context)[0]?.message`. A regex transform over those call sites did not converge and was reverted; the migration is mechanical but needs to be done deliberately, file by file, with the suite green at each step.
+Two migration routes were measured rather than argued. Widening the inner seams — `RubricSubject.context` and `RubricExecution.run` — produces 238 type errors across sixty-one files, because 121 call sites in twenty-eight test files consume a result synchronously, most inline as `item.audit.run(context)[0]?.message`. Widening only `createSession` instead reaches the same capability and touches twenty-eight test files by one line each, none of them for async. The entry point is therefore the seam to move: a concrete synchronous `createSession` stays assignable to the widened type, so no skill breaks until it chooses to become async.
+
+The contract version does not move. Every addition here is source-compatible, and the host validates the version it is given: declaring an unsupported one fails every audit in the estate immediately with `rubric catalogue has an unsupported contract version`. The host also already awaits `createSession`, so an asynchronous session needs no host change at all.
 
 ## Steps
 
-- [ ] Converge the thirty-five vendored `shared/rubric.ts` copies on the nine-copy superset before changing anything, so the contract change lands once rather than twice.
-- [ ] Widen `RubricSubject.context` to `RootContext | Promise<RootContext>`, since this is where the blocking work actually happens and it alone restores the refresh.
-- [ ] Widen `RubricExecution.run` to `Result | Promise<Result>`, so a criterion that shells out directly can also yield.
-- [ ] Add an optional `cost` to `MechanicalRubric` as a relative estimate against its siblings in the same catalogue, defaulting to a unit when unset, and declare it only where an item is materially cheaper or dearer.
-- [ ] Add `emit?: RubricEmitter` to `RubricContextOptions`, with a closed event vocabulary bracketing context creation and item execution and carrying named steps with optional `completed`/`total` counts.
-- [ ] Move the contract version and update every catalogue declaring it.
-- [ ] Convert `collectAuditEvidence` in `ki-engineering` from `execSync` to an awaited subprocess, emitting a step per external command, since it is the largest single blocking span in the estate.
-- [ ] Migrate the 121 test call sites, keeping `bun run test` and `bunx tsc --noEmit` green at each file rather than in one sweep.
-- [ ] Declare a cost on the subprocess-backed criteria in `ki-engineering` and any sibling whose expense is comparable.
+- [x] Converge the thirty-five vendored `shared/rubric.ts` copies, which had drifted into two variants, so the contract change lands once rather than twice.
+- [x] Add `emit?: RubricEmitter` to `RubricContextOptions`, with a closed vocabulary of bracketed stages and named steps carrying optional `completed`/`total` counts.
+- [x] Add an optional `cost` to `MechanicalRubric` as a relative estimate against its siblings, defaulting to a unit when unset.
+- [x] Widen `createSession` to return a session or a promise of one, which is the seam that restores the refresh.
+- [x] Convert `collectAuditEvidence` in `ki-engineering` from `execSync` to awaited subprocesses, emitting a step per external command.
+- [ ] Declare a cost on the subprocess-backed criteria in `ki-engineering` and any sibling whose expense is comparable, so weighting stops being item count.
+- [ ] Convert the remaining contexts that gather evidence expensively, one skill at a time, as each earns it.
 
 ## Files touched
 
 - `skills/*/*/scripts/shared/rubric.ts` — thirty-five vendored copies of the contract.
-- `skills/*/*/scripts/rubric/items/index.ts` — thirty-six catalogues declaring the contract version.
-- `skills/governance/ki-engineering/scripts/rubric/contexts/audit-evidence.ts` — the `execSync` evidence gathering.
-- `skills/*/*/scripts/rubric/**/*.test.ts` — the twenty-eight test files consuming a result synchronously.
-- `skills/keystone/ki-skills/references/standards-rubric-authoring.md` — the authoring standard, which shows the contract version and would otherwise document a retired shape.
+- `skills/governance/ki-engineering/scripts/rubric/contexts/` — the evidence gathering and its session.
+- `skills/*/*/scripts/rubric/items/` — the criteria that will declare a cost.
+- Further `skills/*/*/scripts/rubric/contexts/` as each skill's gathering earns conversion.
 
 ## Verify
 
