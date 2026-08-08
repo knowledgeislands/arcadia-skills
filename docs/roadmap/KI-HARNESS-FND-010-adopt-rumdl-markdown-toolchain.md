@@ -45,6 +45,12 @@ So the migration is close to content-neutral on formatting but is not finding-ne
 
 `MD060` is therefore left off entirely, which is its default. `any` was tried first and rejected: it enforces nothing, and it still misfires on a placeholder table whose only body row holds `-` cells, stripping the padding and leaving the table misaligned. A rule that enforces nothing and damages one case is not worth enabling. Table width moves from the mechanical layer to the judgment layer, which is the one capability this migration gives up.
 
+`MD005` is disabled for the same class of reason: an ordered list inside a blockquote inside a list item is read as top-level, so its `>` markers are de-indented to column 0 while the surrounding blockquote lines keep their indent, splitting one quote across two nestings. Found in `kit-pkb` and reverted before landing.
+
+The estate is wider than this item first recorded. Nineteen repositories carry the toolchain, not fifteen: the fourteen under `knowledgeislands` plus `er-research`, `kit-midnight.ninja`, `kit-pkb`, `kit-techmedix`, `vallearmonia-principal`, and `vallearmonia-website`. Three further repositories hold a stale configuration without declaring `ki-authoring` — `5g-emerge-testbed-website`, `hnr-agentic-harness`, and `kit-principal` — and are outside this harness's governance.
+
+`vallearmonia-website` needed a content change beyond formatting: rumdl does not honour another tool's ignore comments, so its `prettier-ignore` markers became `rumdl-disable`/`rumdl-enable`. Without that, `MD013` reflow joined the Claude Code memory imports in `CLAUDE.md` onto one line, which stops them being imports at all. That file was the only `prettier-ignore` user in the estate.
+
 `MD075` is disabled because **its autofix destroys data**. A paragraph that follows a table and contains a `|` anywhere — inside inline code, or as a wikilink alias such as `[[Note|label]]` — is merged into the table as a row and split at that pipe. The paragraph is lost as prose, and rumdl then reports the corrupted file clean, so nothing surfaces the damage. It was caught during rollout in `ki-plugins`, where a status-order sentence was swallowed into its own status table, and in `ki-arcadia-principal`, where a paragraph was absorbed and a wikilink torn at its alias pipe. Both were reverted before landing. This is the most important finding of the migration: `rumdl check` reporting clean is not evidence that a fix was safe, only that the result satisfies the rules.
 
 Separately, `ki-arcadia-principal/Streams/Parked/Parked.md` is a genuine defect: given a placeholder table whose only body row is `| - | - | - |` padded to the header widths, rumdl strips the padding, leaving the table visually misaligned, then reports the result clean while Prettier reports it unformatted. Reduced to a minimum, a table whose sole body row holds `-` cells is flagged while the identical table with `a` and `b` cells of the same widths is not, so the trigger is cell content rather than column width.
@@ -67,6 +73,8 @@ The gate also gets substantially cheaper. Across this repository's 383 files, Pr
 - [ ] Report the `MD075` data-loss defect upstream with the reduced repro, and record the issue reference under Discussion.
 - [ ] Report the `MD060` placeholder-table defect upstream.
 - [ ] Triage `MD057`, which reports genuinely broken relative links across the estate and is disabled rather than resolved.
+- [ ] Decide whether `kit-legal` adopts the toolchain. Its first conform rewrites 4,546 files — legitimate prose unwrapping in a repository never previously gated — but it holds legal evidence, so the scale and the subject both warrant an explicit decision rather than a sweep.
+- [ ] Migrate `tools-ki`, held back because another writer has work in flight in that checkout.
 
 ## Files touched
 
