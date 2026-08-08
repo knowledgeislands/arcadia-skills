@@ -2,13 +2,7 @@ import { afterEach, expect, test } from 'bun:test'
 import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, symlinkSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
-import {
-  createAuthoringSession,
-  EDITORCONFIG_DEFAULT,
-  MARKDOWNLINT_DEFAULT,
-  PRETTIER_DEFAULT,
-  PRETTIER_IGNORE_DEFAULT
-} from '../contexts/authoring.ts'
+import { createAuthoringSession, EDITORCONFIG_DEFAULT, RUMDL_DEFAULT } from '../contexts/authoring.ts'
 import catalogue, * as indexModule from './index.ts'
 import * as markdownModule from './markdown.ts'
 import * as ownedModule from './owned.ts'
@@ -47,6 +41,7 @@ test('the default export is the sole catalogue entrypoint and families are compl
     'MD-cell-prose',
     'MD-callout',
     'OWN-1',
+    'OWN-2',
     'TOML-keys',
     'TOML-values',
     'TOML-tables',
@@ -67,6 +62,7 @@ test('conform retains drafts, coalesces writes, and leaves publication to the ho
   const context = subject?.context()
   const markdown = markdownModule.MARKDOWN.items[0]
   const owned = ownedModule.OWNED.items[0]
+  const retired = ownedModule.OWNED.items[1]
 
   expect(inspections).toBe(1)
   expect(subject?.context()).toBe(context)
@@ -77,44 +73,32 @@ test('conform retains drafts, coalesces writes, and leaves publication to the ho
     owned?.mechanical?.audit
       .run(context?.owned as NonNullable<typeof context>['owned'])
       .map((outcome) => outcome.status)
-  ).toEqual(['VIOLATION', 'VIOLATION', 'VIOLATION', 'VIOLATION'])
+  ).toEqual(['VIOLATION', 'VIOLATION'])
+  expect(
+    retired?.mechanical?.audit
+      .run(context?.owned as NonNullable<typeof context>['owned'])
+      .map((outcome) => outcome.status)
+  ).toEqual(['VIOLATION', 'PASS', 'PASS'])
 
   owned?.mechanical?.conform?.run(context?.owned as NonNullable<typeof context>['owned'])
   owned?.mechanical?.conform?.run(context?.owned as NonNullable<typeof context>['owned'])
+  retired?.mechanical?.conform?.run(context?.owned as NonNullable<typeof context>['owned'])
+  retired?.mechanical?.conform?.run(context?.owned as NonNullable<typeof context>['owned'])
   markdown?.mechanical?.conform?.run(context?.markdown as NonNullable<typeof context>['markdown'])
 
   expect(session.proposal()).toEqual({
     writes: [
-      { path: '.prettierrc.json', content: PRETTIER_DEFAULT },
       { path: '.editorconfig', content: EDITORCONFIG_DEFAULT, create: true },
-      { path: '.prettierignore', content: PRETTIER_IGNORE_DEFAULT, create: true },
-      { path: '.markdownlint-cli2.jsonc', content: MARKDOWNLINT_DEFAULT, create: true }
+      { path: '.rumdl.toml', content: RUMDL_DEFAULT, create: true }
     ],
     commands: [
-      {
-        program: 'bunx',
-        arguments: [
-          'prettier',
-          '--write',
-          '**/*.md',
-          '!src/generated/**',
-          '!.claude/commands/**',
-          '!.claude/skills/**',
-          '!.claude/agents/**',
-          '!.agents/skills/**',
-          '--ignore-path',
-          '.gitignore',
-          '--ignore-path',
-          '.prettierignore'
-        ]
-      },
-      { program: 'bunx', arguments: ['markdownlint-cli2', '--fix'] }
+      { program: 'rm', arguments: ['-f', '--', '.prettierrc.json'] },
+      { program: 'bunx', arguments: ['rumdl', 'check', '--fix', '.'] }
     ]
   })
   expect(readFileSync(join(repository, '.prettierrc.json'), 'utf8')).toBe('{}\n')
   expect(existsSync(join(repository, '.editorconfig'))).toBe(false)
-  expect(existsSync(join(repository, '.prettierignore'))).toBe(false)
-  expect(existsSync(join(repository, '.markdownlint-cli2.jsonc'))).toBe(false)
+  expect(existsSync(join(repository, '.rumdl.toml'))).toBe(false)
 })
 
 test('trade records are normalized like any other authored Markdown', () => {

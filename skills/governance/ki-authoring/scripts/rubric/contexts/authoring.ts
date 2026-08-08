@@ -10,23 +10,62 @@ import type {
   RubricSession
 } from '../../shared/rubric.ts'
 
-export const PRETTIER_DEFAULT = `{
-  "printWidth": 120,
-  "tabWidth": 2,
-  "useTabs": false,
-  "semi": false,
-  "singleQuote": true,
-  "proseWrap": "never",
-  "trailingComma": "none",
-  "overrides": [
-    {
-      "files": "*.md",
-      "options": {
-        "parser": "markdown"
-      }
-    }
-  ]
-}
+export const RUMDL_DEFAULT = `# rumdl owns Markdown wholly: formatting and linting in one tool. Biome owns
+# TypeScript, JavaScript, and JSON; the two file domains are disjoint.
+
+[global]
+exclude = [
+  "node_modules",
+  "dist",
+  "src/generated",
+  ".claude/commands",
+  ".claude/skills",
+  ".claude/agents",
+  ".agents/skills"
+]
+
+# MD033 inline HTML: <br> in table cells, angle-bracket placeholders in skills.
+# MD036 bold-as-heading: bold labels are used deliberately in skill bodies.
+# MD057 relative-link existence: real signal, but it fires on links that are
+# correct in this repository and dangle in a published copy of it, so switching
+# it on is a content decision rather than a formatting one. Tracked separately.
+disable = ["MD033", "MD036", "MD057"]
+
+# extend-enable adds to the default set. Plain "enable" means run ONLY these,
+# so using it here would silently switch every other rule off and still report
+# success — the failure mode is a clean gate, not an error.
+extend-enable = ["MD060"]
+
+# MD013 owns line length and prose wrapping together, replacing the former
+# split where Prettier held printWidth and MD013 was disabled to avoid a clash.
+# normalize with an unbounded width is what yields one line per paragraph.
+[MD013]
+line-length = 100000
+reflow = true
+reflow-mode = "normalize"
+
+[MD024]
+siblings-only = true
+
+[MD025]
+front-matter-title = ""
+
+[MD004]
+style = "dash"
+
+[MD049]
+style = "underscore"
+
+[MD050]
+style = "asterisk"
+
+# No style reproduces the former behaviour: Prettier padded a table only when
+# the padded form fit its print width and collapsed wider tables to compact,
+# whereas every rumdl style is unconditional. "any" accepts both shapes, which
+# keeps existing tables untouched at the cost of not enforcing alignment;
+# "aligned" would rewrite every wide table into one very long row.
+[MD060]
+style = "any"
 `
 
 export const EDITORCONFIG_DEFAULT = `root = true
@@ -47,93 +86,24 @@ trim_trailing_whitespace = false
 // ki-trades AUTH-1 comparison against the sender's copy, which is insensitive to formatting
 // and sensitive to meaning — an exclusion list only avoided touching them and never checked
 // them, and it never covered Biome at all.
-export const PRETTIER_IGNORE_DEFAULT = `# Generated output and dependencies are never formatted.
 
-dist/
-node_modules/
-`
+// The Markdown scope lives in .rumdl.toml's own exclude list rather than in a glob list
+// passed by the caller, so a bare `rumdl check` at the repository root means the same thing
+// as the gate does.
+const MARKDOWN_AUDIT_COMMANDS: readonly ConformCommand[] = [{ program: 'bunx', arguments: ['rumdl', 'check', '.'] }]
 
-export const MARKDOWNLINT_DEFAULT = `{
-  // Base: enable all rules, then selectively adjust below.
-  "config": {
-    "default": true,
-
-    // MD013 - line length: disabled. Prettier owns line length via printWidth / proseWrap.
-    "MD013": false,
-
-    // MD024 - duplicate headings: allow in sibling sections only.
-    "MD024": { "siblings_only": true },
-
-    // MD025 - single H1: ignore the frontmatter title field.
-    "MD025": { "front_matter_title": "" },
-
-    // MD033 - inline HTML: disabled. <br> is used in table cells and skills use angle-bracket placeholders.
-    "MD033": false,
-
-    // MD036 - bold as heading: disabled. Bold labels are used intentionally in skill bodies.
-    "MD036": false
-  },
-
-  // Skill bodies, references, and repo docs are all markdown content.
-  "globs": ["**/*.md"],
-
-  // Never lint generated output, dependencies, or runtime projections. Trade records
-  // are in scope like any other Markdown: ki-trades AUTH-1 proves their integrity by
-  // comparing meaning against the sender's copy, so formatting them is safe.
-  "ignores": [
-    "dist/**",
-    "**/node_modules/**",
-    "src/generated/**",
-    ".claude/commands/**",
-    ".claude/skills/**",
-    ".claude/agents/**",
-    ".agents/skills/**"
-  ]
-}
-`
-
-const MARKDOWN_PATHS = [
-  '**/*.md',
-  '!src/generated/**',
-  '!.claude/commands/**',
-  '!.claude/skills/**',
-  '!.claude/agents/**',
-  '!.agents/skills/**'
-] as const
-
-const MARKDOWN_AUDIT_COMMANDS: readonly ConformCommand[] = [
-  {
-    program: 'bunx',
-    arguments: [
-      'prettier',
-      '--check',
-      ...MARKDOWN_PATHS,
-      '--ignore-path',
-      '.gitignore',
-      '--ignore-path',
-      '.prettierignore'
-    ]
-  },
-  { program: 'bunx', arguments: ['markdownlint-cli2', '**/*.md'] }
-]
-
+// `check --fix` rather than `fmt`: fmt exits 0 even when unfixable violations remain, which
+// would let CONFORM report success over a file it could not settle.
 const MARKDOWN_CONFORM_COMMANDS: readonly ConformCommand[] = [
-  {
-    program: 'bunx',
-    arguments: [
-      'prettier',
-      '--write',
-      ...MARKDOWN_PATHS,
-      '--ignore-path',
-      '.gitignore',
-      '--ignore-path',
-      '.prettierignore'
-    ]
-  },
-  { program: 'bunx', arguments: ['markdownlint-cli2', '--fix'] }
+  { program: 'bunx', arguments: ['rumdl', 'check', '--fix', '.'] }
 ]
 
-export type OwnedFile = '.prettierrc.json' | '.editorconfig' | '.prettierignore' | '.markdownlint-cli2.jsonc'
+// Retired with the move to rumdl. CONFORM removes them, because a repository that keeps a
+// stale Prettier or markdownlint configuration invites an editor extension to reformat
+// Markdown against a standard this repository no longer holds.
+export const RETIRED_FILES = ['.prettierrc.json', '.prettierignore', '.markdownlint-cli2.jsonc'] as const
+
+export type OwnedFile = '.editorconfig' | '.rumdl.toml'
 export type OwnedFileState = 'missing' | 'canonical' | 'drifted' | 'unsafe'
 export type MarkdownAudit = { clean: boolean; detail?: string }
 export type FrontmatterFileEvidence = {
@@ -156,9 +126,15 @@ export type OwnedFileEvidence = {
   state: OwnedFileState
   synchronise?: () => void
 }
+export type RetiredFileEvidence = {
+  name: string
+  present: boolean
+  remove?: () => void
+}
 export type OwnedRubricContext = {
   targetExists: boolean
   files: readonly OwnedFileEvidence[]
+  retired: readonly RetiredFileEvidence[]
 }
 export type TomlRubricContext = Record<string, never>
 export type SynchronisationRubricContext = Record<string, never>
@@ -181,10 +157,8 @@ type FrontmatterFileDraft = {
 }
 
 const canonical: Record<OwnedFile, string> = {
-  '.prettierrc.json': PRETTIER_DEFAULT,
   '.editorconfig': EDITORCONFIG_DEFAULT,
-  '.prettierignore': PRETTIER_IGNORE_DEFAULT,
-  '.markdownlint-cli2.jsonc': MARKDOWNLINT_DEFAULT
+  '.rumdl.toml': RUMDL_DEFAULT
 }
 
 const sha256 = (content: string): string => createHash('sha256').update(content).digest('hex')
@@ -328,6 +302,21 @@ export const createAuthoringSession = (
   let normaliseMarkdown = false
   const ownedDrafts = (Object.keys(canonical) as OwnedFile[]).map((name) => createOwnedFileDraft(target, name, mutable))
   const frontmatterDrafts = targetExists ? createFrontmatterDrafts(target, mutable) : []
+  const removals = new Set<string>()
+  const retired: readonly RetiredFileEvidence[] = RETIRED_FILES.map((name) => {
+    const present = targetExists && existsSync(join(target, name))
+    return {
+      name,
+      present,
+      ...(mutable && present
+        ? {
+            remove: () => {
+              removals.add(name)
+            }
+          }
+        : {})
+    }
+  })
   const context: AuthoringRubricContext = {
     rubric: { publication },
     markdown: {
@@ -345,7 +334,8 @@ export const createAuthoringSession = (
     },
     owned: {
       targetExists,
-      files: ownedDrafts.map((draft) => draft.evidence)
+      files: ownedDrafts.map((draft) => draft.evidence),
+      retired
     },
     toml: {},
     synchronisation: {}
@@ -368,7 +358,18 @@ export const createAuthoringSession = (
             return write ? [write] : []
           })
         ),
-      ...(normaliseMarkdown ? { commands: MARKDOWN_CONFORM_COMMANDS } : {})
+      ...(removals.size > 0 || normaliseMarkdown
+        ? {
+            commands: [
+              // Removal precedes normalisation so the gate never runs against a repository
+              // still carrying a competing configuration.
+              ...(removals.size > 0
+                ? [{ program: 'rm', arguments: ['-f', '--', ...[...removals].sort()] } satisfies ConformCommand]
+                : []),
+              ...(normaliseMarkdown ? MARKDOWN_CONFORM_COMMANDS : [])
+            ]
+          }
+        : {})
     })
   }
 }

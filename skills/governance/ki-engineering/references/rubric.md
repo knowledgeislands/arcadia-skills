@@ -48,9 +48,9 @@ The shared package metadata and toolchain dependency surface.
   - _Remediation:_ automatic
 - **PKG-4 [M] — Closed package coverage manifest** — Every top-level `package.json` key is in the engineering coverage manifest; an unknown key is drift. This is also the criterion for an unparseable `package.json`. (standards-engineering.md)
   - _Remediation:_ diagnostic — Correct the package manifest structure or declare the missing ownership before rerunning the audit.
-- **PKG-5 [M] — Toolchain dependencies declared** — The toolchain devDependencies `@biomejs/biome`, `knip`, `prettier`, `husky`, `lint-staged`, `markdownlint-cli2`, `syncpack`, and `typescript` are declared rather than implied. (standards-engineering.md)
+- **PKG-5 [M] — Toolchain dependencies declared** — The toolchain devDependencies `@biomejs/biome`, `knip`, `rumdl`, `husky`, `lint-staged`, `syncpack`, and `typescript` are declared rather than implied. (standards-engineering.md)
   - _Remediation:_ automatic
-- **PKG-6 [M] — Lint-staged fan-out** — `lint-staged` is present and fans out to Biome on code and Prettier plus `markdownlint-cli2 --no-globs` on staged authored Markdown only. (standards-engineering.md)
+- **PKG-6 [M] — Lint-staged fan-out** — `lint-staged` is present and fans out to Biome on staged code and `rumdl check --fix` on staged authored Markdown. (standards-engineering.md)
   - _Remediation:_ automatic
 
 ## MISE — Toolchain pins

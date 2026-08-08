@@ -29,7 +29,7 @@ The tracked readable rubric is the exact publication of the structured catalogue
 
 The mechanical Markdown gate and reviewer-applied Markdown conventions.
 
-- **MD-mech [M] — Markdown mechanical gate passes** — `ki repo audit --skill ki-authoring` passes: prose is unwrapped; bullet and quote characters, heading hierarchy, a single H1, spacing, table alignment, resolved links and references, no bare URLs, and descriptive link text satisfy Prettier and markdownlint-cli2, which run directly inside the audit. (standards-authoring.md#markdown-gate, standards-markdown.md#what-to-leave-to-the-linter)
+- **MD-mech [M] — Markdown mechanical gate passes** — `ki repo audit --skill ki-authoring` passes: prose is unwrapped; bullet and quote characters, heading hierarchy, a single H1, spacing, resolved references, no bare URLs, and descriptive link text satisfy rumdl, which runs directly inside the audit. Table alignment is not mechanically enforced — no rumdl style reproduces the former conditional padding, so the width conventions in the Markdown standard carry it. (standards-authoring.md#markdown-gate, standards-markdown.md#what-to-leave-to-the-linter)
   - _Remediation:_ automatic
 - **MD-frontmatter [M] — frontmatter uses canonical bare-safe scalars** — Markdown frontmatter leaves identifier-like scalar tokens unquoted when their YAML meaning is unchanged; quoted YAML-significant values, dates, numeric-looking values, punctuation, whitespace, and escaped strings remain quoted. (standards-markdown.md#frontmatter)
   - _Remediation:_ automatic
@@ -65,7 +65,9 @@ The mechanical Markdown gate and reviewer-applied Markdown conventions.
 
 Configuration files wholly owned by the authoring convention.
 
-- **OWN-1 [M] — owned authoring configuration matches the house templates** — The skill owns `.prettierrc.json`, `.editorconfig`, `.prettierignore`, and `.markdownlint-cli2.jsonc` wholly (SHAPE-16 `owns:`): AUDIT warns on drift from the house templates, while CONFORM transactionally scaffolds missing files and overwrites drifted regular files. Each template is stored already formatted to the house width so CONFORM output is a fixed point of the governing formatter; a template the repository would reformat leaves every governed repository permanently drifted. (standards-authoring.md#owned-configuration)
+- **OWN-1 [M] — owned authoring configuration matches the house templates** — The skill owns `.editorconfig` and `.rumdl.toml` wholly (SHAPE-16 `owns:`): AUDIT warns on drift from the house templates, while CONFORM transactionally scaffolds missing files and overwrites drifted regular files. Each template is stored already formatted to the house width so CONFORM output is a fixed point of the governing formatter; a template the repository would reformat leaves every governed repository permanently drifted. (standards-authoring.md#owned-configuration)
+  - _Remediation:_ automatic
+- **OWN-2 [M] — retired Markdown configuration is absent** — rumdl owns Markdown formatting and linting together, so `.prettierrc.json`, `.prettierignore`, and `.markdownlint-cli2.jsonc` are retired: AUDIT warns while any of them survives and CONFORM removes them. A leftover file is not inert — an editor extension reads it and reformats Markdown against a standard the repository no longer holds, producing drift that the gate then reports without explaining. (standards-authoring.md#owned-configuration)
   - _Remediation:_ automatic
 
 ## TOML — TOML formatting

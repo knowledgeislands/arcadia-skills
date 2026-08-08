@@ -22,7 +22,7 @@ const OWN_1: RubricItem<OwnedRubricContext> = {
   code: 'OWN-1',
   title: 'owned authoring configuration matches the house templates',
   description:
-    'The skill owns `.prettierrc.json`, `.editorconfig`, `.prettierignore`, and `.markdownlint-cli2.jsonc` wholly (SHAPE-16 `owns:`): AUDIT warns on drift from the house templates, while CONFORM transactionally scaffolds missing files and overwrites drifted regular files. Each template is stored already formatted to the house width so CONFORM output is a fixed point of the governing formatter; a template the repository would reformat leaves every governed repository permanently drifted.',
+    'The skill owns `.editorconfig` and `.rumdl.toml` wholly (SHAPE-16 `owns:`): AUDIT warns on drift from the house templates, while CONFORM transactionally scaffolds missing files and overwrites drifted regular files. Each template is stored already formatted to the house width so CONFORM output is a fixed point of the governing formatter; a template the repository would reformat leaves every governed repository permanently drifted.',
   sources: ['standards-authoring.md#owned-configuration'],
   mechanical: {
     level: 'WARN',
@@ -43,11 +43,44 @@ const OWN_1: RubricItem<OwnedRubricContext> = {
   }
 }
 
+const OWN_2: RubricItem<OwnedRubricContext> = {
+  code: 'OWN-2',
+  title: 'retired Markdown configuration is absent',
+  description:
+    'rumdl owns Markdown formatting and linting together, so `.prettierrc.json`, `.prettierignore`, and `.markdownlint-cli2.jsonc` are retired: AUDIT warns while any of them survives and CONFORM removes them. A leftover file is not inert — an editor extension reads it and reformats Markdown against a standard the repository no longer holds, producing drift that the gate then reports without explaining.',
+  sources: ['standards-authoring.md#owned-configuration'],
+  mechanical: {
+    level: 'WARN',
+    remediation: { class: 'automatic' },
+    audit: {
+      phase: 'INSPECT',
+      run: (context): RubricOutcomes<AuditOutcome> => {
+        if (!context.targetExists) return [{ status: 'NOT_APPLICABLE', message: 'audit target does not exist' }]
+        return context.retired.map((file) =>
+          file.present
+            ? {
+                status: 'VIOLATION',
+                message: `${file.name} is retired — run "ki repo conform --skill ki-authoring" to remove it`,
+                subject: file.name
+              }
+            : { status: 'PASS', message: `${file.name} is absent`, subject: file.name }
+        )
+      }
+    },
+    conform: {
+      phase: 'PREPARE',
+      run: (context) => {
+        for (const file of context.retired) if (file.present) file.remove?.()
+      }
+    }
+  }
+}
+
 export const OWNED: RubricFamily<AuthoringRubricContext, OwnedRubricContext> = {
   code: 'OWN',
   title: 'Owned authoring configuration',
   description: 'Configuration files wholly owned by the authoring convention.',
   standard: 'standards-authoring.md#owned-configuration',
   selectContext: (context: AuthoringRubricContext) => context.owned,
-  items: [OWN_1]
+  items: [OWN_1, OWN_2]
 }

@@ -137,29 +137,19 @@ export const auditEvidence = (
     : [{ status: 'NOT_APPLICABLE', message: 'This criterion did not apply to the target.' }]
 }
 
-const requiredDev = [
-  '@biomejs/biome',
-  'knip',
-  'prettier',
-  'husky',
-  'lint-staged',
-  'markdownlint-cli2',
-  'syncpack',
-  'typescript'
-]
+const requiredDev = ['@biomejs/biome', 'knip', 'rumdl', 'husky', 'lint-staged', 'syncpack', 'typescript']
 const versions: Record<string, string> = {
   '@biomejs/biome': '^2.5.4',
   knip: '^6.27.0',
-  prettier: '^3.9.5',
+  rumdl: '^0.2.52',
   husky: '^9.1.7',
   'lint-staged': '^17.1.0',
-  'markdownlint-cli2': '^0.23.1',
   syncpack: '^15.3.2',
   typescript: '^7.0.2'
 }
 const lintStaged = {
   '*.{ts,tsx,js,jsx,json,jsonc}': ['bunx @biomejs/biome check --write --no-errors-on-unmatched'],
-  '*.md': ['bunx prettier --write', 'bunx markdownlint-cli2 --no-globs']
+  '*.md': ['bunx rumdl check --fix']
 }
 const defaults = {
   'mise.toml': `[tools]\nnode = "22"\nbun = "1.3.14"\n`,

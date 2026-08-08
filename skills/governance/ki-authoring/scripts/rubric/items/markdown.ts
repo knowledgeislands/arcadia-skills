@@ -11,7 +11,7 @@ const markdownMechanicalAudit = (
   if (!context.exists)
     return [{ status: 'VIOLATION', message: 'audit target is missing or is not a directory', subject: context.target }]
   return context.audit.clean
-    ? [{ status: 'PASS', message: 'Prettier + markdownlint clean', subject: context.target }]
+    ? [{ status: 'PASS', message: 'rumdl clean', subject: context.target }]
     : [
         {
           status: 'VIOLATION',
@@ -27,7 +27,7 @@ const MD_MECH: RubricItem<MarkdownRubricContext> = {
   code: 'MD-mech',
   title: 'Markdown mechanical gate passes',
   description:
-    '`ki repo audit --skill ki-authoring` passes: prose is unwrapped; bullet and quote characters, heading hierarchy, a single H1, spacing, table alignment, resolved links and references, no bare URLs, and descriptive link text satisfy Prettier and markdownlint-cli2, which run directly inside the audit.',
+    '`ki repo audit --skill ki-authoring` passes: prose is unwrapped; bullet and quote characters, heading hierarchy, a single H1, spacing, resolved references, no bare URLs, and descriptive link text satisfy rumdl, which runs directly inside the audit. Table alignment is not mechanically enforced — no rumdl style reproduces the former conditional padding, so the width conventions in the Markdown standard carry it.',
   sources: ['standards-authoring.md#markdown-gate', 'standards-markdown.md#what-to-leave-to-the-linter'],
   mechanical: {
     level: 'FAIL',

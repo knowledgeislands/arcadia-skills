@@ -18,7 +18,7 @@ The standard pins versions in `packageManager`, `engines`, `biome.json`'s `$sche
 | TS | [typescript releases][ts] | the `tsconfig` / `tsconfig.build` compiler options | ^6.0 | 2026-07-04 |
 | VITEST | [vitest.dev][vitest] | the config-gated test profile + 100% coverage (`vitest run`, v8) | current | 2026-07-04 |
 | SYNCPACK | [syncpack][syncpack] | package ordering inside engineering audit/conform | ^15 | 2026-07-04 |
-| MDLINT | [markdownlint-cli2][mdlint] / [prettier][prettier] | Markdown audit/conform inside `ki-authoring` ❡ | mdl ^0.23 / prettier ^3 | 2026-07-04 |
+| MDLINT | [rumdl][rumdl] | Markdown audit/conform inside `ki-authoring` ❡ | ^0.2.52 | 2026-08-08 |
 | KNIP | [knip][knip] | dependency + dead-code checks inside engineering audit/conform | current | 2026-07-04 |
 
 ❡ The Markdown mechanical pass.
@@ -40,7 +40,7 @@ The standard is the **majority shape** across the TS/Bun repos under `knowledgei
 
 REFRESH last run **2026-07-04**. Cadence: monthly, alongside the other governance skills (the `ki-skills-refresh` routine). **Drift folded in this cycle:** the living-source repos have upgraded three toolchain pins ahead of this file, and the deps tool was replaced.
 
-- **Pins bumped to match the repos:** Biome `2.5.0 → 2.5.2` (repo `biome.json` `$schema=2.5.1`, devDep `@biomejs/biome=2.5.2`; `2.5.2` is upstream latest), markdownlint-cli2 `^0.22 → ^0.23` (`0.23.0` latest, published ~2026-07-02), prettier confirmed `^3.9.4`. syncpack `^15.3.2` absorbs latest 15.x.
+- **Pins bumped to match the repos:** Biome `2.5.0 → 2.5.2` (repo `biome.json` `$schema=2.5.1`, devDep `@biomejs/biome=2.5.2`; `2.5.2` is upstream latest), rumdl adopted at `^0.2.52`, replacing markdownlint-cli2 and prettier. syncpack `^15.3.2` absorbs latest 15.x.
 - **Deps tool replaced:** the `DEPCHECK` row is retired — `depcheck` is no longer a dependency. Knip now runs directly inside engineering audit/conform for dependency and dead-code checks, per `standards-engineering.md` §2/§5 and `rubric.md`. Tracked as `KNIP` going forward.
 - **Pins confirmed current:** `bun@1.3.14` (latest stable, 2026-05-13; no newer 1.3.x), `engines.node >=22.0.0` (22 Maintenance LTS, 24 Active LTS, 26 Current — floor valid; repo node `24.15.0`), TypeScript `^6.0.3` (6.0 still latest **stable**), vitest `4.1.9` (5.0 still beta).
 - **Repo cross-check:** `ki-agentic-harness` self-audit = 0 fail. The prior proseWrap WARN is resolved this run — the standard, checker (`audit.ts`), and rubric now all specify `proseWrap: never`, matching the repo and `ki-authoring` house style.
@@ -56,6 +56,5 @@ REFRESH last run **2026-07-04**. Cadence: monthly, alongside the other governanc
 [ts]: https://www.typescriptlang.org/
 [vitest]: https://vitest.dev/
 [syncpack]: https://github.com/JamieMason/syncpack
-[mdlint]: https://github.com/DavidAnson/markdownlint-cli2
-[prettier]: https://prettier.io/
+[rumdl]: https://github.com/rvben/rumdl
 [knip]: https://github.com/webpro-nl/knip

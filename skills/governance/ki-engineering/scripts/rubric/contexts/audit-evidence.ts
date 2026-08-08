@@ -207,16 +207,7 @@ export const collectAuditEvidence = async (
   // toolchain is actually declared, rather than left implied. lint-staged is the husky
   // pre-commit fan-out — a governed key in the manifest, so it must be present and wired.
   const devDeps = (pkg.devDependencies ?? {}) as Record<string, string>
-  const REQUIRED_DEV = [
-    '@biomejs/biome',
-    'knip',
-    'prettier',
-    'husky',
-    'lint-staged',
-    'markdownlint-cli2',
-    'syncpack',
-    'typescript'
-  ]
+  const REQUIRED_DEV = ['@biomejs/biome', 'knip', 'rumdl', 'husky', 'lint-staged', 'syncpack', 'typescript']
   const missingDev = REQUIRED_DEV.filter((d) => !(d in devDeps))
   missingDev.length
     ? add(
@@ -229,7 +220,7 @@ export const collectAuditEvidence = async (
     : add(
         'PASS',
         'PKG-5',
-        'toolchain devDependencies present (biome, prettier, husky, lint-staged, markdownlint-cli2, syncpack, typescript)',
+        'toolchain devDependencies present (biome, rumdl, husky, lint-staged, syncpack, typescript)',
         STD,
         'package.json'
       )
@@ -238,17 +229,19 @@ export const collectAuditEvidence = async (
     add('FAIL', 'PKG-6', 'lint-staged block missing (the husky pre-commit fan-out)', STD, 'package.json')
   } else {
     const ls = JSON.stringify(lintStaged)
-    const fanOut = ls.includes('@biomejs/biome') && ls.includes('prettier') && ls.includes('markdownlint')
-    const stagedMarkdownOnly = ls.includes('markdownlint-cli2 --no-globs')
+    const fanOut = ls.includes('@biomejs/biome') && ls.includes('rumdl')
+    // rumdl resolves its own scope from .rumdl.toml, so a staged invocation needs no
+    // flag to suppress a repository-wide glob the way markdownlint-cli2 did.
+    const stagedMarkdownOnly = ls.includes('rumdl check --fix')
     // Trade records are no longer excluded from formatting: ki-trades AUTH-1 proves their
     // integrity by comparing meaning against the sender's copy, so the boundary is a check
     // rather than an exclusion list.
     fanOut && stagedMarkdownOnly
-      ? add('PASS', 'PKG-6', 'lint-staged fans out to biome and staged-only prettier/markdownlint', STD, 'package.json')
+      ? add('PASS', 'PKG-6', 'lint-staged fans out to biome and rumdl', STD, 'package.json')
       : add(
           'WARN',
           'PKG-6',
-          'lint-staged should run biome and staged-only prettier + markdownlint-cli2 --no-globs',
+          'lint-staged should run biome over staged code and rumdl check --fix over staged Markdown',
           STD,
           'package.json'
         )
@@ -834,11 +827,11 @@ export const collectAuditEvidence = async (
       new RegExp(`["']${escapeRe(`${prefix}${candidate}`)}(?:/\\*\\*)?["']`).test(content)
     )
   }
-  const markdownlint = read('.markdownlint-cli2.jsonc')
+  const rumdl = read('.rumdl.toml')
   const legacyExclusions = [
     ['biome.json', biome],
     ['knip.json', read('knip.json') || read('knip.jsonc') || read('knip.ts')],
-    ['.markdownlint-cli2.jsonc', markdownlint]
+    ['.rumdl.toml', rumdl]
   ].flatMap(([file, content]) =>
     ['.ki/bootstrap', '.ki/bin'].flatMap((path) => (content.includes(path) ? [`${file} → ${path}`] : []))
   )
@@ -853,7 +846,7 @@ export const collectAuditEvidence = async (
       if (!excludes(biome, surface.biome, true)) missing.push(`biome.json → ${surface.label}`)
       if (!excludes(read('knip.json') || read('knip.jsonc') || read('knip.ts'), surface.knip))
         missing.push(`knip.json → ${surface.label}`)
-      if (!excludes(markdownlint, surface.markdown)) missing.push(`.markdownlint-cli2.jsonc → ${surface.label}`)
+      if (!excludes(rumdl, surface.markdown)) missing.push(`.rumdl.toml → ${surface.label}`)
     }
     missing.length
       ? add(
@@ -870,8 +863,8 @@ export const collectAuditEvidence = async (
         )
   }
 
-  // .prettierrc.json content is owned and audited by ki-authoring (it backs that
-  // skill's own Markdown conform pass) — not checked here (SHAPE-16 ownership split).
+  // .rumdl.toml content is owned and audited by ki-authoring (it backs that skill's own
+  // Markdown audit and conform passes) — not checked here (SHAPE-16 ownership split).
 
   // ── capability detection ──────────────────────────────────────────────────────
   const vitestFile = [

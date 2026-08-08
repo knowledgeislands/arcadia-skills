@@ -347,9 +347,9 @@ Knowledge Islands link and toolchain portability.
   - _Review prompt:_ Are other skills referred to by their public name rather than by a file path?
   - _Outcomes:_ conforming; gap; exclusion
   - _Conforming guidance:_ Record the review as conforming, a named Gap with its next action, or an explicit justified exclusion.
-- **KI-LINK-4 [J] — the house toolchain passes** — The house toolchain passes: Biome (TS/JSON), Prettier + markdownlint-cli2 (markdown). (ki-agentic-harness README)
+- **KI-LINK-4 [J] — the house toolchain passes** — The house toolchain passes: Biome (TS/JSON), rumdl (markdown). (ki-agentic-harness README)
   - _Evidence scope:_ The target skill and the evidence named by this criterion.
-  - _Review prompt:_ Does the repository pass its configured Biome, Prettier, and markdownlint toolchain?
+  - _Review prompt:_ Does the repository pass its configured Biome and rumdl toolchain?
   - _Outcomes:_ conforming; gap; exclusion
   - _Conforming guidance:_ Record the review as conforming, a named Gap with its next action, or an explicit justified exclusion.
 

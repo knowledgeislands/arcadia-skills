@@ -11,7 +11,7 @@ The Knowledge Islands conventions added to the portable [Agent Skills standard](
 
 ## 1. Linking and portability
 
-Knowledge Islands skills survive relocation and symlinking. Internal links are **standard relative markdown links, not Obsidian wikilinks**, and every relative target resolves on disk (use the CommonMark angle-bracket form for paths with spaces). Reference **another skill by its `name`** ("the `ki-kb` skill"), never by file path — a skill's on-disk location is not stable. The house toolchain passes: Biome (TS/JSON), Prettier + markdownlint-cli2 (markdown). (ki-agentic-harness README)
+Knowledge Islands skills survive relocation and symlinking. Internal links are **standard relative markdown links, not Obsidian wikilinks**, and every relative target resolves on disk (use the CommonMark angle-bracket form for paths with spaces). Reference **another skill by its `name`** ("the `ki-kb` skill"), never by file path — a skill's on-disk location is not stable. The house toolchain passes: Biome (TS/JSON), rumdl (markdown). (ki-agentic-harness README)
 
 ## 2. Skill shape
 

@@ -1,4 +1,0 @@
-# Generated output and dependencies are never formatted.
-
-dist/
-node_modules/

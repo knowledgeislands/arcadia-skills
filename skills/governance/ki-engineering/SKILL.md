@@ -70,7 +70,7 @@ Run `ki repo educate --skill ki-engineering` to inspect the complete criterion c
 
 **Precondition:** REFRESH edits this skill's own canonical files, which exist only in `ki-agentic-harness`. Invoked from an installed copy, it stops here and names the harness as where to run it — or, for a pattern recurring across bases, routes it through `ki-kb`'s IMPROVE mode instead.
 
-The standard pins volatile versions (Bun, Node, Biome, TypeScript, vitest, syncpack, markdownlint). Run on its declared cadence (see `references/sources.md`), or when asked "are the engineering standards current".
+The standard pins volatile versions (Bun, Node, Biome, TypeScript, vitest, syncpack, rumdl). Run on its declared cadence (see `references/sources.md`), or when asked "are the engineering standards current".
 
 1. **Read [the source list](references/sources.md)** — each pin with its `last reviewed` date.
 2. **Re-fetch each** (WebFetch / WebSearch) and diff against the standard, rubric, and [canonical item catalogue](scripts/rubric/items/index.ts): a bumped Bun or Biome line, a TypeScript option deprecation, a changed default.
@@ -82,6 +82,6 @@ The standard pins volatile versions (Bun, Node, Biome, TypeScript, vitest, syncp
 Reciprocal off-ramps — each names this skill back for the engineering layer:
 
 - **A repo's GitHub settings, security, the universal local files (README/LICENSE/.gitignore), and the `.ki-config.toml` _contract_** → `ki-repo`. This skill owns the _engineering_ toolchain inside the repo; `ki-repo` owns the repo's _configuration_ and its `.ki-config.toml` contract (this skill only contributes its own table within it).
-- **`.prettierrc.json` and `.editorconfig`** → `ki-authoring`. Prettier backs that skill's own Markdown conform pass, so it owns both files wholly (scaffold, hash-drift check, unconditional overwrite on drift) — this skill no longer scaffolds or content-checks either.
+- **`.rumdl.toml` and `.editorconfig`** → `ki-authoring`. rumdl backs that skill's own Markdown audit and conform passes, so it owns both files wholly (scaffold, hash-drift check, unconditional overwrite on drift) — this skill no longer scaffolds or content-checks either.
 - **Markdown / TOML _formatting_ style** (including what the authoring conform pass produces) → `ki-authoring`. Engineering owns the declared tool dependencies; authoring owns their Markdown execution and the prose/format conventions they enforce.
 - **Artifact-specific code and deltas** — MCP `src/` layout, tool naming, the access gate, security invariants, the coverage-exclude list → `ki-mcp` (and future artifact skills). They build on this common layer and add their own.
