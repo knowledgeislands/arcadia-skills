@@ -6,7 +6,7 @@ horizon: now
 status: draft
 blocks: []
 blocked-by: []
-baseline-ref: 4d7f80f1d3581a56db4dbc22bc8054800b1ba77c
+baseline-ref: null
 ---
 
 ## Goal

@@ -3,7 +3,7 @@ id: KI-HARNESS-FND-010
 title: Adopt rumdl markdown toolchain
 theme: foundation-tooling
 horizon: now
-status: complete
+status: in-progress
 blocks: []
 blocked-by: []
 baseline-ref: 3d354b9a6de1d7e6aed62a3b44a73e272b1ff75e
