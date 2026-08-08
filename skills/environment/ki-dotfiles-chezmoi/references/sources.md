@@ -4,10 +4,11 @@
 
 The authoritative sources behind [the standard](standards-chezmoi-dotfiles.md), [the generated rubric](rubric.md), and its structured [rubric catalogue](../scripts/rubric/items/index.ts). Mode REFRESH reads this file, re-fetches each source, diffs it against the standard and catalogue, then **bumps the `last reviewed` dates** and refreshes the `## Last review` block below (what changed is recorded in the commit, not a changelog).
 
-Two different kinds of claim live in this standard, and they carry different confidence:
+Three different kinds of claim live in this standard, and they carry different confidence:
 
 - **Tool-behavior claims** (chezmoi behavior and format-editor APIs) are grounded in the tools' own official documentation — authoritative for the documented capability, but not a guarantee that every real input round-trips byte-for-byte.
 - **House-convention claims** (the shell-loader pattern, the bin/env dispatcher pattern, the Pattern A/B decision rule, the editor-selection and verification policy, the single-source multi-target templating pattern, the agent-instruction layering split, the audit-reporting etiquette) are derived from a **single anonymized case-study repo** (n=1, initially audited 2026-07-12, with the config-editing case reviewed 2026-07-14) — not a corpus the way `ki-repo`'s repo standard was derived from ten `knowledgeislands`-org repos. Treat every `[J]` criterion in the rubric as provisional until more repos have been audited against this skill and the pattern is confirmed to generalize.
+- **Directly observed claims** (that `chezmoi apply` replaces a target rather than editing it in place) rest on a single measurement against one chezmoi version on one platform, because the behavior is undocumented. They are load-bearing for diagnosis, not for correctness, and REFRESH must re-measure them rather than re-fetch a page.
 
 ## Authoritative (chezmoi.io)
 
@@ -41,6 +42,14 @@ Two different kinds of claim live in this standard, and they carry different con
 † Shell-loader and bin/env dispatcher patterns; Pattern A/B decision rule; single-source multi-target templating; agent-instruction layering; audit etiquette.
 
 ‡ Editor selection, missing-key handling, preservation fixtures, and idempotence.
+
+## Direct observation (measured, not documented)
+
+| Source                                                    | Governs                      | Last reviewed |
+| --------------------------------------------------------- | ---------------------------- | ------------- |
+| Inode comparison across a forced `chezmoi apply`, v2.72.0 | Apply-replaces-target claim§ | 2026-08-08    |
+
+§ That `chezmoi apply` replaces a target rather than editing it in place, and the consequence for an application watching its own config file. Measured on one target on macOS; chezmoi.io does not document the write mechanism, so re-measure before relying on it for another platform or a materially newer chezmoi.
 
 ## Last review
 
