@@ -1,0 +1,89 @@
+---
+id: KI-HARNESS-FND-010
+title: Adopt rumdl markdown toolchain
+theme: foundation-tooling
+horizon: now
+status: draft
+blocks: []
+blocked-by: []
+baseline-ref: null
+---
+
+## Goal
+
+Replace Prettier and markdownlint-cli2 with [rumdl](https://github.com/rvben/rumdl) as the single Markdown formatter and linter, so the estate carries one Markdown tool and one configuration file instead of two of each.
+
+## Context
+
+Markdown is the dominant content type in this estate — 1,134 tracked files across fifteen repositories — and it is currently governed by two tools with a hand-negotiated boundary between them. Prettier owns whitespace, list markers, emphasis characters, table padding, and line width via `printWidth` and `proseWrap`. markdownlint-cli2 owns document structure and link integrity: heading increment, duplicate and multiple `<h1>`, bare URLs, empty links, unlabelled code fences, and anchor links that resolve to no heading. The division is real and neither tool subsumes the other today, which is why the split has survived.
+
+Keeping the boundary costs more than the split is worth. `MD013` must be disabled in the markdownlint configuration with a comment explaining that Prettier owns line length, because the two rules otherwise contradict each other. `.prettierrc.json` declares seven options of which only `printWidth` and `proseWrap` reach a Markdown file; the remaining five — `semi`, `singleQuote`, `trailingComma`, `tabWidth`, `useTabs` — apply to no file Prettier ever touches and silently duplicate Biome's `javascript.formatter` policy, inviting a maintainer to keep two unrelated settings in sync. Prettier is confined to Markdown only by the glob list its callers pass, not by anything in its own configuration, so a bare `prettier --write .` would reformat every TypeScript file in the repository straight into conflict with Biome.
+
+Biome cannot absorb either role. Version 2.5.7 was given a `.md` file with formatting enabled and reported `Checked 0 files`, listing the path under paths "provided but ignored"; the 2.5.6 schema exposes language blocks for `css`, `graphql`, `grit`, `html`, `javascript`, and `json` and no `markdown` key at any depth, so there is no experimental gate to enable. Markdown support is a stated Biome ambition with no version or date attached, and this item does not wait on it.
+
+rumdl covers both roles in one binary. It is distributed on npm as well as crates.io and PyPI, so `bunx rumdl` works without adding a Rust or Python toolchain to a Bun repository.
+
+## Boundary
+
+This item owns the Markdown toolchain: the `ki-authoring` owned-file templates, the audit and conform command lists, the standard text describing the Markdown gate, and the migration of every affected repository in the estate. It does not change Biome's role, configuration, or file coverage — Biome remains the sole formatter and linter for TypeScript, JavaScript, and JSON, and the two tools' file domains stay disjoint. It does not change any Markdown content: the migration is a toolchain swap, and any change to a tracked `.md` file is a defect in this item rather than an expected outcome. It does not introduce a transition period in which both toolchains run; per this repository's current-state migration rule, the contract changes and every footprint conforms in the same pass.
+
+## Current state
+
+`ki-authoring` owns four files through OWN-1, defined as string templates in `scripts/rubric/contexts/authoring.ts`: `.prettierrc.json` (`PRETTIER_DEFAULT`), `.prettierignore` (`PRETTIER_IGNORE_DEFAULT`), `.markdownlint-cli2.jsonc` (`MARKDOWNLINT_DEFAULT`), and `.editorconfig`. Its `MARKDOWN_AUDIT_COMMANDS` and `MARKDOWN_CONFORM_COMMANDS` each invoke `bunx prettier` with an explicit `MARKDOWN_PATHS` glob list and two `--ignore-path` flags, then `bunx markdownlint-cli2`.
+
+The markdownlint configuration enables every rule by default and disables five with stated reasons: `MD013` (Prettier owns line length), `MD024` (siblings only), `MD025` (frontmatter title), `MD033` (inline HTML, for `<br>` in table cells and angle-bracket placeholders), and `MD036` (intentional bold labels).
+
+A read-only sweep established the migration's true cost. rumdl 0.2.52, configured to mirror the current rule set, was run against all fifteen repositories under `knowledgeislands`: thirteen reported no issues at all, over 923 files. Two flagged, both exclusively `MD060` table alignment, with no prose, list, or emphasis divergence anywhere in the estate. So the swap is content-neutral in all but one file, and the toolchain change lands without a reformat.
+
+The two exceptions differ in kind and only one is a divergence. `mcp-m365/fixtures/routing/example-rules.md` is flagged by Prettier as well — the file is simply unformatted today, a pre-existing gap in that repository's gate, and the two tools agree about it. `ki-arcadia-principal/Streams/Parked/Parked.md` is a genuine disagreement, and rumdl is wrong: given a placeholder table whose only body row is `| - | - | - |` padded to the header widths, rumdl strips the padding, leaving the table visually misaligned, then reports the result clean while Prettier reports it unformatted. Reduced to a minimum, a table whose sole body row holds `-` cells triggers `MD060` while the identical table with `a` and `b` cells of the same widths does not, so the trigger is the cell content rather than the column width.
+
+The gate also gets substantially cheaper. Across this repository's 383 files, Prettier takes 3.6 seconds and markdownlint-cli2 a further 1.5 seconds, against 0.06 seconds for rumdl — a gate that runs on every audit and every pre-commit.
+
+## Steps
+
+- [ ] Report the `MD060` placeholder-table defect upstream with the reduced repro, and record the issue reference under Discussion.
+- [ ] Decide and record how the `Parked.md` table is handled: whether the upstream fix is a precondition for migration, or the placeholder row is rewritten so the case does not arise.
+- [ ] Add `rumdl` as a development dependency and define the canonical `.rumdl.toml` template in `ki-authoring`, mapping every currently disabled markdownlint rule to its rumdl equivalent and setting `MD013` to `reflow = true` with `reflow-mode = "normalize"` and an effectively unbounded `line-length`, which is what reproduces `proseWrap: "never"`.
+- [ ] Enable `MD060` explicitly in the template with a comment recording why, since it is opt-in rather than on by default and is the one rule observed to misbehave.
+- [ ] Replace the Prettier and markdownlint entries in `MARKDOWN_AUDIT_COMMANDS` and `MARKDOWN_CONFORM_COMMANDS` with `rumdl check` and `rumdl fmt`, and drop the `MARKDOWN_PATHS` glob list and both `--ignore-path` flags in favour of rumdl's own `exclude` configuration.
+- [ ] Retire `.prettierrc.json`, `.prettierignore`, and `.markdownlint-cli2.jsonc` from the OWN-1 owned-file set, and remove the `OwnedFile` union members and template constants that define them.
+- [ ] Rewrite the Markdown gate description in `references/standards-authoring.md`, and update every cross-reference in the catalogue and repository documentation that names Prettier or markdownlint as the Markdown authority.
+- [ ] Conform all fifteen repositories, deleting the three retired files and adding `.rumdl.toml`, and confirm no tracked `.md` file changes in the same pass.
+- [ ] Format `mcp-m365/fixtures/routing/example-rules.md`, which is unformatted under both toolchains, as a separate change from the migration so the migration's own diff stays content-free.
+
+## Files touched
+
+- `skills/governance/ki-authoring/scripts/rubric/contexts/authoring.ts` — the owned-file templates, the `OwnedFile` union, and both Markdown command lists.
+- `skills/governance/ki-authoring/references/standards-authoring.md` — the Markdown gate description.
+- `skills/governance/ki-authoring/scripts/rubric/items/` — any criterion asserting the retired files or their contents.
+- `package.json` — the `rumdl` development dependency, replacing `prettier` and `markdownlint-cli2`.
+- `.prettierrc.json`, `.prettierignore`, `.markdownlint-cli2.jsonc`, `.rumdl.toml` in this repository and the fourteen others.
+- Every document in the catalogue naming Prettier or markdownlint as the Markdown authority.
+
+## Verify
+
+`ki repo audit --skill ki-authoring` passes clean in this repository, and `bun run test` and `bunx tsc --noEmit` pass.
+
+`rumdl check` reports no issues across all fifteen repositories, matching the read-only sweep already recorded under Current state.
+
+The decisive check is that the migration changes no content: after conforming every repository, `git status` shows the three retired files deleted and `.rumdl.toml` added, and **no tracked `.md` file modified** other than the `mcp-m365` fixture handled as its own change. A Markdown diff in the migration commit means a rule mapping is wrong.
+
+Running `rumdl fmt` twice must be a fixed point, since a formatter that does not converge would reintroduce the OWN-1 idempotency defect this repository has already paid for once.
+
+## Dependencies / blocks
+
+Nothing blocks this item. It subsumes the outstanding OWN-1 re-conform across the estate, because `.prettierignore` is retired rather than corrected, and it dissolves the separately proposed `.prettierrc.json` dead-option cleanup, because that file ceases to exist.
+
+## Discussion
+
+### Why not wait for Biome
+
+Consolidating on Biome would be the tidier end state, since it already owns the code half of the toolchain, but the capability does not exist to adopt: Markdown is not a language Biome recognises, so there is nothing to configure or gate. Waiting means keeping a two-tool Markdown boundary for an unbounded period against an unannounced release. Should Biome ship Markdown support later, it would displace rumdl's formatter role but not its linter role, since the structural and link-integrity rules have no Biome counterpart either.
+
+### Why the maturity risk is acceptable
+
+rumdl is at 0.2.52 with a single maintainer, and replacing two widely-adopted tools with a young one concentrates dependency risk in a way that deserves stating plainly rather than assuming away. The mitigating fact is the sweep: because rumdl is already a fixed point on content that Prettier and markdownlint jointly produced, the migration rewrites nothing and a reversion would rewrite nothing either. The cost of being wrong is restoring three configuration files, not reformatting 1,134 documents.
+
+### Why the one divergence does not block on its own
+
+The `MD060` defect is real and rumdl's output is worse than Prettier's, but it needs a placeholder table with no substantive rows and reaches exactly one file in the estate. It is recorded here, reported upstream, and settled explicitly in the second Step rather than discovered during the migration.
