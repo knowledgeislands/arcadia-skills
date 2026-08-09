@@ -3,7 +3,7 @@ id: KI-HARNESS-GOV-033
 title: Define Agora membership
 theme: governance-consistency
 horizon: now
-status: draft
+status: ready
 blocks: []
 blocked-by: []
 baseline-ref: null
