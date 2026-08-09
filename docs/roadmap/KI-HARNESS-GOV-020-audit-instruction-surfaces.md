@@ -3,10 +3,10 @@ id: KI-HARNESS-GOV-020
 title: Audit instruction surfaces
 theme: governance-consistency
 horizon: now
-status: ready
+status: in-progress
 blocks: []
 blocked-by: []
-baseline-ref: null
+baseline-ref: 9b0ae2145648782ede1ba187141a618675df8dae
 ---
 
 ## Goal
