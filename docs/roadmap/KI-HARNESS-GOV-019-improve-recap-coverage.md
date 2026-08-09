@@ -29,13 +29,13 @@ The grounding helper emits evidence inputs; it does not classify discussion topi
 
 ## Steps
 
-- [ ] Add an optional discussion-coverage step after the three recap legs and before the final Actions section. Use it when the user requests coverage or when multiple materially distinct discussion points would otherwise be difficult to trace; omit it for a simple single-thread recap.
-- [ ] Define one compact four-column shape—discussion point, owning home, disposition, and evidence—with short cells and linked canonical records where a durable home exists.
-- [ ] Define the closed disposition vocabulary: `delivered` for evidence-backed completed work, `captured` for work placed in its durable queue or record, `deferred` for an explicit deferral with a named home or return condition, and `decision-needed` for an unresolved user-owned choice.
-- [ ] Require a short evidence-scope statement immediately before the matrix. Rows may use warm in-session context, the selected eligible transcript, and freshly checked repository evidence, but the recap must label the matrix bounded and non-exhaustive whenever transcript evidence is absent, ambiguous, changed, or otherwise unavailable.
-- [ ] Preserve the existing leg and Actions boundaries: a captured roadmap item remains part of what happened rather than an action; a deferred point without a durable home and a decision-needed point remain outstanding and must reconcile with the final Actions checklist.
-- [ ] Add concise procedure scenarios covering omission for a simple recap, a multi-topic evidence-backed matrix, degraded transcript evidence, and reconciliation between matrix dispositions and Actions.
-- [ ] Update the concise `ki-recap` router to mention the optional matrix without duplicating the full template or implying that the grounding helper produces it.
+- [x] Add an optional discussion-coverage step after the three recap legs and before the final Actions section. Use it when the user requests coverage or when multiple materially distinct discussion points would otherwise be difficult to trace; omit it for a simple single-thread recap.
+- [x] Define one compact four-column shape—discussion point, owning home, disposition, and evidence—with short cells and linked canonical records where a durable home exists.
+- [x] Define the closed disposition vocabulary: `delivered` for evidence-backed completed work, `captured` for work placed in its durable queue or record, `deferred` for an explicit deferral with a named home or return condition, and `decision-needed` for an unresolved user-owned choice.
+- [x] Require a short evidence-scope statement immediately before the matrix. Rows may use warm in-session context, the selected eligible transcript, and freshly checked repository evidence, but the recap must label the matrix bounded and non-exhaustive whenever transcript evidence is absent, ambiguous, changed, or otherwise unavailable.
+- [x] Preserve the existing leg and Actions boundaries: a captured roadmap item remains part of what happened rather than an action; a deferred point without a durable home and a decision-needed point remain outstanding and must reconcile with the final Actions checklist.
+- [x] Add concise procedure scenarios covering omission for a simple recap, a multi-topic evidence-backed matrix, degraded transcript evidence, and reconciliation between matrix dispositions and Actions.
+- [x] Update the concise `ki-recap` router to mention the optional matrix without duplicating the full template or implying that the grounding helper produces it.
 
 ## Files touched
 

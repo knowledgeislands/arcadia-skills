@@ -10,9 +10,10 @@ _On-demand procedure for `ki-recap`. The kind, scope, and leg summary live in [`
   - [2. Summarise](#2-summarise)
   - [3. Surface what is outstanding](#3-surface-what-is-outstanding)
   - [4. Harvest the learnings, and route each](#4-harvest-the-learnings-and-route-each)
-  - [5. Actions](#5-actions)
-  - [6. Route future-work selection to `ki-next`](#6-route-future-work-selection-to-ki-next)
-  - [7. Preserve the handoff and compact at the boundary](#7-preserve-the-handoff-and-compact-at-the-boundary)
+  - [5. Discussion coverage](#5-discussion-coverage)
+  - [6. Actions](#6-actions)
+  - [7. Route future-work selection to `ki-next`](#7-route-future-work-selection-to-ki-next)
+  - [8. Preserve the handoff and compact at the boundary](#8-preserve-the-handoff-and-compact-at-the-boundary)
 
 **Ground every claim in reality, not memory.** Warm in-session context, compaction summaries, and recalled memory entries are hypotheses about state, not evidence of it — concurrent sessions, background processes, and elapsed time all make them stale. Before the recap asserts a checkable fact — a commit landed, a gate passed, a file contains something, a plan is open — check it now (`git log`, re-run the read-only gate, read the file). What cannot be cheaply re-checked, state as recollection ("as of when it ran"), not as fact.
 
@@ -72,9 +73,39 @@ Use `highCostCandidates` from the grounding helper as a starting list, not the f
 
 When `ki-accept` requests a record-scoped recap, do not run or imply a full-session recap. Ground only the record's delivered outputs and verification evidence, then record these H3 parts in a roadmap item's `## Review` section or the equivalent proposal review evidence: **Delivered**, **Summary of changes**, **Verification**, **Outstanding concerns**, and **Mini recap**. The summary names the material changes and useful primary paths; verification records concrete commands, outcomes, and the checked evidence revision; concerns hold open questions and further review analysis. The mini recap may name a learning and its proposed route, but it must say that the route is unapproved. User closure of the record sets it Done only; it does not approve a guide, rubric, agent, hook, memory, or other durable learning write.
 
-## 5. Actions
+## 5. Discussion coverage
 
-Close the recap with an **Actions** section: a short, concrete, imperative list of only the unfinished work that emerged from this session's steps 3 and 4 — each item something that could be done right now, with the exact command, file, or artefact named. Do not add generic backlog, peer-repository state, a proposed feature, or a future-work choice merely because it is actionable; those are `ki-next` concerns, not recap actions. Prefix each item with a short, unique, uppercase hyphenated label that names the work (usually two to four words), so the user can respond in chat by label ("do `COMMIT-DOCS` and `FIX-AUTHORING-AUDIT`") instead of restating the action. Do not use arbitrary sequence labels such as `A1`, `A2`, or `A3`; labels are ephemeral recap handles, not roadmap identifiers. Typical entries:
+Add this optional section after the three recap legs and before Actions only when the user asks for coverage or multiple materially distinct discussion points would otherwise be difficult to trace. Omit it for a simple single-thread recap. It is a compact reviewer aid: it summarises conclusions already grounded by the preceding legs; it does not mine unavailable transcripts, classify every conversational turn, or establish transcript completeness.
+
+Immediately before the matrix, state its evidence scope. Rows may draw only on warm in-session context, the selected eligible transcript, and freshly checked repository evidence. Label the matrix **bounded and non-exhaustive** whenever transcript evidence is absent, ambiguous, changed, or otherwise unavailable; do not silently fill gaps from recollection.
+
+Use exactly these short columns, linking canonical records where a durable home exists:
+
+| Discussion point | Owning home | Disposition | Evidence |
+| --- | --- | --- | --- |
+| <material point> | <canonical record or `—`> | <closed vocabulary> | <fresh check or scoped session evidence> |
+
+Use only this closed disposition vocabulary:
+
+- `delivered` — evidence-backed completed work.
+- `captured` — work placed in its durable queue or record. A roadmap item or Stream added during this session is part of what happened, not an Action.
+- `deferred` — an explicit deferral with a named durable home or return condition.
+- `decision-needed` — an unresolved user-owned choice.
+
+Reconcile the matrix with [Surface what is outstanding](#3-surface-what-is-outstanding) and [Actions](#6-actions): a deferred point without a durable home, and every `decision-needed` row, remains outstanding and has a corresponding final Action. Do not turn a captured record into an Action merely because it is actionable later.
+
+Apply these scenario checks before presenting the matrix:
+
+| Situation | Required result |
+| --- | --- |
+| Simple single-thread recap | Omit the matrix. |
+| Multi-topic recap with grounded evidence | Use the four columns and only the closed dispositions. |
+| Transcript evidence absent, ambiguous, changed, or unavailable | State the bounded non-exhaustive scope; omit unsupported rows. |
+| Deferred point lacks a durable home or a choice remains unresolved | Keep it outstanding and add a reconciled Action. |
+
+## 6. Actions
+
+Close the recap with an **Actions** section: a short, concrete, imperative list of only the unfinished work that emerged from this session's steps 3–5 — each item something that could be done right now, with the exact command, file, or artefact named. Do not add generic backlog, peer-repository state, a proposed feature, or a future-work choice merely because it is actionable; those are `ki-next` concerns, not recap actions. Prefix each item with a short, unique, uppercase hyphenated label that names the work (usually two to four words), so the user can respond in chat by label ("do `COMMIT-DOCS` and `FIX-AUTHORING-AUDIT`") instead of restating the action. Do not use arbitrary sequence labels such as `A1`, `A2`, or `A3`; labels are ephemeral recap handles, not roadmap identifiers. Typical entries:
 
 - `COMMIT-SESSION-CHANGES` — Commit (or explicitly discard) the session's uncommitted files — name the paths and suggest the commit message.
 - `PRESERVE-SESSION-DEFERRAL` — Create the offered roadmap / plan or Stream / proposal Checklist for a thread explicitly deferred during this session that has no home.
@@ -83,7 +114,7 @@ Close the recap with an **Actions** section: a short, concrete, imperative list 
 
 If nothing is actionable, say so in one line ("No actions — tree clean, nothing outstanding"). Do **not** perform the actions unprompted — this section is the checklist the user acts on (or asks you to act on); durable writes still require the step-4 confirmation.
 
-## 6. Route future-work selection to `ki-next`
+## 7. Route future-work selection to `ki-next`
 
 Future-work selection is separate from recap. Route to `ki-next` only when the user asks to choose, rank, or defer future work; it is not a Specific action, a standing recap requirement, or an automatic handoff:
 
@@ -100,7 +131,7 @@ Apply these scenario checks when offering it:
 | Deferred work was already parked on the roadmap | Record it as what happened, not outstanding. |
 | Learning route is unapproved | Label it as a proposal; neither recap nor `ki-next` writes it. |
 
-## 7. Preserve the handoff and compact at the boundary
+## 8. Preserve the handoff and compact at the boundary
 
 The end of a recap is a compaction boundary, not a place to measure headroom. Compaction is the default action there — the recap has just recorded the durable outcome, so the span it summarised is the material the next cycle no longer needs. Do not gate the decision on a context-use percentage or a remaining-headroom figure: no runtime adapter is required to expose one, and a threshold that cannot be read is a rule that never fires.
 
