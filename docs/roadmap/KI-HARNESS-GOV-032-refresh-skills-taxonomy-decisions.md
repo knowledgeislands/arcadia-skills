@@ -3,10 +3,10 @@ id: KI-HARNESS-GOV-032
 title: Refresh skills taxonomy decisions
 theme: governance-consistency
 horizon: now
-status: ready
+status: in-progress
 blocks: []
 blocked-by: []
-baseline-ref: null
+baseline-ref: e61e81ad532bd69ae504ee45524fdcf2dc4274a4
 ---
 
 ## Goal
