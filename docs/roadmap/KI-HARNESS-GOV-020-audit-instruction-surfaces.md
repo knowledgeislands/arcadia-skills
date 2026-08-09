@@ -3,7 +3,7 @@ id: KI-HARNESS-GOV-020
 title: Audit instruction surfaces
 theme: governance-consistency
 horizon: now
-status: in-progress
+status: awaiting-review
 blocks: []
 blocked-by: []
 baseline-ref: 9b0ae2145648782ede1ba187141a618675df8dae
@@ -29,13 +29,13 @@ This repository declares Claude Code and ChatGPT Codex support and carries root 
 
 ## Steps
 
-- [ ] Resolve the active runtime set and build a bounded inventory of canonical chezmoi sources, realised user-wide files, repository `AGENTS.md` / runtime supplements, and their explicit imports; classify each path by scope, authority, runtime, loadedness, and canonical-versus-derived status.
-- [ ] Exclude settings, secrets, runtime memory, plugin and skill payloads, caches, and unrelated nested repository instructions; where load semantics cannot be proven from the file graph or authoritative runtime guidance, record `unverified` rather than infer that a candidate is active.
-- [ ] Capture a pre-audit SHA-256 manifest for every in-scope local instruction file, then read the surfaces without invoking formatters, conformers, chezmoi apply, or any command that can write user or repository instructions.
-- [ ] Assess each authoritative surface against portable placement, explicit `standard` communication level, current-thread → repository → user-wide → default precedence, compact routine progress and command-output guidance, and preservation of failures, safety concerns, approvals, irreversible actions, and material uncertainty.
-- [ ] Compare canonical sources with realised copies and shared guidance with runtime supplements; identify contradictions, stale duplication, missing pointers, and runtime-only rules placed in shared Markdown without treating generated or managed copies as independent authorities.
-- [ ] Record an `## Audit evidence` section in this roadmap item with the inventory and separate PASS / WARN / FAIL findings, followed by a distinct list of proposed remediations and the exact approval each would require; do not apply any proposal in this pass.
-- [ ] Recompute the manifest and prove every instruction-surface hash is unchanged, then add the normal review packet for the audit result.
+- [x] Resolve the active runtime set and build a bounded inventory of canonical chezmoi sources, realised user-wide files, repository `AGENTS.md` / runtime supplements, and their explicit imports; classify each path by scope, authority, runtime, loadedness, and canonical-versus-derived status.
+- [x] Exclude settings, secrets, runtime memory, plugin and skill payloads, caches, and unrelated nested repository instructions; where load semantics cannot be proven from the file graph or authoritative runtime guidance, record `unverified` rather than infer that a candidate is active.
+- [x] Capture a pre-audit SHA-256 manifest for every in-scope local instruction file, then read the surfaces without invoking formatters, conformers, chezmoi apply, or any command that can write user or repository instructions.
+- [x] Assess each authoritative surface against portable placement, explicit `standard` communication level, current-thread → repository → user-wide → default precedence, compact routine progress and command-output guidance, and preservation of failures, safety concerns, approvals, irreversible actions, and material uncertainty.
+- [x] Compare canonical sources with realised copies and shared guidance with runtime supplements; identify contradictions, stale duplication, missing pointers, and runtime-only rules placed in shared Markdown without treating generated or managed copies as independent authorities.
+- [x] Record an `## Audit evidence` section in this roadmap item with the inventory and separate PASS / WARN / FAIL findings, followed by a distinct list of proposed remediations and the exact approval each would require; do not apply any proposal in this pass.
+- [x] Recompute the manifest and prove every instruction-surface hash is unchanged, then add the normal review packet for the audit result.
 
 ## Files touched
 
@@ -105,6 +105,65 @@ Any remediation, including a change to canonical chezmoi sources, realised user 
 - Stop if proving loadedness would require reading secrets, runtime history, memory, or an unbounded cache/plugin tree.
 - Stop before changing any instruction, chezmoi source, realised copy, runtime setting, or shared standard, even when the correction appears mechanical.
 - Escalate contradictions that require choosing a policy owner, changing the communication contract, or overriding an explicit current-thread request.
+
+## Audit evidence
+
+### Scope and manifest
+
+- PASS — active repository runtimes: Claude Code and ChatGPT Codex, declared in `.ki-config.toml`; `AGENTS.md` is shared repository authority and `CLAUDE.md` explicitly imports it as a Claude supplement.
+- PASS — Codex canonical source `/Users/krisbrown/.local/share/chezmoi/dot_codex/private_AGENTS.md` and realised `/Users/krisbrown/.codex/AGENTS.md` are byte-identical: `cdda4e77ebb00541838736a332b0b513b18bc51495777ac0d2ffae0a22f6bb58`.
+- WARN — `/Users/krisbrown/.codex/instructions.md` has hash `2c383dc9c90fe36409ba6560017228d5520fc6150707282ec5014f7cc806f32b`, but no allowed-surface import proves it active; it is `unverified`, not a second authority.
+- PASS — Claude canonical root and realised root are byte-identical: `/Users/krisbrown/.local/share/chezmoi/dot_claude/private_CLAUDE.md` → `/Users/krisbrown/.claude/CLAUDE.md`, `8db82e1f1c4546fcb1e957c35713b9a53285fe5fd65a80607735f129b54c2ae1`.
+- PASS — explicitly imported Claude Markdown and workflow topics are byte-identical: `f0b608a1b4e23d4a8fff90f16128e05d5b9e870b64c2b6f4c841a5603f8c0dca` and `044321c8541cb6840c47c542ed4d82c2251d3dff47dde80ec6564d60f74c75ae`, respectively.
+- PASS — tracked repository hashes are unchanged: `AGENTS.md` `49e09e708f53c6ca8eef6c2655aa90e4880e9b269a6b109c649beec28ad6191b`, `CLAUDE.md` `2a0b3fac1332558a766dfbc2b95e67c6d4d6a8f89066f004cf87422a9308d382`, `.ki-config.toml` `c41fe627ac2a74b37b9fa9e21715eaf822e139bbeb981de276eb56a868d33e2c`.
+
+Settings, secrets, memory, plugins, skills, caches, and unrelated nested instructions were excluded. Codex user `AGENTS.md` is observed active in this session; other runtime loadedness is `unverified` unless the explicit import graph proves it.
+
+### Findings
+
+- PASS — portable placement. The personal Codex source assigns cross-project preferences to itself and project detail to repository `AGENTS.md`; the Claude root is runtime-specific; repository `AGENTS.md` is the shared orientation.
+- PASS — current-thread → repository → user-wide → default precedence and the `standard` communication level are explicit in the active personal Codex authority.
+- PASS — user and repository guidance preserves safety, explicit-path commits, failures, decisions, and material risk.
+- WARN — no in-scope user or repository surface names a general uncertainty-reporting or approval/authority boundary. Existing safety rules are strong but implicit here.
+- WARN — neither runtime-specific user topic supplies a general progress/output contract; the active personal Codex source is concise but does not say when interim progress is required.
+- WARN — repository `CLAUDE.md` is a Claude supplement but includes a Codex path sentence. This is stale cross-runtime duplication, not a functional contradiction.
+- WARN — repository instructions do not point to the shared precedence/communication contract. The contract is active through the personal Codex surface, but the repository-local relationship is not discoverable in the tracked orientation.
+
+### Proposed remediations
+
+- User-managed communication policy — propose explicit uncertainty, authority, and interim-progress wording in the canonical chezmoi Codex source, then review `chezmoi diff` before any apply. Requires the user's explicit approval for a user-wide policy change.
+- Harness repository orientation — propose a thin pointer to the shared communication/precedence contract and remove the Codex-specific sentence from `CLAUDE.md` if the source of truth is confirmed. Requires a separately reviewed Harness record and explicit approval.
+- Codex `instructions.md` — first establish loadedness from authoritative runtime documentation or a bounded runtime experiment. No edit is proposed while it remains `unverified`.
+
+No instruction surface, formatter, conformer, `chezmoi apply`, runtime setting, or remote state changed during evidence collection. The lifecycle and evidence commits affect this roadmap record only.
+
+## Review
+
+### Delivered
+
+A read-only, bounded instruction-surface inventory with source-to-realised integrity evidence, explicit uncertainty labels, and separated remediation proposals.
+
+### Summary of changes
+
+Only this roadmap record records the audit. No user instruction, repository instruction, runtime configuration, or external state was edited.
+
+### Verification
+
+- PASS — pre/post SHA-256 manifests match for every included source, realised copy, and repository surface.
+- PASS — active runtime declarations and every explicit import were re-read; unproven loadedness is labelled `unverified`.
+- PASS — the working tree's only task-owned changes are this record's lifecycle and evidence updates.
+
+### Outstanding concerns
+
+The three proposed remediation areas require their named authority. No audit evidence establishes whether the legacy Codex `instructions.md` is loaded.
+
+### Post-change review
+
+Confirm that future remediation preserves the user-wide/repository/runtime layering without duplicating the communication contract across every surface.
+
+### Mini recap
+
+The audit preserved the distinction between canonical managed sources, realised copies, and runtime candidates; byte identity is evidence of synchronisation, not a second policy owner.
 
 ## Discussion
 
