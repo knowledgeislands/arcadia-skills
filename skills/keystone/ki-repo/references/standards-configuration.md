@@ -105,6 +105,8 @@ wiki = false   # this repo keeps a Wiki — deliberate, not drift
 
 The owning skill's auditor then reports the divergence as an acknowledged note rather than a failure. Adopt the same principle for any skill that needs declared, reviewable per-repo overrides: the divergence lives under that skill's table, is commented with its _why_, and is validated by that skill (an unrecognised key warns).
 
+For a wholly owned file that needs a safety exception, the owning skill may use a nested map of exact filenames to non-empty reasons. The declaration protects only the named destructive conform write; it remains a warning and never supplies a second local template or arbitrary configuration delta.
+
 ## Overridable vs fixed
 
 A skill's standard fixes its model; a base or repo may declare **only** the keys that skill documents as overridable, and nothing else is a config knob. Two kinds of declaration are overridable: **data** the standard reads to fit a target (e.g. `ki-kb`'s zone aliases, `required_frontmatter`, and `preflight`), and **divergences** from a default (the `[…checks]` booleans above). Everything not so documented is **fixed** by the standard — a target does not redefine it in config. This split is what keeps target-specificity declared-and-auditable rather than forked into a coupled skill: where a target differs, it differs through a documented key, not a bespoke `<target>-*` extension skill.

@@ -2,6 +2,18 @@ import type { AuditOutcome, RubricFamily, RubricItem, RubricOutcomes } from '../
 import type { AuthoringRubricContext, OwnedFileEvidence, OwnedRubricContext } from '../contexts/authoring.ts'
 
 const ownedFileAudit = (file: OwnedFileEvidence): AuditOutcome => {
+  if (file.exception && file.state === 'canonical')
+    return {
+      status: 'VIOLATION',
+      message: `${file.name} matches the house template but retains a declared exception — remove it because ${file.exception}`,
+      subject: file.name
+    }
+  if (file.exception && file.state === 'drifted')
+    return {
+      status: 'VIOLATION',
+      message: `${file.name} has a declared exception because ${file.exception} — it remains non-canonical; return it to the house template when the constraint ends`,
+      subject: file.name
+    }
   if (file.state === 'canonical')
     return { status: 'PASS', message: `${file.name} matches the house template`, subject: file.name }
   if (file.state === 'unsafe')
@@ -18,11 +30,20 @@ const ownedFileAudit = (file: OwnedFileEvidence): AuditOutcome => {
   }
 }
 
+const exceptionAudit = (exception: OwnedRubricContext['exceptions'][number]): AuditOutcome | undefined => {
+  if (!exception.issue) return undefined
+  return {
+    status: 'VIOLATION',
+    message: `owned_file_exceptions[${JSON.stringify(exception.name)}] ${exception.issue}`,
+    subject: 'owned_file_exceptions'
+  }
+}
+
 const OWN_1: RubricItem<OwnedRubricContext> = {
   code: 'OWN-1',
   title: 'owned authoring configuration matches the house templates',
   description:
-    'The skill owns `.editorconfig` and `.rumdl.toml` wholly (SHAPE-16 `owns:`): AUDIT warns on drift from the house templates, while CONFORM transactionally scaffolds missing files and overwrites drifted regular files. Each template is stored already formatted to the house width so CONFORM output is a fixed point of the governing formatter; a template the repository would reformat leaves every governed repository permanently drifted.',
+    'The skill owns `.editorconfig` and `.rumdl.toml` wholly (SHAPE-16 `owns:`): AUDIT warns on drift from the house templates, while CONFORM transactionally scaffolds missing files and overwrites drifted regular files. A reasoned `owned_file_exceptions` declaration remains a WARN and suppresses only the named regular drifted-file write; it is never a local template. Each template is stored already formatted to the house width so CONFORM output is a fixed point of the governing formatter; a template the repository would reformat leaves every governed repository permanently drifted.',
   sources: ['standards-authoring.md#owned-configuration'],
   mechanical: {
     level: 'WARN',
@@ -31,7 +52,9 @@ const OWN_1: RubricItem<OwnedRubricContext> = {
       phase: 'INSPECT',
       run: (context): RubricOutcomes<AuditOutcome> => {
         if (!context.targetExists) return [{ status: 'NOT_APPLICABLE', message: 'audit target does not exist' }]
-        return context.files.map(ownedFileAudit)
+        return context.files
+          .map(ownedFileAudit)
+          .concat(context.exceptions.flatMap((exception) => exceptionAudit(exception) ?? []))
       }
     },
     conform: {

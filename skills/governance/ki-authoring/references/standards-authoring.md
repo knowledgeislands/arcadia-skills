@@ -11,7 +11,16 @@ The cross-format mechanical contract for Knowledge Islands authoring. It is sepa
 
 ## Owned configuration
 
-The `ki-authoring` skill wholly owns `.editorconfig` and `.rumdl.toml`. A repository has no legitimate local variation in these files: AUDIT compares each regular file with its canonical template, and CONFORM scaffolds a missing file or replaces a drifted regular file.
+The `ki-authoring` skill wholly owns `.editorconfig` and `.rumdl.toml`. AUDIT compares each regular file with its canonical template, and CONFORM scaffolds a missing file or replaces a drifted regular file.
+
+An evidenced exception is the narrow safety valve for a repository whose regular owned file must remain non-canonical. It belongs under the owning skill's table and maps an exact currently owned filename to a non-empty reason:
+
+```toml
+[skills.ki-authoring.owned_file_exceptions]
+".rumdl.toml" = "Preserves verbatim correspondence whose list markers are source evidence."
+```
+
+AUDIT still reports the declared drift as a WARN with its reason and the recommendation to return to the house template. CONFORM skips only that named regular drifted file; it does not merge a template delta, interpret local settings, or make the exception conforming. Unknown names, blank reasons, a malformed table, and a stale declaration against a canonical file are warnings to correct. A declaration never suppresses scaffolding of a missing file or the safety refusal for an unsafe path.
 
 `.prettierrc.json`, `.prettierignore`, and `.markdownlint-cli2.jsonc` are retired. AUDIT warns while any of them survives and CONFORM removes it, because a leftover configuration is not inert: an editor extension reads it and reformats Markdown against a standard this repository no longer holds.
 

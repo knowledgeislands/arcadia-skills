@@ -111,6 +111,11 @@ export const RETIRED_FILES = ['.prettierrc.json', '.prettierignore', '.markdownl
 
 export type OwnedFile = '.editorconfig' | '.rumdl.toml'
 export type OwnedFileState = 'missing' | 'canonical' | 'drifted' | 'unsafe'
+export type OwnedFileException = {
+  name: string
+  reason?: string
+  issue?: string
+}
 export type MarkdownAudit = { clean: boolean; detail?: string }
 export type FrontmatterFileEvidence = {
   path: string
@@ -130,6 +135,7 @@ export type MarkdownRubricContext = {
 export type OwnedFileEvidence = {
   name: OwnedFile
   state: OwnedFileState
+  exception?: string
   synchronise?: () => void
 }
 export type RetiredFileEvidence = {
@@ -140,6 +146,7 @@ export type RetiredFileEvidence = {
 export type OwnedRubricContext = {
   targetExists: boolean
   files: readonly OwnedFileEvidence[]
+  exceptions: readonly OwnedFileException[]
   retired: readonly RetiredFileEvidence[]
 }
 export type TomlRubricContext = Record<string, never>
@@ -247,17 +254,36 @@ const inspectOwnedFile = (repository: string, name: OwnedFile): OwnedFileState =
   return sha256(original) === sha256(canonical[name]) ? 'canonical' : 'drifted'
 }
 
-const createOwnedFileDraft = (repository: string, name: OwnedFile, mutable: boolean): OwnedFileDraft => {
+const ownedFileExceptions = (configuration: Readonly<Record<string, unknown>>): readonly OwnedFileException[] => {
+  const declared = configuration.owned_file_exceptions
+  if (declared === undefined) return []
+  if (!declared || typeof declared !== 'object' || Array.isArray(declared))
+    return [{ name: 'owned_file_exceptions', issue: 'must be a table mapping owned filenames to non-empty reasons' }]
+  return Object.entries(declared).map(([name, value]) => {
+    if (!(name in canonical)) return { name, issue: 'is not a currently owned file' }
+    if (typeof value !== 'string' || !value.trim()) return { name, issue: 'must have a non-empty reason' }
+    return { name, reason: value.trim() }
+  })
+}
+
+const createOwnedFileDraft = (
+  repository: string,
+  name: OwnedFile,
+  mutable: boolean,
+  exception?: string
+): OwnedFileDraft => {
   const state = inspectOwnedFile(repository, name)
   let requested = false
+  const protectedDrift = state === 'drifted' && Boolean(exception)
   return {
     evidence: {
       name,
       state,
+      ...(exception ? { exception } : {}),
       ...(mutable && state !== 'unsafe'
         ? {
             synchronise: () => {
-              requested = true
+              if (!protectedDrift) requested = true
             }
           }
         : {})
@@ -299,14 +325,17 @@ const inspectMarkdown = (repository: string): MarkdownAudit => {
 export type MarkdownInspector = (repository: string) => MarkdownAudit
 
 export const createAuthoringSession = (
-  { mode, repository, publication }: RubricContextOptions,
+  { mode, repository, configuration, publication }: RubricContextOptions,
   markdownInspector: MarkdownInspector = inspectMarkdown
 ): RubricSession<AuthoringRubricContext> => {
   const target = resolve(repository)
   const targetExists = existsSync(target) && lstatSync(target).isDirectory()
   const mutable = mode === 'conform' && targetExists
   let normaliseMarkdown = false
-  const ownedDrafts = (Object.keys(canonical) as OwnedFile[]).map((name) => createOwnedFileDraft(target, name, mutable))
+  const exceptions = ownedFileExceptions(configuration)
+  const ownedDrafts = (Object.keys(canonical) as OwnedFile[]).map((name) =>
+    createOwnedFileDraft(target, name, mutable, exceptions.find((exception) => exception.name === name)?.reason)
+  )
   const frontmatterDrafts = targetExists ? createFrontmatterDrafts(target, mutable) : []
   const removals = new Set<string>()
   const retired: readonly RetiredFileEvidence[] = RETIRED_FILES.map((name) => {
@@ -341,6 +370,7 @@ export const createAuthoringSession = (
     owned: {
       targetExists,
       files: ownedDrafts.map((draft) => draft.evidence),
+      exceptions,
       retired
     },
     toml: {},

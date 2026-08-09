@@ -158,6 +158,119 @@ test('frontmatter conform removes only safely unnecessary scalar quotes', () => 
   ])
 })
 
+test('a declared owned-file exception remains a warning and suppresses only its drifted-file write', () => {
+  const repository = temporaryRepository()
+  writeFileSync(join(repository, '.editorconfig'), EDITORCONFIG_DEFAULT)
+  writeFileSync(join(repository, '.rumdl.toml'), '# evidence-preserving variation\n')
+  const session = createAuthoringSession(
+    {
+      mode: 'conform',
+      repository,
+      userHome: tmpdir(),
+      configuration: {
+        owned_file_exceptions: {
+          '.rumdl.toml': 'Preserves verbatim correspondence whose list markers are source evidence.'
+        }
+      }
+    },
+    () => ({ clean: true })
+  )
+  const context = session.subjects[1]?.context()
+  const owned = ownedModule.OWNED.items[0]
+
+  expect(owned?.mechanical?.audit.run(context?.owned as NonNullable<typeof context>['owned'])).toContainEqual({
+    status: 'VIOLATION',
+    message:
+      '.rumdl.toml has a declared exception because Preserves verbatim correspondence whose list markers are source evidence. — it remains non-canonical; return it to the house template when the constraint ends',
+    subject: '.rumdl.toml'
+  })
+
+  owned?.mechanical?.conform?.run(context?.owned as NonNullable<typeof context>['owned'])
+  expect(session.proposal().writes).toEqual([])
+})
+
+test('owned-file exceptions do not suppress missing or unsafe paths', () => {
+  const missingRepository = temporaryRepository()
+  writeFileSync(join(missingRepository, '.editorconfig'), EDITORCONFIG_DEFAULT)
+  const missing = createAuthoringSession(
+    {
+      mode: 'conform',
+      repository: missingRepository,
+      userHome: tmpdir(),
+      configuration: { owned_file_exceptions: { '.rumdl.toml': 'Evidence preservation.' } }
+    },
+    () => ({ clean: true })
+  )
+  const missingContext = missing.subjects[1]?.context()
+  ownedModule.OWNED.items[0]?.mechanical?.conform?.run(
+    missingContext?.owned as NonNullable<typeof missingContext>['owned']
+  )
+  expect(missing.proposal().writes).toEqual([{ path: '.rumdl.toml', content: RUMDL_DEFAULT, create: true }])
+
+  const unsafeRepository = temporaryRepository()
+  const outside = join(temporaryRepository(), 'outside')
+  writeFileSync(join(unsafeRepository, '.editorconfig'), EDITORCONFIG_DEFAULT)
+  writeFileSync(outside, 'do not replace\n')
+  symlinkSync(outside, join(unsafeRepository, '.rumdl.toml'))
+  const unsafe = createAuthoringSession(
+    {
+      mode: 'conform',
+      repository: unsafeRepository,
+      userHome: tmpdir(),
+      configuration: { owned_file_exceptions: { '.rumdl.toml': 'Evidence preservation.' } }
+    },
+    () => ({ clean: true })
+  )
+  const unsafeContext = unsafe.subjects[1]?.context()
+  ownedModule.OWNED.items[0]?.mechanical?.conform?.run(
+    unsafeContext?.owned as NonNullable<typeof unsafeContext>['owned']
+  )
+  expect(unsafe.proposal().writes).toEqual([])
+  expect(readFileSync(outside, 'utf8')).toBe('do not replace\n')
+})
+
+test('owned-file exception declarations reject unknown, blank, and stale entries', () => {
+  const repository = temporaryRepository()
+  writeFileSync(join(repository, '.editorconfig'), EDITORCONFIG_DEFAULT)
+  writeFileSync(join(repository, '.rumdl.toml'), RUMDL_DEFAULT)
+  const session = createAuthoringSession(
+    {
+      mode: 'audit',
+      repository,
+      userHome: tmpdir(),
+      configuration: {
+        owned_file_exceptions: {
+          '.rumdl.toml': 'No longer needed.',
+          '.unknown': 'Not owned.',
+          '.editorconfig': ''
+        }
+      }
+    },
+    () => ({ clean: true })
+  )
+  const context = session.subjects[1]?.context()
+  const outcomes = ownedModule.OWNED.items[0]?.mechanical?.audit.run(
+    context?.owned as NonNullable<typeof context>['owned']
+  )
+
+  expect(outcomes).toContainEqual({
+    status: 'VIOLATION',
+    message:
+      '.rumdl.toml matches the house template but retains a declared exception — remove it because No longer needed.',
+    subject: '.rumdl.toml'
+  })
+  expect(outcomes).toContainEqual({
+    status: 'VIOLATION',
+    message: 'owned_file_exceptions[".unknown"] is not a currently owned file',
+    subject: 'owned_file_exceptions'
+  })
+  expect(outcomes).toContainEqual({
+    status: 'VIOLATION',
+    message: 'owned_file_exceptions[".editorconfig"] must have a non-empty reason',
+    subject: 'owned_file_exceptions'
+  })
+})
+
 test('owned-file conform refuses to propose a write through a symlink', () => {
   const repository = temporaryRepository()
   const outside = join(temporaryRepository(), 'outside')
