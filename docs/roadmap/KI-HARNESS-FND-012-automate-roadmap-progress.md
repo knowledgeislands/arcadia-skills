@@ -2,7 +2,7 @@
 id: KI-HARNESS-FND-012
 title: Automate roadmap progress
 theme: foundation-tooling
-horizon: next
+horizon: now
 status: draft
 blocks: []
 blocked-by: []
@@ -23,27 +23,49 @@ Do not create autonomous authority to select priorities, approve plans, accept w
 
 ## Current state
 
-The process skills already define the lifecycle and explicit confirmation boundaries. No orchestration surface currently carries the state, stop rules, prompt timing, or recovery evidence for repeated cycles.
+The process skills already define selection, planning, implementation, acceptance, recap, and batch authority. `ki-batch` supplies a reviewable authorisation and run ledger for named ready items, but no process surface evaluates one approved agenda cycle, records early questions, and stops before widening authority.
+
+## Delivery design
+
+Add a portable `ki-agenda` process skill. It consumes one explicit `ki-batch` authorisation and the named canonical records; it neither selects candidates nor creates a new authority store. Its only durable run state is the authorisation's existing ledger and recap.
+
+The agenda performs one bounded cycle: re-ground repository and item state, validate the approved authority, ask all known decision questions before starting work, then coordinate only independent named items through their existing process skills. It stops the affected item on a failed gate, dirty tree, external dependency, unknown authority, scope change, or other mandatory stop. It may continue only a proven independent authorised item, and normally ends each delivery at `awaiting-review`.
+
+## Locked decisions
+
+- `ki-agenda` is a new portable process skill, not a daemon, CLI command, runtime hook, or scheduler.
+- The reviewed `ki-batch` authorisation remains the sole durable execution authority and ledger; the agenda creates no tracker, queue, or hidden state.
+- Agenda cycles are single-repository by default. A peer repository needs its own named record and authorisation, never an inferred cross-repository mutation.
+- Selection, readiness approval, acceptance, pruning, pushing, releasing, and unapproved decisions remain terminal human gates.
 
 ## Steps
 
-- [ ] Define the loop's durable authority model: selected records, approved operations, explicit stops, and the smallest carry-forward state.
-- [ ] Design the per-cycle grounding, candidate screening, early-question, planning, implementation, review, and recap sequence using the existing process skills rather than duplicate lifecycle logic.
-- [ ] Specify how the loop detects and reports no-progress, external dependencies, conflicting working trees, failed gates, and unapproved decisions without retrying destructively.
-- [ ] Build and test the smallest runtime-neutral orchestration surface, including a controlled dry-run or fixture path.
-- [ ] Review whether the loop reduces human coordination without making a decision or an external write appear automatic.
+- [ ] Define the `ki-agenda` contract around an explicit `ki-batch` authorisation: allowed item states, single-repository scope, timebox, mandatory stops, ledger evidence, and normal `awaiting-review` completion.
+- [ ] Specify the one-cycle sequence: fresh grounding, authorisation validation, early-question report, independent-item coordination, stop or park evidence, and concise recap without duplicating sibling lifecycle logic.
+- [ ] Add a pure fixture-backed cycle model that proves absent authority, an unready item, a dirty tree, a failed gate, a dependency, and an unapproved decision produce a named no-write stop.
+- [ ] Write the portable skill and its `ki-batch` integration guidance, including a dry-run example that reports candidate state and questions without changing a record.
+- [ ] Run focused fixtures and repository gates; review that no result makes selection, readiness, acceptance, pruning, push, release, or external mutation appear automatic.
 
 ## Files touched
 
-The owning process-skill guidance and tests, plus any bounded runtime adapter or orchestration artefact selected during planning. No peer repository is changed without its own receiving work.
+- `skills/change-management/ki-agenda/SKILL.md`
+- `skills/change-management/ki-agenda/references/standards-agenda.md`
+- `skills/change-management/ki-agenda/scripts/agenda-cycle.ts` and its focused test
+- `skills/change-management/ki-batch/SKILL.md` and `references/standards-batch.md`
+- This roadmap item
 
 ## Verify
 
-Fixture-backed cycles prove that an authorised item advances only through its allowed lifecycle stage, all decision points stop with a clear question, and a failed or blocked cycle leaves no hidden mutation or claimed progress.
+- Fixture-backed cycles prove that an authorised item advances only through its allowed lifecycle stage, every decision point stops with a clear question, and a failed or blocked cycle leaves no hidden mutation or claimed progress.
+- `ki repo audit --skill ki-skills --repo .`, `bun run test`, and `bunx tsc --noEmit` pass.
 
 ## Dependencies / blocks
 
 This item is independently shapeable. It must reuse, rather than replace, the authority boundaries of `ki-next`, `ki-plan`, `ki-implement`, `ki-accept`, and `ki-recap`.
+
+## Stop conditions
+
+Stop for a user decision if the proposed agenda would require a standing authority store, an automatic selection or readiness transition, a cross-repository write, a runtime-specific scheduler, or a retry that masks a failed gate. Capture any broader automation as separate work.
 
 ## Discussion
 

@@ -2,7 +2,7 @@
 id: KI-HARNESS-GOV-029
 title: Improve mechanical governance
 theme: governance-consistency
-horizon: soon
+horizon: next
 status: draft
 blocks: []
 blocked-by: []
@@ -30,6 +30,33 @@ Measure repeated evidence gathering and recurring manual checks, then identify t
 ### Promotion conditions
 
 Promote when the candidate measurements distinguish a real repeated cost from a one-off task and each proposed automation has an owner, testable evidence boundary, and non-destructive failure mode.
+
+## Current state
+
+The Harness has measured recurring cost anecdotally through repeated audits, generated-rubric checks, transcript grounding, and estate sweeps, but no current evidence set separates repeatable mechanical work from one-off investigation or judgment-led review.
+
+## Steps
+
+- [ ] Define a compact measurement record: repeated operation, evidence source, frequency or repeated-call signal, current owner, token or time cost, deterministic input, and unsafe or judgment boundary.
+- [ ] Gather current Harness and estate evidence without modifying skills, package scripts, repository configuration, or runtime settings.
+- [ ] Classify each candidate as retain-as-judgment, improve diagnostic or prepared context, add a bounded mechanical check, or route to a separately owned proposal.
+- [ ] For each proposed improvement, name its owning skill, fixture or test boundary, safe no-write failure mode, and a receiver-owned work record where implementation is non-trivial.
+- [ ] Review the resulting shortlist against the boundary: no score, no automatic external write, and no compression that hides uncertainty.
+
+## Files touched
+
+This roadmap item only, containing the measurement evidence, classification, and routed follow-ups. The audit makes no direct automation change.
+
+## Verify
+
+- Every proposal cites a repeated measured signal rather than a one-off experience.
+- Every proposal has one owner, a testable deterministic boundary, and a non-destructive failure mode.
+- Judgmental concerns and external writes are explicitly excluded or routed separately.
+- `ki repo audit --skill ki-roadmap --repo .` and `ki repo audit --skill ki-authoring --repo .` pass.
+
+## Dependencies / blocks
+
+This read-only assessment is independent. Proposed mechanical work is not started or accepted by its inclusion in the shortlist.
 
 ## Discussion
 
