@@ -2,7 +2,7 @@
 id: KI-HARNESS-FND-013
 title: Persist batch authorisations
 theme: foundation-tooling
-horizon: next
+horizon: now
 status: draft
 blocks: []
 blocked-by: []
@@ -48,6 +48,10 @@ Individual explicitly approved ready items can use `ki-implement` normally. A mu
 ### Intended approach
 
 Choose one adapter-compatible record location and shape, define the exact identifier and approval fields, resolve it safely from `ki-batch` and `ki-agenda`, and add fixture coverage for absent, malformed, expired, foreign, or unapproved authority. Keep the existing roadmap item as the canonical delivery record and the authorisation as its bounded execution evidence.
+
+### Decision required before readiness
+
+The record's canonical location and retention boundary are not yet decided. The plan must select one repository-local home that neither creates a second roadmap nor clashes with a repository adapter, then state whether `ki-accept` archives or prunes the completed authority after its ledger has been reviewed. Until that decision is explicit, the skills must continue to refuse a batch rather than infer authority from conversation history or an unstructured file.
 
 ### Promotion conditions
 

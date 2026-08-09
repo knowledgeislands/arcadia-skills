@@ -2,7 +2,7 @@
 id: KI-HARNESS-GOV-032
 title: Refresh skills taxonomy decisions
 theme: governance-consistency
-horizon: next
+horizon: now
 status: draft
 blocks: []
 blocked-by: []
@@ -27,7 +27,7 @@ The native Decision Records audit fails only on the ADR-008 filename. The curren
 
 ## Steps
 
-- [ ] Rename ADR-008 to its canonical title slug and update every exact local citation and index link.
+- [ ] Rename ADR-008 to `ADR-KI-HARNESS-SKILLS-008-a-specifications-skill-for-the-what.md` and update its exact local citations in ADR-009, GDR-004, and the Decision Records index.
 - [ ] Update ADR-006's process-skill taxonomy list to include `ki-agenda` without changing its architectural decision.
 - [ ] Run focused Decision Records, roadmap, and authoring audits; inspect the rename diff and every changed citation.
 
@@ -46,6 +46,16 @@ The native Decision Records audit fails only on the ADR-008 filename. The curren
 ## Dependencies / blocks
 
 This item is independently shapeable and carries GOV-030's evidence. It does not require or authorise any sibling-repository Decision Record change.
+
+## Shaping
+
+### Delivery design
+
+The ADR-008 filename will be corrected with a single Git rename, preserving its ID, title, date, status, and body. The cited files are the only local links to retarget. ADR-006 will receive the one missing process name in its present-tense current taxonomy list; it will not reinterpret the decision, rename another skill, or change any historical record.
+
+### Promotion conditions
+
+The bounded file set, target filename, citation inventory, and no-scope-expansion rule are now explicit. The item is ready for an implementation review once this plan is approved.
 
 ## Discussion
 
