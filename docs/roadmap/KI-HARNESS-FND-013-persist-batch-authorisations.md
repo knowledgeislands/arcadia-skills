@@ -4,7 +4,7 @@ title: Persist batch authorisations
 area: FND
 theme: foundation-tooling
 horizon: now
-status: awaiting-review
+status: done
 blocks: []
 blocked-by: []
 baseline-ref: 16b31e6ca0a4a485fe38142c479c39381931bfbc
@@ -76,6 +76,10 @@ The resolver returns a no-write stop for absent, malformed, foreign, expired, un
 - Delivery: `66732390 feat(batch): resolve canonical authorisations`.
 - Focused authority and batch-cycle fixtures: 7 pass, 0 fail.
 - `bun run test`, `bunx tsc --noEmit`, `ki repo audit --skill ki-skills --repo .`, `ki repo audit --skill ki-change-management-roadmap --repo .`, and `ki repo audit --skill ki-authoring --repo .` pass.
+
+## Done
+
+Accepted on 2026-08-09 by explicit user approval. The canonical repository-local batch-authorisation contract is delivered in `66732390` and its reviewed roadmap packet in `1ee0f687`. Future multi-item delivery may use only an approved, active record under `+/_AUTHORISATIONS/`; the record remains retained until an explicitly selected `ki-accept prune` action.
 
 ## Discussion
 
