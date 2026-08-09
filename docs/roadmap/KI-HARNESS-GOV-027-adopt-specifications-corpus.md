@@ -3,7 +3,7 @@ id: KI-HARNESS-GOV-027
 title: Adopt Specifications corpus
 theme: governance-consistency
 horizon: now
-status: draft
+status: ready
 blocks: []
 blocked-by: []
 baseline-ref: null
@@ -23,7 +23,7 @@ The current contract conflicts with this model: `ki-feature-definitions` owns `d
 
 ## Boundary
 
-This item changes the current operating contract, not historical evidence. New and current documentation, configuration, skill trees, checkers, publication surfaces, and corpus roots use only `ki-specifications` and `docs/specs/` when this work is complete. Historical Decision Records, roadmap items, and trade records retain their original wording as history; they are not compatibility surfaces and must not be rewritten merely to erase a search result.
+This item changes the current operating contract, not historical evidence. New and current documentation, configuration, skill trees, checkers, publication surfaces, and corpus roots use only `ki-specifications` and `docs/specs/` when this work is complete. GDR-KI-HARNESS-004 and ADR-KI-HARNESS-SKILLS-008 are current living Decision Records and change in place with the contract. Roadmap items and trade records retain their original wording as history; they are not compatibility surfaces and must not be rewritten merely to erase a search result.
 
 Do not retain `ki-feature-definitions`, `docs/features/`, `docs/spec/`, a forwarding directory, dual registration, an alias, or a migration flag. A repository is either on the Specifications contract or is not governed by it. Do not split public and architectural specifications into parallel corpora or make public-surface coverage a synthetic mechanical finding.
 
@@ -37,7 +37,7 @@ The active corpus remains on the Feature Definitions contract in all three decla
 
 ### Intended approach
 
-First establish the Specifications contract, including the current documentation-topology decision it supersedes. Rename the skill and its checker-facing capability in the Harness, then migrate every active estate footprint in one coordinated pass: the three declared repositories, their `docs/specs/` corpora, configuration, published plugin copy, documentation site, evaluator fixtures, and tools-ki host support.
+First establish the Specifications contract by updating the two current Decision Records in place. Rename the skill and its checker-facing capability in the Harness, then migrate every active estate footprint in one coordinated pass: the three declared repositories, their `docs/specs/` corpora, configuration, published plugin copy, documentation site, evaluator fixtures, and tools-ki host support.
 
 Keep every as-built requirement, identifier, RFC-2119 statement, verification hook, and Gap semantically unchanged unless a wording correction is independently justified. The migration changes the governed naming and placement, not the corpus's substantive claims. Update the standard's judgment guidance so public requirements are legible from the consumer's perspective and architecture requirements remain clear about their boundary and verification evidence.
 
@@ -45,9 +45,12 @@ Keep every as-built requirement, identifier, RFC-2119 statement, verification ho
 
 This is deliberately a fast, breaking mechanical migration. Set the new contract as the only contract, move every active footprint immediately, and let a missed footprint fail its native audit rather than masking it with a fallback. The estate is privately controlled today; the purpose is to establish a clean contract before external adoption begins.
 
-### Decisions still needed
+### Locked decisions
 
-Confirm the exact decision-record treatment: a new current decision should supersede the Feature Definitions and four-document ownership decisions without rewriting their historical wording. Confirm the new `ki-specifications` checker identifier and any published package naming, then use those names consistently throughout the estate.
+- The sole canonical capability is `ki-specifications`; its corpus root is `docs/specs/`.
+- Public and architectural requirements share one normative corpus. Their differing audience changes the judgment review, not the directory layout or mechanical grammar.
+- GDR-KI-HARNESS-004 and ADR-KI-HARNESS-SKILLS-008 are revised in place as living current decisions. Roadmap and trade history is not rewritten.
+- The Harness and vallearmonia-website migrate first. tools-ki is changed last, after a fresh clean-tree check, because it is the live `ki` host.
 
 ### Promotion conditions
 
@@ -55,23 +58,34 @@ Promote only when the superseding decision and canonical names are fixed; the co
 
 ## Steps
 
-- [ ] Record the current Specifications decision, superseding the active Feature Definitions and documentation-topology contract where necessary while retaining historical records unchanged.
+- [ ] Rewrite GDR-KI-HARNESS-004 and ADR-KI-HARNESS-SKILLS-008 in place for the Specifications contract, preserving their role as current living decisions rather than adding a supersession chain.
 - [ ] Rename the canonical Harness skill from `ki-feature-definitions` to `ki-specifications`, including its declared name, checker capability, standards, rubric, evaluator fixtures, and active references. Do not leave a compatibility alias.
 - [ ] Move the Harness, tools-ki, and vallearmonia-website corpora from `docs/features/` to `docs/specs/`; update each index, internal link, and bare skill declaration in the same pass.
 - [ ] Update the published skill copy, documentation site, and tools-ki host so they expose only `ki-specifications` and the `docs/specs/` contract.
 - [ ] Add judgment guidance distinguishing consumer-facing observable behaviour from architectural boundaries without creating a separate corpus, requirement grammar, or automatic coverage score.
 - [ ] Prove all thirty-two moved files preserve their requirement identities and substantive content, and run the new capability's audit in every declared repository.
-- [ ] Search active operating surfaces for the retired skill name and roots; resolve every hit other than explicitly historical Decision Records, roadmap records, and trades.
+- [ ] Search active operating surfaces for the retired skill name and roots; resolve every hit other than explicitly historical roadmap records and trades.
+
+## Execution plan
+
+1. In the Harness, update the two current decisions, move the canonical skill and `docs/features/` corpus, then change the declared skill, evaluator fixtures, active guidance, and skill map. Run focused source tests, TypeScript, Markdown, and direct corpus checks; do not create a legacy capability.
+2. In vallearmonia-website, move the complete corpus to `docs/specs/`, update its declaration and active documentation or tests, then prove each requirement file's content and identifiers are unchanged apart from the path and terminology migration.
+3. Re-check the tools-ki working tree immediately before touching it. If it is not clean, stop rather than mix this migration with its active work. If clean, update the host's resolved skill model, its corpus, configuration, tests, and active references as the final implementation lane.
+4. Run the new hosted audit in all three repositories only after tools-ki supports the new name. Compare the pre-move and post-move corpus inventories, then search active surfaces for the retired name and roots.
+
+## Stop conditions
+
+Stop if a repository is no longer clean, a current Decision Record cannot be made coherent in place, a moved requirement changes substantively, the tools-ki host needs a compatibility alias to execute, or any audit would require a second active name or root. Resolve the issue within the new contract or escalate it; do not add a migration path.
 
 ## Files touched
 
-The canonical skill under `skills/governance/ki-specifications/`, the Harness `docs/specs/` corpus, `.ki-config.toml`, evaluator fixtures, skill-map and documentation surfaces, plus the corresponding active roots and declarations in tools-ki and vallearmonia-website. The published ki-plugins copy changes only as the normal result of publishing the renamed canonical skill.
+The canonical skill under `skills/governance/ki-specifications/`, the Harness `docs/specs/` corpus, `.ki-config.toml`, current Decision Records, evaluator fixtures, skill-map and documentation surfaces, plus the corresponding active roots and declarations in tools-ki and vallearmonia-website. The published ki-plugins copy changes only as the normal result of publishing the renamed canonical skill.
 
 ## Verify
 
 `ki repo audit --skill ki-specifications` passes in the Harness, tools-ki, and vallearmonia-website. Their corpus inventories prove the same thirty-two requirements files and append-only IDs survived the root move, with no accidental substantive rewrite.
 
-The tools-ki host rejects `ki-feature-definitions` and recognises only `ki-specifications`. An active-surface search finds no `docs/features/`, `docs/spec/`, or `ki-feature-definitions` footprint outside intentionally historical records. Repository test and TypeScript gates pass where source changes occur.
+The tools-ki host rejects `ki-feature-definitions` and recognises only `ki-specifications`. An active-surface search finds no `docs/features/`, `docs/spec/`, or `ki-feature-definitions` footprint outside intentionally historical roadmap and trade records. Repository test and TypeScript gates pass where source changes occur.
 
 ## Dependencies / blocks
 
