@@ -220,6 +220,11 @@ Runner-neutral tests and the conditional Vitest coverage profile.
   - _Review prompt:_ Are tests colocated with their source and does their coverage evidence substantiate the 100% claim?
   - _Outcomes:_ conforming; gap; exclusion
   - _Conforming guidance:_ Colocate or strengthen the tests, record a named Gap, or record an explicit capability exclusion.
+- **TEST-7 [J] — Coverage follows observable contracts** — Coverage evidence starts from supported observable behaviour: reachable paths are proven through their public boundary, unreachable paths are removed, and fault injection stays at a documented interface boundary. (standards-engineering.md#testing-capability-the-repo-ships-tests)
+  - _Evidence scope:_ The supported public contract, covered implementation paths, tests, and any documented interface-level fault injection.
+  - _Review prompt:_ Does each reachable path have evidence through the nearest supported public boundary, with unsupported paths removed rather than preserved for coverage, and is any fault injection a documented interface failure that cannot be exercised deterministically through that boundary?
+  - _Outcomes:_ conforming; gap; exception
+  - _Conforming guidance:_ Add or strengthen an observable-contract case, remove unsupported unreachable code, or document why a necessary interface-level fault injection cannot be exercised through the ordinary public entrypoint.
 
 ## BUILD — Compiled builds
 

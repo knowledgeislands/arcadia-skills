@@ -29,12 +29,12 @@ The required distinction is judgmental. A catalogue can ask a reviewer for evide
 
 ## Steps
 
-- [ ] Extend the testing section of the engineering standard with one portable rule: begin a coverage-gap investigation at the nearest supported public boundary, prove each reachable path through an externally observable result, and remove a path that no supported input can reach.
-- [ ] Define the exception for interface-level fault injection: it must model a documented boundary failure that cannot be exercised deterministically through the ordinary public entrypoint, remain outside implementation internals, and record why the seam is necessary.
-- [ ] Add a dedicated judgment criterion to the `TEST` family for observable-contract coverage; keep it free of mechanical audit or conform callbacks and make its review prompt distinguish supported behaviour, justified boundary injection, and dead code.
-- [ ] Add focused catalogue assertions for the new criterion's stable code, judgment-only shape, and source, and update the catalogue-size assertion without creating a synthetic coverage finding.
-- [ ] Update the concise testing summary in `ki-engineering` so the portable boundary rule is discoverable without duplicating the full standard.
-- [ ] Regenerate the readable engineering rubric from the structured catalogue and review the resulting publication for exact parity.
+- [x] Extend the testing section of the engineering standard with one portable rule: begin a coverage-gap investigation at the nearest supported public boundary, prove each reachable path through an externally observable result, and remove a path that no supported input can reach.
+- [x] Define the exception for interface-level fault injection: it must model a documented boundary failure that cannot be exercised deterministically through the ordinary public entrypoint, remain outside implementation internals, and record why the seam is necessary.
+- [x] Add a dedicated judgment criterion to the `TEST` family for observable-contract coverage; keep it free of mechanical audit or conform callbacks and make its review prompt distinguish supported behaviour, justified boundary injection, and dead code.
+- [x] Add focused catalogue assertions for the new criterion's stable code, judgment-only shape, and source, and update the catalogue-size assertion without creating a synthetic coverage finding.
+- [x] Update the concise testing summary in `ki-engineering` so the portable boundary rule is discoverable without duplicating the full standard.
+- [x] Regenerate the readable engineering rubric from the structured catalogue and review the resulting publication for exact parity.
 
 ## Files touched
 
@@ -67,6 +67,10 @@ Escalate before expanding scope if applying the rule would require an artifact-s
 Keep this as one implementation lane because the standard wording, criterion prompt, and focused assertion form one semantic unit. It can run in parallel with `KI-HARNESS-GOV-019` because their file boundaries do not overlap. The batch orchestrator retains final review of the judgment boundary and runs the shared Harness gates after both lanes converge; no durable delegation packet is warranted.
 
 ## Discussion
+
+### Implementation constraint
+
+The source and generated-rubric checks pass, but the complete `ki-engineering` audit cannot yet be clean: `biome.json` names the 2.5.6 schema while the installed Biome CLI expects 2.5.7. That pre-existing schema-version gap is owned by `KI-HARNESS-GOV-031`; this item deliberately does not fold a configuration migration into coverage guidance.
 
 ### Source
 

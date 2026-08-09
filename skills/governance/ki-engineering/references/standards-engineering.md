@@ -183,6 +183,10 @@ When a repo selects Vitest by carrying `vitest.config.*`, all of the following a
 - **Executable helper scripts are operational tooling, not shipped `src/`, and remain outside Vitest's coverage profile.** A repo's `scripts/` (repo tooling, eval harnesses) and a skill's bundled checkers may carry standalone self-tests behind the bare `test` idiom without adding `vitest.config.*`; the 100% source-coverage rules do not apply to that runner-neutral profile. Their absence of self-tests is not automatically a coverage gap.
 - **Monorepo variant (§0).** The `src/**` globs above are the **flat-shape** form. In a monorepo each workspace scopes them to its own source root: `include`/`exclude` match that workspace's test files (e.g. `include: ['site/scripts/**/*.test.ts']`), and vitest writes coverage to a `reportsDirectory` **under the workspace** — `site/coverage`, gitignored there — never the repo root. The 100%-threshold rule and the `*.test.ts` exclude are unchanged; only the paths become workspace-relative.
 
+Coverage is evidence of supported behaviour, not a reason to introduce an implementation-only test seam. Start a coverage-gap investigation at the nearest supported public boundary and prove every reachable path through an externally observable result. Remove a path that no supported input can reach instead of preserving it solely to satisfy a coverage threshold.
+
+Interface-level fault injection is the narrow exception: it may model a documented boundary failure that the ordinary public entrypoint cannot exercise deterministically. Keep the injection outside implementation internals and record why the supported boundary cannot produce that failure. Do not use fault injection merely to make an internal branch covered.
+
 ## 7. Compiled build & CLI (capability: the repo compiles to `dist/`)
 
 When a repo ships a compiled `dist/` (it has `tsconfig.build.json`, or `build` is a `tsc` call):

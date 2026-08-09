@@ -47,10 +47,18 @@ test('the structured catalogue preserves the engineering criteria', async () => 
   const codes = catalogue.families
     .filter((family) => family.code !== 'RUBRIC')
     .flatMap((family) => family.items.map((item) => item.code))
-  expect(codes).toHaveLength(48)
+  expect(codes).toHaveLength(49)
   expect(new Set(codes).size).toBe(codes.length)
   expect(codes[0]).toBe('PKG-1')
+  expect(codes).toContain('TEST-7')
   expect(codes.at(-1)).toBe('TOML-2')
+
+  const observableCoverage = catalogue.families
+    .find((family) => family.code === 'TEST')
+    ?.items.find((item) => item.code === 'TEST-7')
+  expect(observableCoverage?.mechanical).toBeUndefined()
+  expect(observableCoverage?.sources).toEqual(['standards-engineering.md#testing-capability-the-repo-ships-tests'])
+  expect(observableCoverage?.judgment?.prompt).toContain('nearest supported public boundary')
 })
 
 test('each family module exports one complete family', async () => {
