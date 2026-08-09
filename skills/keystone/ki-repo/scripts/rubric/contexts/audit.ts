@@ -968,7 +968,7 @@ async function auditRepo(
 // The agent runtimes the bootstrap linkers know how to install for. A repo may
 // declare a subset in `[skills.ki-repo] supported_runtimes`; anything outside this set has no
 // discovery path, so the linker would silently do nothing for it (RUNTIMES-1).
-export const KNOWN_RUNTIMES = ['claude-code', 'chatgpt-codex']
+export const KNOWN_RUNTIMES = ['claude-code', 'claude-desktop', 'chatgpt-codex']
 const LOCAL_SELF_SOURCE = '.agents/skills/ki-self'
 const CLAUDE_SELF_PROJECTION = '.claude/skills/ki-self'
 

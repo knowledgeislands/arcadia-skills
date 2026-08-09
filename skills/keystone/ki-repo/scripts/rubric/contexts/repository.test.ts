@@ -257,10 +257,10 @@ describe('runtime environment coverage', () => {
     ])
   })
 
-  test('accepts the complete environment matrix for both runtimes', async () => {
+  test('accepts the complete environment matrix when Claude Desktop is declared', async () => {
     expect(
       await runtimeFindings(`[skills.ki-repo]
-supported_runtimes = ["claude-code", "chatgpt-codex"]
+supported_runtimes = ["claude-code", "claude-desktop", "chatgpt-codex"]
 
 [skills.ki-tokenomics]
 
