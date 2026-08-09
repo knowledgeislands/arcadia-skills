@@ -23,7 +23,7 @@ When a `ki-recap` precedes this cycle, require its handoff/compaction boundary t
 
 1. Resolve the current git repository physically and read `.ki-config.toml`.
 2. In a non-KB repository, run `ki repo audit --skill ki-change-management-roadmap --repo <git-root>` and stop on any FAIL or WARN. Read the generated `ROADMAP.md`, every canonical item directly below `docs/roadmap/`, and active `docs/housekeeping/` templates; derive lifecycle status and dependencies from frontmatter.
-3. In a Knowledge Base, run `ki repo audit --skill ki-repo-kb-streams --repo <git-root>` and read the Focus, proposal, and `Streams/Housekeeping/` indexes fresh.
+3. In a Knowledge Base, run `ki repo audit --skill ki-repo-kb-streams --repo <git-root>` and read the flat records and `_ISSUES.md` ledger in `Streams/Roadmap/`, plus active `Streams/Housekeeping/` templates, fresh.
 4. When the repository declares `ki-trades`, run its audit and inspect validated inbound records after the clean governing-skill audits. Its `README.md` is orientation, not a record.
 
 ## 2. Triage inbound handoffs
@@ -58,13 +58,13 @@ Do not change content until the user confirms exact wording and placement.
 ### Non-KB repositories
 
 1. Gather dependency-ready `now` and `next` records. Reuse their canonical record; if several are independently ready, recommend a small ranked set only when each retains its own lifecycle and the user confirms the set and order.
-2. Only when none is eligible, assess `soon` records against the Next entry rule. After confirmation, change horizon or Focus to `next`, run the adapter audit, then re-evaluate it at the destination.
+2. Only when none is eligible, assess `soon` records against the Next entry rule. After confirmation, change horizon to `next`, run the adapter audit, then re-evaluate it at the destination.
 3. Only when Soon has no viable record, assess Future candidates. Move directly to Next only when the full Next rule is met and Soon adds no value; otherwise move to Soon once the intended outcome and boundary are known. Re-evaluate after every confirmed move.
 4. Reconsider Waiting-for or Parked items only when their named external condition or return trigger changed.
 
 ### Knowledge Bases
 
-Use the same queue through native Focus folders: `Now`, `Next`, `Soon`, `Future`, `Waiting for`, and `Parked`. `Streams/Housekeeping` is a template horizon, not a delivery destination; due runs move to the template's declared delivery Focus.
+Use the same horizon vocabulary on flat `Streams/Roadmap/` records. `Streams/Housekeeping` is a template home, not a delivery destination; due runs become linked roadmap records at the template's declared horizon.
 
 ### Roadmap batchability screen
 
@@ -85,7 +85,7 @@ If no group meets every condition, say so briefly and use the ordinary single-it
 
 ## 5. Defer
 
-`defer <item> <horizon-or-focus>` is an explicit user-confirmed move.
+`defer <item> <horizon>` is an explicit user-confirmed move.
 
 Resolve the exact record and identify linked dependencies before proposing it.
 

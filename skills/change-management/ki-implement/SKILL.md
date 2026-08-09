@@ -49,7 +49,7 @@ It does not bypass readiness, baseline, scope, verification, or human-review gat
 
 `help` / `-h` / `?` explains this skill and stops, taking no action.
 
-`implement <work>` resolves one canonical roadmap item or Streams proposal and follows the procedure.
+`implement <work>` resolves one canonical roadmap item, including one under `Streams/Roadmap/`, and follows the procedure.
 
 With no item, identify that an explicit approved ready item is required and stop.
 

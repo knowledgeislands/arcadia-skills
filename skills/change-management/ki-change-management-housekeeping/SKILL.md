@@ -10,7 +10,7 @@ argument-hint: 'audit <repo> | conform <repo> | educate <repo> | help | refresh'
 
 # Knowledge Islands housekeeping standard
 
-**Kind:** governance. `ki-change-management-housekeeping` owns recurring-work templates, not the delivery of a particular run. The shared forward-work lifecycle is owned by `ki-change-management-roadmap`; `ki-repo-kb-streams` applies it to KB proposals. Read [the housekeeping template standard](references/standards-housekeeping.md) before creating or changing a template, [the generated rubric](references/rubric.md) for checkable criteria, and [the sources](references/sources.md) when refreshing this standard.
+**Kind:** governance. `ki-change-management-housekeeping` owns recurring-work templates, not the delivery of a particular run. The shared forward-work lifecycle is owned by `ki-change-management-roadmap`; `ki-repo-kb-streams` places KB records under `Streams/Roadmap/`. Read [the housekeeping template standard](references/standards-housekeeping.md) before creating or changing a template, [the generated rubric](references/rubric.md) for checkable criteria, and [the sources](references/sources.md) when refreshing this standard.
 
 ## Shared model
 

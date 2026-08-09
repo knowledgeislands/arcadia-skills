@@ -32,7 +32,7 @@ Operational-area layout, legacy migration, and adapter routing.
   - _Remediation:_ diagnostic — Establish Roadmap and Housekeeping, then classify any legacy or unexpected folders with the receiving base owner.
 - **STREAM-2 [M] — legacy state folders** — Legacy state and Focus folders are migration inputs, not target Streams structure. (standards-streams-structure.md)
   - _Remediation:_ diagnostic — Classify each retained legacy record before removing or replacing a legacy navigation folder.
-- **STREAM-4 [J] — adapter-owned records** — Roadmap and housekeeping records follow their owning adapters rather than a generic Streams proposal model. (standards-streams-structure.md)
+- **STREAM-4 [J] — adapter-owned records** — Roadmap and housekeeping records follow their owning adapters rather than a generic Streams record model. (standards-streams-structure.md)
   - _Evidence scope:_ Roadmap and housekeeping records sampled from the two Streams areas.
   - _Review prompt:_ Does each sampled record follow its owning roadmap or housekeeping adapter?
   - _Outcomes:_ conforming; adapter migration required; classification decision required

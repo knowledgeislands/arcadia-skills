@@ -1,6 +1,6 @@
 # KB change-management routing standard
 
-This standard records how a Knowledge Base uses shared change-management capabilities after adopting the Streams operational container. It replaces the former self-contained Enactment proposal process.
+This standard records how a Knowledge Base uses shared change-management capabilities after adopting the Streams operational container. It replaces the former self-contained Enactment process.
 
 ## Routing
 
@@ -14,7 +14,7 @@ The roadmap record carries the shared `draft` → `ready` → `in-progress` → 
 
 ## Canonical change gate
 
-Substantive changes to `Admin/`, `Pillars/`, or `Resources/` require explicitly approved forward work. The base’s always-loaded instruction routes a change to the appropriate adapter and does not create a parallel generic Streams proposal.
+Substantive changes to `Admin/`, `Pillars/`, or `Resources/` require explicitly approved forward work. The base’s always-loaded instruction routes a change to the appropriate adapter and does not create a parallel generic Streams record.
 
 ## Base-owned migration
 

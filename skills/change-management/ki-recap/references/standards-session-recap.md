@@ -50,7 +50,7 @@ Using warm context plus the helper's `filesTouched` / `diffStat`: state what cha
 Then look only for threads left mid-change by this session: uncommitted edits, a failing gate, a decision still open, or an explicitly deferred fix. Do not use a recap to inventory repository backlog, peer-repository state, or plausible future work; those are outside the thread and `ki-next` owns future-work selection. **Ground every "uncommitted" or "still dirty" claim in the `filesTouched` from the grounding helper run at the start of _this_ recap, never in a `git status`/`git diff` seen earlier in the conversation** — commits (yours or a concurrent process's) can land between that earlier look and the recap itself, and stale context reads as a false outstanding item. If `transcriptEvidence.status` is `changed` or `unavailable`, describe transcript-derived tool tallies only as historical or omit their recommendation. If meaningful time has passed since step 1 ran, re-run it before finalizing this section. Apply the house rule:
 
 - A roadmap item or Stream **added during this session** counts as **what happened** (placing work in the repository's durable forward-work structure is a completed action), not as outstanding.
-- An in-session non-KB `ki-plan` with unchecked Steps or KB proposal with unchecked Checklist entries **is** outstanding — cite its identifier and lifecycle state. An unrelated plan or proposal is not.
+- An in-session `ki-plan` record with unchecked Steps, whether under `docs/roadmap/` or `Streams/Roadmap/`, **is** outstanding — cite its identifier and lifecycle state. An unrelated record is not.
 - If an explicitly deferred in-session thread has no durable home, offer its correct local route: `ki-next` capture into the shared queue, then `ki-plan` when it is selected; use the roadmap adapter for a non-KB repository and the Streams adapter for a Knowledge Base. Do not manufacture a route for work merely noticed during the recap.
 
 ## 4. Harvest the learnings, and route each
@@ -65,7 +65,7 @@ The standard owns the placement ladder, promotion evidence, and duplicate-reconc
 | Checker, rubric, shared rule, or reusable operation | Its owning skill, standard, reference, agent, or hook — add a criterion only after scanning the relevant catalogue and linter |
 | A bounded procedure | An existing appropriate guide, rather than new standing orientation |
 | Durable personal fact or user preference | Runtime memory or synchronised personal configuration, according to its scope |
-| Deferred work with no home yet | Non-KB: `ROADMAP.md`, or a `ki-plan` if it is multi-step. KB: Streams, or a proposal Checklist for governed change. |
+| Deferred work with no home yet | Non-KB: `ROADMAP.md`, or a `ki-plan` if it is multi-step. KB: `Streams/Roadmap/`, or a `ki-plan` if it is multi-step. |
 
 Use `highCostCandidates` from the grounding helper as a starting list, not the full set — warm context surfaces things the helper cannot see (a design dead-end, a rejected approach).
 
@@ -108,7 +108,7 @@ Apply these scenario checks before presenting the matrix:
 Close the recap with an **Actions** section: a short, concrete, imperative list of only the unfinished work that emerged from this session's steps 3–5 — each item something that could be done right now, with the exact command, file, or artefact named. Do not add generic backlog, peer-repository state, a proposed feature, or a future-work choice merely because it is actionable; those are `ki-next` concerns, not recap actions. Prefix each item with a short, unique, uppercase hyphenated label that names the work (usually two to four words), so the user can respond in chat by label ("do `COMMIT-DOCS` and `FIX-AUTHORING-AUDIT`") instead of restating the action. Do not use arbitrary sequence labels such as `A1`, `A2`, or `A3`; labels are ephemeral recap handles, not roadmap identifiers. Typical entries:
 
 - `COMMIT-SESSION-CHANGES` — Commit (or explicitly discard) the session's uncommitted files — name the paths and suggest the commit message.
-- `PRESERVE-SESSION-DEFERRAL` — Create the offered roadmap / plan or Stream / proposal Checklist for a thread explicitly deferred during this session that has no home.
+- `PRESERVE-SESSION-DEFERRAL` — Create the offered roadmap record or plan for a thread explicitly deferred during this session that has no home.
 - `APPLY-LEARNING-ROUTE` — Apply an approved learning route from the knowledge-promotion standard (for example, a repository rule, skill criterion, hook, memory, or personal configuration update).
 - `RERUN-FAILING-GATE` — Re-run a gate that was left failing, or finish a mid-change thread.
 

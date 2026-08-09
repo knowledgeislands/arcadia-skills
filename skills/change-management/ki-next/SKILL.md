@@ -4,7 +4,7 @@ ki-kind: process
 ki-depends-on: []
 description: >
   Selects, captures, promotes, defers, and spawns the next work through one shared queue: now, next, soon, future, waiting-for, and parked. It also records the receiver's confirmed disposition of validated inbound trades, including direct application of a trivial local work change versus a separately prioritised work record. Use when asked "what should we do next", "review these inbound trades", "apply this trade directly", "promote this work", or "defer this". It applies the transition rules owned by ki-change-management-roadmap and the ki-repo-kb-streams adapter; local trade transport belongs to ki-trade.
-argument-hint: 'next [--review] | defer <item> <horizon-or-focus> | help'
+argument-hint: 'next [--review] | defer <item> <horizon> | help'
 ---
 
 # ki-next
@@ -17,7 +17,7 @@ The full procedure is in [the next-work standard](references/standards-next-work
 
 ## What this skill does
 
-1. **Ground** the generated repository roadmap index and canonical work items, or Streams Focus and proposal index, plus active `ki-change-management-housekeeping` templates and any inbound records validated by declared `ki-trades` governance.
+1. **Ground** the generated repository roadmap index and canonical work items, or the flat records and issue ledger in `Streams/Roadmap/`, plus active `ki-change-management-housekeeping` templates and any inbound records validated by declared `ki-trades` governance.
 2. **Triage** incoming submissions through an exact human-confirmed receiver disposition, including the proportionate direct-application gate for a work trade, without treating adoption as roadmap authority.
 3. **Review** relevance when asked or when a material stale signal is evident.
 4. **Screen for synergy** across dependency-ready candidates: propose a batch only when the items share a bounded delivery advantage and remain independently executable. A shared theme alone is not enough.

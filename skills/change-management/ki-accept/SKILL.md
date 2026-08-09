@@ -19,7 +19,7 @@ Read [the review-closure procedure](references/standards-acceptance.md) before a
 
 `ki-accept` is the only process skill that closes a work-record lifecycle. It also owns its explicitly selected done-record prune procedure.
 
-1. Confirm the exact roadmap item or Streams proposal is at `awaiting-review` and has its required review packet.
+1. Confirm the exact roadmap item, including one under `Streams/Roadmap/`, is at `awaiting-review` and has its required review packet.
 2. Present the review packet and require human approval by default.
 3. Record approved closure as `done` and retain the done record.
 4. Prune only `done` records resolved from explicit adapter-root paths or globs; the selection is the deletion authority.
@@ -42,9 +42,9 @@ Runtime subagents can help execute bounded review preparation only when separate
 
 `help` / `-h` / `?` explains this skill and stops, taking no action.
 
-`accept <work>` reviews one roadmap item or Streams proposal at `awaiting-review` and stops for the required authority unless an explicit batch authorisation permits that named closure.
+`accept <work>` reviews one roadmap item, including one under `Streams/Roadmap/`, at `awaiting-review` and stops for the required authority unless an explicit batch authorisation permits that named closure.
 
-`prune <work-record-or-glob>...` resolves each explicit pathname or glob only under the adapter's canonical root (`docs/roadmap/` or `Streams/`), verifies that every resolved regular work record is `done`, then deletes that set. Quote shell globs. The invocation is the deletion authority: do not ask for a second confirmation. Use `ki repo roadmap prune` only for the non-KB deterministic repository-roadmap sweep.
+`prune <work-record-or-glob>...` resolves each explicit pathname or glob only under the adapter's canonical root (`docs/roadmap/` or `Streams/Roadmap/`), verifies that every resolved regular work record is `done`, then deletes that set. Quote shell globs. The invocation is the deletion authority: do not ask for a second confirmation. Use `ki repo roadmap prune` only for the non-KB deterministic repository-roadmap sweep.
 
 With no target, identify the required exact accepted item or done records and stop.
 

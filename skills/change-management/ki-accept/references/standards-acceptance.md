@@ -6,7 +6,7 @@ The kind, authority boundary, and relationship map live in [the skill](../SKILL.
 
 ## 1. Review the delivery packet
 
-1. Resolve the physical git root, its repository adapter, and one canonical regular work record: a roadmap item in `docs/roadmap/` or a Streams proposal in `Streams/`.
+1. Resolve the physical git root, its repository adapter, and one canonical regular work record: a roadmap item in `docs/roadmap/` or `Streams/Roadmap/`.
 2. Confirm that it is at `awaiting-review` and read its review packet.
 3. Check that the packet identifies the delivered boundary, verification evidence, deviations, and unresolved concerns honestly.
 4. Re-check any state claim that materially affects approval from current repository evidence.

@@ -2,7 +2,7 @@
 
 ## Scope
 
-This standard defines durable recurring-work templates. A template is not a roadmap item or a Stream proposal: it is the source from which `ki-next` may spawn one due run. The run uses the common forward-work lifecycle and carries the template identifier plus its scheduled date.
+This standard defines durable recurring-work templates. A template is not a roadmap item: it is the source from which `ki-next` may spawn one due run. The run uses the common forward-work lifecycle and carries the template identifier plus its scheduled date.
 
 ## Placement and identity
 

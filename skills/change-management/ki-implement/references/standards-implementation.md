@@ -47,7 +47,7 @@ Record a review packet containing:
 - material decisions, deviations, and unresolved concerns; and
 - proposed learning routes, if any, without promoting them automatically.
 
-Set the record to `awaiting-review` only when all required steps and checks are complete. In a roadmap item, add the packet under `## Review`; in a Streams proposal, add it to the proposal's review evidence.
+Set the record to `awaiting-review` only when all required steps and checks are complete. Add the packet under `## Review` in the canonical roadmap item, whether it lives in `docs/roadmap/` or `Streams/Roadmap/`.
 
 Then stop.
 

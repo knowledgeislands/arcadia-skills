@@ -9,14 +9,16 @@
 
 ## Placement and identity
 
-Each work item is one regular Markdown file directly under `docs/roadmap/`:
+Each work item is one regular Markdown file directly under its adapter's roadmap directory:
 
 ```text
 docs/roadmap/<REPO>-<NNN>-<slug>.md
 docs/roadmap/<REPO>-<AREA>-<NNN>-<slug>.md
+Streams/Roadmap/<REPO>-<NNN>-<slug>.md
+Streams/Roadmap/<REPO>-<AREA>-<NNN>-<slug>.md
 ```
 
-`<REPO>-<NNN>` or `<REPO>-<AREA>-<NNN>` is the identifier described by [the repository-roadmap standard](standards-repository-roadmaps.md). `docs/roadmap/_ISSUES.md` retains the applicable repository or area high-water mark so a pruned record never makes its identifier reusable.
+`<REPO>-<NNN>` or `<REPO>-<AREA>-<NNN>` is the identifier described by [the repository-roadmap standard](standards-repository-roadmaps.md). The adapter-local `_ISSUES.md` retains the applicable repository or area high-water mark so a pruned record never makes its identifier reusable.
 
 `<slug>` is lowercase kebab-case and no longer than 50 characters.
 
