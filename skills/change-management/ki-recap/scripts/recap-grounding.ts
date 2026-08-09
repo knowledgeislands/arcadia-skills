@@ -61,7 +61,7 @@ type Grounding = {
   diffStat: string
   toolTally: Record<string, number>
   highCostCandidates: string[]
-  'ki-recap-repository-evidence/v1': RepositoryEvidence
+  'ki-change-management-recap-repository-evidence/v1': RepositoryEvidence
   transcriptEvidence: TranscriptEvidence
 }
 
@@ -78,7 +78,7 @@ const slugifyRepoPath = (absolutePath: string): string => absolutePath.replace(/
 const resolveClaudeProjectDir = (repo: string): string => join(homedir(), '.claude', 'projects', slugifyRepoPath(repo))
 
 const resolveCodexSessionsDir = (): string => join(homedir(), '.codex', 'sessions')
-const REPOSITORY_EVIDENCE_MARKER = 'ki-recap-repository-evidence/v1'
+const REPOSITORY_EVIDENCE_MARKER = 'ki-change-management-recap-repository-evidence/v1'
 const COMMIT = /^(?:[0-9a-f]{40}|[0-9a-f]{64})$/
 
 const readJsonl = (path: string): unknown[] => {

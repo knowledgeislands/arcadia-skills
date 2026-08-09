@@ -40,4 +40,4 @@ Explain this portable boundary and stop without changing anything.
 
 - `ki-binding-claude` owns Claude Code, Desktop, Cowork, web convention, and the plugin builder.
 - `ki-binding-codex` owns Codex TOML comparison and the merge-safe native renderer.
-- `ki-binding-chezmoi` composes this root with `ki-dotfiles-chezmoi` for a renderer-specific source-repository path.
+- `ki-binding-chezmoi` composes this root with `ki-repo-dotfiles-chezmoi` for a renderer-specific source-repository path.

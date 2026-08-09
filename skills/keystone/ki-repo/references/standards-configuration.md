@@ -44,7 +44,7 @@ branch-protection = true
 
 `[skills.ki-repo]` carries repository identity and declared facts the auditor checks. `repository` is mandatory and is the canonical HTTPS GitHub home (`https://github.com/<owner>/<repository>`), checked against GitHub's repository identity. `title` and `description` are mandatory: title exactly matches the README H1, while description exactly matches GitHub and package.json where those surfaces exist. `visibility` (`"public"` | `"private"`, matched against GitHub) and `license` (an SPDX id — default MIT when unset — matched against the live GitHub license, the `LICENSE` file, and `package.json` `"license"`) are independent: a private repo may be MIT, a public repo proprietary. Pick a license at [choosealicense.com](https://choosealicense.com/); use `"UNLICENSED"` for all-rights-reserved proprietary.
 
-The third, `supported_runtimes`, is a **repo-wide** fact — the agent runtimes this repo supports. It lives on `[skills.ki-repo]` rather than `[skills.ki-harness]` because it drives orientation, skills, subagents, and MCP across the whole repo, not just the five-part harness bundle; a non-harness KI repo can support runtimes too. Native activation resolves it to each runtime's discovery path (Claude Code → `.claude/`, ChatGPT Codex → `.agents/`; see the runtime feature-coverage matrix in `SDR-KI-HARNESS-002`). The key is required: support is a stable repository capability, never inferred from the directories present at a moment in time. Values must name runtimes the activation linkers recognise (`claude-code`, `chatgpt-codex`), must be non-empty, and must not repeat — the auditor's `RUNTIMES-1` FAILs otherwise. The retired `codex` identifier is rejected with recovery guidance; it is not a compatibility alias.
+The third, `supported_runtimes`, is a **repo-wide** fact — the agent runtimes this repo supports. It lives on `[skills.ki-repo]` rather than `[skills.ki-repo-harness]` because it drives orientation, skills, subagents, and MCP across the whole repo, not just the five-part harness bundle; a non-harness KI repo can support runtimes too. Native activation resolves it to each runtime's discovery path (Claude Code → `.claude/`, ChatGPT Codex → `.agents/`; see the runtime feature-coverage matrix in `SDR-KI-HARNESS-002`). The key is required: support is a stable repository capability, never inferred from the directories present at a moment in time. Values must name runtimes the activation linkers recognise (`claude-code`, `chatgpt-codex`), must be non-empty, and must not repeat — the auditor's `RUNTIMES-1` FAILs otherwise. The retired `codex` identifier is rejected with recovery guidance; it is not a compatibility alias.
 
 Runtime environment coverage follows that declaration rather than being opt-in. Every repository declares portable `[skills.ki-tokenomics]`. A repository supporting `claude-code` also declares `[skills.ki-housekeeping-claude]` and `[skills.ki-tokenomics-claude]`; one supporting `chatgpt-codex` declares `[skills.ki-tokenomics-codex]`. Codex housekeeping is deliberately absent until ChatGPT Codex exposes a documented repository-identity and safe-cleanup contract: the matrix requires only real capabilities, never an empty symmetric marker. `RUNTIMES-2` fails when a required table is absent.
 
@@ -59,7 +59,7 @@ A bare name binds to exactly one provider, resolved against the declared `harnes
 - No declared harness provides it → an error naming the skill and the declared list.
 - More than one provides it → an error requiring explicit qualification.
 
-Declaring a skill is separate from configuring it. `[skills.ki-trades]` with no keys is a marker; a skill is never declared as a side effect of one of its sub-tables. State the root table explicitly even where TOML would create it implicitly, so a declaration never depends on whether the skill happens to carry configuration.
+Declaring a skill is separate from configuring it. `[skills.ki-repo-trades]` with no keys is a marker; a skill is never declared as a side effect of one of its sub-tables. State the root table explicitly even where TOML would create it implicitly, so a declaration never depends on whether the skill happens to carry configuration.
 
 ### The out-of-list exception
 
@@ -78,7 +78,7 @@ A `[skills.<name>]` table plays one or both of two roles:
 - **Marker (opt-in)** — its _presence_ declares "this skill governs this repo." The bare header is enough; it needs no keys.
 - **Config** — it carries per-repo declarations the skill reads (data the standard fits to, or `[…checks]` divergences).
 
-The two are separable: a base on the canonical zone names declares a bare `[skills.ki-kb]` (marker only, no keys); a base that renames a zone adds a `[skills.ki-kb.zones]` alias (config). The marker/opt-in skills are `ki-engineering`, `-kb`, `-streams`, `-website`, `-website-cloudflare`, `-mcp`, `-skills`, and `-subagents`. `ki-repo` is the **bedrock marker** — the file's very presence is what makes the repo a ki-repo. `ki-authoring` governs every markdown repo, but it is **declared, not assumed**: every repo carries a bare `[skills.ki-authoring]` table like any other coverage (a missing one is a FAIL — `authoring-baseline`, [ADR-KI-HARNESS-005](../../../../docs/decisions/ADR-KI-HARNESS-005-validate-down-ki-config-toml-contract.md)). There is no injected/cascade-exempt baseline: coverage is purely what the config declares (ADR-KI-HARNESS-007).
+The two are separable: a base on the canonical zone names declares a bare `[skills.ki-repo-kb]` (marker only, no keys); a base that renames a zone adds a `[skills.ki-repo-kb.zones]` alias (config). The marker/opt-in skills are `ki-engineering`, `-kb`, `-streams`, `-website`, `-website-cloudflare`, `-mcp`, `-skills`, and `-subagents`. `ki-repo` is the **bedrock marker** — the file's very presence is what makes the repo a ki-repo. `ki-authoring` governs every markdown repo, but it is **declared, not assumed**: every repo carries a bare `[skills.ki-authoring]` table like any other coverage (a missing one is a FAIL — `authoring-baseline`, [ADR-KI-HARNESS-005](../../../../docs/decisions/ADR-KI-HARNESS-005-validate-down-ki-config-toml-contract.md)). There is no injected/cascade-exempt baseline: coverage is purely what the config declares (ADR-KI-HARNESS-007).
 
 So **what an absent table means is per-skill**, and that is exactly what _Coverage enforcement_ (below) checks:
 
@@ -109,7 +109,7 @@ For a wholly owned file that needs a safety exception, the owning skill may use 
 
 ## Overridable vs fixed
 
-A skill's standard fixes its model; a base or repo may declare **only** the keys that skill documents as overridable, and nothing else is a config knob. Two kinds of declaration are overridable: **data** the standard reads to fit a target (e.g. `ki-kb`'s zone aliases, `required_frontmatter`, and `preflight`), and **divergences** from a default (the `[…checks]` booleans above). Everything not so documented is **fixed** by the standard — a target does not redefine it in config. This split is what keeps target-specificity declared-and-auditable rather than forked into a coupled skill: where a target differs, it differs through a documented key, not a bespoke `<target>-*` extension skill.
+A skill's standard fixes its model; a base or repo may declare **only** the keys that skill documents as overridable, and nothing else is a config knob. Two kinds of declaration are overridable: **data** the standard reads to fit a target (e.g. `ki-repo-kb`'s zone aliases, `required_frontmatter`, and `preflight`), and **divergences** from a default (the `[…checks]` booleans above). Everything not so documented is **fixed** by the standard — a target does not redefine it in config. This split is what keeps target-specificity declared-and-auditable rather than forked into a coupled skill: where a target differs, it differs through a documented key, not a bespoke `<target>-*` extension skill.
 
 So the option set is **authored, not implicit**: each skill with declarable keys defines and can emit or conform its commented schema/default fragment, so an author sees exactly what may be set and an undocumented key warns (validate-down). `ki-repo` separately owns the file-level contract and required foundation markers. A target-specific need that no documented key can express is a signal to **generalise it into the standard** (a REFRESH candidate), not to invent an ad-hoc key or fork a skill.
 
@@ -124,18 +124,18 @@ The detection signals `ki-repo` uses (one recursive tree read + `package.json`):
 | Skill | Detection signal | Opt-in table |
 | --- | --- | --- |
 | `ki-engineering` | `package.json` present | `[skills.ki-engineering]` |
-| `ki-kb` | canonical zones (`Pillars/` + `Resources/`) | `[skills.ki-kb]` |
-| `ki-kb-streams` | `Streams/` zone | `[skills.ki-kb-streams]` |
-| `ki-website` | `eleventy.config.*` | `[skills.ki-website]` |
-| `ki-website-cloudflare` | a `wrangler.*` config | `[skills.ki-website-cloudflare]` |
-| `ki-mcp` | `@modelcontextprotocol/sdk` dependency | `[skills.ki-mcp]` |
-| `ki-plugins` | `.claude-plugin/marketplace.json` | `[skills.ki-plugins]` |
-| `ki-specifications` | `proposals/` + `specifications/` + `schemas/` | `[skills.ki-specifications]` |
-| `ki-tools` | `install.sh` + a `bin/<exe>` | `[skills.ki-tools]` |
-| `ki-homebrew-tap` | `Formula/*.rb` | `[skills.ki-homebrew-tap]` |
+| `ki-repo-kb` | canonical zones (`Pillars/` + `Resources/`) | `[skills.ki-repo-kb]` |
+| `ki-repo-kb-streams` | `Streams/` zone | `[skills.ki-repo-kb-streams]` |
+| `ki-repo-website` | `eleventy.config.*` | `[skills.ki-repo-website]` |
+| `ki-repo-website-cloudflare` | a `wrangler.*` config | `[skills.ki-repo-website-cloudflare]` |
+| `ki-repo-mcp` | `@modelcontextprotocol/sdk` dependency | `[skills.ki-repo-mcp]` |
+| `ki-repo-plugins` | `.claude-plugin/marketplace.json` | `[skills.ki-repo-plugins]` |
+| `ki-repo-specifications` | `proposals/` + `specifications/` + `schemas/` | `[skills.ki-repo-specifications]` |
+| `ki-repo-tools` | `install.sh` + a `bin/<exe>` | `[skills.ki-repo-tools]` |
+| `ki-repo-homebrew-tap` | `Formula/*.rb` | `[skills.ki-repo-homebrew-tap]` |
 | `ki-skills` | `skills/*/SKILL.md` | `[skills.ki-skills]` |
 | `ki-subagents` | `subagents/**/*.md` | `[skills.ki-subagents]` |
-| `ki-checkpoints` | `+/_CHECKPOINTS/` subarea | `[skills.ki-checkpoints]` |
+| `ki-repo-checkpoints` | `+/_CHECKPOINTS/` subarea | `[skills.ki-repo-checkpoints]` |
 
 This is the **one place** `ki-repo` reads across skill tables — and it reads only table **presence**, never another skill's keys (_validate down, ignore across_ still governs table _contents_). It is an **audit-time enforcement** run by `repo`'s auditor, not behaviour baked into the regular use of each skill. A repo opts out of a single signal it doesn't want enforced with a `coverage-<skill> = false` entry in its `[skills.ki-repo.checks]` table (e.g. a repo that vendors an `eleventy.config` it does not own) — reported as an acknowledged note.
 

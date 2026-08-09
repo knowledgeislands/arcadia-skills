@@ -12,7 +12,7 @@ decision_type: architecture
 
 ## Context
 
-This historical record addressed a recurring methodology: reason about a body of work once, then bank that reasoning in an implementation-ready brief a cheaper model or cold agent can execute without reconstructing the planner's context. At the time, `ki-roadmap` owned non-KB roadmap and plan quality, `ki-kb-streams` owned the Knowledge Base equivalent, and `ki-tokenomics` owned model cost and selection. The unresolved question was whether delegation readiness needed a separate governance standard.
+This historical record addressed a recurring methodology: reason about a body of work once, then bank that reasoning in an implementation-ready brief a cheaper model or cold agent can execute without reconstructing the planner's context. At the time, `ki-change-management-roadmap` owned non-KB roadmap and plan quality, `ki-repo-kb-streams` owned the Knowledge Base equivalent, and `ki-tokenomics` owned model cost and selection. The unresolved question was whether delegation readiness needed a separate governance standard.
 
 ## Decision
 

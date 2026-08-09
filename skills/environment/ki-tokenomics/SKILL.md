@@ -4,7 +4,7 @@ ki-kind: governance
 ki-depends-on: []
 ki-shared-dependencies: [ki-skills:rubric]
 description: >
-  Codify and audit portable agent-context tokenomics: repository-selected standing-surface attribution, budget guide-rails, portable model-purpose taxonomy, and the `[skills.ki-tokenomics]` configuration table. Use when a repository needs a runtime-neutral context-cost policy, model-purpose choice, or token budget. Triggers: "set a context budget", "audit our tokenomics policy", "which model type should this work use", "configure tokenomics". Runtime evidence belongs to `ki-tokenomics-claude` or `ki-tokenomics-codex`; MCP server design belongs to `ki-mcp`; skill-description quality belongs to `ki-skills`.
+  Codify and audit portable agent-context tokenomics: repository-selected standing-surface attribution, budget guide-rails, portable model-purpose taxonomy, and the `[skills.ki-tokenomics]` configuration table. Use when a repository needs a runtime-neutral context-cost policy, model-purpose choice, or token budget. Triggers: "set a context budget", "audit our tokenomics policy", "which model type should this work use", "configure tokenomics". Runtime evidence belongs to `ki-tokenomics-claude` or `ki-tokenomics-codex`; MCP server design belongs to `ki-repo-mcp`; skill-description quality belongs to `ki-skills`.
 argument-hint: 'audit | conform | help | educate | refresh'
 ---
 
@@ -12,7 +12,7 @@ argument-hint: 'audit | conform | help | educate | refresh'
 
 `ki-tokenomics` owns the portable policy for the context a runtime carries on every turn. The policy is deliberately separate from inspecting a vendor's files: `ki-tokenomics-claude` and `ki-tokenomics-codex` compose this skill and supply their documented, bounded runtime evidence.
 
-The standing surface is the selected repository's instructions, memory, installed-skill descriptions, MCP tool definitions, and settings or output configuration. An audit attributes each measured cost to its repository or runtime-user layer and routes an artifact fix to its owner: `ki-mcp` for an MCP server, `ki-skills` for a skill description, and the relevant runtime adapter for runtime configuration.
+The standing surface is the selected repository's instructions, memory, installed-skill descriptions, MCP tool definitions, and settings or output configuration. An audit attributes each measured cost to its repository or runtime-user layer and routes an artifact fix to its owner: `ki-repo-mcp` for an MCP server, `ki-skills` for a skill description, and the relevant runtime adapter for runtime configuration.
 
 Budgets are guide-rails, not gates: every measured budget overage is a **WARN**, never a FAIL. FAIL is reserved for a malformed selected-repository `[skills.ki-tokenomics]` table or an explicitly required runtime integration that is missing. Estimates are labelled `~`; they are not billing or provider token counts.
 
@@ -64,7 +64,7 @@ Refresh only in `ki-agentic-harness`; from an installed copy, stop and redirect 
 ## Composition
 
 - `ki-tokenomics-claude` and `ki-tokenomics-codex` compose this policy with their own documented runtime evidence. They do not share fallback paths or inspect the other runtime.
-- `ki-mcp` owns MCP-server design; `ki-skills` owns skill descriptions; a runtime adapter owns its instruction, memory, and settings evidence.
+- `ki-repo-mcp` owns MCP-server design; `ki-skills` owns skill descriptions; a runtime adapter owns its instruction, memory, and settings evidence.
 
 ## Notes
 

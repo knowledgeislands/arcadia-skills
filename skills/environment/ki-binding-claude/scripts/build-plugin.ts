@@ -33,7 +33,7 @@ const SELF = fileURLToPath(import.meta.url)
 const HARNESS_ROOT = resolve(dirname(SELF), '..', '..', '..', '..')
 const SKILLS_DIR = join(HARNESS_ROOT, 'skills')
 const AGENTS_DIR = join(HARNESS_ROOT, 'subagents', 'governance')
-const DEFAULT_OUTPUT = join(homedir(), 'kis', 'knowledgeislands', 'ki-plugins')
+const DEFAULT_OUTPUT = join(homedir(), 'kis', 'knowledgeislands', 'ki-repo-plugins')
 const OWNER = 'Knowledge Islands'
 const NAME = /^[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/
 const TOKEN = /^[a-zA-Z0-9-]+$/
@@ -43,7 +43,7 @@ const HELP = `Usage: bun scripts/build-plugin.ts [out-dir] [options]
 Generate the KI Cowork plugin marketplace projection in a separate repository.
 
 Options:
-  --marketplace <name>  Marketplace name (default: ki-plugins).
+  --marketplace <name>  Marketplace name (default: ki-repo-plugins).
   --plugin <name>       Plugin name and directory (default: knowledge-islands).
   --dry-run             Print the complete projection without changing files.
   --json                Emit the complete pre-write manifest as JSON.
@@ -121,7 +121,7 @@ const valueAfter = (argv: readonly string[], index: number, option: string): str
 
 export const parseBuildPluginArgs = (argv: readonly string[]): BuildPluginOptions => {
   let outDir: string | undefined
-  let marketplace = 'ki-plugins'
+  let marketplace = 'ki-repo-plugins'
   let plugin = 'knowledge-islands'
   let dryRun = false
   let json = false

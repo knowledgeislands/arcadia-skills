@@ -30,7 +30,7 @@ Every repo carries these at the root. A local audit reads the selected checkout'
 | `CLAUDE.md` | Agent instructions — the always-loaded anchor for any repo-specific gate or convention (skills rubric SHAPE-7). |
 | `.ki-config.toml` | Declares this repo's expected config under `[skills.ki-repo]`. † |
 
-† The values it carries: mandatory `title` and `description`, `visibility`, the declared `license` (SPDX id, default MIT), and any per-repo check overrides. A repository that declares `ki-roadmap` also carries its stable `repo_code` here.
+† The values it carries: mandatory `title` and `description`, `visibility`, the declared `license` (SPDX id, default MIT), and any per-repo check overrides. A repository that declares `ki-change-management-roadmap` also carries its stable `repo_code` here.
 
 **Baseline governance is declared, not assumed.** Every Knowledge Islands repo is governed by `ki-repo` **and** `ki-authoring`; both are required declarations — a `.ki-config.toml` missing `[skills.ki-authoring]` is a FAIL (`authoring-baseline`). Authoring is no longer an implicit universal hidden in the tooling ([ADR-KI-HARNESS-005](../../../../docs/decisions/ADR-KI-HARNESS-005-validate-down-ki-config-toml-contract.md)); the config shows the full governance set. Portable tokenomics and the real environment capabilities mapped from `[skills.ki-repo].supported_runtimes` are likewise explicit required tables; `ki-repo` checks their presence without reading their contents.
 
@@ -64,7 +64,7 @@ repo_type = "kb"
 store_roles = ["notes", "sources", "legacy"]
 ```
 
-A KB must declare `ki-kb` and must not declare `ki-roadmap`: its planning model is `ki-kb-streams`. Conversely, the `ki-kb` structure declaration requires `repo_type = "kb"`. This validates operating model separately from the structural skill that implements its layout.
+A KB must declare `ki-repo-kb` and must not declare `ki-change-management-roadmap`: its planning model is `ki-repo-kb-streams`. Conversely, the `ki-repo-kb` structure declaration requires `repo_type = "kb"`. This validates operating model separately from the structural skill that implements its layout.
 
 ## Repository write authority
 
@@ -85,7 +85,7 @@ Every KI repository carries this fixed working-area scaffold:
 
 `+/` is inbound: temporary material received from another repository or external source that needs local triage. `-/` is outbound: temporary material prepared here for another repository or external recipient. Neither is a canonical roadmap, plan, decision-record collection, archive, or automatic transfer channel. The two generic README files are canonical direction and boundary orientation owned by `ki-repo`; AUDIT checks them and CONFORM creates or restores their exact text. The generic directories and README files remain present whether or not another capability defines a subarea.
 
-`ki-trades` owns the optional `_TRADES` subdirectories, their README files, cross-repository records, reciprocal routes, and submission lifecycle only in a repository that declares that skill. `ki-repo` neither creates nor interprets those subdirectories. Knowledge Bases retain their own fixed `+/` and `-/` staging model under `ki-kb`; a declared `ki-trades` capability remains the separate owner of repository-level cross-repository submissions.
+`ki-repo-trades` owns the optional `_TRADES` subdirectories, their README files, cross-repository records, reciprocal routes, and submission lifecycle only in a repository that declares that skill. `ki-repo` neither creates nor interprets those subdirectories. Knowledge Bases retain their own fixed `+/` and `-/` staging model under `ki-repo-kb`; a declared `ki-repo-trades` capability remains the separate owner of repository-level cross-repository submissions.
 
 ## Layer 2 — core GitHub settings
 
@@ -163,7 +163,7 @@ branch-protection = true   # default off — protect `main` on this repo
 [skills.ki-authoring]
 ```
 
-`title` and `description` are mandatory repository identity. The title is exactly the README H1. The description is exactly the GitHub description and, where present, package.json `description`. A repository that declares `ki-roadmap` also declares its stable uppercase `repo_code` in this same table; `ki-roadmap` consumes that code and owns only its theme mapping.
+`title` and `description` are mandatory repository identity. The title is exactly the README H1. The description is exactly the GitHub description and, where present, package.json `description`. A repository that declares `ki-change-management-roadmap` also declares its stable uppercase `repo_code` in this same table; `ki-change-management-roadmap` consumes that code and owns only its theme mapping.
 
 ## Per-repo overrides
 
@@ -193,19 +193,19 @@ The rubric carries the **org default** for every check. Most are bedrock — fil
 
 ## Coverage cascade
 
-`.ki-config.toml`'s presence is the **gate** (Layer 1): once it confirms the repo is a ki-repo, the auditor checks the repo **declares an opt-in `[ki-<skill>]` table for every governance skill whose applicability it can detect** — a `Streams/` zone ⇒ `[skills.ki-kb-streams]`, an `eleventy.config` ⇒ `[skills.ki-website]`, an `@modelcontextprotocol/sdk` dependency ⇒ `[skills.ki-mcp]`, a `.claude-plugin/marketplace.json` ⇒ `[skills.ki-plugins]`, `proposals/` + `specifications/` + `schemas/` ⇒ `[skills.ki-specifications]`, an `install.sh` + a `bin/<exe>` ⇒ `[skills.ki-tools]`, a `Formula/*.rb` ⇒ `[skills.ki-homebrew-tap]`, `skills/*/SKILL.md` ⇒ `[skills.ki-skills]`, and so on. Detected-but-undeclared WARNs; a declared table with no matching artifact WARNs as possibly stale.
+`.ki-config.toml`'s presence is the **gate** (Layer 1): once it confirms the repo is a ki-repo, the auditor checks the repo **declares an opt-in `[ki-<skill>]` table for every governance skill whose applicability it can detect** — a `Streams/` zone ⇒ `[skills.ki-repo-kb-streams]`, an `eleventy.config` ⇒ `[skills.ki-repo-website]`, an `@modelcontextprotocol/sdk` dependency ⇒ `[skills.ki-repo-mcp]`, a `.claude-plugin/marketplace.json` ⇒ `[skills.ki-repo-plugins]`, `proposals/` + `specifications/` + `schemas/` ⇒ `[skills.ki-repo-specifications]`, an `install.sh` + a `bin/<exe>` ⇒ `[skills.ki-repo-tools]`, a `Formula/*.rb` ⇒ `[skills.ki-repo-homebrew-tap]`, `skills/*/SKILL.md` ⇒ `[skills.ki-skills]`, and so on. Detected-but-undeclared WARNs; a declared table with no matching artifact WARNs as possibly stale.
 
 A repo that is **not** a ki-repo (no `.ki-config.toml`) is never coverage-checked — it just takes the `ki-config` FAIL, so a lookalike repo (an `eleventy.config` but no marker) is not falsely told to opt in. This is `ki-repo`'s single cross-table read, and it reads only table **presence**, never another skill's keys. The full signal list and the marker-vs-config model live in [the `.ki-config.toml` standard](standards-configuration.md#coverage-enforcement). Silence one signal with `coverage-<skill> = false` under `[skills.ki-repo.checks]`.
 
-The cascade's companion is a **cardinality** rule: a repo declares **at most one** repo-structure table — `[skills.ki-harness]`, `[skills.ki-kb]`, `[skills.ki-website]`, `[skills.ki-mcp]`, `[skills.ki-plugins]`, `[skills.ki-specifications]`, `[skills.ki-tools]`, `[skills.ki-homebrew-tap]`, `[skills.ki-dotfiles-chezmoi]` — because exactly one skill governs a repo's on-disk shape ([ADR-KI-HARNESS-SKILLS-006](../../../../docs/decisions/ADR-KI-HARNESS-SKILLS-006-concern-first-skill-taxonomy-and-implication-graph.md)). Declaring two or more FAILs (`repo-structure`, bedrock — not overridable). Implied family members (`ki-website-cloudflare` under website, `ki-kb-streams` under kb) are not distinct structures and do not count. Declaring **zero** WARNs (`structure`, overridable — see the table above): silence usually means nobody declared it, not that none applies, so a genuinely structureless repo says so explicitly via `structure = false`.
+The cascade's companion is a **primary-structure** rule: a repo declares at most one of `[skills.ki-repo-project]` and `[skills.ki-repo-kb]`. Project is the explicit default for non-KB repositories; KB is the mutually exclusive Knowledge Base primary. Declaring both FAILs (`repo-structure`, bedrock — not overridable). The remaining `ki-repo-*` standards are composable specialisations and do not count. Declaring neither WARNs (`structure`) so every governed repository makes its primary model visible.
 
 ## Applying it
 
 `gh` CLI, authenticated with repo-admin scope. The commands below are a reference plan, not an unattended conformer: inspect the live state and exact target set, show the proposed diff, and obtain explicit confirmation before each mutation batch. (zsh: use an array, not a bare string — unquoted `$var` does not word-split.)
 
 ```zsh
-all=(ki-arcadia-principal ki-agentic-harness ki-website mcp-claude-housekeeping mcp-git-audit mcp-gsuite mcp-kb-fs mcp-ki-kb-notion-mirror mcp-m365)
-public=(mcp-claude-housekeeping mcp-git-audit mcp-gsuite mcp-kb-fs mcp-ki-kb-notion-mirror mcp-m365)
+all=(ki-arcadia-principal ki-agentic-harness ki-repo-website mcp-claude-housekeeping mcp-git-audit mcp-gsuite mcp-kb-fs mcp-ki-repo-kb-notion-mirror mcp-m365)
+public=(mcp-claude-housekeeping mcp-git-audit mcp-gsuite mcp-kb-fs mcp-ki-repo-kb-notion-mirror mcp-m365)
 
 # Layer 1 — each repo declares its config in .ki-config.toml (committed via PR like any file).
 #   Native conform scaffolds/repairs [skills.ki-repo] + [skills.ki-authoring] only.

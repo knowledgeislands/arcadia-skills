@@ -21,7 +21,7 @@ Every skill payload must be **independently self-contained**, while executable p
 - A skill's `scripts/` code imports no sibling source. A declared shared module is materialised as a regular local file under the consumer's own `scripts/shared/`.
 - A skill's `SKILL.md` refers to sibling skills by their `name:` frontmatter value, never by a file path.
 - Composition is declared in `ki-depends-on`; the host resolves and runs prerequisites before their dependent rather than one skill importing or launching another.
-- A **backend-specific variant** of a concern (a rendering, storage, or dotfiles mechanism) is expressed as a **composition skill** that depends on the universal concern and backend mechanism and adds only the backend delta — never by forking the shared EDUCATE/AUDIT/CONFORM/REFRESH modes into a `<base>-*` skill, and never by baking the backend into the universal skill behind a config flag. The universal skill stays backend-neutral. First instance: the chezmoi render path is `ki-binding-chezmoi`, which depends on the renderer-neutral `ki-binding` and `ki-dotfiles-chezmoi`.
+- A **backend-specific variant** of a concern (a rendering, storage, or dotfiles mechanism) is expressed as a **composition skill** that depends on the universal concern and backend mechanism and adds only the backend delta — never by forking the shared EDUCATE/AUDIT/CONFORM/REFRESH modes into a `<base>-*` skill, and never by baking the backend into the universal skill behind a config flag. The universal skill stays backend-neutral. First instance: the chezmoi render path is `ki-binding-chezmoi`, which depends on the renderer-neutral `ki-binding` and `ki-repo-dotfiles-chezmoi`.
 
 ## Consequences
 

@@ -30,10 +30,10 @@ The mechanical arm is split by area, on one principle: **the skill is the standa
 - For **memory**, the skill governs the area in full — the format is a file convention the skill fully specifies in [the auto-memory standard](standards-auto-memory.md), declares with `ki repo educate --skill ki-housekeeping-claude`, and checks with `ki repo audit --skill ki-housekeeping-claude`. Its structured rubric is bounded to the selected repository's physical user-home `.claude/projects/<selected-repository-slug>/memory` directory, does not follow symlinks, and never enumerates, reports, or writes a foreign project memory. No server tool is needed to read that bounded store.
 - For **every other area**, the state lives in macOS application-support paths that need dedicated, access-gated filesystem tools to inspect and clean safely. Those tools are the paired **`mcp-claude-housekeeping`** server (`@knowledgeislands/mcp-claude-housekeeping`) — codified per-surface audits plus read/`destructive` access-gated tools under the `<app>_<resource>_<action>` naming scheme. The skill reads the server's audit findings and applies judgment (is this session obsolete? is this backup safe to drop?); it never re-implements the tools.
 
-The server is governed as an MCP server by `ki-mcp`; this skill is its standard-and-judgment counterpart. Neither owns the other: the server ships tools with no opinion on when to use them; the skill holds the opinion and no tools beyond the memory checker.
+The server is governed as an MCP server by `ki-repo-mcp`; this skill is its standard-and-judgment counterpart. Neither owns the other: the server ships tools with no opinion on when to use them; the skill holds the opinion and no tools beyond the memory checker.
 
 ## 4. Boundaries
 
-- **Not** a Knowledge Islands base's own memory cascade — a KB's root `Admin/MEMORY.md` indexing its Pillars is KB content read at session start (`ki-kb`'s MEM-2), not machine state.
+- **Not** a Knowledge Islands base's own memory cascade — a KB's root `Admin/MEMORY.md` indexing its Pillars is KB content read at session start (`ki-repo-kb`'s MEM-2), not machine state.
 - **Not** the token cost of the standing-context surface — that is `ki-tokenomics`, which measures what the loaded surface costs per turn rather than the hygiene of what accumulates on disk.
-- **Not** the MCP server's own code quality — that is `ki-mcp`, which audits `mcp-claude-housekeeping` as server code.
+- **Not** the MCP server's own code quality — that is `ki-repo-mcp`, which audits `mcp-claude-housekeeping` as server code.

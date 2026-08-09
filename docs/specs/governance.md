@@ -40,11 +40,11 @@ A dependency identifies a prerequisite governance capability that selection of a
 
 _Verify:_ `bun run ki:skills:graph:check` passes — it validates that every edge resolves and the graph is acyclic.
 
-### GOV-006 — Exactly one repo-structure skill per repo
+### GOV-006 — Exactly one primary repo structure per repo
 
-A Knowledge Islands repo MUST declare at most one repo-structure table (`[skills.ki-harness]`, `[skills.ki-kb]`, `[skills.ki-website]`, `[skills.ki-mcp]`, `[skills.ki-plugins]`, `[skills.ki-tools]`, `[skills.ki-homebrew-tap]`) in its `.ki-config.toml`, since exactly one skill governs a repo's on-disk shape; declaring more than one is a governance error, per [ADR-KI-HARNESS-SKILLS-006](../decisions/ADR-KI-HARNESS-SKILLS-006-concern-first-skill-taxonomy-and-implication-graph.md).
+A Knowledge Islands repo MUST declare at most one primary-structure table (`[skills.ki-repo-project]` or `[skills.ki-repo-kb]`) in its `.ki-config.toml`; declaring both is a governance error. Other `ki-repo-*` tables are composable repository specialisations, per [ADR-KI-HARNESS-SKILLS-006](../decisions/ADR-KI-HARNESS-SKILLS-006-concern-first-skill-taxonomy-and-implication-graph.md).
 
-_Verify:_ `ki-repo`'s `audit-repo.ts` emits a FAIL (`repo-structure`) when more than one repo-structure table is declared; implied family members (`ki-website-cloudflare`, `ki-kb-streams`) are excluded from the count.
+_Verify:_ `ki-repo`'s rubric emits a FAIL (`repo-structure`) when both primary tables are declared; composable specialisations are excluded from the count.
 
 ### GOV-007 — Declared SPDX license, matched everywhere
 

@@ -6,7 +6,7 @@ ki-shared-dependencies: [ki-skills:rubric]
 owns: [mise.toml, tsconfig.json, biome.json, knip.json]
 contributes: ['.ki-config.toml', package.json]
 description: >
-  Use to audit our engineering standards, conform or scaffold a repo's toolchain, or check native audit wiring, tsconfig, or Biome consistency. Owns the shared build/lint/test layer every Knowledge Islands TypeScript/Bun repo conforms to — the twin of `ki-authoring`. Covers the closed `package.json` key-set (toolchain fields here; identity/metadata content in `ki-repo`), the `mise.toml` toolchain pin, direct `ki repo` maintenance, direct code-tool execution, clean-end-state cutovers, the Bun-install/Node-run split, runner-neutral test entrypoint, conditional `vitest` shape with 100% coverage, and the build/cli-chmod rule. Triggers: "audit our engineering standards", "do the repos' scripts match", "why are audit/conform scripts inconsistent". For GitHub settings, security, and the `.ki-config.toml` contract use `ki-repo`; for Markdown/TOML style use `ki-authoring`; for MCP server code use `ki-mcp`.
+  Use to audit our engineering standards, conform or scaffold a repo's toolchain, or check native audit wiring, tsconfig, or Biome consistency. Owns the shared build/lint/test layer every Knowledge Islands TypeScript/Bun repo conforms to — the twin of `ki-authoring`. Covers the closed `package.json` key-set (toolchain fields here; identity/metadata content in `ki-repo`), the `mise.toml` toolchain pin, direct `ki repo` maintenance, direct code-tool execution, clean-end-state cutovers, the Bun-install/Node-run split, runner-neutral test entrypoint, conditional `vitest` shape with 100% coverage, and the build/cli-chmod rule. Triggers: "audit our engineering standards", "do the repos' scripts match", "why are audit/conform scripts inconsistent". For GitHub settings, security, and the `.ki-config.toml` contract use `ki-repo`; for Markdown/TOML style use `ki-authoring`; for MCP server code use `ki-repo-mcp`.
 argument-hint: 'audit <repo> | conform <repo> | help | educate <repo> | refresh'
 ---
 
@@ -14,7 +14,7 @@ argument-hint: 'audit <repo> | conform <repo> | help | educate <repo> | refresh'
 
 You are applying the **Knowledge Islands engineering standard** — the shared software-engineering toolchain every TypeScript/Bun repo in this work builds on. It is the build/test twin of `ki-authoring`: that skill owns _how we write_ (Markdown/TOML style); this one owns _how we build, lint, and test_. `ki-skills` owns the governance-skill enforcement framework that this skill follows.
 
-This is a **standard, base-agnostic Process skill**. It hard-codes no single repo; it applies to any repo carrying a `[skills.ki-engineering]` table in its `.ki-config.toml` (today the 10 TS/Bun repos under `knowledgeislands/` — the seven `mcp-*` servers plus `ki-agentic-harness`, `ki-arcadia-principal`, `ki-website`). How it sits alongside the other skills, and where it must not overlap them, is documented once in the ki-agentic-harness `README.md`.
+This is a **standard, base-agnostic Process skill**. It hard-codes no single repo; it applies to any repo carrying a `[skills.ki-engineering]` table in its `.ki-config.toml` (today the 10 TS/Bun repos under `knowledgeislands/` — the seven `mcp-*` servers plus `ki-agentic-harness`, `ki-arcadia-principal`, `ki-repo-website`). How it sits alongside the other skills, and where it must not overlap them, is documented once in the ki-agentic-harness `README.md`.
 
 ## What this skill owns
 
@@ -37,7 +37,7 @@ The checker is the **common layer**; each independently applicable artifact skil
 ```text
 ki repo audit
   ├── ki-engineering  → common toolchain layer
-  └── ki-mcp          → MCP delta when declared
+  └── ki-repo-mcp          → MCP delta when declared
 ```
 
 A repo is "clean" only when **every applicable** skill's audit passes. The `.ki-config.toml` tables are the selector: `[skills.ki-engineering]` marks the common layer; the artifact skill applies by its own convention.
@@ -68,7 +68,7 @@ Run `ki repo educate --skill ki-engineering` to inspect the complete criterion c
 
 ### Mode REFRESH — re-anchor the toolchain pins to their sources
 
-**Precondition:** REFRESH edits this skill's own canonical files, which exist only in `ki-agentic-harness`. Invoked from an installed copy, it stops here and names the harness as where to run it — or, for a pattern recurring across bases, routes it through `ki-kb`'s IMPROVE mode instead.
+**Precondition:** REFRESH edits this skill's own canonical files, which exist only in `ki-agentic-harness`. Invoked from an installed copy, it stops here and names the harness as where to run it — or, for a pattern recurring across bases, routes it through `ki-repo-kb`'s IMPROVE mode instead.
 
 The standard pins volatile versions (Bun, Node, Biome, TypeScript, vitest, syncpack, rumdl). Run on its declared cadence (see `references/sources.md`), or when asked "are the engineering standards current".
 
@@ -84,4 +84,4 @@ Reciprocal off-ramps — each names this skill back for the engineering layer:
 - **A repo's GitHub settings, security, the universal local files (README/LICENSE/.gitignore), and the `.ki-config.toml` _contract_** → `ki-repo`. This skill owns the _engineering_ toolchain inside the repo; `ki-repo` owns the repo's _configuration_ and its `.ki-config.toml` contract (this skill only contributes its own table within it).
 - **`.rumdl.toml` and `.editorconfig`** → `ki-authoring`. rumdl backs that skill's own Markdown audit and conform passes, so it owns both files wholly (scaffold, hash-drift check, unconditional overwrite on drift) — this skill no longer scaffolds or content-checks either.
 - **Markdown / TOML _formatting_ style** (including what the authoring conform pass produces) → `ki-authoring`. Engineering owns the declared tool dependencies; authoring owns their Markdown execution and the prose/format conventions they enforce.
-- **Artifact-specific code and deltas** — MCP `src/` layout, tool naming, the access gate, security invariants, the coverage-exclude list → `ki-mcp` (and future artifact skills). They build on this common layer and add their own.
+- **Artifact-specific code and deltas** — MCP `src/` layout, tool naming, the access gate, security invariants, the coverage-exclude list → `ki-repo-mcp` (and future artifact skills). They build on this common layer and add their own.

@@ -32,7 +32,7 @@ Like every governance skill it carries the universal **AUDIT · CONFORM · EDUCA
 
 1. **Run the hosted structured checker** — `ki repo audit --skill ki-authoring --repo <repo-path>`. The catalogue prepares the formatter evidence with shell-free argument arrays, so the check is self-sufficient in a repository with or without `ki-engineering` or a `package.json`. The host owns findings, reporting, and the non-zero exit on any FAIL.
 2. Apply the **judgment** (`[J]`) criteria from [the rubric](references/rubric.md) — the response summary counts them as unevaluated but does not manufacture findings for work a reviewer has not performed. Wide tables that should spill to footnotes, non-descriptive link text, a `.ki-config.toml` that reads poorly. TOML has no mechanical pass — the rubric is all of it.
-3. **Report** by location → criterion → fix; lead with FAIL findings, then judgment findings. Trade records under `+/_TRADES/` and `-/_TRADES/` are authored Markdown like any other and are formatted with the rest. Their integrity is a property of meaning, not bytes: `ki-trades` `AUTH-1` compares a record against the sender's copy through a projection that ignores formatting, so formatting them changes nothing it checks. An exclusion list was the weaker guarantee — it only avoided touching the records, never verified them, and never covered Biome at all.
+3. **Report** by location → criterion → fix; lead with FAIL findings, then judgment findings. Trade records under `+/_TRADES/` and `-/_TRADES/` are authored Markdown like any other and are formatted with the rest. Their integrity is a property of meaning, not bytes: `ki-repo-trades` `AUTH-1` compares a record against the sender's copy through a projection that ignores formatting, so formatting them changes nothing it checks. An exclusion list was the weaker guarantee — it only avoided touching the records, never verified them, and never covered Biome at all.
 
 ### Mode CONFORM — bring a document into house style
 
@@ -46,7 +46,7 @@ Run `ki repo educate --skill ki-authoring --repo <repo-path>` to render the regi
 
 ### Mode REFRESH — re-anchor the conventions to their sources
 
-**Precondition:** REFRESH edits this skill's own canonical files, which exist only in `ki-agentic-harness`. Invoked from an installed copy, it stops here and names the harness as where to run it — or, for a pattern recurring across bases, routes it through `ki-kb`'s IMPROVE mode instead.
+**Precondition:** REFRESH edits this skill's own canonical files, which exist only in `ki-agentic-harness`. Invoked from an installed copy, it stops here and names the harness as where to run it — or, for a pattern recurring across bases, routes it through `ki-repo-kb`'s IMPROVE mode instead.
 
 The house conventions sit on top of external tools and specs (CommonMark, rumdl, the TOML spec), which move. Run on its declared cadence (see `references/sources.md`), or when asked "are the authoring conventions current".
 
@@ -68,7 +68,7 @@ Each set is a self-contained reference, loaded on demand. Read the one relevant 
 
 Out of scope by design, with their natural homes:
 
-- **KB note-writing conventions** (zones, frontmatter, routing) → the `ki-kb` skill.
+- **KB note-writing conventions** (zones, frontmatter, routing) → the `ki-repo-kb` skill.
 - **Commit and PR conventions, a repo's configuration, and the `.ki-config.toml` _contract_** (the compliance marker + one-table-per-skill model) → the `ki-repo` skill. This skill owns only the TOML _formatting_ style every such table is written in.
 - **SKILL.md authoring** (frontmatter, description, body altitude) → the `ki-skills` skill.
 

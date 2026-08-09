@@ -38,7 +38,7 @@ The frontmatter of `ki-subagents` shows the governance-skill contract plus the m
 name: ki-subagents
 ki-depends-on: []
 description: >
-  Audit, review, and write Claude Code subagent definitions against current best practice. Use when creating a new agent (subagent), reviewing or critiquing an agent's definition, checking an agent before it ships, asking "is this agent any good / well-scoped", or refreshing the agents rubric. Carries a checkable rubric — mechanical checks a bundled linter runs, judgment checks applied by reading — covering the name and description (the delegation signal), the system-prompt shape (role/lane, grounding, when-invoked, own-vs-defer), least-privilege tools and model choice, and cross-agent lane collisions. Triggers: "audit this agent", "review my subagent", "write a new agent", "is this agent definition good", "scaffold an agent", "refresh the agents rubric", "check the agents". Judges a subagent definition (frontmatter + system prompt) — for authoring a SKILL.md use the `ki-skills` skill instead; for harness-level layout (five-part bundle, `.ki-config.toml` compliance) use `ki-harness`.
+  Audit, review, and write Claude Code subagent definitions against current best practice. Use when creating a new agent (subagent), reviewing or critiquing an agent's definition, checking an agent before it ships, asking "is this agent any good / well-scoped", or refreshing the agents rubric. Carries a checkable rubric — mechanical checks a bundled linter runs, judgment checks applied by reading — covering the name and description (the delegation signal), the system-prompt shape (role/lane, grounding, when-invoked, own-vs-defer), least-privilege tools and model choice, and cross-agent lane collisions. Triggers: "audit this agent", "review my subagent", "write a new agent", "is this agent definition good", "scaffold an agent", "refresh the agents rubric", "check the agents". Judges a subagent definition (frontmatter + system prompt) — for authoring a SKILL.md use the `ki-skills` skill instead; for harness-level layout (five-part bundle, `.ki-config.toml` compliance) use `ki-repo-harness`.
 argument-hint: 'audit <agent-or-dir> | conform <agent> | help | educate <description> | refresh'
 ---
 ```
@@ -85,9 +85,9 @@ Coverage-selected governance is different: if two independently declared standar
 
 ```yaml
 ---
-name: ki-website-cloudflare
-ki-depends-on: [skills.ki-website]
+name: ki-repo-website-cloudflare
+ki-depends-on: [skills.ki-repo-website]
 ---
 ```
 
-Here `ki-website` is a prerequisite because the hosting capability consumes the site capability's built output. `ki-engineering` may also govern the repository, but coverage selects it separately rather than implying a dependency from either website skill.
+Here `ki-repo-website` is a prerequisite because the hosting capability consumes the site capability's built output. `ki-engineering` may also govern the repository, but coverage selects it separately rather than implying a dependency from either website skill.

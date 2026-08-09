@@ -35,24 +35,24 @@ The current `audit.ts` / `conform.ts` pair is therefore the initial executable b
 | `ki-subagents` | Inspect agent definitions | Scaffold/conform agent files | Agent files precede authoring normalisation. |
 | `ki-decision-records` | Inspect decisions/index | Conform decision records/index | Decision writers precede authoring normalisation. |
 | `ki-specs` | Inspect specifications/index | Conform feature documents/index | Feature writers precede authoring normalisation. |
-| `ki-roadmap` | Inspect generated work-item indexes | Generate root work-item indexes | Must follow canonical work-item writers. |
+| `ki-change-management-roadmap` | Inspect generated work-item indexes | Generate root work-item indexes | Must follow canonical work-item writers. |
 | `ki-skills` | Inspect skill contract | Conform skill content | Skill writers precede authoring normalisation. |
 | `ki-binding-chezmoi` | Inspect chezmoi binding | Render managed binding surface | Depends on binding/domain inputs before external render. |
-| `ki-kb-activities` | Inspect activity notes/index | Append safe index entries | Domain writer before KB and roadmap projections. |
-| `ki-kb-live-artifacts` | Inspect live artifact metadata | Reconcile safe artifact indexes | Domain writer before KB projections. |
-| `ki-kb-streams` | Inspect streams/indexes | Reconcile stream indexes | Domain writer before KB and roadmap projections. |
-| `ki-website-cloudflare` | Inspect Cloudflare deployment surface | Reconcile Workers/Pages configuration | Website-domain writer before website normalisation. |
+| `ki-repo-kb-activities` | Inspect activity notes/index | Append safe index entries | Domain writer before KB and roadmap projections. |
+| `ki-repo-kb-live-artifacts` | Inspect live artifact metadata | Reconcile safe artifact indexes | Domain writer before KB projections. |
+| `ki-repo-kb-streams` | Inspect streams/indexes | Reconcile stream indexes | Domain writer before KB and roadmap projections. |
+| `ki-repo-website-cloudflare` | Inspect Cloudflare deployment surface | Reconcile Workers/Pages configuration | Website-domain writer before website normalisation. |
 | `ki-bootstrap` | Inspect generated governance footprint | Rebuild generated payload | Must establish payload before aggregate consumers. |
 | `ki-repo` | Inspect repository contract | Scaffold repo configuration/GitHub settings | Configuration preparation precedes dependent repository skills. |
-| `ki-dotfiles-chezmoi` | Inspect dotfiles shape | Conform chezmoi source files | Domain writer before authoring normalisation. |
-| `ki-harness` | Inspect five-part harness | Conform harness layout | Harness writers precede skills/agents and authoring checks. |
-| `ki-homebrew-tap` | Inspect tap structure | Conform tap files | Domain writer before authoring normalisation. |
-| `ki-kb` | Inspect KB structure | Conform KB root/index | Consumes KB family outputs before roadmap projection. |
-| `ki-mcp` | Inspect MCP surface | Conform MCP files | Domain writer before authoring normalisation. |
-| `ki-plugins` | Inspect plugin layout | Conform plugin files | Domain writer before authoring normalisation. |
-| `ki-specifications` | Inspect specification layout | Conform specification files | Domain writer before authoring normalisation. |
-| `ki-tools` | Inspect tools layout | Conform tool files | Domain writer before authoring normalisation. |
-| `ki-website` | Inspect website layout | Conform website files | Domain writer before authoring normalisation. |
+| `ki-repo-dotfiles-chezmoi` | Inspect dotfiles shape | Conform chezmoi source files | Domain writer before authoring normalisation. |
+| `ki-repo-harness` | Inspect five-part harness | Conform harness layout | Harness writers precede skills/agents and authoring checks. |
+| `ki-repo-homebrew-tap` | Inspect tap structure | Conform tap files | Domain writer before authoring normalisation. |
+| `ki-repo-kb` | Inspect KB structure | Conform KB root/index | Consumes KB family outputs before roadmap projection. |
+| `ki-repo-mcp` | Inspect MCP surface | Conform MCP files | Domain writer before authoring normalisation. |
+| `ki-repo-plugins` | Inspect plugin layout | Conform plugin files | Domain writer before authoring normalisation. |
+| `ki-repo-specifications` | Inspect specification layout | Conform specification files | Domain writer before authoring normalisation. |
+| `ki-repo-tools` | Inspect tools layout | Conform tool files | Domain writer before authoring normalisation. |
+| `ki-repo-website` | Inspect website layout | Conform website files | Domain writer before authoring normalisation. |
 
 ## Required pilot split
 
@@ -65,7 +65,7 @@ Its CONFORM path contains two elements:
 
 The first element is a preparation writer; the second is a terminal normaliser.
 
-`ki-repo` provides the earlier configuration-preparation pilot, `ki-kb-activities` supplies a domain writer, and `ki-roadmap` supplies a projection consumer that follows its domain writers.
+`ki-repo` provides the earlier configuration-preparation pilot, `ki-repo-kb-activities` supplies a domain writer, and `ki-change-management-roadmap` supplies a projection consumer that follows its domain writers.
 
 ## Minimum phase vocabulary
 

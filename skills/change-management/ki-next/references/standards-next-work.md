@@ -1,6 +1,6 @@
 # Next-work procedure
 
-`ki-next` applies the transition rules owned by `ki-roadmap` or `ki-kb-streams`.
+`ki-next` applies the transition rules owned by `ki-change-management-roadmap` or `ki-repo-kb-streams`.
 
 It never treats a recap, handoff, or historic transcript as authority to write.
 
@@ -22,9 +22,9 @@ Its responsibility ends at selecting, promoting, deferring, or spawning due work
 When a `ki-recap` precedes this cycle, require its handoff/compaction boundary to have been reached before starting a new selection cycle. After compaction, treat the digest as orientation only and re-ground every repository fact below.
 
 1. Resolve the current git repository physically and read `.ki-config.toml`.
-2. In a non-KB repository, run `ki repo audit --skill ki-roadmap --repo <git-root>` and stop on any FAIL or WARN. Read the generated `ROADMAP.md`, every canonical item directly below `docs/roadmap/`, and active `docs/housekeeping/` templates; derive lifecycle status and dependencies from frontmatter.
-3. In a Knowledge Base, run `ki repo audit --skill ki-kb-streams --repo <git-root>` and read the Focus, proposal, and `Streams/Housekeeping/` indexes fresh.
-4. When the repository declares `ki-trades`, run its audit and inspect validated inbound records after the clean governing-skill audits. Its `README.md` is orientation, not a record.
+2. In a non-KB repository, run `ki repo audit --skill ki-change-management-roadmap --repo <git-root>` and stop on any FAIL or WARN. Read the generated `ROADMAP.md`, every canonical item directly below `docs/roadmap/`, and active `docs/housekeeping/` templates; derive lifecycle status and dependencies from frontmatter.
+3. In a Knowledge Base, run `ki repo audit --skill ki-repo-kb-streams --repo <git-root>` and read the Focus, proposal, and `Streams/Housekeeping/` indexes fresh.
+4. When the repository declares `ki-repo-trades`, run its audit and inspect validated inbound records after the clean governing-skill audits. Its `README.md` is orientation, not a record.
 
 ## 2. Triage inbound handoffs
 

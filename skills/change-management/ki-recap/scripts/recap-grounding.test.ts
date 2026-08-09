@@ -7,7 +7,7 @@ import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 const helper = join(dirname(fileURLToPath(import.meta.url)), 'recap-grounding.ts')
-const fixture = () => mkdtempSync(join(tmpdir(), 'ki-recap-'))
+const fixture = () => mkdtempSync(join(tmpdir(), 'ki-change-management-recap-'))
 const claudeToolUse = (name: string, input: unknown) =>
   JSON.stringify({ message: { content: [{ type: 'tool_use', name, input }] } })
 const claudeToolResult = (text: string) =>
@@ -26,7 +26,7 @@ const codexOutput = (text: string) =>
     payload: { type: 'custom_tool_call_output', output: [{ type: 'input_text', text }] }
   })
 const evidence = (repo: string, head: string | null, worktree: 'clean' | 'dirty') =>
-  JSON.stringify({ 'ki-recap-repository-evidence/v1': { repo, head, worktree } })
+  JSON.stringify({ 'ki-change-management-recap-repository-evidence/v1': { repo, head, worktree } })
 
 const run = (repo: string, transcripts: string, args: readonly string[] = []) => {
   const result = spawnSync('bun', [helper, repo, '--json', '--transcripts-dir', transcripts, ...args], {
@@ -200,10 +200,14 @@ describe('recap grounding runtime selection', () => {
       writeFileSync(codex, [codexMeta(repo), codexOutput(evidence(repo, baseline, 'clean')), ''].join('\n'))
 
       const unchanged = JSON.parse(run(repo, transcripts, ['--runtime', 'codex']).stdout) as {
-        'ki-recap-repository-evidence/v1': { repo: string; head: string; worktree: string }
+        'ki-change-management-recap-repository-evidence/v1': { repo: string; head: string; worktree: string }
         transcriptEvidence: { status: string; baseline: { head: string } }
       }
-      expect(unchanged['ki-recap-repository-evidence/v1']).toEqual({ repo, head: baseline, worktree: 'clean' })
+      expect(unchanged['ki-change-management-recap-repository-evidence/v1']).toEqual({
+        repo,
+        head: baseline,
+        worktree: 'clean'
+      })
       expect(unchanged.transcriptEvidence).toMatchObject({ status: 'unchanged', baseline: { head: baseline } })
 
       writeFileSync(join(repo, 'evidence.txt'), 'changed\n')

@@ -42,13 +42,13 @@ ki skill user remove example-engineering
 
 ## Repository activation and maintenance
 
-Given an existing KI repository whose `.ki-config.toml` does not yet declare `ki-roadmap`, add the installed skill at repository scope:
+Given an existing KI repository whose `.ki-config.toml` does not yet declare `ki-change-management-roadmap`, add the installed skill at repository scope:
 
 ```sh
-ki skill repo add ki-roadmap --repo .
+ki skill repo add ki-change-management-roadmap --repo .
 ```
 
-The command adds the `[skills.ki-roadmap]` declaration and managed runtime-discovery links only for that repository. It does not add the skill to user scope.
+The command adds the `[skills.ki-change-management-roadmap]` declaration and managed runtime-discovery links only for that repository. It does not add the skill to user scope.
 
 Native repository maintenance then resolves the repository's declared skills from verified installed harnesses:
 
@@ -61,7 +61,7 @@ ki repo conform --repo . --dry-run
 Remove the repository declaration and its managed repository links without changing user activation:
 
 ```sh
-ki skill repo remove ki-roadmap --repo .
+ki skill repo remove ki-change-management-roadmap --repo .
 ```
 
 ## Canonical harness development

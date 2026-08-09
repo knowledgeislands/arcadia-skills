@@ -22,7 +22,7 @@ Run `ki repo audit --skill ki-binding-claude --repo <project>`. The host resolve
 
 ### Mode CONFORM
 
-Run AUDIT first. `ki repo conform --skill ki-binding-claude --repo <project>` drafts only safe regular Cowork settings files, preserving unrelated keys. Relaunch Cowork after publication. Rebuild the marketplace plugin with `bun skills/environment/ki-binding-claude/scripts/build-plugin.ts <ki-plugins-checkout>`; it is a projection, never hand-maintained.
+Run AUDIT first. `ki repo conform --skill ki-binding-claude --repo <project>` drafts only safe regular Cowork settings files, preserving unrelated keys. Relaunch Cowork after publication. Rebuild the marketplace plugin with `bun skills/environment/ki-binding-claude/scripts/build-plugin.ts <ki-repo-plugins-checkout>`; it is a projection, never hand-maintained.
 
 ### Mode EDUCATE
 

@@ -176,11 +176,11 @@ Detected and declared governance coverage.
 
 → [standard](standards-repository.md)
 
-Structural governance identity.
+Primary repository structure, with composable specialisations.
 
-- **STRUCT-1 [M] — Single repository structure** — A repository declares at most one repo-structure governance table. (standards-repository.md)
+- **STRUCT-1 [M] — Single primary repository structure** — A repository declares at most one mutually exclusive Project or Knowledge Base primary. (standards-repository.md)
   - _Remediation:_ diagnostic — Align the repository structure declaration with the applicable standard or record an explicit exemption, then rerun the audit.
-- **STRUCT-2 [M] — Repository structure presence** — A repository normally declares one repo-structure table unless explicitly exempted. (standards-repository.md)
+- **STRUCT-2 [M] — Primary repository structure presence** — A repository declares a Project or Knowledge Base primary structure. (standards-repository.md)
   - _Remediation:_ diagnostic — Align the repository structure declaration with the applicable standard or record an explicit exemption, then rerun the audit.
 
 ## ACCESS — Repository access

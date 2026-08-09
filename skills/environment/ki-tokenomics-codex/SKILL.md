@@ -20,7 +20,7 @@ CONFORM is report-only and emits no writes or commands.
 
 ## Composition
 
-Run `ki-tokenomics` for portable configuration, budget semantics, and model purpose. Route MCP-server design to `ki-mcp` and skill-description quality to `ki-skills`.
+Run `ki-tokenomics` for portable configuration, budget semantics, and model purpose. Route MCP-server design to `ki-repo-mcp` and skill-description quality to `ki-skills`.
 
 ## Operating modes
 

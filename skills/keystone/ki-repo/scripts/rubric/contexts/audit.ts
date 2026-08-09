@@ -70,7 +70,7 @@ const CHECK_DEFAULTS: Record<string, boolean> = {
   topics: true, //              (public) carries the standard topic set
   'secret-scanning': true, //   (public) secret scanning on
   'push-protection': true, //   (public) secret-scanning push protection on
-  structure: true //            declares at least one repo-structure table
+  structure: true //            declares one primary repository structure
 }
 const KI_CONFIG = '.ki-config.toml'
 
@@ -472,39 +472,39 @@ const COVERAGE: { skill: string; table: string; artifact: string; detect: (s: Si
   },
   {
     skill: 'kb',
-    table: skillTable('ki-kb'),
+    table: skillTable('ki-repo-kb'),
     artifact: 'KB zones (Pillars/ + Resources/)',
     detect: (s) => s.root.has('Pillars') && s.root.has('Resources')
   },
   {
     skill: 'streams',
-    table: skillTable('ki-kb-streams'),
+    table: skillTable('ki-repo-kb-streams'),
     artifact: 'Streams/ zone',
     detect: (s) => s.root.has('Streams')
   },
   {
     skill: 'website',
-    table: skillTable('ki-website'),
+    table: skillTable('ki-repo-website'),
     artifact: 'eleventy.config.*',
     detect: (s) =>
       ELEVENTY.some((f) => s.root.has(f)) || [...s.tree].some((p) => ELEVENTY.some((f) => p.endsWith(`/${f}`)))
   },
   {
     skill: 'website-cloudflare',
-    table: skillTable('ki-website-cloudflare'),
+    table: skillTable('ki-repo-website-cloudflare'),
     artifact: 'wrangler config',
     detect: (s) =>
       WRANGLER.some((f) => s.root.has(f)) || [...s.tree].some((p) => WRANGLER.some((f) => p.endsWith(`/${f}`)))
   },
   {
     skill: 'mcp',
-    table: skillTable('ki-mcp'),
+    table: skillTable('ki-repo-mcp'),
     artifact: '@modelcontextprotocol/sdk dependency',
     detect: (s) => pkgHasDep(s.pkg, '@modelcontextprotocol/sdk')
   },
   {
     skill: 'plugins',
-    table: skillTable('ki-plugins'),
+    table: skillTable('ki-repo-plugins'),
     artifact: '.claude-plugin/marketplace.json',
     detect: (s) =>
       s.tree.has('.claude-plugin/marketplace.json') ||
@@ -512,19 +512,19 @@ const COVERAGE: { skill: string; table: string; artifact: string; detect: (s: Si
   },
   {
     skill: 'specifications',
-    table: skillTable('ki-specifications'),
+    table: skillTable('ki-repo-specifications'),
     artifact: 'proposals/ + specifications/ + schemas/',
     detect: (s) => s.root.has('proposals') && s.root.has('specifications') && s.root.has('schemas')
   },
   {
     skill: 'tools',
-    table: skillTable('ki-tools'),
+    table: skillTable('ki-repo-tools'),
     artifact: 'install.sh + bin/<exe>',
     detect: (s) => s.root.has('install.sh') && [...s.tree].some((p) => /^bin\/[^/]+$/.test(p))
   },
   {
     skill: 'homebrew-tap',
-    table: skillTable('ki-homebrew-tap'),
+    table: skillTable('ki-repo-homebrew-tap'),
     artifact: 'Formula/*.rb',
     detect: (s) => [...s.tree].some((p) => /^Formula\/[^/]+\.rb$/.test(p))
   },
@@ -541,28 +541,16 @@ const COVERAGE: { skill: string; table: string; artifact: string; detect: (s: Si
     detect: (s) => [...s.tree].some((p) => /^subagents\/.+\.md$/.test(p) && !/(^|\/)README\.md$/i.test(p))
   },
   {
-    skill: 'checkpoints',
-    table: skillTable('ki-checkpoints'),
+    skill: 'repo-checkpoints',
+    table: skillTable('ki-repo-checkpoints'),
     artifact: '+/_CHECKPOINTS/ subarea',
     detect: (s) => [...s.tree].some((p) => p.startsWith('+/_CHECKPOINTS/'))
   }
 ]
 const COVERAGE_SKILLS = new Set(COVERAGE.map((c) => c.skill))
-// The repo-structure skills — exactly one governs a repo's on-disk shape, so their
-// `[ki-<skill>]` tables are mutually exclusive (ADR-KI-HARNESS-SKILLS-006). Implied
-// family members (ki-website-cloudflare under website, ki-kb-streams under kb) are not
-// distinct structures and are excluded from the count.
-const REPO_STRUCTURE_TABLES = [
-  skillTable('ki-harness'),
-  skillTable('ki-kb'),
-  skillTable('ki-website'),
-  skillTable('ki-mcp'),
-  skillTable('ki-plugins'),
-  skillTable('ki-specifications'),
-  skillTable('ki-tools'),
-  skillTable('ki-homebrew-tap'),
-  skillTable('ki-dotfiles-chezmoi')
-]
+// A primary structure is exclusive; all other ki-repo-* skills are composable
+// specialisations. Project is the non-KB default, while KB owns the KB primary.
+const PRIMARY_STRUCTURE_TABLES = [skillTable('ki-repo-project'), skillTable('ki-repo-kb')]
 type MultilineDelimiter = '"""' | "'''"
 function tripleClose(line: string, delimiter: MultilineDelimiter, from: number): number {
   let at = line.indexOf(delimiter, from)
@@ -696,10 +684,13 @@ async function auditRepo(
     else if (readmeTitle(readme) !== ki.title.trim())
       fail('FILES-2', `README.md H1 must equal ${KI_CONFIG} title`, 'README.md')
     if (!ki.description?.trim()) fail('FILES-2', `${KI_CONFIG} must declare a non-empty \`description\``, KI_CONFIG)
-    if (declaresRootTable(kiText ?? '', skillTable('ki-roadmap')) && !/^[A-Z][A-Z0-9-]{1,23}$/.test(ki.repoCode ?? ''))
+    if (
+      declaresRootTable(kiText ?? '', skillTable('ki-change-management-roadmap')) &&
+      !/^[A-Z][A-Z0-9-]{1,23}$/.test(ki.repoCode ?? '')
+    )
       fail(
         'FILES-2',
-        `${KI_CONFIG} ki-repo repo_code must be a stable uppercase identifier when ki-roadmap is declared`,
+        `${KI_CONFIG} ki-repo repo_code must be a stable uppercase identifier when ki-change-management-roadmap is declared`,
         KI_CONFIG
       )
   }
@@ -709,12 +700,16 @@ async function auditRepo(
     const configuration = parseRepositoryConfiguration(kiText)
     if (configuration.issue) fail('KIND-1', `[skills.${KI_SECTION}] ${configuration.issue}`, KI_CONFIG)
     else if (configuration.repositoryType === 'kb') {
-      if (!declaresRootTable(kiText, skillTable('ki-kb')))
-        fail('KIND-2', 'repo_type = "kb" requires the [skills.ki-kb] structure declaration', KI_CONFIG)
-      if (declaresRootTable(kiText, skillTable('ki-roadmap')))
-        fail('KIND-2', 'repo_type = "kb" cannot declare ki-roadmap; Knowledge Bases use ki-kb-streams', KI_CONFIG)
-    } else if (declaresRootTable(kiText, skillTable('ki-kb')))
-      fail('KIND-2', '[skills.ki-kb] requires repo_type = "kb"', KI_CONFIG)
+      if (!declaresRootTable(kiText, skillTable('ki-repo-kb')))
+        fail('KIND-2', 'repo_type = "kb" requires the [skills.ki-repo-kb] structure declaration', KI_CONFIG)
+      if (declaresRootTable(kiText, skillTable('ki-change-management-roadmap')))
+        fail(
+          'KIND-2',
+          'repo_type = "kb" cannot declare ki-change-management-roadmap; Knowledge Bases use ki-repo-kb-streams',
+          KI_CONFIG
+        )
+    } else if (declaresRootTable(kiText, skillTable('ki-repo-kb')))
+      fail('KIND-2', '[skills.ki-repo-kb] requires repo_type = "kb"', KI_CONFIG)
   }
 
   // ── layer 2: core GitHub ── GH-1
@@ -874,21 +869,19 @@ async function auditRepo(
         warn('COV-1', `declares [skills.${c.table}] but no ${c.artifact} found — stale opt-in?`)
     }
 
-    // ── repo-structure cardinality: exactly one structural identity per repo ── STRUCT-1/2
-    // The repo-structure tables are mutually exclusive; declaring more than one is a
-    // governance error (ADR-KI-HARNESS-SKILLS-006) — bedrock, not overridable. Zero is
-    // WARNed (STRUCT-2, overridable via `structure = false`) rather than FAILed — a
-    // dotfiles/config repo may genuinely carry no structure skill.
-    const declaredStructure = REPO_STRUCTURE_TABLES.filter((t) => declaresTable(text, t))
+    // ── primary-structure cardinality ── STRUCT-1/2
+    // Project and KB are mutually exclusive primaries. Repository specialisations compose
+    // with either primary and must not participate in this count.
+    const declaredStructure = PRIMARY_STRUCTURE_TABLES.filter((t) => declaresTable(text, t))
     if (declaredStructure.length > 1)
       fail(
         'STRUCT-1',
-        `declares ${declaredStructure.length} repo-structure tables (${declaredStructure.map((t) => `[skills.${t}]`).join(', ')}) — a repo has exactly one structural identity; keep one`
+        `declares ${declaredStructure.length} primary structures (${declaredStructure.map((t) => `[skills.${t}]`).join(', ')}) — choose Project or Knowledge Base, not both`
       )
     else if (declaredStructure.length === 0 && enforced('structure'))
       warn(
         'STRUCT-2',
-        'declares no repo-structure table — pick the one that matches its layout (ki-harness/ki-kb/ki-website/ki-mcp/ki-plugins/ki-specifications/ki-tools/ki-homebrew-tap/ki-dotfiles-chezmoi), or set `structure = false` in [skills.ki-repo.checks] if this repo genuinely has none'
+        'declares no primary repository structure — declare ki-repo-project for a non-KB repository or ki-repo-kb for a Knowledge Base'
       )
   }
 

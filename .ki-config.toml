@@ -11,7 +11,7 @@ license = "MIT"
 supported_runtimes = ["claude-code", "chatgpt-codex"]
 
 [skills.ki-repo.checks]
-coverage-checkpoints = false # source repository publishes the optional capability without adopting a checkpoint subarea
+coverage-repo-checkpoints = false # source repository publishes the optional capability without adopting a checkpoint subarea
 
 [skills.ki-authoring]
 
@@ -21,7 +21,9 @@ coverage-checkpoints = false # source repository publishes the optional capabili
 
 [skills.ki-binding-claude]
 
-[skills.ki-harness]
+[skills.ki-repo-project]
+
+[skills.ki-repo-harness]
 
 [skills.ki-skills]
 
@@ -35,11 +37,11 @@ coverage-checkpoints = false # source repository publishes the optional capabili
 
 [skills.ki-guides]
 
-[skills.ki-trades]
+[skills.ki-repo-trades]
 
 [skills.ki-agora]
 
-[skills.ki-trades.routes]
+[skills.ki-repo-trades.routes]
 "knowledgeislands/ki-website" = { export = ["work", "knowledge"] }
 "knowledgeislands/tools-ki" = { export = ["work"], import = ["work", "knowledge"] }
 "knowledgeislands/tools-mgit" = { export = ["work", "knowledge"], import = ["work", "knowledge"] }
@@ -49,12 +51,15 @@ coverage-checkpoints = false # source repository publishes the optional capabili
 
 [skills.ki-housekeeping-claude]
 
-[skills.ki-housekeeping]
+[skills.ki-change-management-housekeeping]
 
-[skills.ki-roadmap]
+[skills.ki-change-management]
+adapter = "roadmap"
+
+[skills.ki-change-management-roadmap]
 themes = ["foundation-tooling", "governance-consistency", "operations", "runtime-portability"]
 
-[skills.ki-checkpoints]
+[skills.ki-repo-checkpoints]
 
 [skills.ki-tokenomics]
 headroom = "recommended"

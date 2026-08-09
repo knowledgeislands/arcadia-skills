@@ -49,7 +49,7 @@ The records are living, compact, and independent. The order below is a **curated
 20. [ADR-KI-HARNESS-SKILLS-006](ADR-KI-HARNESS-SKILLS-006-concern-first-skill-taxonomy-and-implication-graph.md) — the concern-first taxonomy and the implication graph.
 21. [ADR-KI-HARNESS-SKILLS-007](ADR-KI-HARNESS-SKILLS-007-runtime-explicit-claude-housekeeping-scope-and-the-server-pairing.md) — `ki-housekeeping-claude` scope and the server pairing.
 22. [ADR-KI-HARNESS-SKILLS-008](ADR-KI-HARNESS-SKILLS-008-a-specifications-skill-for-the-what.md) — a Specifications skill for the "what".
-23. [ADR-KI-HARNESS-SKILLS-009](ADR-KI-HARNESS-SKILLS-009-two-repo-structure-skills-for-standalone-tools-and-their-homebrew-tap.md) — ki-tools and ki-homebrew-tap repo-structure skills.
+23. [ADR-KI-HARNESS-SKILLS-009](ADR-KI-HARNESS-SKILLS-009-two-repo-structure-skills-for-standalone-tools-and-their-homebrew-tap.md) — ki-repo-tools and ki-repo-homebrew-tap repo-structure skills.
 24. [ADR-KI-HARNESS-AGENTS-001](ADR-KI-HARNESS-AGENTS-001-subagent-isolation-for-multi-skill-invocation.md) — subagent isolation for multi-skill invocation.
 25. [ADR-KI-HARNESS-TOOLCHAIN-004](ADR-KI-HARNESS-TOOLCHAIN-004-checker-remediation-footer-and-learn-block-context-check.md) — checker remediation footer and the headroom:learn cross-repo context check.
 26. [ADR-KI-HARNESS-TOOLCHAIN-005](ADR-KI-HARNESS-TOOLCHAIN-005-generated-and-vendored-code-is-excluded-from-linting-and-knip.md) — generated and vendored code excluded from linting and knip.

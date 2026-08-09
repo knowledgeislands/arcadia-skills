@@ -14,11 +14,11 @@ decision_type: architecture
 
 Non-KB repositories need one durable forward-work model without separate issue, plan, theme-roadmap, and projection records describing the same work.
 
-Knowledge Bases already use their own Streams, Focus, proposals, and Checklist model through `ki-kb-streams`.
+Knowledge Bases already use their own Streams, Focus, proposals, and Checklist model through `ki-repo-kb-streams`.
 
 ## Decision
 
-`ki-roadmap` governs one non-KB shape: flat canonical work items directly below `docs/roadmap/` and a concise root `ROADMAP.md` orientation.
+`ki-change-management-roadmap` governs one non-KB shape: flat canonical work items directly below `docs/roadmap/` and a concise root `ROADMAP.md` orientation.
 
 Each item has a stable `<REPO>-<NNN>` identifier, a human-readable `theme`, horizon, lifecycle status, and dependency fields.
 
@@ -34,7 +34,7 @@ The replacement is direct.
 
 There is no simple-profile exception, thematic profile, `plans/` directory, item locator, compatibility path, dual-write period, or fallback runner.
 
-A Knowledge Base uses `ki-kb-streams`, not repository roadmap artefacts.
+A Knowledge Base uses `ki-repo-kb-streams`, not repository roadmap artefacts.
 
 ## Consequences
 

@@ -15,15 +15,15 @@ Bring the MCP standard up to date with the current specification through a safe,
 
 ## Context
 
-MCP specification revision 2026-07-28 was published on 2026-07-28 and the live specification index now names it as the latest release. The `ki-mcp` standard is anchored to 2025-11-25, so sections 12 and 13 and the annotation semantics in section 4 describe a superseded revision.
+MCP specification revision 2026-07-28 was published on 2026-07-28 and the live specification index now names it as the latest release. The `ki-repo-mcp` standard is anchored to 2025-11-25, so sections 12 and 13 and the annotation semantics in section 4 describe a superseded revision.
 
 Two changes reach into house rules rather than the transport. Every result now carries a required `resultType`, which is the envelope shape the `jsonResult` and `errorResult` helpers produce in each server's `utils/`. A new `server/discover` RPC is a per-server MUST, advertising supported protocol versions, capabilities, and identity. The remainder is absorbed by the SDK: a stateless core with the initialize handshake removed, protocol sessions and `Mcp-Session-Id` removed, Multi Round-Trip Requests replacing server-initiated sampling and elicitation, tasks moved to an official extension, SSE resumability removed, an `extensions` capability field, and cacheable list results.
 
-The external SDK condition is now met. The TypeScript SDK published its v2 package family with 2026-07-28 support on 2026-07-27, including a migration path for v1 consumers. All six sibling `mcp-*` repositories still declare `@modelcontextprotocol/sdk` 1.x, so the decision is now whether and how to move the workspace to the v2 package family before the `ki-mcp` standard makes the new protocol requirements universal.
+The external SDK condition is now met. The TypeScript SDK published its v2 package family with 2026-07-28 support on 2026-07-27, including a migration path for v1 consumers. All six sibling `mcp-*` repositories still declare `@modelcontextprotocol/sdk` 1.x, so the decision is now whether and how to move the workspace to the v2 package family before the `ki-repo-mcp` standard makes the new protocol requirements universal.
 
 ## Boundary
 
-This item covers re-anchoring the `ki-mcp` standard and its rubric to the released revision, and updating the source list. It does not implement the resulting conformance changes in the six `mcp-*` servers; those become separate work in each repository once the standard states the target. It does not adopt the specification's remote-transport features for servers that remain local stdio.
+This item covers re-anchoring the `ki-repo-mcp` standard and its rubric to the released revision, and updating the source list. It does not implement the resulting conformance changes in the six `mcp-*` servers; those become separate work in each repository once the standard states the target. It does not adopt the specification's remote-transport features for servers that remain local stdio.
 
 ## Shaping
 
@@ -47,7 +47,7 @@ Promote when the v2 migration delta has been proven in a named stdio pilot, the 
 
 ## Current state
 
-The `ki-mcp` source list is already anchored to the released 2026-07-28 specification and TypeScript SDK v2 availability, while all six sibling servers still declare SDK 1.x and implement the older profile.
+The `ki-repo-mcp` source list is already anchored to the released 2026-07-28 specification and TypeScript SDK v2 availability, while all six sibling servers still declare SDK 1.x and implement the older profile.
 
 This item is deferred from the current planning batch. It is the first candidate for the following batch once the `mcp-git-audit` owner can accept the pilot and the rollout-profile decision can be reviewed together; neither condition is inferred from SDK availability alone.
 
@@ -58,20 +58,20 @@ This item is deferred from the current planning batch. It is the first candidate
 - [ ] Ask the `mcp-git-audit` owner to accept a bounded v2 migration pilot with its own local work item and verification boundary.
 - [ ] Compare the pilot's SDK-v2 migration delta, result-envelope change, `server/discover` surface, and stdio entry point against its current v1 implementation.
 - [ ] Select and document one rollout profile: retain the older profile until every sibling migrates, or introduce explicit protocol-era applicability that keeps unmigrated servers conformant.
-- [ ] Re-anchor the portable `ki-mcp` standard, sources, and rubric only after the pilot proves the selected profile can be checked without false fleet failures.
+- [ ] Re-anchor the portable `ki-repo-mcp` standard, sources, and rubric only after the pilot proves the selected profile can be checked without false fleet failures.
 - [ ] Create one receiving migration item per affected sibling; no sibling implementation is included in this harness item.
 
 ## Files touched
 
-- `skills/agentic-systems/ki-mcp/` standard, source, rubric, and catalogue files after pilot evidence
+- `skills/repo-structure/ki-repo-mcp/` standard, source, rubric, and catalogue files after pilot evidence
 - This work item
 - Receiving pilot and sibling migration items in their owning repositories
 
 ## Verify
 
 - The accepted pilot's focused SDK-v2, tool-result, discovery, and stdio tests
-- `ki repo audit --skill ki-mcp --repo <pilot>`
-- Harness `ki-mcp` rubric tests and `ki dev skill rubric ki-mcp --write`
+- `ki repo audit --skill ki-repo-mcp --repo <pilot>`
+- Harness `ki-repo-mcp` rubric tests and `ki dev skill rubric ki-repo-mcp --write`
 - A fleet audit that demonstrates the selected protocol-era profile does not create false failures.
 
 ## Dependencies / blocks
@@ -86,7 +86,7 @@ The earlier waiting condition was correct for the v1 package but is no longer co
 
 ### Where the evidence lives
 
-The `ki-mcp` source list records the released protocol and the published v2 SDK evidence. This roadmap item owns the unfinished selection, standard re-anchor, and migration choreography; a source list remains evidence rather than a delivery queue.
+The `ki-repo-mcp` source list records the released protocol and the published v2 SDK evidence. This roadmap item owns the unfinished selection, standard re-anchor, and migration choreography; a source list remains evidence rather than a delivery queue.
 
 ### Scope of the eventual repository work
 

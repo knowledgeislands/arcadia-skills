@@ -14,7 +14,7 @@ decision_type: governance
 
 Knowledge Islands has established commit-message conventions, direct-main working where a repository permits it, and a tested stale Git-lock guard, but their policy was dispersed across repository orientation, hook prose, and a runtime-specific dotfiles standard.
 
-`ki-repo` already owns repository configuration and GitHub settings, the harness owns hook payload layout, and `ki-dotfiles-chezmoi` owns Claude Code settings registration. None of those boundaries owns portable commit discipline or the guard's Git-safety semantics.
+`ki-repo` already owns repository configuration and GitHub settings, the harness owns hook payload layout, and `ki-repo-dotfiles-chezmoi` owns Claude Code settings registration. None of those boundaries owns portable commit discipline or the guard's Git-safety semantics.
 
 ## Decision
 
@@ -22,7 +22,7 @@ Knowledge Islands adopts `ki-git` as the sole owner of portable Git and commit p
 
 - The `ki-git` standard owns Conventional Commit shape and vocabulary, branch-selection guidance, safe Git hygiene, and the semantic contract of the stale-lock guard.
 - The harness continues to publish the hook source under `hooks/`; its test remains beside that executable payload. `ki-git` defines what the guard may do, not how a runtime installs it.
-- `ki-dotfiles-chezmoi` retains runtime-specific Claude Code settings registration. It does not own portable Git policy or install authority for `ki-git`.
+- `ki-repo-dotfiles-chezmoi` retains runtime-specific Claude Code settings registration. It does not own portable Git policy or install authority for `ki-git`.
 - `ki-repo` retains repository and GitHub configuration, including each repository's branch-protection choice.
 - `ki-git` begins as a guidance and standard surface only. It has no compatible native rubric, `.ki-config.toml` table, user-skill activation, or commit-message enforcement until that execution contract is deliberately designed.
 

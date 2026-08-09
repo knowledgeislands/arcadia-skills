@@ -58,7 +58,7 @@ _Verify:_ `lint-skills.ts` SHAPE-5 / SHAPE-11 pass a process skill (e.g. `ki-rec
 
 A collection governance skill that exposes NEW MUST use it to author exactly one new instance into the collection it governs, presupposing EDUCATE has established the collection and never substituting for EDUCATE, per [ADR-KI-HARNESS-SKILLS-001](../decisions/ADR-KI-HARNESS-SKILLS-001-audit-conform-educate-refresh-canonical-modes-help.md).
 
-_Verify:_ the collection skills exposing `### Mode NEW` (`ki-decision-records`, `ki-specs`, `ki-kb-activities`, `ki-kb-live-artifacts`) each also expose EDUCATE; the fixed meaning is pinned in [`skills/keystone/ki-skills/references/standards-knowledge-islands.md`](../../skills/keystone/ki-skills/references/standards-knowledge-islands.md).
+_Verify:_ the collection skills exposing `### Mode NEW` (`ki-decision-records`, `ki-specs`, `ki-repo-kb-activities`, `ki-repo-kb-live-artifacts`) each also expose EDUCATE; the fixed meaning is pinned in [`skills/keystone/ki-skills/references/standards-knowledge-islands.md`](../../skills/keystone/ki-skills/references/standards-knowledge-islands.md).
 
 ### MODE-009 — OPTIMISE pushes toward excellent
 

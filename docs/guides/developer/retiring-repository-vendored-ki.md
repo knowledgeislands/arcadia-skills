@@ -32,9 +32,9 @@ The clean-end-state renames used by the current harness are:
 
 | Retired declaration     | Current declaration     |
 | ----------------------- | ----------------------- |
-| `ki-repo-roadmap`       | `ki-roadmap`            |
-| `ki-11ty-websites`      | `ki-website`            |
-| `ki-cloudflare-hosting` | `ki-website-cloudflare` |
+| `ki-repo-roadmap`       | `ki-change-management-roadmap`            |
+| `ki-11ty-websites`      | `ki-repo-website`            |
+| `ki-cloudflare-hosting` | `ki-repo-website-cloudflare` |
 
 When the existing runtime entries are already managed links, remove the retired declaration and add the current capability through the CLI so both the configuration and links converge:
 

@@ -8,7 +8,7 @@ It governs commit messages, branch-selection guidance, safe working hygiene, and
 
 `ki-repo` owns each repository's GitHub configuration and branch-protection choice.
 
-The harness owns hook payload sources under `hooks/`, and `ki-dotfiles-chezmoi` owns runtime-specific Claude Code settings registration.
+The harness owns hook payload sources under `hooks/`, and `ki-repo-dotfiles-chezmoi` owns runtime-specific Claude Code settings registration.
 
 Neither owner transfers Git policy or hook-install authority to `ki-git`.
 
@@ -64,7 +64,7 @@ The adjacent run test proves this semantic contract.
 
 ## Runtime binding and enforcement
 
-The harness publishes hook payload sources; `ki-dotfiles-chezmoi` may register a selected compatible payload in Claude Code settings.
+The harness publishes hook payload sources; `ki-repo-dotfiles-chezmoi` may register a selected compatible payload in Claude Code settings.
 
 `ki-git` neither installs hooks nor writes runtime settings.
 

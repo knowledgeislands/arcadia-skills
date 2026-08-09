@@ -4,7 +4,7 @@ ki-kind: governance
 ki-depends-on: []
 ki-shared-dependencies: [ki-skills:rubric]
 description: >
-  Governs portable Knowledge Islands Git working and commit conventions: Conventional Commit messages, direct-main versus branch selection, safe Git hygiene, and the stale-lock guard's semantics. Use when preparing or reviewing a commit, deciding whether work needs a branch, recovering a stale Git lock, or clarifying who owns hook payload versus runtime registration. Does not configure GitHub repository settings, install hooks, or write agent settings; use ki-repo for repository configuration and ki-dotfiles-chezmoi for runtime bindings.
+  Governs portable Knowledge Islands Git working and commit conventions: Conventional Commit messages, direct-main versus branch selection, safe Git hygiene, and the stale-lock guard's semantics. Use when preparing or reviewing a commit, deciding whether work needs a branch, recovering a stale Git lock, or clarifying who owns hook payload versus runtime registration. Does not configure GitHub repository settings, install hooks, or write agent settings; use ki-repo for repository configuration and ki-repo-dotfiles-chezmoi for runtime bindings.
 argument-hint: 'audit <repo> | conform <repo> | help | educate <repo> | refresh'
 ---
 
@@ -24,7 +24,7 @@ It does not install a hook, write runtime settings, or add a compatibility execu
 
 - `ki-repo` owns repository configuration and GitHub settings, including branch-protection choices.
 - The harness owns `hooks/` payload layout; `ki-git` owns the stale-lock guard's portable safety semantics.
-- `ki-dotfiles-chezmoi` owns runtime-specific Claude Code settings registration after it has selected a compatible payload.
+- `ki-repo-dotfiles-chezmoi` owns runtime-specific Claude Code settings registration after it has selected a compatible payload.
 
 ## Operating modes
 
@@ -42,7 +42,7 @@ Do not add a compatibility checker or automate commit-message rewriting.
 
 ### Mode EDUCATE
 
-Explain the portable Git boundary and route repository configuration to `ki-repo`, hook payload layout to the harness, and runtime binding to `ki-dotfiles-chezmoi`.
+Explain the portable Git boundary and route repository configuration to `ki-repo`, hook payload layout to the harness, and runtime binding to `ki-repo-dotfiles-chezmoi`.
 
 EDUCATE creates no repository or user-state artifact.
 

@@ -26,7 +26,7 @@ Introduce **`ki-specs`**, a general-governance skill that codifies Specification
 ## Consequences
 
 - The harness dogfoods the skill: it declares `[skills.ki-specs]` and ships its own `docs/specs/` corpus describing the bootstrap chain and the governance model, audited green by the native `ki repo audit --skill ki-specs` command.
-- The skill sits in the governance concern ([ADR-KI-HARNESS-SKILLS-006](ADR-KI-HARNESS-SKILLS-006-concern-first-skill-taxonomy-and-implication-graph.md)) — declared opt-in per repo (like `ki-decision-records`/`ki-roadmap`), has `ki-depends-on: []`, and is not artifact-detected in `ki-repo`'s coverage cascade.
+- The skill sits in the governance concern ([ADR-KI-HARNESS-SKILLS-006](ADR-KI-HARNESS-SKILLS-006-concern-first-skill-taxonomy-and-implication-graph.md)) — declared opt-in per repo (like `ki-decision-records`/`ki-change-management-roadmap`), has `ki-depends-on: []`, and is not artifact-detected in `ki-repo`'s coverage cascade.
 - RFC 2119 (BCP 14) becomes a tracked source: it is the authority for the normative keyword set the checker recognises.
 - The corpus it generalizes from (`vallearmonia-website/docs/specs/`) is a tracked reference, not a governed sibling — divergence there is a REFRESH signal, reconciled deliberately.
 

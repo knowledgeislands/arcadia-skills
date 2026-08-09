@@ -35,7 +35,7 @@ bun skills/change-management/ki-recap/scripts/recap-grounding.ts --json --transc
 
 The selector is a basename, not a path. It must name exactly one eligible regular `.jsonl` candidate; absolute paths, traversal, other extensions, symlinks, files for another repository, and ambiguous duplicate basenames are rejected.
 
-This emits `filesTouched` (git status), `diffStat`, `toolTally`, `highCostCandidates` (repeated identical calls, large-file re-reads), and the exact `ki-recap-repository-evidence/v1` marker. The marker records only the resolved repository root, full `HEAD` or `null`, and observed clean/dirty worktree state. On a later run, the helper recovers only a type-valid marker from the selected runtime's helper-output record and reports `transcriptEvidence.status` as `unchanged`, `changed`, or `unavailable`.
+This emits `filesTouched` (git status), `diffStat`, `toolTally`, `highCostCandidates` (repeated identical calls, large-file re-reads), and the exact `ki-change-management-recap-repository-evidence/v1` marker. The marker records only the resolved repository root, full `HEAD` or `null`, and observed clean/dirty worktree state. On a later run, the helper recovers only a type-valid marker from the selected runtime's helper-output record and reports `transcriptEvidence.status` as `unchanged`, `changed`, or `unavailable`.
 
 The comparison qualifies transcript-derived tool tallies and high-cost suggestions; it never replaces fresh Git checks. A missing, malformed, foreign-repository, unresolvable, or same-commit-dirty marker is `unavailable`, not a guessed result. It is a **helper**, not a checker — treat its output as raw signal to combine with warm in-session context, not a verdict.
 

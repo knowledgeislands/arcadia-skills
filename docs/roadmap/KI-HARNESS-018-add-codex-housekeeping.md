@@ -15,7 +15,7 @@ Add Codex housekeeping only when an official contract makes it safe and supporta
 
 ## Context
 
-Create `ki-housekeeping-codex` only after Codex exposes an official selected-repository identity together with supported retention, cleanup, and safe-conform boundaries.
+Create `ki-change-management-housekeeping-codex` only after Codex exposes an official selected-repository identity together with supported retention, cleanup, and safe-conform boundaries.
 
 ## Boundary
 

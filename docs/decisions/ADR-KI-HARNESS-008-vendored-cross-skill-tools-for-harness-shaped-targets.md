@@ -18,7 +18,7 @@ That tree needs two additional harness operations: one to validate and render th
 
 ## Decision
 
-When a resolved repository carries `ki-harness`, the verified base harness provides exactly two native cross-skill operations:
+When a resolved repository carries `ki-repo-harness`, the verified base harness provides exactly two native cross-skill operations:
 
 - `skill-graph.ts` validates and renders the implication graph across the harness's `SKILL.md` files.
 - `skill-help.ts` renders a skill's HELP block and checks the generated skill index.

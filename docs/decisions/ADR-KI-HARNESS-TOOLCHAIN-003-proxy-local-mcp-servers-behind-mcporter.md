@@ -27,7 +27,7 @@ KI-owned local stdio MCP servers are proxied behind mcporter and consume a singl
 
 - The 19 KI servers occupy one Claude Code slot, leaving headroom for third-party servers within the active-server budget.
 - The server set lives in one renderer-neutral, XDG-located source (`$XDG_CONFIG_HOME/ki/mcp-servers.yaml`), which feeds mcporter's config and the Claude Desktop config alike; `~/.claude.json` carries only the single proxy entry plus any third-party servers. (This superseded an earlier state where mcporter's own `mcporter.json` was the source — see `ki-binding`'s 2026-07-13 renderer-neutral reframing.)
-- mcporter's typed clients for the `mcp-*` repos are generated per-repo via each repo's `ki:generate:client` script (ki-mcp conform).
+- mcporter's typed clients for the `mcp-*` repos are generated per-repo via each repo's `ki:generate:client` script (ki-repo-mcp conform).
 - The `ki-tokenomics` checks confirm the KB-FS-adjacent servers are distinct capabilities, not redundant.
 
 ## References

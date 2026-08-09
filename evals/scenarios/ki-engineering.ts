@@ -59,13 +59,13 @@ export const scenarios: Scenario[] = [
         name: 'engineering common layer',
         re: /ki-engineering[^.\n]{0,50}(common|toolchain)|engineering[^.\n]{0,40}(common|toolchain)/i
       },
-      { name: 'mcp delta', re: /ki-mcp[^.\n]{0,50}(delta|MCP)|MCP delta/i },
+      { name: 'mcp delta', re: /ki-repo-mcp[^.\n]{0,50}(delta|MCP)|MCP delta/i },
       {
         name: 'declared native composition',
         re: /(declared|\.ki-config)[^.\n]{0,80}(both|sequence|compose)|(?:both|sequence|compose)[^.\n]{0,80}(declared|\.ki-config)/i
       }
     ],
     rubric:
-      'House architecture: `ki-engineering` owns the common toolchain (native audit wiring, direct code-tool checks, the `bun test` trap, tsconfig/biome, config-gated Vitest, .env, and the cli-chmod rule); `ki-mcp` owns only the MCP delta (src/ layout, bin/exports, tool naming, and conditional coverage exclusions). `.ki-config.toml` declares both capabilities, and the native `ki repo audit` composes their registered rubrics in dependency order. The repo is clean only when both pass. A correct answer identifies the two layers and native declared composition.'
+      'House architecture: `ki-engineering` owns the common toolchain (native audit wiring, direct code-tool checks, the `bun test` trap, tsconfig/biome, config-gated Vitest, .env, and the cli-chmod rule); `ki-repo-mcp` owns only the MCP delta (src/ layout, bin/exports, tool naming, and conditional coverage exclusions). `.ki-config.toml` declares both capabilities, and the native `ki repo audit` composes their registered rubrics in dependency order. The repo is clean only when both pass. A correct answer identifies the two layers and native declared composition.'
   }
 ]

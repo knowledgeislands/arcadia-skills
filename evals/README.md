@@ -39,7 +39,7 @@ Each scenario ends with a verdict — **skill helped / regressed / no difference
 
 ## Adding scenarios
 
-One file per skill in `scenarios/` (e.g. `scenarios/ki-kb.ts`), each exporting a list of scenarios. A scenario is just three things: a **prompt**, some regex **assertions**, and a judge **rubric**. Copy an existing file for the shape, then add it to the `ALL` list in [`harness.ts`](harness.ts).
+One file per skill in `scenarios/` (e.g. `scenarios/ki-repo-kb.ts`), each exporting a list of scenarios. A scenario is just three things: a **prompt**, some regex **assertions**, and a judge **rubric**. Copy an existing file for the shape, then add it to the `ALL` list in [`harness.ts`](harness.ts).
 
 Aim for **3+ per skill**, and test your **house-specific** names, paths, and rules — not general best practice, which the model knows with or without the skill.
 
@@ -51,6 +51,6 @@ Nearly every skill has scenarios — including authoring, binding, bootstrap, de
 
 These behavioural evals remain advisory. Deterministic rubric and hook fixtures run through the repository's bare `bun run test` command, while native repository mechanics run through `ki repo audit`. Command behaviour itself is tested in `tools-ki`; this harness does not maintain a second guide-driven executor fixture.
 
-The one skill left uncovered is **`ki-harness`, and that is by design.** Its assertions are pure bundle _structure_ that the native `ki-harness` audit already checks mechanically, and the no-skill-baseline method here rewards a recallable house fact. If a planted-violation scenario ever clears the "the model couldn't already know this" bar, revisit that choice.
+The one skill left uncovered is **`ki-repo-harness`, and that is by design.** Its assertions are pure bundle _structure_ that the native `ki-repo-harness` audit already checks mechanically, and the no-skill-baseline method here rewards a recallable house fact. If a planted-violation scenario ever clears the "the model couldn't already know this" bar, revisit that choice.
 
 **For routine runs, use Sonnet — it's the most cost-effective arm.** A full matrix (every scenario × 3 runs) costs roughly **$9 on Haiku, $23 on Sonnet, $34 on Opus** at the original scenario count. Opus gives no cleaner signal than Sonnet for about 50% more, so keep it for occasional confirmation; Sonnet is a representative, trustworthy model at a sensible price. (Haiku is cheapest and did well here, but a stronger model is the safer regression proxy.) Run results aren't checked in — they're regeneratable, so just re-run `bun run ki:eval`.

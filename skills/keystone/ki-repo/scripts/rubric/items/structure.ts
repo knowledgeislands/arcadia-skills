@@ -28,21 +28,21 @@ const item = (
 export const STRUCT: RubricFamily<RepoRubricContext, StructureRubricContext> = {
   code: 'STRUCT',
   title: 'Repository structure',
-  description: 'Structural governance identity.',
+  description: 'Primary repository structure, with composable specialisations.',
   standard: SOURCE,
   selectContext: (context) => context.structure,
   items: [
     item(
       'STRUCT-1',
-      'Single repository structure',
-      'A repository declares at most one repo-structure governance table.',
+      'Single primary repository structure',
+      'A repository declares at most one mutually exclusive Project or Knowledge Base primary.',
       'FAIL',
       (context) => context.structure1
     ),
     item(
       'STRUCT-2',
-      'Repository structure presence',
-      'A repository normally declares one repo-structure table unless explicitly exempted.',
+      'Primary repository structure presence',
+      'A repository declares a Project or Knowledge Base primary structure.',
       'WARN',
       (context) => context.structure2
     )

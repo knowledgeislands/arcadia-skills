@@ -15,7 +15,7 @@ Ensure every supported package script is either declared by exactly one governin
 
 ## Context
 
-`ki-engineering` currently verifies common package-script shape, but a name alone does not establish an accountable owner. The `ki-tools` manual gate exposed the gap: `ki:lint-man` passed a generic prefix check despite being ambiguous, whereas `ki:tools:lint-man` is meaningfully governed by the `ki-tools` rubric.
+`ki-engineering` currently verifies common package-script shape, but a name alone does not establish an accountable owner. The `ki-repo-tools` manual gate exposed the gap: `ki:lint-man` passed a generic prefix check despite being ambiguous, whereas `ki:tools:lint-man` is meaningfully governed by the `ki-repo-tools` rubric.
 
 The existing families use meaningful namespaces — including `ki:deps:*`, `ki:binding:claude:*`, `ki:site:*`, `ki:server:*`, and `ki:test:*` — that are not mechanically derivable from a capability name. The owning skill already has the durable knowledge of which keys it supports; asking every repository to restate that ownership in configuration creates drift rather than authority.
 
@@ -65,7 +65,7 @@ Promote when the catalogue metadata shape, host aggregation contract, complete c
 
 ## Current state
 
-The core inventory already distinguishes a clear `ki:tools:*` claim in `tools-ki` and `ki:site:*` claims in `ki-website`, while the harness has `ki:deps:update`, `ki:binding:build-plugin`, and the ambiguous `ki:eval` key. Static skill declarations replace the retired owner-family map.
+The core inventory already distinguishes a clear `ki:tools:*` claim in `tools-ki` and `ki:site:*` claims in `ki-repo-website`, while the harness has `ki:deps:update`, `ki:binding:build-plugin`, and the ambiguous `ki:eval` key. Static skill declarations replace the retired owner-family map.
 
 No rubric-catalogue metadata currently publishes script claims, the host does not aggregate them, and `ki-engineering` has no exact exclusion contract.
 
@@ -84,7 +84,7 @@ No rubric-catalogue metadata currently publishes script claims, the host does no
 - `skills/governance/ki-engineering/` standard, rubric, catalogue, and tests
 - Relevant owning-skill rubrics, catalogues, and tests
 - `.ki-config.toml`, `package.json`, CI, and relevant documentation in the harness
-- Accepted receiving changes in `tools-ki` and `ki-website`
+- Accepted receiving changes in `tools-ki` and `ki-repo-website`
 
 ## Verify
 
@@ -107,7 +107,7 @@ The owning skill publishes exact keys because namespaces are a readability aid, 
 
 ### Mechanical layers
 
-Keep the common and artifact layers distinct. The host aggregates resolved catalogue declarations; `ki-engineering` validates complete coverage and uniqueness; each claiming skill validates its exact command and CI wiring where those are part of its contract. `ki-tools`' `MAN-SCRIPT` and `MAN-LINT` criteria are the reference case.
+Keep the common and artifact layers distinct. The host aggregates resolved catalogue declarations; `ki-engineering` validates complete coverage and uniqueness; each claiming skill validates its exact command and CI wiring where those are part of its contract. `ki-repo-tools`' `MAN-SCRIPT` and `MAN-LINT` criteria are the reference case.
 
 ### Migration inventory
 

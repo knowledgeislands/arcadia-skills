@@ -18,4 +18,4 @@ Only `[skills.ki-tokenomics]` is read, validate-down. Recognised scalar keys are
 
 ## Ownership
 
-The tokenomics report names cost and attribution; it does not silently edit another owner’s artifact. Route MCP-server design to `ki-mcp`, installed-skill description quality to `ki-skills`, and runtime instruction, settings, memory, compaction, or tool evidence to the matching runtime adapter. Runtime adapters are separate capabilities, not compatibility fallbacks.
+The tokenomics report names cost and attribution; it does not silently edit another owner’s artifact. Route MCP-server design to `ki-repo-mcp`, installed-skill description quality to `ki-skills`, and runtime instruction, settings, memory, compaction, or tool evidence to the matching runtime adapter. Runtime adapters are separate capabilities, not compatibility fallbacks.

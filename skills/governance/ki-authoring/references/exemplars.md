@@ -55,7 +55,7 @@ See [the enactment process](<../Processes/Enactment Process/Enactment Process.md
 
 <!-- Correct: cross-skill reference by name, not path -->
 
-For KB note conventions use the `ki-kb` skill.
+For KB note conventions use the `ki-repo-kb` skill.
 
 <!-- Wrong: wikilink — breaks outside Obsidian and corrupts tables -->
 
@@ -63,7 +63,7 @@ See [[audit-rubric|the rubric]].
 
 <!-- Wrong: file path reference for a skill -->
 
-See `skills/knowledge-bases/ki-kb/SKILL.md` for KB conventions.
+See `skills/repo-structure/ki-repo-kb/SKILL.md` for KB conventions.
 ```
 
 ### Well-formed `.ki-config.toml` table
@@ -82,7 +82,7 @@ branch-protection = true
 node_version = "22"
 lint_paths = ["src", "scripts"]
 
-[skills.ki-kb]
+[skills.ki-repo-kb]
 zones = ["Pillars", "Admin", "Reference"]
 # default_zone controls where new notes land when no zone is specified.
 default_zone = "Pillars"

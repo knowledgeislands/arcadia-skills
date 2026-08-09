@@ -7,7 +7,7 @@ This is a **governance skill** and a **composition skill** in the sense of `ADR-
 ## What each layer owns
 
 - **`ki-binding`** owns the portable MCP source, its client tokens, and mcporter comparison. Runtime adapters own native vendor surface comparison.
-- **`ki-dotfiles-chezmoi`** governs generic chezmoi repository shape, naming, templating, apply, and reverse-merge practices. It has no MCP-specific policy.
+- **`ki-repo-dotfiles-chezmoi`** governs generic chezmoi repository shape, naming, templating, apply, and reverse-merge practices. It has no MCP-specific policy.
 - **`ki-binding-chezmoi`** owns the connection between MCP render data, the `mcp-servers-json` partial, target templates, and the reviewed `chezmoi apply` result.
 
 AUDIT runs the two sibling audits in that order, then this skill's rubric. Findings remain under their owning skill.
@@ -28,7 +28,7 @@ When the data-merge pattern is used, the render must also produce the canonical 
 
 ## Invariants
 
-- **Composition stays explicit.** Run `ki-dotfiles-chezmoi`, then `ki-binding`, then this skill. This rubric checks only the renderer-specific delta.
+- **Composition stays explicit.** Run `ki-repo-dotfiles-chezmoi`, then `ki-binding`, then this skill. This rubric checks only the renderer-specific delta.
 - **Edits flow through the selected source.** A hand-written rendered surface is drift; CONFORM changes the source or template and then applies chezmoi.
 - **External choices remain report-only.** The skill does not infer a data pattern, author a template, choose target surfaces, or launch chezmoi.
 - **Renderer scope stays local.** A non-chezmoi setup uses `ki-binding` with another renderer and does not install this skill. Do not invent a renderer skill for every vendor/client combination.

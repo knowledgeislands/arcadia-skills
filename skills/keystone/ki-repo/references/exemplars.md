@@ -105,7 +105,7 @@ visibility = "private"
 [skills.ki-engineering]
 # Fully conforms; capabilities auto-detected.
 
-[skills.ki-harness]
+[skills.ki-repo-harness]
 # Declares this repo as a KI agentic harness (the five-part layout compliance marker).
 # No per-harness config keys defined yet — table presence is the declaration.
 
@@ -118,7 +118,7 @@ visibility = "private"
 
 ### Required `+` / `-` working areas
 
-A KI repository always carries its generic inbound and outbound working-area scaffold. The two README files are conformed `ki-repo` direction and boundary orientation. A repository declaring `ki-trades` may additionally carry skill-owned `_TRADES` subdirectories; those are not part of the generic scaffold.
+A KI repository always carries its generic inbound and outbound working-area scaffold. The two README files are conformed `ki-repo` direction and boundary orientation. A repository declaring `ki-repo-trades` may additionally carry skill-owned `_TRADES` subdirectories; those are not part of the generic scaffold.
 
 ```text
 my-repo/

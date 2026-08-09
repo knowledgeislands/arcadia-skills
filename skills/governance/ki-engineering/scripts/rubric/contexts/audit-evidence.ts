@@ -47,12 +47,12 @@ const STD = 'references/standards-engineering.md'
 
 const scriptOwner = (key: string): string | undefined => {
   if (key === 'ki:deps:update') return 'ki-engineering'
-  if (key === 'ki:eval') return 'ki-harness'
+  if (key === 'ki:eval') return 'ki-repo-harness'
   if (key.startsWith('ki:binding:')) return 'ki-binding-claude'
-  if (key.startsWith('ki:site:')) return 'ki-website'
-  if (key.startsWith('ki:ingress:')) return 'ki-website-cloudflare'
-  if (key === 'ki:generate:client' || key.startsWith('ki:server:') || key.startsWith('ki:test:')) return 'ki-mcp'
-  if (key.startsWith('ki:tools:')) return 'ki-tools'
+  if (key.startsWith('ki:site:')) return 'ki-repo-website'
+  if (key.startsWith('ki:ingress:')) return 'ki-repo-website-cloudflare'
+  if (key === 'ki:generate:client' || key.startsWith('ki:server:') || key.startsWith('ki:test:')) return 'ki-repo-mcp'
+  if (key.startsWith('ki:tools:')) return 'ki-repo-tools'
   if (key.startsWith('ki:self:')) return 'ki-self'
   return undefined
 }
@@ -191,7 +191,7 @@ export const collectAuditEvidence = async (
     'dependencies',
     'workspaces',
     'lint-staged',
-    // published-artifact surface → the artifact skill (e.g. ki-mcp)
+    // published-artifact surface → the artifact skill (e.g. ki-repo-mcp)
     'main',
     'bin',
     'exports',
@@ -239,7 +239,7 @@ export const collectAuditEvidence = async (
     // rumdl resolves its own scope from .rumdl.toml, so a staged invocation needs no
     // flag to suppress a repository-wide glob the way markdownlint-cli2 did.
     const stagedMarkdownOnly = ls.includes('rumdl check --fix')
-    // Trade records are no longer excluded from formatting: ki-trades AUTH-1 proves their
+    // Trade records are no longer excluded from formatting: ki-repo-trades AUTH-1 proves their
     // integrity by comparing meaning against the sender's copy, so the boundary is a check
     // rather than an exclusion list.
     fanOut && stagedMarkdownOnly

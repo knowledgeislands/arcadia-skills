@@ -38,7 +38,7 @@ That is a KI inference from ICM's explicit-input contract, not an adopted ICM ru
 - Runtime subagent delegation and `ki-delegation` — durable, bounded worker briefs and an orchestrator integration gate.
 - `ki-recap` — durable carry-forward digest only at a safe boundary before runtime-native compaction.
 - `ki-batch` — independently authorised work-item cycles with mandatory stop conditions and a retained ledger.
-- `ki-roadmap`, `ki-plan`, `ki-implement`, and `ki-accept` — file-backed lifecycle and explicit human acceptance.
+- `ki-change-management-roadmap`, `ki-plan`, `ki-implement`, and `ki-accept` — file-backed lifecycle and explicit human acceptance.
 - `docs/decisions/references/runtime-feature-coverage.md` — portable KI artifacts are distinct from runtime-native features.
 
 ## Review record

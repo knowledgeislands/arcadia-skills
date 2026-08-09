@@ -4,7 +4,7 @@ ki-kind: governance
 ki-depends-on: []
 ki-shared-dependencies: [ki-skills:rubric]
 description: >
-  Governs delegation packets for bounded agent work: their source-informed quality bar, durable worker briefs, rolling worker replenishment, and safe mechanical checks over a selected roadmap record. Use when designing or auditing a delegation packet, deciding what a worker brief must contain, or making an approved plan ready for bounded delegation. It augments runtime subagent delegation only when active in the same scope; model-purpose policy belongs to ki-tokenomics; cross-repository work transfer is ki-trades.
+  Governs delegation packets for bounded agent work: their source-informed quality bar, durable worker briefs, rolling worker replenishment, and safe mechanical checks over a selected roadmap record. Use when designing or auditing a delegation packet, deciding what a worker brief must contain, or making an approved plan ready for bounded delegation. It augments runtime subagent delegation only when active in the same scope; model-purpose policy belongs to ki-tokenomics; cross-repository work transfer is ki-repo-trades.
 argument-hint: 'audit <repo> | conform <repo> | educate <work-item> | help | refresh'
 ---
 
@@ -34,7 +34,7 @@ The native rubric inspects only delegation packets: a roadmap record opts in by 
 
 It checks the mechanically legible packet shape, then reviews whether the packet’s partitioning, model choices, locked decisions, escalation boundaries, and verification gates are actually sound.
 
-Ordinary `## Delegation` plan notes without the packet marker remain under `ki-roadmap` and are not a failure here.
+Ordinary `## Delegation` plan notes without the packet marker remain under `ki-change-management-roadmap` and are not a failure here.
 
 ### Mode CONFORM
 
@@ -60,7 +60,7 @@ Read [the sources](references/sources.md), compare durable delegation practice a
 
 ### Mode HELP
 
-Explain the delegation-packet boundary, runtime subagent delegation, model-purpose policy in `ki-tokenomics`, and cross-repository transfer in `ki-trades`.
+Explain the delegation-packet boundary, runtime subagent delegation, model-purpose policy in `ki-tokenomics`, and cross-repository transfer in `ki-repo-trades`.
 
 ## Notes
 

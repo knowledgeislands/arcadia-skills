@@ -32,7 +32,7 @@ The standard is the **majority shape** across the TS/Bun repos under `knowledgei
 | REPOS | the 10 TS/Bun sibling repos † | aggregate/scoped scripts, tsconfig/biome, config-gated Vitest, build/chmod | 2026-06-21 |
 | FRAMEWORK | harness docs ※ | the enforcement framework (modes, checker contract, rubric tagging, sources cadence) | 2026-06-21 |
 
-† the 7 `mcp-*` servers + `ki-agentic-harness`, `ki-arcadia-principal`, `ki-website`.
+† the 7 `mcp-*` servers + `ki-agentic-harness`, `ki-arcadia-principal`, `ki-repo-website`.
 
 ※ `ki-agentic-harness/docs/skills.md` "governance-skill shape".
 

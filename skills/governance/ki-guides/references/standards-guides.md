@@ -11,7 +11,7 @@ A non-Knowledge-Base repository uses four durable documentation concerns:
 | `docs/decisions/` | Why      | Decision Records (`ki-decision-records`)       |
 | `docs/specs/`  | What     | Specifications (`ki-specs`) |
 | `docs/guides/`    | How      | Guides (**this skill**)                        |
-| `docs/roadmap/`   | When     | Repository work items (`ki-roadmap`)           |
+| `docs/roadmap/`   | When     | Repository work items (`ki-change-management-roadmap`)           |
 
 Each source has one job. A guide may link to a decision, feature, or roadmap item when that helps a reader act, but it does not duplicate the source's authority.
 

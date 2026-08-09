@@ -19,7 +19,7 @@ A repository remains the sole authority for its roadmap, priority, implementatio
 
 ## Decision
 
-We adopt `ki-trades` as the portable governance owner for optional cross-repository trades. Each repository declares its canonical home through `ki-repo` and its typed export and import routes through `ki-trades`. A sender-declared export permits local preparation and submission; receipt additionally requires one registered receiver with the matching typed import. Missing reciprocity is pending, while malformed or ambiguous configuration is never trusted.
+We adopt `ki-repo-trades` as the portable governance owner for optional cross-repository trades. Each repository declares its canonical home through `ki-repo` and its typed export and import routes through `ki-repo-trades`. A sender-declared export permits local preparation and submission; receipt additionally requires one registered receiver with the matching typed import. Missing reciprocity is pending, while malformed or ambiguous configuration is never trusted.
 
 Each trade has one concise `TRD-` identity. A sender may commit a mutable preparation that is silently observable through Git but creates no receiver state. Submission atomically moves that identity to its outbound path and freezes the raw sender projection. The receiver creates an inbound copy only on an active route and may add only receiver-local receipt, review, decision, and linkage evidence. Receipt means delivery, not acceptance. Directly applied work requires a verified local commit; adopted work links to a local item whose lifecycle owns completion.
 

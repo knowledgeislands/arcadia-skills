@@ -56,7 +56,7 @@ export const scenarios: Scenario[] = [
       { name: 'composition relationship to ki-binding', re: /compos|implies|depends/i }
     ],
     rubric:
-      'House model: `ki-binding` is renderer-neutral — it reads the canonical source and audits that each surface (Claude Code, Desktop, mcporter) agrees with it, requiring no particular renderer installed. chezmoi is one renderer, now governed by the composition skill `ki-binding-chezmoi`, which implies/depends on `ki-binding` + `ki-dotfiles-chezmoi` and owns the chezmoi-specific render mechanics (the `mcp-servers-json` template, `chezmoi apply`, 1Password refs resolved at apply). A correct answer states `ki-binding` needs no renderer and audits agreement, and names `ki-binding-chezmoi` as the composition skill that owns the chezmoi render path.'
+      'House model: `ki-binding` is renderer-neutral — it reads the canonical source and audits that each surface (Claude Code, Desktop, mcporter) agrees with it, requiring no particular renderer installed. chezmoi is one renderer, now governed by the composition skill `ki-binding-chezmoi`, which implies/depends on `ki-binding` + `ki-repo-dotfiles-chezmoi` and owns the chezmoi-specific render mechanics (the `mcp-servers-json` template, `chezmoi apply`, 1Password refs resolved at apply). A correct answer states `ki-binding` needs no renderer and audits agreement, and names `ki-binding-chezmoi` as the composition skill that owns the chezmoi render path.'
   },
   {
     skill: 'ki-binding',

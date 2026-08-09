@@ -14,7 +14,7 @@ argument-hint: 'plan <work>... | help'
 
 Shapes one or more selected Now or Next drafts through Ready.
 
-The class-level standard—horizons, identity, and file shape—is owned by `ki-roadmap`; read [the lifecycle procedure](references/standards-plan-lifecycle.md) for the complete operation.
+The class-level standard—horizons, identity, and file shape—is owned by `ki-change-management-roadmap`; read [the lifecycle procedure](references/standards-plan-lifecycle.md) for the complete operation.
 
 ## What this skill does
 
@@ -43,7 +43,7 @@ Those responsibilities move cleanly to the dedicated process skills; `ki-plan` c
 
 In a KI code repository the canonical record is `docs/roadmap/<REPO>-<NNN>-<slug>.md`, authored through this skill—not a runtime-native Plan Mode scratch file.
 
-`ki-roadmap` owns the stable `<REPO>` code in `.ki-config.toml`; the identifier holds `<THEME>` and frontmatter holds the human-readable `theme`.
+`ki-change-management-roadmap` owns the stable `<REPO>` code in `.ki-config.toml`; the identifier holds `<THEME>` and frontmatter holds the human-readable `theme`.
 
 A native scratch file is only a draft.
 
@@ -58,7 +58,7 @@ When referring to a specific work item in prose, link its canonical document usi
 ## Preflight
 
 1. Run `git rev-parse --show-toplevel` and physically resolve the result.
-2. Resolve the repository adapter: a KB uses `ki-kb-streams`; every other repository uses `ki-roadmap`.
+2. Resolve the repository adapter: a KB uses `ki-repo-kb-streams`; every other repository uses `ki-change-management-roadmap`.
 3. Run the relevant adapter audit and stop on any failure or warning.
 4. Resolve each record only inside its canonical adapter root; never follow a symlink outside the physical git root or infer an alternate tree.
 

@@ -52,7 +52,7 @@ Six defects, each with a reproduction verified during the migration:
 | `MD005` de-indents a nested blockquote | Quote split across two nestings | Reproduction §     |
 | `MD013` reflow skips paragraphs with `\|` | Silent under-normalisation | Reproduction ‖     |
 
-† Caught in `ki-plugins` and `ki-arcadia-principal` during rollout; both reverted before landing.
+† Caught in `ki-repo-plugins` and `ki-arcadia-principal` during rollout; both reverted before landing.
 
 ‡ Caught in `ki-agentic-harness`, where a wikilink alias in a table cell lost its second half.
 

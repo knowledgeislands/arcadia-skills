@@ -16,9 +16,9 @@ KI governance-domain agents. Each is grounded in the ki-arcadia-principal KB and
 | ----------------------- | -------------------------------------------------------- |
 | `ki-skills-lead`        | SKILL.md authoring, auditing, and conformance            |
 | `ki-engineering-lead`   | Toolchain compliance and repo structure                  |
-| `ki-kb-curator`         | KB zone health, note structure, and link integrity       |
+| `ki-repo-kb-curator`         | KB zone health, note structure, and link integrity       |
 | `ki-decision-author`    | DR authoring (SDR / GDR / ADR) and the Decisions index   |
-| `ki-kb-streams-curator` | Enactment process, proposals pipeline, and streams state |
+| `ki-repo-kb-streams-curator` | Enactment process, proposals pipeline, and streams state |
 
 ## Adding an agent
 

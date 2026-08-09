@@ -52,7 +52,7 @@ This roadmap item only, containing the active-schema inventory, classifications,
 - Every active internal version marker has a producer, consumer, fixture or validator, documentation surface, owner, and named gate—or is reported as incomplete rather than changed.
 - External-standard and historical markers are explicitly excluded with their source or evidence boundary.
 - Every proposed V1 cutover is receiver-owned and remains unimplemented in this item.
-- `ki repo audit --skill ki-roadmap --repo .` and `ki repo audit --skill ki-authoring --repo .` pass.
+- `ki repo audit --skill ki-change-management-roadmap --repo .` and `ki repo audit --skill ki-authoring --repo .` pass.
 
 ## Dependencies / blocks
 

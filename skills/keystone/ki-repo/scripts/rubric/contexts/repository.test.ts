@@ -351,7 +351,7 @@ describe('repository kind and Knowledge Base stores', () => {
 repo_type = "kb"
 store_roles = ["notes", "sources"]
 
-[skills.ki-kb]
+[skills.ki-repo-kb]
 `)
     ).toEqual([])
   })
@@ -369,7 +369,7 @@ store_roles = ["sources"]
       await kindFindings(`[skills.ki-repo]
 repo_type = "repository"
 
-[skills.ki-kb]
+[skills.ki-repo-kb]
 `)
     ).toContainEqual(
       expect.objectContaining({ code: 'KIND-2', message: expect.stringContaining('requires repo_type = "kb"') })
@@ -380,7 +380,7 @@ repo_type = "repository"
     expect(
       await kindFindings(`[skills.ki-repo]
 
-[skills.ki-kb]
+[skills.ki-repo-kb]
 
 [skills.ki-decision-records]
 repo_type = "kb"
@@ -417,7 +417,7 @@ describe('local repository evidence', () => {
     writeFileSync(join(root, 'README.md'), '# Actual title\n')
     writeFileSync(
       join(root, '.ki-config.toml'),
-      '[skills.ki-repo]\ntitle = "Configured title"\ndescription = "Configured description."\n\n[skills.ki-roadmap]\n'
+      '[skills.ki-repo]\ntitle = "Configured title"\ndescription = "Configured description."\n\n[skills.ki-change-management-roadmap]\n'
     )
 
     const findings = (await collectAuditFindings([root])).findings.filter((finding) => finding.code === 'FILES-2')
@@ -437,10 +437,10 @@ describe('local repository evidence', () => {
 
     const findings = (await collectAuditFindings([root])).findings.filter((finding) => finding.code === 'COV-1')
     expect(findings).toContainEqual(
-      expect.objectContaining({ message: expect.stringContaining('looks governed by ki-checkpoints') })
+      expect.objectContaining({ message: expect.stringContaining('looks governed by ki-repo-checkpoints') })
     )
 
-    writeFileSync(join(root, '.ki-config.toml'), '[skills.ki-repo]\n\n[skills.ki-checkpoints]\n')
+    writeFileSync(join(root, '.ki-config.toml'), '[skills.ki-repo]\n\n[skills.ki-repo-checkpoints]\n')
     expect((await collectAuditFindings([root])).findings.filter((finding) => finding.code === 'COV-1')).toEqual([])
   })
 

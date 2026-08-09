@@ -17,7 +17,7 @@ Migrate every Harness rubric catalogue to the strict `contract: 1` remediation a
 
 All 36 rubric catalogues are committed to the strict v1 evidence contract. The final five commits are `a5d0b5bc` (Claude housekeeping), `5cf673a9` (Homebrew tap), `a925542d` (tools), `a8696d10` (website), and `6c5070a1` (website Cloudflare).
 
-The strict-v1 migration and compatibility cleanup are complete. `ki-tools` (`e9d77f85`), `ki-website-cloudflare` (`b0324d45`), and `ki-subagents` (`6910f1a9`) now declare required metadata at source; `ki-delegation` removed its obsolete heading normalizer in `d79aa32e`.
+The strict-v1 migration and compatibility cleanup are complete. `ki-repo-tools` (`e9d77f85`), `ki-repo-website-cloudflare` (`b0324d45`), and `ki-subagents` (`6910f1a9`) now declare required metadata at source; `ki-delegation` removed its obsolete heading normalizer in `d79aa32e`.
 
 ## Decisions made
 

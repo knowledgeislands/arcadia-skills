@@ -20,7 +20,7 @@ CONFORM is report-only unless a future item proves an existing safe, item-owned 
 
 ## Composition
 
-Run `ki-tokenomics` for portable configuration, budgets, and model purpose. Route MCP-server design to `ki-mcp` and skill-description quality to `ki-skills`.
+Run `ki-tokenomics` for portable configuration, budgets, and model purpose. Route MCP-server design to `ki-repo-mcp` and skill-description quality to `ki-skills`.
 
 ## Operating modes
 

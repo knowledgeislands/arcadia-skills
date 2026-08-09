@@ -52,7 +52,7 @@ This roadmap item only, as the durable inventory and receiver-routing evidence. 
 - Every regular estate `package.json` appears once, with an explicit not-applicable result where it has no scripts.
 - Every declared script key is represented once in the inventory, and totals reconcile to the source manifests.
 - Every proposed change names a receiving repository and remains unimplemented in this item.
-- `ki repo audit --skill ki-roadmap --repo .` and `ki repo audit --skill ki-authoring --repo .` pass.
+- `ki repo audit --skill ki-change-management-roadmap --repo .` and `ki repo audit --skill ki-authoring --repo .` pass.
 
 ## Dependencies / blocks
 

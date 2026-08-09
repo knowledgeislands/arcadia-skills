@@ -80,7 +80,7 @@ The OpenAI News page is a discovery source, not a normative standard. On each RE
 | Tag                       | Source                       | Scope            | Last reviewed |
 | ------------------------- | ---------------------------- | ---------------- | ------------- |
 | ki-agentic-harness README | The repo's own `README.md`   | House structure† | 2026-06-21    |
-| `ki-kb`                   | The reference standard skill | Worked example‡  | 2026-06-21    |
+| `ki-repo-kb`                   | The reference standard skill | Worked example‡  | 2026-06-21    |
 
 † Linking convention (no wikilinks), standard vs base-coupled-extension, the house toolchain, Knowledge Islands structure.
 

@@ -12,7 +12,7 @@ decision_type: architecture
 
 ## Context
 
-When auditing a repo that multiple governance skills apply to, executable prerequisites and independent governance layers must not be conflated. A formal composition edge, such as `ki-binding-claude` depending on `ki-binding`, requires the prerequisite first. Coverage-detected standards such as `ki-engineering` and `ki-mcp` remain independent even when a complete repository audit runs both. Human judgment synthesis still benefits from a foundations-first reading priority, but that priority is not another executable dependency graph.
+When auditing a repo that multiple governance skills apply to, executable prerequisites and independent governance layers must not be conflated. A formal composition edge, such as `ki-binding-claude` depending on `ki-binding`, requires the prerequisite first. Coverage-detected standards such as `ki-engineering` and `ki-repo-mcp` remain independent even when a complete repository audit runs both. Human judgment synthesis still benefits from a foundations-first reading priority, but that priority is not another executable dependency graph.
 
 ## Decision
 
@@ -28,11 +28,11 @@ The priority keeps foundational judgment ahead of downstream interpretation. It 
 
 ### Naming grammar
 
-Skill names follow the grammar **`ki-<concern>[-<technology>]`**. The set has three name classes, all conforming to it: **artifact-type** names govern a kind of thing (`ki-repo`, `ki-skills`, `ki-subagents`, `ki-mcp`, `ki-harness`, `ki-roadmap`, `ki-decision-records`); **doctrine/family** names govern a portable practice or family (`ki-authoring`, `ki-engineering`, `ki-tokenomics`, `ki-binding`, `ki-bootstrap`, the `ki-kb-*` family); **stack-specific standards** realise a concern in a named technology, with the concern leading and technology qualifier last. Runtime-bound examples are `ki-housekeeping-claude`, `ki-tokenomics-claude`, `ki-tokenomics-codex`, `ki-binding-claude`, and `ki-binding-codex`. A qualifier describes actual vendor-owned rules; it does not justify an empty symmetric counterpart.
+Skill names follow the grammar **`ki-<concern>[-<technology>]`**. The set has three name classes, all conforming to it: **artifact-type** names govern a kind of thing (`ki-repo`, `ki-skills`, `ki-subagents`, `ki-repo-mcp`, `ki-repo-harness`, `ki-change-management-roadmap`, `ki-decision-records`); **doctrine/family** names govern a portable practice or family (`ki-authoring`, `ki-engineering`, `ki-tokenomics`, `ki-binding`, `ki-bootstrap`, the `ki-repo-kb-*` family); **stack-specific standards** realise a concern in a named technology, with the concern leading and technology qualifier last. Runtime-bound examples are `ki-housekeeping-claude`, `ki-tokenomics-claude`, `ki-tokenomics-codex`, `ki-binding-claude`, and `ki-binding-codex`. A qualifier describes actual vendor-owned rules; it does not justify an empty symmetric counterpart.
 
-Within this Harness, the concern is plural for a collection or repeated unit (`ki-skills`, `ki-subagents`, `ki-decision-records`, `ki-trades`); it is singular for a discipline, lifecycle action, conceptual surface, or repository-structure concern (`ki-authoring`, `ki-plan`, `ki-mcp`, `ki-harness`). Proper names and mass nouns retain their natural form. This is a local naming convention, not an addition to the generic Agent Skills standard.
+Within this Harness, the concern is plural for a collection or repeated unit (`ki-skills`, `ki-subagents`, `ki-decision-records`, `ki-repo-trades`); it is singular for a discipline, lifecycle action, conceptual surface, or repository-structure concern (`ki-authoring`, `ki-plan`, `ki-repo-mcp`, `ki-repo-harness`). Proper names and mass nouns retain their natural form. This is a local naming convention, not an addition to the generic Agent Skills standard.
 
-Every compatible harness has one common skill-name prefix. The prefix belongs to the harness contract, not to individual skills, and must be explicitly declared and auditable through `ki-harness`; `ki` is this Harness's prefix. A technology qualifier does not alter the prefix or the singular/plural rule for the concern.
+Every compatible harness has one common skill-name prefix. The prefix belongs to the harness contract, not to individual skills, and must be explicitly declared and auditable through `ki-repo-harness`; `ki` is this Harness's prefix. A technology qualifier does not alter the prefix or the singular/plural rule for the concern.
 
 ## Consequences
 

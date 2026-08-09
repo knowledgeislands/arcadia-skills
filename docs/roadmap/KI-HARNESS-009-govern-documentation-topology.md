@@ -42,18 +42,18 @@ Do not require every repository to create every documentation category, make gui
 - `skills/governance/ki-guides/{SKILL.md,references/standards-guides.md,references/mode-audit.md,references/mode-conform.md}`
 - `skills/governance/ki-guides/scripts/rubric/items/routing.ts`, its catalogue test, and `references/rubric.md`
 - `skills/governance/ki-feature-definitions/{SKILL.md,references/standards-feature-definitions.md}` and its generated publication only if its catalogue wording changes
-- `skills/change-management/ki-roadmap/references/{standards-repository-roadmaps,standards-work-item-format}.md`
-- `skills/change-management/ki-roadmap/scripts/rubric/contexts/roadmap-evidence.ts`
-- `skills/change-management/ki-roadmap/scripts/rubric/items/{plans,index.test}.ts` and `references/rubric.md`
+- `skills/change-management/ki-change-management-roadmap/references/{standards-repository-roadmaps,standards-work-item-format}.md`
+- `skills/change-management/ki-change-management-roadmap/scripts/rubric/contexts/roadmap-evidence.ts`
+- `skills/change-management/ki-change-management-roadmap/scripts/rubric/items/{plans,index.test}.ts` and `references/rubric.md`
 - Retained `docs/roadmap/*.md` records at `horizon: now` or `horizon: next`
 
 ## Verify
 
-- `bunx vitest run skills/keystone/ki-repo/scripts/rubric/items/index.test.ts skills/governance/ki-guides/scripts/rubric/items/index.test.ts skills/governance/ki-feature-definitions/scripts/rubric/items/index.test.ts skills/change-management/ki-roadmap/scripts/rubric/items/index.test.ts`
+- `bunx vitest run skills/keystone/ki-repo/scripts/rubric/items/index.test.ts skills/governance/ki-guides/scripts/rubric/items/index.test.ts skills/governance/ki-feature-definitions/scripts/rubric/items/index.test.ts skills/change-management/ki-change-management-roadmap/scripts/rubric/items/index.test.ts`
 - A roadmap fixture without `## Documentation impact` fails the mechanical gate; one with the section passes even though the four assessments remain judgment-reviewed.
 - Guide fixtures preserve independent use: a procedure with no stable-behaviour dependency does not require Feature Definitions, while a dependent procedure is routed to the existing corpus or a named gap.
-- `ki dev skill rubric ki-repo`, `ki dev skill rubric ki-guides`, `ki dev skill rubric ki-feature-definitions`, and `ki dev skill rubric ki-roadmap`
-- `ki repo audit --skill ki-repo --repo .`, `ki repo audit --skill ki-guides --repo .`, `ki repo audit --skill ki-feature-definitions --repo .`, and `ki repo audit --skill ki-roadmap --repo .`
+- `ki dev skill rubric ki-repo`, `ki dev skill rubric ki-guides`, `ki dev skill rubric ki-feature-definitions`, and `ki dev skill rubric ki-change-management-roadmap`
+- `ki repo audit --skill ki-repo --repo .`, `ki repo audit --skill ki-guides --repo .`, `ki repo audit --skill ki-feature-definitions --repo .`, and `ki repo audit --skill ki-change-management-roadmap --repo .`
 - `bun run test`, then `bunx tsc --noEmit`
 
 ## Dependencies / blocks

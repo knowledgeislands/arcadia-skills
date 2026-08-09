@@ -17,7 +17,7 @@ Reduce the source cost of the highest-cost advertised skill descriptions while p
 
 The Codex tokenomics audit measured 53 advertised source descriptions at approximately 3,176 words / 23,000 characters before any undisclosed runtime shortening. The result is a ranking, not a billing measurement: Codex does not expose the post-shortening size or its internal routing budget.
 
-`ki-recap`, `ki-repo`, `ki-authoring`, and `ki-dotfiles-chezmoi` are the first high-cost descriptions to optimise. Their workflow detail already belongs in the skill body and references, which load after selection.
+`ki-recap`, `ki-repo`, `ki-authoring`, and `ki-repo-dotfiles-chezmoi` are the first high-cost descriptions to optimise. Their workflow detail already belongs in the skill body and references, which load after selection.
 
 ## Boundary
 
@@ -30,7 +30,7 @@ The `ki-skills` optimisation guidance values standing description cost, but its 
 ## Steps
 
 - [x] Add a `ki-skills` judgment criterion and standard guidance: a description earns its standing source cost by retaining scope, a primary trigger, and only essential collision guidance; workflow detail moves to the body or references.
-- [x] Shorten the `ki-recap`, `ki-repo`, `ki-authoring`, and `ki-dotfiles-chezmoi` descriptions to their routing essentials without making their adjacent boundaries ambiguous.
+- [x] Shorten the `ki-recap`, `ki-repo`, `ki-authoring`, and `ki-repo-dotfiles-chezmoi` descriptions to their routing essentials without making their adjacent boundaries ambiguous.
 - [x] Regenerate the `ki-skills` rubric publication from its structured catalogue.
 - [x] Re-run the skill, authoring, roadmap, and Codex tokenomics audits; run TypeScript and test gates.
 
@@ -39,7 +39,7 @@ The `ki-skills` optimisation guidance values standing description cost, but its 
 - `skills/change-management/ki-recap/SKILL.md`
 - `skills/keystone/ki-repo/SKILL.md`
 - `skills/governance/ki-authoring/SKILL.md`
-- `skills/environment/ki-dotfiles-chezmoi/SKILL.md`
+- `skills/repo-structure/ki-repo-dotfiles-chezmoi/SKILL.md`
 - `skills/keystone/ki-skills/SKILL.md`
 - `skills/keystone/ki-skills/references/standards-agent-skills.md`
 - `skills/keystone/ki-skills/scripts/rubric/items/description.ts`
@@ -49,7 +49,7 @@ The `ki-skills` optimisation guidance values standing description cost, but its 
 ## Verify
 
 - Each edited description remains third-person, states its capability and primary trigger, and retains an essential off-ramp where selection could collide.
-- `ki repo audit --skill ki-skills --repo .`, `ki repo audit --skill ki-authoring --repo .`, `ki repo audit --skill ki-roadmap --repo .`, and `ki repo audit --skill ki-tokenomics-codex --repo .` pass.
+- `ki repo audit --skill ki-skills --repo .`, `ki repo audit --skill ki-authoring --repo .`, `ki repo audit --skill ki-change-management-roadmap --repo .`, and `ki repo audit --skill ki-tokenomics-codex --repo .` pass.
 - `bun run test` and `bunx tsc --noEmit` pass.
 
 ## Dependencies / blocks
@@ -65,7 +65,7 @@ Delivered the four first-priority description reductions and added `DESC-10`, a 
 | `ki-recap` | 141 words / 1,013 chars | 42 / 314 |
 | `ki-repo` | 131 / 1,013 | 48 / 340 |
 | `ki-authoring` | 127 / 921 | 41 / 296 |
-| `ki-dotfiles-chezmoi` | 119 / 997 | 41 / 319 |
+| `ki-repo-dotfiles-chezmoi` | 119 / 997 | 41 / 319 |
 
 The selected descriptions fall from 518 words / 3,944 characters to 172 / 1,269. The figures measure source text only; they do not claim a Codex routing, shortening, or billing token count.
 
@@ -73,7 +73,7 @@ Baseline: `e0dfb29c9287da789f0b34efc2041e8bb69a9ba2`.
 
 Delivery commit: `4ec00a3a91f50908465652389812d95742ee3b46`.
 
-Verification passed: `ki repo audit --skill ki-skills --repo .`, `ki repo audit --skill ki-authoring --repo .`, `ki repo audit --skill ki-roadmap --repo .`, `ki repo audit --skill ki-tokenomics-codex --repo .`, `bunx tsc --noEmit`, and `bun run test` (332 pass, 0 fail).
+Verification passed: `ki repo audit --skill ki-skills --repo .`, `ki repo audit --skill ki-authoring --repo .`, `ki repo audit --skill ki-change-management-roadmap --repo .`, `ki repo audit --skill ki-tokenomics-codex --repo .`, `bunx tsc --noEmit`, and `bun run test` (332 pass, 0 fail).
 
 The standard deliberately sets no universal word target: `DESC-10` remains judgment-only so an essential trigger or collision discriminator is not cut to satisfy a proxy metric.
 

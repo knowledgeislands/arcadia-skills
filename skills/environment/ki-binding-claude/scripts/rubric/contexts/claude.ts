@@ -20,7 +20,7 @@ export type ClaudeBindingContext = {
   coworkBase: string
   cowork: readonly CoworkFile[]
 }
-const COWORK_MARKETPLACE = 'ki-plugins',
+const COWORK_MARKETPLACE = 'ki-repo-plugins',
   COWORK_PLUGIN = 'knowledge-islands',
   COWORK_REPO = 'knowledgeislands/ki-plugins'
 const physicalFile = (path: string) => existsSync(path) && lstatSync(path).isFile() && !lstatSync(path).isSymbolicLink()
