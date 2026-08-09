@@ -7,6 +7,8 @@ status: ready
 blocks: []
 blocked-by: []
 baseline-ref: null
+housekeeping-template: KI-HARNESS-HK-002
+scheduled-for: 2026-08-09
 ---
 
 ## Goal
