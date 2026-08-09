@@ -3,7 +3,7 @@ id: KI-HARNESS-OPS-006
 title: Stabilise test ordering
 theme: operations
 horizon: now
-status: awaiting-review
+status: done
 blocks: []
 blocked-by: []
 baseline-ref: f96ca978b0dea5a7b1cf12ffaa83e72b22e1e0ff
@@ -89,6 +89,10 @@ Confirm that sorting the complete final collection, rather than a filesystem-dep
 ### Mini recap
 
 The defect was in test evidence ordering, not Markdown handling or CI configuration. Deterministic collection order is the durable correction; no new learning route is proposed.
+
+## Done
+
+Accepted by the user on 2026-08-09. The record is retained; GitHub Actions verification remains a later observable follow-up, not a condition inferred from local evidence.
 
 ## Discussion
 
