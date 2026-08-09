@@ -3,7 +3,7 @@ id: KI-HARNESS-GOV-032
 title: Refresh skills taxonomy decisions
 theme: governance-consistency
 horizon: now
-status: in-progress
+status: awaiting-review
 blocks: []
 blocked-by: []
 baseline-ref: e61e81ad532bd69ae504ee45524fdcf2dc4274a4
@@ -27,9 +27,9 @@ The native Decision Records audit fails only on the ADR-008 filename. The curren
 
 ## Steps
 
-- [ ] Rename ADR-008 to `ADR-KI-HARNESS-SKILLS-008-a-specifications-skill-for-the-what.md` and update its exact local citations in ADR-009, GDR-004, and the Decision Records index.
-- [ ] Update ADR-006's process-skill taxonomy list to include `ki-agenda` without changing its architectural decision.
-- [ ] Run focused Decision Records, roadmap, and authoring audits; inspect the rename diff and every changed citation.
+- [x] Rename ADR-008 to `ADR-KI-HARNESS-SKILLS-008-a-specifications-skill-for-the-what.md` and update its exact local citations in ADR-009, GDR-004, and the Decision Records index.
+- [x] Update ADR-006's process-skill taxonomy list to include `ki-agenda` without changing its architectural decision.
+- [x] Run focused Decision Records, roadmap, and authoring audits; inspect the rename diff and every changed citation.
 
 ## Files touched
 
@@ -56,6 +56,22 @@ The ADR-008 filename will be corrected with a single Git rename, preserving its 
 ### Promotion conditions
 
 The bounded file set, target filename, citation inventory, and no-scope-expansion rule are now explicit. The item is ready for an implementation review once this plan is approved.
+
+## Review
+
+### Delivered
+
+Renamed ADR-008 to its canonical title slug, retargeted its three local citations, and added `ki-agenda` to ADR-006's current change-management process taxonomy.
+
+### Verification
+
+- Baseline: `e61e81ad532bd69ae504ee45524fdcf2dc4274a4`.
+- Delivered content: `c09af89b5e0c64fcedb543299478ae2696e3b3bb`.
+- `ki repo audit --skill ki-decision-records --repo .`, `ki repo audit --skill ki-roadmap --repo .`, and `ki repo audit --skill ki-authoring --repo .` pass.
+
+### Scope and review boundary
+
+No Decision Record was deleted, renumbered, reclassified, or substantively rewritten. The separate GOV-030 inventory found no evidence that distinct current decisions should be consolidated; any renewed consolidation proposal needs its own bounded review rather than being inferred from this repair.
 
 ## Discussion
 
