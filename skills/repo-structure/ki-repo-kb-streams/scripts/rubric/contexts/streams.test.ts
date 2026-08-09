@@ -4,6 +4,7 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import type { RubricContextOptions } from '../../shared/rubric.ts'
 import { ENACT } from '../items/enactment.ts'
+import definition from '../items/index.ts'
 import { STREAM } from '../items/stream.ts'
 import { createStreamsSession } from './streams.ts'
 
@@ -85,6 +86,13 @@ const issueLedger = (session: ReturnType<typeof createStreamsSession>) => {
 }
 
 describe('ki-repo-kb-streams session', () => {
+  test('assigns only declared rubric families to every subject', () => {
+    const session = createStreamsSession(options(repository(), 'audit'))
+    const declared = new Set(definition.families.map((family) => family.code))
+
+    for (const subject of session.subjects) expect(subject.families.every((family) => declared.has(family))).toBe(true)
+  })
+
   test('coalesces controlled-vocabulary normalisation into one read-only proposal', () => {
     const { root, files } = streamsFixture()
     const originals = files.map((file) => readFileSync(file, 'utf8'))

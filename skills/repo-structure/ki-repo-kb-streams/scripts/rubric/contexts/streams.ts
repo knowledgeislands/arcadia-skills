@@ -12,6 +12,7 @@ import type {
 
 const OPERATIONAL_AREAS = ['Roadmap', 'Housekeeping', 'Trades'] as const
 const REQUIRED_AREAS = ['Roadmap', 'Housekeeping'] as const
+const EXECUTION_FAMILIES = ['STREAM', 'GATE', 'CONFIG'] as const
 const LEGACY_FOLDERS = [
   'Active',
   'Background',
@@ -277,7 +278,7 @@ export const createStreamsSession = ({
     return {
       subjects: [
         { families: ['RUBRIC'], context: () => context },
-        { families: ['STREAM', 'ENACT', 'GATE', 'CONFIG'], context: () => context }
+        { families: EXECUTION_FAMILIES, context: () => context }
       ],
       proposal: () => ({ writes: [] })
     }
@@ -295,7 +296,7 @@ export const createStreamsSession = ({
     return {
       subjects: [
         { families: ['RUBRIC'], context: () => context },
-        { families: ['STREAM', 'ENACT', 'GATE', 'CONFIG'], context: () => context }
+        { families: EXECUTION_FAMILIES, context: () => context }
       ],
       proposal: () => ({ writes: [] })
     }
@@ -509,7 +510,7 @@ export const createStreamsSession = ({
   return {
     subjects: [
       { families: ['RUBRIC'], context: () => context },
-      { families: ['STREAM', 'ENACT', 'GATE', 'CONFIG'], context: () => context }
+      { families: EXECUTION_FAMILIES, context: () => context }
     ],
     proposal: () => {
       const writes: ConformWrite[] = []
