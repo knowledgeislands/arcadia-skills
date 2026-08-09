@@ -3,7 +3,7 @@ id: KI-HARNESS-GOV-018
 title: Define KB stream codes
 theme: governance-consistency
 horizon: now
-status: in-progress
+status: awaiting-review
 blocks: []
 blocked-by: []
 baseline-ref: 2ee35e8c533881d39614748527aea5286e3391e1
@@ -97,6 +97,37 @@ Applying codes to live Knowledge Bases is deliberately outside this Harness item
 - Stop if representative existing codes cannot satisfy the locked grammar without renumbering, or if durable non-reuse requires a new registry or configuration field.
 - Stop before adding automatic allocation, a title/path-derived fallback, a cross-repository write, or a `tools-ki` parser change.
 - Route live-base migration and any consumer change to separately authorised receiver-owned work.
+
+## Review
+
+### Delivered
+
+Full `stream-proposal` notes now require an explicitly allocated, immutable, Knowledge-Base-wide unique `code`; `KBS-001` is the compatibility exemplar. `ENACT-6` audits missing, malformed, and duplicate identities without proposing an identity write.
+
+### Summary of changes
+
+Implementation commit: `cf529a4269a56d3700f942ef33f9f37ab728e274`.
+
+The Streams structure, Enactment process, mode guidance, exemplar, session evidence, and generated rubric now share one code contract. The live-base migration is deliberately a base-owner-approved explicit map, not an automatic migration.
+
+### Verification
+
+- PASS — focused Streams fixtures: 11 tests cover valid, missing, malformed, and cross-Focus duplicate codes; every CONFORM scenario has an empty write proposal.
+- PASS — `ki dev skill rubric ki-kb-streams --write`, followed by `ki dev skill rubric ki-kb-streams`.
+- PASS — `ki repo audit --skill ki-skills --repo .`, `ki repo audit --skill ki-authoring --repo .`, `bun run test` (323 tests), and `bunx tsc --noEmit`.
+- Read-only consumer check — `tools-ki`'s existing roadmap fixture and assertion render `KBS-001` when present and `undefined` when absent; its parser and test suite were not changed.
+
+### Outstanding concerns
+
+Live Knowledge Bases require separately authorised receiver-owned migration work and owner-approved allocation maps. Preventing reuse after pruning remains a base allocation responsibility because pruned records cannot be audited.
+
+### Post-change review
+
+Confirm that base-wide uniqueness, the explicit allocation boundary, and non-reuse after pruning are strong enough without introducing a global registry.
+
+### Mini recap
+
+The work changed only the portable Streams contract and its fixtures. No live KB, `tools-ki`, derived identity, compatibility fallback, or automatic identity repair was introduced.
 
 ## Discussion
 
