@@ -11,7 +11,7 @@ license = "MIT"
 supported_runtimes = ["claude-code", "chatgpt-codex"]
 
 [skills.ki-repo.checks]
-coverage-repo-checkpoints = false # source repository publishes the optional capability without adopting a checkpoint subarea
+coverage-checkpoint = false # source repository publishes the optional capability without adopting a checkpoint subarea
 
 [skills.ki-authoring]
 
@@ -37,11 +37,11 @@ coverage-repo-checkpoints = false # source repository publishes the optional cap
 
 [skills.ki-guides]
 
-[skills.ki-repo-trades]
+[skills.ki-trades]
 
 [skills.ki-agora]
 
-[skills.ki-repo-trades.routes]
+[skills.ki-trades.routes]
 "knowledgeislands/ki-website" = { export = ["work", "knowledge"] }
 "knowledgeislands/tools-ki" = { export = ["work"], import = ["work", "knowledge"] }
 "knowledgeislands/tools-mgit" = { export = ["work", "knowledge"], import = ["work", "knowledge"] }
@@ -64,7 +64,7 @@ GOV = "governance-consistency"
 OPS = "operations"
 RTP = "runtime-portability"
 
-[skills.ki-repo-checkpoints]
+[skills.ki-checkpoint]
 
 [skills.ki-tokenomics]
 headroom = "recommended"

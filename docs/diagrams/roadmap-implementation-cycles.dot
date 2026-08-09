@@ -10,7 +10,7 @@ digraph roadmap_implementation_cycles {
     fontsize=20
     label=<
       <b>Knowledge Islands roadmap and implementation cycles</b><br/>
-      <font point-size="12">Roadmap selection prepares work · implementation delivers it · acceptance closes it · an agenda coordinates authorised cycles without removing authority</font>
+      <font point-size="12">Roadmap selection prepares work · implementation delivers it · acceptance closes it · a batch coordinates authorised cycles without removing authority</font>
     >
     labelloc=t
     margin=0.35
@@ -117,15 +117,15 @@ digraph roadmap_implementation_cycles {
 
     batch_prepare [fillcolor="#f0ebfa", label=< <b>ki-batch preparation</b><br/><font point-size="10">coordinate named next + plan work</font> >]
     batch_gate [fillcolor="#fff0b8", label=< <b>Manual batch authorisation</b><br/><font point-size="10">named items · authority · stops</font> >, shape=diamond]
-    agenda [fillcolor="#f0ebfa", label=< <b>ki-agenda</b><br/><font point-size="10">fresh grounding · early questions · bounded cycle</font> >]
+    batch_run [fillcolor="#f0ebfa", label=< <b>ki-batch run</b><br/><font point-size="10">fresh grounding · early questions · bounded cycle</font> >]
     park [fillcolor="#f6d9d9", label=< <b>Park</b><br/><font point-size="10">ambiguity or authority stop</font> >]
 
     planned -> batch_prepare [style=dashed, constraint=false, xlabel="approved candidate set"]
     batch_prepare -> batch_gate
-    batch_gate -> agenda [xlabel="approve"]
-    agenda -> implement [style=dashed, constraint=false, xlabel="one ready item at a time"]
-    agenda -> park [xlabel="stop / escalate"]
+    batch_gate -> batch_run [xlabel="approve"]
+    batch_run -> implement [style=dashed, constraint=false, xlabel="one ready item at a time"]
+    batch_run -> park [xlabel="stop / escalate"]
     park -> recap [style=dashed, constraint=false, xlabel="record + return"]
-    agenda -> acceptance_gate [style=dashed, constraint=false]
+    batch_run -> acceptance_gate [style=dashed, constraint=false]
   }
 }

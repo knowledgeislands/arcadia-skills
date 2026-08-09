@@ -20,7 +20,7 @@ The capability must improve resumability without treating a Stop event as proof 
 
 The harness currently has one Stop handler, `hooks/git-lock-check.sh`, which only removes proven-stale Git locks and exits quietly when safety cannot be established.
 
-`ki-recap` provides a deliberate, in-context recap and grounding procedure. The portable checkpoint record and lifecycle it builds on are already delivered by the `ki-repo-checkpoints` capability.
+`ki-recap` provides a deliberate, in-context recap and grounding procedure. The portable checkpoint record and lifecycle it builds on are already delivered by the `ki-checkpoint` capability.
 
 A Stop event may fire repeatedly, after an interruption, or at a runtime-specific boundary whose meaning does not establish that the user has finished the thread.
 
@@ -38,7 +38,7 @@ Do not fold response-verbosity preferences into the checkpoint hook; that is a s
 
 The existing Git-lock guard is a fail-safe, non-interactive recovery hook and has no checkpoint or recap behaviour.
 
-The portable checkpoint schema and lifecycle exist in `ki-repo-checkpoints`. What is missing is the selected-checkpoint marker, the Stop-event contract, the runtime-adapter implementation, and fixture coverage for this capability.
+The portable checkpoint schema and lifecycle exist in `ki-checkpoint`. What is missing is the selected-checkpoint marker, the Stop-event contract, the runtime-adapter implementation, and fixture coverage for this capability.
 
 ## Steps
 
@@ -53,7 +53,7 @@ The portable checkpoint schema and lifecycle exist in `ki-repo-checkpoints`. Wha
 
 - `hooks/` and its runtime-specific registration guidance
 - `skills/change-management/ki-recap/`
-- The `ki-repo-checkpoints` portable checkpoint capability
+- The `ki-checkpoint` portable checkpoint capability
 - Runtime-specific environment adapters and their tests
 - `docs/decisions/` if the event or ownership model needs a durable decision
 - This roadmap item and any receiver-owned implementation record
@@ -67,7 +67,7 @@ The portable checkpoint schema and lifecycle exist in `ki-repo-checkpoints`. Wha
 
 ## Dependencies / blocks
 
-Nothing blocks this item. The portable record, lifecycle, and authority boundaries a hook needs before it can safely select, update, or retire a checkpoint are already established by `ki-repo-checkpoints`.
+Nothing blocks this item. The portable record, lifecycle, and authority boundaries a hook needs before it can safely select, update, or retire a checkpoint are already established by `ki-checkpoint`.
 
 The runtime-portability decision and runtime adapters define event-specific evidence; `ki-recap` retains its explicit in-session judgment and grounding role.
 

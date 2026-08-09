@@ -12,11 +12,11 @@ baseline-ref: null
 
 ## Goal
 
-Give `ki-batch` and `ki-agenda` one canonical, repository-local authorisation record that retains explicit approval, timebox, scope, mandatory stops, and the run ledger.
+Give `ki-batch` one canonical, repository-local authorisation record that retains explicit approval, timebox, scope, mandatory stops, and the run ledger.
 
 ## Context
 
-The batch and agenda procedures require a durable authorisation and ledger, but the current contract supplies only an exemplar and no record location, identity rule, resolver, or retention boundary. The first intended agenda run exposed that gap before any unsafe execution occurred.
+The batch procedure requires a durable authorisation and ledger, but the current contract supplies only an exemplar and no record location, identity rule, resolver, or retention boundary. The first intended batch run exposed that gap before any unsafe execution occurred.
 
 ## Boundary
 
@@ -30,25 +30,24 @@ Individual explicitly approved ready items can use `ki-implement` normally. Mult
 
 - [ ] Choose one adapter-compatible location and identifier shape for a bounded authorisation record.
 - [ ] Define explicit approval, repository, item order, timebox, completion target, mandatory-stop, and ledger fields.
-- [ ] Make `ki-batch` and `ki-agenda` resolve only a safe, local, approved record and stop on every malformed or expired form.
+- [ ] Make `ki-batch` resolve only a safe, local, approved record and stop on every malformed or expired form.
 - [ ] Add focused fixture coverage for authority resolution, no-write stops, and retention after review.
 
 ## Files touched
 
 - `skills/change-management/ki-batch/`
-- `skills/change-management/ki-agenda/`
 - The selected canonical authorisation-record location and this roadmap item
 
 ## Verify
 
-- Focused batch and agenda fixture tests prove that absent, malformed, foreign, expired, and unapproved authority cannot begin delivery.
+- Focused batch fixture tests prove that absent, malformed, foreign, expired, and unapproved authority cannot begin delivery.
 - `ki repo audit --skill ki-skills --repo .`, `bun run test`, and `bunx tsc --noEmit` pass.
 
 ## Shaping
 
 ### Intended approach
 
-Choose one adapter-compatible record location and shape, define the exact identifier and approval fields, resolve it safely from `ki-batch` and `ki-agenda`, and add fixture coverage for absent, malformed, expired, foreign, or unapproved authority. Keep the existing roadmap item as the canonical delivery record and the authorisation as its bounded execution evidence.
+Choose one adapter-compatible record location and shape, define the exact identifier and approval fields, resolve it safely from `ki-batch`, and add fixture coverage for absent, malformed, expired, foreign, or unapproved authority. Keep the existing roadmap item as the canonical delivery record and the authorisation as its bounded execution evidence.
 
 ### Locked design
 
@@ -62,10 +61,10 @@ The storage location, retention rule, approval model, scope resolver, and no-wri
 
 ## Dependencies / blocks
 
-This item is independently shapeable. It unblocks practical use of `ki-agenda` for a reviewed multi-item batch; it does not block individually approved delivery.
+This item is independently shapeable. It unblocks practical use of `ki-batch` for a reviewed multi-item batch; it does not block individually approved delivery.
 
 ## Discussion
 
 ### First-use finding
 
-The agenda's refusal to infer authority worked as designed. The missing record contract is a specification gap, not permission to use a conversational summary as durable approval.
+The batch procedure's refusal to infer authority worked as designed. The missing record contract is a specification gap, not permission to use a conversational summary as durable approval.
