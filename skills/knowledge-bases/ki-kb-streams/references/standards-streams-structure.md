@@ -8,6 +8,7 @@ This standard defines how the `Streams` zone is laid out for the [Knowledge Isla
 - [Path: Focus and Category](#path-focus-and-category)
 - [Leaf, parent, and multi-proposal layout](#leaf-parent-and-multi-proposal-layout)
 - [The Proposal suffix](#the-proposal-suffix)
+- [Proposal codes](#proposal-codes)
 - [Note types and frontmatter](#note-types-and-frontmatter)
 - [Index notes](#index-notes)
 - [What lives in a stream note](#what-lives-in-a-stream-note)
@@ -76,6 +77,25 @@ The proposal note's name **always** ends with a space and the word `Proposal` �
 
 Why the suffix: it marks every stream as a proposal under the Enactment Process at a glance, lets the proposal double as the leaf folder's index, and **preemptively disambiguates** the note from same-named artefacts elsewhere in the base (a policy, a settled record, a store note on the same topic) — so the link to it is collision-safe regardless of what the stream eventually produces. The checker keys on the suffix to find proposals. Before creating or renaming a proposal, **propose the name and resulting path and wait for user confirmation** — renames ripple through links.
 
+## Proposal codes
+
+Every full `stream-proposal` declares a scalar `code` in closed frontmatter. It is the proposal's concise, durable identity for display and reference; it is not a human-readable title substitute and is never inferred from a title, path, Focus, or serial position in a folder.
+
+The value must match `^[A-Z][A-Z0-9]*(?:-[A-Z][A-Z0-9]*)*-[0-9]{3,}$`. Its prefix therefore begins with an uppercase letter and may contain uppercase alphanumeric segments separated by hyphens; its final segment is a positive decimal serial, rendered with at least three digits. `KBS-001` conforms. `KBS-000`, lowercase values, values without a final serial, and values that derive from a title or path do not.
+
+Codes are allocated explicitly when a full proposal is opened. A code is unique across the whole Knowledge Base, not merely within a Focus, category, folder, or parent stream. Once assigned, it remains unchanged for the proposal's retained lifetime: moving Focus, renaming a title or path, changing lifecycle status, or converting between leaf and parent layouts does not change it. A base must not intentionally reuse a code after closure or pruning. The mechanical check can establish uniqueness only among retained proposals; preserving non-reuse after pruning is an allocation responsibility of the base owner.
+
+### Adopting codes in an existing base
+
+This is a clean-cut manual migration, not an automatic allocation feature:
+
+1. Inventory every retained full proposal across the base, including every Focus and child proposal.
+2. Have the base owner approve an explicit, base-wide code map. Resolve duplicates and invalid legacy labels in that map before editing notes; do not derive or renumber codes from paths or titles.
+3. Apply the approved map through receiver-owned Knowledge-Base work and update the affected proposal frontmatter only. Do not add `code` to lightweight streams or index notes.
+4. Re-audit the base for requiredness, grammar, and uniqueness before normal proposal operation resumes.
+
+The harness defines the contract and diagnoses gaps; it neither allocates a code nor edits a live base as part of CONFORM.
+
 ## Note types and frontmatter
 
 The zone uses the machine-readable `type:` key (the canonical scheme; see the skill's bindings) to mark each note's role:
@@ -90,7 +110,7 @@ The zone uses the machine-readable `type:` key (the canonical scheme; see the sk
 
 ※ And `Pass N/` sub-folders.
 
-**Frontmatter applies by type.** Only `stream-proposal` and `stream-note` notes carry the lifecycle fields `status`, `priority`, and `dependencies` (plus the base's descriptive keys such as `title`/`description`, and any local scoping keys). `stream-zone` and `stream-focus` index notes carry `type` and the common keys only — **not** `status`/`priority`/`dependencies`. The checker enforces the lifecycle fields on `<Name> Proposal.md` notes, so it does not wrongly demand them of index notes.
+**Frontmatter applies by type.** Every `stream-proposal` carries its `code` identity. Both `stream-proposal` and `stream-note` notes carry the lifecycle fields `status`, `priority`, and `dependencies` (plus the base's descriptive keys such as `title`/`description`, and any local scoping keys), but `stream-note` does not carry a proposal code. `stream-zone` and `stream-focus` index notes carry `type` and the common keys only — **not** `code`/`status`/`priority`/`dependencies`. The checker enforces proposal fields on `<Name> Proposal.md` notes, so it does not wrongly demand them of index notes.
 
 **Full proposals vs lightweight streams.** A stream comes in [two weights](standards-enactment-process.md): a **full proposal** (a `stream-proposal` with the `Proposal` suffix and the apparatus) or a **lightweight stream** (a plain tracker note — no suffix, no proposal frontmatter — for work that isn't a governed canonical change). The suffix and `STREAM-3` apply only to full proposals; a lightweight stream is just a note under a Focus folder.
 

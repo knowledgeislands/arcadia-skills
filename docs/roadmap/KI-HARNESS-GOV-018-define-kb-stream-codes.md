@@ -29,12 +29,12 @@ The `tools-ki` roadmap reader already exposes a scalar `code` when present, uses
 
 ## Steps
 
-- [ ] Amend the Streams structure and Enactment standards so every full `stream-proposal` declares a scalar `code` matching an uppercase alpha-leading prefix plus a final zero-padded serial of at least three digits, for example `KBS-001`.
-- [ ] Define proposal codes as unique across one Knowledge Base, assigned explicitly at proposal creation, stable across Focus moves, title or path changes, lifecycle transitions, and leaf/parent changes, and never intentionally reused after closure or pruning.
-- [ ] Update PROPOSE, AUDIT, CONFORM, the skill summary, and exemplars: creation requires an explicit code; AUDIT reports missing, malformed, or duplicate codes; CONFORM diagnoses but never invents, renumbers, or repairs an identity.
-- [ ] Extend the Streams session context and the next `ENACT-*` rubric item to inspect requiredness, grammar, and base-wide uniqueness without deriving a fallback, then add focused valid, missing, malformed, duplicate, and cross-Focus fixtures.
-- [ ] Document a clean-cut migration procedure that inventories existing full proposals, has the base owner approve an explicit code map, applies it through receiver-owned KB work, and re-audits before normal proposal operation resumes; do not edit live KB repositories in this item.
-- [ ] Regenerate the `ki-kb-streams` rubric publication and verify that the existing `tools-ki` `KBS-001` reader fixture remains compatible without a host-contract change.
+- [x] Amend the Streams structure and Enactment standards so every full `stream-proposal` declares a scalar `code` matching an uppercase alpha-leading prefix plus a final zero-padded serial of at least three digits, for example `KBS-001`.
+- [x] Define proposal codes as unique across one Knowledge Base, assigned explicitly at proposal creation, stable across Focus moves, title or path changes, lifecycle transitions, and leaf/parent changes, and never intentionally reused after closure or pruning.
+- [x] Update PROPOSE, AUDIT, CONFORM, the skill summary, and exemplars: creation requires an explicit code; AUDIT reports missing, malformed, or duplicate codes; CONFORM diagnoses but never invents, renumbers, or repairs an identity.
+- [x] Extend the Streams session context and the next `ENACT-*` rubric item to inspect requiredness, grammar, and base-wide uniqueness without deriving a fallback, then add focused valid, missing, malformed, duplicate, and cross-Focus fixtures.
+- [x] Document a clean-cut migration procedure that inventories existing full proposals, has the base owner approve an explicit code map, applies it through receiver-owned KB work, and re-audits before normal proposal operation resumes; do not edit live KB repositories in this item.
+- [x] Regenerate the `ki-kb-streams` rubric publication and verify that the existing `tools-ki` `KBS-001` reader fixture remains compatible without a host-contract change.
 
 ## Files touched
 

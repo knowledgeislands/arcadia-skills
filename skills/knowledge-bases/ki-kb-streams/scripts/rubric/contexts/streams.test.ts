@@ -26,13 +26,13 @@ const options = (root: string, mode: 'audit' | 'conform'): RubricContextOptions 
   configuration: {}
 })
 
-const proposal = (title: string): string => `---
+const proposal = (title: string, code?: string): string => `---
 title: ${title}
 type: stream-proposal
 status: draft - working
 priority: high (raised)
 dependencies: []
----
+${code === undefined ? '' : `code: ${code}\n`}---
 # ${title}
 `
 
@@ -46,8 +46,8 @@ const streamsFixture = (): { root: string; files: string[] } => {
     join(root, 'Streams', 'Now', 'Alpha Proposal', 'Alpha Proposal.md'),
     join(root, 'Streams', 'Future', 'Beta Proposal', 'Beta Proposal.md')
   ]
-  writeFileSync(files[0] as string, proposal('Alpha Proposal'))
-  writeFileSync(files[1] as string, proposal('Beta Proposal'))
+  writeFileSync(files[0] as string, proposal('Alpha Proposal', 'KBS-001'))
+  writeFileSync(files[1] as string, proposal('Beta Proposal', 'KBS-002'))
   writeFileSync(join(root, 'AGENTS.md'), 'Canonical changes use a proposal governed by ki-kb-streams.\n')
   return { root, files }
 }
@@ -56,6 +56,15 @@ const rootContext = (session: ReturnType<typeof createStreamsSession>) => {
   const [subject] = session.subjects
   if (!subject) throw new Error('ki-kb-streams session did not expose its repository subject')
   return subject.context()
+}
+
+const proposalCodes = (session: ReturnType<typeof createStreamsSession>) => {
+  const item = ENACT.items.find((candidate) => candidate.code === 'ENACT-6')
+  if (!item?.mechanical) throw new Error('ENACT-6 mechanical audit is unavailable')
+  return {
+    item,
+    outcomes: item.mechanical.audit.run(ENACT.selectContext(rootContext(session)))
+  }
 }
 
 describe('ki-kb-streams session', () => {
@@ -118,5 +127,70 @@ describe('ki-kb-streams session', () => {
         subject: `Streams/${focus}/${focus}.md`
       }))
     )
+  })
+
+  test('passes explicit valid proposal codes without a conform identity write', () => {
+    const { root } = streamsFixture()
+    const session = createStreamsSession(options(root, 'conform'))
+    const { item, outcomes } = proposalCodes(session)
+
+    expect(item.mechanical?.level).toBe('FAIL')
+    expect(outcomes).toEqual([
+      {
+        status: 'PASS',
+        message: 'Proposal codes are present, well-formed, and unique across the Knowledge Base.'
+      }
+    ])
+    expect(item.mechanical?.conform).toBeUndefined()
+    expect(session.proposal()).toEqual({ writes: [] })
+  })
+
+  test('fails missing proposal codes without inventing an identity', () => {
+    const { root, files } = streamsFixture()
+    writeFileSync(files[0] as string, proposal('Alpha Proposal'))
+    const session = createStreamsSession(options(root, 'conform'))
+    const { item, outcomes } = proposalCodes(session)
+
+    expect(item.mechanical?.level).toBe('FAIL')
+    expect(outcomes).toEqual([
+      {
+        status: 'VIOLATION',
+        message: 'Missing proposal code: Streams/Now/Alpha Proposal/Alpha Proposal.md.'
+      }
+    ])
+    expect(session.proposal()).toEqual({ writes: [] })
+  })
+
+  test('fails malformed proposal codes without rewriting an identity', () => {
+    const { root, files } = streamsFixture()
+    writeFileSync(files[0] as string, proposal('Alpha Proposal', 'kbs-000'))
+    const session = createStreamsSession(options(root, 'conform'))
+    const { item, outcomes } = proposalCodes(session)
+
+    expect(item.mechanical?.level).toBe('FAIL')
+    expect(outcomes).toEqual([
+      {
+        status: 'VIOLATION',
+        message: 'Malformed proposal code: Streams/Now/Alpha Proposal/Alpha Proposal.md (kbs-000).'
+      }
+    ])
+    expect(session.proposal()).toEqual({ writes: [] })
+  })
+
+  test('fails a duplicate code across Focus folders without renumbering either proposal', () => {
+    const { root, files } = streamsFixture()
+    writeFileSync(files[1] as string, proposal('Beta Proposal', 'KBS-001'))
+    const session = createStreamsSession(options(root, 'conform'))
+    const { item, outcomes } = proposalCodes(session)
+
+    expect(item.mechanical?.level).toBe('FAIL')
+    expect(outcomes).toEqual([
+      {
+        status: 'VIOLATION',
+        message:
+          'Duplicate proposal code: KBS-001 (Streams/Now/Alpha Proposal/Alpha Proposal.md, Streams/Future/Beta Proposal/Beta Proposal.md).'
+      }
+    ])
+    expect(session.proposal()).toEqual({ writes: [] })
   })
 })

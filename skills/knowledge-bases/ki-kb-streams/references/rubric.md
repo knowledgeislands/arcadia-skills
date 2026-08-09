@@ -71,6 +71,8 @@ Proposal frontmatter, lifecycle, and settlement.
   - _Review prompt:_ Do done proposals retain their review evidence and canonical outputs until an explicit prune selection?
   - _Outcomes:_ conforming; retain evidence; explicit prune selection required
   - _Conforming guidance:_ Restore or retain the reviewed evidence and canonical outputs until an explicit owner-approved prune selection names the proposal.
+- **ENACT-6 [M] — proposal codes** — Each proposal declares a well-formed code unique across the Knowledge Base. (standards-enactment-process.md)
+  - _Remediation:_ diagnostic — Assign an explicit owner-approved code, or resolve the duplicate without deriving, allocating, renumbering, or rewriting a proposal identity.
 
 ## GATE — always-loaded gate
 

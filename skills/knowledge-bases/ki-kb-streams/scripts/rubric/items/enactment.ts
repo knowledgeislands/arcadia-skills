@@ -80,11 +80,27 @@ const ENACT_5: RubricItem<EnactmentRubricContext> = {
   }
 }
 
+const ENACT_6: RubricItem<EnactmentRubricContext> = {
+  code: 'ENACT-6',
+  title: 'proposal codes',
+  description: 'Each proposal declares a well-formed code unique across the Knowledge Base.',
+  sources: [SOURCE],
+  mechanical: {
+    level: 'FAIL',
+    remediation: {
+      class: 'diagnostic',
+      guidance:
+        'Assign an explicit owner-approved code, or resolve the duplicate without deriving, allocating, renumbering, or rewriting a proposal identity.'
+    },
+    audit: { phase: 'INSPECT', run: (context) => auditEvidence(context.proposalCodes, 'FAIL') }
+  }
+}
+
 export const ENACT: RubricFamily<StreamsRubricContext, EnactmentRubricContext> = {
   code: 'ENACT',
   title: 'Enactment Process',
   description: 'Proposal frontmatter, lifecycle, and settlement.',
   standard: SOURCE,
   selectContext: (context) => context.enactment,
-  items: [ENACT_1, ENACT_2, ENACT_3, ENACT_4, ENACT_5]
+  items: [ENACT_1, ENACT_2, ENACT_3, ENACT_4, ENACT_5, ENACT_6]
 }

@@ -23,11 +23,12 @@ Curated patterns showing what well-formed Streams zone notes, proposal documents
 
 ### Well-formed proposal frontmatter
 
-Every full-proposal stream note (a `<Name> Proposal.md` file) carries these lifecycle fields. The following is taken from `Streams/Future/Island MCP/Island MCP Proposal.md` in `ki-arcadia-principal`:
+Every full-proposal stream note (a `<Name> Proposal.md` file) carries an explicitly allocated stable code and these lifecycle fields. The following conforming shape uses the compatibility exemplar `KBS-001`:
 
 ```yaml
 ---
 type: stream-proposal
+code: KBS-001
 tags:
   - topic/knowledge-islands
   - topic/tools
@@ -38,7 +39,7 @@ author: Mixed
 ---
 ```
 
-`type: stream-proposal` is the machine-readable marker the checker keys on. `status` is one of `draft` / `ready` / `in-progress` / `awaiting-review` / `done`. `dependencies` is a YAML list of prerequisite proposal filenames — empty here because none exist yet, but always present so the checker can validate it. `priority` is `urgent` / `high` / `medium` / `low`. Index notes (`stream-focus`, `stream-zone`, `stream-index`) do not carry `status`, `priority`, or `dependencies` — those fields are for proposals only.
+`type: stream-proposal` is the machine-readable marker the checker keys on. `code: KBS-001` matches the required uppercase prefix and zero-padded positive final serial; it was explicitly allocated and is not derived from the proposal's name or path. `status` is one of `draft` / `ready` / `in-progress` / `awaiting-review` / `done`. `dependencies` is a YAML list of prerequisite proposal filenames — empty here because none exist yet, but always present so the checker can validate it. `priority` is `urgent` / `high` / `medium` / `low`. Index notes (`stream-focus`, `stream-zone`, `stream-index`) do not carry `code`, `status`, `priority`, or `dependencies` — those fields are for proposals only.
 
 ### Proposal document structure
 

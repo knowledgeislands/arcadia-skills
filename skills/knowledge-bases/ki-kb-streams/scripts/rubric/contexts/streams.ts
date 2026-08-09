@@ -16,6 +16,7 @@ const PRIORITY = ['urgent', 'high', 'medium', 'low'] as const
 const SUFFIX = ' Proposal'
 const STREAMS_TABLE = 'ki-kb-streams'
 const KB_TABLE = 'ki-kb'
+const STREAM_CODE = /^[A-Z][A-Z0-9]*(?:-[A-Z][A-Z0-9]*)*-[0-9]{3,}$/
 
 export type StreamsEvidence = {
   level: 'FAIL' | 'WARN' | 'INFO' | 'NOT_APPLICABLE' | 'PASS'
@@ -32,6 +33,7 @@ export type StreamRubricContext = {
 export type EnactmentRubricContext = {
   proposalFrontmatter: readonly StreamsEvidence[]
   lifecycle: readonly StreamsEvidence[]
+  proposalCodes: readonly StreamsEvidence[]
   normaliseLifecycle?: () => void
 }
 
@@ -163,6 +165,11 @@ const bareToken = (value: string, vocabulary: readonly string[]): string | undef
     ? undefined
     : vocabulary.find((token) => value.startsWith(token) && /[\s,;.()-]/.test(value.charAt(token.length)))
 
+const validStreamCode = (value: string): boolean => {
+  if (!STREAM_CODE.test(value)) return false
+  return /[1-9]/.test(value.slice(value.lastIndexOf('-') + 1))
+}
+
 const proposalDocument = (document: MarkdownDocument): boolean => {
   const values = document.frontmatter?.values
   return (
@@ -202,7 +209,7 @@ const unavailableContext = (
   return {
     rubric: { publication },
     stream: { focusFolders: [evidence], focusIndexes: notApplicable, proposalSuffix: notApplicable },
-    enactment: { proposalFrontmatter: notApplicable, lifecycle: notApplicable },
+    enactment: { proposalFrontmatter: notApplicable, lifecycle: notApplicable, proposalCodes: notApplicable },
     gate: { anchor: notApplicable },
     config: { knownKeys: notApplicable, noteTypeScheme: notApplicable }
   }
@@ -300,6 +307,9 @@ export const createStreamsSession = ({
   const missing: string[] = []
   const badStatus: string[] = []
   const badPriority: string[] = []
+  const missingCodes: string[] = []
+  const malformedCodes: string[] = []
+  const codePaths = new Map<string, string[]>()
   for (const document of proposals) {
     const frontmatter = document.frontmatter
     if (!frontmatter?.closed) {
@@ -312,7 +322,14 @@ export const createStreamsSession = ({
       badStatus.push(document.relativePath)
     if (frontmatter.values.priority && !PRIORITY.includes(frontmatter.values.priority as (typeof PRIORITY)[number]))
       badPriority.push(document.relativePath)
+    const code = frontmatter.values.code
+    if (!code) missingCodes.push(document.relativePath)
+    else if (!validStreamCode(code)) malformedCodes.push(`${document.relativePath} (${code})`)
+    else codePaths.set(code, [...(codePaths.get(code) ?? []), document.relativePath])
   }
+  const duplicateCodes = [...codePaths.entries()]
+    .filter(([, paths]) => paths.length > 1)
+    .map(([code, paths]) => `${code} (${paths.join(', ')})`)
   const proposalFrontmatter: StreamsEvidence[] = [
     {
       level: malformed.length ? 'FAIL' : missing.length ? 'WARN' : proposals.length ? 'PASS' : 'NOT_APPLICABLE',
@@ -333,6 +350,26 @@ export const createStreamsSession = ({
           ? `Non-lifecycle status or priority: ${sample([...badStatus, ...badPriority])}.`
           : proposals.length
             ? 'Proposal status and priority use bare lifecycle tokens.'
+            : 'No full proposals are present.'
+    }
+  ]
+  const proposalCodes: StreamsEvidence[] = [
+    {
+      level:
+        missingCodes.length || malformedCodes.length || duplicateCodes.length
+          ? 'FAIL'
+          : proposals.length
+            ? 'PASS'
+            : 'NOT_APPLICABLE',
+      message:
+        missingCodes.length || malformedCodes.length || duplicateCodes.length
+          ? [
+              ...(missingCodes.length ? [`Missing proposal code: ${sample(missingCodes)}.`] : []),
+              ...(malformedCodes.length ? [`Malformed proposal code: ${sample(malformedCodes)}.`] : []),
+              ...(duplicateCodes.length ? [`Duplicate proposal code: ${sample(duplicateCodes)}.`] : [])
+            ].join(' ')
+          : proposals.length
+            ? 'Proposal codes are present, well-formed, and unique across the Knowledge Base.'
             : 'No full proposals are present.'
     }
   ]
@@ -381,6 +418,7 @@ export const createStreamsSession = ({
     enactment: {
       proposalFrontmatter,
       lifecycle,
+      proposalCodes,
       ...(mutable
         ? {
             normaliseLifecycle: () => {

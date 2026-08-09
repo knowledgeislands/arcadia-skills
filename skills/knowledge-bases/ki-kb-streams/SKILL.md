@@ -58,7 +58,7 @@ Order: `draft` → `ready` → `in-progress` → `awaiting-review` → `done`. *
 
 ## Proposal document anatomy
 
-The stream note _is_ the proposal document — a working tracker, not a knowledge store. It carries frontmatter `status`, `priority`, and `dependencies` (an array of prerequisite proposal filenames — the machine-readable form of the `Prerequisite` rows in Inputs), plus the base's descriptive keys. Sections:
+The stream note _is_ the proposal document — a working tracker, not a knowledge store. Every full proposal carries an explicitly assigned, Knowledge-Base-wide unique `code` in frontmatter, in addition to `status`, `priority`, and `dependencies` (an array of prerequisite proposal filenames — the machine-readable form of the `Prerequisite` rows in Inputs), plus the base's descriptive keys. A code is stable identity: never derive it from the title or path, and never change it for a Focus move, lifecycle transition, or leaf/parent change. Its grammar, allocation, and existing-base migration procedure are in [the Streams structure standard](references/standards-streams-structure.md#proposal-codes).
 
 - **Inputs** — what the change draws on, recorded as labelled `Document`, `Decision`, or `Prerequisite` entries.
 - **Outputs** — what it produces, recorded as labelled `Decision` or `Artefact` entries. Complete before `ready`.
@@ -103,7 +103,7 @@ The Enactment gate (`## Installing the gate` below) and the Working rules apply 
 
 These apply to every change (the discipline that keeps the workspace trustworthy):
 
-- **Name-confirmation gate.** Before creating a stream/sub-proposal or renaming one, propose the name and resulting path and **wait for confirmation** — renames ripple through links.
+- **Name and identity-confirmation gate.** Before creating a full proposal or renaming one, propose the name, resulting path, and explicitly allocated code and **wait for confirmation** — renames ripple through links, while codes do not.
 - **Keep the proposal and indexes current.** Update immediately on a decision, status change, or priority change; the canonical state must never lag.
 - **Load before editing.** Reload the proposal and indexes before resuming work.
 - **No `ready` while a prerequisite is below `done`.** No rollout without explicit authorisation.
