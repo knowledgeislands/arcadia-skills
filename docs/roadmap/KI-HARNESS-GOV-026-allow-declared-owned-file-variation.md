@@ -4,7 +4,7 @@ title: Allow declared owned-file variation
 theme: governance-consistency
 horizon: now
 status: in-progress
-blocks: []
+blocks: [KI-HARNESS-OPS-004]
 blocked-by: []
 baseline-ref: 35647f7de1cd48dc086f7fbd4904e005c86bfb9d
 ---
