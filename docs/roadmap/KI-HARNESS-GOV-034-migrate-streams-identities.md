@@ -4,7 +4,7 @@ area: GOV
 title: Reshape KB Streams
 theme: governance-consistency
 horizon: now
-status: awaiting-review
+status: done
 blocks: []
 blocked-by: []
 baseline-ref: 4a17d3bf7c5c64edd35c45ebfd07a1b61d80da91
@@ -62,6 +62,10 @@ Delivered the shared Streams contract in `a391c0e1`, `a7af666a`, and `9e60b158`.
 The receiver request below is the migration brief. It intentionally leaves record classification, IDs, paths, and canonical knowledge in each base's control. The 2026-08-09 estate audit confirms those legacy state folders remain in Equal Remedy Research and Kit Principal; this is expected downstream migration work, not evidence that the shared contract is incomplete.
 
 Focused Streams tests, the full Harness test suite, TypeScript, generated-rubric parity, and the relevant Harness audits passed during implementation. The subsequent full repository audit currently fails only on the estate-wide `claude-desktop` runtime-name regression, unrelated to this Streams change.
+
+## Done
+
+Accepted by the user on 2026-08-10 after review of the shared contract, receiver-owned migration boundary, verification, and known estate finding.
 
 ## Discussion
 

@@ -4,7 +4,7 @@ title: Allow declared owned-file variation
 area: GOV
 theme: governance-consistency
 horizon: now
-status: awaiting-review
+status: done
 blocks: [KI-HARNESS-OPS-004]
 blocked-by: []
 baseline-ref: 35647f7de1cd48dc086f7fbd4904e005c86bfb9d
@@ -94,6 +94,10 @@ Delivered the narrow `owned_file_exceptions` configuration shape and the `OWN-1`
 Kit Legal declares `.rumdl.toml = "Preserves intentional evidence annotations and prevents unsafe MD075 autofix corruption."` in commit `60a95f84`. Its audit reports that reason as an actionable exception WARN, and `ki repo conform --skill ki-authoring --dry-run` no longer proposes that file. Its Markdown and repository preflight remains unclean, so no write-mode conform was run.
 
 Focused Authoring tests, generated rubric parity, TypeScript, the harness test suite, and the relevant Harness audits passed during implementation. The 2026-08-09 estate sweep covered all twenty-five registered repositories. It found the expected Kit Legal exception, plus unrelated Markdown debt there and an undeclared `.rumdl.toml` drift warning in Valle Armonia Website. It also exposed a separate, widespread `claude-desktop` runtime-name regression; that estate issue is not an owned-file exception.
+
+## Done
+
+Accepted by the user on 2026-08-10 after review of the delivered boundary, verification, and known estate findings.
 
 ## Discussion
 
