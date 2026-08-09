@@ -3,7 +3,7 @@ id: KI-HARNESS-GOV-027
 title: Adopt Specifications corpus
 theme: governance-consistency
 horizon: now
-status: awaiting-review
+status: done
 blocks: []
 blocked-by: []
 baseline-ref: 4f614a239891ee6e5ed335d59ddb0d5edef6dc05
@@ -101,6 +101,12 @@ Nothing external blocks this work. The superseding decision and the new canonica
 - **Verification:** `ki repo audit --skill ki-specs` passes in all three declared repositories. Harness TypeScript and full tests pass; Vallearmonia's 1,180 tests, Markdown check, and Guides audit pass; tools-ki's 560 functional tests and Markdown check pass; KI Website Markdown check, Eleventy build, and `ki-website` audit pass.
 - **Known non-blocker:** tools-ki's existing coverage threshold remains 99.97% (one uncovered `repository-rendering.ts` line) despite its functional suite passing; this delivery changed no tools-ki source or test file.
 - **Deferred publication:** the `ki-plugins` marketplace projection was regenerated and inspected but would include 463 stale changes from unrelated Harness work. Per user direction, it was restored cleanly and is excluded from this item rather than hand-edited.
+
+## Done
+
+Accepted by Kris Brown on 2026-08-09, on the review packet above.
+
+At acceptance, the three governed repositories were clean at Harness `16714084`, Vallearmonia Website `eea22d6`, and tools-ki `f9c7d00`; the KI Website was clean at `8881535`. `ki repo audit --skill ki-specs` passed in every declared Specifications repository, and `ki repo audit --skill ki-website` passed in the documentation-site repository. The known tools-ki coverage threshold remains accepted as the recorded non-blocker; the separately deferred `ki-plugins` projection remains outside this completed item.
 
 ## Discussion
 
