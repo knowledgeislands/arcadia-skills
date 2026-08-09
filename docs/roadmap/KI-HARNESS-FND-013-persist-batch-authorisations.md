@@ -4,10 +4,10 @@ title: Persist batch authorisations
 area: FND
 theme: foundation-tooling
 horizon: now
-status: ready
+status: in-progress
 blocks: []
 blocked-by: []
-baseline-ref: null
+baseline-ref: 16b31e6ca0a4a485fe38142c479c39381931bfbc
 ---
 
 ## Goal
