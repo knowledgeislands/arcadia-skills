@@ -5,7 +5,6 @@ title: Reshape KB Streams
 theme: governance-consistency
 horizon: now
 status: in-progress
-candidate: false
 blocks: []
 blocked-by: []
 baseline-ref: 4a17d3bf7c5c64edd35c45ebfd07a1b61d80da91
