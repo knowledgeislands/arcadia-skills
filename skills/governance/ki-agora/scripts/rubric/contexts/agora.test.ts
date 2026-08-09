@@ -45,8 +45,8 @@ test('canonical home and membership declarations pass local shape validation', (
     options(root, {
       homes: {
         'knowledge-islands': {
+          owner: 'https://github.com/knowledgeislands/home',
           purpose: 'Knowledge Islands maintained repositories',
-          targets: ['zed-workspace', 'claude-code-trust'],
           members: { 'https://github.com/knowledgeislands/tools-ki': 'maintainer' }
         }
       },
@@ -60,7 +60,7 @@ test('canonical home and membership declarations pass local shape validation', (
   )
 
   expect(outcomes(session, CONFIG)).toEqual([
-    { status: 'PASS', message: 'Agora homes use canonical identity, purpose, policy, and approved member shape.' }
+    { status: 'PASS', message: 'Agora homes use canonical owner identity, purpose, and approved member shape.' }
   ])
   expect(outcomes(session, MEMBERSHIP)).toEqual([
     { status: 'PASS', message: 'Agora memberships use canonical home and role shape.' }
@@ -73,8 +73,8 @@ test('local shape rejects malformed declarations without observing a peer', () =
     options(root, {
       homes: {
         Knowledge_Islands: {
+          owner: 'not a repository',
           purpose: '',
-          targets: ['zed-workspace', 'zed-workspace', 'not-a-target'],
           members: {
             'not a repository': 'not a role',
             'https://github.com/knowledgeislands/home': 'owner'
@@ -87,8 +87,8 @@ test('local shape rejects malformed declarations without observing a peer', () =
 
   expect(outcomes(session, CONFIG).map((outcome) => outcome.message)).toEqual([
     'home Knowledge_Islands must use a stable lower-case hyphenated identifier',
+    'home Knowledge_Islands owner must be a canonical HTTPS GitHub repository',
     'home Knowledge_Islands requires a non-empty purpose',
-    'home Knowledge_Islands targets must be a duplicate-free array from the target-policy vocabulary',
     'home Knowledge_Islands member not a repository must be a canonical HTTPS GitHub repository',
     'home Knowledge_Islands member not a repository role must be a lower-case hyphenated identifier',
     'home Knowledge_Islands must not list its own repository as a member'
@@ -102,4 +102,25 @@ test('local shape rejects malformed declarations without observing a peer', () =
   expect(outcomes(session, MEMBERSHIP).map((outcome) => outcome.message)).toContain(
     'membership knowledge-islands home must be a canonical HTTPS GitHub repository'
   )
+})
+
+test('local shape requires each home to name its declaring owner', () => {
+  const root = fixture()
+  const session = createAgoraSession(
+    options(root, {
+      homes: {
+        team: {
+          owner: 'https://github.com/knowledgeislands/other',
+          purpose: 'Team work',
+          members: {}
+        }
+      }
+    })
+  )
+
+  expect(outcomes(session, CONFIG)).toContainEqual({
+    status: 'VIOLATION',
+    message: 'home team owner must match its declaring repository',
+    subject: '.ki-config.toml'
+  })
 })

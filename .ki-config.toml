@@ -8,7 +8,7 @@ description = "Knowledge Islands agentic harness — canonical home for Agent Sk
 repo_code = "KI-HARNESS"
 visibility = "public"
 license = "MIT"
-supported_runtimes = ["claude-code", "chatgpt-codex"]
+supported_runtimes = ["claude-code", "claude-desktop", "chatgpt-codex"]
 
 [skills.ki-repo.checks]
 coverage-checkpoint = false # source repository publishes the optional capability without adopting a checkpoint subarea
@@ -87,8 +87,8 @@ mcp_servers = 20 # User-scoped; revisit if the global MCP set is pruned.
 [skills.ki-tokenomics-codex]
 
 [skills.ki-agora.homes.ki-all]
+owner = "https://github.com/knowledgeislands/ki-agentic-harness"
 purpose = "Knowledge Islands ecosystem repositories"
-targets = ["zed-workspace"]
 
 [skills.ki-agora.homes.ki-all.members]
 "https://github.com/krisb/dotfiles" = "maintainer"
@@ -108,8 +108,8 @@ targets = ["zed-workspace"]
 "https://github.com/knowledgeislands/tools-mgit" = "maintainer"
 
 [skills.ki-agora.homes.ki-fnd]
+owner = "https://github.com/knowledgeislands/ki-agentic-harness"
 purpose = "Knowledge Islands foundation repositories"
-targets = ["zed-workspace"]
 
 [skills.ki-agora.homes.ki-fnd.members]
 "https://github.com/krisb/dotfiles" = "maintainer"
@@ -121,8 +121,8 @@ targets = ["zed-workspace"]
 "https://github.com/knowledgeislands/tools-mgit" = "maintainer"
 
 [skills.ki-agora.homes.ki-mcps]
+owner = "https://github.com/knowledgeislands/ki-agentic-harness"
 purpose = "Knowledge Islands MCP repositories"
-targets = ["zed-workspace"]
 
 [skills.ki-agora.homes.ki-mcps.members]
 "https://github.com/knowledgeislands/mcp-claude-housekeeping" = "maintainer"

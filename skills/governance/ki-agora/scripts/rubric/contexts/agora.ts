@@ -10,14 +10,6 @@ import type {
 const REPOSITORY = /^https:\/\/github\.com\/[a-z0-9](?:[a-z0-9._-]*[a-z0-9])?\/[a-z0-9](?:[a-z0-9._-]*[a-z0-9])?$/
 const AGORA_ID = /^[a-z][a-z0-9-]*[a-z0-9]$/
 const ROLE = /^[a-z][a-z0-9-]*[a-z0-9]$/
-const TARGETS = new Set([
-  'zed-workspace',
-  'vscode-workspace',
-  'claude-code-trust',
-  'claude-desktop-trust',
-  'chatgpt-codex-trust'
-])
-
 type AgoraConfiguration = Record<string, unknown>
 
 export type OutcomeContext = {
@@ -60,9 +52,6 @@ const repositoryIdentity = (root: string): string | undefined => {
   return typeof repo?.repository === 'string' && REPOSITORY.test(repo.repository) ? repo.repository : undefined
 }
 
-const distinctStrings = (value: unknown): value is readonly string[] =>
-  Array.isArray(value) && value.every((entry) => typeof entry === 'string') && new Set(value).size === value.length
-
 const parseHomes = (value: unknown, local: string | undefined): AuditOutcome[] => {
   const outcomes: AuditOutcome[] = []
   const homes = table(value)
@@ -76,14 +65,14 @@ const parseHomes = (value: unknown, local: string | undefined): AuditOutcome[] =
       outcomes.push(violation(`home ${identifier} must be a table`))
       continue
     }
-    for (const key of Object.keys(home).filter((key) => !['purpose', 'targets', 'members'].includes(key)))
+    for (const key of Object.keys(home).filter((key) => !['owner', 'purpose', 'members'].includes(key)))
       outcomes.push(warning(`home ${identifier} has unrecognised key ${key}`))
+    if (typeof home.owner !== 'string' || !REPOSITORY.test(home.owner))
+      outcomes.push(violation(`home ${identifier} owner must be a canonical HTTPS GitHub repository`))
+    else if (home.owner !== local)
+      outcomes.push(violation(`home ${identifier} owner must match its declaring repository`))
     if (typeof home.purpose !== 'string' || !home.purpose.trim())
       outcomes.push(violation(`home ${identifier} requires a non-empty purpose`))
-    if (!distinctStrings(home.targets) || home.targets.some((target) => !TARGETS.has(target)))
-      outcomes.push(
-        violation(`home ${identifier} targets must be a duplicate-free array from the target-policy vocabulary`)
-      )
     const members = table(home.members)
     if (!members) {
       outcomes.push(violation(`home ${identifier} members must be a repository-to-role table`))
@@ -141,7 +130,7 @@ const parseConfiguration = (configuration: Readonly<AgoraConfiguration>, root: s
     configuration: {
       outcomes: configurationOutcomes.length
         ? configurationOutcomes
-        : pass('Agora homes use canonical identity, purpose, policy, and approved member shape.')
+        : pass('Agora homes use canonical owner identity, purpose, and approved member shape.')
     },
     memberships: {
       outcomes: membershipsOutcomes.length

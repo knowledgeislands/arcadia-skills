@@ -17,13 +17,13 @@ Local `.ki-agora` profiles currently collect absolute paths for one editor. They
 
 ## Decision
 
-This island adopts `ki-agora` as the portable governance owner for named reciprocal Agora membership. An Agora home declares its stable identifier, purpose, permitted target-policy categories, and approved canonical repository members with their roles. A member independently declares the same identifier, canonical home, and role. The portable contract records no local path or application-owned state.
+This island adopts `ki-agora` as the portable governance owner for named reciprocal Agora membership. A registered owner repository declares each Agora's globally unique stable identifier, its own canonical identity, purpose, permitted target-policy categories, and approved canonical repository members with their roles. The owner is automatically included in the resolved projection; every other member independently declares the same identifier, canonical owner, and role. The portable contract records no local path or application-owned state.
 
 The `ki` host owns local registry resolution and reciprocal observation. A user-environment owner may project an agreed Agora to a supported client, while preserving its client-owned state. The full registry may separately derive one protected system-managed estate; named Agoras remain intentional subsets and never enrol external source stores by association.
 
 ## Consequences
 
-Repositories gain one reviewable consent model that survives machines and clients without granting cross-repository write authority. A peer's absence or mismatch becomes an observable validation result, not a mutation request. The first actual Agora vocabulary and member set remain user-authorised follow-on configuration, and tools-ki can now implement resolution without inventing a competing schema.
+Repositories gain one reviewable ownership and consent model that survives machines and clients without granting cross-repository write authority. A peer's absence or mismatch becomes an observable validation result, not a mutation request; an owner identity mismatch or duplicated Agora identifier is rejected by the resolver. The first actual Agora vocabulary and member set remain user-authorised follow-on configuration, and tools-ki can now implement resolution without inventing a competing schema.
 
 ## References
 
