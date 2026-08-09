@@ -3,7 +3,7 @@ id: KI-HARNESS-GOV-033
 title: Define Agora membership
 theme: governance-consistency
 horizon: now
-status: awaiting-review
+status: done
 blocks: []
 blocked-by: []
 baseline-ref: 8769800ab502a0f357933465bb105e89a1defee8
@@ -59,6 +59,10 @@ The portable repository identity and Knowledge Base store-role contract is alrea
 ## Review
 
 The new `ki-agora` capability passes its native audit, the Harness skill, authoring, Decision Record, and roadmap audits, the full Harness test suite, TypeScript, and Biome. Review the authority split and policy vocabulary before accepting: Harness owns the portable declarations, tools-ki owns local reciprocal observation, and user-environment configuration owns client projections. No peer or user configuration has changed.
+
+## Done
+
+Accepted on 2026-08-09 by explicit user approval. The portable contract is delivered in `b27fc834`; CLI-018 may now consume it for local resolution and reciprocal observation, while peer configuration and user-environment projections remain separately authorised follow-on work.
 
 ## Discussion
 
