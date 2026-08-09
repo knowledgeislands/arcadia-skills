@@ -3,10 +3,10 @@ id: KI-HARNESS-GOV-030
 title: Reconcile decision records
 theme: governance-consistency
 horizon: now
-status: ready
+status: in-progress
 blocks: []
 blocked-by: []
-baseline-ref: null
+baseline-ref: c9cc2443f78562529378d3634b42176389ed903f
 housekeeping-template: KI-HARNESS-HK-002
 scheduled-for: 2026-08-09
 ---
