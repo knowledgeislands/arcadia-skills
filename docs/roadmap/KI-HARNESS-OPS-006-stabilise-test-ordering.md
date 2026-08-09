@@ -33,9 +33,9 @@ Retain the existing trade-record fixture, but assert its canonical sorted sequen
 
 ## Steps
 
-- [ ] Sort the final `markdownFiles()` result by default code-unit ordering after recursive collection, preserving every existing inclusion, exclusion, regular-file, and symlink rule.
-- [ ] Update the focused trade-record fixture to assert the canonical path order rather than the filesystem traversal order, including the README and both inbound and outbound records.
-- [ ] Run the focused Authoring rubric test, `bun run test`, `bunx tsc --noEmit`, and the Authoring and roadmap audits; inspect the changed evidence scope and test assertion.
+- [x] Sort the final `markdownFiles()` result by default code-unit ordering after recursive collection, preserving every existing inclusion, exclusion, regular-file, and symlink rule.
+- [x] Update the focused trade-record fixture to assert the canonical path order rather than the filesystem traversal order, including the README and both inbound and outbound records.
+- [x] Run the focused Authoring rubric test, `bun run test`, `bunx tsc --noEmit`, and the Authoring and roadmap audits; inspect the changed evidence scope and test assertion.
 - [ ] Commit the local repair and prepare its review packet. Treat a subsequent GitHub Actions run as remote verification, not as evidence available at local completion.
 
 ## Files touched

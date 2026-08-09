@@ -201,7 +201,7 @@ const markdownFiles = (repository: string, directory = '', files: string[] = [])
     if (entry.isFile() && !entry.isSymbolicLink() && path.endsWith('.md') && !frontmatterPathIsIgnored(path))
       files.push(path)
   }
-  return files
+  return files.sort()
 }
 
 const normaliseFrontmatter = (content: string): { content: string; count: number } => {
