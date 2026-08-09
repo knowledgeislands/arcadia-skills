@@ -3,7 +3,7 @@ id: KI-HARNESS-GOV-029
 title: Improve mechanical governance
 theme: governance-consistency
 horizon: now
-status: in-progress
+status: awaiting-review
 blocks: []
 blocked-by: []
 baseline-ref: 6a3097c9bac5e0e1c6e619356241a512bc96aecd
@@ -39,15 +39,26 @@ The Harness has measured recurring cost anecdotally through repeated audits, gen
 
 ## Steps
 
-- [ ] Define a compact measurement record: repeated operation, evidence source, frequency or repeated-call signal, current owner, token or time cost, deterministic input, and unsafe or judgment boundary.
-- [ ] Gather current Harness and estate evidence without modifying skills, package scripts, repository configuration, or runtime settings.
-- [ ] Classify each candidate as retain-as-judgment, improve diagnostic or prepared context, add a bounded mechanical check, or route to a separately owned proposal.
-- [ ] For each proposed improvement, name its owning skill, fixture or test boundary, safe no-write failure mode, and a receiver-owned work record where implementation is non-trivial.
-- [ ] Review the resulting shortlist against the boundary: no score, no automatic external write, and no compression that hides uncertainty.
+- [x] Define a compact measurement record: repeated operation, evidence source, frequency or repeated-call signal, current owner, token or time cost, deterministic input, and unsafe or judgment boundary.
+- [x] Gather current Harness and estate evidence without modifying skills, package scripts, repository configuration, or runtime settings.
+- [x] Classify each candidate as retain-as-judgment, improve diagnostic or prepared context, add a bounded mechanical check, or route to a separately owned proposal.
+- [x] For each proposed improvement, name its owning skill, fixture or test boundary, safe no-write failure mode, and a receiver-owned work record where implementation is non-trivial.
+- [x] Review the resulting shortlist against the boundary: no score, no automatic external write, and no compression that hides uncertainty.
+
+## Measurement
+
+| Repeated operation | Evidence | Current owner | Deterministic input | Boundary | Disposition |
+| --- | --- | --- | --- | --- | --- |
+| Skill-quality and rubric publication checks | 46 skills, 36 generated rubric publications, and 76 rubric contexts in this Harness | `ki-skills` and each owning skill | Selected skill root and structured catalogue | Publication and mechanical checks cannot judge architecture or wording | Retain the prepared-context and generated-publication model; no new consolidator |
+| Estate package-command assessment | 15 estate repositories and 11 package manifests | GOV-028 / repository owners | Regular `package.json` manifests | A key's purpose and side effect need repository judgment | Keep the separate read-only GOV-028 inventory; do not duplicate it here |
+| Broad repository gates | 77 skill documents name a repository audit | Owning governance skill and `ki-engineering` | Selected declared skill and repository state | A clean command does not prove a content-safe fix | Retain scoped audit selection and one final full gate; no aggregate success score |
+| Authorised multi-item delivery | `ki-batch` and `ki-agenda` require one durable authorisation and run ledger, but source search found only their exemplar | `ki-batch` / `ki-agenda` | Named ready records, scope, timebox, and explicit approval | Storage must not become a tracker, scheduler, or standing authority | Route [FND-013](KI-HARNESS-FND-013-persist-batch-authorisations.md) for a canonical no-write record contract and fixture boundary |
+
+The current evidence supports one contract gap, not a new estate-wide measurement layer. The existing mechanical forms already preserve the important separation: deterministic input may produce focused evidence, while quality, prioritisation, content safety, and external change remain review decisions.
 
 ## Files touched
 
-This roadmap item only, containing the measurement evidence, classification, and routed follow-ups. The audit makes no direct automation change.
+This roadmap item and the separately owned FND-013 follow-up. The audit makes no direct automation change.
 
 ## Verify
 
@@ -59,6 +70,33 @@ This roadmap item only, containing the measurement evidence, classification, and
 ## Dependencies / blocks
 
 This read-only assessment is independent. Proposed mechanical work is not started or accepted by its inclusion in the shortlist.
+
+## Review
+
+### Delivered
+
+Recorded the compact Harness and estate measurements, retained established prepared-context and scoped-gate practices, and routed the only concrete contract gap to FND-013.
+
+### Summary of changes
+
+The review adds evidence and a receiver-owned proposal only. It does not alter a skill, package command, configuration file, runtime setting, or another repository.
+
+### Verification
+
+- Static inventory: 46 skills, 36 generated rubric publications, 76 rubric contexts, 15 estate repositories, and 11 package manifests.
+- `ki repo audit --skill ki-roadmap --repo .`, `ki repo audit --skill ki-authoring --repo .`, and `ki repo audit --skill ki-housekeeping --repo .` pass before review publication.
+
+### Outstanding concerns
+
+The current system has no repository-owned measurement of exact agent-token or elapsed-time cost. This review deliberately does not manufacture one from anecdote; FND-013 addresses the separate durable-authorisation gap exposed by the first intended agenda use.
+
+### Post-change review
+
+The shortlist preserves the boundary against quality scores, automatic external writes, and evidence compression. Existing GOV-028 retains package-command ownership; no duplicated inventory or generic dashboard was added.
+
+### Mini recap
+
+One source search was sufficient to establish the missing authorisation-record contract. Re-running broad audits would not have provided stronger evidence.
 
 ## Discussion
 
