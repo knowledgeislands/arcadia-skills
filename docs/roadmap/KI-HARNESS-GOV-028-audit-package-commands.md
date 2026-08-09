@@ -1,6 +1,7 @@
 ---
-id: KI-HARNESS-011
+id: KI-HARNESS-GOV-028
 title: Audit package commands
+area: GOV
 theme: governance-consistency
 horizon: now
 status: ready

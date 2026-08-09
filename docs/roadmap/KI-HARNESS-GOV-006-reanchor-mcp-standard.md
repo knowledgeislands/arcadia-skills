@@ -1,6 +1,7 @@
 ---
-id: KI-HARNESS-006
+id: KI-HARNESS-GOV-006
 title: Reanchor MCP standard
+area: GOV
 theme: governance-consistency
 horizon: soon
 status: draft

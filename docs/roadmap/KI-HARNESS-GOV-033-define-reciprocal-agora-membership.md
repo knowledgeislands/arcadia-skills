@@ -1,6 +1,7 @@
 ---
-id: KI-HARNESS-013
+id: KI-HARNESS-GOV-033
 title: Define Agora membership
+area: GOV
 theme: governance-consistency
 horizon: now
 status: done

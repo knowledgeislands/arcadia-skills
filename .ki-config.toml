@@ -57,7 +57,12 @@ coverage-repo-checkpoints = false # source repository publishes the optional cap
 adapter = "roadmap"
 
 [skills.ki-change-management-roadmap]
-themes = ["foundation-tooling", "governance-consistency", "operations", "runtime-portability"]
+
+[skills.ki-change-management-roadmap.areas]
+FND = "foundation-tooling"
+GOV = "governance-consistency"
+OPS = "operations"
+RTP = "runtime-portability"
 
 [skills.ki-repo-checkpoints]
 

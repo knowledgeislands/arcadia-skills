@@ -1,6 +1,7 @@
 ---
-id: KI-HARNESS-016
+id: KI-HARNESS-OPS-003
 title: Define OTLP observability
+area: OPS
 theme: operations
 horizon: future
 status: draft

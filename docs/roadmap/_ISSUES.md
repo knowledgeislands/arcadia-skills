@@ -1,7 +1,12 @@
 ---
-last_id: 23
+areas: { FND: 13, GOV: 33, OPS: 4, RTP: 7 }
 ---
 
 # Roadmap issue ledger
 
-This ledger reserves every project-scoped roadmap issue number through `023`. Allocate the next work item as one greater than `last_id`; never lower this value or reuse an issued number after a record is pruned.
+This ledger reserves fixed issuing-area namespaces. Allocate the next work item in its area as one greater than that area's high-water mark; never lower a value or reuse an issued number after a record is pruned. Areas are not mutable themes or groups.
+
+- `FND` reserves through `013`.
+- `GOV` reserves through `033`.
+- `OPS` reserves through `004`.
+- `RTP` reserves through `007`.

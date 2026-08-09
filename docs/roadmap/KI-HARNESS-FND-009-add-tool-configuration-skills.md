@@ -1,6 +1,7 @@
 ---
-id: KI-HARNESS-002
+id: KI-HARNESS-FND-009
 title: Add tool configuration skills
+area: FND
 theme: foundation-tooling
 horizon: soon
 status: draft

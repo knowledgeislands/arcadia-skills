@@ -1,6 +1,7 @@
 ---
-id: KI-HARNESS-004
+id: KI-HARNESS-FND-013
 title: Persist batch authorisations
+area: FND
 theme: foundation-tooling
 horizon: now
 status: ready

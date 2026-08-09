@@ -1,6 +1,7 @@
 ---
-id: KI-HARNESS-014
+id: KI-HARNESS-OPS-001
 title: Complete Claude-state cleanup
+area: OPS
 theme: operations
 horizon: waiting-for
 status: draft

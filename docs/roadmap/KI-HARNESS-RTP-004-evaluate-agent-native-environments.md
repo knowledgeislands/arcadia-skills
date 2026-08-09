@@ -1,6 +1,7 @@
 ---
-id: KI-HARNESS-021
+id: KI-HARNESS-RTP-004
 title: Evaluate agent-native environments
+area: RTP
 theme: runtime-portability
 horizon: future
 status: draft

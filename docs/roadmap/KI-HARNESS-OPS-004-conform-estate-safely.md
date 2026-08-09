@@ -1,11 +1,12 @@
 ---
-id: KI-HARNESS-017
+id: KI-HARNESS-OPS-004
 title: Conform estate safely
+area: OPS
 theme: operations
 horizon: soon
 status: draft
 blocks: []
-blocked-by: [KI-HARNESS-010]
+blocked-by: [KI-HARNESS-GOV-026]
 baseline-ref: null
 ---
 

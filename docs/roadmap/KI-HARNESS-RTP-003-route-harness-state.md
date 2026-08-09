@@ -1,6 +1,7 @@
 ---
-id: KI-HARNESS-020
+id: KI-HARNESS-RTP-003
 title: Route harness state
+area: RTP
 theme: runtime-portability
 horizon: future
 status: draft

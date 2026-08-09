@@ -1,6 +1,7 @@
 ---
-id: KI-HARNESS-023
+id: KI-HARNESS-RTP-007
 title: Optimise skill descriptions
+area: RTP
 theme: runtime-portability
 horizon: now
 status: done

@@ -1,6 +1,7 @@
 ---
-id: KI-HARNESS-008
+id: KI-HARNESS-GOV-009
 title: Make runtime coverage conformable
+area: GOV
 theme: governance-consistency
 horizon: future
 status: draft

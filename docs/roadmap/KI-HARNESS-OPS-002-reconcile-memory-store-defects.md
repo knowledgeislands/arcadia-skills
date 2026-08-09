@@ -1,6 +1,7 @@
 ---
-id: KI-HARNESS-015
+id: KI-HARNESS-OPS-002
 title: Reconcile memory-store defects
+area: OPS
 theme: operations
 horizon: waiting-for
 status: draft

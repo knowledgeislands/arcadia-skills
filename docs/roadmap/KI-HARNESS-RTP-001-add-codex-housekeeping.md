@@ -1,6 +1,7 @@
 ---
-id: KI-HARNESS-018
+id: KI-HARNESS-RTP-001
 title: Add Codex housekeeping
+area: RTP
 theme: runtime-portability
 horizon: waiting-for
 status: draft

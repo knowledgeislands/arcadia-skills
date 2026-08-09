@@ -1,6 +1,7 @@
 ---
-id: KI-HARNESS-019
+id: KI-HARNESS-RTP-002
 title: Reach Cowork MCP servers
+area: RTP
 theme: runtime-portability
 horizon: waiting-for
 status: draft

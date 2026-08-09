@@ -1,6 +1,7 @@
 ---
-id: KI-HARNESS-005
+id: KI-HARNESS-GOV-002
 title: Deploy Feature Definitions fleetwide
+area: GOV
 theme: governance-consistency
 horizon: next
 status: draft
@@ -88,4 +89,4 @@ The `tools-ki` record is the acceptance boundary. This harness may supply the or
 
 ### Direct super-trust bridge
 
-During the handoff-protocol bootstrap, the Harness and `tools-ki` record accepted evidence directly in the owning repository's roadmap. The accepted CLI-011 pilot is therefore recorded above rather than retained as an outbound handoff artifact. `KI-HARNESS-002` will define future cross-repository submissions; this bridge neither activates a route nor authorises a fleet rollout.
+During the handoff-protocol bootstrap, the Harness and `tools-ki` record accepted evidence directly in the owning repository's roadmap. The accepted CLI-011 pilot is therefore recorded above rather than retained as an outbound handoff artifact. `KI-HARNESS-FND-009` will define future cross-repository submissions; this bridge neither activates a route nor authorises a fleet rollout.
