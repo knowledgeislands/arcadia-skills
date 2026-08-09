@@ -3,10 +3,10 @@ id: KI-HARNESS-GOV-029
 title: Improve mechanical governance
 theme: governance-consistency
 horizon: now
-status: ready
+status: in-progress
 blocks: []
 blocked-by: []
-baseline-ref: null
+baseline-ref: 6a3097c9bac5e0e1c6e619356241a512bc96aecd
 housekeeping-template: KI-HARNESS-HK-001
 scheduled-for: 2026-08-09
 ---
