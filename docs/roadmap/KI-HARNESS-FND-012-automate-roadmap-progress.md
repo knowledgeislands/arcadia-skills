@@ -3,7 +3,7 @@ id: KI-HARNESS-FND-012
 title: Automate roadmap progress
 theme: foundation-tooling
 horizon: now
-status: in-progress
+status: awaiting-review
 blocks: []
 blocked-by: []
 baseline-ref: 1904fa5705edbf39b077e0fed49358993018c66c
@@ -67,6 +67,31 @@ This item is independently shapeable. It must reuse, rather than replace, the au
 ## Stop conditions
 
 Stop for a user decision if the proposed agenda would require a standing authority store, an automatic selection or readiness transition, a cross-repository write, a runtime-specific scheduler, or a retry that masks a failed gate. Capture any broader automation as separate work.
+
+## Review
+
+### Delivered
+
+Added portable `ki-agenda`, a single-cycle human-in-the-loop process that consumes an approved `ki-batch` authorisation without creating a queue, tracker, scheduler, daemon, or independent authority store.
+
+The pure fixture model reports only `coordinate`, `question`, or a named `stop`, each with `writes: false`. It proves that unapproved authority, dirty or failing repository preflight, an early decision, an unready item, and an unsatisfied dependency do not claim or perform automatic progress.
+
+The batch, next-work, and lifecycle-diagram projections now describe the optional agenda layer and retain the same selection, readiness, acceptance, pruning, push, release, and cross-repository stops.
+
+### Evidence
+
+- Baseline: `1904fa5705edbf39b077e0fed49358993018c66c`.
+- Delivery: `ff40805aa0651bf2668d2bb15a06ca44638ee1f1`.
+- `bun test skills/change-management/ki-agenda/scripts/agenda-cycle.test.ts` — 4 pass.
+- `bun run test`, `bunx tsc --noEmit`, and `ki repo audit --skill ki-skills --repo .`, `ki repo audit --skill ki-authoring --repo .`, and `ki repo audit --skill ki-roadmap --repo .` — pass.
+
+### Outstanding concerns
+
+This item establishes the bounded process and its no-write model; no independently approved real batch authorisation has yet exercised it. A future live run must still re-ground the repository and obtain its own explicit `ki-batch` authority. Nothing has been pushed.
+
+### Post-change review
+
+No sibling lifecycle owner was duplicated: `ki-next` retains selection, `ki-plan` readiness, `ki-implement` delivery, and `ki-accept` closure and pruning. The agenda has no command, hook, scheduler, filesystem mutation, or cross-repository write surface.
 
 ## Discussion
 
