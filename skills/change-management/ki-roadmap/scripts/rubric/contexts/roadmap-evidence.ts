@@ -48,7 +48,7 @@ const FORMAT = 'references/standards-work-item-format.md'
 const RUBRIC = 'references/rubric.md'
 const ROADMAP_CONFIG = 'ki-roadmap'
 const REPO_CONFIG = 'ki-repo'
-export const ISSUE_LEDGER = 'ISSUES.md'
+export const ISSUE_LEDGER = '_ISSUES.md'
 const TOML = (globalThis as unknown as { Bun: { TOML: { parse(text: string): unknown } } }).Bun.TOML
 
 let findings: Finding[] = []

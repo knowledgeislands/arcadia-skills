@@ -22,7 +22,7 @@ Every non-KB repository uses one shape.
 ```text
 ROADMAP.md                              # concise orientation
 docs/roadmap/
-  ISSUES.md                             # durable issue-allocation ledger
+  _ISSUES.md                            # durable issue-allocation ledger, sorted first
   <REPO>-<NNN>-<slug>.md                # one durable work item
 ```
 
@@ -42,7 +42,7 @@ The item identifier is globally unique within its repository: `<REPO>-<NNN>`.
 
 `<NNN>` is a zero-padded project-scoped serial allocated from `001`.
 
-`docs/roadmap/ISSUES.md` is the canonical durable allocation ledger. Its `last_id` is the highest number ever issued, including pruned records. Allocate a new issue as `last_id + 1`, then advance the ledger in the same coherent change that creates the item. Never lower the ledger, fill a gap, or reuse a number. The checker verifies that the ledger is well-formed and no retained item exceeds it; CONFORM scaffolds the file only when it is absent.
+`docs/roadmap/_ISSUES.md` is the canonical durable allocation ledger. Its `last_id` is the highest number ever issued, including pruned records. Allocate a new issue as `last_id + 1`, then advance the ledger in the same coherent change that creates the item. Never lower the ledger, fill a gap, or reuse a number. The checker verifies that the ledger is well-formed and no retained item exceeds it; CONFORM scaffolds the file only when it is absent.
 
 The filename repeats the identifier followed by a lowercase kebab-case slug.
 

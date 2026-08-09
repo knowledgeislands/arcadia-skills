@@ -15,7 +15,7 @@ Each work item is one regular Markdown file directly under `docs/roadmap/`:
 docs/roadmap/<REPO>-<NNN>-<slug>.md
 ```
 
-`<REPO>-<NNN>` is the identifier described by [the repository-roadmap standard](standards-repository-roadmaps.md). `docs/roadmap/ISSUES.md` retains the highest issued number so a pruned record never makes its identifier reusable.
+`<REPO>-<NNN>` is the identifier described by [the repository-roadmap standard](standards-repository-roadmaps.md). `docs/roadmap/_ISSUES.md` retains the highest issued number so a pruned record never makes its identifier reusable.
 
 `<slug>` is lowercase kebab-case and no longer than 50 characters.
 

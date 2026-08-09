@@ -17,7 +17,7 @@ Read [the repository-roadmap standard](references/standards-repository-roadmaps.
 
 ## Shared model
 
-`ROADMAP.md` is a concise orientation: it points to `docs/roadmap/` and deliberately repeats no queue information. Each canonical item is a single file at `docs/roadmap/<REPO>-<NNN>-<slug>.md`, beginning with a mandatory plain-language Goal before its technical context. `docs/roadmap/ISSUES.md` retains the project-scoped issue-number high-water mark, so an issued number is never reused after pruning. The item’s `theme` field groups related work for CLI reporting; the `horizon` field establishes queue position; and `status` records the common `draft` → `ready` → `in-progress` → `awaiting-review` → `done` lifecycle. A concise item becomes an execution plan by gaining task-list plan sections in the same file: new work starts `- [ ]`, and completed work becomes `- [x]`. The `ki-repo` table declares the stable uppercase `repo_code`; the `ki-roadmap` table declares the allowed theme names. The globally unique identifier is also used by dependencies.
+`ROADMAP.md` is a concise orientation: it points to `docs/roadmap/` and deliberately repeats no queue information. Each canonical item is a single file at `docs/roadmap/<REPO>-<NNN>-<slug>.md`, beginning with a mandatory plain-language Goal before its technical context. `docs/roadmap/_ISSUES.md` retains the project-scoped issue-number high-water mark, so an issued number is never reused after pruning. The item’s `theme` field groups related work for CLI reporting; the `horizon` field establishes queue position; and `status` records the common `draft` → `ready` → `in-progress` → `awaiting-review` → `done` lifecycle. A concise item becomes an execution plan by gaining task-list plan sections in the same file: new work starts `- [ ]`, and completed work becomes `- [x]`. The `ki-repo` table declares the stable uppercase `repo_code`; the `ki-roadmap` table declares the allowed theme names. The globally unique identifier is also used by dependencies.
 
 ## Operating modes
 
@@ -33,7 +33,7 @@ After changing the catalogue or contexts, run their colocated Bun tests for item
 
 ### Mode CONFORM
 
-Run `ki repo conform --skill ki-roadmap --repo <repo> --dry-run` to inspect the proposal. In a valid repository, CONFORM repairs the concise root orientation and scaffolds a missing `docs/roadmap/ISSUES.md` ledger from the highest retained issue number. It never overwrites a malformed ledger, invents work items, moves horizons, removes or rewrites authored prose, reallocates identifiers, or changes lifecycle content. Re-run AUDIT afterward.
+Run `ki repo conform --skill ki-roadmap --repo <repo> --dry-run` to inspect the proposal. In a valid repository, CONFORM repairs the concise root orientation and scaffolds a missing `docs/roadmap/_ISSUES.md` ledger from the highest retained issue number. It never overwrites a malformed ledger, invents work items, moves horizons, removes or rewrites authored prose, reallocates identifiers, or changes lifecycle content. Re-run AUDIT afterward.
 
 ### Mode EDUCATE
 

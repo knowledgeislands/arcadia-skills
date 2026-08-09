@@ -111,7 +111,7 @@ const ROAD_7: RubricItem<RoadmapAuditContext> = {
   code: 'ROAD-7',
   title: 'issue-allocation ledger',
   description:
-    'docs/roadmap/ISSUES.md records a project-scoped high-water mark, preventing a pruned issue number from being reused.',
+    'docs/roadmap/_ISSUES.md records a project-scoped high-water mark, preventing a pruned issue number from being reused.',
   sources: [SOURCE],
   mechanical: {
     level: 'FAIL',

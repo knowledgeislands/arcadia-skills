@@ -62,7 +62,7 @@ Canonical generated-index structure, placement, and readiness.
   - _Conforming guidance:_ Confirm the lifecycle move with its owner, record a gap, or record an explicit exclusion; never choose the move automatically.
 - **ROAD-6 [M] — repository work-item code** — The ki-repo table declares a valid stable repository code and the ki-roadmap table declares its complete theme vocabulary. (standards-repository-roadmaps.md)
   - _Remediation:_ diagnostic — Correct the configured repository code or theme vocabulary from authoritative repository configuration.
-- **ROAD-7 [M] — issue-allocation ledger** — docs/roadmap/ISSUES.md records a project-scoped high-water mark, preventing a pruned issue number from being reused. (standards-repository-roadmaps.md)
+- **ROAD-7 [M] — issue-allocation ledger** — docs/roadmap/_ISSUES.md records a project-scoped high-water mark, preventing a pruned issue number from being reused. (standards-repository-roadmaps.md)
   - _Remediation:_ automatic
 
 ## ITEM — items
