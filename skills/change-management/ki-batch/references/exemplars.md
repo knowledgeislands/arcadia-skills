@@ -3,7 +3,18 @@
 Use this as a reviewable record, not as a new tracker or a substitute for the canonical work items.
 
 ```md
-# BATCH-2026-07-01 — Harden compatible-harness release evidence
+---
+id: KI-EXAMPLE-BATCH-001
+repository: https://github.com/knowledgeislands/ki-example
+approved: true
+approved_at: 2026-07-01T09:00:00Z
+timebox_ends_at: 2026-07-01T11:00:00Z
+item_ids: [KI-EXAMPLE-001, KI-EXAMPLE-002]
+completion_target: awaiting-review
+mandatory_stops: [public-contract-change, unapproved-decision, verification-failure, push-or-release]
+---
+
+# KI-EXAMPLE-BATCH-001 — Harden compatible-harness release evidence
 
 ## Purpose
 

@@ -64,7 +64,7 @@ This skill coordinates these siblings; it does not duplicate their procedures or
 
 `batch <work>...` prepares only the named candidates through the normal shared cycle: shape every draft to Ready, decide whether safe parallel lanes exist, and produce a reviewed proposed authorisation. When `ki-delegation` is active, read its packet standard before creating a durable delegation packet.
 
-`run <batch-authorisation>` validates one approved authorisation, fresh repository state, and named work records; reports known questions before delivery; then coordinates one bounded cycle in dependency order. It never treats a clean gate, silence, or an unreviewed draft as authority.
+`run <batch-authorisation>` resolves one regular authority record directly below `+/_AUTHORISATIONS/`, validates its approval, local repository identity, active timebox, completion target, mandatory stops, and named work records, then reports known questions before delivery and coordinates one bounded cycle in dependency order. It never treats a clean gate, silence, or an unreviewed draft as authority.
 
 With no target, identify whether a candidate set or an approved authorisation is required and stop.
 

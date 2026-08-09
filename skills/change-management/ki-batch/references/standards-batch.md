@@ -14,7 +14,7 @@ Do not start `ki-implement` in this phase.
 
 Check each candidate for a bounded plan, satisfied dependencies, known verification, compatible scope, and a reason it can run independently at its position in the batch.
 
-Prepare one authorisation containing all of the following:
+Prepare one regular Markdown authorisation beneath `+/_AUTHORISATIONS/`, named `<REPO>-BATCH-<NNN>.md` with the same frontmatter `id`. Its frontmatter contains the local repository identity, explicit approval and timestamp, expiry timestamp, ordered item IDs, `awaiting-review` completion target, mandatory stops, and an optional exact closure-item list. It contains all of the following:
 
 - identifier and purpose;
 - named plans in dependency order;
@@ -32,7 +32,7 @@ An omitted field is not implied authority.
 
 ## 2. Validate before implementation
 
-Resolve the approved authorisation and every named canonical work item afresh.
+Resolve the approved regular local authorisation and every named canonical work item afresh. An absent, malformed, foreign, expired, or unapproved authority is a no-write stop; no conversation, clean gate, or unstructured file substitutes for it.
 
 Confirm that each item remains `ready`, its dependencies remain satisfied, its repository and file boundary still match, its required checks are available, and no mandatory stop has already occurred.
 
