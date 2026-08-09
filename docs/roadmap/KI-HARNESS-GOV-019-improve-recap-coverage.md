@@ -3,7 +3,7 @@ id: KI-HARNESS-GOV-019
 title: Improve recap coverage
 theme: governance-consistency
 horizon: now
-status: in-progress
+status: awaiting-review
 blocks: []
 blocked-by: []
 baseline-ref: c0db8fac017276521c1ec304d2c109ad5e637e70
@@ -61,6 +61,36 @@ Escalate before expanding scope if implementation would require transcript topic
 ## Delegation
 
 Keep the procedure and router edits in one implementation lane so trigger, vocabulary, evidence limits, and Actions reconciliation are reviewed together. It can run in parallel with `KI-HARNESS-GOV-017` because their file boundaries do not overlap. The batch orchestrator owns the final cross-item authoring audit and confirms that neither lane turns reviewer judgment into a mechanical claim; no durable delegation packet is warranted.
+
+## Review
+
+### Delivered
+
+`ki-recap` now has an optional Discussion coverage matrix for complex, multi-topic recaps. It has four fixed columns and four closed dispositions; simple recaps omit it.
+
+### Summary of changes
+
+Implementation commit: `180bf6b66a95029f491a9b090f67e31f5fffa156`.
+
+The procedure fixes evidence scope, degraded-transcript labelling, scenario checks, and reconciliation with Actions without changing the grounding helper or adding a rubric.
+
+### Verification
+
+- PASS — `bun test skills/change-management/ki-recap/scripts/recap-grounding.test.ts` (7 tests).
+- PASS — `ki repo audit --skill ki-skills --repo .`, `ki repo audit --skill ki-authoring --repo .`, `bun run test` (323 tests), and `bunx tsc --noEmit`.
+- Judgment review — simple recaps omit the matrix; complex recaps use only the four dispositions; unavailable transcript evidence makes coverage bounded and non-exhaustive; outstanding rows reconcile with Actions.
+
+### Outstanding concerns
+
+None within this procedure update. Topic selection and evidence sufficiency remain reviewer judgment by design.
+
+### Post-change review
+
+Confirm the matrix stays a compact review aid rather than becoming an implied transcript-completeness claim or an extra source of truth.
+
+### Mini recap
+
+No grounding-helper, runtime-transcript format, parser, rubric, or automation scope was added.
 
 ## Discussion
 
