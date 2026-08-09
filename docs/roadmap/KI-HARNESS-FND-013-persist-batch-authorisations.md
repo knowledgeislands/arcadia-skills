@@ -4,7 +4,7 @@ title: Persist batch authorisations
 area: FND
 theme: foundation-tooling
 horizon: now
-status: in-progress
+status: awaiting-review
 blocks: []
 blocked-by: []
 baseline-ref: 16b31e6ca0a4a485fe38142c479c39381931bfbc
@@ -28,10 +28,10 @@ Individual explicitly approved ready items can use `ki-implement` normally. Mult
 
 ## Steps
 
-- [ ] Choose one adapter-compatible location and identifier shape for a bounded authorisation record.
-- [ ] Define explicit approval, repository, item order, timebox, completion target, mandatory-stop, and ledger fields.
-- [ ] Make `ki-batch` resolve only a safe, local, approved record and stop on every malformed or expired form.
-- [ ] Add focused fixture coverage for authority resolution, no-write stops, and retention after review.
+- [x] Choose one adapter-compatible location and identifier shape for a bounded authorisation record.
+- [x] Define explicit approval, repository, item order, timebox, completion target, mandatory-stop, and ledger fields.
+- [x] Make `ki-batch` resolve only a safe, local, approved record and stop on every malformed or expired form.
+- [x] Add focused fixture coverage for authority resolution, no-write stops, and retention after review.
 
 ## Files touched
 
@@ -62,6 +62,20 @@ The storage location, retention rule, approval model, scope resolver, and no-wri
 ## Dependencies / blocks
 
 This item is independently shapeable. It unblocks practical use of `ki-batch` for a reviewed multi-item batch; it does not block individually approved delivery.
+
+## Review
+
+### Delivered
+
+`+/_AUTHORISATIONS/` now defines the sole repository-local record home. `ki-batch` documents and tests a read-only resolver that accepts only a regular direct child with canonical identity, exact local repository identity, explicit timestamped approval, an active timebox, `awaiting-review` target, named work, mandatory stops, and an optional exact closure list.
+
+The resolver returns a no-write stop for absent, malformed, foreign, expired, unapproved, non-canonical, and over-broad closure records. The working-zone README retains the record until an explicit `ki-accept` review and prune.
+
+### Verification
+
+- Delivery: `66732390 feat(batch): resolve canonical authorisations`.
+- Focused authority and batch-cycle fixtures: 7 pass, 0 fail.
+- `bun run test`, `bunx tsc --noEmit`, `ki repo audit --skill ki-skills --repo .`, `ki repo audit --skill ki-change-management-roadmap --repo .`, and `ki repo audit --skill ki-authoring --repo .` pass.
 
 ## Discussion
 
