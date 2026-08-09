@@ -67,7 +67,7 @@ Delivered the four first-priority description reductions and added `DESC-10`, a 
 | `ki-authoring` | 127 / 921 | 41 / 296 |
 | `ki-dotfiles-chezmoi` | 119 / 997 | 41 / 319 |
 
-The selected descriptions fall from 418 words / 3,944 characters to 172 / 1,269. The figures measure source text only; they do not claim a Codex routing, shortening, or billing token count.
+The selected descriptions fall from 518 words / 3,944 characters to 172 / 1,269. The figures measure source text only; they do not claim a Codex routing, shortening, or billing token count.
 
 Baseline: `e0dfb29c9287da789f0b34efc2041e8bb69a9ba2`.
 
