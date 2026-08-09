@@ -4,11 +4,11 @@ area: GOV
 title: Migrate Streams identities
 theme: governance-consistency
 horizon: now
-status: ready
+status: in-progress
 candidate: false
 blocks: []
 blocked-by: []
-baseline-ref: null
+baseline-ref: 4a17d3bf7c5c64edd35c45ebfd07a1b61d80da91
 ---
 
 ## Goal
