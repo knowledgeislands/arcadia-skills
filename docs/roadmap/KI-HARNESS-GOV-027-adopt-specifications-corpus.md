@@ -3,10 +3,10 @@ id: KI-HARNESS-GOV-027
 title: Adopt Specifications corpus
 theme: governance-consistency
 horizon: now
-status: ready
+status: in-progress
 blocks: []
 blocked-by: []
-baseline-ref: null
+baseline-ref: 4f614a239891ee6e5ed335d59ddb0d5edef6dc05
 ---
 
 ## Goal
