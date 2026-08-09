@@ -20,7 +20,7 @@ Knowledge Bases already use their own Streams, Focus, proposals, and Checklist m
 
 `ki-roadmap` governs one non-KB shape: flat canonical work items directly below `docs/roadmap/` and a concise root `ROADMAP.md` orientation.
 
-Each item has a stable `<REPO>-<THEME>-<NNN>` identifier, a human-readable `theme`, horizon, lifecycle status, and dependency fields.
+Each item has a stable `<REPO>-<NNN>` identifier, a human-readable `theme`, horizon, lifecycle status, and dependency fields.
 
 Theme remains an explicit grouping for related work, selection, and presentation; it does not create a directory hierarchy.
 

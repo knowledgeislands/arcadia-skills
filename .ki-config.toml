@@ -52,12 +52,7 @@ coverage-checkpoints = false # source repository publishes the optional capabili
 [skills.ki-housekeeping]
 
 [skills.ki-roadmap]
-
-[skills.ki-roadmap.themes]
-FND = "foundation-tooling"
-GOV = "governance-consistency"
-OPS = "operations"
-RTP = "runtime-portability"
+themes = ["foundation-tooling", "governance-consistency", "operations", "runtime-portability"]
 
 [skills.ki-checkpoints]
 

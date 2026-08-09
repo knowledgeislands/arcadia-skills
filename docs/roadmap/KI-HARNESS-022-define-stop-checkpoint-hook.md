@@ -1,5 +1,5 @@
 ---
-id: KI-HARNESS-RTP-006
+id: KI-HARNESS-022
 title: Define Stop checkpoint hook
 theme: runtime-portability
 horizon: next

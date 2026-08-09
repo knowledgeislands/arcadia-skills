@@ -1,5 +1,5 @@
 ---
-id: KI-HARNESS-GOV-031
+id: KI-HARNESS-012
 title: Normalise schema versions
 theme: governance-consistency
 horizon: now

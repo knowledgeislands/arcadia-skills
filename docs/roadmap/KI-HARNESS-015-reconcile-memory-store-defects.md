@@ -1,5 +1,5 @@
 ---
-id: KI-HARNESS-OPS-002
+id: KI-HARNESS-015
 title: Reconcile memory-store defects
 theme: operations
 horizon: waiting-for

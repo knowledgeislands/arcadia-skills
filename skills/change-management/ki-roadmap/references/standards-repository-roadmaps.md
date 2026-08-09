@@ -22,7 +22,8 @@ Every non-KB repository uses one shape.
 ```text
 ROADMAP.md                              # concise orientation
 docs/roadmap/
-  <REPO>-<THEME>-<NNN>-<slug>.md        # one durable work item
+  ISSUES.md                             # durable issue-allocation ledger
+  <REPO>-<NNN>-<slug>.md                # one durable work item
 ```
 
 `ROADMAP.md` is a concise stable orientation that points to `docs/roadmap/` and explicitly does not duplicate the work-item queue.
@@ -35,13 +36,13 @@ Its frontmatter `title` is a compact label of at most four words. The file slug 
 
 There are no simple or thematic profiles, theme `ROADMAP.md` files, `plans/` directories, item locators, or standalone plan records.
 
-The item identifier is globally unique within its repository: `<REPO>-<THEME>-<NNN>`.
+The item identifier is globally unique within its repository: `<REPO>-<NNN>`.
 
 `<REPO>` is the stable uppercase `repo_code` in the `ki-repo` table.
 
-`<THEME>` is an uppercase semantic code declared in the `ki-roadmap` table’s `themes` mapping.
+`<NNN>` is a zero-padded project-scoped serial allocated from `001`.
 
-`<NNN>` is a zero-padded serial allocated within that repository/theme pair from `001`.
+`docs/roadmap/ISSUES.md` is the canonical durable allocation ledger. Its `last_id` is the highest number ever issued, including pruned records. Allocate a new issue as `last_id + 1`, then advance the ledger in the same coherent change that creates the item. Never lower the ledger, fill a gap, or reuse a number. The checker verifies that the ledger is well-formed and no retained item exceeds it; CONFORM scaffolds the file only when it is absent.
 
 The filename repeats the identifier followed by a lowercase kebab-case slug.
 
@@ -54,12 +55,10 @@ It is deliberately retained after flattening: items in one theme may be selected
 repo_code = "KI-HARNESS"
 
 [skills.ki-roadmap]
-[skills.ki-roadmap.themes]
-FND = "foundation-tooling"
-GOV = "governance-consistency"
+themes = ["foundation-tooling", "governance-consistency"]
 ```
 
-The mapping is the complete allowed theme vocabulary for the repository. Every item’s `<THEME>` identifier segment must map to its `theme` frontmatter value. It may declare a theme before that theme has an item. Keep horizons, lifecycle values, work-item location, and reporting behaviour universal rather than per-repository configuration.
+The array is the complete allowed theme vocabulary for the repository. Every item’s `theme` value must appear in it. It may declare a theme before that theme has an item. Keep horizons, lifecycle values, work-item location, and reporting behaviour universal rather than per-repository configuration.
 
 ## Horizons
 
@@ -158,7 +157,7 @@ It does not set disposition, infer adoption or acceptance from silence, move or 
 
 `ki repo conform --skill ki-roadmap --repo <repo> --dry-run` shows the exact root-orientation replacement.
 
-CONFORM repairs that orientation only when every canonical item is valid.
+CONFORM repairs that orientation and creates a missing issue-allocation ledger only when every canonical item is valid.
 
 It never invents an item, changes a horizon, changes lifecycle status, removes authored prose, reallocates an identifier, or edits an item body.
 

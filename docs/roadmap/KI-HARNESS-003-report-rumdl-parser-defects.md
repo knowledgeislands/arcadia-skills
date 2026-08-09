@@ -1,5 +1,5 @@
 ---
-id: KI-HARNESS-FND-011
+id: KI-HARNESS-003
 title: Report rumdl parser defects
 theme: foundation-tooling
 horizon: waiting-for
@@ -15,7 +15,7 @@ Keep verified rumdl defects ready for an upstream contribution when routine esta
 
 ## Context
 
-`KI-HARNESS-FND-010` adopted rumdl across twenty-two repositories and disabled several rules along the way. A disabled rule is a standing cost: it is off because of a specific defect, and left unexamined a defensive setting outlives its defect and silently loses the coverage it was meant to protect. Every one of these was found by reading a diff, never by the gate — in each case `rumdl check` reported the corrupted result clean.
+The earlier rumdl-adoption rollout adopted rumdl across twenty-two repositories and disabled several rules along the way. A disabled rule is a standing cost: it is off because of a specific defect, and left unexamined a defensive setting outlives its defect and silently loses the coverage it was meant to protect. Every one of these was found by reading a diff, never by the gate — in each case `rumdl check` reported the corrupted result clean.
 
 The defects share two root causes rather than being seven unrelated bugs.
 
@@ -60,7 +60,7 @@ Six defects, each with a reproduction verified during the migration:
 
 ‖ Non-destructive, and the weakest of the seven as a report — it is a behavioural gap rather than corruption.
 
-`MD060`'s placeholder-table misfire is recorded in `KI-HARNESS-FND-010` and is the weakest case of all: the rule is opt-in and off by default, so it costs the estate nothing. It is carried here for completeness rather than as work.
+`MD060`'s placeholder-table misfire came from that earlier rollout and is the weakest case of all: the rule is opt-in and off by default, so it costs the estate nothing. It is carried here for completeness rather than as work.
 
 The `MD018` heuristic itself is not a defect and is not challenged. markdownlint flags `##].` too, and rumdl aims for parity with it. The difference is that markdownlint reports one finding and stops, whereas rumdl admits the candidate into its document model so four rules fire and their combined fixes corrupt the paragraph. The report is about the amplification, not the heuristic.
 

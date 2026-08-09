@@ -11,8 +11,8 @@ Deliver the named independent release-evidence work items before the end of the 
 
 ## Named plans and order
 
-1. KI-HARNESS-FND-001 — verify hosted release evidence
-2. KI-HARNESS-FND-002 — protect generated rubric publications
+1. KI-EXAMPLE-001 — verify hosted release evidence
+2. KI-EXAMPLE-002 — protect generated rubric publications
 
 FND-002 may start only after FND-001 has recorded its shared host result.
 
@@ -65,8 +65,8 @@ Append the outcome to the approved authorisation; do not create a parallel track
 
 | Item | Start | Result | Evidence | Next human action |
 | --- | --- | --- | --- | --- |
-| KI-HARNESS-FND-001 | ready | awaiting-review | `<baseline>` → `<commit>`; stated checks pass | Review the delivery packet |
-| KI-HARNESS-FND-002 | ready | parked | FND-001 exposed a public API choice outside the plan | Decide the API contract, then re-plan FND-002 |
+| KI-EXAMPLE-001 | ready | awaiting-review | `<baseline>` → `<commit>`; stated checks pass | Review the delivery packet |
+| KI-EXAMPLE-002 | ready | parked | KI-EXAMPLE-001 exposed a public API choice outside the plan | Decide the API contract, then re-plan KI-EXAMPLE-002 |
 
 ## Batch recap
 

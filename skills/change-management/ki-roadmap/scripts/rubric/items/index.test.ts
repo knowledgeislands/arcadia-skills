@@ -1,10 +1,10 @@
 import { afterEach, expect, test } from 'bun:test'
-import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
+import { mkdirSync, mkdtempSync, readFileSync, rmSync, unlinkSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import type { RubricFamily, RubricItem } from '../../shared/rubric.ts'
 import type { RoadmapRubricContext } from '../contexts/roadmap.ts'
-import { inspectRoadmap, rootRoadmap } from '../contexts/roadmap-evidence.ts'
+import { ISSUE_LEDGER, inspectRoadmap, issueLedger, rootRoadmap } from '../contexts/roadmap-evidence.ts'
 import catalogue from './index.ts'
 
 const temporaryDirectories: string[] = []
@@ -24,12 +24,12 @@ const createFixture = (): string => {
   mkdirSync(join(repository, 'docs', 'roadmap'), { recursive: true })
   writeFileSync(
     join(repository, '.ki-config.toml'),
-    '[skills.ki-repo]\nrepo_code = "TEST"\n\n[skills.ki-roadmap]\n\n[skills.ki-roadmap.themes]\nFND = "foundation-tooling"\n'
+    '[skills.ki-repo]\nrepo_code = "TEST"\n\n[skills.ki-roadmap]\nthemes = ["foundation-tooling"]\n'
   )
   writeFileSync(
-    join(repository, 'docs', 'roadmap', 'TEST-FND-001-build-the-foundation.md'),
+    join(repository, 'docs', 'roadmap', 'TEST-001-build-the-foundation.md'),
     `---
-id: TEST-FND-001
+id: TEST-001
 title: Build the foundation
 theme: foundation-tooling
 horizon: next
@@ -78,6 +78,7 @@ No dependencies.
 No open questions are recorded.
 `
   )
+  writeFileSync(join(repository, 'docs', 'roadmap', ISSUE_LEDGER), issueLedger(1))
   writeFileSync(join(repository, 'ROADMAP.md'), rootRoadmap())
   return repository
 }
@@ -104,6 +105,7 @@ test('the structured catalogue represents the flat work-item standard', () => {
     'ROAD-4',
     'ROAD-5',
     'ROAD-6',
+    'ROAD-7',
     'ITEM-1',
     'ITEM-2',
     'ITEM-3',
@@ -141,12 +143,12 @@ test('a flat work item and concise root orientation conform', () => {
   const repository = createFixture()
   expect(inspectRoadmap(repository).filter((finding) => finding.level === 'FAIL')).toEqual([])
   expect(readFileSync(join(repository, 'ROADMAP.md'), 'utf8')).toContain('canonical structured Markdown work items')
-  expect(readFileSync(join(repository, 'ROADMAP.md'), 'utf8')).not.toContain('TEST-FND-001')
+  expect(readFileSync(join(repository, 'ROADMAP.md'), 'utf8')).not.toContain('TEST-001')
 })
 
 test('invalid lifecycle placement and missing execution sections fail', () => {
   const repository = createFixture()
-  const item = join(repository, 'docs', 'roadmap', 'TEST-FND-001-build-the-foundation.md')
+  const item = join(repository, 'docs', 'roadmap', 'TEST-001-build-the-foundation.md')
   writeFileSync(
     item,
     readFileSync(item, 'utf8')
@@ -162,7 +164,7 @@ test('invalid lifecycle placement and missing execution sections fail', () => {
 
 test('every item ends with Discussion', () => {
   const repository = createFixture()
-  const item = join(repository, 'docs', 'roadmap', 'TEST-FND-001-build-the-foundation.md')
+  const item = join(repository, 'docs', 'roadmap', 'TEST-001-build-the-foundation.md')
   writeFileSync(item, readFileSync(item, 'utf8').replace('\n## Discussion\n', '\n## Discussion moved\n'))
   expect(inspectRoadmap(repository)).toContainEqual(
     expect.objectContaining({ area: 'ITEM-3', msg: '## Discussion must be the final top-level section' })
@@ -171,7 +173,7 @@ test('every item ends with Discussion', () => {
 
 test('Soon work carries shaping detail', () => {
   const repository = createFixture()
-  const item = join(repository, 'docs', 'roadmap', 'TEST-FND-001-build-the-foundation.md')
+  const item = join(repository, 'docs', 'roadmap', 'TEST-001-build-the-foundation.md')
   writeFileSync(
     item,
     readFileSync(item, 'utf8')
@@ -191,7 +193,7 @@ test('Soon work carries shaping detail', () => {
 
 test('a Goal is mandatory and non-empty', () => {
   const repository = createFixture()
-  const item = join(repository, 'docs', 'roadmap', 'TEST-FND-001-build-the-foundation.md')
+  const item = join(repository, 'docs', 'roadmap', 'TEST-001-build-the-foundation.md')
   writeFileSync(item, readFileSync(item, 'utf8').replace('Give users a working foundation.', ''))
   expect(inspectRoadmap(repository)).toContainEqual(
     expect.objectContaining({ area: 'ITEM-3', msg: '## Goal must be non-empty' })
@@ -200,7 +202,7 @@ test('a Goal is mandatory and non-empty', () => {
 
 test('a title has at most four words', () => {
   const repository = createFixture()
-  const item = join(repository, 'docs', 'roadmap', 'TEST-FND-001-build-the-foundation.md')
+  const item = join(repository, 'docs', 'roadmap', 'TEST-001-build-the-foundation.md')
   writeFileSync(
     item,
     readFileSync(item, 'utf8').replace('title: Build the foundation', 'title: Build a foundation for every user')
@@ -212,7 +214,7 @@ test('a title has at most four words', () => {
 
 test('execution Steps use lifecycle-appropriate task lists', () => {
   const repository = createFixture()
-  const item = join(repository, 'docs', 'roadmap', 'TEST-FND-001-build-the-foundation.md')
+  const item = join(repository, 'docs', 'roadmap', 'TEST-001-build-the-foundation.md')
   writeFileSync(
     item,
     readFileSync(item, 'utf8').replace('- [ ] Implement the first slice.', '1. [ ] Implement the first slice.')
@@ -227,7 +229,7 @@ test('execution Steps use lifecycle-appropriate task lists', () => {
 
 test('awaiting-review Steps are all checked', () => {
   const repository = createFixture()
-  const item = join(repository, 'docs', 'roadmap', 'TEST-FND-001-build-the-foundation.md')
+  const item = join(repository, 'docs', 'roadmap', 'TEST-001-build-the-foundation.md')
   writeFileSync(
     item,
     readFileSync(item, 'utf8')
@@ -260,27 +262,55 @@ test('conform repairs only a stale root orientation', () => {
   expect(session.proposal().writes).toEqual([{ path: 'ROADMAP.md', content: rootRoadmap() }])
 })
 
-test('dependency links must be reciprocal', () => {
+test('conform scaffolds a missing issue ledger from the highest retained issue', () => {
   const repository = createFixture()
-  const item = join(repository, 'docs', 'roadmap', 'TEST-FND-001-build-the-foundation.md')
-  writeFileSync(item, readFileSync(item, 'utf8').replace('blocks: []', 'blocks: [TEST-FND-002]'))
+  unlinkSync(join(repository, 'docs', 'roadmap', ISSUE_LEDGER))
+  const session = catalogue.createSession({ mode: 'conform', repository, userHome: '/tmp', configuration: {} })
+  const context = session.subjects[1]?.context() as RoadmapRubricContext
+  const family = catalogue.families.find((candidate) => candidate.code === 'ROAD')
+  const item = family?.items.find((candidate) => candidate.code === 'ROAD-7') as
+    | RubricItem<typeof context.roadmaps>
+    | undefined
+  item?.mechanical?.conform?.run(context.roadmaps)
+  expect(session.proposal().writes).toEqual([{ path: `docs/roadmap/${ISSUE_LEDGER}`, content: issueLedger(1) }])
+})
+
+test('the issue ledger prevents a retained issue from exceeding the allocated range', () => {
+  const repository = createFixture()
+  writeFileSync(join(repository, 'docs', 'roadmap', ISSUE_LEDGER), issueLedger(0))
   expect(inspectRoadmap(repository)).toContainEqual(
-    expect.objectContaining({ area: 'ITEM-4', msg: "dependency 'TEST-FND-002' does not exist" })
+    expect.objectContaining({ area: 'ROAD-7', msg: 'issue ledger last_id 0 is below retained issue 1' })
   )
 })
 
-test('item theme codes must be declared by the repository roadmap configuration', () => {
+test('conform never overwrites a malformed issue ledger', () => {
   const repository = createFixture()
-  const item = join(repository, 'docs', 'roadmap', 'TEST-FND-001-build-the-foundation.md')
+  writeFileSync(join(repository, 'docs', 'roadmap', ISSUE_LEDGER), '# stale ledger\n')
+  const session = catalogue.createSession({ mode: 'conform', repository, userHome: '/tmp', configuration: {} })
+  expect(session.proposal().writes).toEqual([])
+})
+
+test('dependency links must be reciprocal', () => {
+  const repository = createFixture()
+  const item = join(repository, 'docs', 'roadmap', 'TEST-001-build-the-foundation.md')
+  writeFileSync(item, readFileSync(item, 'utf8').replace('blocks: []', 'blocks: [TEST-002]'))
+  expect(inspectRoadmap(repository)).toContainEqual(
+    expect.objectContaining({ area: 'ITEM-4', msg: "dependency 'TEST-002' does not exist" })
+  )
+})
+
+test('item themes must be declared by the repository roadmap configuration', () => {
+  const repository = createFixture()
+  const item = join(repository, 'docs', 'roadmap', 'TEST-001-build-the-foundation.md')
   writeFileSync(item, readFileSync(item, 'utf8').replace('theme: foundation-tooling', 'theme: other-theme'))
   expect(inspectRoadmap(repository)).toContainEqual(
-    expect.objectContaining({ area: 'ITEM-2', msg: 'item identifier theme code must map to its configured theme' })
+    expect.objectContaining({ area: 'ITEM-2', msg: 'item theme must be declared by ki-roadmap configuration' })
   )
 })
 
 test('trade waits use a flat canonical identity array only at Waiting for', () => {
   const repository = createFixture()
-  const item = join(repository, 'docs', 'roadmap', 'TEST-FND-001-build-the-foundation.md')
+  const item = join(repository, 'docs', 'roadmap', 'TEST-001-build-the-foundation.md')
   writeFileSync(
     item,
     readFileSync(item, 'utf8')

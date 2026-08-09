@@ -7,7 +7,7 @@ last-run: null
 grace: P7D
 spawn-policy: when-due
 spawn-horizon: now
-active-run: KI-HARNESS-GOV-030
+active-run: null
 ---
 
 # Monthly decision reconciliation

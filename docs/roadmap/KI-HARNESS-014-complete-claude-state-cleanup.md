@@ -1,5 +1,5 @@
 ---
-id: KI-HARNESS-OPS-001
+id: KI-HARNESS-014
 title: Complete Claude-state cleanup
 theme: operations
 horizon: waiting-for

@@ -1,5 +1,5 @@
 ---
-id: KI-HARNESS-GOV-016
+id: KI-HARNESS-009
 title: Govern documentation topology
 theme: governance-consistency
 horizon: next

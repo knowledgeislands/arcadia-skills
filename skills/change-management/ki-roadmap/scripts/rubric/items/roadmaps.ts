@@ -91,18 +91,39 @@ const ROAD_6: RubricItem<RoadmapAuditContext> = {
   code: 'ROAD-6',
   title: 'repository work-item code',
   description:
-    'The ki-repo table declares a valid stable repository code and the ki-roadmap table declares a complete uppercase-code-to-theme mapping.',
+    'The ki-repo table declares a valid stable repository code and the ki-roadmap table declares its complete theme vocabulary.',
   sources: [SOURCE],
   mechanical: {
     level: 'FAIL',
     remediation: {
       class: 'diagnostic',
-      guidance: 'Correct the configured repository code or theme mapping from authoritative repository configuration.'
+      guidance:
+        'Correct the configured repository code or theme vocabulary from authoritative repository configuration.'
     },
     audit: {
       phase: 'INSPECT',
       run: (context) => outcomesFor(context, 'ROAD-6', 'The repository work-item code is valid.')
     }
+  }
+}
+
+const ROAD_7: RubricItem<RoadmapAuditContext> = {
+  code: 'ROAD-7',
+  title: 'issue-allocation ledger',
+  description:
+    'docs/roadmap/ISSUES.md records a project-scoped high-water mark, preventing a pruned issue number from being reused.',
+  sources: [SOURCE],
+  mechanical: {
+    level: 'FAIL',
+    remediation: {
+      class: 'automatic'
+    },
+    audit: {
+      phase: 'INSPECT',
+      run: (context) =>
+        outcomesFor(context, 'ROAD-7', 'The issue-allocation ledger reserves every issued project number.')
+    },
+    conform: { phase: 'DERIVED', run: (context) => context.scaffoldIssueLedger?.() }
   }
 }
 
@@ -112,5 +133,5 @@ export const ROAD: RubricFamily<RoadmapRubricContext, RoadmapAuditContext> = {
   description: 'Canonical generated-index structure, placement, and readiness.',
   standard: SOURCE,
   selectContext: (context) => context.roadmaps,
-  items: [ROAD_1, ROAD_2, ROAD_3, ROAD_4, ROAD_5, ROAD_6]
+  items: [ROAD_1, ROAD_2, ROAD_3, ROAD_4, ROAD_5, ROAD_6, ROAD_7]
 }

@@ -10,6 +10,7 @@ import { type Finding, inspectRoadmap } from './roadmap-evidence.ts'
 
 export type RoadmapAuditContext = {
   readonly findings: readonly Finding[]
+  readonly scaffoldIssueLedger?: () => void
 }
 
 export type RoadmapIndexContext = RoadmapAuditContext & {
@@ -60,7 +61,7 @@ export const createRoadmapSession = ({
   const context: RoadmapRubricContext = {
     rubric: { publication },
     scope: audit,
-    roadmaps: audit,
+    roadmaps: { ...audit, ...(draft ? { scaffoldIssueLedger: draft.scaffoldIssueLedger } : {}) },
     items: audit,
     index: { ...audit, ...(draft ? { normaliseRoot: draft.normaliseRoot } : {}) },
     execution: audit,

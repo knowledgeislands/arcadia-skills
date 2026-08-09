@@ -1,5 +1,5 @@
 ---
-id: KI-HARNESS-GOV-007
+id: KI-HARNESS-007
 title: Govern skill package scripts
 theme: governance-consistency
 horizon: next

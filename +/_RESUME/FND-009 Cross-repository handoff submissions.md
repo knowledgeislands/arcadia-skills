@@ -36,11 +36,11 @@ FND-009 remains `in-progress` solely because the published contract has not yet 
 - `skills/governance/ki-handoffs/` — new governance capability, standard, and native checker.
 - `skills/keystone/ki-repo/` — generic working-area ownership only.
 - `skills/governance/ki-roadmap/` and `skills/process/ki-next/` — handoff lifecycle routing.
-- `docs/roadmap/KI-HARNESS-FND-009-define-cross-repository-handoff-submissions.md` — implementation status.
+- `docs/roadmap/KI-HARNESS-002-define-cross-repository-handoff-submissions.md` — implementation status.
 
 ## Read first
 
-- `docs/roadmap/KI-HARNESS-FND-009-define-cross-repository-handoff-submissions.md` — work-item scope and final unchecked step.
+- `docs/roadmap/KI-HARNESS-002-define-cross-repository-handoff-submissions.md` — work-item scope and final unchecked step.
 - `docs/decisions/GDR-KI-HARNESS-005-cross-repository-trade-routes.md` — governing contract.
 - `skills/governance/ki-handoffs/SKILL.md` — capability boundary and operating model.
 - `skills/governance/ki-handoffs/references/standards-handoffs.md` — record, route, and lifecycle shape.

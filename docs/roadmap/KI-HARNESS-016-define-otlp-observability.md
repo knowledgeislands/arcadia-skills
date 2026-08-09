@@ -1,5 +1,5 @@
 ---
-id: KI-HARNESS-OPS-003
+id: KI-HARNESS-016
 title: Define OTLP observability
 theme: operations
 horizon: future

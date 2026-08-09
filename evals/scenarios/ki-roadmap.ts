@@ -20,13 +20,13 @@ export const scenarios: Scenario[] = [
     prompt:
       "Set up a Future item for 'replace stale links' in the seo theme. I want a generic filename and no candidate field. Anything to correct?",
     assertions: [
-      { name: 'repository-theme-serial identifier', re: /<REPO>-<THEME>-<NNN>|SEO|001/i },
+      { name: 'repository-scoped issue identifier', re: /<REPO>-<NNN>|SEO|001/i },
       { name: 'flat placement', re: /docs\/roadmap\//i },
       { name: 'explicit theme field', re: /theme/i },
       { name: 'future candidate field', re: /candidate/i }
     ],
     rubric:
-      'House fact: each item is docs/roadmap/<REPO>-<THEME>-<NNN>-<slug>.md and carries explicit theme, horizon, status, dependencies, and candidate: true for Future work.'
+      'House fact: each item is docs/roadmap/<REPO>-<NNN>-<slug>.md and carries explicit theme, horizon, status, dependencies, and candidate: true for Future work.'
   },
   {
     skill: 'ki-roadmap',

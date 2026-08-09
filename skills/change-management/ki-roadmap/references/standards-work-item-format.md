@@ -12,10 +12,10 @@
 Each work item is one regular Markdown file directly under `docs/roadmap/`:
 
 ```text
-docs/roadmap/<REPO>-<THEME>-<NNN>-<slug>.md
+docs/roadmap/<REPO>-<NNN>-<slug>.md
 ```
 
-`<REPO>-<THEME>-<NNN>` is the identifier described by [the repository-roadmap standard](standards-repository-roadmaps.md).
+`<REPO>-<NNN>` is the identifier described by [the repository-roadmap standard](standards-repository-roadmaps.md). `docs/roadmap/ISSUES.md` retains the highest issued number so a pruned record never makes its identifier reusable.
 
 `<slug>` is lowercase kebab-case and no longer than 50 characters.
 
@@ -23,7 +23,7 @@ docs/roadmap/<REPO>-<THEME>-<NNN>-<slug>.md
 
 ```yaml
 ---
-id: KI-HARNESS-FND-001
+id: KI-HARNESS-001
 title: Compact descriptive title
 theme: foundation-tooling
 horizon: future
