@@ -318,11 +318,8 @@ const parseRepositoryConfiguration = (root: string): TradeConfiguration => {
 }
 
 const registryPath = (userHome: string): string => {
-  const conventional = join(userHome, '.config', 'ki', 'config.toml')
-  if (physicalFile(conventional)) return conventional
-  if (process.env.KI_CONFIG_HOME) return join(resolve(process.env.KI_CONFIG_HOME), 'config.toml')
-  if (process.env.XDG_CONFIG_HOME) return join(resolve(process.env.XDG_CONFIG_HOME), 'ki', 'config.toml')
-  return conventional
+  const stateHome = process.env.XDG_STATE_HOME ? resolve(process.env.XDG_STATE_HOME) : join(userHome, '.local', 'state')
+  return join(stateHome, 'ki', 'registry.toml')
 }
 
 const registeredRepositories = (userHome: string): readonly RegisteredRepository[] => {
@@ -330,10 +327,10 @@ const registeredRepositories = (userHome: string): readonly RegisteredRepository
   if (!physicalFile(path)) return []
   try {
     const document = Bun.TOML.parse(readFileSync(path, 'utf8')) as Record<string, unknown>
-    const repositories = table(document.repositories)
-    const paths = Array.isArray(repositories?.paths) ? repositories.paths : []
-    return paths
-      .filter((entry): entry is string => typeof entry === 'string' && isAbsolute(entry) && physicalDirectory(entry))
+    const repositories = table(document.repositories) ?? {}
+    return Object.values(repositories)
+      .map((entry) => table(entry)?.path)
+      .filter((root): root is string => typeof root === 'string' && isAbsolute(root) && physicalDirectory(root))
       .map((root) => ({ root: realpathSync(root), configuration: parseRepositoryConfiguration(realpathSync(root)) }))
   } catch {
     return []

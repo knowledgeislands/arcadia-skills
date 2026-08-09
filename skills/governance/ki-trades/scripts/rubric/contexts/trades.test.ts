@@ -13,9 +13,12 @@ import { STATUS } from '../items/status.ts'
 import { createTradesSession, tradeReadmes } from './trades.ts'
 
 const temporaryDirectories: string[] = []
+const initialXdgStateHome = process.env.XDG_STATE_HOME
 
 afterEach(() => {
   for (const directory of temporaryDirectories.splice(0)) rmSync(directory, { recursive: true, force: true })
+  if (initialXdgStateHome === undefined) delete process.env.XDG_STATE_HOME
+  else process.env.XDG_STATE_HOME = initialXdgStateHome
 })
 
 const temporaryDirectory = (prefix: string): string => {
@@ -74,11 +77,19 @@ const scaffold = (root: string): void => {
 }
 
 const registry = (home: string, roots: readonly string[]): void => {
-  const directory = join(home, '.config', 'ki')
+  const directory = join(home, '.local', 'state', 'ki')
   mkdirSync(directory, { recursive: true })
   writeFileSync(
-    join(directory, 'config.toml'),
-    ['[repositories]', `paths = [${roots.map((root) => JSON.stringify(root)).join(', ')}]`, ''].join('\n')
+    join(directory, 'registry.toml'),
+    [
+      'schema = 1',
+      '',
+      ...roots.flatMap((root, index) => [
+        `[repositories.${JSON.stringify(`repository-${index + 1}`)}]`,
+        `path = ${JSON.stringify(root)}`,
+        ''
+      ])
+    ].join('\n')
   )
 }
 
@@ -99,12 +110,15 @@ const options = (
   userHome: string,
   configuration: Record<string, unknown>,
   mode: 'audit' | 'conform' = 'audit'
-): RubricContextOptions => ({
-  mode,
-  repository,
-  userHome,
-  configuration
-})
+): RubricContextOptions => {
+  process.env.XDG_STATE_HOME = join(userHome, '.local', 'state')
+  return {
+    mode,
+    repository,
+    userHome,
+    configuration
+  }
+}
 
 const record = (
   id: string,
