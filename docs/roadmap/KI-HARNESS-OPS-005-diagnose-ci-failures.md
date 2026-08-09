@@ -3,7 +3,7 @@ id: KI-HARNESS-OPS-005
 title: Diagnose CI failures
 theme: operations
 horizon: now
-status: draft
+status: ready
 blocks: []
 blocked-by: []
 baseline-ref: null

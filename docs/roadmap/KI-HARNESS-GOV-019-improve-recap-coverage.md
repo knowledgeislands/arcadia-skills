@@ -3,7 +3,7 @@ id: KI-HARNESS-GOV-019
 title: Improve recap coverage
 theme: governance-consistency
 horizon: now
-status: draft
+status: ready
 blocks: []
 blocked-by: []
 baseline-ref: null
