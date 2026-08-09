@@ -3,10 +3,10 @@ id: KI-HARNESS-GOV-018
 title: Define KB stream codes
 theme: governance-consistency
 horizon: now
-status: ready
+status: in-progress
 blocks: []
 blocked-by: []
-baseline-ref: null
+baseline-ref: 2ee35e8c533881d39614748527aea5286e3391e1
 ---
 
 ## Goal
