@@ -2,7 +2,7 @@
 id: KI-HARNESS-FND-011
 title: Report rumdl parser defects
 theme: foundation-tooling
-horizon: now
+horizon: waiting-for
 status: draft
 blocks: []
 blocked-by: []
@@ -11,7 +11,7 @@ baseline-ref: null
 
 ## Goal
 
-Report the rumdl defects found during the estate migration upstream, with a minimal reproduction and a fix for each, so the rules currently disabled across the estate can be re-enabled rather than carried indefinitely.
+Keep verified rumdl defects ready for an upstream contribution when routine estate use shows that a fix is worth submitting, so disabled rules can be recovered without treating a migration-stage fork as an obligation to open pull requests.
 
 ## Context
 
@@ -36,6 +36,10 @@ Contributions follow the upstream project's conventions and stay minimal. The ai
 Reproductions must carry no content from this estate. Test fixtures use neutral public-domain prose rather than reduced copies of the documents where each defect was found.
 
 ## Current state
+
+The fork carries three local candidate branches, but no pull request is open and none should be opened merely because the migration found a reproduction. The recorded `MD056` branch was overtaken by correcting the affected Markdown; the recorded `MD075` branch does not address the variant the estate actually encounters. Both claims require fresh, fixture-level measurement before they can count as submission-ready work.
+
+This item now waits for routine use of rumdl across the estate to provide a reason to resume: a recurrent defect, a changed upstream release, or enough operational evidence that recovering a particular rule is worth the upstream-maintenance cost. Its return begins with re-validation, not with opening the existing branches as pull requests.
 
 Six defects, each with a reproduction verified during the migration:
 
@@ -65,9 +69,8 @@ Upstream is at 0.2.52, uses conventional commits with a `fix(rules)` scope, gene
 ## Steps
 
 - [x] Install the Rust toolchain the project pins and confirm the test suite passes before any change.
-- [x] Fix `MD056`'s table-row truncation, on branch `fix-obsidian-wikilink-table-cells`.
-- [x] Fix `MD075`'s paragraph merge, on branch `fix-obsidian-wikilink-orphaned-rows`, which builds on the branch above.
-- [x] Fix `MD005`'s blockquote de-indentation, on branch `fix-md005-indented-blockquote-lists`.
+- [ ] Re-validate the three candidate branches against the estate's exact reproductions before treating any as a fix. Retire the superseded `MD056` contribution unless new evidence gives it an independent purpose; redesign or retire the `MD075` contribution unless it fixes the observed variant.
+- [ ] Re-validate the `MD005` branch against the nested-list reproduction before treating it as submission-ready.
 - [ ] Fix the ATX and setext misparses, which are one root cause and may be one pull request.
 - [ ] Fix the `MD013` reflow gap, the last of the pipe-context defects.
 - [ ] Open one pull request per branch, each carrying its reproduction, and record the references under Discussion.
@@ -89,7 +92,7 @@ A fix is only proven by re-running the original reproduction, not by the rule re
 
 ## Dependencies / blocks
 
-Nothing blocks this item, and it blocks nothing. The estate is stable with the rules disabled; this recovers coverage rather than unblocking work.
+This item waits for routine estate use of rumdl to create a reason to resume: a recurrent defect, a relevant upstream release, or sufficient operational evidence that a specific rule should be recovered. It blocks nothing. The estate remains stable with the affected rules disabled, so an upstream contribution is coverage recovery rather than delivery-critical work.
 
 ## Discussion
 

@@ -11,7 +11,7 @@ baseline-ref: null
 
 ## Goal
 
-Let a repository declare a justified departure from a wholly owned configuration file, so CONFORM stops silently overwriting a setting the repository needs and AUDIT can tell a declared variation from drift.
+Keep wholly owned configuration canonical while protecting a repository from a destructive conform action when it has an evidenced exception. A declared exception must remain visibly non-conforming and prompt alignment to the standard; it must not become a second canonical template.
 
 ## Context
 
@@ -25,33 +25,32 @@ The same repository also enables `MD005` and `MD056`, which the house template d
 
 ## Boundary
 
-This item owns the ownership contract for wholly owned files: how a repository declares a variation, how AUDIT distinguishes a declared variation from drift, and what CONFORM does when one is declared. It covers `ki-authoring`'s two owned files and any other skill that owns a file wholly under the same premise.
+This item owns the ownership contract for wholly owned files: how a repository declares an exceptional safety boundary, how AUDIT distinguishes a declared exception from ordinary drift, and what CONFORM does when one is declared. It covers `ki-authoring`'s two owned files and any other skill that owns a file wholly under the same premise.
 
 It does not decide any individual repository's rule set. Whether `kit-legal` is right to disable `MD029` and `MD030` is that repository's judgement, already recorded in its own configuration; this item makes the judgement expressible rather than adjudicating it.
 
-It does not change the default. A repository that declares nothing keeps today's behaviour exactly: hash comparison against the template, and transactional overwrite on drift. Variation is opt-in and must be justified in the declaration, so the common case stays strict.
+It does not change the default. A repository that declares nothing keeps today's behaviour exactly: hash comparison against the template, and transactional overwrite on drift. An exception is opt-in, must state its reason, remains a WARN with an explicit recommendation to return to the template, and suppresses only the destructive write for its named file. It is not a conformed variant, a PASS result, or a general-purpose per-repository configuration layer.
 
 ## Current state
 
 `OWN-1` compares each owned file against its template by hash and reports drift as a WARN. `OWN-2` removes retired files. `CONFORM` prepares early transactional writes for owned files, refusing unsafe file types and declining to write through a symlink.
 
-`.ki-config.toml` already carries per-skill tables under fully-qualified `<harness-id>:<skill-name>` keys, so a declaration has an obvious home and needs no new file.
+`.ki-config.toml` already carries a bare table for each declared skill, so an exception declaration has an obvious home and needs no new file. `ki-repo` owns that configuration contract.
 
 Twenty-two repositories carry `.rumdl.toml`. Twenty-one match the house template. One does not, and its divergence is the case above.
 
 ## Steps
 
-- [ ] Decide the declaration's shape: whether a repository declares specific rules it adds to or removes from the template's `disable` list, or declares the whole file as locally owned with a stated reason.
-- [ ] Prefer the narrower form if it is workable — a declared delta keeps AUDIT able to check everything else against the template, where whole-file ownership gives up all of it.
-- [ ] Require a reason string in the declaration, so the justification travels with the repository rather than living only in a commit message.
-- [ ] Teach `OWN-1` to apply the declared delta to the template before comparing, reporting undeclared difference as drift and declared difference as PASS.
-- [ ] Teach CONFORM to write the template with the declared delta applied, so conforming a declared repository is safe rather than destructive.
-- [ ] Declare `kit-legal`'s `MD028`, `MD029` and `MD030` disables and its `MD005` and `MD056` enables, and confirm its audit passes without weakening the check elsewhere.
-- [ ] Re-run `ki repo audit --skill ki-authoring` across the estate and confirm the other twenty-one repositories are unaffected.
+- [ ] Define the smallest declaration: a named wholly owned file and a reason explaining the safety or external-contract constraint. Do not model arbitrary rule deltas or a locally canonical replacement template.
+- [ ] Require the reason string to travel with the declaration, so the exception is reviewable and re-considered rather than surviving as an unexplained repository preference.
+- [ ] Teach `OWN-1` to report a declared exception as a distinct WARN: show the reason and exact template drift, recommend return to the house template, and continue to report any undeclared difference as ordinary drift.
+- [ ] Teach CONFORM to skip the named declared file entirely. It must retain the existing protective configuration for subsequent Markdown commands; it must not overwrite it, apply a template delta, or claim the file now conforms.
+- [ ] Declare `kit-legal`'s `.rumdl.toml` exception with its evidence-preservation reason, and confirm that its `MD028`, `MD029`, and `MD030` disables survive a `ki repo conform --skill ki-authoring` run.
+- [ ] Re-run `ki repo audit --skill ki-authoring` across the estate: the other twenty-one repositories remain canonical, while Kit Legal carries only the explicit, actionable exception warning.
 
 ## Files touched
 
-`skills/governance/ki-authoring/scripts/rubric/items/owned.ts` for the comparison, `contexts/authoring.ts` for applying a delta to the template, and `SKILL.md` where the wholly-owned premise is stated.
+`skills/governance/ki-authoring/scripts/rubric/items/owned.ts` for the comparison and conform boundary, `contexts/authoring.ts` for the owned-file model, and `SKILL.md` where the wholly-owned premise is stated.
 
 `skills/governance/ki-repo/references/` for the `.ki-config.toml` contract, since the declaration's key belongs to that skill's model rather than this one's.
 
@@ -59,7 +58,7 @@ Twenty-two repositories carry `.rumdl.toml`. Twenty-one match the house template
 
 ## Verify
 
-`ki repo audit --skill ki-authoring` passes in `kit-legal` with its disables intact, and `ki repo conform --skill ki-authoring` there leaves them in place rather than removing them. This is the test that matters: conforming the repository must not be the thing that destroys the protection.
+`ki repo audit --skill ki-authoring` reports Kit Legal's declared exception as an explicit WARN with its reason and a recommendation to align, while `ki repo conform --skill ki-authoring` there leaves its disables intact rather than removing them. This is the test that matters: conforming the repository must not be the thing that destroys the protection.
 
 An undeclared change to an owned file is still reported as drift, proven by making one and seeing it fail.
 
@@ -77,7 +76,11 @@ Disabling `MD029` and `MD030` estate-wide would spend real coverage everywhere t
 
 ### Why not drop the file from `ki-authoring`'s ownership
 
-Whole-file ownership is what makes the estate's Markdown enforcement uniform, and it works for twenty-one of twenty-two repositories. The problem is that the contract offers only two states — identical or drifted — where a third is needed.
+Whole-file ownership is what makes the estate's Markdown enforcement uniform, and it works for twenty-one of twenty-two repositories. The problem is that the contract offers only two operational responses — overwrite or leave a dangerous drift — where a third is needed: protect the named file while keeping its departure visibly exceptional.
+
+### Why not make a declared variation pass
+
+A PASS would make each repository's preference as authoritative as the shared standard, encouraging local templates to accumulate without a strong reason to remove them. The declaration instead prevents destructive automation but preserves the standard's expectation: the exception stays visible, carries its reason, and is reviewed as work to eliminate when the constraint changes.
 
 ### Why the reason belongs in the declaration
 
