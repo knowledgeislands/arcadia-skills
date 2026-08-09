@@ -3,10 +3,10 @@ id: KI-HARNESS-GOV-026
 title: Allow declared owned-file variation
 theme: governance-consistency
 horizon: now
-status: ready
+status: in-progress
 blocks: []
 blocked-by: []
-baseline-ref: null
+baseline-ref: 35647f7de1cd48dc086f7fbd4904e005c86bfb9d
 ---
 
 ## Goal
