@@ -3,10 +3,10 @@ id: KI-HARNESS-GOV-017
 title: Improve verification boundaries
 theme: governance-consistency
 horizon: now
-status: ready
+status: in-progress
 blocks: []
 blocked-by: []
-baseline-ref: null
+baseline-ref: 936960a4621022bc344362af6d6dbebeef254294
 ---
 
 ## Goal
