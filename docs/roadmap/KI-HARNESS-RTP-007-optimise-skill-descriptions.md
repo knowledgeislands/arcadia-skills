@@ -3,7 +3,7 @@ id: KI-HARNESS-RTP-007
 title: Optimise skill descriptions
 theme: runtime-portability
 horizon: now
-status: in-progress
+status: awaiting-review
 blocks: []
 blocked-by: []
 baseline-ref: e0dfb29c9287da789f0b34efc2041e8bb69a9ba2
@@ -55,6 +55,27 @@ The `ki-skills` optimisation guidance values standing description cost, but its 
 ## Dependencies / blocks
 
 Nothing blocks this item. The user approved both its Now placement and the described delivery boundary.
+
+## Review
+
+Delivered the four first-priority description reductions and added `DESC-10`, a `ki-skills` judgment rule that keeps source cost proportionate to routing value.
+
+| Skill | Before | After |
+| --- | ---: | ---: |
+| `ki-recap` | 141 words / 1,013 chars | 42 / 314 |
+| `ki-repo` | 131 / 1,013 | 48 / 340 |
+| `ki-authoring` | 127 / 921 | 41 / 296 |
+| `ki-dotfiles-chezmoi` | 119 / 997 | 41 / 319 |
+
+The selected descriptions fall from 418 words / 3,944 characters to 172 / 1,269. The figures measure source text only; they do not claim a Codex routing, shortening, or billing token count.
+
+Baseline: `e0dfb29c9287da789f0b34efc2041e8bb69a9ba2`.
+
+Delivery commit: `4ec00a3a91f50908465652389812d95742ee3b46`.
+
+Verification passed: `ki repo audit --skill ki-skills --repo .`, `ki repo audit --skill ki-authoring --repo .`, `ki repo audit --skill ki-roadmap --repo .`, `ki repo audit --skill ki-tokenomics-codex --repo .`, `bunx tsc --noEmit`, and `bun run test` (332 pass, 0 fail).
+
+The standard deliberately sets no universal word target: `DESC-10` remains judgment-only so an essential trigger or collision discriminator is not cut to satisfy a proxy metric.
 
 ## Discussion
 
