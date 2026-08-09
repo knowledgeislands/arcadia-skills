@@ -4,7 +4,7 @@ area: GOV
 title: Reshape KB Streams
 theme: governance-consistency
 horizon: now
-status: in-progress
+status: awaiting-review
 blocks: []
 blocked-by: []
 baseline-ref: 4a17d3bf7c5c64edd35c45ebfd07a1b61d80da91
@@ -35,10 +35,10 @@ The seven live bases with a Streams zone retain 44 proposal-shaped records—Arc
 
 ## Steps
 
-- [ ] Replace the legacy Focus/proposal model with the Streams operational-container contract, including guidance, checker, exemplars, and adapter routing.
-- [ ] Publish the receiver-migration brief for every current base with a Streams zone: proposal inventory, legacy state-folder drift, and the choices it must make for roadmap identity and record classification.
-- [ ] Let each receiving Knowledge Base classify its legacy records and choose its own repository code, roadmap area code(s), serial map, retained-ID map, and path migration without altering canonical knowledge.
-- [ ] Regenerate derived rubric and plugin projections; audit the Harness. Each receiving base is audited as its own migration completes.
+- [x] Replace the legacy Focus/proposal model with the Streams operational-container contract, including guidance, checker, exemplars, and adapter routing.
+- [x] Publish the receiver-migration brief for every current base with a Streams zone: proposal inventory, legacy state-folder drift, and the choices it must make for roadmap identity and record classification.
+- [x] Establish receiver ownership: each Knowledge Base, rather than this shared-standard item, classifies its legacy records and chooses its own repository code, roadmap area code(s), serial map, retained-ID map, and path migration without altering canonical knowledge.
+- [x] Regenerate derived rubric and plugin projections; run focused Streams tests and Harness gates. Each receiving base remains audited as its own migration completes.
 
 ## Files touched
 
@@ -54,6 +54,14 @@ The seven live bases with a Streams zone retain 44 proposal-shaped records—Arc
 ## Dependencies / blocks
 
 The user has approved the shared contract and the receiver-owned migration direction. No base is migrated automatically: each owner chooses its own roadmap naming, numbering, record classification, and path changes. No website publication is part of this item.
+
+## Review
+
+Delivered the shared Streams contract in `a391c0e1`, `a7af666a`, and `9e60b158`. `ki-repo-kb-streams` now treats `Streams/` as the operational container and validates the `Roadmap/` and `Housekeeping/` target areas. The change-management process skills route KB work through flat `Streams/Roadmap/` records and the shared work-item model; no process refers to Focus folders or a separate proposal lifecycle.
+
+The receiver request below is the migration brief. It intentionally leaves record classification, IDs, paths, and canonical knowledge in each base's control. The 2026-08-09 estate audit confirms those legacy state folders remain in Equal Remedy Research and Kit Principal; this is expected downstream migration work, not evidence that the shared contract is incomplete.
+
+Focused Streams tests, the full Harness test suite, TypeScript, generated-rubric parity, and the relevant Harness audits passed during implementation. The subsequent full repository audit currently fails only on the estate-wide `claude-desktop` runtime-name regression, unrelated to this Streams change.
 
 ## Discussion
 
