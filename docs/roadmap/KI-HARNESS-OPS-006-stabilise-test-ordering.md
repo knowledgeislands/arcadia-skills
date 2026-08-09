@@ -3,7 +3,7 @@ id: KI-HARNESS-OPS-006
 title: Stabilise test ordering
 theme: operations
 horizon: now
-status: draft
+status: ready
 blocks: []
 blocked-by: []
 baseline-ref: null
