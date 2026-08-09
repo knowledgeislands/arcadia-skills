@@ -3,7 +3,7 @@ id: KI-HARNESS-GOV-017
 title: Improve verification boundaries
 theme: governance-consistency
 horizon: now
-status: in-progress
+status: awaiting-review
 blocks: []
 blocked-by: []
 baseline-ref: 936960a4621022bc344362af6d6dbebeef254294
@@ -66,11 +66,39 @@ Escalate before expanding scope if applying the rule would require an artifact-s
 
 Keep this as one implementation lane because the standard wording, criterion prompt, and focused assertion form one semantic unit. It can run in parallel with `KI-HARNESS-GOV-019` because their file boundaries do not overlap. The batch orchestrator retains final review of the judgment boundary and runs the shared Harness gates after both lanes converge; no durable delegation packet is warranted.
 
+## Review
+
+### Delivered
+
+`TEST-7` adds a portable, judgment-only observable-contract coverage criterion. The engineering standard and concise skill summary now direct reviewers to test through the nearest supported boundary, remove unsupported paths, and limit fault injection to documented interface failures.
+
+### Summary of changes
+
+Implementation commit: `904873552c9b9cdf5b28fc63cbdab7b9ec2a7952`.
+
+The generated engineering rubric now publishes `TEST-7`; focused assertions cover its stable code, judgment-only form, source, and public-boundary prompt.
+
+### Verification
+
+- PASS — `bun test skills/governance/ki-engineering/scripts/rubric/items/index.test.ts` (8 tests).
+- PASS — `ki dev skill rubric ki-engineering --write`, followed by `ki dev skill rubric ki-engineering`.
+- PASS — `bun run test` (319 tests) and `bunx tsc --noEmit`.
+- PASS — `ki repo audit --skill ki-engineering --repo .`, `ki repo audit --skill ki-skills --repo .`, and `ki repo audit --skill ki-authoring --repo .`.
+- Judgment review — the criterion creates no mechanical finding or conform action; it expressly favours supported observable contracts and deletion of unsupported paths over internal-only seams.
+
+### Outstanding concerns
+
+None within this item. Concrete public-boundary definitions remain owned by applicable artifact skills.
+
+### Post-change review
+
+Confirm the wording preserves the narrow fault-injection exception without making an internal seam an acceptable coverage shortcut.
+
+### Mini recap
+
+The work remained within the portable engineering boundary; no artifact-specific test rule, heuristic reachability check, or cross-repository change was introduced.
+
 ## Discussion
-
-### Implementation constraint
-
-The source and generated-rubric checks pass, but the complete `ki-engineering` audit cannot yet be clean: `biome.json` names the 2.5.6 schema while the installed Biome CLI expects 2.5.7. That pre-existing schema-version gap is owned by `KI-HARNESS-GOV-031`; this item deliberately does not fold a configuration migration into coverage guidance.
 
 ### Source
 
