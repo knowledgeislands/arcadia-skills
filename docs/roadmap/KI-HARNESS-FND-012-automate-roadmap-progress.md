@@ -40,18 +40,19 @@ The agenda performs one bounded cycle: re-ground repository and item state, vali
 
 ## Steps
 
-- [ ] Define the `ki-agenda` contract around an explicit `ki-batch` authorisation: allowed item states, single-repository scope, timebox, mandatory stops, ledger evidence, and normal `awaiting-review` completion.
-- [ ] Specify the one-cycle sequence: fresh grounding, authorisation validation, early-question report, independent-item coordination, stop or park evidence, and concise recap without duplicating sibling lifecycle logic.
-- [ ] Add a pure fixture-backed cycle model that proves absent authority, an unready item, a dirty tree, a failed gate, a dependency, and an unapproved decision produce a named no-write stop.
-- [ ] Write the portable skill and its `ki-batch` integration guidance, including a dry-run example that reports candidate state and questions without changing a record.
-- [ ] Run focused fixtures and repository gates; review that no result makes selection, readiness, acceptance, pruning, push, release, or external mutation appear automatic.
+- [x] Define the `ki-agenda` contract around an explicit `ki-batch` authorisation: allowed item states, single-repository scope, timebox, mandatory stops, ledger evidence, and normal `awaiting-review` completion.
+- [x] Specify the one-cycle sequence: fresh grounding, authorisation validation, early-question report, independent-item coordination, stop or park evidence, and concise recap without duplicating sibling lifecycle logic.
+- [x] Add a pure fixture-backed cycle model that proves absent authority, an unready item, a dirty tree, a failed gate, a dependency, and an unapproved decision produce a named no-write stop.
+- [x] Write the portable skill and its `ki-batch` integration guidance, including a dry-run example that reports candidate state and questions without changing a record.
+- [x] Run focused fixtures and repository gates; review that no result makes selection, readiness, acceptance, pruning, push, release, or external mutation appear automatic.
 
 ## Files touched
 
 - `skills/change-management/ki-agenda/SKILL.md`
 - `skills/change-management/ki-agenda/references/standards-agenda.md`
-- `skills/change-management/ki-agenda/scripts/agenda-cycle.ts` and its focused test
+- `skills/change-management/ki-agenda/scripts/internal/agenda-cycle.ts` and its focused test
 - `skills/change-management/ki-batch/SKILL.md` and `references/standards-batch.md`
+- `skills/change-management/ki-next/SKILL.md` and the lifecycle diagram projections
 - This roadmap item
 
 ## Verify

@@ -30,6 +30,8 @@ Present the complete authorisation for review and require explicit approval befo
 
 An omitted field is not implied authority.
 
+`ki-agenda` may consume this approved record for one bounded agenda cycle. It preserves this record as the sole authority and ledger, applies every mandatory stop below, and leaves selection, readiness, closure, and pruning with their owning process skills.
+
 ## 2. Validate before implementation
 
 Resolve the approved authorisation and every named canonical work item afresh.

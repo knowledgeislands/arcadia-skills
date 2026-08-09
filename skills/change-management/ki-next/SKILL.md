@@ -35,7 +35,8 @@ ki-recap (optional current-session context)
               ├─> ki-implement (one Ready item through Awaiting review)
               │     └─> ki-accept (Awaiting review through Done)
               └─> ki-batch (confirmed independent, synergistic Ready set)
-                    └─> repeated ki-implement cycles under an approved authorisation
+                    └─> ki-agenda (one fresh-grounded cycle under an approved authorisation)
+                          └─> ki-implement (each named Ready item through Awaiting review)
 
 ki-roadmap governs the shared forward-work contract and the non-KB adapter.
 ki-kb-streams governs the KB Streams adapter and Enactment gate.
@@ -50,6 +51,8 @@ When a recap precedes it, `ki-next` begins only after that recap has preserved i
 Selection is itself a compaction boundary. Once the selected work and its confirmed disposition are recorded, `ki-next` compacts by default so the following plan or implementation cycle starts on a clean slate carrying the selected item and nothing else. The same two conditions withhold it as in `ki-recap`: an unsafe boundary, or no substantive work entering context since the last compaction — a recap running straight into `ki-next` compacts once here, not twice.
 
 `ki-batch` prepares and coordinates an explicitly authorised independent Ready set. It does not change `ki-next` ownership of selection, priority, or an individual item's lifecycle.
+
+`ki-agenda` may run one bounded cycle from that approved batch authority. It asks known questions before delivery and retains the same selection, readiness, acceptance, pruning, push, release, and repository-boundary stops.
 
 `ki-trade` prepares, submits, receives, releases, and prunes local trade records. It hands a validated received record to `ki-next`; it never chooses the receiver's disposition.
 

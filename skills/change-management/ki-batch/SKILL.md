@@ -40,6 +40,8 @@ Park ambiguity rather than resolving it by inference, then record a per-item led
 
 `ki-batch` may request batched closure only when the authorisation expressly grants it for named records.
 
+`ki-agenda` may run one bounded cycle from the same approved authorisation. It adds fresh grounding and early-question handling; it neither broadens the batch nor replaces this skill's authorisation and ledger contract.
+
 Pruning always requires separate explicit destructive authority.
 
 ## Relationship boundary
