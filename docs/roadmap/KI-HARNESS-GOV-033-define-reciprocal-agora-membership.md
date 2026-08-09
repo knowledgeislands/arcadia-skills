@@ -3,7 +3,7 @@ id: KI-HARNESS-GOV-033
 title: Define Agora membership
 theme: governance-consistency
 horizon: now
-status: in-progress
+status: awaiting-review
 blocks: []
 blocked-by: []
 baseline-ref: 8769800ab502a0f357933465bb105e89a1defee8
@@ -25,17 +25,17 @@ Do not change any peer repository configuration, local `tools-ki` resolver, Dotf
 
 ## Current state
 
-No Harness skill owns Agora membership. The current portable `ki-repo` contract defines repository identity and Knowledge Base store roles, but deliberately does not define cross-repository collection membership. Current local profiles cover only path-based Zed projects; the Dotfiles comparison identifies 25 distinct existing repository paths alongside independently managed source stores.
+`ki-agora` now owns the portable declarations, standard, generated rubric, and local-shape fixture coverage. The contract deliberately stops before peer observation: tools-ki will resolve registered identities and check both sides only after explicit acceptance. Current local profiles remain path-based Zed collections, and the Dotfiles comparison still identifies 25 repository paths alongside independently managed source stores.
 
 ## Steps
 
-- [ ] Define a dedicated `ki-agora` governance capability, including its ownership boundary, configuration vocabulary, standard, rubric, and generated publication.
-- [ ] Specify the Agora-home declaration: stable Agora ID, purpose, target-policy categories, and approved canonical repository members with their roles.
-- [ ] Specify the member declaration: Agora ID, canonical home repository identity, and role; permit a repository to belong to multiple Agoras.
-- [ ] Define reciprocal validation: canonical HTTPS identities, duplicate and collision handling, agreement rules, and the diagnostic boundary between portable contract validation and tools-ki local path resolution.
-- [ ] Define target-policy categories for Zed multi-root projection, VS Code workspace projection, source-root trust by supported client, and no projection; do not choose the initial Agora set or memberships in the portable standard.
-- [ ] Add contract fixtures and verification to the Harness, then prepare the contract for explicit acceptance before any consumer or peer migration begins.
-- [ ] After acceptance, hand off the local resolver and validator to CLI-018, the machine-local projections to DOTFILES-UE-005, and each approved member declaration to its owning repository for incremental delivery.
+- [x] Define a dedicated `ki-agora` governance capability, including its ownership boundary, configuration vocabulary, standard, rubric, and generated publication.
+- [x] Specify the Agora-home declaration: stable Agora ID, purpose, target-policy categories, and approved canonical repository members with their roles.
+- [x] Specify the member declaration: Agora ID, canonical home repository identity, and role; permit a repository to belong to multiple Agoras.
+- [x] Define reciprocal validation: canonical HTTPS identities, duplicate and collision handling, agreement rules, and the diagnostic boundary between portable contract validation and tools-ki local path resolution.
+- [x] Define target-policy categories for Zed multi-root projection, VS Code workspace projection, source-root trust by supported client, and no projection; do not choose the initial Agora set or memberships in the portable standard.
+- [x] Add contract fixtures and verification to the Harness, then prepare the contract for explicit acceptance before any consumer or peer migration begins.
+- [x] Define the post-acceptance handoff: CLI-018 owns local resolution and validation, DOTFILES-UE-005 owns machine-local projections, and each approved member declaration remains an incremental change in its owning repository.
 
 ## Files touched
 
@@ -55,6 +55,10 @@ No other repository is changed by this item.
 ## Dependencies / blocks
 
 The portable repository identity and Knowledge Base store-role contract is already accepted. This item needs user approval of its ready plan before implementation, then explicit acceptance before CLI-018, DOTFILES-UE-005, or a peer repository changes configuration.
+
+## Review
+
+The new `ki-agora` capability passes its native audit, the Harness skill, authoring, Decision Record, and roadmap audits, the full Harness test suite, TypeScript, and Biome. Review the authority split and policy vocabulary before accepting: Harness owns the portable declarations, tools-ki owns local reciprocal observation, and user-environment configuration owns client projections. No peer or user configuration has changed.
 
 ## Discussion
 

@@ -37,6 +37,8 @@ coverage-checkpoints = false # source repository publishes the optional capabili
 
 [skills.ki-trades]
 
+[skills.ki-agora]
+
 [skills.ki-trades.routes]
 "knowledgeislands/ki-website" = { export = ["work", "knowledge"] }
 "knowledgeislands/tools-ki" = { export = ["work"], import = ["work", "knowledge"] }
