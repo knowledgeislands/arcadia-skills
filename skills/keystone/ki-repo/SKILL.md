@@ -79,7 +79,7 @@ GitHub's settings surface moves (rulesets vs classic protection, new security to
 
 ### Mode REVIEW — examine repository architecture and implementation
 
-Run a bounded, human-led repository review: agree the frame, gather inspectable evidence, interview material uncertainty, identify findings, and route each outcome to `ki-roadmap` / `ki-plan`, `ki-decision-records`, `ki-feature-definitions`, a guide, or no action.
+Run a bounded, human-led repository review: agree the frame, gather inspectable evidence, interview material uncertainty, identify findings, and route each outcome to `ki-roadmap` / `ki-plan`, `ki-decision-records`, `ki-specs`, a guide, or no action.
 
 Read and follow [the REVIEW procedure](references/mode-review.md). Mechanical `ki repo audit` output may be evidence, but REVIEW does not turn architecture or implementation observations into repository-compliance rules, create an automatic score, or publish a durable route without explicit confirmation. Use `review close <REV-NNN>` to assess whether an optional review record can be pruned.
 

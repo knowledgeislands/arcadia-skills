@@ -7,7 +7,7 @@ Shapes to adapt when authoring a repository-local guide collection. They illustr
 ```markdown
 # Guides
 
-Practical instructions for contributors and operators of this repository. Decisions explain why, Feature Definitions explain what, and these guides explain how.
+Practical instructions for contributors and operators of this repository. Decisions explain why, Specifications explain what, and these guides explain how.
 
 ## Start here
 

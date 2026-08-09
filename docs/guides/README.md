@@ -1,6 +1,6 @@
 # Guides
 
-Practical instructions for using, operating, contributing to, and maintaining the harness. Decisions explain why, Feature Definitions explain what, and these guides explain how.
+Practical instructions for using, operating, contributing to, and maintaining the harness. Decisions explain why, Specifications explain what, and these guides explain how.
 
 ## Guide areas
 

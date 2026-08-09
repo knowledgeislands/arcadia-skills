@@ -4,7 +4,7 @@ This is the map of `docs/` and the guiding principles that govern everything in 
 
 ## Guiding principles
 
-**Each source has one job.** Decisions record the **why**, Feature Definitions the **what**, guides the **how**, and roadmap items the **when**. Public explanatory guidance lives on the website. A fact belongs in exactly one of them; if it is tempting to write it in two places, one of those is the wrong place.
+**Each source has one job.** Decisions record the **why**, Specifications the **what**, guides the **how**, and roadmap items the **when**. Public explanatory guidance lives on the website. A fact belongs in exactly one of them; if it is tempting to write it in two places, one of those is the wrong place.
 
 **A source is written to be read on its own terms.** Decision Records ([`decisions/`](decisions)) are **self-contained**. A record inlines the context it needs and states the decision in full; its only outbound links are normally to sibling DRs in the same set, following the reading-order layering. The sole carve-out is a record whose subject is an external artefact or whose canonical public publication has moved, which may cite that current location while preserving the historical decision. The format is governed by the `ki-decision-records` skill.
 
@@ -16,9 +16,9 @@ This is the map of `docs/` and the guiding principles that govern everything in 
 
 [`decisions/`](decisions) holds the Decision Records: `ADR-`, `GDR-`, and the other typed records, each a living present-state record in the Nygard five-section shape. The bare `ADR-KI-HARNESS-NNN` series is the **foundations**; sub-scoped series (`TOOLCHAIN`, `SKILLS`, `AGENTS`) carry decisions about a narrower area. See [`decisions/README.md`](decisions/README.md) for the reading order (grouped by scope, numeric within each) and the by-ID index.
 
-### Feature definitions — the _what_
+### Specifications — the _what_
 
-[`features/`](features) holds the behaviour-level specification: what the harness does, stated normatively (RFC-2119) with a `_Verify:_` hook per requirement. Flat, one file per area, with [`features/index.md`](features/index.md) defining the ID scheme and areas table. Governed by the `ki-feature-definitions` skill.
+[`specs/`](specs) holds the behaviour-level contract: what the harness does, stated normatively (RFC-2119) with a `_Verify:_` hook per requirement. Flat, one file per area, with [`specs/index.md`](specs/index.md) defining the ID scheme and areas table. Governed by the `ki-specs` skill.
 
 ### Guides — the _how_
 
@@ -32,7 +32,7 @@ The KI Website is the canonical home for public explanatory guidance:
 - [Skills and journeys](https://knowledgeislands.info/guidance/skills/) explains the skill families, catalogue, dependencies, and process composition.
 - [Prompting guides](https://knowledgeislands.info/guidance/prompting/) publish the source-backed, model-specific guidance and current portable type-to-model resolution.
 
-The harness retains the underlying `SKILL.md` files, standards, generated rubric publications, decisions, feature definitions, and developer procedures. Do not recreate website guidance under `docs/` as a compatibility copy.
+The harness retains the underlying `SKILL.md` files, standards, generated rubric publications, decisions, specifications, and developer procedures. Do not recreate website guidance under `docs/` as a compatibility copy.
 
 ### Repository roadmaps — the _when_
 

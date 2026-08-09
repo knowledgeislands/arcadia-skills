@@ -48,7 +48,7 @@ import { scenarios as activitiesScenarios } from './scenarios/ki-kb-activities.t
 import { scenarios as liveArtifactsScenarios } from './scenarios/ki-kb-live-artifacts.ts'
 import { scenarios as housekeepingScenarios } from './scenarios/ki-housekeeping-claude.ts'
 import { scenarios as bindingScenarios } from './scenarios/ki-binding.ts'
-import { scenarios as featureDefinitionsScenarios } from './scenarios/ki-feature-definitions.ts'
+import { scenarios as specsScenarios } from './scenarios/ki-specs.ts'
 import { scenarios as pluginsScenarios } from './scenarios/ki-plugins.ts'
 
 export type Assertion = { name: string; re: RegExp }
@@ -69,7 +69,7 @@ const ALL: Scenario[] = [
   ...streamsScenarios,
   ...tokenomicsScenarios,
   ...decisionRecordsScenarios,
-  ...featureDefinitionsScenarios,
+  ...specsScenarios,
   ...repoRoadmapScenarios,
   ...activitiesScenarios,
   ...liveArtifactsScenarios,

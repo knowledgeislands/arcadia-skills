@@ -48,7 +48,7 @@ The records are living, compact, and independent. The order below is a **curated
 19. [ADR-KI-HARNESS-SKILLS-005](ADR-KI-HARNESS-SKILLS-005-the-handoff-doctrine-is-its-own-skill.md) — archived decision to create a standalone handoff skill; superseded by runtime subagent delegation and optional packet governance.
 20. [ADR-KI-HARNESS-SKILLS-006](ADR-KI-HARNESS-SKILLS-006-concern-first-skill-taxonomy-and-implication-graph.md) — the concern-first taxonomy and the implication graph.
 21. [ADR-KI-HARNESS-SKILLS-007](ADR-KI-HARNESS-SKILLS-007-runtime-explicit-claude-housekeeping-scope-and-the-server-pairing.md) — `ki-housekeeping-claude` scope and the server pairing.
-22. [ADR-KI-HARNESS-SKILLS-008](ADR-KI-HARNESS-SKILLS-008-a-feature-definitions-skill-for-the-what.md) — a Feature Definitions skill for the "what".
+22. [ADR-KI-HARNESS-SKILLS-008](ADR-KI-HARNESS-SKILLS-008-a-specs-skill-for-the-what.md) — a Specifications skill for the "what".
 23. [ADR-KI-HARNESS-SKILLS-009](ADR-KI-HARNESS-SKILLS-009-two-repo-structure-skills-for-standalone-tools-and-their-homebrew-tap.md) — ki-tools and ki-homebrew-tap repo-structure skills.
 24. [ADR-KI-HARNESS-AGENTS-001](ADR-KI-HARNESS-AGENTS-001-subagent-isolation-for-multi-skill-invocation.md) — subagent isolation for multi-skill invocation.
 25. [ADR-KI-HARNESS-TOOLCHAIN-004](ADR-KI-HARNESS-TOOLCHAIN-004-checker-remediation-footer-and-learn-block-context-check.md) — checker remediation footer and the headroom:learn cross-repo context check.
@@ -99,7 +99,7 @@ decision_type: <machine-decision-type>
 
 ## References
 
-A record is **self-contained**. Its only followable links are to sibling records in this directory (backward in the reading-order layering — the foundations a decision builds on) and to external URLs (a tool's homepage, a spec, a source), and the `## References` section lists only those. Everything else — other internal Knowledge Islands artefacts (skills, guides, feature definitions, workflows, KB notes) and the standards a decision grounds in — is **named in the body prose**, not linked and not listed under References, so nothing depends on chasing a link that rots. External links are supplementary: the record must read completely without following them. A record also states the decision, not the enforcing skill's volatile identifiers — no `SHAPE-N`/`SCRIPT-N` criterion IDs or `§N` section numbers; name the concept or standard.
+A record is **self-contained**. Its only followable links are to sibling records in this directory (backward in the reading-order layering — the foundations a decision builds on) and to external URLs (a tool's homepage, a spec, a source), and the `## References` section lists only those. Everything else — other internal Knowledge Islands artefacts (skills, guides, specifications, workflows, KB notes) and the standards a decision grounds in — is **named in the body prose**, not linked and not listed under References, so nothing depends on chasing a link that rots. External links are supplementary: the record must read completely without following them. A record also states the decision, not the enforcing skill's volatile identifiers — no `SHAPE-N`/`SCRIPT-N` criterion IDs or `§N` section numbers; name the concept or standard.
 
 - [ADR-KI-HARNESS-NNN](ADR-KI-HARNESS-NNN-title.md) — the foundational decision this record builds on.
 ```

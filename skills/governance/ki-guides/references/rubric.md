@@ -43,7 +43,7 @@ Guides are the durable how without creating parallel documentation systems.
 - **ROUTE-1 [M] — retired parallel documentation roots are absent** — A repository declaring this skill has no `docs/spec/`, `docs/developer/`, or generic `docs/logs/` root; their durable material is reclassified into the owned documentation concern. (standards-guides.md#boundary-and-migration-rules)
   - _Remediation:_ diagnostic — Reclassify durable material from the retired root into its owning documentation concern, then remove the retired root and rerun the audit.
 - **ROUTE-2 [J] — guides are discoverable, actionable, and correctly placed** — The guide index gives each intended reader a useful route, and each guide contains practical procedure rather than duplicated rationale, behaviour specification, or future work. (standards-guides.md#boundary-and-migration-rules)
-  - _Evidence scope:_ The Guides index, every guide below `docs/guides/`, and their linked Decision Records, Feature Definitions, and roadmap records where applicable.
+  - _Evidence scope:_ The Guides index, every guide below `docs/guides/`, and their linked Decision Records, Specifications, and roadmap records where applicable.
   - _Review prompt:_ Can the intended reader find the guide, complete its stated outcome, verify success, and recover from the failures it describes? Are why, what, and when statements held by their Decision Record, Feature Definition, and roadmap owners instead?
   - _Outcomes:_ conforming; guide revision; reclassify material
   - _Conforming guidance:_ Revise the guide for its intended reader and outcome, or move rationale, behaviour, and future work to their owning record. Do not infer a documentation or product decision from the check alone.

@@ -40,7 +40,7 @@ ki bootstrap
 - [Developer linking](docs/guides/developer/linking-skills.md) — the current local live-link workflow for harness contributors.
 - [Prompting guides](https://knowledgeislands.info/guidance/prompting/) — how to prompt the models we run, with one source-backed guide per model.
 
-The public website guidance is self-contained. For how it relates to the decisions, feature definitions, roadmap items, and skill code underneath it — and to the Knowledge Islands concept — see [docs/docs.md](docs/docs.md).
+The public website guidance is self-contained. For how it relates to the decisions, specifications, roadmap items, and skill code underneath it — and to the Knowledge Islands concept — see [docs/docs.md](docs/docs.md).
 
 ## Roadmap
 

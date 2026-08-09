@@ -12,13 +12,13 @@ decision_type: governance
 
 ## Context
 
-Knowledge Islands repositories had clear owners for Decision Records, Feature Definitions, and roadmap items, but practical contributor and operator material remained scattered between `docs/developer/`, `docs/guides/`, `docs/spec/`, and generic log directories. That made the documentation tree difficult to navigate and left its practical how without a native governed rubric.
+Knowledge Islands repositories had clear owners for Decision Records, Specifications, and roadmap items, but practical contributor and operator material remained scattered between `docs/developer/`, `docs/guides/`, `docs/spec/`, and generic log directories. That made the documentation tree difficult to navigate and left its practical how without a native governed rubric.
 
 ## Decision
 
-Knowledge Islands adopts four durable documentation concerns for non-Knowledge-Base repositories: Decision Records answer why, Feature Definitions answer what, Guides answer how, and roadmap items answer when.
+Knowledge Islands adopts four durable documentation concerns for non-Knowledge-Base repositories: Decision Records answer why, Specifications answer what, Guides answer how, and roadmap items answer when.
 
-- `ki-decision-records`, `ki-feature-definitions`, and `ki-roadmap` retain their existing owned roots.
+- `ki-decision-records`, `ki-specs`, and `ki-roadmap` retain their existing owned roots.
 - `ki-guides` owns `docs/guides/` and its `README.md` collection entry point, with a native structured rubric.
 - `docs/spec/`, `docs/developer/`, and generic durable `docs/logs/` are retired as parallel roots. Their durable material is reclassified to its actual owner; ephemeral logs do not become a repository documentation system.
 
@@ -31,5 +31,5 @@ Knowledge Islands adopts four durable documentation concerns for non-Knowledge-B
 
 ## References
 
-- [ADR-KI-HARNESS-SKILLS-008](ADR-KI-HARNESS-SKILLS-008-a-feature-definitions-skill-for-the-what.md) — Feature Definitions as the owner of behaviour-level specification.
+- [ADR-KI-HARNESS-SKILLS-008](ADR-KI-HARNESS-SKILLS-008-a-specs-skill-for-the-what.md) — Specifications as the owner of behaviour-level specification.
 - [ADR-KI-HARNESS-SKILLS-011](ADR-KI-HARNESS-SKILLS-011-repository-roadmaps-for-non-kb-repositories.md) — repository roadmaps as the owner of non-KB forward work.

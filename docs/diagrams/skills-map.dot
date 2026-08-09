@@ -49,7 +49,7 @@ digraph skills_map {
   authoring [fillcolor="#feead2", label=< <b>ki-authoring</b><br/><font point-size="9">Governance</font><br/><font point-size="9">writing conventions</font> >]
   decisions [fillcolor="#feead2", label=< <b>ki-decision-records</b><br/><font point-size="9">Governance</font><br/><font point-size="9">decision records</font> >]
   engineering [fillcolor="#feead2", label=< <b>ki-engineering</b><br/><font point-size="9">Governance</font><br/><font point-size="9">toolchain · tests</font> >]
-  features [fillcolor="#feead2", label=< <b>ki-feature-definitions</b><br/><font point-size="9">Governance</font><br/><font point-size="9">feature behaviour</font> >]
+  specs [fillcolor="#feead2", label=< <b>ki-specs</b><br/><font point-size="9">Governance</font><br/><font point-size="9">specification contract</font> >]
   git [fillcolor="#feead2", label=< <b>ki-git</b><br/><font point-size="9">Governance</font><br/><font point-size="9">Git working · commit practice</font> >]
   guides [fillcolor="#feead2", label=< <b>ki-guides</b><br/><font point-size="9">Governance</font><br/><font point-size="9">repository-local procedure</font> >]
   delegation [fillcolor="#feead2", label=< <b>ki-delegation</b><br/><font point-size="9">Governance</font><br/><font point-size="9">delegation packets</font> >]
@@ -98,7 +98,7 @@ digraph skills_map {
   // one. Contextual links may deliberately point across the flow.
   { rank=same; bootstrap; authoring; git }
   { rank=same; repo; dotfiles }
-  { rank=same; decisions; delegation; engineering; features; guides; roadmap; specifications; skills; agents; kb_activities; kb_artifacts; kb_streams; website; binding; tokenomics; tools; tap; housekeeping_claude; recap }
+  { rank=same; decisions; delegation; engineering; specs; guides; roadmap; specifications; skills; agents; kb_activities; kb_artifacts; kb_streams; website; binding; tokenomics; tools; tap; housekeeping_claude; recap }
   { rank=same; harness; kb; principal; cloudflare; binding_claude; binding_codex; binding_chezmoi; tokenomics_claude; tokenomics_codex; next; batch; self; checkers }
   { rank=same; mcp; plugins; plan; native_host; mcp_housekeeping; hooks }
   { rank=same; implement }
@@ -132,7 +132,7 @@ digraph skills_map {
   // Repository baseline: these skills establish a repository's shared contract.
   repo -> decisions [xlabel="baseline", style=dashed]
   repo -> engineering [style=dashed]
-  repo -> features [style=dashed]
+  repo -> specs [style=dashed]
   repo -> guides [style=dashed]
   repo -> roadmap [style=dashed]
   repo -> specifications [style=dashed]

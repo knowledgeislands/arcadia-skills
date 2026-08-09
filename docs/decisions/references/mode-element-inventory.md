@@ -34,7 +34,7 @@ The current `audit.ts` / `conform.ts` pair is therefore the initial executable b
 | `ki-engineering` | Inspect toolchain | Format and reconcile toolchain | Toolchain formatting follows source writers. |
 | `ki-subagents` | Inspect agent definitions | Scaffold/conform agent files | Agent files precede authoring normalisation. |
 | `ki-decision-records` | Inspect decisions/index | Conform decision records/index | Decision writers precede authoring normalisation. |
-| `ki-feature-definitions` | Inspect feature definitions/index | Conform feature documents/index | Feature writers precede authoring normalisation. |
+| `ki-specs` | Inspect specifications/index | Conform feature documents/index | Feature writers precede authoring normalisation. |
 | `ki-roadmap` | Inspect generated work-item indexes | Generate root work-item indexes | Must follow canonical work-item writers. |
 | `ki-skills` | Inspect skill contract | Conform skill content | Skill writers precede authoring normalisation. |
 | `ki-binding-chezmoi` | Inspect chezmoi binding | Render managed binding surface | Depends on binding/domain inputs before external render. |

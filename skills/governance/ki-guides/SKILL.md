@@ -4,7 +4,7 @@ ki-kind: governance
 ki-depends-on: []
 ki-shared-dependencies: [ki-skills:rubric]
 description: >
-  Codify, audit, and maintain repository-local guides — the practical how of using, operating, contributing to, or maintaining a system — in any Knowledge Islands repository. Guides live under `docs/guides/`, whose `README.md` gives readers a concise map. Decisions record why (`ki-decision-records`), Feature Definitions record what (`ki-feature-definitions`), guides record how, and roadmap items record when (`ki-roadmap`). Use when writing a procedure or contributor guide, bringing a documentation tree into shape, or deciding whether material belongs in a guide, Feature Definition, Decision Record, or roadmap item. Triggers: "write a guide", "document how", "guide structure", "audit docs/guides", "move developer docs". Off-ramps: ki-decision-records (durable rationale), ki-feature-definitions (observable behaviour), ki-roadmap (future work), ki-authoring (Markdown style).
+  Codify, audit, and maintain repository-local guides — the practical how of using, operating, contributing to, or maintaining a system — in any Knowledge Islands repository. Guides live under `docs/guides/`, whose `README.md` gives readers a concise map. Decisions record why (`ki-decision-records`), Specifications record what (`ki-specs`), guides record how, and roadmap items record when (`ki-roadmap`). Use when writing a procedure or contributor guide, bringing a documentation tree into shape, or deciding whether material belongs in a guide, specification, Decision Record, or roadmap item. Triggers: "write a guide", "document how", "guide structure", "audit docs/guides", "move developer docs". Off-ramps: ki-decision-records (durable rationale), ki-specs (observable behaviour), ki-roadmap (future work), ki-authoring (Markdown style).
 argument-hint: 'audit [dir] | conform [dir] | help | educate [dir] | refresh'
 ---
 
@@ -15,7 +15,7 @@ You are applying the **Knowledge Islands Guides standard** — the durable home 
 ## What this skill owns
 
 1. **The guide root** — repository-local guides live below `docs/guides/`. Its `README.md` is the reader's entry point: it states the collection's scope and links to the guides or guide areas it contains.
-2. **The documentation boundary** — a guide answers **how**. Durable rationale belongs in a Decision Record, observable behaviour and its verification belong in a Feature Definition, and planned work belongs in a roadmap item. Do not use `docs/spec/`, `docs/developer/`, or a generic durable `docs/logs/` as parallel documentation systems.
+2. **The documentation boundary** — a guide answers **how**. Durable rationale belongs in a Decision Record, observable behaviour and its verification belong in a specification, and planned work belongs in a roadmap item. Do not use `docs/spec/`, `docs/developer/`, or a generic durable `docs/logs/` as parallel documentation systems.
 3. **The guide shape** — each guide has one H1 and an explicit reader, outcome, or operating context. Nest guides only when the grouping helps a reader find the right procedure; no universal category taxonomy is imposed.
 4. **The mechanical checker** — `ki repo audit --skill ki-guides` checks the controlled root and index, H1 presence, retired sibling roots, and the generated rubric publication. It leaves placement quality and procedural truth to explicit judgment.
 
@@ -41,7 +41,7 @@ Carries the universal **AUDIT · CONFORM · EDUCATE · REFRESH**. Invoked as `he
 
 ## Notes
 
-- **Guide, not a second specification** — explain the sequence, conditions, and recovery needed to do work. Link to the Feature Definition when a guide needs to name a stable system behaviour; do not restate its normative contract.
-- **No generic log archive** — a durable result belongs in its owning record, guide, Feature Definition, or roadmap item. Ephemeral command output and runtime logs remain untracked operational evidence unless a specialised system owns them.
+- **Guide, not a second specification** — explain the sequence, conditions, and recovery needed to do work. Link to the specification when a guide needs to name a stable system behaviour; do not restate its normative contract.
+- **No generic log archive** — a durable result belongs in its owning record, guide, specification, or roadmap item. Ephemeral command output and runtime logs remain untracked operational evidence unless a specialised system owns them.
 - **Developer documentation is a guide** — put contributor mechanics in `docs/guides/developer/`, not a sibling `docs/developer/` tree.
 - The `ki` host owns findings, dry-run publication, reporting, and post-conform verification; judgment aspects are counted as unevaluated rather than emitted as synthetic mechanical findings.

@@ -9,7 +9,7 @@ A non-Knowledge-Base repository uses four durable documentation concerns:
 | Location          | Question | Instrument                                     |
 | ----------------- | -------- | ---------------------------------------------- |
 | `docs/decisions/` | Why      | Decision Records (`ki-decision-records`)       |
-| `docs/features/`  | What     | Feature Definitions (`ki-feature-definitions`) |
+| `docs/specs/`  | What     | Specifications (`ki-specs`) |
 | `docs/guides/`    | How      | Guides (**this skill**)                        |
 | `docs/roadmap/`   | When     | Repository work items (`ki-roadmap`)           |
 
@@ -24,7 +24,7 @@ Each source has one job. A guide may link to a decision, feature, or roadmap ite
 
 ## Boundary and migration rules
 
-- **`docs/spec/` is not a durable documentation category.** Behavioural, testable specifications migrate to `docs/features/` and are governed by `ki-feature-definitions`. Other material is reclassified according to its actual concern.
+- **`docs/spec/` is not a durable documentation category.** Behavioural, testable specifications migrate to `docs/specs/` and are governed by `ki-specs`. Other material is reclassified according to its actual concern.
 - **`docs/developer/` is not a parallel root.** Contributor and maintainer instructions migrate to `docs/guides/developer/`.
 - **A generic `docs/logs/` is not a durable documentation category.** Record a durable conclusion in its governing Decision Record, guide, Feature Definition, or roadmap item. Keep ephemeral logs out of version control unless a specialised operational system owns and governs them.
 - Diagram sources and other assets live beside the concern they explain or in a repository-specific asset location. This skill does not impose a graphics format or asset pipeline.
