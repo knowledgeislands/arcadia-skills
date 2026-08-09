@@ -3,7 +3,7 @@ id: KI-HARNESS-FND-012
 title: Automate roadmap progress
 theme: foundation-tooling
 horizon: now
-status: draft
+status: ready
 blocks: []
 blocked-by: []
 baseline-ref: null

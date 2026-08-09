@@ -2,8 +2,8 @@
 id: KI-HARNESS-GOV-028
 title: Audit package commands
 theme: governance-consistency
-horizon: next
-status: draft
+horizon: now
+status: ready
 blocks: []
 blocked-by: []
 baseline-ref: null
