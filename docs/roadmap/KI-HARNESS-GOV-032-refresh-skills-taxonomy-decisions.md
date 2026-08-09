@@ -1,0 +1,54 @@
+---
+id: KI-HARNESS-GOV-032
+title: Refresh skills taxonomy decisions
+theme: governance-consistency
+horizon: next
+status: draft
+blocks: []
+blocked-by: []
+baseline-ref: null
+---
+
+## Goal
+
+Restore two current Harness skills-taxonomy Decision Records to their current, mechanically valid state.
+
+## Context
+
+GOV-030 found that `ADR-KI-HARNESS-SKILLS-008` has a filename that abbreviates, rather than slugifies, its current title. It also found that `ADR-KI-HARNESS-SKILLS-006` presents an exhaustive list of change-management process skills but omits the newly added `ki-agenda`.
+
+## Boundary
+
+Update only the two identified living Decision Records and their exact local citations or index entry. Do not revise historical roadmap or trade records, rename unrelated files, alter decision scope, or create a supersession chain.
+
+## Current state
+
+The native Decision Records audit fails only on the ADR-008 filename. The current taxonomy list needs the agenda addition for truthful present-state reading, but that omission is judgmental rather than a mechanical audit failure.
+
+## Steps
+
+- [ ] Rename ADR-008 to its canonical title slug and update every exact local citation and index link.
+- [ ] Update ADR-006's process-skill taxonomy list to include `ki-agenda` without changing its architectural decision.
+- [ ] Run focused Decision Records, roadmap, and authoring audits; inspect the rename diff and every changed citation.
+
+## Files touched
+
+- `docs/decisions/ADR-KI-HARNESS-SKILLS-006-concern-first-skill-taxonomy-and-implication-graph.md`
+- ADR-008, its renamed canonical filename, `docs/decisions/README.md`, and exact local citations
+- This roadmap item
+
+## Verify
+
+- `ki repo audit --skill ki-decision-records --repo .` passes.
+- Every former ADR-008 link resolves to the canonical renamed file.
+- `ki repo audit --skill ki-roadmap --repo .` and `ki repo audit --skill ki-authoring --repo .` pass.
+
+## Dependencies / blocks
+
+This item is independently shapeable and carries GOV-030's evidence. It does not require or authorise any sibling-repository Decision Record change.
+
+## Discussion
+
+### Living currentness
+
+The records are refreshed in place because a Decision Record describes the current decision. The archived handoff doctrine remains separate historical evidence.
