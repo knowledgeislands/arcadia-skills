@@ -3,7 +3,7 @@ id: KI-HARNESS-023
 title: Optimise skill descriptions
 theme: runtime-portability
 horizon: now
-status: awaiting-review
+status: done
 blocks: []
 blocked-by: []
 baseline-ref: e0dfb29c9287da789f0b34efc2041e8bb69a9ba2
@@ -76,6 +76,10 @@ Delivery commit: `4ec00a3a91f50908465652389812d95742ee3b46`.
 Verification passed: `ki repo audit --skill ki-skills --repo .`, `ki repo audit --skill ki-authoring --repo .`, `ki repo audit --skill ki-roadmap --repo .`, `ki repo audit --skill ki-tokenomics-codex --repo .`, `bunx tsc --noEmit`, and `bun run test` (332 pass, 0 fail).
 
 The standard deliberately sets no universal word target: `DESC-10` remains judgment-only so an essential trigger or collision discriminator is not cut to satisfy a proxy metric.
+
+## Done
+
+Accepted on 2026-08-09 by explicit user approval. The delivered description and rubric changes are in `4ec00a3a`; the retained review packet was corrected in `d0b08d59`. No pruning is authorised or performed.
 
 ## Discussion
 
