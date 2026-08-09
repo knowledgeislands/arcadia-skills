@@ -3,7 +3,7 @@ id: KI-HARNESS-GOV-030
 title: Reconcile decision records
 theme: governance-consistency
 horizon: now
-status: awaiting-review
+status: done
 blocks: []
 blocked-by: []
 baseline-ref: c9cc2443f78562529378d3634b42176389ed903f
@@ -103,6 +103,10 @@ The review preserves the living-record standard for current decisions and the ev
 ### Mini recap
 
 One native audit per collection and one byte-level check for the shared record were sufficient; broad rewrite or repo-wide conform work was neither needed nor authorised.
+
+## Done
+
+Accepted on 2026-08-09 by explicit user approval. GOV-032 owned and delivered the two identified Harness Decision Record refreshes.
 
 ## Discussion
 

@@ -3,7 +3,7 @@ id: KI-HARNESS-GOV-032
 title: Refresh skills taxonomy decisions
 theme: governance-consistency
 horizon: now
-status: awaiting-review
+status: done
 blocks: []
 blocked-by: []
 baseline-ref: e61e81ad532bd69ae504ee45524fdcf2dc4274a4
@@ -72,6 +72,10 @@ Renamed ADR-008 to its canonical title slug, retargeted its three local citation
 ### Scope and review boundary
 
 No Decision Record was deleted, renumbered, reclassified, or substantively rewritten. The separate GOV-030 inventory found no evidence that distinct current decisions should be consolidated; any renewed consolidation proposal needs its own bounded review rather than being inferred from this repair.
+
+## Done
+
+Accepted on 2026-08-09 by explicit user approval. ADR-008's canonical filename and citations are current, and ADR-006 includes `ki-agenda` in its taxonomy.
 
 ## Discussion
 

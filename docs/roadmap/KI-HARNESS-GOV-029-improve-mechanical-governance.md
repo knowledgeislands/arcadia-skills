@@ -3,7 +3,7 @@ id: KI-HARNESS-GOV-029
 title: Improve mechanical governance
 theme: governance-consistency
 horizon: now
-status: awaiting-review
+status: done
 blocks: []
 blocked-by: []
 baseline-ref: 6a3097c9bac5e0e1c6e619356241a512bc96aecd
@@ -97,6 +97,10 @@ The shortlist preserves the boundary against quality scores, automatic external 
 ### Mini recap
 
 One source search was sufficient to establish the missing authorisation-record contract. Re-running broad audits would not have provided stronger evidence.
+
+## Done
+
+Accepted on 2026-08-09 by explicit user approval. The measured review is complete; FND-013 owns the one identified contract follow-up.
 
 ## Discussion
 
