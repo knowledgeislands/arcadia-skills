@@ -4,7 +4,7 @@ ki-kind: governance
 ki-shared-dependencies: [ki-skills:rubric]
 ki-depends-on: [ki-authoring]
 description: >
-  Codify, audit, and conform the chezmoi dotfiles-management standard — naming-prefix semantics, edit-source-not-target discipline, shell-loader layering, the bin/ dispatcher pattern, app-mutated-config handling (surgical patch, fragment binding, or full-template reverse-merge), format-preserving config editor selection, single-source-to-multi-target config templating, repo-local-vs-user-level agent-instruction layering, and chezmoi-specific repo-shape and OS gotchas. Use when auditing or authoring a chezmoi source repo, deciding how to manage an app-mutated config, structuring shell config or a bin/ directory, or checking dotfiles conventions are followed. Triggers: "chezmoi standard", "audit my chezmoi repo", "how should I manage this dotfile", "configuration fragment binding", "surgical patch or reverse-merge", "preserve config comments", "dotfiles conventions". Not for a specific repo's own personal tool choices — those belong in that repo's own agent guidance, not this skill.
+  Codifies, audits, and conforms the chezmoi dotfiles-management standard. Use for a chezmoi source repo, app-mutated configuration, shell or `bin/` layout, or preserving config comments. Covers source-vs-target editing, prefix semantics, fragment binding, and reverse merges; not a specific repo's personal tool choices.
 argument-hint: 'audit <repo> | conform <repo> | help | educate <repo> | refresh'
 ---
 

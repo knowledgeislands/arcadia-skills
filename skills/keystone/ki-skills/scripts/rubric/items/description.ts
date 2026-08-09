@@ -122,11 +122,22 @@ const DESC_9: RubricItem<DescriptionRubricContext> = {
   judgment: judgment('Where skill-selection collision is likely, would explicit non-triggers improve routing?')
 }
 
+const DESC_10: RubricItem<DescriptionRubricContext> = {
+  code: 'DESC-10',
+  title: 'description earns its standing cost through routing value',
+  description:
+    'The description retains scope, its primary trigger, and essential collision guidance while routing mode and workflow detail out of the standing surface.',
+  sources: ['KI'],
+  judgment: judgment(
+    'Does the description earn its standing source cost by retaining scope, its primary trigger, and only essential collision guidance while routing mode and workflow detail out?'
+  )
+}
+
 export const DESC: RubricFamily<KiSkillsRubricContext, DescriptionRubricContext> = {
   code: 'DESC',
   title: 'Frontmatter: description',
   description: 'The portable skill description contract.',
   standard: 'standards-agent-skills.md#5-frontmatter-description',
   selectContext: (context: KiSkillsRubricContext) => selectKiSkillsContext(context, 'description'),
-  items: [DESC_1, DESC_2, DESC_3, DESC_4, DESC_5, DESC_6, DESC_7, DESC_8, DESC_9]
+  items: [DESC_1, DESC_2, DESC_3, DESC_4, DESC_5, DESC_6, DESC_7, DESC_8, DESC_9, DESC_10]
 }

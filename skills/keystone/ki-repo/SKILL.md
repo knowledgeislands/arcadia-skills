@@ -7,7 +7,7 @@ ki-shared-dependencies: [ki-skills:rubric]
 owns: ['.gitignore']
 contributes: ['.ki-config.toml']
 description: >
-  Codifies, audits, and applies the Knowledge Islands repo standard to any KI-compliant git repo carrying `.ki-config.toml`, not only the `knowledgeislands` reference org. Covers local files, optional `+` / `-` working areas, GitHub settings, and security; its human-led REVIEW mode examines repository architecture and implementation without turning those observations into compliance rules. Use when checking or bringing a repo into line, onboarding a repo, reviewing its architecture or implementation, or refreshing the standard against GitHub's surface. Triggers: "audit the repos", "do our repos follow the standard", "apply the repo standard", "review this repository", "architecture review", "implementation review", "review findings", "enable secret scanning / Dependabot", "refresh the repo standard". Discovers repos from a local tree or an org via `gh`. Off-ramps: `ki-authoring` (Markdown/TOML), `ki-engineering` (toolchain), `ki-harness` (bundle layout), `ki-roadmap` and `ki-plan` (delivery routing).
+  Audits, conforms, and reviews the Knowledge Islands standard for any Git repo with `.ki-config.toml`. Use for "audit this repo", "apply the repo standard", or "review this repository". Covers repository setup, GitHub settings, and `+` / `-` areas; use `ki-engineering`, `ki-harness`, or `ki-roadmap` for toolchain, bundle, or delivery work.
 argument-hint: 'audit | conform <repo> | educate <repo> | help | refresh | review [scope] | review close <REV-NNN>'
 ---
 

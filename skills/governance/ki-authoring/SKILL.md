@@ -5,7 +5,7 @@ ki-depends-on: []
 ki-shared-dependencies: [ki-skills:rubric]
 owns: ['.editorconfig', '.rumdl.toml']
 description: >
-  The foundational authoring, formatting, and knowledge-placement conventions shared across every Knowledge Islands skill, repo, and base — the common style layer the others build on rather than restate. Covers Markdown and its canonical frontmatter, TOML formatting for the shared `.ki-config.toml`, and runtime-neutral knowledge promotion. Use when writing or editing Markdown or TOML, bringing a document or config to house style, deciding where a durable learning belongs, checking conventions, or refreshing them against their sources. Triggers: "format this to our style", "fix this markdown", "tidy this README", "audit this doc's formatting", "does this follow house style", "where should we record this learning". For KB note-writing use `ki-kb`; for a repo's configuration and `.ki-config.toml` contract use `ki-repo`; to judge a SKILL.md use `ki-skills`; for the build/lint/test toolchain use `ki-engineering`.
+  Defines Knowledge Islands Markdown, TOML, and knowledge-placement conventions. Use to format or audit Markdown or TOML, decide where a durable learning belongs, or refresh house style. Use `ki-skills` for a SKILL.md, `ki-repo` for a configuration contract, and `ki-engineering` for the toolchain.
 argument-hint: 'audit <path> | conform <path> | educate <target> | help | refresh'
 ---
 

@@ -3,7 +3,7 @@ name: ki-recap
 ki-kind: process
 ki-depends-on: []
 description: >
-  Recaps a live session in three legs — summarise what happened (changes, decisions, files touched), surface only unfinished work from that session, and harvest its learnings (dead-ends, workarounds, conventions), routing each to its proper home. It does not inventory generic repository backlog or choose future work; `ki-next` owns that separate selection. The recap boundary is a compaction boundary: it preserves only next-work carry-forward information, then compacts by default through the documented runtime/vendor mechanism. A process skill (kind: process, ADR-KI-HARNESS-SKILLS-006): it drives an action, it does not hold a standard. Installable globally, cross-repo — usable in any repo on the machine, not just this one. Triggers: "recap this session", "summarise what happened", "what's outstanding", "harvest what we learned", "/ki-recap". Not the offline, mechanical mining of historical transcripts after the fact — that is a separate ROADMAP candidate sharing this skill's grounding substrate.
+  Recaps a live session: summarises changes, decisions, and files; surfaces only unfinished session work; and routes durable learnings. Use for "recap this session", "what's outstanding", or "harvest what we learned". It does not select backlog work—that is `ki-next`—or mechanically mine historical transcripts.
 argument-hint: 'recap [--runtime detect|claude|codex] [--transcript <session-file>] | help'
 ---
 

@@ -127,6 +127,11 @@ The portable skill description contract.
   - _Review prompt:_ Where skill-selection collision is likely, would explicit non-triggers improve routing?
   - _Outcomes:_ conforming; gap; exclusion
   - _Conforming guidance:_ Record the review as conforming, a named Gap with its next action, or an explicit justified exclusion.
+- **DESC-10 [J] — description earns its standing cost through routing value** — The description retains scope, its primary trigger, and essential collision guidance while routing mode and workflow detail out of the standing surface. (KI)
+  - _Evidence scope:_ The target skill and the evidence named by this criterion.
+  - _Review prompt:_ Does the description earn its standing source cost by retaining scope, its primary trigger, and only essential collision guidance while routing mode and workflow detail out?
+  - _Outcomes:_ conforming; gap; exclusion
+  - _Conforming guidance:_ Record the review as conforming, a named Gap with its next action, or an explicit justified exclusion.
 
 ## OPT — Frontmatter: optional fields
 

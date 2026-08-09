@@ -29,10 +29,10 @@ The `ki-skills` optimisation guidance values standing description cost, but its 
 
 ## Steps
 
-- [ ] Add a `ki-skills` judgment criterion and standard guidance: a description earns its standing source cost by retaining scope, a primary trigger, and only essential collision guidance; workflow detail moves to the body or references.
-- [ ] Shorten the `ki-recap`, `ki-repo`, `ki-authoring`, and `ki-dotfiles-chezmoi` descriptions to their routing essentials without making their adjacent boundaries ambiguous.
-- [ ] Regenerate the `ki-skills` rubric publication from its structured catalogue.
-- [ ] Re-run the skill, authoring, roadmap, and Codex tokenomics audits; run TypeScript and test gates.
+- [x] Add a `ki-skills` judgment criterion and standard guidance: a description earns its standing source cost by retaining scope, a primary trigger, and only essential collision guidance; workflow detail moves to the body or references.
+- [x] Shorten the `ki-recap`, `ki-repo`, `ki-authoring`, and `ki-dotfiles-chezmoi` descriptions to their routing essentials without making their adjacent boundaries ambiguous.
+- [x] Regenerate the `ki-skills` rubric publication from its structured catalogue.
+- [x] Re-run the skill, authoring, roadmap, and Codex tokenomics audits; run TypeScript and test gates.
 
 ## Files touched
 
@@ -40,6 +40,7 @@ The `ki-skills` optimisation guidance values standing description cost, but its 
 - `skills/keystone/ki-repo/SKILL.md`
 - `skills/governance/ki-authoring/SKILL.md`
 - `skills/environment/ki-dotfiles-chezmoi/SKILL.md`
+- `skills/keystone/ki-skills/SKILL.md`
 - `skills/keystone/ki-skills/references/standards-agent-skills.md`
 - `skills/keystone/ki-skills/scripts/rubric/items/description.ts`
 - `skills/keystone/ki-skills/references/rubric.md`
