@@ -3,7 +3,7 @@ id: KI-HARNESS-FND-012
 title: Automate roadmap progress
 theme: foundation-tooling
 horizon: now
-status: awaiting-review
+status: done
 blocks: []
 blocked-by: []
 baseline-ref: 1904fa5705edbf39b077e0fed49358993018c66c
@@ -78,6 +78,10 @@ The pure fixture model reports only `coordinate`, `question`, or a named `stop`,
 
 The batch, next-work, and lifecycle-diagram projections now describe the optional agenda layer and retain the same selection, readiness, acceptance, pruning, push, release, and cross-repository stops.
 
+### Summary of changes
+
+Added one process skill, its bounded procedure and pure fixture model, then aligned the batch, next-work, and lifecycle projections with that optional execution layer.
+
 ### Evidence
 
 - Baseline: `1904fa5705edbf39b077e0fed49358993018c66c`.
@@ -92,6 +96,14 @@ This item establishes the bounded process and its no-write model; no independent
 ### Post-change review
 
 No sibling lifecycle owner was duplicated: `ki-next` retains selection, `ki-plan` readiness, `ki-implement` delivery, and `ki-accept` closure and pruning. The agenda has no command, hook, scheduler, filesystem mutation, or cross-repository write surface.
+
+### Mini recap
+
+The controlled fixture model belongs in `scripts/internal/`, not at the public command surface. No broader automation was proposed.
+
+## Done
+
+Accepted by the user on 2026-08-09. The reviewed boundary, verification evidence, and outstanding concern remain recorded above; this retained completion record is now explicitly selected for pruning.
 
 ## Discussion
 
