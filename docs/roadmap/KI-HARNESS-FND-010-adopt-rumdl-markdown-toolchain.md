@@ -3,7 +3,7 @@ id: KI-HARNESS-FND-010
 title: Adopt rumdl markdown toolchain
 theme: foundation-tooling
 horizon: now
-status: awaiting-review
+status: done
 blocks: []
 blocked-by: []
 baseline-ref: 3d354b9a6de1d7e6aed62a3b44a73e272b1ff75e
@@ -169,6 +169,12 @@ The measurement discipline this item adopted after the `MD060` error — prove t
 Outstanding from this item: `kit-legal`'s 593 suppressed findings, its template divergence, and the `OWN-1` contract gap, which needs its own item before the next conform runs in that repository.
 
 The durable learning is recorded in `ki-authoring`: a clean gate says the result satisfies the rules, not that the fix preserved meaning. Every destructive defect in this migration was found by reading a diff, and the one that reached a commit did so because nobody read that one.
+
+## Done
+
+Accepted by Kris Brown on 2026-08-09, on the review packet above.
+
+At acceptance, the Harness worktree was clean at `e5a6449359d1ebd0ccbc54e9c88f9093ee8aa09a`. `bunx tsc --noEmit` was clean, `bun run test` reported 316 pass and 0 fail across 83 files, and `ki repo audit --skill ki-authoring` and `ki repo audit --skill ki-skills` both passed without findings. The accepted delivery retains its stated safety boundary: do not use `rumdl check --fix` for `MD075`, and preserve kit-legal's protective configuration until the separately scoped owned-file variation work is complete.
 
 ## Discussion
 
