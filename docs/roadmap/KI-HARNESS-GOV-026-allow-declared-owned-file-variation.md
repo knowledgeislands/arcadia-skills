@@ -3,7 +3,7 @@ id: KI-HARNESS-GOV-026
 title: Allow declared owned-file variation
 theme: governance-consistency
 horizon: now
-status: draft
+status: ready
 blocks: []
 blocked-by: []
 baseline-ref: null
@@ -38,6 +38,26 @@ It does not change the default. A repository that declares nothing keeps today's
 `.ki-config.toml` already carries a bare table for each declared skill, so an exception declaration has an obvious home and needs no new file. `ki-repo` owns that configuration contract.
 
 Twenty-two repositories carry `.rumdl.toml`. Twenty-one match the house template. One does not, and its divergence is the case above.
+
+## Locked decisions
+
+- The declaration lives only in the owning skill's table, as a TOML subtable: `[skills.ki-authoring.owned_file_exceptions]`. Its keys are exact currently owned filenames and its values are non-empty reasons; for example, `".rumdl.toml" = "Preserves verbatim correspondence…"`.
+- A declared drift is still a `WARN`, naming the file, its reason, and the expectation to return to the house template. It is not a PASS, a second template, or a rule-delta schema.
+- A declaration for a canonical file is also a `WARN`, instructing the repository to remove the now-stale declaration. A declaration never suppresses scaffolding of a missing file or safety handling of an unsafe path.
+- CONFORM skips only a regular, drifted file with a valid declared exception. It does not replace, merge, or otherwise interpret the file's content; all other owned-file states keep the existing behaviour.
+
+## Execution plan
+
+1. Extend the Authoring owned-file context to validate `owned_file_exceptions` from its own resolved configuration: recognise only currently owned filenames with non-empty reason strings, and retain the declaration alongside each file's evidence.
+2. Make `OWN-1` distinguish declared drift, stale declarations, malformed declarations, and ordinary drift. Preserve the existing WARN level and default remediation for every undeclared or invalid case.
+3. Change OWN-1 CONFORM preparation so only a valid declared exception on a regular drifted file suppresses its synchronisation write. Add focused context and catalogue tests for audit messages, unknown keys, stale declarations, unsafe or missing files, and proposed writes.
+4. Document the narrowly scoped configuration shape in `ki-authoring` and the shared configuration contract, then regenerate the Authoring rubric publication.
+5. Add kit-legal's `.rumdl.toml` exception with its evidence-preservation reason. Inspect the dry-run proposal, then run the targeted conform only after confirming its clean preflight; prove the file and its protective disables remain unchanged.
+6. Run focused tests, generated-rubric parity, the relevant Harness audits and gates, then audit the estate's Authoring declarations. Record the baseline, commits, verification, and any remaining warning in the review packet.
+
+## Stop conditions
+
+Stop and return for a decision if the host cannot provide the owning skill's resolved configuration without parsing another skill table; if a declaration would require a local replacement template, arbitrary rule deltas, or suppression of a missing or unsafe file repair; if kit-legal is not clean before the targeted conform; or if the dry run proposes any write to kit-legal's `.rumdl.toml`.
 
 ## Steps
 
