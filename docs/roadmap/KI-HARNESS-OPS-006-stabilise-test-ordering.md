@@ -2,7 +2,7 @@
 id: KI-HARNESS-OPS-006
 title: Stabilise test ordering
 theme: operations
-horizon: next
+horizon: now
 status: draft
 blocks: []
 blocked-by: []
@@ -23,18 +23,20 @@ Do not weaken frontmatter coverage or make CI order-dependent. Keep any repair w
 
 ## Current state
 
-The implementation recurses through Markdown files without sorting the returned paths. The test checks the collected path sequence, so different valid filesystem enumeration orders produce different results.
+`markdownFiles()` recurses through the raw `readdirSync()` entries and returns its accumulated relative paths unchanged. The frontmatter evidence therefore depends on filesystem enumeration order, and the focused trade-record fixture asserts that incidental order.
 
-## Proposed plan
+## Delivery design
 
-- Sort the collected Markdown paths at the deterministic session-evidence boundary, then retain the existing complete expected list.
-- Add a focused fixture or assertion showing that traversal order cannot alter the evidence order.
-- Run the authoring focused test, `bun run test`, TypeScript, and the applicable audits; do not change the GitHub workflow.
+Sort the final relative-path collection with JavaScript's default code-unit ordering at the `markdownFiles()` evidence boundary. This preserves the complete Markdown scope and recursive traversal rules while making the public evidence sequence independent of directory enumeration and locale.
+
+Retain the existing trade-record fixture, but assert its canonical sorted sequence — `+/_TRADES/README.md`, then the inbound record, then the outbound record — even though the fixture creates the paths in a different traversal order. The test therefore covers both ordinary Markdown scope and the ordering contract without mocking the filesystem or changing CI configuration.
 
 ## Steps
 
-- [ ] Shape the deterministic evidence repair and confirm it does not alter the Markdown scope.
-- [ ] Implement, verify locally, and prepare a review packet; wait for a later GitHub Actions run before treating remote CI as verified.
+- [ ] Sort the final `markdownFiles()` result by default code-unit ordering after recursive collection, preserving every existing inclusion, exclusion, regular-file, and symlink rule.
+- [ ] Update the focused trade-record fixture to assert the canonical path order rather than the filesystem traversal order, including the README and both inbound and outbound records.
+- [ ] Run the focused Authoring rubric test, `bun run test`, `bunx tsc --noEmit`, and the Authoring and roadmap audits; inspect the changed evidence scope and test assertion.
+- [ ] Commit the local repair and prepare its review packet. Treat a subsequent GitHub Actions run as remote verification, not as evidence available at local completion.
 
 ## Files touched
 
