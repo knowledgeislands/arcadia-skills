@@ -3,7 +3,7 @@ id: KI-HARNESS-GOV-018
 title: Define KB stream codes
 theme: governance-consistency
 horizon: now
-status: awaiting-review
+status: done
 blocks: []
 blocked-by: []
 baseline-ref: 2ee35e8c533881d39614748527aea5286e3391e1
@@ -128,6 +128,10 @@ Confirm that base-wide uniqueness, the explicit allocation boundary, and non-reu
 ### Mini recap
 
 The work changed only the portable Streams contract and its fixtures. No live KB, `tools-ki`, derived identity, compatibility fallback, or automatic identity repair was introduced.
+
+## Done
+
+Accepted by the user on 2026-08-09. Retained until explicitly selected for pruning.
 
 ## Discussion
 

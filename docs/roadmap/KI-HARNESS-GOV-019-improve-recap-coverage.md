@@ -3,7 +3,7 @@ id: KI-HARNESS-GOV-019
 title: Improve recap coverage
 theme: governance-consistency
 horizon: now
-status: awaiting-review
+status: done
 blocks: []
 blocked-by: []
 baseline-ref: c0db8fac017276521c1ec304d2c109ad5e637e70
@@ -91,6 +91,10 @@ Confirm the matrix stays a compact review aid rather than becoming an implied tr
 ### Mini recap
 
 No grounding-helper, runtime-transcript format, parser, rubric, or automation scope was added.
+
+## Done
+
+Accepted by the user on 2026-08-09. Retained until explicitly selected for pruning.
 
 ## Discussion
 

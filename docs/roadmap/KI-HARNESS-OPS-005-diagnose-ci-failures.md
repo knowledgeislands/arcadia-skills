@@ -3,7 +3,7 @@ id: KI-HARNESS-OPS-005
 title: Diagnose CI failures
 theme: operations
 horizon: now
-status: awaiting-review
+status: done
 blocks: []
 blocked-by: []
 baseline-ref: 5acfd5e208230fbc87dbd91fefc4e62eed32b76a
@@ -95,6 +95,10 @@ Confirm OPS-006 sorts or otherwise makes evidence order-independent without narr
 ### Mini recap
 
 The diagnosis stayed read-only against GitHub and created one local follow-up record; no repair was conflated with evidence collection.
+
+## Done
+
+Accepted by the user on 2026-08-09. Retained until explicitly selected for pruning.
 
 ## Discussion
 

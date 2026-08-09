@@ -3,7 +3,7 @@ id: KI-HARNESS-GOV-020
 title: Audit instruction surfaces
 theme: governance-consistency
 horizon: now
-status: awaiting-review
+status: done
 blocks: []
 blocked-by: []
 baseline-ref: 9b0ae2145648782ede1ba187141a618675df8dae
@@ -164,6 +164,10 @@ Confirm that future remediation preserves the user-wide/repository/runtime layer
 ### Mini recap
 
 The audit preserved the distinction between canonical managed sources, realised copies, and runtime candidates; byte identity is evidence of synchronisation, not a second policy owner.
+
+## Done
+
+Accepted by the user on 2026-08-09. Retained until explicitly selected for pruning.
 
 ## Discussion
 

@@ -3,7 +3,7 @@ id: KI-HARNESS-GOV-017
 title: Improve verification boundaries
 theme: governance-consistency
 horizon: now
-status: awaiting-review
+status: done
 blocks: []
 blocked-by: []
 baseline-ref: 936960a4621022bc344362af6d6dbebeef254294
@@ -97,6 +97,10 @@ Confirm the wording preserves the narrow fault-injection exception without makin
 ### Mini recap
 
 The work remained within the portable engineering boundary; no artifact-specific test rule, heuristic reachability check, or cross-repository change was introduced.
+
+## Done
+
+Accepted by the user on 2026-08-09. Retained until explicitly selected for pruning.
 
 ## Discussion
 
