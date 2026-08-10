@@ -45,10 +45,14 @@ coverage-checkpoint = false # source repository publishes the optional capabilit
 export = ["work", "knowledge"]
 
 [skills.ki-trades.routes."knowledgeislands/tools-ki"]
-export = ["work"]
+export = ["work", "knowledge"]
 import = ["work", "knowledge"]
 
 [skills.ki-trades.routes."knowledgeislands/tools-mgit"]
+export = ["work", "knowledge"]
+import = ["work", "knowledge"]
+
+[skills.ki-trades.routes."knowledgeislands/ki-arcadia-principal"]
 export = ["work", "knowledge"]
 import = ["work", "knowledge"]
 
