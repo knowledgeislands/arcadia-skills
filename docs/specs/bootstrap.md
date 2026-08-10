@@ -54,7 +54,7 @@ _Verify:_ add and remove a declared skill in a two-runtime fixture, then inspect
 
 ### BOOT-010 — ~~Generated-state CLEAN entrypoint~~ (deprecated)
 
-Replaced by BOOT-016. Legacy retirement is guide-led and fail-closed rather than a compatibility command.
+Replaced by BOOT-016. Native repository operations preserve unowned state rather than becoming a cleanup command.
 
 ## User bootstrap
 
@@ -84,7 +84,7 @@ User skill operations MUST change only configured user runtime spaces, while rep
 
 _Verify:_ run `ki skill user add <skill>` and `ki skill repo add <skill>` in isolated state and confirm each command mutates only its own configuration and discovery scope.
 
-## Native operations and retirement
+## Native operations
 
 ### BOOT-015 — Repository governance executes natively
 
@@ -92,8 +92,8 @@ _Verify:_ run `ki skill user add <skill>` and `ki skill repo add <skill>` in iso
 
 _Verify:_ run all three operations against a declared fixture and confirm the compatible catalogue executes; add an otherwise runnable legacy wrapper and confirm it is neither read nor invoked.
 
-### BOOT-016 — Legacy retirement is explicit and fail-closed
+### BOOT-016 — Repository operations preserve unowned state
 
-Retirement of a repository-vendored KI footprint MUST follow the maintainer guide, remove only completely proven legacy state, and preserve any changed, linked, partial, unfamiliar, or concurrently modified target for review.
+Native repository operations MUST leave unowned repository state unchanged; it is neither an execution source nor a deletion target.
 
-_Verify:_ apply the retirement procedure to one known generated fixture and one altered fixture; confirm the known footprint is removed and the altered footprint is retained with a blocker.
+_Verify:_ add an unowned executable-looking repository directory to a declared fixture and confirm that native operations neither read nor remove it.

@@ -2,8 +2,6 @@
 
 This standard implements the architecture in [ADR-KI-HARNESS-012](../../../../docs/decisions/ADR-KI-HARNESS-012-compatible-harness-publication-and-governed-rubric-boundary.md).
 
-It replaces the former repository-vendored executor model.
-
 ## Contents
 
 - [Scope and ownership](#scope-and-ownership)
@@ -13,7 +11,7 @@ It replaces the former repository-vendored executor model.
 - [Native repository operations](#native-repository-operations)
 - [First-time bootstrap](#first-time-bootstrap)
 - [Local harness development](#local-harness-development)
-- [Guide-led legacy retirement](#guide-led-legacy-retirement)
+- [Unowned repository state](#unowned-repository-state)
 - [CI and direct automation](#ci-and-direct-automation)
 - [Scope and safety separation](#scope-and-safety-separation)
 
@@ -100,21 +98,11 @@ The exposure is widest where harness edits and harness-dependent verification ov
 
 `ki diag` distinguishes the two cases after the fact. `Installation` and `Local source` say whether governance came from a mutable tree, so an audit or conform result that moved while the target repository did not is explained there rather than in the repository.
 
-## Guide-led legacy retirement
+## Unowned repository state
 
-Vendored repository execution is retired.
+Native operations execute only the declared catalogues resolved from verified installed harnesses. A repository directory, executable, manifest, or runtime payload does not become an operation source merely by being present.
 
-Existing `.ki/bootstrap/`, `.ki/bin/`, and manifest state are examined only through the maintainer [retirement guide](../../../../docs/guides/developer/retiring-repository-vendored-ki.md).
-
-Migration validates the required installed harnesses, repository declaration, target ownership, and complete removal set before writing.
-
-It removes generated legacy material only when it proves ownership of every target; a changed, dangling, linked, partial, unfamiliar, or concurrently changed footprint is left in place and reported as a fail-closed blocker.
-
-Migration never runs legacy material to complete a native operation, never silently cleans up, and never treats legacy state as proof that native operations are available.
-
-The guide replaces a migration command because the remaining estate is private and reviewed repository by repository.
-
-It does not permit broad deletion: unfamiliar or unproven state is retained, and native execution never uses it as a compatibility runner.
+Normal repository operations leave unowned material unchanged. They never infer ownership, run it as a fallback, or turn repository maintenance into a broad cleanup operation.
 
 ## CI and direct automation
 

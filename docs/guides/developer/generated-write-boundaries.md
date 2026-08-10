@@ -84,6 +84,5 @@ Use the owner of each surface:
 - User or repository skill-link drift → the matching `ki skill user` or `ki skill repo` command.
 - Repository governance findings → `ki repo audit` followed by a reviewed `ki repo conform`.
 - A user-global hook binding or runtime setting → the applicable user-environment manager.
-- Legacy repository `.ki/` state → the maintainer [retirement guide](retiring-repository-vendored-ki.md), which preserves it until native replacement and ownership are proven.
 
 The `ki-bootstrap` skill explains the installation and activation boundary; `ki-repo` owns repository coverage; exact command grammar comes from `ki help`.

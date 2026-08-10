@@ -1,4 +1,4 @@
-# Local skill linking for harness development
+# Local harness development
 
 This is the contributor workflow for making an installed canonical harness follow a local checkout. Normal users should start with [Install and get started](https://knowledgeislands.info/guidance/using-ki/getting-started/).
 

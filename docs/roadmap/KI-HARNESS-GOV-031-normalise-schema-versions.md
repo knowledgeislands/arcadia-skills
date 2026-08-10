@@ -175,7 +175,7 @@ The inventory contains eighteen active internal marker families: thirteen are al
 ### Historical evidence and raw-search reconciliation
 
 - Future or invalid versions in tests—`schema = 2` in `tools-ki`, capture `0.2.0`, and `rules v2` in `mcp-m365`—are negative rejection fixtures, not supported aliases.
-- `+/_CHECKPOINTS/_RETIRED/rubric-v1-migration.md`, prior roadmap and decision discussions, and `tools-ki/-/_LEGACY_HANDOFFS/` preserve completed or superseded evidence. They are not rewrite targets.
+- Prior roadmap and decision discussions, and `tools-ki/-/_LEGACY_HANDOFFS/`, preserve completed or superseded evidence. They are not rewrite targets.
 - Current roadmap records such as `KI-HARNESS-GOV-006` intentionally discuss external MCP SDK V1/V2 lineage. Trade and roadmap evidence remains immutable except through its owning lifecycle.
 - The raw scan also found an uncommitted `tools-ki/src/core/managed-artifacts.ts` schema-one surface and related uncommitted tests in a peer worktree with nineteen changed paths. Because it is not committed canonical evidence and its documentation remains roadmap-shaped, it is excluded from the active inventory and parked for the `tools-ki` owner. The other fifteen participant worktrees were clean at observation except the Harness, where another approved batch lane had modified `docs/roadmap/KI-HARNESS-GOV-002-deploy-specifications-fleetwide.md`.
 
