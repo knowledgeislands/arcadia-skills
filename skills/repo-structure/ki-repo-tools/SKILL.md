@@ -53,6 +53,10 @@ Mirrors `ki-engineering`'s capability-conditional pattern: what the repo _is_ de
 
 A `tools-*` repo opts into this standard by declaring a **keyless** `[skills.ki-repo-tools]` table in its `.ki-config.toml`. The table is validated **down** (this skill reads only its own table and warns on any unknown key inside it). `ki repo conform --skill ki-repo-tools` may add the marker to an existing physical, parseable configuration. It may also set executable bits on verified physical `bin/*` files and `install.sh`; missing content, malformed or unsafe paths, external releases, and Homebrew operations remain report-only.
 
+## Release readiness
+
+Before preparing or reviewing a tool release, read [the release-readiness checklist](references/standards-release-readiness.md). It consolidates the existing version, documentation, validation, and distribution obligations into one staged human checklist; it does not create another skill mode or take ownership from `ki-engineering` or `ki-repo-homebrew-tap`.
+
 ## Operating modes
 
 Every governance skill carries the universal four **AUDIT · CONFORM · EDUCATE · REFRESH**; EDUCATE here scaffolds a new tool repo. Invoked as `help` / `-h` / `?`, it explains itself and stops — the generated HELP block (name, purpose, invocation, modes, off-ramps), taking no action. With no mode it does the same, then, in an interactive session only, offers the mode choice via `AskUserQuestion`, prompting for any `argument-hint` target the chosen mode shows.

@@ -8,6 +8,7 @@ The full, quotable standard behind the `ki-repo-tools` skill. A `tools-*` repo h
 - [Repository layout](#repository-layout)
 - [The executable — `bin/<tool>`](#the-executable--bintool)
 - [Versioning & releases](#versioning--releases)
+- [Release readiness](#release-readiness)
 - [The distribution contract](#the-distribution-contract)
 - [Persisted configuration formats](#persisted-configuration-formats)
 - [Capability conditionals](#capability-conditionals)
@@ -53,6 +54,10 @@ tools-<name>/
 - Releases are **`vX.Y.Z` git tags**, each with a **GitHub release**. The version marker, the tag, and the top `CHANGELOG.md` entry agree.
 - `CHANGELOG.md` names the current semantic-versioned release. It may use [Keep a Changelog](https://keepachangelog.com/) sections (`Unreleased`, then dated version entries grouped by Added / Changed / Fixed / Removed), or establish a declared current-release baseline that inventories the shipped command surface. A baseline does not backfill older releases: their tags and commit history remain the record of that run-up.
 - Tags and releases can't be seen from a checkout path — the checker hands this to the judgment pass (RELEASE, ADVISORY).
+
+## Release readiness
+
+Use [the release-readiness checklist](standards-release-readiness.md) to turn these requirements into a release-specific review. It orders the candidate's version and compatibility decision, public-surface documentation, applicable validation, and publication handoffs without adding a second release policy or a new repository mode.
 
 ## The distribution contract
 
