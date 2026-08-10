@@ -59,6 +59,31 @@ This roadmap item only, as the durable inventory and receiver-routing evidence. 
 
 This is read-only estate evidence work. Individual repairs belong to their repository owners and do not block the audit record from reaching review.
 
+## Delegation
+
+### Locked decisions
+
+- Only this roadmap item may be written; no package script, lockfile, workflow, or peer repository configuration may change.
+- The estate scope is the Harness plus declared `ki-all` members; a repository without a regular `package.json` receives an explicit not-applicable disposition.
+
+### Escalate
+
+- An inaccessible declared member or uncertain manifest scope that prevents an honest reconciliation.
+- Any script whose purpose, owner, caller, or side effects cannot be evidenced, and any request to run or alter a script, manifest, lockfile, workflow, or peer record.
+
+### Rounds
+
+- Round 1: `package-command-estate-inventory`.
+
+### Worker: package-command-estate-inventory
+
+- **Deliverable:** Complete package-command inventory, explicit not-applicable results, current-contract classifications, receiver-owned follow-ups, and reconciled totals in this item.
+- **Files:** Write only `docs/roadmap/KI-HARNESS-GOV-028-audit-package-commands.md`; read regular estate `package.json` files and their governing standards or caller evidence.
+- **Definition of done:** Every in-scope manifest and declared script key appears exactly once with the required fields, and every proposed repair remains receiver-owned and unimplemented.
+- **Model:** reasoning — broad but bounded side-effect and ownership classification.
+- **Verify:** Orchestrator samples manifest totals and side-effect classifications, confirms no script ran or peer changed, then runs the item's roadmap and authoring audits.
+- **Checkpoint:** Return with the completed record and all ambiguous, destructive, stale, or unowned scripts routed as follow-ups; use `GIT_INDEX_FILE=/private/tmp/ki-harness-batch-001-gov028.index` for any Git staging and do not commit.
+
 ## Discussion
 
 ### Direct commands

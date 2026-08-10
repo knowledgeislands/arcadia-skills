@@ -59,6 +59,31 @@ This roadmap item only, containing the active-schema inventory, classifications,
 
 This inventory and migration-map phase is read-only. It does not authorise a cross-repository cutover; each proven map routes to separately confirmed receiving work.
 
+## Delegation
+
+### Locked decisions
+
+- Only this roadmap item may be written; no schema, protocol, fixture, parser, generated publication, or peer repository may be changed.
+- External-standard references and historical evidence remain exclusions unless current internal producer, consumer, fixture or validator, documentation, and receiver ownership are proven.
+
+### Escalate
+
+- An inaccessible declared member or incomplete search surface that prevents an honest estate reconciliation.
+- Any unclear version axis, unknown active consumer, incomplete generated target, or request to renumber a contract, preserve an alias, or alter a peer record.
+
+### Rounds
+
+- Round 1: `active-schema-version-inventory`.
+
+### Worker: active-schema-version-inventory
+
+- **Deliverable:** Complete active-schema inventory, classifications, receiver-owned V1 migration maps, explicit exclusions, incomplete findings, and raw-search reconciliation in this item.
+- **Files:** Write only `docs/roadmap/KI-HARNESS-GOV-031-normalise-schema-versions.md`; read estate schema, protocol, fixture, validator, generated-publication, and documentation evidence.
+- **Definition of done:** Every proposed internal V1 cutover names a producer, consumer, fixture or validator, documentation surface, receiver, and verification gate; all other markers are explicitly excluded or incomplete.
+- **Model:** reasoning — version-axis and producer-consumer classification requires evidence-led judgment.
+- **Verify:** Orchestrator samples every proposed cutover and exclusion, confirms no schema or peer changed, then runs the item's roadmap and authoring audits.
+- **Checkpoint:** Return with the completed record and all unknown consumers, external references, and required receiver decisions; use `GIT_INDEX_FILE=/private/tmp/ki-harness-batch-001-gov031.index` for any Git staging and do not commit.
+
 ## Discussion
 
 ### Version meaning

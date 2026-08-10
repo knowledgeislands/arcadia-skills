@@ -73,6 +73,31 @@ No peer `docs/specs/`, configuration, or roadmap file changes in this item.
 
 The `tools-ki` corpus is available as evidence. A proposal cannot progress past this work item until its receiving repository confirms a local disposition; absence of a receiver, stable as-built area, or verification is a named park, not an inferred rollout.
 
+## Delegation
+
+### Locked decisions
+
+- Only this roadmap item may be written; every estate repository remains read-only and owns its own disposition.
+- The estate inventory includes the Harness and the declared `ki-all` members; missing access, an absent owner, or insufficient evidence is a named park, never an inferred adoption.
+
+### Escalate
+
+- An inaccessible declared member, disputed estate boundary, or incomplete source inventory that prevents an honest complete count.
+- Any candidate without a receiving owner, stable as-built area, or truthful verification hook, and any request to create or alter a peer record or specifications corpus.
+
+### Rounds
+
+- Round 1: `specifications-estate-inventory`.
+
+### Worker: specifications-estate-inventory
+
+- **Deliverable:** Complete estate inventory, `tools-ki` pilot reconciliation, classifications, receiver-facing proposals, exclusions, and reconciled totals in this item.
+- **Files:** Write only `docs/roadmap/KI-HARNESS-GOV-002-deploy-specifications-fleetwide.md`; read estate configuration, `docs/specs/`, and existing verification evidence.
+- **Definition of done:** Every declared estate repository has a covered, candidate, not-applicable, or parked disposition; every candidate names its proposed first area, receiver, verification, and exclusion boundary.
+- **Model:** frontier — cross-repository evidence synthesis under strict receiving-authority boundaries.
+- **Verify:** Orchestrator confirms no peer write, samples every cited evidence source, checks totals, then runs the item's roadmap and authoring audits.
+- **Checkpoint:** Return with the completed record and a concise list of every park or human decision; use `GIT_INDEX_FILE=/private/tmp/ki-harness-batch-001-gov002.index` for any Git staging and do not commit.
+
 ## Discussion
 
 ### Current terminology
