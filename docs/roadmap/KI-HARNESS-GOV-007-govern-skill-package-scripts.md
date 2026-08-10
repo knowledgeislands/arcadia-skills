@@ -4,7 +4,7 @@ title: Govern skill package scripts
 area: GOV
 theme: governance-consistency
 horizon: next
-status: draft
+status: ready
 blocks: []
 blocked_by: []
 baseline_ref: null
@@ -60,9 +60,9 @@ This change needs a shared rubric-catalogue metadata contract and host aggregati
 
 A skill must claim a script before it is retained. If no resolved skill claims a proposed key and it is not genuinely user-owned external tooling, remove the script rather than creating a placeholder, relying on a prefix convention, or keeping a compatibility alias. The harness replaces `ki:eval` with `ki:harness:eval` and `ki:binding:build-plugin` with `ki:binding:claude:build-plugin` in the same change; no legacy key remains.
 
-### Promotion conditions
+### Approved planning basis
 
-Promote when the catalogue metadata shape, host aggregation contract, complete core-repository inventory, exact exclusion semantics, clean-cut migration map, and focused harness verification are reviewable.
+The catalogue metadata shape, host aggregation contract, exact exclusion semantics, clean-cut migration rule, and focused verification are the approved delivery boundary. The estate inventory establishes the receiving scope during implementation; a missing owner or receiver is a named follow-up, not a compatibility exception.
 
 ## Current state
 
@@ -85,7 +85,7 @@ No rubric-catalogue metadata currently publishes script claims, the host does no
 - `skills/governance/ki-engineering/` standard, rubric, catalogue, and tests
 - Relevant owning-skill rubrics, catalogues, and tests
 - `.ki-config.toml`, `package.json`, CI, and relevant documentation in the harness
-- Accepted receiving changes in `tools-ki` and `ki-repo-website`
+- Receiver-owned changes in `tools-ki` and `ki-website`, if their owners accept the resulting proposals
 
 ## Verify
 
@@ -98,7 +98,7 @@ No rubric-catalogue metadata currently publishes script claims, the host does no
 
 ## Dependencies / blocks
 
-Do not mark this item Ready or modify receiving repositories until the static metadata shape, host aggregation boundary, complete script inventory, and clean-cut migration map are reviewed.
+The static metadata shape, host aggregation boundary, exact exclusions, and clean-cut migration rule are approved. Each receiving repository remains a separate acceptance boundary; an unclaimed key, duplicate claim, or unavailable receiver is a stop with a routed local follow-up.
 
 ## Discussion
 

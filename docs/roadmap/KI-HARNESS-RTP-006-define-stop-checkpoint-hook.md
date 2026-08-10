@@ -4,7 +4,7 @@ title: Define Stop checkpoint hook
 area: RTP
 theme: runtime-portability
 horizon: next
-status: draft
+status: ready
 blocks: []
 blocked_by: []
 baseline_ref: null
@@ -40,6 +40,8 @@ The existing Git-lock guard is a fail-safe, non-interactive recovery hook and ha
 
 The portable checkpoint schema and lifecycle exist in `ki-checkpoint`. What is missing is the selected-checkpoint marker, the Stop-event contract, the runtime-adapter implementation, and fixture coverage for this capability.
 
+The approved delivery boundary is opt-in only: an adapter may address an already-selected valid checkpoint only when its native event contract proves the action safe, and it must no-op on uncertainty. Unsupported or insufficiently evidenced runtimes remain explicitly unsupported rather than acquiring a shared fallback.
+
 ## Steps
 
 - [ ] Inventory the supported Stop-event contracts for each intended runtime, including payload identity, repeated invocation, cancellation or interruption semantics, timeout and exit behaviour, and writable-state boundaries; retain primary-source evidence for every claimed capability.
@@ -67,7 +69,7 @@ The portable checkpoint schema and lifecycle exist in `ki-checkpoint`. What is m
 
 ## Dependencies / blocks
 
-Nothing blocks this item. The portable record, lifecycle, and authority boundaries a hook needs before it can safely select, update, or retire a checkpoint are already established by `ki-checkpoint`.
+The portable record, lifecycle, and authority boundaries a hook needs before it can safely select, update, or retire a checkpoint are already established by `ki-checkpoint`. Primary-source evidence is a delivery gate: an adapter without it is parked, while independently evidenced adapters may proceed.
 
 The runtime-portability decision and runtime adapters define event-specific evidence; `ki-recap` retains its explicit in-session judgment and grounding role.
 

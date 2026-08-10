@@ -4,7 +4,7 @@ title: Add change-aware code reviews
 area: FND
 theme: foundation-tooling
 horizon: next
-status: draft
+status: ready
 blocks: []
 blocked_by: []
 baseline_ref: null
@@ -46,9 +46,9 @@ KI-Consistency-Review-Outcome: consistent | follow-up:<work-item-id>
 
 The reviewed result is the commit carrying the trailers; the base names the exclusive lower bound of the examined range. `Scope` states the paths actually considered, and `Outcome` is either `consistent` or one canonical follow-up work-item identifier. A review that is not warranted emits no record. A follow-up remains an ordinary roadmap item, so the trailers document judgment without becoming a second planning system.
 
-### Promotion conditions
+### Approved planning basis
 
-Promote when the trailer parser and record-selection rule, exact judgment prompt, review outcome vocabulary, and a representative example of "review now" versus "not yet warranted" are agreed.
+The trailer parser and record-selection rule, exact judgment prompt, outcome vocabulary, and representative examples are the approved delivery boundary for this work. A review remains advisory; the implementation must not introduce a threshold that turns it into a mechanical gate.
 
 ## Current state
 
@@ -80,7 +80,7 @@ Promote when the trailer parser and record-selection rule, exact judgment prompt
 
 ## Dependencies / blocks
 
-The durable record model remains an explicit design decision. Do not mark this item Ready or add a generic review ledger until that model is approved.
+The approved trailer record is the only durable review evidence introduced by this work. `ki-git` remains the owner of portable commit hygiene; any conflict with its existing contract is a stop rather than a reason to add a competing policy.
 
 ## Discussion
 

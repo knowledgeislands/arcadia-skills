@@ -4,7 +4,7 @@ title: Govern documentation topology
 area: GOV
 theme: governance-consistency
 horizon: next
-status: draft
+status: ready
 blocks: []
 blocked_by: []
 baseline_ref: null
@@ -16,7 +16,7 @@ Make the shared documentation topology clear so repository authors can place dec
 
 ## Context
 
-The imported documentation submissions establish a useful division: decisions explain why, Feature Definitions explain observable behaviour, guides explain how, and roadmap items explain planned change. The repository shape needs to name that topology while specialist skills retain content ownership.
+The imported documentation submissions establish a useful division: decisions explain why, Specifications state observable behaviour, guides explain how, and roadmap items explain planned change. The repository shape needs to name that topology while specialist skills retain content ownership.
 
 ## Boundary
 
@@ -24,15 +24,15 @@ Do not require every repository to create every documentation category, make gui
 
 ## Current state
 
-[GDR-KI-HARNESS-004](../decisions/GDR-KI-HARNESS-004-four-doc-repository-documentation-ownership.md) establishes the four-document split, and the Guides and Feature Definitions standards repeat it, but `ki-repo` does not yet own the non-KB physical topology. `ki-guides` does not route a procedure that relies on stable behaviour to an absent or incomplete Feature Definitions corpus, and the roadmap execution contract has no mechanically required documentation-impact section.
+[GDR-KI-HARNESS-004](../decisions/GDR-KI-HARNESS-004-four-doc-repository-documentation-ownership.md) establishes the four-document split, and the Guides and Specifications standards repeat it, but `ki-repo` does not yet own the non-KB physical topology. `ki-guides` does not route a procedure that relies on stable behaviour to an absent or incomplete Specifications corpus, and the roadmap execution contract has no mechanically required documentation-impact section.
 
 ## Steps
 
-- [ ] Make `ki-repo` the topology owner for non-KB `docs/decisions/`, `docs/features/`, `docs/guides/`, and `docs/roadmap/`, while keeping each category optional until its specialist skill is declared and avoiding duplicate specialist checks.
+- [ ] Make `ki-repo` the topology owner for non-KB `docs/decisions/`, `docs/specs/`, `docs/guides/`, and `docs/roadmap/`, while keeping each category optional until its specialist skill is declared and avoiding duplicate specialist checks.
 - [ ] Add a `ki-repo` judgment criterion that checks whether durable material is routed to the correct authority without treating an absent optional category as drift.
-- [ ] Strengthen `ki-guides` AUDIT, CONFORM, and judgment guidance so a guide links to an existing Feature Definition when it relies on stable behaviour, or routes an actual contract gap to `ki-feature-definitions` without requiring a corpus for unrelated guides.
-- [ ] Align the Feature Definitions topology wording with the `ki-repo` owner while preserving its flat area, requirement, and Gaps contracts unchanged.
-- [ ] Add `## Documentation impact` to the immediate roadmap shape, with explicit Decision Record, Feature Definition, Guide, and roadmap outcomes or justified non-applicability; check section presence mechanically and assessment truth by judgment.
+- [ ] Strengthen `ki-guides` AUDIT, CONFORM, and judgment guidance so a guide links to an existing Specification when it relies on stable behaviour, or routes an actual contract gap to `ki-specs` without requiring a corpus for unrelated guides.
+- [ ] Align the Specifications topology wording with the `ki-repo` owner while preserving its flat area, requirement, and Gaps contracts unchanged.
+- [ ] Add `## Documentation impact` to the immediate roadmap shape, with explicit Decision Record, Specification, Guide, and roadmap outcomes or justified non-applicability; check section presence mechanically and assessment truth by judgment.
 - [ ] Update the roadmap evidence parser and fixtures, then migrate every retained Now or Next item to the new section without changing its horizon, status, or delivery scope.
 - [ ] Regenerate the four affected rubric publications once and run focused and aggregate verification.
 
@@ -42,7 +42,7 @@ Do not require every repository to create every documentation category, make gui
 - `skills/keystone/ki-repo/scripts/rubric/items/{index,documentation}.ts` and `references/rubric.md`
 - `skills/governance/ki-guides/{SKILL.md,references/standards-guides.md,references/mode-audit.md,references/mode-conform.md}`
 - `skills/governance/ki-guides/scripts/rubric/items/routing.ts`, its catalogue test, and `references/rubric.md`
-- `skills/governance/ki-feature-definitions/{SKILL.md,references/standards-feature-definitions.md}` and its generated publication only if its catalogue wording changes
+- `skills/governance/ki-specs/{SKILL.md,references/standards-specs.md}` and its generated publication only if its catalogue wording changes
 - `skills/change-management/ki-change-management-roadmap/references/{standards-repository-roadmaps,standards-work-item-format}.md`
 - `skills/change-management/ki-change-management-roadmap/scripts/rubric/contexts/roadmap-evidence.ts`
 - `skills/change-management/ki-change-management-roadmap/scripts/rubric/items/{plans,index.test}.ts` and `references/rubric.md`
@@ -50,11 +50,11 @@ Do not require every repository to create every documentation category, make gui
 
 ## Verify
 
-- `bunx vitest run skills/keystone/ki-repo/scripts/rubric/items/index.test.ts skills/governance/ki-guides/scripts/rubric/items/index.test.ts skills/governance/ki-feature-definitions/scripts/rubric/items/index.test.ts skills/change-management/ki-change-management-roadmap/scripts/rubric/items/index.test.ts`
+- `bunx vitest run skills/keystone/ki-repo/scripts/rubric/items/index.test.ts skills/governance/ki-guides/scripts/rubric/items/index.test.ts skills/governance/ki-specs/scripts/rubric/items/index.test.ts skills/change-management/ki-change-management-roadmap/scripts/rubric/items/index.test.ts`
 - A roadmap fixture without `## Documentation impact` fails the mechanical gate; one with the section passes even though the four assessments remain judgment-reviewed.
-- Guide fixtures preserve independent use: a procedure with no stable-behaviour dependency does not require Feature Definitions, while a dependent procedure is routed to the existing corpus or a named gap.
-- `ki dev skill rubric ki-repo`, `ki dev skill rubric ki-guides`, `ki dev skill rubric ki-feature-definitions`, and `ki dev skill rubric ki-change-management-roadmap`
-- `ki repo audit --skill ki-repo --repo .`, `ki repo audit --skill ki-guides --repo .`, `ki repo audit --skill ki-feature-definitions --repo .`, and `ki repo audit --skill ki-change-management-roadmap --repo .`
+- Guide fixtures preserve independent use: a procedure with no stable-behaviour dependency does not require Specifications, while a dependent procedure is routed to the existing corpus or a named gap.
+- `ki dev skill rubric ki-repo`, `ki dev skill rubric ki-guides`, `ki dev skill rubric ki-specs`, and `ki dev skill rubric ki-change-management-roadmap`
+- `ki repo audit --skill ki-repo --repo .`, `ki repo audit --skill ki-guides --repo .`, `ki repo audit --skill ki-specs --repo .`, and `ki repo audit --skill ki-change-management-roadmap --repo .`
 - `bun run test`, then `bunx tsc --noEmit`
 
 ## Dependencies / blocks
@@ -63,7 +63,7 @@ The accepted repository-governance work supplied the canonical non-KB repository
 
 ## Delegation
 
-The orchestrator first fixes the topology ownership and exact `## Documentation impact` template. After that gate, one bounded worker may update Guides and Feature Definitions wording, while another updates the roadmap contract, parser, fixtures, and retained immediate records. Keep `ki-repo` catalogue integration and all generated publications with the orchestrator to avoid shared-file conflicts. The orchestrator reviews the cross-skill boundary, generates publications once, and runs the final audits and full gates.
+The orchestrator first fixes the topology ownership and exact `## Documentation impact` template. After that gate, one bounded worker may update Guides and Specifications wording, while another updates the roadmap contract, parser, fixtures, and retained immediate records. Keep `ki-repo` catalogue integration and all generated publications with the orchestrator to avoid shared-file conflicts. The orchestrator reviews the cross-skill boundary, generates publications once, and runs the final audits and full gates.
 
 ## Discussion
 
@@ -73,7 +73,7 @@ This item adopts `TRD-6f63fb71` and `TRD-24095e01`.
 
 ### Documentation-impact shape
 
-The immediate-work section should use four explicit entries: **Decision records**, **Feature Definitions**, **Guides**, and **Roadmap**. Each names the file or behaviour to update, or says why that authority is not applicable. The checker proves only that the section exists in the required order; review decides whether all four assessments are truthful and whether a proposed documentation change belongs to the named owner.
+The immediate-work section should use four explicit entries: **Decision Records**, **Specifications**, **Guides**, and **Roadmap**. Each names the file or behaviour to update, or says why that authority is not applicable. The checker proves only that the section exists in the required order; review decides whether all four assessments are truthful and whether a proposed documentation change belongs to the named owner.
 
 ### Ownership model
 
