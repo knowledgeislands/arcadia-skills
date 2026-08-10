@@ -3,7 +3,7 @@ id: KI-HARNESS-GOV-002
 title: Deploy Specifications fleetwide
 area: GOV
 theme: governance-consistency
-horizon: next
+horizon: now
 status: ready
 blocks: []
 blocked_by: []

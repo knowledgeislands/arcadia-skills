@@ -3,7 +3,7 @@ id: KI-HARNESS-GOV-016
 title: Govern documentation topology
 area: GOV
 theme: governance-consistency
-horizon: next
+horizon: now
 status: ready
 blocks: []
 blocked_by: []

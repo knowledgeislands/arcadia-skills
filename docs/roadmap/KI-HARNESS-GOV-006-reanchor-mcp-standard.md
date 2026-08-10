@@ -3,7 +3,7 @@ id: KI-HARNESS-GOV-006
 title: Reanchor MCP standard
 area: GOV
 theme: governance-consistency
-horizon: soon
+horizon: next
 status: draft
 blocks: []
 blocked_by: []

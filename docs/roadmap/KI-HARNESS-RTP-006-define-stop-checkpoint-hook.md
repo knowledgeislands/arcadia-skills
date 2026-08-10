@@ -3,7 +3,7 @@ id: KI-HARNESS-RTP-006
 title: Define Stop checkpoint hook
 area: RTP
 theme: runtime-portability
-horizon: next
+horizon: now
 status: ready
 blocks: []
 blocked_by: []

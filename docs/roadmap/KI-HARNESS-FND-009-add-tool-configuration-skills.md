@@ -3,7 +3,7 @@ id: KI-HARNESS-FND-009
 title: Add tool configuration skills
 area: FND
 theme: foundation-tooling
-horizon: soon
+horizon: next
 status: draft
 blocks: []
 blocked_by: []
@@ -43,6 +43,35 @@ Confirm the initial default set and the exact tracked files for each tool, inclu
 ### Promotion conditions
 
 Promote when each tool's project-local contract, safe defaults, ownership boundary, and activation path are reviewable; the two skills have a clear shared-versus-tool-specific split; and a representative repository can validate their configuration without requiring either tool to be installed for unrelated work.
+
+## Current state
+
+`tools-ki` provides the reference project-local VS Code and Zed configuration, but the Harness has not yet classified every tracked setting as portable, tool-specific, user-local, or machine-local. No reusable tool-configuration skill currently owns the shared or per-tool defaults.
+
+## Steps
+
+- [ ] Inventory the tracked VS Code and Zed configuration in `tools-ki`, classifying each setting by ownership, portability, and whether it requires its native editor to validate.
+- [ ] Select the exact safe defaults, tracked files, skill names, and placement for each tool; reject user preferences, machine paths, and repository-identity claims from the reusable contract.
+- [ ] Create the two optional tool-configuration skills, keeping common guidance minimal and each tool's defaults, file conventions, and validation in its own skill.
+- [ ] Add a representative repository fixture or equivalent file-level evidence that proves explicit activation is safe while an unrelated repository remains unaffected without either editor installed.
+- [ ] Audit the new skill roots, record any excluded setting and its owner, and route any `tools-ki` command work back to its owning repository.
+
+## Files touched
+
+- The two selected tool-configuration skill roots and their scoped references, rubric material, and tests
+- This work item
+
+No user-level editor configuration, machine-local state, portable `ki-repo` metadata, or `tools-ki` implementation changes are in scope.
+
+## Verify
+
+- Each retained default has an explicit tracked-file, ownership, and portability classification.
+- A repository that activates either skill receives only the declared project-local configuration; one that does not activate it receives no editor-specific requirement.
+- The new skills' native checks, `ki repo audit --skill ki-skills --repo .`, `bun run test`, and `bunx tsc --noEmit` pass.
+
+## Dependencies / blocks
+
+The `tools-ki` configuration is evidence, not a dependency that grants copying authority. The selection of safe defaults, exact tracked files, and the skill names remains the immediate planning decision; do not mark this item Ready until it is recorded and reviewable.
 
 ## Discussion
 
