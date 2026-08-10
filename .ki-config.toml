@@ -46,18 +46,44 @@ export = ["knowledge"]
 
 [skills.ki-trades.routes."knowledgeislands/tools-ki"]
 export = ["work", "knowledge"]
-import = ["work", "knowledge"]
 
 [skills.ki-trades.routes."knowledgeislands/tools-mgit"]
 export = ["work", "knowledge"]
-import = ["work", "knowledge"]
 
 [skills.ki-trades.routes."knowledgeislands/ki-arcadia-principal"]
 import = ["knowledge"]
 
 [skills.ki-trades.routes."krisb/dotfiles"]
 export = ["work", "knowledge"]
+
+[skills.ki-trades.routes."knowledgeislands/ki-specifications"]
+export = ["work", "knowledge"]
 import = ["work", "knowledge"]
+
+[skills.ki-trades.routes."knowledgeislands/ki-techne-principal"]
+export = ["work", "knowledge"]
+import = ["work", "knowledge"]
+
+[skills.ki-trades.routes."knowledgeislands/ki-plugins"]
+export = ["knowledge"]
+
+[skills.ki-trades.routes."knowledgeislands/mcp-claude-housekeeping"]
+export = ["knowledge"]
+
+[skills.ki-trades.routes."knowledgeislands/mcp-git-audit"]
+export = ["knowledge"]
+
+[skills.ki-trades.routes."knowledgeislands/mcp-gsuite"]
+export = ["knowledge"]
+
+[skills.ki-trades.routes."knowledgeislands/mcp-ki-kb-fs"]
+export = ["knowledge"]
+
+[skills.ki-trades.routes."knowledgeislands/mcp-ki-kb-notion-mirror"]
+export = ["knowledge"]
+
+[skills.ki-trades.routes."knowledgeislands/mcp-m365"]
+export = ["knowledge"]
 
 [skills.ki-git]
 
