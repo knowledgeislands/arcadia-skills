@@ -4,10 +4,10 @@ title: Deploy Specifications fleetwide
 area: GOV
 theme: governance-consistency
 horizon: now
-status: ready
+status: in-progress
 blocks: []
 blocked_by: []
-baseline_ref: null
+baseline_ref: ba91c843419820f6c37679abd8691c665bed951d
 ---
 
 ## Goal
