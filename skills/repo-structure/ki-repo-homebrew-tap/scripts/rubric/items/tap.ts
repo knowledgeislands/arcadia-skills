@@ -234,7 +234,7 @@ const TAP_6: RubricItem<TapContext> = {
 const TAP_7: RubricItem<TapContext> = {
   code: 'TAP-7',
   title: 'Homebrew audit',
-  description: 'Homebrew style and strict audit are run explicitly for every formula.',
+  description: 'Homebrew style and strict audit validate every formula when Homebrew is available.',
   sources: SOURCE,
   mechanical: {
     level: 'WARN',
@@ -246,11 +246,7 @@ const TAP_7: RubricItem<TapContext> = {
           return [{ status: 'NOT_APPLICABLE', message: 'ki-repo-homebrew-tap is not applicable.' }]
         if (context.formulae.length === 0)
           return [{ status: 'NOT_APPLICABLE', message: 'No formulae are available for Homebrew checks.' }]
-        return context.formulae.map((formula) => ({
-          status: 'VIOLATION',
-          message: `Run Homebrew validation explicitly: brew style Formula/${formula.file} and brew audit --strict ${formula.name}.`,
-          subject: `Formula/${formula.file}`
-        }))
+        return context.homebrewValidation
       }
     }
   }

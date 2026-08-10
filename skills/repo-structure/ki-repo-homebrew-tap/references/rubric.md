@@ -39,7 +39,7 @@ Formula layout, explicit Homebrew validation, and judgment review of tap correct
   - _Remediation:_ diagnostic — Correct the tap formula or release evidence through the responsible maintainer; hosted conform does not infer release or package semantics.
 - **TAP-6 [M] — formula discoverability** — README.md lists every formula by name. (standards-homebrew-tap.md)
   - _Remediation:_ diagnostic — Correct the tap formula or release evidence through the responsible maintainer; hosted conform does not infer release or package semantics.
-- **TAP-7 [M] — Homebrew audit** — Homebrew style and strict audit are run explicitly for every formula. (standards-homebrew-tap.md)
+- **TAP-7 [M] — Homebrew audit** — Homebrew style and strict audit validate every formula when Homebrew is available. (standards-homebrew-tap.md)
   - _Remediation:_ diagnostic — Correct the tap formula or release evidence through the responsible maintainer; hosted conform does not infer release or package semantics.
 - **TAP-J1 [J] — tap naming** — The repository name follows Homebrew tap naming conventions. (standards-homebrew-tap.md)
   - _Evidence scope:_ The Homebrew tap, its formulae, release evidence, and CI configuration.
