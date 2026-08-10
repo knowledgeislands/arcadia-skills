@@ -3,7 +3,7 @@ id: KI-HARNESS-GOV-036
 title: Route specifications evidence
 area: GOV
 theme: governance-consistency
-horizon: now
+horizon: next
 status: ready
 blocks: []
 blocked_by: []

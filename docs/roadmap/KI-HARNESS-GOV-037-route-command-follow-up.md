@@ -3,7 +3,7 @@ id: KI-HARNESS-GOV-037
 title: Route command follow-up
 area: GOV
 theme: governance-consistency
-horizon: now
+horizon: next
 status: ready
 blocks: []
 blocked_by: []
