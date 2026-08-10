@@ -3,9 +3,8 @@ id: KI-HARNESS-GOV-009
 title: Make runtime coverage conformable
 area: GOV
 theme: governance-consistency
-horizon: future
+horizon: next
 status: draft
-candidate: true
 blocks: []
 blocked_by: []
 baseline_ref: null
@@ -25,7 +24,46 @@ The contract must distinguish repository-owned projections — shared `AGENTS.md
 
 Do not infer or add supported runtimes, globally install user skills, or modify unmanaged runtime configuration. Do not weaken the read-only audit boundary or conceal an unresolved runtime-to-skill mapping.
 
+## Current state
+
+The Harness's `ki-repo` runtime rubric already derives the required portable and runtime-specific skill tables from a repository's declared `supported_runtimes`, then reports every missing table as `RUNTIMES-2`. Managed runtime-discovery links are created safely by the existing `ki repo skill add` path.
+
+The current recovery remains manually decomposed: a maintainer must interpret the audit finding and invoke the add command for each missing capability. The `ki repo conform` executor does not yet consume the same deterministic mapping, and the Harness must not implement that executor or write a peer repository's configuration.
+
+## Steps
+
+- [ ] Reconcile the Harness runtime-coverage contract, its `RUNTIMES-2` evidence, and the existing `ki repo skill add` safeguards into one precise receiver-facing conform proposal; list the recognised runtimes, required capabilities, and repository-owned projections it may repair.
+- [ ] Prepare a `tools-ki` receiver-owned implementation proposal for `ki repo conform`, including shared resolver reuse, containment, ownership, compatibility, and trust checks; do not infer acceptance or edit the receiving repository.
+- [ ] Specify the dry-run and apply transaction behaviour: report each exact proposed table or managed-link addition, make no user-configuration write, fail closed on missing or ambiguous mappings, and leave unrelated declarations and unmanaged runtime files byte-preserved.
+- [ ] Define focused two-runtime fixtures for missing declarations and links, dry-run output, successful convergence, a repeated byte-stable conform run, and rejected ambiguous, incompatible, untrusted, or out-of-scope cases.
+- [ ] Record the receiving disposition and any named park in this item; only an accepted `tools-ki` record may implement the CLI change and run its repository-local verification.
+
+## Files touched
+
+- This work item, containing the runtime-coverage mapping and the receiver-facing implementation proposal
+
+No `tools-ki` source, repository configuration, managed discovery link, or user-owned runtime setting changes in this item.
+
+## Verify
+
+- The proposal maps every recognised declared runtime to its exact required capabilities and identifies the existing audit and `ki repo skill add` evidence it reuses.
+- Each proposed CONFORM action is limited to declared repository-owned tables and managed discovery links; unsupported, missing, ambiguous, incompatible, or untrusted sources are explicit failures.
+- The fixture plan proves dry-run non-mutation, apply convergence, repeat idempotence, and preservation of unrelated declarations and unmanaged runtime files.
+- `ki repo audit --skill ki-change-management-roadmap --repo .` and `ki repo audit --skill ki-authoring --repo .` pass.
+
+## Dependencies / blocks
+
+The runtime-coverage mapping and the `ki repo skill add` safety checks already exist as Harness evidence. The actual `ki repo conform` executor and its CLI fixtures belong to `tools-ki`; no implementation may start until that repository confirms a receiver-owned record and scope.
+
 ## Discussion
+
+### Why Next, not Soon
+
+The required mapping, ownership boundary, failure mode, and verification shape are already concrete. A Soon shaping stage would duplicate the focused reconciliation and receiver proposal defined here, so the item can be prepared directly in Next while retaining the receiving repository's independent priority and acceptance decision.
+
+### Local and user-owned state
+
+The deterministic repair must reconcile only a repository's declared governance tables and managed runtime-discovery links. User settings, global skill installation, machine-local state, and unmanaged runtime configuration remain outside its authority even when they sit beside a supported runtime surface.
 
 ### Intended repair contract
 
