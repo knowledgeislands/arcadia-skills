@@ -39,6 +39,7 @@ test('the structured catalogue preserves the engineering criteria', async () => 
     'SYNC',
     'DEPS',
     'GEN',
+    'DESIGN',
     'TEST',
     'BUILD',
     'ENV',
@@ -47,10 +48,11 @@ test('the structured catalogue preserves the engineering criteria', async () => 
   const codes = catalogue.families
     .filter((family) => family.code !== 'RUBRIC')
     .flatMap((family) => family.items.map((item) => item.code))
-  expect(codes).toHaveLength(49)
+  expect(codes).toHaveLength(50)
   expect(new Set(codes).size).toBe(codes.length)
   expect(codes[0]).toBe('PKG-1')
   expect(codes).toContain('TEST-7')
+  expect(codes).toContain('DESIGN-1')
   expect(codes.at(-1)).toBe('TOML-2')
 
   const observableCoverage = catalogue.families

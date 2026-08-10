@@ -64,6 +64,7 @@ export type KnipRubricContext = {
 export type SyncRubricContext = { sync1: EngineeringEvidence; normalise?: () => void }
 export type DependenciesRubricContext = { deps1: EngineeringEvidence }
 export type GeneratedRubricContext = { gen1: EngineeringEvidence }
+export type DesignRubricContext = Record<string, never>
 export type TestRubricContext = {
   test1: EngineeringEvidence
   test2: EngineeringEvidence
@@ -97,6 +98,7 @@ export type EngineeringRubricContext = {
   sync: SyncRubricContext
   dependencies: DependenciesRubricContext
   generated: GeneratedRubricContext
+  design: DesignRubricContext
   test: TestRubricContext
   build: BuildRubricContext
   environment: EnvironmentRubricContext
@@ -393,6 +395,7 @@ export const createEngineeringSession = async (
     },
     dependencies: { deps1: evidence('DEPS-1') },
     generated: { gen1: evidence('GEN-1') },
+    design: {},
     test: {
       test1: evidence('TEST-1'),
       test2: evidence('TEST-2'),
@@ -430,6 +433,7 @@ export const createEngineeringSession = async (
           'SYNC',
           'DEPS',
           'GEN',
+          'DESIGN',
           'TEST',
           'BUILD',
           'ENV',

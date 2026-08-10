@@ -9,6 +9,7 @@ This file is the **normative, quotable** standard. The checkable items and their
 ## Contents
 
 - [Scope and layers](#scope-and-layers)
+- [Code design](#code-design)
 - [0. Repo shapes — flat vs monorepo (core)](#0-repo-shapes--flat-vs-monorepo-core)
 - [1. package.json & toolchain pinning (core)](#1-packagejson--toolchain-pinning-core)
 - [2. The governed script surface (core)](#2-the-governed-script-surface-core)
@@ -24,6 +25,7 @@ This file is the **normative, quotable** standard. The checkable items and their
 
 The standard applies to any repo carrying a `[skills.ki-engineering]` table in its `.ki-config.toml` (§9) — today the 10 TS/Bun repos under `knowledgeislands/`. It is split into:
 
+- **Code design** — judgment-led standards for code structure and tests that preserve comprehension (§Code design and §6).
 - **Core** — the baseline every such repo MUST meet, unconditionally (§1–§5).
 - **Capability conditionals** — common rules that fire only when the repo opts into a capability, detected by a marker in the repo (§6–§8). A repo with no tests is not required to have a test script; a repo that ships tests exposes them through the bare `test` idiom. Vitest is recommended, not mandated; when a repo selects it by carrying `vitest.config.*`, the canonical Vitest scripts and 100% coverage rules apply in full.
 
@@ -37,6 +39,16 @@ The capability markers, and what each unlocks:
 | Compiled build | `tsconfig.build.json` present, or `build` is a `tsc` invocation | §7 — `build`/`files`/`tsconfig.build.json` |
 | Env config | `.env*.example` present, or `process.loadEnvFile` used | §8 — `.env` discipline + `NODE_ENV`-in-dev |
 | CLI binary | `src/cli/` present | §7 — `build` chmods `dist/cli/cli.js` |
+
+## Code design
+
+Code is maintained for correct change, not merely compact implementation. These are judgment standards: they guide review and shaping rather than prescribing an arbitrary directory layout or a mechanical complexity threshold.
+
+- **Keep modules cohesive.** Organise a module around one domain concern and split it when unrelated responsibilities, callers, or reasons to change accumulate. Prefer a small explicit seam between domains over a catch-all utility or coordinator. Do not split a coherent flow merely to meet a file-length target.
+- **Optimise for comprehension.** Names, module boundaries, data flow, and control flow SHOULD let a maintainer locate the responsible concern and follow the ordinary case without reconstructing hidden abstractions. Make important policies explicit at their boundary; use types and narrow interfaces to reveal, rather than conceal, the contract.
+- **Prefer clarity to maximal DRY.** Extract shared code only when it represents a stable concept with the same meaning, lifecycle, and error semantics for every caller. Local, well-named duplication is preferable when an abstraction would hide domain vocabulary, couple unrelated flows, or force conditional behaviour into a generic helper.
+
+Tests remain part of this design discipline: coverage is evidence only when it begins at a supported API, CLI, or other observable contract boundary (§6). A test seam MAY model a documented interface failure that cannot be reproduced deterministically through that boundary, but it MUST NOT become an implementation-only substitute for it.
 
 ## 0. Repo shapes — flat vs monorepo (core)
 
@@ -183,7 +195,7 @@ When a repo selects Vitest by carrying `vitest.config.*`, all of the following a
 - **Executable helper scripts are operational tooling, not shipped `src/`, and remain outside Vitest's coverage profile.** A repo's `scripts/` (repo tooling, eval harnesses) and a skill's bundled checkers may carry standalone self-tests behind the bare `test` idiom without adding `vitest.config.*`; the 100% source-coverage rules do not apply to that runner-neutral profile. Their absence of self-tests is not automatically a coverage gap.
 - **Monorepo variant (§0).** The `src/**` globs above are the **flat-shape** form. In a monorepo each workspace scopes them to its own source root: `include`/`exclude` match that workspace's test files (e.g. `include: ['site/scripts/**/*.test.ts']`), and vitest writes coverage to a `reportsDirectory` **under the workspace** — `site/coverage`, gitignored there — never the repo root. The 100%-threshold rule and the `*.test.ts` exclude are unchanged; only the paths become workspace-relative.
 
-Coverage is evidence of supported behaviour, not a reason to introduce an implementation-only test seam. Start a coverage-gap investigation at the nearest supported public boundary and prove every reachable path through an externally observable result. Remove a path that no supported input can reach instead of preserving it solely to satisfy a coverage threshold.
+Coverage is evidence of supported behaviour, not a reason to introduce an implementation-only test seam. Start a coverage-gap investigation at the nearest supported API, CLI, or other public boundary and prove every reachable path through an externally observable result. Remove a path that no supported input can reach instead of preserving it solely to satisfy a coverage threshold.
 
 Interface-level fault injection is the narrow exception: it may model a documented boundary failure that the ordinary public entrypoint cannot exercise deterministically. Keep the injection outside implementation internals and record why the supported boundary cannot produce that failure. Do not use fault injection merely to make an internal branch covered.
 

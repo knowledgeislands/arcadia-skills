@@ -20,6 +20,7 @@ Line-by-line criteria for auditing ki-engineering. Classifications are derived f
 - [SYNC — Dependency synchronisation](#sync--dependency-synchronisation)
 - [DEPS — Dependency freshness](#deps--dependency-freshness)
 - [GEN — Generated surfaces](#gen--generated-surfaces)
+- [DESIGN — Code design](#design--code-design)
 - [TEST — Tests](#test--tests)
 - [BUILD — Compiled builds](#build--compiled-builds)
 - [ENV — Environment configuration](#env--environment-configuration)
@@ -198,6 +199,18 @@ Managed discovery surfaces carry consistent tool exclusions.
 
 - **GEN-1 [M] — Managed discovery surfaces share exclusions** — Known generated or managed discovery surfaces have matching Biome, Knip, and Markdown exclusions, and no legacy `.ki` runtime exclusion remains. (standards-engineering.md)
   - _Remediation:_ diagnostic — Align the generated-surface exclusions with the managed paths and remove the legacy runtime exclusion, then rerun the audit.
+
+## DESIGN — Code design
+
+→ [standard](standards-engineering.md)
+
+Comprehension-first modularity and deliberately restrained abstraction.
+
+- **DESIGN-1 [J] — Comprehension-first design** — Code keeps modules cohesive, makes important policies and ordinary control flow clear, and extracts reuse only for a stable shared concept. (standards-engineering.md#code-design)
+  - _Evidence scope:_ Source modules, their imports and callers, public boundaries, and the corresponding contract tests.
+  - _Review prompt:_ Do module boundaries match domain concerns and reasons to change; can a maintainer follow ordinary control flow and policy from clear names and interfaces; and does each shared abstraction retain the same meaning, lifecycle, and error semantics for every caller?
+  - _Outcomes:_ conforming; gap; exception
+  - _Conforming guidance:_ Split a mixed-responsibility module at a domain seam, simplify or name an obscuring abstraction, or retain documented local duplication where it makes the domain clearer.
 
 ## TEST — Tests
 

@@ -5,6 +5,7 @@ import { BUILD } from './build.ts'
 import { BUN } from './bun.ts'
 import { CI } from './ci.ts'
 import { DEPENDENCIES } from './dependencies.ts'
+import { DESIGN } from './design.ts'
 import { ENVIRONMENT } from './environment.ts'
 import { GENERATED } from './generated.ts'
 import { KNIP } from './knip.ts'
@@ -35,6 +36,7 @@ export default {
     SYNC,
     DEPENDENCIES,
     GENERATED,
+    DESIGN,
     TEST,
     BUILD,
     ENVIRONMENT,
