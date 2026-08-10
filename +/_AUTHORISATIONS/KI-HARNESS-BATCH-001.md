@@ -1,9 +1,9 @@
 ---
 id: KI-HARNESS-BATCH-001
 repository: https://github.com/knowledgeislands/ki-agentic-harness
-approved: false
-approved_at: null
-timebox_ends_at: 2026-08-17T18:00:00Z
+approved: true
+approved_at: 2026-08-10T08:23:38Z
+timebox_ends_at: 2026-08-10T12:23:38Z
 item_ids: [KI-HARNESS-GOV-028, KI-HARNESS-GOV-031, KI-HARNESS-GOV-002]
 completion_target: awaiting-review
 mandatory_stops: [public-contract-change, material-scope-expansion, destructive-or-irreversible-work, external-coordination, verification-failure, unapproved-decision, push-or-release]
@@ -61,4 +61,4 @@ The records are independent and may run in parallel after fresh preflight. The o
 
 ## Approval
 
-This is an unapproved preparation record only. It grants no implementation authority until a human approves its exact named set and an active four-hour timebox in frontmatter.
+Approved by the user at 2026-08-10T08:23:38Z for the exact named set and four-hour timebox above. It grants no authority beyond this record's scope or completion target.
