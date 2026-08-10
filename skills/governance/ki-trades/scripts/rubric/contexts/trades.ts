@@ -82,6 +82,7 @@ type TradeConfiguration = {
   readonly identity?: string
   readonly exportsTo: Readonly<Record<TradeKind, readonly string[]>>
   readonly importsFrom: Readonly<Record<TradeKind, readonly string[]>>
+  readonly mapBonus: number
   readonly participates: boolean
   readonly valid: boolean
 }
@@ -134,6 +135,9 @@ export type TradesRubricContext = {
 const table = (value: unknown): Record<string, unknown> | null =>
   value && typeof value === 'object' && !Array.isArray(value) ? (value as Record<string, unknown>) : null
 
+const validMapBonus = (value: unknown): value is number =>
+  typeof value === 'number' && Number.isInteger(value) && value >= 0 && value <= 3
+
 const physicalDirectory = (path: string): boolean => {
   if (!existsSync(path)) return false
   const state = lstatSync(path)
@@ -172,7 +176,7 @@ const parseConfiguration = (
   subject: string
 ): { configuration: TradeConfiguration; outcomes: AuditOutcome[] } => {
   const outcomes: AuditOutcome[] = []
-  const unknown = Object.keys(value).filter((key) => key !== 'routes')
+  const unknown = Object.keys(value).filter((key) => key !== 'map_bonus' && key !== 'routes')
   for (const key of unknown)
     outcomes.push({
       status: 'VIOLATION',
@@ -184,6 +188,11 @@ const parseConfiguration = (
   const local = repositoryIdentity(repository)
   if (!local.repository || !local.identity)
     outcomes.push({ status: 'VIOLATION', message: 'ki-repo repository must be a canonical HTTPS GitHub home', subject })
+
+  const declaredMapBonus = value.map_bonus
+  const configuredMapBonus = declaredMapBonus === undefined ? 0 : declaredMapBonus
+  if (!validMapBonus(configuredMapBonus))
+    outcomes.push({ status: 'VIOLATION', message: 'map_bonus must be an integer from 0 through 3', subject })
 
   // Routes are declared partner-first — one table per peer, keyed by `owner/name` — while the
   // rest of this skill reasons kind-first. Partner keys are unique by TOML's own prohibition on
@@ -277,6 +286,7 @@ const parseConfiguration = (
       ...local,
       exportsTo,
       importsFrom,
+      mapBonus: validMapBonus(configuredMapBonus) ? configuredMapBonus : 0,
       participates: true,
       valid: outcomes.every((outcome) => outcome.status !== 'VIOLATION' || outcome.level === 'WARN')
     },
@@ -290,6 +300,7 @@ const parseRepositoryConfiguration = (root: string): TradeConfiguration => {
     return {
       exportsTo: { work: [], knowledge: [] },
       importsFrom: { work: [], knowledge: [] },
+      mapBonus: 0,
       participates: false,
       valid: false
     }
@@ -303,6 +314,7 @@ const parseRepositoryConfiguration = (root: string): TradeConfiguration => {
         ...repositoryIdentity(repository),
         exportsTo: { work: [], knowledge: [] },
         importsFrom: { work: [], knowledge: [] },
+        mapBonus: 0,
         participates: false,
         valid: false
       }
@@ -311,6 +323,7 @@ const parseRepositoryConfiguration = (root: string): TradeConfiguration => {
     return {
       exportsTo: { work: [], knowledge: [] },
       importsFrom: { work: [], knowledge: [] },
+      mapBonus: 0,
       participates: true,
       valid: false
     }

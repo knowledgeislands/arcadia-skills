@@ -38,8 +38,12 @@ const routes = (
 const tradeConfiguration = (
   _identity: string,
   peers: readonly string[],
-  kinds?: readonly ('work' | 'knowledge')[]
-): Record<string, unknown> => ({ routes: routes(peers, kinds) })
+  kinds?: readonly ('work' | 'knowledge')[],
+  mapBonus?: unknown
+): Record<string, unknown> => ({
+  ...(mapBonus === undefined ? {} : { map_bonus: mapBonus }),
+  routes: routes(peers, kinds)
+})
 
 const writeRepositoryConfiguration = (
   root: string,
@@ -203,6 +207,23 @@ test('malformed route declarations are refused', () => {
   expect(messages).toContain('route peer/repo import must not repeat a kind')
   expect(messages).toContain('route another/repo export kind gossip is not a declared trade kind')
   expect(messages).toContain('route third/repo must be a table declaring export and import kinds')
+})
+
+test('map bonus is bounded presentation metadata', () => {
+  const { home, local } = fixture()
+  const valid = createTradesSession(options(local, home, tradeConfiguration('local/repo', ['peer/repo'], undefined, 1)))
+  expect(mechanicalOutcomes(valid, CONFIG)).toEqual([
+    { status: 'PASS', message: 'Trade route declarations are canonical.' }
+  ])
+
+  const invalid = createTradesSession(
+    options(local, home, tradeConfiguration('local/repo', ['peer/repo'], undefined, 4))
+  )
+  expect(mechanicalOutcomes(invalid, CONFIG)).toContainEqual({
+    status: 'VIOLATION',
+    message: 'map_bonus must be an integer from 0 through 3',
+    subject: '.ki-config.toml'
+  })
 })
 
 test('declared routes remain pending until the other repository registers and reciprocates', () => {

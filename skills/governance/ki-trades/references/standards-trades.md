@@ -20,6 +20,8 @@ A repository participates only by declaring its own table, naming each partner o
 
 ```toml
 [skills.ki-trades]
+# Optional presentation-only map uplift; omitted means 0.
+map_bonus = 1
 
 [skills.ki-trades.routes."owner/receiver"]
 export = ["work"]
@@ -35,6 +37,8 @@ import = ["work"]
 The repository's canonical endpoint is `ki-repo.repository`, a required HTTPS GitHub URI. Each route has its own table, keyed by the partner's `owner/name` — the same form a trade record uses for its `sender` and `receiver` — carrying `export` and `import`, each a duplicate-free array drawn from the closed trade-kind set `work` and `knowledge`. A direction the partner does not trade is **absent**, never an empty array. A partner outside the default host keeps a full canonical HTTPS URL as its key, so that exception stays visibly exceptional.
 
 Each partner appears exactly once: TOML's own prohibition on defining a key twice enforces that, so no hand-written uniqueness or lexical-ordering rule is needed. `[skills.ki-trades]` is declared explicitly rather than implied by its `routes` sub-table, because declaring a skill is separate from configuring it.
+
+`map_bonus` is an optional integer from `0` through `3`, defaulting to `0`. It is presentation metadata for the generated registered-estate map: it adds a small declared contribution to the repository's visible influence alongside route-derived degree and any renderer-derived organisation treatment. It does not change route activation, preparation, submission, receipt, decision, priority, or authority.
 
 A sender-declared export authorises only sender-local preparation and submission. It remains a pending observation route while the receiver is absent from the local registry, does not participate, or has not declared the matching import. Receipt requires an active reciprocal route: exactly one registered root declares the receiver's canonical home, the sender exports that kind, and the receiver imports the same kind from the sender. Filesystem visibility, one-sided declaration, or reciprocity for another kind never activates receipt. Route removal must refuse while a local preparation, submitted outbound, or retained inbound record depends on that typed route.
 
