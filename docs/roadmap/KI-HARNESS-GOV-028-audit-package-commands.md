@@ -4,7 +4,7 @@ title: Audit package commands
 area: GOV
 theme: governance-consistency
 horizon: now
-status: awaiting-review
+status: done
 blocks: []
 blocked_by: []
 baseline_ref: ba91c843419820f6c37679abd8691c665bed951d
@@ -114,6 +114,10 @@ The report keeps current behaviour separate from proposed future naming. In part
 ### Mini recap
 
 The estate has a reconciled present-tense baseline: 107 intentional scripts and one ambiguous remote-upload entrypoint routed to `ki-website`; all implementation and naming changes remain outside this audit.
+
+## Done
+
+Accepted by the repository owner on 2026-08-10 after review of the evidence packet. This closes the read-only command inventory; the `ki-website` `ki:site:upload` follow-up remains receiver-owned and must proceed through an independent local decision. No record is pruned.
 
 ## Discussion
 

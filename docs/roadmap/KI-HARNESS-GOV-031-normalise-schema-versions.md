@@ -4,7 +4,7 @@ title: Normalise schema versions
 area: GOV
 theme: governance-consistency
 horizon: now
-status: awaiting-review
+status: done
 blocks: []
 blocked_by: []
 baseline_ref: ba91c843419820f6c37679abd8691c665bed951d
@@ -115,6 +115,10 @@ The delivery stayed within the read-only boundary: no schema, protocol, alias, f
 ### Mini recap
 
 The inventory establishes a V1 baseline without fabricating lineage: fourteen internal families are already or cleanly become V1, while four incomplete contracts and every non-internal version axis remain explicitly parked or excluded.
+
+## Done
+
+Accepted by the repository owner on 2026-08-10 after review of the evidence packet. This closes the evidence inventory only: the proven Harness compatibility cleanup requires a separately selected local work record, and the four incomplete mappings remain parked with their named owners. No record is pruned.
 
 ## Discussion
 

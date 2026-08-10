@@ -4,7 +4,7 @@ title: Deploy Specifications fleetwide
 area: GOV
 theme: governance-consistency
 horizon: now
-status: awaiting-review
+status: done
 blocks: []
 blocked_by: []
 baseline_ref: ba91c843419820f6c37679abd8691c665bed951d
@@ -185,6 +185,10 @@ The write boundary remains this roadmap item only. No peer record, configuration
 ### Mini recap
 
 The estate count reconciles at sixteen, the current pilot conforms mechanically, and every eligible uncovered repository now has a bounded proposal ready for its receiver's decision.
+
+## Done
+
+Accepted by the repository owner on 2026-08-10 after review of the evidence packet. This closes the Harness-owned inventory and proposal boundary only: the eleven receiver-owned proposals remain subject to their repositories' independent trade receipt, disposition, and local roadmap processes. No record is pruned.
 
 ## Discussion
 
