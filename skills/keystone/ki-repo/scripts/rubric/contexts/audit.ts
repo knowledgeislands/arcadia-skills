@@ -725,7 +725,7 @@ async function auditRepo(
   const liveKey = r.licenseInfo?.key ?? null
   // GH-2: declared license, cross-checked against live GitHub + package.json
   if (proprietary) {
-    if (liveKey && !['other', 'noassertion'].includes(liveKey))
+    if (liveKey && !['other', 'noassertion', 'unlicensed'].includes(liveKey))
       fail('GH-2', `${KI_CONFIG} declares a proprietary license but GitHub reports "${liveKey}"`)
   } else if (liveKey !== declaredKey) {
     fail('GH-2', `license is "${liveKey ?? 'none'}" (want ${declaredLicense} per ${KI_CONFIG})`)
