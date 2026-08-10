@@ -62,3 +62,15 @@ The records are independent and may run in parallel after fresh preflight. The o
 ## Approval
 
 Approved by the user at 2026-08-10T08:23:38Z for the exact named set and four-hour timebox above. It grants no authority beyond this record's scope or completion target.
+
+## Run ledger
+
+| Item | Start | Result | Evidence | Next human action |
+| --- | --- | --- | --- | --- |
+| KI-HARNESS-GOV-028 | ready | awaiting-review | `ba91c843` → `8cb15618`; roadmap and authoring audits pass | Review the `ki-website` upload disposition. |
+| KI-HARNESS-GOV-031 | ready | awaiting-review | `ba91c843` → `8cb15618`; roadmap and authoring audits pass | Review the plan-provenance cleanup and four parked maps. |
+| KI-HARNESS-GOV-002 | ready | awaiting-review | `ba91c843` → `8cb15618`; `tools-ki` `ki-specs`, roadmap, and authoring audits pass | Review eleven receiver-facing proposals. |
+
+## Batch recap
+
+The three independent records reached `awaiting-review` without peer writes, side-effecting script invocation, a push, release, closure, or prune. GOV-028 routed one remote-upload decision to `ki-website`; GOV-031 retained four incomplete mappings and one future Harness cleanup for human selection; GOV-002 prepared eleven receiver-facing `ki-specs` proposals. A review-packet heading gap was discovered during orchestration and is being routed to the roadmap skill separately; it did not widen any item’s delivery scope.

@@ -167,6 +167,7 @@ Recorded two covered repositories, eleven adoption candidates, three structural 
 
 ### Verification
 
+- Integrated batch result: `8cb15618ff1e9d0da5441d5c9e701f73a94984a8`.
 - `ki repo audit --skill ki-specs --repo ../tools-ki` — passed with no FAIL or WARN findings.
 - Exact-name search across `tools-ki/src/tests/cli/repo/repo.test.ts` and `targets.test.ts` — all seven requirement hooks found.
 - `git -C ../tools-ki diff --quiet -- docs/specs/index.md docs/specs/repository-audit.md src/tests/cli/repo/repo.test.ts src/tests/cli/repo/targets.test.ts` — exit 0; pilot evidence paths match `tools-ki` HEAD.

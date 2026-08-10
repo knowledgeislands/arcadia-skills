@@ -96,7 +96,7 @@ Recorded thirteen active internal families already on V1, one complete Harness V
 
 ### Verification
 
-The immutable baseline is `ba91c843419820f6c37679abd8691c665bed951d`. Per the batch worker authority, no result commit was created; the target-only working-tree diff is the hand-off evidence for the orchestrator's eventual integration reference.
+The immutable baseline is `ba91c843419820f6c37679abd8691c665bed951d`; the integrated batch result is `8cb15618ff1e9d0da5441d5c9e701f73a94984a8`.
 
 - `git diff --check -- docs/roadmap/KI-HARNESS-GOV-031-normalise-schema-versions.md` passed.
 - `ki repo audit --skill ki-change-management-roadmap --repo .` passed with `FAIL=0 WARN=0`.

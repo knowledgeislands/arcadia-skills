@@ -96,6 +96,7 @@ The inventory classifies 105 scripts as necessary public entrypoints, two as use
 
 ### Verification
 
+- Integrated batch result: `8cb15618ff1e9d0da5441d5c9e701f73a94984a8`.
 - `ki repo audit --skill ki-change-management-roadmap --repo .` — PASS.
 - `ki repo audit --skill ki-authoring --repo .` — PASS.
 - Manifest reconciliation using `rg --files ... -g package.json` plus `jq` over every accessible in-scope manifest — 11 regular manifests, 108 scripts, and 59 `ki:*` scripts; the per-manifest counts sum exactly to the inventory.
