@@ -56,7 +56,8 @@ import = ["work", "knowledge"]
 import = ["knowledge"]
 
 [skills.ki-trades.routes."krisb/dotfiles"]
-export = ["work"]
+export = ["work", "knowledge"]
+import = ["work", "knowledge"]
 
 [skills.ki-git]
 
