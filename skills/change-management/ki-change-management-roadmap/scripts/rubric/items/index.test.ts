@@ -149,9 +149,9 @@ test('a flat work item and concise root orientation conform', () => {
 test('frontmatter keys use snake_case', () => {
   const repository = createFixture()
   const item = join(repository, 'docs', 'roadmap', 'TEST-001-build-the-foundation.md')
-  writeFileSync(item, readFileSync(item, 'utf8').replace('blocked_by: []', 'blocked_by: []'))
+  writeFileSync(item, readFileSync(item, 'utf8').replace('blocked_by: []', 'blocked-by: []'))
   expect(inspectRoadmap(repository)).toContainEqual(
-    expect.objectContaining({ area: 'ITEM-1', msg: 'frontmatter line is invalid: blocked_by: []' })
+    expect.objectContaining({ area: 'ITEM-1', msg: 'frontmatter line is invalid: blocked-by: []' })
   )
 })
 
@@ -291,9 +291,18 @@ test('awaiting-review Steps are all checked', () => {
       )
   )
   expect(inspectRoadmap(repository).filter((finding) => finding.area === 'ITEM-3')).toEqual([])
+  writeFileSync(item, readFileSync(item, 'utf8').replace('### Delivered', '### Delivered boundary'))
+  expect(inspectRoadmap(repository)).toContainEqual(
+    expect.objectContaining({
+      area: 'ITEM-3',
+      msg: '## Review must contain Delivered → Summary of changes → Verification → Outstanding concerns → Post-change review → Mini recap in order'
+    })
+  )
   writeFileSync(
     item,
-    readFileSync(item, 'utf8').replace('- [x] Implement the first slice.', '- [ ] Implement the first slice.')
+    readFileSync(item, 'utf8')
+      .replace('### Delivered boundary', '### Delivered')
+      .replace('- [x] Implement the first slice.', '- [ ] Implement the first slice.')
   )
   expect(inspectRoadmap(repository)).toContainEqual(
     expect.objectContaining({ area: 'ITEM-3', msg: 'awaiting-review and done items must mark every Step as - [x]' })

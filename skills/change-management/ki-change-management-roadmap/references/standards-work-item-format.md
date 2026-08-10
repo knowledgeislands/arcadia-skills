@@ -163,7 +163,7 @@ Record material departures, decisions, and newly discovered constraints under th
 
 ### Awaiting review
 
-Before setting `status: awaiting-review`, insert `## Review` immediately before `Discussion` with `### Delivered`, `### Summary of changes`, `### Verification`, `### Outstanding concerns`, `### Post-change review`, and `### Mini recap` in that order.
+Before setting `status: awaiting-review`, insert `## Review` immediately before `Discussion` with `### Delivered`, `### Summary of changes`, `### Verification`, `### Outstanding concerns`, `### Post-change review`, and `### Mini recap` in that exact order. The roadmap checker enforces this review-packet shape.
 
 This is the required evidence and review packet for an explicit acceptance decision. `ki-accept` records the interactive review outcome here before closure.
 

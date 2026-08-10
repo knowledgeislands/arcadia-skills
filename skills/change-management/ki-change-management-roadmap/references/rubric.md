@@ -104,7 +104,7 @@ The exact concise root orientation for flat work items.
 
 In-place execution shape and lifecycle integrity.
 
-- **EXEC-1 [M] — in-place execution record** — A work item entering execution retains its concise issue context and adds the required execution sections in the same file. (standards-work-item-format.md)
+- **EXEC-1 [M] — in-place execution record** — A work item entering execution retains its concise issue context and adds the required execution sections in the same file; awaiting-review and done records carry the ordered review packet. (standards-work-item-format.md)
   - _Remediation:_ diagnostic — Restore the required in-place execution sections without changing the item priority, acceptance, or lifecycle decision.
 - **EXEC-2 [J] — stage-appropriate work-item detail** — Future items preserve the issue and its discussion; Soon adds useful shaping; immediate and active items have concrete Steps, checkable Verify, honest Current state, and minimal Files touched. (standards-work-item-format.md)
   - _Evidence scope:_ The stage-appropriate detail in every canonical work item.

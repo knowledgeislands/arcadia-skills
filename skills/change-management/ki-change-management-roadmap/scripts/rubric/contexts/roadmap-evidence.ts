@@ -230,6 +230,14 @@ const roadmapConfiguration = (repository: string): RoadmapConfiguration | undefi
 }
 
 const EXECUTION_SECTIONS = ['Current state', 'Steps', 'Files touched', 'Verify', 'Dependencies / blocks'] as const
+const REVIEW_SECTIONS = [
+  'Delivered',
+  'Summary of changes',
+  'Verification',
+  'Outstanding concerns',
+  'Post-change review',
+  'Mini recap'
+] as const
 
 const requiredSections = (item: WorkItem): readonly string[] => {
   const sections: string[] = ['Goal', 'Context', 'Boundary']
@@ -254,6 +262,9 @@ const sectionContent = (body: string, heading: string): string | undefined => {
     .join('\n')
     .trim()
 }
+
+const subsectionHeadings = (content: string): readonly string[] =>
+  content.split(/\r?\n/).flatMap((line) => line.match(/^###\s+(.+?)\s*#*\s*$/)?.[1] ?? [])
 
 const validateSteps = (item: WorkItem): void => {
   const content = sectionContent(item.body, 'Steps')
@@ -280,6 +291,11 @@ const validateBody = (item: WorkItem): void => {
   if (present.at(-1) !== 'Discussion')
     add('FAIL', 'ITEM-3', '## Discussion must be the final top-level section', FORMAT, item.file)
   if (required.includes('Steps')) validateSteps(item)
+  if (item.status === 'awaiting-review' || item.status === 'done') {
+    const review = sectionContent(item.body, 'Review')
+    if (review && JSON.stringify(subsectionHeadings(review)) !== JSON.stringify(REVIEW_SECTIONS))
+      add('FAIL', 'ITEM-3', `## Review must contain ${REVIEW_SECTIONS.join(' → ')} in order`, FORMAT, item.file)
+  }
 }
 
 const parseItem = (repository: string, name: string, configuration?: RoadmapConfiguration): WorkItem | undefined => {

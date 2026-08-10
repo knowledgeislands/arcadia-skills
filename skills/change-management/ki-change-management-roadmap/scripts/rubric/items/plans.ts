@@ -27,7 +27,7 @@ const mechanical = (
 const EXEC_1 = mechanical(
   'EXEC-1',
   'in-place execution record',
-  'A work item entering execution retains its concise issue context and adds the required execution sections in the same file.',
+  'A work item entering execution retains its concise issue context and adds the required execution sections in the same file; awaiting-review and done records carry the ordered review packet.',
   'Every execution record is an enriched canonical work item.'
 )
 
