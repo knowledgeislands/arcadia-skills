@@ -34,7 +34,7 @@ Carries the universal **AUDIT · CONFORM · EDUCATE · REFRESH**, plus **NEW** (
 
 ### Mode EDUCATE
 
-→ Activate this skill with `ki skill repo add ki-specs`; the hosted EDUCATE mode renders its concern and rubric. Use [NEW](references/mode-new.md) to author the first area and index from the exemplars.
+→ Activate this skill with `ki repo skill add ki-specs`; the hosted EDUCATE mode renders its concern and rubric. Use [NEW](references/mode-new.md) to author the first area and index from the exemplars.
 
 ### Mode AUDIT
 
