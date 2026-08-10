@@ -146,7 +146,7 @@ test('a symlinked output is never proposed or followed', () => {
   expect(readFileSync(outside, 'utf8')).toBe('outside\n')
 })
 
-test('a zone alias cannot propose a create through an intermediate symlink', () => {
+test('a zone alias may propose a create through an intermediate symlink', () => {
   const repository = createBase()
   const outside = mkdtempSync(join(tmpdir(), 'ki-repo-kb-outside-'))
   temporaryDirectories.push(outside)
@@ -161,6 +161,6 @@ test('a zone alias cannot propose a create through an intermediate symlink', () 
   const zone = families.find((family) => family.code === 'ZONE')
   zone?.items.find((item) => item.code === 'ZONE-2')?.mechanical?.conform?.run(zone.selectContext(context))
 
-  expect(session.proposal().writes.some((write) => write.path.startsWith('linked/'))).toBe(false)
+  expect(session.proposal().writes.some((write) => write.path.startsWith('linked/'))).toBe(true)
   expect(existsSync(join(outside, 'Resources', 'linked', 'Resources.md'))).toBe(false)
 })

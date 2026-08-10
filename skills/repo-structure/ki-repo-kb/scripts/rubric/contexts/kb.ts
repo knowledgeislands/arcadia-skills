@@ -1,4 +1,4 @@
-import { existsSync, lstatSync, readdirSync, readFileSync } from 'node:fs'
+import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs'
 import { dirname, isAbsolute, join, relative, resolve } from 'node:path'
 import type {
   AuditOutcome,
@@ -29,10 +29,8 @@ export type KbEvidenceFinding = {
   subject?: string
 }
 
-const isDirectory = (path: string): boolean =>
-  existsSync(path) && !lstatSync(path).isSymbolicLink() && lstatSync(path).isDirectory()
-const isFile = (path: string): boolean =>
-  existsSync(path) && !lstatSync(path).isSymbolicLink() && lstatSync(path).isFile()
+const isDirectory = (path: string): boolean => existsSync(path) && statSync(path).isDirectory()
+const isFile = (path: string): boolean => existsSync(path) && statSync(path).isFile()
 const sample = (values: readonly string[], maximum = 10): string =>
   `${values.slice(0, maximum).join('; ')}${values.length > maximum ? `; …+${values.length - maximum} more` : ''}`
 
