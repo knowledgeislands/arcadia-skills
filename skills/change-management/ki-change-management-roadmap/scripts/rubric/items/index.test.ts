@@ -149,9 +149,9 @@ test('a flat work item and concise root orientation conform', () => {
 test('frontmatter keys use snake_case', () => {
   const repository = createFixture()
   const item = join(repository, 'docs', 'roadmap', 'TEST-001-build-the-foundation.md')
-  writeFileSync(item, readFileSync(item, 'utf8').replace('blocked_by: []', 'blocked-by: []'))
+  writeFileSync(item, readFileSync(item, 'utf8').replace('blocked_by: []', 'blocked_by: []'))
   expect(inspectRoadmap(repository)).toContainEqual(
-    expect.objectContaining({ area: 'ITEM-1', msg: 'frontmatter line is invalid: blocked-by: []' })
+    expect.objectContaining({ area: 'ITEM-1', msg: 'frontmatter line is invalid: blocked_by: []' })
   )
 })
 
