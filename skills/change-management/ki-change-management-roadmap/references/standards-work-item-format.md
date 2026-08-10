@@ -34,12 +34,12 @@ horizon: future
 status: draft
 candidate: true
 blocks: []
-blocked-by: []
-baseline-ref: null
+blocked_by: []
+baseline_ref: null
 ---
 ```
 
-`id`, `title`, `theme`, `horizon`, `status`, `blocks`, `blocked-by`, and `baseline-ref` are required. `area` is required only when the repository configures fixed issuing areas, and prohibited otherwise.
+`id`, `title`, `theme`, `horizon`, `status`, `blocks`, `blocked_by`, and `baseline_ref` are required. `area` is required only when the repository configures fixed issuing areas, and prohibited otherwise.
 
 `title` contains at most four words. It is a compact human label for lists and reports; put scope and nuance in the Goal and Context rather than extending the title.
 
@@ -49,17 +49,17 @@ baseline-ref: null
 
 `status` is `draft`, `ready`, `in-progress`, `awaiting-review`, or `done`.
 
-`blocks` and `blocked-by` are arrays of item identifiers and use `[]` when empty.
+`blocks` and `blocked_by` are arrays of item identifiers and use `[]` when empty.
 
-`waiting-on-trades` is an optional flat array of unique `TRD-<eight-hex>` identities. It is valid only when `horizon: waiting-for` and records observed cross-repository conditions rather than local work-item dependencies. Do not place trade identities in `blocks` or `blocked-by`.
+`waiting_on_trades` is an optional flat array of unique `TRD-<eight-hex>` identities. It is valid only when `horizon: waiting-for` and records observed cross-repository conditions rather than local work-item dependencies. Do not place trade identities in `blocks` or `blocked_by`.
 
-`baseline-ref` is `null` until execution begins, then the immutable full lowercase commit ID.
+`baseline_ref` is `null` until execution begins, then the immutable full lowercase commit ID.
 
 `theme` is the human-readable kebab-case project grouping.
 
 `area` is the immutable issuing code included in an area-qualified identifier. It is not a theme or mutable group.
 
-An optional non-empty `transferred-from` records a durable handoff origin.
+An optional non-empty `transferred_from` records a durable handoff origin.
 
 ## Body
 
@@ -157,7 +157,7 @@ Every Step is a Markdown task-list item. New and Ready plans use `- [ ]`; implem
 
 ### In progress
 
-The implementation process records the immutable full `HEAD` commit in `baseline-ref`, sets `status: in-progress`, and marks completed Steps `- [x]` without deleting them.
+The implementation process records the immutable full `HEAD` commit in `baseline_ref`, sets `status: in-progress`, and marks completed Steps `- [x]` without deleting them.
 
 Record material departures, decisions, and newly discovered constraints under the relevant topic in the final `Discussion`; do not record routine activity.
 

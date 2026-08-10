@@ -6,8 +6,8 @@ theme: operations
 horizon: soon
 status: draft
 blocks: []
-blocked-by: [KI-HARNESS-GOV-026]
-baseline-ref: null
+blocked_by: [KI-HARNESS-GOV-026]
+baseline_ref: null
 ---
 
 ## Goal

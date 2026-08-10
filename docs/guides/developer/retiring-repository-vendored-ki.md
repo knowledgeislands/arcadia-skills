@@ -69,7 +69,7 @@ It does not replace the old bootstrap/scaffolding operation; decide each remaini
 
 ## Preserve a comparison baseline
 
-The governed plan records the full known-good commit ID in `baseline-ref` when execution starts, so the before and after states remain directly comparable.
+The governed plan records the full known-good commit ID in `baseline_ref` when execution starts, so the before and after states remain directly comparable.
 
 Resolve the immutable baseline directly:
 
@@ -80,15 +80,15 @@ git rev-parse HEAD
 Compare the baseline with the current branch locally:
 
 ```sh
-git diff --stat <baseline-ref>..HEAD
-git diff <baseline-ref>..HEAD
-git log --oneline <baseline-ref>..HEAD
+git diff --stat <baseline_ref>..HEAD
+git diff <baseline_ref>..HEAD
+git log --oneline <baseline_ref>..HEAD
 ```
 
 GitHub accepts the immutable commit ID in the same comparison URL:
 
 ```text
-https://github.com/<owner>/<repository>/compare/<baseline-ref>...main
+https://github.com/<owner>/<repository>/compare/<baseline_ref>...main
 ```
 
 A tag or release may still provide a convenient shared name, but neither is part of the clean-end-state cutover requirement.

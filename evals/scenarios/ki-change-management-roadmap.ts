@@ -46,14 +46,14 @@ export const scenarios: Scenario[] = [
     skill: 'ki-change-management-roadmap',
     id: 'repo-roadmap-blocks-graph',
     prompt:
-      "KI-WEB-SEO-005 cannot start until KI-WEB-CNT-004 is finished. I've added blocked-by: [KI-WEB-CNT-004] and would like to start it now in parallel. Anything wrong with that?",
+      "KI-WEB-SEO-005 cannot start until KI-WEB-CNT-004 is finished. I've added blocked_by: [KI-WEB-CNT-004] and would like to start it now in parallel. Anything wrong with that?",
     assertions: [
-      { name: 'blocked-by field', re: /blocked-by/i },
+      { name: 'blocked_by field', re: /blocked_by/i },
       { name: 'reverse blocks edge', re: /blocks/i },
       { name: 'identifier blocker reference', re: /KI-WEB-CNT-004/i },
       { name: 'no in-progress before blockers done', re: /done|finish|complete|wait|before/i }
     ],
     rubric:
-      'House fact: work-item identifiers are globally unique. blocks/blocked-by are bidirectional arrays, and no item may become ready or in-progress before its blockers are done.'
+      'House fact: work-item identifiers are globally unique. blocks/blocked_by are bidirectional arrays, and no item may become ready or in-progress before its blockers are done.'
   }
 ]

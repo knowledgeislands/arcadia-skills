@@ -6,8 +6,8 @@ theme: governance-consistency
 horizon: now
 status: ready
 blocks: []
-blocked-by: []
-baseline-ref: null
+blocked_by: []
+baseline_ref: null
 ---
 
 ## Goal

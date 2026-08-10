@@ -35,8 +35,8 @@ theme: foundation-tooling
 horizon: next
 status: draft
 blocks: []
-blocked-by: []
-baseline-ref: null
+blocked_by: []
+baseline_ref: null
 ---
 
 ## Goal
@@ -144,6 +144,15 @@ test('a flat work item and concise root orientation conform', () => {
   expect(inspectRoadmap(repository).filter((finding) => finding.level === 'FAIL')).toEqual([])
   expect(readFileSync(join(repository, 'ROADMAP.md'), 'utf8')).toContain('canonical structured Markdown work items')
   expect(readFileSync(join(repository, 'ROADMAP.md'), 'utf8')).not.toContain('TEST-001')
+})
+
+test('frontmatter keys use snake_case', () => {
+  const repository = createFixture()
+  const item = join(repository, 'docs', 'roadmap', 'TEST-001-build-the-foundation.md')
+  writeFileSync(item, readFileSync(item, 'utf8').replace('blocked_by: []', 'blocked-by: []'))
+  expect(inspectRoadmap(repository)).toContainEqual(
+    expect.objectContaining({ area: 'ITEM-1', msg: 'frontmatter line is invalid: blocked-by: []' })
+  )
 })
 
 test('an area-qualified work item uses its configured namespace and area ledger', () => {
@@ -274,7 +283,7 @@ test('awaiting-review Steps are all checked', () => {
     item,
     readFileSync(item, 'utf8')
       .replace('status: draft', 'status: awaiting-review')
-      .replace('baseline-ref: null', 'baseline-ref: 0123456789abcdef0123456789abcdef01234567')
+      .replace('baseline_ref: null', 'baseline_ref: 0123456789abcdef0123456789abcdef01234567')
       .replace('- [ ] Implement the first slice.', '- [x] Implement the first slice.')
       .replace(
         '## Discussion',
@@ -358,7 +367,7 @@ test('trade waits use a flat canonical identity array only at Waiting for', () =
     item,
     readFileSync(item, 'utf8')
       .replace('horizon: next', 'horizon: waiting-for')
-      .replace('blocked-by: []', 'blocked-by: []\nwaiting-on-trades: [TRD-1234abcd]')
+      .replace('blocked_by: []', 'blocked_by: []\nwaiting_on_trades: [TRD-1234abcd]')
       .replace(
         '\n## Current state\n\nThe first slice is not implemented.\n\n## Steps\n\n- [ ] Implement the first slice.\n\n## Files touched\n\n- `src/foundation.ts`\n\n## Verify\n\n- `bun test`\n\n## Dependencies / blocks\n\nNo dependencies.\n',
         '\n'
@@ -368,22 +377,22 @@ test('trade waits use a flat canonical identity array only at Waiting for', () =
 
   writeFileSync(item, readFileSync(item, 'utf8').replace('horizon: waiting-for', 'horizon: soon'))
   expect(inspectRoadmap(repository)).toContainEqual(
-    expect.objectContaining({ area: 'TRADE-2', msg: 'waiting-on-trades is valid only at the waiting-for horizon' })
+    expect.objectContaining({ area: 'TRADE-2', msg: 'waiting_on_trades is valid only at the waiting-for horizon' })
   )
 
   writeFileSync(
     item,
     readFileSync(item, 'utf8')
       .replace('horizon: soon', 'horizon: waiting-for')
-      .replace('waiting-on-trades: [TRD-1234abcd]', 'waiting-on-trades: [TRD-INVALID, TRD-INVALID]')
+      .replace('waiting_on_trades: [TRD-1234abcd]', 'waiting_on_trades: [TRD-INVALID, TRD-INVALID]')
   )
   expect(inspectRoadmap(repository)).toEqual(
     expect.arrayContaining([
       expect.objectContaining({
         area: 'TRADE-2',
-        msg: 'waiting-on-trades must contain only canonical trade identities'
+        msg: 'waiting_on_trades must contain only canonical trade identities'
       }),
-      expect.objectContaining({ area: 'TRADE-2', msg: 'waiting-on-trades must not repeat a trade identity' })
+      expect.objectContaining({ area: 'TRADE-2', msg: 'waiting_on_trades must not repeat a trade identity' })
     ])
   )
 })

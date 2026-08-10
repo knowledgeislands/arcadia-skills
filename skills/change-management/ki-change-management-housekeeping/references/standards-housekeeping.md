@@ -57,7 +57,7 @@ The body states the Goal, the check or maintenance Procedure, the evidence a suc
 | Overdue, `when-overdue` | Create the linked `draft` run at `spawn-horizon`; use `now` when the template declares it. |
 | Paused                  | Never create a run.                                                                        |
 
-The new run records `housekeeping-template` and `scheduled-for`. It is otherwise an ordinary roadmap item. `ki-accept` updates `last-run` and clears `active-run` only after the run has completed review, become `done`, and been committed.
+The new run records `housekeeping_template` and `scheduled_for`. It is otherwise an ordinary roadmap item. `ki-accept` updates `last-run` and clears `active-run` only after the run has completed review, become `done`, and been committed.
 
 ## KB adapter
 
