@@ -67,11 +67,15 @@ GOV-028 is accepted and supplies the factual finding. The current reciprocal KI 
 ### Worker: author-upload-follow-up-submission
 
 - **Deliverable:** One valid outbound `work` submission that presents the GOV-028 finding and receiver-owned options exactly.
+- **Inputs:** The accepted GOV-028 record, the current reciprocal route evidence, and the `ki-trades` submission contract.
 - **Files:** Write only the named path under `-/_TRADES/knowledgeislands/ki-website/`; do not stage or commit.
+- **Authority:** Create the named outbound submission only; do not upload, write to the receiver, set a disposition, stage, or commit.
+- **Isolation:** Shared worktree with exclusive write scope over the named submission path and no Git write commands.
 - **Definition of done:** One submitted record passes the local `ki-trades` audit and contains no receiver-local field.
 - **Model:** reasoning — remote-effect safety and receiver-ownership boundaries must remain exact.
-- **Verify:** Orchestrator compares the payload against GOV-028, rechecks the route and record shape, then runs the stated audits.
-- **Checkpoint:** Return with the record path, identity, and any route or payload stop; use `GIT_INDEX_FILE=/private/tmp/ki-harness-batch-002-gov037.index` for any Git staging and do not commit.
+- **Verify:** Coordinator compares the payload against GOV-028, rechecks the route and record shape, then runs the stated audits.
+- **Return:** Submission path and identity, verification evidence, and any route or payload stop; no receiver action.
+- **Checkpoint:** Return when the record and local audit evidence are complete, or at the first route or payload stop.
 
 ## Discussion
 

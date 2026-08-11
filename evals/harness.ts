@@ -32,6 +32,7 @@ import { homedir, tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { scenarios as websitesScenarios } from './scenarios/ki-repo-website.ts'
 import { scenarios as agentsScenarios } from './scenarios/ki-subagents.ts'
+import { scenarios as delegationScenarios } from './scenarios/ki-delegation.ts'
 import { scenarios as authoringScenarios } from './scenarios/ki-authoring.ts'
 import { scenarios as bootstrapScenarios } from './scenarios/ki-bootstrap.ts'
 import { scenarios as hostingScenarios } from './scenarios/ki-repo-website-cloudflare.ts'
@@ -58,6 +59,7 @@ export type Scenario = { skill: string; id: string; prompt: string; assertions: 
 const ALL: Scenario[] = [
   ...websitesScenarios,
   ...agentsScenarios,
+  ...delegationScenarios,
   ...authoringScenarios,
   ...bootstrapScenarios,
   ...hostingScenarios,

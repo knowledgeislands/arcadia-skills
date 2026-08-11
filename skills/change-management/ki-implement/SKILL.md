@@ -25,7 +25,7 @@ It does not choose work, create or reshape a plan, close a lifecycle, or delete 
 1. Preflight the repository adapter, exact record, readiness, approval, dependencies, and stated verification.
 2. Record immutable baseline evidence and transition only that record to `in-progress`.
 3. Apply the approved plan within its boundary.
-4. When bounded parallel work would improve delivery, use runtime subagents while retaining orchestration, review, and integration. If `ki-delegation` is active in the same scope, apply its packet standard before creating a durable delegation packet.
+4. When `ki-delegation` is active in the same scope, apply its suitability test and coordinator-first contract. For suitable substantial work, keep the primary agent available as coordinator while bounded subagents execute the approved worker lanes; otherwise continue locally. Create or confirm the durable packet before spawning workers.
 5. Review and integrate bounded results, run the required verification, and record the evidence.
 6. Create the required review packet, transition the record to `awaiting-review`, and stop.
 
@@ -39,7 +39,7 @@ The caller or `ki-accept` owns the next decision.
 
 `ki-plan` owns plan shape and readiness material; it does not replace this delivery procedure.
 
-Runtime subagents may execute bounded worker lanes when this item's approved plan calls for them; they do not confer execution authority. `ki-delegation`, when active, supplies the additional durable packet standard.
+Runtime subagents may execute bounded worker lanes when this item's approved plan calls for them; they do not confer execution authority. `ki-delegation`, when active, supplies the suitability decision, coordinator responsibilities, and durable packet standard. The primary agent retains human interaction, authority decisions, dependency ordering, integration, verification, and the final account of the work.
 
 `ki-batch` may coordinate repeated independent runs only under an explicit bounded authorisation.
 

@@ -27,9 +27,13 @@ The baseline describes the starting evidence; it is not a substitute for verific
 
 Follow the checked plan steps in order and preserve its boundary.
 
-Use runtime subagents only when the plan explicitly calls for delegation, or when an explicit authority record permits it. When `ki-delegation` is active in the same scope, read its packet standard before creating a durable delegation packet.
+Use runtime subagents only when the plan explicitly calls for delegation, or when an explicit authority record permits it. Delegation never supplies that authority.
 
-Every delegated unit must retain its bounded scope, locked decisions, escalation boundary, definition of done, and verification gate.
+When `ki-delegation` is active in the same scope, apply its suitability test before spawning a worker. For suitable substantial work, the primary agent becomes the coordinator: it keeps the human-interaction channel available, issues the approved bounded packets, sequences dependencies, replenishes ready independent lanes, resolves escalations, and retains integration and final verification. It does not duplicate an active worker's bounded task merely to appear busy.
+
+Create or confirm the durable delegation packet before spawning. Every delegated unit must retain the packet's inputs, bounded file or system scope, authority, isolation, locked decisions, escalation boundary, definition of done, verification gate, return contract, and checkpoint.
+
+Use the runtime's available sandbox, tool, permission, context, or worktree controls to enforce the packet as narrowly as practical. If the work is quick, tightly coupled, context-heavy, unsafe to isolate, more expensive to brief than execute, or unsupported by the available runtime, continue locally or serially without claiming governed delegation.
 
 Review and integrate every result before the next dependent unit.
 

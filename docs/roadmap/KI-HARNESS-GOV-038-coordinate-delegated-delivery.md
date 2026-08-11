@@ -44,12 +44,14 @@ This work does not depend on or change `AGENTS.md`, grant new execution authorit
 - `skills/governance/ki-delegation/`
 - `skills/change-management/ki-implement/`
 - `evals/scenarios/`
+- `evals/harness.ts`
+- `docs/roadmap/KI-HARNESS-GOV-037-route-command-follow-up.md`
 - `docs/roadmap/_ISSUES.md`
 - this work item
 
 ## Verify
 
-- `bunx vitest run skills/governance/ki-delegation/scripts/rubric/contexts/delegation.test.ts skills/governance/ki-delegation/scripts/rubric/items/index.test.ts`
+- `bun test skills/governance/ki-delegation/scripts/rubric/contexts/delegation.test.ts skills/governance/ki-delegation/scripts/rubric/items/index.test.ts`
 - `ki dev skill rubric ki-delegation`
 - `ki repo audit --skill ki-delegation --repo .`
 - `ki repo audit --skill ki-skills --repo .`
@@ -116,3 +118,11 @@ Coordinator-first is a suitability decision for substantial work that has indepe
 ### Source boundary
 
 The vendor guides are evidence for shared principles such as isolated contexts, bounded tools and permissions, background or parallel work, and a main-agent coordination role. They are not a portable mandate for either vendor's configuration surface.
+
+### Current-state migration
+
+The strengthened checker exposed one existing Ready packet in GOV-037 that used the earlier six-field worker shape. Bringing that packet forward with explicit inputs, authority, isolation, and return evidence is part of making the current repository conform; it does not change GOV-037's execution authority or outcome.
+
+### Verification runner
+
+The delegation rubric tests use Bun's native `bun:test` API and the repository does not declare Vitest. The targeted verification therefore uses `bun test` rather than the originally drafted `bunx vitest run` command.

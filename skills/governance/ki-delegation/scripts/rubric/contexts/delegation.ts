@@ -4,7 +4,23 @@ import type { AuditOutcome, RubricContextOptions, RubricSession } from '../../sh
 import type { DelegationRubricContext } from '../types.ts'
 
 const REQUIRED_SECTIONS = ['Locked decisions', 'Escalate', 'Rounds']
-const REQUIRED_WORKER_FIELDS = ['Deliverable', 'Files', 'Definition of done', 'Model', 'Verify', 'Checkpoint']
+const REQUIRED_WORKER_FIELDS = [
+  'Deliverable',
+  'Inputs',
+  'Files',
+  'Authority',
+  'Isolation',
+  'Definition of done',
+  'Model',
+  'Verify',
+  'Return',
+  'Checkpoint'
+]
+
+const ROADMAP_ADAPTERS = [
+  ['docs', 'roadmap'],
+  ['Streams', 'Roadmap']
+] as const
 
 const delegationSection = (content: string): string | null => {
   const match = /^## Delegation\s*$(?<section>[\s\S]*?)(?=^##\s|$(?![\s\S]))/m.exec(content)
@@ -27,7 +43,7 @@ const packetOutcomes = (subject: string, section: string): AuditOutcome[] => {
     return [{ status: 'NOT_APPLICABLE', message: 'The delegation note is not an opted-in delegation packet.', subject }]
   const violations: AuditOutcome[] = []
   for (const heading of REQUIRED_SECTIONS)
-    if (!sectionHasContent(section, heading) && !(heading === 'Escalate' && sectionHasContent(section, 'Escalation')))
+    if (!sectionHasContent(section, heading))
       violations.push({
         status: 'VIOLATION',
         message: `Delegation packet requires a non-empty \`${heading}\` section.`,
@@ -57,13 +73,17 @@ export const createDelegationSession = ({
   repository
 }: RubricContextOptions): RubricSession<DelegationRubricContext> => {
   const root = resolve(repository)
-  const roadmap = join(root, 'docs', 'roadmap')
   const outcomes: AuditOutcome[] = []
+  const presentAdapters: string[] = []
 
-  if (!existsSync(roadmap))
-    outcomes.push({ status: 'NOT_APPLICABLE', message: 'No roadmap directory is present.', subject: 'docs/roadmap' })
-  else
-    for (const entry of readdirSync(roadmap, { withFileTypes: true })) {
+  for (const adapter of ROADMAP_ADAPTERS) {
+    const roadmap = join(root, ...adapter)
+    if (!existsSync(roadmap)) continue
+    presentAdapters.push(adapter.join('/'))
+    const entries = readdirSync(roadmap, { withFileTypes: true }).sort((left, right) =>
+      left.name.localeCompare(right.name)
+    )
+    for (const entry of entries) {
       if (!entry.isFile() || !entry.name.endsWith('.md')) continue
       const path = join(roadmap, entry.name)
       const content = readFileSync(path, 'utf8')
@@ -72,9 +92,16 @@ export const createDelegationSession = ({
       const subject = relative(root, path)
       outcomes.push(...packetOutcomes(subject, section))
     }
+  }
 
   if (!outcomes.length)
-    outcomes.push({ status: 'NOT_APPLICABLE', message: 'No delegation packets are present.', subject: 'docs/roadmap' })
+    outcomes.push({
+      status: 'NOT_APPLICABLE',
+      message: presentAdapters.length
+        ? 'No delegation packets are present.'
+        : 'No roadmap adapter directory is present.',
+      subject: presentAdapters.join(', ') || 'docs/roadmap or Streams/Roadmap'
+    })
   const context: DelegationRubricContext = {
     packets: {
       outcomes
