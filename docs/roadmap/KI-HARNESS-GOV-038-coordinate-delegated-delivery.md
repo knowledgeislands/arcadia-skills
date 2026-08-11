@@ -4,7 +4,7 @@ area: GOV
 title: Coordinate delegated delivery
 theme: governance-consistency
 horizon: next
-status: in-progress
+status: awaiting-review
 blocks: []
 blocked_by: []
 baseline_ref: bb4eb190744ed65d9c73c456bfa13ed8eb55dd90
@@ -32,12 +32,12 @@ This work does not depend on or change `AGENTS.md`, grant new execution authorit
 
 ## Steps
 
-- [ ] Define the portable coordinator-first suitability test and responsibility split in `ki-delegation` while preserving its authority boundary.
-- [ ] Record the official OpenAI and Anthropic subagent guides as dated sources and extract only shared portable principles.
-- [ ] Strengthen delegation packets with explicit inputs, authority, isolation, return, and existing completion and verification fields.
-- [ ] Extend mechanical checks, negative tests, adapter coverage, and evaluation scenarios for the strengthened contract.
-- [ ] Update `ki-implement` to apply the `ki-delegation` coordinator contract during authorised execution.
-- [ ] Regenerate publications, run the relevant audits and repository gates, and prepare the required review packet.
+- [x] Define the portable coordinator-first suitability test and responsibility split in `ki-delegation` while preserving its authority boundary.
+- [x] Record the official OpenAI and Anthropic subagent guides as dated sources and extract only shared portable principles.
+- [x] Strengthen delegation packets with explicit inputs, authority, isolation, return, and existing completion and verification fields.
+- [x] Extend mechanical checks, negative tests, adapter coverage, and evaluation scenarios for the strengthened contract.
+- [x] Update `ki-implement` to apply the `ki-delegation` coordinator contract during authorised execution.
+- [x] Regenerate publications, run the relevant audits and repository gates, and prepare the required review packet.
 
 ## Files touched
 
@@ -108,6 +108,41 @@ Escalate source conflicts, any proposed authority expansion, a need for runtime-
 - **Checkpoint:** Stop after targeted checks pass or the first unresolved contract ambiguity is documented.
 
 The primary agent owns the `ki-implement` changes, lifecycle transitions, cross-lane review, derived publication, full verification, and final response to the human.
+
+## Review
+
+### Delivered
+
+The portable delegation standard now recommends a human-facing coordinator for suitable substantial work, defines when work should remain local, and requires sandbox-conscious worker briefs. `ki-implement` applies the contract during authorised execution without depending on `AGENTS.md` or granting new authority.
+
+### Summary of changes
+
+- Added a four-part suitability test, coordinator and worker responsibility split, least-authority isolation guidance, fallback behaviour, and rolling worker replenishment.
+- Added dated OpenAI Codex and Anthropic Claude Code subagent sources with a quarterly refresh cadence while excluding vendor-specific settings from the portable contract.
+- Added `Inputs`, `Authority`, `Isolation`, and `Return` to the required worker fields; removed the legacy `Escalation` heading alias; and added project plus Knowledge Base adapter coverage.
+- Added three registered evaluation scenarios and migrated the existing GOV-037 Ready packet to the current shape.
+
+The immutable baseline is `bb4eb190744ed65d9c73c456bfa13ed8eb55dd90`. Lifecycle start is `c9f600eaad4765bceef81525aabe6ff58658b482`; the implementation is `3b4517bde33635c2cfb46e43ed27a962858b8ec4`.
+
+### Verification
+
+- Targeted delegation rubric tests: 16 passed, 0 failed.
+- Generated `ki-delegation` rubric publication: in sync.
+- `ki-delegation`, `ki-skills`, `ki-authoring`, and `ki-change-management-roadmap` audits: pass with no findings.
+- Repository suite: 358 passed, 0 failed.
+- TypeScript no-emit gate, targeted Biome checks, Markdown checks, and Git diff check: pass.
+
+### Outstanding concerns
+
+The three behavioural eval scenarios are registered but were not run against a live vendor model because that advisory harness spends external model quota and is not a repository gate. No implementation concern blocks review.
+
+### Post-change review
+
+The optional dependency remains optional: without active `ki-delegation`, `ki-implement` does not claim the governed packet contract. With it active, the suitability decision avoids compulsory delegation, the packet cannot expand authority, and unenforceable isolation falls back to a safer read-only lane or local execution. The existing repository packet migration passes the strengthened checker without changing that item's intended outcome.
+
+### Mini recap
+
+Coordinator-first delegation is now portable skill doctrine rather than repository orientation. The implementation used the new pattern itself: two disjoint worker lanes returned bounded changes, and the primary agent integrated, migrated, verified, committed, and prepared this review evidence.
 
 ## Discussion
 
