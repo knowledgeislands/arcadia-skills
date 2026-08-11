@@ -4,10 +4,10 @@ area: GOV
 title: Coordinate delegated delivery
 theme: governance-consistency
 horizon: next
-status: ready
+status: in-progress
 blocks: []
 blocked_by: []
-baseline_ref: null
+baseline_ref: bb4eb190744ed65d9c73c456bfa13ed8eb55dd90
 ---
 
 # Coordinate delegated delivery
