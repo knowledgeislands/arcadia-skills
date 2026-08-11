@@ -4,7 +4,7 @@ area: GOV
 title: Coordinate delegated delivery
 theme: governance-consistency
 horizon: next
-status: awaiting-review
+status: done
 blocks: []
 blocked_by: []
 baseline_ref: bb4eb190744ed65d9c73c456bfa13ed8eb55dd90
@@ -143,6 +143,10 @@ The optional dependency remains optional: without active `ki-delegation`, `ki-im
 ### Mini recap
 
 Coordinator-first delegation is now portable skill doctrine rather than repository orientation. The implementation used the new pattern itself: two disjoint worker lanes returned bounded changes, and the primary agent integrated, migrated, verified, committed, and prepared this review evidence.
+
+## Done
+
+Accepted on 2026-08-12 following explicit human approval. The delivered boundary and verification recorded above are accepted; the unrun advisory live-model evaluation remains a documented non-blocking concern. This record is retained as completion history.
 
 ## Discussion
 
