@@ -87,6 +87,8 @@ Phase 0 and dependency ordering are complete. Phase 1 and Phase 2 review and rem
 | 35 | [`ki-repo-website`](ki-repo-website.md)       | complete | review only  | —          |
 | 36 | [`ki-repo-website-cloudflare`](ki-repo-website-cloudflare.md) | complete | review only | —          |
 | 37 | [`ki-repo-plugins`](ki-repo-plugins.md)       | complete | review only  | —          |
+| 38 | [`ki-repo-tools`](ki-repo-tools.md)           | complete | review only  | —          |
+| 39 | [`ki-repo-homebrew-tap`](ki-repo-homebrew-tap.md) | complete | review only | —          |
 
 The [Phase 1 synthesis](phase-1-synthesis.md) and [Phase 2 synthesis](phase-2-synthesis.md) retain cross-skill conclusions. Detailed applied changes and remaining gaps live only in each skill record.
 
