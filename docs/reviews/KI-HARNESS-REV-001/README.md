@@ -31,7 +31,7 @@ The allowed proposed dispositions are `retain`, `revise`, `consolidate`, `split`
 - Inventory and dependency baseline: complete.
 - Phase 1: complete. [`ki-skills`](ki-skills.md), [`ki-authoring`](ki-authoring.md), [`ki-git`](ki-git.md), [`ki-engineering`](ki-engineering.md), [`ki-repo`](ki-repo.md), and [`ki-delegation`](ki-delegation.md) each currently propose `revise` before grading.
 - Phase 1 dependency and ownership reconciliation: [complete](phase-1-synthesis.md); no review-order change required.
-- Phase 2: in progress. [`ki-change-management`](ki-change-management.md) proposes `revise`; its base-selector review requires no order change and records adapter-specific checks for Round 5.
+- Phase 2: in progress. [`ki-change-management`](ki-change-management.md), [`ki-change-management-roadmap`](ki-change-management-roadmap.md), [`ki-change-management-github-issues`](ki-change-management-github-issues.md), and [`ki-change-management-linear`](ki-change-management-linear.md) propose `revise`; no order change is required.
 - Phases 3–6: pending.
 
 ## Evidence rules
