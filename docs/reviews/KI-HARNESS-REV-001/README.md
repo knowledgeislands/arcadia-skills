@@ -71,6 +71,11 @@ Phase 0, the inventory, and dependency ordering are complete. Phase 1 and Phase 
 | 19 | [`ki-specs`](ki-specs.md)                     | complete | review only  | —          |
 | 20 | [`ki-guides`](ki-guides.md)                   | complete | review only  | —          |
 | 21 | [`ki-checkpoint`](ki-checkpoint.md)           | complete | review only  | —          |
+| 22 | [`ki-trades`](ki-trades.md)                   | complete | review only  | —          |
+| 23 | [`ki-trade`](ki-trade.md)                     | complete | review only  | —          |
+| 24 | [`ki-agora`](ki-agora.md)                     | complete | review only  | —          |
+| 25 | [`ki-communication`](ki-communication.md)     | complete | review only  | —          |
+| 26 | [`ki-subagents`](ki-subagents.md)             | complete | review only  | —          |
 
 The [Phase 1 synthesis](phase-1-synthesis.md) and [Phase 2 synthesis](phase-2-synthesis.md) retain cross-skill conclusions. Detailed applied changes and remaining gaps live only in each skill record.
 
