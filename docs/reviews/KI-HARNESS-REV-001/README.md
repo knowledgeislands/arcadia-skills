@@ -54,7 +54,7 @@ Each completed review or phase may expose a reusable effectiveness check. Distil
 
 ## Progress
 
-Phase 0 and dependency ordering are complete. Phase 1 and Phase 2 review and remediation are complete. Phases 3–5 are complete. Phase 6 review is next.
+Phase 0 and dependency ordering are complete. Phase 1 and Phase 2 review and remediation are complete. Phases 3–5 are complete. Phase 6 review is in progress.
 
 | #  | Skill                                        | Review   | Change state | Evidence   |
 | -: | -------------------------------------------- | -------- | ------------ | ---------- |
@@ -106,6 +106,7 @@ Phase 0 and dependency ordering are complete. Phase 1 and Phase 2 review and rem
 | 46 | [`ki-tokenomics`](ki-tokenomics.md)           | complete | review only  | —          |
 | 47 | [`ki-tokenomics-claude`](ki-tokenomics-claude.md) | complete | review only | —          |
 | 48 | [`ki-tokenomics-codex`](ki-tokenomics-codex.md) | complete | review only | —          |
+| 49 | [`ki-repo-harness`](ki-repo-harness.md)       | complete | review only  | —          |
 
 The [Phase 1 synthesis](phase-1-synthesis.md), [Phase 2 synthesis](phase-2-synthesis.md), [Phase 3 synthesis](phase-3-synthesis.md), [Phase 4 synthesis](phase-4-synthesis.md), and [Phase 5 synthesis](phase-5-synthesis.md) retain cross-skill conclusions. Detailed applied changes and remaining gaps live only in each skill record.
 
