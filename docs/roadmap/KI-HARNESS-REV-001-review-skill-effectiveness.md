@@ -126,7 +126,7 @@ Reconcile the three surfaces against one another and the canonical skill set. Re
 
 ## Current state
 
-The Harness review has completed the standing-guidance audit and 48 of 50 dependency-ordered skill reviews. Approved Phase 1 and Phase 2 remediations are applied and recorded per skill in [the review evidence](../reviews/KI-HARNESS-REV-001/README.md). Phases 3–5 are reviewed, ungraded, and unremediated. Phase 6 will review the aggregate Harness and `ki-bootstrap` entry point.
+The Harness review has completed the standing-guidance audit and all 50 dependency-ordered skill reviews. Approved Phase 1 and Phase 2 remediations are applied and recorded per skill in [the review evidence](../reviews/KI-HARNESS-REV-001/README.md). Phase 3–6 findings are reviewed, ungraded, and unremediated. The cumulative calibration and coverage check is in progress before the disposition and grading approval gate.
 
 No grade scale or remediation queue is approved yet. The ordered inventory and common checks above are the planning basis for collecting comparable evidence before those decisions.
 

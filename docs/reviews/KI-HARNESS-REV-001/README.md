@@ -51,10 +51,12 @@ Each completed review or phase may expose a reusable effectiveness check. Distil
 - Separate canonical source, render, applied target, registration, installation, activation, and loaded runtime capability.
 - Report name parity, configuration state, authentication, reachability, and usable tools as distinct claims.
 - Limit runtime passes to direct observations; effective model, context, memory use, and active tools require authorized session evidence.
+- Distinguish source checkout, verified payload, development source, activation links, declaration, and executed runtime capability.
+- Verify guidance-only command examples against the installed executable even when no native rubric is warranted.
 
 ## Progress
 
-Phase 0 and dependency ordering are complete. Phase 1 and Phase 2 review and remediation are complete. Phases 3–5 are complete. Phase 6 review is in progress.
+Phase 0, dependency ordering, and all 50 skill reviews are complete. Phase 1 and Phase 2 remediation is applied. Phase 3–6 findings remain review-only pending grading and disposition approval.
 
 | #  | Skill                                        | Review   | Change state | Evidence   |
 | -: | -------------------------------------------- | -------- | ------------ | ---------- |
@@ -107,8 +109,9 @@ Phase 0 and dependency ordering are complete. Phase 1 and Phase 2 review and rem
 | 47 | [`ki-tokenomics-claude`](ki-tokenomics-claude.md) | complete | review only | —          |
 | 48 | [`ki-tokenomics-codex`](ki-tokenomics-codex.md) | complete | review only | —          |
 | 49 | [`ki-repo-harness`](ki-repo-harness.md)       | complete | review only  | —          |
+| 50 | [`ki-bootstrap`](ki-bootstrap.md)             | complete | review only  | —          |
 
-The [Phase 1 synthesis](phase-1-synthesis.md), [Phase 2 synthesis](phase-2-synthesis.md), [Phase 3 synthesis](phase-3-synthesis.md), [Phase 4 synthesis](phase-4-synthesis.md), and [Phase 5 synthesis](phase-5-synthesis.md) retain cross-skill conclusions. Detailed applied changes and remaining gaps live only in each skill record.
+The [Phase 1 synthesis](phase-1-synthesis.md), [Phase 2 synthesis](phase-2-synthesis.md), [Phase 3 synthesis](phase-3-synthesis.md), [Phase 4 synthesis](phase-4-synthesis.md), [Phase 5 synthesis](phase-5-synthesis.md), and [Phase 6 synthesis](phase-6-synthesis.md) retain cross-skill conclusions. Detailed applied changes and remaining gaps live only in each skill record.
 
 ## Evidence rules
 
