@@ -19,7 +19,7 @@ Sub-scopes used in this harness:
 | _(none)_    | Foundational paradigms and repository-level decisions |
 | `TOOLCHAIN` | Standard toolchain choices (Bun, Biome, etc.)         |
 | `SKILLS`    | Governance skill structure and canonical modes        |
-| `AGENTS`    | Multi-skill invocation and subagent orchestration     |
+| `AGENTS`    | Portable subagent contracts and orchestration         |
 
 ## Reading order
 
@@ -51,23 +51,24 @@ The records are living, compact, and independent. The order below is a **curated
 22. [ADR-KI-HARNESS-SKILLS-008](ADR-KI-HARNESS-SKILLS-008-a-specifications-skill-for-the-what.md) — a Specifications skill for the "what".
 23. [ADR-KI-HARNESS-SKILLS-009](ADR-KI-HARNESS-SKILLS-009-two-repo-structure-skills-for-standalone-tools-and-their-homebrew-tap.md) — ki-repo-tools and ki-repo-homebrew-tap repo-structure skills.
 24. [ADR-KI-HARNESS-AGENTS-001](ADR-KI-HARNESS-AGENTS-001-subagent-isolation-for-multi-skill-invocation.md) — subagent isolation for multi-skill invocation.
-25. [ADR-KI-HARNESS-TOOLCHAIN-004](ADR-KI-HARNESS-TOOLCHAIN-004-checker-remediation-footer-and-learn-block-context-check.md) — checker remediation footer and the headroom:learn cross-repo context check.
-26. [ADR-KI-HARNESS-TOOLCHAIN-005](ADR-KI-HARNESS-TOOLCHAIN-005-generated-and-vendored-code-is-excluded-from-linting-and-knip.md) — generated and vendored code excluded from linting and knip.
-27. [ADR-KI-HARNESS-007](ADR-KI-HARNESS-007-uniform-skill-modes-bare-mode-scripts-and-a-coverage-scoped-aggregate-gate.md) — uniform skill modes (bare audit/conform/educate), the toolchain collapse, and the coverage-scoped aggregate gate.
-28. [ADR-KI-HARNESS-008](ADR-KI-HARNESS-008-vendored-cross-skill-tools-for-harness-shaped-targets.md) — vendoring cross-skill graph and HELP tools into `.ki-meta/bin/` for harness-shaped targets.
-29. [ADR-KI-HARNESS-SKILLS-010](ADR-KI-HARNESS-SKILLS-010-comparable-cited-checker-findings-across-audit-and-conform.md) — comparable, cited checker findings across audit and conform (the `ref`/`file` finding fields, conform `--json`, and the shared aggregate renderer).
-30. [ADR-KI-HARNESS-SKILLS-011](ADR-KI-HARNESS-SKILLS-011-repository-roadmaps-for-non-kb-repositories.md) — the non-KB repo-roadmap profiles, thematic plan layout, and Knowledge Base Streams boundary.
-31. [ADR-KI-HARNESS-009](ADR-KI-HARNESS-009-portable-model-types-not-vendor-model-names-in-governance-config.md) — portable model _types_ (`frontier`/`reasoning`/`standard`/`fast`) not vendor model names in governance config; the `preferred_model_type` rename and `model_tier_bindings` sub-table.
-32. [ADR-KI-HARNESS-010](ADR-KI-HARNESS-010-managed-hook-payloads-and-user-environment-binding.md) — durable hook payloads, user-environment settings binding, and the repository-bootstrap boundary.
-33. [ADR-KI-HARNESS-011](ADR-KI-HARNESS-011-project-skill-copies-and-repository-local-links.md) — complete runtime-skill copies by default and explicit repository-local links.
-34. [ADR-KI-HARNESS-SKILLS-012](ADR-KI-HARNESS-SKILLS-012-local-copies-for-shared-modules.md) — local copied shared modules without cross-skill imports.
-35. [ADR-KI-HARNESS-SKILLS-013](ADR-KI-HARNESS-SKILLS-013-readable-identifier-presentation.md) — title-first human presentation with stable machine identifiers.
-36. [ODR-KI-HARNESS-001](ODR-KI-HARNESS-001-scoped-lifecycle-operations.md) — separate repository and user lifecycle operations.
-37. [ADR-KI-HARNESS-012](ADR-KI-HARNESS-012-compatible-harness-publication-and-governed-rubric-boundary.md) — compatible harness publication and the governed-rubric boundary.
-38. [GDR-KI-HARNESS-003](GDR-KI-HARNESS-003-portable-git-governance-ownership.md) — portable Git governance ownership.
-39. [GDR-KI-HARNESS-004](GDR-KI-HARNESS-004-four-doc-repository-documentation-ownership.md) — four-doc repository documentation ownership.
-40. [GDR-KI-HARNESS-005](GDR-KI-HARNESS-005-cross-repository-trade-routes.md) — locally declared, receiver-controlled cross-repository trade submissions.
-41. [GDR-KI-HARNESS-006](GDR-KI-HARNESS-006-reciprocal-agora-membership.md) — portable consent for named repository collections and local target-policy projection.
+25. [ADR-KI-HARNESS-AGENTS-002](ADR-KI-HARNESS-AGENTS-002-portable-subagent-contract-and-runtime-adapters.md) — portable subagent meaning with separate Claude Code and Codex adapters.
+26. [ADR-KI-HARNESS-TOOLCHAIN-004](ADR-KI-HARNESS-TOOLCHAIN-004-checker-remediation-footer-and-learn-block-context-check.md) — checker remediation footer and the headroom:learn cross-repo context check.
+27. [ADR-KI-HARNESS-TOOLCHAIN-005](ADR-KI-HARNESS-TOOLCHAIN-005-generated-and-vendored-code-is-excluded-from-linting-and-knip.md) — generated and vendored code excluded from linting and knip.
+28. [ADR-KI-HARNESS-007](ADR-KI-HARNESS-007-uniform-skill-modes-bare-mode-scripts-and-a-coverage-scoped-aggregate-gate.md) — uniform skill modes (bare audit/conform/educate), the toolchain collapse, and the coverage-scoped aggregate gate.
+29. [ADR-KI-HARNESS-008](ADR-KI-HARNESS-008-vendored-cross-skill-tools-for-harness-shaped-targets.md) — vendoring cross-skill graph and HELP tools into `.ki-meta/bin/` for harness-shaped targets.
+30. [ADR-KI-HARNESS-SKILLS-010](ADR-KI-HARNESS-SKILLS-010-comparable-cited-checker-findings-across-audit-and-conform.md) — comparable, cited checker findings across audit and conform (the `ref`/`file` finding fields, conform `--json`, and the shared aggregate renderer).
+31. [ADR-KI-HARNESS-SKILLS-011](ADR-KI-HARNESS-SKILLS-011-repository-roadmaps-for-non-kb-repositories.md) — the non-KB repo-roadmap profiles, thematic plan layout, and Knowledge Base Streams boundary.
+32. [ADR-KI-HARNESS-009](ADR-KI-HARNESS-009-portable-model-types-not-vendor-model-names-in-governance-config.md) — portable model _types_ (`frontier`/`reasoning`/`standard`/`fast`) not vendor model names in governance config; the `preferred_model_type` rename and `model_tier_bindings` sub-table.
+33. [ADR-KI-HARNESS-010](ADR-KI-HARNESS-010-managed-hook-payloads-and-user-environment-binding.md) — durable hook payloads, user-environment settings binding, and the repository-bootstrap boundary.
+34. [ADR-KI-HARNESS-011](ADR-KI-HARNESS-011-project-skill-copies-and-repository-local-links.md) — complete runtime-skill copies by default and explicit repository-local links.
+35. [ADR-KI-HARNESS-SKILLS-012](ADR-KI-HARNESS-SKILLS-012-local-copies-for-shared-modules.md) — local copied shared modules without cross-skill imports.
+36. [ADR-KI-HARNESS-SKILLS-013](ADR-KI-HARNESS-SKILLS-013-readable-identifier-presentation.md) — title-first human presentation with stable machine identifiers.
+37. [ODR-KI-HARNESS-001](ODR-KI-HARNESS-001-scoped-lifecycle-operations.md) — separate repository and user lifecycle operations.
+38. [ADR-KI-HARNESS-012](ADR-KI-HARNESS-012-compatible-harness-publication-and-governed-rubric-boundary.md) — compatible harness publication and the governed-rubric boundary.
+39. [GDR-KI-HARNESS-003](GDR-KI-HARNESS-003-portable-git-governance-ownership.md) — portable Git governance ownership.
+40. [GDR-KI-HARNESS-004](GDR-KI-HARNESS-004-four-doc-repository-documentation-ownership.md) — four-doc repository documentation ownership.
+41. [GDR-KI-HARNESS-005](GDR-KI-HARNESS-005-cross-repository-trade-routes.md) — locally declared, receiver-controlled cross-repository trade submissions.
+42. [GDR-KI-HARNESS-006](GDR-KI-HARNESS-006-reciprocal-agora-membership.md) — portable consent for named repository collections and explicit local target selection.
 
 ## Template
 
