@@ -182,6 +182,8 @@ The immutable baseline is `94f0b775903286fcf37c0ec050d5568672a5154f`. Changes to
 - Round 1: `refresh-ki-skills-sources`, `review-ki-skills-architecture`, and `inventory-evaluation-evidence` run independently against the frozen baseline.
 - Round 2: `review-ki-authoring`, `review-ki-git`, and `review-ki-engineering` begin after the coordinator integrates the `ki-skills` evidence shape.
 - Round 3: `review-ki-repo` begins after the authoring and Git reviews; `review-ki-delegation` may run alongside it after the Phase 1 evidence shape is stable.
+- Round 4: `review-ki-change-management` begins only after the coordinator records the Phase 1 synthesis. It establishes the base adapter and lifecycle boundary before the remaining change-management skills.
+- Round 5: the roadmap, GitHub Issues, and Linear adapter reviews may begin after `ki-change-management` is integrated, subject to any ownership or ordering change found in Round 4.
 
 ### Worker: refresh-ki-skills-sources
 
@@ -286,6 +288,19 @@ The immutable baseline is `94f0b775903286fcf37c0ec050d5568672a5154f`. Changes to
 - **Verify:** Coordinator checks the counterfactual evidence, citations, candidate routes, and disposition independently.
 - **Return:** One compact review record and canonical candidate findings; no raw command output.
 - **Checkpoint:** Return after the complete ungraded review.
+
+### Worker: review-ki-change-management
+
+- **Deliverable:** A read-only effectiveness review of `ki-change-management` that establishes whether the base adapter and lifecycle vocabulary still improve outcomes before its adapters and process consumers are reviewed.
+- **Inputs:** The complete `ki-change-management` directory, relevant decision records, tests and eval evidence, the Phase 1 synthesis, and this item's protocol.
+- **Files:** None; read-only review.
+- **Authority:** Inspect named repository evidence, run read-only checks, and browse declared primary or official sources; do not remediate, grade, or create follow-up work.
+- **Isolation:** Read-only lane scoped to `ki-change-management` and directly relevant adapter or lifecycle evidence; do not review later Phase 2 skills in place of the named base.
+- **Definition of done:** Every protocol dimension has evidence or an explicit gap, the adapter-selection and lifecycle ownership boundary is tested against current consumers, sources are refreshed, and one disposition is proposed.
+- **Model:** reasoning — the base contract determines how later change-management skills are interpreted and ordered.
+- **Verify:** Coordinator re-runs focused checks, reads every cited local contract, checks current sources, and validates any ownership or ordering conclusion before integration.
+- **Return:** One compact ungraded review, direct source links, candidate findings in the canonical shape, and explicit implications for Round 5; no raw command or browsing transcript.
+- **Checkpoint:** Return after the base change-management review is complete or when an ordering, source-authority, or normative conflict requires coordinator reconciliation.
 
 ## Discussion
 
