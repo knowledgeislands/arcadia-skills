@@ -1,53 +1,73 @@
 /**
- * Eval scenarios for the `ki-tokenomics` skill — the standing context
- * surface + runtime levers.
+ * Outcome scenarios for the portable `ki-tokenomics` contract.
  *
- * Design note: a capable model already knows generic "trim your prompt" advice, so
- * testing that shows "no difference". These scenarios target house-ARBITRARY specifics a
- * baseline cannot derive: the seeded compression tool and how the checker detects it, the
- * WARN-not-FAIL budget posture and where the numbers live, and the two-layer composition
- * the audit measures by design.
+ * These test the boundary between declared policy, bounded filesystem evidence,
+ * and effective session state rather than retired runtime-specific machinery.
  */
-import type { Scenario } from '../harness.ts'
+import type { Scenario } from "../harness.ts";
 
 export const scenarios: Scenario[] = [
   {
-    skill: 'ki-tokenomics',
-    id: 'tok-headroom',
+    skill: "ki-tokenomics",
+    id: "tokenomics-malformed-nested-policy",
     prompt:
-      'In our Knowledge Islands tokenomics standard, which context-compression tool is the seeded default, what is its posture (required / recommended / off), and how does the checker detect it?',
+      'A repository declares `[skills.ki-tokenomics]` but sets `budgets = "large"` and `model_tier_bindings = []`. Should the audit treat missing child keys as an empty policy or reject the configuration?',
     assertions: [
-      { name: 'Headroom', re: /headroom/i },
-      { name: 'recommended posture', re: /recommended/i },
-      { name: 'detection signal', re: /headroom_(compress|retrieve|stats)|mcpServers|HEADROOM_/i }
+      { name: "fails closed", re: /fail(s)? closed|reject|violation|invalid/i },
+      {
+        name: "budgets must be a table",
+        re: /budgets[^\.\n]{0,50}(table|mapping)/i,
+      },
+      {
+        name: "bindings must be a table",
+        re: /model_tier_bindings[^\.\n]{0,50}(table|mapping)/i,
+      },
     ],
     rubric:
-      'House fact: the seeded context-compression entry is **Headroom** (the chopratejas / extraheadroom compression proxy / MCP server). The house default treats one such layer as **recommended** (not required, not off) — the posture is declared per environment. The checker detects it across both config layers via an `mcpServers` `headroom` entry exposing `headroom_compress` / `headroom_retrieve` / `headroom_stats`, a `headroom proxy`, or `HEADROOM_*` env. A correct answer names Headroom, says recommended, and names at least one detection signal. The registry is extensible (other projects can be added).'
+      "Both nested values have required table shape. The audit rejects malformed `budgets` and `model_tier_bindings`; it must not coerce either to an empty object and report a clean policy.",
   },
   {
-    skill: 'ki-tokenomics',
-    id: 'tok-budget-posture',
+    skill: "ki-tokenomics",
+    id: "tokenomics-policy-is-not-observation",
     prompt:
-      'When auditing tokenomics in a Knowledge Islands repo, is a token-budget overage a FAIL or a WARN, where are the budgets configured, and where do the volatile numbers (model ids, prices, cache TTLs, context-window sizes) come from?',
+      "A portable tokenomics configuration validates. Does that prove a budget was measured, the effective model used the declared purpose, or standing-context cost was attributed?",
     assertions: [
-      { name: 'overage is WARN not FAIL', re: /\bWARN\b/ },
-      { name: 'config table', re: /\[ki-tokenomics\]|\.ki-config\.toml/i },
-      { name: 'numbers defer to claude-api', re: /claude-api/i }
+      {
+        name: "no measurement proof",
+        re: /(does not|doesn.?t|cannot)[^\.\n]{0,60}(measure|budget|overage)/i,
+      },
+      {
+        name: "no effective model proof",
+        re: /(effective|actual)[^\.\n]{0,25}model[^\.\n]{0,45}(unavailable|not|unknown)/i,
+      },
+      {
+        name: "no attribution proof",
+        re: /attribution[^\.\n]{0,45}(unavailable|not observed|not proved|unknown)/i,
+      },
     ],
     rubric:
-      'House rules: a budget overage is a **WARN, never a FAIL** — the budgets are guide-rails, not gates. Budgets are configured in a `["knowledgeislands/ki-agentic-harness:ki-tokenomics"]` table in the target\'s `.ki-config.toml` (read validate-down; `educate` scaffolds the keys). The volatile reference numbers — model ids, prices, cache TTLs, context-window sizes — are deliberately NOT held in this skill; they resolve through the `claude-api` skill at runtime, and token figures here are a chars/4 estimate marked `~`, for budgeting not billing. A correct answer states WARN, names the `["knowledgeislands/ki-agentic-harness:ki-tokenomics"]` table, and routes the numbers to `claude-api`.'
+      "A valid portable table proves only declared policy. It does not observe usage, an overage, the effective model, standing-surface attribution, or routing execution. Those outcomes require adapter or session evidence and remain explicitly unavailable otherwise.",
   },
   {
-    skill: 'ki-tokenomics',
-    id: 'tok-two-layers',
+    skill: "ki-tokenomics",
+    id: "tokenomics-runtime-evidence-boundary",
     prompt:
-      'What configuration layers does our tokenomics audit measure together by design when it runs, and how do you tell the checker to look at only the project layer?',
+      "What may a runtime tokenomics adapter safely report from bounded repository files, and what must remain unavailable without separate session authority?",
     assertions: [
-      { name: 'user-wide layer', re: /~\/\.claude|user-wide/i },
-      { name: 'project-local layer', re: /project-local|project layer|\.claude|CLAUDE\.md/i },
-      { name: '--no-user flag', re: /--no-user/ }
+      {
+        name: "direct repository observations",
+        re: /(observed|parseable|present)[^\.\n]{0,60}(repository|project|file|source)/i,
+      },
+      {
+        name: "session facts unavailable",
+        re: /(loaded context|active MCP|effective model|memory use|transcript|compaction)[\s\S]{0,140}unavailable/i,
+      },
+      {
+        name: "no user or secret inference",
+        re: /(user|secret|session)[^\.\n]{0,70}(not read|without authority|separate.*author)/i,
+      },
     ],
     rubric:
-      'House design: tokenomics IS the **composition** of two layers, so the checker reads both by design — the **user-wide** `~/.claude` layer and the **project-local** `.claude` / `CLAUDE.md` layer (over any base in play) — and attributes cost to each. To audit the project layer alone you pass **`--no-user`** (`--user <dir>` points the user layer elsewhere for testing). A correct answer names both layers and the `--no-user` flag.'
-  }
-]
+      "An adapter may report direct, bounded, non-secret repository observations such as physical instruction/config sources and parse failures. Effective model, loaded context, active MCP state, trust, memory use, transcripts, compaction, and billing remain unavailable without separately authorised session evidence; no user-home or secret inference fills the gap.",
+  },
+];
