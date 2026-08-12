@@ -170,14 +170,20 @@ The immutable baseline is `94f0b775903286fcf37c0ec050d5568672a5154f`. Changes to
 ### Locked decisions
 
 - The approved review protocol, 50-skill baseline, dependency-respecting order, and `baseline_ref` remain fixed unless new evidence is reconciled explicitly in this item.
-- Workers collect and judge evidence only. They do not edit skills, source records, standards, rubrics, tests, roadmap records, or repository configuration.
+- Review workers collect and judge evidence only. Remediation workers introduced after Round 8 may edit only their exact non-overlapping `Files` boundary after the user approved the Phase 1 and Phase 2 proposals on 2026-08-12.
 - A clean audit is not effectiveness evidence. Every returned review must address selection value, outcome value, instruction economy, architecture, safety, tests, and disposition.
-- Normative rubric changes, canonical skill-set changes, remediation, and final grades remain human approval points.
+- The remediation baseline is `bf8d4e85`. Retain the 17 existing capabilities and their current owners; create no new skill, agent, hook, compatibility path, or remote write surface.
+- Mechanise deterministic contracts where trustworthy, keep genuine judgment visibly unevaluated, and add host-visible negative-path tests rather than synthetic passes.
+- Housekeeping sets `active-run` at spawn, updates `last-run` only after accepted completion, then clears `active-run`; abandonment or replacement clears the active link without advancing successful-run evidence.
+- A `ki-batch` authorisation names one repository. Remote adapters remain configuration and safety guidance and fail closed for process execution until `KI-HARNESS-FND-014` is separately implemented.
+- Workers do not stage, commit, alter lifecycle state, edit review evidence or roadmap records, push, release, delete, or perform external writes. The coordinator reviews, integrates, verifies, and commits every unit against shared `HEAD`.
+- Canonical skill-set changes and final grades remain human approval points.
 
 ### Escalate
 
-- Return any source conflict, proposed normative change, ownership or dependency change, missing authority, unsafe command, external write, or conclusion that cannot be supported from the named evidence to the coordinator.
-- Stop if a lane would overlap another worker's scope, require repository writes, or depend on an unreviewed earlier skill.
+- Return any source conflict, ownership or dependency change, missing authority, unsafe command, external write, destructive action, or conclusion that cannot be supported from the named evidence to the coordinator.
+- Stop if a lane would overlap another worker's scope, require a file outside its exact boundary, conflict with current primary authority, or depend on an unintegrated earlier remediation.
+- Return cross-skill schema, lifecycle, shared-module, host-contract, and root-configuration decisions to the coordinator before implementing them.
 
 ### Rounds
 
@@ -189,6 +195,11 @@ The immutable baseline is `94f0b775903286fcf37c0ec050d5568672a5154f`. Changes to
 - Round 6: `review-ki-change-management-housekeeping`, `review-ki-recap`, and `review-ki-next` may run independently after the adapter findings are integrated; later process reviews wait for their synthesis.
 - Round 7: `review-ki-plan`, `review-ki-batch`, and `review-ki-implement` may run after Round 6 is integrated; each must test selected-adapter resolution and must not assume the current local-only path is complete.
 - Round 8: `review-ki-accept` begins only after the coordinator integrates Round 7 because it owns closure and is named by the unresolved housekeeping completion contract.
+- Round 9: `remediate-ki-skills-authoring`, `remediate-ki-git-engineering`, and `remediate-ki-repo-delegation` apply the independent Phase 1 improvements against the remediation baseline.
+- Round 10: after Phase 1 integration, `remediate-change-management-roadmap`, `remediate-remote-adapters`, and `remediate-housekeeping-recap` apply non-overlapping Phase 2 governance improvements.
+- Round 11: after the coordinator reconciles Round 10 contracts, `remediate-next-plan` and `remediate-batch-implement` apply the process improvements against the resolved adapter, housekeeping, batch, and review-packet boundaries.
+- Round 12: `remediate-accept` begins after Rounds 10 and 11 are integrated because acceptance owns closure, pruning, batch-closure validation, and housekeeping completion.
+- Round 13: the coordinator performs cross-skill integration, host-visible negative-path verification, publication parity, whole-repository gates, evidence updates, and explicit-path commits. It does not assign grades or close this 50-skill review.
 
 ### Worker: refresh-ki-skills-sources
 
@@ -436,6 +447,123 @@ The immutable baseline is `94f0b775903286fcf37c0ec050d5568672a5154f`. Changes to
 - **Verify:** Coordinator reruns focused tests, checks cited contracts, and validates every authority, deletion, and adapter conclusion.
 - **Return:** One compact ungraded review, canonical candidates, and Phase 2 boundary implications; no lifecycle mutation.
 - **Checkpoint:** Return after the complete review or at a material closure, deletion, adapter, or housekeeping conflict.
+
+### Worker: remediate-ki-skills-authoring
+
+- **Deliverable:** Apply the approved `ki-skills` and `ki-authoring` source-authority, rubric-ownership, regression-fixture, and evaluation-scenario improvements without changing their capability boundaries.
+- **Inputs:** The two complete review records, Phase 1 synthesis, cumulative calibration checklist, canonical source lists and standards, current primary sources, and remediation baseline `bf8d4e85`.
+- **Files:** `skills/keystone/ki-skills/**`, `skills/governance/ki-authoring/**`, `evals/scenarios/ki-skills.ts`, and `evals/scenarios/ki-authoring.ts` only.
+- **Authority:** Edit the exact files, browse official or primary sources read-only, regenerate the two rubric publications, and run focused read-only checks; do not edit other skills, root configuration, decisions, roadmap or review records, Git state, or external systems.
+- **Isolation:** Exclusive shared-worktree ownership of the named paths; no Git write commands.
+- **Definition of done:** Source classifications and dates are current, unsupported runtime claims are corrected, semantic TOML judgment is removed from `ki-authoring`, stale recall scenarios are replaced, deterministic watch-items have focused adversarial coverage where feasible, and both catalogues publish exactly.
+- **Model:** reasoning — source authority and rubric ownership require hard judgment.
+- **Verify:** Coordinator reviews every normative diff, reopens primary sources, runs both focused test sets, regenerates publications independently, and exercises both catalogues through `ki`.
+- **Return:** Concise changed-file summary, source decisions with links, commands and results, remaining judgment-only gaps, and any escalation; no raw transcript.
+- **Checkpoint:** Return after both bounded capabilities are internally consistent or immediately on an authority or ownership conflict.
+
+### Worker: remediate-ki-git-engineering
+
+- **Deliverable:** Apply the approved `ki-git` and `ki-engineering` evidence, checker, decision-authority, regression-fixture, and evaluation-scenario improvements.
+- **Inputs:** The two complete review records, Phase 1 synthesis, cumulative calibration checklist, current standards and sources, live tool configuration evidence, and remediation baseline `bf8d4e85`.
+- **Files:** `skills/governance/ki-git/**`, `skills/governance/ki-engineering/**`, `evals/scenarios/ki-engineering.ts`, and `docs/decisions/ADR-KI-HARNESS-TOOLCHAIN-001-bun-biome-and-knip-standard-toolchain.md` only.
+- **Authority:** Edit the exact files, browse official or primary sources read-only, regenerate the two rubric publications, and run focused checks; do not edit root tool configuration, package manifests, roadmap or review records, Git state, or external systems.
+- **Isolation:** Exclusive shared-worktree ownership of the named paths; no Git write commands.
+- **Definition of done:** Git's judgment-only status is unambiguous and has focused evidence prompts/tests; engineering source records, decision authority, build/checks coverage, and current outcome scenarios agree without restoring retired executors or aliases.
+- **Model:** reasoning — policy evidence and toolchain authority require hard judgment.
+- **Verify:** Coordinator reviews the decision change and every checker boundary, runs both focused test sets, regenerates publications, and exercises the live catalogues.
+- **Return:** Concise changed-file summary, decisions, commands and results, remaining judgment gaps, and any root-config recommendation requiring coordinator action.
+- **Checkpoint:** Return after both capabilities are internally consistent or immediately on a live-pin, decision-authority, or root-configuration conflict.
+
+### Worker: remediate-ki-repo-delegation
+
+- **Deliverable:** Apply the approved `ki-repo` source/evaluation/contract corrections and reduce `ki-delegation` to its evidenced durable high-risk governance delta.
+- **Inputs:** The two complete review records, Phase 1 synthesis, cumulative calibration checklist, current standards, sources and official documentation, and remediation baseline `bf8d4e85`.
+- **Files:** `skills/keystone/ki-repo/**`, `skills/governance/ki-delegation/**`, `evals/scenarios/ki-repo.ts`, and `evals/scenarios/ki-delegation.ts` only.
+- **Authority:** Edit the exact files, browse primary sources read-only, regenerate both rubric publications, and run focused checks; do not edit process consumers, repository configuration, roadmap or review records, Git state, or external systems.
+- **Isolation:** Exclusive shared-worktree ownership of the named paths; no Git write commands.
+- **Definition of done:** Repository licence/visibility, source count and authority, TOML ownership, provenance, and confirmation scenarios are current; delegation activation, packet content and runtime guidance are smaller, non-duplicative, and backed by focused/evaluation evidence.
+- **Model:** reasoning — keystone ownership and delegation counterfactual value require hard judgment.
+- **Verify:** Coordinator checks current official sources, all ownership edits, focused tests, publication parity, and live catalogue outcomes before integration.
+- **Return:** Concise changed-file summary, source and ownership decisions, commands and results, retained delegation delta, and escalations.
+- **Checkpoint:** Return after both capabilities are internally consistent or immediately on a portability, ownership, or process-consumer conflict.
+
+### Worker: remediate-change-management-roadmap
+
+- **Deliverable:** Implement selected-adapter declaration/resolution validation in `ki-change-management` and repair roadmap adapter finding publication, KB scoping, source locators, and host-visible regression coverage.
+- **Inputs:** The base and roadmap review records, Phase 2 synthesis, cumulative calibration checklist, integrated Phase 1 contracts, current standards and tests, and remediation baseline.
+- **Files:** `skills/change-management/ki-change-management/**` and `skills/change-management/ki-change-management-roadmap/**` only.
+- **Authority:** Edit the exact files, add pure helpers and focused tests within those roots, regenerate rubric publications, and run read-only checks; do not edit process skills, remote adapters, roadmap records, Git state, or external systems.
+- **Isolation:** Exclusive shared-worktree ownership of the named paths; no Git write commands.
+- **Definition of done:** The selected adapter must be known, declared and resolvable; abstract and concrete lifecycle ownership is explicit; `PROFILE-1` is published or correctly remapped, dependency failures reach `ITEM-5`, catalogue-to-inspector coverage prevents orphan codes, host outcomes expose failures, and KB detection uses the current declared structure contract.
+- **Model:** reasoning — selector and hosted-outcome architecture are safety-critical.
+- **Verify:** Coordinator runs focused tests, adversarial missing-root/dependency/KB fixtures, publication parity, and live `ki` audits before integration.
+- **Return:** Concise changed-file summary, criterion mapping, commands and results, and any shared-resolver design requiring coordinator reconciliation.
+- **Checkpoint:** Return after both catalogues and hosted outcomes agree or immediately on a host/shared-module boundary conflict.
+
+### Worker: remediate-remote-adapters
+
+- **Deliverable:** Correct GitHub Issues and Linear identity, migration, lifecycle-metadata, deletion/archive, source, and capability-description contracts while retaining a no-remote-write boundary.
+- **Inputs:** Both remote-adapter review records, Phase 2 synthesis, cumulative calibration checklist, current official GitHub and Linear documentation, and the locked `KI-HARNESS-FND-014` execution boundary.
+- **Files:** `skills/change-management/ki-change-management-github-issues/**` and `skills/change-management/ki-change-management-linear/**` only.
+- **Authority:** Edit the exact files, browse official documentation read-only, add focused rubric/tests, and regenerate publications; make no GitHub or Linear writes and do not edit process skills, roadmap records, Git state, or external systems.
+- **Isolation:** Exclusive shared-worktree ownership of the named paths with external access restricted to read-only official-source research; no Git write commands.
+- **Definition of done:** Sources are dated and current; mutable locators and move/transfer procedures are explicit; lifecycle metadata and hierarchy/dependency distinctions are inspectable; archive/delete claims are accurate; descriptions state configuration/guidance capability and remote execution fails closed pending `KI-HARNESS-FND-014`.
+- **Model:** reasoning — remote identity and authority semantics require hard judgment.
+- **Verify:** Coordinator reopens every official source, runs focused tests and publications, and confirms that no remote mutation path or overstated process claim remains.
+- **Return:** Concise changed-file summary, direct official links, commands and results, and any unresolved stable-identity evidence.
+- **Checkpoint:** Return after both adapters are internally consistent or immediately if official authority cannot establish the proposed identity contract.
+
+### Worker: remediate-housekeeping-recap
+
+- **Deliverable:** Implement the locked housekeeping state machine and complete template validation, and make recap runtime and repository grounding current and fail closed.
+- **Inputs:** The housekeeping and recap review records, Phase 2 synthesis, cumulative calibration checklist, locked lifecycle decisions, current runtime sources, integrated Phase 1 contracts, and remediation baseline.
+- **Files:** `skills/change-management/ki-change-management-housekeeping/**` and `skills/change-management/ki-recap/**` only.
+- **Authority:** Edit the exact files, browse official runtime sources read-only, add pure helpers and focused tests, and regenerate the housekeeping rubric; do not edit `ki-next`, `ki-accept`, tokenomics adapters, roadmap or review records, Git state, transcripts, or external systems.
+- **Isolation:** Exclusive shared-worktree ownership of the named paths; transcript evidence is read-only and no Git write commands are allowed.
+- **Definition of done:** Housekeeping validates exact fields, regular files, filename identity, required body/linkage, dates, duplicates and lifecycle state; recap distinguishes manual and automatic compaction, treats transcripts as version-sensitive, resolves the physical Git root, includes staged/unstaged/untracked evidence, and reports Git or transcript failure as unavailable rather than clean.
+- **Model:** reasoning — recurring lifecycle authority and unstable runtime evidence require hard judgment.
+- **Verify:** Coordinator runs both focused suites, adversarial filesystem/Git fixtures, publication parity, and checks current official runtime claims before integration.
+- **Return:** Concise changed-file summary, lifecycle semantics, source links, commands and results, and required follow-through for process consumers.
+- **Checkpoint:** Return after both bounded capabilities pass or immediately on a tokenomics/runtime-authority or cross-skill lifecycle conflict.
+
+### Worker: remediate-next-plan
+
+- **Deliverable:** Align `ki-next` and `ki-plan` with the integrated selected-adapter and housekeeping contracts and add focused no-write decision coverage.
+- **Inputs:** Their review records, Phase 2 synthesis, cumulative calibration checklist, integrated Round 10 base/adapter/housekeeping contracts, locked remote fail-closed boundary, and remediation baseline.
+- **Files:** `skills/change-management/ki-next/**` and `skills/change-management/ki-plan/**` only.
+- **Authority:** Edit the exact files and add pure no-write helpers/tests; do not mutate actual work records, edit other skills, roadmap or review records, Git state, or external systems.
+- **Isolation:** Exclusive shared-worktree ownership of the named paths; no Git write commands or lifecycle mutations outside fixtures.
+- **Definition of done:** Both processes resolve the configured adapter, support the two local adapters, fail closed for unsupported remote execution, preserve identity, and test ranking, promotion, deferral, trade/housekeeping decisions, containment, dependencies, approval refusal, atomic readiness, and delegation thresholds without duplicating runtime compaction policy.
+- **Model:** reasoning — priority, authority, adapter and readiness decisions interact.
+- **Verify:** Coordinator runs focused tests and checks every process step against the integrated base, roadmap, housekeeping, and runtime ownership contracts.
+- **Return:** Concise changed-file summary, decision tables, commands and results, and any shared-resolver or consumer-schema escalation.
+- **Checkpoint:** Return after both processes agree with integrated contracts or immediately on a missing executable resolver boundary.
+
+### Worker: remediate-batch-implement
+
+- **Deliverable:** Make `ki-batch` single-repository and integrity-safe, and align `ki-implement` with adapter resolution and one canonical review-packet schema with focused lifecycle evidence.
+- **Inputs:** Their review records, Phase 2 synthesis, cumulative calibration checklist, integrated Round 10 adapter contracts, locked single-repository decision, current roadmap review headings, and remediation baseline.
+- **Files:** `skills/change-management/ki-batch/**` and `skills/change-management/ki-implement/**` only.
+- **Authority:** Edit the exact files and add pure helpers/tests; do not execute a batch, transition an actual record, edit other skills, roadmap or review records, Git state, or external systems.
+- **Isolation:** Exclusive shared-worktree ownership of the named paths; no Git write commands or lifecycle mutations outside fixtures.
+- **Definition of done:** Batch rejects plural repositories and duplicate IDs, binds approval to a verifiable payload/run record, resolves canonical items/dependencies/scope/stops/adapter support, and implementation resolves adapters, uses the canonical six-part review packet, and tests baseline, transitions, completed steps, scope/gate/delegation stops, verification and handoff.
+- **Model:** reasoning — approval integrity and delivery authority are high risk.
+- **Verify:** Coordinator runs all focused tests and checks the review-packet schema against roadmap and acceptance consumers before integration.
+- **Return:** Concise changed-file summary, authority and schema decisions, commands and results, and any acceptance follow-through.
+- **Checkpoint:** Return after both process contracts pass or immediately on a cross-skill review-schema or ledger-ownership decision.
+
+### Worker: remediate-accept
+
+- **Deliverable:** Align `ki-accept` with integrated adapter, review-packet, batch-authority and housekeeping contracts and complete destructive prune safeguards and tests.
+- **Inputs:** The acceptance review, Phase 2 synthesis, cumulative calibration checklist, all integrated Round 10 and 11 contracts, locked housekeeping state machine, and remediation baseline.
+- **Files:** `skills/change-management/ki-accept/**` only.
+- **Authority:** Edit the exact files and add pure no-write/selected-deletion fixture tests; do not accept, close, prune or delete actual work, edit other skills, roadmap or review records, Git state, or external systems.
+- **Isolation:** Exclusive shared-worktree ownership of the named path; destructive behavior is exercised only in disposable contained fixtures and no Git write commands are allowed.
+- **Definition of done:** Acceptance resolves the exact adapter root, consumes the canonical review packet, independently verifies human or named batch closure authority, refuses retained-trade pruning, fails closed for remote execution, and atomically records accepted housekeeping completion with explicit abandonment/replacement recovery; containment, symlink, traversal, incomplete-set and selected-deletion paths are tested.
+- **Model:** reasoning — terminal lifecycle and deletion authority are safety-critical.
+- **Verify:** Coordinator reviews every destructive boundary and runs focused disposable-fixture tests plus integrated contract checks before committing.
+- **Return:** Concise changed-file summary, closure/prune/housekeeping decisions, commands and results, and any remaining authority limitation.
+- **Checkpoint:** Return after acceptance agrees with every integrated producer or immediately on an unresolved destructive or closure-authority boundary.
 
 ## Discussion
 
