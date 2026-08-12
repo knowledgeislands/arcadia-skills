@@ -4,7 +4,7 @@ title: Review skill effectiveness
 area: REV
 theme: regular-reviews
 horizon: now
-status: awaiting-review
+status: done
 blocks: []
 blocked_by: []
 baseline_ref: 94f0b775903286fcf37c0ec050d5568672a5154f
@@ -792,6 +792,10 @@ All baseline dispositions are implemented and recoverably committed. Review evid
 - **Verify:** Coordinator checks every criterion owner, official source claim, dependency edge, description/off-ramp, publication, focused test, whole-set `ki-skills` audit, and host-unavailable Codex state before integration.
 - **Return:** Concise architecture map, changed files, exact tests/results, criteria moved/retained, host handoff, and review/inventory implications.
 - **Checkpoint:** Return after all three roots pass or immediately if portable meaning cannot be separated without a new canonical source format.
+
+## Done
+
+Accepted on 2026-08-12 following explicit human approval. The completed review, approved remediation, and captured follow-up routing are retained as evidence; its live-estate findings remain external observations rather than unowned Harness work.
 
 ## Discussion
 
