@@ -6,7 +6,7 @@
  * already answer it. The global CLAUDE.md states the headline "wide table →
  * footnote" rule, so we deliberately do NOT test that; we test the rules it says
  * "live in the skill": the footnote-marker SERIES, the wikilink prohibition +
- * angle-bracket form, and the house TOML style.
+ * angle-bracket form, TOML presentation, and knowledge-promotion routing.
  *
  * Assertions are regexes over the answer text — the deterministic half of the
  * hybrid score. The `rubric` is handed to the LLM judge for the qualitative half.
@@ -53,25 +53,31 @@ export const scenarios: Scenario[] = [
   },
   {
     skill: 'ki-authoring',
-    // Tightened after the 3-model matrix flagged it as the noisiest scenario. Two
-    // changes: (1) the prompt asks for a clean TOML-only reply (less prose to regex
-    // over) without stating the rules (no answer-leak to the no-skill arm); (2) the
-    // assertions are whitespace-tolerant and combined (e.g. lowercase key AND double
-    // quote in one), so the no-skill baseline now reliably scores 0 and a false
-    // "regression" can't arise from a high baseline. NOTE: a key-RENAME check
-    // (`ExtraTopics` → `extra_topics`) was tried and dropped — it scored 0 on BOTH
-    // arms because models avoid renaming a key (it changes an identifier's meaning)
-    // even with the skill, so it carried no signal. We test reformatting moves the
-    // model will actually make: table recase, value quoting, and array form.
+    // TOML presentation must not rename configuration identifiers or change table
+    // topology; those semantic decisions belong to ki-repo. This tests only the
+    // value formatting that this skill actually owns.
     id: 'toml-style',
     prompt:
-      "Rewrite this `.ki-config.toml` snippet in our house TOML style. Reply with only the corrected TOML, no explanation:\n\n[KnowledgeIslands-Repo]\nVisibility = 'private'\nExtraTopics = 'mcp','bun'\n",
+      "Rewrite this TOML snippet for readable value presentation only. Preserve every key and table name exactly. Reply with only the corrected TOML, no explanation:\n\n[release-policy]\nvisibility = 'private'\ntopics = ['mcp','bun']\n",
     assertions: [
-      { name: 'skill-named lowercase table', re: /\[\s*ki-repo\s*\]/ },
-      { name: 'lowercase key + double-quoted value', re: /\bvisibility\s*=\s*"private"/ },
+      { name: 'preserves the declared table identity', re: /\[\s*release-policy\s*\]/ },
+      { name: 'double-quoted value', re: /\bvisibility\s*=\s*"private"/ },
       { name: 'inline double-quoted array', re: /\[\s*"mcp"\s*,\s*"bun"\s*\]/ }
     ],
     rubric:
-      'House TOML style: keys are lowercase (multi-word in snake_case); strings are double-quoted; short arrays use the inline ["a", "b"] form; one table per skill, named for the skill in lowercase (["knowledgeislands/ki-agentic-harness:ki-repo"]). A correct rewrite uses ["knowledgeislands/ki-agentic-harness:ki-repo"], `visibility = "private"`, and an inline double-quoted array `["mcp", "bun"]`. Score on those house-specific reformatting moves, not on whether prose was added.'
+      'House TOML presentation: preserve existing key and table identity; strings are double-quoted and short arrays use the inline ["a", "b"] form. `ki-repo` owns configuration semantics such as key/table naming and topology. Score exact preservation plus these value-formatting moves, not a renamed table or generic prose.'
+  },
+  {
+    skill: 'ki-authoring',
+    id: 'knowledge-promotion-routing',
+    prompt:
+      'We learned a stable rule that applies across several Knowledge Islands repositories, but it is not an unfinished task. Where should it live, and what should happen to duplicate repository copies?',
+    assertions: [
+      { name: 'routes to a shared standard, reference, or decision', re: /shared (standard|reference)|decision record|owning ki-/i },
+      { name: 'requires evidence and scope before durable write', re: /scope|evidence|confirm|approval/i },
+      { name: 'reconciles duplicate repository copies', re: /replace|remove|pointer|duplicate/i }
+    ],
+    rubric:
+      'Knowledge-promotion placement ladder: a cross-repository rule, source, decision, or method belongs in its owning shared ki-* standard/reference or decision record after scope and evidence are assessed and the durable write is confirmed. Reconcile lower-layer duplicates by removing them or replacing them with a pointer, unless they serve a distinct audience. It is not roadmap work.'
   }
 ]

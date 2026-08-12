@@ -14,7 +14,7 @@ argument-hint: 'audit <repo> | conform <repo> | help | educate <repo> | refresh'
 
 You are applying the **Knowledge Islands engineering standard** — the shared code-design and software-engineering toolchain every TypeScript/Bun repo in this work builds on. It is the build/test twin of `ki-authoring`: that skill owns _how we write_ (Markdown/TOML style); this one owns _how we structure, build, lint, and test_. `ki-skills` owns the governance-skill enforcement framework that this skill follows.
 
-This is a **standard, base-agnostic Process skill**. It hard-codes no single repo; it applies to any repo carrying a `[skills.ki-engineering]` table in its `.ki-config.toml` (today the 10 TS/Bun repos under `knowledgeislands/` — the seven `mcp-*` servers plus `ki-agentic-harness`, `ki-arcadia-principal`, `ki-repo-website`). How it sits alongside the other skills, and where it must not overlap them, is documented once in the ki-agentic-harness `README.md`.
+This is a **standard, base-agnostic governance skill**. It hard-codes no single repo; it applies to any repo carrying a `[skills.ki-engineering]` table in its `.ki-config.toml`. The active repository set is local supporting evidence, not a normative count: derive it from the current configured collection during REFRESH. How this skill sits alongside the other skills, and where it must not overlap them, is documented once in the ki-agentic-harness `README.md`.
 
 ## What this skill owns
 

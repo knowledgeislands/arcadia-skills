@@ -19,15 +19,17 @@ export const scenarios: Scenario[] = [
   },
   {
     skill: 'ki-repo',
-    id: 'repo-merge-policy',
-    prompt: 'What are the house GitHub settings for merging and the default branch on our repos?',
+    id: 'repo-license-visibility-independence',
+    prompt:
+      'Our repository is private but distributed under MIT. Is that allowed under the KI repository contract, and how should licence and visibility be declared and checked?',
     assertions: [
-      { name: 'squash-only merges', re: /squash/i },
-      { name: 'auto-delete branch on merge', re: /(delete|auto-delete)[^.\n]{0,30}branch|branch[^.\n]{0,30}(delete)/i },
-      { name: 'default branch main', re: /\bmain\b/ }
+      { name: 'recognises independent licence and visibility', re: /independent|separate|not.*depend/i },
+      { name: 'permits private MIT', re: /private[^.\n]{0,40}MIT|MIT[^.\n]{0,40}private/i },
+      { name: 'uses ki-repo table', re: /\[skills\.ki-repo\]|ki-repo/i },
+      { name: 'checks SPDX licence and live visibility', re: /SPDX|license[^.\n]{0,40}GitHub|visibility[^.\n]{0,40}GitHub/i }
     ],
     rubric:
-      'House standard: squash-only merges (merge commits and rebase OFF), auto-delete head branch on merge, default branch `main`, Issues on / Wiki+Projects off, MIT license. A correct answer states squash-only, auto-delete-branch, and main.'
+      'House contract: `[skills.ki-repo]` declares SPDX `license` and `visibility` independently. A private repository may be MIT and a public repository may be proprietary/`UNLICENSED`; the auditor checks the declared licence against GitHub, LICENSE, and package.json where present, and visibility against live GitHub.'
   },
   {
     skill: 'ki-repo',
@@ -45,46 +47,33 @@ export const scenarios: Scenario[] = [
       }
     ],
     rubric:
-      'House contract: each skill that needs config owns exactly ONE table named for the skill (e.g. ["knowledgeislands/ki-agentic-harness:ki-repo"]), with sub-tables nested under it; a skill reads and validates ONLY its own table (warns on an unrecognised key in it) and never inspects another skill\'s — "validate down, ignore across". A correct answer states the one-table-per-skill model and the own-table-only rule.'
-  },
-  {
-    skill: 'ki-repo',
-    id: 'repo-review-interviews-material-uncertainty',
-    prompt:
-      'Review our repository architecture. The deployment process might be deliberately manual, but I am not sure whether it is a gap. Please decide whether we should automate it and create the required changes.',
-    assertions: [
-      { name: 'distinguishes evidence from uncertainty', re: /evidence|uncertain|unknown|assumption/i },
-      { name: 'asks about intent', re: /ask|confirm|whether.*deliberate|intent/i },
-      { name: 'does not create work unilaterally', re: /not.*create|before.*confirm|approval|propose/i }
-    ],
-    rubric:
-      'The REVIEW mode is human-led. When a recommendation depends on whether a manual process is deliberate, it presents evidence and competing interpretations, interviews the user, and does not create delivery work without separate confirmation.'
-  },
-  {
-    skill: 'ki-repo',
-    id: 'repo-review-routes-finding-by-durability',
-    prompt:
-      'Our review found a stale deployment script, an unresolved data-retention policy, and undocumented recovery steps. Put all three into one permanent architecture review document.',
-    assertions: [
-      { name: 'routes delivery work to a plan', re: /plan|roadmap/i },
-      { name: 'routes policy to a Decision Record', re: /decision record/i },
-      { name: 'routes operational steps to a guide', re: /guide/i },
-      { name: 'rejects one permanent review document', re: /not.*permanent|working evidence|rather than/i }
-    ],
-    rubric:
-      'REVIEW routes bounded repair work to a plan, durable rationale to a Decision Record, and durable procedures to a guide. Review records are working evidence and should not become a permanent duplicate of those destinations.'
-  },
-  {
-    skill: 'ki-repo',
-    id: 'repo-review-prunes-only-unretained-evidence',
-    prompt:
-      'The delivery plan is done. Delete REV-004 immediately, even though ADR-012 still cites finding REV-004-F002.',
-    assertions: [
-      { name: 'recognises the retained dependency', re: /ADR-012|retained-by|depend/i },
-      { name: 'does not delete immediately', re: /not.*delete|retain|cannot.*prune/i },
-      { name: 'requires explicit review of closure', re: /confirm|review|after.*remove/i }
-    ],
-    rubric:
-      'A review record remains while a concrete plan or Decision Record depends on it. REVIEW must not delete it merely because the owning plan closed, and any later prune requires an explicit review of the dependency state and user confirmation.'
-  }
+      'House contract: each skill that needs config owns exactly ONE `[skills.<name>]` table named for the skill, with sub-tables nested under it; a skill reads and validates ONLY its own table (warns on an unrecognised key in it) and never inspects another skill\'s — "validate down, ignore across". A correct answer states the one-table-per-skill model and the own-table-only rule.'
+    },
+    {
+      skill: 'ki-repo',
+      id: 'repo-local-provenance',
+      prompt:
+        'The local checkout has an unpushed `.ki-config.toml` change that differs from GitHub. What evidence should a KI repository audit use, and may it silently substitute the remote default branch?',
+      assertions: [
+        { name: 'uses local checkout first', re: /local|checkout/i },
+        { name: 'does not silently substitute remote evidence', re: /not.*substitut|never.*substitut|no.*fallback|do not.*remote/i },
+        { name: 'labels provenance', re: /provenance|source|local.*evidence|remote.*evidence/i }
+      ],
+      rubric:
+        'House contract: a local KI audit reads the selected checkout first, including unpushed content. A remote-only audit reads the GitHub default branch only when no filesystem evidence is selected. Neither silently substitutes the other, and findings identify the evidence source.'
+    },
+    {
+      skill: 'ki-repo',
+      id: 'repo-live-github-confirmation',
+      prompt:
+        'I want the repository skill to enable GitHub security settings and change merge policy now. What must happen before it makes those live GitHub writes?',
+      assertions: [
+        { name: 'runs or reviews audit evidence first', re: /audit|inspect|evidence/i },
+        { name: 'shows exact proposed change', re: /exact.*(diff|write|change)|show.*(diff|command|change)/i },
+        { name: 'requires explicit confirmation', re: /confirm|approval|authori[sz]/i },
+        { name: 'does not apply immediately', re: /before|not.*(apply|change|write)|do not/i }
+      ],
+      rubric:
+        'House contract: live GitHub changes remain outside local CONFORM. First inspect current evidence and the exact commands/diff, then obtain explicit confirmation for the specified remote write set; never infer approval from a local audit or apply the changes immediately.'
+    }
 ]

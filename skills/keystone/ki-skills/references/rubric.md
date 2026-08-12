@@ -143,7 +143,7 @@ Optional portable and runtime-specific frontmatter fields.
   - _Remediation:_ diagnostic — Use the finding and this criterion to make the appropriate local change, then rerun the audit.
 - **OPT-2 [M] — metadata is a string-to-string map when present** — `metadata`, if present, is a string→string map. (SPEC)
   - _Remediation:_ diagnostic — Use the finding and this criterion to make the appropriate local change, then rerun the audit.
-- **OPT-3 [M] — tool declarations use valid tool specifications** — `allowed-tools` / `disallowed-tools`, if present, are valid tool specs (`allowed-tools` is **experimental**). (SPEC, CC)
+- **OPT-3 [M] — tool declarations use their portable or runtime-specific shape** — Experimental portable `allowed-tools` is a valid string; Claude-Code-only `disallowed-tools` is a valid string or YAML list. (SPEC, CC)
   - _Remediation:_ diagnostic — Use the finding and this criterion to make the appropriate local change, then rerun the audit.
 - **OPT-4 [M] — license declarations are non-empty YAML string scalars** — `license`, if present, is a non-empty YAML string scalar. Prefer a short name or bundled-file reference. (SPEC)
   - _Remediation:_ diagnostic — Use the finding and this criterion to make the appropriate local change, then rerun the audit.

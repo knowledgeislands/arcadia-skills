@@ -23,7 +23,7 @@ This file is the **normative, quotable** standard. The checkable items and their
 
 ## Scope and layers
 
-The standard applies to any repo carrying a `[skills.ki-engineering]` table in its `.ki-config.toml` (§9) — today the 10 TS/Bun repos under `knowledgeislands/`. It is split into:
+The standard applies to any repo carrying a `[skills.ki-engineering]` table in its `.ki-config.toml` (§9). The active repository set is discovered from the current configured collection during REFRESH; it is supporting evidence rather than a normative count. The standard is split into:
 
 - **Code design** — judgment-led standards for code structure and tests that preserve comprehension (§Code design and §6).
 - **Core** — the baseline every such repo MUST meet, unconditionally (§1–§5).
@@ -232,11 +232,12 @@ A governed repo declares a `[skills.ki-engineering]` table. Presence marks "the 
 
 ```toml
 [skills.ki-engineering]
-# This repo fully conforms, so it declares no overrides. To diverge from a check,
-# add a [skills.ki-engineering.checks] table with one boolean per check id
-# (false = waive), and say why in a comment.
+# This repo fully conforms, so it declares no checks. A named check may be recorded
+# below with a boolean when a local review needs an explicit exception note.
 ```
 
-The table carries **no top-level keys**. Repo shape (flat vs monorepo, §0) — which drives engineering's workspace-aware type-checking — is read from the standard Bun `workspaces` array in `package.json`, not from here. Keeping the shape signal in `package.json` means standard tooling (Bun, syncpack) sees it too, rather than hiding it behind a bespoke `.ki-config.toml` extension.
+The table carries **no top-level keys**. Its optional `[skills.ki-engineering.checks]` table accepts only exact mechanical rubric IDs as boolean values. The checker validates both the key set and value type, but a `false` value is an explicit local diagnostic record — it does **not** suppress a finding or turn a judgment criterion into a pass. A reviewer records the reason next to the entry and resolves it through the owning repository's change process.
+
+Repo shape (flat vs monorepo, §0) — which drives engineering's workspace-aware type-checking — is read from the standard Bun `workspaces` array in `package.json`, not from here. Keeping the shape signal in `package.json` means standard tooling (Bun, syncpack) sees it too, rather than hiding it behind a bespoke `.ki-config.toml` extension.
 
 The checker **validates down**: any key under `[skills.ki-engineering]` is drift (the table is a conformance marker; the only allowed sub-structure is a `[skills.ki-engineering.checks]` table), so a typo or a stale override surfaces rather than silently doing nothing.

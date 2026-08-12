@@ -3,15 +3,13 @@ import { join, relative, resolve } from 'node:path'
 import type { AuditOutcome, RubricContextOptions, RubricSession } from '../../shared/rubric.ts'
 import type { DelegationRubricContext } from '../types.ts'
 
-const REQUIRED_SECTIONS = ['Locked decisions', 'Escalate', 'Rounds']
+const REQUIRED_SECTIONS = ['Locked decisions', 'Escalate']
 const REQUIRED_WORKER_FIELDS = [
   'Deliverable',
   'Inputs',
-  'Files',
+  'Scope',
   'Authority',
   'Isolation',
-  'Definition of done',
-  'Model',
   'Verify',
   'Return',
   'Checkpoint'
@@ -39,7 +37,7 @@ const workerHasField = (worker: string, field: string): boolean =>
   new RegExp(`^- \\*\\*${field}:\\*\\*\\s*\\S`, 'm').test(worker)
 
 const packetOutcomes = (subject: string, section: string): AuditOutcome[] => {
-  if (!/^### Rounds\s*$/m.test(section))
+  if (!/^### (?:Locked decisions|Escalate|Worker:)\s/m.test(section))
     return [{ status: 'NOT_APPLICABLE', message: 'The delegation note is not an opted-in delegation packet.', subject }]
   const violations: AuditOutcome[] = []
   for (const heading of REQUIRED_SECTIONS)

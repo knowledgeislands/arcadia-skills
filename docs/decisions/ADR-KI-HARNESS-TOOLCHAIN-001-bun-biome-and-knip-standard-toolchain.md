@@ -1,7 +1,7 @@
 ---
 id: ADR-KI-HARNESS-TOOLCHAIN-001
 title: 'Bun, Biome, and knip standard toolchain'
-date: 2026-06-28
+date: 2026-08-12
 status: current
 type: Architecture Decision Record
 type_url: https://knowledgeislands.info/specifications/decision-records/adr
@@ -16,23 +16,17 @@ Knowledge Islands repos need a consistent toolchain for installing, running scri
 
 ## Decision
 
-All Knowledge Islands TypeScript repos use:
+All Knowledge Islands TypeScript repos use Bun for package management and development, while compiled output runs on supported Node. Biome provides TypeScript and JSON formatting/linting, `tsc --noEmit` provides type-checking, rumdl provides the authoring-owned Markdown pass, and knip provides dependency and dead-code hygiene. Each repository has an intentional `knip.json` describing its real entry points, generated surfaces, and justified exceptions.
 
-- **Bun** for package management and script execution (`bun install`, `bun run <script>`, `bun scripts/…`).
-- **Biome** for linting and formatting TypeScript and JSON (`bun run ki:lint:check`).
-- **tsc `--noEmit`** for type-checking (`bun run ki:lint:types`).
-- **rumdl** for Markdown, formatting and linting in one tool (`ki repo audit --skill ki-authoring` is the gate; `ki repo conform --skill ki-authoring` writes).
-- **knip** for dependency **and** dead-code hygiene. knip is plugin-aware (it reads ~100 tools' config files, so it does not mis-flag config-referenced deps), has first-class Bun + workspaces support, and finds unused/unlisted dependencies plus dead files, exports, types, and members. `ki:deps:check` = `bunx knip --dependencies --no-config-hints`; `ki:deps:fix` adds `--fix`; `ki:deps:update` = `bun update --force`. `ki:knip` = `bunx knip --no-config-hints` runs the full pass and is composed into `ki:verify` (the read-only aggregate gate CI runs), so an unused export or phantom dependency fails CI. Each repo carries a small `knip.json` declaring its entry points and any intentional ignores (house defaults: `ignoreExportsUsedInFile: true`; ignore generated trees; `ignoreDependencies` only for transitively-vended or non-JS-imported packages, with a recorded reason).
-
-The script families (`ki:lint:check`, `ki:lint:types`, `ki:lint:md`, `ki:lint:md:check`, `ki:deps:*`, `ki:knip`) are required in every repo's `package.json`. Capability-gated families (test, build, CLI) are added when the repo opts into the capability.
+The verified installed `ki` collection is the only governance entrypoint. `ki repo audit` runs the read-only declared governance set and `ki repo conform` performs its bounded write pass; each command may be focused to a declared skill. The registered engineering operation invokes its code tools directly. Package scripts retain only universal lifecycle entrypoints (`test`, `build`, `clean`, `prepare`) and explicitly owned repository capabilities. Derived governance aliases and per-tool lint, dependency, knip, or aggregate verification script families are retired. `ki:deps:update` remains the explicit dependency-maintenance action.
 
 ## Consequences
 
-- All governance checkers can assume `bun` is available and scripts follow the standard family names.
-- CI pipelines for all KI repos share the same gate commands; dependency cleanup is safe to automate and dead code is caught at the gate rather than accumulating.
-- The engineering audit checker (`audit-engineering.ts`) verifies toolchain config files (`biome.json`, `tsconfig.json`, `knip.json`) and script families.
-- A new entry point not declared in `knip.json` surfaces immediately as a CI failure (false-positive dead code) rather than silent rot — a deliberately visible maintenance cost.
-- Switching toolchain for a single repo requires an explicit deviation declared in `.ki-config.toml`.
+- CI and contributors use the same native collection-backed governance commands rather than a checkout-local script wrapper. Building and testing remain explicit lifecycle operations after conformance when applicable.
+- Toolchain checks remain executable inside the engineering operation, while authoring owns Markdown execution. A new published entry point must be represented in `knip.json`; otherwise the audit makes the potentially destructive false-positive risk visible for human resolution.
+- Repositories retain a small, predictable package-script surface. Removing the retired aliases is a clean cutover: no compatibility command is retained solely for an intermediate workflow.
+- A local engineering check record can document an exception but cannot suppress an audit finding; the repository's owning change process decides and records any actual divergence.
+- A change of toolchain or a compatibility floor remains a repository decision with a documented rationale.
 
 ## References
 

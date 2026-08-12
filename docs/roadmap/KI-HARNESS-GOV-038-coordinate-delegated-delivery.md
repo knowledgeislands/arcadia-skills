@@ -85,7 +85,7 @@ Escalate source conflicts, any proposed authority expansion, a need for runtime-
 
 - **Deliverable:** A concise portable coordinator-first standard and current external source record.
 - **Inputs:** The existing `ki-delegation` skill and standard, the approved work item, and the official OpenAI and Anthropic subagent guides.
-- **Files:** `skills/governance/ki-delegation/SKILL.md`, `skills/governance/ki-delegation/references/standards-delegation-packets.md`, and `skills/governance/ki-delegation/references/sources.md` only.
+- **Scope:** `skills/governance/ki-delegation/SKILL.md`, `skills/governance/ki-delegation/references/standards-delegation-packets.md`, and `skills/governance/ki-delegation/references/sources.md` only.
 - **Authority:** Edit only the named files; do not change lifecycle state, stage, commit, browse unrelated sources, or perform external writes.
 - **Isolation:** Shared worktree with an exclusive write boundary over the named files; no Git write commands.
 - **Definition of done:** The doctrine defines suitability, coordinator and worker responsibilities, worker replenishment, sandboxing, and fallback behaviour without vendor-specific runtime policy.
@@ -98,7 +98,7 @@ Escalate source conflicts, any proposed authority expansion, a need for runtime-
 
 - **Deliverable:** Mechanical and evaluation coverage for the strengthened delegation packet.
 - **Inputs:** The existing delegation rubric context and tests, work-item adapters, evaluation scenario patterns, and this approved packet.
-- **Files:** `skills/governance/ki-delegation/scripts/rubric/`, `skills/governance/ki-delegation/evals/` if present, and delegation-specific files under `evals/scenarios/` only.
+- **Scope:** `skills/governance/ki-delegation/scripts/rubric/`, `skills/governance/ki-delegation/evals/` if present, and delegation-specific files under `evals/scenarios/` only.
 - **Authority:** Edit only the named files; do not change standards prose, lifecycle state, stage, commit, or perform external writes.
 - **Isolation:** Shared worktree with an exclusive write boundary over the named files; no Git write commands.
 - **Definition of done:** Checks cover both roadmap adapters, exact packet headings, all required worker fields, representative failures, and at least one coordinator-first evaluation scenario.

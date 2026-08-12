@@ -7,9 +7,10 @@ const BRANCH_1: RubricItem<GitRubricContext> = {
   description: 'Direct main and branch work each follow the repository policy and the change’s review needs.',
   sources: ['standards-git.md'],
   judgment: {
-    scope: 'The selected repository, requested change, protection policy, and review boundary.',
+    scope:
+      'The selected repository, requested change, current `git branch --show-current` evidence, protection policy, and review boundary.',
     prompt:
-      'Assess whether direct main or a branch is appropriate for this repository’s protection policy, the user’s request, and the value of an isolated review boundary.',
+      'After checking the current branch and applicable protection evidence, assess whether direct main or a branch is appropriate for this repository’s protection policy, the user’s request, and the value of an isolated review boundary.',
     outcomes: ['conforming', 'branch required', 'direct-main rationale required'],
     guidance:
       'Create an isolated branch where review or repository policy requires it, or record why a focused direct-main change is appropriate.'

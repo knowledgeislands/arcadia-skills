@@ -29,10 +29,6 @@ exclude = [
 # MD057 relative-link existence: real signal, but it fires on links that are
 # correct in this repository and dangle in a published copy of it, so switching
 # it on is a content decision rather than a formatting one. Tracked separately.
-# MD075 orphaned table rows: its autofix destroys data. A paragraph following a
-# table that contains "|" anywhere — inline code, or a wikilink alias such as
-# [[Note|label]] — is merged into the table as a row and split at that pipe.
-# The paragraph is lost as prose and rumdl then reports the result clean.
 # MD060 table alignment stays off (it is opt-in). No style reproduces the former
 # behaviour, where a table was padded only if the padded form fit the print
 # width and left compact otherwise; "aligned" would rewrite every wide table
@@ -43,12 +39,8 @@ exclude = [
 # table cell — [[Target|Label]] — is counted as a cell separator, so the row
 # reads as having too many cells and the fix resolves it by truncating the row,
 # deleting the alias text and every cell after it. Same pipe-confusion root
-# cause as MD075.
-# MD005 list indentation: its autofix breaks structure. An ordered list
-# inside a blockquote inside a list item is read as top-level, so its ">"
-# markers are de-indented to column 0 while the blockquote lines around
-# them keep their indent, leaving the quote split across two nestings.
-disable = ["MD005", "MD033", "MD036", "MD056", "MD057", "MD075"]
+# cause as MD075 did before rumdl 0.2.54.
+disable = ["MD033", "MD036", "MD056", "MD057"]
 
 # MD013 owns line length and prose wrapping together, replacing the former
 # split where Prettier held printWidth and MD013 was disabled to avoid a clash.

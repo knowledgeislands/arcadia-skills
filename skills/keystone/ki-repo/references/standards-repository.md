@@ -193,7 +193,7 @@ The rubric carries the **org default** for every check. Most are bedrock — fil
 
 ## Coverage cascade
 
-`.ki-config.toml`'s presence is the **gate** (Layer 1): once it confirms the repo is a ki-repo, the auditor checks the repo **declares an opt-in `[ki-<skill>]` table for every governance skill whose applicability it can detect** — a `Streams/` zone ⇒ `[skills.ki-repo-kb-streams]`, an `eleventy.config` ⇒ `[skills.ki-repo-website]`, an `@modelcontextprotocol/sdk` dependency ⇒ `[skills.ki-repo-mcp]`, a `.claude-plugin/marketplace.json` ⇒ `[skills.ki-repo-plugins]`, `proposals/` + `specifications/` + `schemas/` ⇒ `[skills.ki-repo-specifications]`, an `install.sh` + a `bin/<exe>` ⇒ `[skills.ki-repo-tools]`, a `Formula/*.rb` ⇒ `[skills.ki-repo-homebrew-tap]`, `skills/*/SKILL.md` ⇒ `[skills.ki-skills]`, and so on. Detected-but-undeclared WARNs; a declared table with no matching artifact WARNs as possibly stale.
+`.ki-config.toml`'s presence is the **gate** (Layer 1): once it confirms the repo is a ki-repo, the auditor checks the repo **declares an opt-in `[skills.ki-<skill>]` table for every governance skill whose applicability it can detect** — a `Streams/` zone ⇒ `[skills.ki-repo-kb-streams]`, an `eleventy.config` ⇒ `[skills.ki-repo-website]`, an `@modelcontextprotocol/sdk` dependency ⇒ `[skills.ki-repo-mcp]`, a `.claude-plugin/marketplace.json` ⇒ `[skills.ki-repo-plugins]`, `proposals/` + `specifications/` + `schemas/` ⇒ `[skills.ki-repo-specifications]`, an `install.sh` + a `bin/<exe>` ⇒ `[skills.ki-repo-tools]`, a `Formula/*.rb` ⇒ `[skills.ki-repo-homebrew-tap]`, `skills/*/SKILL.md` ⇒ `[skills.ki-skills]`, and so on. Detected-but-undeclared WARNs; a declared table with no matching artifact WARNs as possibly stale.
 
 A repo that is **not** a ki-repo (no `.ki-config.toml`) is never coverage-checked — it just takes the `ki-config` FAIL, so a lookalike repo (an `eleventy.config` but no marker) is not falsely told to opt in. This is `ki-repo`'s single cross-table read, and it reads only table **presence**, never another skill's keys. The full signal list and the marker-vs-config model live in [the `.ki-config.toml` standard](standards-configuration.md#coverage-enforcement). Silence one signal with `coverage-<skill> = false` under `[skills.ki-repo.checks]`.
 
@@ -201,7 +201,7 @@ The cascade's companion is a **primary-structure** rule: a repo declares at most
 
 ## Applying it
 
-`gh` CLI, authenticated with repo-admin scope. The commands below are a reference plan, not an unattended conformer: inspect the live state and exact target set, show the proposed diff, and obtain explicit confirmation before each mutation batch. (zsh: use an array, not a bare string — unquoted `$var` does not word-split.)
+`gh` CLI, authenticated with the GitHub **Administration** permission required for each target repository. The commands below are a reference plan, not an unattended conformer: inspect the live state and exact target set, show the proposed diff, and obtain explicit confirmation before each mutation batch. (zsh: use an array, not a bare string — unquoted `$var` does not word-split.)
 
 ```zsh
 all=(ki-arcadia-principal ki-agentic-harness ki-repo-website mcp-claude-housekeeping mcp-git-audit mcp-gsuite mcp-kb-fs mcp-ki-repo-kb-notion-mirror mcp-m365)

@@ -82,6 +82,7 @@ export type EnvironmentRubricContext = { env1: EngineeringEvidence; env2: Engine
 export type TomlRubricContext = {
   toml1: EngineeringEvidence
   toml2: EngineeringEvidence
+  toml3: EngineeringEvidence
   declare?: () => void
 }
 
@@ -141,12 +142,12 @@ export const auditEvidence = (
 
 const requiredDev = ['@biomejs/biome', 'knip', 'rumdl', 'husky', 'lint-staged', 'syncpack', 'typescript']
 const versions: Record<string, string> = {
-  '@biomejs/biome': '^2.5.4',
-  knip: '^6.27.0',
+  '@biomejs/biome': '^2.5.7',
+  knip: '^6.32.0',
   rumdl: '^0.2.52',
   husky: '^9.1.7',
   'lint-staged': '^17.1.0',
-  syncpack: '^15.3.2',
+  syncpack: '^15.3.3',
   typescript: '^7.0.2'
 }
 const lintStaged = {
@@ -173,7 +174,7 @@ const defaults = {
 }
 `,
   'biome.json': `{
-  "$schema": "https://biomejs.dev/schemas/2.5.4/schema.json",
+  "$schema": "https://biomejs.dev/schemas/2.5.7/schema.json",
   "vcs": {
     "enabled": true,
     "clientKind": "git",
@@ -413,6 +414,7 @@ export const createEngineeringSession = async (
     toml: {
       toml1: evidence('TOML-1'),
       toml2: evidence('TOML-2'),
+      toml3: evidence('TOML-3'),
       ...(mutable ? { declare: requestEngineeringTable } : {})
     }
   }

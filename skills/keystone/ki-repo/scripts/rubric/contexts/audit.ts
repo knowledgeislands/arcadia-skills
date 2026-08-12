@@ -14,7 +14,7 @@
  *                repo is confirmed a ki-repo by carrying it, each other governance
  *                skill whose applicability is detectable in the repo (a Streams/
  *                zone, an eleventy.config, an MCP SDK dep, …) must DECLARE its
- *                `[ki-<skill>]` opt-in table — detected-but-undeclared
+ *                `[skills.ki-<skill>]` opt-in table — detected-but-undeclared
  *                WARNs. A non-ki-repo is never coverage-checked (no false positives).
  *   2. GITHUB  — default branch, license, squash-only + linear, auto-delete-branch,
  *                Issues on / Wiki+Projects off, non-empty description, visibility
@@ -406,7 +406,7 @@ const REPO_FIELDS =
 // ── coverage cascade ──────────────────────────────────────────────────────────
 // Once the gate confirms a repo is a ki-repo (it carries .ki-config.toml), each
 // other governance skill whose APPLICABILITY is detectable from the repo must be
-// DECLARED — its `[ki-<skill>]` opt-in table present. This is the
+// DECLARED — its `[skills.ki-<skill>]` opt-in table present. This is the
 // single registry of {skill → detection signal → opt-in table}. `repo` reads only
 // table PRESENCE here (validate-down still owns table CONTENTS); a detected-but-
 // undeclared signal WARNs, a declared-but-undetected table WARNs as possibly stale.

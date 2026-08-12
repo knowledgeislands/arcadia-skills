@@ -68,7 +68,7 @@ GOV-028 is accepted and supplies the factual finding. The current reciprocal KI 
 
 - **Deliverable:** One valid outbound `work` submission that presents the GOV-028 finding and receiver-owned options exactly.
 - **Inputs:** The accepted GOV-028 record, the current reciprocal route evidence, and the `ki-trades` submission contract.
-- **Files:** Write only the named path under `-/_TRADES/knowledgeislands/ki-website/`; do not stage or commit.
+- **Scope:** Write only the named path under `-/_TRADES/knowledgeislands/ki-website/`; do not stage or commit.
 - **Authority:** Create the named outbound submission only; do not upload, write to the receiver, set a disposition, stage, or commit.
 - **Isolation:** Shared worktree with exclusive write scope over the named submission path and no Git write commands.
 - **Definition of done:** One submitted record passes the local `ki-trades` audit and contains no receiver-local field.

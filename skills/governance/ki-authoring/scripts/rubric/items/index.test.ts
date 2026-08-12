@@ -42,12 +42,16 @@ test('the default export is the sole catalogue entrypoint and families are compl
     'MD-callout',
     'OWN-1',
     'OWN-2',
-    'TOML-keys',
     'TOML-values',
-    'TOML-tables',
     'TOML-comments',
     'SYNC-1'
   ])
+})
+
+test('the owned rumdl template keeps only the unrepaired destructive rules disabled', () => {
+  expect(RUMDL_DEFAULT).not.toContain('"MD005"')
+  expect(RUMDL_DEFAULT).not.toContain('"MD075"')
+  expect(RUMDL_DEFAULT).toContain('"MD056"')
 })
 
 test('conform retains drafts, coalesces writes, and leaves publication to the host', () => {

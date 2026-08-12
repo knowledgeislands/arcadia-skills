@@ -205,7 +205,7 @@ The immutable baseline is `94f0b775903286fcf37c0ec050d5568672a5154f`. Changes to
 
 - **Deliverable:** Current, cited source-refresh evidence for `ki-skills`, including page-inventory drift, changed claims, relevant new primary or official material, discovery-source additions, and unresolved conflicts.
 - **Inputs:** `skills/keystone/ki-skills/references/sources.md`, its three standards, generated rubric, and the source-refresh protocol in this item.
-- **Files:** None; read-only repository and web research.
+- **Scope:** None; read-only repository and web research.
 - **Authority:** Read the named local files and browse their declared sources; perform no repository or external writes and propose no silent standard change.
 - **Isolation:** Read-only worker lane with no shared-worktree mutation.
 - **Definition of done:** Every tracked source has a current status, the Agent Skills documentation index is reconciled, relevant additions are named, and each possible normative impact is separated from supporting practice.
@@ -218,7 +218,7 @@ The immutable baseline is `94f0b775903286fcf37c0ec050d5568672a5154f`. Changes to
 
 - **Deliverable:** A read-only effectiveness review of `ki-skills` against the approved protocol and all judgment criteria, with candidate findings in the canonical shape.
 - **Inputs:** The complete `ki-skills` directory, whole-repository mechanical audit evidence supplied in the brief, relevant eval scenarios and results, the REVIEW procedure, and this work item's boundary.
-- **Files:** None; read-only review.
+- **Scope:** None; read-only review.
 - **Authority:** Inspect named repository evidence and run read-only checks; do not edit, stage, commit, or create roadmap work.
 - **Isolation:** Read-only worker lane scoped to `ki-skills` and its directly relevant eval evidence.
 - **Definition of done:** The report covers selection and outcome effectiveness, instruction economy, architecture, executability, test evidence, source posture, disposition, and deduplicated candidates.
@@ -231,7 +231,7 @@ The immutable baseline is `94f0b775903286fcf37c0ec050d5568672a5154f`. Changes to
 
 - **Deliverable:** A mechanical baseline mapping all 50 skills to dependency position, source-list presence, structured rubric, tests, eval scenarios, and available result evidence, plus proposed fields for a comparable review record.
 - **Inputs:** Canonical `skills/`, `evals/`, the review sequence, and `baseline_ref`.
-- **Files:** None; read-only inventory.
+- **Scope:** None; read-only inventory.
 - **Authority:** Run read-only repository inspection only; do not edit or interpret missing evidence as a grade.
 - **Isolation:** Read-only whole-repository scan with no network or mutation.
 - **Definition of done:** All 50 canonical skills appear exactly once, dependency order is checked, evidence coverage is explicit, and the proposed record fields map directly to the approved protocol.
@@ -244,7 +244,7 @@ The immutable baseline is `94f0b775903286fcf37c0ec050d5568672a5154f`. Changes to
 
 - **Deliverable:** A read-only effectiveness review of `ki-authoring` using the integrated record shape.
 - **Inputs:** The complete `ki-authoring` directory, relevant tests and eval evidence, the Phase 1 `ki-skills` review record, and this item's protocol.
-- **Files:** None; read-only review.
+- **Scope:** None; read-only review.
 - **Authority:** Inspect and run read-only checks only; do not remediate or create follow-up work.
 - **Isolation:** Read-only lane scoped to `ki-authoring` and its directly relevant evidence.
 - **Definition of done:** Every review-protocol dimension has evidence or an explicit gap and one proposed disposition.
@@ -257,7 +257,7 @@ The immutable baseline is `94f0b775903286fcf37c0ec050d5568672a5154f`. Changes to
 
 - **Deliverable:** A read-only effectiveness review of `ki-git` using the integrated record shape.
 - **Inputs:** The complete `ki-git` directory, relevant tests and eval evidence, the Phase 1 `ki-skills` review record, and this item's protocol.
-- **Files:** None; read-only review.
+- **Scope:** None; read-only review.
 - **Authority:** Inspect and run read-only checks only; do not mutate Git state, remediate, or create follow-up work.
 - **Isolation:** Read-only lane scoped to `ki-git` and its directly relevant evidence.
 - **Definition of done:** Every review-protocol dimension has evidence or an explicit gap and one proposed disposition.
@@ -270,7 +270,7 @@ The immutable baseline is `94f0b775903286fcf37c0ec050d5568672a5154f`. Changes to
 
 - **Deliverable:** A read-only effectiveness review of `ki-engineering` using the integrated record shape.
 - **Inputs:** The complete `ki-engineering` directory, relevant tests and eval evidence, the Phase 1 `ki-skills` review record, and this item's protocol.
-- **Files:** None; read-only review.
+- **Scope:** None; read-only review.
 - **Authority:** Inspect and run read-only checks only; do not remediate or create follow-up work.
 - **Isolation:** Read-only lane scoped to `ki-engineering` and its directly relevant evidence.
 - **Definition of done:** Every review-protocol dimension has evidence or an explicit gap and one proposed disposition.
@@ -283,7 +283,7 @@ The immutable baseline is `94f0b775903286fcf37c0ec050d5568672a5154f`. Changes to
 
 - **Deliverable:** A read-only effectiveness review of `ki-repo` using the integrated record shape and the completed authoring and Git evidence.
 - **Inputs:** The complete `ki-repo` directory, relevant tests and eval evidence, completed `ki-authoring` and `ki-git` reviews, and this item's protocol.
-- **Files:** None; read-only review.
+- **Scope:** None; read-only review.
 - **Authority:** Inspect and run read-only checks only; do not remediate or create follow-up work.
 - **Isolation:** Read-only lane scoped to `ki-repo` and its directly relevant evidence.
 - **Definition of done:** Every review-protocol dimension has evidence or an explicit gap, dependency claims are reconciled, and one disposition is proposed.
@@ -296,7 +296,7 @@ The immutable baseline is `94f0b775903286fcf37c0ec050d5568672a5154f`. Changes to
 
 - **Deliverable:** A read-only effectiveness review of `ki-delegation`, explicitly testing whether the revised coordinator-first contract provides value beyond current runtime behavior and ordinary execution guidance.
 - **Inputs:** The complete `ki-delegation` directory, its recent history and eval evidence, the integrated Phase 1 record shape, and this item's motivating finding.
-- **Files:** None; read-only review.
+- **Scope:** None; read-only review.
 - **Authority:** Inspect and run read-only checks only; do not alter the current delegation contract, packet, or roadmap.
 - **Isolation:** Read-only lane scoped to `ki-delegation` and its directly relevant evidence.
 - **Definition of done:** The report compares skill-assisted and current-runtime behavior, identifies residual value or ceremony, covers every protocol dimension, and proposes one disposition.
@@ -309,7 +309,7 @@ The immutable baseline is `94f0b775903286fcf37c0ec050d5568672a5154f`. Changes to
 
 - **Deliverable:** A read-only effectiveness review of `ki-change-management` that establishes whether the base adapter and lifecycle vocabulary still improve outcomes before its adapters and process consumers are reviewed.
 - **Inputs:** The complete `ki-change-management` directory, relevant decision records, tests and eval evidence, the Phase 1 synthesis, and this item's protocol.
-- **Files:** None; read-only review.
+- **Scope:** None; read-only review.
 - **Authority:** Inspect named repository evidence, run read-only checks, and browse declared primary or official sources; do not remediate, grade, or create follow-up work.
 - **Isolation:** Read-only lane scoped to `ki-change-management` and directly relevant adapter or lifecycle evidence; do not review later Phase 2 skills in place of the named base.
 - **Definition of done:** Every protocol dimension has evidence or an explicit gap, the adapter-selection and lifecycle ownership boundary is tested against current consumers, sources are refreshed, and one disposition is proposed.
@@ -322,7 +322,7 @@ The immutable baseline is `94f0b775903286fcf37c0ec050d5568672a5154f`. Changes to
 
 - **Deliverable:** A read-only effectiveness review of `ki-change-management-roadmap`, explicitly testing its concrete lifecycle and local-record ownership against the reviewed base selector.
 - **Inputs:** The complete roadmap-adapter directory, relevant decisions, tests and eval evidence, the base-selector review, and this item's protocol.
-- **Files:** None; read-only review.
+- **Scope:** None; read-only review.
 - **Authority:** Inspect repository evidence, run read-only checks, and browse declared sources; do not edit, grade, prune, or create work records.
 - **Isolation:** Read-only lane scoped to the roadmap adapter and its directly relevant evidence; do not review process consumers in place.
 - **Definition of done:** Every protocol dimension has evidence or a gap, sources are refreshed, concrete lifecycle ownership and adapter resolution are assessed, and one disposition is proposed.
@@ -335,7 +335,7 @@ The immutable baseline is `94f0b775903286fcf37c0ec050d5568672a5154f`. Changes to
 
 - **Deliverable:** A read-only effectiveness review of `ki-change-management-github-issues` against current GitHub issue identity, lifecycle, dependency, metadata, and remote-write semantics.
 - **Inputs:** The complete GitHub Issues adapter directory, relevant tests and eval evidence, the base-selector review, and this item's protocol.
-- **Files:** None; read-only review.
+- **Scope:** None; read-only review.
 - **Authority:** Inspect repository evidence, run read-only checks, and browse official GitHub sources; make no GitHub or repository writes and do not grade or create follow-up work.
 - **Isolation:** Read-only lane scoped to the GitHub Issues adapter and directly relevant official evidence.
 - **Definition of done:** Every protocol dimension has evidence or a gap, all source claims are current, native GitHub features are reconciled with the KI mapping, and one disposition is proposed.
@@ -348,7 +348,7 @@ The immutable baseline is `94f0b775903286fcf37c0ec050d5568672a5154f`. Changes to
 
 - **Deliverable:** A read-only effectiveness review of `ki-change-management-linear` that resolves the known conflict between team-scoped identity claims and current cross-team move behavior.
 - **Inputs:** The complete Linear adapter directory, relevant tests and eval evidence, the base-selector review, current official workflow and issue-editing documentation, and this item's protocol.
-- **Files:** None; read-only review.
+- **Scope:** None; read-only review.
 - **Authority:** Inspect repository evidence, run read-only checks, and browse official Linear sources; make no Linear or repository writes and do not grade or create follow-up work.
 - **Isolation:** Read-only lane scoped to the Linear adapter and directly relevant official evidence.
 - **Definition of done:** Every protocol dimension has evidence or a gap, identifier stability and lifecycle translation are reconciled, authority boundaries are assessed, and one disposition is proposed.
@@ -361,7 +361,7 @@ The immutable baseline is `94f0b775903286fcf37c0ec050d5568672a5154f`. Changes to
 
 - **Deliverable:** A read-only effectiveness review of `ki-change-management-housekeeping`, including whether recurring templates add value without creating a second lifecycle.
 - **Inputs:** The complete housekeeping skill, relevant tests and eval evidence, completed base and adapter reviews, and this item's protocol.
-- **Files:** None; read-only review.
+- **Scope:** None; read-only review.
 - **Authority:** Inspect repository evidence, run read-only checks, and browse declared sources; do not spawn due work, update templates, grade, or remediate.
 - **Isolation:** Read-only lane scoped to housekeeping templates and directly relevant lifecycle evidence.
 - **Definition of done:** Every protocol dimension has evidence or a gap, cadence/source claims are current, lifecycle and `ki-next` boundaries are tested, and one disposition is proposed.
@@ -374,7 +374,7 @@ The immutable baseline is `94f0b775903286fcf37c0ec050d5568672a5154f`. Changes to
 
 - **Deliverable:** A read-only effectiveness review of `ki-recap`, including grounding, learning routing, compaction advice, and boundaries with backlog selection.
 - **Inputs:** The complete recap skill, helper and tests, relevant runtime/source evidence, completed foundation reviews, and this item's protocol.
-- **Files:** None; read-only review.
+- **Scope:** None; read-only review.
 - **Authority:** Inspect repository and session-helper evidence, run read-only checks, and browse official runtime sources; do not recap the live session, mutate memory, compact, grade, or remediate.
 - **Isolation:** Read-only lane scoped to recap behavior and directly relevant runtime/tokenomics evidence.
 - **Definition of done:** Every protocol dimension has evidence or a gap, runtime claims and helper behavior are current, selection/recap boundaries are assessed, and one disposition is proposed.
@@ -387,7 +387,7 @@ The immutable baseline is `94f0b775903286fcf37c0ec050d5568672a5154f`. Changes to
 
 - **Deliverable:** A read-only effectiveness review of `ki-next`, explicitly testing selection, capture, promotion, housekeeping spawn, trade disposition, and adapter resolution boundaries.
 - **Inputs:** The complete next-work skill, relevant tests and eval evidence, completed base/adapter reviews, and this item's protocol.
-- **Files:** None; read-only review.
+- **Scope:** None; read-only review.
 - **Authority:** Inspect repository evidence and run read-only checks; do not select, promote, defer, spawn, apply trades, grade, or remediate any actual work.
 - **Isolation:** Read-only lane scoped to next-work selection and directly relevant adapter, housekeeping, and trade evidence.
 - **Definition of done:** Every protocol dimension has evidence or a gap, actual adapter consumption and remote limitations are explicit, authority boundaries are tested, and one disposition is proposed.
@@ -400,7 +400,7 @@ The immutable baseline is `94f0b775903286fcf37c0ec050d5568672a5154f`. Changes to
 
 - **Deliverable:** A read-only effectiveness review of `ki-plan`, covering in-place readiness shaping, approval, adapter resolution, and plan/runtime boundaries.
 - **Inputs:** The complete planning skill, tests and eval evidence, completed selector/adapter/next reviews, and this item's protocol.
-- **Files:** None; read-only review.
+- **Scope:** None; read-only review.
 - **Authority:** Inspect and run read-only checks only; do not shape or approve any work record, grade, or remediate.
 - **Isolation:** Read-only lane scoped to `ki-plan` and directly relevant adapter evidence.
 - **Definition of done:** Every protocol dimension has evidence or a gap, readiness and adapter behavior are tested, and one disposition is proposed.
@@ -413,7 +413,7 @@ The immutable baseline is `94f0b775903286fcf37c0ec050d5568672a5154f`. Changes to
 
 - **Deliverable:** A read-only effectiveness review of `ki-batch`, including authorisation, independence, delegation, adapter resolution, and stop behavior.
 - **Inputs:** The complete batch skill, helper/tests/evals, completed selection and delegation reviews, and this item's protocol.
-- **Files:** None; read-only review.
+- **Scope:** None; read-only review.
 - **Authority:** Inspect and run read-only checks only; do not prepare or run a batch, grade, or remediate.
 - **Isolation:** Read-only lane scoped to batch behavior and directly relevant selection/delegation/adapter evidence.
 - **Definition of done:** Every protocol dimension has evidence or a gap, authority and failure stops are assessed, and one disposition is proposed.
@@ -426,7 +426,7 @@ The immutable baseline is `94f0b775903286fcf37c0ec050d5568672a5154f`. Changes to
 
 - **Deliverable:** A read-only effectiveness review of `ki-implement`, covering immutable baseline, lifecycle transition, delegation, verification, review packet, and adapter resolution.
 - **Inputs:** The complete implementation skill, tests and eval evidence, completed adapter/delegation/next reviews, and this item's protocol.
-- **Files:** None; read-only review.
+- **Scope:** None; read-only review.
 - **Authority:** Inspect and run read-only checks only; do not implement or transition any work record, grade, or remediate.
 - **Isolation:** Read-only lane scoped to implementation behavior and directly relevant lifecycle/delegation/adapter evidence.
 - **Definition of done:** Every protocol dimension has evidence or a gap, execution and stop boundaries are tested, and one disposition is proposed.
@@ -439,7 +439,7 @@ The immutable baseline is `94f0b775903286fcf37c0ec050d5568672a5154f`. Changes to
 
 - **Deliverable:** A read-only effectiveness review of `ki-accept`, including review authority, closure, retention, destructive pruning, adapter resolution, and housekeeping completion evidence.
 - **Inputs:** The complete acceptance skill, tests and eval evidence, all earlier Phase 2 reviews, and this item's protocol.
-- **Files:** None; read-only review.
+- **Scope:** None; read-only review.
 - **Authority:** Inspect and run read-only checks only; do not accept, close, prune, delete, grade, or remediate any record.
 - **Isolation:** Read-only lane scoped to acceptance and directly relevant lifecycle, adapter, and housekeeping evidence.
 - **Definition of done:** Every protocol dimension has evidence or a gap, closure/prune authority and housekeeping ownership are reconciled, and one disposition is proposed.
@@ -452,7 +452,7 @@ The immutable baseline is `94f0b775903286fcf37c0ec050d5568672a5154f`. Changes to
 
 - **Deliverable:** Apply the approved `ki-skills` and `ki-authoring` source-authority, rubric-ownership, regression-fixture, and evaluation-scenario improvements without changing their capability boundaries.
 - **Inputs:** The two complete review records, Phase 1 synthesis, cumulative calibration checklist, canonical source lists and standards, current primary sources, and remediation baseline `bf8d4e85`.
-- **Files:** `skills/keystone/ki-skills/**`, `skills/governance/ki-authoring/**`, `evals/scenarios/ki-skills.ts`, and `evals/scenarios/ki-authoring.ts` only.
+- **Scope:** `skills/keystone/ki-skills/**`, `skills/governance/ki-authoring/**`, `evals/scenarios/ki-skills.ts`, and `evals/scenarios/ki-authoring.ts` only.
 - **Authority:** Edit the exact files, browse official or primary sources read-only, regenerate the two rubric publications, and run focused read-only checks; do not edit other skills, root configuration, decisions, roadmap or review records, Git state, or external systems.
 - **Isolation:** Exclusive shared-worktree ownership of the named paths; no Git write commands.
 - **Definition of done:** Source classifications and dates are current, unsupported runtime claims are corrected, semantic TOML judgment is removed from `ki-authoring`, stale recall scenarios are replaced, deterministic watch-items have focused adversarial coverage where feasible, and both catalogues publish exactly.
@@ -465,7 +465,7 @@ The immutable baseline is `94f0b775903286fcf37c0ec050d5568672a5154f`. Changes to
 
 - **Deliverable:** Apply the approved `ki-git` and `ki-engineering` evidence, checker, decision-authority, regression-fixture, and evaluation-scenario improvements.
 - **Inputs:** The two complete review records, Phase 1 synthesis, cumulative calibration checklist, current standards and sources, live tool configuration evidence, and remediation baseline `bf8d4e85`.
-- **Files:** `skills/governance/ki-git/**`, `skills/governance/ki-engineering/**`, `evals/scenarios/ki-engineering.ts`, and `docs/decisions/ADR-KI-HARNESS-TOOLCHAIN-001-bun-biome-and-knip-standard-toolchain.md` only.
+- **Scope:** `skills/governance/ki-git/**`, `skills/governance/ki-engineering/**`, `evals/scenarios/ki-engineering.ts`, and `docs/decisions/ADR-KI-HARNESS-TOOLCHAIN-001-bun-biome-and-knip-standard-toolchain.md` only.
 - **Authority:** Edit the exact files, browse official or primary sources read-only, regenerate the two rubric publications, and run focused checks; do not edit root tool configuration, package manifests, roadmap or review records, Git state, or external systems.
 - **Isolation:** Exclusive shared-worktree ownership of the named paths; no Git write commands.
 - **Definition of done:** Git's judgment-only status is unambiguous and has focused evidence prompts/tests; engineering source records, decision authority, build/checks coverage, and current outcome scenarios agree without restoring retired executors or aliases.
@@ -478,7 +478,7 @@ The immutable baseline is `94f0b775903286fcf37c0ec050d5568672a5154f`. Changes to
 
 - **Deliverable:** Apply the approved `ki-repo` source/evaluation/contract corrections and reduce `ki-delegation` to its evidenced durable high-risk governance delta.
 - **Inputs:** The two complete review records, Phase 1 synthesis, cumulative calibration checklist, current standards, sources and official documentation, and remediation baseline `bf8d4e85`.
-- **Files:** `skills/keystone/ki-repo/**`, `skills/governance/ki-delegation/**`, `evals/scenarios/ki-repo.ts`, and `evals/scenarios/ki-delegation.ts` only.
+- **Scope:** `skills/keystone/ki-repo/**`, `skills/governance/ki-delegation/**`, `evals/scenarios/ki-repo.ts`, and `evals/scenarios/ki-delegation.ts` only.
 - **Authority:** Edit the exact files, browse primary sources read-only, regenerate both rubric publications, and run focused checks; do not edit process consumers, repository configuration, roadmap or review records, Git state, or external systems.
 - **Isolation:** Exclusive shared-worktree ownership of the named paths; no Git write commands.
 - **Definition of done:** Repository licence/visibility, source count and authority, TOML ownership, provenance, and confirmation scenarios are current; delegation activation, packet content and runtime guidance are smaller, non-duplicative, and backed by focused/evaluation evidence.
@@ -491,7 +491,7 @@ The immutable baseline is `94f0b775903286fcf37c0ec050d5568672a5154f`. Changes to
 
 - **Deliverable:** Implement selected-adapter declaration/resolution validation in `ki-change-management` and repair roadmap adapter finding publication, KB scoping, source locators, and host-visible regression coverage.
 - **Inputs:** The base and roadmap review records, Phase 2 synthesis, cumulative calibration checklist, integrated Phase 1 contracts, current standards and tests, and remediation baseline.
-- **Files:** `skills/change-management/ki-change-management/**` and `skills/change-management/ki-change-management-roadmap/**` only.
+- **Scope:** `skills/change-management/ki-change-management/**` and `skills/change-management/ki-change-management-roadmap/**` only.
 - **Authority:** Edit the exact files, add pure helpers and focused tests within those roots, regenerate rubric publications, and run read-only checks; do not edit process skills, remote adapters, roadmap records, Git state, or external systems.
 - **Isolation:** Exclusive shared-worktree ownership of the named paths; no Git write commands.
 - **Definition of done:** The selected adapter must be known, declared and resolvable; abstract and concrete lifecycle ownership is explicit; `PROFILE-1` is published or correctly remapped, dependency failures reach `ITEM-5`, catalogue-to-inspector coverage prevents orphan codes, host outcomes expose failures, and KB detection uses the current declared structure contract.
@@ -504,7 +504,7 @@ The immutable baseline is `94f0b775903286fcf37c0ec050d5568672a5154f`. Changes to
 
 - **Deliverable:** Correct GitHub Issues and Linear identity, migration, lifecycle-metadata, deletion/archive, source, and capability-description contracts while retaining a no-remote-write boundary.
 - **Inputs:** Both remote-adapter review records, Phase 2 synthesis, cumulative calibration checklist, current official GitHub and Linear documentation, and the locked `KI-HARNESS-FND-014` execution boundary.
-- **Files:** `skills/change-management/ki-change-management-github-issues/**` and `skills/change-management/ki-change-management-linear/**` only.
+- **Scope:** `skills/change-management/ki-change-management-github-issues/**` and `skills/change-management/ki-change-management-linear/**` only.
 - **Authority:** Edit the exact files, browse official documentation read-only, add focused rubric/tests, and regenerate publications; make no GitHub or Linear writes and do not edit process skills, roadmap records, Git state, or external systems.
 - **Isolation:** Exclusive shared-worktree ownership of the named paths with external access restricted to read-only official-source research; no Git write commands.
 - **Definition of done:** Sources are dated and current; mutable locators and move/transfer procedures are explicit; lifecycle metadata and hierarchy/dependency distinctions are inspectable; archive/delete claims are accurate; descriptions state configuration/guidance capability and remote execution fails closed pending `KI-HARNESS-FND-014`.
@@ -517,7 +517,7 @@ The immutable baseline is `94f0b775903286fcf37c0ec050d5568672a5154f`. Changes to
 
 - **Deliverable:** Implement the locked housekeeping state machine and complete template validation, and make recap runtime and repository grounding current and fail closed.
 - **Inputs:** The housekeeping and recap review records, Phase 2 synthesis, cumulative calibration checklist, locked lifecycle decisions, current runtime sources, integrated Phase 1 contracts, and remediation baseline.
-- **Files:** `skills/change-management/ki-change-management-housekeeping/**` and `skills/change-management/ki-recap/**` only.
+- **Scope:** `skills/change-management/ki-change-management-housekeeping/**` and `skills/change-management/ki-recap/**` only.
 - **Authority:** Edit the exact files, browse official runtime sources read-only, add pure helpers and focused tests, and regenerate the housekeeping rubric; do not edit `ki-next`, `ki-accept`, tokenomics adapters, roadmap or review records, Git state, transcripts, or external systems.
 - **Isolation:** Exclusive shared-worktree ownership of the named paths; transcript evidence is read-only and no Git write commands are allowed.
 - **Definition of done:** Housekeeping validates exact fields, regular files, filename identity, required body/linkage, dates, duplicates and lifecycle state; recap distinguishes manual and automatic compaction, treats transcripts as version-sensitive, resolves the physical Git root, includes staged/unstaged/untracked evidence, and reports Git or transcript failure as unavailable rather than clean.
@@ -530,7 +530,7 @@ The immutable baseline is `94f0b775903286fcf37c0ec050d5568672a5154f`. Changes to
 
 - **Deliverable:** Align `ki-next` and `ki-plan` with the integrated selected-adapter and housekeeping contracts and add focused no-write decision coverage.
 - **Inputs:** Their review records, Phase 2 synthesis, cumulative calibration checklist, integrated Round 10 base/adapter/housekeeping contracts, locked remote fail-closed boundary, and remediation baseline.
-- **Files:** `skills/change-management/ki-next/**` and `skills/change-management/ki-plan/**` only.
+- **Scope:** `skills/change-management/ki-next/**` and `skills/change-management/ki-plan/**` only.
 - **Authority:** Edit the exact files and add pure no-write helpers/tests; do not mutate actual work records, edit other skills, roadmap or review records, Git state, or external systems.
 - **Isolation:** Exclusive shared-worktree ownership of the named paths; no Git write commands or lifecycle mutations outside fixtures.
 - **Definition of done:** Both processes resolve the configured adapter, support the two local adapters, fail closed for unsupported remote execution, preserve identity, and test ranking, promotion, deferral, trade/housekeeping decisions, containment, dependencies, approval refusal, atomic readiness, and delegation thresholds without duplicating runtime compaction policy.
@@ -543,7 +543,7 @@ The immutable baseline is `94f0b775903286fcf37c0ec050d5568672a5154f`. Changes to
 
 - **Deliverable:** Make `ki-batch` single-repository and integrity-safe, and align `ki-implement` with adapter resolution and one canonical review-packet schema with focused lifecycle evidence.
 - **Inputs:** Their review records, Phase 2 synthesis, cumulative calibration checklist, integrated Round 10 adapter contracts, locked single-repository decision, current roadmap review headings, and remediation baseline.
-- **Files:** `skills/change-management/ki-batch/**` and `skills/change-management/ki-implement/**` only.
+- **Scope:** `skills/change-management/ki-batch/**` and `skills/change-management/ki-implement/**` only.
 - **Authority:** Edit the exact files and add pure helpers/tests; do not execute a batch, transition an actual record, edit other skills, roadmap or review records, Git state, or external systems.
 - **Isolation:** Exclusive shared-worktree ownership of the named paths; no Git write commands or lifecycle mutations outside fixtures.
 - **Definition of done:** Batch rejects plural repositories and duplicate IDs, binds approval to a verifiable payload/run record, resolves canonical items/dependencies/scope/stops/adapter support, and implementation resolves adapters, uses the canonical six-part review packet, and tests baseline, transitions, completed steps, scope/gate/delegation stops, verification and handoff.
@@ -556,7 +556,7 @@ The immutable baseline is `94f0b775903286fcf37c0ec050d5568672a5154f`. Changes to
 
 - **Deliverable:** Align `ki-accept` with integrated adapter, review-packet, batch-authority and housekeeping contracts and complete destructive prune safeguards and tests.
 - **Inputs:** The acceptance review, Phase 2 synthesis, cumulative calibration checklist, all integrated Round 10 and 11 contracts, locked housekeeping state machine, and remediation baseline.
-- **Files:** `skills/change-management/ki-accept/**` only.
+- **Scope:** `skills/change-management/ki-accept/**` only.
 - **Authority:** Edit the exact files and add pure no-write/selected-deletion fixture tests; do not accept, close, prune or delete actual work, edit other skills, roadmap or review records, Git state, or external systems.
 - **Isolation:** Exclusive shared-worktree ownership of the named path; destructive behavior is exercised only in disposable contained fixtures and no Git write commands are allowed.
 - **Definition of done:** Acceptance resolves the exact adapter root, consumes the canonical review packet, independently verifies human or named batch closure authority, refuses retained-trade pruning, fails closed for remote execution, and atomically records accepted housekeeping completion with explicit abandonment/replacement recovery; containment, symlink, traversal, incomplete-set and selected-deletion paths are tested.

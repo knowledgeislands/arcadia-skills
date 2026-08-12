@@ -1,71 +1,54 @@
 /**
- * Eval scenarios for the `ki-engineering` skill — the common toolchain
- * + enforcement framework.
+ * Outcome scenarios for `ki-engineering`.
  *
- * Design note: a capable model already knows generic TS/Bun hygiene (lint, test,
- * tsconfig strictness), so testing those shows "no difference". These scenarios target
- * house-ARBITRARY specifics a baseline cannot derive: the native repository operation surface,
- * direct tool execution and config-gated Vitest posture, the cli-chmod rule, and the
- * common-vs-artifact composition that defines how a repo is audited.
+ * Each prompt supplies a concrete review situation. The assertions distinguish an
+ * assisted answer that applies the house contract from a generic TS/Bun answer;
+ * they are not recall questions about a single rule.
  */
 import type { Scenario } from '../harness.ts'
 
 export const scenarios: Scenario[] = [
   {
     skill: 'ki-engineering',
-    id: 'eng-governed-entrypoints',
+    id: 'eng-refresh-separates-release-range-and-lock',
     prompt:
-      'In our Knowledge Islands TypeScript/Bun repos, which native commands run the complete and engineering-scoped audit/conform operations, where do the code tools run, and when does the Vitest profile apply?',
+      'A refresh finds the harness manifest declares `rumdl: ^0.2.52`, its committed bun.lock resolves 0.2.52, and rumdl has released 0.2.54. We are only changing the engineering skill, not root package files. What should the source record say, what may this change do now, and who decides the version update?',
     assertions: [
-      {
-        name: 'native audit/conform',
-        re: /ki repo audit[^.\n]{0,80}ki repo conform|ki repo conform[^.\n]{0,80}ki repo audit/
-      },
-      { name: 'skill-scoped engineering', re: /--skill\s+ki-engineering/ },
-      { name: 'no package aliases', re: /(no|not|without)[^.\n]{0,50}(package|script|alias)/i },
-      {
-        name: 'code tools internal',
-        re: /(Biome|TypeScript|tsc)[^.\n]{0,80}(inside|internal|direct)|inside[^.\n]{0,80}(Biome|TypeScript|tsc)/i
-      },
-      { name: 'runner-neutral test', re: /(bare|runner-neutral)[^.\n]{0,30}`?test`?/i },
-      { name: 'Vitest config-gated', re: /vitest\.config[^.\n]{0,50}(gate|select|present|carry|when)/i }
+      { name: 'range distinguished from resolution', re: /(range|declared)[^.\n]{0,70}\^0\.2\.52[^.\n]{0,90}(lock|resolved)[^.\n]{0,30}0\.2\.52/i },
+      { name: 'upstream availability distinguished', re: /(upstream|release)[^.\n]{0,80}0\.2\.54/i },
+      { name: 'no root manifest mutation', re: /(do not|cannot|not)[^.\n]{0,70}(package\.json|root manifest|lockfile)/i },
+      { name: 'owner decides', re: /(root|manifest|integration)[^.\n]{0,80}(owner|decide|approval)/i }
     ],
     rubric:
-      'House rule: `ki repo audit` and `ki repo conform` host the complete declared governance set; `--skill ki-engineering` narrows either operation. Package aliases and skill-owned wrappers are absent. Biome, TypeScript, syncpack, and knip run directly inside the engineering rubric; Markdown tools run inside authoring. Tests use the runner-neutral bare `test` idiom. The canonical Vitest scripts, globals, and 100% coverage profile apply only when `vitest.config.*` selects Vitest. A correct answer covers the native commands, direct code tools, test entrypoint, and Vitest conditional.'
+      'A source refresh records three different facts: upstream 0.2.54 is available; package.json deliberately selects the compatible ^0.2.52 range; bun.lock resolves 0.2.52 today. With no root-config authority, update only the source evidence and make a precise owner-facing recommendation; do not silently edit package.json or bun.lock. A correct answer states that the root manifest/lock owner decides the normal dependency update.'
   },
   {
     skill: 'ki-engineering',
-    id: 'eng-cli-chmod',
+    id: 'eng-build-profile-audit-is-complete',
     prompt:
-      'In our repos that compile to dist/, what is the rule for what the `build` script chmods +x — and what must it NOT chmod?',
+      'A compiled TypeScript repository has build `tsc -p tsconfig.build.json`, files ["dist"], and a tsconfig.build.json with extends, noEmit false, declaration true, outDir ./dist, noUncheckedIndexedAccess true, and test exclusion. It omits declarationMap, rootDir, and allowImportingTsExtensions false. State the audit outcome and the smallest safe repair; do not create package-script governance aliases.',
     assertions: [
-      { name: 'chmod dist/cli/cli.js', re: /dist\/cli\/cli\.js/ },
-      { name: 'iff src/cli exists', re: /(iff|only if|when)[^.\n]{0,30}src\/cli|src\/cli[^.\n]{0,30}(exist|present)/i },
-      {
-        name: 'never the server/mcp-server bin',
-        re: /(not|never|no)[^.\n]{0,40}(server|mcp-server)[^.\n]{0,12}bin|(server|mcp-server)[^.\n]{0,20}(not|never|no) chmod/i
-      }
+      { name: 'build criterion surfaced', re: /BUILD-2|build TypeScript configuration/i },
+      { name: 'declaration map required', re: /declarationMap[^.\n]{0,35}true/i },
+      { name: 'root directory required', re: /rootDir[^.\n]{0,35}(\.\/src|src)/i },
+      { name: 'imports extension setting required', re: /allowImportingTsExtensions[^.\n]{0,35}false/i },
+      { name: 'native operations retained', re: /(no|not|without)[^.\n]{0,50}(package|script|alias)/i }
     ],
     rubric:
-      'House rule (a deliberate decision): the `build` script chmods `dist/cli/cli.js` **iff** `src/cli/` exists, and chmods NOTHING ELSE — in particular not the server / `dist/mcp-server/index.js` bin (package managers set +x on bin at install, and launchers run via `node`). A correct answer states chmod dist/cli/cli.js only when src/cli/ exists, and that the mcp-server/server bin must NOT be chmodded.'
+      'The compiled-build profile is incomplete and produces BUILD-2 diagnostic findings for declarationMap true, rootDir ./src, and allowImportingTsExtensions false. Repair only tsconfig.build.json and rerun the native engineering audit. A correct answer does not add ki:lint, ki:verify, or any package wrapper to work around the check.'
   },
   {
     skill: 'ki-engineering',
-    id: 'eng-composition',
+    id: 'eng-published-export-protected-before-knip-fix',
     prompt:
-      'How does `ki repo audit` fully audit a workspace MCP repository — which declared capabilities run, what does each own, and how do they compose?',
+      'A package exports `./parse` as `./dist/main/email/parse.js`, but knip.json entry only covers `src/main/*/index.ts`. Knip reports the parse export as unused and someone proposes `knip --fix`. How should the engineering audit classify this, what evidence should be checked, and what is the safe next action?',
     assertions: [
-      {
-        name: 'engineering common layer',
-        re: /ki-engineering[^.\n]{0,50}(common|toolchain)|engineering[^.\n]{0,40}(common|toolchain)/i
-      },
-      { name: 'mcp delta', re: /ki-repo-mcp[^.\n]{0,50}(delta|MCP)|MCP delta/i },
-      {
-        name: 'declared native composition',
-        re: /(declared|\.ki-config)[^.\n]{0,80}(both|sequence|compose)|(?:both|sequence|compose)[^.\n]{0,80}(declared|\.ki-config)/i
-      }
+      { name: 'published export criterion', re: /KNIP-3|published export|entry point/i },
+      { name: 'maps dist to source', re: /src\/main\/email\/parse\.ts|dist\/main\/email\/parse\.js/i },
+      { name: 'no destructive fix', re: /(do not|must not|avoid)[^.\n]{0,70}knip --fix/i },
+      { name: 'human chooses entry correction', re: /(review|human|author)[^.\n]{0,90}(entry|glob|export)/i }
     ],
     rubric:
-      'House architecture: `ki-engineering` owns the common toolchain (native audit wiring, direct code-tool checks, the `bun test` trap, tsconfig/biome, config-gated Vitest, .env, and the cli-chmod rule); `ki-repo-mcp` owns only the MCP delta (src/ layout, bin/exports, tool naming, and conditional coverage exclusions). `.ki-config.toml` declares both capabilities, and the native `ki repo audit` composes their registered rubrics in dependency order. The repo is clean only when both pass. A correct answer identifies the two layers and native declared composition.'
+      'This is a KNIP-3 published-entry-point gap: map the built export to src/main/email/parse.ts and verify whether an intended entry glob reaches it. Do not run knip --fix while that public surface is unresolved because it can remove genuine API. Adding the correct entry glob or correcting the export is a human decision, so the audit is diagnostic rather than an automatic conform repair.'
   }
 ]

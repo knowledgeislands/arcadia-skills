@@ -1,6 +1,6 @@
 /**
  * Eval scenarios for the `ki-skills` skill — the Agent Skills rubric.
- * Each probes a house/standard rule (the standard-vs-base-coupled-extension shape,
+ * Each probes a house/standard rule (the declared-not-forked variation shape,
  * the size cap, the relative-not-wikilinks rule) the skill encodes — house-arbitrary
  * conventions a skill-less baseline can't derive.
  */
@@ -8,27 +8,26 @@ import type { Scenario } from '../harness.ts'
 
 export const scenarios: Scenario[] = [
   {
-    // Replaces the former `skills-description` scenario — that probed generic
-    // "what goes in a description" advice a skill-less baseline already knows
-    // (matrix: baseline ~2.7-3.0/3, no real lift). This targets a house-ARBITRARY
-    // distinction the skill owns (rubric area SHAPE) that a baseline can't derive.
+    // A repository variation is declared in configuration and standing guidance;
+    // it never forks a standard skill's universal modes. This tests the current
+    // declared-not-forked contract, not the retired base-coupled extension pattern.
     skill: 'ki-skills',
-    id: 'skills-shape',
+    id: 'skills-declared-variation',
     prompt:
-      "In this skill collection we distinguish a 'standard' skill from a 'base-coupled extension'. What is each, and how does an extension reuse a standard skill's shared modes?",
+      'Our repository needs a base-specific variation of an existing standard skill. Should we fork the skill and copy its AUDIT/CONFORM/EDUCATE/REFRESH modes, or where should the variation be represented?',
     assertions: [
       {
-        name: 'standard resolves base bindings at runtime / no hard-coded base',
-        re: /(resolv|bind)[^.\n]{0,40}runtime|hard.?codes? no|no (single )?(hard.?coded )?base/i
+        name: 'does not fork or copy the shared modes',
+        re: /(do not|never|avoid|rather than)[^.\n]{0,50}(fork|copy)[^.\n]{0,50}(mode|skill)|no[^.\n]{0,30}(fork|extension)/i
       },
       {
-        name: 'extension supplies base bindings / delegates shared modes',
-        re: /(supplies|provides|carries|holds)[^.\n]{0,30}base|delegat/i
+        name: 'declares the variation in configuration or standing guidance',
+        re: /(declare|configuration|\.ki-config\.toml|standing guidance|AGENTS\.md|CLAUDE\.md)/i
       },
-      { name: 'reuses the standard skill by name', re: /by (its )?`?name`?|reference[^.\n]{0,20}name/i }
+      { name: 'generalises a behaviour that declaration cannot express', re: /generaliz|standard|refresh candidate/i }
     ],
     rubric:
-      'House rubric (SHAPE-1/2): a STANDARD KI skill resolves its base bindings at runtime and hard-codes no single base, so it installs anywhere; a BASE-COUPLED EXTENSION supplies only the base-specific bindings and delegates the shared governance modes (AUDIT/CONFORM/REFRESH) to a standard skill, referencing it BY NAME (not a file path, since on-disk location is not stable). A correct answer draws this standard-vs-extension distinction and says the extension reuses the standard skill by name.'
+      'House standard (skill shape): a base variation is declared rather than forked — configuration data belongs in that repository’s `.ki-config.toml` table and standing prose in its AGENTS.md or runtime guidance. Do not copy a standard skill’s universal governance modes into a base-coupled extension. A genuinely base-specific behaviour that cannot be declared is a REFRESH candidate to generalise into the standard. Score the decision and routing, not generic advice about writing skills.'
   },
   {
     skill: 'ki-skills',

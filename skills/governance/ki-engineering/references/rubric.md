@@ -285,3 +285,5 @@ The repository selector and validate-down configuration boundary.
   - _Remediation:_ automatic
 - **TOML-2 [M] — Engineering configuration validates down** — Every key under `[skills.ki-engineering]` is known to the checker; an unknown key is drift. (standards-engineering.md)
   - _Remediation:_ diagnostic — Remove or correct the unknown engineering configuration key, then rerun the audit.
+- **TOML-3 [M] — Engineering check records validate** — Every optional `[skills.ki-engineering.checks]` entry names a known mechanical rubric ID and has a boolean value; entries remain diagnostic records, not audit waivers. (standards-engineering.md)
+  - _Remediation:_ diagnostic — Remove or correct the check-record key or value; retain any exception rationale in the repository change record, then rerun the audit.

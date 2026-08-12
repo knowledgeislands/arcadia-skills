@@ -16,7 +16,7 @@ For concurrent delegated work in one worktree, it also owns the split between wo
 
 Read [the Git standard](references/standards-git.md) before preparing a commit, choosing a branch boundary, or assessing a stale lock.
 
-The hosted native rubric records the portable review prompts below. It deliberately has no mechanical policy checks yet.
+The hosted native rubric records the portable review prompts below. Its four policy families are **judgment-only**: an AUDIT renders them as unassessed review work, not as a clean Git result. Before recording a judgment, gather the named read-only evidence (for example `git status --short`, `git branch --show-current`, and the proposed commit diff/message) and retain its outcome with the review. It deliberately has no mechanical policy checks or private Git executor yet.
 
 It does not install a hook, write runtime settings, or add a compatibility execution path.
 
@@ -32,7 +32,7 @@ It does not install a hook, write runtime settings, or add a compatibility execu
 
 Read the selected repository's commit history and working-state evidence against the Git standard.
 
-Run `ki repo audit --skill ki-git --repo <repo>` to render the portable review prompts. It does not infer a missing configuration table or run a private wrapper.
+Run `ki repo audit --skill ki-git --repo <repo>` to render the portable review prompts. Treat the result as an unassessed judgment checklist until a reviewer records outcomes against the focused read-only evidence; it is not a pass/fail audit of Git state. It does not infer a missing configuration table or run a private wrapper.
 
 ### Mode CONFORM
 

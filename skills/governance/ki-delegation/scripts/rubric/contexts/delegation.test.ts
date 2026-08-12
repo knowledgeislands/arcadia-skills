@@ -29,19 +29,13 @@ const validPacket = `## Delegation
 
 - Return unresolved policy questions.
 
-### Rounds
-
-- Round 1: research.
-
 ### Worker: research
 
 - **Deliverable:** Source evidence.
 - **Inputs:** The approved work record and named sources.
-- **Files:** None.
+- **Scope:** Named sources only; no repository or external writes.
 - **Authority:** Read only; perform no external writes.
 - **Isolation:** Read-only worker context.
-- **Definition of done:** The source is cited.
-- **Model:** fast.
 - **Verify:** Coordinator reads the source.
 - **Return:** Findings, citations, and remaining uncertainty.
 - **Checkpoint:** Return when complete.
@@ -82,18 +76,21 @@ describe('ki-delegation session', () => {
     })
   })
 
-  for (const field of [
-    'Deliverable',
-    'Inputs',
-    'Files',
-    'Authority',
-    'Isolation',
-    'Definition of done',
-    'Model',
-    'Verify',
-    'Return',
-    'Checkpoint'
-  ])
+  test('rejects the retired Files boundary label', () => {
+    const session = createDelegationSession({
+      mode: 'audit',
+      repository: repository(validPacket.replace('**Scope:**', '**Files:**')),
+      userHome: '',
+      configuration: {}
+    })
+    expect(session.subjects[0]?.context().packets.outcomes).toContainEqual({
+      status: 'VIOLATION',
+      message: 'Delegation worker is missing a non-empty `Scope` field.',
+      subject: 'docs/roadmap/KI-TEST-GOV-001-packet.md'
+    })
+  })
+
+  for (const field of ['Deliverable', 'Inputs', 'Scope', 'Authority', 'Isolation', 'Verify', 'Return', 'Checkpoint'])
     test(`rejects a worker without ${field}`, () => {
       const packet = validPacket.replace(new RegExp(`^- \\*\\*${field}:\\*\\*.*\\n`, 'm'), '')
       const session = createDelegationSession({
@@ -116,9 +113,6 @@ describe('ki-delegation session', () => {
 
 ### Escalate
 
-### Rounds
-
-- Round 1: research.
 `
     const session = createDelegationSession({
       mode: 'audit',
@@ -145,7 +139,7 @@ describe('ki-delegation session', () => {
     ])
   })
 
-  test('keeps an ordinary delegation note outside the packet rubric', () => {
+  test('keeps an ordinary delegation note outside the durable-packet rubric', () => {
     const session = createDelegationSession({
       mode: 'audit',
       repository: repository('## Delegation\n\nKeep this task with the coordinator.\n'),
