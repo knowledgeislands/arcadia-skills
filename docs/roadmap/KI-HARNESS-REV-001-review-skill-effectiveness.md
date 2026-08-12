@@ -126,7 +126,7 @@ Reconcile the three surfaces against one another and the canonical skill set. Re
 
 ## Current state
 
-The Harness has a strong mechanical `ki-skills` rubric and per-skill REFRESH contracts, but it has no completed effectiveness record spanning all 50 skills. Phase 0 reconciled the standing instruction surfaces and the immutable 50-skill inventory and dependency order are frozen in [the review evidence](../reviews/KI-HARNESS-REV-001/README.md). Phase 1 reviewed all six foundations. Phase 2 reviewed and reconciled all 11 change-management skills. All 17 reviewed skills currently propose revision and no order change is required. The phase syntheses record source drift, hosted-audit false negatives, incomplete remote adapters, local-path process assumptions, recurring-state conflict, stale runtime claims, batch authority ambiguity, review-packet mismatch, and incomplete prune guards without applying remediation or grades.
+The Harness review has completed the standing-guidance audit and 26 of 50 dependency-ordered skill reviews. Approved Phase 1 and Phase 2 remediations are applied and recorded per skill in [the review evidence](../reviews/KI-HARNESS-REV-001/README.md). Phase 3 reviewed all portable-governance and agent-system skills: eight propose revision and `ki-communication` proposes retirement; none is graded or remediated. Phase 4 repository-structure reviews are in progress.
 
 No grade scale or remediation queue is approved yet. The ordered inventory and common checks above are the planning basis for collecting comparable evidence before those decisions.
 
