@@ -15,3 +15,9 @@ The claimed adapter resolution is false. Preflight branches on KB versus every o
 ## Proposed remediation
 
 These proposals are not approved: extend `KI-HARNESS-FND-014` with shared process resolution; add pure no-write fixtures for containment, draft/horizon checks, dependencies, approval refusal, re-audit failure, atomic multi-record readiness, and delegation threshold; add current outcome scenarios. Retain human approval as judgment. No new skill, agent, or hook is proposed.
+
+## Applied changes
+
+**State:** applied in `a1483153`.
+
+Added pure selected-adapter and readiness decisions with exact roots, remote refusal, containment, draft/horizon, dependency, verification, approval, atomic multi-record, and delegation-threshold fixtures. Repository shape is no longer an adapter fallback. Human approval remains judgment; live shared resolution and remote execution remain with `KI-HARNESS-FND-014`.

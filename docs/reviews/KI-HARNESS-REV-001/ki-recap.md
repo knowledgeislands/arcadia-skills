@@ -50,3 +50,9 @@ These proposals are not approved implementation:
 5. Add cross-runtime assisted-versus-baseline scenarios for missed dirty work, false backlog Actions, learning confirmation, and future-work routing.
 
 No new skill, agent, or hook is proposed.
+
+## Applied changes
+
+**State:** applied in `76173ee7`.
+
+Grounding now resolves the physical Git root, reports staged, unstaged, and untracked evidence, combines diff statistics, and returns `unavailable` rather than clean on Git failure. Transcript parsing is advisory and version-sensitive. Runtime sources distinguish documented `/compact` availability from agent authority, with expanded failure and drift fixtures.

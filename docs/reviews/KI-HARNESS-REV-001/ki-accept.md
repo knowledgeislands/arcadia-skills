@@ -20,3 +20,9 @@ Four material gaps remain:
 ## Proposed remediation
 
 These proposals are not approved: use the exact adapter root; add trade-retention refusal; consume one canonical review packet; independently validate human or batch closure authority; resolve the configured adapter and fail closed remotely; atomically reconcile linked housekeeping completion with abandonment/replacement recovery; add pure no-write and selected-deletion fixtures. No new skill, agent, or hook is proposed.
+
+## Applied changes
+
+**State:** applied in `7143bf33`.
+
+Acceptance now resolves exact local adapter roots, refuses remote execution, consumes the six-heading review packet, and validates human or approval-bound named batch closure. Pruning rejects unsafe or incomplete selection and retained/uncertain completion-observation trades. Pure fixtures cover lifecycle, authority, containment, traversal, symlinks, terminal state, accepted housekeeping completion, explicit disposition, and verified replacement.

@@ -17,3 +17,9 @@ The review packet contract is inconsistent. Implementation asks for five semanti
 ## Proposed remediation
 
 These proposals are not approved: reuse the `KI-HARNESS-FND-014` resolver; establish one canonical review-packet schema across implementation, roadmap, and acceptance; add pure fixtures for baseline, lifecycle transitions, completed steps, gate/scope stops, delegation, verification, and acceptance handoff; add assisted-versus-baseline outcomes. No new skill, agent, or hook is proposed.
+
+## Applied changes
+
+**State:** applied in `cab06c4e`.
+
+Added selected-adapter preflight with remote refusal, immutable-baseline and lifecycle decisions, bounded-plan/scope/gate/delegation stops, completed-step and verification checks, and exact production of the roadmap-owned six-heading review packet. Pure fixtures cover both start and acceptance-handoff boundaries without mutating live work.

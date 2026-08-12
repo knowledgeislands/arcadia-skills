@@ -49,6 +49,12 @@ These proposals are not approved implementation:
 
 No new skill, agent, or hook is proposed. Existing `KI-HARNESS-FND-014` is the remote-execution owner; the housekeeping conflict requires a separately confirmed cross-skill amendment.
 
+## Applied changes
+
+**State:** applied in `a1483153`.
+
+Added pure selected-adapter decisions for local roadmap and KB Streams roots, with no filesystem-shape fallback and explicit remote refusal. Housekeeping spawn now sets only `active-run`; runtime compaction assertions were removed. Fixtures cover ranking, promotion, deferral, trade disposition, housekeeping policy, duplicate active runs, and adapter refusal.
+
 ## Later-process implications
 
 `ki-plan`, `ki-implement`, and `ki-accept` must resolve the base-selected adapter and fail closed for unavailable remote execution. `ki-accept` must explicitly own or reject successful housekeeping completion updates rather than leaving the current cross-skill promise unimplemented.

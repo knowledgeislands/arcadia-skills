@@ -46,3 +46,9 @@ These proposals are not approved implementation:
 5. Preserve the existing keystone rather than splitting its mutually dependent repository contract into new skills.
 
 No new skill, agent, hook, or standalone script is proposed.
+
+## Applied changes
+
+**State:** applied in `ba4bd18a`.
+
+Aligned licence guidance with independent visibility/licence policy, refreshed repository and GitHub sources, added SPDX authority, and established `ki-repo` as the exclusive semantic TOML configuration owner. Retired-syntax evals were replaced with current configuration, licence, provenance, and confirmation scenarios. The keystone remains intentionally unified.

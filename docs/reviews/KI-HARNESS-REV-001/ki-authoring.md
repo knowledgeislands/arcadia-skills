@@ -50,3 +50,9 @@ These proposals are not approved implementation:
 5. Route semantic TOML-table judgment to `ki-repo` and retain presentation judgment in `ki-authoring`.
 
 No new skill, agent, hook, or shared module is proposed.
+
+## Applied changes
+
+**State:** applied in `ba4bd18a`.
+
+Moved semantic TOML judgment to `ki-repo`, retained presentation rules here, refreshed official rumdl evidence, upgraded rumdl to 0.2.54, and re-enabled MD005 and MD075 after their reproductions passed. MD056 remains disabled because its corruption still reproduces. Sources, fixtures, configuration, and eval scenarios were updated.

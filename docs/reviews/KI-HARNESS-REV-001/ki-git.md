@@ -45,3 +45,9 @@ These proposals are not approved implementation:
 4. Track `git-worktree` directly for linked-worktree safety claims.
 
 No new skill, script, agent, or hook is proposed.
+
+## Applied changes
+
+**State:** applied in `ba4bd18a`.
+
+Made judgment-only status explicit, required focused read-only Git evidence in review prompts, classified upstream authority narrowly, and added `git-worktree` as a direct safety source. Rubric wording and focused tests were refreshed. Assisted-versus-baseline outcome grading remains future evidence.

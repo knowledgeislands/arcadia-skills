@@ -52,6 +52,12 @@ These proposals are not approved implementation:
 
 No new skill, agent, or hook is proposed. The code-alignment work is a candidate for a separately confirmed direct amendment to this skill.
 
+## Applied changes
+
+**State:** applied in `76173ee7`.
+
+Mapped missing-profile findings to a published criterion, corrected dependency failures to `ITEM-5`, and added catalogue-to-inspector and host-visible coverage tests. KB applicability now follows configured repository type. The roadmap owns one exact six-heading review packet consumed by delivery and acceptance processes. Sources and eval evidence were refreshed.
+
 ## Later-process implications
 
 `ki-next`, `ki-plan`, `ki-implement`, and `ki-accept` must be reviewed against this adapter's concrete record and state contract without treating a clean hosted audit as trustworthy until the confirmed publication mismatches are fixed. They must also resolve the base-selected adapter rather than infer a local path when a remote adapter is selected.

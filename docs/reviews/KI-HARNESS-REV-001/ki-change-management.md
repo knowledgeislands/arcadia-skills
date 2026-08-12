@@ -46,6 +46,12 @@ These proposals are not approved implementation:
 
 No new skill, agent, or hook is proposed. A small selector-resolution helper within the existing skill is the preferred automation shape.
 
+## Applied changes
+
+**State:** applied in `76173ee7`.
+
+Added deterministic validation for known adapters, required owner declarations, and repository-kind applicability. Clarified that the base owns abstract lifecycle vocabulary while adapters own concrete mappings and records. Host-visible negative fixtures cover absent, unknown, undeclared, inapplicable, and valid selections; resolved execution remains a process/host responsibility.
+
 ## Round 5 implications
 
 The next reviews can proceed in the established order. `ki-change-management-roadmap` must test concrete lifecycle ownership rather than attributing it to the base. GitHub Issues must assess its current issue dependency, sub-issue, metadata, and remote-operation surfaces. Linear has a material source-authority issue: [moving an issue between teams creates a new identifier and URL, while old identifiers redirect and remain searchable](https://linear.app/docs/editing-issues). The Linear review must reconcile that behavior with its current stable team-scoped identity claim.

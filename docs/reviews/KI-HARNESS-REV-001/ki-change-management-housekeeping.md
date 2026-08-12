@@ -46,3 +46,9 @@ These proposals are not approved implementation:
 5. Add assisted-versus-baseline scenarios for missed, duplicate, premature, and successfully completed maintenance.
 
 No new skill, agent, or hook is proposed. Any lifecycle remediation requires separately confirmed cross-skill amendments.
+
+## Applied changes
+
+**State:** applied in `76173ee7`; its `ki-accept` consumer landed in `7143bf33`.
+
+Established the state machine: spawn sets only `active-run`; accepted completion sets `last-run` and clears it; replacement substitutes the link without advancing successful-run evidence; non-success states require explicit disposition. Audit now validates exact fields, body sections, roots, identities, linked-record integrity, dates, and duplicate active ownership with negative fixtures.

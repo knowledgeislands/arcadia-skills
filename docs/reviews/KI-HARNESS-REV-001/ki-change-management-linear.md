@@ -50,3 +50,9 @@ These proposals are not approved implementation:
 5. Route remote resolution, execution, conflict, and no-write fixtures through existing `KI-HARNESS-FND-014`; until delivered, narrow the description to actual configuration and guidance.
 
 No new skill, agent, or hook is proposed. Existing `KI-HARNESS-FND-014` is the appropriate remediation owner.
+
+## Applied changes
+
+**State:** applied in `76173ee7`.
+
+Replaced stable shorthand-ID language with mutable team-scoped locator guidance, retained aliases, and made team moves authority-gated without asserting undocumented UUID persistence. Workflow, hierarchy/dependency, archive/delete, and permission guidance were corrected. Mapping fixtures were added; remote execution remains fail closed under `KI-HARNESS-FND-014`.

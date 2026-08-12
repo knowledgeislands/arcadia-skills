@@ -80,3 +80,9 @@ These proposals are not approved implementation:
 4. Regenerate current advisory evidence across supported runtime paths before grading.
 
 No new skill, agent, hook, or shared module is proposed. These are direct amendments to the existing `ki-skills` owner and its evaluation evidence.
+
+## Applied changes
+
+**State:** applied in `ba4bd18a`.
+
+Corrected portable versus runtime-specific authority, qualified the selection-signal claim, demoted demonstration-only sources, replaced the obsolete composition scenario, and added regression coverage for the retired extension pattern. Source records, standards, rubric publication, tests, and eval scenarios were aligned. Outcome effectiveness still awaits grading evidence.

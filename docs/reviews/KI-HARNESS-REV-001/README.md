@@ -6,7 +6,7 @@ This directory records the ungraded evidence for [KI-HARNESS-REV-001](../../road
 - **Inventory:** [50-skill baseline](inventory.md)
 - **Standing-guidance review:** recorded in the roadmap item
 - **Grading:** not assigned; the vocabulary and final grades remain an approval gate
-- **Remediation:** proposals only; review records do not authorise edits to a reviewed skill
+- **Remediation:** Phase 1 and Phase 2 proposals were approved on 2026-08-12; each skill record distinguishes applied work from remaining gaps
 
 ## Common record
 
@@ -46,15 +46,33 @@ Each completed review or phase may expose a reusable effectiveness check. Distil
 
 ## Progress
 
-- Phase 0 standing guidance: complete.
-- Inventory and dependency baseline: complete.
-- Phase 1: complete. [`ki-skills`](ki-skills.md), [`ki-authoring`](ki-authoring.md), [`ki-git`](ki-git.md), [`ki-engineering`](ki-engineering.md), [`ki-repo`](ki-repo.md), and [`ki-delegation`](ki-delegation.md) each currently propose `revise` before grading.
-- Phase 1 dependency and ownership reconciliation: [complete](phase-1-synthesis.md); no review-order change required.
-- Phase 2: in progress. [`ki-change-management`](ki-change-management.md), [`ki-change-management-roadmap`](ki-change-management-roadmap.md), [`ki-change-management-github-issues`](ki-change-management-github-issues.md), and [`ki-change-management-linear`](ki-change-management-linear.md) propose `revise`; no order change is required.
-- Phase 2 continued: [`ki-change-management-housekeeping`](ki-change-management-housekeeping.md), [`ki-recap`](ki-recap.md), and [`ki-next`](ki-next.md) also propose `revise`; lifecycle and runtime conflicts are recorded without remediation.
-- Phase 2: complete. [`ki-plan`](ki-plan.md), [`ki-batch`](ki-batch.md), [`ki-implement`](ki-implement.md), and [`ki-accept`](ki-accept.md) propose `revise`; the [phase synthesis](phase-2-synthesis.md) reconciles ownership and preserves the existing order.
-- Phase 3: in progress. [`ki-decision-records`](ki-decision-records.md), [`ki-specs`](ki-specs.md), [`ki-guides`](ki-guides.md), and [`ki-checkpoint`](ki-checkpoint.md) propose `revise`; ownership conflicts are deferred to their declared later gates rather than decided early.
-- Phases 4–6: pending.
+Phase 0, the inventory, and dependency ordering are complete. Phase 1 and Phase 2 review and remediation are complete. Phase 3 review is in progress. Phases 4–6 are pending.
+
+| #  | Skill                                        | Review   | Change state | Evidence   |
+| -: | -------------------------------------------- | -------- | ------------ | ---------- |
+| 1  | [`ki-skills`](ki-skills.md)                  | complete | applied      | `ba4bd18a` |
+| 2  | [`ki-authoring`](ki-authoring.md)            | complete | applied      | `ba4bd18a` |
+| 3  | [`ki-git`](ki-git.md)                        | complete | applied      | `ba4bd18a` |
+| 4  | [`ki-engineering`](ki-engineering.md)        | complete | applied      | `ba4bd18a` |
+| 5  | [`ki-repo`](ki-repo.md)                      | complete | applied      | `ba4bd18a` |
+| 6  | [`ki-delegation`](ki-delegation.md)          | complete | applied      | `ba4bd18a` |
+| 7  | [`ki-change-management`](ki-change-management.md) | complete | applied  | `76173ee7` |
+| 8  | [`ki-change-management-roadmap`](ki-change-management-roadmap.md) | complete | applied | `76173ee7` |
+| 9  | [`ki-change-management-github-issues`](ki-change-management-github-issues.md) | complete | applied | `76173ee7` |
+| 10 | [`ki-change-management-linear`](ki-change-management-linear.md) | complete | applied | `76173ee7` |
+| 11 | [`ki-change-management-housekeeping`](ki-change-management-housekeeping.md) | complete | applied | `76173ee7` |
+| 12 | [`ki-recap`](ki-recap.md)                     | complete | applied      | `76173ee7` |
+| 13 | [`ki-next`](ki-next.md)                       | complete | applied      | `a1483153` |
+| 14 | [`ki-plan`](ki-plan.md)                       | complete | applied      | `a1483153` |
+| 15 | [`ki-batch`](ki-batch.md)                     | complete | applied      | `cab06c4e` |
+| 16 | [`ki-implement`](ki-implement.md)             | complete | applied      | `cab06c4e` |
+| 17 | [`ki-accept`](ki-accept.md)                   | complete | applied      | `7143bf33` |
+| 18 | [`ki-decision-records`](ki-decision-records.md) | complete | review only | —          |
+| 19 | [`ki-specs`](ki-specs.md)                     | complete | review only  | —          |
+| 20 | [`ki-guides`](ki-guides.md)                   | complete | review only  | —          |
+| 21 | [`ki-checkpoint`](ki-checkpoint.md)           | complete | review only  | —          |
+
+The [Phase 1 synthesis](phase-1-synthesis.md) and [Phase 2 synthesis](phase-2-synthesis.md) retain cross-skill conclusions. Detailed applied changes and remaining gaps live only in each skill record.
 
 ## Evidence rules
 

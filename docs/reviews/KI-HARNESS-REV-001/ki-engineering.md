@@ -48,3 +48,9 @@ These proposals are not approved implementation:
 5. Retain `KI-HARNESS-GOV-007` as the owner of package-script claim aggregation.
 
 No new skill, agent, hook, or standalone script is proposed.
+
+## Applied changes
+
+**State:** applied in `ba4bd18a`.
+
+Reconciled declared tool ranges, lock resolutions, current upstream sources, and the toolchain decision. Replaced retired aliases with native operations, expanded build-field validation, made documented check records mechanically exact without manufacturing judgment passes, aligned generated defaults, and replaced recall-only evals with concrete scenarios.

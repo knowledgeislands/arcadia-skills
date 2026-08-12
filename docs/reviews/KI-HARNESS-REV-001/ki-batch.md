@@ -19,3 +19,9 @@ A material authority conflict remains. Frontmatter names one local repository, w
 ## Proposed remediation
 
 These proposals are not approved: choose single-repository batches or define explicit per-repository authority and isolation; make the approved payload verifiable with a separate append-only run ledger; reject duplicate IDs; resolve canonical records, dependencies, scope, stops, and adapter selection; add outcome scenarios for wrongful admission, duplicate execution, unsafe continuation, and unnecessary ceremony. No new skill, agent, or hook is proposed.
+
+## Applied changes
+
+**State:** applied in `cab06c4e`.
+
+Locked batches to one repository, rejected duplicate identifiers, bound approval to a SHA-256 payload and run identity, and made the append-only ledger evidence rather than authority. Pure preflight models reject unsupported adapters, non-canonical or out-of-scope records, missing plans/checks, unsafe delegation, mandatory stops, and invalid dependency order.

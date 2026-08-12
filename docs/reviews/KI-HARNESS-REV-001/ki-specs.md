@@ -1,6 +1,8 @@
 # `ki-specs` effectiveness review
 
-**Review state:** complete, ungraded **Candidate disposition:** revise
+- **Review state:** complete, ungraded
+- **Candidate disposition:** revise
+- **Change state:** review only; no Phase 3 remediation is authorised
 
 ## Dependency and ownership
 

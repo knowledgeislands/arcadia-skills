@@ -48,3 +48,9 @@ These proposals are not approved implementation:
 5. Add cross-runtime assisted-versus-baseline scenarios that measure missed constraints, unsafe authority, integration defects, context cost, and completion time.
 
 No new skill, agent, hook, or standalone script is proposed.
+
+## Applied changes
+
+**State:** applied in `ba4bd18a`.
+
+Narrowed activation to durable high-risk handoffs and reduced the packet to its portable authority, isolation, escalation, verification, return, and checkpoint fields. Ordinary scheduling, model choice, worker selection, and coordination remain with runtime/process owners. Existing packets, rubric fixtures, and evals were migrated to the current contract.

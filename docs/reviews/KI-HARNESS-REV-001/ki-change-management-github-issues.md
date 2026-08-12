@@ -50,3 +50,9 @@ These proposals are not approved implementation:
 5. Route remote execution, stale-read, permission, filtering, and no-write fixtures through existing `KI-HARNESS-FND-014`; until delivered, narrow the description to the actual configuration and guidance capability.
 
 No new skill, agent, or hook is proposed. Existing `KI-HARNESS-FND-014` is the appropriate remediation owner.
+
+## Applied changes
+
+**State:** applied in `76173ee7`.
+
+Reframed displayed issue locators as mutable addresses, retained old locators as aliases, made transfers authority-gated, and added explicit lifecycle metadata, dependency-versus-hierarchy, closure, and permission guidance. A local mapping criterion and negative fixtures were added. Remote reads and writes remain unavailable and fail closed pending `KI-HARNESS-FND-014`.
