@@ -6,15 +6,15 @@ ki-runtime-binding: true
 ki-supported-runtimes: [chatgpt-codex]
 ki-shared-dependencies: [ki-skills:rubric]
 description: >
-  Audit documented Codex context-cost evidence for the selected repository and bounded user configuration: instructions, skills, MCP declarations, memory and subagent surfaces, without exposing secret values. Use when a Codex repository needs runtime evidence for portable `ki-tokenomics` policy. Triggers: "audit Codex context", "check Codex tokenomics", "why is Codex context big". For portable budgets and model purpose use `ki-tokenomics`; for Claude Code use `ki-tokenomics-claude`.
+  Audit direct, non-secret Codex filesystem observations in the selected repository: trusted project configuration, AGENTS.md, skill, and custom-agent source directories. Use when a Codex repository needs bounded runtime evidence for portable `ki-tokenomics` policy. Effective model, loaded instructions, active MCP, trust, memory use, transcripts, and compaction remain unavailable without authorised session evidence. For portable budgets use `ki-tokenomics`; for Claude Code use `ki-tokenomics-claude`.
 argument-hint: 'audit | conform | educate | refresh | help'
 ---
 
 # Codex tokenomics
 
-`ki-tokenomics-codex` composes `ki-tokenomics` with only the documented Codex configuration, instruction, skill, MCP, memory, and subagent surfaces available for the selected repository. It does not inspect Claude state, arbitrary local caches, or undocumented local state.
+`ki-tokenomics-codex` composes `ki-tokenomics` with direct Codex filesystem observations from the selected repository only. It does not inspect user-home state, Claude state, arbitrary local caches, or undocumented local state.
 
-The audit reports paths and structural presence only. It never reads or reports secret values, including environment variables, API keys, headers, or credential-bearing configuration values. Actual billing, tool-schema weights, compaction metrics, and transcript metrics are explicitly **not available** from this documented filesystem evidence.
+The audit reports paths and structural presence only. It parses the selected trusted project TOML only to verify its shape and never reports values, including environment variables, API keys, headers, or credential-bearing configuration. Effective model/profile, loaded instruction hierarchy, active MCP, trust, memory use, transcript, compaction, billing, and tool-schema metrics are unavailable.
 
 CONFORM is report-only and emits no writes or commands.
 

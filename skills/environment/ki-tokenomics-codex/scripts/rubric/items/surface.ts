@@ -6,7 +6,7 @@ const SURF_1: RubricItem<CodexEvidenceContext> = {
   code: 'CODEX-SURF-1',
   title: 'Documented Codex surfaces are bounded',
   description:
-    'Only documented selected-repository and bounded user Codex configuration, instructions, skills, memory, subagent, and MCP structural evidence is reported; values that may be secret are not emitted.',
+    'Only directly observed selected-repository Codex configuration, instructions, skills, and custom-agent source structure is reported; user-memory and effective-session state are unavailable, and values that may be secret are not emitted.',
   sources: [SOURCE],
   mechanical: {
     level: 'WARN',

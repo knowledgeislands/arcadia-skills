@@ -4,10 +4,14 @@
 
 | Source                                       | Governs                                   | Last reviewed |
 | -------------------------------------------- | ----------------------------------------- | ------------- |
-| [Codex configuration][config]                | documented user and project configuration | 2026-07-27    |
-| [Codex AGENTS.md instructions][instructions] | repository instruction discovery          | 2026-07-27    |
-| [Codex MCP][mcp]                             | documented MCP surface                    | 2026-07-27    |
-| [Codex skills][skills]                       | skill discovery and loading               | 2026-07-27    |
+| [Codex configuration][config]                | trusted project configuration and effective-state boundary | 2026-08-12 |
+| [Codex AGENTS.md instructions][instructions] | repository instruction source and loaded-hierarchy boundary | 2026-08-12 |
+| [Codex MCP][mcp]                             | declared MCP source and active-state boundary | 2026-08-12 |
+| [Codex skills][skills]                       | repository skill source directory | 2026-08-12 |
+
+## Last review
+
+**REFRESH last run 2026-08-12.** Project source observations are distinct from user configuration and effective session state, which remain unavailable.
 
 [config]: https://developers.openai.com/codex/config-reference/
 [instructions]: https://developers.openai.com/codex/guides/agents-md/

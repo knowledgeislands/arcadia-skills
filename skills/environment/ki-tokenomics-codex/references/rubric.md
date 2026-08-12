@@ -9,7 +9,7 @@ Line-by-line criteria for auditing ki-tokenomics-codex. Classifications are deri
 ## Contents
 
 - [SURF — Codex standing surfaces](#surf--codex-standing-surfaces)
-- [NA — Unavailable metrics](#na--unavailable-metrics)
+- [NA — Unavailable Codex runtime state](#na--unavailable-codex-runtime-state)
 - [RUBRIC — Generated rubric publication](#rubric--generated-rubric-publication)
 
 ## SURF — Codex standing surfaces
@@ -18,17 +18,17 @@ Line-by-line criteria for auditing ki-tokenomics-codex. Classifications are deri
 
 Bounded documented Codex evidence.
 
-- **CODEX-SURF-1 [M] — Documented Codex surfaces are bounded** — Only documented selected-repository and bounded user Codex configuration, instructions, skills, memory, subagent, and MCP structural evidence is reported; values that may be secret are not emitted. (standards-codex-tokenomics.md)
+- **CODEX-SURF-1 [M] — Documented Codex surfaces are bounded** — Only directly observed selected-repository Codex configuration, instructions, skills, and custom-agent source structure is reported; user-memory and effective-session state are unavailable, and values that may be secret are not emitted. (standards-codex-tokenomics.md)
   - _Remediation:_ diagnostic — Adjust the selected Codex configuration or document the observed standing surface; hosted conform does not change runtime state.
 
-## NA — Unavailable metrics
+## NA — Unavailable Codex runtime state
 
 → [standard](standards-codex-tokenomics.md)
 
-Metrics not inferred from local state.
+Session facts not inferred from filesystem observations.
 
-- **CODEX-NA-1 [M] — Unavailable token metrics are explicit** — Actual billing, tool-schema weights, compaction totals, and transcript metrics are explicitly not applicable until Codex documents a safe evidence contract. (standards-codex-tokenomics.md)
-  - _Remediation:_ diagnostic — Supply the selected Codex configuration evidence or record the unavailable metric; hosted conform does not infer runtime state.
+- **CODEX-NA-1 [M] — Effective session state is unavailable** — Effective model, instructions, active MCP, trust, memory use, transcript, compaction, billing, and tool-schema metrics are unavailable without authorised session evidence. (standards-codex-tokenomics.md)
+  - _Remediation:_ diagnostic — Use an explicitly authorised session-evidence owner; do not infer session state from filesystem sources.
 
 ## RUBRIC — Generated rubric publication
 
