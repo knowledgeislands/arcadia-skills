@@ -163,6 +163,130 @@ The work has no roadmap blocker. Its first gate is methodological: refresh and a
 
 The immutable baseline will be recorded when implementation begins. Changes to the canonical skill set after that point must be reconciled explicitly rather than silently appended to or omitted from the review.
 
+## Delegation
+
+### Locked decisions
+
+- The approved review protocol, 50-skill baseline, dependency-respecting order, and `baseline_ref` remain fixed unless new evidence is reconciled explicitly in this item.
+- Workers collect and judge evidence only. They do not edit skills, source records, standards, rubrics, tests, roadmap records, or repository configuration.
+- A clean audit is not effectiveness evidence. Every returned review must address selection value, outcome value, instruction economy, architecture, safety, tests, and disposition.
+- Normative rubric changes, canonical skill-set changes, remediation, and final grades remain human approval points.
+
+### Escalate
+
+- Return any source conflict, proposed normative change, ownership or dependency change, missing authority, unsafe command, external write, or conclusion that cannot be supported from the named evidence to the coordinator.
+- Stop if a lane would overlap another worker's scope, require repository writes, or depend on an unreviewed earlier skill.
+
+### Rounds
+
+- Round 1: `refresh-ki-skills-sources`, `review-ki-skills-architecture`, and `inventory-evaluation-evidence` run independently against the frozen baseline.
+- Round 2: `review-ki-authoring`, `review-ki-git`, and `review-ki-engineering` begin after the coordinator integrates the `ki-skills` evidence shape.
+- Round 3: `review-ki-repo` begins after the authoring and Git reviews; `review-ki-delegation` may run alongside it after the Phase 1 evidence shape is stable.
+
+### Worker: refresh-ki-skills-sources
+
+- **Deliverable:** Current, cited source-refresh evidence for `ki-skills`, including page-inventory drift, changed claims, relevant new primary or official material, discovery-source additions, and unresolved conflicts.
+- **Inputs:** `skills/keystone/ki-skills/references/sources.md`, its three standards, generated rubric, and the source-refresh protocol in this item.
+- **Files:** None; read-only repository and web research.
+- **Authority:** Read the named local files and browse their declared sources; perform no repository or external writes and propose no silent standard change.
+- **Isolation:** Read-only worker lane with no shared-worktree mutation.
+- **Definition of done:** Every tracked source has a current status, the Agent Skills documentation index is reconciled, relevant additions are named, and each possible normative impact is separated from supporting practice.
+- **Model:** reasoning — current-source reconciliation and authority conflicts require hard judgment.
+- **Verify:** Coordinator checks every cited source, inventory conclusion, and claimed normative impact before recording it.
+- **Return:** Concise source-by-source findings with direct links, dates where available, proposed source-list changes, and unresolved watch-items; no browsing transcript.
+- **Checkpoint:** Return after the complete `ki-skills` source set and discovery surfaces have been assessed.
+
+### Worker: review-ki-skills-architecture
+
+- **Deliverable:** A read-only effectiveness review of `ki-skills` against the approved protocol and all judgment criteria, with candidate findings in the canonical shape.
+- **Inputs:** The complete `ki-skills` directory, whole-repository mechanical audit evidence supplied in the brief, relevant eval scenarios and results, the REVIEW procedure, and this work item's boundary.
+- **Files:** None; read-only review.
+- **Authority:** Inspect named repository evidence and run read-only checks; do not edit, stage, commit, or create roadmap work.
+- **Isolation:** Read-only worker lane scoped to `ki-skills` and its directly relevant eval evidence.
+- **Definition of done:** The report covers selection and outcome effectiveness, instruction economy, architecture, executability, test evidence, source posture, disposition, and deduplicated candidates.
+- **Model:** reasoning — the lane is an architectural and effectiveness judgment.
+- **Verify:** Coordinator rechecks each finding against cited paths, the mechanical baseline, and the candidate-finding standard.
+- **Return:** One compact review record plus candidate findings; distinguish facts, inferences, gaps, and proposals.
+- **Checkpoint:** Return after one complete `ki-skills` review with no remediation applied.
+
+### Worker: inventory-evaluation-evidence
+
+- **Deliverable:** A mechanical baseline mapping all 50 skills to dependency position, source-list presence, structured rubric, tests, eval scenarios, and available result evidence, plus proposed fields for a comparable review record.
+- **Inputs:** Canonical `skills/`, `evals/`, the review sequence, and `baseline_ref`.
+- **Files:** None; read-only inventory.
+- **Authority:** Run read-only repository inspection only; do not edit or interpret missing evidence as a grade.
+- **Isolation:** Read-only whole-repository scan with no network or mutation.
+- **Definition of done:** All 50 canonical skills appear exactly once, dependency order is checked, evidence coverage is explicit, and the proposed record fields map directly to the approved protocol.
+- **Model:** standard — the work is bounded evidence collection and synthesis.
+- **Verify:** Coordinator reruns the inventory and samples mappings against the filesystem and baseline commit.
+- **Return:** Compact machine-verifiable counts, the 50-skill coverage map, and a proposed ungraded record template.
+- **Checkpoint:** Return after the complete inventory is accounted for with no unknown skill identity.
+
+### Worker: review-ki-authoring
+
+- **Deliverable:** A read-only effectiveness review of `ki-authoring` using the integrated record shape.
+- **Inputs:** The complete `ki-authoring` directory, relevant tests and eval evidence, the Phase 1 `ki-skills` review record, and this item's protocol.
+- **Files:** None; read-only review.
+- **Authority:** Inspect and run read-only checks only; do not remediate or create follow-up work.
+- **Isolation:** Read-only lane scoped to `ki-authoring` and its directly relevant evidence.
+- **Definition of done:** Every review-protocol dimension has evidence or an explicit gap and one proposed disposition.
+- **Model:** reasoning — effectiveness and ownership require hard judgment.
+- **Verify:** Coordinator checks citations, audit evidence, candidates, and disposition against the integrated template.
+- **Return:** One compact review record and canonical candidate findings; no raw command output.
+- **Checkpoint:** Return after the complete ungraded review.
+
+### Worker: review-ki-git
+
+- **Deliverable:** A read-only effectiveness review of `ki-git` using the integrated record shape.
+- **Inputs:** The complete `ki-git` directory, relevant tests and eval evidence, the Phase 1 `ki-skills` review record, and this item's protocol.
+- **Files:** None; read-only review.
+- **Authority:** Inspect and run read-only checks only; do not mutate Git state, remediate, or create follow-up work.
+- **Isolation:** Read-only lane scoped to `ki-git` and its directly relevant evidence.
+- **Definition of done:** Every review-protocol dimension has evidence or an explicit gap and one proposed disposition.
+- **Model:** reasoning — safety, runtime behaviour, and instruction value require hard judgment.
+- **Verify:** Coordinator checks citations, audit evidence, candidates, and disposition against the integrated template.
+- **Return:** One compact review record and canonical candidate findings; no raw command output.
+- **Checkpoint:** Return after the complete ungraded review.
+
+### Worker: review-ki-engineering
+
+- **Deliverable:** A read-only effectiveness review of `ki-engineering` using the integrated record shape.
+- **Inputs:** The complete `ki-engineering` directory, relevant tests and eval evidence, the Phase 1 `ki-skills` review record, and this item's protocol.
+- **Files:** None; read-only review.
+- **Authority:** Inspect and run read-only checks only; do not remediate or create follow-up work.
+- **Isolation:** Read-only lane scoped to `ki-engineering` and its directly relevant evidence.
+- **Definition of done:** Every review-protocol dimension has evidence or an explicit gap and one proposed disposition.
+- **Model:** reasoning — architecture, automation, and instruction economy require hard judgment.
+- **Verify:** Coordinator checks citations, audit evidence, candidates, and disposition against the integrated template.
+- **Return:** One compact review record and canonical candidate findings; no raw command output.
+- **Checkpoint:** Return after the complete ungraded review.
+
+### Worker: review-ki-repo
+
+- **Deliverable:** A read-only effectiveness review of `ki-repo` using the integrated record shape and the completed authoring and Git evidence.
+- **Inputs:** The complete `ki-repo` directory, relevant tests and eval evidence, completed `ki-authoring` and `ki-git` reviews, and this item's protocol.
+- **Files:** None; read-only review.
+- **Authority:** Inspect and run read-only checks only; do not remediate or create follow-up work.
+- **Isolation:** Read-only lane scoped to `ki-repo` and its directly relevant evidence.
+- **Definition of done:** Every review-protocol dimension has evidence or an explicit gap, dependency claims are reconciled, and one disposition is proposed.
+- **Model:** reasoning — this keystone aggregates broad repository policy and safety behavior.
+- **Verify:** Coordinator checks citations, audit evidence, dependency conclusions, candidates, and disposition.
+- **Return:** One compact review record and canonical candidate findings; no raw command output.
+- **Checkpoint:** Return after the complete ungraded review.
+
+### Worker: review-ki-delegation
+
+- **Deliverable:** A read-only effectiveness review of `ki-delegation`, explicitly testing whether the revised coordinator-first contract provides value beyond current runtime behavior and ordinary execution guidance.
+- **Inputs:** The complete `ki-delegation` directory, its recent history and eval evidence, the integrated Phase 1 record shape, and this item's motivating finding.
+- **Files:** None; read-only review.
+- **Authority:** Inspect and run read-only checks only; do not alter the current delegation contract, packet, or roadmap.
+- **Isolation:** Read-only lane scoped to `ki-delegation` and its directly relevant evidence.
+- **Definition of done:** The report compares skill-assisted and current-runtime behavior, identifies residual value or ceremony, covers every protocol dimension, and proposes one disposition.
+- **Model:** reasoning — the motivating effectiveness question requires careful counterfactual judgment.
+- **Verify:** Coordinator checks the counterfactual evidence, citations, candidate routes, and disposition independently.
+- **Return:** One compact review record and canonical candidate findings; no raw command output.
+- **Checkpoint:** Return after the complete ungraded review.
+
 ## Discussion
 
 ### Why this is a new area
