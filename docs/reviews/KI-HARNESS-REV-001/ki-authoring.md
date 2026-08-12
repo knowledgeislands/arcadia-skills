@@ -25,7 +25,7 @@ The skill materially improves outcomes by separating mechanical formatting from 
 
 The 83-line entrypoint routes enforcement, Markdown, TOML, knowledge promotion, and examples to five on-demand references. The inline footnote-marker sequence is a justified high-frequency recall aid. Reports should aggregate clean judgment areas rather than restating every rubric criterion.
 
-One ownership boundary needs later reconciliation with `ki-repo`: the TOML standard says the one-table-per-skill contract belongs to `ki-repo`, while `ki-authoring`'s `TOML-tables` criterion judges that same semantic contract. Authoring should either judge only presentation or cite an explicitly shared contract; this review does not choose the fix before the dependent `ki-repo` review.
+The subsequent `ki-repo` review confirms the ownership boundary: `ki-repo` owns semantic table identity and the one-table-per-skill contract, while `ki-authoring` should judge TOML presentation or explicitly consume that repository contract rather than duplicate semantic judgment.
 
 ## Executability and safety
 
@@ -37,7 +37,7 @@ The focused tests establish catalogue and mutation safety but do not execute rum
 
 The current TOML scenario is not reliable current-contract evidence: its assertion expects `[ki-repo]`, while the live contract uses `[skills.ki-repo]`, and its rubric text names yet another table spelling. Its comment that the no-skill baseline reliably scores zero also conflicts with the available historical results. Knowledge-promotion routing has no behavioural scenario.
 
-Explicit gaps are current rumdl compatibility evidence, real-tool regression fixtures, multi-runtime assisted-versus-baseline results, knowledge-promotion evidence, and the unresolved TOML contract boundary.
+Explicit gaps are current rumdl compatibility evidence, real-tool regression fixtures, multi-runtime assisted-versus-baseline results, knowledge-promotion evidence, and implementation of the now-reconciled TOML ownership boundary.
 
 ## Proposed remediation
 
@@ -47,6 +47,6 @@ These proposals are not approved implementation:
 2. Add the official rumdl configuration and CLI pages and clarify which sources define syntax versus local style.
 3. Add real-tool regression fixtures for the destructive watch-items.
 4. Replace the stale TOML recall scenario with a current contract task and add knowledge-promotion outcome evidence across supported runtimes.
-5. Reconcile semantic TOML ownership with the later `ki-repo` review.
+5. Route semantic TOML-table judgment to `ki-repo` and retain presentation judgment in `ki-authoring`.
 
 No new skill, agent, hook, or shared module is proposed.

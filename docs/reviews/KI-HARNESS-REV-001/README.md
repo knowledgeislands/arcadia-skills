@@ -29,8 +29,8 @@ The allowed proposed dispositions are `retain`, `revise`, `consolidate`, `split`
 
 - Phase 0 standing guidance: complete.
 - Inventory and dependency baseline: complete.
-- [`ki-skills`](ki-skills.md), [`ki-authoring`](ki-authoring.md), [`ki-git`](ki-git.md), and [`ki-engineering`](ki-engineering.md): reviewed; each currently proposes `revise` before grading.
-- Remaining Phase 1 skills: `ki-repo` and `ki-delegation`.
+- Phase 1: complete. [`ki-skills`](ki-skills.md), [`ki-authoring`](ki-authoring.md), [`ki-git`](ki-git.md), [`ki-engineering`](ki-engineering.md), [`ki-repo`](ki-repo.md), and [`ki-delegation`](ki-delegation.md) each currently propose `revise` before grading.
+- Phase 1 dependency and ownership reconciliation: [complete](phase-1-synthesis.md); no review-order change required.
 - Phases 2–6: pending.
 
 ## Evidence rules
