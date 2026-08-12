@@ -55,4 +55,4 @@ No new skill, agent, hook, or shared module is proposed.
 
 **State:** applied in `ba4bd18a`.
 
-Moved semantic TOML judgment to `ki-repo`, retained presentation rules here, refreshed official rumdl evidence, upgraded rumdl to 0.2.54, and re-enabled MD005 and MD075 after their reproductions passed. MD056 remains disabled because its corruption still reproduces. Sources, fixtures, configuration, and eval scenarios were updated.
+Moved semantic TOML judgment to `ki-repo`, retained presentation rules here, refreshed official rumdl evidence, and upgraded rumdl to 0.2.54. MD005 and MD075 were re-enabled after their reproductions passed. A follow-up flavor-specific reproduction confirmed the 0.2.54 MD056 wikilink fix under Obsidian; the standard-flavor house configuration now enables MD056 for detection but marks it unfixable so CONFORM cannot truncate invalid wikilink-table rows. Sources, fixtures, configuration, and eval scenarios were updated.

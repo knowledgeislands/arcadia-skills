@@ -35,12 +35,13 @@ exclude = [
 # into one very long row, and the permissive "any" enforces nothing while still
 # misfiring on a placeholder table whose only body row holds "-" cells. Table
 # width is therefore a judgment convention, not a mechanical check.
-# MD056 table column count: its autofix destroys data. A wikilink alias in a
-# table cell — [[Target|Label]] — is counted as a cell separator, so the row
-# reads as having too many cells and the fix resolves it by truncating the row,
-# deleting the alias text and every cell after it. Same pipe-confusion root
-# cause as MD075 did before rumdl 0.2.54.
-disable = ["MD033", "MD036", "MD056", "MD057"]
+# MD056 table column count: rumdl 0.2.54 correctly treats [[Target|Label]] as
+# one cell under the Obsidian flavor. This repository intentionally uses the
+# standard flavor and forbids wikilinks, where the pipe remains a real column
+# separator. Keep MD056 enabled so AUDIT catches that invalid shape, but make
+# it unfixable so CONFORM cannot truncate the row while reporting it.
+disable = ["MD033", "MD036", "MD057"]
+unfixable = ["MD056"]
 
 # MD013 owns line length and prose wrapping together, replacing the former
 # split where Prettier held printWidth and MD013 was disabled to avoid a clash.
