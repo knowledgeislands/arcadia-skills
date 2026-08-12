@@ -8,13 +8,13 @@ The parent `ki-subagents` owns portable semantics. This adapter uses current Cla
 
 ## Normative
 
-| Tag | Source | Governs | Reviewed |
+| Tag | Source | Governs | Last reviewed |
 | --- | --- | --- | --- |
 | CC | [Claude Code subagents](https://code.claude.com/docs/en/sub-agents) | Markdown/YAML source shape, required/supported fields, discovery, and runtime-only limits | 2026-08-12 |
 
 ## Local boundary
 
-| Tag | Source | Governs | Reviewed |
+| Tag | Source | Governs | Last reviewed |
 | --- | --- | --- | --- |
 | HOST | Harness host capability inspection recorded in the Round 25 packet | No generic subagent publisher consumes the advertised Claude path | 2026-08-12 |
 

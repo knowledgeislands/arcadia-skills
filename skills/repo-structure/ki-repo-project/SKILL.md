@@ -3,7 +3,6 @@ name: ki-repo-project
 ki-kind: governance
 ki-depends-on: []
 ki-shared-dependencies: [ki-skills:rubric]
-contributes: ['.ki-config.toml']
 description: >
   Explains the Project repository baseline for a non-Knowledge-Base Knowledge Islands repository and its composable ki-repo-* structures. Primary-kind declaration and mutual exclusion belong to ki-repo; forward-work adapter selection belongs to ki-change-management. Use when orienting a Project migration or its relationship to a specialised repository structure. For KBs use ki-repo-kb; for tracker choice use ki-change-management.
 argument-hint: 'audit <repo> | conform <repo> | educate <repo> | help | refresh'

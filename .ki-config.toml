@@ -29,6 +29,10 @@ coverage-checkpoint = false # source repository publishes the optional capabilit
 
 [skills.ki-subagents]
 
+[skills.ki-subagents-claude]
+
+[skills.ki-subagents-codex]
+
 [skills.ki-decision-records]
 
 [skills.ki-delegation]
