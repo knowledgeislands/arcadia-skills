@@ -46,7 +46,7 @@ Each completed review or phase may expose a reusable effectiveness check. Distil
 
 ## Progress
 
-Phase 0, the inventory, and dependency ordering are complete. Phase 1 and Phase 2 review and remediation are complete. Phase 3 review is in progress. Phases 4–6 are pending.
+Phase 0 and dependency ordering are complete. Phase 1 and Phase 2 review and remediation are complete. Phase 3 is complete. Phase 4 review is in progress; Phases 5–6 are pending.
 
 | #  | Skill                                        | Review   | Change state | Evidence   |
 | -: | -------------------------------------------- | -------- | ------------ | ---------- |
@@ -76,6 +76,12 @@ Phase 0, the inventory, and dependency ordering are complete. Phase 1 and Phase 
 | 24 | [`ki-agora`](ki-agora.md)                     | complete | review only  | —          |
 | 25 | [`ki-communication`](ki-communication.md)     | complete | review only  | —          |
 | 26 | [`ki-subagents`](ki-subagents.md)             | complete | review only  | —          |
+| 27 | [`ki-repo-project`](ki-repo-project.md)       | complete | review only  | —          |
+| 28 | [`ki-repo-kb-activities`](ki-repo-kb-activities.md) | complete | review only | —          |
+| 29 | [`ki-repo-kb-live-artifacts`](ki-repo-kb-live-artifacts.md) | complete | review only | —          |
+| 30 | [`ki-repo-kb-streams`](ki-repo-kb-streams.md) | complete | review only  | —          |
+| 31 | [`ki-repo-kb`](ki-repo-kb.md)                 | complete | review only  | —          |
+| 33 | [`ki-repo-specifications`](ki-repo-specifications.md) | complete | review only | —          |
 
 The [Phase 1 synthesis](phase-1-synthesis.md) and [Phase 2 synthesis](phase-2-synthesis.md) retain cross-skill conclusions. Detailed applied changes and remaining gaps live only in each skill record.
 
