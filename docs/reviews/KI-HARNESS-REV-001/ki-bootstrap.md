@@ -1,8 +1,8 @@
 # `ki-bootstrap` effectiveness review
 
-- **Review state:** complete, ungraded
-- **Candidate disposition:** revise
-- **Change state:** review only; no Phase 6 remediation is authorised
+- **Review state:** complete; grade `U` approved on 2026-08-12
+- **Disposition:** revise
+- **Change state:** approved Phase 6 remediation applied in `cec03ae7`
 - **Identity:** position 50 of 50; process; no declared dependency; baseline `94f0b775903286fcf37c0ec050d5568672a5154f`; order valid
 
 ## Dependency and ownership
@@ -25,6 +25,10 @@ There is no rubric or focused test, which is acceptable for guidance only if liv
 2. Surface verified archive versus explicit local-development source as distinct activation and provenance states.
 3. Add host integrity evidence for payload path type, manifest/archive, activation target, and capability resolution before reporting health.
 4. Replace call-error evals with current grammar and separate configuration, installed payload, activation, and loaded-runtime outcomes.
+
+## Applied changes
+
+The skill, standard, exemplars, source record, and evals now use the installed `ki skill add/remove`, `ki repo skill add/remove`, `ki dev local set/on/off`, and `ki manage doctor/diag` grammar. They distinguish a mutable selected development source from a verified installed payload, activation, and loaded runtime capability. The host-owned provenance work is prepared as `TRD-4a875479`.
 
 ## Carry-forward criteria
 

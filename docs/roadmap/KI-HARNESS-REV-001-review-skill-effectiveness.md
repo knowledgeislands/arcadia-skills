@@ -4,7 +4,7 @@ title: Review skill effectiveness
 area: REV
 theme: regular-reviews
 horizon: now
-status: in-progress
+status: awaiting-review
 blocks: []
 blocked_by: []
 baseline_ref: 94f0b775903286fcf37c0ec050d5568672a5154f
@@ -126,7 +126,7 @@ Reconcile the three surfaces against one another and the canonical skill set. Re
 
 ## Current state
 
-The Harness review has completed the standing-guidance audit, all 50 dependency-ordered skill reviews, and the [final cumulative calibration](../reviews/KI-HARNESS-REV-001/final-calibration.md). The user approved the [grading and disposition matrix](../reviews/KI-HARNESS-REV-001/approval-matrix.md), [candidate clusters](../reviews/KI-HARNESS-REV-001/candidate-clusters.md), and owner-decision gates on 2026-08-12. Phase 1 and Phase 2 remediations are applied; Phase 3–6 remediation is authorised and proceeds in dependency order.
+The Harness review has completed the standing-guidance audit, all 50 dependency-ordered skill reviews, the [final cumulative calibration](../reviews/KI-HARNESS-REV-001/final-calibration.md), and every approved Phase 1–6 remediation. The user approved the [grading and disposition matrix](../reviews/KI-HARNESS-REV-001/approval-matrix.md), [candidate clusters](../reviews/KI-HARNESS-REV-001/candidate-clusters.md), and owner-decision gates on 2026-08-12. The current catalogue contains 51 skills after one approved retirement and two approved runtime-adapter additions.
 
 The approved evidence grades describe present proof and false-assurance risk, not intrinsic skill quality. Cross-owner policy conflicts remain implementation gates even though the remediation routes are approved.
 
@@ -164,6 +164,32 @@ The approved evidence grades describe present proof and false-assurance risk, no
 The work has no roadmap blocker. Its first gate is methodological: refresh and approve the `ki-skills` evidence contract before using it to grade other skills. Formal composition dependencies constrain the review order, while shared rubric declarations, documented lifecycle relationships, and ownership boundaries inform judgment without being misreported as executable edges.
 
 The immutable baseline is `94f0b775903286fcf37c0ec050d5568672a5154f`. Changes to the canonical skill set after that point must be reconciled explicitly rather than silently appended to or omitted from the review.
+
+## Review
+
+### Delivered
+
+Completed the dependency-ordered effectiveness review and approved remediation for all 50 baseline skills, retired `ki-communication`, and split `ki-subagents` into a portable parent plus Claude and Codex adapters.
+
+### Summary of changes
+
+Reconciled standing guidance, refreshed sources, strengthened deterministic rubrics and negative fixtures, removed false runtime assurance, separated source/projection/payload/activation/effective-runtime evidence, updated stale command and eval contracts, and maintained per-skill applied summaries plus a formatted 50-skill inventory. The current catalogue is 51 skills. Remaining `tools-ki` host work is consolidated in committed trade preparation `TRD-4a875479`.
+
+### Verification
+
+Focused family tests, generated publication checks, scoped audits, Markdown formatting, TypeScript, and repository-wide tests were run throughout each committed unit. Final whole-repository gates and inventory reconciliation are recorded in the review evidence before this item is handed to acceptance.
+
+### Outstanding concerns
+
+The stricter binding audit exposes an incomplete per-client transport mapping in the user-owned canonical MCP source. The stricter Claude-housekeeping audit exposes a malformed current memory index entry and a generated block without a valid date. These are live-estate findings, not hidden Harness implementation failures. `TRD-4a875479` is committed as a preparation because the current host does not prove safe atomic submission.
+
+### Post-change review
+
+The remediation stayed within the approved cutoff: proven false positives or negatives, source and command drift, resolvable ownership contradictions, safety defects, and the explicit portable subagent split. It did not add speculative frameworks, compatibility layers, runtime integrations, or subjective mechanical passes.
+
+### Mini recap
+
+All baseline dispositions are implemented and recoverably committed. Review evidence lives under `docs/reviews/KI-HARNESS-REV-001/`; this canonical item now awaits explicit acceptance rather than self-closing.
 
 ## Delegation
 

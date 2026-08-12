@@ -6,11 +6,12 @@ This terminal check reconciled the 50 skill records against the complete review 
 
 - The immutable baseline has 50 canonical skills, inventory entries, review records, and README rows with identical identities and order. The current tree has 51 after one retirement and two post-baseline subagent adapters.
 - All 20 declared dependency edges point to an earlier review entry; there are no unknown dependencies or cycles.
-- Positions 1–48 record applied revisions or the applied retirement. Positions 49–50 remain authorised Phase 6 work.
+- All 50 baseline positions record an applied revision or the applied retirement.
 - Approved dispositions are 49 `revise` and one `retire`.
 - All review Markdown and progress links pass the house formatter and link-target checks used by this review.
-- The final `ki-skills` host audit has no failures and one known source-cadence warning: its quarterly source record lacks a machine-readable `Last reviewed` date.
-- The final TypeScript gate passes.
+- The final `ki-skills` host audit passes with no failures or warnings.
+- The final TypeScript gate and all 431 repository tests pass.
+- The repository-wide audit reports 25 skills passing and two live-estate failures now exposed by the strengthened checks: the canonical MCP source lacks one per-client transport mapping, and the selected Claude memory has malformed index/date evidence. These are not hidden as clean Harness results.
 
 ## Evidence calibration
 

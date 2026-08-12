@@ -2,7 +2,7 @@
 
 The immutable baseline contains 50 canonical skills in dependency-safe review order. The approved retirement of `ki-communication` and addition of two subagent adapters leave 51 in the current tree while retaining the retired review row as historical evidence.
 
-Approved Phase 1–5 updates have changed 47 baseline implementations. The subagent remediation also added two current adapter identities.
+Approved Phase 1–6 updates have changed 49 baseline implementations and retired one. The subagent remediation also added two current adapter identities.
 
 The [review index](README.md) records the baseline set, applied changes, and remaining approved remediation.
 
@@ -22,7 +22,7 @@ The [review index](README.md) records the baseline set, applied changes, and rem
 
 Every row is reviewed and graded; `Review` is the approved disposition.
 
-`Update` is `applied` for 47 completed baseline revisions, `retired` for one completed retirement, and `awaiting` for two approved revisions.
+`Update` is `applied` for 49 completed baseline revisions and `retired` for one completed retirement. No approved baseline revision is awaiting implementation.
 
 |   # | Skill                                | Kind       | Review | Update   | Sources | Rubric | Tests | Eval | Matrix |
 | --: | ------------------------------------ | ---------- | ------ | -------- | ------- | ------ | ----- | ---- | ------ |
@@ -74,8 +74,8 @@ Every row is reviewed and graded; `Review` is the approved disposition.
 |  46 | `ki-tokenomics`                      | governance | revise | applied  | D       | Y      | Y     | Y    | —      |
 |  47 | `ki-tokenomics-claude`               | governance | revise | applied  | D       | Y      | Y     | —    | —      |
 |  48 | `ki-tokenomics-codex`                | governance | revise | applied  | D       | Y      | Y     | —    | —      |
-|  49 | `ki-repo-harness`                    | governance | revise | awaiting | D       | Y      | Y     | —    | —      |
-|  50 | `ki-bootstrap`                       | process    | revise | awaiting | D       | —      | —     | Y    | —      |
+|  49 | `ki-repo-harness`                    | governance | revise | applied  | D       | Y      | Y     | —    | —      |
+|  50 | `ki-bootstrap`                       | process    | revise | applied  | D       | —      | —     | Y    | —      |
 
 ## Post-baseline additions
 

@@ -71,8 +71,8 @@ All dispositions are `revise` except `ki-communication`, whose approved disposit
 |  46 | `ki-tokenomics`                      |   F   |   H   | applied  | Policy is labelled declared, never measured.            |
 |  47 | `ki-tokenomics-claude`               |   F   |   M   | applied  | Only bounded repository evidence may pass.              |
 |  48 | `ki-tokenomics-codex`                |   F   |   M   | applied  | Current repository paths and unavailability are clear.  |
-|  49 | `ki-repo-harness`                    |   F   |   H   | awaiting | Count masks symlinked source checkout.                  |
-|  50 | `ki-bootstrap`                       |   U   |   H   | awaiting | Guidance uses obsolete CLI grammar.                     |
+|  49 | `ki-repo-harness`                    |   F   |   H   | applied  | Source shape no longer implies payload provenance.      |
+|  50 | `ki-bootstrap`                       |   U   |   H   | applied  | Guidance and evals use current installed CLI grammar.   |
 
 Distribution: `E 0`, `P 16`, `F 29`, `U 5`.
 

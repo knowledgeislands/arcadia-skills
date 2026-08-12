@@ -1,6 +1,6 @@
 # Phase 6 synthesis
 
-Phase 6 reviewed the aggregate Harness and bootstrap entry point after all dependencies. Both propose `revise`; neither is graded or remediated.
+Phase 6 reviewed and remediated the aggregate Harness and bootstrap entry point after all dependencies. Both approved `revise` dispositions are applied.
 
 ## Reconciled architecture
 
@@ -16,6 +16,10 @@ Phase 6 reviewed the aggregate Harness and bootstrap entry point after all depen
 3. Guidance-only process skills require executable command fixtures and current host evidence even when a native rubric would add no value.
 4. Development-mode provenance must be explicit; it cannot be reported as ordinary verified-installed authority.
 
-## Review boundary
+## Applied outcome
 
-The dependency-ordered ungraded review is complete for all 50 baseline skills. Phase 1 and Phase 2 approved remediations are applied; Phase 3–6 findings remain proposals pending disposition and grading approval. The [final cumulative calibration](final-calibration.md) completes the coverage check without changing any reviewed skill.
+- Harness source conformance now reports verified payload, development source, activation, capability resolution, and execution as separate host-owned unavailable evidence.
+- Bootstrap guidance, examples, source evidence, and evals match the current installed CLI grammar and distinguish mutable development selection from verified payload authority.
+- The remaining host-owned work is consolidated in committed preparation `TRD-4a875479` for `tools-ki`; this repository has not written the receiver or claimed delivery.
+
+The dependency-ordered review and approved remediation are complete for all 50 baseline skills. The [final cumulative calibration](final-calibration.md) records the final coverage and evidence limits.

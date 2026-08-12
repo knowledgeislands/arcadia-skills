@@ -1,8 +1,8 @@
 # `ki-repo-harness` effectiveness review
 
-- **Review state:** complete, ungraded
-- **Candidate disposition:** revise
-- **Change state:** review only; no Phase 6 remediation is authorised
+- **Review state:** complete; grade `F` approved on 2026-08-12
+- **Disposition:** revise
+- **Change state:** approved Phase 6 remediation applied in `cec03ae7`; host provenance remains unavailable
 - **Identity:** position 49 of 50; governance; depends on `ki-skills` (1), `ki-subagents` (26), `ki-decision-records` (18), and `ki-change-management-roadmap` (8); baseline `94f0b775903286fcf37c0ec050d5568672a5154f`; order valid
 
 ## Dependency and ownership
@@ -25,6 +25,10 @@ The aggregate audits only source shelves, marker, and local skill names. It can 
 2. Add explicit evidence handoffs for each populated capability kind and component audit; source layout must not mask unavailable runtime projections.
 3. Reconcile source dates and primary Agent Skills/runtime links.
 4. Add negative fixtures for symlinked or stale payloads, checkout projections, missing members, cross-Harness collisions, and activation escapes.
+
+## Applied changes
+
+The source audit now publishes a host-visible payload criterion that reports verified installation, local-development selection, activation, capability resolution, and execution as unavailable rather than inheriting assurance from source shape. An adversarial fixture protects that boundary. Archive, manifest, hash, link, and executed-runtime evidence remain with `tools-ki` through `TRD-4a875479`.
 
 ## Carry-forward criteria
 

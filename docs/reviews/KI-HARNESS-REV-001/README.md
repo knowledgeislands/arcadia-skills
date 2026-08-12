@@ -8,7 +8,7 @@ This directory records the reviewed and approved evidence for [KI-HARNESS-REV-00
 - **Candidate routes:** [approved deduplicated clusters](candidate-clusters.md)
 - **Standing-guidance review:** recorded in the roadmap item
 - **Grading:** approved on 2026-08-12; evidence grades describe current proof and false-assurance risk, not intrinsic quality
-- **Remediation:** Phase 1–5 repairs are applied; approved Phase 6 remediation is next
+- **Remediation:** all approved Phase 1–6 repairs are applied
 
 ## Common record
 
@@ -59,7 +59,7 @@ Each completed review or phase may expose a reusable effectiveness check. Distil
 
 ## Progress
 
-Phase 0, dependency ordering, and all 50 baseline skill reviews are complete. All baseline grades and dispositions are approved. Phase 1–5 repairs, the `ki-communication` retirement, and the portable subagent split are applied. Phase 6 remediation remains.
+Phase 0, dependency ordering, and all 50 baseline skill reviews are complete. All baseline grades and dispositions are approved and applied. The current catalogue has 51 skills after the `ki-communication` retirement and the addition of two runtime-specific subagent adapters.
 
 | #  | Skill                                        | Review   | Change state | Evidence   |
 | -: | -------------------------------------------- | -------- | ------------ | ---------- |
@@ -111,8 +111,8 @@ Phase 0, dependency ordering, and all 50 baseline skill reviews are complete. Al
 | 46 | [`ki-tokenomics`](ki-tokenomics.md)           | complete | applied      | `a28cf057` |
 | 47 | [`ki-tokenomics-claude`](ki-tokenomics-claude.md) | complete | applied | `a28cf057` |
 | 48 | [`ki-tokenomics-codex`](ki-tokenomics-codex.md) | complete | applied | `a28cf057` |
-| 49 | [`ki-repo-harness`](ki-repo-harness.md)       | complete | review only  | —          |
-| 50 | [`ki-bootstrap`](ki-bootstrap.md)             | complete | review only  | —          |
+| 49 | [`ki-repo-harness`](ki-repo-harness.md)       | complete | applied      | `cec03ae7` |
+| 50 | [`ki-bootstrap`](ki-bootstrap.md)             | complete | applied      | `cec03ae7` |
 
 Post-baseline additions:
 
