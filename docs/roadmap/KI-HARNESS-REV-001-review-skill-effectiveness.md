@@ -126,7 +126,7 @@ Reconcile the three surfaces against one another and the canonical skill set. Re
 
 ## Current state
 
-The Harness review has completed the standing-guidance audit and 26 of 50 dependency-ordered skill reviews. Approved Phase 1 and Phase 2 remediations are applied and recorded per skill in [the review evidence](../reviews/KI-HARNESS-REV-001/README.md). Phase 3 reviewed all portable-governance and agent-system skills: eight propose revision and `ki-communication` proposes retirement; none is graded or remediated. Phase 4 repository-structure reviews are in progress.
+The Harness review has completed the standing-guidance audit and 40 of 50 dependency-ordered skill reviews. Approved Phase 1 and Phase 2 remediations are applied and recorded per skill in [the review evidence](../reviews/KI-HARNESS-REV-001/README.md). Phase 3 reviewed all portable-governance and agent-system skills; Phase 4 reviewed all repository-structure skills. Those phases remain ungraded and unremediated. Phase 5 environment and runtime adapter reviews are next.
 
 No grade scale or remediation queue is approved yet. The ordered inventory and common checks above are the planning basis for collecting comparable evidence before those decisions.
 

@@ -43,10 +43,15 @@ Each completed review or phase may expose a reusable effectiveness check. Distil
 - Keep descriptions and operational claims within demonstrated execution capability; configuration or guidance alone must not imply that a process can execute.
 - Exercise destructive and filesystem boundaries with exact roots, containment, regular-file and symlink checks, retention guards, and independently resolved targets.
 - Count ceremony, loaded context, repeated procedures, and tool round-trips as costs; retain them only where evidence shows a portable benefit.
+- Treat aggregate composition as unverified until child schemas, selected adapters, identities, and fixtures demonstrate one owner-selected contract.
+- Separate generated shape, source freshness, installed activation, and runtime availability; evidence for one layer does not transfer to another.
+- Assign each parent/child producer-consumer seam one mechanical owner and validate normalized, parsed, exact handoff evidence.
+- Treat target binaries, package managers, installers, and external validators as side-effecting unless an authorised isolation boundary proves otherwise.
+- Align applicability declarations, structure detection, host selection, published rubric families, and negative fixtures as one contract.
 
 ## Progress
 
-Phase 0 and dependency ordering are complete. Phase 1 and Phase 2 review and remediation are complete. Phase 3 is complete. Phase 4 review is in progress; Phases 5–6 are pending.
+Phase 0 and dependency ordering are complete. Phase 1 and Phase 2 review and remediation are complete. Phases 3 and 4 are complete. Phase 5 review is next; Phase 6 is pending.
 
 | #  | Skill                                        | Review   | Change state | Evidence   |
 | -: | -------------------------------------------- | -------- | ------------ | ---------- |
@@ -89,8 +94,9 @@ Phase 0 and dependency ordering are complete. Phase 1 and Phase 2 review and rem
 | 37 | [`ki-repo-plugins`](ki-repo-plugins.md)       | complete | review only  | —          |
 | 38 | [`ki-repo-tools`](ki-repo-tools.md)           | complete | review only  | —          |
 | 39 | [`ki-repo-homebrew-tap`](ki-repo-homebrew-tap.md) | complete | review only | —          |
+| 40 | [`ki-repo-dotfiles-chezmoi`](ki-repo-dotfiles-chezmoi.md) | complete | review only | —          |
 
-The [Phase 1 synthesis](phase-1-synthesis.md) and [Phase 2 synthesis](phase-2-synthesis.md) retain cross-skill conclusions. Detailed applied changes and remaining gaps live only in each skill record.
+The [Phase 1 synthesis](phase-1-synthesis.md), [Phase 2 synthesis](phase-2-synthesis.md), [Phase 3 synthesis](phase-3-synthesis.md), and [Phase 4 synthesis](phase-4-synthesis.md) retain cross-skill conclusions. Detailed applied changes and remaining gaps live only in each skill record.
 
 ## Evidence rules
 
