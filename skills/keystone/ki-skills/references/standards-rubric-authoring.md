@@ -114,6 +114,8 @@ A family groups criteria that assess one coherent concern, such as `NAME`, `DESC
 
 The family catalogue owns its stable family code, readable title, standard section, explanatory introduction, ordered item list, and any presentation metadata needed to reproduce the readable rubric.
 
+Before adding a criterion to an existing family, scan every criterion in that complete family and allocate the next unused numeric suffix. Never infer the next code from one item file, a partial search result, or the generated publication. The family source remains authoritative even when item constants are private and the readable rubric presents the same codes.
+
 The files under `scripts/rubric/items/` MUST have one uniform responsibility:
 
 - `index.ts` is catalogue wiring only. It imports each ordered family and default-exports the complete `SkillRubricDefinition`. It MUST NOT define rubric items, family metadata, execution callbacks, evidence builders, adapters, casts, or write capabilities.

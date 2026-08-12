@@ -125,13 +125,13 @@ Reconcile the three surfaces against one another and the canonical skill set. Re
 
 ## Current state
 
-The Harness has a strong mechanical `ki-skills` rubric and per-skill REFRESH contracts, but it has no current, complete review order or common effectiveness record spanning all 50 skills. Its standing instruction surfaces already state the intended boundary — `AGENTS.md` is the common repository anchor, `CLAUDE.md` is runtime-specific, and `ki-self` is repository-local — but that boundary has not been reviewed as the input gate to this effectiveness sweep. The existing dependency-order decision distinguishes executable dependencies from judgment priority, but its illustrative priority list no longer names the complete canonical set.
+The Harness has a strong mechanical `ki-skills` rubric and per-skill REFRESH contracts, but it has no current, complete review order or common effectiveness record spanning all 50 skills. Phase 0 reconciled the standing instruction surfaces: `AGENTS.md` is now a concise common repository anchor, `CLAUDE.md` contains only its Claude-specific hook boundary, the reusable rubric-code allocation rule lives in `ki-skills`, and the redundant repository-local `ki-self` has been retired. The existing dependency-order decision distinguishes executable dependencies from judgment priority, but its illustrative priority list no longer names the complete canonical set.
 
 No grade scale or remediation queue is approved yet. The ordered inventory and common checks above are the planning basis for collecting comparable evidence before those decisions.
 
 ## Steps
 
-- [ ] Audit `AGENTS.md`, `CLAUDE.md`, and `.agents/skills/ki-self/SKILL.md` for duplicated or reusable guidance; present deduplicated extraction candidates and obtain approval for any move, deletion, new skill, or existing-skill amendment.
+- [x] Audit `AGENTS.md`, `CLAUDE.md`, and `.agents/skills/ki-self/SKILL.md` for duplicated or reusable guidance; present deduplicated extraction candidates and obtain approval for any move, deletion, new skill, or existing-skill amendment.
 - [ ] After confirmed standing-guidance dispositions are applied or explicitly deferred, freeze the execution baseline, regenerate the canonical skill inventory and dependency graph, and reconcile any additions, removals, missing dependencies, or cycles against the 50-skill planning list before reviewing content.
 - [ ] Refresh `ki-skills` and its source inventory first, confirm the effectiveness evidence template and grading vocabulary, and obtain approval for any normative rubric change before applying it to the remaining set.
 - [ ] Process Phases 1–6 in order, reviewing one skill at a time and recording source evidence, mechanical results, judgment findings, effectiveness evidence, instruction cost, and proposed disposition without silently remediating the skill.
@@ -151,7 +151,7 @@ No grade scale or remediation queue is approved yet. The ordered inventory and c
 ## Verify
 
 - A generated inventory reports exactly the same canonical skills as the review sequence, with every declared dependency earlier than its dependent and no cycle or unknown target.
-- Every instruction in `AGENTS.md`, `CLAUDE.md`, and `ki-self` has a recorded boundary disposition, no confirmed reusable rule remains duplicated across standing surfaces, and every extraction is linked to its shared owner or separately approved candidate.
+- Every instruction in `AGENTS.md`, `CLAUDE.md`, and the former `ki-self` has a recorded boundary disposition, no confirmed reusable rule remains duplicated across standing surfaces, and every extraction is linked to its shared owner or separately approved candidate.
 - Every canonical skill has a review record covering all protocol checks, a source-list decision, exact audit evidence, and one proposed disposition.
 - `ki repo audit --skill ki-skills --repo .` and each applicable focused skill audit pass after approved source-refresh changes; judgment gaps remain visible rather than being converted into synthetic mechanical passes.
 - Focused rubric and fixture tests pass for every approved normative change, followed by `bun run test` and `bunx tsc --noEmit`.
@@ -180,6 +180,10 @@ The work begins one level above the skill catalogue by reviewing the always-load
 After that gate, the numbered list begins by refreshing the shared skill-quality contract, then reviews the foundational authoring, Git, engineering, repository, and delegation concerns that shape later judgment. Change management follows immediately because its governance and process skills control how every resulting finding will be captured, planned, implemented, and accepted.
 
 The remaining phases keep portable governance ahead of repository and runtime specialisations. Composite and adapter skills appear only after their declared prerequisites, and `ki-repo-harness` plus `ki-bootstrap` come last because they aggregate or expose much of the reviewed system.
+
+### Standing-guidance disposition
+
+The approved Phase 0 review found no missing capability that justified a new skill. `AGENTS.md` retains only the shared repository anchor, local workflow deltas, and concise pointers to existing owners. The one reusable rule not fully captured elsewhere — complete-family rubric-code allocation — moved into the `ki-skills` rubric-authoring standard. `CLAUDE.md` now contains only its import and Claude-specific hook-binding boundary. The former `ki-self` repeated `ki-repo`, `ki-git`, `ki-engineering`, `ki-authoring`, and runtime-projection guidance without owning a Harness-specific artifact, checker, configuration, or command, so it was retired rather than preserved as an empty indirection.
 
 ### Source coverage
 
