@@ -58,6 +58,7 @@ test('the structured catalogue preserves every KB criterion', () => {
     'ZONE-3',
     'ZONE-4',
     'ZONE-5',
+    'CONFIG-0',
     'CONFIG-1',
     'CONFIG-2',
     'CONFIG-3',
@@ -146,7 +147,7 @@ test('a symlinked output is never proposed or followed', () => {
   expect(readFileSync(outside, 'utf8')).toBe('outside\n')
 })
 
-test('a zone alias may propose a create through an intermediate symlink', () => {
+test('a zone alias through an intermediate symlink produces no unsafe proposal', () => {
   const repository = createBase()
   const outside = mkdtempSync(join(tmpdir(), 'ki-repo-kb-outside-'))
   temporaryDirectories.push(outside)
@@ -161,6 +162,6 @@ test('a zone alias may propose a create through an intermediate symlink', () => 
   const zone = families.find((family) => family.code === 'ZONE')
   zone?.items.find((item) => item.code === 'ZONE-2')?.mechanical?.conform?.run(zone.selectContext(context))
 
-  expect(session.proposal().writes.some((write) => write.path.startsWith('linked/'))).toBe(true)
+  expect(session.proposal().writes.some((write) => write.path.startsWith('linked/'))).toBe(false)
   expect(existsSync(join(outside, 'Resources', 'linked', 'Resources.md'))).toBe(false)
 })

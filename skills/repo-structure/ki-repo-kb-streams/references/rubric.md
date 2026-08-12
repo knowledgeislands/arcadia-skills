@@ -63,7 +63,9 @@ The canonical-change gate anchor.
 
 The skill-owned ki-repo-kb-streams table.
 
+- **CONFIG-0 [M] — parseable Streams configuration** — The shared configuration file parses before Streams bindings are used. (standards-streams-structure.md)
+  - _Remediation:_ diagnostic — Correct the TOML syntax before relying on Streams configuration.
 - **CONFIG-1 [M] — known Streams configuration** — Only documented Streams container bindings are recognised under ki-repo-kb-streams. (standards-streams-structure.md)
   - _Remediation:_ diagnostic — Remove or document unsupported configuration keys after confirming the Streams behaviour they were intended to express.
-- **CONFIG-2 [M] — legacy note classification** — A declared legacy note_type_scheme remains valid only while a base migrates old Streams records. (standards-streams-structure.md)
-  - _Remediation:_ diagnostic — Use the documented `type` or `tags` scheme, or record the governing decision for a different note classification.
+- **CONFIG-2 [M] — contained process note binding** — When process_note is declared, it resolves to a regular file beneath the base without symlink traversal. (standards-streams-structure.md)
+  - _Remediation:_ diagnostic — Correct or remove the process_note binding; do not follow a link or substitute a local authority note.

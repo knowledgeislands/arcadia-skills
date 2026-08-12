@@ -1,5 +1,5 @@
 import { existsSync, lstatSync, readdirSync, readFileSync } from 'node:fs'
-import { basename, join, resolve } from 'node:path'
+import { basename, isAbsolute, join, relative, resolve } from 'node:path'
 import type {
   AuditOutcome,
   RubricContextOptions,
@@ -41,8 +41,9 @@ export type GateRubricContext = {
 }
 
 export type ConfigRubricContext = {
+  parseable: readonly StreamsEvidence[]
   knownKeys: readonly StreamsEvidence[]
-  noteTypeScheme: readonly StreamsEvidence[]
+  processNote: readonly StreamsEvidence[]
 }
 
 export type StreamsRubricContext = {
@@ -56,6 +57,19 @@ type StreamsConfiguration = {
   keys: Record<string, string>
   ownKeys: readonly string[]
   streams: string
+  malformed: boolean
+}
+
+const safeRegularFile = (root: string, path: string): boolean => {
+  const output = relative(root, path)
+  if (isAbsolute(output) || output === '..' || output.startsWith('../')) return false
+  let cursor = root
+  for (const segment of output.split(/[\\/]/)) {
+    if (!segment) continue
+    cursor = join(cursor, segment)
+    if (!existsSync(cursor) || lstatSync(cursor).isSymbolicLink()) return false
+  }
+  return regularFile(path)
 }
 
 export const auditEvidence = (
@@ -107,21 +121,18 @@ const parseConfiguration = (text: string): StreamsConfiguration => {
     const own = (document.skills as Record<string, unknown> | undefined)?.[STREAMS_TABLE] as
       | Record<string, unknown>
       | undefined
-    const kb = (document.skills as Record<string, unknown> | undefined)?.['ki-repo-kb'] as
-      | Record<string, unknown>
-      | undefined
-    const zones = kb?.zones as Record<string, unknown> | undefined
     return {
       keys: Object.fromEntries(
         Object.entries(own ?? {})
-          .filter(([key]) => ['process_note', 'note_type_scheme'].includes(key))
+          .filter(([key]) => key === 'process_note')
           .map(([key, value]) => [key, String(value)])
       ),
       ownKeys: Object.keys(own ?? {}),
-      streams: typeof zones?.Streams === 'string' ? zones.Streams : 'Streams'
+      streams: 'Streams',
+      malformed: false
     }
   } catch {
-    return { keys: {}, ownKeys: [], streams: 'Streams' }
+    return { keys: {}, ownKeys: [], streams: 'Streams', malformed: true }
   }
 }
 
@@ -139,7 +150,7 @@ const unavailableContext = (
     rubric: { publication },
     stream: { operationalAreas: [evidence], legacyFolders: notApplicable },
     gate: { anchor: notApplicable },
-    config: { knownKeys: notApplicable, noteTypeScheme: notApplicable }
+    config: { parseable: notApplicable, knownKeys: notApplicable, processNote: notApplicable }
   }
 }
 
@@ -220,9 +231,14 @@ export const createStreamsSession = ({
       ...(anchorFiles.length ? { subject: anchorFiles.join(', ') } : {})
     }
   ]
-  const unknownKeys = configuration.ownKeys.filter(
-    (key) => !['process_note', 'note_type_scheme', 'areas'].includes(key)
-  )
+  const parseable: StreamsEvidence[] = [
+    {
+      level: configuration.malformed ? 'FAIL' : 'PASS',
+      message: configuration.malformed ? 'Cannot parse .ki-config.toml.' : 'Streams configuration is parseable.',
+      subject: '.ki-config.toml'
+    }
+  ]
+  const unknownKeys = configuration.ownKeys.filter((key) => key !== 'process_note')
   const knownKeys: StreamsEvidence[] = [
     {
       level: unknownKeys.length ? 'WARN' : 'PASS',
@@ -232,22 +248,26 @@ export const createStreamsSession = ({
       subject: '.ki-config.toml'
     }
   ]
-  const scheme = configuration.keys.note_type_scheme
-  const noteTypeScheme: StreamsEvidence[] = [
-    {
-      level: scheme && !['type', 'tags'].includes(scheme) ? 'WARN' : 'PASS',
-      message:
-        scheme && !['type', 'tags'].includes(scheme)
-          ? `Invalid note_type_scheme: ${scheme}.`
-          : 'Note type scheme is canonical or absent.',
-      subject: '.ki-config.toml'
-    }
+  const processNote = configuration.keys.process_note
+  const processNotePath = processNote
+    ? resolve(root, processNote.endsWith('.md') ? processNote : `${processNote}.md`)
+    : undefined
+  const processNoteEvidence: StreamsEvidence[] = [
+    !processNote
+      ? { level: 'PASS', message: 'No optional process_note binding is declared.', subject: '.ki-config.toml' }
+      : safeRegularFile(root, processNotePath as string)
+        ? { level: 'PASS', message: 'The declared process_note is a contained regular file.', subject: processNote }
+        : {
+            level: 'WARN',
+            message: 'The declared process_note is missing, unsafe, or outside the base.',
+            subject: processNote
+          }
   ]
   const context: StreamsRubricContext = {
     rubric: { publication },
     stream: { operationalAreas, legacyFolders },
     gate: { anchor },
-    config: { knownKeys, noteTypeScheme }
+    config: { parseable, knownKeys, processNote: processNoteEvidence }
   }
 
   return {

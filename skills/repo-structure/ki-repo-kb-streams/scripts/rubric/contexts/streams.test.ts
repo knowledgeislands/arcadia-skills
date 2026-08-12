@@ -34,7 +34,7 @@ const targetFixture = (): string => {
   writeFileSync(join(root, 'Streams', 'Roadmap', '_ISSUES.md'), '# Streams issue ledger\n')
   writeFileSync(
     join(root, '.ki-config.toml'),
-    '[skills.ki-repo-kb-streams]\n\n[skills.ki-repo-kb-streams.areas]\nOPS = "repository-operations"\n'
+    '[skills.ki-repo-kb-streams]\nprocess_note = "Admin/Operations/Processes/Enactment Process"\n'
   )
   return root
 }
@@ -96,6 +96,40 @@ describe('ki-repo-kb-streams session', () => {
       { level: 'WARN', message: 'Legacy Streams state or Focus folders: Now.', subject: 'Streams' }
     ])
     expect(session.proposal()).toEqual({ writes: [] })
+  })
+
+  test('rejects inert area configuration rather than silently accepting it', () => {
+    const root = targetFixture()
+    writeFileSync(join(root, '.ki-config.toml'), '[skills.ki-repo-kb-streams.areas]\nOPS = "repository-operations"\n')
+    const context = rootContext(createStreamsSession(options(root, 'audit')))
+    const config = definition.families.find((family) => family.code === 'CONFIG')?.selectContext(context) as {
+      knownKeys: readonly { level: string; message: string }[]
+    }
+
+    expect(config.knownKeys[0]).toMatchObject({ level: 'WARN', message: expect.stringContaining('areas') })
+  })
+
+  test('consumes process_note as a contained regular-file binding', () => {
+    const root = targetFixture()
+    const session = createStreamsSession(options(root, 'audit'))
+    const context = rootContext(session)
+    const config = definition.families.find((family) => family.code === 'CONFIG')?.selectContext(context) as {
+      processNote: readonly { level: string; message: string }[]
+    }
+
+    expect(config.processNote[0]).toMatchObject({ level: 'WARN', message: expect.stringContaining('missing') })
+  })
+
+  test('allows the documented extensionless process-note binding', () => {
+    const root = targetFixture()
+    mkdirSync(join(root, 'Admin', 'Operations', 'Processes'), { recursive: true })
+    writeFileSync(join(root, 'Admin', 'Operations', 'Processes', 'Enactment Process.md'), '# Enactment Process\n')
+    const context = rootContext(createStreamsSession(options(root, 'audit')))
+    const config = definition.families.find((family) => family.code === 'CONFIG')?.selectContext(context) as {
+      processNote: readonly { level: string }[]
+    }
+
+    expect(config.processNote[0]).toMatchObject({ level: 'PASS' })
   })
 
   test('requires an always-loaded anchor only after a roadmap record exists', () => {

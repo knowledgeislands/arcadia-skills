@@ -83,12 +83,9 @@ ki-arcadia-principal/
 │   └── Technē/
 ├── Resources/           ← reference material with external origin
 └── Streams/             ← work in motion (see ki-repo-kb-streams)
-    ├── Blocking/
-    ├── Active/
-    ├── Background/
-    ├── Waiting for/
-    ├── Dormant/
-    └── Future/
+    ├── Streams.md
+    ├── Roadmap/
+    └── Housekeeping/
 ```
 
 The staging areas (`+/`, `-/`) have no zone index note; only the five canonical zones carry one. Pillar folders inside `Pillars/` match the island's topic arms — they are not fixed by the standard; what is fixed is that each carries a same-name index note at its root.

@@ -22,7 +22,7 @@ The authoritative definition of frontmatter fields for all notes in a Knowledge 
 | `tags` | Optional | Topical / temporal / source labels (`topic/*`, `date/*`, `source/*`) — retained, but never the **kind** classifier |
 | `author` | Recommended | `AI-assisted` / `Manual` / `Mixed` |
 
-† For example, `ki-repo-kb-activities` uses `active` / `inactive`.
+† Component-specific status values remain under their component owners while KB-wide metadata reconciliation is pending.
 
 **Freshness** is carried by the timestamps, not by `status`: a note is current while `reviewed` is at or after its last `updated`, and goes stale once `updated` moves ahead of `reviewed` (or `reviewed` is absent). `status` is reserved for a `type`'s own lifecycle where it has one — for example `ki-repo-kb-activities` uses `active` / `inactive`.
 
@@ -46,7 +46,7 @@ The slugs use slash-hierarchical notation: `<zone>/<arm>/<leaf>`. The zone prefi
 | `admin/operations/activity`   | `Admin/Operations/Activities/**/*`                        | `ki-repo-kb-activities`    |
 | `admin/operations/skill`      | `Admin/Operations/Skills/**/*`                            | TBD                   |
 
-`Admin/Operations/Activities/` is governed by `ki-repo-kb-activities` and `Admin/Operations/Live Artifacts/` by `ki-repo-kb-live-artifacts`. Both currently define their notes with skill-specific frontmatter — `status` + `realization` and `status` + `renders` respectively — rather than the `type:` node_type used elsewhere in this table, so Live Artifacts has no row above; bringing them onto a `type:` field (and adding an `admin/operations/live-artifact` row) is an open reconciliation. The remaining `TBD` rows have no governing skill yet.
+`Admin/Operations/Activities/` is governed by `ki-repo-kb-activities` and `Admin/Operations/Live Artifacts/` by `ki-repo-kb-live-artifacts`. Their component-specific frontmatter and the universal metadata contract are not yet reconciled; this standard therefore does not treat a clean component or aggregate structural audit as proof of a universal metadata schema. The remaining `TBD` rows have no governing skill yet.
 
 ### Outbound staging (`-/`)
 
@@ -89,9 +89,7 @@ The `Streams` zone's internal structure is owned by `ki-repo-kb-streams`; these 
 | Type               | Path context                                     | Defined by      |
 | ------------------ | ------------------------------------------------ | --------------- |
 | `streams/zone`     | `Streams/Streams.md` (zone root)                 | `ki-repo-kb-streams` |
-| `streams/focus`    | A focus / lifecycle-folder summary (`Active`, …) | `ki-repo-kb-streams` |
-| `streams/proposal` | A workstream proposal (the enactment unit)       | `ki-repo-kb-streams` |
-| `streams/note`     | A working note within a stream                   | `ki-repo-kb-streams` |
+| _pending reconciliation_ | Roadmap and housekeeping record metadata is owned by their selected adapters | respective adapter owners |
 
 ### Pillars branch (`pillars/`)
 
@@ -110,8 +108,6 @@ Some `type` values require additional fields, defined by the skill that owns tha
 | --- | --- | --- | --- |
 | `admin/governance/decision` | `decision_type` | nine decision domains‡ | `ki-decision-records` |
 | `calendar/daily` | `day_type` | work-day / weekend / bank-holiday / annual-leave (open enumeration) | `ki-repo-kb` |
-| `streams/proposal` | `status` | the Streams proposal lifecycle (values owned by `ki-repo-kb-streams`) | `ki-repo-kb-streams` |
-| `streams/proposal` | `priority` | `urgent` / `high` / `medium` / `low` | `ki-repo-kb-streams` |
-| `streams/proposal` | `dependencies` | list of blocking stream names (`[]` when none) | `ki-repo-kb-streams` |
+| _pending reconciliation_ | Roadmap and housekeeping dependent fields | adapter-defined | selected adapter owner |
 
 ‡ strategy, product, architecture, data, security, operations, governance, research, knowledge.

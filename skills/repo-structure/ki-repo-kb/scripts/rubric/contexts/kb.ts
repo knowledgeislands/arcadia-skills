@@ -1,4 +1,4 @@
-import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs'
+import { existsSync, lstatSync, readdirSync, readFileSync } from 'node:fs'
 import { dirname, isAbsolute, join, relative, resolve } from 'node:path'
 import type {
   AuditOutcome,
@@ -29,8 +29,10 @@ export type KbEvidenceFinding = {
   subject?: string
 }
 
-const isDirectory = (path: string): boolean => existsSync(path) && statSync(path).isDirectory()
-const isFile = (path: string): boolean => existsSync(path) && statSync(path).isFile()
+const isDirectory = (path: string): boolean =>
+  existsSync(path) && !lstatSync(path).isSymbolicLink() && lstatSync(path).isDirectory()
+const isFile = (path: string): boolean =>
+  existsSync(path) && !lstatSync(path).isSymbolicLink() && lstatSync(path).isFile()
 const sample = (values: readonly string[], maximum = 10): string =>
   `${values.slice(0, maximum).join('; ')}${values.length > maximum ? `; …+${values.length - maximum} more` : ''}`
 
@@ -89,26 +91,27 @@ const markdownFiles = (directory: string, files: string[] = []): string[] => {
   return files
 }
 
-const frontmatter = (text: string): { keys: string[]; terminated: boolean; type: string | null } | null => {
+const frontmatter = (
+  text: string
+): { keys: string[]; terminated: boolean; valid: boolean; type: string | null } | null => {
   const lines = text.split(/\r?\n/)
   if (lines[0]?.trim() !== '---') return null
-  const keys: string[] = []
-  let type: string | null = null
-  for (let index = 1; index < lines.length; index++) {
-    const line = lines[index] as string
-    if (line.trim() === '---') return { keys, terminated: true, type }
-    if (/^\s/.test(line)) continue
-    const separator = line.indexOf(':')
-    if (separator <= 0) continue
-    const key = line.slice(0, separator).trim()
-    const value = line
-      .slice(separator + 1)
-      .trim()
-      .replace(/^['"]|['"]$/g, '')
-    keys.push(key)
-    if (key === 'type') type = value
+  const match = text.match(/^---\r?\n([\s\S]*?)\r?\n---(?:\r?\n|$)/)
+  if (!match) return { keys: [], terminated: false, valid: false, type: null }
+  try {
+    const parsed = Bun.YAML.parse(match[1] ?? '')
+    if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed))
+      return { keys: [], terminated: true, valid: false, type: null }
+    const fields = parsed as Record<string, unknown>
+    return {
+      keys: Object.keys(fields),
+      terminated: true,
+      valid: true,
+      type: typeof fields.type === 'string' ? fields.type : null
+    }
+  } catch {
+    return { keys: [], terminated: true, valid: false, type: null }
   }
-  return { keys, terminated: false, type }
 }
 
 type KbCheck = RubricOutcomes<AuditOutcome>
@@ -124,6 +127,7 @@ export type KbZoneContext = {
 }
 
 export type KbConfigContext = {
+  readonly parseable: KbCheck
   readonly knownKeys: KbCheck
   readonly nonRedundantAliases: KbCheck
   readonly canonicalAliasKeys: KbCheck
@@ -185,6 +189,12 @@ export const collectKbAuditEvidence = (target: string): readonly KbEvidenceFindi
   const config = parsed.value
   const zoneOf = (zone: string): string => config?.zones[zone] ?? zone
   if (!config) {
+    add(
+      parsed.malformed ? 'FAIL' : 'NOT_APPLICABLE',
+      'CONFIG-0',
+      parsed.malformed ? 'Cannot parse .ki-config.toml.' : '[skills.ki-repo-kb] is not declared.',
+      CONFIG
+    )
     for (const code of ['CONFIG-1', 'CONFIG-2', 'CONFIG-3', 'CONFIG-4', 'CONFIG-5'])
       add(
         'NOT_APPLICABLE',
@@ -194,6 +204,7 @@ export const collectKbAuditEvidence = (target: string): readonly KbEvidenceFindi
           : '[skills.ki-repo-kb] is not declared.'
       )
   } else {
+    add('PASS', 'CONFIG-0', 'The ki-repo-kb configuration table is parseable.', CONFIG)
     for (const key of Object.keys(config.keys))
       add('WARN', 'CONFIG-1', `Unrecognised scalar [skills.ki-repo-kb] key: ${key}.`, CONFIG)
     if (Object.keys(config.keys).length === 0)
@@ -292,7 +303,7 @@ export const collectKbAuditEvidence = (target: string): readonly KbEvidenceFindi
     )
   }
   const required = config?.requiredFrontmatter ?? []
-  const unterminated: string[] = []
+  const malformedFrontmatter: string[] = []
   const badKeys: string[] = []
   const missingRequired: string[] = []
   const misplacedOutputs: string[] = []
@@ -301,8 +312,8 @@ export const collectKbAuditEvidence = (target: string): readonly KbEvidenceFindi
     const value = frontmatter(readFileSync(path, 'utf8'))
     if (!value) continue
     const relative = path.slice(root.length + 1)
-    if (!value.terminated) {
-      unterminated.push(relative)
+    if (!value.terminated || !value.valid) {
+      malformedFrontmatter.push(relative)
       continue
     }
     for (const key of value.keys) if (!SNAKE_CASE.test(key)) badKeys.push(`${relative}: ${key}`)
@@ -311,9 +322,11 @@ export const collectKbAuditEvidence = (target: string): readonly KbEvidenceFindi
       misplacedOutputs.push(relative)
   }
   add(
-    unterminated.length ? 'FAIL' : 'PASS',
+    malformedFrontmatter.length ? 'FAIL' : 'PASS',
     'NOTE-1a',
-    unterminated.length ? `Unterminated frontmatter: ${sample(unterminated)}.` : 'Frontmatter fences are well formed.'
+    malformedFrontmatter.length
+      ? `Malformed or unterminated frontmatter: ${sample(malformedFrontmatter)}.`
+      : 'Frontmatter fences and YAML are well formed.'
   )
   add(
     missingRequired.length ? 'FAIL' : 'PASS',
@@ -434,6 +447,7 @@ export const createKbSession = ({
         : {})
     },
     config: {
+      parseable: check('CONFIG-0'),
       knownKeys: check('CONFIG-1'),
       nonRedundantAliases: check('CONFIG-2'),
       canonicalAliasKeys: check('CONFIG-3'),
