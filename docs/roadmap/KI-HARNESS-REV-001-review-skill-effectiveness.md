@@ -4,10 +4,10 @@ title: Review skill effectiveness
 area: REV
 theme: regular-reviews
 horizon: now
-status: ready
+status: in-progress
 blocks: []
 blocked_by: []
-baseline_ref: null
+baseline_ref: 94f0b775903286fcf37c0ec050d5568672a5154f
 ---
 
 ## Goal
