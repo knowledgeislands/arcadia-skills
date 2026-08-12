@@ -4,10 +4,10 @@
 
 | Source | Last reviewed | Governs |
 | --- | --- | --- |
-| Knowledge Islands project planning practice and repository history | 2026-07-29 | Work items, horizons, theme grouping, indexes, and lifecycle |
-| Knowledge Islands chezmoi roadmap | 2026-07-16 | Canonical horizon blurbs and local placement guidance |
-| `ki-repo-kb-streams` canonical standard | 2026-07-16 | KB boundary and off-ramp |
+| `ROADMAP.md` | 2026-08-12 | Repository-local planning practice, work items, horizons, theme grouping, indexes, and lifecycle |
+| [Change-management adapter standard](../../ki-change-management/references/standards-change-management-adapters.md) | 2026-08-12 | Selector resolution, abstract lifecycle vocabulary, and ownership boundary |
+| [`ki-repo-kb-streams` Streams standard](../../../repo-structure/ki-repo-kb-streams/references/standards-streams-structure.md#roadmap) | 2026-08-12 | KB boundary, placement, and off-ramp |
 
 ## Last review
 
-The repo-roadmap boundary now uses one clean non-KB shape: flat durable work items, grouped by an explicit theme field and indexed from the root roadmap. A work item is enriched in place when it needs execution detail; no parallel plan record or theme tree survives. KB streams remain their complete native planning instrument. The chezmoi roadmap's horizon blurbs were promoted into the shared standard because they make the model legible at the point of use. Refresh on a normative change or when real repositories expose friction the current item model cannot represent cleanly.
+The repo-roadmap boundary uses one clean non-KB shape: flat durable work items, grouped by an explicit theme field and indexed from the root roadmap. A work item is enriched in place when it needs execution detail; no parallel plan record or theme tree survives. KB Streams is the native placement container and reuses this adapter's concrete record model. The source record retains directly inspectable canonical material only. Refresh on a normative change or when real repositories expose friction the current item model cannot represent cleanly.

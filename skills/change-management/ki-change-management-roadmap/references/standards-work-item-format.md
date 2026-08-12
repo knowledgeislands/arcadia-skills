@@ -165,6 +165,15 @@ Record material departures, decisions, and newly discovered constraints under th
 
 Before setting `status: awaiting-review`, insert `## Review` immediately before `Discussion` with `### Delivered`, `### Summary of changes`, `### Verification`, `### Outstanding concerns`, `### Post-change review`, and `### Mini recap` in that exact order. The roadmap checker enforces this review-packet shape.
 
+- **Delivered** states the approved boundary and exclusions, plus immutable baseline and resulting evidence.
+- **Summary of changes** names concrete changed files, material decisions, and approved deviations.
+- **Verification** records exact gates and their outcomes.
+- **Outstanding concerns** records unresolved, unchecked, or failing issues, or explicitly says none.
+- **Post-change review** freshly assesses goal, scope, regression risk, and acceptance readiness.
+- **Mini recap** restates item-scoped delivery, verification, and concerns, then proposes learning routes without promoting them.
+
+Later process skills reuse these producer/consumer semantics; they do not reinterpret heading names or insert parallel review sections.
+
 This is the required evidence and review packet for an explicit acceptance decision. `ki-accept` records the interactive review outcome here before closure.
 
 ### Done

@@ -1,8 +1,8 @@
 # Linear adapter standard
 
-## Configuration
+## Configuration and local inspection
 
-Select the adapter and name exactly one Linear team key.
+Select the adapter, name one current Linear team locator, and make the repository's lifecycle metadata decision inspectable locally.
 
 ```toml
 [skills.ki-change-management]
@@ -10,16 +10,29 @@ adapter = "linear"
 
 [skills.ki-change-management-linear]
 team = "ENG"
+metadata_owner = "team-workflow-owner"
+dependencies = "documented Linear relation mapping"
+hierarchy = "documented Linear parent/sub-issue mapping"
+
+[skills.ki-change-management-linear.lifecycle]
+queue = "Backlog"
+ready = "Todo"
+review = "In Review"
+done = "Done"
 ```
 
-`team` is the identifier prefix. A canonical record reference is `ENG-123`; Linear allocates the number and it is never reused. Do not substitute a title, URL slug, or local counter as identity.
+`team` is a configured current locator prefix. `ENG-123` is a current team-scoped locator, not durable cross-team identity: a team move produces a new issue identifier and URL, while old locators remain searchable aliases. Do not claim that a Linear model UUID persists through a move without official proof.
 
-## Lifecycle mapping
+The `lifecycle` table names exact remote workflow values for queue, readiness, review, and done. `metadata_owner` names the authority that resolves mapping conflicts; `dependencies` and `hierarchy` are separate non-empty mappings and must never silently be treated as interchangeable. The local rubric checks only declaration shape; it does not contact Linear or prove the remote workflow matches it.
 
-A Linear Issue is the canonical record. The repository documents the exact mapping from its workflow states to queue placement, readiness, in-progress, awaiting review, and done; do not infer it from a state name. Completion is the team workflow's terminal done state. Linear has no general prune operation: closed Issues remain canonical evidence unless a separately authorised retention policy names a reversible archive action.
+## Lifecycle, migration, and retention
 
-Use the Issue description and comments for planning, delivery, and review evidence. A process skill never assumes a state conveys human acceptance unless the configured workflow explicitly makes that boundary visible.
+A Linear Issue is the remote record. Its description and comments are the intended locations for plan, delivery, and review evidence. Never infer human acceptance from a workflow state name alone. Completion maps to the declared `done` value.
 
-## Authority and conflicts
+A team move is an authority-gated migration stop, not a normal lifecycle transition. Before any future authorised operation, `KI-HARNESS-FND-014` must re-resolve the current locator, team, workflow mapping, retained aliases, and fields that Linear may remap or clear, then obtain fresh authority for the new write set. This skill performs none of those reads or writes.
 
-Read-only discovery is allowed when the user asks to inspect configured work. Creating, editing, moving, assigning, changing priority, or completing Issues requires confirmation of the exact remote write set. Re-read each Issue immediately before a write; stop on changed workflow state, concurrent human update, missing permissions, or uncertain team identity.
+Linear archives closed inactive Issues automatically; it has no manual archive action. Deletion is distinct, recoverable only for Linear's documented retention period, and is not a KI prune operation. This adapter defines no archive, delete, or prune action.
+
+## Execution boundary
+
+Remote discovery, authentication, stale-read checks, conflict handling, and every mutation fail closed pending `KI-HARNESS-FND-014`. A future executor must re-read each Issue immediately before an approved write and stop on changed workflow metadata, concurrent human updates, missing permissions, uncertain current locator/team, or moved-field uncertainty.

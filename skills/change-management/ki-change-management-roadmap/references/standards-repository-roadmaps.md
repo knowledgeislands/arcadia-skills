@@ -127,7 +127,7 @@ When multi-file or multi-step execution is selected for immediate work, `ki-plan
 
 It never creates a duplicate plan file.
 
-`status` records the shared delivery lifecycle independently of `horizon`:
+This adapter owns the concrete local record lifecycle independently of `horizon`; the base selector owns only abstract lifecycle vocabulary:
 
 `draft` → `ready` → `in-progress` → `awaiting-review` → `done`.
 

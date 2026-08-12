@@ -1,8 +1,8 @@
 # GitHub Issues adapter standard
 
-## Configuration
+## Configuration and local inspection
 
-Select the adapter and name exactly one GitHub repository.
+Select the adapter, name one current GitHub repository namespace, and make the repository's lifecycle metadata decision inspectable locally.
 
 ```toml
 [skills.ki-change-management]
@@ -10,16 +10,27 @@ adapter = "github-issues"
 
 [skills.ki-change-management-github-issues]
 repository = "owner/repository"
+metadata_owner = "repository-maintainers"
+dependencies = "native Issue blocked-by/blocking relations"
+hierarchy = "native sub-issues only; not a blocker relation"
+
+[skills.ki-change-management-github-issues.lifecycle]
+queue = "label: queued"
+ready = "label: ready"
+review = "label: awaiting-review"
+done = "closed"
 ```
 
-`repository` is the issue namespace. A canonical record reference is `owner/repository#123`; the number is allocated by GitHub and never reused. Do not substitute a title, URL fragment, or local counter as identity.
+`repository` is the configured Issue namespace. `<owner>/<repository>#<number>` is a current mutable locator, not a durable identity: an open Issue transfer changes its namespace and may change its number. The old URL redirects, but retain the old locator only as historical alias evidence. Do not infer a canonical cross-transfer identifier, including an API ID, without a separately evidenced identity decision.
 
-## Lifecycle mapping
+The `lifecycle` table names exact remote values for queue, readiness, review, and done. `metadata_owner` names the authority that resolves a label, Issue-field, or Project-field conflict; `dependencies` and `hierarchy` are separate non-empty mappings and must never silently be treated as interchangeable. The local rubric checks that this declaration is complete, but it does not contact GitHub or prove that the remote configuration matches it.
 
-The open Issue is the canonical record. Labels or project fields may express queue placement, readiness, and review state only when the repository documents their exact mapping. Closing an Issue is the shared `done` transition. GitHub does not provide a safe general prune operation: `ki-accept prune` retains closed Issues unless a separately authorised repository-retention policy names a reversible archive action.
+## Lifecycle, migration, and retention
 
-Use the Issue body and comments for plan, delivery, and review evidence. A process skill never assumes an Issue is Ready merely because it is open, and never infers acceptance from a merged pull request.
+An Issue is the remote record. Its body and comments are the intended locations for plan, delivery, and review evidence. Never infer readiness from `open` or acceptance from a merged pull request. `done` maps to the declared closed value; closed Issues are retained evidence. This adapter defines no archive or delete/prune operation.
 
-## Authority and conflicts
+A transfer is an authority-gated migration stop, not a normal lifecycle transition. Before any future authorised operation, `KI-HARNESS-FND-014` must re-resolve the current repository and locator, verify the Issue is not a pull request, inspect the current lifecycle fields and retained aliases, identify transferred labels/milestones that did not survive, and obtain fresh authority for the new write set. This skill performs none of those reads or writes.
 
-Read-only discovery is allowed when the user asks to inspect configured work. Creating, editing, relabelling, assigning, closing, reopening, or transferring Issues requires confirmation of the exact remote write set. Re-read each Issue immediately before a write; stop on a changed lifecycle field, conflicting human update, missing permissions, or uncertain repository identity.
+## Execution boundary
+
+Remote discovery, authentication, filtering, stale-read checks, conflict handling, and every mutation fail closed pending `KI-HARNESS-FND-014`. A future executor must re-read each Issue immediately before an approved write and stop on changed lifecycle metadata, conflicting human updates, missing permissions, an uncertain current locator, or an Issue response that represents a pull request.

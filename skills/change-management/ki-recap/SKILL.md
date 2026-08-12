@@ -9,7 +9,7 @@ argument-hint: 'recap [--runtime detect|claude|codex] [--transcript <session-fil
 
 # ki-recap
 
-**Kind:** process. Recaps a **live** session — warm, in-context, run inside the session itself. Full procedure in [the session-recap standard](references/standards-session-recap.md).
+**Kind:** process. Recaps a **live** session — warm, in-context, run inside the session itself. Read [the session-recap standard](references/standards-session-recap.md) for the procedure and [the runtime sources](references/sources.md) when refreshing runtime claims.
 
 ## What this skill does
 
@@ -27,11 +27,11 @@ When `ki-accept` asks for a work-record mini recap, use the same grounding and l
 
 When the user wants to select or sequence future work after a recap, route that separate request to `ki-next`. Do not present it as an action, invent a future-work checklist, or invoke `ki-next` from the recap itself.
 
-The boundary after every recap and before a new work cycle **is** a compaction boundary: compact by default there rather than waiting on a context-pressure reading. Preserve only what is in scope for that next cycle, then use the documented runtime- or vendor-specific compaction mechanism to reduce the active context to that scope. Two conditions withhold the default — the recap has not yet recorded the durable outcome (an active change, unresolved tool operation, or uncommitted implementation unit), or no substantive work has entered context since the last compaction, the minimum-footprint floor that stops a recap and an immediately following `ki-next` compacting twice across an unchanged span. The applicable `ki-tokenomics` runtime adapter owns the mechanism's evidence boundary; Claude Code exposes an invocable mechanism, Codex compacts only automatically, and where none can be invoked, say so plainly — a digest alone is useful handoff material, not context reduction.
+The boundary after every recap and before a new work cycle is a compaction decision point: preserve only what is in scope for the next cycle, then offer the documented runtime mechanism when it is available. Do not autonomously invoke a user-facing compaction command. Two conditions withhold that offer — the recap has not yet recorded the durable outcome (an active change, unresolved tool operation, or uncommitted implementation unit), or no substantive work has entered context since the last compaction, the minimum-footprint floor that stops a recap and an immediately following `ki-next` compacting twice across an unchanged span. The applicable `ki-tokenomics` runtime adapter owns the mechanism's evidence boundary; current Claude Code and Codex both document user-invocable compaction, but availability and agent authority are runtime/session-specific. Where it cannot be invoked, say so plainly — a digest is useful handoff material, not context reduction.
 
 The recap grounds every checkable claim in current reality, not in warm context or recalled memory: before asserting a commit landed, a gate passed, or a file's state, it re-checks (`git log`, the read-only gate, a fresh read) — stale context otherwise reads as fact.
 
-A mechanical **grounding helper**, [`scripts/recap-grounding.ts`](scripts/recap-grounding.ts), resolves the newest matching Claude or Codex session transcript and emits files-touched, tool-tally, high-cost-candidate, and versioned repository-evidence data. On a later recap it compares a compatible prior evidence marker and reports `unchanged`, `changed`, or `unavailable`; current Git state remains authoritative. It grounds the summarise and harvest legs, it does not replace judgment over them.
+A mechanical **grounding helper**, [`scripts/recap-grounding.ts`](scripts/recap-grounding.ts), resolves the physical Git root before reporting staged, unstaged, and untracked evidence. If Git cannot establish that root or read its evidence, it reports `repository.status: unavailable`; never call that state clean. It may also parse the newest matching Claude or Codex session transcript for advisory tool tally and historical markers. Those local JSONL formats are version-sensitive convenience evidence, not a stable runtime interface. On a later recap it compares a compatible prior marker and reports `unchanged`, `changed`, or `unavailable`; current Git state remains authoritative. It grounds the summarise and harvest legs, it does not replace judgment over them.
 
 ## Invocation
 

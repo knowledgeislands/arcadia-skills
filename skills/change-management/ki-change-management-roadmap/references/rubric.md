@@ -41,7 +41,7 @@ Repository-roadmap applicability.
 
 Canonical generated-index structure, placement, and readiness.
 
-- **ROAD-1 [M] — root orientation** — Root ROADMAP.md is a concise orientation that points to canonical work items rather than duplicating their queue. (standards-repository-roadmaps.md)
+- **ROAD-1 [M] — roadmap structure and root orientation** — The canonical docs/roadmap structure contains only regular work-item files, and root ROADMAP.md is a concise orientation rather than a duplicate queue. (standards-repository-roadmaps.md)
   - _Remediation:_ diagnostic — Restore the concise root orientation and canonical roadmap structure without reconstructing or prioritizing the work queue.
 - **ROAD-2 [J] — honest horizon placement** — Items sit in honest horizons; Waiting-for items name their external condition; speculative Future work carries `candidate: true`. (standards-repository-roadmaps.md)
   - _Evidence scope:_ Every horizon, Waiting-for condition, and Future candidate declaration.

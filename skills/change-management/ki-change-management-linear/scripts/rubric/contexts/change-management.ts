@@ -10,8 +10,13 @@ const TOML = (globalThis as unknown as { Bun: { TOML: { parse(text: string): unk
 export const createLinearSession = ({ repository }: RubricContextOptions): RubricSession<LinearRubricContext> => {
   const config = join(repository, '.ki-config.toml')
   let outcomes: AuditOutcome[]
+  let mapping: AuditOutcome[]
   if (!existsSync(config))
     outcomes = [
+      { status: 'NOT_APPLICABLE', message: 'No KI repository configuration is present.', subject: '.ki-config.toml' }
+    ]
+  if (!existsSync(config))
+    mapping = [
       { status: 'NOT_APPLICABLE', message: 'No KI repository configuration is present.', subject: '.ki-config.toml' }
     ]
   else {
@@ -21,7 +26,24 @@ export const createLinearSession = ({ repository }: RubricContextOptions): Rubri
       const selected = parsed.skills?.['ki-change-management'] as Record<string, unknown> | undefined
       const values =
         table && typeof table === 'object' && !Array.isArray(table) ? (table as Record<string, unknown>) : undefined
-      const unknown = values ? Object.keys(values).filter((key) => key !== 'team') : []
+      const unknown = values
+        ? Object.keys(values).filter(
+            (key) => !['team', 'metadata_owner', 'dependencies', 'hierarchy', 'lifecycle'].includes(key)
+          )
+        : []
+      const lifecycle = values?.lifecycle
+      const lifecycleValues =
+        lifecycle && typeof lifecycle === 'object' && !Array.isArray(lifecycle)
+          ? (lifecycle as Record<string, unknown>)
+          : undefined
+      const requiredLifecycle = ['queue', 'ready', 'review', 'done']
+      const missingLifecycle = requiredLifecycle.filter(
+        (key) => typeof lifecycleValues?.[key] !== 'string' || !String(lifecycleValues?.[key]).trim()
+      )
+      const directUnknown = unknown
+      const lifecycleUnknown = lifecycleValues
+        ? Object.keys(lifecycleValues).filter((key) => !requiredLifecycle.includes(key))
+        : []
       outcomes = [
         ...(selected?.adapter === 'linear'
           ? []
@@ -51,12 +73,75 @@ export const createLinearSession = ({ repository }: RubricContextOptions): Rubri
             ]
           : [])
       ]
+      mapping = [
+        ...(typeof values?.metadata_owner === 'string' && values.metadata_owner.trim()
+          ? [
+              {
+                status: 'PASS' as const,
+                message: `Linear lifecycle conflict owner is ${values.metadata_owner}.`,
+                subject: '.ki-config.toml'
+              }
+            ]
+          : [
+              {
+                status: 'VIOLATION' as const,
+                message: 'Linear configuration requires a non-empty metadata_owner.',
+                subject: '.ki-config.toml'
+              }
+            ]),
+        ...(typeof values?.dependencies === 'string' &&
+        values.dependencies.trim() &&
+        typeof values?.hierarchy === 'string' &&
+        values.hierarchy.trim() &&
+        values.dependencies !== values.hierarchy
+          ? [
+              {
+                status: 'PASS' as const,
+                message: 'Linear dependency and hierarchy mappings are distinct.',
+                subject: '.ki-config.toml'
+              }
+            ]
+          : [
+              {
+                status: 'VIOLATION' as const,
+                message: 'Linear configuration requires distinct non-empty dependencies and hierarchy mappings.',
+                subject: '.ki-config.toml'
+              }
+            ]),
+        ...(missingLifecycle.length
+          ? [
+              {
+                status: 'VIOLATION' as const,
+                message: `Linear lifecycle mapping requires non-empty values for: ${missingLifecycle.join(', ')}.`,
+                subject: '.ki-config.toml'
+              }
+            ]
+          : [
+              {
+                status: 'PASS' as const,
+                message: 'Linear lifecycle mapping declares queue, ready, review, and done.',
+                subject: '.ki-config.toml'
+              }
+            ]),
+        ...(directUnknown.length || lifecycleUnknown.length
+          ? [
+              {
+                status: 'VIOLATION' as const,
+                message: `Unrecognised Linear lifecycle configuration key: ${[...directUnknown, ...lifecycleUnknown].join(', ')}.`,
+                subject: '.ki-config.toml'
+              }
+            ]
+          : [])
+      ]
     } catch {
       outcomes = [{ status: 'VIOLATION', message: 'Cannot parse .ki-config.toml.', subject: '.ki-config.toml' }]
+      mapping = [{ status: 'VIOLATION', message: 'Cannot parse .ki-config.toml.', subject: '.ki-config.toml' }]
     }
   }
   return {
-    subjects: [{ families: ['SELECT'], context: () => ({ selection: { outcomes } }) }],
+    subjects: [
+      { families: ['SELECT', 'MAP'], context: () => ({ selection: { outcomes }, mapping: { outcomes: mapping } }) }
+    ],
     proposal: () => ({ writes: [] })
   }
 }

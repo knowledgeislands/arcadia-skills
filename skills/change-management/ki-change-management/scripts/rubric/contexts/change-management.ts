@@ -4,8 +4,25 @@ import type { AuditOutcome, RubricContextOptions, RubricSession } from '../../sh
 import type { ChangeManagementRubricContext } from '../types.ts'
 
 const TABLE = 'ki-change-management'
-const ADAPTERS = new Set(['roadmap', 'kb-streams', 'github-issues', 'linear'])
+type AdapterDefinition = { readonly skill: string; readonly repositoryKind?: 'repository' | 'kb' }
+type Adapter = 'roadmap' | 'kb-streams' | 'github-issues' | 'linear'
+
+const ADAPTERS: Readonly<Record<Adapter, AdapterDefinition>> = {
+  roadmap: { skill: 'ki-change-management-roadmap', repositoryKind: 'repository' },
+  'kb-streams': { skill: 'ki-repo-kb-streams', repositoryKind: 'kb' },
+  'github-issues': { skill: 'ki-change-management-github-issues' },
+  linear: { skill: 'ki-change-management-linear' }
+}
 const TOML = (globalThis as unknown as { Bun: { TOML: { parse(text: string): unknown } } }).Bun.TOML
+
+const tableAt = (skills: Record<string, unknown> | undefined, name: string): Record<string, unknown> | undefined => {
+  const table = skills?.[name]
+  return typeof table === 'object' && table !== null && !Array.isArray(table)
+    ? (table as Record<string, unknown>)
+    : undefined
+}
+
+const isAdapter = (value: unknown): value is Adapter => typeof value === 'string' && value in ADAPTERS
 
 export const createChangeManagementSession = ({
   repository
@@ -19,8 +36,9 @@ export const createChangeManagementSession = ({
   else {
     try {
       const parsed = TOML.parse(readFileSync(config, 'utf8')) as { skills?: Record<string, unknown> }
-      const table = parsed.skills?.[TABLE]
-      if (!table || typeof table !== 'object' || Array.isArray(table))
+      const skills = parsed.skills
+      const table = tableAt(skills, TABLE)
+      if (!table)
         outcomes = [
           {
             status: 'VIOLATION',
@@ -29,10 +47,12 @@ export const createChangeManagementSession = ({
           }
         ]
       else {
-        const values = table as Record<string, unknown>
-        const unknown = Object.keys(values).filter((key) => key !== 'adapter')
-        const adapter = values.adapter
-        outcomes = [
+        const unknown = Object.keys(table).filter((key) => key !== 'adapter')
+        const adapter = table.adapter
+        const definition = isAdapter(adapter) ? ADAPTERS[adapter] : undefined
+        const repo = tableAt(skills, 'ki-repo')
+        const repoType = repo?.repo_type === 'kb' ? 'kb' : 'repository'
+        const violations: AuditOutcome[] = [
           ...(unknown.length
             ? [
                 {
@@ -42,22 +62,44 @@ export const createChangeManagementSession = ({
                 }
               ]
             : []),
-          ...(typeof adapter === 'string' && ADAPTERS.has(adapter)
-            ? [
-                {
-                  status: 'PASS' as const,
-                  message: `Change management selects the ${adapter} adapter.`,
-                  subject: '.ki-config.toml'
-                }
-              ]
+          ...(definition
+            ? []
             : [
                 {
                   status: 'VIOLATION' as const,
                   message: 'adapter must be one of: roadmap, kb-streams, github-issues, linear.',
                   subject: '.ki-config.toml'
                 }
-              ])
+              ]),
+          ...(definition && !tableAt(skills, definition.skill)
+            ? [
+                {
+                  status: 'VIOLATION' as const,
+                  message: `Selected ${adapter} adapter requires a declared [skills.${definition.skill}] table.`,
+                  subject: '.ki-config.toml'
+                }
+              ]
+            : []),
+          ...(definition?.repositoryKind && repoType !== definition.repositoryKind
+            ? [
+                {
+                  status: 'VIOLATION' as const,
+                  message: `Selected ${adapter} adapter applies only to a ${definition.repositoryKind} repository, not ${repoType}.`,
+                  subject: '.ki-config.toml'
+                }
+              ]
+            : [])
         ]
+        outcomes =
+          violations.length > 0
+            ? violations
+            : [
+                {
+                  status: 'PASS',
+                  message: `Change management selects ${adapter}, resolved to ${definition?.skill}.`,
+                  subject: '.ki-config.toml'
+                }
+              ]
       }
     } catch {
       outcomes = [{ status: 'VIOLATION', message: 'Cannot parse .ki-config.toml.', subject: '.ki-config.toml' }]

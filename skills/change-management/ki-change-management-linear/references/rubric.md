@@ -9,6 +9,7 @@ Line-by-line criteria for auditing ki-change-management-linear. Classifications 
 ## Contents
 
 - [SELECT — Linear configuration](#select--linear-configuration)
+- [MAP — Linear lifecycle mapping](#map--linear-lifecycle-mapping)
 
 ## SELECT — Linear configuration
 
@@ -18,3 +19,12 @@ One declared Linear team with matching shared selection.
 
 - **SELECT-1 [M] — explicit Linear adapter** — The repository selects and configures one Linear team. (standards-linear.md)
   - _Remediation:_ diagnostic — Select linear and declare one uppercase Linear team key.
+
+## MAP — Linear lifecycle mapping
+
+→ [standard](standards-linear.md)
+
+Inspectable local workflow metadata, conflict owner, and separate relationship meanings.
+
+- **MAP-1 [M] — inspectable Linear lifecycle mapping** — The local configuration names exact queue, ready, review, and done values, a metadata conflict owner, and distinct dependency and hierarchy mappings; it does not assert remote verification. (standards-linear.md)
+  - _Remediation:_ diagnostic — Declare the exact workflow mapping and owner locally, then have an authorised future resolver verify it remotely before any process execution.

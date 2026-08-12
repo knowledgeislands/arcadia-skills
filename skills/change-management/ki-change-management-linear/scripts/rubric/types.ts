@@ -10,4 +10,5 @@ export type { AuditOutcome, RubricContextOptions, RubricFamily, RubricSession, S
 
 export type LinearRubricContext = {
   selection: { outcomes: readonly AuditOutcome[] }
+  mapping: { outcomes: readonly AuditOutcome[] }
 }

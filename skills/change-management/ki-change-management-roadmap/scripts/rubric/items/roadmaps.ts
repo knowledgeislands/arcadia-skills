@@ -5,9 +5,9 @@ const SOURCE = 'standards-repository-roadmaps.md'
 
 const ROAD_1: RubricItem<RoadmapAuditContext> = {
   code: 'ROAD-1',
-  title: 'root orientation',
+  title: 'roadmap structure and root orientation',
   description:
-    'Root ROADMAP.md is a concise orientation that points to canonical work items rather than duplicating their queue.',
+    'The canonical docs/roadmap structure contains only regular work-item files, and root ROADMAP.md is a concise orientation rather than a duplicate queue.',
   sources: [SOURCE],
   mechanical: {
     level: 'FAIL',
@@ -18,7 +18,7 @@ const ROAD_1: RubricItem<RoadmapAuditContext> = {
     },
     audit: {
       phase: 'INSPECT',
-      run: (context) => outcomesFor(context, 'ROAD-1', 'Every authored roadmap has canonical structure.')
+      run: (context) => outcomesFor(context, 'ROAD-1', 'The roadmap structure and root orientation are canonical.')
     }
   }
 }

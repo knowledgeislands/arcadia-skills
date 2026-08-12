@@ -14,6 +14,14 @@ const families = catalogue.families.filter((family) => family.code !== 'RUBRIC')
 >[]
 const items = families.flatMap((family) => family.items) as readonly RubricItem<unknown>[]
 
+const hostedOutcomes = (repository: string, code: string) => {
+  const session = catalogue.createSession({ mode: 'audit', repository, userHome: '/tmp', configuration: {} })
+  const context = session.subjects[1]?.context() as RoadmapRubricContext
+  const family = catalogue.families.find((candidate) => candidate.items.some((item) => item.code === code))
+  const item = family?.items.find((candidate) => candidate.code === code) as RubricItem<unknown> | undefined
+  return item?.mechanical?.audit.run(family?.selectContext(context) as never) ?? []
+}
+
 afterEach(() => {
   for (const directory of temporaryDirectories.splice(0)) rmSync(directory, { recursive: true, force: true })
 })
@@ -353,8 +361,46 @@ test('dependency links must be reciprocal', () => {
   const item = join(repository, 'docs', 'roadmap', 'TEST-001-build-the-foundation.md')
   writeFileSync(item, readFileSync(item, 'utf8').replace('blocks: []', 'blocks: [TEST-002]'))
   expect(inspectRoadmap(repository)).toContainEqual(
-    expect.objectContaining({ area: 'ITEM-4', msg: "dependency 'TEST-002' does not exist" })
+    expect.objectContaining({ area: 'ITEM-5', msg: "dependency 'TEST-002' does not exist" })
   )
+  expect(hostedOutcomes(repository, 'ITEM-5')).toEqual(
+    expect.arrayContaining([
+      expect.objectContaining({ status: 'VIOLATION', message: "dependency 'TEST-002' does not exist" })
+    ])
+  )
+})
+
+test('every emitted structural failure is visible through its catalogue criterion', () => {
+  const repository = createFixture()
+  rmSync(join(repository, 'docs', 'roadmap'), { recursive: true, force: true })
+  expect(inspectRoadmap(repository)).toContainEqual(
+    expect.objectContaining({ area: 'ROAD-1', msg: 'non-KB repository requires docs/roadmap/ as a directory' })
+  )
+  expect(hostedOutcomes(repository, 'ROAD-1')).toEqual(
+    expect.arrayContaining([
+      expect.objectContaining({
+        status: 'VIOLATION',
+        message: 'non-KB repository requires docs/roadmap/ as a directory'
+      })
+    ])
+  )
+})
+
+test('KB scope follows the declared repository kind, not a directory shape', () => {
+  const repository = createFixture()
+  writeFileSync(
+    join(repository, '.ki-config.toml'),
+    '[skills.ki-repo]\nrepo_code = "TEST"\nrepo_type = "kb"\n\n[skills.ki-change-management-roadmap]\nthemes = ["foundation-tooling"]\n'
+  )
+  expect(inspectRoadmap(repository)).toContainEqual(
+    expect.objectContaining({ area: 'SCOPE-1', level: 'FAIL', msg: expect.stringContaining('ki-repo-kb-streams') })
+  )
+  writeFileSync(
+    join(repository, '.ki-config.toml'),
+    '[skills.ki-repo]\nrepo_code = "TEST"\n\n[skills.ki-change-management-roadmap]\nthemes = ["foundation-tooling"]\n'
+  )
+  mkdirSync(join(repository, 'Streams', 'Roadmap'), { recursive: true })
+  expect(inspectRoadmap(repository).filter((finding) => finding.area === 'SCOPE-1')).toEqual([])
 })
 
 test('item themes must be declared by the repository roadmap configuration', () => {

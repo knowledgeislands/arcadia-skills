@@ -458,18 +458,18 @@ const validateDependencies = (items: readonly WorkItem[]): void => {
   const byId = new Map(items.map((item) => [item.id, item]))
   for (const item of items) {
     for (const id of [...item.blocks, ...item.blockedBy])
-      if (!byId.has(id)) add('FAIL', 'ITEM-4', `dependency '${id}' does not exist`, FORMAT, item.file)
+      if (!byId.has(id)) add('FAIL', 'ITEM-5', `dependency '${id}' does not exist`, FORMAT, item.file)
     for (const id of item.blocks)
       if (!byId.get(id)?.blockedBy.includes(item.id))
-        add('FAIL', 'ITEM-4', `blocks '${id}' is not reciprocal`, FORMAT, item.file)
+        add('FAIL', 'ITEM-5', `blocks '${id}' is not reciprocal`, FORMAT, item.file)
     for (const id of item.blockedBy)
       if (!byId.get(id)?.blocks.includes(item.id))
-        add('FAIL', 'ITEM-4', `blocked_by '${id}' is not reciprocal`, FORMAT, item.file)
+        add('FAIL', 'ITEM-5', `blocked_by '${id}' is not reciprocal`, FORMAT, item.file)
     if (
       ['ready', 'in-progress', 'awaiting-review'].includes(item.status) &&
       item.blockedBy.some((id) => byId.get(id)?.status !== 'done')
     )
-      add('FAIL', 'ITEM-4', 'active item has a non-done blocker', FORMAT, item.file)
+      add('FAIL', 'ITEM-5', 'active item has a non-done blocker', FORMAT, item.file)
   }
 }
 
@@ -524,14 +524,14 @@ export const inspectRoadmap = (repository: string): readonly Finding[] => {
   }
   const configuration = roadmapConfiguration(root)
   if (!existsSync(roadmap) || !lstatSync(roadmap).isDirectory()) {
-    add('FAIL', 'PROFILE-1', 'non-KB repository requires docs/roadmap/ as a directory', STANDARD)
+    add('FAIL', 'ROAD-1', 'non-KB repository requires docs/roadmap/ as a directory', STANDARD)
     return findings
   }
   const names = readdirSync(roadmap, { withFileTypes: true }).sort((a, b) => a.name.localeCompare(b.name))
   for (const entry of names) {
     const display = relative(root, join(roadmap, entry.name))
     if (!entry.isFile()) {
-      add('FAIL', 'PROFILE-1', 'docs/roadmap contains only regular work-item files', STANDARD, display)
+      add('FAIL', 'ROAD-1', 'docs/roadmap contains only regular work-item files', STANDARD, display)
     }
   }
   const items = workItemsFor(root, configuration)

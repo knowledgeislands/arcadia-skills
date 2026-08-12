@@ -43,11 +43,13 @@ active-run: null
 
 `cadence` and `grace` are ISO-8601 calendar durations using one positive unit: `P<n>D`, `P<n>W`, or `P<n>M`. `last-run` is an ISO date or `null` for a newly introduced template. `active-run` is `null` or the linked run identity. `spawn-policy` is `manual`, `when-due`, or `when-overdue`; `spawn-horizon` is one of `now`, `next`, `soon`, `future`, `waiting-for`, or `parked`.
 
-The body states the Goal, the check or maintenance Procedure, the evidence a successful run must record, and the condition that makes the template obsolete. It is a concise source record, not a history log.
+The body has non-empty `## Goal`, `## Procedure`, `## Successful-run evidence`, and `## Obsolescence` sections. It is a concise source record, not a history log.
+
+AUDIT accepts only regular Markdown files below the selected root. It checks exact frontmatter fields, a valid calendar date, non-KB filename identity, KB note naming plus `type: stream-housekeeping`, and the required body sections. An `active-run` must resolve to exactly one unfinished local roadmap record which names the template in `housekeeping_template` and has a valid `scheduled_for` date. No two templates may name the same active run.
 
 ## Due-run procedure
 
-`ki-next` calculates `due = last-run + cadence`, and `overdue = due + grace`. A template with a non-null `active-run` remains ineligible until that linked run reaches `done` or is explicitly replaced.
+`ki-next` calculates `due = last-run + cadence`, and `overdue = due + grace`. A template with a non-null `active-run` remains ineligible until that linked run is accepted as `done` or is explicitly replaced. The template state machine is: spawning atomically writes `active-run` and the linked `draft`; only accepted completion atomically writes `last-run` and clears `active-run`; replacement atomically substitutes the linked identity without changing `last-run`. Failed, abandoned, or superseded runs retain `active-run` until an explicit replacement or disposition is recorded.
 
 | Condition               | `ki-next` action                                                                           |
 | ----------------------- | ------------------------------------------------------------------------------------------ |
@@ -57,7 +59,7 @@ The body states the Goal, the check or maintenance Procedure, the evidence a suc
 | Overdue, `when-overdue` | Create the linked `draft` run at `spawn-horizon`; use `now` when the template declares it. |
 | Paused                  | Never create a run.                                                                        |
 
-The new run records `housekeeping_template` and `scheduled_for`. It is otherwise an ordinary roadmap item. `ki-accept` updates `last-run` and clears `active-run` only after the run has completed review, become `done`, and been committed.
+The new run records `housekeeping_template` and `scheduled_for`. It is otherwise an ordinary roadmap item. `ki-next` is the only process that creates a linked draft and sets `active-run`; `ki-accept` is the only process that records successful completion by setting `last-run` and clearing `active-run` after the run has completed review, become `done`, and been committed. This skill owns the template-side state-machine contract and its validation; it does not perform either process transition.
 
 ## KB adapter
 

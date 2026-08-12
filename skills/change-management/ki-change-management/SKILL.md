@@ -17,7 +17,7 @@ Read [the change-management adapter standard](references/standards-change-manage
 
 ## Shared model
 
-`[skills.ki-change-management]` declares exactly one adapter. `roadmap` is the default for a Project repository; `kb-streams` is the default for a Knowledge Base; `github-issues` and `linear` are explicit alternatives. Resolution has no fallback: an absent, unknown, or inapplicable declaration stops the process rather than guessing from a directory. The owning adapter retains record storage, identity, and structural rules.
+`[skills.ki-change-management]` declares exactly one adapter and the matching adapter table is declared beside it. `roadmap` is the default for an ordinary Project repository; `kb-streams` is the default for a Knowledge Base; `github-issues` and `linear` are explicit alternatives. Resolution has no fallback: an absent, unknown, undeclared, or inapplicable declaration stops the process rather than guessing from a directory. This skill owns abstract lifecycle terms, while the owning adapter retains concrete status mapping, record storage, identity, and structural rules.
 
 ## Operating modes
 
@@ -25,7 +25,7 @@ Carries the universal **AUDIT · CONFORM · EDUCATE · REFRESH** modes. Invoked 
 
 ### Mode AUDIT
 
-Run `ki repo audit --skill ki-change-management --repo <repo>`. It verifies that the local table selects one supported adapter. Then confirm that the selected adapter is declared and audit it through its own skill; this selector neither interprets nor repairs adapter-specific configuration.
+Run `ki repo audit --skill ki-change-management --repo <repo>`. It verifies that the local table selects one supported, declared, applicable adapter mapping. Then run the resolved adapter's own audit; this selector neither interprets nor repairs adapter-specific configuration, and resolution alone is not an adapter audit.
 
 ### Mode CONFORM
 
