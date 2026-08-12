@@ -9,6 +9,7 @@ Line-by-line criteria for auditing ki-repo-harness. Classifications are derived 
 ## Contents
 
 - [CAP — Capability publication](#cap--capability-publication)
+- [PAYLOAD — Payload and runtime evidence boundary](#payload--payload-and-runtime-evidence-boundary)
 - [LAY — Source-harness layout and files](#lay--source-harness-layout-and-files)
 - [CLAUDE — Root orientation](#claude--root-orientation)
 - [CONFIG — Harness declaration](#config--harness-declaration)
@@ -28,6 +29,15 @@ Typed compatible-harness capability inventory and kind-specific boundaries.
   - _Review prompt:_ Review each populated shelf: are its capabilities discoverable through the compatible payload, and are kind-specific semantics delegated to the appropriate standard?
   - _Outcomes:_ conforming; inventory revision; route to owning standard
   - _Conforming guidance:_ Revise the inventory or route the concern to its owning standard; do not alter a capability’s runtime semantics from this container-level review.
+
+## PAYLOAD — Payload and runtime evidence boundary
+
+→ [standard](standards-compatible-harness.md)
+
+Host-owned provenance and activation evidence not derived from source layout.
+
+- **PAYLOAD-1 [M] — Installed and runtime evidence remains separate** — A source-harness audit records that verified payload, local-development source, activation, capability resolution, and execution need host evidence. (standards-compatible-harness.md#source-and-installed-boundaries)
+  - _Remediation:_ diagnostic — Obtain the required provenance or runtime evidence from tools-ki; do not infer it from a source checkout.
 
 ## LAY — Source-harness layout and files
 

@@ -33,6 +33,8 @@ A **compatible installed harness** is a verified regular-file payload acquired a
 
 The installed payload, not a checkout, runtime projection, cache, or repository-local `.ki/` directory, is the operation source. A nearby checkout never becomes authoritative because a name matches or a symlink points to it.
 
+A source-harness audit proves only physical source layout and source capability identity. It cannot establish a verified installed payload, selected local-development source, runtime activation link, declared-capability resolution, component conformance, or executed runtime capability. Those evidence states are host-owned and must be reported separately as observed or unavailable.
+
 The source repository therefore defines capability semantics and carries their source files. The `ki` host owns acquisition evidence, installation layout, registry state, runtime activation links, repository activation, public CLI grammar, generic rubric execution, reporting, transactions, migration, and support diagnostics.
 
 ## Capability publication

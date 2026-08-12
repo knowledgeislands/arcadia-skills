@@ -1,6 +1,7 @@
 import { type Dirent, lstatSync, readdirSync, readFileSync } from 'node:fs'
 import { basename, join, relative, resolve } from 'node:path'
 import type {
+  AuditOutcome,
   ConformWrite,
   RubricContextOptions,
   RubricPublicationContext,
@@ -51,12 +52,18 @@ export type HarnessReviewContext = {
   repository: string
 }
 
+export type HarnessProvenanceContext = {
+  repository: string
+  payload: readonly AuditOutcome[]
+}
+
 export type HarnessRubricContext = {
   rubric: RubricPublicationContext
   layout: HarnessLayoutContext
   config: HarnessConfigContext
   skills: HarnessSkillsContext
   review: HarnessReviewContext
+  provenance: HarnessProvenanceContext
 }
 
 const pathState = (path: string): PathState => {
@@ -198,12 +205,23 @@ export const createHarnessSession = ({
       repositoryState: state,
       ...inspectedSkills
     },
-    review: { repository: root }
+    review: { repository: root },
+    provenance: {
+      repository: root,
+      payload: [
+        {
+          status: 'NOT_APPLICABLE',
+          message:
+            'Source-harness inspection does not establish verified installed payload, development-source selection, runtime activation, declared capability resolution, or execution.',
+          subject: root
+        }
+      ]
+    }
   }
   return {
     subjects: [
       {
-        families: ['CAP', 'LAY', 'CLAUDE', 'CONFIG', 'SKILLS', 'LONG', 'COLL'],
+        families: ['CAP', 'PAYLOAD', 'LAY', 'CLAUDE', 'CONFIG', 'SKILLS', 'LONG', 'COLL'],
         context: () => context,
         subject: root
       },

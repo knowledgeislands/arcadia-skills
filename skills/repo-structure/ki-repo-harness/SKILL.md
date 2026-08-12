@@ -21,10 +21,10 @@ The universal modes are **AUDIT · CONFORM · EDUCATE · REFRESH**.
 
 ### Mode AUDIT — check a source harness and publication boundary
 
-1. Run `ki repo audit --skill ki-repo-harness --repo <path>`. The host executes declared dependencies before the harness delta and reports mechanical results.
-2. Review the generated rubric's judgment criteria: compatible capability publication, root-orientation coverage and freshness, populated-shelf governance, installed-surface ambiguity, refresh health, and capability boundaries.
-3. Run separately coverage-detected owning audits where applicable: `ki-engineering` for the development toolchain, `ki-repo` for repository governance, and `ki-repo-mcp` when the MCP shelf contains server code.
-4. Report sibling findings under their owning skill and harness findings under this skill.
+- Run `ki repo audit --skill ki-repo-harness --repo <path>`. The host executes declared dependencies before the harness delta and reports mechanical results.
+- Review the generated rubric's judgment criteria, especially capability and payload boundaries. Source layout does not establish a verified payload, local-development selection, activation, resolved capability, component result, or execution; obtain those states from `tools-ki` or report them unavailable.
+- Run separately coverage-detected owning audits where applicable: `ki-engineering` for the development toolchain, `ki-repo` for repository governance, and `ki-repo-mcp` when the MCP shelf contains server code.
+- Report sibling findings under their owning skill and harness findings under this skill.
 
 ### Mode CONFORM — apply the one safe harness repair
 

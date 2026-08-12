@@ -35,12 +35,12 @@ export const scenarios: Scenario[] = [
       'After `ki harness install example/operations`, are its skills active automatically? Explain the user-scope and repository-scope commands and what each changes.',
     assertions: [
       { name: 'installation does not activate', re: /(does not|doesn't|not)[^.\n]{0,40}(activate|active)/i },
-      { name: 'user activation command', re: /ki skill user add/ },
-      { name: 'repository activation command', re: /ki skill repo add/ },
+      { name: 'user activation command', re: /ki skill add/ },
+      { name: 'repository activation command', re: /ki repo skill add/ },
       { name: 'repository declaration', re: /\.ki-config\.toml/ }
     ],
     rubric:
-      "House contract: installing a compatible harness only makes its registered capabilities available. `ki skill user add <skill>` creates managed user-runtime links and records the selected provider. `ki skill repo add <skill>` updates one repository's `.ki-config.toml` and its managed repository-runtime links. Neither scope implies the other."
+      "House contract: installing a compatible harness only makes its registered capabilities available. `ki skill add <skill>` creates managed user-runtime links and records the selected provider. `ki repo skill add <skill>` updates one repository's `.ki-config.toml` and its managed repository-runtime links. Neither scope implies the other."
   },
   {
     skill: 'ki-bootstrap',
@@ -54,9 +54,9 @@ export const scenarios: Scenario[] = [
       },
       { name: 'installed harness authority', re: /(verified|installed)[^.\n]{0,40}harness/i },
       { name: 'no local runner fallback', re: /(no|never|not)[^.\n]{0,50}(runner|wrapper|\.ki)/i },
-      { name: 'development checkout must be explicit', re: /ki dev on/ }
+      { name: 'development checkout must be explicit', re: /ki dev local (set|on)/ }
     ],
     rubric:
-      'House trust boundary: repository operations resolve declared capabilities only from verified installed compatible harnesses and fail before execution when resolution is incomplete. They never fall back to `.ki` wrappers, copied runners, or a nearby checkout. A contributor may select a validated checkout only through explicit `ki dev on <path>`.'
+      'House trust boundary: repository operations resolve declared capabilities only from verified installed compatible harnesses and fail before execution when resolution is incomplete. They never fall back to `.ki` wrappers, copied runners, or a nearby checkout. A contributor may select a validated checkout only through explicit `ki dev local set <path>` followed by `ki dev local on`; this is a mutable development source, not a verified installed payload or loaded-runtime proof.'
   }
 ]

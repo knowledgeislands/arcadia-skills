@@ -45,6 +45,7 @@ test('the catalogue preserves the current compatible-harness criteria', () => {
   expect(catalogue.createSession).toBeFunction()
   expect(catalogue.families.map((family) => family.code)).toEqual([
     'CAP',
+    'PAYLOAD',
     'LAY',
     'CLAUDE',
     'CONFIG',
@@ -56,6 +57,7 @@ test('the catalogue preserves the current compatible-harness criteria', () => {
   const codes = catalogue.families.flatMap((family) => family.items.map((item) => item.code))
   expect(codes).toEqual([
     'CAP-1',
+    'PAYLOAD-1',
     'LAY-1',
     'LAY-2',
     'LAY-3',
@@ -117,6 +119,18 @@ test('audit is read-only and an existing marker produces no proposal', () => {
   expect(context.config.hasHarnessTable).toBe(true)
   expect(context.config.requestHarnessMarker).toBeUndefined()
   expect(session.proposal().writes).toEqual([])
+})
+
+test('source conformance does not inherit payload or runtime assurance', () => {
+  const repository = fixture()
+  const session = catalogue.createSession({ mode: 'audit', repository, userHome: tmpdir(), configuration: {} })
+  const context = session.subjects[0]?.context() as HarnessRubricContext
+  expect(context.provenance.payload).toEqual([
+    expect.objectContaining({
+      status: 'NOT_APPLICABLE',
+      message: expect.stringContaining('verified installed payload')
+    })
+  ])
 })
 
 test('conform refuses a symlinked or dangling configuration path', () => {
