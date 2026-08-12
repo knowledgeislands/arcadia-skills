@@ -51,7 +51,7 @@ Each completed review or phase may expose a reusable effectiveness check. Distil
 
 ## Progress
 
-Phase 0 and dependency ordering are complete. Phase 1 and Phase 2 review and remediation are complete. Phases 3 and 4 are complete. Phase 5 review is next; Phase 6 is pending.
+Phase 0 and dependency ordering are complete. Phase 1 and Phase 2 review and remediation are complete. Phases 3 and 4 are complete. Phase 5 review is in progress; Phase 6 is pending.
 
 | #  | Skill                                        | Review   | Change state | Evidence   |
 | -: | -------------------------------------------- | -------- | ------------ | ---------- |
@@ -95,6 +95,8 @@ Phase 0 and dependency ordering are complete. Phase 1 and Phase 2 review and rem
 | 38 | [`ki-repo-tools`](ki-repo-tools.md)           | complete | review only  | —          |
 | 39 | [`ki-repo-homebrew-tap`](ki-repo-homebrew-tap.md) | complete | review only | —          |
 | 40 | [`ki-repo-dotfiles-chezmoi`](ki-repo-dotfiles-chezmoi.md) | complete | review only | —          |
+| 41 | [`ki-binding`](ki-binding.md)                 | complete | review only  | —          |
+| 46 | [`ki-tokenomics`](ki-tokenomics.md)           | complete | review only  | —          |
 
 The [Phase 1 synthesis](phase-1-synthesis.md), [Phase 2 synthesis](phase-2-synthesis.md), [Phase 3 synthesis](phase-3-synthesis.md), and [Phase 4 synthesis](phase-4-synthesis.md) retain cross-skill conclusions. Detailed applied changes and remaining gaps live only in each skill record.
 
