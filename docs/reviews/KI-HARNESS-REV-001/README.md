@@ -53,8 +53,8 @@ Each completed review or phase may expose a reusable effectiveness check. Distil
 - Phase 2: in progress. [`ki-change-management`](ki-change-management.md), [`ki-change-management-roadmap`](ki-change-management-roadmap.md), [`ki-change-management-github-issues`](ki-change-management-github-issues.md), and [`ki-change-management-linear`](ki-change-management-linear.md) propose `revise`; no order change is required.
 - Phase 2 continued: [`ki-change-management-housekeeping`](ki-change-management-housekeeping.md), [`ki-recap`](ki-recap.md), and [`ki-next`](ki-next.md) also propose `revise`; lifecycle and runtime conflicts are recorded without remediation.
 - Phase 2: complete. [`ki-plan`](ki-plan.md), [`ki-batch`](ki-batch.md), [`ki-implement`](ki-implement.md), and [`ki-accept`](ki-accept.md) propose `revise`; the [phase synthesis](phase-2-synthesis.md) reconciles ownership and preserves the existing order.
-- Phases 3–6: pending.
-- Phases 3–6: pending.
+- Phase 3: in progress. [`ki-decision-records`](ki-decision-records.md) and [`ki-guides`](ki-guides.md) propose `revise`; ownership conflicts are deferred to their declared later gates rather than decided early.
+- Phases 4–6: pending.
 
 ## Evidence rules
 
