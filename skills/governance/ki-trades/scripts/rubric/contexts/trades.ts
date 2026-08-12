@@ -215,7 +215,7 @@ const parseConfiguration = (
     if (!home) {
       outcomes.push({
         status: 'VIOLATION',
-        message: `route ${partner} must be keyed by owner/name or a canonical HTTPS GitHub repository URL`,
+        message: `route ${partner} must be keyed by owner/name or a canonical HTTPS GitHub repository URL; non-GitHub endpoints are unsupported`,
         subject
       })
       continue
@@ -659,30 +659,16 @@ const remoteRecord = (root: string, path: string, direction: Direction): TradeRe
   return parseRecord(root, path, direction, emptyChannels())
 }
 
-const linkedWorkIsDone = (root: string, identity: unknown): boolean => {
-  if (typeof identity !== 'string' || !identity) return false
-  for (const directory of ['docs/roadmap', 'Streams']) {
-    for (const path of readMarkdownFiles(root, directory)) {
-      const source = readFileSync(join(root, path), 'utf8')
-      const frontmatter = source.match(/^---\n([\s\S]*?)\n---\n/)?.[1]
-      if (!frontmatter) continue
-      try {
-        const fields = table(Bun.YAML.parse(frontmatter))
-        if (fields?.id === identity && fields.status === 'done') return true
-      } catch {}
-    }
-  }
-  return false
-}
-
-const releaseEligible = (record: TradeRecord, receiptVisible: boolean, receiverRoot: string): boolean => {
+const releaseEligible = (record: TradeRecord, receiptVisible: boolean): boolean => {
   if (!record.observation) return false
   if (record.observation === 'unattended' || record.observation === 'receipt') return receiptVisible
   if (!record.decisionStatus || !TERMINAL_DECISION_STATUSES.has(record.decisionStatus)) return false
   if (record.observation === 'decision') return true
   if (record.decisionStatus === 'applied' || record.decisionStatus === 'retained') return true
   if (record.decisionStatus === 'declined' || record.decisionStatus === 'superseded') return true
-  return record.decisionStatus === 'adopted' && linkedWorkIsDone(receiverRoot, record.fields.adopted_as)
+  // Canonical completion belongs to the selected change-management adapter. This protocol cannot
+  // resolve the adapter or validate the owner record, so a path scan would be false authority.
+  return false
 }
 
 const recordEvidence = (
@@ -795,7 +781,7 @@ const recordEvidence = (
       )
         status.push({
           status: 'VIOLATION',
-          message: 'received_from_ref must be a full 40-character lower-case hexadecimal commit',
+          message: 'received_from_ref must be a full 40-character lower-case hexadecimal commit locator',
           subject: record.path
         })
       if (typeof record.fields.reviewed_at === 'string' && !UTC_TIMESTAMP.test(record.fields.reviewed_at))
@@ -826,7 +812,7 @@ const recordEvidence = (
       )
         status.push({
           status: 'VIOLATION',
-          message: 'applied requires a full verified local applied_commit',
+          message: 'applied requires a full lower-case hexadecimal applied_commit locator',
           subject: record.path
         })
       if (record.decisionStatus === 'applied' && record.kind !== 'work')
@@ -905,8 +891,15 @@ const recordEvidence = (
       })
 
     if (record.direction === 'inbound') {
-      if (counterpart) {
-        if (releaseEligible(record, true, root))
+      if (record.observation === 'completion' && record.decisionStatus === 'adopted') {
+        release.push({
+          status: 'NOT_APPLICABLE',
+          message:
+            'adopted completion is unavailable: no selected-adapter owner-valid canonical completion evidence exists',
+          subject: record.path
+        })
+      } else if (counterpart) {
+        if (releaseEligible(record, true))
           release.push({
             status: 'INFO',
             message: `${record.observation} observation policy permits sender release`,
@@ -918,7 +911,7 @@ const recordEvidence = (
             message: `${record.observation ?? 'invalid'} observation policy requires sender retention`,
             subject: record.path
           })
-      } else if (releaseEligible(record, true, root)) {
+      } else if (releaseEligible(record, true)) {
         release.push({
           status: 'INFO',
           message: 'eligible sender release is observable; receiver may prune this inbound copy',
@@ -937,7 +930,14 @@ const recordEvidence = (
         message: 'receiver has not created an inbound copy; sender retains the outbound record',
         subject: record.path
       })
-    } else if (releaseEligible(counterpart, true, peer?.root ?? root)) {
+    } else if (counterpart.observation === 'completion' && counterpart.decisionStatus === 'adopted') {
+      release.push({
+        status: 'NOT_APPLICABLE',
+        message:
+          'adopted completion is unavailable: no selected-adapter owner-valid canonical completion evidence exists',
+        subject: record.path
+      })
+    } else if (releaseEligible(counterpart, true)) {
       release.push({
         status: 'INFO',
         message: `${counterpart.observation} observation policy permits sender release`,

@@ -7,7 +7,7 @@ const RELEASE_1: RubricItem<OutcomeContext> = {
   code: 'RELEASE-1',
   title: 'release and pruning follow observable lifecycle evidence',
   description:
-    'Sender release follows the declared observation policy: unattended and receipt wait for receipt, decision waits for a terminal receiver decision, and completion additionally waits for adopted local work to be done. Receiver pruning becomes eligible only after such a release is observable.',
+    'Sender release follows the declared observation policy: unattended and receipt wait for receipt, and decision waits for a terminal receiver decision. Applied, retained, declined, and superseded completion observations resolve directly; adopted completion remains unavailable until the selected adapter supplies owner-valid canonical completion evidence. Receiver pruning becomes eligible only after such a release is observable.',
   sources: [SOURCE],
   mechanical: {
     level: 'FAIL',

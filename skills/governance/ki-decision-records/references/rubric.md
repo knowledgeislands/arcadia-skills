@@ -31,6 +31,8 @@ The tracked readable rubric is the exact publication of the structured catalogue
 
 Canonical decision-record filenames and serial namespaces.
 
+- **FILENAME-0 [M] — Every decision-directory Markdown file has a canonical record heading** — Every Markdown file other than the collection index under the selected decisions directory has a parseable `# <PREFIX>-<SCOPE>-NNN: <title>` heading. Files that do not expose an identity are reported rather than silently skipped. (standards-decision-records.md)
+  - _Remediation:_ diagnostic — Move supporting material outside the decisions directory or add the canonical Decision Record heading before rerunning the audit.
 - **FILENAME-1 [M] — Canonical decision-record filename** — Filename is `<ID>-<title-slug>.md`: the canonical uppercase record ID, a dash, then the title lowercased with each non-alphanumeric run replaced by one dash and leading or trailing dashes removed. (standards-decision-records.md)
   - _Remediation:_ diagnostic — Rename the record to its canonical ID and title slug, then update every affected citation.
 - **FILENAME-2 [M] — Unique serial within prefix and scope** — NNN is unique per prefix within its `<SCOPE>` namespace; two files may share the same integer if they carry different prefixes; no two files share the same prefix+scope+serial combination. `XXX` files are exempt from uniqueness. (standards-decision-records.md)
@@ -131,6 +133,8 @@ Complete, current, and readable decision-record indexes.
   - _Remediation:_ automatic
 - **INDEX-3 [M] — No stale index entries** — No index entry references a decision-record file that does not exist. (standards-decision-records.md)
   - _Remediation:_ diagnostic — Remove or correct each stale index entry after confirming the record history.
+- **INDEX-4 [M] — Index links resolve to their named record** — Every ordered Decision Record index entry links its displayed record ID to that record’s canonical filename, and decision links are not hidden in unordered bullets or other prose. (standards-decision-records.md)
+  - _Remediation:_ diagnostic — Restore the ordered list form and point each record ID at its canonical filename.
 - **INDEX-6 [J] — Reveal order** — Entries are in a sensible reveal order: a from-scratch build narrative with roots first, then dependents, weaving sub-scopes in. (standards-decision-records.md)
   - _Evidence scope:_ The ordered entries of the active decision index.
   - _Review prompt:_ Assess whether index entries form a sensible from-scratch reveal order with roots before dependents.

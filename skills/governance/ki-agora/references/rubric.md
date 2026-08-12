@@ -27,7 +27,7 @@ The tracked readable rubric is the exact publication of the structured catalogue
 
 Owner identity, purpose, and approved member roles are explicit and portable.
 
-- **CONFIG-1 [M] — Agora homes are canonical** — A declared Agora home uses a stable identifier, explicitly names the canonical identity of its declaring owner repository, and records only its non-empty purpose and canonical HTTPS GitHub member repositories with lower-case hyphenated roles. The owner is an automatic projection participant, not a reciprocal member. (standards-agora.md)
+- **CONFIG-1 [M] — Agora homes are canonical** — A declared Agora home uses a stable identifier, explicitly names the canonical identity of its declaring owner repository, and records only its non-empty purpose and canonical HTTPS GitHub member repositories with lower-case hyphenated roles. Unknown fields fail closed. The owner is an automatic projection participant, not a reciprocal member, and local declaration shape is not reciprocal-consent evidence. (standards-agora.md)
   - _Remediation:_ diagnostic — Correct the local ki-agora home declaration, then rerun the audit.
 
 ## MEMBERSHIP — Member declaration
@@ -36,5 +36,5 @@ Owner identity, purpose, and approved member roles are explicit and portable.
 
 Every membership is a local, portable consent declaration.
 
-- **MEMBERSHIP-1 [M] — member consent is canonical** — Each declared membership names one stable Agora identifier, canonical HTTPS GitHub home, and lower-case hyphenated role. A repository may declare multiple memberships; local shape never infers peer agreement. (standards-agora.md)
+- **MEMBERSHIP-1 [M] — member consent is canonical** — Each declared membership names one stable Agora identifier, canonical HTTPS GitHub home, and lower-case hyphenated role with no unknown fields. A repository may declare multiple memberships; local shape never infers peer agreement. (standards-agora.md)
   - _Remediation:_ diagnostic — Correct the local ki-agora membership declaration, then rerun the audit.

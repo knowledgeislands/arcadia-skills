@@ -33,7 +33,7 @@ The tracked readable rubric is the exact publication of the structured catalogue
 
 Typed trade routes are explicit, canonical, and owned locally.
 
-- **CONFIG-1 [M] — typed routes are canonical** — A participating repository names each trade partner exactly once with its own `[skills.ki-trades.routes."owner/name"]` table, whose `export` and `import` arrays are duplicate-free and drawn from the closed trade-kind set; a direction carrying no kinds is absent rather than empty, an optional presentation-only `map_bonus` is an integer from 0 through 3, and the repository identity comes only from `ki-repo.repository`. (standards-trades.md)
+- **CONFIG-1 [M] — typed routes use supported canonical identities** — A participating repository names each trade partner exactly once with its own `[skills.ki-trades.routes."owner/name"]` table, whose `export` and `import` arrays are duplicate-free and drawn from the closed trade-kind set; a direction carrying no kinds is absent rather than empty, an optional presentation-only `map_bonus` is an integer from 0 through 3, and the repository identity comes only from the currently representable GitHub `owner/name` form of `ki-repo.repository`. Unsupported identities are refused. (standards-trades.md)
   - _Remediation:_ diagnostic — Correct the local ki-trades route declaration, then rerun the audit.
 
 ## ROUTE — Typed reciprocal routes
@@ -95,7 +95,7 @@ Preparation, submission, receipt, receiver decision, and local completion remain
 
 Absence is an observable release signal only after the sender-selected receipt, decision, or completion condition is satisfied.
 
-- **RELEASE-1 [M + J] — release and pruning follow observable lifecycle evidence** — Sender release follows the declared observation policy: unattended and receipt wait for receipt, decision waits for a terminal receiver decision, and completion additionally waits for adopted local work to be done. Receiver pruning becomes eligible only after such a release is observable. (standards-trades.md)
+- **RELEASE-1 [M + J] — release and pruning follow observable lifecycle evidence** — Sender release follows the declared observation policy: unattended and receipt wait for receipt, and decision waits for a terminal receiver decision. Applied, retained, declined, and superseded completion observations resolve directly; adopted completion remains unavailable until the selected adapter supplies owner-valid canonical completion evidence. Receiver pruning becomes eligible only after such a release is observable. (standards-trades.md)
   - _Remediation:_ guarded — Observe the sender-selected lifecycle evidence and make no release or pruning change until the responsible repository confirms it.
   - _Evidence scope:_ Every submitted trade whose sender release or receiver pruning eligibility is under review.
   - _Review prompt:_ Assess the observable receipt, terminal decision, and completion evidence against the sender-selected observation policy before any sender release or receiver pruning action.

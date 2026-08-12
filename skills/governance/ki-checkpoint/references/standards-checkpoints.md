@@ -79,10 +79,10 @@ A retired record is inspectable recovery evidence and never an active resume can
 
 A checkpoint contains reconstruction state, not a transcript. It has no vendor-session field, conversation URL, runtime identifier, message log, or role-by-role dialogue. Its prose must not claim that a future agent can access or reopen the originating session.
 
-It is also not a completion signal, roadmap, decision record, knowledge store, or session recap. `ki-recap` owns the user-facing judgment-led recap; the relevant governance skill owns each durable artifact. Optional runtime adapters may discover or update an already selected checkpoint only within this contract.
+It is also not a completion signal, roadmap, decision record, knowledge store, or session recap. `ki-recap` owns the user-facing judgment-led recap; the relevant governance skill owns each durable artifact. Optional runtime adapters may discover an already selected checkpoint only within this contract. They do not grant write authority, choose a thread, or turn this portable procedure into a native host operation.
 
 ## Audit and conform boundary
 
-AUDIT checks only the declared repository's physical checkpoint subarea. It reports absent scope as not applicable, rejects symlinks and unsupported nesting, and treats retired records as non-active.
+AUDIT, CONFORM, and EDUCATE are the currently hosted `ki repo` operations. RESUME, UPDATE, and RETIRE remain explicit agent procedures until a host operation is implemented and independently verified. AUDIT checks only the declared repository's physical checkpoint subarea. It reports absent scope as not applicable, rejects symlinks and unsupported nesting, and treats retired records as non-active.
 
 CONFORM never creates content, selects a thread, repairs prose or metadata, moves or retires a record, or infers lifecycle state. Authored corrections require an explicit UPDATE or RETIRE operation because automation cannot safely supply reconstruction judgment.

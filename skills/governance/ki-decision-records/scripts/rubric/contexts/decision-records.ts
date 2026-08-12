@@ -59,7 +59,9 @@ const PREFIX_TO_TYPE: Record<string, { decisionType: string; type: string; typeU
   }
 }
 const ID = /^(SDR|PDR|ADR|DDR|XDR|ODR|GDR|RDR|KDR)-([A-Z][A-Z0-9]*(?:-[A-Z][A-Z0-9]*)*)-(XXX|\d{3,})$/
-const INDEX_ID = /^\s*(?:\d+\.|[-*])\s+.*?((?:SDR|PDR|ADR|DDR|XDR|ODR|GDR|RDR|KDR)-[A-Z][A-Z0-9-]+-(?:XXX|\d{3,}))/
+const INDEX_ENTRY =
+  /^\s*(\d+)\.\s+\[((?:SDR|PDR|ADR|DDR|XDR|ODR|GDR|RDR|KDR)-[A-Z][A-Z0-9-]+-(?:XXX|\d{3,}))\]\(([^)]+)\)/
+const DECISION_LINK = /\[((?:SDR|PDR|ADR|DDR|XDR|ODR|GDR|RDR|KDR)-[A-Z][A-Z0-9-]+-(?:XXX|\d{3,}))\]\(([^)]+)\)/
 const HEADING = /^#\s+((?:SDR|PDR|ADR|DDR|XDR|ODR|GDR|RDR|KDR)-[A-Z][A-Z0-9-]+-(?:XXX|\d{3,})):\s+(.+)$/m
 
 export type DecisionRecord = {
@@ -89,6 +91,7 @@ export type DecisionRecord = {
 }
 
 export type FilenameRubricContext = {
+  unparseableFiles: readonly string[]
   invalidFilenames: readonly string[]
   duplicateIds: ReadonlyMap<string, readonly string[]>
   serialGaps: ReadonlyMap<string, readonly number[]>
@@ -110,6 +113,8 @@ export type IndexRubricContext = {
   indexExists: boolean
   indexIds: readonly string[]
   indexCounts: ReadonlyMap<string, number>
+  indexLinks: readonly { id: string; target: string }[]
+  unorderedIndexLinks: readonly string[]
   records: readonly DecisionRecord[]
   outOfOrderIds: readonly { id: string; previous: number }[]
   appendMissingEntries?: () => void
@@ -240,6 +245,15 @@ const readRecords = (directory: string, entries: readonly string[], indexFile: s
   return records
 }
 
+const unparseableRecordFiles = (directory: string, entries: readonly string[], indexFile: string): string[] =>
+  entries
+    .filter((entry) => entry.endsWith('.md') && entry !== indexFile)
+    .filter((file) => {
+      const content = readFileSync(join(directory, file), 'utf8')
+      const body = content.replace(/^---\n[\s\S]*?\n---\n?/, '')
+      return !HEADING.test(body)
+    })
+
 const serialEvidence = (records: readonly DecisionRecord[]) => {
   const idsToFiles = new Map<string, string[]>()
   const serialsBySeries = new Map<string, number[]>()
@@ -290,8 +304,10 @@ const createIndexDraft = (repository: string, path: string, original: string): I
     appendMissingEntries: (records, indexCounts) => {
       const missing = records.filter((record) => (indexCounts.get(record.id) ?? 0) === 0)
       if (missing.length === 0) return
+      const existingEntries = original.split('\n').filter((line) => INDEX_ENTRY.test(line)).length
       const additions = missing.map(
-        (record) => `- [${record.id}](${record.file}) — ${record.headingTitle ?? '(title unknown — see file)'}`
+        (record, index) =>
+          `${existingEntries + index + 1}. [${record.id}](${record.file}) — ${record.headingTitle ?? '(title unknown — see file)'}`
       )
       working = `${working.replace(/\n*$/, '\n')}${additions.join('\n')}\n`
     },
@@ -312,10 +328,15 @@ export const createDecisionRecordsSession = ({
   const indexExists = entries.includes(indexFile)
   const indexPath = join(directory, indexFile)
   const indexContent = indexExists ? readFileSync(indexPath, 'utf8') : ''
-  const indexIds = indexContent
+  const indexLinks = indexContent
     .split('\n')
-    .map((line) => line.match(INDEX_ID)?.[1])
-    .filter((id): id is string => Boolean(id))
+    .map((line) => line.match(INDEX_ENTRY))
+    .filter((entry): entry is RegExpMatchArray => Boolean(entry))
+    .map((entry) => ({ id: entry[2] as string, target: entry[3] as string }))
+  const indexIds = indexLinks.map(({ id }) => id)
+  const unorderedIndexLinks = indexContent
+    .split('\n')
+    .filter((line) => DECISION_LINK.test(line) && !INDEX_ENTRY.test(line))
   const indexCounts = new Map<string, number>()
   for (const id of indexIds) indexCounts.set(id, (indexCounts.get(id) ?? 0) + 1)
   const records = readRecords(directory, entries, indexFile)
@@ -326,6 +347,7 @@ export const createDecisionRecordsSession = ({
   const context: DecisionRecordsRubricContext = {
     rubric: { publication },
     filename: {
+      unparseableFiles: unparseableRecordFiles(directory, entries, indexFile),
       invalidFilenames: records
         .filter((record) => record.file !== record.expectedFilename)
         .map((record) => record.file),
@@ -346,6 +368,8 @@ export const createDecisionRecordsSession = ({
       indexExists,
       indexIds,
       indexCounts,
+      indexLinks,
+      unorderedIndexLinks,
       records,
       outOfOrderIds: revealOrderEvidence(indexIds),
       ...(indexDraft

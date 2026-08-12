@@ -27,7 +27,7 @@ The normative standard behind [the generated rubric](rubric.md). Grounded in Mic
 
 ## Prefix table
 
-Each type maps to a fixed prefix, a human-readable record type, and a durable public specification URL. Required metadata must duplicate the canonical values encoded by the H1 prefix (FAIL check). Whether that prefix actually fits the decision is a human judgement, not a value the checker can derive.
+Each type maps to a fixed prefix, a human-readable record type, and a house reference URL. Required metadata must duplicate the canonical values encoded by the H1 prefix (FAIL check). The URL is identifier metadata, not evidence that a public type page is available or authoritative. Whether that prefix actually fits the decision is a human judgement, not a value the checker can derive.
 
 | Prefix | `type` | `decision_type` | `type_url` | Covers |
 | --- | --- | --- | --- | --- |
@@ -41,7 +41,7 @@ Each type maps to a fixed prefix, a human-readable record type, and a durable pu
 | `RDR-` | Research Decision Record | `research` | `.../rdr` | Methodology choices, investigation frameworks |
 | `KDR-` | Knowledge Decision Record | `knowledge` | `.../kdr` | Taxonomy, naming, classification, vocabularies |
 
-Each `type_url` expands from `https://knowledgeislands.info/specifications/decision-records/{prefix-lowercase}`. The URLs are stable metadata now, so the future public pages do not require a repository migration. `ADR-` aligns with the established ADR ecosystem (Nygard, adr.github.io). `KDR-` reclaims the former Knowledge Decision Records prefix with a precise `knowledge` scope.
+Each `type_url` expands from `https://knowledgeislands.info/specifications/decision-records/{prefix-lowercase}`. These house reference URLs are not a claim that public type pages are currently published; publishing or verifying them is an external-site owner concern. `ADR-` aligns with the established ADR ecosystem (Nygard, adr.github.io). `KDR-` reclaims the former Knowledge Decision Records prefix with a precise `knowledge` scope.
 
 ## Placement
 

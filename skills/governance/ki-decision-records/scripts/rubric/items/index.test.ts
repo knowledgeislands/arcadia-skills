@@ -34,6 +34,7 @@ test('the structured catalogue preserves every decision-record criterion', () =>
     'INDEX'
   ])
   expect(items.map((item) => item.code)).toEqual([
+    'FILENAME-0',
     'FILENAME-1',
     'FILENAME-2',
     'FILENAME-3',
@@ -56,6 +57,7 @@ test('the structured catalogue preserves every decision-record criterion', () =>
     'INDEX-1',
     'INDEX-2',
     'INDEX-3',
+    'INDEX-4',
     'INDEX-6',
     'INDEX-7',
     'INDEX-8'
@@ -149,8 +151,8 @@ The decision is available.
     {
       path: 'docs/decisions/README.md',
       content: expect.stringContaining(
-        '- [ADR-EXAMPLE-001](ADR-EXAMPLE-001-first-decision.md) — First decision\n' +
-          '- [ADR-EXAMPLE-002](ADR-EXAMPLE-002-second-decision.md) — Second decision'
+        '1. [ADR-EXAMPLE-001](ADR-EXAMPLE-001-first-decision.md) — First decision\n' +
+          '2. [ADR-EXAMPLE-002](ADR-EXAMPLE-002-second-decision.md) — Second decision'
       )
     }
   ])

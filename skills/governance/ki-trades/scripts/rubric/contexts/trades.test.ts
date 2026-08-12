@@ -201,12 +201,26 @@ test('malformed route declarations are refused', () => {
   const messages = mechanicalOutcomes(session, CONFIG).map((outcome) => outcome.message)
 
   expect(messages).toContain(
-    'route not a repository must be keyed by owner/name or a canonical HTTPS GitHub repository URL'
+    'route not a repository must be keyed by owner/name or a canonical HTTPS GitHub repository URL; non-GitHub endpoints are unsupported'
   )
   expect(messages).toContain('route peer/repo export carries no kinds and must be omitted rather than empty')
   expect(messages).toContain('route peer/repo import must not repeat a kind')
   expect(messages).toContain('route another/repo export kind gossip is not a declared trade kind')
   expect(messages).toContain('route third/repo must be a table declaring export and import kinds')
+})
+
+test('non-GitHub partner identities fail closed rather than entering a partial route projection', () => {
+  const { home, local } = fixture()
+  const session = createTradesSession(
+    options(local, home, { routes: { 'https://code.example.org/peer/repo': { export: ['work'] } } })
+  )
+
+  expect(mechanicalOutcomes(session, CONFIG)).toContainEqual({
+    status: 'VIOLATION',
+    message:
+      'route https://code.example.org/peer/repo must be keyed by owner/name or a canonical HTTPS GitHub repository URL; non-GitHub endpoints are unsupported',
+    subject: '.ki-config.toml'
+  })
 })
 
 test('map bonus is bounded presentation metadata', () => {
@@ -701,16 +715,16 @@ test('receipt and completion policies produce different release eligibility', ()
     subject: `-/_TRADES/peer/repo/${receiptId}.md`
   })
   expect(mechanicalOutcomes(waiting, RELEASE)).toContainEqual({
-    status: 'PASS',
-    message: 'completion observation policy requires sender retention',
+    status: 'NOT_APPLICABLE',
+    message: 'adopted completion is unavailable: no selected-adapter owner-valid canonical completion evidence exists',
     subject: `-/_TRADES/peer/repo/${completionId}.md`
   })
 
   writeFileSync(roadmapPath, ['---', 'id: KI-PEER-FND-001', 'status: done', '---', '', '# Linked work', ''].join('\n'))
   const completed = createTradesSession(options(local, home, tradeConfiguration('local/repo', ['peer/repo'])))
   expect(mechanicalOutcomes(completed, RELEASE)).toContainEqual({
-    status: 'INFO',
-    message: 'completion observation policy permits sender release',
+    status: 'NOT_APPLICABLE',
+    message: 'adopted completion is unavailable: no selected-adapter owner-valid canonical completion evidence exists',
     subject: `-/_TRADES/peer/repo/${completionId}.md`
   })
 })
@@ -733,8 +747,8 @@ test('receipt and applied commit references require full lower-case commit ids',
 
   const session = createTradesSession(options(local, home, tradeConfiguration('local/repo', ['peer/repo'])))
   const messages = mechanicalOutcomes(session, STATUS).map((outcome) => outcome.message)
-  expect(messages).toContain('received_from_ref must be a full 40-character lower-case hexadecimal commit')
-  expect(messages).toContain('applied requires a full verified local applied_commit')
+  expect(messages).toContain('received_from_ref must be a full 40-character lower-case hexadecimal commit locator')
+  expect(messages).toContain('applied requires a full lower-case hexadecimal applied_commit locator')
 })
 
 test('conform proposes only the local owned README scaffold and never writes a peer', () => {

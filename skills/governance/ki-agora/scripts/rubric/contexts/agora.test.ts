@@ -95,12 +95,43 @@ test('local shape rejects malformed declarations without observing a peer', () =
   ])
   expect(outcomes(session, MEMBERSHIP)).toContainEqual({
     status: 'VIOLATION',
-    level: 'WARN',
     message: 'membership knowledge-islands has unrecognised key extra',
     subject: '.ki-config.toml'
   })
   expect(outcomes(session, MEMBERSHIP).map((outcome) => outcome.message)).toContain(
     'membership knowledge-islands home must be a canonical HTTPS GitHub repository'
+  )
+})
+
+test('unknown fields fail closed and a local declaration never becomes reciprocal consent', () => {
+  const root = fixture()
+  const session = createAgoraSession(
+    options(root, {
+      target_policy: ['editor'],
+      homes: {
+        team: {
+          owner: 'https://github.com/knowledgeislands/home',
+          purpose: 'Team work',
+          members: {},
+          target_policy: ['editor']
+        }
+      }
+    })
+  )
+
+  expect(outcomes(session, CONFIG)).toEqual(
+    expect.arrayContaining([
+      {
+        status: 'VIOLATION',
+        message: 'unrecognised ki-agora configuration key target_policy',
+        subject: '.ki-config.toml'
+      },
+      {
+        status: 'VIOLATION',
+        message: 'home team has unrecognised key target_policy',
+        subject: '.ki-config.toml'
+      }
+    ])
   )
 })
 

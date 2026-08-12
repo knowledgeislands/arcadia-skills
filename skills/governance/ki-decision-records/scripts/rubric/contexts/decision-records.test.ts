@@ -53,13 +53,17 @@ The repository adopts the universal record metadata.
 Readers can identify record type without inferring it from an acronym.
 `
 
-const fixture = (filename: string, options: { metadata?: string; legacyDate?: string } = {}) => {
+const fixture = (
+  filename: string,
+  options: { metadata?: string; legacyDate?: string; extra?: ReadonlyArray<{ file: string; content: string }> } = {}
+) => {
   const root = mkdtempSync(join(tmpdir(), 'ki-decision-records-'))
   temporaryRoots.push(root)
   const directory = join(root, 'docs', 'decisions')
   writeFileSync(join(root, '.ki-config.toml'), '[skills.ki-decision-records]\n')
   mkdirSync(directory, { recursive: true })
   writeFileSync(join(directory, filename), record(options))
+  for (const extra of options.extra ?? []) writeFileSync(join(directory, extra.file), extra.content)
   writeFileSync(join(directory, 'README.md'), `# Decisions\n\n1. [ADR-EXAMPLE-001](${filename}) — record shape.\n`)
   return createDecisionRecordsSession({
     mode: 'audit',
@@ -156,6 +160,17 @@ decision_type: architecture`,
     expect(audit('FM-6', context as DecisionRecordsRubricContext)?.[0]?.message).toBe('`status` is absent.')
     expect(audit('BODY-3', context as DecisionRecordsRubricContext)?.[0]?.status).toBe('VIOLATION')
   })
+
+  test('reports unparseable Markdown files in the selected decisions directory', () => {
+    const context = fixture('ADR-EXAMPLE-001-decide-the-record-shape.md', {
+      extra: [{ file: 'supporting-note.md', content: '# Supporting note\n' }]
+    })
+
+    expect(audit('FILENAME-0', context as DecisionRecordsRubricContext)?.[0]).toMatchObject({
+      status: 'VIOLATION',
+      subject: 'supporting-note.md'
+    })
+  })
 })
 
 describe('new collection adoption root', () => {
@@ -228,5 +243,36 @@ describe('shared record mirrors', () => {
     const context = rootFixture({ files: [ordinary], indexIds: [ordinary.id] })
 
     expect(audit('FILENAME-3', context as DecisionRecordsRubricContext)?.[0]?.status).toBe('VIOLATION')
+  })
+})
+
+describe('decision-record index links', () => {
+  test('reports unordered or stale decision-record links', () => {
+    const root = mkdtempSync(join(tmpdir(), 'ki-decision-records-index-links-'))
+    temporaryRoots.push(root)
+    const directory = join(root, 'docs', 'decisions')
+    mkdirSync(directory, { recursive: true })
+    writeFileSync(join(root, '.ki-config.toml'), '[skills.ki-decision-records]\n')
+    const id = 'ADR-EXAMPLE-001'
+    const file = 'ADR-EXAMPLE-001-first-decision.md'
+    writeFileSync(join(directory, file), rootRecord({ id, title: 'First decision' }))
+    writeFileSync(
+      join(directory, 'README.md'),
+      `# Decisions\n\n- [${id}](wrong.md) — First decision.\n1. [${id}](wrong.md) — First decision.\n`
+    )
+    const context = createDecisionRecordsSession({
+      mode: 'audit',
+      repository: root,
+      userHome: tmpdir(),
+      configuration: {}
+    }).subjects[0]?.context()
+    const outcomes = audit('INDEX-4', context as DecisionRecordsRubricContext)
+
+    expect(outcomes).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ status: 'VIOLATION', message: expect.stringContaining('ordered list form') }),
+        expect.objectContaining({ status: 'VIOLATION', subject: id, message: expect.stringContaining('wrong.md') })
+      ])
+    )
   })
 })

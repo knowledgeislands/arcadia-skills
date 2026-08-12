@@ -29,13 +29,6 @@ const pass = (message: string): readonly AuditOutcome[] => [{ status: 'PASS', me
 
 const violation = (message: string): AuditOutcome => ({ status: 'VIOLATION', message, subject: '.ki-config.toml' })
 
-const warning = (message: string): AuditOutcome => ({
-  status: 'VIOLATION',
-  level: 'WARN',
-  message,
-  subject: '.ki-config.toml'
-})
-
 const parsedRepository = (root: string): unknown => {
   const configuration = join(root, '.ki-config.toml')
   if (!existsSync(configuration)) return undefined
@@ -66,7 +59,7 @@ const parseHomes = (value: unknown, local: string | undefined): AuditOutcome[] =
       continue
     }
     for (const key of Object.keys(home).filter((key) => !['owner', 'purpose', 'members'].includes(key)))
-      outcomes.push(warning(`home ${identifier} has unrecognised key ${key}`))
+      outcomes.push(violation(`home ${identifier} has unrecognised key ${key}`))
     if (typeof home.owner !== 'string' || !REPOSITORY.test(home.owner))
       outcomes.push(violation(`home ${identifier} owner must be a canonical HTTPS GitHub repository`))
     else if (home.owner !== local)
@@ -106,7 +99,7 @@ const parseMemberships = (value: unknown): AuditOutcome[] => {
       continue
     }
     for (const key of Object.keys(membership).filter((key) => !['home', 'role'].includes(key)))
-      outcomes.push(warning(`membership ${identifier} has unrecognised key ${key}`))
+      outcomes.push(violation(`membership ${identifier} has unrecognised key ${key}`))
     if (typeof membership.home !== 'string' || !REPOSITORY.test(membership.home))
       outcomes.push(violation(`membership ${identifier} home must be a canonical HTTPS GitHub repository`))
     if (typeof membership.role !== 'string' || !ROLE.test(membership.role))
@@ -121,7 +114,7 @@ const parseConfiguration = (configuration: Readonly<AgoraConfiguration>, root: s
   const local = repositoryIdentity(root)
   if (!local) configurationOutcomes.push(violation('ki-repo repository must be a canonical HTTPS GitHub home'))
   for (const key of Object.keys(configuration).filter((key) => !['homes', 'memberships'].includes(key)))
-    configurationOutcomes.push(warning(`unrecognised ki-agora configuration key ${key}`))
+    configurationOutcomes.push(violation(`unrecognised ki-agora configuration key ${key}`))
   configurationOutcomes.push(...parseHomes(configuration.homes, local))
   membershipsOutcomes.push(...parseMemberships(configuration.memberships))
 

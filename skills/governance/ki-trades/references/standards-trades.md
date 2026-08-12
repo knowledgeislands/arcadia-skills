@@ -34,7 +34,7 @@ export = ["work", "knowledge"]
 import = ["work"]
 ```
 
-The repository's canonical endpoint is `ki-repo.repository`, a required HTTPS GitHub URI. Each route has its own table, keyed by the partner's `owner/name` — the same form a trade record uses for its `sender` and `receiver` — carrying `export` and `import`, each a duplicate-free array drawn from the closed trade-kind set `work` and `knowledge`. A direction the partner does not trade is **absent**, never an empty array. A partner outside the default host keeps a full canonical HTTPS URL as its key, so that exception stays visibly exceptional.
+The repository's canonical endpoint is `ki-repo.repository`, a required HTTPS GitHub URI. Each route has its own table, keyed by the partner's `owner/name` — the same form a trade record uses for its `sender` and `receiver` — carrying `export` and `import`, each a duplicate-free array drawn from the closed trade-kind set `work` and `knowledge`. A direction the partner does not trade is **absent**, never an empty array. Non-GitHub identities are currently unsupported: the registry, route keys, record paths, and projection cannot represent them consistently, so configuration must refuse them rather than claim portable HTTPS support.
 
 Each partner appears exactly once: TOML's own prohibition on defining a key twice enforces that, so no hand-written uniqueness or lexical-ordering rule is needed. `[skills.ki-trades]` is declared explicitly rather than implied by its `routes` sub-table, because declaring a skill is separate from configuring it.
 
@@ -115,7 +115,7 @@ The sender writes and removes only its preparation and outbound record and never
 
 Insensitivity to formatting is not a licence to normalise. A receiver never rewrites a sender-owned record to satisfy its own style, and a mismatch is escalated to the sender rather than repaired locally: audit reports, and never proposes a repair to either copy.
 
-`received_from_ref`, when present, identifies the committed sender version received. `reviewed_at` is a UTC timestamp. `rationale` records receiver reasoning. `applied_commit` is valid only for `applied`; `adopted_as`, `retained_as`, and `superseded_by` are valid only for their matching decisions. These are local evidence, not priority or acceptance authority.
+`received_from_ref`, when present, is a full lower-case hexadecimal Git commit locator for the committed sender version received. `reviewed_at` is a UTC timestamp. `rationale` records receiver reasoning. `applied_commit` is valid only for `applied` and is likewise a syntactic Git commit locator; this local checker does not verify object existence or ancestry. `adopted_as`, `retained_as`, and `superseded_by` are valid only for their matching decisions. These are local evidence, not priority or acceptance authority.
 
 The governance checker is read-only across repositories. Its only conformable write is the local owned README scaffold. Preparation, observation, submission, receipt, disposition, release, and pruning are explicit local operations outside CONFORM.
 
@@ -149,7 +149,7 @@ The sender chooses one policy without imposing an obligation on the receiver:
 - `unattended` — no response is requested; receipt alone permits release.
 - `receipt` — the sender waits only until receipt is observable.
 - `decision` — the sender waits for `applied`, `adopted`, `retained`, `declined`, or `superseded`.
-- `completion` — the sender waits through decision and, for `adopted`, until the linked local work record is `done`; `applied` and `retained` satisfy completion directly, while `declined` and `superseded` resolve the observation without completion.
+- `completion` — `applied` and `retained` satisfy completion directly, while `declined` and `superseded` resolve the observation without completion. For `adopted`, the selected adapter must provide owner-valid canonical completion evidence. That resolver is not available in this local checker, so adopted completion is unavailable and neither sender release nor receiver pruning is eligible.
 
 `parked` and `clarify` are non-terminal under every policy that waits beyond receipt. A policy grants no deadline, delivery guarantee, response guarantee, priority, or implementation commitment.
 
@@ -161,6 +161,6 @@ The receiver may prune its inbound copy only after an eligible sender release is
 
 ## Roadmap and process boundary
 
-`ki-next` presents inbound trades for a human-confirmed disposition. Direct `applied` is available only for one bounded, reversible, independently verifiable local work change with clear authority, no material design decision, dependency, migration, public-contract change, or cross-repository write, and an existing targeted gate. Everything else creates or links separately prioritised local work. Knowledge never uses the direct-work path and is retained only in a named canonical artifact.
+`ki-next` presents inbound trades for a human-confirmed disposition. Direct `applied` is available only for one bounded, reversible, independently verifiable local work change with clear authority, no material design decision, dependency, migration, public-contract change, or cross-repository write, and an existing targeted gate. Everything else creates or links separately prioritised local work. Knowledge never uses the direct-work path and is retained only in a named canonical artifact. A future selected-adapter resolver, not this protocol, owns canonical local-work identity and completion evidence.
 
 `ki-change-management-roadmap` may identify valid inbound records needing review and may record an explicit trade observation on which local work waits. It does not change a route, record, decision, or peer state. Neither skill gains cross-repository write authority.

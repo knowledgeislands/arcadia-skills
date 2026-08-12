@@ -7,7 +7,7 @@ const ROUTE_1: RubricItem<GuidesRubricContext> = {
   code: 'ROUTE-1',
   title: 'retired parallel documentation roots are absent',
   description:
-    'A repository declaring this skill has no `docs/spec/`, `docs/developer/`, or generic `docs/logs/` root; their durable material is reclassified into the owned documentation concern.',
+    'A repository declaring this skill has no `docs/spec/` or `docs/developer/` parallel root; their durable material is reclassified into the owned documentation concern. A specialised operational owner decides whether a `docs/logs/` area is generic.',
   sources: [SOURCE],
   mechanical: {
     level: 'FAIL',
@@ -40,7 +40,7 @@ const ROUTE_2: RubricItem<GuidesRubricContext> = {
     scope:
       'The Guides index, every guide below `docs/guides/`, and their linked Decision Records, Specifications, and roadmap records where applicable.',
     prompt:
-      'Can the intended reader find the guide, complete its stated outcome, verify success, and recover from the failures it describes? Are why, what, and when statements held by their Decision Record, Feature Definition, and roadmap owners instead?',
+      'Can the intended reader find the guide, complete its stated outcome, verify success, and recover from the failures it describes? Are why, what, and when statements held by their Decision Record, Specification, and roadmap owners instead?',
     outcomes: ['conforming', 'guide revision', 'reclassify material'],
     guidance:
       'Revise the guide for its intended reader and outcome, or move rationale, behaviour, and future work to their owning record. Do not infer a documentation or product decision from the check alone.'

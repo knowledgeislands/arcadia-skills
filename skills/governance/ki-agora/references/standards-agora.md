@@ -24,7 +24,7 @@ Declare the capability explicitly, even when no home or membership is yet config
 [skills.ki-agora]
 ```
 
-The root table admits only the optional `homes` and `memberships` tables. Their keys are stable lower-case hyphenated identifiers matching `[a-z][a-z0-9-]*[a-z0-9]`; an identifier is stable rather than a rendered title.
+The root table admits only the optional `homes` and `memberships` tables. Their keys are stable lower-case hyphenated identifiers matching `[a-z][a-z0-9-]*[a-z0-9]`; an identifier is stable rather than a rendered title. Target selection is an explicit local `ki agora open --target` choice, not portable group policy. Unknown root, home, and membership fields are configuration errors and do not provide evidence of membership, consent, or target authorization.
 
 ```toml
 [skills.ki-agora.homes.knowledge-islands]
