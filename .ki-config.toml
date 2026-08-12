@@ -100,6 +100,7 @@ adapter = "roadmap"
 FND = "foundation-tooling"
 GOV = "governance-consistency"
 OPS = "operations"
+REV = "regular-reviews"
 RTP = "runtime-portability"
 
 [skills.ki-checkpoint]
