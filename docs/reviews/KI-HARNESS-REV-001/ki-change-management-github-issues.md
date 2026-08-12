@@ -6,6 +6,7 @@
 - **Kind / dependencies:** governance / none.
 - **Review state:** complete and ungraded.
 - **Proposed disposition:** `revise` — retain the small safety and configuration boundary, but describe it honestly as non-operational and resolve identity, metadata, dependency, and execution semantics before grading.
+- **Change state:** applied in `76173ee7`.
 
 ## Sources and mechanics
 

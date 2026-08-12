@@ -6,6 +6,7 @@
 - **Kind / dependencies:** process / none; it consumes roadmap, Streams, housekeeping, trades, and runtime compaction contracts.
 - **Review state:** complete and ungraded.
 - **Proposed disposition:** `revise` — retain its selection and authority discipline, but resolve the configured adapter and housekeeping state machine and add direct outcome evidence before grading.
+- **Change state:** applied in `a1483153`.
 
 ## Sources and mechanics
 

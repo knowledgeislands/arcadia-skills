@@ -6,6 +6,7 @@
 - **Kind / dependencies:** governance / none; it consumes `ki-repo` repository-kind evidence without declaring an executable dependency.
 - **Review state:** complete and ungraded.
 - **Proposed disposition:** `revise` — retain the operational flat-record adapter, but repair two high-severity audit false negatives and strengthen source and outcome evidence before grading.
+- **Change state:** applied in `76173ee7`.
 
 ## Sources and mechanics
 

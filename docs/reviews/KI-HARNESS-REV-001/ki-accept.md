@@ -2,7 +2,9 @@
 
 - **Position:** 17 of 50; process; no dependency.
 - **Baseline / snapshot:** `94f0b775903286fcf37c0ec050d5568672a5154f` / `f3a4547d`.
-- **Review state / disposition:** complete, ungraded; `revise`.
+- **Review state:** complete and ungraded.
+- **Proposed disposition:** `revise`.
+- **Change state:** applied in `7143bf33`.
 
 ## Findings
 

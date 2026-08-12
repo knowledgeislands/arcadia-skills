@@ -6,6 +6,7 @@
 - **Kind / dependencies:** governance / none.
 - **Review state:** complete and ungraded.
 - **Proposed disposition:** `revise` — retain the capability and architecture, correct its source authority and stale evaluation evidence before grading.
+- **Change state:** applied in `ba4bd18a`.
 
 ## Mechanical conformance
 

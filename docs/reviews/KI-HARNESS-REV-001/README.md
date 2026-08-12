@@ -53,6 +53,7 @@ Each completed review or phase may expose a reusable effectiveness check. Distil
 - Limit runtime passes to direct observations; effective model, context, memory use, and active tools require authorized session evidence.
 - Distinguish source checkout, verified payload, development source, activation links, declaration, and executed runtime capability.
 - Verify guidance-only command examples against the installed executable even when no native rubric is warranted.
+- Require dated longitudinal primary evidence for temporal-stability claims; a current clean estate proves only present agreement.
 
 ## Progress
 
@@ -111,7 +112,7 @@ Phase 0, dependency ordering, and all 50 skill reviews are complete. Phase 1 and
 | 49 | [`ki-repo-harness`](ki-repo-harness.md)       | complete | review only  | —          |
 | 50 | [`ki-bootstrap`](ki-bootstrap.md)             | complete | review only  | —          |
 
-The [Phase 1 synthesis](phase-1-synthesis.md), [Phase 2 synthesis](phase-2-synthesis.md), [Phase 3 synthesis](phase-3-synthesis.md), [Phase 4 synthesis](phase-4-synthesis.md), [Phase 5 synthesis](phase-5-synthesis.md), and [Phase 6 synthesis](phase-6-synthesis.md) retain cross-skill conclusions. Detailed applied changes and remaining gaps live only in each skill record.
+The [Phase 1 synthesis](phase-1-synthesis.md), [Phase 2 synthesis](phase-2-synthesis.md), [Phase 3 synthesis](phase-3-synthesis.md), [Phase 4 synthesis](phase-4-synthesis.md), [Phase 5 synthesis](phase-5-synthesis.md), and [Phase 6 synthesis](phase-6-synthesis.md) retain cross-skill conclusions. The [final cumulative calibration](final-calibration.md) records coverage and evidence limits. Detailed applied changes and remaining gaps live only in each skill record.
 
 ## Evidence rules
 

@@ -3,6 +3,7 @@
 - **Review state:** complete, ungraded
 - **Candidate disposition:** retire
 - **Change state:** review only; no Phase 3 remediation is authorised
+- **Identity:** position 25 of 50; governance; no declared dependency; baseline `94f0b775903286fcf37c0ec050d5568672a5154f`; order valid
 
 ## Dependency and ownership
 

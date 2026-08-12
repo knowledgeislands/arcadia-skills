@@ -126,7 +126,7 @@ Reconcile the three surfaces against one another and the canonical skill set. Re
 
 ## Current state
 
-The Harness review has completed the standing-guidance audit and all 50 dependency-ordered skill reviews. Approved Phase 1 and Phase 2 remediations are applied and recorded per skill in [the review evidence](../reviews/KI-HARNESS-REV-001/README.md). Phase 3–6 findings are reviewed, ungraded, and unremediated. The cumulative calibration and coverage check is in progress before the disposition and grading approval gate.
+The Harness review has completed the standing-guidance audit, all 50 dependency-ordered skill reviews, and the [final cumulative calibration](../reviews/KI-HARNESS-REV-001/final-calibration.md). Approved Phase 1 and Phase 2 remediations are applied and recorded per skill. Phase 3–6 findings are reviewed, ungraded, and unremediated. The next gate is disposition and grading approval, followed by normalization and routing of only the approved candidate set.
 
 No grade scale or remediation queue is approved yet. The ordered inventory and common checks above are the planning basis for collecting comparable evidence before those decisions.
 
@@ -135,7 +135,7 @@ No grade scale or remediation queue is approved yet. The ordered inventory and c
 - [x] Audit `AGENTS.md`, `CLAUDE.md`, and `.agents/skills/ki-self/SKILL.md` for duplicated or reusable guidance; present deduplicated extraction candidates and obtain approval for any move, deletion, new skill, or existing-skill amendment.
 - [x] After confirmed standing-guidance dispositions are applied or explicitly deferred, freeze the execution baseline, regenerate the canonical skill inventory and dependency graph, and reconcile any additions, removals, missing dependencies, or cycles against the 50-skill planning list before reviewing content.
 - [ ] Refresh `ki-skills` and its source inventory first, confirm the effectiveness evidence template and grading vocabulary, and obtain approval for any normative rubric change before applying it to the remaining set.
-- [ ] Process Phases 1–6 in order, reviewing one skill at a time and recording source evidence, mechanical results, judgment findings, effectiveness evidence, instruction cost, and proposed disposition without silently remediating the skill.
+- [x] Process Phases 1–6 in order, reviewing one skill at a time and recording source evidence, mechanical results, judgment findings, effectiveness evidence, instruction cost, and proposed disposition without silently remediating the skill.
 - [ ] At each phase boundary, reconcile newly discovered ownership or dependency changes and add only new generalised effectiveness checks to the cumulative calibration checklist before starting the next phase; update the remaining order only with an explicit, evidenced reason.
 - [ ] Re-run whole-repository collision and dependency checks, recheck `ki-skills` against emergent findings, back-check every earlier review against the final cumulative calibration checklist, and prove that every canonical skill has exactly one completed review record.
 - [ ] Present the complete grade and disposition matrix for approval, then route confirmed remediation as amendments or separate roadmap items under the owning area.

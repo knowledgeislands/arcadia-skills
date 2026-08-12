@@ -3,6 +3,7 @@
 - **Review state:** complete, ungraded
 - **Candidate disposition:** revise
 - **Change state:** review only; no Phase 4 remediation is authorised
+- **Identity:** position 30 of 50; governance; no declared dependency; baseline `94f0b775903286fcf37c0ec050d5568672a5154f`; order valid
 
 ## Dependency and ownership
 
@@ -15,6 +16,8 @@ This leaves area identity and allocation advertised in one contract but operatio
 `GATE-1` uses a weak keyword anchor rather than validating the authoritative gate. Most operating modes redirect elsewhere, and there are no negative fixtures for record integrity, ledger resolution, selected-adapter behavior, or symlinks. The exact eval still uses retired Focus/proposal terminology and statuses.
 
 Clean estate audits demonstrate current container shape, not the configured areas or lifecycle promises.
+
+The canonical on-change source was reviewed on 2026-08-09. Nine focused tests with 19 assertions pass; they cover catalogue shape, read-only conform, absent-zone applicability, current containers, legacy Focus detection, and the gate trigger, but not the semantic gaps above.
 
 ## Candidate improvements
 

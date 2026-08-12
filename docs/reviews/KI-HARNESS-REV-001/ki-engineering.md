@@ -6,6 +6,7 @@
 - **Kind / dependencies:** governance / none.
 - **Review state:** complete and ungraded.
 - **Proposed disposition:** `revise` — retain the common engineering layer; resolve source and decision authority, checker coverage, and outcome evidence before grading.
+- **Change state:** applied in `ba4bd18a`.
 
 ## Sources and mechanics
 

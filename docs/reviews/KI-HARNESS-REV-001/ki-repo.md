@@ -6,6 +6,7 @@
 - **Kind / dependencies:** governance / `ki-authoring`, `ki-git`; both reviewed earlier.
 - **Review state:** complete and ungraded.
 - **Proposed disposition:** `revise` — retain the repository and configuration owner; correct conflicting shorthand, refresh source authority, and replace stale evaluation evidence before grading.
+- **Change state:** applied in `ba4bd18a`.
 
 ## Sources and mechanics
 

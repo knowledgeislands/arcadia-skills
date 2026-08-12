@@ -3,6 +3,7 @@
 - **Review state:** complete, ungraded
 - **Candidate disposition:** revise
 - **Change state:** review only; no Phase 4 remediation is authorised
+- **Identity:** position 27 of 50; governance; no declared dependency; baseline `94f0b775903286fcf37c0ec050d5568672a5154f`; order valid
 
 ## Dependency and ownership
 
@@ -13,6 +14,8 @@ The description also says Project work is governed through a selected change-man
 ## Mechanical trace and limits
 
 The structured criterion is executable, but it contributes only the duplicated cardinality check. There is no focused test or exact eval scenario, and conform has no migration evidence. The clean structural path must not be treated as evidence that a selected adapter exists or works.
+
+The source decision is explicit and current-on-change: the Project contract is Harness-owned and requires review when a primary structure, inheritance rule, or Project/KB boundary changes. No external source is required for that house-owned classification.
 
 ## Candidate improvements
 

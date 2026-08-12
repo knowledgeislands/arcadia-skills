@@ -18,4 +18,4 @@ Phase 6 reviewed the aggregate Harness and bootstrap entry point after all depen
 
 ## Review boundary
 
-The dependency-ordered ungraded review is complete for all 50 baseline skills. Phase 1 and Phase 2 approved remediations are applied; Phase 3–6 findings remain proposals pending disposition and grading approval. The final cumulative calibration and coverage check follows without changing any reviewed skill.
+The dependency-ordered ungraded review is complete for all 50 baseline skills. Phase 1 and Phase 2 approved remediations are applied; Phase 3–6 findings remain proposals pending disposition and grading approval. The [final cumulative calibration](final-calibration.md) completes the coverage check without changing any reviewed skill.

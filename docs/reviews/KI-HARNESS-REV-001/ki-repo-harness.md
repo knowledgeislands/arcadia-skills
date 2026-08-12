@@ -3,6 +3,7 @@
 - **Review state:** complete, ungraded
 - **Candidate disposition:** revise
 - **Change state:** review only; no Phase 6 remediation is authorised
+- **Identity:** position 49 of 50; governance; depends on `ki-skills` (1), `ki-subagents` (26), `ki-decision-records` (18), and `ki-change-management-roadmap` (8); baseline `94f0b775903286fcf37c0ec050d5568672a5154f`; order valid
 
 ## Dependency and ownership
 

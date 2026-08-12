@@ -6,6 +6,7 @@
 - **Kind / dependencies:** governance / none.
 - **Review state:** complete and ungraded.
 - **Proposed disposition:** `revise` — retain the capability and safety model; refresh tool evidence, repair eval reliability, and reconcile TOML ownership before grading.
+- **Change state:** applied in `ba4bd18a`.
 
 ## Sources and mechanics
 

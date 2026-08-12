@@ -6,6 +6,7 @@
 - **Kind / dependencies:** governance / none.
 - **Review state:** complete and ungraded.
 - **Proposed disposition:** `revise` — retain the template/run separation, but reconcile lifecycle authority and validate the actual template contract before grading or automatic spawning.
+- **Change state:** applied in `76173ee7`.
 
 ## Sources and mechanics
 

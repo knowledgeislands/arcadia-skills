@@ -3,6 +3,7 @@
 - **Review state:** complete, ungraded
 - **Candidate disposition:** revise
 - **Change state:** review only; no Phase 4 remediation is authorised
+- **Identity:** position 36 of 50; governance; depends on `ki-repo-website` at position 35; baseline `94f0b775903286fcf37c0ec050d5568672a5154f`; order valid
 
 ## Dependency and ownership
 

@@ -2,7 +2,9 @@
 
 - **Position:** 14 of 50; process; no hard dependency; optional `ki-delegation`.
 - **Baseline / snapshot:** `94f0b775903286fcf37c0ec050d5568672a5154f` / `873bfd1d`.
-- **Review state / disposition:** complete, ungraded; `revise`.
+- **Review state:** complete and ungraded.
+- **Proposed disposition:** `revise`.
+- **Change state:** applied in `a1483153`.
 
 ## Findings
 

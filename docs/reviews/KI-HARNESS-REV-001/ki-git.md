@@ -6,6 +6,7 @@
 - **Kind / dependencies:** governance / none.
 - **Review state:** complete and ungraded.
 - **Proposed disposition:** `revise` — retain portable Git governance; make judgment-only audit evidence and outcome evaluation explicit before grading.
+- **Change state:** applied in `ba4bd18a`.
 
 ## Sources and mechanics
 

@@ -6,6 +6,7 @@
 - **Kind / dependencies:** governance / none.
 - **Review state:** complete and ungraded.
 - **Proposed disposition:** `revise` — retain the compact safety and configuration boundary, but correct the identity contract and describe it honestly as non-operational before grading.
+- **Change state:** applied in `76173ee7`.
 
 ## Sources and mechanics
 

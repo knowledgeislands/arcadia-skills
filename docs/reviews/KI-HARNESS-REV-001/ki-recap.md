@@ -6,6 +6,7 @@
 - **Kind / dependencies:** process / none.
 - **Review state:** complete and ungraded.
 - **Proposed disposition:** `revise` — retain the warm-recap capability and conservative writing boundary; correct runtime claims and make repository grounding fail closed before grading.
+- **Change state:** applied in `76173ee7`.
 
 ## Sources and mechanics
 

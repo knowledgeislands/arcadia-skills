@@ -6,6 +6,7 @@
 - **Kind / dependencies:** governance / none.
 - **Review state:** complete and ungraded.
 - **Proposed disposition:** `revise` — retain the small selector and adapter-neutral interface; verify that the selected adapter is declared and resolvable, and clarify abstract versus concrete lifecycle ownership before grading.
+- **Change state:** applied in `76173ee7`.
 
 ## Sources and mechanics
 

@@ -6,6 +6,7 @@
 - **Kind / dependencies:** governance / none; optional consumer relationships from `ki-implement` and `ki-batch` are not executable dependencies.
 - **Review state:** complete and ungraded.
 - **Proposed disposition:** `revise` — retain a smaller durable-governance delta; remove runtime-default advice, duplicated execution guidance, and unproven ceremony before grading.
+- **Change state:** applied in `ba4bd18a`.
 
 ## Sources and mechanics
 
