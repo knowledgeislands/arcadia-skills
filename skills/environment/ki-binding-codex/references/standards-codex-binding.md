@@ -2,7 +2,7 @@
 
 `ki-binding-codex` owns the native Codex surface after `ki-binding` establishes the canonical source.
 
-The target is `~/.codex/config.toml` and its `[mcp_servers.*]` entries. This is application-owned TOML that can contain non-KI entries, including app-provided servers. Compare it read-only during audit. Render only canonical entries targeting `chatgpt-codex`, using `codex mcp add` so Codex owns its merge and formatting behavior. Do not template or rewrite the complete TOML file; do not remove unrecognised entries.
+The target is `~/.codex/config.toml` and its `[mcp_servers.*]` entries. This is application-owned TOML that can contain non-KI entries, including app-provided servers. Compare full non-secret targeted definitions read-only during audit. Render only canonical entries targeting `chatgpt-codex`, using `codex mcp add` so Codex owns its merge and formatting behavior. Do not template or rewrite the complete TOML file; do not remove unrecognised entries. Repository selection and hosted Codex activation are coordinator-owned; configuration parity never proves either activation or runtime health.
 
 ## Partial-update recovery
 

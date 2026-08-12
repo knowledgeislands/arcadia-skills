@@ -21,6 +21,8 @@ coverage-checkpoint = false # source repository publishes the optional capabilit
 
 [skills.ki-binding-claude]
 
+[skills.ki-binding-codex]
+
 [skills.ki-repo-project]
 
 [skills.ki-repo-harness]

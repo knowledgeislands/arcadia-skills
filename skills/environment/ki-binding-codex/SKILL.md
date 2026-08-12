@@ -4,7 +4,7 @@ ki-kind: governance
 ki-depends-on: [ki-binding]
 ki-runtime-binding: true
 ki-supported-runtimes: [chatgpt-codex]
-ki-shared-dependencies: [ki-skills:rubric]
+ki-shared-dependencies: [ki-binding:binding, ki-skills:rubric]
 description: >
   Codify, audit, and safely render the native Codex MCP binding: compare the `[mcp_servers]` TOML surface and merge KI-targeted servers through Codex's native `codex mcp` writer without taking ownership of unrelated app configuration. Use when Codex MCP entries drift or need a safe render. The portable source belongs to `ki-binding`; Claude belongs to `ki-binding-claude`.
 argument-hint: 'audit [project] | conform [project] | help | educate [project] | refresh'
@@ -18,11 +18,11 @@ This adapter composes `ki-binding` and owns only the native Codex TOML surface. 
 
 ### Mode AUDIT
 
-Run `ki-binding` first, then `ki repo audit --skill ki-binding-codex --repo <project>`. The adapter checks whether the native TOML surface is safely readable and leaves the merge-boundary decision visible for judgment.
+Run `ki-binding` first, then `ki repo audit --skill ki-binding-codex --repo <project>`. The adapter compares readable full non-secret definitions and leaves the merge-boundary decision visible for judgment. Missing or unreadable target evidence is unavailable; it never implies activation or runtime health.
 
 ### Mode CONFORM
 
-Run AUDIT first. Preview with `bun skills/environment/ki-binding-codex/scripts/render-codex.ts --check [--source <path>]`, then run it without `--check`. The script adds only source servers targeting `chatgpt-codex` through the native CLI and leaves non-KI configuration untouched.
+Run AUDIT first. Preview with `bun skills/environment/ki-binding-codex/scripts/render-codex.ts --check [--source <path>]`, then run it without `--check`. The script adds only source servers targeting `chatgpt-codex` through the native CLI and leaves non-KI configuration untouched. Hosted activation is outside this adapter and routes to the coordinator.
 
 ### Mode EDUCATE
 

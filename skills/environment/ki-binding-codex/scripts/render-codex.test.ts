@@ -19,6 +19,7 @@ const urlSource = `mcpServers:
   - name: ki-example
     clients: [chatgpt-codex]
     url: https://example.invalid/mcp
+    transports: { chatgpt-codex: streamable_http }
 `
 
 const fixture = (config: string, sourceContents = stdioSource): { home: string; source: string } => {

@@ -13,6 +13,7 @@ import { execFileSync } from 'node:child_process'
 import { existsSync, readFileSync } from 'node:fs'
 import { homedir } from 'node:os'
 import { join, resolve } from 'node:path'
+import { type EnvValue, readSource, type ServerEntry } from './shared/binding.ts'
 
 declare const Bun: { YAML: { parse(input: string): unknown }; TOML: { parse(input: string): unknown } }
 
@@ -31,14 +32,6 @@ const REF = 'references/standards-codex-binding.md'
 type Options = { check: boolean; json: boolean; source?: string; help: boolean; home?: string }
 type Level = 'FAIL' | 'WARN' | 'PASS'
 type Finding = { level: Level; msg: string; ref: string; file?: string }
-type SourceEntry = {
-  name: string
-  clients?: string[]
-  command?: string
-  args?: string[]
-  env?: Record<string, unknown>
-  url?: string
-}
 type CodexServer = {
   command?: unknown
   args?: unknown
@@ -76,15 +69,11 @@ export const parseRenderCodexArgs = (argv: readonly string[]): Options => {
   return { check, json, source, help }
 }
 
-const sourceEntries = (path: string): SourceEntry[] => {
-  if (!existsSync(path)) throw new Error(`source does not exist: ${path}`)
-  const parsed = Bun.YAML.parse(readFileSync(path, 'utf8')) as { mcpServers?: unknown }
-  if (!parsed || !Array.isArray(parsed.mcpServers)) throw new Error(`source mcpServers must be a list: ${path}`)
-  return parsed.mcpServers.map((entry, index) => {
-    if (!entry || typeof entry !== 'object' || typeof (entry as SourceEntry).name !== 'string')
-      throw new Error(`source entry ${index + 1} has no name`)
-    return entry as SourceEntry
-  })
+const sourceEntries = (path: string): readonly ServerEntry[] => {
+  const source = readSource(path)
+  if (source.kind === 'absent') throw new Error(`source does not exist: ${path}`)
+  if (source.kind === 'invalid') throw new Error(`source is invalid: ${source.message}`)
+  return source.entries
 }
 
 const codexServers = (path: string): Record<string, CodexServer> => {
@@ -95,9 +84,9 @@ const codexServers = (path: string): Record<string, CodexServer> => {
     : {}
 }
 
-const plainEnv = (env: Record<string, unknown> | undefined): Record<string, string> | null => {
+const plainEnv = (env: Readonly<Record<string, EnvValue>>): Record<string, string> | null => {
   const values: Record<string, string> = {}
-  for (const [key, value] of Object.entries(env ?? {})) {
+  for (const [key, value] of Object.entries(env)) {
     if (value && typeof value === 'object' && typeof (value as { op?: unknown }).op === 'string') return null
     values[key] = String(value)
   }
@@ -111,37 +100,36 @@ const orderedRecord = (value: unknown): Record<string, unknown> =>
       )
     : {}
 
-const sameServer = (entry: SourceEntry, actual: CodexServer | undefined): boolean => {
+const sameServer = (entry: ServerEntry, actual: CodexServer | undefined): boolean => {
   if (!actual) return false
-  if (entry.url) return actual.url === entry.url
+  if ('url' in entry) return actual.url === entry.url
   const expectedEnv = plainEnv(entry.env)
   return (
     actual.command === entry.command &&
-    JSON.stringify(actual.args ?? []) === JSON.stringify(entry.args ?? []) &&
+    JSON.stringify(actual.args ?? []) === JSON.stringify(entry.args) &&
     expectedEnv !== null &&
     JSON.stringify(orderedRecord(actual.env)) === JSON.stringify(orderedRecord(expectedEnv))
   )
 }
 
-const resolveEnvValue = (value: unknown): string => {
+const resolveEnvValue = (value: EnvValue): string => {
   if (value && typeof value === 'object' && typeof (value as { op?: unknown }).op === 'string')
     return execFileSync('op', ['read', (value as { op: string }).op], { encoding: 'utf8' }).trim()
   return String(value)
 }
 
-const addArgs = (entry: SourceEntry): string[] => {
-  if (entry.url) return ['mcp', 'add', entry.name, '--url', entry.url]
-  if (!entry.command) throw new Error(`Codex-targeted server ${entry.name} needs command or url`)
+const addArgs = (entry: ServerEntry): string[] => {
+  if ('url' in entry) return ['mcp', 'add', entry.name, '--url', entry.url]
   const args = ['mcp', 'add', entry.name]
-  for (const [key, value] of Object.entries(entry.env ?? {})) args.push('--env', `${key}=${resolveEnvValue(value)}`)
-  args.push('--', entry.command, ...(entry.args ?? []))
+  for (const [key, value] of Object.entries(entry.env)) args.push('--env', `${key}=${resolveEnvValue(value)}`)
+  args.push('--', entry.command, ...entry.args)
   return args
 }
 
-const shownCommand = (entry: SourceEntry): string => {
-  if (entry.url) return `codex mcp add ${entry.name} --url ${entry.url}`
-  const env = Object.keys(entry.env ?? {}).flatMap((key) => ['--env', `${key}=***`])
-  return ['codex', 'mcp', 'add', entry.name, ...env, '--', entry.command ?? '', ...(entry.args ?? [])].join(' ')
+const shownCommand = (entry: ServerEntry): string => {
+  if ('url' in entry) return `codex mcp add ${entry.name} --url ${entry.url}`
+  const env = Object.keys(entry.env).flatMap((key) => ['--env', `${key}=***`])
+  return ['codex', 'mcp', 'add', entry.name, ...env, '--', entry.command, ...entry.args].join(' ')
 }
 
 const record = (value: unknown): Record<string, unknown> | null =>
@@ -223,13 +211,13 @@ const replayArgs = (name: string, snapshot: NativeSnapshot): string[] => {
   return args
 }
 
-const matches = (entry: SourceEntry, snapshot: NativeSnapshot): boolean => {
-  if (entry.url) return snapshot.transport === 'streamable_http' && snapshot.url === entry.url
+const matches = (entry: ServerEntry, snapshot: NativeSnapshot): boolean => {
+  if ('url' in entry) return snapshot.transport === 'streamable_http' && snapshot.url === entry.url
   const env = plainEnv(entry.env)
   return (
     snapshot.transport === 'stdio' &&
     snapshot.command === entry.command &&
-    JSON.stringify(snapshot.args) === JSON.stringify(entry.args ?? []) &&
+    JSON.stringify(snapshot.args) === JSON.stringify(entry.args) &&
     env !== null &&
     JSON.stringify(orderedRecord(snapshot.env)) === JSON.stringify(orderedRecord(env))
   )
@@ -243,7 +231,7 @@ export const runRenderCodex = (options: RenderCodexOptions): number => {
   const configPath = join(home, '.codex', 'config.toml')
   const entries = sourceEntries(source)
   const universe = new Set(entries.map((entry) => entry.name))
-  const desired = entries.filter((entry) => entry.clients?.includes('chatgpt-codex'))
+  const desired = entries.filter((entry) => entry.clients.includes('chatgpt-codex'))
   const actual = codexServers(configPath)
   const toAdd = desired.filter((entry) => !sameServer(entry, actual[entry.name]))
   const desiredNames = new Set(desired.map((entry) => entry.name))

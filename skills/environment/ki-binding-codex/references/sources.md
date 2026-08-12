@@ -4,7 +4,7 @@
 
 | Tag    | Source                  | Governs                             | Last reviewed |
 | ------ | ----------------------- | ----------------------------------- | ------------- |
-| [CLI]  | Codex CLI `mcp` command | Native merge writer                 | 2026-07-27    |
-| [TOML] | Codex `config.toml`     | Read-only native surface comparison | 2026-07-27    |
+| [CLI] | [Codex MCP documentation](https://learn.chatgpt.com/docs/extend/mcp?surface=cli) | Native merge writer and MCP state boundaries | 2026-08-12 |
+| [TOML] | [Codex configuration reference](https://learn.chatgpt.com/docs/config-file/config-reference) | TOML location and full non-secret MCP fields | 2026-08-12 |
 
 Refresh when the native command or TOML shape changes.
