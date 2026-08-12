@@ -45,7 +45,7 @@ All dispositions are `revise` except `ki-communication`, whose approved disposit
 |  20 | `ki-guides`                          |   P   |   L   | applied  | Useful structure; reader outcomes unproven.             |
 |  21 | `ki-checkpoint`                      |   P   |   L   | applied  | Plausible reconstruction; no resumption trial.          |
 |  22 | `ki-trades`                          |   F   |   M   | applied  | Completion now fails closed without adapter evidence.   |
-|  23 | `ki-trade`                           |   F   |   M   | applied  | Unsupported host atomic intake is blocked.              |
+|  23 | `ki-trade`                           |   F   |   M   | applied  | Async receipt semantics corrected; host claims bounded. |
 |  24 | `ki-agora`                           |   F   |   M   | applied  | Local shape explicitly cannot prove bilateral consent.  |
 |  25 | `ki-communication`                   |   U   |   H   | retired  | No activation, checker, sources, tests, or modes.       |
 |  26 | `ki-subagents`                       |   F   |   M   | applied  | Portable/native split removes parser overclaim.         |

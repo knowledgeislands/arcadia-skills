@@ -13,4 +13,4 @@ This table is the durable action list for `KI-HARNESS-REV-001`. It separates com
 | `FIX-USER-MCP` | Repair one MCP transport mapping. | User-owned MCP source | External observation |
 | `FIX-CLAUDE-MEMORY` | Repair Claude memory index/date evidence. | User-owned memory; [OPS-002](../../roadmap/KI-HARNESS-OPS-002-reconcile-memory-store-defects.md) | External observation |
 
-† Submission needs host proof of a safe transaction boundary. The current `ki-trade` procedure therefore stops at preparation.
+† The preparation remains unsent until `tools-ki` accepts and prioritises it. It does not change the asynchronous trade protocol.

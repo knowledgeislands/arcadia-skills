@@ -66,7 +66,7 @@ Show the committed diff only when the cursor and current commit share comparable
 
 `ki trade receive <TRD>` requires one explicit submitted identity and an active reciprocal route for its kind. Preview the sender source and receiver destination, preserve the immutable sender projection byte-for-byte, add only the receiver-owned fields, and record the committed sender reference when it is available.
 
-`ki trade receive --all` is an explicit batch operation that requires a host-proven stable complete-set preview, validation of every candidate (including skipped and conflicting records), and no write before that validation succeeds. The current host does not yet prove those guarantees, so do not use `receive --all`; receive one explicit identity instead. An invalid member must prevent partial intake.
+`ki trade receive --all` is a convenience operation over independent asynchronous receipts. Its preview lists the identities receivable at that point; with confirmation, the host attempts each listed identity sequentially. A later failure does not retract an earlier receipt, and a preview neither promises that every outbound file was evaluated nor grants receiver authority. Report the actual local results; use one explicit identity when an operator needs a single-record boundary.
 
 Receipt begins at `unconsidered`. It is not acceptance, retention, adoption, priority, or completion. Hand the inbound record to `ki-next` for receiver disposition.
 
@@ -86,6 +86,6 @@ A completion-observation trade retains the linked adopted local work record unti
 
 ## 8. Finish
 
-Run the local `ki-trades` audit after every mutation. Report the operation, exact local paths changed or removed, observation policy and next observable condition, pending reciprocity where relevant, and audit result. Do not report transaction, atomicity, or pre/post-audit enforcement unless the host produced that evidence.
+Run the local `ki-trades` audit after every mutation. Report the operation, exact local paths changed or removed, observation policy and next observable condition, pending reciprocity where relevant, and audit result. Do not report atomicity or pre/post-audit enforcement unless the host produced that evidence.
 
 For a received record, name `ki-next` as the next decision step. For an adopted work item that reached done, name sender release observation before either side prunes the remaining evidence.
