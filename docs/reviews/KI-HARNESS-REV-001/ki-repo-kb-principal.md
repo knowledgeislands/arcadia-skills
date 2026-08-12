@@ -2,7 +2,7 @@
 
 - **Review state:** complete, ungraded
 - **Candidate disposition:** revise
-- **Change state:** review only; no Phase 4 remediation is authorised
+- **Change state:** approved Phase 4 remediation applied
 - **Identity:** position 32 of 50; governance; depends on `ki-repo-kb` (31) and `ki-decision-records` (18); baseline `94f0b775903286fcf37c0ec050d5568672a5154f`; order valid
 
 ## Dependency and ownership
@@ -23,6 +23,10 @@ Two tests cover missing files and the keyword fixture. There is no exact eval, o
 2. After that decision, validate only the permitted selected-adapter and Enactment-gate evidence; never infer approval from a phrase.
 3. Add meaningful non-empty, link, relationship, source, and positive/negative outcome evidence within the eventual ownership boundary.
 4. Reconcile inherited KB/Decision Record metadata before relying on aggregate principal completion.
+
+## Applied changes
+
+The checker now reports structural entry points only. Empty files and keyword-only prose cannot imply a governing gate, canonical authority, or principal role. Identity and cross-island authority representation remain unresolved owner decisions.
 
 ## Carry-forward criteria
 

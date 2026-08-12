@@ -2,7 +2,7 @@
 
 - **Review state:** complete, ungraded
 - **Candidate disposition:** revise
-- **Change state:** review only; no Phase 4 remediation is authorised
+- **Change state:** approved Phase 4 remediation applied
 - **Identity:** position 36 of 50; governance; depends on `ki-repo-website` at position 35; baseline `94f0b775903286fcf37c0ec050d5568672a5154f`; order valid
 
 ## Dependency and ownership
@@ -23,6 +23,10 @@ The standard requires an assets site Worker with no `main`, but every config con
 2. Parse every supported configuration format and test malformed and deceptive-text inputs.
 3. After parent layout reconciliation, require a normalized, contained, exact build-output path with traversal and mismatch negatives.
 4. Refresh sources and keep deployed environment evidence distinct from local no-write inspection.
+
+## Applied changes
+
+Wrangler JSONC and TOML are parsed rather than searched. Assets-plus-main, malformed or comment-only evidence, traversal, and non-exact parent output paths now fail closed. Build and deployment outcomes remain unavailable dynamic evidence.
 
 ## Carry-forward criteria
 

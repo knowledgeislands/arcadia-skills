@@ -126,19 +126,19 @@ Reconcile the three surfaces against one another and the canonical skill set. Re
 
 ## Current state
 
-The Harness review has completed the standing-guidance audit, all 50 dependency-ordered skill reviews, and the [final cumulative calibration](../reviews/KI-HARNESS-REV-001/final-calibration.md). The [proposed approval matrix](../reviews/KI-HARNESS-REV-001/approval-matrix.md) and [candidate clusters](../reviews/KI-HARNESS-REV-001/candidate-clusters.md) are ready. Approved Phase 1 and Phase 2 remediations are applied; Phase 3–6 findings remain unremediated. The current gate is explicit grading, disposition, and route approval.
+The Harness review has completed the standing-guidance audit, all 50 dependency-ordered skill reviews, and the [final cumulative calibration](../reviews/KI-HARNESS-REV-001/final-calibration.md). The user approved the [grading and disposition matrix](../reviews/KI-HARNESS-REV-001/approval-matrix.md), [candidate clusters](../reviews/KI-HARNESS-REV-001/candidate-clusters.md), and owner-decision gates on 2026-08-12. Phase 1 and Phase 2 remediations are applied; Phase 3–6 remediation is authorised and proceeds in dependency order.
 
-No grade scale or remediation queue is approved yet. The ordered inventory and common checks above are the planning basis for collecting comparable evidence before those decisions.
+The approved evidence grades describe present proof and false-assurance risk, not intrinsic skill quality. Cross-owner policy conflicts remain implementation gates even though the remediation routes are approved.
 
 ## Steps
 
 - [x] Audit `AGENTS.md`, `CLAUDE.md`, and `.agents/skills/ki-self/SKILL.md` for duplicated or reusable guidance; present deduplicated extraction candidates and obtain approval for any move, deletion, new skill, or existing-skill amendment.
 - [x] After confirmed standing-guidance dispositions are applied or explicitly deferred, freeze the execution baseline, regenerate the canonical skill inventory and dependency graph, and reconcile any additions, removals, missing dependencies, or cycles against the 50-skill planning list before reviewing content.
-- [ ] Approve or amend the proposed effectiveness grading vocabulary and matrix; no normative rubric change or Phase 3–6 remediation occurs before that decision.
+- [x] Approve or amend the proposed effectiveness grading vocabulary and matrix; no normative rubric change or Phase 3–6 remediation occurs before that decision.
 - [x] Process Phases 1–6 in order, reviewing one skill at a time and recording source evidence, mechanical results, judgment findings, effectiveness evidence, instruction cost, and proposed disposition without silently remediating the skill.
 - [x] At each phase boundary, reconcile newly discovered ownership or dependency changes and add only new generalised effectiveness checks to the cumulative calibration checklist before starting the next phase; update the remaining order only with an explicit, evidenced reason.
 - [x] Re-run whole-repository collision and dependency checks, recheck `ki-skills` against emergent findings, back-check every earlier review against the final cumulative calibration checklist, and prove that every canonical skill has exactly one completed review record.
-- [ ] Present the complete grade and disposition matrix for approval, then route confirmed remediation as amendments or separate roadmap items under the owning area.
+- [x] Present the complete grade and disposition matrix for approval, then route confirmed remediation as amendments or separate roadmap items under the owning area.
 
 ## Files touched
 
@@ -207,6 +207,11 @@ The immutable baseline is `94f0b775903286fcf37c0ec050d5568672a5154f`. Changes to
 - Round 18: `ki-binding` and `ki-tokenomics` run first; `ki-housekeeping-claude` may run alongside them. After `ki-binding`, the rolling pool processes `ki-binding-claude`, `ki-binding-codex`, and `ki-binding-chezmoi`; after `ki-tokenomics`, it processes `ki-tokenomics-claude` and `ki-tokenomics-codex`.
 - Round 19: the coordinator writes the Phase 5 synthesis, then reviews `ki-repo-harness` after all of its dependencies and `ki-bootstrap` last. It writes the Phase 6 synthesis and complete 50-skill coverage account without grading or remediating the newly reviewed skills.
 - Round 20: the coordinator applies the completed cumulative calibration checklist back across all 50 records, reruns whole-set collision/dependency/evidence checks, and presents the ungraded disposition matrix and newly proposed remediations for approval.
+- Round 21: after the user approves the complete matrix and cluster routes, three exclusive Phase 3 remediation lanes repair records/specifications, cross-repository protocols, and subagent mechanics. The coordinator owns policy reconciliation, `ki-communication` retirement, review evidence, integration, and commits.
+- Round 22: after Phase 3 integration, three exclusive Phase 4 lanes repair the KB aggregate, repository projections, and delivery/hosting structures. Parent skills own source/build facts, child skills own their exact projections, selected declarations determine applicability, and read-only audit never executes target code or package managers.
+- Round 23: after Phase 4 integration, three exclusive Phase 5 lanes repair binding projections, tokenomics evidence, and Claude housekeeping. Canonical source, deterministic render, applied target, registration, activation, and effective session state remain separate evidence classes.
+- Round 24: after every dependency remediation is integrated, the aggregate Harness and bootstrap entry point are repaired last. The Harness owns source/payload claims, while `tools-ki` remains the installation and activation executor.
+- Round 25: the user resolves the Phase 3 subagent owner gate by making `ki-subagents` the portable semantic parent and adding `ki-subagents-claude` plus `ki-subagents-codex` as runtime adapters. The current Markdown tree remains Claude source evidence; Codex TOML validation is added without claiming host publication, which remains a fail-closed `tools-ki` handoff.
 
 ### Worker: refresh-ki-skills-sources
 
@@ -610,6 +615,157 @@ The immutable baseline is `94f0b775903286fcf37c0ec050d5568672a5154f`. Changes to
 - **Verify:** Coordinator reruns exact checks, reopens material sources, checks every cited path and inference, reconciles dependency/ownership effects, and writes the durable record and phase synthesis.
 - **Return:** Compact review record ready for the common template, direct source links, exact commands/results, facts versus inferences/gaps, one proposed disposition, new generalised checks, and candidate routes; no raw transcript.
 - **Checkpoint:** Return after the assigned skill is complete or immediately on a source conflict, ownership/dependency change, unsafe command, missing authority, or conclusion requiring another skill's unresolved evidence.
+
+### Worker: remediate-governance-records
+
+- **Deliverable:** Apply the approved Phase 3 revisions to Decision Records, Specifications, Guides, and Checkpoints without inventing cross-owner metadata or scope policy.
+- **Inputs:** Their four review records, Phase 3 synthesis, final calibration, approved matrix and clusters, current standards/rubrics/tests/evals, and the integrated Phase 1–2 contracts.
+- **Scope:** `skills/governance/ki-decision-records/**`, `skills/governance/ki-specs/**`, `skills/governance/ki-guides/**`, and `skills/governance/ki-checkpoint/**` only.
+- **Authority:** Edit the exact skill roots; refresh local sources from already recorded current evidence; add semantic fail-closed mechanics and adversarial fixtures; regenerate only their publications. Do not edit KB skills, decisions, roadmap/review records, Git state, or external systems.
+- **Isolation:** Exclusive shared-worktree ownership of the four named roots; no Git writes or external mutations.
+- **Definition of done:** Obsolete eval contracts are current; deterministic claims are mechanically checked where sound; unavailable outcome evidence is labelled; conflicting metadata, serial, and applicability choices are returned with precise owner options rather than silently selected.
+- **Model:** reasoning — metadata, serial identity, applicability, and durable-record boundaries require judgment.
+- **Verify:** Coordinator reviews every owner boundary, runs focused tests/publication checks, and reconciles any returned choice before integration.
+- **Return:** Concise changed-file summary, focused command results, remaining owner decisions with recommended smallest choice, and review-record implications.
+- **Checkpoint:** Return when the four roots are internally truthful or immediately if a safe improvement depends on an unresolved cross-owner choice.
+
+### Worker: remediate-cross-repository-protocols
+
+- **Deliverable:** Apply approved Phase 3 revisions to Trades, Trade operations, and Agora so identity, completion, consent, and mutation claims fail closed against available evidence.
+- **Inputs:** Their review records, Phase 3 synthesis, final calibration, approved clusters, selected-adapter contract from Phase 2, and current standards/rubrics/tests.
+- **Scope:** `skills/governance/ki-trades/**`, `skills/governance/ki-trade/**`, and `skills/governance/ki-agora/**` only.
+- **Authority:** Edit the exact roots, add pure resolvers/validators and disposable fixtures, and regenerate their publications. Do not execute trades, mutate another repository, edit change-management/KB/repo owners, alter Git state, or make external writes.
+- **Isolation:** Exclusive shared-worktree ownership of the three named roots; all mutation behavior remains fixture-only and no Git writes are allowed.
+- **Definition of done:** Local evidence cannot impersonate selected-adapter completion or bilateral consent; unsupported partner identities and remote paths fail closed; process guidance no longer promises host behavior it does not perform; partial-intake and audit boundaries are mechanically covered where the local owner can prove them.
+- **Model:** reasoning — bilateral authority, immutable identity, and transaction boundaries are safety-critical.
+- **Verify:** Coordinator checks every change against change-management and repository identity owners and runs focused negative-path tests before integration.
+- **Return:** Concise changed-file summary, exact tests/results, unresolved owner/host requirements, and review-record implications.
+- **Checkpoint:** Return when all locally owned repairs pass or at the first required host/identity policy decision.
+
+### Worker: remediate-subagent-contract
+
+- **Deliverable:** Make `ki-subagents` parse and report its source/runtime contract truthfully against the approved review findings.
+- **Inputs:** The `ki-subagents` review record, Phase 3 synthesis, final calibration, approved semantic-parsing and source-currentness clusters, current official-source evidence recorded by the review, and the current rubric/tests/eval.
+- **Scope:** `skills/agentic-systems/ki-subagents/**` only.
+- **Authority:** Edit the exact root, add a real YAML parser through existing repository dependencies where available, refresh standards/source wording from recorded evidence, add adversarial fixtures, and regenerate its publication. Do not edit runtime agent definitions, package manifests, other skills, roadmap/review records, Git state, or external systems.
+- **Isolation:** Exclusive shared-worktree ownership of the named skill root; no Git or external writes.
+- **Definition of done:** Malformed YAML fails closed; name/path/background/permission claims are current and explicitly scoped; source-shape checks do not imply installed or runtime activation; focused malformed and scoped-identity fixtures pass.
+- **Model:** reasoning — vendor-source interpretation and source/runtime separation require judgment.
+- **Verify:** Coordinator checks the current authority interpretation, dependency use, publication parity, and focused tests.
+- **Return:** Concise changed-file summary, source decisions, commands/results, and any package or runtime-owner follow-up.
+- **Checkpoint:** Return after the root is internally consistent or immediately if the repair requires a root dependency or runtime policy change.
+
+### Worker: remediate-kb-aggregate
+
+- **Deliverable:** Apply the approved revisions to the Project and Knowledge Base structure family, producing one truthful aggregate contract without silently choosing unresolved cross-owner metadata or identity policy.
+- **Inputs:** The six relevant review records, Phase 4 synthesis, approved clusters, integrated Decision Record/Specification results, `ki-repo` primary-kind ownership, and the selected-adapter contract.
+- **Scope:** `skills/repo-structure/ki-repo-project/**`, `skills/repo-structure/ki-repo-kb-activities/**`, `skills/repo-structure/ki-repo-kb-live-artifacts/**`, `skills/repo-structure/ki-repo-kb-streams/**`, `skills/repo-structure/ki-repo-kb/**`, and `skills/repo-structure/ki-repo-kb-principal/**` only.
+- **Authority:** Edit the exact roots, refresh their local source evidence, add semantic validators and adversarial fixtures, and regenerate their publications. Do not edit Decision Records, change-management, base repository, roadmap/review records, Git state, representative external estates, or external systems.
+- **Isolation:** Exclusive shared-worktree ownership of the six roots; no Git or external writes.
+- **Locked decisions:** Shared Project/KB cardinality remains owned by `ki-repo`; selected `kb-streams` configuration must be consumed or rejected; aggregate success must not imply unresolved metadata, role, adapter, or child-schema reconciliation; current flat Roadmap containers replace retired Focus/proposal folder claims.
+- **Definition of done:** Duplicated checks and inert configuration are removed or made executable; malformed config/frontmatter, false index links, symlinks, and stale Stream forms fail closed where locally owned; aggregate and principal outcomes state exactly what is observed; unresolved universal metadata or canonical-role policy is returned before dependent mechanics.
+- **Model:** reasoning — aggregate schema, adapter, identity, and role ownership are high-risk cross-owner seams.
+- **Verify:** Coordinator checks every cross-owner choice against integrated owners, runs all focused family tests/publications, and validates representative estate implications without modifying them.
+- **Return:** Concise changed-file summary, exact tests/results, remaining owner decisions with smallest recommended resolution, migration implications, and review-record updates.
+- **Checkpoint:** Return after locally owned repairs pass or immediately when a metadata/identity choice is required.
+
+### Worker: remediate-repository-projections
+
+- **Deliverable:** Apply approved revisions to Specifications-repository, MCP, plugin, and chezmoi projections so structural evidence is distinct from freshness, security, rendering, activation, and runtime outcomes.
+- **Inputs:** Their four review records, Phase 4 synthesis, approved clusters, current source records, existing rubrics/tests, and integrated source/runtime evidence taxonomy.
+- **Scope:** `skills/repo-structure/ki-repo-specifications/**`, `skills/repo-structure/ki-repo-mcp/**`, `skills/repo-structure/ki-repo-plugins/**`, and `skills/repo-structure/ki-repo-dotfiles-chezmoi/**` only.
+- **Authority:** Edit the exact roots, add pure parsed/manifest/applicability checks and adversarial fixtures, refresh local source wording from recorded evidence, and regenerate their publications. Do not edit bindings, runtime targets, package manifests, external repositories, roadmap/review records, Git state, or external systems.
+- **Isolation:** Exclusive shared-worktree ownership of the four roots; no Git or external writes.
+- **Locked decisions:** Repository declaration is the applicability authority; structural audit reports observed source shape only; freshness, rendered equality, security, registration, activation, and loaded runtime remain separate evidence; every published family must be host-visible.
+- **Definition of done:** Host/applicability families align; false source-shape implications are removed; deterministic per-tool or manifest checks use parsed exact evidence where feasible; unavailable runtime/security claims remain visible; focused negative and no-write fixtures pass.
+- **Model:** reasoning — projection/freshness/runtime separation and security claims require careful evidence boundaries.
+- **Verify:** Coordinator reviews cross-owner off-ramps, runs focused tests/publications, and checks that no structural PASS implies an unobserved runtime outcome.
+- **Return:** Concise changed-file summary, tests/results, source decisions, any binding/host follow-up, and review-record implications.
+- **Checkpoint:** Return after all locally owned repairs pass or at the first required binding/runtime owner decision.
+
+### Worker: remediate-delivery-structures
+
+- **Deliverable:** Apply approved revisions to Website/Cloudflare and Tools/Homebrew so build/hosting seams have one owner and read-only audit executes no target-owned or package-manager code.
+- **Inputs:** Their four review records, Phase 4 synthesis, approved safety/parser clusters, current standards/rubrics/tests/evals, and the integrated engineering/source authority contract.
+- **Scope:** `skills/repo-structure/ki-repo-website/**`, `skills/repo-structure/ki-repo-website-cloudflare/**`, `skills/repo-structure/ki-repo-tools/**`, and `skills/repo-structure/ki-repo-homebrew-tap/**` only.
+- **Authority:** Edit the exact roots, add pure parsing/static validators and adversarial fixtures, refresh local sources from recorded evidence, and regenerate their publications. Do not run target binaries, Homebrew, builds, deploys, installers, network validators, Git writes, or external mutations; do not edit root toolchain configuration or external estates.
+- **Isolation:** Exclusive shared-worktree ownership of the four roots; all evidence is static or fixture-local.
+- **Locked decisions:** Website owns workspace/runtime/build-output facts; Cloudflare owns Wrangler/hosting projection and consumes the exact parent output; modern Node is permitted and no native-Bun claim survives without evidence; audit never executes target binaries or Homebrew; environment/runtime checks are explicit opt-in diagnostics outside read-only conformance.
+- **Definition of done:** One layout/output/runtime contract is consistent; assets-plus-main, malformed/deceptive config, traversal/mismatch paths, release mismatches, wrong primary names, and workflow text false positives are covered where feasible; unavailable dynamic evidence is not reported as PASS.
+- **Model:** reasoning — target execution, package managers, build/hosting seams, and release claims are safety-sensitive.
+- **Verify:** Coordinator inspects all removed execution paths, runs focused tests/publications, and confirms static audit remains no-write and no-network.
+- **Return:** Concise changed-file summary, exact tests/results, source updates, dynamic-evidence limitations, and review-record implications.
+- **Checkpoint:** Return after all four roots pass static verification or immediately on a root-toolchain/host policy conflict.
+
+### Worker: remediate-binding-family
+
+- **Deliverable:** Apply the approved binding-family revisions so canonical inventory, client render, configured target, registration, activation, and runtime health are separately and truthfully reported.
+- **Inputs:** The four binding review records, Phase 5 synthesis, approved clusters, integrated projection/applicability contract, current standards/rubrics/tests/evals, and recorded official-source evidence.
+- **Scope:** `skills/environment/ki-binding/**`, `skills/environment/ki-binding-claude/**`, `skills/environment/ki-binding-codex/**`, and `skills/environment/ki-binding-chezmoi/**` only.
+- **Authority:** Edit the exact roots, share pure source-resolution/schema helpers only through an already approved shared-module boundary, add parsed definition and adversarial fixtures, refresh local source records from current evidence, and regenerate publications. Do not render or apply live chezmoi state, install/enable plugins, contact MCP servers, read secret values, edit root configuration, roadmap/review records, Git state, or external systems.
+- **Isolation:** Exclusive shared-worktree ownership of the four roots; all targets are fixtures and no Git/external writes occur.
+- **Locked decisions:** A URL binding carries an explicit supported transport per client; name parity is never definition or health parity; source location follows explicit override then XDG; missing or unreadable target evidence is unavailable; client tokens and scope are current; Cowork behavior is not inferred from Claude Code.
+- **Definition of done:** Malformed and unsupported inventory fields fail closed; full non-secret targeted definitions are compared where configured; root and adapters resolve the same source; Codex hosted activation is explicitly routed to the coordinator; chezmoi structure/render/apply states are separated; runtime health remains unavailable without direct authorised evidence.
+- **Model:** reasoning — schema portability, transport mapping, product authority, and secret-safe evidence are high risk.
+- **Verify:** Coordinator reviews the portable/client schema mapping, runs focused tests/publications, activates only approved repository declarations, and checks no secret or live runtime action occurred.
+- **Return:** Concise changed-file summary, exact tests/results, schema/source decisions, required root activation or host follow-up, and review-record implications.
+- **Checkpoint:** Return after all locally owned repairs pass or immediately on a portable-schema/product-authority decision.
+
+### Worker: remediate-tokenomics-family
+
+- **Deliverable:** Apply the approved portable, Claude, and Codex tokenomics revisions so declared policy, observed filesystem surfaces, measurement, and effective session state cannot be conflated.
+- **Inputs:** The three tokenomics review records, Phase 5 synthesis, approved clusters, current source records, rubrics/tests/evals, and integrated runtime evidence taxonomy.
+- **Scope:** `skills/environment/ki-tokenomics/**`, `skills/environment/ki-tokenomics-claude/**`, and `skills/environment/ki-tokenomics-codex/**` only.
+- **Authority:** Edit the exact roots, add pure configuration and bounded filesystem resolvers, refresh current source wording from recorded evidence, add privacy/unavailable/path fixtures, and regenerate publications. Do not inspect live transcripts/session state, secret values, runtime commands, user files outside explicit fixture roots, root configuration, roadmap/review records, Git state, or external systems.
+- **Isolation:** Exclusive shared-worktree ownership of the three roots; fixture-only filesystem evidence and no Git/external writes.
+- **Locked decisions:** Portable results describe declared policy only; malformed nested tables fail closed; filesystem adapters pass only direct bounded observations; effective model, loaded context, active tools, trust, transcript, compaction, and memory use are unavailable absent separately authorised session evidence; no new privacy authority is granted.
+- **Definition of done:** Unconditional policy passes are relabelled or removed; current Claude/Codex paths and hierarchies are bounded and parsed where feasible; stale evals are replaced with current observed-versus-unavailable scenarios; privacy and override uncertainty remain explicit.
+- **Model:** reasoning — privacy, session evidence, hierarchy, and model-effectiveness claims require judgment.
+- **Verify:** Coordinator reviews every observation scope, runs focused tests/publications, and confirms no live user/session data was read.
+- **Return:** Concise changed-file summary, exact tests/results, source/path decisions, unavailable evidence, and review-record implications.
+- **Checkpoint:** Return when all three roots are truthful or immediately if a session/privacy authority expansion is required.
+
+### Worker: remediate-claude-housekeeping
+
+- **Deliverable:** Apply approved `ki-housekeeping-claude` revisions so native memory, Headroom output, overrides, registration, and executed audit are independent evidence.
+- **Inputs:** Its review record, Phase 5 synthesis, approved runtime/source clusters, current standards/rubrics/tests/evals, and recorded Claude/Headroom evidence.
+- **Scope:** `skills/environment/ki-housekeeping-claude/**` only.
+- **Authority:** Edit the exact root, add pure override/path/format validators and fixture tests, refresh local source wording from recorded evidence, and regenerate its publication. Do not read or change live Claude memory/settings, invoke Headroom, register servers, inspect secrets, edit root configuration, roadmap/review records, Git state, or external systems.
+- **Isolation:** Exclusive shared-worktree ownership of the named root; fixture-only evidence and no Git/external writes.
+- **Locked decisions:** Claude native memory and Headroom learned output are separate authorities; selected overrides must be resolved or reported unavailable; source payload, inventory declaration, registration, exposure, and executed audit are distinct; no default-path clean result survives override uncertainty.
+- **Definition of done:** Default/override/disabled/worktree paths, malformed entries, marker dates, size semantics, and unavailable server state have focused fixtures; claims match current sources; conform remains bounded and proposal-only.
+- **Model:** reasoning — user overrides, third-party format drift, and runtime registration require careful authority boundaries.
+- **Verify:** Coordinator reviews the no-live-state boundary, runs focused tests/publication, and checks source claims against recorded current evidence.
+- **Return:** Concise changed-file summary, exact tests/results, source decisions, unavailable runtime evidence, and review-record implications.
+- **Checkpoint:** Return after the root passes or immediately on a product/third-party authority conflict.
+
+### Worker: remediate-harness-bootstrap
+
+- **Deliverable:** Apply the approved aggregate Harness and bootstrap revisions after all dependency remediations, making source, verified payload, development source, activation, declaration, and executed runtime capability distinct.
+- **Inputs:** Both Phase 6 review records and synthesis, approved clusters, all integrated Phase 3–5 results, current Harness decision/standard/rubric/tests, current installed `ki` grammar and read-only provenance evidence, and bootstrap standards/examples/evals.
+- **Scope:** `skills/repo-structure/ki-repo-harness/**`, `skills/keystone/ki-bootstrap/**`, and `evals/scenarios/ki-bootstrap.ts` only.
+- **Authority:** Edit the exact roots and eval, add pure source/payload/path fixtures and read-only CLI grammar tests where supported by existing infrastructure, refresh local sources from recorded evidence, and regenerate the Harness publication. Do not edit `tools-ki`, install or activate a Harness, toggle development mode, write user/runtime configuration, edit roadmap/review records, alter Git state, or mutate external systems.
+- **Isolation:** Exclusive shared-worktree ownership of the named roots after their dependencies are stable; no Git or external writes.
+- **Locked decisions:** `tools-ki` owns installation/activation; explicit local-development source is permitted only when reported as such and never as verified installed payload; source layout does not prove payload integrity or runtime availability; bootstrap uses current `ki skill add/remove`, `ki repo skill add/remove`, `ki dev local set/on/off`, and `ki manage doctor/diag` grammar.
+- **Definition of done:** Aggregate findings cannot inherit unavailable component outcomes; source/payload symlink and manifest/provenance boundaries are mechanically covered where Harness-owned; every bootstrap command/example/eval matches the installed CLI; development mode and loaded runtime remain explicit evidence states.
+- **Model:** reasoning — aggregate false assurance, provenance, host ownership, and entry-point executability require judgment.
+- **Verify:** Coordinator runs focused Harness tests/publication, read-only CLI help/diagnostics, current bootstrap eval tests, then whole-repository gates.
+- **Return:** Concise changed-file summary, exact tests/results, host-owned follow-up, provenance limits, and review-record implications.
+- **Checkpoint:** Return after both capabilities are internally truthful or immediately on a host-contract decision requiring `tools-ki`.
+
+### Worker: split-portable-subagents
+
+- **Deliverable:** Replace the Claude-only `ki-subagents` contract with one portable semantic parent plus native Claude Code and Codex adapter skills.
+- **Inputs:** The approved user decision in Round 25, the `ki-subagents` review and current unintegrated remediation diff, SDR-KI-HARNESS-002, runtime parity scorecard, current official Claude subagent documentation, the current official OpenAI Codex Subagents manual section, `ki-skills`, and the Harness source/payload contract.
+- **Scope:** `skills/agentic-systems/ki-subagents/**`, new `skills/agentic-systems/ki-subagents-claude/**`, and new `skills/agentic-systems/ki-subagents-codex/**` only.
+- **Authority:** Rewrite the parent, scaffold both adapters, move runtime-specific standards/rubric mechanics/tests to the correct adapter, add normalized semantic and native-format adversarial fixtures, and generate their publications. Do not edit live `subagents/`, root configuration, Harness aggregation, review/roadmap records, `tools-ki`, Git state, installed/runtime agent files, or external systems.
+- **Isolation:** Exclusive shared-worktree ownership of the three named skill roots; no Git or external writes.
+- **Locked decisions:** `ki-subagents` is runtime-neutral and owns identity, purpose/selection description, core instructions, lane, grounding, hand-offs, orchestration intent, and effectiveness evidence; it owns no native serialization. `ki-subagents-claude` depends on the parent and owns Markdown/YAML, Claude fields, source discovery, and Claude-specific mechanics. `ki-subagents-codex` depends on the parent and owns standalone TOML, required `name`/`description`/`developer_instructions`, supported config keys, source discovery, and Codex-specific mechanics. Source conformance never proves installation, activation, effective settings, or execution. The current host advertises Claude subagent capability metadata but implements no subagent publisher for either runtime; both adapters must report publication and activation unavailable rather than imply support.
+- **Definition of done:** All portable criteria are vendor-neutral; each runtime field appears in only its adapter; malformed YAML and TOML fail closed; parent/adapters compose without duplicate mechanical ownership; current official sources are separated; focused tests and publications pass; all three skills meet `ki-skills` requirements.
+- **Model:** reasoning — portable semantic extraction, incompatible serializations, runtime defaults, and false activation claims require hard judgment.
+- **Verify:** Coordinator checks every criterion owner, official source claim, dependency edge, description/off-ramp, publication, focused test, whole-set `ki-skills` audit, and host-unavailable Codex state before integration.
+- **Return:** Concise architecture map, changed files, exact tests/results, criteria moved/retained, host handoff, and review/inventory implications.
+- **Checkpoint:** Return after all three roots pass or immediately if portable meaning cannot be separated without a new canonical source format.
 
 ## Discussion
 

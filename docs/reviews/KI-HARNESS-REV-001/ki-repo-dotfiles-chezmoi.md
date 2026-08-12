@@ -2,7 +2,7 @@
 
 - **Review state:** complete, ungraded
 - **Candidate disposition:** revise
-- **Change state:** review only; no Phase 4 remediation is authorised
+- **Change state:** approved local remediation applied; runtime, security, and freshness evidence remain separate
 - **Identity:** position 40 of 50; governance; depends on `ki-authoring` at position 2; baseline `94f0b775903286fcf37c0ec050d5568672a5154f`; order valid
 
 ## Dependency and ownership
@@ -23,6 +23,10 @@ The catalogue publishes `SHELL-J1`, but the host subject omits the `SHELL` famil
 2. Give every published rubric family, including `SHELL`, a host-visible execution path or remove/reclassify it.
 3. Narrow template and prefix checks to explicit house conventions or validate real source-to-target dependencies and the current attribute surface.
 4. Add contained no-write rendered-target fixtures for malformed, missing, symlinked, concurrent, idempotent, and secret-safe paths; keep reload behavior platform-scoped.
+
+## Applied changes
+
+Declaration now controls applicability, the published `SHELL` family is host-visible, and declaration/no-write negative fixtures protect the boundary. Structural success no longer implies rendered equality, secret safety, apply success, or runtime reload.
 
 ## Carry-forward criteria
 

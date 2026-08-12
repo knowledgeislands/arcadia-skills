@@ -1,15 +1,15 @@
 # Skill review inventory
 
-The immutable baseline and current tree contain the same 50 canonical skills in dependency-safe review order.
+The immutable baseline contains 50 canonical skills in dependency-safe review order. The approved retirement of `ki-communication` and addition of two subagent adapters leave 51 in the current tree while retaining the retired review row as historical evidence.
 
-Approved Phase 1–2 updates changed 17 implementations without changing identity or dependencies.
+Approved Phase 1–4 updates have changed 39 baseline implementations. The subagent remediation also added two current adapter identities.
 
-The [review index](README.md) records their commits and the 33 later review-only skills.
+The [review index](README.md) records the baseline set, applied changes, and remaining approved remediation.
 
 ## Integrity
 
-- Canonical skills: 50.
-- Review-sequence entries: 50.
+- Baseline canonical skills: 50; current canonical skills: 51 after one retirement and two additions.
+- Review-sequence entries: 50 in the immutable baseline; two post-baseline adapter records are listed separately.
 - Duplicate identities, missing entries, extra entries, unknown dependencies, cycles, and order violations: 0.
 - Source lists: 42; structured rubrics: 41; focused tests: 38; exact-name eval scenario files: 21.
 - Three ignored historical matrix logs exist locally but not in the baseline; they are advisory only.
@@ -20,9 +20,9 @@ The [review index](README.md) records their commits and the 33 later review-only
 
 `M` means all three advisory matrix logs have rows for that skill.
 
-Every row is reviewed and ungraded; `Review` is the proposed disposition.
+Every row is reviewed and graded; `Review` is the approved disposition.
 
-`Update` is `applied` for 17 approved remediations and `awaiting` for 33 proposals.
+`Update` is `applied` for 39 completed baseline revisions, `retired` for one completed retirement, and `awaiting` for 10 approved revisions.
 
 |   # | Skill                                | Kind       | Review | Update   | Sources | Rubric | Tests | Eval | Matrix |
 | --: | ------------------------------------ | ---------- | ------ | -------- | ------- | ------ | ----- | ---- | ------ |
@@ -43,29 +43,29 @@ Every row is reviewed and ungraded; `Review` is the proposed disposition.
 |  15 | `ki-batch`                           | process    | revise | applied  | U       | —      | Y     | —    | —      |
 |  16 | `ki-implement`                       | process    | revise | applied  | —       | —      | —     | —    | —      |
 |  17 | `ki-accept`                          | process    | revise | applied  | —       | —      | —     | —    | —      |
-|  18 | `ki-decision-records`                | governance | revise | awaiting | D       | Y      | Y     | Y    | —      |
-|  19 | `ki-specs`                           | governance | revise | awaiting | D       | Y      | Y     | Y    | —      |
-|  20 | `ki-guides`                          | governance | revise | awaiting | D       | Y      | Y     | —    | —      |
-|  21 | `ki-checkpoint`                      | governance | revise | awaiting | D       | Y      | —     | —    | —      |
-|  22 | `ki-trades`                          | governance | revise | awaiting | D       | Y      | Y     | —    | —      |
-|  23 | `ki-trade`                           | process    | revise | awaiting | —       | —      | —     | —    | —      |
-|  24 | `ki-agora`                           | governance | revise | awaiting | D       | Y      | Y     | —    | —      |
-|  25 | `ki-communication`                   | governance | retire | awaiting | —       | —      | —     | —    | —      |
-|  26 | `ki-subagents`                       | governance | revise | awaiting | D       | Y      | Y     | Y    | —      |
-|  27 | `ki-repo-project`                    | governance | revise | awaiting | U       | Y      | —     | —    | —      |
-|  28 | `ki-repo-kb-activities`              | governance | revise | awaiting | D       | Y      | Y     | Y    | —      |
-|  29 | `ki-repo-kb-live-artifacts`          | governance | revise | awaiting | D       | Y      | Y     | Y    | —      |
-|  30 | `ki-repo-kb-streams`                 | governance | revise | awaiting | D       | Y      | Y     | Y    | —      |
-|  31 | `ki-repo-kb`                         | governance | revise | awaiting | D       | Y      | Y     | Y    | M      |
-|  32 | `ki-repo-kb-principal`               | governance | revise | awaiting | —       | Y      | Y     | —    | —      |
-|  33 | `ki-repo-specifications`             | governance | revise | awaiting | D       | Y      | Y     | —    | —      |
-|  34 | `ki-repo-mcp`                        | governance | revise | awaiting | D       | Y      | Y     | Y    | M      |
-|  35 | `ki-repo-website`                    | governance | revise | awaiting | D       | Y      | Y     | Y    | —      |
-|  36 | `ki-repo-website-cloudflare`         | governance | revise | awaiting | D       | Y      | Y     | Y    | —      |
-|  37 | `ki-repo-plugins`                    | governance | revise | awaiting | D       | Y      | Y     | Y    | —      |
-|  38 | `ki-repo-tools`                      | governance | revise | awaiting | D       | Y      | Y     | —    | —      |
-|  39 | `ki-repo-homebrew-tap`               | governance | revise | awaiting | D       | Y      | Y     | —    | —      |
-|  40 | `ki-repo-dotfiles-chezmoi`           | governance | revise | awaiting | D       | Y      | Y     | —    | —      |
+|  18 | `ki-decision-records`                | governance | revise | applied  | D       | Y      | Y     | Y    | —      |
+|  19 | `ki-specs`                           | governance | revise | applied  | D       | Y      | Y     | Y    | —      |
+|  20 | `ki-guides`                          | governance | revise | applied  | D       | Y      | Y     | —    | —      |
+|  21 | `ki-checkpoint`                      | governance | revise | applied  | D       | Y      | Y     | —    | —      |
+|  22 | `ki-trades`                          | governance | revise | applied  | D       | Y      | Y     | —    | —      |
+|  23 | `ki-trade`                           | process    | revise | applied  | —       | —      | —     | —    | —      |
+|  24 | `ki-agora`                           | governance | revise | applied  | D       | Y      | Y     | —    | —      |
+|  25 | `ki-communication`                   | governance | retire | retired  | —       | —      | —     | —    | —      |
+|  26 | `ki-subagents`                       | governance | revise | applied  | D       | Y      | Y     | Y    | —      |
+|  27 | `ki-repo-project`                    | governance | revise | applied  | U       | Y      | Y     | —    | —      |
+|  28 | `ki-repo-kb-activities`              | governance | revise | applied  | D       | Y      | Y     | Y    | —      |
+|  29 | `ki-repo-kb-live-artifacts`          | governance | revise | applied  | D       | Y      | Y     | Y    | —      |
+|  30 | `ki-repo-kb-streams`                 | governance | revise | applied  | D       | Y      | Y     | Y    | —      |
+|  31 | `ki-repo-kb`                         | governance | revise | applied  | D       | Y      | Y     | Y    | M      |
+|  32 | `ki-repo-kb-principal`               | governance | revise | applied  | —       | Y      | Y     | —    | —      |
+|  33 | `ki-repo-specifications`             | governance | revise | applied  | D       | Y      | Y     | —    | —      |
+|  34 | `ki-repo-mcp`                        | governance | revise | applied  | D       | Y      | Y     | Y    | M      |
+|  35 | `ki-repo-website`                    | governance | revise | applied  | D       | Y      | Y     | Y    | —      |
+|  36 | `ki-repo-website-cloudflare`         | governance | revise | applied  | D       | Y      | Y     | Y    | —      |
+|  37 | `ki-repo-plugins`                    | governance | revise | applied  | D       | Y      | Y     | Y    | —      |
+|  38 | `ki-repo-tools`                      | governance | revise | applied  | D       | Y      | Y     | —    | —      |
+|  39 | `ki-repo-homebrew-tap`               | governance | revise | applied  | D       | Y      | Y     | —    | —      |
+|  40 | `ki-repo-dotfiles-chezmoi`           | governance | revise | applied  | D       | Y      | Y     | —    | —      |
 |  41 | `ki-binding`                         | governance | revise | awaiting | D       | Y      | Y     | Y    | —      |
 |  42 | `ki-binding-claude`                  | governance | revise | awaiting | D       | Y      | Y     | —    | —      |
 |  43 | `ki-binding-codex`                   | governance | revise | awaiting | D       | Y      | Y     | —    | —      |
@@ -77,12 +77,23 @@ Every row is reviewed and ungraded; `Review` is the proposed disposition.
 |  49 | `ki-repo-harness`                    | governance | revise | awaiting | D       | Y      | Y     | —    | —      |
 |  50 | `ki-bootstrap`                       | process    | revise | awaiting | D       | —      | —     | Y    | —      |
 
+## Post-baseline additions
+
+These adapters were created by the approved `ki-subagents` remediation and therefore have no immutable-baseline grade or matrix row.
+
+| Skill                  | Kind       | Update  | Sources | Rubric | Tests | Depends on     |
+| ---------------------- | ---------- | ------- | ------- | ------ | ----- | -------------- |
+| `ki-subagents-claude`  | governance | applied | D       | Y      | Y     | `ki-subagents` |
+| `ki-subagents-codex`   | governance | applied | D       | Y      | Y     | `ki-subagents` |
+
 ## Declared dependency edges
 
 Every edge points to an earlier review entry:
 
 - `ki-repo` → `ki-authoring`, `ki-git`.
 - `ki-trade` → `ki-trades`.
+- `ki-subagents` → `ki-skills`.
+- `ki-subagents-claude` and `ki-subagents-codex` → `ki-subagents`.
 - `ki-repo-kb` → `ki-repo-kb-activities`, `ki-repo-kb-live-artifacts`, `ki-repo-kb-streams`.
 - `ki-repo-kb-principal` → `ki-repo-kb`, `ki-decision-records`.
 - `ki-repo-website-cloudflare` → `ki-repo-website`.

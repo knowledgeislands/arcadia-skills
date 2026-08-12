@@ -1,14 +1,14 @@
 # KI-HARNESS-REV-001 review evidence
 
-This directory records the ungraded evidence for [KI-HARNESS-REV-001](../../roadmap/KI-HARNESS-REV-001-review-skill-effectiveness.md).
+This directory records the reviewed and approved evidence for [KI-HARNESS-REV-001](../../roadmap/KI-HARNESS-REV-001-review-skill-effectiveness.md).
 
 - **Immutable baseline:** `94f0b775903286fcf37c0ec050d5568672a5154f`
 - **Inventory:** [50-skill baseline](inventory.md)
-- **Approval matrix:** [proposed grades and dispositions](approval-matrix.md)
-- **Candidate routes:** [proposed deduplicated clusters](candidate-clusters.md)
+- **Approval matrix:** [approved grades and dispositions](approval-matrix.md)
+- **Candidate routes:** [approved deduplicated clusters](candidate-clusters.md)
 - **Standing-guidance review:** recorded in the roadmap item
-- **Grading:** not assigned; the vocabulary and final grades remain an approval gate
-- **Remediation:** Phase 1 and Phase 2 proposals were approved on 2026-08-12; each skill record distinguishes applied work from remaining gaps
+- **Grading:** approved on 2026-08-12; evidence grades describe current proof and false-assurance risk, not intrinsic quality
+- **Remediation:** Phase 1–4 repairs are applied; approved Phase 5–6 remediation is next
 
 ## Common record
 
@@ -59,7 +59,7 @@ Each completed review or phase may expose a reusable effectiveness check. Distil
 
 ## Progress
 
-Phase 0, dependency ordering, and all 50 skill reviews are complete. Phase 1 and Phase 2 remediation is applied. Phase 3–6 findings remain review-only pending grading and disposition approval.
+Phase 0, dependency ordering, and all 50 baseline skill reviews are complete. All baseline grades and dispositions are approved. Phase 1–4 repairs, the `ki-communication` retirement, and the portable subagent split are applied. Phase 5–6 remediation remains.
 
 | #  | Skill                                        | Review   | Change state | Evidence   |
 | -: | -------------------------------------------- | -------- | ------------ | ---------- |
@@ -80,29 +80,29 @@ Phase 0, dependency ordering, and all 50 skill reviews are complete. Phase 1 and
 | 15 | [`ki-batch`](ki-batch.md)                     | complete | applied      | `cab06c4e` |
 | 16 | [`ki-implement`](ki-implement.md)             | complete | applied      | `cab06c4e` |
 | 17 | [`ki-accept`](ki-accept.md)                   | complete | applied      | `7143bf33` |
-| 18 | [`ki-decision-records`](ki-decision-records.md) | complete | review only | —          |
-| 19 | [`ki-specs`](ki-specs.md)                     | complete | review only  | —          |
-| 20 | [`ki-guides`](ki-guides.md)                   | complete | review only  | —          |
-| 21 | [`ki-checkpoint`](ki-checkpoint.md)           | complete | review only  | —          |
-| 22 | [`ki-trades`](ki-trades.md)                   | complete | review only  | —          |
-| 23 | [`ki-trade`](ki-trade.md)                     | complete | review only  | —          |
-| 24 | [`ki-agora`](ki-agora.md)                     | complete | review only  | —          |
-| 25 | [`ki-communication`](ki-communication.md)     | complete | review only  | —          |
-| 26 | [`ki-subagents`](ki-subagents.md)             | complete | review only  | —          |
-| 27 | [`ki-repo-project`](ki-repo-project.md)       | complete | review only  | —          |
-| 28 | [`ki-repo-kb-activities`](ki-repo-kb-activities.md) | complete | review only | —          |
-| 29 | [`ki-repo-kb-live-artifacts`](ki-repo-kb-live-artifacts.md) | complete | review only | —          |
-| 30 | [`ki-repo-kb-streams`](ki-repo-kb-streams.md) | complete | review only  | —          |
-| 31 | [`ki-repo-kb`](ki-repo-kb.md)                 | complete | review only  | —          |
-| 32 | [`ki-repo-kb-principal`](ki-repo-kb-principal.md) | complete | review only | —          |
-| 33 | [`ki-repo-specifications`](ki-repo-specifications.md) | complete | review only | —          |
-| 34 | [`ki-repo-mcp`](ki-repo-mcp.md)               | complete | review only  | —          |
-| 35 | [`ki-repo-website`](ki-repo-website.md)       | complete | review only  | —          |
-| 36 | [`ki-repo-website-cloudflare`](ki-repo-website-cloudflare.md) | complete | review only | —          |
-| 37 | [`ki-repo-plugins`](ki-repo-plugins.md)       | complete | review only  | —          |
-| 38 | [`ki-repo-tools`](ki-repo-tools.md)           | complete | review only  | —          |
-| 39 | [`ki-repo-homebrew-tap`](ki-repo-homebrew-tap.md) | complete | review only | —          |
-| 40 | [`ki-repo-dotfiles-chezmoi`](ki-repo-dotfiles-chezmoi.md) | complete | review only | —          |
+| 18 | [`ki-decision-records`](ki-decision-records.md) | complete | applied | `4dfd435f` |
+| 19 | [`ki-specs`](ki-specs.md)                     | complete | applied      | `4dfd435f` |
+| 20 | [`ki-guides`](ki-guides.md)                   | complete | applied      | `4dfd435f` |
+| 21 | [`ki-checkpoint`](ki-checkpoint.md)           | complete | applied      | `4dfd435f` |
+| 22 | [`ki-trades`](ki-trades.md)                   | complete | applied      | `4dfd435f` |
+| 23 | [`ki-trade`](ki-trade.md)                     | complete | applied      | `4dfd435f` |
+| 24 | [`ki-agora`](ki-agora.md)                     | complete | applied      | `4dfd435f` |
+| 25 | [`ki-communication`](ki-communication.md)     | complete | retired      | `e35cb1e5` |
+| 26 | [`ki-subagents`](ki-subagents.md)             | complete | applied      | `f27f9d76` |
+| 27 | [`ki-repo-project`](ki-repo-project.md)       | complete | applied      | `13d99a33` |
+| 28 | [`ki-repo-kb-activities`](ki-repo-kb-activities.md) | complete | applied | `13d99a33` |
+| 29 | [`ki-repo-kb-live-artifacts`](ki-repo-kb-live-artifacts.md) | complete | applied | `13d99a33` |
+| 30 | [`ki-repo-kb-streams`](ki-repo-kb-streams.md) | complete | applied      | `13d99a33` |
+| 31 | [`ki-repo-kb`](ki-repo-kb.md)                 | complete | applied      | `13d99a33` |
+| 32 | [`ki-repo-kb-principal`](ki-repo-kb-principal.md) | complete | applied | `13d99a33` |
+| 33 | [`ki-repo-specifications`](ki-repo-specifications.md) | complete | applied | `e7a53a2c` |
+| 34 | [`ki-repo-mcp`](ki-repo-mcp.md)               | complete | applied      | `e7a53a2c` |
+| 35 | [`ki-repo-website`](ki-repo-website.md)       | complete | applied      | `5affff38` |
+| 36 | [`ki-repo-website-cloudflare`](ki-repo-website-cloudflare.md) | complete | applied | `5affff38` |
+| 37 | [`ki-repo-plugins`](ki-repo-plugins.md)       | complete | applied      | `e7a53a2c` |
+| 38 | [`ki-repo-tools`](ki-repo-tools.md)           | complete | applied      | `5affff38` |
+| 39 | [`ki-repo-homebrew-tap`](ki-repo-homebrew-tap.md) | complete | applied | `5affff38` |
+| 40 | [`ki-repo-dotfiles-chezmoi`](ki-repo-dotfiles-chezmoi.md) | complete | applied | `e7a53a2c` |
 | 41 | [`ki-binding`](ki-binding.md)                 | complete | review only  | —          |
 | 42 | [`ki-binding-claude`](ki-binding-claude.md)   | complete | review only  | —          |
 | 43 | [`ki-binding-codex`](ki-binding-codex.md)     | complete | review only  | —          |
@@ -113,6 +113,13 @@ Phase 0, dependency ordering, and all 50 skill reviews are complete. Phase 1 and
 | 48 | [`ki-tokenomics-codex`](ki-tokenomics-codex.md) | complete | review only | —          |
 | 49 | [`ki-repo-harness`](ki-repo-harness.md)       | complete | review only  | —          |
 | 50 | [`ki-bootstrap`](ki-bootstrap.md)             | complete | review only  | —          |
+
+Post-baseline additions:
+
+| Skill | Review | Change state | Evidence |
+| --- | --- | --- | --- |
+| [`ki-subagents-claude`](ki-subagents-claude.md) | integrated | applied | `f27f9d76` |
+| [`ki-subagents-codex`](ki-subagents-codex.md) | integrated | applied | `f27f9d76` |
 
 The [Phase 1 synthesis](phase-1-synthesis.md), [Phase 2 synthesis](phase-2-synthesis.md), [Phase 3 synthesis](phase-3-synthesis.md), [Phase 4 synthesis](phase-4-synthesis.md), [Phase 5 synthesis](phase-5-synthesis.md), and [Phase 6 synthesis](phase-6-synthesis.md) retain cross-skill conclusions. The [final cumulative calibration](final-calibration.md) records coverage and evidence limits. Detailed applied changes and remaining gaps live only in each skill record.
 

@@ -2,7 +2,7 @@
 
 - **Review state:** complete, ungraded
 - **Candidate disposition:** revise
-- **Change state:** review only; no Phase 3 remediation is authorised
+- **Change state:** approved local remediation applied
 - **Identity:** position 20 of 50; governance; no declared dependency; baseline `94f0b775903286fcf37c0ec050d5568672a5154f`; order valid
 
 ## Dependency and ownership
@@ -35,6 +35,10 @@ The registered sources are current house authorities last reviewed on 2026-08-02
 2. Keep deterministic structure in the checker but retain discoverability, actionability, recovery, and currency as visible judgment criteria; add host-visible negative fixtures.
 3. Stop inferring “generic log” solely from path presence.
 4. Reconcile supported development-command forms under `ki-bootstrap`, then ground guide commands against that authority.
+
+## Applied changes
+
+The standard no longer uses obsolete Feature Definition language or classifies `docs/logs/` merely from path presence. A negative fixture now protects that routing boundary. Reader-success evidence remains a future effectiveness trial rather than a conformance claim.
 
 ## Carry-forward criteria
 

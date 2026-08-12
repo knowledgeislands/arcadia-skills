@@ -2,14 +2,14 @@
 
 - **Review state:** complete, ungraded
 - **Candidate disposition:** revise
-- **Change state:** review only; no Phase 3 remediation is authorised
+- **Change state:** approved split applied in `f27f9d76`; host publication remains unavailable
 - **Identity:** position 26 of 50; governance; no declared dependency; baseline `94f0b775903286fcf37c0ec050d5568672a5154f`; order valid
 
 ## Dependency and ownership
 
-`ki-subagents` owns the quality of the Harness's Claude-oriented source payload. The runtime's permissions, tools, memory, isolation, worktree, and delegation controls justify a runtime-specific governance capability beyond `ki-skills` and `ki-delegation`.
+`ki-subagents` now owns only the portable semantic role contract. `ki-subagents-claude` and `ki-subagents-codex` own their native source formats. Runtime permissions, publication, activation, and execution remain host/runtime evidence rather than parent claims.
 
-The checker audits `subagents/`, not installed `.claude/agents` or user agents. SDR-002 confirms Claude Markdown and Codex TOML definitions are incompatible projections. The source-payload boundary is coherent, but the proposed portable conceptual core remains unproven.
+The parent checker publishes semantic and host-unavailable criteria without parsing a native format. The Claude adapter uses semantic YAML parsing; the Codex adapter uses semantic TOML parsing. Both explicitly distinguish candidate source from installed or effective runtime state.
 
 ## Mechanical trace and limits
 
@@ -30,6 +30,10 @@ Material gaps remain:
 3. Establish the boundary among portable concept, source payload, runtime projection, and installed activation.
 4. Add real subagent-run outcome evidence before claiming operational effectiveness.
 
+## Applied changes
+
+The approved architecture split is complete: the parent is runtime-neutral, Claude-specific mechanics moved to `ki-subagents-claude`, and `ki-subagents-codex` supplies a native TOML validator. Malformed YAML and TOML fail closed, native fields have one owner, and source conformance does not imply publication or activation. A `tools-ki` publisher and real outcome evidence remain unavailable.
+
 ## Carry-forward criteria
 
 Runtime-bound skills must refresh vendor defaults and capabilities. A parser claim requires actual parse failure evidence. Source payload, runtime projection, and installed activation are distinct contracts and cannot inherit assurance from one another.
@@ -37,9 +41,10 @@ Runtime-bound skills must refresh vendor defaults and capabilities. A parser cla
 ## Local evidence
 
 - `skills/agentic-systems/ki-subagents/SKILL.md`
-- `skills/agentic-systems/ki-subagents/references/standards-subagent-definitions.md`
+- `skills/agentic-systems/ki-subagents/references/standards-portable-subagents.md`
 - `skills/agentic-systems/ki-subagents/references/sources.md`
-- `skills/agentic-systems/ki-subagents/scripts/rubric/contexts/agents.ts`
+- `skills/agentic-systems/ki-subagents/scripts/rubric/contexts/portable.ts`
 - `skills/agentic-systems/ki-subagents/scripts/rubric/items/index.test.ts`
 - `evals/scenarios/ki-subagents.ts`
 - `docs/decisions/SDR-KI-HARNESS-002-runtime-portable-contracts-and-executor-positioning.md`
+- `docs/decisions/ADR-KI-HARNESS-AGENTS-002-portable-subagent-contract-and-runtime-adapters.md`

@@ -1,8 +1,8 @@
-# Proposed candidate clusters
+# Approved candidate clusters
 
-These clusters deduplicate Phase 3–6 findings into approval-sized routes. They do not approve or create roadmap work.
+These clusters deduplicate Phase 3–6 findings into approved routes. Approval authorises their dependency-ordered remediation, subject to the stated owner-decision gates.
 
-Before routing, the approved subset must retain canonical evidence, disposition, roadmap treatment, and owner/action fields.
+Each routed unit must retain canonical evidence, disposition, roadmap treatment, and owner/action fields.
 
 ## 1. Reconcile metadata, identity, and lifecycle ownership
 

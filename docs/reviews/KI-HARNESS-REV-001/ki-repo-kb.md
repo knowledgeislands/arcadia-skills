@@ -2,7 +2,7 @@
 
 - **Review state:** complete, ungraded
 - **Candidate disposition:** revise
-- **Change state:** review only; no Phase 4 remediation is authorised
+- **Change state:** approved Phase 4 remediation applied
 - **Identity:** position 31 of 50; governance; depends on `ki-repo-kb-activities` (28), `ki-repo-kb-live-artifacts` (29), and `ki-repo-kb-streams` (30); baseline `94f0b775903286fcf37c0ec050d5568672a5154f`; order valid
 
 ## Dependency and ownership
@@ -23,6 +23,10 @@ The checker permits an intermediate-symlink zone proposal while the publishing h
 2. Remove or explicitly migrate Focus, proposal, lifecycle-folder, and retired Stream-type guidance; validate the selected `kb-streams` adapter and resolved areas.
 3. Distinguish structural success from unverified cross-owner semantics and mechanically enforce the selected aggregate schema.
 4. Either make linked-zone conform executable through the publisher or fail closed before proposing it, with an end-to-end host test.
+
+## Applied changes
+
+Retired Focus/proposal claims were removed, aggregate YAML and configuration parsing now fails closed, and conform proposals do not follow symlinks. Aggregate success explicitly excludes unresolved universal metadata, adapter, and canonical-role policy.
 
 ## Carry-forward criteria
 

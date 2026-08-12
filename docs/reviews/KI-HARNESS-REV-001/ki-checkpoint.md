@@ -2,7 +2,7 @@
 
 - **Review state:** complete, ungraded
 - **Candidate disposition:** revise
-- **Change state:** review only; no Phase 3 remediation is authorised
+- **Change state:** approved local remediation applied; reconstruction outcome evidence remains unavailable
 - **Identity:** position 21 of 50; governance; no declared dependency; baseline `94f0b775903286fcf37c0ec050d5568672a5154f`; order valid
 
 ## Dependency and ownership
@@ -34,6 +34,10 @@ The source record's “Knowledge Islands checkpoint practice” is not a reprodu
 2. State plainly that RESUME, UPDATE, and RETIRE are agent procedures unless a host command is implemented.
 3. Replace the unlocatable house-practice citation with a reproducible decision, exemplar, or outcome trial.
 4. Test a fresh-agent reconstruction task before expanding the standing schema or automatic runtime integration.
+
+## Applied changes
+
+Focused fixtures now cover lifecycle, unsafe paths, schema failures, and session locators. RESUME, UPDATE, and RETIRE are explicitly agent procedures rather than host commands, and the unlocatable practice claim was removed. A real fresh-agent reconstruction trial is still required for outcome evidence.
 
 ## Carry-forward criteria
 

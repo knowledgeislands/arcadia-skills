@@ -2,7 +2,7 @@
 
 - **Review state:** complete, ungraded
 - **Candidate disposition:** revise
-- **Change state:** review only; no Phase 3 remediation is authorised
+- **Change state:** approved local remediation applied; KB metadata ownership remains awaiting reconciliation
 - **Identity:** position 18 of 50; governance; no declared dependency; baseline `94f0b775903286fcf37c0ec050d5568672a5154f`; order valid
 
 ## Dependency and ownership
@@ -39,6 +39,10 @@ The registered sources were last reviewed on 2026-07-04. Current checks of [Mich
 3. Validate index link targets and preserve the standard's ordered-list grammar during CONFORM.
 4. Replace the stale KB scenario with a current-contract fixture and record an executed host-level outcome evaluation.
 5. Publish and verify the house type URL targets, or classify them as internal, non-authoritative metadata.
+
+## Applied changes
+
+Discovery now covers all Decision-looking Markdown, ordered index entries validate their link targets, CONFORM preserves numbered entries, and adversarial fixtures cover malformed and unindexed records. `type_url` is explicitly non-authoritative house metadata. The `ki-repo-kb` frontmatter and `ki-repo` configuration-owner collision remains open.
 
 ## Carry-forward criterion
 

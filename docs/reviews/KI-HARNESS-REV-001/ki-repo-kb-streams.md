@@ -2,7 +2,7 @@
 
 - **Review state:** complete, ungraded
 - **Candidate disposition:** revise
-- **Change state:** review only; no Phase 4 remediation is authorised
+- **Change state:** approved Phase 4 remediation applied
 - **Identity:** position 30 of 50; governance; no declared dependency; baseline `94f0b775903286fcf37c0ec050d5568672a5154f`; order valid
 
 ## Dependency and ownership
@@ -24,6 +24,10 @@ The canonical on-change source was reviewed on 2026-08-09. Nine focused tests wi
 1. Give selected KB Streams area configuration one executable owner and reconcile it with the roadmap adapter and base selector.
 2. Replace the obsolete eval with current record, ledger, identity, and lifecycle scenarios.
 3. Strengthen gate validation and add selected-adapter, malformed-record, and filesystem-boundary fixtures.
+
+## Applied changes
+
+The checker rejects inert `areas` and retired configuration, consumes `process_note` as a contained regular-file binding, and uses the current flat Roadmap and Housekeeping layout. Selected-adapter execution remains outside this structural skill.
 
 ## Carry-forward criteria
 

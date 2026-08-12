@@ -1,12 +1,12 @@
 # Phase 4 synthesis
 
-Phase 4 reviewed all 14 repository-structure skills in dependency order. All propose `revise`; none is graded or remediated.
+Phase 4 reviewed all 14 repository-structure skills in dependency order. All approved local remediations are applied; unresolved metadata and identity choices remain owner-gated.
 
 ## Reconciled architecture
 
 - Narrow structure deltas remain useful when they add a distinct repository role, build, packaging, serving, or source-state contract.
 - Base structure, specialisation, aggregate, generated projection, hosting, and installed runtime are separate evidence layers.
-- KB aggregation currently composes child audits without reconciling their metadata and selected-adapter contracts.
+- KB aggregation now excludes unresolved metadata and selected-adapter contracts from aggregate success.
 - Website and Cloudflare serving, plugin projection and binding activation, tools and taps, and chezmoi source and rendered targets each need explicit producer-consumer evidence boundaries.
 
 ## Cross-cutting findings
@@ -22,4 +22,4 @@ Phase 4 reviewed all 14 repository-structure skills in dependency order. All pro
 
 ## Phase boundary decision
 
-Phase 5 may proceed in the existing dependency order. Binding reviews must distinguish canonical inventory from generated client projections and installed runtime state. Tokenomics reviews must distinguish configured attribution from actual context loading and measurement. No Phase 4 finding is applied before approval.
+Phase 5 may proceed in the existing dependency order. Binding reviews must distinguish canonical inventory from generated client projections and installed runtime state. Tokenomics reviews must distinguish configured attribution from actual context loading and measurement. Phase 4 changes are committed in `13d99a33`, `e7a53a2c`, and `5affff38`.

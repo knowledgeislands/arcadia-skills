@@ -2,7 +2,7 @@
 
 - **Review state:** complete, ungraded
 - **Candidate disposition:** revise
-- **Change state:** review only; no Phase 4 remediation is authorised
+- **Change state:** approved local remediation applied; runtime, security, and freshness evidence remain separate
 - **Identity:** position 37 of 50; governance; no declared dependency; baseline `94f0b775903286fcf37c0ec050d5568672a5154f`; order valid
 
 ## Dependency and ownership
@@ -23,6 +23,10 @@ The standard says every Harness skill is copied and agents come from `agents/gov
 2. Mechanically compare selected source manifests or hashes with the projection, or label freshness and reproducibility explicitly unverified.
 3. Define a scoped evidence handoff between source projection and binding-owned registered, enabled, and loaded runtime state.
 4. Refresh official platform rules and label one-plugin, MCP, and Cowork constraints as house/runtime-specific.
+
+## Applied changes
+
+Declaration now controls applicability and structural success is explicitly separate from generation freshness, byte identity, registration, enablement, and loaded runtime state. Negative fixtures protect undeclared and no-write behavior. Source selection and runtime projection remain adapter and binding concerns.
 
 ## Carry-forward criteria
 

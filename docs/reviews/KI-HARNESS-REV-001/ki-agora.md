@@ -2,7 +2,7 @@
 
 - **Review state:** complete, ungraded
 - **Candidate disposition:** revise
-- **Change state:** review only; no Phase 3 remediation is authorised
+- **Change state:** approved local remediation applied
 - **Identity:** position 24 of 50; governance; no declared dependency; baseline `94f0b775903286fcf37c0ec050d5568672a5154f`; order valid
 
 ## Dependency and ownership
@@ -27,6 +27,10 @@ Material gaps remain:
 1. Reconcile the target-policy field set across GDR, standard, examples, catalogue, publication, checker, and migration evidence.
 2. Add disposable multi-repository host fixtures for every agreement and non-agreement state.
 3. After schema ownership is settled, make unknown-field handling match the promised closed contract.
+
+## Applied changes
+
+The schema now rejects unknown home and membership fields, and local declaration shape is explicitly not evidence of reciprocal consent. The governing Decision Record now leaves target selection to an explicit local host choice instead of naming a nonexistent portable target-policy table.
 
 ## Carry-forward criteria
 

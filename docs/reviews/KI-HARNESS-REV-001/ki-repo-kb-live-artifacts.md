@@ -2,7 +2,7 @@
 
 - **Review state:** complete, ungraded
 - **Candidate disposition:** revise
-- **Change state:** review only; no Phase 4 remediation is authorised
+- **Change state:** approved Phase 4 remediation applied
 - **Identity:** position 29 of 50; governance; no declared dependency; baseline `94f0b775903286fcf37c0ec050d5568672a5154f`; order valid
 
 ## Dependency and ownership
@@ -22,6 +22,10 @@ The current evidence therefore establishes conservative mechanics, not usefulnes
 1. Reconcile identity, frontmatter, link form, and zone rules with the aggregate KB owner, followed by a current-estate migration.
 2. Fail closed on invalid configuration and replace handwritten semantic parsing with format-aware validation.
 3. Add a real source/render pair baseline covering creation, drift, unsafe links, nested paths, and no-delete behavior.
+
+## Applied changes
+
+Malformed configuration and symlink traversal now fail closed, and the aggregate no longer derives repair paths from unsafe configuration. Pairing and outcome-quality evidence remain separate from structural conformance.
 
 ## Carry-forward criteria
 

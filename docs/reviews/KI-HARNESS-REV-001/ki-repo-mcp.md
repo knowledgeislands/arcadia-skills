@@ -2,7 +2,7 @@
 
 - **Review state:** complete, ungraded
 - **Candidate disposition:** revise
-- **Change state:** review only; no Phase 4 remediation is authorised
+- **Change state:** approved local remediation applied; runtime, security, and freshness evidence remain separate
 - **Identity:** position 34 of 50; governance; no declared dependency; baseline `94f0b775903286fcf37c0ec050d5568672a5154f`; order valid
 
 ## Dependency and ownership
@@ -23,6 +23,10 @@ A clean result does not establish dependency injection, no singleton, config-fir
 2. Add bounded per-tool fixtures for gated registration, annotation use, schema/result pairing, bypass attempts, and representative failure envelopes.
 3. Keep dynamic security judgment explicit, and do not present structural success as protocol, binding, reachability, or safety evidence.
 4. Decide whether report-only runtime detail should become concise routing to binding-owned references, without changing ownership during this review.
+
+## Applied changes
+
+Declaration now controls applicability, source-structure findings exclude binding, activation, reachability, and security outcomes, and `TOOL-1` checks result-helper evidence within each source file instead of across the whole repository. An adversarial cross-file schema fixture protects the corrected boundary.
 
 ## Carry-forward criteria
 

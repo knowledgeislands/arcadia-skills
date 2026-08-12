@@ -2,7 +2,7 @@
 
 - **Review state:** complete, ungraded
 - **Candidate disposition:** revise
-- **Change state:** review only; no Phase 4 remediation is authorised
+- **Change state:** approved Phase 4 remediation applied
 - **Identity:** position 35 of 50; governance; no declared dependency; baseline `94f0b775903286fcf37c0ec050d5568672a5154f`; order valid
 
 ## Dependency and ownership
@@ -23,6 +23,10 @@ The standard and checker require `site/` from day one with `site/dist`, while th
 2. Assign `assets.directory` to one parent/child owner and compose the other layer's evidence without duplicate validation.
 3. Select one portable runtime policy with `ki-engineering`, align the estate, and test accepted and refused runners.
 4. Enforce stated versions/dependencies or narrow the published criteria, and add explicit build/generated-output evidence.
+
+## Applied changes
+
+Repository declaration now controls applicability, the source contract permits modern Node, and static checks use exact Eleventy 3 declaration evidence. Cloudflare hosting configuration is routed to its adapter rather than duplicated here.
 
 ## Carry-forward criteria
 

@@ -1,13 +1,13 @@
 # Phase 3 synthesis
 
-Phase 3 reviewed all nine portable-governance and agent-system skills in dependency order. Eight propose `revise`; `ki-communication` proposes `retire`. All remain ungraded, and no Phase 3 remediation is authorised.
+Phase 3 reviewed all nine baseline portable-governance and agent-system skills in dependency order. The approved locally owned repairs and portable subagent split are applied, and `ki-communication` is retired.
 
 ## Reconciled architecture
 
 - Decision Records, Specifications, guides, checkpoints, typed trades, Agora declarations, and Claude subagent source quality retain distinct useful outcomes.
 - `ki-trade` remains the executable process consumer of `ki-trades`, but its host must implement the safety boundaries the process claims.
-- `ki-subagents` is presently a Claude source-payload standard, not evidence of a portable or installed-runtime contract.
-- `ki-communication` has no distinct executable governance delivery shape and repeats the empty-indirection problem identified in Phase 0.
+- `ki-subagents` is a portable semantic parent with separate Claude Code and Codex source adapters; host publication remains a separate unavailable capability.
+- `ki-communication` had no distinct executable governance delivery shape and repeated the empty-indirection problem identified in Phase 0; its approved retirement is applied.
 
 ## Cross-cutting findings
 
@@ -20,4 +20,4 @@ Phase 3 reviewed all nine portable-governance and agent-system skills in depende
 
 ## Phase boundary decision
 
-Phase 4 may proceed in the existing order. Its `ki-repo-kb` review must reconcile the Decision Record frontmatter collision. Repository and registry reviews must backcheck non-default trade identity. Structure reviews must distinguish their local source shape from host and runtime outcomes. No Phase 3 finding is applied before approval.
+Phase 4 may proceed in the existing order. Its `ki-repo-kb` remediation must reconcile the Decision Record frontmatter collision. Repository and registry remediation must backcheck non-default trade identity. Structure changes must distinguish local source shape from host and runtime outcomes.

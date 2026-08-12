@@ -2,7 +2,7 @@
 
 - **Review state:** complete, ungraded
 - **Candidate disposition:** revise
-- **Change state:** review only; no Phase 4 remediation is authorised
+- **Change state:** approved local remediation applied; runtime, security, and freshness evidence remain separate
 - **Identity:** position 33 of 50; governance; no declared dependency; baseline `94f0b775903286fcf37c0ec050d5568672a5154f`; order valid
 
 ## Dependency and ownership
@@ -22,6 +22,10 @@ The sole behavioral test covers a normal idempotent marker proposal. It omits ma
 1. Add host-visible negative fixtures for malformed configuration, symlinks, unknown keys, missing seams, severity, and no-write behavior.
 2. Record dated longitudinal estate evidence for each governed seam or narrow the stability claim.
 3. Add an assisted-versus-baseline structural-drift evaluation before treating the clean audit as outcome evidence.
+
+## Applied changes
+
+Repository declaration now determines applicability, while detected structure is reported only as `ki-repo` coverage evidence. Structural findings no longer imply temporal stability or runtime behavior, and negative fixtures cover undeclared and no-write paths. Longitudinal outcome evidence remains unavailable.
 
 ## Carry-forward criteria
 

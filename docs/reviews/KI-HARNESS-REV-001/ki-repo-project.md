@@ -2,7 +2,7 @@
 
 - **Review state:** complete, ungraded
 - **Candidate disposition:** revise
-- **Change state:** review only; no Phase 4 remediation is authorised
+- **Change state:** approved Phase 4 remediation applied
 - **Identity:** position 27 of 50; governance; no declared dependency; baseline `94f0b775903286fcf37c0ec050d5568672a5154f`; order valid
 
 ## Dependency and ownership
@@ -22,6 +22,10 @@ The source decision is explicit and current-on-change: the Project contract is H
 1. Retain only a distinct Project educational, activation, or migration delta; route shared primary-kind cardinality to `ki-repo`.
 2. Validate the claimed selected change-management adapter through its owning contract, without reimplementing adapter resolution.
 3. Add negative fixtures and an outcome scenario for actual Project activation or narrow the capability claim to the demonstrated structural marker.
+
+## Applied changes
+
+The duplicated primary-kind checker was removed. `ki-repo` remains the primary-structure owner and `ki-change-management` remains the forward-work selector; this skill now explains only the Project baseline delta.
 
 ## Carry-forward criteria
 

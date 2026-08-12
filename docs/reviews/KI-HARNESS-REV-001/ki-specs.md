@@ -2,7 +2,7 @@
 
 - **Review state:** complete, ungraded
 - **Candidate disposition:** revise
-- **Change state:** review only; no Phase 3 remediation is authorised
+- **Change state:** approved local remediation applied; serial scope and applicability remain awaiting policy
 - **Identity:** position 19 of 50; governance; no declared dependency; baseline `94f0b775903286fcf37c0ec050d5568672a5154f`; order valid
 
 ## Dependency and ownership
@@ -41,6 +41,10 @@ The source record incorrectly presents RFC 2119 alone as BCP 14 and does not giv
 2. Reconcile serial scope and applicability policy once, then align SKILL, modes, standard, exemplar, catalogue, tests, publication, evals, and host behaviour without parallel interpretations.
 3. Register RFC 2119 plus RFC 8174 as the primary BCP 14 pair and align the keyword list.
 4. Give the supporting reference corpus a stable URL and immutable sampled revision, or remove/demote it.
+
+## Applied changes
+
+Requirement parsing now uses bounded envelopes, duplicate prefix owners fail closed, malformed or missing `_Verify:` evidence has explicit severity, and RFC authority is corrected. The serial sequence scope and declared-activation versus incidental-discovery applicability remain unresolved owner choices.
 
 ## Carry-forward criteria
 

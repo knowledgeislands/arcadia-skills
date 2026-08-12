@@ -2,7 +2,7 @@
 
 - **Review state:** complete, ungraded
 - **Candidate disposition:** revise
-- **Change state:** review only; no Phase 4 remediation is authorised
+- **Change state:** approved Phase 4 remediation applied
 - **Identity:** position 39 of 50; governance; no declared dependency; baseline `94f0b775903286fcf37c0ec050d5568672a5154f`; order valid
 
 ## Dependency and ownership
@@ -23,6 +23,10 @@ The checker does not prove filename-to-class identity, executable formula DSL pl
 2. Align meaningful-test guidance and fixtures with a basic functional assertion or narrow the claim.
 3. Replace text signatures with structured evidence for class identity, DSL, immutable release coordinates, and README registration.
 4. Reconcile unavailable-Homebrew semantics, correct the part count, and add Tap Trust to current primary sources.
+
+## Applied changes
+
+Read-only audit no longer invokes Homebrew or inspects active taps. Package-manager validation is an explicit external diagnostic, and static source evidence remains separate from installation, formula execution, and fleet outcomes.
 
 ## Carry-forward criteria
 

@@ -2,7 +2,7 @@
 
 - **Review state:** complete, ungraded
 - **Candidate disposition:** revise
-- **Change state:** review only; no Phase 3 remediation is authorised
+- **Change state:** approved local remediation applied; host and selected-adapter capabilities remain unavailable
 - **Identity:** position 22 of 50; governance; no declared dependency; baseline `94f0b775903286fcf37c0ec050d5568672a5154f`; order valid
 
 ## Dependency and ownership
@@ -32,6 +32,10 @@ The internal GDR and `ki-repo` registry contract are the house authorities. GitH
 2. Reconcile non-default HTTPS identities across `ki-repo`, configuration, record paths, and peer projection before claiming portability.
 3. Validate Git object/reference integrity before calling a reference verified, or narrow the claim to syntax.
 4. Add end-to-end two-repository and negative lifecycle evidence.
+
+## Applied changes
+
+The executable contract now rejects identities its GitHub-only registry and path grammar cannot represent, treats adopted-completion release and pruning as unavailable without selected-adapter owner-valid evidence, and limits commit fields to syntax locators rather than verified Git objects. Non-GitHub portability and completion resolution remain owner and host work.
 
 ## Carry-forward criteria
 

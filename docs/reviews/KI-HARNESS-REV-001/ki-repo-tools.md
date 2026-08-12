@@ -2,7 +2,7 @@
 
 - **Review state:** complete, ungraded
 - **Candidate disposition:** revise
-- **Change state:** review only; no Phase 4 remediation is authorised
+- **Change state:** approved Phase 4 remediation applied
 - **Identity:** position 38 of 50; governance; no declared dependency; baseline `94f0b775903286fcf37c0ec050d5568672a5154f`; order valid
 
 ## Dependency and ownership
@@ -23,6 +23,10 @@ Nine tests, publication sync, type-checking, and focused audits of `tools-mgit` 
 2. Assign one owner for resolved package/engineering activation or narrow the public claim to judgment-only.
 3. Define and mechanically enforce release-baseline alignment, failing closed when local or remote evidence is unavailable.
 4. Refresh source attribution and current estate observations, and parse deterministic naming/workflow evidence rather than scanning text.
+
+## Applied changes
+
+Read-only audit no longer executes target binaries. Version execution is an explicit opt-in diagnostic, while static checks now require the exact primary name and align local package and changelog release markers. Runtime behavior remains unavailable without isolated authorization.
 
 ## Carry-forward criteria
 

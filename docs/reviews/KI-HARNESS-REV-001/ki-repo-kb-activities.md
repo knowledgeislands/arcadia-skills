@@ -2,7 +2,7 @@
 
 - **Review state:** complete, ungraded
 - **Candidate disposition:** revise
-- **Change state:** review only; no Phase 4 remediation is authorised
+- **Change state:** approved Phase 4 remediation applied
 - **Identity:** position 28 of 50; governance; no declared dependency; baseline `94f0b775903286fcf37c0ec050d5568672a5154f`; order valid
 
 ## Dependency and ownership
@@ -22,6 +22,10 @@ The Harness itself does not declare this skill, so focused host evidence comes f
 1. Reconcile Activities with the aggregate KB frontmatter owner, then migrate standards, estate records, fixtures, and checker together.
 2. Refresh the source record against the present adopted estate.
 3. Parse actual Markdown links for index coverage and add false-positive fixtures for prose, code, malformed frontmatter, and unsafe paths.
+
+## Applied changes
+
+Activity frontmatter now uses semantic YAML parsing, and index coverage requires real Markdown link targets rather than filename text in prose or code. Malformed YAML, lookalikes, and symlinked collection paths fail closed. The KB-wide `type` schema remains owner-gated.
 
 ## Carry-forward criteria
 
