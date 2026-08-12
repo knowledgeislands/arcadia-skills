@@ -302,6 +302,45 @@ The immutable baseline is `94f0b775903286fcf37c0ec050d5568672a5154f`. Changes to
 - **Return:** One compact ungraded review, direct source links, candidate findings in the canonical shape, and explicit implications for Round 5; no raw command or browsing transcript.
 - **Checkpoint:** Return after the base change-management review is complete or when an ordering, source-authority, or normative conflict requires coordinator reconciliation.
 
+### Worker: review-ki-change-management-roadmap
+
+- **Deliverable:** A read-only effectiveness review of `ki-change-management-roadmap`, explicitly testing its concrete lifecycle and local-record ownership against the reviewed base selector.
+- **Inputs:** The complete roadmap-adapter directory, relevant decisions, tests and eval evidence, the base-selector review, and this item's protocol.
+- **Files:** None; read-only review.
+- **Authority:** Inspect repository evidence, run read-only checks, and browse declared sources; do not edit, grade, prune, or create work records.
+- **Isolation:** Read-only lane scoped to the roadmap adapter and its directly relevant evidence; do not review process consumers in place.
+- **Definition of done:** Every protocol dimension has evidence or a gap, sources are refreshed, concrete lifecycle ownership and adapter resolution are assessed, and one disposition is proposed.
+- **Model:** reasoning — record semantics, safe mutation, and lifecycle ownership require hard judgment.
+- **Verify:** Coordinator reruns focused checks, samples fixtures and scenarios, reads cited contracts, and validates ownership conclusions.
+- **Return:** One compact ungraded review, direct sources, canonical candidate findings, and implications for later process reviews; no raw transcript.
+- **Checkpoint:** Return after one complete adapter review or when a source, dependency, or ownership conflict requires reconciliation.
+
+### Worker: review-ki-change-management-github-issues
+
+- **Deliverable:** A read-only effectiveness review of `ki-change-management-github-issues` against current GitHub issue identity, lifecycle, dependency, metadata, and remote-write semantics.
+- **Inputs:** The complete GitHub Issues adapter directory, relevant tests and eval evidence, the base-selector review, and this item's protocol.
+- **Files:** None; read-only review.
+- **Authority:** Inspect repository evidence, run read-only checks, and browse official GitHub sources; make no GitHub or repository writes and do not grade or create follow-up work.
+- **Isolation:** Read-only lane scoped to the GitHub Issues adapter and directly relevant official evidence.
+- **Definition of done:** Every protocol dimension has evidence or a gap, all source claims are current, native GitHub features are reconciled with the KI mapping, and one disposition is proposed.
+- **Model:** reasoning — remote identity, workflow mapping, and authority boundaries require hard judgment.
+- **Verify:** Coordinator reruns focused checks, reopens official sources, samples implementation evidence, and validates the proposed mapping and disposition.
+- **Return:** One compact ungraded review, direct official links, canonical candidate findings, and unresolved mapping or authority questions; no browsing transcript.
+- **Checkpoint:** Return after one complete adapter review or at the first material source-authority conflict.
+
+### Worker: review-ki-change-management-linear
+
+- **Deliverable:** A read-only effectiveness review of `ki-change-management-linear` that resolves the known conflict between team-scoped identity claims and current cross-team move behavior.
+- **Inputs:** The complete Linear adapter directory, relevant tests and eval evidence, the base-selector review, current official workflow and issue-editing documentation, and this item's protocol.
+- **Files:** None; read-only review.
+- **Authority:** Inspect repository evidence, run read-only checks, and browse official Linear sources; make no Linear or repository writes and do not grade or create follow-up work.
+- **Isolation:** Read-only lane scoped to the Linear adapter and directly relevant official evidence.
+- **Definition of done:** Every protocol dimension has evidence or a gap, identifier stability and lifecycle translation are reconciled, authority boundaries are assessed, and one disposition is proposed.
+- **Model:** reasoning — the known source conflict affects record identity and lifecycle correctness.
+- **Verify:** Coordinator reruns focused checks, reopens official sources, samples implementation evidence, and independently tests the identity conclusion.
+- **Return:** One compact ungraded review, direct official links, canonical candidate findings, and any remaining identity or migration uncertainty; no browsing transcript.
+- **Checkpoint:** Return after one complete adapter review or sooner if no stable canonical reference can be established from current authority.
+
 ## Discussion
 
 ### Why this is a new area
