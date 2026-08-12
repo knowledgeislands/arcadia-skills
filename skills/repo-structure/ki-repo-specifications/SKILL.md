@@ -38,13 +38,13 @@ ki-repo-specifications/
 ### Mode AUDIT
 
 1. Run `ki repo audit --repo <repo> --skill ki-repo-specifications` and capture its findings.
-2. Confirm the repository declares `[skills.ki-repo-specifications]` and retains the seven top-level areas without judging their evolving internal contents.
+2. Confirm the repository declares `[skills.ki-repo-specifications]`; only that declaration selects this optional standard. The structural audit then observes the seven top-level areas without judging their evolving internal contents, freshness, or outcomes.
 3. Apply the judgment criteria in [the rubric](references/rubric.md), especially whether a proposed new invariant is mature enough to belong here.
 
 ### Mode CONFORM
 
 1. Run AUDIT first.
-2. Run `ki repo conform --repo <repo> --skill ki-repo-specifications` to add the keyless marker when `.ki-config.toml` exists.
+2. The selected repository declaration is owned by `ki-repo`; this structural skill does not add it. Resolve a missing declaration through the repository configuration owner before running this standard.
 3. Create a missing top-level area only after confirming its intended contents; an empty directory cannot be governed by git, so the conformer does not manufacture placeholders.
 4. Re-run AUDIT.
 
