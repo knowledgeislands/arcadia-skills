@@ -185,6 +185,8 @@ The immutable baseline is `94f0b775903286fcf37c0ec050d5568672a5154f`. Changes to
 - Round 4: `review-ki-change-management` begins only after the coordinator records the Phase 1 synthesis. It establishes the base adapter and lifecycle boundary before the remaining change-management skills.
 - Round 5: the roadmap, GitHub Issues, and Linear adapter reviews may begin after `ki-change-management` is integrated, subject to any ownership or ordering change found in Round 4.
 - Round 6: `review-ki-change-management-housekeeping`, `review-ki-recap`, and `review-ki-next` may run independently after the adapter findings are integrated; later process reviews wait for their synthesis.
+- Round 7: `review-ki-plan`, `review-ki-batch`, and `review-ki-implement` may run after Round 6 is integrated; each must test selected-adapter resolution and must not assume the current local-only path is complete.
+- Round 8: `review-ki-accept` begins only after the coordinator integrates Round 7 because it owns closure and is named by the unresolved housekeeping completion contract.
 
 ### Worker: refresh-ki-skills-sources
 
@@ -380,6 +382,58 @@ The immutable baseline is `94f0b775903286fcf37c0ec050d5568672a5154f`. Changes to
 - **Verify:** Coordinator reruns focused tests, checks cited contracts and code paths, and validates selection and authority conclusions.
 - **Return:** One compact ungraded review, canonical candidates, and implications for `ki-plan` and later processes; no selected work or mutation.
 - **Checkpoint:** Return after the complete review or when a priority, adapter, trade, or spawn authority conflict requires reconciliation.
+
+### Worker: review-ki-plan
+
+- **Deliverable:** A read-only effectiveness review of `ki-plan`, covering in-place readiness shaping, approval, adapter resolution, and plan/runtime boundaries.
+- **Inputs:** The complete planning skill, tests and eval evidence, completed selector/adapter/next reviews, and this item's protocol.
+- **Files:** None; read-only review.
+- **Authority:** Inspect and run read-only checks only; do not shape or approve any work record, grade, or remediate.
+- **Isolation:** Read-only lane scoped to `ki-plan` and directly relevant adapter evidence.
+- **Definition of done:** Every protocol dimension has evidence or a gap, readiness and adapter behavior are tested, and one disposition is proposed.
+- **Model:** reasoning — readiness, approval, and runtime-plan separation require judgment.
+- **Verify:** Coordinator reruns focused checks, reads cited contracts, and validates adapter and authority conclusions.
+- **Return:** One compact ungraded review, canonical candidates, and later-process implications; no record mutation.
+- **Checkpoint:** Return after the complete review or at a material readiness, adapter, or authority conflict.
+
+### Worker: review-ki-batch
+
+- **Deliverable:** A read-only effectiveness review of `ki-batch`, including authorisation, independence, delegation, adapter resolution, and stop behavior.
+- **Inputs:** The complete batch skill, helper/tests/evals, completed selection and delegation reviews, and this item's protocol.
+- **Files:** None; read-only review.
+- **Authority:** Inspect and run read-only checks only; do not prepare or run a batch, grade, or remediate.
+- **Isolation:** Read-only lane scoped to batch behavior and directly relevant selection/delegation/adapter evidence.
+- **Definition of done:** Every protocol dimension has evidence or a gap, authority and failure stops are assessed, and one disposition is proposed.
+- **Model:** reasoning — batch authority, independence, and multi-record safety interact.
+- **Verify:** Coordinator reruns focused tests, checks cited contracts, and validates authority and adapter conclusions.
+- **Return:** One compact ungraded review, canonical candidates, and implementation implications; no batch execution.
+- **Checkpoint:** Return after the complete review or at a material authorisation, adapter, or isolation conflict.
+
+### Worker: review-ki-implement
+
+- **Deliverable:** A read-only effectiveness review of `ki-implement`, covering immutable baseline, lifecycle transition, delegation, verification, review packet, and adapter resolution.
+- **Inputs:** The complete implementation skill, tests and eval evidence, completed adapter/delegation/next reviews, and this item's protocol.
+- **Files:** None; read-only review.
+- **Authority:** Inspect and run read-only checks only; do not implement or transition any work record, grade, or remediate.
+- **Isolation:** Read-only lane scoped to implementation behavior and directly relevant lifecycle/delegation/adapter evidence.
+- **Definition of done:** Every protocol dimension has evidence or a gap, execution and stop boundaries are tested, and one disposition is proposed.
+- **Model:** reasoning — this is the highest-authority delivery path before closure.
+- **Verify:** Coordinator reruns focused tests, checks cited contracts, and validates lifecycle, delegation, and adapter conclusions.
+- **Return:** One compact ungraded review, canonical candidates, and acceptance implications; no implementation.
+- **Checkpoint:** Return after the complete review or at a material lifecycle, adapter, delegation, or verification conflict.
+
+### Worker: review-ki-accept
+
+- **Deliverable:** A read-only effectiveness review of `ki-accept`, including review authority, closure, retention, destructive pruning, adapter resolution, and housekeeping completion evidence.
+- **Inputs:** The complete acceptance skill, tests and eval evidence, all earlier Phase 2 reviews, and this item's protocol.
+- **Files:** None; read-only review.
+- **Authority:** Inspect and run read-only checks only; do not accept, close, prune, delete, grade, or remediate any record.
+- **Isolation:** Read-only lane scoped to acceptance and directly relevant lifecycle, adapter, and housekeeping evidence.
+- **Definition of done:** Every protocol dimension has evidence or a gap, closure/prune authority and housekeeping ownership are reconciled, and one disposition is proposed.
+- **Model:** reasoning — human acceptance and deletion authority are safety-critical.
+- **Verify:** Coordinator reruns focused tests, checks cited contracts, and validates every authority, deletion, and adapter conclusion.
+- **Return:** One compact ungraded review, canonical candidates, and Phase 2 boundary implications; no lifecycle mutation.
+- **Checkpoint:** Return after the complete review or at a material closure, deletion, adapter, or housekeeping conflict.
 
 ## Discussion
 
