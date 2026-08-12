@@ -9,6 +9,8 @@ This terminal check reconciles the 50 ungraded skill records against the complet
 - Positions 1–17 record approved applied changes. Positions 18–50 remain review-only.
 - Proposed dispositions are 49 `revise` and one `retire`; these remain recommendations.
 - All review Markdown and progress links pass the house formatter and link-target checks used by this review.
+- The final `ki-skills` host audit has no failures and one known source-cadence warning: its quarterly source record lacks a machine-readable `Last reviewed` date.
+- The final TypeScript gate passes.
 
 ## Evidence calibration
 

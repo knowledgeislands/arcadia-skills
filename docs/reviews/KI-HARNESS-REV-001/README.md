@@ -4,6 +4,8 @@ This directory records the ungraded evidence for [KI-HARNESS-REV-001](../../road
 
 - **Immutable baseline:** `94f0b775903286fcf37c0ec050d5568672a5154f`
 - **Inventory:** [50-skill baseline](inventory.md)
+- **Approval matrix:** [proposed grades and dispositions](approval-matrix.md)
+- **Candidate routes:** [proposed deduplicated clusters](candidate-clusters.md)
 - **Standing-guidance review:** recorded in the roadmap item
 - **Grading:** not assigned; the vocabulary and final grades remain an approval gate
 - **Remediation:** Phase 1 and Phase 2 proposals were approved on 2026-08-12; each skill record distinguishes applied work from remaining gaps
