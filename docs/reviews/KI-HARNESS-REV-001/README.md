@@ -81,7 +81,10 @@ Phase 0 and dependency ordering are complete. Phase 1 and Phase 2 review and rem
 | 29 | [`ki-repo-kb-live-artifacts`](ki-repo-kb-live-artifacts.md) | complete | review only | —          |
 | 30 | [`ki-repo-kb-streams`](ki-repo-kb-streams.md) | complete | review only  | —          |
 | 31 | [`ki-repo-kb`](ki-repo-kb.md)                 | complete | review only  | —          |
+| 32 | [`ki-repo-kb-principal`](ki-repo-kb-principal.md) | complete | review only | —          |
 | 33 | [`ki-repo-specifications`](ki-repo-specifications.md) | complete | review only | —          |
+| 34 | [`ki-repo-mcp`](ki-repo-mcp.md)               | complete | review only  | —          |
+| 35 | [`ki-repo-website`](ki-repo-website.md)       | complete | review only  | —          |
 
 The [Phase 1 synthesis](phase-1-synthesis.md) and [Phase 2 synthesis](phase-2-synthesis.md) retain cross-skill conclusions. Detailed applied changes and remaining gaps live only in each skill record.
 
