@@ -97,9 +97,11 @@ Phase 0 and dependency ordering are complete. Phase 1 and Phase 2 review and rem
 | 40 | [`ki-repo-dotfiles-chezmoi`](ki-repo-dotfiles-chezmoi.md) | complete | review only | —          |
 | 41 | [`ki-binding`](ki-binding.md)                 | complete | review only  | —          |
 | 42 | [`ki-binding-claude`](ki-binding-claude.md)   | complete | review only  | —          |
+| 43 | [`ki-binding-codex`](ki-binding-codex.md)     | complete | review only  | —          |
 | 44 | [`ki-binding-chezmoi`](ki-binding-chezmoi.md) | complete | review only  | —          |
 | 45 | [`ki-housekeeping-claude`](ki-housekeeping-claude.md) | complete | review only | —          |
 | 46 | [`ki-tokenomics`](ki-tokenomics.md)           | complete | review only  | —          |
+| 47 | [`ki-tokenomics-claude`](ki-tokenomics-claude.md) | complete | review only | —          |
 
 The [Phase 1 synthesis](phase-1-synthesis.md), [Phase 2 synthesis](phase-2-synthesis.md), [Phase 3 synthesis](phase-3-synthesis.md), and [Phase 4 synthesis](phase-4-synthesis.md) retain cross-skill conclusions. Detailed applied changes and remaining gaps live only in each skill record.
 
