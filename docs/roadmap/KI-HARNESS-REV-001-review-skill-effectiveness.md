@@ -200,6 +200,13 @@ The immutable baseline is `94f0b775903286fcf37c0ec050d5568672a5154f`. Changes to
 - Round 11: after the coordinator reconciles Round 10 contracts, `remediate-next-plan` and `remediate-batch-implement` apply the process improvements against the resolved adapter, housekeeping, batch, and review-packet boundaries.
 - Round 12: `remediate-accept` begins after Rounds 10 and 11 are integrated because acceptance owns closure, pruning, batch-closure validation, and housekeeping completion.
 - Round 13: the coordinator performs cross-skill integration, host-visible negative-path verification, publication parity, whole-repository gates, evidence updates, and explicit-path commits. It does not assign grades or close this 50-skill review.
+- Round 14: after Phase 2 remediation is integrated, the rolling review pool processes `ki-decision-records`, `ki-specs`, `ki-guides`, `ki-checkpoint`, `ki-trades`, `ki-agora`, and `ki-subagents`; `ki-trade` waits for `ki-trades`, while `ki-communication` may enter any free slot because it has no declared dependency.
+- Round 15: `ki-trade` runs after `ki-trades`; the coordinator then writes the Phase 3 synthesis, adds only new generalised calibration checks, and reconciles ownership or ordering before Phase 4.
+- Round 16: the rolling pool processes `ki-repo-project`, `ki-repo-kb-activities`, `ki-repo-kb-live-artifacts`, `ki-repo-kb-streams`, `ki-repo-specifications`, `ki-repo-mcp`, `ki-repo-website`, `ki-repo-plugins`, `ki-repo-tools`, `ki-repo-homebrew-tap`, and `ki-repo-dotfiles-chezmoi` in numbered order as slots free.
+- Round 17: `ki-repo-kb` runs after its three declared KB dependencies; `ki-repo-kb-principal` then runs after `ki-repo-kb` and the earlier `ki-decision-records`; `ki-repo-website-cloudflare` runs after `ki-repo-website`. The coordinator writes the Phase 4 synthesis before Phase 5.
+- Round 18: `ki-binding` and `ki-tokenomics` run first; `ki-housekeeping-claude` may run alongside them. After `ki-binding`, the rolling pool processes `ki-binding-claude`, `ki-binding-codex`, and `ki-binding-chezmoi`; after `ki-tokenomics`, it processes `ki-tokenomics-claude` and `ki-tokenomics-codex`.
+- Round 19: the coordinator writes the Phase 5 synthesis, then reviews `ki-repo-harness` after all of its dependencies and `ki-bootstrap` last. It writes the Phase 6 synthesis and complete 50-skill coverage account without grading or remediating the newly reviewed skills.
+- Round 20: the coordinator applies the completed cumulative calibration checklist back across all 50 records, reruns whole-set collision/dependency/evidence checks, and presents the ungraded disposition matrix and newly proposed remediations for approval.
 
 ### Worker: refresh-ki-skills-sources
 
@@ -564,6 +571,45 @@ The immutable baseline is `94f0b775903286fcf37c0ec050d5568672a5154f`. Changes to
 - **Verify:** Coordinator reviews every destructive boundary and runs focused disposable-fixture tests plus integrated contract checks before committing.
 - **Return:** Concise changed-file summary, closure/prune/housekeeping decisions, commands and results, and any remaining authority limitation.
 - **Checkpoint:** Return after acceptance agrees with every integrated producer or immediately on an unresolved destructive or closure-authority boundary.
+
+### Worker: review-remaining-a
+
+- **Deliverable:** One complete ungraded effectiveness review for the single coordinator-assigned eligible skill from Phases 3–6; accept the next assignment only after the coordinator verifies and integrates the previous return.
+- **Inputs:** The named skill root, immutable baseline, current integrated tree, its exact review position and dependency records, relevant decisions/sources/tests/evals, common record, cumulative calibration checklist, and current phase findings supplied in the dispatch.
+- **Scope:** Read-only inspection of the named skill, directly relevant repository decisions and implementation, its exact-name eval evidence, and current official or primary sources; no other skill is reviewed in its place.
+- **Authority:** Read named local evidence, run read-only checks, and browse official or primary sources; do not edit, stage, commit, grade, remediate, create work, mutate external systems, or infer missing evidence as a pass.
+- **Isolation:** One cold-agent, one-skill read-only lane. Stop before reading or changing an overlapping active worker scope except for coordinator-supplied dependency evidence.
+- **Definition of done:** The returned record covers identity/dependencies, current sources, exact mechanics, rubric-to-host traceability, selection and outcome value, instruction economy, ownership, executability/safety, tests/evals, cumulative calibration, explicit gaps, one disposition, and deduplicated candidate findings.
+- **Model:** reasoning — cross-source effectiveness, ownership, and counterfactual value require hard judgment.
+- **Verify:** Coordinator reruns exact checks, reopens material sources, checks every cited path and inference, reconciles dependency/ownership effects, and writes the durable record and phase synthesis.
+- **Return:** Compact review record ready for the common template, direct source links, exact commands/results, facts versus inferences/gaps, one proposed disposition, new generalised checks, and candidate routes; no raw transcript.
+- **Checkpoint:** Return after the assigned skill is complete or immediately on a source conflict, ownership/dependency change, unsafe command, missing authority, or conclusion requiring another skill's unresolved evidence.
+
+### Worker: review-remaining-b
+
+- **Deliverable:** One complete ungraded effectiveness review for the single coordinator-assigned eligible skill from Phases 3–6; accept the next assignment only after the coordinator verifies and integrates the previous return.
+- **Inputs:** The named skill root, immutable baseline, current integrated tree, its exact review position and dependency records, relevant decisions/sources/tests/evals, common record, cumulative calibration checklist, and current phase findings supplied in the dispatch.
+- **Scope:** Read-only inspection of the named skill, directly relevant repository decisions and implementation, its exact-name eval evidence, and current official or primary sources; no other skill is reviewed in its place.
+- **Authority:** Read named local evidence, run read-only checks, and browse official or primary sources; do not edit, stage, commit, grade, remediate, create work, mutate external systems, or infer missing evidence as a pass.
+- **Isolation:** One cold-agent, one-skill read-only lane. Stop before reading or changing an overlapping active worker scope except for coordinator-supplied dependency evidence.
+- **Definition of done:** The returned record covers identity/dependencies, current sources, exact mechanics, rubric-to-host traceability, selection and outcome value, instruction economy, ownership, executability/safety, tests/evals, cumulative calibration, explicit gaps, one disposition, and deduplicated candidate findings.
+- **Model:** reasoning — cross-source effectiveness, ownership, and counterfactual value require hard judgment.
+- **Verify:** Coordinator reruns exact checks, reopens material sources, checks every cited path and inference, reconciles dependency/ownership effects, and writes the durable record and phase synthesis.
+- **Return:** Compact review record ready for the common template, direct source links, exact commands/results, facts versus inferences/gaps, one proposed disposition, new generalised checks, and candidate routes; no raw transcript.
+- **Checkpoint:** Return after the assigned skill is complete or immediately on a source conflict, ownership/dependency change, unsafe command, missing authority, or conclusion requiring another skill's unresolved evidence.
+
+### Worker: review-remaining-c
+
+- **Deliverable:** One complete ungraded effectiveness review for the single coordinator-assigned eligible skill from Phases 3–6; accept the next assignment only after the coordinator verifies and integrates the previous return.
+- **Inputs:** The named skill root, immutable baseline, current integrated tree, its exact review position and dependency records, relevant decisions/sources/tests/evals, common record, cumulative calibration checklist, and current phase findings supplied in the dispatch.
+- **Scope:** Read-only inspection of the named skill, directly relevant repository decisions and implementation, its exact-name eval evidence, and current official or primary sources; no other skill is reviewed in its place.
+- **Authority:** Read named local evidence, run read-only checks, and browse official or primary sources; do not edit, stage, commit, grade, remediate, create work, mutate external systems, or infer missing evidence as a pass.
+- **Isolation:** One cold-agent, one-skill read-only lane. Stop before reading or changing an overlapping active worker scope except for coordinator-supplied dependency evidence.
+- **Definition of done:** The returned record covers identity/dependencies, current sources, exact mechanics, rubric-to-host traceability, selection and outcome value, instruction economy, ownership, executability/safety, tests/evals, cumulative calibration, explicit gaps, one disposition, and deduplicated candidate findings.
+- **Model:** reasoning — cross-source effectiveness, ownership, and counterfactual value require hard judgment.
+- **Verify:** Coordinator reruns exact checks, reopens material sources, checks every cited path and inference, reconciles dependency/ownership effects, and writes the durable record and phase synthesis.
+- **Return:** Compact review record ready for the common template, direct source links, exact commands/results, facts versus inferences/gaps, one proposed disposition, new generalised checks, and candidate routes; no raw transcript.
+- **Checkpoint:** Return after the assigned skill is complete or immediately on a source conflict, ownership/dependency change, unsafe command, missing authority, or conclusion requiring another skill's unresolved evidence.
 
 ## Discussion
 
