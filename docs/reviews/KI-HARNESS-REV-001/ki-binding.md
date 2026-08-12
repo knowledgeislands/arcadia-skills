@@ -1,8 +1,8 @@
 # `ki-binding` effectiveness review
 
-- **Review state:** complete, ungraded
-- **Candidate disposition:** revise
-- **Change state:** review only; no Phase 5 remediation is authorised
+- **Review state:** complete; grade `F` approved on 2026-08-12
+- **Disposition:** revise
+- **Change state:** approved Phase 5 remediation applied in `e75590e6`; current canonical inventory fails the stricter schema
 - **Identity:** position 41 of 50; governance; no declared dependency; baseline `94f0b775903286fcf37c0ec050d5568672a5154f`; order valid
 
 ## Dependency and ownership
@@ -23,6 +23,10 @@ Six tests, publication sync, and focused audit pass. The root is safely report-o
 2. Define supported portable fields and transports, diagnosing malformed or unsupported values instead of silently discarding them.
 3. Reconcile root and adapter tokens, boundaries, fixtures, and evals without moving projection ownership into the root.
 4. Register current MCP and mcporter primary sources and distinguish protocol requirements from house schema.
+
+## Applied changes
+
+The portable source now has one closed, shared parser and source resolver. URL entries require a supported transport for every targeted client; full non-secret definitions replace name-only comparison; absent targets are unavailable rather than clean. The current seventh canonical entry now fails because its client transport mapping is incomplete, which is a truthful external-source finding rather than a reason to weaken the rubric. Current evals replace the retired client-token cases.
 
 ## Carry-forward criteria
 

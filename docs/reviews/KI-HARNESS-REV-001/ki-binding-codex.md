@@ -1,8 +1,8 @@
 # `ki-binding-codex` effectiveness review
 
-- **Review state:** complete, ungraded
-- **Candidate disposition:** revise
-- **Change state:** review only; no Phase 5 remediation is authorised
+- **Review state:** complete; grade `U` approved on 2026-08-12
+- **Disposition:** revise
+- **Change state:** approved Phase 5 remediation applied in `e75590e6`; repository adapter is activated
 - **Identity:** position 43 of 50; governance; depends on `ki-binding` at position 41; baseline `94f0b775903286fcf37c0ec050d5568672a5154f`; order valid
 
 ## Dependency and ownership
@@ -23,6 +23,10 @@ Thirteen tests and publication sync pass, but the prescribed hosted audit is una
 2. Integrate parsed transport and full-definition equivalence, enabled state where in scope, and shared source resolution into hosted evidence.
 3. Add alternate-XDG, invalid transport, malformed entry, extra-key, unavailable-runtime, and active-CLI fixtures.
 4. Preserve native merge/recovery and secret-safe diagnostics while labeling config/list state separately from reachability and usable tools.
+
+## Applied changes
+
+The repository now declares this adapter. Hosted evidence compares complete supported native definitions through the shared resolver, while the writer retains rollback and post-write verification. The adapter itself passes; its parent correctly reports the malformed current canonical URL entry. Authentication, transport initialization, reachability, and usable tools remain unavailable.
 
 ## Carry-forward criteria
 

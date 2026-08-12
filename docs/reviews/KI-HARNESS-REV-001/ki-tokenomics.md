@@ -1,8 +1,8 @@
 # `ki-tokenomics` effectiveness review
 
-- **Review state:** complete, ungraded
-- **Candidate disposition:** revise
-- **Change state:** review only; no Phase 5 remediation is authorised
+- **Review state:** complete; grade `F` approved on 2026-08-12
+- **Disposition:** revise
+- **Change state:** approved Phase 5 remediation applied in `a28cf057`; current evals applied in `18033a58`
 - **Identity:** position 46 of 50; governance; no declared dependency; baseline `94f0b775903286fcf37c0ec050d5568672a5154f`; order valid
 
 ## Dependency and ownership
@@ -23,6 +23,10 @@ All three evals encode retired Claude/Headroom, `claude-api`, and `--no-user` be
 2. Relabel results as declared policy or explicit adapter-required/unavailable evidence; retain measurement and attribution in adapters.
 3. Replace retired evals with portable config and adapter-routing cases, adding adapter outcome/privacy scenarios only after review.
 4. Reconcile stale decision references and label numeric budgets and character conversion as provisional house guide-rails.
+
+## Applied changes
+
+Malformed nested policy tables now fail closed. Policy outcomes are informational declarations rather than passes for measurement, effective model, or attribution. The shared evals now exercise schema failure, declared-versus-observed evidence, and runtime privacy boundaries instead of retired Claude and Headroom behavior.
 
 ## Carry-forward criteria
 

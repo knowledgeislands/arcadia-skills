@@ -1,8 +1,8 @@
 # `ki-binding-chezmoi` effectiveness review
 
-- **Review state:** complete, ungraded
-- **Candidate disposition:** revise
-- **Change state:** review only; no Phase 5 remediation is authorised
+- **Review state:** complete; grade `F` approved on 2026-08-12
+- **Disposition:** revise
+- **Change state:** approved Phase 5 remediation applied in `e75590e6`
 - **Identity:** position 44 of 50; governance; depends on `ki-binding` (41) and `ki-repo-dotfiles-chezmoi` (40); baseline `94f0b775903286fcf37c0ec050d5568672a5154f`; order valid
 
 ## Dependency and ownership
@@ -23,6 +23,10 @@ Conform writes nothing but recommends `chezmoi diff` and `apply`. The real parti
 2. Add a contained no-secret/no-apply render fixture comparing normalized canonical definitions to rendered projection while keeping installed state separate.
 3. Register current official templating, diff, and apply sources and reconcile data-merge terminology with the actual include pattern.
 4. Report prerequisite evidence as verified, missing, or unavailable rather than using an always-not-applicable composition criterion.
+
+## Applied changes
+
+The adapter now parses exact canonical data and template evidence, rejects ambiguous or comment-only wiring, and shares the root source contract. Its audit remains report-only: source structure does not imply secret-safe rendering, applied target equality, registration, activation, or runtime health.
 
 ## Carry-forward criteria
 

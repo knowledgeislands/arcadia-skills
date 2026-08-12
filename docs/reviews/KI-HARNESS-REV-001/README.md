@@ -8,7 +8,7 @@ This directory records the reviewed and approved evidence for [KI-HARNESS-REV-00
 - **Candidate routes:** [approved deduplicated clusters](candidate-clusters.md)
 - **Standing-guidance review:** recorded in the roadmap item
 - **Grading:** approved on 2026-08-12; evidence grades describe current proof and false-assurance risk, not intrinsic quality
-- **Remediation:** Phase 1–4 repairs are applied; approved Phase 5–6 remediation is next
+- **Remediation:** Phase 1–5 repairs are applied; approved Phase 6 remediation is next
 
 ## Common record
 
@@ -59,7 +59,7 @@ Each completed review or phase may expose a reusable effectiveness check. Distil
 
 ## Progress
 
-Phase 0, dependency ordering, and all 50 baseline skill reviews are complete. All baseline grades and dispositions are approved. Phase 1–4 repairs, the `ki-communication` retirement, and the portable subagent split are applied. Phase 5–6 remediation remains.
+Phase 0, dependency ordering, and all 50 baseline skill reviews are complete. All baseline grades and dispositions are approved. Phase 1–5 repairs, the `ki-communication` retirement, and the portable subagent split are applied. Phase 6 remediation remains.
 
 | #  | Skill                                        | Review   | Change state | Evidence   |
 | -: | -------------------------------------------- | -------- | ------------ | ---------- |
@@ -103,14 +103,14 @@ Phase 0, dependency ordering, and all 50 baseline skill reviews are complete. Al
 | 38 | [`ki-repo-tools`](ki-repo-tools.md)           | complete | applied      | `5affff38` |
 | 39 | [`ki-repo-homebrew-tap`](ki-repo-homebrew-tap.md) | complete | applied | `5affff38` |
 | 40 | [`ki-repo-dotfiles-chezmoi`](ki-repo-dotfiles-chezmoi.md) | complete | applied | `e7a53a2c` |
-| 41 | [`ki-binding`](ki-binding.md)                 | complete | review only  | —          |
-| 42 | [`ki-binding-claude`](ki-binding-claude.md)   | complete | review only  | —          |
-| 43 | [`ki-binding-codex`](ki-binding-codex.md)     | complete | review only  | —          |
-| 44 | [`ki-binding-chezmoi`](ki-binding-chezmoi.md) | complete | review only  | —          |
-| 45 | [`ki-housekeeping-claude`](ki-housekeeping-claude.md) | complete | review only | —          |
-| 46 | [`ki-tokenomics`](ki-tokenomics.md)           | complete | review only  | —          |
-| 47 | [`ki-tokenomics-claude`](ki-tokenomics-claude.md) | complete | review only | —          |
-| 48 | [`ki-tokenomics-codex`](ki-tokenomics-codex.md) | complete | review only | —          |
+| 41 | [`ki-binding`](ki-binding.md)                 | complete | applied      | `e75590e6` |
+| 42 | [`ki-binding-claude`](ki-binding-claude.md)   | complete | applied      | `e75590e6` |
+| 43 | [`ki-binding-codex`](ki-binding-codex.md)     | complete | applied      | `e75590e6` |
+| 44 | [`ki-binding-chezmoi`](ki-binding-chezmoi.md) | complete | applied      | `e75590e6` |
+| 45 | [`ki-housekeeping-claude`](ki-housekeeping-claude.md) | complete | applied | `e6c42c80` |
+| 46 | [`ki-tokenomics`](ki-tokenomics.md)           | complete | applied      | `a28cf057` |
+| 47 | [`ki-tokenomics-claude`](ki-tokenomics-claude.md) | complete | applied | `a28cf057` |
+| 48 | [`ki-tokenomics-codex`](ki-tokenomics-codex.md) | complete | applied | `a28cf057` |
 | 49 | [`ki-repo-harness`](ki-repo-harness.md)       | complete | review only  | —          |
 | 50 | [`ki-bootstrap`](ki-bootstrap.md)             | complete | review only  | —          |
 

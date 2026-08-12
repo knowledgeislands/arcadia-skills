@@ -6,7 +6,7 @@ This terminal check reconciled the 50 skill records against the complete review 
 
 - The immutable baseline has 50 canonical skills, inventory entries, review records, and README rows with identical identities and order. The current tree has 51 after one retirement and two post-baseline subagent adapters.
 - All 20 declared dependency edges point to an earlier review entry; there are no unknown dependencies or cycles.
-- Positions 1–40 record applied revisions or the applied retirement. Positions 41–50 remain authorised Phase 5–6 work.
+- Positions 1–48 record applied revisions or the applied retirement. Positions 49–50 remain authorised Phase 6 work.
 - Approved dispositions are 49 `revise` and one `retire`.
 - All review Markdown and progress links pass the house formatter and link-target checks used by this review.
 - The final `ki-skills` host audit has no failures and one known source-cadence warning: its quarterly source record lacks a machine-readable `Last reviewed` date.

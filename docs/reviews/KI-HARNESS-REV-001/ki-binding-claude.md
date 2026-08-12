@@ -1,8 +1,8 @@
 # `ki-binding-claude` effectiveness review
 
-- **Review state:** complete, ungraded
-- **Candidate disposition:** revise
-- **Change state:** review only; no Phase 5 remediation is authorised
+- **Review state:** complete; grade `F` approved on 2026-08-12
+- **Disposition:** revise
+- **Change state:** approved Phase 5 remediation applied in `e75590e6`; runtime health remains unavailable
 - **Identity:** position 42 of 50; governance; depends on `ki-binding` at position 41; baseline `94f0b775903286fcf37c0ec050d5568672a5154f`; order valid
 
 ## Dependency and ownership
@@ -23,6 +23,10 @@ No KI plugin is installed in current Claude Code. Missing Cowork settings are in
 2. Require sourced Cowork-specific external-edit and activation evidence before automatic conform, or remove that claim.
 3. Share canonical source-location resolution and test XDG override parity.
 4. Create a scoped evidence chain from projection hash/version through selected marketplace, installed/enabled cache, and loaded capability.
+
+## Applied changes
+
+Claude Code and Desktop checks now use the shared canonical resolver and compare supported native definitions, including explicit URL transports. Cowork automatic writes were removed because Claude Code settings are not Cowork authority. Registration, installation, enablement, authentication, reachability, and loaded capability remain separate unavailable evidence.
 
 ## Carry-forward criteria
 

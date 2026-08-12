@@ -1,8 +1,8 @@
 # `ki-tokenomics-claude` effectiveness review
 
-- **Review state:** complete, ungraded
-- **Candidate disposition:** revise
-- **Change state:** review only; no Phase 5 remediation is authorised
+- **Review state:** complete; grade `F` approved on 2026-08-12
+- **Disposition:** revise
+- **Change state:** approved Phase 5 remediation applied in `a28cf057`
 - **Identity:** position 47 of 50; governance; depends on `ki-tokenomics` at position 46; baseline `94f0b775903286fcf37c0ec050d5568672a5154f`; order valid
 
 ## Dependency and ownership
@@ -23,6 +23,10 @@ Character estimates are marked approximate, but loaded tokens, tool schemas, com
 2. Add a bounded source-grounded resolver for hierarchy, local/rules/imports, memory overrides, and MCP configuration with negative fixtures.
 3. Clarify user-home authority before expanding observation; keep session commands and more private state behind a separate privacy decision.
 4. Replace obsolete evals with unavailable-state, override, import-containment, and no-secret scenarios.
+
+## Applied changes
+
+The adapter now inspects only bounded selected-repository instructions, rules, settings, MCP declarations, and importer-relative contained imports. It handles fences, cycles, depth, escape, parse failures, and symlinks. It reads no user home or live session; effective model, loaded context, active MCP, trust, memory use, transcripts, compaction, and billing remain unavailable.
 
 ## Carry-forward criteria
 

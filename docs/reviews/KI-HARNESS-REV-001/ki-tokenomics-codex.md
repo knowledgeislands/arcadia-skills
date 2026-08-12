@@ -1,8 +1,8 @@
 # `ki-tokenomics-codex` effectiveness review
 
-- **Review state:** complete, ungraded
-- **Candidate disposition:** revise
-- **Change state:** review only; no Phase 5 remediation is authorised
+- **Review state:** complete; grade `F` approved on 2026-08-12
+- **Disposition:** revise
+- **Change state:** approved Phase 5 remediation applied in `a28cf057`
 - **Identity:** position 48 of 50; governance; depends on `ki-tokenomics` at position 46; baseline `94f0b775903286fcf37c0ec050d5568672a5154f`; order valid
 
 ## Dependency and ownership
@@ -23,6 +23,10 @@ Tests create only one repository skill directory and assert absence of a secret 
 2. Mark model, active MCP, trust, memory use, and context composition unavailable until an authorized runtime evidence source exists.
 3. Reconcile recap and tokenomics ownership for transcript and compaction evidence without granting new inspection or lifecycle authority.
 4. Replace retired shared evals with observed-versus-unavailable, privacy, and current-path scenarios.
+
+## Applied changes
+
+The adapter now observes only bounded repository `AGENTS.md`, trusted project config, skills, and `.codex/agents` source structure. It does not read user `~/.codex/memories` or claim repository memory. Effective model, loaded instructions, active MCP, trust, memory use, transcripts, compaction, and billing remain unavailable without separate session authority.
 
 ## Carry-forward criteria
 

@@ -63,14 +63,14 @@ All dispositions are `revise` except `ki-communication`, whose approved disposit
 |  38 | `ki-repo-tools`                      |   F   |   H   | applied  | Read-only audit no longer executes target code.         |
 |  39 | `ki-repo-homebrew-tap`               |   F   |   H   | applied  | Read-only audit no longer invokes Homebrew.             |
 |  40 | `ki-repo-dotfiles-chezmoi`           |   F   |   M   | applied  | Applicability and host subjects now align.              |
-|  41 | `ki-binding`                         |   F   |   H   | awaiting | Name-only comparison is not runtime parity.             |
-|  42 | `ki-binding-claude`                  |   F   |   H   | awaiting | CLI rejects projection despite name parity.             |
-|  43 | `ki-binding-codex`                   |   U   |   H   | awaiting | Hosted audit is undeclared and unavailable.             |
-|  44 | `ki-binding-chezmoi`                 |   F   |   M   | awaiting | Substrings cannot prove render equality.                |
-|  45 | `ki-housekeeping-claude`             |   F   |   M   | awaiting | Override uncertainty can appear clean.                  |
-|  46 | `ki-tokenomics`                      |   F   |   H   | awaiting | Policy passes without measurement.                      |
-|  47 | `ki-tokenomics-claude`               |   F   |   M   | awaiting | Filesystem config is presented as effective.            |
-|  48 | `ki-tokenomics-codex`                |   F   |   M   | awaiting | Incorrect paths misstate runtime surfaces.              |
+|  41 | `ki-binding`                         |   F   |   H   | applied  | Full definitions and source resolution are checked.     |
+|  42 | `ki-binding-claude`                  |   F   |   H   | applied  | Projection no longer claims runtime health.             |
+|  43 | `ki-binding-codex`                   |   U   |   H   | applied  | Hosted adapter activated; runtime remains unavailable.  |
+|  44 | `ki-binding-chezmoi`                 |   F   |   M   | applied  | Parsed source structure replaces substring assurance.   |
+|  45 | `ki-housekeeping-claude`             |   F   |   M   | applied  | Memory selection now resolves or fails closed.          |
+|  46 | `ki-tokenomics`                      |   F   |   H   | applied  | Policy is labelled declared, never measured.            |
+|  47 | `ki-tokenomics-claude`               |   F   |   M   | applied  | Only bounded repository evidence may pass.              |
+|  48 | `ki-tokenomics-codex`                |   F   |   M   | applied  | Current repository paths and unavailability are clear.  |
 |  49 | `ki-repo-harness`                    |   F   |   H   | awaiting | Count masks symlinked source checkout.                  |
 |  50 | `ki-bootstrap`                       |   U   |   H   | awaiting | Guidance uses obsolete CLI grammar.                     |
 

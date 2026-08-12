@@ -1,8 +1,8 @@
 # `ki-housekeeping-claude` effectiveness review
 
-- **Review state:** complete, ungraded
-- **Candidate disposition:** revise
-- **Change state:** review only; no Phase 5 remediation is authorised
+- **Review state:** complete; grade `F` approved on 2026-08-12
+- **Disposition:** revise
+- **Change state:** approved Phase 5 remediation applied in `e6c42c80`; two current-memory findings are now visible
 - **Identity:** position 45 of 50; governance; no declared dependency; baseline `94f0b775903286fcf37c0ec050d5568672a5154f`; order valid
 
 ## Dependency and ownership
@@ -23,6 +23,10 @@ No registered housekeeping server or binary is available in the current Claude r
 2. Resolve the selected native store or fail closed with explicit unverified/disabled state; test defaults, overrides, worktrees, and disabled memory.
 3. Align size and exact-format criteria with native limits and semantic parsing, adding malformed/date false-negative fixtures.
 4. Separate server source, inventory reference, client registration, access exposure, and executed audit evidence.
+
+## Applied changes
+
+Native settings now select a contained default or override and fail closed on unavailable, malformed, disabled, unsafe, or symlinked evidence. YAML frontmatter and index entries are parsed, generation dates are validated, and byte size is reported without inventing a native line limit. Server source, registration, exposure, and executed audit remain distinct. The hosted audit now exposes the current malformed `MEMORY.md` entry and missing generated-block date.
 
 ## Carry-forward criteria
 

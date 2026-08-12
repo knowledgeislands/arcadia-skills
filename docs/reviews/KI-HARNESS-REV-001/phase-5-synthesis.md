@@ -1,6 +1,6 @@
 # Phase 5 synthesis
 
-Phase 5 reviewed all eight environment and runtime-adapter skills in dependency order. All propose `revise`; none is graded or remediated.
+Phase 5 reviewed all eight environment and runtime-adapter skills in dependency order. All approved `revise` dispositions are now applied.
 
 ## Reconciled architecture
 
@@ -19,6 +19,11 @@ Phase 5 reviewed all eight environment and runtime-adapter skills in dependency 
 6. Runtime-specific authority cannot be inferred across products, nor can native platform behavior be inferred from a third-party helper's output.
 7. Secret-safe inspection requires value avoidance, explicit preview boundaries, and authorization before rendering, applying, or reading session-derived state.
 
-## Phase boundary decision
+## Applied outcome
 
-Phase 6 may now review the aggregate Harness after all declared dependencies, then `ki-bootstrap` last. Aggregate review must not inherit assurance from unavailable hosted adapters or clean component shape. No Phase 5 finding is applied before approval.
+- One shared binding schema and resolver now separates canonical inventory, client definition, projection, activation, and runtime health. The stricter contract exposes one current canonical source defect rather than hiding it.
+- Claude housekeeping resolves native memory selection or fails closed, parses deterministic formats, and leaves registration and executed runtime evidence unavailable. Two current memory defects are now visible.
+- Portable tokenomics reports declared policy only. Claude and Codex adapters observe bounded repository files and explicitly withhold session-effective claims.
+- Current binding and tokenomics evals replace retired client tokens, Headroom assumptions, and obsolete command flags.
+
+Phase 6 may now remediate the aggregate Harness after all declared dependencies, then `ki-bootstrap` last. Aggregate assurance must not inherit unavailable hosted adapters or clean component shape.
