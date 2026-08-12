@@ -1,8 +1,8 @@
 # `ki-communication` effectiveness review
 
-- **Review state:** complete, ungraded
-- **Candidate disposition:** retire
-- **Change state:** review only; no Phase 3 remediation is authorised
+- **Review state:** complete; grade `U` approved on 2026-08-12
+- **Disposition:** retired
+- **Change state:** applied; the orphan skill was removed after catalogue and dependency reconciliation
 - **Identity:** position 25 of 50; governance; no declared dependency; baseline `94f0b775903286fcf37c0ec050d5568672a5154f`; order valid
 
 ## Dependency and ownership
@@ -21,9 +21,9 @@ The concise-writing concern is useful, but transient requests such as “be more
 
 Current OpenAI guidance supports concise, non-repeated instructions but not this taxonomy. Current Claude guidance demonstrates materially different managed-policy and instruction-loading behavior, so the asserted order is not portable authority.
 
-## Candidate disposition
+## Applied disposition
 
-Retire the orphan governance surface rather than create a guidance-only exception. A future capability should first establish a distinct owner, source-backed runtime boundary, executable modes, negative-path tests, and measured outcome value.
+The orphan governance surface was retired rather than creating a guidance-only exception. It had no declaration, dependency, catalogue, eval, runtime projection, or documentation consumer outside this review, so removal required no migration.
 
 If any precedence guidance survives elsewhere, it must distinguish immutable platform/runtime hierarchy from the narrower ordering among user-controlled personal, repository, and thread guidance.
 
