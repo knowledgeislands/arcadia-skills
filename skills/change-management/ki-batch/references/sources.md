@@ -1,6 +1,8 @@
 # Sources
 
-**Refresh:** canonical · on-change
+**Refresh:** external-spec · quarterly
+
+**Last reviewed:** 2026-08-12
 
 These are recorded design influences, not imported operating machinery.
 
@@ -10,6 +12,10 @@ These are recorded design influences, not imported operating machinery.
 | [gstack][gstack] | Separation of planning, implementation, review, QA, and reflection; explicit scope control. | Its product workflow, command surface, and runtime-specific mechanics. |
 
 The KI control plane remains the reviewed batch authorisation and the canonical repository work items.
+
+## Last review
+
+On 2026-08-12, both repositories remained available. They are supporting design influences only: the local batch standard, the selected adapter, and canonical work-record authority govern execution.
 
 [faff]: https://github.com/shftwst/faff
 [gstack]: https://github.com/garrytan/gstack
