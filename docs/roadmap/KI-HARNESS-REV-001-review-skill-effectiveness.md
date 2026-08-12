@@ -125,14 +125,14 @@ Reconcile the three surfaces against one another and the canonical skill set. Re
 
 ## Current state
 
-The Harness has a strong mechanical `ki-skills` rubric and per-skill REFRESH contracts, but it has no current, complete review order or common effectiveness record spanning all 50 skills. Phase 0 reconciled the standing instruction surfaces: `AGENTS.md` is now a concise common repository anchor, `CLAUDE.md` contains only its Claude-specific hook boundary, the reusable rubric-code allocation rule lives in `ki-skills`, and the redundant repository-local `ki-self` has been retired. The existing dependency-order decision distinguishes executable dependencies from judgment priority, but its illustrative priority list no longer names the complete canonical set.
+The Harness has a strong mechanical `ki-skills` rubric and per-skill REFRESH contracts, but it has no completed effectiveness record spanning all 50 skills. Phase 0 reconciled the standing instruction surfaces: `AGENTS.md` is now a concise common repository anchor, `CLAUDE.md` contains only its Claude-specific hook boundary, the reusable rubric-code allocation rule lives in `ki-skills`, and the redundant repository-local `ki-self` has been retired. The immutable 50-skill inventory and dependency order are now frozen in [the review evidence](../reviews/KI-HARNESS-REV-001/README.md), along with the common ungraded record shape and the first completed skill review.
 
 No grade scale or remediation queue is approved yet. The ordered inventory and common checks above are the planning basis for collecting comparable evidence before those decisions.
 
 ## Steps
 
 - [x] Audit `AGENTS.md`, `CLAUDE.md`, and `.agents/skills/ki-self/SKILL.md` for duplicated or reusable guidance; present deduplicated extraction candidates and obtain approval for any move, deletion, new skill, or existing-skill amendment.
-- [ ] After confirmed standing-guidance dispositions are applied or explicitly deferred, freeze the execution baseline, regenerate the canonical skill inventory and dependency graph, and reconcile any additions, removals, missing dependencies, or cycles against the 50-skill planning list before reviewing content.
+- [x] After confirmed standing-guidance dispositions are applied or explicitly deferred, freeze the execution baseline, regenerate the canonical skill inventory and dependency graph, and reconcile any additions, removals, missing dependencies, or cycles against the 50-skill planning list before reviewing content.
 - [ ] Refresh `ki-skills` and its source inventory first, confirm the effectiveness evidence template and grading vocabulary, and obtain approval for any normative rubric change before applying it to the remaining set.
 - [ ] Process Phases 1–6 in order, reviewing one skill at a time and recording source evidence, mechanical results, judgment findings, effectiveness evidence, instruction cost, and proposed disposition without silently remediating the skill.
 - [ ] At each phase boundary, reconcile newly discovered ownership or dependency changes before starting the next phase; update the remaining order only with an explicit, evidenced reason.
@@ -161,7 +161,7 @@ No grade scale or remediation queue is approved yet. The ordered inventory and c
 
 The work has no roadmap blocker. Its first gate is methodological: refresh and approve the `ki-skills` evidence contract before using it to grade other skills. Formal composition dependencies constrain the review order, while shared rubric declarations, documented lifecycle relationships, and ownership boundaries inform judgment without being misreported as executable edges.
 
-The immutable baseline will be recorded when implementation begins. Changes to the canonical skill set after that point must be reconciled explicitly rather than silently appended to or omitted from the review.
+The immutable baseline is `94f0b775903286fcf37c0ec050d5568672a5154f`. Changes to the canonical skill set after that point must be reconciled explicitly rather than silently appended to or omitted from the review.
 
 ## Delegation
 
