@@ -184,6 +184,7 @@ The immutable baseline is `94f0b775903286fcf37c0ec050d5568672a5154f`. Changes to
 - Round 3: `review-ki-repo` begins after the authoring and Git reviews; `review-ki-delegation` may run alongside it after the Phase 1 evidence shape is stable.
 - Round 4: `review-ki-change-management` begins only after the coordinator records the Phase 1 synthesis. It establishes the base adapter and lifecycle boundary before the remaining change-management skills.
 - Round 5: the roadmap, GitHub Issues, and Linear adapter reviews may begin after `ki-change-management` is integrated, subject to any ownership or ordering change found in Round 4.
+- Round 6: `review-ki-change-management-housekeeping`, `review-ki-recap`, and `review-ki-next` may run independently after the adapter findings are integrated; later process reviews wait for their synthesis.
 
 ### Worker: refresh-ki-skills-sources
 
@@ -340,6 +341,45 @@ The immutable baseline is `94f0b775903286fcf37c0ec050d5568672a5154f`. Changes to
 - **Verify:** Coordinator reruns focused checks, reopens official sources, samples implementation evidence, and independently tests the identity conclusion.
 - **Return:** One compact ungraded review, direct official links, canonical candidate findings, and any remaining identity or migration uncertainty; no browsing transcript.
 - **Checkpoint:** Return after one complete adapter review or sooner if no stable canonical reference can be established from current authority.
+
+### Worker: review-ki-change-management-housekeeping
+
+- **Deliverable:** A read-only effectiveness review of `ki-change-management-housekeeping`, including whether recurring templates add value without creating a second lifecycle.
+- **Inputs:** The complete housekeeping skill, relevant tests and eval evidence, completed base and adapter reviews, and this item's protocol.
+- **Files:** None; read-only review.
+- **Authority:** Inspect repository evidence, run read-only checks, and browse declared sources; do not spawn due work, update templates, grade, or remediate.
+- **Isolation:** Read-only lane scoped to housekeeping templates and directly relevant lifecycle evidence.
+- **Definition of done:** Every protocol dimension has evidence or a gap, cadence/source claims are current, lifecycle and `ki-next` boundaries are tested, and one disposition is proposed.
+- **Model:** reasoning — recurring authority, safe spawning, and lifecycle separation require judgment.
+- **Verify:** Coordinator reruns focused checks, reads cited contracts and fixtures, and validates all authority and ownership conclusions.
+- **Return:** One compact ungraded review, direct sources, canonical candidates, and implications for `ki-next`; no raw transcript.
+- **Checkpoint:** Return after the complete review or when a lifecycle or automatic-spawn authority conflict requires reconciliation.
+
+### Worker: review-ki-recap
+
+- **Deliverable:** A read-only effectiveness review of `ki-recap`, including grounding, learning routing, compaction advice, and boundaries with backlog selection.
+- **Inputs:** The complete recap skill, helper and tests, relevant runtime/source evidence, completed foundation reviews, and this item's protocol.
+- **Files:** None; read-only review.
+- **Authority:** Inspect repository and session-helper evidence, run read-only checks, and browse official runtime sources; do not recap the live session, mutate memory, compact, grade, or remediate.
+- **Isolation:** Read-only lane scoped to recap behavior and directly relevant runtime/tokenomics evidence.
+- **Definition of done:** Every protocol dimension has evidence or a gap, runtime claims and helper behavior are current, selection/recap boundaries are assessed, and one disposition is proposed.
+- **Model:** reasoning — transcript evidence, learning durability, and runtime compaction claims require hard judgment.
+- **Verify:** Coordinator reruns focused tests, checks runtime sources and helper contracts, and validates the outcome counterfactual.
+- **Return:** One compact ungraded review, direct sources, canonical candidates, and unresolved runtime or evidence limitations; no live recap output.
+- **Checkpoint:** Return after the complete review or at the first material runtime-source conflict.
+
+### Worker: review-ki-next
+
+- **Deliverable:** A read-only effectiveness review of `ki-next`, explicitly testing selection, capture, promotion, housekeeping spawn, trade disposition, and adapter resolution boundaries.
+- **Inputs:** The complete next-work skill, relevant tests and eval evidence, completed base/adapter reviews, and this item's protocol.
+- **Files:** None; read-only review.
+- **Authority:** Inspect repository evidence and run read-only checks; do not select, promote, defer, spawn, apply trades, grade, or remediate any actual work.
+- **Isolation:** Read-only lane scoped to next-work selection and directly relevant adapter, housekeeping, and trade evidence.
+- **Definition of done:** Every protocol dimension has evidence or a gap, actual adapter consumption and remote limitations are explicit, authority boundaries are tested, and one disposition is proposed.
+- **Model:** reasoning — priority, lifecycle, adapter, and cross-repository authority interact in this skill.
+- **Verify:** Coordinator reruns focused tests, checks cited contracts and code paths, and validates selection and authority conclusions.
+- **Return:** One compact ungraded review, canonical candidates, and implications for `ki-plan` and later processes; no selected work or mutation.
+- **Checkpoint:** Return after the complete review or when a priority, adapter, trade, or spawn authority conflict requires reconciliation.
 
 ## Discussion
 
