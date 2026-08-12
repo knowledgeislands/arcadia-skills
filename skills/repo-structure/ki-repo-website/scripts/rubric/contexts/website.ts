@@ -8,12 +8,7 @@ import type {
 } from '../../shared/rubric.ts'
 
 const CONFIG_NAMES = ['eleventy.config.ts', 'eleventy.config.js', 'eleventy.config.mjs', 'eleventy.config.cjs'] as const
-const SKILL_NAME = 'ki-repo-website'
 const KI_SECTION = 'ki-repo-website'
-const KI_DEFAULT = `# ${SKILL_NAME} — opt-in marker: presence of this table opts the repo into the
-# Eleventy + Tailwind site-build standard. It takes no per-repo keys today.
-[skills.${KI_SECTION}]
-`
 
 type Draft = {
   path: string
@@ -39,7 +34,6 @@ export type WebsiteContext = {
   kiWebsiteTable: Record<string, unknown> | null
   malformedConfig: boolean
   seoMeta: boolean
-  addOptIn?: () => void
   addDistIgnore?: () => void
 }
 
@@ -88,7 +82,6 @@ export const createWebsiteSession = ({
 
   const flatCfg = CONFIG_NAMES.find((name) => containedPhysical(root, at(name), 'file'))
   const siteCfg = CONFIG_NAMES.find((name) => containedPhysical(root, at('site', name), 'file'))
-  const structuralMarker = CONFIG_NAMES.some((name) => existsSync(at(name)) || existsSync(at('site', name)))
   const siteRoot: '' | 'site' = flatCfg ? '' : siteCfg ? 'site' : ''
   const cfgName = flatCfg ?? siteCfg ?? ''
   const siteAt = (...parts: string[]) => (siteRoot ? join(siteRoot, ...parts) : join(...parts))
@@ -99,7 +92,7 @@ export const createWebsiteSession = ({
   const configRaw = configSafe && configExists ? read('.ki-config.toml') : ''
   const ki = configSafe ? parseToml(configRaw) : { document: null, malformed: true }
   const kiWebsiteTable = asTable(asTable(ki.document?.skills)?.[KI_SECTION])
-  const applicable = available && (kiWebsiteTable !== null || ki.malformed || structuralMarker)
+  const applicable = available && kiWebsiteTable !== null
 
   const packageSource = read('package.json')
   let packageOk = true
@@ -143,18 +136,7 @@ export const createWebsiteSession = ({
     return draft
   }
 
-  const configDraft =
-    mode === 'conform' && !kiWebsiteTable && !ki.malformed ? prepareDraft('.ki-config.toml') : undefined
   const ignoreDraft = mode === 'conform' && cfgName ? prepareDraft('.gitignore') : undefined
-  const addOptIn =
-    configDraft === undefined
-      ? undefined
-      : (): void => {
-          if (/\["knowledgeislands\/ki-agentic-harness:ki-repo-website"\]/.test(configDraft.content)) return
-          configDraft.content = configDraft.content
-            ? `${configDraft.content.replace(/\n*$/, '\n')}\n${KI_DEFAULT}`
-            : KI_DEFAULT
-        }
   const addDistIgnore =
     ignoreDraft === undefined
       ? undefined
@@ -187,7 +169,6 @@ export const createWebsiteSession = ({
     kiWebsiteTable,
     malformedConfig: ki.malformed,
     seoMeta,
-    ...(addOptIn ? { addOptIn } : {}),
     ...(addDistIgnore ? { addDistIgnore } : {})
   }
 

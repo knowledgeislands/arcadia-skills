@@ -1,6 +1,7 @@
 import type { AuditOutcome, RubricFamily, RubricItem } from '../../shared/rubric.ts'
 import {
   configDirectory,
+  isExactSiteOutput,
   type WebsiteCloudflareContext,
   type WebsiteCloudflareRubricContext
 } from '../contexts/website-cloudflare.ts'
@@ -120,7 +121,7 @@ const WCF_3: RubricItem<WebsiteCloudflareContext> = {
 const WCF_4: RubricItem<WebsiteCloudflareContext> = {
   code: 'WCF-4',
   title: 'assets directory',
-  description: 'Assets point at the build dist directory.',
+  description: 'Parsed assets.directory is the exact contained dist output adjacent to its Wrangler config.',
   sources: [`${SOURCE}#2-the-dist-seam`],
   mechanical: {
     level: 'FAIL',
@@ -134,18 +135,18 @@ const WCF_4: RubricItem<WebsiteCloudflareContext> = {
         if (!site) return []
         if (!site.assetsDirectory)
           return [{ status: 'VIOLATION', message: 'The assets block has no directory.', subject: site.path }]
-        return /(?:^|\/)dist\/?$/.test(site.assetsDirectory)
+        return isExactSiteOutput(site)
           ? [
               {
                 status: 'PASS',
-                message: `assets.directory points at dist (${site.assetsDirectory}).`,
+                message: `assets.directory consumes the exact local dist seam (${site.assetsDirectory}).`,
                 subject: site.path
               }
             ]
           : [
               {
                 status: 'VIOLATION',
-                message: `assets.directory points at ${site.assetsDirectory}, not the build dist directory.`,
+                message: `assets.directory ${site.assetsDirectory} is not the exact contained local dist seam.`,
                 subject: site.path
               }
             ]

@@ -30,6 +30,7 @@ const fixture = (): string => {
   mkdirSync(join(repository, 'site'), { recursive: true })
   writeFileSync(join(repository, 'site', 'eleventy.config.ts'), 'export default function () {}\n')
   writeFileSync(join(repository, 'package.json'), '{"scripts":{},"dependencies":{}}\n')
+  writeFileSync(join(repository, '.ki-config.toml'), '[skills.ki-repo-website]\n')
   return repository
 }
 
@@ -52,32 +53,26 @@ test('audit is read-only, stable, and exposes no conform capabilities', () => {
 
   expect(subject.context()).toBe(subject.context())
   expect(context.applicable).toBe(true)
-  expect(context.addOptIn).toBeUndefined()
   expect(context.addDistIgnore).toBeUndefined()
   expect(item('WEB-33').audit.run(context)[0]?.status).toBe('VIOLATION')
-  expect(item('WEB-41').audit.run(context)[0]?.status).toBe('VIOLATION')
+  expect(item('WEB-41').audit.run(context)[0]?.status).toBe('PASS')
   expect(session.proposal()).toEqual({ writes: [] })
-  expect(existsSync(join(repository, '.ki-config.toml'))).toBe(false)
+  expect(existsSync(join(repository, '.ki-config.toml'))).toBe(true)
   expect(existsSync(join(repository, '.gitignore'))).toBe(false)
 })
 
-test('safe marker and ignore repairs are item-owned, coalesced, and idempotent', () => {
+test('ignore repair is item-owned and declaration selection is never inferred', () => {
   const repository = fixture()
   const session = createWebsiteSession(options(repository, 'conform'))
   const { context } = rootContext(session)
 
-  item('WEB-41').conform?.run(context)
-  item('WEB-41').conform?.run(context)
   item('WEB-33').conform?.run(context)
   item('WEB-33').conform?.run(context)
 
   const proposal = session.proposal()
-  expect(proposal.writes).toHaveLength(2)
-  expect(proposal.writes[0]).toMatchObject({ path: '.ki-config.toml', create: true })
-  expect(proposal.writes[0]?.content).toContain('[skills.ki-repo-website]\n')
-  expect(proposal.writes[1]).toEqual({ path: '.gitignore', content: 'site/dist\n', create: true })
+  expect(proposal.writes).toEqual([{ path: '.gitignore', content: 'site/dist\n', create: true }])
   expect(session.proposal()).toEqual(proposal)
-  expect(existsSync(join(repository, '.ki-config.toml'))).toBe(false)
+  expect(existsSync(join(repository, '.ki-config.toml'))).toBe(true)
   expect(existsSync(join(repository, '.gitignore'))).toBe(false)
 })
 
@@ -88,17 +83,9 @@ test('existing physical files are preserved around bounded repairs', () => {
   const session = createWebsiteSession(options(repository, 'conform'))
   const { context } = rootContext(session)
 
-  item('WEB-41').conform?.run(context)
   item('WEB-33').conform?.run(context)
 
-  expect(session.proposal().writes).toEqual([
-    {
-      path: '.ki-config.toml',
-      content:
-        '[skills.ki-repo]\n\n# ki-repo-website — opt-in marker: presence of this table opts the repo into the\n# Eleventy + Tailwind site-build standard. It takes no per-repo keys today.\n[skills.ki-repo-website]\n'
-    },
-    { path: '.gitignore', content: '# generated\n/site/dist/\n' }
-  ])
+  expect(session.proposal().writes).toEqual([{ path: '.gitignore', content: '# generated\n/site/dist/\n' }])
   expect(readFileSync(join(repository, '.ki-config.toml'), 'utf8')).toBe('[skills.ki-repo]\n')
   expect(readFileSync(join(repository, '.gitignore'), 'utf8')).toBe('# generated\n/dist/\n')
 })
@@ -110,6 +97,7 @@ test('symlinked proposal targets are never traversed or replaced', () => {
   const ignore = join(outside, 'ignore')
   writeFileSync(config, '[skills.ki-repo]\n')
   writeFileSync(ignore, '/dist/\n')
+  rmSync(join(repository, '.ki-config.toml'))
   symlinkSync(config, join(repository, '.ki-config.toml'))
   symlinkSync(ignore, join(repository, '.gitignore'))
   const session = createWebsiteSession(options(repository, 'conform'))
@@ -119,7 +107,6 @@ test('symlinked proposal targets are never traversed or replaced', () => {
   item('WEB-33').conform?.run(context)
 
   expect(context.malformedConfig).toBe(true)
-  expect(context.addOptIn).toBeUndefined()
   expect(context.addDistIgnore).toBeUndefined()
   expect(session.proposal()).toEqual({ writes: [] })
   expect(readFileSync(config, 'utf8')).toBe('[skills.ki-repo]\n')
@@ -132,6 +119,7 @@ test('a symlinked Eleventy marker activates reporting without exposing its conte
   writeFileSync(join(outside, 'eleventy.config.ts'), 'toRelativeOutputUrl\n')
   symlinkSync(join(outside, 'eleventy.config.ts'), join(repository, 'eleventy.config.ts'))
   writeFileSync(join(repository, 'package.json'), '{"scripts":{},"dependencies":{}}\n')
+  writeFileSync(join(repository, '.ki-config.toml'), '[skills.ki-repo-website]\n')
   const session = createWebsiteSession(options(repository, 'audit'))
   const { context } = rootContext(session)
 

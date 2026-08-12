@@ -73,7 +73,7 @@ Every `Formula/*.rb` must appear in this table (`TAP-6`); a formula the table om
 
 ## CI — brew test-bot
 
-A tap MAY carry a `.github/workflows/` job running [`brew test-bot`][testbot] — Homebrew's own CI action that runs `brew audit`, `brew style`, and `brew install` on each changed formula per PR _(shape, OPTIONAL)_. It is the backstop for a machine auditing the tap without Homebrew installed or a current active source. The checker warns when it cannot run local validation; it does not FAIL a tap for lacking test-bot.
+A tap MAY carry a `.github/workflows/` job running [`brew test-bot`][testbot] — Homebrew's own CI action that runs `brew audit`, `brew style`, and `brew install` on each changed formula per PR _(shape, OPTIONAL)_. It can supply separately captured package-manager evidence; hosted static audit neither executes it nor treats its absence as a structural failure.
 
 ## Config marker
 
@@ -81,7 +81,7 @@ The tap opts into governance with a keyless `[skills.ki-repo-homebrew-tap]` tabl
 
 ## What `brew` checks that this skill does not
 
-`TAP-7` runs `brew style <formula>` against the target and `brew audit --strict <tap>/<formula>` for every formula when Homebrew is available. When the target is a workspace clone, it first proves that the formula's bytes match the active local tap; otherwise the active audit result would not apply and it WARNs. It disables Homebrew automatic updates, but Homebrew may provision its checker dependencies; it never changes the target repository. An unavailable Homebrew installation or stale active source is a WARN, rather than permission to report a different formula as validated. Those commands own the deep formula rules—dependency correctness, `bin`/`libexec` conventions, deprecated DSL, mirror/livecheck hygiene, and RuboCop style—rather than this skill restating them. This skill's local checks cover what `brew` cannot: that the tap has a `Formula/` directory, that a versioned tarball rather than HEAD is used, that the README lists the formula, and that the `[skills.ki-repo-homebrew-tap]` marker is present. When local Homebrew is unavailable, the tap's test-bot CI remains the backstop.
+`TAP-7` never runs `brew style` or `brew audit` from hosted audit. Those package-manager commands own the deep formula rules—dependency correctness, `bin`/`libexec` conventions, deprecated DSL, mirror/livecheck hygiene, and RuboCop style—and require separately authorized isolated diagnostics against the intended tap. Static audit reports only parsed source shape: that the tap has a `Formula/` directory, that a versioned tarball rather than HEAD is used, that the README lists the formula, and that the `[skills.ki-repo-homebrew-tap]` marker is present. Missing package-manager evidence is unavailable evidence, not a structural PASS.
 
 [cookbook]: https://docs.brew.sh/Formula-Cookbook
 [testbot]: https://docs.brew.sh/Brew-Test-Bot

@@ -17,6 +17,8 @@ You are applying the **Knowledge Islands 11ty website standard** — the shared 
 
 This is a **base-agnostic governance skill**. It hard-codes no single repo; it applies to any repo carrying a `[skills.ki-repo-website]` table in its `.ki-config.toml`. How it sits beside the other skills, and where it must not overlap them, is documented once in the ki-agentic-harness `README.md`.
 
+`ki-repo` owns that repository declaration. Detected Eleventy files are coverage evidence only; hosted conform never infers or adds the opt-in.
+
 This skill owns the **site-build delta** only. The generic toolchain (Bun mandate, aggregate/scoped audit wiring, and direct `tsconfig`/Biome/TypeScript checks) is `ki-engineering`'s; Markdown/TOML style is `ki-authoring`'s; **serving the built `dist/`** on Cloudflare is `ki-repo-website-cloudflare`'s. Those independently selected standards are audited alongside this one rather than restated here.
 
 The full, quotable standard is [the Eleventy site standard](references/standards-eleventy-site.md); the line-by-line pass/fail items are in [the audit rubric](references/rubric.md); the tracked provenance is [the source list](references/sources.md). `ki repo audit --skill ki-repo-website` runs the mechanical checks. Read those for detail; this file is the operating procedure.
@@ -45,7 +47,7 @@ Four invariants define the standard — most findings are a breach of one:
 
 1. **Config-less Tailwind 4.** No `tailwind.config.*`; `main.css` is `@import "tailwindcss"` then `tokens.css`, whose semantic CSS vars are exposed to utilities via `@theme inline`.
 2. **The build emits a portable `dist/`.** An `addTransform` rewrites absolute internal URLs to relative ones, so `dist/` serves from any root. This is the contract `ki-repo-website-cloudflare` consumes.
-3. **TypeScript runs natively — no transpile.** `eleventy.config.ts` and `_data/*.ts` run under Bun; `.ts` + `.json5` data extensions are registered in the config. `tsc` is type-check only (engineering's layer).
+3. **TypeScript runner is declared, not proven.** Package scripts select Bun or modern Node for TypeScript; `tsx` is not used. `.ts` + `.json5` data extensions are registered in the config. `tsc` is type-check only (engineering's layer); actual execution belongs to explicit runtime evidence.
 4. **Tailwind compiles inside the Eleventy lifecycle.** An `eleventy.before` hook runs the Tailwind CLI in build mode; dev runs a parallel `--watch` and an `addWatchTarget` on the compiled CSS.
 
 ## Layering — how a site repo gets fully audited

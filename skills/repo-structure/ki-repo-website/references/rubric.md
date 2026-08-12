@@ -30,7 +30,7 @@ The static-site stack, workspace layout, generated output, and sustainable opera
   - _Remediation:_ diagnostic — Inspect the affected website surface and apply the standard through a reviewable, site-owned change.
 - **WEB-2 [M] — Eleventy rather than SPA stack** — Astro and Next dependencies are absent. (standards-eleventy-site.md)
   - _Remediation:_ diagnostic — Inspect the affected website surface and apply the standard through a reviewable, site-owned change.
-- **WEB-3 [M] — Native TypeScript runner** — TypeScript runs natively on Bun or modern Node; the legacy `tsx` runner is absent. (standards-eleventy-site.md)
+- **WEB-3 [M] — Native TypeScript runner** — TypeScript runner is declared in package scripts as modern Node or Bun; the legacy `tsx` runner is absent. Runtime execution remains separate evidence. (standards-eleventy-site.md)
   - _Remediation:_ diagnostic — Inspect the affected website surface and apply the standard through a reviewable, site-owned change.
 - **WEB-4 [J] — Nunjucks template engine** — Nunjucks is the HTML and Markdown template engine; content is Markdown and template logic is Nunjucks. (standards-eleventy-site.md)
   - _Evidence scope:_ Nunjucks is the HTML and Markdown template engine; content is Markdown and template logic is Nunjucks.
@@ -144,8 +144,11 @@ The static-site stack, workspace layout, generated output, and sustainable opera
   - _Review prompt:_ Is dist treated as fully generated build output and never hand-edited?
   - _Outcomes:_ conforming; revision required; design decision required
   - _Conforming guidance:_ Revise the affected website surface to meet the standard, or record the owning design decision before accepting a deliberate exception.
-- **WEB-36 [M] — Hosting assets directory seam** — A site workspace Wrangler assets directory points at `dist`. (standards-eleventy-site.md)
-  - _Remediation:_ diagnostic — Inspect the affected website surface and apply the standard through a reviewable, site-owned change.
+- **WEB-36 [J] — Hosting seam handoff** — The exact site/dist output is consumed by the separately selected Cloudflare projection without claiming deployment or runtime success. (standards-eleventy-site.md)
+  - _Evidence scope:_ The exact site/dist output is consumed by the separately selected Cloudflare projection without claiming deployment or runtime success.
+  - _Review prompt:_ Does the selected hosting projection consume site/dist, with parsed configuration and runtime/deployment evidence kept separate?
+  - _Outcomes:_ conforming; revision required; design decision required
+  - _Conforming guidance:_ Revise the affected website surface to meet the standard, or record the owning design decision before accepting a deliberate exception.
 - **WEB-37 [J] — Volatile facts have one home** — Volatile versions and idioms have one canonical home. (standards-eleventy-site.md)
   - _Evidence scope:_ Volatile versions and idioms have one canonical home.
   - _Review prompt:_ Do volatile facts live in package metadata or the standard rather than being scattered through implementation?
@@ -161,6 +164,6 @@ The static-site stack, workspace layout, generated output, and sustainable opera
 - **WEB-40 [M] — Tailwind CLI dependency** — `@tailwindcss/cli` is a dependency. (standards-eleventy-site.md)
   - _Remediation:_ diagnostic — Inspect the affected website surface and apply the standard through a reviewable, site-owned change.
 - **WEB-41 [M] — Website opt-in** — Applicable sites declare `[skills.ki-repo-website]`. (standards-eleventy-site.md)
-  - _Remediation:_ automatic
+  - _Remediation:_ diagnostic — Inspect the affected website surface and apply the standard through a reviewable, site-owned change.
 - **WEB-42 [M] — Website opt-in validation** — The marker table has no unknown keys. (standards-eleventy-site.md)
   - _Remediation:_ diagnostic — Inspect the affected website surface and apply the standard through a reviewable, site-owned change.

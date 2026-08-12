@@ -45,7 +45,7 @@ tools-<name>/
 ## The executable — `bin/<tool>`
 
 - Lives at `bin/<tool>` and carries the **executable bit**. Git tracks the exec bit, so `chmod +x bin/<tool>` is committed once and travels with the repo — a bin file without it is a FAIL (the curl installer and Homebrew formula both rely on it).
-- Answers `--version` (and `-V` where the CLI convention allows), printing the tool name and version. The checker invokes the physical primary executable directly with `--version`, a five-second timeout, and a minimal environment; this is the machine-checkable contract behind the version marker below.
+- Answers `--version` (and `-V` where the CLI convention allows), printing the tool name and version. Hosted audit never executes the physical primary executable; a separately authorized isolated diagnostic supplies any runtime evidence.
 - Follows the XDG Base Directory spec for any config/state/cache it writes (`$XDG_CONFIG_HOME`, `$XDG_STATE_HOME`, `$XDG_CACHE_HOME` with the documented `$HOME`-relative fallbacks) rather than scattering dotfiles in `$HOME`.
 
 ## Versioning & releases

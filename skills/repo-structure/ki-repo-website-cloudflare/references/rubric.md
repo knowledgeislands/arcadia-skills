@@ -32,7 +32,7 @@ Workers + Static Assets hosting standard.
   - _Remediation:_ diagnostic — Correct the evidenced Cloudflare hosting issue through the responsible site owner; hosted conform does not infer deployment or security intent.
 - **WCF-3 [M] — single site Worker** — Exactly one site Worker carries an assets block. (standards-cloudflare-hosting.md#1-model--workers--static-assets-not-pages)
   - _Remediation:_ diagnostic — Correct the evidenced Cloudflare hosting issue through the responsible site owner; hosted conform does not infer deployment or security intent.
-- **WCF-4 [M + J] — assets directory** — Assets point at the build dist directory. (standards-cloudflare-hosting.md#2-the-dist-seam)
+- **WCF-4 [M + J] — assets directory** — Parsed assets.directory is the exact contained dist output adjacent to its Wrangler config. (standards-cloudflare-hosting.md#2-the-dist-seam)
   - _Remediation:_ diagnostic — Correct the evidenced Cloudflare hosting issue through the responsible site owner; hosted conform does not infer deployment or security intent.
   - _Evidence scope:_ The Cloudflare Worker, static assets, deployment configuration, and evidence named by this criterion.
   - _Review prompt:_ Confirm the declared dist path is the exact output directory produced by the separately audited ki-repo-website build.

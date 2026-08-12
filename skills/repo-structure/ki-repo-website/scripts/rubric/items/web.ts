@@ -11,7 +11,7 @@ const inactive = (context: WebsiteContext): readonly AuditOutcome[] | null =>
           {
             status: 'NOT_APPLICABLE',
             message:
-              'ki-repo-website not applicable: no [skills.ki-repo-website] declaration or Eleventy config structural marker'
+              'ki-repo-website is not applicable: its repository declaration is absent. Detected Eleventy shape is handled by ki-repo coverage.'
           }
         ]
       : null
@@ -101,7 +101,7 @@ const WEB_1 = mechanical(
   (context) =>
     inactive(context) ??
     one(
-      Boolean(context.deps['@11ty/eleventy']),
+      /^\^3\./.test(context.deps['@11ty/eleventy'] ?? ''),
       `@11ty/eleventy ${context.deps['@11ty/eleventy']}`,
       '@11ty/eleventy not a dependency',
       'package.json'
@@ -130,7 +130,7 @@ const WEB_2 = mechanical(
 const WEB_3 = mechanical(
   'WEB-3',
   'Native TypeScript runner',
-  'TypeScript runs natively on Bun or modern Node; the legacy `tsx` runner is absent.',
+  'TypeScript runner is declared in package scripts as modern Node or Bun; the legacy `tsx` runner is absent. Runtime execution remains separate evidence.',
   'WARN',
   (context) => {
     const stop = inactive(context)
@@ -138,10 +138,15 @@ const WEB_3 = mechanical(
     const usesTsx =
       context.deps.tsx !== undefined ||
       Object.values(context.scripts).some((value) => /tsx\/esm|--import\s+tsx/.test(value))
+    const nativeRunner = Object.values(context.scripts).some((value) =>
+      /\b(?:bun|node(?:\s+--experimental-strip-types)?)\b/.test(value)
+    )
     return one(
-      !usesTsx,
-      'no tsx (TypeScript runs natively)',
-      'tsx detected (legacy TypeScript runner) — run TypeScript natively on Bun or Node',
+      !usesTsx && nativeRunner,
+      'package scripts declare a modern native TypeScript runner',
+      usesTsx
+        ? 'tsx detected (legacy TypeScript runner)'
+        : 'no modern Bun or Node runner is declared in package scripts',
       'package.json'
     )
   }
@@ -519,34 +524,11 @@ const WEB_35 = judgment(
   'Is dist treated as fully generated build output and never hand-edited?'
 )
 
-const WEB_36 = mechanical(
+const WEB_36 = judgment(
   'WEB-36',
-  'Hosting assets directory seam',
-  'A site workspace Wrangler assets directory points at `dist`.',
-  'WARN',
-  (context) => {
-    const stop = inactive(context)
-    if (stop) return stop
-    if (!context.siteRoot) return [{ status: 'NOT_APPLICABLE', message: 'site/ workspace is absent' }]
-    const path = context.has('site', 'wrangler.jsonc') ? 'site/wrangler.jsonc' : 'site/wrangler.json'
-    const content = context.read(path)
-    if (!content) return [{ status: 'NOT_APPLICABLE', message: 'no site Wrangler configuration found' }]
-    const directory = /"directory"\s*:\s*"([^"]+)"/.exec(content)?.[1]
-    if (directory === 'dist' || directory === './dist')
-      return [{ status: 'PASS', message: `assets.directory = "${directory}"`, subject: path }]
-    return [
-      {
-        status: 'VIOLATION',
-        ...(directory === '../dist' ? { level: 'FAIL' as const } : {}),
-        message:
-          directory === undefined
-            ? 'Wrangler configuration has no assets.directory'
-            : `assets.directory = "${directory}"; expected "dist"`,
-        subject: path
-      }
-    ]
-  },
-  { overrideLevels: ['FAIL'] }
+  'Hosting seam handoff',
+  'The exact site/dist output is consumed by the separately selected Cloudflare projection without claiming deployment or runtime success.',
+  'Does the selected hosting projection consume site/dist, with parsed configuration and runtime/deployment evidence kept separate?'
 )
 
 const WEB_37 = judgment(
@@ -605,8 +587,7 @@ const WEB_41 = mechanical(
       '[skills.ki-repo-website] table present',
       'no [skills.ki-repo-website] table in .ki-config.toml',
       '.ki-config.toml'
-    ),
-  { conform: (context) => context.addOptIn?.() }
+    )
 )
 
 const WEB_42 = mechanical(

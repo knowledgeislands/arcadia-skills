@@ -4,7 +4,7 @@ The normative, quotable reference for the Knowledge Islands 11ty website standar
 
 This skill owns the **site-build delta**. The toolchain it sits on (Bun mandate, aggregate/scoped audit wiring, direct code-tool execution, `tsconfig`/`biome`, and TypeScript checking) is `ki-engineering`'s and is referenced here, not restated.
 
-The standard applies when a repository either declares `[skills.ki-repo-website]` in `.ki-config.toml` or carries an `eleventy.config.{ts,js,mjs,cjs}` structural marker at the repository root or under `site/`. Neither signal produces one `NA` and stops the checker; either signal activates the complete site audit, so a declared but incomplete site and an undeclared Eleventy site still surface their existing findings.
+The standard applies only when a repository declares `[skills.ki-repo-website]` in `.ki-config.toml`. An `eleventy.config.{ts,js,mjs,cjs}` file at the repository root or under `site/` is coverage evidence for `ki-repo`, not local selection authority; an undeclared site receives one `NOT_APPLICABLE` result here.
 
 ## Contents
 
@@ -22,7 +22,7 @@ The standard applies when a repository either declares `[skills.ki-repo-website]
 
 - **Eleventy 3** (`@11ty/eleventy` `^3.x`) is the generator — a static-site generator, **not** a JS framework. **Not** Astro, Next, Vite, or a SPA. The output is HTML + CSS + a little progressive-enhancement JS.
 - **Nunjucks** (`.njk`) is the template engine for both HTML templates and Markdown (`htmlTemplateEngine: 'njk'`, `markdownTemplateEngine: 'njk'`). **Markdown** (`.md`) carries prose content; `.njk` carries logic/layout.
-- **TypeScript runs natively on Bun — no transpile step.** `eleventy.config.ts` and `_data/*.ts` are executed directly (Bun, or plain `node` on Node ≥ 24 — type stripping is stable and unflagged since v24.3 / v22.18; the older `--experimental-strip-types` flag is now a no-op). `tsc` is used only for `--noEmit` type-checking, which is the `ki-engineering` layer.
+- **TypeScript runner is declared, not proven.** Package scripts select Bun or modern Node and reject `tsx`; actual config or data execution is explicit runtime evidence. `tsc` is used only for `--noEmit` type-checking, which is the `ki-engineering` layer.
 - **Bun is mandated** as the package manager and runtime. The Bun-install / Node-run split, the `packageManager: bun@…` pin, `engines`, aggregate/scoped audit wiring, and internal code-tool checks are `ki-engineering`'s — this standard assumes them.
 - **Lucide** provides icons, copied from `node_modules` as a passthrough and initialised client-side (no build-time icon framework).
 
