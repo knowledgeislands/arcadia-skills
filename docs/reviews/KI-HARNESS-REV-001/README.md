@@ -96,6 +96,8 @@ Phase 0 and dependency ordering are complete. Phase 1 and Phase 2 review and rem
 | 39 | [`ki-repo-homebrew-tap`](ki-repo-homebrew-tap.md) | complete | review only | —          |
 | 40 | [`ki-repo-dotfiles-chezmoi`](ki-repo-dotfiles-chezmoi.md) | complete | review only | —          |
 | 41 | [`ki-binding`](ki-binding.md)                 | complete | review only  | —          |
+| 42 | [`ki-binding-claude`](ki-binding-claude.md)   | complete | review only  | —          |
+| 44 | [`ki-binding-chezmoi`](ki-binding-chezmoi.md) | complete | review only  | —          |
 | 45 | [`ki-housekeeping-claude`](ki-housekeeping-claude.md) | complete | review only | —          |
 | 46 | [`ki-tokenomics`](ki-tokenomics.md)           | complete | review only  | —          |
 
