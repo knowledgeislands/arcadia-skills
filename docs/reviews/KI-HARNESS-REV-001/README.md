@@ -25,6 +25,25 @@ Every skill review records the same evidence:
 
 The allowed proposed dispositions are `retain`, `revise`, `consolidate`, `split`, `replace with automation`, and `retire`. They are recommendations, not grades or accepted work.
 
+## Cumulative calibration
+
+Each completed review or phase may expose a reusable effectiveness check. Distil that pattern here once, without copying the originating skill's line-by-line findings. Apply the resulting checklist to every later review, and recheck the earlier records against the complete checklist during final synthesis. A new pattern supplements the common record; it does not silently change a normative skill rubric or authorise remediation.
+
+- Separate structural conformance from demonstrated outcome value; a clean audit is not effectiveness evidence.
+- For every deterministic contract, trace criterion policy through inspector output, published catalogue, host-visible result, and focused tests. Reject orphan finding codes, incorrect criterion mappings, and tests that assert raw inspector output while missing the hosted outcome.
+- Mechanise deterministic evidence as far as practical while leaving usefulness, authority, and other genuine judgment visibly unevaluated rather than manufacturing a pass.
+- Test the contract users depend on, including negative paths, false positives, false negatives, failure propagation, and assisted-versus-baseline value, rather than only file shape or recall.
+- Classify source authority explicitly, refresh volatile runtime and platform claims, and reconcile current primary sources with local standards and decision records.
+- Give each semantic rule and lifecycle transition one owner; detect duplicated or contradictory guidance across skills, standards, processes, and standing instructions.
+- Resolve selected adapters, dependencies, repository kinds, and runtime capabilities rather than validating only a literal name or assuming a local implementation path.
+- Treat identifiers, locators, namespace moves, aliases, and record migrations as explicit continuity contracts; do not assume a displayed key is stable identity.
+- Verify that approval scope and integrity cannot widen through unparsed prose, duplicate identifiers, stale reads, or an unverified handoff between producers and consumers.
+- Make failures and unavailable evidence fail closed; never translate an error, unsupported runtime, or incomplete observation into clean state.
+- Reconcile exact schemas and state machines across every producer and consumer, including completion, abandonment, replacement, retention, and recovery paths.
+- Keep descriptions and operational claims within demonstrated execution capability; configuration or guidance alone must not imply that a process can execute.
+- Exercise destructive and filesystem boundaries with exact roots, containment, regular-file and symlink checks, retention guards, and independently resolved targets.
+- Count ceremony, loaded context, repeated procedures, and tool round-trips as costs; retain them only where evidence shows a portable benefit.
+
 ## Progress
 
 - Phase 0 standing guidance: complete.
@@ -43,4 +62,5 @@ The allowed proposed dispositions are `retain`, `revise`, `consolidate`, `split`
 - Inferences and gaps are labelled; missing evidence never becomes a synthetic pass or failure.
 - Historical eval logs are advisory and are not baseline evidence when absent from the baseline commit.
 - A source refresh separates portable authority, runtime overlays, house authority, and supporting discovery material.
+- Every later review applies the cumulative calibration checklist; phase synthesis adds only genuinely new, generalised checks.
 - No review record edits the skill it assesses.

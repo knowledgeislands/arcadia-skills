@@ -41,6 +41,7 @@ Apply the same evidence shape to every skill:
 - **Architecture and ownership:** Check scope, naming, portability, dependency truth, shared-module use, collisions, and whether the capability belongs as guidance, a reference, a script, another skill, an agent, or a hook.
 - **Executability and safety:** Validate that commands, runtime assumptions, authority boundaries, stop conditions, recovery behaviour, and examples remain current and usable in supported environments.
 - **Evidence and tests:** Examine rubric coverage, fixtures, false-positive and false-negative risk, and whether tests prove the contract that users actually depend on rather than only its file shape.
+- **Cumulative calibration:** After each review and phase, distil genuinely reusable failure patterns into the review evidence's deduplicated calibration checklist rather than copying skill-specific findings. Apply the complete checklist to every later skill, then back-check all earlier records against its final form before grading. Treat additions as review criteria only; any normative rubric or remediation change remains separately approval-gated.
 - **Disposition:** Produce one evidence-backed recommendation: retain, revise, consolidate, split, replace with a smaller automation shape, or retire. Route each confirmed candidate through the `ki-skills` candidate-finding contract; the review itself grants no remediation authority.
 
 ## Review sequence
@@ -135,8 +136,8 @@ No grade scale or remediation queue is approved yet. The ordered inventory and c
 - [x] After confirmed standing-guidance dispositions are applied or explicitly deferred, freeze the execution baseline, regenerate the canonical skill inventory and dependency graph, and reconcile any additions, removals, missing dependencies, or cycles against the 50-skill planning list before reviewing content.
 - [ ] Refresh `ki-skills` and its source inventory first, confirm the effectiveness evidence template and grading vocabulary, and obtain approval for any normative rubric change before applying it to the remaining set.
 - [ ] Process Phases 1–6 in order, reviewing one skill at a time and recording source evidence, mechanical results, judgment findings, effectiveness evidence, instruction cost, and proposed disposition without silently remediating the skill.
-- [ ] At each phase boundary, reconcile newly discovered ownership or dependency changes before starting the next phase; update the remaining order only with an explicit, evidenced reason.
-- [ ] Re-run whole-repository collision and dependency checks, recheck `ki-skills` against emergent findings, and prove that every canonical skill has exactly one completed review record.
+- [ ] At each phase boundary, reconcile newly discovered ownership or dependency changes and add only new generalised effectiveness checks to the cumulative calibration checklist before starting the next phase; update the remaining order only with an explicit, evidenced reason.
+- [ ] Re-run whole-repository collision and dependency checks, recheck `ki-skills` against emergent findings, back-check every earlier review against the final cumulative calibration checklist, and prove that every canonical skill has exactly one completed review record.
 - [ ] Present the complete grade and disposition matrix for approval, then route confirmed remediation as amendments or separate roadmap items under the owning area.
 
 ## Files touched
@@ -153,6 +154,7 @@ No grade scale or remediation queue is approved yet. The ordered inventory and c
 - A generated inventory reports exactly the same canonical skills as the review sequence, with every declared dependency earlier than its dependent and no cycle or unknown target.
 - Every instruction in `AGENTS.md`, `CLAUDE.md`, and the former `ki-self` has a recorded boundary disposition, no confirmed reusable rule remains duplicated across standing surfaces, and every extraction is linked to its shared owner or separately approved candidate.
 - Every canonical skill has a review record covering all protocol checks, a source-list decision, exact audit evidence, and one proposed disposition.
+- Every reusable finding pattern is represented once in the cumulative calibration checklist, every later review applies the checklist current at its start, and final synthesis back-checks earlier reviews against the completed checklist without duplicating their line-by-line findings.
 - `ki repo audit --skill ki-skills --repo .` and each applicable focused skill audit pass after approved source-refresh changes; judgment gaps remain visible rather than being converted into synthetic mechanical passes.
 - Focused rubric and fixture tests pass for every approved normative change, followed by `bun run test` and `bunx tsc --noEmit`.
 - The final matrix accounts for all 50 baseline skills plus any explicitly reconciled catalogue change, and no remediation is implemented without its recorded approval and owner.
