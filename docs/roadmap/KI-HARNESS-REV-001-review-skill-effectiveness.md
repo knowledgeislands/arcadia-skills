@@ -125,7 +125,7 @@ Reconcile the three surfaces against one another and the canonical skill set. Re
 
 ## Current state
 
-The Harness has a strong mechanical `ki-skills` rubric and per-skill REFRESH contracts, but it has no completed effectiveness record spanning all 50 skills. Phase 0 reconciled the standing instruction surfaces: `AGENTS.md` is now a concise common repository anchor, `CLAUDE.md` contains only its Claude-specific hook boundary, the reusable rubric-code allocation rule lives in `ki-skills`, and the redundant repository-local `ki-self` has been retired. The immutable 50-skill inventory and dependency order are now frozen in [the review evidence](../reviews/KI-HARNESS-REV-001/README.md), along with the common ungraded record shape and the first completed skill review.
+The Harness has a strong mechanical `ki-skills` rubric and per-skill REFRESH contracts, but it has no completed effectiveness record spanning all 50 skills. Phase 0 reconciled the standing instruction surfaces: `AGENTS.md` is now a concise common repository anchor, `CLAUDE.md` contains only its Claude-specific hook boundary, the reusable rubric-code allocation rule lives in `ki-skills`, and the redundant repository-local `ki-self` has been retired. The immutable 50-skill inventory and dependency order are now frozen in [the review evidence](../reviews/KI-HARNESS-REV-001/README.md), along with the common ungraded record shape and the completed reviews through `ki-engineering`.
 
 No grade scale or remediation queue is approved yet. The ordered inventory and common checks above are the planning basis for collecting comparable evidence before those decisions.
 
