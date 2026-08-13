@@ -138,6 +138,31 @@ test('static version evidence remains unavailable even for a rejecting executabl
   expect(toolItem('TOOL-VERSION').audit.run(TOOL.selectContext(context))[0]?.status).toBe('INFO')
 })
 
+test('release-marker alignment starts at package version 1.0.0', () => {
+  const { repository } = fixture()
+  writeFileSync(join(repository, 'package.json'), JSON.stringify({ version: '0.2.20' }))
+  writeFileSync(join(repository, 'CHANGELOG.md'), '# Changelog\n\n## [1.0.0] - in progress\n')
+
+  const preOne = createToolsSession(options(repository, 'audit')).subjects[0]?.context()
+  if (!preOne) throw new Error('ki-repo-tools session has no repository context')
+  expect(toolItem('TOOL-RELEASE-MARKERS').audit.run(TOOL.selectContext(preOne))).toEqual([
+    {
+      status: 'NOT_APPLICABLE',
+      message: 'Package 0.2.20 is pre-1.0; changelog release-marker alignment is not evaluated.'
+    }
+  ])
+
+  writeFileSync(join(repository, 'package.json'), JSON.stringify({ version: '1.0.0' }))
+  const aligned = createToolsSession(options(repository, 'audit')).subjects[0]?.context()
+  if (!aligned) throw new Error('ki-repo-tools session has no repository context')
+  expect(toolItem('TOOL-RELEASE-MARKERS').audit.run(TOOL.selectContext(aligned))[0]?.status).toBe('PASS')
+
+  writeFileSync(join(repository, 'package.json'), JSON.stringify({ version: '1.0.1' }))
+  const drifted = createToolsSession(options(repository, 'audit')).subjects[0]?.context()
+  if (!drifted) throw new Error('ki-repo-tools session has no repository context')
+  expect(toolItem('TOOL-RELEASE-MARKERS').audit.run(TOOL.selectContext(drifted))[0]?.status).toBe('VIOLATION')
+})
+
 test('a physical manual page requires a mandoc lint workflow gate', () => {
   const { repository } = fixture()
   const beforeManual = createToolsSession(options(repository, 'audit')).subjects[0]?.context()

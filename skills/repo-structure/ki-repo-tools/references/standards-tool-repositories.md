@@ -52,6 +52,7 @@ tools-<name>/
 
 - The tool carries a **version marker** — for example `MGIT_VERSION=0.1.0` in a shell entrypoint or the package metadata of a TS/Bun tool — that `--version` prints. One source of truth; no second copy to drift.
 - Releases are **`vX.Y.Z` git tags**, each with a **GitHub release**. The version marker, the tag, and the top `CHANGELOG.md` entry agree.
+- Before the package reaches `1.0.0`, the mechanical audit does not compare its version with the changelog's leading release marker. A pre-1.0 package may legitimately retain a proposed 1.0 baseline while the implementation version continues to advance. Changelog presence and judgmental release-readiness review still apply.
 - `CHANGELOG.md` names the current semantic-versioned release. It may use [Keep a Changelog](https://keepachangelog.com/) sections (`Unreleased`, then dated version entries grouped by Added / Changed / Fixed / Removed), or establish a declared current-release baseline that inventories the shipped command surface. A baseline does not backfill older releases: their tags and commit history remain the record of that run-up.
 - Tags and releases can't be seen from a checkout path — the checker hands this to the judgment pass (RELEASE, ADVISORY).
 

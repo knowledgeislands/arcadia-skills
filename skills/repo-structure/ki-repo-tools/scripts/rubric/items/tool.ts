@@ -205,11 +205,16 @@ const TOOL_VERSION_SOURCE = judgment(
 const TOOL_RELEASE_MARKERS = mechanical(
   'TOOL-RELEASE-MARKERS',
   'Release marker alignment',
-  'When package.json and CHANGELOG.md expose stable semver releases, their current local markers agree.',
+  'From package version 1.0.0 onward, package.json and CHANGELOG.md current local release markers agree.',
   'WARN',
   (context) => {
     const skipped = notApplicable(context)
     if (skipped) return skipped
+    if (context.releaseVersion?.startsWith('0.'))
+      return one({
+        status: 'NOT_APPLICABLE',
+        message: `Package ${context.releaseVersion} is pre-1.0; changelog release-marker alignment is not evaluated.`
+      })
     if (!context.releaseVersion || !context.changelogVersion)
       return one({
         status: 'NOT_APPLICABLE',

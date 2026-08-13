@@ -64,7 +64,7 @@ Layout, executable, distribution, versioning, and judgment criteria.
   - _Review prompt:_ The version marker has one source of truth aligned with the latest tag and changelog.
   - _Outcomes:_ conforming; gap; exclusion
   - _Conforming guidance:_ Revise the tool repository through its responsible maintainer, record a named gap, or record an explicit justified exclusion.
-- **TOOL-RELEASE-MARKERS [M] — Release marker alignment** — When package.json and CHANGELOG.md expose stable semver releases, their current local markers agree. (standards-tool-repositories.md)
+- **TOOL-RELEASE-MARKERS [M] — Release marker alignment** — From package version 1.0.0 onward, package.json and CHANGELOG.md current local release markers agree. (standards-tool-repositories.md)
   - _Remediation:_ diagnostic — Correct the evidenced tool-repository issue through the responsible maintainer; hosted conform does not infer tool, release, or documentation semantics.
 - **TOOL-CHANGELOG [M] — Changelog presence** — `CHANGELOG.md` is a physical regular file. (standards-tool-repositories.md)
   - _Remediation:_ diagnostic — Correct the evidenced tool-repository issue through the responsible maintainer; hosted conform does not infer tool, release, or documentation semantics.
