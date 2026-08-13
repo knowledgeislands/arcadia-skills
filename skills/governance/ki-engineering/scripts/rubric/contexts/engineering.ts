@@ -11,6 +11,7 @@ import type {
   ViolationLevel
 } from '../../shared/rubric.ts'
 import { collectAuditEvidence, type EngineeringEvidenceFinding } from './audit-evidence.ts'
+import { inspectConsistencyReviewEvidence } from './review-evidence.ts'
 
 const ENGINEERING_TABLE = 'ki-engineering'
 
@@ -65,6 +66,7 @@ export type SyncRubricContext = { sync1: EngineeringEvidence; normalise?: () => 
 export type DependenciesRubricContext = { deps1: EngineeringEvidence }
 export type GeneratedRubricContext = { gen1: EngineeringEvidence }
 export type DesignRubricContext = Record<string, never>
+export type ReviewRubricContext = { review1: EngineeringEvidence }
 export type TestRubricContext = {
   test1: EngineeringEvidence
   test2: EngineeringEvidence
@@ -100,6 +102,7 @@ export type EngineeringRubricContext = {
   dependencies: DependenciesRubricContext
   generated: GeneratedRubricContext
   design: DesignRubricContext
+  review: ReviewRubricContext
   test: TestRubricContext
   build: BuildRubricContext
   environment: EnvironmentRubricContext
@@ -300,7 +303,10 @@ export const createEngineeringSession = async (
   const target = resolve(repository)
   const mutable = mode === 'conform'
   emit?.({ kind: 'stage', edge: 'start', label: 'engineering evidence' })
-  const evidence = evidenceByCode(await inspect(target, emit))
+  const evidence = evidenceByCode([
+    ...(await inspect(target, emit)),
+    ...(await inspectConsistencyReviewEvidence(target))
+  ])
   emit?.({ kind: 'stage', edge: 'end', label: 'engineering evidence' })
   const packagePath = join(target, 'package.json')
   const packageSource = isSafeRegularFile(packagePath) ? readFileSync(packagePath, 'utf8') : undefined
@@ -397,6 +403,7 @@ export const createEngineeringSession = async (
     dependencies: { deps1: evidence('DEPS-1') },
     generated: { gen1: evidence('GEN-1') },
     design: {},
+    review: { review1: evidence('REVIEW-1') },
     test: {
       test1: evidence('TEST-1'),
       test2: evidence('TEST-2'),
@@ -436,6 +443,7 @@ export const createEngineeringSession = async (
           'DEPS',
           'GEN',
           'DESIGN',
+          'REVIEW',
           'TEST',
           'BUILD',
           'ENV',

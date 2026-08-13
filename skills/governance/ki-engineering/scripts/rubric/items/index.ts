@@ -12,6 +12,7 @@ import { KNIP } from './knip.ts'
 import { MISE } from './mise.ts'
 import { PACKAGE } from './package.ts'
 import { RUBRIC } from './publication.ts'
+import { REVIEW } from './review.ts'
 import { SCRIPTS } from './scripts.ts'
 import { SYNC } from './sync.ts'
 import { TEST } from './test.ts'
@@ -37,6 +38,7 @@ export default {
     DEPENDENCIES,
     GENERATED,
     DESIGN,
+    REVIEW,
     TEST,
     BUILD,
     ENVIRONMENT,

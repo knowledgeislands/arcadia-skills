@@ -4,7 +4,7 @@ title: Add change-aware code reviews
 area: FND
 theme: foundation-tooling
 horizon: now
-status: in-progress
+status: awaiting-review
 blocks: []
 blocked_by: []
 baseline_ref: f6159032ac8ba657c48695f5342da0c218db6319
@@ -56,11 +56,11 @@ The trailer parser and record-selection rule, exact judgment prompt, outcome voc
 
 ## Steps
 
-- [ ] Define and parse the `KI-Consistency-Review-Base`, `-Scope`, and `-Outcome` trailer block; select the newest valid record whose base remains resolvable, and report unavailable evidence rather than guessing from an arbitrary commit.
-- [ ] Add one advisory `ki-engineering` judgment prompt that first asks whether the change since the selected boundary warrants review and, when it does, applies structural questions to the explicit range and scope.
-- [ ] Document the two outcomes — `consistent` and `follow-up:<work-item-id>` — plus representative "review now" and "not yet warranted" cases without turning either into an automatic threshold.
-- [ ] Confirm the convention with `ki-git` so the trailer shape remains portable commit metadata rather than a competing Git-hygiene policy.
-- [ ] Add focused catalogue and documentation verification for valid trailers, malformed or unresolved evidence, review selection, and the advisory prompt.
+- [x] Define and parse the `KI-Consistency-Review-Base`, `-Scope`, and `-Outcome` trailer block; select the newest valid record whose base remains resolvable, and report unavailable evidence rather than guessing from an arbitrary commit.
+- [x] Add one advisory `ki-engineering` judgment prompt that first asks whether the change since the selected boundary warrants review and, when it does, applies structural questions to the explicit range and scope.
+- [x] Document the two outcomes — `consistent` and `follow-up:<work-item-id>` — plus representative "review now" and "not yet warranted" cases without turning either into an automatic threshold.
+- [x] Confirm the convention with `ki-git` so the trailer shape remains portable commit metadata rather than a competing Git-hygiene policy.
+- [x] Add focused catalogue and documentation verification for valid trailers, malformed or unresolved evidence, review selection, and the advisory prompt.
 
 ## Files touched
 
@@ -81,6 +81,32 @@ The trailer parser and record-selection rule, exact judgment prompt, outcome voc
 ## Dependencies / blocks
 
 The approved trailer record is the only durable review evidence introduced by this work. `ki-git` remains the owner of portable commit hygiene; any conflict with its existing contract is a stop rather than a reason to add a competing policy.
+
+## Review
+
+### Delivered
+
+Added an advisory `REVIEW-1` engineering criterion and Git-trailer evidence selector for change-aware consistency review.
+
+### Summary of changes
+
+The selector accepts only a final contiguous Base, Scope, Outcome trailer block with a reachable earlier base, chooses the newest usable record, and reports absent, malformed, or unreachable evidence as unavailable. `ki-git` now identifies this as engineering-owned commit metadata, not hygiene policy.
+
+### Verification
+
+Focused evidence and catalogue tests (12 passing), `bun run test`, `bunx tsc --noEmit`, rubric publication, engineering/roadmap/authoring audits, Biome, rumdl, and `git diff --check` passed.
+
+### Outstanding concerns
+
+No trailer in current history is expected to report unavailable evidence, not a failed review. The review decision remains human or model judgment; this change adds no cadence, threshold, or gate.
+
+### Post-change review
+
+Fixture-backed history selects the newest valid boundary and never promotes malformed or unreachable trailers to completed-review evidence.
+
+### Mini recap
+
+Maintainers now have portable, inspectable review-boundary evidence without a second planning system or automated quality claim.
 
 ## Discussion
 

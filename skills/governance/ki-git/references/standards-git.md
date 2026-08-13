@@ -24,6 +24,8 @@ Choose the narrowest type that describes the committed unit rather than combinin
 
 Historic messages are not rewritten merely to conform to this current convention.
 
+Other skills MAY define a narrowly-scoped trailer block as durable evidence for their own concern. For example, `ki-engineering` owns the `KI-Consistency-Review-*` block for an advisory code-consistency review. That block is portable commit metadata, not a new Git-hygiene policy: `ki-git` neither interprets its engineering outcome nor requires it on ordinary commits.
+
 ## Direct main and branches
 
 `main` is open by default in Knowledge Islands repositories.

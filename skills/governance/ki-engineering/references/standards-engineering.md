@@ -10,6 +10,7 @@ This file is the **normative, quotable** standard. The checkable items and their
 
 - [Scope and layers](#scope-and-layers)
 - [Code design](#code-design)
+- [Change-aware consistency review](#change-aware-consistency-review)
 - [0. Repo shapes — flat vs monorepo (core)](#0-repo-shapes--flat-vs-monorepo-core)
 - [1. package.json & toolchain pinning (core)](#1-packagejson--toolchain-pinning-core)
 - [2. The governed script surface (core)](#2-the-governed-script-surface-core)
@@ -49,6 +50,24 @@ Code is maintained for correct change, not merely compact implementation. These 
 - **Prefer clarity to maximal DRY.** Extract shared code only when it represents a stable concept with the same meaning, lifecycle, and error semantics for every caller. Local, well-named duplication is preferable when an abstraction would hide domain vocabulary, couple unrelated flows, or force conditional behaviour into a generic helper.
 
 Tests remain part of this design discipline: coverage is evidence only when it begins at a supported API, CLI, or other observable contract boundary (§6). A test seam MAY model a documented interface failure that cannot be reproduced deterministically through that boundary, but it MUST NOT become an implementation-only substitute for it.
+
+## Change-aware consistency review
+
+A repository MAY record a completed, focused consistency review when a maintainer judges that accumulated code change warrants one. There is no calendar cadence, numeric threshold, CI gate, or automatic finding: the reviewer decides whether review is worthwhile after inspecting the actual change.
+
+When completed, the outcome commit carries one final contiguous trailer block in this exact order. Its commit is the reviewed result; `Base` is the exclusive lower boundary of the inspected range.
+
+```text
+KI-Consistency-Review-Base: <full-40-character lowercase commit>
+KI-Consistency-Review-Scope: repository | <pathspec>, <pathspec>, ...
+KI-Consistency-Review-Outcome: consistent | follow-up:<canonical-work-item-id>
+```
+
+`Scope` is either `repository` or a non-empty comma-separated pathspec list that states what was examined. `Outcome` is `consistent` or `follow-up:<canonical-work-item-id>`; the follow-up remains an ordinary work item in the repository's selected change-management adapter. A review that is not warranted records nothing.
+
+The rubric selects the newest reachable outcome commit whose block is well formed, whose `Base` resolves to a commit, and whose Base is an earlier ancestor of that outcome commit. Absent, malformed, foreign, or unresolved trailers are unavailable evidence, not a proxy for freshness. The reviewer may inspect ordinary Git history when evidence is unavailable, but must not infer a prior review from commit time, prose, or changed-path heuristics.
+
+Review the explicit range and scope for coherent module structure, naming, ownership, duplication, and treatment of public surfaces and their contract tests. A public API change, cross-cutting rewrite, or repeated local change can justify review; a small isolated change may not. These are examples for judgment, not automatic triggers.
 
 ## 0. Repo shapes — flat vs monorepo (core)
 

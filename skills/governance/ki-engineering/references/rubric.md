@@ -21,6 +21,7 @@ Line-by-line criteria for auditing ki-engineering. Classifications are derived f
 - [DEPS — Dependency freshness](#deps--dependency-freshness)
 - [GEN — Generated surfaces](#gen--generated-surfaces)
 - [DESIGN — Code design](#design--code-design)
+- [REVIEW — Change-aware consistency review](#review--change-aware-consistency-review)
 - [TEST — Tests](#test--tests)
 - [BUILD — Compiled builds](#build--compiled-builds)
 - [ENV — Environment configuration](#env--environment-configuration)
@@ -211,6 +212,19 @@ Comprehension-first modularity and deliberately restrained abstraction.
   - _Review prompt:_ Do module boundaries match domain concerns and reasons to change; can a maintainer follow ordinary control flow and policy from clear names and interfaces; and does each shared abstraction retain the same meaning, lifecycle, and error semantics for every caller?
   - _Outcomes:_ conforming; gap; exception
   - _Conforming guidance:_ Split a mixed-responsibility module at a domain seam, simplify or name an obscuring abstraction, or retain documented local duplication where it makes the domain clearer.
+
+## REVIEW — Change-aware consistency review
+
+→ [standard](standards-engineering.md)
+
+Advisory evidence for a focused review of accumulated code changes.
+
+- **REVIEW-1 [M + J] — Change-aware consistency review** — Git trailers may identify the newest usable review boundary, but a reviewer decides whether the change since that boundary warrants a focused consistency review. (standards-engineering.md#change-aware-consistency-review)
+  - _Remediation:_ diagnostic — Treat unavailable trailer evidence as unavailable, not as a freshness signal; inspect the explicit Git range before deciding whether to record a new review.
+  - _Evidence scope:_ The newest usable KI-Consistency-Review trailer block, its exclusive-base-to-result Git range, the stated scope, and the affected source, public surfaces, and contract tests.
+  - _Review prompt:_ Does the accumulated change since the explicit boundary warrant a focused review; if it does, do module structure, naming, ownership, duplication, and public-surface treatment remain coherent in the examined range and scope?
+  - _Outcomes:_ not warranted; consistent; follow-up:<canonical-work-item-id>
+  - _Conforming guidance:_ Do not record a review when it is not warranted. When a review completes, put one final Base, Scope, Outcome trailer block on its outcome commit: use consistent, or follow-up:<canonical-work-item-id> and create that ordinary work item.
 
 ## TEST — Tests
 
