@@ -1,10 +1,10 @@
 # Documentation
 
-This is the map of `docs/` and the guiding principles that govern everything in it. The harness repository keeps four durable documentation sources, while the KI Website publishes the public user and prompting guidance. Read this page to know where a given thing belongs and how it is expected to be written.
+This is the map of `docs/` and the guiding principles that govern everything in it. The harness repository keeps four durable documentation sources, while the KI Website publishes broader public user and prompting guidance. Read this page to know where a given thing belongs and how it is expected to be written.
 
 ## Guiding principles
 
-**Each source has one job.** Decisions record the **why**, Specifications the **what**, guides the **how**, and roadmap items the **when**. Public explanatory guidance lives on the website. A fact belongs in exactly one of them; if it is tempting to write it in two places, one of those is the wrong place.
+**Each source has one job.** Decisions record the **why**, Specifications the **what**, guides the **how**, and roadmap items the **when**. The generated capability catalogue publishes exact local skill facts; the skills-by-outcome guide explains how to choose among them. A fact belongs in exactly one of them; if it is tempting to write it in two places, one of those is the wrong place.
 
 **A source is written to be read on its own terms.** Decision Records ([`decisions/`](decisions)) are **self-contained**. A record inlines the context it needs and states the decision in full; its only outbound links are normally to sibling DRs in the same set, following the reading-order layering. The sole carve-out is a record whose subject is an external artefact or whose canonical public publication has moved, which may cite that current location while preserving the historical decision. The format is governed by the `ki-decision-records` skill.
 
@@ -22,17 +22,17 @@ This is the map of `docs/` and the guiding principles that govern everything in 
 
 ### Guides — the _how_
 
-[`guides/`](guides) holds repository-local practical instructions. Its [index](guides/README.md) directs contributors and operators to the right procedure; [`guides/developer/`](guides/developer) holds harness contributor mechanics such as local harness development, testing, managed write boundaries, and bounded acquisition work. Governed by the `ki-guides` skill.
+[`guides/`](guides) holds repository-local practical instructions. Its [index](guides/README.md) directs readers to the [skills-by-outcome guide](guides/skills-by-outcome.md) and contributor procedures; [`guides/developer/`](guides/developer) holds harness contributor mechanics such as local harness development, testing, managed write boundaries, and bounded acquisition work. Governed by the `ki-guides` skill.
 
 ### Public guidance — website-owned
 
 The KI Website is the canonical home for public explanatory guidance:
 
 - [Using KI](https://knowledgeislands.info/guidance/using-ki/) explains installation, onboarding, safe operation, tuning, and planning journeys.
-- [Skills and journeys](https://knowledgeislands.info/guidance/skills/) explains the skill families, catalogue, dependencies, and process composition.
+- [Skills and journeys](https://knowledgeislands.info/guidance/skills/) may provide public explanatory material; the Harness [skills-by-outcome guide](guides/skills-by-outcome.md) and generated [capability catalogue](../skills/README.md#generated-capability-catalogue) remain authoritative for the capabilities in this repository.
 - [Prompting guides](https://knowledgeislands.info/guidance/prompting/) publish the source-backed, model-specific guidance and current portable type-to-model resolution.
 
-The harness retains the underlying `SKILL.md` files, standards, generated rubric publications, decisions, specifications, and developer procedures. Do not recreate website guidance under `docs/` as a compatibility copy.
+The harness retains the underlying `SKILL.md` files, generated capability catalogue, selection guide, standards, generated rubric publications, decisions, specifications, and developer procedures. Do not recreate website guidance under `docs/` as a compatibility copy.
 
 ### Repository roadmaps — the _when_
 

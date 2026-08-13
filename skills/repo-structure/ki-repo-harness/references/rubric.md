@@ -29,6 +29,8 @@ Typed compatible-harness capability inventory and kind-specific boundaries.
   - _Review prompt:_ Review each populated shelf: are its capabilities discoverable through the compatible payload, and are kind-specific semantics delegated to the appropriate standard?
   - _Outcomes:_ conforming; inventory revision; route to owning standard
   - _Conforming guidance:_ Revise the inventory or route the concern to its owning standard; do not alter a capability’s runtime semantics from this container-level review.
+- **CAP-2 [M] — Generated capability catalogue is exact** — A populated skills shelf publishes one marker-bounded catalogue in `skills/README.md`, derived exactly from canonical skill frontmatter and safely replaceable without changing authored surrounding guidance. (standards-compatible-harness.md#capability-publication)
+  - _Remediation:_ automatic
 
 ## PAYLOAD — Payload and runtime evidence boundary
 

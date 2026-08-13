@@ -2,11 +2,11 @@
 
 **This is the common, runtime-neutral orientation** for any agent working in this repo — the [open agents.md standard](https://agents.md/), read directly by Codex and imported by `CLAUDE.md` for Claude Code. Put shared guidance here; keep only genuinely runtime-specific notes in per-runtime files.
 
-The README is the entry point; [the overview](https://knowledgeislands.info/guidance/using-ki/), [skills map](https://knowledgeislands.info/guidance/skills/), and [roadmap](ROADMAP.md) supply detail. This file is the short anchor.
+The README is the entry point; the [skills-by-outcome guide](docs/guides/skills-by-outcome.md), generated [capability catalogue](skills/README.md#generated-capability-catalogue), and [roadmap](ROADMAP.md) supply detail. This file is the short anchor.
 
 ## What this repo is
 
-The canonical home for reusable Knowledge Islands agentic capabilities. The [README](README.md) owns the five-part source layout and current repository status; the [skills map](https://knowledgeislands.info/guidance/skills/) owns the skill taxonomy and composition graph.
+The canonical home for reusable Knowledge Islands agentic capabilities. The [README](README.md) owns the five-part source layout and current repository status; the [skills-by-outcome guide](docs/guides/skills-by-outcome.md) owns task-oriented selection, while the generated [capability catalogue](skills/README.md#generated-capability-catalogue) publishes exact membership and formal composition.
 
 ## How skills relate
 

@@ -4,4 +4,5 @@ Practical instructions for using, operating, contributing to, and maintaining th
 
 ## Guide areas
 
+- [Choose a skill by outcome](skills-by-outcome.md) — route an intended result to the smallest useful capability or delivery journey without first knowing a skill name.
 - [Developer guides](developer/README.md) — lightweight contributor workflows for local harness development and testing.

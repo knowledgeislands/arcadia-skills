@@ -7,6 +7,11 @@ import type {
   RubricPublicationContext,
   RubricSession
 } from '../../shared/rubric.ts'
+import {
+  type CapabilityPublicationDraft,
+  type CapabilitySource,
+  prepareCapabilityPublication
+} from './capability-publication.ts'
 
 export const HARNESS_PARTS = ['skills', 'subagents', 'mcp', 'evals', 'hooks'] as const
 export type HarnessPart = (typeof HARNESS_PARTS)[number]
@@ -48,6 +53,13 @@ export type HarnessSkillsContext = {
   unsafePaths: readonly string[]
 }
 
+export type HarnessCapabilityPublicationContext = {
+  repository: string
+  state: CapabilityPublicationDraft['state']
+  issues: readonly string[]
+  requestUpdate?: () => void
+}
+
 export type HarnessReviewContext = {
   repository: string
 }
@@ -59,6 +71,7 @@ export type HarnessProvenanceContext = {
 
 export type HarnessRubricContext = {
   rubric: RubricPublicationContext
+  capabilityPublication: HarnessCapabilityPublicationContext
   layout: HarnessLayoutContext
   config: HarnessConfigContext
   skills: HarnessSkillsContext
@@ -166,6 +179,31 @@ export const createHarnessSession = ({
   const hasHarnessTable = configContent !== null && hasTomlTable(configContent, 'ki-repo-harness')
   let markerRequested = false
   const inspectedSkills = inspectSkills(root, state)
+  const capabilitySources: CapabilitySource[] = []
+  const capabilitySourceIssues: string[] = []
+  for (const skill of inspectedSkills.skills) {
+    const path = join(root, skill.path, 'SKILL.md')
+    try {
+      capabilitySources.push({ path: `${skill.path}/SKILL.md`, content: readFileSync(path, 'utf8') })
+    } catch {
+      capabilitySourceIssues.push(`${skill.path}/SKILL.md could not be read`)
+    }
+  }
+  const skillsReadmePath = join(root, 'skills', 'README.md')
+  const skillsReadmeState = state === 'physical' ? pathState(skillsReadmePath) : 'missing'
+  let skillsReadme: string | undefined
+  if (skillsReadmeState === 'file') {
+    try {
+      skillsReadme = readFileSync(skillsReadmePath, 'utf8')
+    } catch {
+      capabilitySourceIssues.push('skills/README.md could not be read')
+    }
+  } else {
+    capabilitySourceIssues.push('skills/README.md is missing or is not a physical file')
+  }
+  const capabilityDraft = prepareCapabilityPublication(skillsReadme, capabilitySources)
+  const capabilityIssues = [...capabilitySourceIssues, ...capabilityDraft.issues].sort()
+  let capabilityPublicationRequested = false
   const parts = HARNESS_PARTS.map((name) => {
     const partState = state === 'physical' ? pathState(join(root, name)) : 'missing'
     return {
@@ -176,6 +214,18 @@ export const createHarnessSession = ({
   })
   const context: HarnessRubricContext = {
     rubric: { publication },
+    capabilityPublication: {
+      repository: root,
+      state: capabilityIssues.length > 0 ? 'unsafe' : capabilityDraft.state,
+      issues: capabilityIssues,
+      ...(mode === 'conform' && capabilityIssues.length === 0 && capabilityDraft.state !== 'in-sync'
+        ? {
+            requestUpdate: () => {
+              capabilityPublicationRequested = true
+            }
+          }
+        : {})
+    },
     layout: {
       repository: root,
       repositoryState: state,
@@ -234,6 +284,8 @@ export const createHarnessSession = ({
           path: '.ki-config.toml',
           content: `${configContent.replace(/\n*$/, '\n')}\n[skills.${tableIdentity('ki-repo-harness')}]\n`
         })
+      if (capabilityPublicationRequested && capabilityDraft.merged !== undefined)
+        writes.push({ path: 'skills/README.md', content: capabilityDraft.merged })
       return { writes }
     }
   }

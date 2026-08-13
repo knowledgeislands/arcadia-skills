@@ -47,6 +47,10 @@ An installed skill's physical source directory and `SKILL.md` frontmatter are au
 
 Runtime activation is a separate managed projection. Only the host creates or verifies activation links to a verified installed source. A source-harness script must not install a harness, activate user or repository capabilities, or link runtime discovery directly to its checkout.
 
+A populated skills shelf publishes one generated capability catalogue between the `ki-repo-harness:capability-catalogue:start` and `ki-repo-harness:capability-catalogue:end` markers in `skills/README.md`. The private harness context parses canonical `SKILL.md` YAML frontmatter and derives exact governance/process counts, source-domain groups, full descriptions, invocation hints, required dependencies, runtime bindings, and a Mermaid view of formal `ki-depends-on` composition. The graph excludes optional dependencies, shared rubric modules, lifecycle hand-offs, and conceptual relationships.
+
+AUDIT compares the marker-bounded bytes with the deterministic rendering. Missing, renamed, removed, or changed skills therefore stale the publication mechanically. CONFORM may add a missing generated section or replace one exact marker-bounded section while preserving authored content around it. It refuses malformed skill frontmatter, unknown dependencies, duplicate capability names, unsafe files, and missing, duplicate, partial, or reversed markers rather than guessing at a repair. `ki-skills` remains the owner of individual skill quality and frontmatter semantics; this standard uses those source facts only to publish the Harness inventory.
+
 ## Source-harness layout
 
 Every source harness has all five directories at its physical repository root, each with a physical `README.md` explaining its purpose and status:
