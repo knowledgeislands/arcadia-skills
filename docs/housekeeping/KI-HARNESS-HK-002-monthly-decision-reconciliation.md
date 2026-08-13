@@ -3,7 +3,7 @@ id: KI-HARNESS-HK-002
 title: Monthly decision reconciliation
 status: active
 cadence: P1M
-last-run: null
+last-run: 2026-08-09
 grace: P7D
 spawn-policy: when-due
 spawn-horizon: now
