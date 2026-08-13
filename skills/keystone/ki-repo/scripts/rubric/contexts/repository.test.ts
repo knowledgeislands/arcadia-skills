@@ -444,6 +444,48 @@ describe('local repository evidence', () => {
     expect((await collectAuditFindings([root])).findings.filter((finding) => finding.code === 'COV-1')).toEqual([])
   })
 
+  test('requires the portable parent and Claude adapter for Markdown subagent projections', async () => {
+    const root = repository()
+    mkdirSync(join(root, 'subagents', 'governance'), { recursive: true })
+    writeFileSync(join(root, 'subagents', 'governance', 'reviewer.md'), '# Reviewer\n')
+    writeFileSync(join(root, '.ki-config.toml'), '[skills.ki-repo]\n')
+
+    const findings = (await collectAuditFindings([root])).findings.filter((finding) => finding.code === 'COV-1')
+    expect(findings).toContainEqual(
+      expect.objectContaining({ message: expect.stringContaining('looks governed by ki-subagents (') })
+    )
+    expect(findings).toContainEqual(
+      expect.objectContaining({ message: expect.stringContaining('looks governed by ki-subagents-claude') })
+    )
+
+    writeFileSync(
+      join(root, '.ki-config.toml'),
+      '[skills.ki-repo]\n\n[skills.ki-subagents]\n\n[skills.ki-subagents-claude]\n'
+    )
+    expect((await collectAuditFindings([root])).findings.filter((finding) => finding.code === 'COV-1')).toEqual([])
+  })
+
+  test('requires the portable parent and Codex adapter for TOML subagent projections', async () => {
+    const root = repository()
+    mkdirSync(join(root, '.codex', 'agents'), { recursive: true })
+    writeFileSync(join(root, '.codex', 'agents', 'reviewer.toml'), 'name = "reviewer"\n')
+    writeFileSync(join(root, '.ki-config.toml'), '[skills.ki-repo]\n')
+
+    const findings = (await collectAuditFindings([root])).findings.filter((finding) => finding.code === 'COV-1')
+    expect(findings).toContainEqual(
+      expect.objectContaining({ message: expect.stringContaining('looks governed by ki-subagents (') })
+    )
+    expect(findings).toContainEqual(
+      expect.objectContaining({ message: expect.stringContaining('looks governed by ki-subagents-codex') })
+    )
+
+    writeFileSync(
+      join(root, '.ki-config.toml'),
+      '[skills.ki-repo]\n\n[skills.ki-subagents]\n\n[skills.ki-subagents-codex]\n'
+    )
+    expect((await collectAuditFindings([root])).findings.filter((finding) => finding.code === 'COV-1')).toEqual([])
+  })
+
   test('fails a selected local target rather than falling back to GitHub content', async () => {
     const root = mkdtempSync(join(tmpdir(), 'ki-repo-broken-local-'))
     roots.push(root)

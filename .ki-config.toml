@@ -12,6 +12,7 @@ supported_runtimes = ["claude-code", "claude-desktop", "chatgpt-codex"]
 
 [skills.ki-repo.checks]
 coverage-checkpoint = false # source repository publishes the optional capability without adopting a checkpoint subarea
+coverage-subagents-codex = false # source repository publishes the adapter without adopting Codex agent projections
 
 [skills.ki-authoring]
 

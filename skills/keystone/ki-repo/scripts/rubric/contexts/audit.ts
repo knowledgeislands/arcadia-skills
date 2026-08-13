@@ -206,7 +206,7 @@ const pkgHasDep = (pkg: Pkg | null, name: string): boolean =>
   Boolean(pkg?.dependencies?.[name] ?? pkg?.devDependencies?.[name])
 
 // The repo's full tree (recursive) as a set of paths, for the coverage signals that
-// look below the root (`site/wrangler.jsonc`, `skills/*/SKILL.md`, `subagents/**/*.md`).
+// look below the root (`site/wrangler.jsonc`, `skills/*/SKILL.md`, runtime subagent projections).
 // One API call; empty set on error or truncation. `rootPaths` stays the top-level
 // view the file-presence checks use.
 async function treePaths(nwo: string, branch: string): Promise<Set<string>> {
@@ -537,8 +537,23 @@ const COVERAGE: { skill: string; table: string; artifact: string; detect: (s: Si
   {
     skill: 'subagents',
     table: skillTable('ki-subagents'),
+    artifact: 'subagents/**/*.md or .codex/agents/**/*.toml',
+    detect: (s) =>
+      [...s.tree].some(
+        (p) => (/^subagents\/.+\.md$/.test(p) && !/(^|\/)README\.md$/i.test(p)) || /^\.codex\/agents\/.+\.toml$/.test(p)
+      )
+  },
+  {
+    skill: 'subagents-claude',
+    table: skillTable('ki-subagents-claude'),
     artifact: 'subagents/**/*.md',
     detect: (s) => [...s.tree].some((p) => /^subagents\/.+\.md$/.test(p) && !/(^|\/)README\.md$/i.test(p))
+  },
+  {
+    skill: 'subagents-codex',
+    table: skillTable('ki-subagents-codex'),
+    artifact: '.codex/agents/**/*.toml',
+    detect: (s) => [...s.tree].some((p) => /^\.codex\/agents\/.+\.toml$/.test(p))
   },
   {
     skill: 'checkpoint',

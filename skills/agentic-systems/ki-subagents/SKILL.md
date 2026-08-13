@@ -1,7 +1,7 @@
 ---
 name: ki-subagents
 ki-kind: governance
-ki-depends-on: [ki-skills]
+ki-depends-on: []
 ki-shared-dependencies: [ki-skills:rubric]
 description: Define or assess a portable subagent role before choosing a runtime projection. Use for identity, delegation purpose, core instructions, lane, grounding, hand-offs, orchestration intent, and outcome evidence. Use ki-subagents-claude for Claude Markdown/YAML or ki-subagents-codex for Codex TOML. This skill does not prescribe a native file format or prove installation, activation, effective settings, or execution.
 argument-hint: 'audit | conform | educate | refresh | help'
