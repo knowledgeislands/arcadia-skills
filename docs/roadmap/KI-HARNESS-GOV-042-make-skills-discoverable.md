@@ -4,7 +4,7 @@ title: Make skills discoverable
 area: GOV
 theme: governance-consistency
 horizon: next
-status: in-progress
+status: awaiting-review
 blocks: []
 blocked_by: []
 baseline_ref: dd1277b640c08863092ca231c29a917da43bb96c
@@ -34,13 +34,13 @@ The selected design keeps one generated catalogue section between stable markers
 
 ## Steps
 
-- [ ] Extend the private `ki-repo-harness` capability context to parse the required `SKILL.md` frontmatter fields safely and render one deterministic marker-bounded catalogue section for `skills/README.md`.
-- [ ] Add a mechanical capability-publication criterion that fails on a missing or stale generated section and makes CONFORM propose only the exact section update; declare the skill's contribution to `skills/README.md`.
-- [ ] Render exact skill counts, domain groups, full descriptions, invocation hints, dependencies, runtime bindings, and a Mermaid formal-composition view from source facts; keep lifecycle and conceptual relationships out of the dependency graph.
-- [ ] Retire `docs/diagrams/skills-map.dot` and `docs/diagrams/skills-map.svg`; use the generated catalogue for factual membership and composition, and retain the separately governed roadmap-cycle diagram for the delivery lifecycle.
-- [ ] Add `docs/guides/skills-by-outcome.md`, organised around repository governance, documentation instruments, delivery, delegation versus subagent roles, repository structures, runtime binding and tokenomics, and cross-repository trades; link it from the guide and root orientations.
-- [ ] Correct `README.md`, `AGENTS.md`, `docs/docs.md`, the authored portions of `skills/README.md`, and the current HELP decision so they describe the 43-governance/eight-process set and current local discovery surfaces without claiming removed CLI commands or Website freshness.
-- [ ] Add focused context and catalogue fixtures for add, rename, remove, kind, domain, dependency, runtime-binding, invocation-hint, malformed-frontmatter, stale-publication, and marker-preservation cases; regenerate the readable `ki-repo-harness` rubric once.
+- [x] Extend the private `ki-repo-harness` capability context to parse the required `SKILL.md` frontmatter fields safely and render one deterministic marker-bounded catalogue section for `skills/README.md`.
+- [x] Add a mechanical capability-publication criterion that fails on a missing or stale generated section and makes CONFORM propose only the exact section update; declare the skill's contribution to `skills/README.md`.
+- [x] Render exact skill counts, domain groups, full descriptions, invocation hints, dependencies, runtime bindings, and a Mermaid formal-composition view from source facts; keep lifecycle and conceptual relationships out of the dependency graph.
+- [x] Retire `docs/diagrams/skills-map.dot` and `docs/diagrams/skills-map.svg`; use the generated catalogue for factual membership and composition, and retain the separately governed roadmap-cycle diagram for the delivery lifecycle.
+- [x] Add `docs/guides/skills-by-outcome.md`, organised around repository governance, documentation instruments, delivery, delegation versus subagent roles, repository structures, runtime binding and tokenomics, and cross-repository trades; link it from the guide and root orientations.
+- [x] Correct `README.md`, `AGENTS.md`, `docs/docs.md`, the authored portions of `skills/README.md`, and the current HELP decision so they describe the 43-governance/eight-process set and current local discovery surfaces without claiming removed CLI commands or Website freshness.
+- [x] Add focused context and catalogue fixtures for add, rename, remove, kind, domain, dependency, runtime-binding, invocation-hint, malformed-frontmatter, stale-publication, and marker-preservation cases; regenerate the readable `ki-repo-harness` rubric once.
 
 ## Files touched
 
@@ -69,6 +69,39 @@ No external repository or Website publication is required. `ki-repo-harness` own
 
 The implementation is tightly coupled across one inventory renderer, one rubric context, its exact publication, and the documents consuming it. Parallel delegation would create shared-file and regeneration conflicts without a bounded delivery advantage, so this item should remain local to one implementation context.
 
+## Review
+
+### Delivered
+
+Implemented the approved Harness-local boundary from immutable baseline `dd1277b640c08863092ca231c29a917da43bb96c`. Commit `9e09b943` adds the generated catalogue and mechanical parity check, the task-oriented guide, current orientation and HELP documentation, and retires only the obsolete skill-map DOT/SVG pair. It makes no KI Website or `tools-ki` change and does not alter skill semantics to simplify the graph.
+
+### Summary of changes
+
+Added a private Bun-YAML capability parser and deterministic marker renderer to `ki-repo-harness`, plus mechanical criterion `CAP-2` and its automatic CONFORM proposal. The generated `skills/README.md` section now publishes all 51 canonical skills, the 43-governance/eight-process split, domain groups, descriptions, invocation hints, dependencies, runtime bindings, and a Mermaid graph containing only formal `ki-depends-on` edges.
+
+Added `docs/guides/skills-by-outcome.md` and routed the root, agent, documentation, and guide indexes to it and the generated catalogue. Updated the current HELP Decision Record to describe in-session skill-owned HELP and the current cross-skill discovery surfaces without retired renderers or CLI aliases. Removed `docs/diagrams/skills-map.dot` and `docs/diagrams/skills-map.svg`; the separately governed roadmap-cycle diagram remains.
+
+### Verification
+
+- `bun run test` — passed the complete isolated Harness and hook suite, including the new 14 focused capability-publication/catalogue tests.
+- `bunx tsc --noEmit` — passed.
+- `ki dev skill rubric ki-repo-harness` — reported `references/rubric.md` in sync.
+- `ki repo audit --skill ki-repo-harness --repo .` — passed with zero FAIL and WARN across the selected dependency chain.
+- Focused `ki-skills`, `ki-guides`, `ki-decision-records`, and `ki-authoring` audits — each passed with zero FAIL and WARN.
+- Catalogue evidence — 51 generated `ki-*` entries exactly match 43 governance and eight process source declarations; searches found no retired skill-map references or removed HELP/audit aliases in the current discovery surfaces.
+
+### Outstanding concerns
+
+None within the approved boundary. Public Website guidance may remain independently stale, but Website export and publication were explicitly excluded and are not required for this item.
+
+### Post-change review
+
+The delivery meets the goal: a reader can start from an intended outcome, then reach exact source-derived capability facts without relying on a separately maintained public catalogue or mixed-purpose map. Regression risk is bounded to the new private parser and marker replacement; fail-closed validation, exact-byte audit, marker-preservation fixtures, full tests, TypeScript, and focused governance audits cover that boundary. The item is ready for human acceptance.
+
+### Mini recap
+
+GOV-042 now separates authored judgment from mechanical facts: the guide owns outcome selection, while `ki-repo-harness` owns catalogue membership and formal composition parity. The useful durable learning is already encoded in the Harness standard, rubric criterion, Decision Record, and guide, so no additional knowledge promotion is proposed.
+
 ## Discussion
 
 ### Four discovery questions
@@ -83,7 +116,7 @@ Names, kinds, domains, dependencies, runtime bindings, modes, and membership are
 
 `skills/README.md` is the smallest durable factual home because every source harness already requires that shelf orientation. Its generated section can be exact without taking ownership of the surrounding contributor guidance. The authored `docs/guides/skills-by-outcome.md` starts from user intent and links into that catalogue; it does not repeat all 51 entries.
 
-The current DOT/SVG map mixes formal dependencies, contextual links, lifecycle hand-offs, runtime components, and a repository-local skill in one manually maintained graph. Replacing it with the generated formal-composition view and the existing focused roadmap-cycle diagram reduces both drift and cognitive load.
+The retired DOT/SVG map mixed formal dependencies, contextual links, lifecycle hand-offs, runtime components, and a repository-local skill in one manually maintained graph. The generated formal-composition view and the existing focused roadmap-cycle diagram now keep those concerns separate, reducing both drift and cognitive load.
 
 ### Local publication boundary
 
