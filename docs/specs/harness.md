@@ -64,7 +64,7 @@ _Verify:_ `ki-repo-harness`'s rubric CLAUDE-1 and CLAUDE-2 ([`skills/repo-struct
 
 ### HARN-009 — Claude Code plan lifecycle hooks
 
-The harness MUST ship `hooks/plan-stamp.sh` and `hooks/plan-sync.sh` as a Claude-Code-specific lifecycle pair. The compatible harness payload makes hooks available to runtime bindings; the source harness MUST NOT claim a repository-local installer, mutate Claude settings, or create hook symlinks.
+The harness MUST ship `hooks/plan-stamp.sh` and `hooks/plan-sync.sh` as a Claude-Code-specific lifecycle pair. The state record is JSON V1 only, with exactly `version`, `session_id`, `plan_file`, and physically resolved `cwd`; malformed, schema-invalid, and plaintext state records MUST fail closed. The compatible harness payload makes hooks available to runtime bindings; the source harness MUST NOT claim a repository-local installer, mutate Claude settings, or create hook symlinks.
 
 _Verify:_ `bun hooks/plan-stamp.test.ts && bun hooks/plan-sync.test.ts` exercises the pair; compatible-harness inventory checks confirm that the hooks payload is published without source-harness installation side effects.
 

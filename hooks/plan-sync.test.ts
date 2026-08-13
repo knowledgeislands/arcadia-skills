@@ -355,26 +355,26 @@ exit "$status"
   }
 }
 
-// Legacy one-line absolute pointers remain sync-compatible, but multi-line records do not.
+// Plaintext state records are rejected without touching their plan targets.
 {
   const env = environment()
   try {
     const planFile = createPlan(env)
     writeFileSync(join(env.state, 'legacy-session'), `${realpathSync(planFile)}\n`)
     run(env.home, 'legacy-session', todos())
-    check('legacy pointer → progress applied', readFileSync(planFile, 'utf8').includes('- [ ] Do thing'))
+    check('plaintext pointer → rejected', readFileSync(planFile, 'utf8') === FRONTMATTER)
 
     const second = createPlan(env, 'second.md')
     writeFileSync(join(env.state, 'legacy-multiline'), `${realpathSync(second)}\nignored\n`)
     const before = readFileSync(second, 'utf8')
     run(env.home, 'legacy-multiline', todos())
-    check('multi-line legacy → rejected', readFileSync(second, 'utf8') === before)
+    check('multi-line plaintext → rejected', readFileSync(second, 'utf8') === before)
   } finally {
     rmSync(env.root, { recursive: true, force: true })
   }
 }
 
-// JSON-shaped malformed or schema-invalid records never fall back to legacy.
+// Malformed or schema-invalid records fail closed.
 for (const [label, stateValue] of [
   ['malformed JSON', '  {not-json\n'],
   [
@@ -474,23 +474,23 @@ for (const [label, stateValue] of [
   }
 }
 
-// Outside/traversal/symlink plan targets are contained, including legacy records.
+// Outside, traversal, and symlink plan targets are contained for V1 records.
 {
   const env = environment()
   try {
     const outside = join(env.root, 'outside.md')
     writeFileSync(outside, FRONTMATTER)
-    writeFileSync(join(env.state, 'outside-plan'), `${realpathSync(outside)}\n`)
+    writeV1(env, 'outside-plan', outside)
     run(env.home, 'outside-plan', todos())
     check('outside plan → untouched', readFileSync(outside, 'utf8') === FRONTMATTER)
 
-    writeFileSync(join(env.state, 'traversal-plan'), `${env.plans}/../../../outside.md\n`)
+    writeV1(env, 'traversal-plan', outside, { plan_file: `${env.plans}/../../../outside.md` })
     run(env.home, 'traversal-plan', todos())
     check('traversal plan → untouched', readFileSync(outside, 'utf8') === FRONTMATTER)
 
     const link = join(env.plans, 'linked.md')
     symlinkSync(outside, link)
-    writeFileSync(join(env.state, 'symlink-plan'), `${link}\n`)
+    writeV1(env, 'symlink-plan', link)
     run(env.home, 'symlink-plan', todos())
     check('symlink plan → target untouched', readFileSync(outside, 'utf8') === FRONTMATTER)
   } finally {

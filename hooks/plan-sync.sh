@@ -94,40 +94,24 @@ state=${state_record%$'\034'}
 [ -n "$state" ] || exit 0
 state_unchanged || exit 0
 
-first_non_ws=$(printf '%s' "$state" | jq -Rrs 'try match("\\S").string catch ""') || exit 0
-if [ "$first_non_ws" = "{" ]; then
-  printf '%s' "$state" | jq -e -s \
-    --arg session_id "$session_id" \
-    'length == 1
-      and (.[0] | type == "object")
-      and (.[0] | keys == ["cwd", "plan_file", "session_id", "version"])
-      and .[0].version == 1
-      and (.[0].session_id | type == "string")
-      and .[0].session_id == $session_id
-      and (.[0].plan_file | type == "string" and length > 0)
-      and (.[0].cwd | type == "string" and length > 0)' >/dev/null || exit 0
-  plan_file=$(printf '%s' "$state" | jq -sr '.[0].plan_file') || exit 0
-  state_cwd=$(printf '%s' "$state" | jq -sr '.[0].cwd') || exit 0
-  case "$state_cwd" in
-    /*) ;;
-    *) exit 0 ;;
-  esac
-  [ -d "$state_cwd" ] || exit 0
-  [ "$(cd "$state_cwd" 2>/dev/null && pwd -P)" = "$state_cwd" ] || exit 0
-else
-  # Temporary sync-only compatibility: one absolute plaintext path. A record that
-  # looks like JSON is never allowed to fall through here after a parse failure.
-  [ "$(awk 'END { print NR }' "$state_file")" -eq 1 ] || exit 0
-  legacy_state=${state%$'\n'}
-  case "$legacy_state" in
-    /*) ;;
-    *) exit 0 ;;
-  esac
-  case "$legacy_state" in
-    *$'\r'* | *$'\n'*) exit 0 ;;
-  esac
-  plan_file="$legacy_state"
-fi
+printf '%s' "$state" | jq -e -s \
+  --arg session_id "$session_id" \
+  'length == 1
+    and (.[0] | type == "object")
+    and (.[0] | keys == ["cwd", "plan_file", "session_id", "version"])
+    and .[0].version == 1
+    and (.[0].session_id | type == "string")
+    and .[0].session_id == $session_id
+    and (.[0].plan_file | type == "string" and length > 0)
+    and (.[0].cwd | type == "string" and length > 0)' >/dev/null || exit 0
+plan_file=$(printf '%s' "$state" | jq -sr '.[0].plan_file') || exit 0
+state_cwd=$(printf '%s' "$state" | jq -sr '.[0].cwd') || exit 0
+case "$state_cwd" in
+  /*) ;;
+  *) exit 0 ;;
+esac
+[ -d "$state_cwd" ] || exit 0
+[ "$(cd "$state_cwd" 2>/dev/null && pwd -P)" = "$state_cwd" ] || exit 0
 
 case "$plan_file" in
   /*) ;;
@@ -145,12 +129,10 @@ plan_file="$resolved_dir/$(basename "$plan_file")"
 [ -L "$plan_file" ] && exit 0
 [ -f "$plan_file" ] || exit 0
 
-# V1 records are canonical by contract; a rewritten or stale non-physical path is
-# rejected even if it happens to resolve back into the plans jail.
-if [ "$first_non_ws" = "{" ]; then
-  recorded_plan=$(printf '%s' "$state" | jq -sr '.[0].plan_file') || exit 0
-  [ "$recorded_plan" = "$plan_file" ] || exit 0
-fi
+# A rewritten or stale non-physical path is rejected even if it happens to resolve
+# back into the plans jail.
+recorded_plan=$(printf '%s' "$state" | jq -sr '.[0].plan_file') || exit 0
+[ "$recorded_plan" = "$plan_file" ] || exit 0
 
 jq -e '(.tool_input.todos // []) | length > 0' <<<"$input" >/dev/null || exit 0
 
