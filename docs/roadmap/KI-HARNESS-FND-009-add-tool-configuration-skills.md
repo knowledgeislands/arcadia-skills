@@ -38,15 +38,24 @@ Keep shared guidance in a common place only where the tools genuinely have the s
 
 ### Decisions still needed
 
-Confirm the initial default set and the exact tracked files for each tool, including whether every proposed default is safe across KI repositories. Decide the skill names and placement after reviewing the reference implementation and the current skill taxonomy.
+Confirm the canonical names and placement, whether each skill owns a closed settings file or a declared key-level merge, and the exact initial keys. Decide whether formatter integration is conditional on `ki-engineering`, how an unavailable VS Code extension or community-maintained Zed Biome extension is represented, and which `.editorconfig`-owned behaviours must be omitted as duplication.
+
+The next planning review should compare two explicit options:
+
+- `ki-vscode` and `ki-zed` under `skills/environment/`, each governing one project settings file and preserving unrelated keys through an exact key-level contract.
+- `ki-editor-vscode` and `ki-editor-zed` under the same concern, making the editor relationship more explicit at the cost of longer names.
+
+For either option, user preferences, extension installation, global settings, formatter selection without a declared compatible toolchain, and machine paths remain excluded.
 
 ### Promotion conditions
 
-Promote when each tool's project-local contract, safe defaults, ownership boundary, and activation path are reviewable; the two skills have a clear shared-versus-tool-specific split; and a representative repository can validate their configuration without requiring either tool to be installed for unrelated work.
+Promote when the names, key-level versus whole-file ownership, conditional `ki-engineering` relationship, exact defaults, and extension-availability behaviour are selected; the two skills have a clear shared-versus-tool-specific split; and fixtures validate their configuration without requiring either editor to be installed.
 
 ## Current state
 
 `tools-ki` provides the reference project-local VS Code and Zed configuration, but the Harness has not yet classified every tracked setting as portable, tool-specific, user-local, or machine-local. No reusable tool-configuration skill currently owns the shared or per-tool defaults.
+
+The reference files are only `.vscode/settings.json` and `.zed/settings.json`, and they are not a coherent policy: VS Code selects Biome for JavaScript, TypeScript, and JSON, while Zed selects Prettier globally. Current primary editor documentation confirms project/workspace settings and the file-hygiene keys, but Zed's Biome support requires a community extension and its `.editorconfig` support already owns line endings. The plan must therefore choose whether these skills provide only non-duplicative editor behaviour or conditionally compose with `ki-engineering`; it cannot copy the two reference files wholesale.
 
 ## Steps
 
@@ -74,6 +83,10 @@ No user-level editor configuration, machine-local state, portable `ki-repo` meta
 The `tools-ki` configuration is evidence, not a dependency that grants copying authority. The selection of safe defaults, exact tracked files, and the skill names remains the immediate planning decision; do not mark this item Ready until it is recorded and reviewable.
 
 ## Discussion
+
+### Source evidence
+
+Current [VS Code workspace-settings documentation](https://code.visualstudio.com/docs/configure/settings) confirms that project settings live under the workspace and may be language-specific. Current [Zed settings documentation](https://zed.dev/docs/reference/all-settings) confirms its project keys and that `.editorconfig` overrides line-ending settings, while [Zed's Biome documentation](https://zed.dev/docs/languages/biome) identifies Biome support as a community-maintained extension. These sources support the ownership questions; they do not select the KI defaults.
 
 ### Optional adoption
 

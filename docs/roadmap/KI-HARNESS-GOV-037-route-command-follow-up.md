@@ -3,8 +3,8 @@ id: KI-HARNESS-GOV-037
 title: Route command follow-up
 area: GOV
 theme: governance-consistency
-horizon: next
-status: ready
+horizon: waiting-for
+status: draft
 blocks: []
 blocked_by: []
 baseline_ref: null
@@ -25,6 +25,8 @@ Do not run the upload command, modify any Website script, create a receiver copy
 ## Current state
 
 The accepted GOV-028 inventory records the exact command, evidence boundary, and two valid receiver options: establish it as an intentional operational entrypoint with a documented owner and safety boundary, or remove it through receiver-owned work. No outbound follow-up exists.
+
+The required route is not currently available. The Harness exports only `knowledge` to KI Website and KI Website imports only `knowledge` from the Harness, while this item requires a `work` submission. The earlier Ready state therefore cannot author the planned record safely.
 
 ## Steps
 
@@ -47,7 +49,7 @@ The accepted GOV-028 inventory records the exact command, evidence boundary, and
 
 ## Dependencies / blocks
 
-GOV-028 is accepted and supplies the factual finding. The current reciprocal KI Website route makes receipt available; the future receiver decision remains independent.
+GOV-028 is accepted and supplies the factual finding. Return this item to Next only after both repositories independently declare a reciprocal `work` route and the local `ki-trades` audit confirms it. The future receiver decision remains independent.
 
 ## Delegation
 

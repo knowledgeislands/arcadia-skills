@@ -3,7 +3,7 @@ id: KI-HARNESS-GOV-006
 title: Reanchor MCP standard
 area: GOV
 theme: governance-consistency
-horizon: next
+horizon: waiting-for
 status: draft
 blocks: []
 blocked_by: []
@@ -50,7 +50,7 @@ Promote when the v2 migration delta has been proven in a named stdio pilot, the 
 
 The `ki-repo-mcp` source list is already anchored to the released 2026-07-28 specification and TypeScript SDK v2 availability, while all six sibling servers still declare SDK 1.x and implement the older profile.
 
-This item is deferred from the current planning batch. It is the first candidate for the following batch once the `mcp-git-audit` owner can accept the pilot and the rollout-profile decision can be reviewed together; neither condition is inferred from SDK availability alone.
+This item waits for two external facts: a reciprocal Harness-to-`mcp-git-audit` work route and that repository owner's acceptance of a bounded v2 pilot. The current declarations do not provide that work route, so no receiver-owned pilot record can yet be submitted or inferred from SDK availability alone.
 
 `mcp-git-audit` is the proposed named stdio pilot because its scope is local and its migration can be evaluated before a fleet-wide standard change.
 
@@ -77,7 +77,7 @@ This item is deferred from the current planning batch. It is the first candidate
 
 ## Dependencies / blocks
 
-This item cannot become Ready until `mcp-git-audit` accepts the pilot and the owner selects the fleet rollout profile.
+Return this item to Next only after a reciprocal work route exists and `mcp-git-audit` has accepted a receiver-owned pilot. It cannot become Ready until the pilot evidence exists and the owner selects the fleet rollout profile.
 
 ## Discussion
 

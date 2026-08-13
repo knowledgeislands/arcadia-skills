@@ -38,9 +38,9 @@ Reproductions must carry no content from this estate. Test fixtures use neutral 
 
 ## Current state
 
-The fork carries three local candidate branches, but no pull request is open and none should be opened merely because the migration found a reproduction. The recorded `MD056` branch was overtaken by correcting the affected Markdown; the recorded `MD075` branch does not address the variant the estate actually encounters. Both claims require fresh, fixture-level measurement before they can count as submission-ready work.
+rumdl 0.2.54 resolved the practical MD005 and MD075 cases and added Obsidian-flavour handling for the MD056 wikilink case. Direct reproductions recorded by `ki-authoring` now preserve the MD005 and MD075 fixtures; the standard-flavour house configuration enables MD056 for detection but marks it unfixable so CONFORM cannot truncate a row. Those released outcomes replace the local candidate branches as current evidence.
 
-This item now waits for routine use of rumdl across the estate to provide a reason to resume: a recurrent defect, a changed upstream release, or enough operational evidence that recovering a particular rule is worth the upstream-maintenance cost. Its return begins with re-validation, not with opening the existing branches as pull requests.
+The soft-wrapped ATX/setext corruption and MD013 pipe-reflow gap remain open watch-items. No pull request or released fix is recorded for either. This item therefore still waits for routine estate use, a relevant upstream release, or enough operational evidence that recovering one of those rules is worth the upstream-maintenance cost. Its return begins with fresh fixture-level validation.
 
 Six defects, each with a reproduction verified during the migration:
 
@@ -65,17 +65,17 @@ Six defects, each with a reproduction verified during the migration:
 
 The `MD018` heuristic itself is not a defect and is not challenged. markdownlint flags `##].` too, and rumdl aims for parity with it. The difference is that markdownlint reports one finding and stops, whereas rumdl admits the candidate into its document model so four rules fire and their combined fixes corrupt the paragraph. The report is about the amplification, not the heuristic.
 
-Upstream is at 0.2.52, uses conventional commits with a `fix(rules)` scope, generates its changelog from commit messages with git-cliff, and runs its tests through `cargo-nextest`. `CONTRIBUTING.md` asks contributors not to hand-edit `CHANGELOG.md`.
+The current local evidence is rumdl 0.2.54. The upstream project uses conventional commits with a `fix(rules)` scope, generates its changelog from commit messages with git-cliff, and runs its tests through `cargo-nextest`. `CONTRIBUTING.md` asks contributors not to hand-edit `CHANGELOG.md`.
 
 ## Steps
 
 - [x] Install the Rust toolchain the project pins and confirm the test suite passes before any change.
-- [ ] Re-validate the three candidate branches against the estate's exact reproductions before treating any as a fix. Retire the superseded `MD056` contribution unless new evidence gives it an independent purpose; redesign or retire the `MD075` contribution unless it fixes the observed variant.
-- [ ] Re-validate the `MD005` branch against the nested-list reproduction before treating it as submission-ready.
+- [x] Re-validate released rumdl 0.2.54 against the exact MD005, MD075, and MD056 cases and record the safe house configuration in `ki-authoring`.
+- [ ] Retire the three superseded local candidate branches after confirming that none carries an independent unreleased fix.
 - [ ] Fix the ATX and setext misparses, which are one root cause and may be one pull request.
 - [ ] Fix the `MD013` reflow gap, the last of the pipe-context defects.
-- [ ] Open one pull request per branch, each carrying its reproduction, and record the references under Discussion.
-- [ ] Once a fix is released, re-test the rule against its recorded reproduction and re-enable it across the estate through `ki-authoring` REFRESH.
+- [ ] Open one pull request per remaining fix, each carrying its reproduction, and record the references under Discussion.
+- [ ] Once a remaining fix is released, re-test the rule against its recorded reproduction and recover its coverage through `ki-authoring` REFRESH.
 
 ## Files touched
 

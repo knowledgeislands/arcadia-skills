@@ -4,7 +4,7 @@ title: Govern skill package scripts
 area: GOV
 theme: governance-consistency
 horizon: now
-status: ready
+status: draft
 blocks: []
 blocked_by: []
 baseline_ref: null
@@ -70,6 +70,8 @@ The core inventory already distinguishes a clear `ki:tools:*` claim in `tools-ki
 
 No rubric-catalogue metadata currently publishes script claims, the host does not aggregate them, and `ki-engineering` has no exact exclusion contract.
 
+The local declaration contract is approved, but the end-to-end plan is not dependency-ready. Catalogue discovery and aggregation belong to `tools-ki`, which has no accepted receiver-owned record for this change. The Website migration is also named without a reciprocal work route. Before this record returns to Ready, split the Harness-owned static contract from receiver-owned host and estate migrations, or narrow this item to one independently complete local outcome plus exact outbound submissions.
+
 ## Steps
 
 - [ ] Add exact `packageScripts` metadata to the shared rubric-catalogue contract, with validation that a skill claims each key at most once and retains the owner-specific rule and judgment alongside its claim.
@@ -98,7 +100,7 @@ No rubric-catalogue metadata currently publishes script claims, the host does no
 
 ## Dependencies / blocks
 
-The static metadata shape, host aggregation boundary, exact exclusions, and clean-cut migration rule are approved. Each receiving repository remains a separate acceptance boundary; an unclaimed key, duplicate claim, or unavailable receiver is a stop with a routed local follow-up.
+The static metadata shape, host aggregation boundary, exact exclusions, and clean-cut migration rule are approved. Host aggregation remains an unsatisfied `tools-ki` dependency, and the Website currently has no reciprocal work route. Each receiver remains a separate acceptance boundary; an unclaimed key, duplicate claim, or unavailable receiver is a stop rather than permission to implement across repositories.
 
 ## Discussion
 

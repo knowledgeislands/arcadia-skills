@@ -33,14 +33,15 @@ The current recovery remains manually decomposed: a maintainer must interpret th
 ## Steps
 
 - [ ] Reconcile the Harness runtime-coverage contract, its `RUNTIMES-2` evidence, and the existing `ki repo skill add` safeguards into one precise receiver-facing conform proposal; list the recognised runtimes, required capabilities, and repository-owned projections it may repair.
-- [ ] Prepare a `tools-ki` receiver-owned implementation proposal for `ki repo conform`, including shared resolver reuse, containment, ownership, compatibility, and trust checks; do not infer acceptance or edit the receiving repository.
 - [ ] Specify the dry-run and apply transaction behaviour: report each exact proposed table or managed-link addition, make no user-configuration write, fail closed on missing or ambiguous mappings, and leave unrelated declarations and unmanaged runtime files byte-preserved.
 - [ ] Define focused two-runtime fixtures for missing declarations and links, dry-run output, successful convergence, a repeated byte-stable conform run, and rejected ambiguous, incompatible, untrusted, or out-of-scope cases.
-- [ ] Record the receiving disposition and any named park in this item; only an accepted `tools-ki` record may implement the CLI change and run its repository-local verification.
+- [ ] Create one immutable outbound `work` submission to `knowledgeislands/tools-ki` with `observation: decision`, preserving the proposal, safety boundary, and fixture plan without selecting the receiver's disposition.
+- [ ] Audit the local submitted record and record its identity and receiver-owned next condition here; do not wait for receipt, disposition, or implementation as part of this delivery.
 
 ## Files touched
 
-- This work item, containing the runtime-coverage mapping and the receiver-facing implementation proposal
+- This work item, containing the runtime-coverage mapping and receiver-facing proposal
+- `-/_TRADES/knowledgeislands/tools-ki/TRD-<eight-hex>.md`
 
 No `tools-ki` source, repository configuration, managed discovery link, or user-owned runtime setting changes in this item.
 
@@ -49,11 +50,12 @@ No `tools-ki` source, repository configuration, managed discovery link, or user-
 - The proposal maps every recognised declared runtime to its exact required capabilities and identifies the existing audit and `ki repo skill add` evidence it reuses.
 - Each proposed CONFORM action is limited to declared repository-owned tables and managed discovery links; unsupported, missing, ambiguous, incompatible, or untrusted sources are explicit failures.
 - The fixture plan proves dry-run non-mutation, apply convergence, repeat idempotence, and preservation of unrelated declarations and unmanaged runtime files.
+- The outbound record is `kind: work`, `phase: submitted`, `observation: decision`, and passes `ki repo audit --skill ki-trades --repo .` without a receiver-local disposition.
 - `ki repo audit --skill ki-change-management-roadmap --repo .` and `ki repo audit --skill ki-authoring --repo .` pass.
 
 ## Dependencies / blocks
 
-The runtime-coverage mapping and the `ki repo skill add` safety checks already exist as Harness evidence. The actual `ki repo conform` executor and its CLI fixtures belong to `tools-ki`; no implementation may start until that repository confirms a receiver-owned record and scope.
+The runtime-coverage mapping and the `ki repo skill add` safety checks already exist as Harness evidence, and the reciprocal `tools-ki` work route is active. The actual `ki repo conform` executor and its CLI fixtures belong to `tools-ki`; submission does not grant that repository priority or implementation authority.
 
 ## Discussion
 

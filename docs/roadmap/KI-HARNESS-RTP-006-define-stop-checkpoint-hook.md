@@ -42,12 +42,15 @@ The portable checkpoint schema and lifecycle exist in `ki-checkpoint`. What is m
 
 The approved delivery boundary is opt-in only: an adapter may address an already-selected valid checkpoint only when its native event contract proves the action safe, and it must no-op on uncertainty. Unsupported or insufficiently evidenced runtimes remain explicitly unsupported rather than acquiring a shared fallback.
 
+The first delivery is reminder-only. A Stop adapter may report that one already-selected valid checkpoint needs an explicit update; it does not create or mutate checkpoint content. Before any adapter implementation, a contained fresh-agent reconstruction trial must show that the existing portable checkpoint can restore the named task, constraints, current state, and next action without transcript or vendor-session access. A failed trial stops hook work and routes a checkpoint-contract follow-up.
+
 ## Steps
 
-- [ ] Inventory the supported Stop-event contracts for each intended runtime, including payload identity, repeated invocation, cancellation or interruption semantics, timeout and exit behaviour, and writable-state boundaries; retain primary-source evidence for every claimed capability.
-- [ ] Decide the opt-in configuration, selection rule, and exact action contract: a hook may emit a compact reminder or invoke one bounded checkpoint operation, but it must do nothing when repository identity, active-thread selection, or event safety is uncertain.
+- [ ] Run one contained fresh-agent reconstruction trial against a representative valid checkpoint, recording whether task, constraints, current state, and next action can be recovered without transcript or vendor-session access; stop and route a checkpoint-contract follow-up if it fails.
+- [ ] Inventory Claude Code and Codex Stop-event contracts independently, including payload identity, repeated invocation, cancellation or interruption semantics, timeout and exit behaviour, and writable-state boundaries; retain primary-source evidence for every claimed capability and omit an unsupported adapter.
+- [ ] Define the opt-in configuration, selected-checkpoint rule, and reminder-only action contract; do nothing when repository identity, active-thread selection, checkpoint validity, or event safety is uncertain.
 - [ ] Define the relationship to `ki-recap` and portable checkpoints: recap remains the judgment-led durable summary, while the hook may only use an already-selected active record and must never fabricate decisions, work status, or prose from a transcript.
-- [ ] Implement isolated runtime adapters only after their event contracts are verified; keep shared checkpoint validation runtime-neutral and do not assume a Claude executable works in Codex.
+- [ ] Implement each isolated reminder adapter only after its native event contract is verified; keep shared checkpoint validation runtime-neutral and do not assume a Claude executable works in Codex.
 - [ ] Make successful execution quiet by default and failure actionable but compact; document that response verbosity belongs to a separate precedence-aware policy, not hook output filtering.
 - [ ] Add fixture-backed tests for absent opt-in, unknown repository, no selected checkpoint, repeated Stop events, interrupted work, malformed records, a safe no-op, and each supported adapter's native invocation.
 
@@ -62,14 +65,15 @@ The approved delivery boundary is opt-in only: an adapter may address an already
 
 ## Verify
 
-- Primary-source evidence identifies the native Stop semantics and hook environment for every supported adapter.
+- The fresh-agent trial either proves reconstruction of task, constraints, current state, and next action or stops adapter delivery with a named checkpoint follow-up.
+- Primary-source evidence identifies the native Stop semantics and hook environment for every supported adapter; unsupported runtimes produce no adapter.
 - Focused fixture tests prove that uncertain state produces no write, repeated Stop events remain idempotent, and only an explicitly selected valid checkpoint can be addressed.
 - The native adapter tests prove a compact success result and actionable failure result without emitting routine transcript, test, or progress detail.
 - `ki repo audit --skill ki-skills --repo .`, the relevant focused tests, `bun run test`, and `bunx tsc --noEmit` pass.
 
 ## Dependencies / blocks
 
-The portable record, lifecycle, and authority boundaries a hook needs before it can safely select, update, or retire a checkpoint are already established by `ki-checkpoint`. Primary-source evidence is a delivery gate: an adapter without it is parked, while independently evidenced adapters may proceed.
+The portable record, lifecycle, and authority boundaries a hook needs are established by `ki-checkpoint`, but its effectiveness review records no fresh-agent reconstruction outcome. That trial is the first delivery gate. Primary-source event evidence is the second: an adapter without it is omitted, while independently evidenced reminder adapters may proceed.
 
 The runtime-portability decision and runtime adapters define event-specific evidence; `ki-recap` retains its explicit in-session judgment and grounding role.
 
@@ -80,6 +84,10 @@ The runtime-portability decision and runtime adapters define event-specific evid
 A Stop event can be useful as a narrow session-boundary signal, but it cannot establish whether the user is finished, whether an agent result is correct, or whether durable records have been updated.
 
 The safe default is therefore no-op on uncertainty, not an invented checkpoint or a noisy warning.
+
+### First-delivery authority
+
+Reminder-only keeps Stop handling outside checkpoint mutation authority and is independently reversible. A later proposal may consider one bounded checkpoint update only after outcome evidence and a separately approved authority contract; it is not latent scope in this item.
 
 ### Output and response policy
 

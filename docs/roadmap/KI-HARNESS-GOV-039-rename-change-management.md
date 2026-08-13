@@ -30,9 +30,11 @@ Do not mutate installed runtime projections or external repositories directly. R
 
 The canonical parent is `ki-change-management`. Its identity appears in its directory and frontmatter, repository configuration, dependency declarations, standards, rubrics, tests, evaluations, documentation, generated publications, and host or external-consumer references. No `ki-work` compatibility surface exists.
 
+A 2026-08-13 estate scan finds broad local and external impact rather than one bounded rename: ninety-nine non-review Harness source files, the generated `ki-plugins` projection, and owner-controlled references in KI Website, `tools-ki`, kit-legal, and Techne Principal, plus repository declarations across the wider governed estate. The record remains Draft until the parent-only versus whole-adapter-family decision is explicit and each external owner has a valid migration route.
+
 ## Steps
 
-- [ ] Inventory exact parent-identity references in the Harness, generated outputs, host integration, installed projections, and known external consumers.
+- [ ] Turn the fresh reference scan into an exact path-classified inventory: canonical Harness source, generated projection, installed runtime projection, host integration, and each owner-controlled external repository.
 - [ ] Confirm whether adapter children retain their current names or move as one explicitly named family; do not infer this from the parent rename.
 - [ ] Rename the canonical parent directory and `name:` to `ki-work`, then update declarations, dependencies, source links, standards, rubrics, tests, evaluations, and documentation atomically.
 - [ ] Remove every obsolete exact parent-name reference without adding an alias, fallback, redirect, or compatibility shim.
@@ -59,7 +61,7 @@ The canonical parent is `ki-change-management`. Its identity appears in its dire
 
 ## Dependencies / blocks
 
-The completed effectiveness evidence under `docs/reviews/KI-HARNESS-REV-001/` is the naming and boundary baseline. Implementation is not blocked, but planning must resolve the child-skill naming question and identify external consumers before changing canonical identity.
+The completed effectiveness evidence under `docs/reviews/KI-HARNESS-REV-001/` is the naming and boundary baseline. Planning is blocked on the child-family naming decision and valid owner-visible routes for every external consumer; generated projections are regenerated from source rather than edited directly.
 
 ## Discussion
 

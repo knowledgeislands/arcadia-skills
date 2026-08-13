@@ -4,7 +4,7 @@ title: Leverage runtime model tiers
 area: RTP
 theme: runtime-portability
 horizon: next
-status: draft
+status: ready
 blocks: []
 blocked_by: []
 baseline_ref: null
@@ -18,7 +18,7 @@ Make Knowledge Islands use each supported runtime's current model family deliber
 
 The Harness already defines the portable `frontier`, `reasoning`, `standard`, and `fast` purposes, accepts repository-local runtime bindings, and requires delegation packets to choose the minimum viable model. Current [OpenAI model guidance](https://developers.openai.com/api/docs/models) distinguishes GPT-5.6 Sol for complex reasoning and coding, Terra for balanced capability and cost, and Luna for cost-sensitive high-volume work. The existing Codex tokenomics adapter reports context surfaces but does not yet turn changing provider guidance into a governed, evidence-backed resolution and evaluation path across tokenomics, delegation, and Codex subagents.
 
-This is ready for immediate shaping because the portable taxonomy and relevant ownership boundaries already exist, the official provider evidence is available, and a bounded runtime-adapter investigation can establish what should change without first inventing a new shared abstraction.
+The portable taxonomy and relevant ownership boundaries already exist. Official OpenAI model guidance checked on 2026-08-13 identifies Sol for frontier work, Terra for balancing intelligence and cost, Luna for efficient high-volume work, and `medium` reasoning as a balanced starting point while requiring representative evaluation before a lower effort or model becomes a default. A bounded Codex-owned investigation can therefore proceed without inventing a new shared abstraction.
 
 ## Boundary
 
@@ -28,21 +28,34 @@ Preserve purpose-based names in portable governance and keep provider model IDs,
 
 `ki-tokenomics` defines portable purposes and validates optional `model_tier_bindings`; `ki-delegation` requires a minimum viable worker model; and the current subagent guidance relates runtime aliases to the portable taxonomy. Codex guidance, model resolution, reasoning-effort choice, orchestration defaults, refresh cadence, and cross-model evaluation are not yet joined into one documented and testable operating path.
 
+The first delivery is limited to Codex-owned evidence and resolution guidance. It may update `ki-tokenomics-codex`, its source record, Codex subagent guidance, focused tests, and one dated evaluation report. Portable `ki-tokenomics`, `ki-delegation`, or `ki-subagents` changes are out of scope unless the investigation proves an exact runtime-neutral contract gap; such a gap stops for separate review and, where necessary, a Decision Record.
+
+## Approved planning basis
+
+Use three fixed, repository-local evaluation cases: a deterministic extraction/classification task with exact assertions, a conflicting-governance judgment task with a required evidence rubric, and a coordinator task with three independent read-only lanes plus one integrated answer. Run Sol, Terra, and Luna twice on each case at `medium` reasoning when the runtime supports it, then test one lower supported effort only for a model that passes both baseline repetitions.
+
+A run passes only when every case-specific assertion, evidence requirement, authority boundary, and return shape passes without corrective prompting. Record latency, input/output tokens or the runtime's explicit unavailable result, and required correction count separately; do not calculate a composite score. Recommend the lowest-cost model and effort that passes both repetitions for a purpose. If evidence is mixed, unavailable, or no lower tier passes, retain inheritance or the existing binding and record `no default change`.
+
 ## Steps
 
-- [ ] Re-ground current official OpenAI model, reasoning-effort, and agent orchestration guidance alongside the portable tokenomics and delegation contracts.
+- [ ] Record the current official OpenAI model, reasoning-effort, and multi-agent guidance with a review date alongside the portable tokenomics and delegation contracts.
 - [ ] Map the Sol, Terra, and Luna family to portable purposes as runtime evidence, identifying where one-to-one bindings are insufficient or would become stale.
-- [ ] Decide the smallest runtime-owned contract for resolving main-thread, judgment-worker, and mechanical-worker choices without leaking provider names into portable governance.
-- [ ] Update the relevant Codex tokenomics, delegation, or subagent surfaces and their refresh sources, with focused tests for any new mechanical rule.
-- [ ] Exercise representative orchestration, hard-judgment, and high-volume tasks across the proposed tiers and record the evidence and limitations.
+- [ ] Define the smallest Codex-owned resolver for main-thread orchestration, judgment workers, and mechanical workers without leaking provider names into portable governance.
+- [ ] Add the three fixed evaluation fixtures and an evidence schema covering assertions, authority, return shape, latency, available token usage, and correction count; require separate user authority before live model calls.
+- [ ] Exercise the fixed cases twice across Sol, Terra, and Luna at the common baseline effort, test one lower effort only for a passing candidate, and publish the raw outcomes and limitations without a composite score.
+- [ ] Update only the relevant Codex tokenomics and subagent surfaces plus refresh sources, with focused tests for any new mechanical resolver; route a proven portable gap separately.
 - [ ] Verify that repository overrides remain advisory and that execution, delegation, and spending still require their existing authority gates.
 
 ## Files touched
 
 - This roadmap item
 - Runtime-specific tokenomics guidance and sources under `skills/environment/ki-tokenomics-codex/`
-- Portable tokenomics, delegation, or subagent surfaces only where evidence shows a runtime-neutral contract gap
+- Runtime-specific guidance under `skills/agentic-systems/ki-subagents-codex/` only where the resolver affects Codex projection
+- `evals/` fixtures or an equivalent deterministic local case definition for the three named tasks
+- `docs/reviews/runtime-model-tiers-2026-08.md`
 - Focused rubric tests and generated publications for any changed mechanical criteria
+
+Portable tokenomics, delegation, and subagent roots are not edited by this item; a proven runtime-neutral gap is a stop and separate proposal.
 
 ## Verify
 
@@ -50,12 +63,13 @@ Preserve purpose-based names in portable governance and keep provider model IDs,
 - `ki repo audit --skill ki-tokenomics-codex --repo .` passes.
 - `ki repo audit --skill ki-delegation --repo .` passes.
 - Applicable focused catalogue tests pass for every changed rubric.
+- The dated evaluation report contains two baseline runs per model and case, exact assertion and authority outcomes, available latency and usage evidence, correction counts, and an explicit recommendation or `no default change`.
 - `ki repo audit --skill ki-change-management-roadmap --repo .` and `ki repo audit --skill ki-authoring --repo .` pass.
 - The resulting guidance preserves `frontier`, `reasoning`, `standard`, and `fast` as portable purposes and treats provider names and capabilities as refreshable runtime evidence.
 
 ## Dependencies / blocks
 
-ADR-KI-HARNESS-009 and the current tokenomics and delegation standards supply the governing baseline. No roadmap dependency blocks investigation; implementation must stop for a Decision Record if the evidence requires a new cross-runtime abstraction or changes an established authority boundary.
+ADR-KI-HARNESS-009 and the current tokenomics and delegation standards supply the governing baseline. No roadmap dependency blocks the local preparation. Live model calls require explicit execution and spending authority; absent authority stops after fixtures and the evidence schema. Implementation must also stop for separate review if evidence requires a cross-runtime abstraction or changes an established authority boundary.
 
 ## Discussion
 

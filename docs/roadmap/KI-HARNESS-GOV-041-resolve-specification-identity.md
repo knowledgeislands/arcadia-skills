@@ -6,7 +6,7 @@ theme: governance-consistency
 horizon: next
 status: draft
 blocks: []
-blocked_by: []
+blocked_by: [KI-HARNESS-GOV-040]
 baseline_ref: null
 ---
 
@@ -28,28 +28,34 @@ Decide the policy and its migration only. Do not renumber existing Specification
 
 Serial scope and applicability are explicitly unresolved in the review record. The checker already fails closed for malformed local evidence and duplicate prefix ownership, but cannot establish the intended serial sequence or activation boundary without a governing choice.
 
+The work is fully shapeable as two independently reconsiderable governance decisions, but it cannot become Ready until GOV-040 fixes the Decision Record metadata authority used to publish them. Once that blocker is Done, `GDR-KI-HARNESS-009` will own Specification serial identity and `GDR-KI-HARNESS-010` will own capability applicability.
+
 ## Steps
 
-- [ ] Choose whether serials are global, per prefix, or per file, and define how multi-prefix files participate.
-- [ ] Choose whether an undeclared incidental `docs/specs` directory is not applicable or a repository conformance failure.
-- [ ] Define how existing identifiers, indexes, host selection, and fixtures migrate without dual semantics.
-- [ ] Record the policy in a Decision Record and capture a separate implementation item for any code or estate migration.
+- [ ] Inventory the retained Specification corpus by file, prefix, serial, multi-prefix ownership, repository declaration, and incidental-directory state; record the migration count for each alternative.
+- [ ] Write `GDR-KI-HARNESS-009` to choose global, per-prefix, or per-file serial identity and define exactly how multi-prefix files participate.
+- [ ] Write `GDR-KI-HARNESS-010` to choose whether an undeclared incidental `docs/specs/` directory is not applicable or a repository conformance failure, while preserving malformed declared evidence as a failure.
+- [ ] Update the Decision Records index and define one clean-cut migration for identifiers, indexes, host selection, and fixtures with no dual semantics or compatibility fallback.
+- [ ] Capture separate implementation work for the checker and estate only after both decisions are approved.
 
 ## Files touched
 
-- A Decision Record or equivalent canonical policy artifact
+- `docs/decisions/GDR-KI-HARNESS-009-specification-serial-identity.md`
+- `docs/decisions/GDR-KI-HARNESS-010-specification-capability-applicability.md`
+- `docs/decisions/README.md`
 - This work item
-- A follow-on implementation item if the decision changes the current contract
+- A separate roadmap item only when the approved decisions require implementation
 
 ## Verify
 
 - The skill, standard, host selection, checker, and fixtures state the same serial scope and applicability rule.
 - Existing identifiers have an explicit continuity or migration path.
 - Undeclared, malformed, and declared Specifications have distinct expected outcomes covered by fixtures.
+- `ki repo audit --skill ki-decision-records --repo .`, `ki repo audit --skill ki-change-management-roadmap --repo .`, and `ki repo audit --skill ki-authoring --repo .` pass.
 
 ## Dependencies / blocks
 
-Depends on the `ki-specs` review record. It blocks dependent identity and applicability implementation; it does not reopen the completed review.
+Depends on the `ki-specs` review record and is blocked by GOV-040's Decision Record metadata authority decision. It becomes Ready only after that record is Done and the next two planned GDR serials remain available. It blocks dependent identity and applicability implementation; it does not reopen the completed review.
 
 ## Discussion
 

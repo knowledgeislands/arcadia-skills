@@ -4,8 +4,8 @@ area: GOV
 title: Resolve Knowledge Base authority
 theme: governance-consistency
 horizon: next
-status: draft
-blocks: []
+status: ready
+blocks: [KI-HARNESS-GOV-041]
 blocked_by: []
 baseline_ref: null
 ---
@@ -28,28 +28,34 @@ Make the authority and migration decision only. Do not rewrite existing Knowledg
 
 The aggregate Knowledge Base audit excludes universal metadata, adapter, and canonical-role policy from a clean result. Existing repositories may use activity-specific fields, legacy Stream forms, or Decision Record metadata that cannot all be canonical simultaneously.
 
+The delivery is two independently readable governance decisions rather than one mixed schema change. `GDR-KI-HARNESS-007` owns universal Knowledge Base and Decision Record metadata authority; `GDR-KI-HARNESS-008` owns whether and how a principal repository declares its authority role. The current exclusive ownership of `[skills.ki-repo].repo_type` is the baseline, not an outcome silently reopened by this plan.
+
 ## Steps
 
-- [ ] Decide the owner for universal Knowledge Base frontmatter and which fields are universal, collection-specific, or prohibited.
-- [ ] Decide how Decision Record metadata composes with that schema, including ownership of `type`, `type_url`, `decision_type`, and `repo_type`.
-- [ ] Decide whether a principal role requires explicit configuration, a canonical authority record, both, or no portable representation.
-- [ ] Define migration evidence for current collections and capture a separate implementation item only after the choices are approved.
+- [ ] Inventory representative Arcadia and Techne principal records plus the current `ki-repo`, `ki-repo-kb*`, and `ki-decision-records` contracts at field level; classify `repo_type`, `type`, `type_url`, and `decision_type` by current owner and collision.
+- [ ] Write `GDR-KI-HARNESS-007` to choose one owner for universal Knowledge Base metadata, distinguish universal, collection-specific, and prohibited fields, and state how Decision Record metadata composes without a second classifier.
+- [ ] Write `GDR-KI-HARNESS-008` to choose among explicit configuration, a canonical authority record, both, or no portable representation for principal role and cross-island authority.
+- [ ] Update the Decision Records index in reveal order and verify that both records are self-contained, independently reconsiderable, and preserve `[skills.ki-repo].repo_type` unless the first decision explicitly changes it.
+- [ ] Record the exact clean-cut migration consequences and capture separate implementation work; do not alter repository schemas, collections, or receiving repositories in this item.
 
 ## Files touched
 
-- A Decision Record or equivalent canonical policy artifact
+- `docs/decisions/GDR-KI-HARNESS-007-knowledge-base-metadata-authority.md`
+- `docs/decisions/GDR-KI-HARNESS-008-principal-repository-authority.md`
+- `docs/decisions/README.md`
 - This work item
-- A follow-on migration item if the decision changes the current estate
+- A separate roadmap item only when an approved decision requires implementation
 
 ## Verify
 
 - One owner is named for every shared metadata field and role claim.
 - The selected schema has no contradictory required fields across `ki-repo`, `ki-repo-kb*`, and `ki-decision-records`.
 - Migration scope, compatibility stance, and representative fixtures are explicit before any implementation begins.
+- `ki repo audit --skill ki-decision-records --repo .`, `ki repo audit --skill ki-change-management-roadmap --repo .`, and `ki repo audit --skill ki-authoring --repo .` pass.
 
 ## Dependencies / blocks
 
-Depends on the Decision Records, KB, and principal review records under `docs/reviews/KI-HARNESS-REV-001/`. It blocks dependent metadata and principal-role implementation, not the truthful checks already applied.
+The Decision Records, KB, and principal review records under `docs/reviews/KI-HARNESS-REV-001/` are available as the evidence baseline. This item blocks GOV-041 so the Specification decision does not rely on a Decision Record metadata contract that is simultaneously being reconsidered. It blocks dependent metadata and principal-role implementation, not the truthful checks already applied.
 
 ## Discussion
 
