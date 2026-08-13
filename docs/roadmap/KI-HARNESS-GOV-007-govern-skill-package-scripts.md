@@ -20,6 +20,8 @@ Ensure every supported package script is either declared by exactly one governin
 
 The existing families use meaningful namespaces — including `ki:deps:*`, `ki:binding:claude:*`, `ki:site:*`, `ki:server:*`, and `ki:test:*` — that are not mechanically derivable from a capability name. The owning skill already has the durable knowledge of which keys it supports; asking every repository to restate that ownership in configuration creates drift rather than authority.
 
+Accepted GOV-028 found one concrete ownership gap: KI Website's `ki:site:upload` runs `cd site && bunx wrangler versions upload` and changes remote state, but the current `ki-repo-website-cloudflare` script family neither claims it nor defines its safety boundary. Website history identifies Workers Builds as its intended purpose. The script therefore needs an explicit outcome under this ownership contract rather than a separate sender-side routing item.
+
 ## Boundary
 
 Do not add package-script aliases for native `ki repo audit` or `ki repo conform`, loosen the retired generic tool aliases, require every capability to publish a package script, or let a repository configuration assign script ownership. Do not infer ownership from a namespace alone or retain legacy aliases during a migration.
@@ -52,7 +54,7 @@ Every exclusion must name an existing script exactly, be unique, use no pattern 
 
 ### Known dependencies
 
-The harness contains an engineering-owned dependency update, a Claude-binding plugin builder, and an evaluation script; the website has site-owned scripts. The inventory must establish the declaring skill and its own rubric rule for every retained key. An unclaimed key is a design finding, not a reason to grandfather it.
+The harness contains an engineering-owned dependency update, a Claude-binding plugin builder, and an evaluation script; the Website has site-owned scripts, including the unresolved `ki:site:upload` command. The inventory must establish the declaring skill and its own rubric rule for every retained key. In particular, `ki-repo-website-cloudflare` must either claim `ki:site:upload` with a semantic check and explicit remote-effect safety boundary or reject it from the house script family so receiver-owned work can remove it. An unclaimed key is a design finding, not a reason to grandfather it.
 
 This change needs a shared rubric-catalogue metadata contract and host aggregation. It affects the harness first, then rolls through other primary public repositories under their own work items. A repository can add an exclusion only for an actual external key that its resolved skills deliberately do not govern.
 
@@ -70,7 +72,7 @@ The core inventory already distinguishes a clear `ki:tools:*` claim in `tools-ki
 
 No rubric-catalogue metadata currently publishes script claims, the host does not aggregate them, and `ki-engineering` has no exact exclusion contract.
 
-The local declaration contract is approved, but the end-to-end plan is not dependency-ready. Catalogue discovery and aggregation belong to `tools-ki`, which has no accepted receiver-owned record for this change. The Website migration is also named without a reciprocal work route. Before this record returns to Ready, split the Harness-owned static contract from receiver-owned host and estate migrations, or narrow this item to one independently complete local outcome plus exact outbound submissions.
+The local declaration contract is approved, but the end-to-end plan is not dependency-ready. Catalogue discovery and aggregation belong to `tools-ki`, which has no accepted receiver-owned record for this change. A Website manifest change also cannot be bundled without a reciprocal work route. Before this record returns to Ready, split the Harness-owned static contract and script-family decisions from receiver-owned host and estate migrations, or narrow this item to one independently complete local outcome plus exact outbound submissions. The Harness can decide whether its Cloudflare skill supports `ki:site:upload` without waiting for Website access; only applying the resulting manifest change is receiver-owned.
 
 ## Steps
 
@@ -78,7 +80,7 @@ The local declaration contract is approved, but the end-to-end plan is not depen
 - [ ] Make the host aggregate static claims from resolved skills and expose one read-only inventory to `ki-engineering`; reject duplicate claims as cross-skill contract errors.
 - [ ] Add a mechanical `ki-engineering` criterion that validates every package script as an engineering claim, one aggregated skill claim, or an exact `script_exclusions` entry; reject stale, duplicate, patterned, and overlapping exclusions.
 - [ ] Replace the hard-coded owner-family map with rubric claims; rename the harness evaluation command to `ki:harness:eval`, rename the builder to `ki:binding:claude:build-plugin`, and remove `ki:eval` and `ki:binding:build-plugin` without aliases.
-- [ ] Add claims and skill-owned semantic checks for each accepted core repository; route any unclaimed non-external key to its owning skill or remove it rather than grandfathering it.
+- [ ] Add claims and skill-owned semantic checks for each accepted core repository; explicitly decide whether `ki-repo-website-cloudflare` claims `ki:site:upload` with a remote-effect safety boundary or rejects it for receiver-owned removal, and route every other unclaimed non-external key to its owning skill or remove it rather than grandfathering it.
 - [ ] Update CI and documented invocations in the same cut, then add focused fixtures for aggregation, duplicate and absent claims, exact exclusions, misaligned skill-owned commands, and legacy-key removal.
 
 ## Files touched
@@ -100,7 +102,7 @@ The local declaration contract is approved, but the end-to-end plan is not depen
 
 ## Dependencies / blocks
 
-The static metadata shape, host aggregation boundary, exact exclusions, and clean-cut migration rule are approved. Host aggregation remains an unsatisfied `tools-ki` dependency, and the Website currently has no reciprocal work route. Each receiver remains a separate acceptance boundary; an unclaimed key, duplicate claim, or unavailable receiver is a stop rather than permission to implement across repositories.
+The static metadata shape, host aggregation boundary, exact exclusions, and clean-cut migration rule are approved. Host aggregation remains an unsatisfied `tools-ki` dependency, and the Website currently has no reciprocal work route. The local `ki:site:upload` standard decision is independently executable because the Harness owns `ki-repo-website-cloudflare`; changing the Website manifest remains a separate receiver acceptance boundary. An unclaimed key, duplicate claim, or unavailable receiver is a stop rather than permission to implement across repositories.
 
 ## Discussion
 
@@ -123,3 +125,7 @@ Promote once the static declaration representation, host aggregation, backward-i
 ### Ownership before naming
 
 The namespace communicates intent only after a skill claim makes that intent checkable. A plausible key such as `ki:eval` is not sufficient evidence by itself: an owning rubric must claim it, the user must explicitly exclude it as external tooling, or it must disappear. This prevents the common engineering rule from becoming a broad prefix allow-list.
+
+### Workers Builds upload
+
+The `ki:site:upload` command is not treated as accidental merely because no checked-in caller invokes it: its introducing Website commit records Workers Builds as the purpose. That evidence does not by itself make the command governed. GOV-007 must decide whether version upload is a supported part of the `ki-repo-website-cloudflare` contract and, if so, codify its remote-state authority and safe invocation boundary. If the skill rejects the command, removal belongs to Website-owned work after an available receiver path and explicit acceptance.
