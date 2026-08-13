@@ -4,10 +4,10 @@ title: Remove plan fallback
 area: GOV
 theme: governance-consistency
 horizon: next
-status: ready
+status: in-progress
 blocks: []
 blocked_by: []
-baseline_ref: null
+baseline_ref: f6159032ac8ba657c48695f5342da0c218db6319
 ---
 
 ## Goal
