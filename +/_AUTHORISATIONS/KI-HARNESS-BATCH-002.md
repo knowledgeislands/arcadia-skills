@@ -61,3 +61,5 @@ Approved by the user on 2026-08-13 for the exact named set, an eight-hour timebo
 
 | Item | Start | Result | Evidence | Next human action |
 | --- | --- | --- | --- | --- |
+| KI-HARNESS-GOV-035 | `f6159032` | awaiting-review | `e96b55e4`; focused hooks, full tests, type, audit, formatting | Review and accept or return |
+| KI-HARNESS-FND-008 | `f6159032` | awaiting-review | `a1576abf`; focused rubric, full tests, type, audit, formatting | Review and accept or return |
