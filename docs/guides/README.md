@@ -4,4 +4,4 @@ Practical instructions for using, operating, contributing to, and maintaining th
 
 ## Guide areas
 
-- [Developer guides](developer/README.md) — local harness development, testing, managed writes, and bounded knowledge acquisition for harness contributors.
+- [Developer guides](developer/README.md) — lightweight contributor workflows for local harness development and testing.
