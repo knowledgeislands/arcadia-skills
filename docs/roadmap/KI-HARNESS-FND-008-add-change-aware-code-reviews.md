@@ -4,7 +4,7 @@ title: Add change-aware code reviews
 area: FND
 theme: foundation-tooling
 horizon: now
-status: awaiting-review
+status: done
 blocks: []
 blocked_by: []
 baseline_ref: f6159032ac8ba657c48695f5342da0c218db6319
@@ -107,6 +107,10 @@ Fixture-backed history selects the newest valid boundary and never promotes malf
 ### Mini recap
 
 Maintainers now have portable, inspectable review-boundary evidence without a second planning system or automated quality claim.
+
+## Done
+
+Accepted on 2026-08-13 following explicit human approval. The delivered advisory review contract, Git-trailer evidence boundary, and recorded verification are accepted with no blocking concern. This record is retained as completion history pending the separately authorised prune.
 
 ## Discussion
 

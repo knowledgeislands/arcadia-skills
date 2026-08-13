@@ -4,7 +4,7 @@ title: Remove plan fallback
 area: GOV
 theme: governance-consistency
 horizon: next
-status: awaiting-review
+status: done
 blocks: []
 blocked_by: []
 baseline_ref: f6159032ac8ba657c48695f5342da0c218db6319
@@ -77,6 +77,10 @@ Valid V1 provenance continues to synchronise while both one-line and multi-line 
 ### Mini recap
 
 The current producer and consumer now share one strict, documented V1 contract.
+
+## Done
+
+Accepted on 2026-08-13 following explicit human approval. The JSON V1-only plan provenance boundary and recorded verification are accepted with no outstanding concern. This record is retained as completion history pending the separately authorised prune.
 
 ## Discussion
 
