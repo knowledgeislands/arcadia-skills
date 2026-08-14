@@ -52,4 +52,4 @@ The skills rubric enforces that every governance skill exposes this shape.
 - Composition is predictable: a skill declares required prerequisites in `ki-depends-on`, and the host executes compatible operations in dependency order.
 - Skill-specific modes extend the vocabulary without replacing it; the universal four are always present.
 - OPTIMISE remains an accepted optional extension for pushing a compliant artifact from the floor toward excellent.
-- HELP gives each skill a uniform, non-acting "what are you" entry in-session without a second per-skill guide. The generated Harness capability catalogue supplies the exact cross-skill inventory and formal composition facts; the authored skills-by-outcome guide supplies task-oriented selection without duplicating all entries.
+- HELP gives each skill a uniform, non-acting "what are you" entry in-session without a second per-skill guide. The generated Harness capability catalogue supplies the exact cross-skill inventory and declared dependency facts; the authored skills-by-outcome guide supplies task-oriented selection without duplicating all entries.

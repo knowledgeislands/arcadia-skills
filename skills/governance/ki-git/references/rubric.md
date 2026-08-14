@@ -10,7 +10,7 @@ Line-by-line criteria for auditing ki-git. Classifications are derived from item
 
 - [RUBRIC — Generated rubric publication](#rubric--generated-rubric-publication)
 - [COMMIT — commit shape](#commit--commit-shape)
-- [BRANCH — branch choice](#branch--branch-choice)
+- [BRANCH — working approach](#branch--working-approach)
 - [HYGIENE — Git working hygiene](#hygiene--git-working-hygiene)
 - [LOCK — stale-lock semantics](#lock--stale-lock-semantics)
 
@@ -35,17 +35,17 @@ Commit messages express one completed unit through the portable convention.
   - _Outcomes:_ conforming; split required; message revision required
   - _Conforming guidance:_ Split unrelated changes into separately reviewable commits, then revise the Conventional Commit type, scope, or imperative summary to describe the completed unit.
 
-## BRANCH — branch choice
+## BRANCH — working approach
 
 → [standard](standards-git.md)
 
-Branch use follows local protection and review needs without invented ceremony.
+Working-copy topology and review flow follow local protection, review, and concurrency needs.
 
-- **BRANCH-1 [J] — branch choice matches the change boundary** — Direct main and branch work each follow the repository policy and the change’s review needs. (standards-git.md)
-  - _Evidence scope:_ The selected repository, requested change, current `git branch --show-current` evidence, protection policy, and review boundary.
-  - _Review prompt:_ After checking the current branch and applicable protection evidence, assess whether direct main or a branch is appropriate for this repository’s protection policy, the user’s request, and the value of an isolated review boundary.
-  - _Outcomes:_ conforming; branch required; direct-main rationale required
-  - _Conforming guidance:_ Create an isolated branch where review or repository policy requires it, or record why a focused direct-main change is appropriate.
+- **BRANCH-1 [J] — working approach matches the delivery boundary** — Single-main, branch-with-PR, and worktree-with-PR approaches follow repository policy, review needs, and concurrency. (standards-git.md)
+  - _Evidence scope:_ The selected repository, requested change, current `git branch --show-current` and `git worktree list` evidence, protection policy, concurrency, and review boundary.
+  - _Review prompt:_ After checking branch, worktree, protection, concurrency, and review evidence, assess whether `single-working-copy-on-main`, `single-working-copy-on-branch-with-pr`, or `worktrees-with-pr` is the appropriate approach.
+  - _Outcomes:_ conforming; use single-working-copy-on-main; use single-working-copy-on-branch-with-pr; use worktrees-with-pr
+  - _Conforming guidance:_ Use the least ceremonial approach that preserves the selected protection, review, and concurrency boundary; use separate worktrees when concurrent deliveries need isolated working files.
 
 ## HYGIENE — Git working hygiene
 

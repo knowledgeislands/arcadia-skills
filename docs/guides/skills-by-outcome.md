@@ -1,6 +1,6 @@
 # Choose a skill by outcome
 
-Use this guide when you know what you want to achieve but do not yet know the Knowledge Islands skill name. It routes common outcomes to the smallest useful capability or journey. For the complete source-of-truth inventory, exact invocation hints, runtime bindings, and formal dependencies, use the generated [capability catalogue](../../skills/README.md#generated-capability-catalogue).
+Use this guide when you know what you want to achieve but do not yet know the Knowledge Islands skill name. It routes common outcomes to the smallest useful capability or journey. For the complete source-of-truth inventory, exact argument hints, runtime bindings, and formal dependencies, use the generated [capability catalogue](../../skills/README.md#generated-capability-catalogue).
 
 You can ask for an outcome in plain language or invoke the named skill directly. Start with the narrowest route below; a skill's own HELP explains its modes and off-ramps before acting.
 
@@ -30,7 +30,7 @@ Keep these instruments separate. A guide may link to the decision or specificati
 
 The standard local delivery journey is:
 
-1. Use `ki-next` to select, capture, promote, defer, or spawn work from the shared queue. It can select an authorised independent batch when the adapter and candidates support one; it does not silently implement the work.
+1. Use `ki-next` to select, capture, promote, defer, or spawn work from the shared queue. It can identify and confirm an independent batch candidate when the adapter and candidates support one; `ki-batch` requires separate explicit authorisation before execution.
 2. Use `ki-plan` to make selected Now or Next work honestly ready. It enriches the canonical record and stops at `ready`.
 3. Use `ki-implement` to deliver one explicitly approved ready record through the local adapter. It establishes a baseline, applies bounded changes, verifies them, and stops at `awaiting-review`.
 4. Use `ki-accept` after human approval to close the evidence-backed record and optionally prune an explicitly selected eligible done record.
@@ -63,7 +63,7 @@ Start with `ki-repo` for the common baseline, then select the structural capabil
 - **Dotfiles managed by chezmoi** — `ki-repo-dotfiles-chezmoi`.
 - **Homebrew tap** — `ki-repo-homebrew-tap`.
 
-Repository structures compose with the universal baseline; they do not replace it. Use the generated composition graph to distinguish a formal dependency from a common pairing.
+Repository structures compose with the universal baseline; they do not replace it. Use each catalogue entry's dependency list to distinguish a formal dependency from a common pairing.
 
 ## Bind runtimes and manage context cost
 
@@ -89,7 +89,7 @@ The sender proposes; the receiver owns priority, planning, and execution. A trad
 Before acting, check three things:
 
 1. The selected skill's HELP describes the intended outcome and names the adjacent off-ramps.
-2. The generated catalogue shows the expected kind, invocation, runtime binding, and formal dependencies.
+2. The generated catalogue shows the expected kind, argument hint, runtime binding, and formal dependencies.
 3. The target repository declares the governance capabilities that `ki repo audit` or `ki repo conform` must execute; user-level installation alone does not add them to repository audit scope.
 
 If none of the routes fits, start with `ki-skills` only when the missing outcome may warrant a new reusable capability. A one-off repository action normally belongs in the existing owning skill or local work record rather than a new skill.

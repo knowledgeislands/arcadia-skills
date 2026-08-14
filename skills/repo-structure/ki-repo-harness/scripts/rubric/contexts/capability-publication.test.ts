@@ -79,7 +79,7 @@ test('fails closed on malformed or incomplete frontmatter', () => {
   )
 })
 
-test('renders exact counts, source facts, and only formal dependency edges', () => {
+test('renders exact counts and runtime-neutral source facts without a diagram', () => {
   const rendered = renderCapabilityCatalogue([
     entry(source('ki-base')),
     entry(
@@ -93,13 +93,14 @@ test('renders exact counts, source facts, and only formal dependency edges', () 
     )
   ])
   expect(rendered).toContain('2 skills: 1 governance skill and 1 process skill')
-  expect(rendered).toContain('`/ki-run run <target>`')
+  expect(rendered).toContain('- **Arguments:** `run <target>`')
+  expect(rendered).toContain('- **Dependencies:** `ki-base`')
   expect(rendered).toContain('Runtime-bound: `claude-code`')
-  expect(rendered).toContain('skill_0 --> skill_1')
-  expect(rendered).not.toContain('optional dependency')
+  expect(rendered).not.toContain('/ki-run')
+  expect(rendered).not.toContain('```mermaid')
 })
 
-test('add, rename, remove, kind, domain, dependency, runtime, and invocation changes stale the publication', () => {
+test('add, rename, remove, kind, domain, dependency, runtime, and argument changes stale the publication', () => {
   const baseline = [source('ki-base'), source('ki-example', { dependencies: ['ki-base'] })]
   const base = baseline[0]
   if (!base) throw new Error('baseline source is missing')

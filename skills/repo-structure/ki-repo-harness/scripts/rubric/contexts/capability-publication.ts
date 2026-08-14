@@ -113,10 +113,6 @@ const runtimeDescription = ({ runtimeBinding, supportedRuntimes }: CapabilityEnt
   return `Runtime-bound: ${supportedRuntimes.map((runtime) => `\`${runtime}\``).join(', ')}`
 }
 
-const invocation = ({ name, argumentHint }: CapabilityEntry): string =>
-  argumentHint ? `\`/${name} ${argumentHint}\`` : `\`/${name}\``
-
-const mermaidId = (index: number): string => `skill_${index}`
 const counted = (count: number, singular: string): string => `${count} ${count === 1 ? singular : `${singular}s`}`
 
 export const renderCapabilityCatalogue = (entries: readonly CapabilityEntry[]): string => {
@@ -125,7 +121,6 @@ export const renderCapabilityCatalogue = (entries: readonly CapabilityEntry[]): 
   )
   const governance = ordered.filter((entry) => entry.kind === 'governance').length
   const process = ordered.filter((entry) => entry.kind === 'process').length
-  const names = new Map(ordered.map((entry, index) => [entry.name, mermaidId(index)]))
   const sections: string[] = [
     CAPABILITY_CATALOGUE_START,
     '## Generated capability catalogue',
@@ -143,7 +138,7 @@ export const renderCapabilityCatalogue = (entries: readonly CapabilityEntry[]): 
         entry.description,
         '',
         `- **Kind:** ${titleCase(entry.kind)}`,
-        `- **Invoke:** ${invocation(entry)}`,
+        `- **Arguments:** ${entry.argumentHint ? `\`${entry.argumentHint}\`` : 'None'}`,
         `- **Dependencies:** ${entry.dependencies.length === 0 ? 'None' : entry.dependencies.map((dependency) => `\`${dependency}\``).join(', ')}`,
         `- **Runtime:** ${runtimeDescription(entry)}`,
         ''
@@ -151,27 +146,7 @@ export const renderCapabilityCatalogue = (entries: readonly CapabilityEntry[]): 
     }
   }
 
-  sections.push(
-    '### Formal composition',
-    '',
-    'Arrows run from a required skill to the skill that composes it. This graph includes only declared `ki-depends-on` edges; optional dependencies, shared rubric modules, lifecycle hand-offs, and conceptual relationships remain outside it.',
-    '',
-    '```mermaid',
-    'graph LR'
-  )
-  for (const entry of ordered) {
-    const id = names.get(entry.name)
-    if (id) sections.push(`  ${id}["${entry.name}"]`)
-  }
-  for (const entry of ordered) {
-    const target = names.get(entry.name)
-    if (!target) continue
-    for (const dependency of [...entry.dependencies].sort()) {
-      const source = names.get(dependency)
-      if (source) sections.push(`  ${source} --> ${target}`)
-    }
-  }
-  sections.push('```', '', CAPABILITY_CATALOGUE_END)
+  sections.push(CAPABILITY_CATALOGUE_END)
   return `${sections.join('\n')}\n`
 }
 
