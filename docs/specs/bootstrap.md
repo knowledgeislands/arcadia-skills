@@ -48,7 +48,7 @@ Replaced by BOOT-011. First-time setup uses the installed CLI and verified harne
 
 ### BOOT-009 — Runtime publication follows repository scope
 
-`ki skill repo add <skill>` and `ki skill repo remove <skill>` MUST update only the selected repository's `.ki-config.toml` declaration and managed discovery links for its supported runtimes, without copying executable governance payloads or changing user activation.
+`ki repo skill add <skill>` and `ki repo skill remove <skill>` MUST update only the selected repository's `.ki-config.toml` declaration and managed discovery links for its supported runtimes, without copying executable governance payloads or changing user activation.
 
 _Verify:_ add and remove a declared skill in a two-runtime fixture, then inspect `.ki-config.toml` and both runtime discovery locations while confirming the user configuration is unchanged.
 
@@ -82,7 +82,7 @@ _Verify:_ run capability resolution with only a nearby harness checkout and conf
 
 User skill operations MUST change only configured user runtime spaces, while repository skill operations MUST change only the selected repository declaration and managed runtime links.
 
-_Verify:_ run `ki skill user add <skill>` and `ki skill repo add <skill>` in isolated state and confirm each command mutates only its own configuration and discovery scope.
+_Verify:_ run `ki skill add <skill>` and `ki repo skill add <skill>` in isolated state and confirm each command mutates only its own configuration and discovery scope.
 
 ## Native operations
 

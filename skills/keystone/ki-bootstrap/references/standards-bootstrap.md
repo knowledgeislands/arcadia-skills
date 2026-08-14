@@ -11,6 +11,7 @@ This standard implements the architecture in [ADR-KI-HARNESS-012](../../../../do
 - [Native repository operations](#native-repository-operations)
 - [First-time bootstrap](#first-time-bootstrap)
 - [Local harness development](#local-harness-development)
+- [Managed-state recovery](#managed-state-recovery)
 - [Unowned repository state](#unowned-repository-state)
 - [CI and direct automation](#ci-and-direct-automation)
 - [Scope and safety separation](#scope-and-safety-separation)
@@ -97,6 +98,12 @@ While `ki dev local on` is active the selected checkout is live, so every `ki` i
 The exposure is widest where harness edits and harness-dependent verification overlap in time, which is most likely when either is delegated: a worker editing the harness and a worker auditing repositories against it are, in development mode, sharing one mutable input. Separating them in time removes the interaction, and `ki dev local off` removes it entirely by resolving the run against the verified canonical archive, which is what makes a result reproducible or comparable across sessions.
 
 `ki manage diag` distinguishes the two cases after the fact. `Installation` and `Local source` say whether governance came from a mutable tree, so an audit or conform result that moved while the target repository did not is explained there rather than in the repository.
+
+## Managed-state recovery
+
+Harness source, installed payloads, runtime-discovery links, and repository declarations are separate owned surfaces. A command refuses unfamiliar, altered, escaping, or unsafe managed state before it overwrites or removes anything. Treat that refusal as a diagnostic: inspect it with `ki manage diag`, `ki manage doctor`, or the applicable `ki harness`, `ki skill`, or `ki repo skill` command rather than copying or deleting files across surfaces.
+
+After a command changes a managed skill link or switches the selected development source, start a new agent session so the runtime re-scans its discovery directories. An already-running session is not evidence that the new activation is loaded.
 
 ## Unowned repository state
 

@@ -27,17 +27,9 @@ The command validates the required `skills/`, `subagents/`, and `hooks/` roots b
 Confirm the active installation:
 
 ```bash
-ki diag
-ki doctor
+ki manage diag
+ki manage doctor
 ```
-
-Repository-scoped skill links resolve through the installed harness location, so they follow the development checkout without a separate source linker. Add a missing repository capability with:
-
-```bash
-ki skill repo add <skill> --repo <repository>
-```
-
-`ki-self` is different from an installed harness skill: author its one committed source at `.agents/skills/ki-self/SKILL.md`. Codex reads that source directly; Claude Code projects `.claude/skills/ki-self` to it by relative link. Do not create a second copy.
 
 Start a new agent session after changing skill activation or switching harness source so the runtime re-scans its skill directories.
 
@@ -46,8 +38,8 @@ Start a new agent session after changing skill activation or switching harness s
 When checkout-local development is complete, restore the verified canonical archive and refresh the user projections:
 
 ```bash
-ki dev off
-ki doctor
+ki dev local off
+ki manage doctor
 ```
 
-`ki dev off` preserves unfamiliar state and fails with recovery guidance rather than deleting an unproven installation.
+`ki dev local off` preserves unfamiliar state and fails with recovery guidance rather than deleting an unproven installation.

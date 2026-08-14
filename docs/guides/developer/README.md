@@ -4,4 +4,3 @@ Contributor-facing mechanics for authoring and maintaining the harness. Agent op
 
 - [Local harness development](local-harness-development.md) — use a local checkout as the active canonical harness.
 - [Testing an individual skill](testing-skills.md) — run one source skill's mechanical AUDIT or dry-run CONFORM with terminal or JSONL output.
-- [Managed write boundaries](generated-write-boundaries.md) — ownership and recovery for installed harnesses, runtime links, repository declarations, and local development.

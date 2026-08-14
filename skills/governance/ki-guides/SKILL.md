@@ -25,7 +25,7 @@ Carries the universal **AUDIT · CONFORM · EDUCATE · REFRESH**. Invoked as `he
 
 ### Mode EDUCATE
 
-→ Activate this skill with `ki skill repo add ki-guides`; establish `docs/guides/README.md` from the exemplar before adding the first guide.
+→ Activate this skill with `ki repo skill add ki-guides`; establish `docs/guides/README.md` from the exemplar before adding the first guide.
 
 ### Mode AUDIT
 

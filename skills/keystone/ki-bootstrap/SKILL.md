@@ -31,6 +31,8 @@ The user configuration and installed harness payloads are separate from a reposi
 
 `ki repo skill add <skill>` and `ki repo skill remove <skill>` manage a skill's repository declaration and runtime link. They affect only the selected repository; they never alter user activation.
 
+Managed activation is fail-closed. If a link, installed payload, or development projection is unfamiliar, altered, escaping, or otherwise unsafe, use the owning `ki` diagnostic and repair command; do not copy or delete files across source, installed, and runtime-discovery surfaces. Start a new agent session after changing activation or the selected development source so the runtime re-scans its discovery directories.
+
 ## Repository operations
 
 `.ki-config.toml` declares the skills that govern a repository. `ki repo educate`, `ki repo audit`, and `ki repo conform` resolve only those declarations and their explicit dependencies from installed harnesses.

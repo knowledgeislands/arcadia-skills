@@ -51,7 +51,7 @@ ki-repo-specifications/
 ### Mode EDUCATE
 
 1. Establish a normal `ki-repo` first.
-2. Add this skill to the repository through `ki skill repo add ki-repo-specifications --repo <repo>`.
+2. Add this skill to the repository through `ki repo skill add ki-repo-specifications --repo <repo>`.
 3. Add the seven top-level areas with their first real artefacts, then run AUDIT.
 
 ### Mode HELP
