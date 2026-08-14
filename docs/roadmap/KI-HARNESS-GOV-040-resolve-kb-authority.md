@@ -5,7 +5,7 @@ title: Resolve Knowledge Base authority
 theme: governance-consistency
 horizon: next
 status: ready
-blocks: [KI-HARNESS-GOV-041]
+blocks: [KI-HARNESS-GOV-041, KI-HARNESS-GOV-043]
 blocked_by: []
 baseline_ref: null
 ---

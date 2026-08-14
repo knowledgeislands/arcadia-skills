@@ -7,6 +7,7 @@ This directory records the reviewed and approved evidence for [KI-HARNESS-REV-00
 - **Approval matrix:** [approved grades and dispositions](approval-matrix.md)
 - **Candidate routes:** [approved deduplicated clusters](candidate-clusters.md)
 - **Action routing:** [coded follow-ups and external observations](actions.md)
+- **Audit remediation:** [complete report-only classification and promotion evidence](audit-remediation-review.md)
 - **Standing-guidance review:** recorded in the roadmap item
 - **Grading:** approved on 2026-08-12; evidence grades describe current proof and false-assurance risk, not intrinsic quality
 - **Remediation:** all approved Phase 1–6 repairs are applied
