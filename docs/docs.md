@@ -22,7 +22,7 @@ This is the map of `docs/` and the guiding principles that govern everything in 
 
 ### Guides — the _how_
 
-[`guides/`](guides) holds repository-local practical instructions. Its [index](guides/README.md) directs readers to the [skills-by-outcome guide](guides/skills-by-outcome.md) and contributor procedures; [`guides/developer/`](guides/developer) holds harness contributor mechanics such as local harness development, testing, managed write boundaries, and bounded acquisition work. Governed by the `ki-guides` skill.
+[`guides/`](guides) holds repository-local practical instructions. Its [index](guides/README.md) directs readers to the [skills-by-outcome guide](guides/skills-by-outcome.md) and contributor procedures; [`guides/developer/`](guides/developer) stays lightweight, covering local Harness development and skill testing. Governed by the `ki-guides` skill.
 
 ### Public guidance — website-owned
 
