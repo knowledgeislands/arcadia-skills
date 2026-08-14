@@ -4,7 +4,7 @@ title: Make audits conformable
 area: GOV
 theme: governance-consistency
 horizon: now
-status: draft
+status: ready
 blocks: []
 blocked_by: []
 baseline_ref: null
@@ -16,7 +16,7 @@ Make governance rubrics explicit about the relationship between what AUDIT detec
 
 ## Context
 
-The current two-aspect model classifies each rubric criterion as mechanical, judgmental, or hybrid. That describes how a criterion is evaluated, but it does not describe whether a finding is safely repairable. In the shared rubric contract, a mechanical aspect always has an audit action and may have a conform action; the absence of that optional action does not distinguish unfinished automation from a deliberate safety, authority, or information boundary.
+The two-aspect model classifies each rubric criterion as mechanical, judgmental, or hybrid. A later remediation model already classifies every mechanical aspect as `automatic`, `diagnostic`, or `guarded`. The implementation therefore has the right conceptual axes, but the rubric-authoring standard still describes CONFORM as merely optional and the shared TypeScript shape does not encode the combinations that the host rejects at load time.
 
 The Harness effectiveness review repeatedly found that clean mechanical audits can coexist with unresolved semantic or outcome questions. That distinction must remain intact. Improving audit/conform symmetry must not turn judgment into a synthetic finding, weaken a useful audit because it is hard to repair, or treat a proposed write as safe without containment, preservation, idempotence, and post-audit evidence.
 
@@ -30,36 +30,39 @@ The Harness owns criterion policy, focused evidence, safe draft capabilities, an
 
 ## Current state
 
-Structured rubric items already separate mechanical and judgment aspects, and the host safely derives `FIXED` only after a conform action and clean re-audit. Mechanical items without a conform action still participate in AUDIT, but neither the catalogue nor generated rubric says why they are report-only. Reviewers therefore cannot tell whether missing conformance is intentional, unsafe, externally owned, or simply unfinished, and the repository has no measure of audit-to-conform coverage.
+Structured rubric items already separate mechanical and judgment aspects. Every mechanical item declares remediation metadata, generated rubrics publish it, and the host safely derives `FIXED` only after a conform action and clean re-audit. The host also enforces the current combinations: `automatic` requires a conform action; `diagnostic` and `guarded` forbid one; and `guarded` requires a judgment aspect. The remaining contract drift is that the rubric-authoring standard omits this model, the materialised compile-time type permits combinations that the host rejects, and violating command output does not surface diagnostic or guarded guidance.
+
+A source-tree baseline on 2026-08-14 covers 44 generated rubrics and 633 criteria. Of those, 435 carry a mechanical aspect and 233 carry a judgment aspect, with hybrid criteria counted on both axes. Mechanical remediation is 86 automatic, 336 diagnostic, and 13 guarded, so current automatic coverage is 19.8%. The classification is complete; the unanswered question is whether each of the 349 report-only mechanics has the correct boundary or is safe automation debt.
 
 The existing runtime-coverage criterion `RUNTIMES-2` derives the required capabilities from declared `supported_runtimes`; the managed `ki repo skill add` path already contains the relevant trust and link safeguards. Its missing single-run CONFORM path remains in scope, now as one representative test of the general model rather than a standalone roadmap item.
 
-The shaping baseline is a multidimensional classification, not a replacement for the mechanical/judgment distinction:
+This item retains the established classes rather than introducing a second taxonomy:
 
-- **Evaluation** distinguishes mechanical, judgment, and hybrid evidence.
-- **Audit coverage** distinguishes host-executed checks from explicit review-only prompts.
-- **Remediation** distinguishes safe deterministic conformance, reviewer-confirmed assistance, manual or external repair, and intentionally non-remedial information.
-- **Outcome** remains the host result vocabulary and violation severity; it does not imply how a finding may be fixed.
+- **Automatic** means the desired state is derivable without a new policy decision and the host can apply a bounded, preserving, idempotent action. A conform callback is required.
+- **Diagnostic** means AUDIT is deterministic but the correct repair still requires authorship, a local implementation choice, unavailable capability, or external state. Specific guidance is required and no conform callback is allowed.
+- **Guarded** means the repair depends on explicit human judgment or authority. The item must be hybrid, publish the decision boundary, and have no conform callback.
 
-The exact remediation vocabulary, allowed combinations, denominator, and target must be approved during planning. At minimum, every mechanically detected violation must either declare a conform path or an explicit non-conformability reason, and the measured result must not hide judgment or exclude difficult checks to make the ratio look better.
+An unimplemented safe deterministic repair is not a fourth remediation class and must not be hidden as `diagnostic`. It is an automation gap: promote it to `automatic` in this item when the repair is cross-cutting or already bounded, or route a named owner record when the repair is substantial and concern-specific.
+
+Coverage uses all 435 criteria with a mechanical aspect as the denominator and `automatic` criteria as the numerator. Judgment aspects and guarded or diagnostic exceptions are reported separately, not removed from the denominator. The delivery target is semantic rather than an unsafe quota: review every report-only item, implement every safe bounded candidate in the approved tranche, and leave no remaining diagnostic or guarded item without specific guidance that states its real boundary. The numerical rate must rise and be published before and after, but it is not a release gate that can justify unsafe writes or weaker audits.
 
 ## Steps
 
-- [ ] Inventory every structured rubric item and relevant effectiveness-review finding by evaluation aspect, audit execution, possible violation, current conform action, write boundary, verification, and reason for any missing repair path.
-- [ ] Define the canonical remediation vocabulary, allowed combinations, and coverage measure; state which local deterministic violations should be conformable by default and which safety, authority, external-state, ambiguity, or information boundaries justify an exception.
-- [ ] Update the rubric-authoring standard, shared type contract, catalogue validation, and generated publication so repairability and explicit exceptions are reviewable without duplicating criterion policy or inventing judgment findings.
-- [ ] Prove the contract in `ki-skills`, including fixtures for safe conform, deliberate report-only mechanics, hybrid criteria, reviewer-confirmed assistance, malformed metadata, dry-run, repeat idempotence, byte preservation, and clean post-audit derivation of `FIXED`.
-- [ ] Add high-confidence missing conform actions where the local deterministic evidence and bounded draft capability already exist; retain every non-conformable item with a named reason and owner rather than a vague manual fallback.
-- [ ] Carry the former runtime-coverage work through the new model: preserve the declared-runtime mapping and existing trust safeguards, specify the exact single-run repair, and route any receiver-owned host implementation and two-runtime fixtures through one immutable `tools-ki` work submission.
-- [ ] Publish baseline and post-change audit-to-conform coverage, then route genuinely distinct owner work without creating one roadmap item per rubric finding.
+- [ ] Correct the rubric-authoring standard to define evaluation and remediation as independent axes, state the three existing remediation classes and allowed combinations, and make safe deterministic conformance the default design expectation.
+- [ ] Strengthen the shared TypeScript contract so `automatic` requires `conform`, `diagnostic` and `guarded` exclude it, and `guarded` requires judgment at compile time; retain equivalent fail-closed host validation for dynamically loaded catalogues.
+- [ ] Generate a source-loaded inventory of every criterion by evaluation aspect and remediation class, then review all 349 diagnostic and guarded items against one candidate test: the desired state is fully derivable, the target is locally owned, and the action can prove containment, preservation, dry-run, idempotence, and clean post-audit.
+- [ ] Record each reviewed report-only item as a justified boundary or a promotion candidate. Keep specific guidance for every boundary; route only substantial concern-specific candidates to separate owner records, and keep cross-cutting or already bounded candidates in this item.
+- [ ] Implement the approved promotion tranche with focused context capabilities and item-owned conform actions. Include `RUNTIMES-2` as the required proof case, using declared runtimes and existing managed-install safeguards without inferring policy or touching unmanaged state.
+- [ ] Route one immutable `tools-ki` submission for the mirrored type and validator contract, violating-finding presentation of diagnostic and guarded guidance, any source-loaded coverage support, and the runtime-coverage host capability that the local proof requires.
+- [ ] Regenerate every affected rubric publication and publish the dated before-and-after totals for mechanical, automatic, diagnostic, guarded, judgment, and hybrid criteria.
 
 ## Files touched
 
 - `skills/keystone/ki-skills/references/standards-rubric-authoring.md`
-- `skills/keystone/ki-skills/scripts/shared/rubric.ts` and its focused tests
-- `skills/keystone/ki-skills/scripts/rubric/` catalogue, contexts, fixtures, and generated publication
+- `skills/keystone/ki-skills/scripts/shared/rubric.ts` and focused compile-time and runtime-parity tests
+- `skills/keystone/ki-skills/scripts/rubric/` catalogue validation or inventory evidence and generated publication
 - Other governance-skill rubric items, contexts, tests, and generated publications only where the approved inventory adds an explicit classification or a proven safe conform action
-- One outbound `tools-ki` work trade if generic host validation, reporting, or runtime-coverage execution must change
+- One outbound `tools-ki` work trade for its mirrored contract, loader validation, finding presentation, coverage support if needed, and runtime-coverage execution
 - This work item
 
 No peer-repository source, user runtime settings, unmanaged configuration, bulk estate conformance, or unrelated rubric policy is in scope.
@@ -67,23 +70,66 @@ No peer-repository source, user runtime settings, unmanaged configuration, bulk 
 ## Verify
 
 - Every rubric item still has a mechanical aspect, a judgment aspect, or both, and every mechanical aspect retains an AUDIT action.
-- Every mechanical violation-producing path either has a tested conform action or publishes one canonical non-conformability category and a specific reason.
-- Coverage evidence reports the complete denominator, conformable count, exception count by reason, and judgment count before and after the change; no criterion disappears merely because it is difficult to repair.
+- The compile-time contract and host loader accept exactly the same remediation combinations, including rejection fixtures for automatic-without-conform, report-only-with-conform, guarded-without-judgment, and missing guidance.
+- Every mechanical criterion is counted once as automatic, diagnostic, or guarded; every automatic item has a tested conform action, and every diagnostic or guarded item publishes specific guidance for its actual boundary.
+- Coverage evidence reproduces the 435-item baseline and reports automatic, diagnostic, guarded, judgment, and hybrid counts before and after; no criterion disappears or changes evaluation type merely because it is difficult to repair.
+- Violating diagnostic and guarded findings expose their remediation guidance in normal AUDIT and CONFORM output without emitting judgment as a synthetic mechanical finding.
 - Safe conform fixtures prove bounded dry-run proposals, containment and symlink refusal, preservation of unrelated bytes, repeat idempotence, and `FIXED` only after a clean re-audit.
 - Runtime coverage for a repository declaring both Claude Code and Codex has an exact proposal for its missing repository-owned tables and managed links while user and unmanaged settings remain untouched; ambiguous, incompatible, unavailable, or untrusted sources fail closed.
 - Focused shared-rubric and affected catalogue tests, generated-rubric parity, `ki repo audit --skill ki-skills --repo .`, `ki repo audit --skill ki-change-management-roadmap --repo .`, `ki repo audit --skill ki-authoring --repo .`, `bun run test`, and `bunx tsc --noEmit` pass.
 
 ## Dependencies / blocks
 
-The current structured rubric, host-gated CONFORM lifecycle, and effectiveness review provide the evidence baseline. The local classification and safe action work can proceed independently. Generic host changes and the runtime-coverage executor remain owned by `tools-ki`; a submitted trade records that receiver boundary but grants no priority, implementation, or acceptance authority.
+The current structured rubric, remediation catalogue, host-gated CONFORM lifecycle, and effectiveness review provide the evidence baseline. The local standard, compile-time contract, inventory, classification review, and safe item actions can proceed independently. The mirrored runtime contract, generic reporting, and runtime-coverage executor remain owned by `tools-ki`; a submitted trade records that receiver boundary but grants no priority, implementation, or acceptance authority.
 
-This broader scope returns GOV-009 from Ready to Draft while it is shaped in Now. It becomes Ready only after the remediation vocabulary, complete inventory method, measurable target, initial conformer set, host boundary, and verification plan are reviewed together.
+The user approved the retained taxonomy, complete-denominator measure, promotion test, required `RUNTIMES-2` proof, host boundary, and verification plan together on 2026-08-15. The full promotion list is implementation evidence produced by the source-loaded inventory; readiness does not require guessing that list from generated Markdown.
+
+## Delegation
+
+### Locked decisions
+
+- Retain mechanical, judgment, and hybrid as the evaluation axis and `automatic`, `diagnostic`, and `guarded` as the remediation axis.
+- Count every mechanical criterion once in the remediation denominator; the coverage rate is evidence, not a quota or release gate.
+- Promote only locally owned, fully derivable repairs that can prove containment, preservation, dry-run, idempotence, and clean post-audit.
+- Keep generic host execution, reporting, loader validation, and runtime activation in `tools-ki`; this repository may submit one immutable trade but may not write the peer.
+- Preserve `RUNTIMES-2` as the required proof case without inferring runtime policy or touching user-owned or unmanaged settings.
+
+### Escalate
+
+- Any proposed fourth remediation class, denominator change, or weakening of a mechanical audit.
+- Any conform action whose desired state, ownership, containment, preservation, or idempotence cannot be proved from local evidence.
+- Any need to edit `tools-ki`, a user runtime, unmanaged configuration, or another repository rather than recording the receiver-owned work.
+- Any inventory result that cannot reproduce the dated baseline or exposes a material ownership conflict not already bounded by this item.
+
+### Worker: inventory-classification
+
+- **Deliverable:** A source-loaded count and concise classification of every diagnostic and guarded criterion, including safe promotion candidates and justified boundaries.
+- **Inputs:** The approved GOV-009 record, structured rubric catalogues, generated publications, and the 2026-08-14 baseline counts.
+- **Scope:** Read-only inspection of rubric sources under `skills/`; no repository or external writes.
+- **Authority:** Run read-only searches and local analysis commands; do not edit, stage, commit, conform, or contact external systems.
+- **Isolation:** Read-only worker lane in the shared repository with no Git write authority.
+- **Verify:** Coordinator reproduces the totals from source and reviews every proposed promotion against the locked candidate test.
+- **Return:** Counts, candidate list with owning criterion and rationale, justified-boundary summary, and unresolved discrepancies; no raw command transcript.
+- **Checkpoint:** Return after all source-loaded rubric catalogues are counted and every report-only item is classified.
+
+### Worker: runtime-proof-boundary
+
+- **Deliverable:** A bounded design and evidence map for the `RUNTIMES-2` local proof and the exact receiver-owned `tools-ki` requirements.
+- **Inputs:** GOV-009, `ki-repo-harness` runtime criteria and contexts, managed-link standards, existing trade route, and current host contracts.
+- **Scope:** Read-only inspection of Harness and locally available host sources; no repository, peer, user-state, or external writes.
+- **Authority:** Read the named sources and run read-only searches or tests; do not edit, stage, commit, conform, install, activate, or submit a trade.
+- **Isolation:** Read-only worker lane; peer repositories remain evidence only.
+- **Verify:** Coordinator checks the proposed local capability against the locked safety test and validates the trade boundary against `ki-trades`.
+- **Return:** Exact local files and tests to change, host-owned requirements, safety stops, and unresolved conflicts; no implementation or peer mutation.
+- **Checkpoint:** Return once the local proof boundary and receiver requirements are concrete enough for coordinator implementation.
 
 ## Discussion
 
 ### Audit and conform symmetry
 
-The desired default is not that every finding is automatically rewritten. It is that every deterministic local violation is designed with repairability in mind, and that absence of a conformer is an explicit policy decision rather than an invisible omission. Audit coverage remains valuable even when a safe repair is impossible.
+The desired default is not that every finding is automatically rewritten. It is that every deterministic local violation is designed with repairability in mind, and that absence of a conformer is an explicit policy boundary rather than a convenience label for unfinished work. Audit coverage remains valuable even when a safe repair is impossible.
+
+The existing remediation model is now the starting point, not proposed future vocabulary. `automatic` is executable, `diagnostic` is a deterministic report whose correction still needs authorship or another unavailable input, and `guarded` is a hybrid decision boundary. Evaluation type still answers how evidence is assessed; remediation class answers what the host may do after a mechanical finding.
 
 ### Consolidated runtime coverage
 
@@ -95,4 +141,4 @@ The previous GOV-009 runtime-coverage scope is preserved here rather than retain
 
 ### Ratio without gaming
 
-A useful measure must count the complete mechanical audit surface and explain every exception. It must not reward deleting hard checks, splitting one rule to inflate the numerator, relabelling deterministic evidence as judgment, or calling an unsafe suggestion a conformer. The coverage trend is evidence for rubric quality, not an automatic score or release gate until the inventory establishes a defensible denominator.
+A useful measure counts the complete mechanical audit surface and explains every exception. The dated baseline is 86 automatic of 435 mechanical criteria, or 19.8%. It must not reward deleting hard checks, splitting one rule to inflate the numerator, relabelling deterministic evidence as judgment, or calling an unsafe suggestion a conformer. The coverage trend is evidence for rubric quality, not an automatic score or release gate.
