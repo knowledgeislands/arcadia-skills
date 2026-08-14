@@ -444,6 +444,29 @@ describe('local repository evidence', () => {
     expect((await collectAuditFindings([root])).findings.filter((finding) => finding.code === 'COV-1')).toEqual([])
   })
 
+  test('separates website coverage and enforces one purpose-specific implementation', async () => {
+    const root = repository()
+    writeFileSync(join(root, 'vite.config.ts'), 'export default {}\n')
+    writeFileSync(
+      join(root, 'package.json'),
+      JSON.stringify({ dependencies: { react: '^19.0.0' }, devDependencies: { vite: '^7.0.0' } })
+    )
+    writeFileSync(join(root, '.ki-config.toml'), '[skills.ki-repo]\n')
+
+    const coverage = (await collectAuditFindings([root])).findings.filter((finding) => finding.code === 'COV-1')
+    expect(coverage).toContainEqual(expect.objectContaining({ message: expect.stringContaining('ki-website (') }))
+    expect(coverage).toContainEqual(expect.objectContaining({ message: expect.stringContaining('ki-website-app') }))
+
+    writeFileSync(
+      join(root, '.ki-config.toml'),
+      '[skills.ki-repo]\n\n[skills.ki-repo-website]\n\n[skills.ki-repo-website-content]\n\n[skills.ki-repo-website-app]\n'
+    )
+    const structure = (await collectAuditFindings([root])).findings.filter((finding) => finding.code === 'STRUCT-3')
+    expect(structure).toContainEqual(
+      expect.objectContaining({ level: 'FAIL', message: expect.stringContaining('choose content or app') })
+    )
+  })
+
   test('requires the portable parent and Claude adapter for Markdown subagent projections', async () => {
     const root = repository()
     mkdirSync(join(root, 'subagents', 'governance'), { recursive: true })

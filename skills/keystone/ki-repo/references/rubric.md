@@ -182,6 +182,10 @@ Primary repository structure, with composable specialisations.
   - _Remediation:_ diagnostic — Align the repository structure declaration with the applicable standard or record an explicit exemption, then rerun the audit.
 - **STRUCT-2 [M] — Primary repository structure presence** — A repository declares a Project or Knowledge Base primary structure. (standards-repository.md)
   - _Remediation:_ diagnostic — Align the repository structure declaration with the applicable standard or record an explicit exemption, then rerun the audit.
+- **STRUCT-3 [M] — Single website implementation** — A website declares at most one mutually exclusive content or app implementation. (standards-repository.md)
+  - _Remediation:_ diagnostic — Align the repository structure declaration with the applicable standard or record an explicit exemption, then rerun the audit.
+- **STRUCT-4 [M] — Website implementation presence** — A declared website core selects a content or app implementation. (standards-repository.md)
+  - _Remediation:_ diagnostic — Align the repository structure declaration with the applicable standard or record an explicit exemption, then rerun the audit.
 
 ## ACCESS — Repository access
 

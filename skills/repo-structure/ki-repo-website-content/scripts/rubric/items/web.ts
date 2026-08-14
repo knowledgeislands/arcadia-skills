@@ -11,7 +11,7 @@ const inactive = (context: WebsiteContext): readonly AuditOutcome[] | null =>
           {
             status: 'NOT_APPLICABLE',
             message:
-              'ki-repo-website is not applicable: its repository declaration is absent. Detected Eleventy shape is handled by ki-repo coverage.'
+              'ki-repo-website-content is not applicable: its repository declaration is absent. Detected Eleventy shape is handled by ki-repo coverage.'
           }
         ]
       : null
@@ -111,19 +111,21 @@ const WEB_1 = mechanical(
 const WEB_2 = mechanical(
   'WEB-2',
   'Eleventy rather than SPA stack',
-  'Astro and Next dependencies are absent.',
-  'WARN',
+  'Application-framework and React/Vite dependencies are absent.',
+  'FAIL',
   (context) => {
     const stop = inactive(context)
     if (stop) return stop
-    const found = ['astro', 'next'].filter((name) => context.deps[name])
+    const found = ['astro', 'next', 'react', 'react-dom', 'vite', '@vitejs/plugin-react'].filter(
+      (name) => context.deps[name]
+    )
     return found.length
       ? found.map((name) => ({
           status: 'VIOLATION' as const,
           message: `${name} present — this skill governs Eleventy sites, not ${name}`,
           subject: 'package.json'
         }))
-      : [{ status: 'PASS', message: 'no Astro or Next dependency', subject: 'package.json' }]
+      : [{ status: 'PASS', message: 'no application-framework or React/Vite dependency', subject: 'package.json' }]
   }
 )
 
@@ -578,14 +580,14 @@ const WEB_40 = mechanical(
 const WEB_41 = mechanical(
   'WEB-41',
   'Website opt-in',
-  'Applicable sites declare `[skills.ki-repo-website]`.',
+  'Applicable sites declare `[skills.ki-repo-website-content]`.',
   'WARN',
   (context) =>
     inactive(context) ??
     one(
       Boolean(context.kiWebsiteTable),
-      '[skills.ki-repo-website] table present',
-      'no [skills.ki-repo-website] table in .ki-config.toml',
+      '[skills.ki-repo-website-content] table present',
+      'no [skills.ki-repo-website-content] table in .ki-config.toml',
       '.ki-config.toml'
     )
 )
@@ -599,18 +601,18 @@ const WEB_42 = mechanical(
     const stop = inactive(context)
     if (stop) return stop
     if (!context.kiWebsiteTable)
-      return [{ status: 'NOT_APPLICABLE', message: '[skills.ki-repo-website] table is absent' }]
+      return [{ status: 'NOT_APPLICABLE', message: '[skills.ki-repo-website-content] table is absent' }]
     const keys = Object.keys(context.kiWebsiteTable)
     return keys.length
       ? keys.map((key) => ({
           status: 'VIOLATION' as const,
-          message: `unknown key under [skills.ki-repo-website]: ${key}`,
+          message: `unknown key under [skills.ki-repo-website-content]: ${key}`,
           subject: '.ki-config.toml'
         }))
       : [
           {
             status: 'PASS',
-            message: '[skills.ki-repo-website] contains no unknown keys',
+            message: '[skills.ki-repo-website-content] contains no unknown keys',
             subject: '.ki-config.toml'
           }
         ]

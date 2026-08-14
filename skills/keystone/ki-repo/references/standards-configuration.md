@@ -126,7 +126,9 @@ The detection signals `ki-repo` uses (one recursive tree read + `package.json`):
 | `ki-engineering` | `package.json` present | `[skills.ki-engineering]` |
 | `ki-repo-kb` | canonical zones (`Pillars/` + `Resources/`) | `[skills.ki-repo-kb]` |
 | `ki-repo-kb-streams` | `Streams/` zone | `[skills.ki-repo-kb-streams]` |
-| `ki-repo-website` | `eleventy.config.*` | `[skills.ki-repo-website]` |
+| `ki-repo-website` | either website implementation signal below | `[skills.ki-repo-website]` |
+| `ki-repo-website-content` | `eleventy.config.*` | `[skills.ki-repo-website-content]` |
+| `ki-repo-website-app` | Vite config plus React and Vite dependencies | `[skills.ki-repo-website-app]` |
 | `ki-repo-website-cloudflare` | a `wrangler.*` config | `[skills.ki-repo-website-cloudflare]` |
 | `ki-repo-mcp` | `@modelcontextprotocol/sdk` dependency | `[skills.ki-repo-mcp]` |
 | `ki-repo-plugins` | `.claude-plugin/marketplace.json` | `[skills.ki-repo-plugins]` |
@@ -139,7 +141,7 @@ The detection signals `ki-repo` uses (one recursive tree read + `package.json`):
 | `ki-subagents-codex` | `.codex/agents/**/*.toml` | `[skills.ki-subagents-codex]` |
 | `ki-checkpoint` | `+/_CHECKPOINTS/` subarea | `[skills.ki-checkpoint]` |
 
-This is the **one place** `ki-repo` reads across skill tables — and it reads only table **presence**, never another skill's keys (_validate down, ignore across_ still governs table _contents_). It is an **audit-time enforcement** run by `repo`'s auditor, not behaviour baked into the regular use of each skill. A repo opts out of a single signal it doesn't want enforced with a `coverage-<skill> = false` entry in its `[skills.ki-repo.checks]` table (e.g. a repo that vendors an `eleventy.config` it does not own) — reported as an acknowledged note.
+This is the **one place** `ki-repo` reads across skill tables — and it reads only table **presence**, never another skill's keys (_validate down, ignore across_ still governs table _contents_). It is an **audit-time enforcement** run by `repo`'s auditor, not behaviour baked into the regular use of each skill. A repo opts out of a single signal with a `coverage-<skill> = false` entry under `[skills.ki-repo.checks]`. Website keys are independent: `coverage-website`, `coverage-website-content`, `coverage-website-app`, and `coverage-website-cloudflare` do not disable one another.
 
 No marker table is decorative — each is read by code. Most are read by their **owning** skill's auditor too (`-engineering`/`-kb`/`-streams`/`-website`/`-website-cloudflare`/`-mcp`/`-plugins` each read their own table when run). `ki-skills`, `ki-subagents`, and its runtime adapters are the documented exception: their checkers lint artifact sets (`SKILL.md` files or native agent projections), not a repo's config, so their opt-in tables are read only by `ki-repo`'s coverage check.
 

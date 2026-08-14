@@ -114,6 +114,7 @@ const scriptOwner = (key: string): string | undefined => {
   if (key === 'ki:deps:update') return 'ki-engineering'
   if (key === 'ki:eval') return 'ki-repo-harness'
   if (key.startsWith('ki:binding:')) return 'ki-binding-claude'
+  if (['ki:site:deploy', 'ki:site:preview'].includes(key)) return 'ki-repo-website-cloudflare'
   if (key.startsWith('ki:site:')) return 'ki-repo-website'
   if (key.startsWith('ki:ingress:')) return 'ki-repo-website-cloudflare'
   if (key === 'ki:generate:client' || key.startsWith('ki:server:') || key.startsWith('ki:test:')) return 'ki-repo-mcp'

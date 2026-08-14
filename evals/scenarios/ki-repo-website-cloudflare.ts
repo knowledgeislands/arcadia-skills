@@ -16,12 +16,12 @@ export const scenarios: Scenario[] = [
     prompt:
       'How do we deploy a static site to Cloudflare under the Knowledge Islands house standard — which Cloudflare product, which deploy command, and which command must never be used?',
     assertions: [
-      { name: 'Workers + Static Assets', re: /workers[^.\n]{0,20}static assets|static assets/i },
-      { name: 'not Pages', re: /not pages|never[^.\n]{0,20}pages|migrated off pages/i },
+      { name: 'Workers Static Assets', re: /workers[^.\n]{0,20}static assets|static assets/i },
+      { name: 'not Pages', re: /not pages|never[^.\n]{0,20}pages|pages[^.\n]{0,20}not.*target/i },
       { name: 'never wrangler pages deploy', re: /wrangler pages deploy/i }
     ],
     rubric:
-      'House decision: serve the site as a **Cloudflare Worker + Static Assets**, NOT Pages. Deploy with `wrangler deploy` (a Worker carrying an `assets` block). **Never `wrangler pages deploy`** — Cloudflare steers new sites to Workers + Static Assets and the house sites were explicitly migrated off Pages. A correct answer names Workers + Static Assets, says not Pages, and flags `wrangler pages deploy` as forbidden.'
+      'House decision: serve the site with **Cloudflare Workers Static Assets**, not Pages as the deployment target for new projects. Deploy with `wrangler deploy` and never `wrangler pages deploy`.'
   },
   {
     skill: 'ki-repo-website-cloudflare',
@@ -37,7 +37,7 @@ export const scenarios: Scenario[] = [
       }
     ],
     rubric:
-      'House model: `assets.directory` is the **seam** — it points at the `dist/` that `ki-repo-website` emits (`./dist` flat, `../dist` from a `site/` subfolder). The in-scope **site Worker carries `assets` and no `main`**; a Worker with a `main` entry and no `assets` is a **companion** (bot, ingress, API, …) that belongs to the generic `cloudflare` / `wrangler` skills, not this one. A correct answer states assets.directory → dist/, the assets-and-no-main test for the site Worker, and that a main/no-assets Worker routes to the generic cloudflare/wrangler skills.'
+      'House model: `assets.directory` points at the exact local `dist/` produced through `ki-repo-website`. The static site carries `assets` and no `main`; no `main` is what guarantees no server-side Worker code executes. A main/no-assets companion belongs to the generic Cloudflare/Wrangler skills.'
   },
   {
     skill: 'ki-repo-website-cloudflare',

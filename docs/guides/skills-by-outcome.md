@@ -56,7 +56,7 @@ Start with `ki-repo` for the common baseline, then select the structural capabil
 - **General project** — `ki-repo-project` for a non-Knowledge-Base project baseline.
 - **Knowledge Base** — `ki-repo-kb` for the base island structure; add `ki-repo-kb-principal`, `ki-repo-kb-streams`, `ki-repo-kb-activities`, or `ki-repo-kb-live-artifacts` only for the corresponding structure.
 - **MCP server** — `ki-repo-mcp` for the MCP source, tool, access, and packaging delta.
-- **Website** — `ki-repo-website` for the site structure and `ki-repo-website-cloudflare` for its Cloudflare deployment delta.
+- **Website** — start with `ki-repo-website`, then choose exactly one purpose-specific implementation: `ki-repo-website-content` for a Markdown/data page collection or `ki-repo-website-app` for one interactive React/Vite app. Add `ki-repo-website-cloudflare` independently for Workers Static Assets hosting.
 - **CLI or developer tooling repository** — `ki-repo-tools`.
 - **Specification repository** — `ki-repo-specifications`.
 - **Plugin repository** — `ki-repo-plugins`.

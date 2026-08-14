@@ -131,14 +131,46 @@ describe('ki-repo-website-cloudflare session', () => {
       writeFileSync(join(repository, '.ki-config.toml'), '[skills.ki-repo-website-cloudflare]\n')
       writeFileSync(join(repository, 'site', 'wrangler.jsonc'), content)
       const context = WCF.selectContext(createWebsiteCloudflareSession(options(repository)).subjects[0].context())
-      const code = name === 'traversal' ? 'WCF-4' : 'WCF-1'
+      const code = name === 'assets-plus-main' ? 'WCF-23' : name === 'traversal' ? 'WCF-4' : 'WCF-1'
       const result = WCF.items.find((item) => item.code === code)?.mechanical?.audit.run(context)
 
       expect(result?.[0]?.status).toBe('VIOLATION')
       expect(result?.[0]?.message).toContain(
-        name === 'traversal' ? 'not the exact contained local dist seam' : 'No site Worker config'
+        name === 'assets-plus-main'
+          ? 'Static site config has a main field'
+          : name === 'traversal'
+            ? 'not the exact contained local dist seam'
+            : 'No site Worker config'
       )
     }
+  })
+
+  test('reports the legacy Pages marker with its Workers Static Assets replacement', () => {
+    const repository = makeRoot()
+    mkdirSync(join(repository, 'site'), { recursive: true })
+    writeFileSync(join(repository, '.ki-config.toml'), '[skills.ki-repo-website-cloudflare]\n')
+    writeFileSync(join(repository, 'site', 'wrangler.jsonc'), '{"pages_build_output_dir":"./dist"}\n')
+    const context = WCF.selectContext(createWebsiteCloudflareSession(options(repository)).subjects[0].context())
+    const result = WCF.items.find((item) => item.code === 'WCF-2')?.mechanical?.audit.run(context)
+
+    expect(result?.[0]?.status).toBe('VIOLATION')
+    expect(result?.[0]?.message).toContain('legacy Cloudflare Pages marker')
+    expect(result?.[0]?.message).toContain('"assets": { "directory": "./dist" }')
+  })
+
+  test('requires Workers Static Assets SPA fallback for the app implementation', () => {
+    const repository = makeRoot()
+    mkdirSync(join(repository, 'site'), { recursive: true })
+    writeFileSync(
+      join(repository, '.ki-config.toml'),
+      '[skills.ki-repo-website-app]\n\n[skills.ki-repo-website-cloudflare]\n'
+    )
+    writeFileSync(join(repository, 'site', 'wrangler.jsonc'), '{"assets":{"directory":"./dist"}}\n')
+    const context = WCF.selectContext(createWebsiteCloudflareSession(options(repository)).subjects[0].context())
+    const result = WCF.items.find((item) => item.code === 'WCF-24')?.mechanical?.audit.run(context)
+
+    expect(result?.[0]?.status).toBe('VIOLATION')
+    expect(result?.[0]?.message).toContain('single-page-application')
   })
 
   test('accepts parsed JSONC with comments but rejects a misleading comment-only assets declaration', () => {

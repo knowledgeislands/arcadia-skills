@@ -99,7 +99,9 @@ const GITHUB_CODES = new Set([
   'CHECKS-1',
   'COV-1',
   'STRUCT-1',
-  'STRUCT-2'
+  'STRUCT-2',
+  'STRUCT-3',
+  'STRUCT-4'
 ])
 
 export type EvidenceRubricContext = {
@@ -126,6 +128,8 @@ export type GhRubricContext = {
 export type StructureRubricContext = {
   structure1: readonly RepoEvidenceFinding[]
   structure2: readonly RepoEvidenceFinding[]
+  structure3: readonly RepoEvidenceFinding[]
+  structure4: readonly RepoEvidenceFinding[]
 }
 
 export type RuntimesRubricContext = {
@@ -381,7 +385,12 @@ export const createRepoSession = async (
     actions: { evidence: evidence('ACT-1') },
     checks: { evidence: evidence('CHECKS-1') },
     coverage: { evidence: evidence('COV-1') },
-    structure: { structure1: evidence('STRUCT-1'), structure2: evidence('STRUCT-2') },
+    structure: {
+      structure1: evidence('STRUCT-1'),
+      structure2: evidence('STRUCT-2'),
+      structure3: evidence('STRUCT-3'),
+      structure4: evidence('STRUCT-4')
+    },
     access: { evidence: evidence('ACCESS-1') },
     kind: { kind1: evidence('KIND-1'), kind2: evidence('KIND-2') },
     runtimes: {

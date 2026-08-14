@@ -19,7 +19,7 @@ Use the [skills-by-outcome guide](../docs/guides/skills-by-outcome.md) when you 
 <!-- ki-repo-harness:capability-catalogue:start -->
 ## Generated capability catalogue
 
-This source harness publishes 51 skills: 43 governance skills and 8 process skills. The entries below are generated from canonical `SKILL.md` frontmatter; edit the source skill, then run `ki repo conform --skill ki-repo-harness` to republish this section.
+This source harness publishes 53 skills: 45 governance skills and 8 process skills. The entries below are generated from canonical `SKILL.md` frontmatter; edit the source skill, then run `ki repo conform --skill ki-repo-harness` to republish this section.
 
 ### Agentic Systems
 
@@ -476,19 +476,37 @@ Audit, conform, or scaffold a Knowledge Islands `tools-*` repo — ONE standalon
 
 #### `ki-repo-website`
 
-Codifies, audits, and enforces the Knowledge Islands static-site standard: Eleventy 3 with Nunjucks and Markdown, TypeScript run natively on Bun, Tailwind 4 in config-less mode with semantic design tokens, and a portable `dist/` output. Use when building a new KI static site, auditing an existing site against the standard, conforming one to the standard, or scaffolding the initial `eleventy.config.ts`, Tailwind token pair, `src/` layout, and SEO wiring. Triggers: "audit my 11ty site", "does this site follow our standard", "scaffold a new 11ty site", "conform this site to KI standard", "build a static site with Eleventy", "my Tailwind build isn't generating any output", "add a page layout". The separately coverage-detected ki-engineering and ki-authoring standards own the code toolchain and Markdown style; for deploying the built `dist/` to Cloudflare use ki-repo-website-cloudflare. Not for Astro, Next, or other frameworks.
+Governs the generator-neutral Knowledge Islands website seam: one site source root, a reproducible `dist/` output, and the `ki:site:build`, `ki:site:dev`, and `ki:site:clean` lifecycle. Use for any repository that publishes a website, before selecting exactly one purpose-specific implementation: `ki-repo-website-content` for Markdown/data page collections or `ki-repo-website-app` for a single interactive React/Vite app. Hosting is orthogonal; add `ki-repo-website-cloudflare` only when Cloudflare serves the output.
 
 - **Kind:** Governance
 - **Arguments:** `audit <repo> | conform <repo> | help | educate <repo> | refresh`
 - **Dependencies:** None
 - **Runtime:** Portable
 
+#### `ki-repo-website-app`
+
+Governs the Knowledge Islands interactive website implementation: one client-side React application bundled by Vite to `dist/`. Use for dashboards and single interactive SPAs whose primary artifact is an application rather than a Markdown/data page collection. This is the legitimate alternative to `ki-repo-website-content`; never select both. Cloudflare hosting remains an independent adapter.
+
+- **Kind:** Governance
+- **Arguments:** `audit <repo> | conform <repo> | help | educate <repo> | refresh`
+- **Dependencies:** `ki-repo-website`
+- **Runtime:** Portable
+
 #### `ki-repo-website-cloudflare`
 
-Codify, audit, conform, and scaffold the Knowledge Islands house convention for serving a built static site on Cloudflare — Workers + Static Assets (not Pages), one `wrangler.jsonc` pointing `assets.directory` at the site's `dist/`, custom-domain routes, observability, and the `ki:site:deploy` script family. Use when deploying a site to Cloudflare, wiring or auditing its `wrangler.jsonc`, bringing hosting up to standard, or scaffolding it. Triggers: "deploy this site to Cloudflare", "audit the Cloudflare hosting", "set up wrangler for the site", "host the dist on Cloudflare", "configure Workers Static Assets", "why won't the site deploy", "conform the hosting". Depends on `ki-repo-website`, which produces the `dist/` seam; the separately coverage-detected `ki-engineering` standard owns the toolchain. For any Worker that is not the static-site server (bots, ingress receivers, APIs, Durable Objects) and general Cloudflare/Workers/wrangler usage, use the `cloudflare` and `wrangler` skills.
+Governs Cloudflare hosting for either Knowledge Islands website implementation using Workers Static Assets, never Pages as the deployment target. Audits `wrangler.jsonc`, rejects the legacy `pages_build_output_dir` marker and any `main` server entry, matches `assets.directory` to `dist/`, and covers Workers Builds, workers.dev, custom domains, and deploy scripts. Use when publishing a content site or interactive app on Cloudflare or diagnosing a static deployment failure. Depends only on the neutral `ki-repo-website` seam.
 
 - **Kind:** Governance
 - **Arguments:** `audit <repo> | conform <repo> | educate <repo> | help | refresh`
+- **Dependencies:** `ki-repo-website`
+- **Runtime:** Portable
+
+#### `ki-repo-website-content`
+
+Governs the Knowledge Islands content-led website implementation: Eleventy 3 generates a collection of pages from Markdown and structured data, with Nunjucks, Tailwind 4 semantic tokens, and portable `dist/` output. Use for documentation, publication, and marketing sites whose primary artifact is a page collection. Do not use for a single interactive SPA; select `ki-repo-website-app` instead because Eleventy does not bundle React application JavaScript and combining them creates two build systems. Depends on the neutral `ki-repo-website` seam; Cloudflare hosting remains independent.
+
+- **Kind:** Governance
+- **Arguments:** `audit <repo> | conform <repo> | help | educate <repo> | refresh`
 - **Dependencies:** `ki-repo-website`
 - **Runtime:** Portable
 

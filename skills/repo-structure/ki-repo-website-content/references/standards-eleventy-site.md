@@ -1,10 +1,12 @@
 # Eleventy site standard
 
-The normative, quotable reference for the Knowledge Islands 11ty website standard — what a good site looks like, and why. The audit rubric ([rubric.md](rubric.md)) turns each section into checkable items; the procedure is in the [SKILL.md](../SKILL.md). See [the source list](sources.md) for provenance.
+The normative, quotable reference for the Knowledge Islands content website standard — what a good site looks like, and why. The audit rubric ([rubric.md](rubric.md)) turns each section into checkable items; the procedure is in the [SKILL.md](../SKILL.md). See [the source list](sources.md) for provenance.
 
 This skill owns the **site-build delta**. The toolchain it sits on (Bun mandate, aggregate/scoped audit wiring, direct code-tool execution, `tsconfig`/`biome`, and TypeScript checking) is `ki-engineering`'s and is referenced here, not restated.
 
-The standard applies only when a repository declares `[skills.ki-repo-website]` in `.ki-config.toml`. An `eleventy.config.{ts,js,mjs,cjs}` file at the repository root or under `site/` is coverage evidence for `ki-repo`, not local selection authority; an undeclared site receives one `NOT_APPLICABLE` result here.
+Use this implementation when the website is a collection of pages generated from Markdown or structured data. A single interactive SPA is a legitimate non-adoption: select `ki-repo-website-app` instead. Eleventy does not bundle React application JavaScript, so combining both implementations would introduce two build systems and is outside the current standard.
+
+The standard applies only when a repository declares `[skills.ki-repo-website-content]` in `.ki-config.toml`. An `eleventy.config.{ts,js,mjs,cjs}` file at the repository root or under `site/` is coverage evidence for `ki-repo`, not local selection authority; an undeclared site receives one `NOT_APPLICABLE` result here.
 
 ## Contents
 
@@ -20,7 +22,7 @@ The standard applies only when a repository declares `[skills.ki-repo-website]` 
 
 ## 1. Stack
 
-- **Eleventy 3** (`@11ty/eleventy` `^3.x`) is the generator — a static-site generator, **not** a JS framework. **Not** Astro, Next, Vite, or a SPA. The output is HTML + CSS + a little progressive-enhancement JS.
+- **Eleventy 3** (`@11ty/eleventy` `^3.x`) is the generator — a static-site generator, **not** a JS application framework. **Not** Astro, Next, React/Vite, or a SPA. The output is HTML + CSS + a little progressive-enhancement JS.
 - **Nunjucks** (`.njk`) is the template engine for both HTML templates and Markdown (`htmlTemplateEngine: 'njk'`, `markdownTemplateEngine: 'njk'`). **Markdown** (`.md`) carries prose content; `.njk` carries logic/layout.
 - **TypeScript runner is declared, not proven.** Package scripts select Bun or modern Node and reject `tsx`; actual config or data execution is explicit runtime evidence. `tsc` is used only for `--noEmit` type-checking, which is the `ki-engineering` layer.
 - **Bun is mandated** as the package manager and runtime. The Bun-install / Node-run split, the `packageManager: bun@…` pin, `engines`, aggregate/scoped audit wiring, and internal code-tool checks are `ki-engineering`'s — this standard assumes them.

@@ -18,7 +18,9 @@ export type WranglerConfigEvidence = {
   readonly text: string | null
   readonly hasAssets: boolean
   readonly hasMain: boolean
+  readonly hasPagesBuildOutputDir: boolean
   readonly assetsDirectory: string | null
+  readonly notFoundHandling: string | null
   readonly hasName: boolean
   readonly hasCompatibilityDate: boolean
   readonly observabilityEnabled: boolean
@@ -35,6 +37,7 @@ export type WebsiteCloudflareContext = {
     readonly state: ConfigurationState
     readonly keys: readonly string[]
     readonly siteRoot: string | null
+    readonly appDeclared: boolean
   }
   readonly package: {
     readonly state: PackageState
@@ -115,8 +118,10 @@ const inspectWranglerConfig = (root: string, path: string): WranglerConfigEviden
     state,
     text,
     hasAssets: assetTable !== null,
-    hasMain: typeof value?.main === 'string',
+    hasMain: value !== null && Object.hasOwn(value, 'main'),
+    hasPagesBuildOutputDir: value !== null && Object.hasOwn(value, 'pages_build_output_dir'),
     assetsDirectory: typeof assetTable?.directory === 'string' ? assetTable.directory : null,
+    notFoundHandling: typeof assetTable?.not_found_handling === 'string' ? assetTable.not_found_handling : null,
     hasName: typeof value?.name === 'string' && value.name.length > 0,
     hasCompatibilityDate:
       typeof value?.compatibility_date === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(value.compatibility_date),
@@ -151,26 +156,30 @@ const inspectConfiguration = (
   readonly state: ConfigurationState
   readonly keys: readonly string[]
   readonly siteRoot: string | null
+  readonly appDeclared: boolean
 } => {
   const kind = nodeKind(path)
-  if (kind === 'missing') return { state: 'missing', keys: [], siteRoot: null }
-  if (kind !== 'file') return { state: 'unsafe', keys: [], siteRoot: null }
+  if (kind === 'missing') return { state: 'missing', keys: [], siteRoot: null, appDeclared: false }
+  if (kind !== 'file') return { state: 'unsafe', keys: [], siteRoot: null, appDeclared: false }
   const text = readRegularText(path)
-  if (text === null) return { state: 'unsafe', keys: [], siteRoot: null }
+  if (text === null) return { state: 'unsafe', keys: [], siteRoot: null, appDeclared: false }
   try {
     const parsed = Bun.TOML.parse(text) as Record<string, unknown>
-    const candidate = (parsed.skills as Record<string, unknown> | undefined)?.[CONFIG_SECTION]
-    if (candidate === undefined) return { state: 'absent', keys: [], siteRoot: null }
+    const skills = parsed.skills as Record<string, unknown> | undefined
+    const appDeclared = skills?.['ki-repo-website-app'] !== undefined
+    const candidate = skills?.[CONFIG_SECTION]
+    if (candidate === undefined) return { state: 'absent', keys: [], siteRoot: null, appDeclared }
     if (!candidate || typeof candidate !== 'object' || Array.isArray(candidate))
-      return { state: 'malformed', keys: [], siteRoot: null }
+      return { state: 'malformed', keys: [], siteRoot: null, appDeclared }
     const table = candidate as Record<string, unknown>
     return {
       state: 'present',
       keys: Object.keys(table),
-      siteRoot: typeof table['site-root'] === 'string' ? table['site-root'] : null
+      siteRoot: typeof table['site-root'] === 'string' ? table['site-root'] : null,
+      appDeclared
     }
   } catch {
-    return { state: 'malformed', keys: [], siteRoot: null }
+    return { state: 'malformed', keys: [], siteRoot: null, appDeclared: false }
   }
 }
 
@@ -219,12 +228,12 @@ export const createWebsiteCloudflareSession = ({
   const configs = targetExists ? collectWranglerConfigs(target) : []
   const configuration = targetExists
     ? inspectConfiguration(join(target, CONFIG_FILE))
-    : { state: 'missing' as const, keys: [], siteRoot: null }
-  const siteConfigs = configs.filter((config) => config.state === 'present' && config.hasAssets && !config.hasMain)
+    : { state: 'missing' as const, keys: [], siteRoot: null, appDeclared: false }
+  const siteConfigs = configs.filter((config) => config.state === 'present' && config.hasAssets)
   const companionConfigs = configs.filter((config) => config.state === 'present' && !config.hasAssets && config.hasMain)
   const hosting: WebsiteCloudflareContext = {
     targetExists,
-    applicable: configuration.state === 'present',
+    applicable: configuration.state === 'present' || configs.length > 0,
     configs,
     siteConfigs,
     companionConfigs,

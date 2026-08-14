@@ -31,6 +31,8 @@ import { mkdtempSync } from 'node:fs'
 import { homedir, tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { scenarios as websitesScenarios } from './scenarios/ki-repo-website.ts'
+import { scenarios as websiteAppScenarios } from './scenarios/ki-repo-website-app.ts'
+import { scenarios as websiteContentScenarios } from './scenarios/ki-repo-website-content.ts'
 import { scenarios as agentsScenarios } from './scenarios/ki-subagents.ts'
 import { scenarios as delegationScenarios } from './scenarios/ki-delegation.ts'
 import { scenarios as authoringScenarios } from './scenarios/ki-authoring.ts'
@@ -58,6 +60,8 @@ export type Scenario = { skill: string; id: string; prompt: string; assertions: 
 // Scenario registry — add a `./scenarios/<skill>.ts` file and spread it in here.
 const ALL: Scenario[] = [
   ...websitesScenarios,
+  ...websiteAppScenarios,
+  ...websiteContentScenarios,
   ...agentsScenarios,
   ...delegationScenarios,
   ...authoringScenarios,
