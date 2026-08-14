@@ -4,7 +4,7 @@ title: Make skills discoverable
 area: GOV
 theme: governance-consistency
 horizon: next
-status: awaiting-review
+status: done
 blocks: []
 blocked_by: []
 baseline_ref: dd1277b640c08863092ca231c29a917da43bb96c
@@ -102,6 +102,10 @@ The delivery meets the goal: a reader can start from an intended outcome, then r
 ### Mini recap
 
 GOV-042 now separates authored judgment from mechanical facts: the guide owns outcome selection, while `ki-repo-harness` owns catalogue membership and declared-dependency parity. The useful durable learning is already encoded in the Harness standard, rubric criterion, Decision Record, and guide, so no additional knowledge promotion is proposed.
+
+## Done
+
+Accepted by the user on 2026-08-14 after review of the runtime-neutral catalogue, removal of the generated diagram, corrected batch-authorisation guidance, and the clarified `ki-git` working approaches. The accepted delivery is recorded by commits `9e09b943`, `6c6a8977`, and `2ceb38ce`.
 
 ## Discussion
 
