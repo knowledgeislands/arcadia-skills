@@ -5,6 +5,7 @@ import { tmpdir } from 'node:os'
 import { dirname, join } from 'node:path'
 import type { RubricContextOptions } from '../../shared/rubric.ts'
 import { FILES } from '../items/files.ts'
+import { RUNTIMES } from '../items/runtimes.ts'
 import { WORK } from '../items/working-areas.ts'
 import { collectAuditFindings, localTreePaths } from './audit.ts'
 import { createRepoSession, type FilesRubricContext, type WorkingAreasRubricContext } from './repository.ts'
@@ -57,6 +58,17 @@ const workingAreasContext = (session: Awaited<ReturnType<typeof createRepoSessio
 
 const runWorkingAreasConform = (context: WorkingAreasRubricContext): void => {
   for (const item of WORK.items) item.mechanical?.conform?.run(context)
+}
+
+const runtimesContext = (session: Awaited<ReturnType<typeof createRepoSession>>) => {
+  const subject = session.subjects.find(({ families }) => families.includes('RUNTIMES'))
+  if (!subject) throw new Error('ki-repo session did not expose its runtime subject')
+  return RUNTIMES.selectContext(subject.context())
+}
+
+const runRuntimeCoverageConform = (session: Awaited<ReturnType<typeof createRepoSession>>): void => {
+  const item = RUNTIMES.items.find(({ code }) => code === 'RUNTIMES-2')
+  item?.mechanical?.conform?.run(runtimesContext(session))
 }
 
 const applyWrites = (
@@ -255,6 +267,100 @@ describe('runtime environment coverage', () => {
         subject: expect.any(String)
       }
     ])
+  })
+
+  test('requests one exact host-native activation group for missing both-runtime coverage', async () => {
+    const root = repository()
+    const inspected: string[][] = []
+    const requested: string[][] = []
+    writeFileSync(
+      join(root, '.ki-config.toml'),
+      '[skills.ki-repo]\nsupported_runtimes = ["claude-code", "chatgpt-codex"]\n'
+    )
+
+    const session = await createRepoSession({
+      ...options(root, 'conform'),
+      repositorySkills: {
+        inspect: (names) => {
+          inspected.push([...names])
+          return names.map((name) => ({ name, status: 'missing' as const, message: 'not activated' }))
+        },
+        propose: (names) => requested.push([...names])
+      }
+    })
+    runRuntimeCoverageConform(session)
+
+    const expected = ['ki-housekeeping-claude', 'ki-tokenomics', 'ki-tokenomics-claude', 'ki-tokenomics-codex']
+    expect(inspected).toEqual([expected])
+    expect(requested).toEqual([expected])
+    expect(session.proposal()).toEqual({ writes: [] })
+  })
+
+  test('does not request active, blocked, unavailable, or invalid runtime coverage', async () => {
+    const complete = `[skills.ki-repo]
+supported_runtimes = ["claude-code", "chatgpt-codex"]
+
+[skills.ki-housekeeping-claude]
+
+[skills.ki-tokenomics]
+
+[skills.ki-tokenomics-claude]
+
+[skills.ki-tokenomics-codex]
+`
+    const activeRoot = repository()
+    const activeRequests: string[][] = []
+    writeFileSync(join(activeRoot, '.ki-config.toml'), complete)
+    const active = await createRepoSession({
+      ...options(activeRoot, 'conform'),
+      repositorySkills: {
+        inspect: (names) => names.map((name) => ({ name, status: 'active' as const, message: 'activated' })),
+        propose: (names) => activeRequests.push([...names])
+      }
+    })
+    runRuntimeCoverageConform(active)
+    expect(activeRequests).toEqual([])
+    expect(RUNTIMES.items[1]?.mechanical?.audit.run(runtimesContext(active))).toEqual([
+      { status: 'PASS', message: 'criterion satisfied' }
+    ])
+
+    const blockedRoot = repository()
+    const blockedRequests: string[][] = []
+    writeFileSync(join(blockedRoot, '.ki-config.toml'), complete)
+    const blocked = await createRepoSession({
+      ...options(blockedRoot, 'conform'),
+      repositorySkills: {
+        inspect: (names) =>
+          names.map((name, index) => ({
+            name,
+            status: index === 0 ? ('blocked' as const) : ('active' as const),
+            message: index === 0 ? 'provider is ambiguous' : 'activated'
+          })),
+        propose: (names) => blockedRequests.push([...names])
+      }
+    })
+    runRuntimeCoverageConform(blocked)
+    expect(blockedRequests).toEqual([])
+
+    const unavailableRoot = repository()
+    writeFileSync(join(unavailableRoot, '.ki-config.toml'), complete)
+    const unavailable = await createRepoSession(options(unavailableRoot, 'conform'))
+    expect(runtimesContext(unavailable).requestRuntimeSkills).toBeUndefined()
+
+    const invalidRoot = repository()
+    let invalidInspected = false
+    writeFileSync(join(invalidRoot, '.ki-config.toml'), '[skills.ki-repo]\nsupported_runtimes = ["unknown"]\n')
+    await createRepoSession({
+      ...options(invalidRoot, 'conform'),
+      repositorySkills: {
+        inspect: () => {
+          invalidInspected = true
+          return []
+        },
+        propose: () => {}
+      }
+    })
+    expect(invalidInspected).toBe(false)
   })
 
   test('accepts the complete environment matrix when Claude Desktop is declared', async () => {

@@ -1136,6 +1136,16 @@ const localKiSelfFindings = (dir: string, runtimes: readonly string[]): Finding[
 // RUNTIMES-1: validate the required `[skills.ki-repo] supported_runtimes` declaration. A pure
 // local .ki-config.toml read — offline-safe, sitting beside vendor-integrity. Every
 // name must be a runtime the linkers recognise; the support surface is never inferred.
+export const requiredRuntimeSkills = (runtimes: readonly string[]): readonly string[] => {
+  const required = new Set(['ki-tokenomics'])
+  if (runtimes.includes('claude-code')) {
+    required.add('ki-housekeeping-claude')
+    required.add('ki-tokenomics-claude')
+  }
+  if (runtimes.includes('chatgpt-codex')) required.add('ki-tokenomics-codex')
+  return [...required].sort()
+}
+
 function localConfigFindings(dir: string): Finding[] {
   const { f, fail } = mk()
   const cfgPath = join(dir, KI_CONFIG)
@@ -1162,14 +1172,9 @@ function localConfigFindings(dir: string): Finding[] {
     )
   if (unknown.length) return f
 
-  const required = new Set([skillTable('ki-tokenomics')])
-  if (parsed.runtimes.includes('claude-code')) {
-    required.add(skillTable('ki-housekeeping-claude'))
-    required.add(skillTable('ki-tokenomics-claude'))
-  }
-  if (parsed.runtimes.includes('chatgpt-codex')) required.add(skillTable('ki-tokenomics-codex'))
+  const required = requiredRuntimeSkills(parsed.runtimes)
   const declared = new Set(parsed.rootTables)
-  const missing = [...required].filter((skill) => !declared.has(skill)).sort()
+  const missing = required.filter((skill) => !declared.has(skill))
   if (missing.length)
     fail(
       'RUNTIMES-2',
