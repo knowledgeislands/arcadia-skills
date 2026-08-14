@@ -34,11 +34,11 @@ Line-by-line criteria for auditing ki-skills. Classifications are derived from i
 Portable skill layout and supporting-file structure.
 
 - **LAY-1 [M] — SKILL.md exists at the skill root** — `SKILL.md` exists at the skill root. (SPEC, CC)
-  - _Remediation:_ diagnostic — Use the finding and this criterion to make the appropriate local change, then rerun the audit.
+  - _Remediation:_ diagnostic — Create the missing SKILL.md only after establishing the intended skill identity and authored instructions for that root.
 - **LAY-2 [M] — the skill is a directory named after the skill** — The skill is a **directory** named after the skill, with `SKILL.md` inside — not a bare `.md`. (SPEC, CC)
-  - _Remediation:_ diagnostic — Use the finding and this criterion to make the appropriate local change, then rerun the audit.
+  - _Remediation:_ diagnostic — Choose the intended skill name, create its directory, and move or rewrite the standalone Markdown as that directory’s SKILL.md.
 - **LAY-3 [M] — optional directories use standard names** — Optional subdirs use the standard names `references/`, `scripts/`, `assets/`; KI-governed skills may additionally use `.ki-meta/` for their local generated state. (SPEC, KI)
-  - _Remediation:_ diagnostic — Use the finding and this criterion to make the appropriate local change, then rerun the audit.
+  - _Remediation:_ diagnostic — Classify each nonstandard support directory by purpose, then rename or relocate it to references/, scripts/, assets/, or .ki-meta/ and repair affected links.
 - **LAY-4 [M] — file references use forward slashes** — File references use forward slashes, never backslashes. (BP)
   - _Remediation:_ automatic
 - **LAY-5 [J] — reference chains are shallow** — Reference files are **one level deep** from `SKILL.md` — no nested chains (SKILL → a → b → c). (BP, SPEC)
@@ -59,7 +59,7 @@ Portable skill layout and supporting-file structure.
 The YAML frontmatter document that identifies a skill.
 
 - **FM-1 [M] — SKILL.md begins with a valid YAML frontmatter mapping** — `SKILL.md` begins with a fenced YAML frontmatter block that parses to a mapping. Without it, dependent frontmatter checks do not run. (SPEC, CC)
-  - _Remediation:_ diagnostic — Use the finding and this criterion to make the appropriate local change, then rerun the audit.
+  - _Remediation:_ diagnostic — Create or repair the opening YAML mapping without inventing the skill identity or discarding authored frontmatter values.
 
 ## NAME — Frontmatter: name
 
@@ -68,17 +68,17 @@ The YAML frontmatter document that identifies a skill.
 The portable skill name contract.
 
 - **NAME-1 [M] — name is present** — `name` present (spec requires it; CC defaults to dir name — see ※1). (SPEC, CC)
-  - _Remediation:_ diagnostic — Use the finding and this criterion to make the appropriate local change, then rerun the audit.
+  - _Remediation:_ automatic
 - **NAME-2 [M] — name is no longer than 64 characters** — `name` ≤ 64 characters. (SPEC, BP)
-  - _Remediation:_ diagnostic — Use the finding and this criterion to make the appropriate local change, then rerun the audit.
+  - _Remediation:_ diagnostic — Choose a shorter canonical name that preserves the capability’s meaning, then coordinate its frontmatter, directory, dependencies, and references.
 - **NAME-3 [M] — name uses lowercase letters, digits, and hyphens only** — `name` is lowercase letters, digits, hyphens only. (SPEC, BP)
-  - _Remediation:_ diagnostic — Use the finding and this criterion to make the appropriate local change, then rerun the audit.
+  - _Remediation:_ diagnostic — Choose the intended lowercase hyphenated name rather than mechanically transliterating identity, then coordinate every name-bearing path and reference.
 - **NAME-4 [M] — name has no leading or trailing hyphen and no consecutive hyphens** — `name` has no leading/trailing hyphen and no consecutive hyphens. (SPEC)
-  - _Remediation:_ diagnostic — Use the finding and this criterion to make the appropriate local change, then rerun the audit.
+  - _Remediation:_ diagnostic — Choose a canonical name without edge or consecutive hyphens, then coordinate the frontmatter, directory, dependencies, and references.
 - **NAME-5 [M] — name matches the parent directory name exactly** — `name` matches the parent directory name exactly. The committed repository-local source is `.agents/skills/ki-self/`, whose required name is `ki-self`. (SPEC)
   - _Remediation:_ automatic
 - **NAME-6 [M] — name contains no XML tags or reserved words** — `name` contains no XML tags and no reserved words (`anthropic`, `claude`), except that an explicit runtime adapter may use its matching vendor word. (BP, KI)
-  - _Remediation:_ diagnostic — Use the finding and this criterion to make the appropriate local change, then rerun the audit.
+  - _Remediation:_ diagnostic — Confirm whether the skill is an explicit matching runtime adapter; otherwise choose a non-reserved name and coordinate every identity reference.
 - **NAME-7 [J] — name is specific rather than generic** — `name` is specific, not generic (avoid `helper`, `utils`, `tools`, `data`). (BP)
   - _Evidence scope:_ The target skill and the evidence named by this criterion.
   - _Review prompt:_ Is this name concrete and appropriately scoped for the capability it governs?
@@ -92,11 +92,11 @@ The portable skill name contract.
 The portable skill description contract.
 
 - **DESC-1 [M] — description is present and non-empty** — `description` present and non-empty. (SPEC, CC)
-  - _Remediation:_ diagnostic — Use the finding and this criterion to make the appropriate local change, then rerun the audit.
+  - _Remediation:_ diagnostic — Author a truthful description that states the skill scope and when to select it; the intended capability cannot be inferred safely from an empty value.
 - **DESC-2 [M] — description is no longer than 1024 characters** — `description` ≤ 1024 characters (spec hard cap — see ※2). (SPEC, BP)
-  - _Remediation:_ diagnostic — Use the finding and this criterion to make the appropriate local change, then rerun the audit.
+  - _Remediation:_ diagnostic — Shorten the description below the hard cap while preserving its scope, primary triggers, and essential collision guidance.
 - **DESC-3 [M] — description contains no XML tags** — `description` contains no XML tags (placeholders inside backticks are fine). (BP)
-  - _Remediation:_ diagnostic — Use the finding and this criterion to make the appropriate local change, then rerun the audit.
+  - _Remediation:_ diagnostic — Rewrite or escape the XML-like text while preserving the author’s intended meaning and any literal placeholder syntax.
 - **DESC-4 [J] — description states what the skill does and when to use it** — States **both** what it does **and** when to use it. (SPEC, BP)
   - _Evidence scope:_ The target skill and the evidence named by this criterion.
   - _Review prompt:_ Does the description state both what this skill does and when it should be used?
@@ -140,13 +140,13 @@ The portable skill description contract.
 Optional portable and runtime-specific frontmatter fields.
 
 - **OPT-1 [M] — compatibility is between 1 and 500 characters when present** — `compatibility`, if present, is 1–500 chars. (SPEC)
-  - _Remediation:_ diagnostic — Use the finding and this criterion to make the appropriate local change, then rerun the audit.
+  - _Remediation:_ diagnostic — Rewrite or remove compatibility after confirming the actual environment requirements; preserve useful constraints within the 1–500 character contract.
 - **OPT-2 [M] — metadata is a string-to-string map when present** — `metadata`, if present, is a string→string map. (SPEC)
-  - _Remediation:_ diagnostic — Use the finding and this criterion to make the appropriate local change, then rerun the audit.
+  - _Remediation:_ diagnostic — Choose the intended textual representation for each metadata value, or remove metadata that has no valid string meaning.
 - **OPT-3 [M] — tool declarations use their portable or runtime-specific shape** — Experimental portable `allowed-tools` is a valid string; Claude-Code-only `disallowed-tools` is a valid string or YAML list. (SPEC, CC)
-  - _Remediation:_ diagnostic — Use the finding and this criterion to make the appropriate local change, then rerun the audit.
+  - _Remediation:_ diagnostic — Confirm the intended runtime and permission boundary, then rewrite allowed-tools or disallowed-tools in that runtime’s supported scalar or sequence shape.
 - **OPT-4 [M] — license declarations are non-empty YAML string scalars** — `license`, if present, is a non-empty YAML string scalar. Prefer a short name or bundled-file reference. (SPEC)
-  - _Remediation:_ diagnostic — Use the finding and this criterion to make the appropriate local change, then rerun the audit.
+  - _Remediation:_ diagnostic — Supply the intended license name or bundled-file reference as a non-empty YAML string, or remove the optional field if no declaration is intended.
 - **OPT-5 [J] — runtime-specific fields are flagged where portability matters** — CC-only fields are flagged when cross-platform portability matters (see ※3). (CC)
   - _Evidence scope:_ The target skill and the evidence named by this criterion.
   - _Review prompt:_ Where cross-platform portability matters, are runtime-specific fields clearly identified?
@@ -170,9 +170,9 @@ Optional portable and runtime-specific frontmatter fields.
 The progressive-disclosure budget for a skill body.
 
 - **SIZE-1 [M] — body is under 500 lines** — `SKILL.md` body is under **500 lines**. (SPEC, BP, CC)
-  - _Remediation:_ diagnostic — Use the finding and this criterion to make the appropriate local change, then rerun the audit.
+  - _Remediation:_ diagnostic — Reduce the body below the line budget by removing generic knowledge and routing rarely used authored detail into focused references without losing behaviour.
 - **SIZE-2 [M] — body stays below approximately 5,000 tokens** — Body instructions stay under **~5,000 tokens**. (SPEC)
-  - _Remediation:_ diagnostic — Use the finding and this criterion to make the appropriate local change, then rerun the audit.
+  - _Remediation:_ diagnostic — Reduce the body below the token guide-rail while preserving selection, shared behaviour, and links to necessary on-demand detail.
 - **SIZE-3 [J] — body omits knowledge the agent already has** — No token spent on what a competent agent already knows. (BP)
   - _Evidence scope:_ The target skill and the evidence named by this criterion.
   - _Review prompt:_ Does the body avoid spending tokens on knowledge a competent agent already has?
@@ -201,7 +201,7 @@ How a skill routes supporting detail into references.
   - _Outcomes:_ conforming; gap; exclusion
   - _Conforming guidance:_ Record the review as conforming, a named Gap with its next action, or an explicit justified exclusion.
 - **REF-3 [M] — long reference files open with a table of contents** — Reference files > 100 lines open with a table of contents. (BP, COMMUNITY)
-  - _Remediation:_ diagnostic — Use the finding and this criterion to make the appropriate local change, then rerun the audit.
+  - _Remediation:_ diagnostic — Author a concise table of contents near the top using the reference’s actual section structure and stable anchors.
 - **REF-4 [J] — script execution intent is explicit** — Execution intent is explicit per script (run vs read). (BP, ENG)
   - _Evidence scope:_ The target skill and the evidence named by this criterion.
   - _Review prompt:_ Is the execution intent for each script explicit: run it or read it?
@@ -302,7 +302,7 @@ The quality and autonomy of executable skill support.
   - _Outcomes:_ conforming; gap; exclusion
   - _Conforming guidance:_ Record the review as conforming, a named Gap with its next action, or an explicit justified exclusion.
 - **SCRIPT-8 [M-heuristic + J] — top-level scripts are necessary public commands** — Every supported non-test script directly under `scripts/` is a necessary public command whose leading comment states its `Purpose:`, canonical `Run: bun scripts/<name> --help`, and `Boundary:`. It exits successfully for `-h` and `--help`, prints useful usage, handles expected errors, and has focused tests. Private implementation belongs under `scripts/internal/`; published or materialised compile-time modules belong under `scripts/shared/`; rubric behaviour belongs under `scripts/rubric/`; generic execution belongs to `ki`. (AS, KI)
-  - _Remediation:_ diagnostic — Use the finding and this criterion to make the appropriate local change, then rerun the audit.
+  - _Remediation:_ diagnostic — Decide whether each top-level script is a supported public command; add truthful command metadata, help, error handling, and tests, or relocate it to its actual ownership boundary.
   - _Evidence scope:_ The target skill and the evidence named by this criterion.
   - _Review prompt:_ Is each top-level script still a necessary, tested public command at the correct ownership boundary, with a truthful header, useful help, and expected-error handling?
   - _Outcomes:_ conforming; gap; exclusion
@@ -320,13 +320,13 @@ Knowledge Islands catalogue, session, and packaging responsibilities.
   - _Outcomes:_ conforming; gap; exclusion
   - _Conforming guidance:_ Record the review as conforming, a named Gap with its next action, or an explicit justified exclusion.
 - **KI-CHECKER-2 [M] — skill implementation imports remain inside its own payload** — A skill's `scripts/**/*.ts` files contain no static `from`, dynamic `import()`, or CommonJS `require()` relative import that resolves outside its own `scripts/` directory. A portable rubric dependency is copied into `scripts/shared/rubric.ts`, so every rubric item and context remains typecheckable inside the skill root. (KI)
-  - _Remediation:_ diagnostic — Use the finding and this criterion to make the appropriate local change, then rerun the audit.
+  - _Remediation:_ diagnostic — Move the dependency inside the skill payload, materialise an explicitly declared shared module, or remove the import after resolving which component owns that code.
 - **KI-CHECKER-3 [M] — ki-skills publishes the portable rubric contract** — `ki-skills` publishes the sole portable shared dependency, `scripts/shared/rubric.ts`, declared as `ki-shared-modules: [rubric]`. It provides catalogue authoring types for independently installed skills; `ki` owns execution, reporting, and transaction handling. The provider never declares a dependency on itself. (ADR-KI-HARNESS-SKILLS-012)
-  - _Remediation:_ diagnostic — Use the finding and this criterion to make the appropriate local change, then rerun the audit.
+  - _Remediation:_ diagnostic — Align ki-skills frontmatter and its owned scripts/shared/rubric.ts with the sole provider contract, removing any self-dependency without overwriting authored module content.
 - **KI-CHECKER-4 [M] — structured rubric items follow the uniform family layout** — `scripts/rubric/items/index.ts` is catalogue wiring only. Each family is imported from one semantic family module, which exports only that complete ordered `RubricFamily`; item constants and helpers remain private. Rule definitions and execution callbacks do not live in the catalogue index. (standards-rubric-authoring.md#rubric-families-and-items)
-  - _Remediation:_ diagnostic — Use the finding and this criterion to make the appropriate local change, then rerun the audit.
+  - _Remediation:_ diagnostic — Refactor the catalogue index to wiring only and move each rule into the correct semantic family module while preserving criterion order and behaviour.
 - **KI-CHECKER-5 [M] — shared and internal script packaging is explicit** — Private implementation belongs under `scripts/internal/`; cross-skill modules belong under `scripts/shared/`, whose non-test entries must exactly match the modules published through `ki-shared-modules:` or materialised through `ki-shared-dependencies:`. (KI)
-  - _Remediation:_ diagnostic — Use the finding and this criterion to make the appropriate local change, then rerun the audit.
+  - _Remediation:_ diagnostic — Classify legacy scripts/lib code as private or shared, relocate it, and reconcile scripts/shared/ with the authored module and dependency declarations.
 
 ## RUBRIC — Generated rubric publication
 
@@ -344,9 +344,9 @@ The tracked readable rubric is the exact publication of the structured catalogue
 Knowledge Islands link and toolchain portability.
 
 - **KI-LINK-1 [M] — internal links use standard relative Markdown links** — Internal links are **standard relative markdown links**, not wikilinks. (ki-agentic-harness README)
-  - _Remediation:_ diagnostic — Use the finding and this criterion to make the appropriate local change, then rerun the audit.
+  - _Remediation:_ diagnostic — Replace each wikilink with a standard relative Markdown link after identifying the intended local target and suitable link text.
 - **KI-LINK-2 [M] — relative link targets resolve** — Links resolve — every relative target exists (angle-bracket form for paths with spaces). (ki-agentic-harness README)
-  - _Remediation:_ diagnostic — Use the finding and this criterion to make the appropriate local change, then rerun the audit.
+  - _Remediation:_ diagnostic — Correct the relative target, restore the missing file, or remove the link according to the author’s intended relationship.
 - **KI-LINK-3 [J] — other skills are referred to by name** — Other skills are referenced by `name`, never by file path. (ki-agentic-harness README)
   - _Evidence scope:_ The target skill and the evidence named by this criterion.
   - _Review prompt:_ Are other skills referred to by their public name rather than by a file path?
@@ -365,7 +365,7 @@ Knowledge Islands link and toolchain portability.
 Portable contracts make runtime-specific boundaries explicit.
 
 - **PORT-1 [M] — portable contracts make runtime assumptions explicit** — Portable guidance has no unqualified vendor, runtime, or runtime-home reference. Declare a dedicated runtime-binding skill, use a `Runtime binding` section, attribute source material, or compare multiple runtimes explicitly. (KI)
-  - _Remediation:_ diagnostic — Use the finding and this criterion to make the appropriate local change, then rerun the audit.
+  - _Remediation:_ diagnostic — Decide whether each runtime reference is policy, a binding, source attribution, or comparison, then qualify or relocate it without changing the portable contract.
 
 ## KI-SHAPE — Knowledge Islands skill shape
 
@@ -379,13 +379,13 @@ The common shape of a Knowledge Islands governance skill.
   - _Outcomes:_ conforming; gap; exclusion
   - _Conforming guidance:_ Record the review as conforming, a named Gap with its next action, or an explicit justified exclusion.
 - **KI-SHAPE-2 [M-heuristic + J] — skills compose or optionally augment rather than extend** — **Composition and optional augmentation are the only dependent inter-skill relationships — the base-coupled extension pattern is retired.** Formal composition means selecting one skill necessarily selects and runs another governance capability before adding its delta; declare it in `ki-depends-on:`. An optional augmentation is declared in `ki-optional-depends-on:` and applies only when the named capability is active in the same scope; it never makes that capability mandatory or claims composition. List order is not semantic. Separately coverage-detected standards are audited alongside, off-ramps are routing, and `ki-shared-dependencies:` is packaging — none is composition. What a base needs differently is **declared, not forked**: data in the repo's own `.ki-config` table (read validate-down), prose in its `CLAUDE.md` — never a `<base>-kb`-style skill that takes the shared modes by name. _Delegation between two standards (kb → streams) is composition at sub-scope and is declared by the delegating parent._ The linter flags **endorsement of the retired pattern** (telling a base to ship/"prefer" an extension skill, or that a skill "delegates the modes back" / "extends this one") as a mechanical heuristic; the **[J]** gate is that every claimed composition has the matching dependency edge and no adjacent relationship is mislabeled as composition. (ki-agentic-harness README, `ki-engineering`)
-  - _Remediation:_ diagnostic — Use the finding and this criterion to make the appropriate local change, then rerun the audit.
+  - _Remediation:_ diagnostic — Replace the retired extension claim with the actual relationship: required composition, optional augmentation, routing, shared packaging, or repository-local configuration.
   - _Evidence scope:_ The target skill and the evidence named by this criterion.
   - _Review prompt:_ Does every claimed composition have a required dependency edge, every optional augmentation the correct optional edge, and coverage-detected standards, off-ramps, and shared-module packaging remain distinct?
   - _Outcomes:_ conforming; gap; exclusion
   - _Conforming guidance:_ Record the review as conforming, a named Gap with its next action, or an explicit justified exclusion.
 - **KI-SHAPE-3 [M + J] — the skill declares its kind** — Every KI skill declares its **kind** in exact frontmatter as `ki-kind: governance` or `ki-kind: process`; a directory and prose never establish kind (ADR-KI-HARNESS-SKILLS-006). A **governance skill** holds a house standard and exposes the universal modes (KI-SHAPE-5). A **process skill** drives an action or lifecycle rather than holding a standard: it is lightweight, may bundle a helper `scripts/` and a `references/` procedure, and is exempt from universal governance modes — its mode count follows its own lifecycle and it exposes HELP only optionally. Both kinds use the closed Knowledge Islands reference vocabulary (KI-SHAPE-6) and are dual-invocable (`/<name>` and model-triggered). (ki-agentic-harness README, ADR-KI-HARNESS-SKILLS-006)
-  - _Remediation:_ diagnostic — Use the finding and this criterion to make the appropriate local change, then rerun the audit.
+  - _Remediation:_ diagnostic — Decide whether the skill holds a governance standard or drives a process lifecycle, then declare exactly ki-kind: governance or ki-kind: process.
   - _Evidence scope:_ The target skill and the evidence named by this criterion.
   - _Review prompt:_ Does the explicit kind accurately match the skill’s concern and operating contract?
   - _Outcomes:_ conforming; gap; exclusion
@@ -401,19 +401,19 @@ The common shape of a Knowledge Islands governance skill.
   - _Outcomes:_ conforming; gap; exclusion
   - _Conforming guidance:_ Record the review as conforming, a named Gap with its next action, or an explicit justified exclusion.
 - **KI-SHAPE-6 [M + J] — Knowledge Islands skills use the closed reference vocabulary** — _Closed reference vocabulary — Knowledge Islands skills only._ Every top-level Markdown reference is `standards-<topic>.md`, generated `rubric.md`, `sources.md`, optional `exemplars.md`, or one-mode-only `mode-<verb>.md`; a skill includes only the classes it needs. Normative formats, process doctrine, and shared mode contracts are standards. Combined mode names, bare `standards.md`, `<topic>-standards.md`, nested references, and ad hoc guide, format, or contract filenames are retired. Templates and reusable output material live in `assets/`. A skill tracking a moving external spec keeps a current-state `## Last review` block in `sources.md`. Skills outside the Knowledge Islands set are exempt. (ki-agentic-harness README)
-  - _Remediation:_ diagnostic — Use the finding and this criterion to make the appropriate local change, then rerun the audit.
+  - _Remediation:_ diagnostic — Classify each nonstandard reference by reader need, rename or relocate it into the closed vocabulary or assets/, and repair every affected link.
   - _Evidence scope:_ The target skill and the evidence named by this criterion.
   - _Review prompt:_ Does each retained reference class serve a distinct reader need, with templates and executable helpers elsewhere?
   - _Outcomes:_ conforming; gap; exclusion
   - _Conforming guidance:_ Record the review as conforming, a named Gap with its next action, or an explicit justified exclusion.
 - **KI-SHAPE-7 [M-heuristic + J] — behaviour-changing skills define and check their anchor** — _A behaviour-changing skill defines its gate — and checks the anchor._ A skill that changes a **default behaviour** — installs a gate, a standing "always do X before Y" rule, or a routing intercept — cannot rely on its own `description` to fire it, because skills load **on demand** and the triggering request often won't mention the skill (e.g. "edit this note" never says "proposal"). Such a skill must **anchor the behaviour in always-loaded context** (the base/repo `CLAUDE.md` / `AGENTS.md`, or a companion skill that _does_ reliably load handing off to it), **and its rubric must verify the anchor is present** so it can't be silently lost. The hosted audit surfaces candidates mechanically (strong gate phrasing in the body or a reference file — body + references scanned as one unit, since mode-routing lifts procedures out of the body — without an anchor its rubric reads); the **[J]** call is whether the skill genuinely changes a default and so _needs_ a gate. Realised as `ki-repo-kb-streams`' **GATE-1** (the Enactment gate) and `ki-repo-kb`'s **MEM-2** (the memory cascade); `ki-repo`'s `.ki-config.toml` marker is the same pattern (anchor + checked). (standards-knowledge-islands.md §2, standards-rubric-authoring.md#context-and-evidence)
-  - _Remediation:_ diagnostic — Use the finding and this criterion to make the appropriate local change, then rerun the audit.
+  - _Remediation:_ diagnostic — Confirm that the skill changes default behaviour, then choose an appropriate always-loaded anchor and add rubric evidence that verifies that specific anchor.
   - _Evidence scope:_ The target skill and the evidence named by this criterion.
   - _Review prompt:_ Does a behaviour-changing skill have an appropriate always-loaded anchor that its rubric verifies?
   - _Outcomes:_ conforming; gap; exclusion
   - _Conforming guidance:_ Record the review as conforming, a named Gap with its next action, or an explicit justified exclusion.
 - **KI-SHAPE-9 [M-heuristic + J] — mechanical work belongs in the structured rubric** — _Mechanical work belongs in the structured rubric, not in tokens._ A criterion a script can decide deterministically — no judgment, no AI benefit — is tagged **[M]** and implemented in `scripts/rubric/items/`; a **[J]** tag is earned by the judgment a criterion genuinely needs, never by "no implementation written yet". The reader's context is spent only on the **[J]** items, so a mechanical criterion left to prose, or a **[J]** the rubric already decides, is drift — it **moves into the structured rubric and flips to [M]**. The linter surfaces the mechanical heuristic — a rubric carrying **[M]** criteria but shipping no structured rubric (nor a documented toolchain delegation to a skill-scoped audit) — as a WARN; the **[J]** gate is whether each remaining **[J]** genuinely needs a reader rather than a script. ([Rubric authoring](standards-rubric-authoring.md))
-  - _Remediation:_ diagnostic — Use the finding and this criterion to make the appropriate local change, then rerun the audit.
+  - _Remediation:_ diagnostic — Implement each genuinely deterministic criterion in the structured rubric, or document the actual skill-scoped toolchain owner; retain judgment only where review is necessary.
   - _Evidence scope:_ The target skill and the evidence named by this criterion.
   - _Review prompt:_ Do remaining judgment criteria genuinely require review rather than deterministic checking?
   - _Outcomes:_ conforming; gap; exclusion
@@ -428,21 +428,21 @@ The common shape of a Knowledge Islands governance skill.
 - **KI-SHAPE-12 [M] — governance mode vocabulary is canonical and complete** — _Mode vocabulary is canonical and complete._ A governance skill exposes **AUDIT**, **CONFORM**, **EDUCATE**, **REFRESH** and **HELP** spelled exactly so — a governance skill missing any universal verb from its `argument-hint` (EDUCATE is the common gap) **WARNs**; `NEW`, `OPTIMISE`, and operational verbs are additive, never substitutes for a universal mode (a collection skill exposes both EDUCATE and NEW). The current source-entrypoint migration invariant is validated by KI-SHAPE-15; direct delivery resolves registered operations from the verified collection. Process skills are exempt throughout. (ADR-KI-HARNESS-SKILLS-001, ADR-KI-HARNESS-SKILLS-006, ADR-KI-HARNESS-007)
   - _Remediation:_ automatic
 - **KI-SHAPE-13 [M] — mode headings have a canonical structure** — _Mode-heading structure._ A governance skill presents its modes under a **single `## Operating modes` H2** (the home for the shared no-mode/HELP intro), with each mode as a **`### Mode <NAME>` H3** or — for router skills with many operational verbs — a **`| Mode | … |` dispatch table** inside that section. The linter WARNs on a flat `## Mode X` H2, a bare `### X` heading missing the `Mode` prefix, and any `argument-hint` verb absent from the Operating-modes body (hint ⊆ body). Process skills are exempt. (ADR-KI-HARNESS-SKILLS-001)
-  - _Remediation:_ diagnostic — Use the finding and this criterion to make the appropriate local change, then rerun the audit.
+  - _Remediation:_ diagnostic — Restructure the authored mode prose under one Operating modes section and reconcile argument-hint with the modes that remain, preserving each procedure’s meaning.
 - **KI-SHAPE-14 [M] — REFRESH states its ownership precondition** — _REFRESH states its ownership precondition._ REFRESH's write target is normally the skill's own canonical files under `skills/<name>/` in `ki-agentic-harness` — a governance skill's `### Mode REFRESH` section (or, per REF-5, its `references/mode-refresh.md`) must name `ki-agentic-harness` as the only place it writes, and instruct the agent to stop and redirect when invoked from an installed copy (to the harness, or — for a pattern recurring across bases — to `ki-repo-kb`'s IMPROVE mode). The one committed repository-local source at `.agents/skills/ki-self/` instead names that local source and stops to promote reusable rules to their shared owner. Missing either half **WARNs**. Process skills (KI-SHAPE-3) are exempt; a skill with no REFRESH section at all is already caught by KI-SHAPE-12. (ADR-KI-HARNESS-SKILLS-001, ADR-KI-HARNESS-SKILLS-006)
-  - _Remediation:_ diagnostic — Use the finding and this criterion to make the appropriate local change, then rerun the audit.
+  - _Remediation:_ diagnostic — Author the REFRESH ownership precondition for the actual source location, including the correct stop-and-redirect or promotion boundary.
 - **KI-SHAPE-15 [M] — governance skills expose no legacy runner entrypoints** — _Direct governance operation shape._ A governance skill exposes its rubric catalogue from `scripts/rubric/items/index.ts`; `ki` resolves and hosts that catalogue from the verified installed harness. `scripts/govern.ts`, `scripts/educate.ts`, `scripts/audit.ts`, and `scripts/conform.ts` are retired, with no compatibility runner or fallback. REFRESH is harness-only. Process skills and the committed repository-local `.agents/skills/ki-self/` source are exempt. (standards-knowledge-islands.md §2, ADR-KI-HARNESS-007)
-  - _Remediation:_ diagnostic — Use the finding and this criterion to make the appropriate local change, then rerun the audit.
+  - _Remediation:_ diagnostic — Migrate any still-required behaviour to its catalogue, context, host, or EDUCATE owner before removing the retired governance runner entrypoint.
 - **KI-SHAPE-16 [M-heuristic + J] — target files have declared ownership** — _Declared file ownership, three tiers._ A skill whose rubric reads or changes a house-standard file in the **target repository's** working tree declares that relationship in frontmatter, alongside `ki-depends-on:`, under one of three keys: `requires:` (must exist, doesn't create/control it — any number of skills may share a `requires:` filename), `contributes:` (writes/expects only its own section of a shared file — any number of skills may share a `contributes:` filename, e.g. `.ki-config.toml`, `package.json`), or `owns:` (sole author of the whole file — **exclusive**, at most one skill per filename). The mechanical heuristic verifies that declared filenames occur in the skill's production implementation and that no filename is owned by more than one skill. Judgment confirms that every session proposal and governed read has the appropriate declaration. (KI)
-  - _Remediation:_ diagnostic — Use the finding and this criterion to make the appropriate local change, then rerun the audit.
+  - _Remediation:_ diagnostic — Trace the skill’s real target-file reads and writes, choose requires, contributes, or owns accordingly, and resolve exclusive ownership collisions with the affected skills.
   - _Evidence scope:_ The target skill and the evidence named by this criterion.
   - _Review prompt:_ Do all governed target-file reads and session proposals carry the appropriate ownership declaration?
   - _Outcomes:_ conforming; gap; exclusion
   - _Conforming guidance:_ Record the review as conforming, a named Gap with its next action, or an explicit justified exclusion.
 - **KI-SHAPE-17 [M] — dependencies are declared explicitly** — _Explicit dependency declaration._ Every skill declares `ki-depends-on:` as a single-line flow list. `ki-depends-on: []` is the required explicit form when a skill has no governance dependencies. The listed capability names and a governed repository's matching `.ki-config.toml` tables are validated by the dependency graph and bootstrap; the skill checker enforces the local declaration shape. (ADR-KI-HARNESS-SKILLS-006)
-  - _Remediation:_ diagnostic — Use the finding and this criterion to make the appropriate local change, then rerun the audit.
+  - _Remediation:_ diagnostic — Determine the skill’s genuine governance prerequisites and author ki-depends-on as a single-line flow list, using [] only when none are required.
 - **KI-SHAPE-18 [M] — runtime compatibility is explicit and bounded** — A vendor-bound skill declares `ki-supported-runtimes:` as a non-empty, duplicate-free flow list of recognised repository runtime identifiers and also declares `ki-runtime-binding: true`; an absent list means the skill is portable across supported runtimes. (standards-knowledge-islands.md §2)
-  - _Remediation:_ diagnostic — Use the finding and this criterion to make the appropriate local change, then rerun the audit.
+  - _Remediation:_ diagnostic — Decide whether the skill is portable or vendor-bound; for a binding, declare the recognised runtime list and ki-runtime-binding: true without duplicates.
 
 ## KI-INVOKE — Invocation protocol
 
@@ -480,7 +480,7 @@ Evaluation and real-usage evidence for the skill.
 Selection boundaries across a set of skills.
 
 - **COLL-1 [M] — quoted trigger phrases are not shared across skills** — _Shared triggers._ Within a set of ≥ 2 skills, no two `description`s declare the **same quoted trigger phrase** (WARN — a shared trigger signals scopes that overlap and need separating). (COMMUNITY, ki-agentic-harness README)
-  - _Remediation:_ diagnostic — Use the finding and this criterion to make the appropriate local change, then rerun the audit.
+  - _Remediation:_ diagnostic — Decide which skill owns each shared trigger, redesign the competing scopes, and add reciprocal off-ramps only where genuine adjacency remains.
 - **COLL-2 [J] — adjacent skills have non-overlapping scope and reciprocal off-ramps** — _Non-overlapping scope by design, with a reciprocal off-ramp where adjacency remains._ The first guard is **design**: skills are scoped so they don't compete for the same request, and each `description` is primarily **self-scoped** (what it does, and briefly what it doesn't). Where two skills are nonetheless genuinely adjacent, **each** description names the other as the off-ramp — the reciprocal pattern (`ki-repo-mcp` ↔ `ki-skills`); a one-directional guard is a half-fix. A COLL-1 hit means the scopes overlap and the **design** needs fixing first, before any off-ramp papers over it. (standard §15, ki-agentic-harness README)
   - _Evidence scope:_ The target skill and the evidence named by this criterion.
   - _Review prompt:_ Do adjacent skills have non-overlapping scopes and reciprocal off-ramps where their requests are genuinely adjacent?
@@ -504,6 +504,6 @@ Refresh paths and cadence for knowledge that changes over time.
   - _Outcomes:_ conforming; gap; exclusion
   - _Conforming guidance:_ Record the review as conforming, a named Gap with its next action, or an explicit justified exclusion.
 - **LONG-3 [M] — the declared refresh cadence is being met** — _The cadence is actually being met._ Where a skill carries `references/sources.md`, its most recent `Last reviewed` date (read from that table column, so dates quoted in prose don't count) is within the skill's **declared per-skill cadence** plus grace; an overdue source list WARNs so AUDIT and the scheduled refresh routine surface it. A `canonical · on-change` skill carries no clock and is exempt — it refreshes when the model changes, not on a calendar. Never a FAIL — staleness is elapsed time, not a defect in the change under review. (COMMUNITY)
-  - _Remediation:_ diagnostic — Use the finding and this criterion to make the appropriate local change, then rerun the audit.
+  - _Remediation:_ diagnostic — Run the skill’s authored REFRESH procedure against its declared sources, reconcile any changes, and record the actual review date.
 - **LONG-4 [M] — the refresh marker is present and coherent** — _The refresh marker is present and coherent._ Each `sources.md` carries a parseable `**Refresh:** <class> · <cadence>` line (§4 of the enforcement framework) — a missing or malformed marker WARNs (**4a**). An `external-spec` skill must declare a clock cadence, not `on-change` (**4b**, soft WARN). Class is **not** mechanically tied to `## Last review`-block presence — a `canonical` skill may keep a block as a hand-curated practice note (`ki-repo-kb-streams` does), so block-presence stays a `[J]` read, not a checker rule. (COMMUNITY)
-  - _Remediation:_ diagnostic — Use the finding and this criterion to make the appropriate local change, then rerun the audit.
+  - _Remediation:_ diagnostic — Choose the source class and cadence that match the skill’s volatility, then author a parseable **Refresh:** marker; external specifications require a clock cadence.

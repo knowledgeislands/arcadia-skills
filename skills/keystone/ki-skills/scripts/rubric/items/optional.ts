@@ -1,5 +1,5 @@
 import type { RubricFamily, RubricItem } from '../../shared/rubric.ts'
-import { DIAGNOSTIC_REMEDIATION, judgment } from '../../shared/rubric.ts'
+import { judgment } from '../../shared/rubric.ts'
 import { type KiSkillsRubricContext, type OptionalRubricContext, selectKiSkillsContext } from '../contexts/contexts.ts'
 
 const COMPATIBILITY_MIN_LENGTH = 1
@@ -12,7 +12,11 @@ const OPT_1: RubricItem<OptionalRubricContext> = {
   sources: ['SPEC'],
   mechanical: {
     level: 'FAIL',
-    remediation: DIAGNOSTIC_REMEDIATION,
+    remediation: {
+      class: 'diagnostic',
+      guidance:
+        'Rewrite or remove compatibility after confirming the actual environment requirements; preserve useful constraints within the 1–500 character contract.'
+    },
     audit: {
       phase: 'INSPECT',
       run: ({ compatibility }) => {
@@ -37,7 +41,11 @@ const OPT_2: RubricItem<OptionalRubricContext> = {
   sources: ['SPEC'],
   mechanical: {
     level: 'FAIL',
-    remediation: DIAGNOSTIC_REMEDIATION,
+    remediation: {
+      class: 'diagnostic',
+      guidance:
+        'Choose the intended textual representation for each metadata value, or remove metadata that has no valid string meaning.'
+    },
     audit: {
       phase: 'INSPECT',
       run: ({ metadataPresent, metadata }) => {
@@ -63,7 +71,11 @@ const OPT_3: RubricItem<OptionalRubricContext> = {
   sources: ['SPEC', 'CC'],
   mechanical: {
     level: 'FAIL',
-    remediation: DIAGNOSTIC_REMEDIATION,
+    remediation: {
+      class: 'diagnostic',
+      guidance:
+        'Confirm the intended runtime and permission boundary, then rewrite allowed-tools or disallowed-tools in that runtime’s supported scalar or sequence shape.'
+    },
     audit: {
       phase: 'INSPECT',
       run: ({ allowedToolsPresent, allowedTools, disallowedToolsPresent, disallowedTools }) => {
@@ -89,7 +101,11 @@ const OPT_4: RubricItem<OptionalRubricContext> = {
   sources: ['SPEC'],
   mechanical: {
     level: 'FAIL',
-    remediation: DIAGNOSTIC_REMEDIATION,
+    remediation: {
+      class: 'diagnostic',
+      guidance:
+        'Supply the intended license name or bundled-file reference as a non-empty YAML string, or remove the optional field if no declaration is intended.'
+    },
     audit: {
       phase: 'INSPECT',
       run: ({ licensePresent, license }) => {

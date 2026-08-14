@@ -28,25 +28,34 @@ const mechanical = (
   level: ViolationLevel,
   audit: (context: WebsiteContext) => readonly AuditOutcome[],
   options: MechanicalOptions = {}
-): RubricItem<WebsiteContext> => ({
-  code,
-  title,
-  description,
-  sources: [SOURCE],
-  mechanical: {
+): RubricItem<WebsiteContext> => {
+  const base = { code, title, description, sources: [SOURCE] as const }
+  const shared = {
     level,
-    remediation: options.conform
-      ? { class: 'automatic' }
-      : {
-          class: 'diagnostic',
-          guidance:
-            'Inspect the affected website surface and apply the standard through a reviewable, site-owned change.'
-        },
     ...(options.overrideLevels ? { overrideLevels: options.overrideLevels } : {}),
-    audit: { phase: 'INSPECT', run: audit },
-    ...(options.conform ? { conform: { phase: 'NORMALISE' as const, run: options.conform } } : {})
+    audit: { phase: 'INSPECT' as const, run: audit }
   }
-})
+  return options.conform
+    ? {
+        ...base,
+        mechanical: {
+          ...shared,
+          remediation: { class: 'automatic' },
+          conform: { phase: 'NORMALISE', run: options.conform }
+        }
+      }
+    : {
+        ...base,
+        mechanical: {
+          ...shared,
+          remediation: {
+            class: 'diagnostic',
+            guidance:
+              'Inspect the affected website surface and apply the standard through a reviewable, site-owned change.'
+          }
+        }
+      }
+}
 
 const judgment = (code: string, title: string, description: string, prompt: string): RubricItem<WebsiteContext> => ({
   code,
