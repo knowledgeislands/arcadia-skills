@@ -4,7 +4,7 @@ title: Make skills discoverable
 area: GOV
 theme: governance-consistency
 horizon: next
-status: awaiting-review
+status: in-progress
 blocks: []
 blocked_by: []
 baseline_ref: dd1277b640c08863092ca231c29a917da43bb96c
