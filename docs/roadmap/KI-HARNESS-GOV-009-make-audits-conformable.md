@@ -4,7 +4,7 @@ title: Make audits conformable
 area: GOV
 theme: governance-consistency
 horizon: now
-status: in-progress
+status: awaiting-review
 blocks: []
 blocked_by: []
 baseline_ref: 8c87acf049c13298d9314d0aac0c41241637a08f
@@ -48,13 +48,13 @@ Coverage uses all 435 criteria with a mechanical aspect as the denominator and `
 
 ## Steps
 
-- [ ] Correct the rubric-authoring standard to define evaluation and remediation as independent axes, state the three existing remediation classes and allowed combinations, and make safe deterministic conformance the default design expectation.
-- [ ] Strengthen the shared TypeScript contract so `automatic` requires `conform`, `diagnostic` and `guarded` exclude it, and `guarded` requires judgment at compile time; retain equivalent fail-closed host validation for dynamically loaded catalogues.
-- [ ] Generate a source-loaded inventory of every criterion by evaluation aspect and remediation class, then review all 349 diagnostic and guarded items against one candidate test: the desired state is fully derivable, the target is locally owned, and the action can prove containment, preservation, dry-run, idempotence, and clean post-audit.
-- [ ] Record each reviewed report-only item as a justified boundary or a promotion candidate. Keep specific guidance for every boundary; route only substantial concern-specific candidates to separate owner records, and keep cross-cutting or already bounded candidates in this item.
-- [ ] Implement the approved promotion tranche with focused context capabilities and item-owned conform actions. Include `RUNTIMES-2` as the required proof case, using declared runtimes and existing managed-install safeguards without inferring policy or touching unmanaged state.
-- [ ] Route one immutable `tools-ki` submission for the mirrored type and validator contract, violating-finding presentation of diagnostic and guarded guidance, any source-loaded coverage support, and the runtime-coverage host capability that the local proof requires.
-- [ ] Regenerate every affected rubric publication and publish the dated before-and-after totals for mechanical, automatic, diagnostic, guarded, judgment, and hybrid criteria.
+- [x] Correct the rubric-authoring standard to define evaluation and remediation as independent axes, state the three existing remediation classes and allowed combinations, and make safe deterministic conformance the default design expectation.
+- [x] Strengthen the shared TypeScript contract so `automatic` requires `conform`, `diagnostic` and `guarded` exclude it, and `guarded` requires judgment at compile time; retain equivalent fail-closed host validation for dynamically loaded catalogues.
+- [x] Generate a source-loaded inventory of every criterion by evaluation aspect and remediation class, then review all 349 diagnostic and guarded items against one candidate test: the desired state is fully derivable, the target is locally owned, and the action can prove containment, preservation, dry-run, idempotence, and clean post-audit.
+- [x] Record each reviewed report-only item as a justified boundary or a promotion candidate. Keep specific guidance for every boundary; route only substantial concern-specific candidates to separate owner records, and keep cross-cutting or already bounded candidates in this item.
+- [x] Implement the approved promotion tranche with focused context capabilities and item-owned conform actions. Include `RUNTIMES-2` as the required proof case, using declared runtimes and existing managed-install safeguards without inferring policy or touching unmanaged state.
+- [x] Route one immutable `tools-ki` submission for the mirrored type and validator contract, violating-finding presentation of diagnostic and guarded guidance, any source-loaded coverage support, and the runtime-coverage host capability that the local proof requires.
+- [x] Regenerate every affected rubric publication and publish the dated before-and-after totals for mechanical, automatic, diagnostic, guarded, judgment, and hybrid criteria.
 
 ## Files touched
 
@@ -133,6 +133,50 @@ The user approved the retained taxonomy, complete-denominator measure, promotion
 - **Verify:** No item in scope uses the generic diagnostic constant, every replacement guidance is non-empty and criterion-specific, focused `ki-skills` item tests and Biome pass.
 - **Return:** Changed path list, guidance-boundary summary, focused verification, and any criterion whose true boundary is ambiguous.
 - **Checkpoint:** Return after all in-scope generic diagnostics are replaced or an ambiguity requires coordinator review.
+
+## Review
+
+### Delivered
+
+Implemented the approved GOV-009 boundary from immutable baseline `8c87acf049c13298d9314d0aac0c41241637a08f`. The Harness now encodes evaluation and remediation independently, source-loads and validates all 45 structured catalogues, records the disposition of every original report-only criterion, promotes two bounded repairs, and submits the receiver-owned host work without writing `tools-ki` or user runtime state.
+
+The resulting evidence is committed in `5fa55b52`, `474cd424`, `73813389`, and immutable submitted trade `TRD-65db6d36` at `e6e401ff`. Readiness, start, and delegation authority were committed separately before implementation.
+
+### Summary of changes
+
+- Strengthened the materialised rubric type so automatic remediation requires a conform action, diagnostic and guarded remediation exclude one, guarded remediation requires judgment, and report-only guidance is mandatory.
+- Reworked four catalogue factories into explicit automatic or diagnostic branches so the compile-time and dynamically loaded contracts agree without weakening either.
+- Added a source-loaded inventory and focused assertions for 45 catalogues, 633 criteria, exact remediation totals, six candidate dispositions, and the exhaustive report-only complement.
+- Replaced 40 generic `ki-skills` diagnostics with criterion-specific authorship, ambiguity, safety, or ownership guidance.
+- Promoted `ki-skills/NAME-1` with a preserving physical-source-only frontmatter insertion and `ki-repo/RUNTIMES-2` with an exact typed host-native activation request.
+- Published the dated evidence under `docs/reviews/KI-HARNESS-REV-001/`, routed Decision Records work to GOV-043, routed Engineering work to GOV-044, and submitted `TRD-65db6d36` to `tools-ki`.
+- Corrected the catalogue count from 44 to 45. The criterion totals and approved denominator were unchanged.
+
+### Verification
+
+- `bun run test` passed: 459 tests, 0 failures.
+- `bunx tsc --noEmit` passed.
+- All 45 `ki dev skill rubric <skill>` publication checks passed; the affected `ki-skills` and `ki-repo` publications were regenerated first.
+- `ki repo audit --skill ki-skills --repo .` passed.
+- `ki repo audit --skill ki-repo --repo .` passed with its `ki-authoring` and `ki-git` dependencies.
+- Focused `ki-change-management-roadmap`, `ki-authoring`, `ki-delegation`, and `ki-trades` audits passed.
+- The source-loaded result is 435 mechanical, 88 automatic, 334 diagnostic, 13 guarded, 233 judgment, and 35 hybrid criteria; automatic coverage rose from 19.8% to 20.2% without removing a criterion or evidence aspect.
+
+### Outstanding concerns
+
+The Harness-local work has no failing or unchecked gate. `tools-ki` still owns loader parity, normal-output remediation guidance, the native activation proposal, publication safety, and post-CONFORM `FIXED` proof; submitted trade `TRD-65db6d36` requests that work without assigning receiver priority or acceptance.
+
+Four safe but substantial concern-specific candidates remain intentionally diagnostic: Decision Records `FM-3`, `FM-4`, and `INDEX-4` are routed to GOV-043, which is blocked by the existing GOV-040 metadata authority decision; Engineering `GEN-1` is routed to GOV-044. They remain visible automation debt with specific guidance.
+
+### Post-change review
+
+The goal and approved scope are satisfied. Mechanical evaluation was not weakened, judgment was not manufactured, and the coverage change came only from two actions with bounded ownership and negative-path evidence. `NAME-1` preserves unrelated bytes and refuses symbolic sources. `RUNTIMES-2` derives only exact names and exposes no direct config write, link write, subprocess, provider choice, or user-setting capability.
+
+The largest regression surface is the shared rubric type copied into 43 consumers. Exact hash parity, whole-repository TypeScript, the complete 459-test suite, all 45 generated publications, and the staged-snapshot skill audit passed, so the item is ready for acceptance review.
+
+### Mini recap
+
+GOV-009 delivered a stricter rubric contract, exhaustive remediation evidence, specific report-only guidance, two safe promotions, two coded owner follow-ups, and one immutable host trade. The reusable learning is already encoded in the rubric-authoring standard, source-loaded inventory, focused failure fixtures, and the effectiveness review evidence; no additional guide, idea note, or skill extraction is proposed.
 
 ## Discussion
 
