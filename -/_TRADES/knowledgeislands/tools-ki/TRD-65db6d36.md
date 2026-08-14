@@ -7,7 +7,7 @@ receiver: knowledgeislands/tools-ki
 kind: work
 source_ref: "KI-HARNESS-GOV-009"
 observation: decision
-phase: preparing
+phase: submitted
 ---
 
 # TRD-65db6d36: Implement audit remediation host contract
