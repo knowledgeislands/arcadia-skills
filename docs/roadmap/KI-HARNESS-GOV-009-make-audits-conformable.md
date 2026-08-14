@@ -4,10 +4,10 @@ title: Make audits conformable
 area: GOV
 theme: governance-consistency
 horizon: now
-status: ready
+status: in-progress
 blocks: []
 blocked_by: []
-baseline_ref: null
+baseline_ref: 8c87acf049c13298d9314d0aac0c41241637a08f
 ---
 
 ## Goal
