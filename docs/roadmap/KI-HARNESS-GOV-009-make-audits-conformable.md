@@ -32,7 +32,7 @@ The Harness owns criterion policy, focused evidence, safe draft capabilities, an
 
 Structured rubric items already separate mechanical and judgment aspects. Every mechanical item declares remediation metadata, generated rubrics publish it, and the host safely derives `FIXED` only after a conform action and clean re-audit. The host also enforces the current combinations: `automatic` requires a conform action; `diagnostic` and `guarded` forbid one; and `guarded` requires a judgment aspect. The remaining contract drift is that the rubric-authoring standard omits this model, the materialised compile-time type permits combinations that the host rejects, and violating command output does not surface diagnostic or guarded guidance.
 
-A source-tree baseline on 2026-08-14 covers 44 generated rubrics and 633 criteria. Of those, 435 carry a mechanical aspect and 233 carry a judgment aspect, with hybrid criteria counted on both axes. Mechanical remediation is 86 automatic, 336 diagnostic, and 13 guarded, so current automatic coverage is 19.8%. The classification is complete; the unanswered question is whether each of the 349 report-only mechanics has the correct boundary or is safe automation debt.
+A source-tree baseline on 2026-08-14 covers 45 generated rubrics and 633 criteria. Of those, 435 carry a mechanical aspect and 233 carry a judgment aspect, with hybrid criteria counted on both axes. Mechanical remediation is 86 automatic, 336 diagnostic, and 13 guarded, so current automatic coverage is 19.8%. The classification is complete; the unanswered question is whether each of the 349 report-only mechanics has the correct boundary or is safe automation debt.
 
 The existing runtime-coverage criterion `RUNTIMES-2` derives the required capabilities from declared `supported_runtimes`; the managed `ki repo skill add` path already contains the relevant trust and link safeguards. Its missing single-run CONFORM path remains in scope, now as one representative test of the general model rather than a standalone roadmap item.
 
@@ -122,6 +122,17 @@ The user approved the retained taxonomy, complete-denominator measure, promotion
 - **Verify:** Coordinator checks the proposed local capability against the locked safety test and validates the trade boundary against `ki-trades`.
 - **Return:** Exact local files and tests to change, host-owned requirements, safety stops, and unresolved conflicts; no implementation or peer mutation.
 - **Checkpoint:** Return once the local proof boundary and receiver requirements are concrete enough for coordinator implementation.
+
+### Worker: diagnostic-guidance
+
+- **Deliverable:** Replace the generic `ki-skills` diagnostic fallback with criterion-specific guidance that states each actual authorship, policy, safety, or ownership boundary.
+- **Inputs:** The approved GOV-009 contract and only the `ki-skills` rubric item modules that currently use `DIAGNOSTIC_REMEDIATION`.
+- **Scope:** Exclusive writes to `skills/keystone/ki-skills/scripts/rubric/items/*.ts` files that already use `DIAGNOSTIC_REMEDIATION`; no shared contract, context, standard, generated publication, roadmap, or other skill files.
+- **Authority:** Edit those item declarations and their imports only; run focused read-only tests and formatting; do not stage, commit, conform, or write outside the exclusive scope.
+- **Isolation:** Exclusive non-overlapping source-file boundary in the shared worktree; coordinator owns all generated publications and integration.
+- **Verify:** No item in scope uses the generic diagnostic constant, every replacement guidance is non-empty and criterion-specific, focused `ki-skills` item tests and Biome pass.
+- **Return:** Changed path list, guidance-boundary summary, focused verification, and any criterion whose true boundary is ambiguous.
+- **Checkpoint:** Return after all in-scope generic diagnostics are replaced or an ambiguity requires coordinator review.
 
 ## Discussion
 
