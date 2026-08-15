@@ -4,7 +4,7 @@ title: Govern documentation topology
 area: GOV
 theme: governance-consistency
 horizon: now
-status: awaiting-review
+status: done
 blocks: []
 blocked_by: []
 baseline_ref: 4b566140fd2b645f4c0075b2dfc98c4572817a7b
@@ -148,6 +148,10 @@ Review future immediate records for concise, truthful non-applicability statemen
 ### Mini recap
 
 GOV-016 made the existing four-concern decision executable across repository topology, human guides, specifications, and forward-work records without creating a fifth documentation category.
+
+## Done
+
+Approved on 2026-08-15 after review of the committed implementation and verification evidence.
 
 ## Discussion
 
