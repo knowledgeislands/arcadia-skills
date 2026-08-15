@@ -4,10 +4,10 @@ title: Conform estate safely
 area: OPS
 theme: operations
 horizon: next
-status: ready
+status: in-progress
 blocks: []
 blocked_by: []
-baseline_ref: null
+baseline_ref: 4677aa94c96f8b165ee85feaf1f5f044f20a6b8c
 ---
 
 ## Goal
