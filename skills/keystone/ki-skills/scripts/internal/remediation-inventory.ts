@@ -48,7 +48,7 @@ export type RemediationInventory = {
 export type PromotionReview = {
   skill: string
   criterion: string
-  disposition: 'promoted' | 'deferred'
+  disposition: 'promoted' | 'deferred' | 'boundary'
   rationale: string
 }
 
@@ -90,9 +90,9 @@ export const PROMOTION_REVIEW: readonly PromotionReview[] = [
   {
     skill: 'ki-engineering',
     criterion: 'GEN-1',
-    disposition: 'deferred',
+    disposition: 'boundary',
     rationale:
-      'Safe multi-format configuration preservation is substantial concern-specific parser work and belongs to its own owner record.'
+      'GOV-044 confirmed a cross-owner criterion and a disproportionate preserving editor; Engineering owns Biome and Knip while ki-authoring wholly owns `.rumdl.toml`.'
   }
 ]
 

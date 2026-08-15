@@ -29,20 +29,20 @@ The catalogue count corrects the original roadmap prose from 44 to 45; both the 
 | `ki-decision-records/FM-3` | GOV-043† | Metadata authority is unresolved. |
 | `ki-decision-records/FM-4` | GOV-043† | Metadata authority is unresolved. |
 | `ki-decision-records/INDEX-4` | GOV-043† | Needs a preserving owner-specific parser. |
-| `ki-engineering/GEN-1` | GOV-044‡ | Needs preserving multi-format parsers. |
+| `ki-engineering/GEN-1` | Boundary via GOV-044‡ | Cross-owner check; safe preserving repair is disproportionate. |
 
 † [GOV-043](../../roadmap/KI-HARNESS-GOV-043-conform-decision-record-normalisation.md) waits for GOV-040 before normalising Decision Record metadata and owns the related index parser.
 
-‡ [GOV-044](../../roadmap/KI-HARNESS-GOV-044-conform-generated-surface-exclusions.md) owns the Engineering configuration preservation work.
+‡ [GOV-044](../../roadmap/KI-HARNESS-GOV-044-conform-generated-surface-exclusions.md) confirmed that `ki-engineering` owns Biome and Knip while `ki-authoring` wholly owns `.rumdl.toml`. Two successive no-dependency prototypes required 514 and 365 lines respectively to preserve comments and unrelated bytes while refusing ambiguous input. The candidate is therefore a justified diagnostic boundary until a proportionate owned editor capability or narrower configuration contract exists.
 
 ## Report-only disposition
 
 | Current class | Count | Review outcome |
 | --- | ---: | --- |
-| Diagnostic candidate | 4 | Deferred above; retained visibly as automation debt. |
-| Diagnostic boundary | 330 | Repair needs authorship, policy, external state, or unavailable owner capability. |
+| Diagnostic candidate | 3 | Deferred above; retained visibly as automation debt. |
+| Diagnostic boundary | 331 | Repair needs authorship, policy, external state, or unavailable owner capability. |
 | Guarded boundary | 13 | Repair requires explicit human judgment or authority and remains hybrid. |
 
-Every one of the 343 justified boundaries retains non-empty guidance for its actual authorship, ambiguity, safety, external-state, or ownership boundary. The 40 `ki-skills` diagnostics that previously shared a generic sentence now carry criterion-specific guidance. Guarded criteria remain judgment-bearing and expose no conform action.
+Every one of the 344 justified boundaries retains non-empty guidance for its actual authorship, ambiguity, safety, external-state, or ownership boundary. The 40 `ki-skills` diagnostics that previously shared a generic sentence now carry criterion-specific guidance. Guarded criteria remain judgment-bearing and expose no conform action.
 
 The two promotions retain the same mechanical evaluation. `NAME-1` writes only a valid physical `SKILL.md`, preserves unrelated bytes, refuses symbolic sources, and becomes a no-op after repair. `RUNTIMES-2` only derives and requests the exact capability names; it cannot write sibling configuration, create links, choose providers, invoke a subprocess, or alter user settings. Host activation and post-CONFORM proof remain receiver-owned.

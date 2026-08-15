@@ -37,6 +37,6 @@ test('source-loaded remediation inventory covers every structured criterion exac
     ({ remediation }) => remediation === 'diagnostic' || remediation === 'guarded'
   )
   expect(reportOnly).toHaveLength(347)
-  expect(reportOnly.filter((entry) => reportOnlyDisposition(entry) === 'candidate-deferred')).toHaveLength(4)
-  expect(reportOnly.filter((entry) => reportOnlyDisposition(entry) === 'justified-boundary')).toHaveLength(343)
+  expect(reportOnly.filter((entry) => reportOnlyDisposition(entry) === 'candidate-deferred')).toHaveLength(3)
+  expect(reportOnly.filter((entry) => reportOnlyDisposition(entry) === 'justified-boundary')).toHaveLength(344)
 })

@@ -12,7 +12,7 @@ baseline_ref: 7eb84d97f2c3485270dc8911e4c78823c1366acf
 
 ## Goal
 
-Give `ki-engineering` a bounded conform path for the generated-surface exclusions it owns, while retaining a truthful cross-tool check for the `.rumdl.toml` surface owned by `ki-authoring`.
+Resolve whether `ki-engineering` can gain a proportionate bounded conform path for generated-surface exclusions without crossing `ki-authoring` ownership or weakening preservation guarantees.
 
 ## Context
 
@@ -26,29 +26,29 @@ Normalise only the generated-surface exclusion entries in regular, contained Bio
 
 ## Current state
 
-`GEN-1` deterministically reports missing generated-surface coverage and legacy KI runtime exclusions but remains diagnostic. The Engineering session exposes evidence only and has no focused Biome/Knip draft capability. `ki-authoring` already owns an automatic canonical `.rumdl.toml` write containing all current managed-surface exclusions.
+`GEN-1` remains a justified diagnostic cross-tool check. A fully local preserving parser prototype required 514 lines; using `Bun.JSONC.parse` for validation still required a 365-line byte-offset walker/editor. Although 13 focused cases passed, that implementation was disproportionate to four managed paths and was completely reverted. `ki-authoring` already owns automatic canonical `.rumdl.toml` conformance; Biome and Knip await a proportionate owned editor capability or narrower configuration contract.
 
 ## Steps
 
-- [ ] Retain `GEN-1` as the diagnostic cross-tool agreement check and add one automatic criterion limited to Engineering-owned Biome and Knip exclusions.
-- [ ] Add one operation-scoped, format-preserving JSON/JSONC draft that coalesces the two files and fails closed on unsupported or ambiguous input.
-- [ ] Prove positive, malformed, preservation, comment, symlink, dry-run, and repeat-idempotence cases without writing `.rumdl.toml`.
-- [ ] Regenerate the Engineering rubric and update the GOV-009 remediation inventory evidence with the ownership-corrected disposition and totals.
+- [x] Confirm the ownership split: retain `GEN-1` as the diagnostic cross-tool agreement check and never write `.rumdl.toml` from Engineering.
+- [x] Prototype a no-dependency, operation-scoped, format-preserving JSON/JSONC draft for the two Engineering-owned files.
+- [x] Prove the prototype's positive, malformed, preservation, comment, symlink, dry-run, and repeat-idempotence cases, then reject and remove it when its size proved disproportionate.
+- [x] Keep the catalogue and totals unchanged, strengthen `GEN-1` owner routing, and update the GOV-009 remediation evidence from deferred candidate to justified boundary.
 
 ## Files touched
 
 - `skills/governance/ki-engineering/`
-- Generated Engineering rubric publication
+- `skills/keystone/ki-skills/scripts/internal/remediation-inventory.ts`
+- `skills/keystone/ki-skills/scripts/internal/remediation-inventory.test.ts`
 - GOV-009 remediation inventory evidence
 - This work item
 
 ## Verify
 
-- Each supported Biome or Knip format proposes only the exact generated-surface exclusion delta.
-- Malformed, symbolic, unsupported, ambiguous, or escaping targets produce no write.
-- Existing unrelated configuration, comments, and ordering remain intact.
-- A repeated conform proposal is empty; the automatic criterion passes a clean re-audit; `GEN-1` remains truthful about any unresolved authoring-owned surface.
-- Focused Engineering tests, rubric publication parity, repository audits, and TypeScript pass.
+- No automatic write or new dependency survives without a proportionate preservation and refusal contract.
+- `GEN-1` remains diagnostic, retains the same cross-tool evidence, and routes `.rumdl.toml` to its owner.
+- The source-loaded inventory reports three deferred candidates and 344 justified report-only boundaries without changing the accepted criterion totals.
+- Focused remediation-inventory and Engineering catalogue tests, rubric publication parity, repository audits, Markdown, Biome, TypeScript, and the full harness suite pass.
 
 ## Dependencies / blocks
 
@@ -73,7 +73,7 @@ GOV-009 supplies the candidate evidence. This concern-specific parser work is in
 
 ### Why this is separate
 
-The desired values are deterministic, but format-preserving edits are substantial enough to warrant focused tests. Keeping this separate prevents a coverage metric from expanding a cross-cutting contract item into an unsafe generic config rewriter.
+The desired values are deterministic, but format-preserving edits proved too substantial for this four-path rule. The failed proportionality test is the delivery result: it prevents a coverage metric from expanding a cross-cutting contract item into an unsafe generic config rewriter.
 
 ### Readiness decision
 
