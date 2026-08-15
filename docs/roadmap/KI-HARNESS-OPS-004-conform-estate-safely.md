@@ -12,7 +12,7 @@ baseline_ref: 4677aa94c96f8b165ee85feaf1f5f044f20a6b8c
 
 ## Goal
 
-Produce one reviewed estate conformance matrix that separates safe mechanical proposals from repository-owned decisions and blocked work, without applying a peer-repository write.
+Resolve the bounded estate conformance preconditions without applying an estate-wide write or disturbing unrelated peer-repository work.
 
 ## Context
 
@@ -34,7 +34,7 @@ GOV-026 is accepted and its retained record has been pruned. Each repository rem
 
 ### Approved planning basis
 
-The delivery boundary is the read-only matrix at `docs/reviews/estate-conformance-2026-08.md`. Its required columns are repository, checked revision, governing skill, proposed paths, declared exception, classification, verification, recovery, and disposition. Classifications are exactly `no-change`, `safe-mechanical-proposal`, `receiver-decision`, or `blocked`. The frozen registry snapshot and unavailable repositories remain explicit evidence rather than inferred coverage.
+The delivery boundary is verified resolution of the local source mappings and repository-local authoring failures found in the initial read-only review. The frozen registry snapshot and unavailable repositories remain explicit evidence rather than inferred coverage.
 
 ## Current state
 
@@ -46,11 +46,10 @@ The governed estate has no current conformance matrix that connects each propose
 - [x] Run the applicable audits and `ki repo conform --dry-run` only, capturing each proposed path, governing skill, declared safety variation, and required post-write gate without applying a change.
 - [x] Classify every result as `no-change`, `safe-mechanical-proposal`, `receiver-decision`, or `blocked`; record a named reason for every non-mechanical or unavailable result.
 - [x] Review every formatter or structural-Markdown proposal for meaning and mark uncertainty as `receiver-decision` or `blocked`, never as mechanically safe.
-- [x] Publish the complete matrix and propose separately authorised repository-local work for selected safe sets; do not execute, stage, commit, push, or release any peer change.
+- [x] Resolve separately authorised repository-local work without an estate-wide conform; remove the transient matrix once every recorded blocker has fresh verification.
 
 ## Files touched
 
-- `docs/reviews/estate-conformance-2026-08.md`
 - This work item
 
 No peer-repository content, configuration, Git state, push, release, or destructive cleanup is in scope.
@@ -93,35 +92,31 @@ The estate review records any safe proposal, receiver decision, or blocked repos
 
 ### Delivered
 
-Published the frozen 24-root estate matrix at `docs/reviews/estate-conformance-2026-08.md`.
+Resolved the five bounded estate preconditions and removed the temporary conformance matrix.
 
 ### Summary of changes
 
-Every registered root has a recorded revision and read-only `ki-repo` audit outcome.
+Registered the verified `Resources/` source roots for `er-research`, `kit-techmedix`, `vallearmonia-principal`, and `kit-principal` in the local KI registry.
 
-Only audit-pass roots received the bounded dry-run, which produced no change proposal for 19 repositories.
-
-Five roots are explicitly blocked by audit failures or missing KB source mappings.
+Applied and committed rumdl-safe Markdown repairs and eight verified relative-link corrections in `kit-legal`, and two rumdl-safe Calendar repairs in `kit-principal`.
 
 ### Verification
 
-All operations used `ki repo audit` or `ki repo conform --dry-run` only.
+All four affected Knowledge Bases now pass `ki repo conform --skill ki-repo --dry-run`.
 
-No peer repository was edited, staged, committed, pushed, or released.
+`kit-legal` and `kit-principal` now pass `ki repo audit --skill ki-authoring`; each retains only its declared `.rumdl.toml` exception warning.
 
 ### Outstanding concerns
 
-The blocked receiver-owned preconditions need separate local authority before another review can consider them.
-
-Pre-existing worktree changes in `tools-ki`, `kit-legal`, and `kit-principal` were not inspected or altered.
+Pre-existing worktree changes in `tools-ki`, `kit-legal`, and `kit-principal` remain outside this work.
 
 ### Post-change review
 
-Refresh this matrix only from a newly frozen registry snapshot and a new checked revision per repository.
+Repeat an estate review only from a newly frozen registry snapshot when there is a specific reason to assess it.
 
 ### Mini recap
 
-The estate has no mechanically safe peer write set from this review; the useful result is a precise, non-invasive boundary for later owner-led work.
+The transient review exposed four missing local source mappings and two bounded authoring repairs; all have now been resolved without an estate-wide write.
 
 ## Discussion
 
