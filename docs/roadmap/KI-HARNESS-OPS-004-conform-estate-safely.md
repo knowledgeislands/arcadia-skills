@@ -4,7 +4,7 @@ title: Conform estate safely
 area: OPS
 theme: operations
 horizon: next
-status: in-progress
+status: awaiting-review
 blocks: []
 blocked_by: []
 baseline_ref: 4677aa94c96f8b165ee85feaf1f5f044f20a6b8c
@@ -42,11 +42,11 @@ The governed estate has no current conformance matrix that connects each propose
 
 ## Steps
 
-- [ ] Freeze the locally registered governed-estate membership and checked revision for every available repository; record missing or inaccessible members without substituting another checkout.
-- [ ] Run the applicable audits and `ki repo conform --dry-run` only, capturing each proposed path, governing skill, declared safety variation, and required post-write gate without applying a change.
-- [ ] Classify every result as `no-change`, `safe-mechanical-proposal`, `receiver-decision`, or `blocked`; record a named reason for every non-mechanical or unavailable result.
-- [ ] Review every formatter or structural-Markdown proposal for meaning and mark uncertainty as `receiver-decision` or `blocked`, never as mechanically safe.
-- [ ] Publish the complete matrix and propose separately authorised repository-local work for selected safe sets; do not execute, stage, commit, push, or release any peer change.
+- [x] Freeze the locally registered governed-estate membership and checked revision for every available repository; record missing or inaccessible members without substituting another checkout.
+- [x] Run the applicable audits and `ki repo conform --dry-run` only, capturing each proposed path, governing skill, declared safety variation, and required post-write gate without applying a change.
+- [x] Classify every result as `no-change`, `safe-mechanical-proposal`, `receiver-decision`, or `blocked`; record a named reason for every non-mechanical or unavailable result.
+- [x] Review every formatter or structural-Markdown proposal for meaning and mark uncertainty as `receiver-decision` or `blocked`, never as mechanically safe.
+- [x] Publish the complete matrix and propose separately authorised repository-local work for selected safe sets; do not execute, stage, commit, push, or release any peer change.
 
 ## Files touched
 
@@ -88,6 +88,40 @@ No guide changes are planned; each discovered repository-local concern remains w
 ### Roadmap
 
 The estate review records any safe proposal, receiver decision, or blocked repository as explicit follow-on work.
+
+## Review
+
+### Delivered
+
+Published the frozen 24-root estate matrix at `docs/reviews/estate-conformance-2026-08.md`.
+
+### Summary of changes
+
+Every registered root has a recorded revision and read-only `ki-repo` audit outcome.
+
+Only audit-pass roots received the bounded dry-run, which produced no change proposal for 19 repositories.
+
+Five roots are explicitly blocked by audit failures or missing KB source mappings.
+
+### Verification
+
+All operations used `ki repo audit` or `ki repo conform --dry-run` only.
+
+No peer repository was edited, staged, committed, pushed, or released.
+
+### Outstanding concerns
+
+The blocked receiver-owned preconditions need separate local authority before another review can consider them.
+
+Pre-existing worktree changes in `tools-ki`, `kit-legal`, and `kit-principal` were not inspected or altered.
+
+### Post-change review
+
+Refresh this matrix only from a newly frozen registry snapshot and a new checked revision per repository.
+
+### Mini recap
+
+The estate has no mechanically safe peer write set from this review; the useful result is a precise, non-invasive boundary for later owner-led work.
 
 ## Discussion
 
