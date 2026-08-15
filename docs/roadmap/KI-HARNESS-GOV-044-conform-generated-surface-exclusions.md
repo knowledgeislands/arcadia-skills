@@ -4,7 +4,7 @@ area: GOV
 title: Conform generated-surface exclusions
 theme: governance-consistency
 horizon: next
-status: in-progress
+status: awaiting-review
 blocks: []
 blocked_by: []
 baseline_ref: 7eb84d97f2c3485270dc8911e4c78823c1366acf
@@ -68,6 +68,40 @@ GOV-009 supplies the candidate evidence. This concern-specific parser work is in
 - **Verify:** Focused Engineering tests, Biome on touched TypeScript, rumdl on touched Markdown, Engineering rubric publication parity, focused `ki-engineering` audit, TypeScript, and `git diff --check`.
 - **Return:** Concise changed-file list, exact behaviour and refusal cases, gate results, unresolved concerns, and confirmation that no out-of-scope or Git writes occurred.
 - **Checkpoint:** Return after the focused implementation and checks pass, or immediately on any escalation condition.
+
+## Review
+
+### Delivered
+
+From immutable baseline `7eb84d97f2c3485270dc8911e4c78823c1366acf`, GOV-044 resolved the `GEN-1` automation candidate without crossing the approved ownership or preservation boundaries. The delegated implementation tested two no-dependency approaches, rejected both as disproportionate, removed every prototype byte, and retained the criterion as a justified diagnostic boundary. The persistent delivery is commit `98e5d591`.
+
+### Summary of changes
+
+- Clarified in the Engineering standard and generated rubric that `ki-authoring` wholly owns and automatically conforms `.rumdl.toml`, while Biome and Knip correction remains deliberate until a proportionate preserving editor exists.
+- Changed the GOV-009 source-loaded disposition for `ki-engineering/GEN-1` from deferred candidate to justified boundary, leaving the accepted catalogue and remediation totals unchanged.
+- Updated the review evidence to three deferred candidates, 331 diagnostic boundaries, 13 guarded boundaries, and 344 justified report-only boundaries.
+- Used the approved delegation packet to test a 514-line fully local parser and a 365-line `Bun.JSONC.parse`-assisted editor. Thirteen focused safety cases passed, but the implementation was completely reverted because its cost was disproportionate to four exclusion paths.
+
+### Verification
+
+- Focused remediation-inventory and Engineering catalogue tests: 10 passed, 0 failed.
+- `bunx tsc --noEmit`: passed.
+- `ki dev skill rubric ki-engineering`: exact publication parity passed.
+- Focused `ki-engineering`, `ki-skills`, and roadmap audits: passed with no FAIL or WARN.
+- `bun run test`: full harness suite passed.
+- Biome, rumdl, and `git diff --check`: passed on the changed surface.
+
+### Outstanding concerns
+
+`GEN-1` intentionally remains diagnostic. A future automatic repair needs either a proportionate owner-approved JSON/JSONC editor capability or a narrower configuration contract; neither is invented here. GOV-043 remains separately blocked by GOV-040's metadata-authority decision.
+
+### Post-change review
+
+The work now answers the candidate question with stronger evidence than the original source-loaded classification. It preserves the useful cross-tool audit, makes the correction route explicit, introduces no parser dependency or partial repair, and leaves no prototype code. The narrowed delivery meets its safety and proportionality goal and is ready for acceptance.
+
+### Mini recap
+
+GOV-044 tested the strongest practical no-dependency conform designs, rejected an over-engineered result, and folded that learning into the recurring review inventory and Engineering guidance. No new durable learning route is needed beyond the existing `KI-HARNESS-REV-001` evidence and this retained work record.
 
 ## Discussion
 
