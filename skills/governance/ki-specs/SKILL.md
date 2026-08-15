@@ -14,6 +14,8 @@ You are applying the **Knowledge Islands Specifications standard** — how a sys
 
 ## What this skill owns
 
+`ki-repo` owns applying the non-Knowledge-Base documentation topology. This skill owns the `docs/specs/` behaviour concern within that topology.
+
 1. **The layout** — Specifications live in `docs/specs/`, **flat, one file per area** (e.g. `authentication.md`, `site-seo.md`). An `index.md` is the overview: purpose, how-to-read, the ID scheme, the Gaps convention, and the **areas table**.
 2. **The areas table** — in `index.md`, a table whose rows map an **area file** to its **prefix** (and a short "covers" blurb). A file may host more than one prefix; a prefix belongs to exactly one file. This table is the registry the checker validates IDs against.
 3. **The ID scheme** — every requirement is a level-3 heading `### <PREFIX>-NNN — <title>`: `PREFIX` is one or more uppercase alpha-leading segments (e.g. `AUTH`, `SITE-SEO`); `NNN` is zero-padded (≥ 3 digits), sequential within the file. IDs are **append-only and never reused** — a retired requirement keeps its number, struck through with a `(deprecated)` note; never renumber to tidy up.

@@ -229,7 +229,15 @@ const roadmapConfiguration = (repository: string): RoadmapConfiguration | undefi
   }
 }
 
-const EXECUTION_SECTIONS = ['Current state', 'Steps', 'Files touched', 'Verify', 'Dependencies / blocks'] as const
+const EXECUTION_SECTIONS = [
+  'Current state',
+  'Steps',
+  'Files touched',
+  'Verify',
+  'Dependencies / blocks',
+  'Documentation impact'
+] as const
+const DOCUMENTATION_IMPACT_SECTIONS = ['Decision Records', 'Specifications', 'Guides', 'Roadmap'] as const
 const REVIEW_SECTIONS = [
   'Delivered',
   'Summary of changes',
@@ -266,6 +274,18 @@ const sectionContent = (body: string, heading: string): string | undefined => {
 const subsectionHeadings = (content: string): readonly string[] =>
   content.split(/\r?\n/).flatMap((line) => line.match(/^###\s+(.+?)\s*#*\s*$/)?.[1] ?? [])
 
+const subsectionContent = (content: string, heading: string): string | undefined => {
+  const lines = content.split(/\r?\n/)
+  const start = lines.findIndex((line) => line.match(new RegExp(`^###\\s+${heading}\\s*#*\\s*$`)))
+  if (start === -1) return undefined
+
+  const end = lines.findIndex((line, index) => index > start && /^#{1,3}\s+/.test(line))
+  return lines
+    .slice(start + 1, end === -1 ? undefined : end)
+    .join('\n')
+    .trim()
+}
+
 const validateSteps = (item: WorkItem): void => {
   const content = sectionContent(item.body, 'Steps')
   if (content === undefined) return
@@ -281,6 +301,29 @@ const validateSteps = (item: WorkItem): void => {
     add('FAIL', 'ITEM-3', 'draft and ready items must retain at least one - [ ] Step', FORMAT, item.file)
 }
 
+const validateDocumentationImpact = (item: WorkItem): void => {
+  const impact = sectionContent(item.body, 'Documentation impact')
+  if (impact === undefined) return
+
+  const sections = subsectionHeadings(impact)
+  if (JSON.stringify(sections) !== JSON.stringify(DOCUMENTATION_IMPACT_SECTIONS)) {
+    add(
+      'FAIL',
+      'EXEC-4',
+      `## Documentation impact requires ${DOCUMENTATION_IMPACT_SECTIONS.map((heading) => `### ${heading}`).join(', ')}`,
+      FORMAT,
+      item.file
+    )
+    return
+  }
+
+  for (const heading of DOCUMENTATION_IMPACT_SECTIONS) {
+    if (!subsectionContent(impact, heading)) {
+      add('FAIL', 'EXEC-4', `### ${heading} documentation impact is non-empty`, FORMAT, item.file)
+    }
+  }
+}
+
 const validateBody = (item: WorkItem): void => {
   const present = headings(item.body)
   const required = requiredSections(item)
@@ -291,6 +334,7 @@ const validateBody = (item: WorkItem): void => {
   if (present.at(-1) !== 'Discussion')
     add('FAIL', 'ITEM-3', '## Discussion must be the final top-level section', FORMAT, item.file)
   if (required.includes('Steps')) validateSteps(item)
+  if (required.includes('Documentation impact')) validateDocumentationImpact(item)
   if (item.status === 'awaiting-review' || item.status === 'done') {
     const review = sectionContent(item.body, 'Review')
     if (review && JSON.stringify(subsectionHeadings(review)) !== JSON.stringify(REVIEW_SECTIONS))

@@ -82,6 +82,24 @@ No user-level editor configuration, machine-local state, portable `ki-repo` meta
 
 The `tools-ki` configuration is evidence, not a dependency that grants copying authority. The selection of safe defaults, exact tracked files, and the skill names remains the immediate planning decision; do not mark this item Ready until it is recorded and reviewable.
 
+## Documentation impact
+
+### Decision Records
+
+No new decision record is needed until the proposed editor-skill boundary is selected; this record preserves that choice rather than deciding it implicitly.
+
+### Specifications
+
+No behaviour-level product contract changes; any future editor configuration remains a tool-specific concern.
+
+### Guides
+
+If promoted, the selected project-local configuration needs concise contributor guidance; user-level preferences remain out of scope.
+
+### Roadmap
+
+The tool-boundary decision and any receiver-owned `tools-ki` work remain explicit follow-on work.
+
 ## Discussion
 
 ### Source evidence

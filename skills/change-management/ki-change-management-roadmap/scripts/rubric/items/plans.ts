@@ -62,11 +62,18 @@ const EXEC_3: RubricItem<RoadmapAuditContext> = {
   }
 }
 
+const EXEC_4: RubricItem<RoadmapAuditContext> = mechanical(
+  'EXEC-4',
+  'documentation impact',
+  'Immediate work records state the impact on Decision Records, Specifications, Guides, and the Roadmap, including justified non-applicability.',
+  'Immediate work has a complete documentation-impact record.'
+)
+
 export const EXEC: RubricFamily<RoadmapRubricContext, RoadmapAuditContext> = {
   code: 'EXEC',
   title: 'execution',
   description: 'In-place execution shape and lifecycle integrity.',
   standard: SOURCE,
   selectContext: (context) => context.execution,
-  items: [EXEC_1, EXEC_2, EXEC_3]
+  items: [EXEC_1, EXEC_2, EXEC_3, EXEC_4]
 }

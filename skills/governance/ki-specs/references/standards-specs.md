@@ -4,6 +4,8 @@ This standard defines how a Specifications corpus is laid out and how each requi
 
 ## The four-doc split
 
+`ki-repo` owns applying the non-Knowledge-Base repository-wide documentation topology. This skill owns only the behaviour-level Specification concern.
+
 A non-Knowledge-Base repository's `docs/` separates four durable concerns, and a specification is exactly one of them:
 
 | Location          | Question | Instrument                               |

@@ -34,13 +34,13 @@ const ROUTE_2: RubricItem<GuidesRubricContext> = {
   code: 'ROUTE-2',
   title: 'guides are discoverable, actionable, and correctly placed',
   description:
-    'The guide index gives each intended reader a useful route, and each guide contains practical procedure rather than duplicated rationale, behaviour specification, or future work.',
+    'The guide index gives each intended reader a useful route, and each guide contains practical procedure rather than duplicated rationale, behaviour specification, or future work; stable behaviour reaches its existing Specification or a routed `ki-specs` gap.',
   sources: [SOURCE],
   judgment: {
     scope:
-      'The Guides index, every guide below `docs/guides/`, and their linked Decision Records, Specifications, and roadmap records where applicable.',
+      'The Guides index, every guide below `docs/guides/`, and their linked Decision Records, Specifications, `ki-specs` gaps, and roadmap records where applicable.',
     prompt:
-      'Can the intended reader find the guide, complete its stated outcome, verify success, and recover from the failures it describes? Are why, what, and when statements held by their Decision Record, Specification, and roadmap owners instead?',
+      'Can the intended reader find the guide, complete its stated outcome, verify success, and recover from the failures it describes? Are why, what, and when statements held by their Decision Record, existing Specification, routed `ki-specs` gap, and roadmap owners instead?',
     outcomes: ['conforming', 'guide revision', 'reclassify material'],
     guidance:
       'Revise the guide for its intended reader and outcome, or move rationale, behaviour, and future work to their owning record. Do not infer a documentation or product decision from the check alone.'

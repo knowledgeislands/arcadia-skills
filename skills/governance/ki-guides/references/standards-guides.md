@@ -4,7 +4,7 @@ This standard defines the home and minimum navigability of repository-local prac
 
 ## The four-doc split
 
-A non-Knowledge-Base repository uses four durable documentation concerns:
+A non-Knowledge-Base repository uses four durable documentation concerns. `ki-repo` owns applying that repository-wide topology; this skill owns only the practical-guide concern:
 
 | Location          | Question | Instrument                                     |
 | ----------------- | -------- | ---------------------------------------------- |
@@ -13,7 +13,7 @@ A non-Knowledge-Base repository uses four durable documentation concerns:
 | `docs/guides/`    | How      | Guides (**this skill**)                        |
 | `docs/roadmap/`   | When     | Repository work items (`ki-change-management-roadmap`)           |
 
-Each source has one job. A guide may link to a Decision Record, Specification, or roadmap item when that helps a reader act, but it does not duplicate the source's authority.
+Each source has one job. A guide may link to a Decision Record, Specification, or roadmap item when that helps a reader act, but it does not duplicate the source's authority. A guide that relies on stable system behaviour routes to the applicable existing Specification. Where no durable behaviour contract exists, identify the gap for `ki-specs`; do not manufacture speculative requirements or require an unrelated corpus before publishing the guide.
 
 ## Guide root and index
 

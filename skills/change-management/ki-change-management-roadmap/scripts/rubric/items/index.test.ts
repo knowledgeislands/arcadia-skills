@@ -79,6 +79,24 @@ The first slice is not implemented.
 
 No dependencies.
 
+## Documentation impact
+
+### Decision Records
+
+No durable decision is needed.
+
+### Specifications
+
+The foundation interface needs a behaviour-level contract.
+
+### Guides
+
+No contributor workflow changes.
+
+### Roadmap
+
+No follow-on work is identified.
+
 ## Discussion
 
 ### Open questions
@@ -123,6 +141,7 @@ test('the structured catalogue represents the flat work-item standard', () => {
     'EXEC-1',
     'EXEC-2',
     'EXEC-3',
+    'EXEC-4',
     'SAFE-1',
     'TRADE-1',
     'TRADE-2'

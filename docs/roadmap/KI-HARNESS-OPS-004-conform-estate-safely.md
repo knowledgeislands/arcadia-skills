@@ -71,6 +71,24 @@ GOV-026 is satisfied. The local registry and repository checkouts are evidence i
 
 Read-only repository lanes may run in parallel when each worker is bound to an explicit repository set and returns only revision, audit, dry-run, classification, and stop evidence. Workers may not run CONFORM without `--dry-run`, edit, stage, commit, contact a receiver, or broaden the frozen registry. The coordinator owns the registry snapshot, classification consistency, matrix synthesis, and final proof that peer Git state is unchanged.
 
+## Documentation impact
+
+### Decision Records
+
+No decision record is needed: this is a read-only evidence collection and does not select receiver-owned changes.
+
+### Specifications
+
+No behaviour-level product specification changes are planned.
+
+### Guides
+
+No guide changes are planned; each discovered repository-local concern remains with its receiving owner.
+
+### Roadmap
+
+The estate review records any safe proposal, receiver decision, or blocked repository as explicit follow-on work.
+
 ## Discussion
 
 ### Conform is evidence gathering

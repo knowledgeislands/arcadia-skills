@@ -71,6 +71,24 @@ Portable tokenomics, delegation, and subagent roots are not edited by this item;
 
 ADR-KI-HARNESS-009 and the current tokenomics and delegation standards supply the governing baseline. No roadmap dependency blocks the local preparation. Live model calls require explicit execution and spending authority; absent authority stops after fixtures and the evidence schema. Implementation must also stop for separate review if evidence requires a cross-runtime abstraction or changes an established authority boundary.
 
+## Documentation impact
+
+### Decision Records
+
+No new decision record is planned unless the bounded evaluation changes the portable tokenomics or delegation policy.
+
+### Specifications
+
+No behaviour-level product specification changes are planned.
+
+### Guides
+
+Runtime-specific guidance may be updated only with reproducible evaluation evidence; no volatile provider defaults are added to portable guidance.
+
+### Roadmap
+
+Any confirmed model-binding, measurement, or cross-runtime policy work is captured as explicit follow-on work.
+
 ## Discussion
 
 ### Portability boundary

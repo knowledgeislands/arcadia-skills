@@ -63,6 +63,24 @@ A 2026-08-13 estate scan finds broad local and external impact rather than one b
 
 The completed effectiveness evidence under `docs/reviews/KI-HARNESS-REV-001/` is the naming and boundary baseline. Planning is blocked on the child-family naming decision and valid owner-visible routes for every external consumer; generated projections are regenerated from source rather than edited directly.
 
+## Documentation impact
+
+### Decision Records
+
+A naming decision is required before any child-family migration; this draft records the unresolved decision rather than creating an alias policy.
+
+### Specifications
+
+No behaviour-level product contract changes are planned.
+
+### Guides
+
+Canonical skill-selection and command guidance must move with an approved clean-cut rename; no transition guidance is introduced now.
+
+### Roadmap
+
+The child-family naming decision and receiver-owned consumer migrations remain explicit dependencies before implementation.
+
 ## Discussion
 
 ### Naming decision

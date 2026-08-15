@@ -104,6 +104,24 @@ The local declaration contract is approved, but the end-to-end plan is not depen
 
 The static metadata shape, host aggregation boundary, exact exclusions, and clean-cut migration rule are approved. Host aggregation remains an unsatisfied `tools-ki` dependency, and the Website currently has no reciprocal work route. The local `ki:site:upload` standard decision is independently executable because the Harness owns `ki-repo-website-cloudflare`; changing the Website manifest remains a separate receiver acceptance boundary. An unclaimed key, duplicate claim, or unavailable receiver is a stop rather than permission to implement across repositories.
 
+## Documentation impact
+
+### Decision Records
+
+GOV-028 remains the governing decision for script ownership; this work applies its contract without creating a new decision record.
+
+### Specifications
+
+No behaviour-level product specification changes are planned.
+
+### Guides
+
+Owner-specific script invocations and CI references will be updated with the declared claim, rather than adding generic package-script guidance.
+
+### Roadmap
+
+Receiver-owned `tools-ki` aggregation and Website script ownership remain separately tracked until their authorities accept them.
+
 ## Discussion
 
 ### Skill declarations

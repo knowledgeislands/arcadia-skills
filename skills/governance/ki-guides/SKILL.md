@@ -41,7 +41,7 @@ Carries the universal **AUDIT · CONFORM · EDUCATE · REFRESH**. Invoked as `he
 
 ## Notes
 
-- **Guide, not a second specification** — explain the sequence, conditions, and recovery needed to do work. Link to the specification when a guide needs to name a stable system behaviour; do not restate its normative contract.
+- **Guide, not a second specification** — explain the sequence, conditions, and recovery needed to do work. Link to the applicable existing Specification when a guide needs to name a stable system behaviour; do not restate its normative contract. If the durable behaviour lacks a contract, route the gap to `ki-specs`; do not create a speculative Specification corpus merely to make a guide look complete.
 - **No generic log archive** — a durable result belongs in its owning record, guide, specification, or roadmap item. Ephemeral command output and runtime logs remain untracked operational evidence unless a specialised system owns them.
 - **Developer documentation is a guide** — put contributor mechanics in `docs/guides/developer/`, not a sibling `docs/developer/` tree.
 - The `ki` host owns findings, dry-run publication, reporting, and post-conform verification; judgment aspects are counted as unevaluated rather than emitted as synthetic mechanical findings.

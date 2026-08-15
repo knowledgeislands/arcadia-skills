@@ -77,6 +77,24 @@ The portable record, lifecycle, and authority boundaries a hook needs are establ
 
 The runtime-portability decision and runtime adapters define event-specific evidence; `ki-recap` retains its explicit in-session judgment and grounding role.
 
+## Documentation impact
+
+### Decision Records
+
+An implementation decision record is needed only if primary-source runtime evidence supports an opt-in Stop-hook adapter.
+
+### Specifications
+
+The portable checkpoint contract remains unchanged; this work evaluates only a runtime-specific reminder adapter.
+
+### Guides
+
+Any supported opt-in hook requires concise runtime-specific setup guidance; no universal contributor workflow is assumed.
+
+### Roadmap
+
+The fresh-agent reconstruction trial and any runtime-adapter delivery remain explicit follow-on work.
+
 ## Discussion
 
 ### Stop is not completion

@@ -27,6 +27,7 @@ Line-by-line criteria for auditing ki-repo. Classifications are derived from ite
 - [KIND — Repository kind](#kind--repository-kind)
 - [RUNTIMES — Runtime support](#runtimes--runtime-support)
 - [DESCFIT — Description fitness](#descfit--description-fitness)
+- [DOC — Documentation topology](#doc--documentation-topology)
 - [OVR — Override rationale](#ovr--override-rationale)
 - [SYNC — Standard synchronisation](#sync--standard-synchronisation)
 - [WORK — Working areas](#work--working-areas)
@@ -236,6 +237,18 @@ Human assessment of repository purpose.
   - _Review prompt:_ Read the repository and judge whether its one-sentence description fits its actual purpose.
   - _Outcomes:_ conforming; gap; exclusion
   - _Conforming guidance:_ Update the description, record a named gap, or record an explicit repository-level exclusion.
+
+## DOC — Documentation topology
+
+→ [standard](standards-documentation-topology.md)
+
+Repository-level ownership of durable documentation concerns.
+
+- **DOC-1 [J] — Documentation concern ownership** — In a non-Knowledge-Base repository, durable documentation is routed to Decision Records, Specifications, Guides, or the Roadmap; specialist skills retain the content contract for their concern. (standards-documentation-topology.md)
+  - _Evidence scope:_ Repository documentation topology and the durable material routed to each concern.
+  - _Review prompt:_ Does each durable documentation concern have the right owner, with decisions explaining choices, Specifications defining behaviour, Guides helping people operate or contribute, and roadmap records tracking planned change?
+  - _Outcomes:_ conforming; gap; exclusion
+  - _Conforming guidance:_ Route the material to its owning concern, record a named gap where the required contract is absent, or record an explicit repository-level exclusion.
 
 ## OVR — Override rationale
 

@@ -116,6 +116,8 @@ In-place execution shape and lifecycle integrity.
   - _Review prompt:_ Review whether work-item status honestly reflects its lifecycle gate or retained completion record.
   - _Outcomes:_ conforming; gap; exclusion
   - _Conforming guidance:_ Select or confirm lifecycle transitions with the owning authority; otherwise record a gap or explicit exclusion.
+- **EXEC-4 [M] — documentation impact** — Immediate work records state the impact on Decision Records, Specifications, Guides, and the Roadmap, including justified non-applicability. (standards-work-item-format.md)
+  - _Remediation:_ diagnostic — Restore the required in-place execution sections without changing the item priority, acceptance, or lifecycle decision.
 
 ## SAFE — safe mechanics
 

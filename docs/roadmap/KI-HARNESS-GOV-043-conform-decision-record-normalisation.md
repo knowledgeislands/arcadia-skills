@@ -55,6 +55,24 @@ All three criteria remain diagnostic with specific guidance. `ki-decision-record
 
 Blocked by GOV-040. GOV-009 supplies the candidate evidence but grants no authority to choose the pending Knowledge Base metadata contract.
 
+## Documentation impact
+
+### Decision Records
+
+This work normalises Decision Record metadata and index entries only after GOV-040 selects the canonical Knowledge metadata contract.
+
+### Specifications
+
+No behaviour-level product specification changes are planned.
+
+### Guides
+
+No contributor guide change is planned; the canonical Decision Record standard remains the operational reference.
+
+### Roadmap
+
+GOV-040 remains the blocker, and any migration beyond the bounded normalisation is recorded separately.
+
 ## Discussion
 
 ### One owner-specific delivery

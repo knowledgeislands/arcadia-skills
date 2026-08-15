@@ -57,6 +57,24 @@ The delivery is two independently readable governance decisions rather than one 
 
 The Decision Records, KB, and principal review records under `docs/reviews/KI-HARNESS-REV-001/` are available as the evidence baseline. This item blocks GOV-041 so the Specification decision does not rely on a Decision Record metadata contract that is simultaneously being reconsidered. It blocks dependent metadata and principal-role implementation, not the truthful checks already applied.
 
+## Documentation impact
+
+### Decision Records
+
+This work delivers GDR-KI-HARNESS-007 and GDR-KI-HARNESS-008, recording the selected metadata and principal-authority migration policy.
+
+### Specifications
+
+No behaviour-level product specification is changed by the decision-only delivery.
+
+### Guides
+
+No contributor guide change is planned until a follow-on migration adopts the selected policy.
+
+### Roadmap
+
+The decision unblocks GOV-041 and GOV-043 and requires separate implementation records for any collection migration.
+
 ## Discussion
 
 ### Decision boundary

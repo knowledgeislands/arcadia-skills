@@ -25,6 +25,7 @@ describe('ki-repo rubric catalogue', () => {
       'KIND',
       'RUNTIMES',
       'DESCFIT',
+      'DOC',
       'OVR',
       'SYNC',
       'WORK'

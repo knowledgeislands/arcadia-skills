@@ -4,7 +4,7 @@ title: Govern documentation topology
 area: GOV
 theme: governance-consistency
 horizon: now
-status: in-progress
+status: awaiting-review
 blocks: []
 blocked_by: []
 baseline_ref: 4b566140fd2b645f4c0075b2dfc98c4572817a7b
@@ -28,13 +28,13 @@ Do not require every repository to create every documentation category, make gui
 
 ## Steps
 
-- [ ] Make `ki-repo` the topology owner for non-KB `docs/decisions/`, `docs/specs/`, `docs/guides/`, and `docs/roadmap/`, while keeping each category optional until its specialist skill is declared and avoiding duplicate specialist checks.
-- [ ] Add a `ki-repo` judgment criterion that checks whether durable material is routed to the correct authority without treating an absent optional category as drift.
-- [ ] Strengthen `ki-guides` AUDIT, CONFORM, and judgment guidance so a guide links to an existing Specification when it relies on stable behaviour, or routes an actual contract gap to `ki-specs` without requiring a corpus for unrelated guides.
-- [ ] Align the Specifications topology wording with the `ki-repo` owner while preserving its flat area, requirement, and Gaps contracts unchanged.
-- [ ] Add `## Documentation impact` to the immediate roadmap shape, with explicit Decision Record, Specification, Guide, and roadmap outcomes or justified non-applicability; check section presence mechanically and assessment truth by judgment.
-- [ ] Update the roadmap evidence parser and fixtures, then migrate every retained Now or Next item to the new section without changing its horizon, status, or delivery scope.
-- [ ] Regenerate the four affected rubric publications once and run focused and aggregate verification.
+- [x] Make `ki-repo` the topology owner for non-KB `docs/decisions/`, `docs/specs/`, `docs/guides/`, and `docs/roadmap/`, while keeping each category optional until its specialist skill is declared and avoiding duplicate specialist checks.
+- [x] Add a `ki-repo` judgment criterion that checks whether durable material is routed to the correct authority without treating an absent optional category as drift.
+- [x] Strengthen `ki-guides` AUDIT, CONFORM, and judgment guidance so a guide links to an existing Specification when it relies on stable behaviour, or routes an actual contract gap to `ki-specs` without requiring a corpus for unrelated guides.
+- [x] Align the Specifications topology wording with the `ki-repo` owner while preserving its flat area, requirement, and Gaps contracts unchanged.
+- [x] Add `## Documentation impact` to the immediate roadmap shape, with explicit Decision Record, Specification, Guide, and roadmap outcomes or justified non-applicability; check section presence mechanically and assessment truth by judgment.
+- [x] Update the roadmap evidence parser and fixtures, then migrate every retained Now or Next item to the new section without changing its horizon, status, or delivery scope.
+- [x] Regenerate the four affected rubric publications once and run focused and aggregate verification.
 
 ## Files touched
 
@@ -60,6 +60,24 @@ Do not require every repository to create every documentation category, make gui
 ## Dependencies / blocks
 
 The accepted repository-governance work supplied the canonical non-KB repository-kind signal; its retained record has now been pruned. This work must preserve specialist-skill ownership and the independent usability of all four skills. All implementation is local to this repository; trade records remain evidence, sibling repositories remain read-only, and fleet documentation migration requires separate receiver-owned work.
+
+## Documentation impact
+
+### Decision Records
+
+GDR-KI-HARNESS-004 remains authoritative; this work makes its four-concern ownership model executable without changing the decision.
+
+### Specifications
+
+The topology clarifies where Specifications belong but does not alter any behaviour-level contract.
+
+### Guides
+
+Guides gain explicit routing for stable behaviour and missing Specification gaps while retaining ownership of human-oriented guidance.
+
+### Roadmap
+
+Immediate work records gain an explicit four-concern documentation-impact statement, so follow-on documentation work is visible without becoming a fifth category.
 
 ## Delegation
 
@@ -96,6 +114,40 @@ Return to the coordinator before changing Decision Record policy, Specification 
 - **Verify:** Focused roadmap tests, rubric-publication parity, focused roadmap audit, and formatting checks.
 - **Return:** Changed files, exact parsed rule and refusal cases, checks, and every unresolved or escalated issue; do not stage or commit.
 - **Checkpoint:** Return after the adapter root is internally consistent, or immediately on a lifecycle or ownership conflict.
+
+## Review
+
+### Delivered
+
+The four durable non-KB documentation concerns now have explicit topology and specialist ownership, and immediate work records carry a structured documentation-impact statement.
+
+### Summary of changes
+
+`ki-repo` adds the topology judgment criterion and its dedicated standard.
+
+`ki-guides` and `ki-specs` clarify their routing boundary.
+
+The roadmap adapter adds structural `EXEC-4` evidence for ordered, non-empty Decision Records, Specifications, Guides, and Roadmap statements in Now and Next records.
+
+The current immediate records now meet that shape.
+
+### Verification
+
+`bun run test`, `bunx tsc --noEmit`, focused audits for `ki-repo`, `ki-guides`, `ki-specs`, `ki-change-management-roadmap`, `ki-authoring`, and `ki-delegation`, generated-rubric parity, and `git diff --check` pass.
+
+### Outstanding concerns
+
+This is a structural routing contract, not a corpus migration or a judgment that each documentation-impact statement is substantively correct.
+
+Receiver-owned documentation changes in sibling repositories remain outside this repository's authority.
+
+### Post-change review
+
+Review future immediate records for concise, truthful non-applicability statements rather than boilerplate.
+
+### Mini recap
+
+GOV-016 made the existing four-concern decision executable across repository topology, human guides, specifications, and forward-work records without creating a fifth documentation category.
 
 ## Discussion
 

@@ -143,7 +143,27 @@ A pass/fail command or assertion.
 ## Dependencies / blocks
 
 Narrative dependency context.
+
+## Documentation impact
+
+### Decision Records
+
+State the impact, or why no decision record is needed.
+
+### Specifications
+
+State the impact, or why no behaviour-level contract changes.
+
+### Guides
+
+State the impact, or why no human guidance changes.
+
+### Roadmap
+
+State the impact on follow-on work, or why no roadmap change is needed.
 ```
+
+Immediate `Now` and `Next` records MUST retain this exact `Documentation impact` shape. Each concern records its intended change or a concise, justified non-applicability. The parser checks the shape and non-empty statements; review judges whether the claimed impact is truthful. This records documentation consequences without making documentation a fifth work-item category.
 
 When delegated work is planned, add `## Delegation` after `## Dependencies / blocks`.
 

@@ -57,6 +57,24 @@ The work is fully shapeable as two independently reconsiderable governance decis
 
 Depends on the `ki-specs` review record and is blocked by GOV-040's Decision Record metadata authority decision. It becomes Ready only after that record is Done and the next two planned GDR serials remain available. It blocks dependent identity and applicability implementation; it does not reopen the completed review.
 
+## Documentation impact
+
+### Decision Records
+
+The resulting specification-identity authority requires a durable decision record after GOV-040 resolves the shared Knowledge metadata baseline.
+
+### Specifications
+
+This work defines the identity and authority boundary for Specifications; it does not silently rewrite existing contracts.
+
+### Guides
+
+No guide change is planned until the decision identifies the contributor-facing workflow.
+
+### Roadmap
+
+GOV-040 remains the prerequisite; any migration or checker change becomes explicit follow-on work.
+
 ## Discussion
 
 ### Why a decision comes first
