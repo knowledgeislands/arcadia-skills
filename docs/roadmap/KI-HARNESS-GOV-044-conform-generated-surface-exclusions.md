@@ -4,10 +4,10 @@ area: GOV
 title: Conform generated-surface exclusions
 theme: governance-consistency
 horizon: next
-status: ready
+status: in-progress
 blocks: []
 blocked_by: []
-baseline_ref: null
+baseline_ref: 7eb84d97f2c3485270dc8911e4c78823c1366acf
 ---
 
 ## Goal
