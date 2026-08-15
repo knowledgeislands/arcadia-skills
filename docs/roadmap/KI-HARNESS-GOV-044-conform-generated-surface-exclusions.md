@@ -4,7 +4,7 @@ area: GOV
 title: Conform generated-surface exclusions
 theme: governance-consistency
 horizon: next
-status: awaiting-review
+status: done
 blocks: []
 blocked_by: []
 baseline_ref: 7eb84d97f2c3485270dc8911e4c78823c1366acf
@@ -102,6 +102,10 @@ The work now answers the candidate question with stronger evidence than the orig
 ### Mini recap
 
 GOV-044 tested the strongest practical no-dependency conform designs, rejected an over-engineered result, and folded that learning into the recurring review inventory and Engineering guidance. No new durable learning route is needed beyond the existing `KI-HARNESS-REV-001` evidence and this retained work record.
+
+## Done
+
+Accepted by the user on 2026-08-15. The accepted outcome is the ownership-corrected diagnostic boundary, not an automatic JSON/JSONC rewriter.
 
 ## Discussion
 
