@@ -4,7 +4,7 @@ title: Conform estate safely
 area: OPS
 theme: operations
 horizon: next
-status: awaiting-review
+status: done
 blocks: []
 blocked_by: []
 baseline_ref: 4677aa94c96f8b165ee85feaf1f5f044f20a6b8c
@@ -117,6 +117,10 @@ Repeat an estate review only from a newly frozen registry snapshot when there is
 ### Mini recap
 
 The transient review exposed four missing local source mappings and two bounded authoring repairs; all have now been resolved without an estate-wide write.
+
+## Done
+
+Approved on 2026-08-16 after review of the resolved source mappings, authoring repairs, and retained verification evidence.
 
 ## Discussion
 
