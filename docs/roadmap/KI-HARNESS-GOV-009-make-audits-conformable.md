@@ -4,7 +4,7 @@ title: Make audits conformable
 area: GOV
 theme: governance-consistency
 horizon: now
-status: awaiting-review
+status: done
 blocks: []
 blocked_by: []
 baseline_ref: 8c87acf049c13298d9314d0aac0c41241637a08f
@@ -177,6 +177,10 @@ The largest regression surface is the shared rubric type copied into 43 consumer
 ### Mini recap
 
 GOV-009 delivered a stricter rubric contract, exhaustive remediation evidence, specific report-only guidance, two safe promotions, two coded owner follow-ups, and one immutable host trade. The reusable learning is already encoded in the rubric-authoring standard, source-loaded inventory, focused failure fixtures, and the effectiveness review evidence; no additional guide, idea note, or skill extraction is proposed.
+
+## Done
+
+Accepted by the user on 2026-08-15 after review of the stricter remediation contract, complete source-loaded inventory, specific diagnostic guidance, bounded `NAME-1` and `RUNTIMES-2` promotions, coded owner follow-ups, and immutable `tools-ki` submission. The accepted delivery is recorded by commits `5fa55b52`, `474cd424`, `73813389`, `e6e401ff`, and `e6374887`.
 
 ## Discussion
 
