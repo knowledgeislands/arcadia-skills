@@ -4,10 +4,10 @@ title: Govern documentation topology
 area: GOV
 theme: governance-consistency
 horizon: now
-status: ready
+status: in-progress
 blocks: []
 blocked_by: []
-baseline_ref: null
+baseline_ref: 4b566140fd2b645f4c0075b2dfc98c4572817a7b
 ---
 
 ## Goal
@@ -64,6 +64,38 @@ The accepted repository-governance work supplied the canonical non-KB repository
 ## Delegation
 
 The orchestrator first fixes the topology ownership and exact `## Documentation impact` template. After that gate, one bounded worker may update Guides and Specifications wording, while another updates the roadmap contract, parser, fixtures, and retained immediate records. Keep `ki-repo` catalogue integration and all generated publications with the orchestrator to avoid shared-file conflicts. The orchestrator reviews the cross-skill boundary, generates publications once, and runs the final audits and full gates.
+
+### Locked decisions
+
+- `ki-repo` owns non-Knowledge-Base topology and durable documentation-routing judgment; `ki-guides`, `ki-specs`, and the roadmap adapter retain their specialised content and lifecycle boundaries.
+- The work establishes a four-concern documentation-impact model only: Decision Records, Specifications, Guides, and Roadmap. It neither adds a fifth documentation category nor changes feature contracts.
+- Sibling repositories, externally owned trade records, and fleet migrations remain read-only evidence; no receiver repository is modified.
+
+### Escalate
+
+Return to the coordinator before changing Decision Record policy, Specification identity, roadmap lifecycle semantics beyond the approved documentation-impact shape, shared rubric-host behaviour, or any file outside the stated lane. Stop on a contradictory existing owner contract or a required external-repository change.
+
+### Worker: guides-specs
+
+- **Deliverable:** Bounded Guides and Specifications wording plus focused rubric updates that route durable documentation to their owners without changing topology ownership.
+- **Inputs:** This record, `GDR-KI-HARNESS-004`, current `ki-guides` and `ki-specs` standards, rubrics, contexts, tests, and generated publications.
+- **Scope:** `skills/governance/ki-guides/` and `skills/governance/ki-specs/` only.
+- **Authority:** Edit only the named skill roots, regenerate only their rubric publications, and add focused tests where the approved documentation-routing rule needs mechanical evidence.
+- **Isolation:** Do not edit `ki-repo`, roadmap-adapter, root documentation, other skill roots, external repositories, or Git state.
+- **Verify:** Focused Guides and Specifications tests, their rubric-publication parity, relevant focused audits, and formatting checks.
+- **Return:** Changed files, rule/ownership summary, exact checks, and every unresolved or escalated issue; do not stage or commit.
+- **Checkpoint:** Return after both skill roots are internally consistent, or immediately on an ownership or scope conflict.
+
+### Worker: roadmap-impact
+
+- **Deliverable:** The approved roadmap documentation-impact shape, parser evidence, fixtures, and generated publication for immediate work records.
+- **Inputs:** This record, current roadmap standards, context, item catalogue, tests, and generated rubric.
+- **Scope:** `skills/change-management/ki-change-management-roadmap/` only.
+- **Authority:** Edit only the named adapter root and regenerate only its rubric publication. Preserve existing horizon, status, identity, dependency, and lifecycle semantics except for the locked documentation-impact rule.
+- **Isolation:** Do not edit `ki-repo`, Guides, Specifications, root roadmap records, external repositories, or Git state.
+- **Verify:** Focused roadmap tests, rubric-publication parity, focused roadmap audit, and formatting checks.
+- **Return:** Changed files, exact parsed rule and refusal cases, checks, and every unresolved or escalated issue; do not stage or commit.
+- **Checkpoint:** Return after the adapter root is internally consistent, or immediately on a lifecycle or ownership conflict.
 
 ## Discussion
 
