@@ -14,7 +14,7 @@ argument-hint: 'plan <work>... | help'
 
 Shapes one or more selected Now or Next drafts through Ready.
 
-The class-level standard—horizons, identity, and file shape—is owned by `ki-change-management-roadmap`; read [the lifecycle procedure](references/standards-plan-lifecycle.md) for the complete operation.
+The class-level standard—horizons, identity, and file shape—is owned by `ki-work-roadmap`; read [the lifecycle procedure](references/standards-plan-lifecycle.md) for the complete operation.
 
 ## What this skill does
 
@@ -43,7 +43,7 @@ Those responsibilities move cleanly to the dedicated process skills; `ki-plan` c
 
 In a KI code repository the canonical record is `docs/roadmap/<REPO>-<NNN>-<slug>.md`, or `docs/roadmap/<REPO>-<AREA>-<NNN>-<slug>.md` where the repository declares fixed issuing areas, authored through this skill—not a runtime-native Plan Mode scratch file.
 
-`ki-change-management-roadmap` owns the stable `<REPO>` code and any fixed `<AREA>` namespace in `.ki-config.toml`; `theme` remains the human-readable grouping in frontmatter.
+`ki-work-roadmap` owns the stable `<REPO>` code and any fixed `<AREA>` namespace in `.ki-config.toml`; `theme` remains the human-readable grouping in frontmatter.
 
 A native scratch file is only a draft.
 
@@ -58,8 +58,8 @@ When referring to a specific work item in prose, link its canonical document usi
 ## Preflight
 
 1. Run `git rev-parse --show-toplevel` and physically resolve the result.
-2. Run `ki repo audit --skill ki-change-management --repo <git-root>` and stop on any failure. Read the selected adapter literal and require its matching declared owner table; the base audit remains the semantic selector authority.
-3. `roadmap` uses `ki-change-management-roadmap` and `docs/roadmap/`; `kb-streams` uses `ki-repo-kb-streams` and `Streams/Roadmap/`. Run the selected local adapter audit and stop on any failure or warning. `github-issues` and `linear` stop without reads or writes because remote process execution is not implemented.
+2. Run `ki repo audit --skill ki-work --repo <git-root>` and stop on any failure. Read the selected adapter literal and require its matching declared owner table; the base audit remains the semantic selector authority.
+3. `roadmap` uses `ki-work-roadmap` and `docs/roadmap/`; `kb-streams` uses `ki-repo-kb-streams` and `Streams/Roadmap/`. Run the selected local adapter audit and stop on any failure or warning. `github-issues` and `linear` stop without reads or writes because remote process execution is not implemented.
 4. Resolve each record only inside the selected canonical root; never follow a symlink outside the physical git root, infer an alternate tree, or use repository shape as an adapter fallback.
 
 ## Notes

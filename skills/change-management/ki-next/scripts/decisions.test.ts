@@ -10,20 +10,20 @@ import {
 
 const local = (adapter: 'roadmap' | 'kb-streams') => ({
   skills: {
-    'ki-change-management': { adapter },
-    [adapter === 'roadmap' ? 'ki-change-management-roadmap' : 'ki-repo-kb-streams']: {}
+    'ki-work': { adapter },
+    [adapter === 'roadmap' ? 'ki-work-roadmap' : 'ki-repo-kb-streams']: {}
   }
 })
 
 test('resolves only declared local adapters and refuses remote or incomplete selection', () => {
   expect(resolveSelectedAdapter(local('roadmap'))).toMatchObject({ kind: 'local', recordRoot: 'docs/roadmap' })
   expect(resolveSelectedAdapter(local('kb-streams'))).toMatchObject({ kind: 'local', recordRoot: 'Streams/Roadmap' })
-  expect(resolveSelectedAdapter({ skills: { 'ki-change-management': { adapter: 'linear' } } })).toMatchObject({
+  expect(resolveSelectedAdapter({ skills: { 'ki-work': { adapter: 'linear' } } })).toMatchObject({
     kind: 'refusal'
   })
   expect(
     resolveSelectedAdapter({
-      skills: { 'ki-change-management': { adapter: 'linear' }, 'ki-change-management-linear': {} }
+      skills: { 'ki-work': { adapter: 'linear' }, 'ki-work-linear': {} }
     })
   ).toMatchObject({ kind: 'remote-refusal' })
 })

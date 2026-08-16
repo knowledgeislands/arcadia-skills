@@ -17,7 +17,7 @@ The full procedure is in [the next-work standard](references/standards-next-work
 
 ## What this skill does
 
-1. **Ground** the configured local adapter's canonical records and issue ledger, active `ki-change-management-housekeeping` templates, and inbound records validated by declared `ki-trades` governance.
+1. **Ground** the configured local adapter's canonical records and issue ledger, active `ki-work-housekeeping` templates, and inbound records validated by declared `ki-trades` governance.
 2. **Triage** incoming submissions through an exact human-confirmed receiver disposition, including the proportionate direct-application gate for a work trade, without treating adoption as roadmap authority.
 3. **Review** relevance when asked or when a material stale signal is evident.
 4. **Screen for synergy** across dependency-ready candidates: propose a batch only when the items share a bounded delivery advantage and remain independently executable. A shared theme alone is not enough.
@@ -38,7 +38,7 @@ ki-recap (optional current-session context)
                     └─> one fresh-grounded authorised cycle
                           └─> ki-implement (each named Ready item through Awaiting review)
 
-The base selector governs adapter choice; `ki-change-management-roadmap` governs the local record model and `ki-repo-kb-streams` its KB Streams container.
+The base selector governs adapter choice; `ki-work-roadmap` governs the local record model and `ki-repo-kb-streams` its KB Streams container.
 ```
 
 `ki-recap` is optional.
@@ -70,6 +70,6 @@ With no argument or `next`, run the full procedure.
 - This is a process skill, not a universal AUDIT / CONFORM / EDUCATE / REFRESH checker.
 - A housekeeping template may create a due run only under its declared spawning policy; every other capture, selection, and queue transition follows the applicable confirmed promotion rule.
 - `ki-next` does not start or authorise a batch from similarity alone. A confirmed candidate group proceeds only to `ki-batch`; implementation still requires that skill's reviewed authorisation.
-- Resolve `[skills.ki-change-management].adapter` and require its matching declared owner table before reading any local root. The base audit remains the authority for semantic selection validation; this process makes no shape fallback. `roadmap` uses `docs/roadmap/`; `kb-streams` uses `Streams/Roadmap/`; `github-issues` and `linear` stop without writes until their remote execution is separately implemented.
+- Resolve `[skills.ki-work].adapter` and require its matching declared owner table before reading any local root. The base audit remains the authority for semantic selection validation; this process makes no shape fallback. `roadmap` uses `docs/roadmap/`; `kb-streams` uses `Streams/Roadmap/`; `github-issues` and `linear` stop without writes until their remote execution is separately implemented.
 - `ki-next` may recommend `status: done` records for pruning, but it never deletes them. `ki-accept` owns explicit path or glob selection; `ki repo roadmap prune` is the separate deterministic selected-repository sweep.
 - Installed as a core user skill by `ki bootstrap`; it is not a repository-governance root.

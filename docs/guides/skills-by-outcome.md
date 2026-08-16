@@ -20,8 +20,8 @@ A normal repository-governance journey is `ki-repo` plus the structure skill mat
 - **Why was a durable choice made?** Use `ki-decision-records` for a living Decision Record.
 - **What behaviour must a system provide?** Use `ki-specs` for testable requirements and verification hooks.
 - **How does a reader use, operate, contribute to, or maintain it?** Use `ki-guides` for practical instructions under `docs/guides/`.
-- **When should repository work happen?** Use `ki-change-management` to select the adapter, then the matching adapter skill: `ki-change-management-roadmap`, `ki-change-management-github-issues`, or `ki-change-management-linear`.
-- **What recurring maintenance is due?** Use `ki-change-management-housekeeping` to govern templates and due-run spawning.
+- **When should repository work happen?** Use `ki-work` to select the adapter, then the matching adapter skill: `ki-work-roadmap`, `ki-work-github-issues`, or `ki-work-linear`.
+- **What recurring maintenance is due?** Use `ki-work-housekeeping` to govern templates and due-run spawning.
 - **How can a live thread resume in fresh context?** Use `ki-checkpoint` for one concise repository-owned reconstruction snapshot. Use `ki-recap` instead when summarising the current live session and routing durable learning.
 
 Keep these instruments separate. A guide may link to the decision or specification that supports it, but it should not become a second copy of either. A future action belongs in the selected work adapter rather than a Decision Record.
@@ -71,7 +71,7 @@ Repository structures compose with the universal baseline; they do not replace i
 - **Project bindings into a runtime or user environment** — use `ki-binding-claude`, `ki-binding-codex`, or `ki-binding-chezmoi` for the matching native surface. These adapters do not replace the portable source.
 - **Set runtime-neutral context budgets or model-purpose guidance** — use `ki-tokenomics`.
 - **Inspect bounded runtime filesystem evidence** — use `ki-tokenomics-claude` or `ki-tokenomics-codex` after the portable policy. These adapters do not establish undocumented live-session state.
-- **Govern Claude-specific runtime housekeeping** — use `ki-housekeeping-claude`; use `ki-change-management-housekeeping` instead for portable recurring repository maintenance.
+- **Govern Claude-specific runtime housekeeping** — use `ki-housekeeping-claude`; use `ki-work-housekeeping` instead for portable recurring repository maintenance.
 
 Runtime binding and runtime evidence are separate from capability activation. A source file or clean source audit is not proof that a runtime loaded or executed it.
 

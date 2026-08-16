@@ -4,7 +4,7 @@ ki-kind: governance
 ki-depends-on: []
 ki-shared-dependencies: [ki-skills:rubric]
 description: >
-  Explains the Project repository baseline for a non-Knowledge-Base Knowledge Islands repository and its composable ki-repo-* structures. Primary-kind declaration and mutual exclusion belong to ki-repo; forward-work adapter selection belongs to ki-change-management. Use when orienting a Project migration or its relationship to a specialised repository structure. For KBs use ki-repo-kb; for tracker choice use ki-change-management.
+  Explains the Project repository baseline for a non-Knowledge-Base Knowledge Islands repository and its composable ki-repo-* structures. Primary-kind declaration and mutual exclusion belong to ki-repo; forward-work adapter selection belongs to ki-work. Use when orienting a Project migration or its relationship to a specialised repository structure. For KBs use ki-repo-kb; for tracker choice use ki-work.
 argument-hint: 'audit <repo> | conform <repo> | educate <repo> | help | refresh'
 ---
 
@@ -20,7 +20,7 @@ Carries the universal **AUDIT · CONFORM · EDUCATE · REFRESH** modes. `help` /
 
 ### Mode AUDIT
 
-Run `ki repo audit --skill ki-repo --repo <repo>` for the declared primary kind, then `ki repo audit --skill ki-change-management --repo <repo>` for the selected forward-work adapter. This skill adds no duplicate primary-kind audit.
+Run `ki repo audit --skill ki-repo --repo <repo>` for the declared primary kind, then `ki repo audit --skill ki-work --repo <repo>` for the selected forward-work adapter. This skill adds no duplicate primary-kind audit.
 
 ### Mode CONFORM
 

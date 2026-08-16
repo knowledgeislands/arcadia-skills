@@ -50,7 +50,7 @@ Set the authority contract and its local enforcement only. Do not rewrite existi
 - One owner is named for every shared metadata field and role claim.
 - The selected schema has no contradictory required fields across `ki-repo`, `ki-repo-kb*`, and `ki-decision-records`.
 - Migration scope, compatibility stance, and representative fixtures are explicit before any estate migration begins.
-- `ki repo audit --skill ki-decision-records --repo .`, `ki repo audit --skill ki-change-management-roadmap --repo .`, and `ki repo audit --skill ki-authoring --repo .` pass.
+- `ki repo audit --skill ki-decision-records --repo .`, `ki repo audit --skill ki-work-roadmap --repo .`, and `ki repo audit --skill ki-authoring --repo .` pass.
 
 ## Dependencies / blocks
 

@@ -7,7 +7,7 @@ import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 const helper = join(dirname(fileURLToPath(import.meta.url)), 'recap-grounding.ts')
-const fixture = () => mkdtempSync(join(tmpdir(), 'ki-change-management-recap-'))
+const fixture = () => mkdtempSync(join(tmpdir(), 'ki-work-recap-'))
 const claudeToolUse = (name: string, input: unknown) =>
   JSON.stringify({ message: { content: [{ type: 'tool_use', name, input }] } })
 const claudeToolResult = (text: string) =>
@@ -26,7 +26,7 @@ const codexOutput = (text: string) =>
     payload: { type: 'custom_tool_call_output', output: [{ type: 'input_text', text }] }
   })
 const evidence = (repo: string, head: string | null, worktree: 'clean' | 'dirty') =>
-  JSON.stringify({ 'ki-change-management-recap-repository-evidence/v1': { repo, head, worktree } })
+  JSON.stringify({ 'ki-work-recap-repository-evidence/v1': { repo, head, worktree } })
 
 const physical = (path: string): string => realpathSync(resolve(path))
 
@@ -211,10 +211,10 @@ describe('recap grounding runtime selection', () => {
       writeFileSync(codex, [codexMeta(repo), codexOutput(evidence(physical(repo), baseline, 'clean')), ''].join('\n'))
 
       const unchanged = JSON.parse(run(repo, transcripts, ['--runtime', 'codex']).stdout) as {
-        'ki-change-management-recap-repository-evidence/v1': { repo: string; head: string; worktree: string }
+        'ki-work-recap-repository-evidence/v1': { repo: string; head: string; worktree: string }
         transcriptEvidence: { status: string; baseline: { head: string } }
       }
-      expect(unchanged['ki-change-management-recap-repository-evidence/v1']).toEqual({
+      expect(unchanged['ki-work-recap-repository-evidence/v1']).toEqual({
         repo: physical(repo),
         head: baseline,
         worktree: 'clean'
@@ -308,12 +308,12 @@ describe('recap grounding runtime selection', () => {
       const grounded = JSON.parse(run(root, transcripts).stdout) as {
         repository: { status: string; root: null; reason: string }
         filesTouched: string[]
-        'ki-change-management-recap-repository-evidence/v1': null
+        'ki-work-recap-repository-evidence/v1': null
         transcriptEvidence: { status: string; current: null }
       }
       expect(grounded.repository).toMatchObject({ status: 'unavailable', root: null })
       expect(grounded.filesTouched).toEqual([])
-      expect(grounded['ki-change-management-recap-repository-evidence/v1']).toBeNull()
+      expect(grounded['ki-work-recap-repository-evidence/v1']).toBeNull()
       expect(grounded.transcriptEvidence).toMatchObject({ status: 'unavailable', current: null })
     } finally {
       rmSync(root, { recursive: true, force: true })

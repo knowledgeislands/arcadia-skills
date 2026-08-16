@@ -6,8 +6,8 @@ This standard records how a Knowledge Base uses shared change-management capabil
 
 | Need | KB location | Owner |
 | --- | --- | --- |
-| Finite forward work | `Streams/Roadmap/` | `ki-change-management-roadmap` plus `ki-next`, `ki-plan`, `ki-implement`, and `ki-accept` |
-| Recurring obligation | `Streams/Housekeeping/` | `ki-change-management-housekeeping` |
+| Finite forward work | `Streams/Roadmap/` | `ki-work-roadmap` plus `ki-next`, `ki-plan`, `ki-implement`, and `ki-accept` |
+| Recurring obligation | `Streams/Housekeeping/` | `ki-work-housekeeping` |
 | Cross-repository trade | Generic `+` / `-` working areas until a KB trade placement is adopted | `ki-trades` |
 
 The roadmap record carries the shared `draft` → `ready` → `in-progress` → `awaiting-review` → `done` lifecycle. Its horizon is metadata, not a folder. A housekeeping template is a source of due runs, not a delivery-state record.

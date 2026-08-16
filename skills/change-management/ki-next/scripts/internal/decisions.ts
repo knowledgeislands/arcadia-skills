@@ -19,13 +19,13 @@ const tableAt = (configuration: unknown, name: string): Record<string, unknown> 
 }
 
 export const resolveSelectedAdapter = (configuration: unknown): AdapterDecision => {
-  const selection = tableAt(configuration, 'ki-change-management')
+  const selection = tableAt(configuration, 'ki-work')
   const adapter = selection?.adapter
   const owners = {
-    roadmap: { owner: 'ki-change-management-roadmap', recordRoot: 'docs/roadmap' },
+    roadmap: { owner: 'ki-work-roadmap', recordRoot: 'docs/roadmap' },
     'kb-streams': { owner: 'ki-repo-kb-streams', recordRoot: 'Streams/Roadmap' },
-    'github-issues': { owner: 'ki-change-management-github-issues' },
-    linear: { owner: 'ki-change-management-linear' }
+    'github-issues': { owner: 'ki-work-github-issues' },
+    linear: { owner: 'ki-work-linear' }
   } as const
   if (adapter !== 'roadmap' && adapter !== 'kb-streams' && adapter !== 'github-issues' && adapter !== 'linear')
     return { kind: 'refusal', reason: 'No supported configured change-management adapter is available.' }

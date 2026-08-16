@@ -30,7 +30,7 @@ Every repo carries these at the root. A local audit reads the selected checkout'
 | `CLAUDE.md` | Agent instructions — the always-loaded anchor for any repo-specific gate or convention (skills rubric SHAPE-7). |
 | `.ki-config.toml` | Declares this repo's expected config under `[skills.ki-repo]`. † |
 
-† The values it carries: mandatory `title` and `description`, `visibility`, the declared `license` (SPDX id, default MIT), and any per-repo check overrides. A repository that declares `ki-change-management-roadmap` also carries its stable `repo_code` here.
+† The values it carries: mandatory `title` and `description`, `visibility`, the declared `license` (SPDX id, default MIT), and any per-repo check overrides. A repository that declares `ki-work-roadmap` also carries its stable `repo_code` here.
 
 **Baseline governance is declared, not assumed.** Every Knowledge Islands repo is governed by `ki-repo` **and** `ki-authoring`; both are required declarations — a `.ki-config.toml` missing `[skills.ki-authoring]` is a FAIL (`authoring-baseline`). Authoring is no longer an implicit universal hidden in the tooling ([ADR-KI-HARNESS-005](../../../../docs/decisions/ADR-KI-HARNESS-005-validate-down-ki-config-toml-contract.md)); the config shows the full governance set. Portable tokenomics and the real environment capabilities mapped from `[skills.ki-repo].supported_runtimes` are likewise explicit required capabilities. `ki-repo` derives the exact names and checks their declarations without reading sibling-owned contents; verified source resolution and managed runtime projections remain host evidence.
 
@@ -64,7 +64,7 @@ repo_type = "kb"
 store_roles = ["notes", "sources", "legacy"]
 ```
 
-A KB must declare `ki-repo-kb` and must not declare `ki-change-management-roadmap`: its planning model is `ki-repo-kb-streams`. Conversely, the `ki-repo-kb` structure declaration requires `repo_type = "kb"`. This validates operating model separately from the structural skill that implements its layout.
+A KB must declare `ki-repo-kb` and must not declare `ki-work-roadmap`: its planning model is `ki-repo-kb-streams`. Conversely, the `ki-repo-kb` structure declaration requires `repo_type = "kb"`. This validates operating model separately from the structural skill that implements its layout.
 
 ## Repository write authority
 
@@ -163,7 +163,7 @@ branch-protection = true   # default off — protect `main` on this repo
 [skills.ki-authoring]
 ```
 
-`title` and `description` are mandatory repository identity. The title is exactly the README H1. The description is exactly the GitHub description and, where present, package.json `description`. A repository that declares `ki-change-management-roadmap` also declares its stable uppercase `repo_code` in this same table; `ki-change-management-roadmap` consumes that code and owns only its theme mapping.
+`title` and `description` are mandatory repository identity. The title is exactly the README H1. The description is exactly the GitHub description and, where present, package.json `description`. A repository that declares `ki-work-roadmap` also declares its stable uppercase `repo_code` in this same table; `ki-work-roadmap` consumes that code and owns only its theme mapping.
 
 ## Per-repo overrides
 

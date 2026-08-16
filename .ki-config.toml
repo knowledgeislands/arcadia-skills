@@ -96,14 +96,14 @@ export = ["knowledge"]
 
 [skills.ki-housekeeping-claude]
 
-[skills.ki-change-management-housekeeping]
+[skills.ki-work-housekeeping]
 
-[skills.ki-change-management]
+[skills.ki-work]
 adapter = "roadmap"
 
-[skills.ki-change-management-roadmap]
+[skills.ki-work-roadmap]
 
-[skills.ki-change-management-roadmap.areas]
+[skills.ki-work-roadmap.areas]
 FND = "foundation-tooling"
 GOV = "governance-consistency"
 OPS = "operations"

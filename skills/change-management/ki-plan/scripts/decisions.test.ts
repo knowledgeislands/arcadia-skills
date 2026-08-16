@@ -3,20 +3,20 @@ import { delegationDecision, readinessDecision, resolveSelectedAdapter } from '.
 
 const selected = (adapter: 'roadmap' | 'kb-streams') => ({
   skills: {
-    'ki-change-management': { adapter },
-    [adapter === 'roadmap' ? 'ki-change-management-roadmap' : 'ki-repo-kb-streams']: {}
+    'ki-work': { adapter },
+    [adapter === 'roadmap' ? 'ki-work-roadmap' : 'ki-repo-kb-streams']: {}
   }
 })
 
 test('uses selected local adapter roots without a shape fallback and refuses remote execution', () => {
   expect(resolveSelectedAdapter(selected('roadmap'))).toMatchObject({ kind: 'local', recordRoot: 'docs/roadmap' })
   expect(resolveSelectedAdapter(selected('kb-streams'))).toMatchObject({ kind: 'local', recordRoot: 'Streams/Roadmap' })
-  expect(resolveSelectedAdapter({ skills: { 'ki-change-management': { adapter: 'roadmap' } } })).toMatchObject({
+  expect(resolveSelectedAdapter({ skills: { 'ki-work': { adapter: 'roadmap' } } })).toMatchObject({
     kind: 'refusal'
   })
   expect(
     resolveSelectedAdapter({
-      skills: { 'ki-change-management': { adapter: 'github-issues' }, 'ki-change-management-github-issues': {} }
+      skills: { 'ki-work': { adapter: 'github-issues' }, 'ki-work-github-issues': {} }
     })
   ).toMatchObject({ kind: 'remote-refusal' })
 })

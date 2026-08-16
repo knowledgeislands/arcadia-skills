@@ -4,7 +4,7 @@
 
 A KI repository declares exactly one primary structure through the `ki-repo` contract. Project is the explicit default for a non-Knowledge-Base repository; `ki-repo-kb` supplies the Knowledge Base structure contract. Other `ki-repo-*` skills are composable specialisations, not alternate primaries.
 
-Project does not select a work tracker. `[skills.ki-change-management]` separately selects `roadmap`, `github-issues`, or `linear`. A Knowledge Base selects its Streams process through `ki-repo-kb-streams`.
+Project does not select a work tracker. `[skills.ki-work]` separately selects `roadmap`, `github-issues`, or `linear`. A Knowledge Base selects its Streams process through `ki-repo-kb-streams`.
 
 ## Inheritance
 

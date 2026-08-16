@@ -11,7 +11,7 @@ A non-Knowledge-Base repository uses four durable documentation concerns. `ki-re
 | `docs/decisions/` | Why      | Decision Records (`ki-decision-records`)       |
 | `docs/specs/`  | What     | Specifications (`ki-specs`) |
 | `docs/guides/`    | How      | Guides (**this skill**)                        |
-| `docs/roadmap/`   | When     | Repository work items (`ki-change-management-roadmap`)           |
+| `docs/roadmap/`   | When     | Repository work items (`ki-work-roadmap`)           |
 
 Each source has one job. A guide may link to a Decision Record, Specification, or roadmap item when that helps a reader act, but it does not duplicate the source's authority. A guide that relies on stable system behaviour routes to the applicable existing Specification. Where no durable behaviour contract exists, identify the gap for `ki-specs`; do not manufacture speculative requirements or require an unrelated corpus before publishing the guide.
 

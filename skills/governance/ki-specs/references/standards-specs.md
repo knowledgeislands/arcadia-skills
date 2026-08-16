@@ -13,7 +13,7 @@ A non-Knowledge-Base repository's `docs/` separates four durable concerns, and a
 | `docs/decisions/` | Why      | Decision Records (`ki-decision-records`) |
 | `docs/specs/`  | What     | Specifications (**this skill**)     |
 | `docs/guides/`    | How      | Guides (`ki-guides`)                     |
-| `docs/roadmap/`   | When     | Repository work items (`ki-change-management-roadmap`)     |
+| `docs/roadmap/`   | When     | Repository work items (`ki-work-roadmap`)     |
 
 A requirement states **behaviour**, not rationale and not procedure. If a statement starts explaining _why_, that reasoning belongs in a Decision Record the requirement cites; if it explains _how to operate_, it belongs in a guide.
 

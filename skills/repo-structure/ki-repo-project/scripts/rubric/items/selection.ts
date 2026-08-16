@@ -14,7 +14,7 @@ const PROJECT_1: RubricItem<ProjectRubricContext> = {
     prompt: 'Do the owner-owned kind and adapter declarations support the intended Project orientation?',
     outcomes: ['conforming', 'owner-audit required', 'migration decision required'],
     guidance:
-      'Use ki-repo for primary-kind evidence and ki-change-management for adapter evidence; decide a Project/KB migration explicitly rather than inferring it here.'
+      'Use ki-repo for primary-kind evidence and ki-work for adapter evidence; decide a Project/KB migration explicitly rather than inferring it here.'
   }
 }
 

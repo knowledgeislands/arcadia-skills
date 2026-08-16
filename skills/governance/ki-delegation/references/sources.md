@@ -6,7 +6,7 @@
 | --- | --- | --- |
 | Knowledge Islands delegation practice | 2026-08-12 | Durable high-risk handoff, authority, escalation, verification, and return boundaries |
 | `ki-tokenomics` | 2026-08-12 | Model-purpose and context-cost policy belong outside the packet |
-| `ki-change-management-roadmap` | 2026-08-12 | Approved work-record lifecycle, plan ownership, and review boundary |
+| `ki-work-roadmap` | 2026-08-12 | Approved work-record lifecycle, plan ownership, and review boundary |
 | [OpenAI: Codex subagents][openai-subagents] | 2026-08-12 | Ordinary subagent task selection, permissions, and execution guidance |
 | [Anthropic: Claude Code sub-agents][anthropic-subagents] | 2026-08-12 | Ordinary subagent task fit, restricted capabilities, and isolation guidance |
 

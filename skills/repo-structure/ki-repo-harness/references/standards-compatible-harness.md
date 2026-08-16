@@ -91,7 +91,7 @@ It must not present removed package aliases, repository-vendored runners, or che
 
 ## Root roadmap
 
-A source harness carries `ROADMAP.md` as its open-work register. The `ki-change-management-roadmap` skill owns roadmap profiles, horizon vocabulary, generated projections, and content discipline; this standard checks only the root file's physical presence.
+A source harness carries `ROADMAP.md` as its open-work register. The `ki-work-roadmap` skill owns roadmap profiles, horizon vocabulary, generated projections, and content discipline; this standard checks only the root file's physical presence.
 
 ## Harness declaration
 
@@ -114,9 +114,9 @@ This standard governs the source container and compatible-payload boundary. Cont
 | Skill quality                                | `ki-skills`      |
 | Agent definition quality                     | `ki-subagents`   |
 | MCP server code                              | `ki-repo-mcp`         |
-| Repository roadmap content                   | `ki-change-management-roadmap`     |
+| Repository roadmap content                   | `ki-work-roadmap`     |
 | Engineering toolchain and package scripts    | `ki-engineering` |
 | Repository declaration and GitHub settings   | `ki-repo`        |
 | Harness install, activation, and CLI runtime | `tools-ki`       |
 
-Selecting `ki-repo-harness` also selects its declared prerequisites: `ki-skills`, `ki-subagents`, `ki-decision-records`, and `ki-change-management-roadmap`. Coverage selects `ki-repo-mcp`, `ki-engineering`, and `ki-repo` separately when their concerns apply. This standard adds only the container and publication delta defined here.
+Selecting `ki-repo-harness` also selects its declared prerequisites: `ki-skills`, `ki-subagents`, `ki-decision-records`, and `ki-work-roadmap`. Coverage selects `ki-repo-mcp`, `ki-engineering`, and `ki-repo` separately when their concerns apply. This standard adds only the container and publication delta defined here.

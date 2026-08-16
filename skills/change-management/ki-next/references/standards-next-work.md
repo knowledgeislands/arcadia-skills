@@ -1,6 +1,6 @@
 # Next-work procedure
 
-`ki-next` applies the transition rules of the adapter selected by `ki-change-management`.
+`ki-next` applies the transition rules of the adapter selected by `ki-work`.
 
 It never treats a recap, handoff, or historic transcript as authority to write.
 
@@ -22,8 +22,8 @@ Its responsibility ends at selecting, promoting, deferring, or spawning due work
 When a `ki-recap` precedes this cycle, require its bounded handoff to be complete before starting a new selection cycle. Treat its digest as orientation only and re-ground every repository fact below.
 
 1. Resolve the current git repository physically and read `.ki-config.toml`.
-2. Run `ki repo audit --skill ki-change-management --repo <git-root>` and stop on any failure. Read its selected adapter literal and require the matching declared owner table. This process does not reimplement the base selector's semantic validation and never infers an adapter from repository shape.
-3. For `roadmap`, run `ki repo audit --skill ki-change-management-roadmap --repo <git-root>` and stop on any FAIL or WARN. Read `ROADMAP.md`, every canonical item directly below `docs/roadmap/`, and active `docs/housekeeping/` templates; derive lifecycle status and dependencies from frontmatter.
+2. Run `ki repo audit --skill ki-work --repo <git-root>` and stop on any failure. Read its selected adapter literal and require the matching declared owner table. This process does not reimplement the base selector's semantic validation and never infers an adapter from repository shape.
+3. For `roadmap`, run `ki repo audit --skill ki-work-roadmap --repo <git-root>` and stop on any FAIL or WARN. Read `ROADMAP.md`, every canonical item directly below `docs/roadmap/`, and active `docs/housekeeping/` templates; derive lifecycle status and dependencies from frontmatter.
 4. For `kb-streams`, run `ki repo audit --skill ki-repo-kb-streams --repo <git-root>` and stop on any FAIL or WARN. Read the flat records and `_ISSUES.md` ledger in `Streams/Roadmap/`, plus active `Streams/Housekeeping/` templates, fresh.
 5. For `github-issues` or `linear`, stop before reading or writing records: remote process execution is not implemented. Do not fall back to local paths or a compatibility representation.
 6. When the repository declares `ki-trades`, run its audit and inspect validated inbound records after the clean governing-skill audits. Its `README.md` is orientation, not a record.

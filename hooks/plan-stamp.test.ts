@@ -30,7 +30,7 @@ function check(label: string, cond: boolean): void {
 }
 
 function environment(): { root: string; home: string; plans: string; state: string } {
-  const root = mkdtempSync(join(tmpdir(), 'ki-change-management-plan-stamp-'))
+  const root = mkdtempSync(join(tmpdir(), 'ki-work-plan-stamp-'))
   const home = join(root, 'home')
   const plans = join(home, '.claude', 'plans')
   const state = join(plans, '.state')

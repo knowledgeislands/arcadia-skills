@@ -20,4 +20,4 @@ A non-duplicating Project baseline and its owner boundaries.
   - _Evidence scope:_ The repository’s declared kind and selected change-management adapter, reviewed through their owner audits.
   - _Review prompt:_ Do the owner-owned kind and adapter declarations support the intended Project orientation?
   - _Outcomes:_ conforming; owner-audit required; migration decision required
-  - _Conforming guidance:_ Use ki-repo for primary-kind evidence and ki-change-management for adapter evidence; decide a Project/KB migration explicitly rather than inferring it here.
+  - _Conforming guidance:_ Use ki-repo for primary-kind evidence and ki-work for adapter evidence; decide a Project/KB migration explicitly rather than inferring it here.

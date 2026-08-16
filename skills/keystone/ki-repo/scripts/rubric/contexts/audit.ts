@@ -721,12 +721,12 @@ async function auditRepo(
       fail('FILES-2', `README.md H1 must equal ${KI_CONFIG} title`, 'README.md')
     if (!ki.description?.trim()) fail('FILES-2', `${KI_CONFIG} must declare a non-empty \`description\``, KI_CONFIG)
     if (
-      declaresRootTable(kiText ?? '', skillTable('ki-change-management-roadmap')) &&
+      declaresRootTable(kiText ?? '', skillTable('ki-work-roadmap')) &&
       !/^[A-Z][A-Z0-9-]{1,23}$/.test(ki.repoCode ?? '')
     )
       fail(
         'FILES-2',
-        `${KI_CONFIG} ki-repo repo_code must be a stable uppercase identifier when ki-change-management-roadmap is declared`,
+        `${KI_CONFIG} ki-repo repo_code must be a stable uppercase identifier when ki-work-roadmap is declared`,
         KI_CONFIG
       )
   }
@@ -738,10 +738,10 @@ async function auditRepo(
     else if (configuration.repositoryType === 'kb') {
       if (!declaresRootTable(kiText, skillTable('ki-repo-kb')))
         fail('KIND-2', 'repo_type = "kb" requires the [skills.ki-repo-kb] structure declaration', KI_CONFIG)
-      if (declaresRootTable(kiText, skillTable('ki-change-management-roadmap')))
+      if (declaresRootTable(kiText, skillTable('ki-work-roadmap')))
         fail(
           'KIND-2',
-          'repo_type = "kb" cannot declare ki-change-management-roadmap; Knowledge Bases use ki-repo-kb-streams',
+          'repo_type = "kb" cannot declare ki-work-roadmap; Knowledge Bases use ki-repo-kb-streams',
           KI_CONFIG
         )
     } else if (declaresRootTable(kiText, skillTable('ki-repo-kb')))

@@ -523,7 +523,7 @@ describe('local repository evidence', () => {
     writeFileSync(join(root, 'README.md'), '# Actual title\n')
     writeFileSync(
       join(root, '.ki-config.toml'),
-      '[skills.ki-repo]\ntitle = "Configured title"\ndescription = "Configured description."\n\n[skills.ki-change-management-roadmap]\n'
+      '[skills.ki-repo]\ntitle = "Configured title"\ndescription = "Configured description."\n\n[skills.ki-work-roadmap]\n'
     )
 
     const findings = (await collectAuditFindings([root])).findings.filter((finding) => finding.code === 'FILES-2')

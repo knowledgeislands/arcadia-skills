@@ -6,7 +6,7 @@ The kind, authority boundary, and relationship map live in [the skill](../SKILL.
 
 ## 1. Resolve the record and review packet
 
-1. Resolve the physical Git root and the selected adapter through `ki-change-management`; never infer an adapter from a filesystem shape.
+1. Resolve the physical Git root and the selected adapter through `ki-work`; never infer an adapter from a filesystem shape.
 2. Stop before reading or writing an operational record when the adapter is unresolved or remote. Remote discovery, stale-read checks, and every mutation remain unavailable pending `KI-HARNESS-FND-014`.
 3. Resolve one canonical regular local record under the selected adapter's exact root. `roadmap` uses `docs/roadmap/`; `kb-streams` uses `Streams/Roadmap/`.
 4. Confirm that the record is `awaiting-review`, every planned Step is complete, and its immutable delivery evidence is present.

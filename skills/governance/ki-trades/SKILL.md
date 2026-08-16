@@ -6,7 +6,7 @@ ki-shared-dependencies: [ki-skills:rubric]
 contributes: [".ki-config.toml"]
 owns: ["+/_TRADES/README.md", "-/_TRADES/README.md"]
 description: >
-  Governs typed, directional cross-repository trades between locally registered Knowledge Islands repositories: mutable committed preparations, work and knowledge routes, TRD eight-hexadecimal identities, immutable submitted sender projections, receipt, receiver-only decisions, sender observation policies, release, and pruning. Use when preparing or submitting work or knowledge to another repository, observing a preparation, receiving or reviewing an inbound trade, auditing routes or records, or resolving direct application, adoption, retention, parking, clarification, decline, or supersession. A route grants visibility only; ki-change-management-roadmap and the receiving repository retain priority and acceptance authority.
+  Governs typed, directional cross-repository trades between locally registered Knowledge Islands repositories: mutable committed preparations, work and knowledge routes, TRD eight-hexadecimal identities, immutable submitted sender projections, receipt, receiver-only decisions, sender observation policies, release, and pruning. Use when preparing or submitting work or knowledge to another repository, observing a preparation, receiving or reviewing an inbound trade, auditing routes or records, or resolving direct application, adoption, retention, parking, clarification, decline, or supersession. A route grants visibility only; ki-work-roadmap and the receiving repository retain priority and acceptance authority.
 argument-hint: "audit <repo> | conform <repo> | educate <repo> | help | refresh"
 ---
 
@@ -47,6 +47,6 @@ REFRESH writes only this skill's canonical files in `ki-agentic-harness`. When i
 ## Notes
 
 - `ki-next` may present an inbound record for exact human-confirmed disposition, but cannot infer a disposition or roadmap transition.
-- `ki-change-management-roadmap` supplies read-only structural and review guidance; it does not write trade records or gain cross-repository priority authority.
+- `ki-work-roadmap` supplies read-only structural and review guidance; it does not write trade records or gain cross-repository priority authority.
 - The checker reads only registered repository roots and their public `ki-trades` declarations and records. It never scans for repositories or writes a peer checkout.
 - The `ki` host owns execution, findings, publication, and post-conform verification; judgment aspects remain explicitly unevaluated until reviewed.

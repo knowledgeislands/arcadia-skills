@@ -6,7 +6,7 @@ The kind, boundary, and relationship map live in [the skill](../SKILL.md).
 
 ## 1. Preflight
 
-1. Resolve the physical git root and the selected adapter through `ki-change-management`; never infer an adapter from filesystem shape.
+1. Resolve the physical git root and the selected adapter through `ki-work`; never infer an adapter from filesystem shape.
 2. Stop before execution if the adapter is unresolved or remote: remote discovery, authentication, stale-read checks, and every write remain unavailable pending `KI-HARNESS-FND-014`.
 3. Resolve exactly one canonical record through the selected local adapter. For the roadmap adapter, it is one regular work-item file under `docs/roadmap/` or `Streams/Roadmap/`.
 4. Confirm that the item is `ready`, is explicitly approved for implementation, has satisfied dependencies, and contains a bounded plan with stated verification.

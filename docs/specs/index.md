@@ -11,7 +11,7 @@ The behaviour-level contract for what the **ki-agentic-harness** does — the **
 | `decisions/`           | Why      | Decision Records (`ki-decision-records`) |
 | `specs/`               | What     | Specifications (this corpus)             |
 | [`guides/`](../guides) | How      | Guides (`ki-guides`)                     |
-| `roadmap/`             | When     | Repository work items (`ki-change-management-roadmap`)     |
+| `roadmap/`             | When     | Repository work items (`ki-work-roadmap`)     |
 
 ## How to read a requirement
 

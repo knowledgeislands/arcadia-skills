@@ -45,7 +45,7 @@ const PHASES = ['preparing', 'submitted', 'received'] as const
 const ALLOWED_SENDER_FIELDS = new Set<string>([...SENDER_FIELDS, 'phase'])
 const ALLOWED_INBOUND_FIELDS = new Set<string>([...SENDER_FIELDS, 'phase', ...RECEIVER_FIELDS])
 const PREPARATIONS_DIRECTORY = '-/_TRADES/_PREPARATIONS'
-// Looser than ki-change-management-roadmap's four: a trade lands alone in another repository, where the title
+// Looser than ki-work-roadmap's four: a trade lands alone in another repository, where the title
 // carries the whole meaning to a reader with none of the surrounding item context.
 const TITLE_WORD_LIMIT = 6
 

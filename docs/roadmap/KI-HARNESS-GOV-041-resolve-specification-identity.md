@@ -51,7 +51,7 @@ The work is fully shapeable as two independently reconsiderable governance decis
 - The skill, standard, host selection, checker, and fixtures state the same serial scope and applicability rule.
 - Existing identifiers have an explicit continuity or migration path.
 - Undeclared, malformed, and declared Specifications have distinct expected outcomes covered by fixtures.
-- `ki repo audit --skill ki-decision-records --repo .`, `ki repo audit --skill ki-change-management-roadmap --repo .`, and `ki repo audit --skill ki-authoring --repo .` pass.
+- `ki repo audit --skill ki-decision-records --repo .`, `ki repo audit --skill ki-work-roadmap --repo .`, and `ki repo audit --skill ki-authoring --repo .` pass.
 
 ## Dependencies / blocks
 

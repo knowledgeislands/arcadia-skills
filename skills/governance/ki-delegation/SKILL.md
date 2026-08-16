@@ -34,7 +34,7 @@ The native rubric inspects only durable delegation packets: a roadmap record opt
 
 It checks the mechanically legible packet shape, then reviews whether packet activation, locked decisions, authority, isolation, escalation boundaries, return contract, and verification gates are actually sound.
 
-Ordinary `## Delegation` plan notes without the packet marker remain under `ki-change-management-roadmap` and are not a failure here.
+Ordinary `## Delegation` plan notes without the packet marker remain under `ki-work-roadmap` and are not a failure here.
 
 ### Mode CONFORM
 

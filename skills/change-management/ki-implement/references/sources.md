@@ -4,11 +4,11 @@
 
 ## Local authority
 
-The [change-management adapter standard](../../ki-change-management/references/standards-change-management-adapters.md) is normative for selected-adapter resolution and the remote no-execution boundary.
+The [change-management adapter standard](../../ki-work/references/standards-change-management-adapters.md) is normative for selected-adapter resolution and the remote no-execution boundary.
 
-The [repository work-item format](../../ki-change-management-roadmap/references/standards-work-item-format.md#awaiting-review) is normative for the roadmap review packet: its six headings, exact order, and producer/consumer semantics.
+The [repository work-item format](../../ki-work-roadmap/references/standards-work-item-format.md#awaiting-review) is normative for the roadmap review packet: its six headings, exact order, and producer/consumer semantics.
 
-The [repository-roadmap lifecycle](../../ki-change-management-roadmap/references/standards-repository-roadmaps.md#work-item-discipline) is normative for the local record lifecycle and `baseline_ref` evidence.
+The [repository-roadmap lifecycle](../../ki-work-roadmap/references/standards-repository-roadmaps.md#work-item-discipline) is normative for the local record lifecycle and `baseline_ref` evidence.
 
 ## Last review
 
