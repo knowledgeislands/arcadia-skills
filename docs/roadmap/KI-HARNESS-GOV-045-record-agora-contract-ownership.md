@@ -4,7 +4,7 @@ area: GOV
 title: Record Agora contract ownership
 theme: governance-consistency
 horizon: next
-status: in-progress
+status: awaiting-review
 blocks: []
 blocked_by: []
 baseline_ref: b6cc3df4c96872371f54afd8246a2a567fa7fae1
@@ -30,11 +30,11 @@ The portable ownership boundary is already normative in `GDR-KI-HARNESS-006`, th
 
 ## Steps
 
-- [ ] Enumerate `equalremedy`, `hnr`, `ki-all`, `ki-fnd`, `ki-mcps`, `legal`, `personal`, `techmedix`, and `vallearmonia` with `ki agora show`, recording each registered home, resolved owner root, and resolved member count while keeping `estate` separate.
-- [ ] Audit `ki-agora` across each named Agora so every locally registered home and non-owner member declaration is checked in its owning repository.
-- [ ] Compare the observed declarations and resolver behaviour with `GDR-KI-HARNESS-006`, the `ki-agora` skill, and the Agora standard; record one owner each for portable declarations, local registry resolution and reciprocal observation, and target-specific user-environment projection.
-- [ ] Inspect the resolver's `list`, `show`, and `roots` outputs and the user-environment projection boundary read-only; record mismatches as findings rather than changing a peer declaration, opening a target, or writing application state.
-- [ ] Retain the audit and ownership evidence in this item's review packet, updating an existing Agora standard or guide only if the comparison exposes a genuine discoverability gap.
+- [x] Enumerate `equalremedy`, `hnr`, `ki-all`, `ki-fnd`, `ki-mcps`, `legal`, `personal`, `techmedix`, and `vallearmonia` with `ki agora show`, recording each registered home, resolved owner root, and resolved member count while keeping `estate` separate.
+- [x] Audit `ki-agora` across each named Agora so every locally registered home and non-owner member declaration is checked in its owning repository.
+- [x] Compare the observed declarations and resolver behaviour with `GDR-KI-HARNESS-006`, the `ki-agora` skill, and the Agora standard; record one owner each for portable declarations, local registry resolution and reciprocal observation, and target-specific user-environment projection.
+- [x] Inspect the resolver's `list`, `show`, and `roots` outputs and the user-environment projection boundary read-only; record mismatches as findings rather than changing a peer declaration, opening a target, or writing application state.
+- [x] Retain the audit and ownership evidence in this item's review packet, updating an existing Agora standard or guide only if the comparison exposes a genuine discoverability gap.
 
 ## Files touched
 
@@ -71,6 +71,39 @@ Update an existing guide only if the normative boundary is correct but not disco
 ### Roadmap
 
 This item supplies the retained cross-repository delivery evidence required before chezmoi can complete its separately governed local Agora-projection work. It creates no dependency edge because that work is owned outside this repository.
+
+## Review
+
+### Delivered
+
+Against immutable baseline `b6cc3df4c96872371f54afd8246a2a567fa7fae1`, the delivery verified all nine named Agoras without changing a peer declaration, opening a target, or writing application state. `ki agora list` retained the separate protected `estate`; `ki agora show` and `ki agora roots` agreed for every named Agora.
+
+The observed member counts were `equalremedy` 2, `hnr` 1, `ki-all` 16, `ki-fnd` 8, `ki-mcps` 7, `legal` 1, `personal` 2, `techmedix` 1, and `vallearmonia` 2. Overlap between the Knowledge Islands Agoras is intentional and does not duplicate consent.
+
+### Summary of changes
+
+Only this retained work item changed during implementation. The audit confirmed the existing three-owner boundary: each home and member repository owns its portable `ki-agora` declaration; the `ki` host owns registered identity resolution, reciprocal observation, and explicit target opening; chezmoi owns only the machine-local target projections it renders, while Codex Desktop and Claude Desktop retain their app-owned project state.
+
+No Agora standard, guide, peer configuration, resolver source, or user-environment projection needed a change. `GDR-KI-HARNESS-006`, the `ki-agora` skill and standard, and chezmoi's `DOTFILES-UE-005` work item already make the boundary discoverable at their respective governance and operator layers.
+
+### Verification
+
+- `ki agora list` passed and reported nine declared Agoras plus the 27-member system `estate`.
+- For every named Agora, `ki agora show <agora>` and `ki agora roots <agora>` passed with identical member counts.
+- For every named Agora, `ki repo --agora <agora> audit --skill ki-agora --concise --progress never` passed for every selected repository with no warnings or failures.
+- `ki repo audit --skill ki-agora --repo .`, `ki repo audit --skill ki-change-management-roadmap --repo .`, and `ki repo audit --skill ki-authoring --repo .` passed.
+
+### Outstanding concerns
+
+None within GOV-045. Chezmoi's target-specific projection work remains separately governed by `DOTFILES-UE-005` and requires its own lifecycle and acceptance.
+
+### Post-change review
+
+The evidence meets the goal and preserves the approved read-only boundary. The only repository change is the canonical work record, so regression risk is limited to roadmap shape; the Agora, roadmap, and authoring gates cover that risk. The item is ready for acceptance review.
+
+### Mini recap
+
+GOV-045 verified the nine reciprocal Agora declarations, distinguished them from the registry-derived estate, and retained the declaration, resolver, and projection ownership split. All specified gates passed with no concerns. No additional durable learning route is proposed because the existing decision, skill standard, and user-environment work item already own the reusable knowledge.
 
 ## Discussion
 
