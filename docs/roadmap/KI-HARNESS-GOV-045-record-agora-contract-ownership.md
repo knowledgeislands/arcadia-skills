@@ -4,7 +4,7 @@ area: GOV
 title: Record Agora contract ownership
 theme: governance-consistency
 horizon: next
-status: draft
+status: ready
 blocks: []
 blocked_by: []
 baseline_ref: null
@@ -24,35 +24,41 @@ Preserve the existing `ki-agora` declaration schema and reciprocal-consent model
 
 ## Current state
 
-`ki-agentic-harness` declares the `ki-all`, `ki-fnd`, and `ki-mcps` homes. Other registered homes declare Equal Remedy, HNR, Legal, Personal, Techmedix, and Vallearmonia. `tools-ki` resolves the declarations locally, and chezmoi keeps target-specific trust and workspace state separate.
+`ki agora list` currently reports nine declared Agoras and one separate system-managed `estate`. `ki-agentic-harness` owns the `ki-all`, `ki-fnd`, and `ki-mcps` homes; the Equal Remedy, HNR, Legal, Personal, Techmedix, and Vallearmonia repositories own the other six homes. All nine resolve their registered owner and member roots locally.
+
+The portable ownership boundary is already normative in `GDR-KI-HARNESS-006`, the `ki-agora` skill, and its Agora standard: repositories own their declarations, the `ki` host owns registry resolution and reciprocal observation, and a user-environment owner may render target-specific state. What remains is to verify that the deployed declarations follow that boundary and retain the evidence in this item without treating the derived estate as a tenth declared Agora.
 
 ## Steps
 
-- [ ] Audit the nine declared Agoras and their resolvable reciprocal memberships.
-- [ ] Record the ownership boundary between `ki-agora`, `tools-ki`, and user-environment projections.
-- [ ] Link the evidence to the relevant skill standards and local resolver behaviour.
-- [ ] Review the recorded contract without changing membership declarations or target application state.
+- [ ] Enumerate `equalremedy`, `hnr`, `ki-all`, `ki-fnd`, `ki-mcps`, `legal`, `personal`, `techmedix`, and `vallearmonia` with `ki agora show`, recording each registered home, resolved owner root, and resolved member count while keeping `estate` separate.
+- [ ] Audit `ki-agora` across each named Agora so every locally registered home and non-owner member declaration is checked in its owning repository.
+- [ ] Compare the observed declarations and resolver behaviour with `GDR-KI-HARNESS-006`, the `ki-agora` skill, and the Agora standard; record one owner each for portable declarations, local registry resolution and reciprocal observation, and target-specific user-environment projection.
+- [ ] Inspect the resolver's `list`, `show`, and `roots` outputs and the user-environment projection boundary read-only; record mismatches as findings rather than changing a peer declaration, opening a target, or writing application state.
+- [ ] Retain the audit and ownership evidence in this item's review packet, updating an existing Agora standard or guide only if the comparison exposes a genuine discoverability gap.
 
 ## Files touched
 
-- `docs/roadmap/KI-HARNESS-GOV-045-record-agora-contract-ownership.md`
-- Existing Agora standards or guides only if the audit exposes a missing ownership statement.
+- This work item, including its review packet.
+- `skills/governance/ki-agora/references/standards-agora.md` only if the audit exposes a missing normative ownership statement.
+- An existing Agora-facing guide only if the normative boundary is correct but not discoverable to an operator.
 
 ## Verify
 
-- `ki agora list` resolves all declared Agoras and their local roots.
-- `ki repo audit --skill ki-agora` passes for the involved home and resolver repositories.
-- The recorded boundary names one owner for declarations, local resolution, and target-specific projection.
+- `ki agora list` reports exactly the nine named declared Agoras plus the separate system-managed `estate`.
+- `ki agora show <agora>` and `ki agora roots <agora>` succeed for each named Agora and agree on its resolved member count.
+- `ki repo --agora <agora> audit --skill ki-agora --concise` passes for each named Agora.
+- The retained evidence names repository-local `ki-agora` declarations, the `ki` host, and the user-environment owner as the respective owners of portable declaration, local resolution and reciprocal observation, and target-specific projection.
+- `ki repo audit --skill ki-agora --repo .`, `ki repo audit --skill ki-change-management-roadmap --repo .`, and `ki repo audit --skill ki-authoring --repo .` pass.
 
 ## Dependencies / blocks
 
-The existing registered-repository inventory and locally available declared homes must remain resolvable. No peer-repository mutation is authorised by this item.
+The existing registered-repository inventory and all nine named home repositories must remain locally resolvable. This item has no roadmap blocker. It authorises read-only inspection of registered peers but no peer-repository mutation, target opening, or application-state write.
 
 ## Documentation impact
 
 ### Decision Records
 
-No decision record is planned unless the audit identifies an unresolved ownership conflict.
+No decision record is planned because `GDR-KI-HARNESS-006` already owns the authority choice. A new decision is required only if the audit exposes a real conflict that the existing decision cannot resolve.
 
 ### Specifications
 
@@ -60,12 +66,16 @@ The existing `ki-agora` standard remains the portable declaration specification.
 
 ### Guides
 
-Update a guide only if the current ownership boundary is not already discoverable from the capability documentation.
+Update an existing guide only if the normative boundary is correct but not discoverable from the operator-facing capability documentation.
 
 ### Roadmap
 
-This item supplies the cross-repository delivery evidence required before chezmoi can complete its local Agora-projection work.
+This item supplies the retained cross-repository delivery evidence required before chezmoi can complete its separately governed local Agora-projection work. It creates no dependency edge because that work is owned outside this repository.
 
 ## Discussion
 
-The portable contract is already in use. This item records and verifies its ownership rather than redesigning it.
+### Evidence boundary
+
+This is a verification and ownership-recording delivery, not a new governance choice or resolver implementation. The durable evidence belongs in this retained work item and its review packet unless comparison with the existing standard exposes a concrete documentation gap.
+
+The live inventory distinguishes nine intentional reciprocal Agoras from the protected registry-derived `estate`. Reporting ten entries without preserving that distinction would incorrectly turn registry inclusion into named Agora consent.
