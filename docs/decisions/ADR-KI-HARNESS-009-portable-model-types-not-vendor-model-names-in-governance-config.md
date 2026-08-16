@@ -3,8 +3,7 @@ id: ADR-KI-HARNESS-009
 title: 'Portable model types, not vendor model names, in governance config'
 date: 2026-07-13
 status: current
-type: Architecture Decision Record
-type_url: https://knowledgeislands.info/specifications/decision-records/adr
+decision_type_url: https://knowledgeislands.info/specifications/decision-records/adr
 decision_type: architecture
 ---
 

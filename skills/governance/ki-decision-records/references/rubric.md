@@ -57,13 +57,13 @@ Required universal decision metadata.
 
 - **FM-0 [M] — Decision-record frontmatter** — YAML frontmatter block is present on every decision record. (standards-decision-records.md)
   - _Remediation:_ diagnostic — Add canonical YAML frontmatter using the record body and filename as evidence.
-- **FM-3 [M] — Human-readable record type** — `type` is the canonical human-readable record type for the filename prefix. (standards-decision-records.md)
-  - _Remediation:_ diagnostic — Set `type` to the canonical human-readable value for the record prefix.
-- **FM-4 [M] — Decision type metadata** — `decision_type` field is present. (standards-decision-records.md)
-  - _Remediation:_ diagnostic — Add the canonical `decision_type` metadata derived from the record prefix.
-- **FM-5 [M] — Prefix and decision type alignment** — `decision_type` exactly matches the canonical value encoded by the filename prefix. This makes required KB metadata internally consistent; it does not prove that the prefix is the right semantic classification. (standards-decision-records.md)
-  - _Remediation:_ diagnostic — Align `decision_type` with the canonical filename prefix after confirming the record classification.
-- **FM-6 [M] — Core decision metadata** — `id`, `title`, `date`, `status`, and `type_url` are present; ID and title compose the H1, date uses YYYY-MM-DD, and the URL matches the record prefix. (standards-decision-records.md)
+- **FM-3 [M] — No generic type metadata** — Generic `type` and `type_url` fields are absent from a decision record. (standards-decision-records.md)
+  - _Remediation:_ diagnostic — Remove generic `type` or `type_url`; use the decision-record-specific fields instead.
+- **FM-4 [M] — Decision type metadata** — `decision_type` and `decision_type_url` fields are present. (standards-decision-records.md)
+  - _Remediation:_ diagnostic — Add canonical `decision_type` and `decision_type_url` metadata derived from the record prefix.
+- **FM-5 [M] — Prefix and decision type alignment** — `decision_type` and `decision_type_url` exactly match the canonical values encoded by the filename prefix. This does not prove that the prefix is the right semantic classification. (standards-decision-records.md)
+  - _Remediation:_ diagnostic — Align decision-type metadata with the canonical filename prefix after confirming the record classification.
+- **FM-6 [M] — Core decision metadata** — `id`, `title`, `date`, and `status` are present; ID and title compose the H1 and date uses YYYY-MM-DD. (standards-decision-records.md)
   - _Remediation:_ diagnostic — Complete the required metadata from the canonical H1, filename, and record type.
 
 ## TYPE-FIT — decision classification
@@ -115,9 +115,9 @@ Present-state decision-record structure and writing quality.
   - _Review prompt:_ Assess whether the title is a short noun phrase rather than a question or full sentence.
   - _Outcomes:_ conforming; gap; exclusion
   - _Conforming guidance:_ Rewrite the title as a concise noun phrase, record a named Gap, or record an explicit exclusion.
-- **BODY-10 [J] — Present-state record** — The record is written as now and carries no historic, superseding, or forward-looking narration. Such content belongs in the ROADMAP or a KB stream, not in a present-state record. (standards-decision-records.md)
+- **BODY-10 [J] — Present-state record** — The record is concise, self-contained, and written as now, without historic, superseding, or forward-looking narration. Such content belongs in the ROADMAP or a KB stream, not in a present-state record. (standards-decision-records.md)
   - _Evidence scope:_ The narrative body of every active decision record.
-  - _Review prompt:_ Assess whether the record states the present decision without historic, superseding, forward-looking, parked, or not-yet-started narration.
+  - _Review prompt:_ Assess whether the record is concise and self-contained, stating the present decision without historic, superseding, forward-looking, parked, or not-yet-started narration.
   - _Outcomes:_ conforming; gap; exclusion
   - _Conforming guidance:_ Move lifecycle narration to its appropriate record, revise to present state, record a named Gap, or record an explicit exclusion.
 

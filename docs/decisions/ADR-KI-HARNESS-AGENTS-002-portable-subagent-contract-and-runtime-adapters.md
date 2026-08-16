@@ -3,8 +3,7 @@ id: ADR-KI-HARNESS-AGENTS-002
 title: 'Portable subagent contract and runtime adapters'
 date: 2026-08-12
 status: current
-type: Architecture Decision Record
-type_url: https://knowledgeislands.info/specifications/decision-records/adr
+decision_type_url: https://knowledgeislands.info/specifications/decision-records/adr
 decision_type: architecture
 ---
 

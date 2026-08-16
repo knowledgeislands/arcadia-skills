@@ -3,8 +3,7 @@ id: ADR-KI-HARNESS-002
 title: 'The ki- naming model and harness-as-source vs plugin-as-projection'
 date: 2026-07-07
 status: current
-type: Architecture Decision Record
-type_url: https://knowledgeislands.info/specifications/decision-records/adr
+decision_type_url: https://knowledgeislands.info/specifications/decision-records/adr
 decision_type: architecture
 ---
 

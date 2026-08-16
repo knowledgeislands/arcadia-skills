@@ -3,8 +3,7 @@ id: ADR-KI-HARNESS-TOOLCHAIN-004
 title: 'Checker remediation footer and learn-block context check'
 date: 2026-07-10
 status: current
-type: Architecture Decision Record
-type_url: https://knowledgeislands.info/specifications/decision-records/adr
+decision_type_url: https://knowledgeislands.info/specifications/decision-records/adr
 decision_type: architecture
 ---
 

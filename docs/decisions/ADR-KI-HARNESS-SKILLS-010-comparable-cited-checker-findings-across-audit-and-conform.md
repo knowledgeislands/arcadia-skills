@@ -3,8 +3,7 @@ id: ADR-KI-HARNESS-SKILLS-010
 title: 'Comparable, cited checker findings across audit and conform'
 date: 2026-07-12
 status: current
-type: Architecture Decision Record
-type_url: https://knowledgeislands.info/specifications/decision-records/adr
+decision_type_url: https://knowledgeislands.info/specifications/decision-records/adr
 decision_type: architecture
 ---
 

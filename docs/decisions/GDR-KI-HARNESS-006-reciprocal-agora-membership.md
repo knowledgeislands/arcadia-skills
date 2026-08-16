@@ -3,8 +3,7 @@ id: GDR-KI-HARNESS-006
 title: 'Reciprocal Agora membership'
 date: 2026-08-09
 status: current
-type: Governance Decision Record
-type_url: https://knowledgeislands.info/specifications/decision-records/gdr
+decision_type_url: https://knowledgeislands.info/specifications/decision-records/gdr
 decision_type: governance
 decision_depends_on: ['GDR-KI-FUNDAMENTALS-001']
 ---

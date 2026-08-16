@@ -3,8 +3,7 @@ id: ADR-KI-HARNESS-006
 title: 'User installation, repository bootstrap, and self-sufficiency'
 date: 2026-07-09
 status: current
-type: Architecture Decision Record
-type_url: https://knowledgeislands.info/specifications/decision-records/adr
+decision_type_url: https://knowledgeislands.info/specifications/decision-records/adr
 decision_type: architecture
 ---
 

@@ -3,8 +3,7 @@ id: ADR-KI-HARNESS-011
 title: 'Project skill copies and repository-local links'
 date: 2026-07-16
 status: current
-type: Architecture Decision Record
-type_url: https://knowledgeislands.info/specifications/decision-records/adr
+decision_type_url: https://knowledgeislands.info/specifications/decision-records/adr
 decision_type: architecture
 ---
 

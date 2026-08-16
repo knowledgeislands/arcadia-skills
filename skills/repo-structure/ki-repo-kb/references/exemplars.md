@@ -19,11 +19,11 @@ Curated patterns showing what well-formed Knowledge Islands KB notes, folder str
 
 ### Correct note frontmatter
 
-Every KB note carries `type`; the current exemplar also uses `status`, `tags`, and `author`. The `type` field drives routing; `status` carries a type-specific state where one exists; `tags` carry the topic context; `author` records provenance for curation. The following is the canonical shape for `Admin/Admin.md`, a zone-root index note:
+Every KB note carries `note_type`; the current exemplar also uses `status`, `tags`, and `author`. The `note_type` field drives routing; `status` carries a note-type-specific state where one exists; `tags` carry the topic context; `author` records provenance for curation. The generic `type` field is not valid KB note metadata. The following is the canonical shape for `Admin/Admin.md`, a zone-root index note:
 
 ```yaml
 ---
-type: admin/zone
+note_type: admin/zone
 tags:
   - card/note
   - topic/knowledge-islands
@@ -32,7 +32,7 @@ author: AI-assisted
 ---
 ```
 
-Key points: `type` is the sole kind classifier and is constrained by the note's location; `tags` is a YAML list, never an inline string; the `status` field uses a freeform date suffix so the age of a status assessment is visible without opening the note body; `author` distinguishes human-authored, AI-authored, and collaborative notes (`AI-assisted` / `Manual` / `Mixed`).
+Key points: `note_type` is the sole note-kind classifier and is constrained by the note's location; `tags` is a YAML list, never an inline string; the `status` field uses a freeform date suffix so the age of a status assessment is visible without opening the note body; `author` distinguishes human-authored, AI-authored, and collaborative notes (`AI-assisted` / `Manual` / `Mixed`).
 
 ### Folder-note structure (zone root)
 

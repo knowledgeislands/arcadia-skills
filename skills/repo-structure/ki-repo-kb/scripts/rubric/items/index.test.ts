@@ -12,7 +12,7 @@ import {
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import type { RubricFamily, RubricItem } from '../../shared/rubric.ts'
-import { type KbRubricContext, ZONES } from '../contexts/kb.ts'
+import { collectKbAuditEvidence, type KbRubricContext, ZONES } from '../contexts/kb.ts'
 import catalogue from './index.ts'
 
 const temporaryDirectories: string[] = []
@@ -71,6 +71,7 @@ test('the structured catalogue preserves every KB criterion', () => {
     'NOTE-1',
     'NOTE-1a',
     'NOTE-1b',
+    'NOTE-1c',
     'NOTE-2',
     'NOTE-3',
     'MEM-1',
@@ -164,4 +165,28 @@ test('a zone alias through an intermediate symlink produces no unsafe proposal',
 
   expect(session.proposal().writes.some((write) => write.path.startsWith('linked/'))).toBe(false)
   expect(existsSync(join(outside, 'Resources', 'linked', 'Resources.md'))).toBe(false)
+})
+
+test('governed note frontmatter requires note_type and rejects the generic type field', () => {
+  const repository = createBase()
+  const note = join(repository, 'Pillars', 'Note.md')
+  writeFileSync(note, '---\nnote_type: pillars/note\n---\n\n# Note\n')
+
+  expect(collectKbAuditEvidence(repository).filter((finding) => finding.code === 'NOTE-1c')).toEqual([
+    {
+      level: 'PASS',
+      code: 'NOTE-1c',
+      message: 'Frontmatter uses note_type and does not use the legacy type field.'
+    }
+  ])
+
+  writeFileSync(note, '---\ntype: pillars/note\n---\n\n# Note\n')
+
+  expect(collectKbAuditEvidence(repository).filter((finding) => finding.code === 'NOTE-1c')).toEqual([
+    {
+      level: 'FAIL',
+      code: 'NOTE-1c',
+      message: 'Invalid note-type metadata: missing note_type: Pillars/Note.md; legacy type: Pillars/Note.md.'
+    }
+  ])
 })

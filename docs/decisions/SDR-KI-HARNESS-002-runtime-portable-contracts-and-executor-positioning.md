@@ -3,8 +3,7 @@ id: SDR-KI-HARNESS-002
 title: 'Runtime-portable contracts and executor positioning'
 date: 2026-07-11
 status: current
-type: Strategy Decision Record
-type_url: https://knowledgeislands.info/specifications/decision-records/sdr
+decision_type_url: https://knowledgeislands.info/specifications/decision-records/sdr
 decision_type: strategy
 ---
 

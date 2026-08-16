@@ -3,8 +3,7 @@ id: GDR-KI-HARNESS-004
 title: 'Four-doc repository documentation ownership'
 date: 2026-08-02
 status: current
-type: Governance Decision Record
-type_url: https://knowledgeislands.info/specifications/decision-records/gdr
+decision_type_url: https://knowledgeislands.info/specifications/decision-records/gdr
 decision_type: governance
 ---
 

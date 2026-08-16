@@ -3,8 +3,7 @@ id: ADR-KI-HARNESS-TOOLCHAIN-005
 title: 'Generated and vendored code is excluded from linting and knip'
 date: 2026-07-11
 status: current
-type: Architecture Decision Record
-type_url: https://knowledgeislands.info/specifications/decision-records/adr
+decision_type_url: https://knowledgeislands.info/specifications/decision-records/adr
 decision_type: architecture
 ---
 

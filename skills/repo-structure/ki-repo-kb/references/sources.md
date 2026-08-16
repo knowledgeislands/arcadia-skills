@@ -11,7 +11,7 @@ Unlike `ki-repo-mcp` and `ki-skills`, this skill follows **no moving external sp
 | Source | Governs | Last reviewed |
 | --- | --- | --- |
 | [Knowledge Islands knowledge-base standard][kb-standard] | † The zone model, conventions, routing, and per-base configuration | 2026-08-12 |
-| [Knowledge Islands frontmatter standard][frontmatter] | Universal note metadata, type taxonomy, location constraints, and dependent fields | 2026-08-12 |
+| [Knowledge Islands frontmatter standard][frontmatter] | Universal note metadata, note-type taxonomy, location constraints, and dependent fields | 2026-08-16 |
 
 † The authoritative structure: five zones (Calendar / Pillars / Resources / Streams / Admin) flanked by the inbound `+` and outbound `-` staging areas. This in-house Reference is the canonical definition — the skill follows no external spec.
 

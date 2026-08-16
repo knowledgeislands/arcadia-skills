@@ -3,8 +3,7 @@ id: GDR-KI-HARNESS-003
 title: 'Portable Git governance ownership'
 date: 2026-07-27
 status: current
-type: Governance Decision Record
-type_url: https://knowledgeislands.info/specifications/decision-records/gdr
+decision_type_url: https://knowledgeislands.info/specifications/decision-records/gdr
 decision_type: governance
 ---
 

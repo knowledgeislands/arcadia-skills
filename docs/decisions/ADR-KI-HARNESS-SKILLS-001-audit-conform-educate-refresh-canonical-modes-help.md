@@ -3,8 +3,7 @@ id: ADR-KI-HARNESS-SKILLS-001
 title: 'AUDIT/CONFORM/EDUCATE/REFRESH canonical modes (+ HELP)'
 date: 2026-08-13
 status: current
-type: Architecture Decision Record
-type_url: https://knowledgeislands.info/specifications/decision-records/adr
+decision_type_url: https://knowledgeislands.info/specifications/decision-records/adr
 decision_type: architecture
 ---
 

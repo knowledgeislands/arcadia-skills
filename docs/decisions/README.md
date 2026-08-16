@@ -69,6 +69,7 @@ The records are living, compact, and independent. The order below is a **curated
 40. [GDR-KI-HARNESS-004](GDR-KI-HARNESS-004-four-doc-repository-documentation-ownership.md) — four-doc repository documentation ownership.
 41. [GDR-KI-HARNESS-005](GDR-KI-HARNESS-005-cross-repository-trade-routes.md) — locally declared, receiver-controlled cross-repository trade submissions.
 42. [GDR-KI-HARNESS-006](GDR-KI-HARNESS-006-reciprocal-agora-membership.md) — portable consent for named repository collections and explicit local target selection.
+43. [GDR-KI-HARNESS-007](GDR-KI-HARNESS-007-document-metadata-and-principal-authority.md) — ownership of document metadata and principal authority.
 
 ## Template
 
@@ -80,9 +81,8 @@ id: <PREFIX>-KI-<SCOPE>-NNN
 title: '<Title>'
 date: YYYY-MM-DD
 status: current
-type: <Human-readable Decision Record type>
-type_url: https://knowledgeislands.info/specifications/decision-records/<prefix-lowercase>
 decision_type: <machine-decision-type>
+decision_type_url: https://knowledgeislands.info/specifications/decision-records/<prefix-lowercase>
 ---
 
 # <PREFIX>-KI-<SCOPE>-NNN: <Title>

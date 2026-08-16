@@ -3,8 +3,7 @@ id: ADR-KI-HARNESS-SKILLS-009
 title: 'Two repo-structure skills for standalone tools and their Homebrew tap'
 date: 2026-07-09
 status: current
-type: Architecture Decision Record
-type_url: https://knowledgeislands.info/specifications/decision-records/adr
+decision_type_url: https://knowledgeislands.info/specifications/decision-records/adr
 decision_type: architecture
 ---
 

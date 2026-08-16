@@ -3,8 +3,7 @@ id: ADR-KI-HARNESS-012
 title: 'Compatible harness publication and governed-rubric boundary'
 date: 2026-07-24
 status: current
-type: Architecture Decision Record
-type_url: https://knowledgeislands.info/specifications/decision-records/adr
+decision_type_url: https://knowledgeislands.info/specifications/decision-records/adr
 decision_type: architecture
 decision_depends_on:
   - ADR-KI-HARNESS-003

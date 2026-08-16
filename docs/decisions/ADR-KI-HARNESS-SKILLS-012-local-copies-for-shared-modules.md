@@ -3,8 +3,7 @@ id: ADR-KI-HARNESS-SKILLS-012
 title: 'Local copies for shared modules'
 date: 2026-07-17
 status: current
-type: Architecture Decision Record
-type_url: https://knowledgeislands.info/specifications/decision-records/adr
+decision_type_url: https://knowledgeislands.info/specifications/decision-records/adr
 decision_type: architecture
 ---
 

@@ -3,8 +3,7 @@ id: GDR-KI-HARNESS-002
 title: 'Public repos and a declared license, decoupled from visibility'
 date: 2026-07-09
 status: current
-type: Governance Decision Record
-type_url: https://knowledgeislands.info/specifications/decision-records/gdr
+decision_type_url: https://knowledgeislands.info/specifications/decision-records/gdr
 decision_type: governance
 ---
 

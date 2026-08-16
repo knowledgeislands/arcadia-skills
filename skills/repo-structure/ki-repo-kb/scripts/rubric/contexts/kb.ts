@@ -93,24 +93,24 @@ const markdownFiles = (directory: string, files: string[] = []): string[] => {
 
 const frontmatter = (
   text: string
-): { keys: string[]; terminated: boolean; valid: boolean; type: string | null } | null => {
+): { keys: string[]; terminated: boolean; valid: boolean; noteType: string | null } | null => {
   const lines = text.split(/\r?\n/)
   if (lines[0]?.trim() !== '---') return null
   const match = text.match(/^---\r?\n([\s\S]*?)\r?\n---(?:\r?\n|$)/)
-  if (!match) return { keys: [], terminated: false, valid: false, type: null }
+  if (!match) return { keys: [], terminated: false, valid: false, noteType: null }
   try {
     const parsed = Bun.YAML.parse(match[1] ?? '')
     if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed))
-      return { keys: [], terminated: true, valid: false, type: null }
+      return { keys: [], terminated: true, valid: false, noteType: null }
     const fields = parsed as Record<string, unknown>
     return {
       keys: Object.keys(fields),
       terminated: true,
       valid: true,
-      type: typeof fields.type === 'string' ? fields.type : null
+      noteType: typeof fields.note_type === 'string' ? fields.note_type : null
     }
   } catch {
-    return { keys: [], terminated: true, valid: false, type: null }
+    return { keys: [], terminated: true, valid: false, noteType: null }
   }
 }
 
@@ -147,6 +147,7 @@ export type KbNoteContext = {
   readonly requiredFrontmatter: KbCheck
   readonly frontmatterFences: KbCheck
   readonly frontmatterKeys: KbCheck
+  readonly noteType: KbCheck
 }
 
 export type KbMemoryContext = {
@@ -306,6 +307,8 @@ export const collectKbAuditEvidence = (target: string): readonly KbEvidenceFindi
   const malformedFrontmatter: string[] = []
   const badKeys: string[] = []
   const missingRequired: string[] = []
+  const missingNoteType: string[] = []
+  const legacyType: string[] = []
   const misplacedOutputs: string[] = []
   const outbound = `${zoneOf('-')}/`
   for (const path of markdownFiles(root)) {
@@ -318,7 +321,9 @@ export const collectKbAuditEvidence = (target: string): readonly KbEvidenceFindi
     }
     for (const key of value.keys) if (!SNAKE_CASE.test(key)) badKeys.push(`${relative}: ${key}`)
     for (const key of required) if (!value.keys.includes(key)) missingRequired.push(`${relative} (${key})`)
-    if ((value.type === 'session-digest' || value.type === 'handoff') && !relative.startsWith(outbound))
+    if (!value.noteType) missingNoteType.push(relative)
+    if (value.keys.includes('type')) legacyType.push(relative)
+    if ((value.noteType === 'session-digest' || value.noteType === 'handoff') && !relative.startsWith(outbound))
       misplacedOutputs.push(relative)
   }
   add(
@@ -341,6 +346,18 @@ export const collectKbAuditEvidence = (target: string): readonly KbEvidenceFindi
     badKeys.length ? 'WARN' : 'PASS',
     'NOTE-1b',
     badKeys.length ? `Non-snake_case frontmatter keys: ${sample(badKeys)}.` : 'Frontmatter keys use snake_case.'
+  )
+  add(
+    missingNoteType.length || legacyType.length ? 'FAIL' : 'PASS',
+    'NOTE-1c',
+    missingNoteType.length || legacyType.length
+      ? `Invalid note-type metadata: ${[
+          missingNoteType.length ? `missing note_type: ${sample(missingNoteType)}` : '',
+          legacyType.length ? `legacy type: ${sample(legacyType)}` : ''
+        ]
+          .filter(Boolean)
+          .join('; ')}.`
+      : 'Frontmatter uses note_type and does not use the legacy type field.'
   )
   add(
     misplacedOutputs.length ? 'FAIL' : 'PASS',
@@ -463,7 +480,8 @@ export const createKbSession = ({
     notes: {
       requiredFrontmatter: check('NOTE-1'),
       frontmatterFences: check('NOTE-1a'),
-      frontmatterKeys: check('NOTE-1b')
+      frontmatterKeys: check('NOTE-1b'),
+      noteType: check('NOTE-1c')
     },
     memory: { anchor: check('MEM-2') },
     links: {}

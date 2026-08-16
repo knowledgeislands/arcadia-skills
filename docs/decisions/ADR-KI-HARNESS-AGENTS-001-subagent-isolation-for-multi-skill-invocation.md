@@ -3,8 +3,7 @@ id: ADR-KI-HARNESS-AGENTS-001
 title: 'Subagent isolation for multi-skill invocation'
 date: 2026-06-23
 status: current
-type: Architecture Decision Record
-type_url: https://knowledgeislands.info/specifications/decision-records/adr
+decision_type_url: https://knowledgeislands.info/specifications/decision-records/adr
 decision_type: architecture
 ---
 

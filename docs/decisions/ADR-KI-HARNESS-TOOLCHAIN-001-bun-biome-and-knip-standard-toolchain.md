@@ -3,8 +3,7 @@ id: ADR-KI-HARNESS-TOOLCHAIN-001
 title: 'Bun, Biome, and knip standard toolchain'
 date: 2026-08-12
 status: current
-type: Architecture Decision Record
-type_url: https://knowledgeislands.info/specifications/decision-records/adr
+decision_type_url: https://knowledgeislands.info/specifications/decision-records/adr
 decision_type: architecture
 ---
 

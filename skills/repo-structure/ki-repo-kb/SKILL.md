@@ -137,4 +137,4 @@ The memory cascade and the canonical-zone Enactment gate are part of the shared 
 
 Normative detail: [the Knowledge Islands knowledge-base standard](references/standards-knowledge-base.md). Checkable criteria: [the generated rubric](references/rubric.md), enforced mechanically by `ki repo audit --skill ki-repo-kb`. After changing the catalogue under `scripts/rubric/items/`, regenerate the published catalogue with `ki dev skill rubric ki-repo-kb --write`.
 
-KI-wide frontmatter standard (universal fields and the `type` taxonomy): [the frontmatter standard](references/standards-frontmatter.md).
+KI-wide frontmatter standard (universal fields and the `note_type` taxonomy): [the frontmatter standard](references/standards-frontmatter.md).

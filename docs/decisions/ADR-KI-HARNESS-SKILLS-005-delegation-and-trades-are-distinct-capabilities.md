@@ -3,8 +3,7 @@ id: ADR-KI-HARNESS-SKILLS-005
 title: 'Delegation and trades are distinct capabilities'
 date: 2026-08-10
 status: current
-type: Architecture Decision Record
-type_url: https://knowledgeislands.info/specifications/decision-records/adr
+decision_type_url: https://knowledgeislands.info/specifications/decision-records/adr
 decision_type: architecture
 ---
 

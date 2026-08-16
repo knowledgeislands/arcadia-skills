@@ -11,51 +11,42 @@ const CODE_DIR = 'docs/decisions'
 const KB_DIR = 'Admin/Governance/Decisions'
 const REPO_CONFIG = 'ki-repo'
 const TOML = (globalThis as unknown as { Bun: { TOML: { parse(text: string): unknown } } }).Bun.TOML
-const PREFIX_TO_TYPE: Record<string, { decisionType: string; type: string; typeUrl: string }> = {
+const PREFIX_TO_TYPE: Record<string, { decisionType: string; decisionTypeUrl: string }> = {
   SDR: {
     decisionType: 'strategy',
-    type: 'Strategy Decision Record',
-    typeUrl: 'https://knowledgeislands.info/specifications/decision-records/sdr'
+    decisionTypeUrl: 'https://knowledgeislands.info/specifications/decision-records/sdr'
   },
   PDR: {
     decisionType: 'product',
-    type: 'Product Decision Record',
-    typeUrl: 'https://knowledgeislands.info/specifications/decision-records/pdr'
+    decisionTypeUrl: 'https://knowledgeislands.info/specifications/decision-records/pdr'
   },
   ADR: {
     decisionType: 'architecture',
-    type: 'Architecture Decision Record',
-    typeUrl: 'https://knowledgeislands.info/specifications/decision-records/adr'
+    decisionTypeUrl: 'https://knowledgeislands.info/specifications/decision-records/adr'
   },
   DDR: {
     decisionType: 'data',
-    type: 'Data Decision Record',
-    typeUrl: 'https://knowledgeislands.info/specifications/decision-records/ddr'
+    decisionTypeUrl: 'https://knowledgeislands.info/specifications/decision-records/ddr'
   },
   XDR: {
     decisionType: 'security',
-    type: 'Security Decision Record',
-    typeUrl: 'https://knowledgeislands.info/specifications/decision-records/xdr'
+    decisionTypeUrl: 'https://knowledgeislands.info/specifications/decision-records/xdr'
   },
   ODR: {
     decisionType: 'operations',
-    type: 'Operations Decision Record',
-    typeUrl: 'https://knowledgeislands.info/specifications/decision-records/odr'
+    decisionTypeUrl: 'https://knowledgeislands.info/specifications/decision-records/odr'
   },
   GDR: {
     decisionType: 'governance',
-    type: 'Governance Decision Record',
-    typeUrl: 'https://knowledgeislands.info/specifications/decision-records/gdr'
+    decisionTypeUrl: 'https://knowledgeislands.info/specifications/decision-records/gdr'
   },
   RDR: {
     decisionType: 'research',
-    type: 'Research Decision Record',
-    typeUrl: 'https://knowledgeislands.info/specifications/decision-records/rdr'
+    decisionTypeUrl: 'https://knowledgeislands.info/specifications/decision-records/rdr'
   },
   KDR: {
     decisionType: 'knowledge',
-    type: 'Knowledge Decision Record',
-    typeUrl: 'https://knowledgeislands.info/specifications/decision-records/kdr'
+    decisionTypeUrl: 'https://knowledgeislands.info/specifications/decision-records/kdr'
   }
 }
 const ID = /^(SDR|PDR|ADR|DDR|XDR|ODR|GDR|RDR|KDR)-([A-Z][A-Z0-9]*(?:-[A-Z][A-Z0-9]*)*)-(XXX|\d{3,})$/
@@ -71,8 +62,7 @@ export type DecisionRecord = {
   scope: string
   serial: string
   expectedDecisionType: string
-  expectedType: string
-  expectedTypeUrl: string
+  expectedDecisionTypeUrl: string
   expectedFilename: string
   content: string
   body: string
@@ -81,8 +71,7 @@ export type DecisionRecord = {
   title?: string
   date?: string
   status?: string
-  type?: string
-  typeUrl?: string
+  decisionTypeUrl?: string
   decisionType?: string
   sharedRecord: boolean
   headingId?: string
@@ -213,7 +202,7 @@ const readRecords = (directory: string, entries: readonly string[], indexFile: s
     const [, prefix, scope, serial] = identity
     const id = `${prefix}-${scope}-${serial}`
     const headingTitle = heading[2].trim()
-    const expected = PREFIX_TO_TYPE[prefix] as { decisionType: string; type: string; typeUrl: string }
+    const expected = PREFIX_TO_TYPE[prefix] as { decisionType: string; decisionTypeUrl: string }
     records.push({
       file,
       id,
@@ -221,8 +210,7 @@ const readRecords = (directory: string, entries: readonly string[], indexFile: s
       scope,
       serial,
       expectedDecisionType: expected.decisionType,
-      expectedType: expected.type,
-      expectedTypeUrl: expected.typeUrl,
+      expectedDecisionTypeUrl: expected.decisionTypeUrl,
       expectedFilename: `${id}-${slugify(headingTitle)}.md`,
       content,
       body,
@@ -231,8 +219,9 @@ const readRecords = (directory: string, entries: readonly string[], indexFile: s
       ...(frontmatterValue(frontmatter, 'title') ? { title: frontmatterValue(frontmatter, 'title') } : {}),
       ...(frontmatterValue(frontmatter, 'date') ? { date: frontmatterValue(frontmatter, 'date') } : {}),
       ...(frontmatterValue(frontmatter, 'status') ? { status: frontmatterValue(frontmatter, 'status') } : {}),
-      ...(frontmatterValue(frontmatter, 'type') ? { type: frontmatterValue(frontmatter, 'type') } : {}),
-      ...(frontmatterValue(frontmatter, 'type_url') ? { typeUrl: frontmatterValue(frontmatter, 'type_url') } : {}),
+      ...(frontmatterValue(frontmatter, 'decision_type_url')
+        ? { decisionTypeUrl: frontmatterValue(frontmatter, 'decision_type_url') }
+        : {}),
       ...(frontmatterValue(frontmatter, 'decision_type')
         ? { decisionType: frontmatterValue(frontmatter, 'decision_type') }
         : {}),

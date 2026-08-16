@@ -3,8 +3,7 @@ id: ADR-KI-HARNESS-010
 title: 'Managed hook payloads and user-environment binding'
 date: 2026-07-16
 status: current
-type: Architecture Decision Record
-type_url: https://knowledgeislands.info/specifications/decision-records/adr
+decision_type_url: https://knowledgeislands.info/specifications/decision-records/adr
 decision_type: architecture
 ---
 

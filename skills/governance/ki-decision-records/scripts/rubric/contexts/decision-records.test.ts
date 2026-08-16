@@ -31,8 +31,7 @@ ${
 title: 'Decide the record shape'
 date: 2026-07-21
 status: current
-type: Architecture Decision Record
-type_url: https://knowledgeislands.info/specifications/decision-records/adr
+decision_type_url: https://knowledgeislands.info/specifications/decision-records/adr
 decision_type: architecture`
 }
 ---
@@ -75,16 +74,14 @@ const fixture = (
 
 const rootRecord = ({ id, title, sharedRecord = false }: { id: string; title: string; sharedRecord?: boolean }) => {
   const prefix = id.slice(0, 3)
-  const type = prefix === 'GDR' ? 'Governance Decision Record' : 'Architecture Decision Record'
   const decisionType = prefix === 'GDR' ? 'governance' : 'architecture'
   return `---
 id: ${id}
 title: '${title}'
 date: 2026-07-22
 status: current
-type: ${type}
-type_url: https://knowledgeislands.info/specifications/decision-records/${prefix.toLowerCase()}
 decision_type: ${decisionType}
+decision_type_url: https://knowledgeislands.info/specifications/decision-records/${prefix.toLowerCase()}
 ${sharedRecord ? 'shared_record: true\n' : ''}---
 
 # ${id}: ${title}
@@ -150,8 +147,7 @@ describe('decision-record metadata contract', () => {
       metadata: `id: ADR-EXAMPLE-001
 title: 'Decide the record shape'
 date: 2026-07-21
-type: Architecture Decision Record
-type_url: https://knowledgeislands.info/specifications/decision-records/adr
+decision_type_url: https://knowledgeislands.info/specifications/decision-records/adr
 decision_type: architecture`,
       legacyDate: '**Date:** 2026-07-21\n'
     })
@@ -159,6 +155,21 @@ decision_type: architecture`,
     expect(audit('FILENAME-1', context as DecisionRecordsRubricContext)?.[0]?.status).toBe('VIOLATION')
     expect(audit('FM-6', context as DecisionRecordsRubricContext)?.[0]?.message).toBe('`status` is absent.')
     expect(audit('BODY-3', context as DecisionRecordsRubricContext)?.[0]?.status).toBe('VIOLATION')
+  })
+
+  test('rejects generic type metadata', () => {
+    const context = fixture('ADR-EXAMPLE-001-decide-the-record-shape.md', {
+      metadata: `id: ADR-EXAMPLE-001
+title: 'Decide the record shape'
+date: 2026-07-21
+status: current
+type: Architecture Decision Record
+type_url: https://knowledgeislands.info/specifications/decision-records/adr
+decision_type: architecture
+decision_type_url: https://knowledgeislands.info/specifications/decision-records/adr`
+    })
+
+    expect(audit('FM-3', context as DecisionRecordsRubricContext)?.[0]?.status).toBe('VIOLATION')
   })
 
   test('reports unparseable Markdown files in the selected decisions directory', () => {
@@ -191,7 +202,7 @@ describe('new collection adoption root', () => {
     expect(audit('ROOT-1', context as DecisionRecordsRubricContext)?.[0]?.status).toBe('PASS')
   })
 
-  test('rejects a marked collection whose first record has an unrelated type, title, or serial', () => {
+  test('rejects a marked collection whose first record has an unrelated classification, title, or serial', () => {
     const wrongTitle = { ...adoption, file: 'GDR-EXAMPLE-001-governance-baseline.md', title: 'Governance baseline' }
     const wrongSerial = { ...adoption, file: 'GDR-EXAMPLE-002-adopting-decision-records.md', id: 'GDR-EXAMPLE-002' }
 

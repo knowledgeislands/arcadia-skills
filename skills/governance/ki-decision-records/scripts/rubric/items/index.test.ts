@@ -111,8 +111,7 @@ id: ${id}
 title: '${title}'
 date: 2026-07-27
 status: current
-type: Architecture Decision Record
-type_url: https://knowledgeislands.info/specifications/decision-records/adr
+decision_type_url: https://knowledgeislands.info/specifications/decision-records/adr
 decision_type: architecture
 ---
 

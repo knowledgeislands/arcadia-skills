@@ -3,8 +3,7 @@ id: ODR-KI-HARNESS-001
 title: 'Scoped lifecycle operations'
 date: 2026-07-20
 status: current
-type: Operations Decision Record
-type_url: https://knowledgeislands.info/specifications/decision-records/odr
+decision_type_url: https://knowledgeislands.info/specifications/decision-records/odr
 decision_type: operations
 ---
 

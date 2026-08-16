@@ -3,8 +3,7 @@ id: ADR-KI-HARNESS-007
 title: 'Uniform skill modes, bare mode scripts, and a coverage-scoped aggregate gate'
 date: 2026-07-12
 status: current
-type: Architecture Decision Record
-type_url: https://knowledgeislands.info/specifications/decision-records/adr
+decision_type_url: https://knowledgeislands.info/specifications/decision-records/adr
 decision_type: architecture
 ---
 

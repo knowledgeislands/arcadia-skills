@@ -3,8 +3,7 @@ id: ADR-KI-HARNESS-TOOLCHAIN-003
 title: 'Proxy local MCP servers behind mcporter'
 date: 2026-06-24
 status: current
-type: Architecture Decision Record
-type_url: https://knowledgeislands.info/specifications/decision-records/adr
+decision_type_url: https://knowledgeislands.info/specifications/decision-records/adr
 decision_type: architecture
 ---
 

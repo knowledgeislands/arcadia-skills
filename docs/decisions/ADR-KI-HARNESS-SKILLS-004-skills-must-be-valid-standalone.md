@@ -3,8 +3,7 @@ id: ADR-KI-HARNESS-SKILLS-004
 title: 'Skills must be valid standalone'
 date: 2026-06-23
 status: current
-type: Architecture Decision Record
-type_url: https://knowledgeislands.info/specifications/decision-records/adr
+decision_type_url: https://knowledgeislands.info/specifications/decision-records/adr
 decision_type: architecture
 ---
 

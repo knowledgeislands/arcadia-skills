@@ -21,11 +21,11 @@ Tracked sources for Mode REFRESH. Re-fetch before proposing changes to the forma
 
 REFRESH last run **2026-08-12**.
 
-- **Nygard ADR format** — current primary page remains available. It recommends a short single-decision record with Context, active-voice Decision, Status, and Consequences; the house living-record model intentionally diverges from its historical-status and supersession treatment.
+- **Nygard ADR format** — current primary page remains available. It recommends a short single-decision record with Context, active-voice Decision, Status, and Consequences; the house living-record model intentionally diverges from its historical-status treatment.
 - **ADR GitHub community** — remains supporting community evidence for optional record patterns, not authority for the house taxonomy, serial scope, or living-record policy.
-- **House metadata** — the nine-prefix taxonomy, `type_url`, and living-record policy remain house conventions. Current primary discovery did not verify public `type_url` targets, so the standard now labels them non-authoritative house reference metadata rather than published external specifications.
+- **House metadata** — the nine-prefix taxonomy, `decision_type_url`, and living-record policy remain house conventions. Current primary discovery did not verify public `decision_type_url` targets, so the standard labels them non-authoritative house reference metadata rather than published external specifications.
 
-External sources are current. **Internal note:** the house DR format moved to a **living present-state record** — the former Status lifecycle, Mutability axis, supersession chain, and `## Changelog` were dropped, and `SKILL.md`, the Decision Records standard, the rubric, and the checker were realigned together. Serial uniqueness remains per-prefix within scope.
+External sources are current. **Internal note:** the house DR format is a **living present-state record** — lifecycle axes, historical narrative, supersession chains, and `## Changelog` are excluded, and `SKILL.md`, the Decision Records standard, the rubric, and the checker align on that form. Serial uniqueness remains per-prefix within scope.
 
 Open watch-items:
 

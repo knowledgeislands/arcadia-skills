@@ -61,7 +61,7 @@ Rules, following the `.ki-config.toml` contract:
 
 ## Session digest structure
 
-Destination `-/_DIGESTS/<UTC timestamp> <Short Topic>.md` (timestamp `YYYY-MM-DDTHHMMSSZ`; topic in Title Case). Frontmatter `type: session-digest` and `retain_until: YYYY-MM-DD` (default 30 days from the write date). Body sections:
+Destination `-/_DIGESTS/<UTC timestamp> <Short Topic>.md` (timestamp `YYYY-MM-DDTHHMMSSZ`; topic in Title Case). Frontmatter `note_type: session-digest` and `retain_until: YYYY-MM-DD` (default 30 days from the write date). Body sections:
 
 - **Context** - what the session was about.
 - **Decisions** - choices made and their rationale.

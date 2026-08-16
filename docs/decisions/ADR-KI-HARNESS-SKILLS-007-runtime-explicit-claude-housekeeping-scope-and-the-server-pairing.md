@@ -3,8 +3,7 @@ id: ADR-KI-HARNESS-SKILLS-007
 title: 'Runtime-explicit Claude housekeeping scope and the server pairing'
 date: 2026-07-09
 status: current
-type: Architecture Decision Record
-type_url: https://knowledgeislands.info/specifications/decision-records/adr
+decision_type_url: https://knowledgeislands.info/specifications/decision-records/adr
 decision_type: architecture
 ---
 
