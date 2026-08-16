@@ -4,10 +4,10 @@ title: Leverage runtime model tiers
 area: RTP
 theme: runtime-portability
 horizon: next
-status: ready
+status: awaiting-review
 blocks: []
 blocked_by: []
-baseline_ref: null
+baseline_ref: fd1a6cb89bc34d5785aed956114d05fa37c74a21
 ---
 
 ## Goal
@@ -38,13 +38,13 @@ A run passes only when every case-specific assertion, evidence requirement, auth
 
 ## Steps
 
-- [ ] Record the current official OpenAI model, reasoning-effort, and multi-agent guidance with a review date alongside the portable tokenomics and delegation contracts.
-- [ ] Map the Sol, Terra, and Luna family to portable purposes as runtime evidence, identifying where one-to-one bindings are insufficient or would become stale.
-- [ ] Define the smallest Codex-owned resolver for main-thread orchestration, judgment workers, and mechanical workers without leaking provider names into portable governance.
-- [ ] Add the three fixed evaluation fixtures and an evidence schema covering assertions, authority, return shape, latency, available token usage, and correction count; require separate user authority before live model calls.
-- [ ] Exercise the fixed cases twice across Sol, Terra, and Luna at the common baseline effort, test one lower effort only for a passing candidate, and publish the raw outcomes and limitations without a composite score.
-- [ ] Update only the relevant Codex tokenomics and subagent surfaces plus refresh sources, with focused tests for any new mechanical resolver; route a proven portable gap separately.
-- [ ] Verify that repository overrides remain advisory and that execution, delegation, and spending still require their existing authority gates.
+- [x] Record the current official OpenAI model, reasoning-effort, and multi-agent guidance with a review date alongside the portable tokenomics and delegation contracts.
+- [x] Map the Sol, Terra, and Luna family to portable purposes as runtime evidence, identifying where one-to-one bindings are insufficient or would become stale.
+- [x] Define the smallest Codex-owned resolver for main-thread orchestration, judgment workers, and mechanical workers without leaking provider names into portable governance.
+- [x] Add the three fixed evaluation fixtures and an evidence schema covering assertions, authority, return shape, latency, available token usage, and correction count; require separate user authority before live model calls.
+- [x] Exercise the fixed cases twice across Sol, Terra, and Luna at the common baseline effort, test one lower effort only for a passing candidate, and publish the raw outcomes and limitations without a composite score.
+- [x] Update only the relevant Codex tokenomics and subagent surfaces plus refresh sources, with focused tests for any new mechanical resolver; route a proven portable gap separately.
+- [x] Verify that repository overrides remain advisory and that execution, delegation, and spending still require their existing authority gates.
 
 ## Files touched
 
@@ -88,6 +88,40 @@ Runtime-specific guidance may be updated only with reproducible evaluation evide
 ### Roadmap
 
 Any confirmed model-binding, measurement, or cross-runtime policy work is captured as explicit follow-on work.
+
+## Review
+
+### Delivered
+
+Added Codex-local, dated model-family evidence and a no-live-call evaluation protocol.
+
+The portable tokenomics taxonomy and all runtime-default, spending, and delegation authority remain unchanged.
+
+### Summary of changes
+
+Added a private role-to-purpose resolver, focused tests, and standards guidance that keeps repository bindings opaque and advisory.
+
+The resolver maps orchestration to inherited frontier purpose, judgment to reasoning evidence, and mechanical work to fast evidence without selecting an effective runtime model.
+
+### Verification
+
+Focused resolver tests, `bunx tsc --noEmit`, `bunx rumdl check`, `ki repo audit --skill ki-tokenomics --repo . --concise`, `ki repo audit --skill ki-tokenomics-codex --repo . --concise`, and the aggregate `ki-skills` audit passed.
+
+### Outstanding concerns
+
+The dated family positioning was not live-revalidated during implementation.
+
+Any live evaluation, default selection, model availability claim, or spending decision requires separate user authority.
+
+### Post-change review
+
+`ki-tokenomics-codex` owns this runtime-local evidence; `ki-tokenomics` remains the portable-policy producer.
+
+No consumer may treat the resolver as effective-session proof or a delegation authorisation.
+
+### Mini recap
+
+Codex model-tier evidence is now explicit, testable, and advisory; adopting a default is intentionally deferred.
 
 ## Discussion
 

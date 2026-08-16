@@ -4,10 +4,10 @@ title: Define Stop checkpoint hook
 area: RTP
 theme: runtime-portability
 horizon: now
-status: ready
+status: awaiting-review
 blocks: []
 blocked_by: []
-baseline_ref: null
+baseline_ref: 98e7b896ffd39dd9af0f317033a6514b7a87f89c
 ---
 
 ## Goal
@@ -46,13 +46,13 @@ The first delivery is reminder-only. A Stop adapter may report that one already-
 
 ## Steps
 
-- [ ] Run one contained fresh-agent reconstruction trial against a representative valid checkpoint, recording whether task, constraints, current state, and next action can be recovered without transcript or vendor-session access; stop and route a checkpoint-contract follow-up if it fails.
-- [ ] Inventory Claude Code and Codex Stop-event contracts independently, including payload identity, repeated invocation, cancellation or interruption semantics, timeout and exit behaviour, and writable-state boundaries; retain primary-source evidence for every claimed capability and omit an unsupported adapter.
-- [ ] Define the opt-in configuration, selected-checkpoint rule, and reminder-only action contract; do nothing when repository identity, active-thread selection, checkpoint validity, or event safety is uncertain.
-- [ ] Define the relationship to `ki-recap` and portable checkpoints: recap remains the judgment-led durable summary, while the hook may only use an already-selected active record and must never fabricate decisions, work status, or prose from a transcript.
-- [ ] Implement each isolated reminder adapter only after its native event contract is verified; keep shared checkpoint validation runtime-neutral and do not assume a Claude executable works in Codex.
-- [ ] Make successful execution quiet by default and failure actionable but compact; document that response verbosity belongs to a separate precedence-aware policy, not hook output filtering.
-- [ ] Add fixture-backed tests for absent opt-in, unknown repository, no selected checkpoint, repeated Stop events, interrupted work, malformed records, a safe no-op, and each supported adapter's native invocation.
+- [x] Run one contained fresh-agent reconstruction trial against a representative valid checkpoint, recording whether task, constraints, current state, and next action can be recovered without transcript or vendor-session access; stop and route a checkpoint-contract follow-up if it fails.
+- [x] Inventory Claude Code and Codex Stop-event contracts independently, including payload identity, repeated invocation, cancellation or interruption semantics, timeout and exit behaviour, and writable-state boundaries; retain primary-source evidence for every claimed capability and omit an unsupported adapter.
+- [x] Define the opt-in configuration, selected-checkpoint rule, and reminder-only action contract; do nothing when repository identity, active-thread selection, checkpoint validity, or event safety is uncertain.
+- [x] Define the relationship to `ki-recap` and portable checkpoints: recap remains the judgment-led durable summary, while the hook may only use an already-selected active record and must never fabricate decisions, work status, or prose from a transcript.
+- [x] Implement each isolated reminder adapter only after its native event contract is verified; keep shared checkpoint validation runtime-neutral and do not assume a Claude executable works in Codex.
+- [x] Make successful execution quiet by default and failure actionable but compact; document that response verbosity belongs to a separate precedence-aware policy, not hook output filtering.
+- [x] Add fixture-backed tests for absent opt-in, unknown repository, no selected checkpoint, repeated Stop events, interrupted work, malformed records, a safe no-op, and each supported adapter's native invocation.
 
 ## Files touched
 
@@ -94,6 +94,38 @@ Any supported opt-in hook requires concise runtime-specific setup guidance; no u
 ### Roadmap
 
 The fresh-agent reconstruction trial and any runtime-adapter delivery remain explicit follow-on work.
+
+## Review
+
+### Delivered
+
+Defined the portable, opt-in boundary for a runtime reminder consumer of one already human-selected active checkpoint.
+
+No native Stop hook, runtime configuration, session access, recap invocation, or checkpoint mutation was delivered.
+
+### Summary of changes
+
+Updated `ki-checkpoint` guidance and standards so a future runtime adapter must receive an explicit thread name from its own configuration and otherwise perform a quiet no-op.
+
+Added a closed-schema fixture that rejects portable `selected:` metadata, preserving runtime-local selection authority.
+
+### Verification
+
+`bun test skills/governance/ki-checkpoint/scripts/rubric/contexts/checkpoints.test.ts` passed with four tests.
+
+`bunx rumdl check` on the changed Markdown and `ki repo audit --skill ki-checkpoint --repo . --concise` passed.
+
+### Outstanding concerns
+
+Native Stop-event semantics, registration, interruption handling, and fresh-agent reconstruction remain unproven and intentionally outside this portable delivery.
+
+### Post-change review
+
+`ki-checkpoint` is the producer of the portable record contract; any future runtime adapter is a separately authorised consumer and must prove its own event contract before acting.
+
+### Mini recap
+
+The shared checkpoint contract now fails closed around selection and reminders; native runtime work remains a separate decision.
 
 ## Discussion
 
