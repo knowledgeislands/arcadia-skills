@@ -4,7 +4,7 @@ title: Define Stop checkpoint hook
 area: RTP
 theme: runtime-portability
 horizon: now
-status: awaiting-review
+status: done
 blocks: []
 blocked_by: []
 baseline_ref: 98e7b896ffd39dd9af0f317033a6514b7a87f89c
@@ -126,6 +126,12 @@ Native Stop-event semantics, registration, interruption handling, and fresh-agen
 ### Mini recap
 
 The shared checkpoint contract now fails closed around selection and reminders; native runtime work remains a separate decision.
+
+## Done
+
+Approved on 2026-08-16.
+
+The portable checkpoint reminder boundary is accepted; any native runtime adapter remains separate, authority-gated work.
 
 ## Discussion
 

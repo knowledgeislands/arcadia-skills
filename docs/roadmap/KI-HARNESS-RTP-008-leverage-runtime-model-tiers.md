@@ -4,7 +4,7 @@ title: Leverage runtime model tiers
 area: RTP
 theme: runtime-portability
 horizon: next
-status: awaiting-review
+status: done
 blocks: []
 blocked_by: []
 baseline_ref: fd1a6cb89bc34d5785aed956114d05fa37c74a21
@@ -122,6 +122,12 @@ No consumer may treat the resolver as effective-session proof or a delegation au
 ### Mini recap
 
 Codex model-tier evidence is now explicit, testable, and advisory; adopting a default is intentionally deferred.
+
+## Done
+
+Approved on 2026-08-16.
+
+The advisory Codex model-tier evidence is accepted; any live evaluation or default-selection work remains separately authorised.
 
 ## Discussion
 
