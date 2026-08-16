@@ -14,6 +14,7 @@ Mode REFRESH re-fetches these sources, reconciles them with the standard and str
 | WRANGLER | [Wrangler configuration][wrangler] | Worker identity, routes, assets, and observability | 2026-08-14 |
 | DOMAIN | [Workers Custom Domains][domains] | Dashboard path and `custom_domain` routes | 2026-08-14 |
 | DEV | [workers.dev][workers-dev] | `<name>.<account-subdomain>.workers.dev` URL syntax | 2026-08-14 |
+| DNS | [Partial setup][dns-partial] · [Subdomain setup][dns-subdomain] | Plan gating for off-Cloudflare zone setups | 2026-08-16 |
 
 The dashboard navigation name **Workers & Pages** remains correct in operator instructions even though Pages is not the deployment target for new projects.
 
@@ -37,4 +38,6 @@ REFRESH last ran **2026-08-14**. Current Cloudflare documentation confirms Worke
 [builds]: https://developers.cloudflare.com/workers/ci-cd/builds/configuration/
 [domains]: https://developers.cloudflare.com/workers/configuration/routing/custom-domains/
 [workers-dev]: https://developers.cloudflare.com/workers/configuration/routing/workers-dev/
+[dns-partial]: https://developers.cloudflare.com/dns/zone-setups/partial-setup/
+[dns-subdomain]: https://developers.cloudflare.com/dns/zone-setups/subdomain-setup/
 [wrangler]: https://developers.cloudflare.com/workers/wrangler/configuration/
