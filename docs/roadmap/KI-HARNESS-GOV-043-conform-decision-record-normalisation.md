@@ -4,10 +4,10 @@ area: GOV
 title: Conform Decision Record normalisation
 theme: governance-consistency
 horizon: next
-status: draft
+status: in-progress
 blocks: []
-blocked_by: [KI-HARNESS-GOV-040]
-baseline_ref: null
+blocked_by: []
+baseline_ref: fd1925db8eeb37adf298dc3bfc1ff4e3ab7b0b37
 ---
 
 ## Goal
