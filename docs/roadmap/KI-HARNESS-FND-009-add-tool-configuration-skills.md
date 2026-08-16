@@ -34,18 +34,20 @@ Keep shared guidance in a common place only where the tools genuinely have the s
 
 ### Known dependencies
 
-`tools-ki` is the initial implementation reference, not an authority to copy wholesale. The skills must remain compatible with the established tool-workspace boundary: project-local configuration may compose repositories and declared stores, but it must not redefine canonical repository identity, stores, or local-user configuration.
+The initial scope is limited to the two reference tools, VS Code and Zed. `tools-ki` is evidence for their current tracked files, not an authority to copy its settings wholesale or to choose the reusable contract. The Harness owns any resulting skill content and semantics; `tools-ki` owns its host commands and its own project configuration.
+
+The skills must remain compatible with the established tool-workspace boundary: project-local configuration may consume a repository's declared structure, but it must not redefine canonical repository identity, declared stores, or local-user configuration. If the selected contract needs a `ki` command or host activation behaviour, capture a separate receiver-owned `tools-ki` work item through `ki-trades`; this item does not authorise that change.
 
 ### Decisions still needed
 
-Confirm the canonical names and placement, whether each skill owns a closed settings file or a declared key-level merge, and the exact initial keys. Decide whether formatter integration is conditional on `ki-engineering`, how an unavailable VS Code extension or community-maintained Zed Biome extension is represented, and which `.editorconfig`-owned behaviours must be omitted as duplication.
+Confirm the canonical names and placement, whether each skill owns a closed settings file or a declared key-level merge, and the exact initial keys. Decide whether formatter integration is conditional on `ki-engineering`, how unavailable extensions or community-maintained formatter support are represented, and which `.editorconfig`-owned behaviours must be omitted as duplication.
 
 The next planning review should compare two explicit options:
 
 - `ki-vscode` and `ki-zed` under `skills/environment/`, each governing one project settings file and preserving unrelated keys through an exact key-level contract.
 - `ki-editor-vscode` and `ki-editor-zed` under the same concern, making the editor relationship more explicit at the cost of longer names.
 
-For either option, user preferences, extension installation, global settings, formatter selection without a declared compatible toolchain, and machine paths remain excluded.
+For either option, user preferences, extension installation, global settings, formatter selection without a declared compatible toolchain, and machine paths remain excluded. Selecting either naming option is a Harness decision; it must not be inferred from the two `tools-ki` reference files.
 
 ### Promotion conditions
 
@@ -57,30 +59,36 @@ Promote when the names, key-level versus whole-file ownership, conditional `ki-e
 
 The reference files are only `.vscode/settings.json` and `.zed/settings.json`, and they are not a coherent policy: VS Code selects Biome for JavaScript, TypeScript, and JSON, while Zed selects Prettier globally. Current primary editor documentation confirms project/workspace settings and the file-hygiene keys, but Zed's Biome support requires a community extension and its `.editorconfig` support already owns line endings. The plan must therefore choose whether these skills provide only non-duplicative editor behaviour or conditionally compose with `ki-engineering`; it cannot copy the two reference files wholesale.
 
+The evidence establishes the source boundary but leaves three implementation decisions unresolved: exact initial keys, whole-file versus key-level ownership, and the formatter/extension policy. Until they are selected together, neither a skill name nor a verification fixture is reviewable enough for Ready.
+
 ## Steps
 
-- [ ] Inventory the tracked VS Code and Zed configuration in `tools-ki`, classifying each setting by ownership, portability, and whether it requires its native editor to validate.
-- [ ] Select the exact safe defaults, tracked files, skill names, and placement for each tool; reject user preferences, machine paths, and repository-identity claims from the reusable contract.
+- [ ] Inventory the tracked VS Code and Zed configuration in `tools-ki`, classifying each setting by ownership, portability, native-editor validation, and the source that supports retaining or excluding it.
+- [ ] Select and record the exact safe defaults, tracked files, skill names, and placement for each tool; decide whole-file versus key-level ownership, formatter/extension treatment, and `.editorconfig` exclusions together. Reject user preferences, machine paths, and repository-identity claims from the reusable contract.
 - [ ] Create the two optional tool-configuration skills, keeping common guidance minimal and each tool's defaults, file conventions, and validation in its own skill.
 - [ ] Add a representative repository fixture or equivalent file-level evidence that proves explicit activation is safe while an unrelated repository remains unaffected without either editor installed.
-- [ ] Audit the new skill roots, record any excluded setting and its owner, and route any `tools-ki` command work back to its owning repository.
+- [ ] Audit the new skill roots, record every excluded setting and its owner, and create a `ki-trades` submission only if the selected contract identifies receiver-owned `tools-ki` command work.
 
 ## Files touched
 
 - The two selected tool-configuration skill roots and their scoped references, rubric material, and tests
+- A fixture or equivalent file-level evidence that represents explicit activation without an installed editor
 - This work item
 
-No user-level editor configuration, machine-local state, portable `ki-repo` metadata, or `tools-ki` implementation changes are in scope.
+No user-level editor configuration, machine-local state, portable `ki-repo` metadata, or `tools-ki` implementation changes are in scope. A receiver-owned `tools-ki` record may be submitted only after this item identifies a necessary host change; it remains outside this item's implementation.
 
 ## Verify
 
-- Each retained default has an explicit tracked-file, ownership, and portability classification.
+- Each retained or excluded reference setting has an explicit tracked-file, owner, portability, and evidence classification.
 - A repository that activates either skill receives only the declared project-local configuration; one that does not activate it receives no editor-specific requirement.
-- The new skills' native checks, `ki repo audit --skill ki-skills --repo .`, `bun run test`, and `bunx tsc --noEmit` pass.
+- The fixture parses the selected configuration format and proves repeated application is preserving and idempotent without either editor installed.
+- The selected native, file-level, and skill checks are named before implementation; `ki repo audit --skill ki-skills --repo .`, `bun run test`, and `bunx tsc --noEmit` pass.
 
 ## Dependencies / blocks
 
-The `tools-ki` configuration is evidence, not a dependency that grants copying authority. The selection of safe defaults, exact tracked files, and the skill names remains the immediate planning decision; do not mark this item Ready until it is recorded and reviewable.
+`tools-ki` configuration is evidence, not a dependency that grants copying authority. The immediate blocker is the unresolved selection of exact safe defaults, tracked-file ownership, names, formatter/extension treatment, and verification fixture. Do not mark this item Ready until those choices are recorded and reviewable.
+
+No durable delegation packet is appropriate while this record remains Draft: no implementation is approved and no worker has authority to select the unresolved policy. A later Ready item may add a packet only if its selected implementation needs a durable high-risk hand-off.
 
 ## Documentation impact
 
@@ -94,11 +102,11 @@ No behaviour-level product contract changes; any future editor configuration rem
 
 ### Guides
 
-If promoted, the selected project-local configuration needs concise contributor guidance; user-level preferences remain out of scope.
+If promoted, the selected project-local configuration needs concise contributor guidance, including the opt-in boundary and excluded user-level preferences. Any host command is documented by `tools-ki` only after its owner accepts a separate work item.
 
 ### Roadmap
 
-The tool-boundary decision and any receiver-owned `tools-ki` work remain explicit follow-on work.
+The locked tool-policy decision remains in this record. Any receiver-owned `tools-ki` command work is a separately coded trade and roadmap item, not a hidden dependency.
 
 ## Discussion
 
