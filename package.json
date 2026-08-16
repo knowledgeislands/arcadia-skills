@@ -46,9 +46,9 @@
   },
   "scripts": {
     "clean": "rm -rf node_modules",
-    "ki:binding:build-plugin": "bun skills/environment/ki-binding-claude/scripts/build-plugin.ts",
+    "ki:binding:claude:build-plugin": "bun skills/environment/ki-binding-claude/scripts/build-plugin.ts",
     "ki:deps:update": "bun update --latest",
-    "ki:eval": "bun evals/harness.ts",
+    "ki:harness:eval": "bun evals/harness.ts",
     "prepare": "husky",
     "test": "bun test --isolate --max-concurrency=1 ./skills ./hooks"
   },

@@ -67,7 +67,7 @@ An empty shelf is valid. Its README distinguishes intentional reserved structure
 
 The source root also contains physical `CLAUDE.md`, `ROADMAP.md`, and `.ki-config.toml` files. Symlinked, dangling, directory-valued, device, or unreadable evidence is unsafe and does not satisfy a physical-file or physical-directory requirement.
 
-The source harness may have a `package.json` for its own development and verification. Package scripts are conveniences governed by `ki-engineering`; they are not installation, activation, or governance entry points and are not required by this standard.
+The source harness may have a `package.json` for its own development and verification. `ki:harness:eval` is this standard's exact source-harness evaluation claim: it runs `bun evals/harness.ts` and is neither an installation, activation, nor governance entry point. Other package-script ownership and complete-set validation belong to `ki-engineering`.
 
 ## Skill capability identity
 

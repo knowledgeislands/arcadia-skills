@@ -59,6 +59,7 @@ const capabilityPublicationItem = () => {
 test('the catalogue preserves the current compatible-harness criteria', () => {
   expect(catalogue.contract).toBe(1)
   expect(catalogue.name).toBe('ki-repo-harness')
+  expect(catalogue.packageScripts).toEqual(['ki:harness:eval'])
   expect(catalogue.createSession).toBeFunction()
   expect(catalogue.families.map((family) => family.code)).toEqual([
     'CAP',
