@@ -6,7 +6,7 @@ theme: governance-consistency
 horizon: next
 status: draft
 blocks: []
-blocked_by: [KI-HARNESS-GOV-040]
+blocked_by: []
 baseline_ref: null
 ---
 
@@ -28,20 +28,20 @@ Decide the policy and its migration only. Do not renumber existing Specification
 
 Serial scope and applicability are explicitly unresolved in the review record. The checker already fails closed for malformed local evidence and duplicate prefix ownership, but cannot establish the intended serial sequence or activation boundary without a governing choice.
 
-The work is fully shapeable as two independently reconsiderable governance decisions, but it cannot become Ready until GOV-040 fixes the Decision Record metadata authority used to publish them. Once that blocker is Done, `GDR-KI-HARNESS-009` will own Specification serial identity and `GDR-KI-HARNESS-010` will own capability applicability.
+The work is fully shapeable as two independently reconsiderable governance decisions, but it cannot become Ready until the corpus inventory supplies the migration evidence and both decisions are approved. `GDR-KI-HARNESS-008` will own Specification serial identity and `GDR-KI-HARNESS-009` will own capability applicability.
 
 ## Steps
 
 - [ ] Inventory the retained Specification corpus by file, prefix, serial, multi-prefix ownership, repository declaration, and incidental-directory state; record the migration count for each alternative.
-- [ ] Write `GDR-KI-HARNESS-009` to choose global, per-prefix, or per-file serial identity and define exactly how multi-prefix files participate.
-- [ ] Write `GDR-KI-HARNESS-010` to choose whether an undeclared incidental `docs/specs/` directory is not applicable or a repository conformance failure, while preserving malformed declared evidence as a failure.
+- [ ] Write `GDR-KI-HARNESS-008` to choose global, per-prefix, or per-file serial identity and define exactly how multi-prefix files participate.
+- [ ] Write `GDR-KI-HARNESS-009` to choose whether an undeclared incidental `docs/specs/` directory is not applicable or a repository conformance failure, while preserving malformed declared evidence as a failure.
 - [ ] Update the Decision Records index and define one clean-cut migration for identifiers, indexes, host selection, and fixtures with no dual semantics or compatibility fallback.
 - [ ] Capture separate implementation work for the checker and estate only after both decisions are approved.
 
 ## Files touched
 
-- `docs/decisions/GDR-KI-HARNESS-009-specification-serial-identity.md`
-- `docs/decisions/GDR-KI-HARNESS-010-specification-capability-applicability.md`
+- `docs/decisions/GDR-KI-HARNESS-008-specification-serial-identity.md`
+- `docs/decisions/GDR-KI-HARNESS-009-specification-capability-applicability.md`
 - `docs/decisions/README.md`
 - This work item
 - A separate roadmap item only when the approved decisions require implementation
@@ -55,13 +55,13 @@ The work is fully shapeable as two independently reconsiderable governance decis
 
 ## Dependencies / blocks
 
-Depends on the `ki-specs` review record and is blocked by GOV-040's Decision Record metadata authority decision. It becomes Ready only after that record is Done and the next two planned GDR serials remain available. It blocks dependent identity and applicability implementation; it does not reopen the completed review.
+Depends on the `ki-specs` review record. It becomes Ready only after the corpus inventory is recorded and the two pending decisions are approved. It blocks dependent identity and applicability implementation; it does not reopen the completed review.
 
 ## Documentation impact
 
 ### Decision Records
 
-The resulting specification-identity authority requires a durable decision record after GOV-040 resolves the shared Knowledge metadata baseline.
+The resulting specification-identity authority requires durable decision records; GOV-040 has resolved the shared Knowledge metadata baseline.
 
 ### Specifications
 
@@ -73,7 +73,7 @@ No guide change is planned until the decision identifies the contributor-facing 
 
 ### Roadmap
 
-GOV-040 remains the prerequisite; any migration or checker change becomes explicit follow-on work.
+The GOV-040 prerequisite is resolved; any migration or checker change becomes explicit follow-on work after the two pending decisions and corpus inventory.
 
 ## Discussion
 
