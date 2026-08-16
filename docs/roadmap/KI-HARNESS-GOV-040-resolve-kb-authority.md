@@ -4,7 +4,7 @@ area: GOV
 title: Resolve Knowledge Base authority
 theme: governance-consistency
 horizon: next
-status: awaiting-review
+status: done
 blocks: [KI-HARNESS-GOV-041, KI-HARNESS-GOV-043]
 blocked_by: []
 baseline_ref: 1219075b4d375be45c1b70d64a358b1b906dd343
@@ -99,6 +99,12 @@ The delivered policy matches the approved boundary: each field and authority cla
 ### Mini recap
 
 GOV-040 resolves the KB/Decision Record/principal-authority collision and provides the safe local contract. Verification is recorded above; GOV-043 is the only follow-on for estate normalisation. No new durable learning is proposed beyond the governing GDR and updated skill standards.
+
+## Done
+
+Accepted on 2026-08-16.
+
+The metadata-authority policy and local enforcement are complete; GOV-043 remains the separate estate-normalisation follow-on.
 
 ## Discussion
 
