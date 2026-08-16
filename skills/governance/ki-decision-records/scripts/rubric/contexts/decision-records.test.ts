@@ -392,4 +392,52 @@ describe('decision-record index links', () => {
       ])
     )
   })
+
+  test('repairs only canonical ordered entries while preserving every other index line idempotently', () => {
+    const root = mkdtempSync(join(tmpdir(), 'ki-decision-records-index-conform-'))
+    temporaryRoots.push(root)
+    const directory = join(root, 'docs', 'decisions')
+    mkdirSync(directory, { recursive: true })
+    writeFileSync(join(root, '.ki-config.toml'), '[skills.ki-decision-records]\n')
+    writeFileSync(
+      join(directory, 'ADR-EXAMPLE-001-first-decision.md'),
+      rootRecord({ id: 'ADR-EXAMPLE-001', title: 'First decision' })
+    )
+    writeFileSync(
+      join(directory, 'ADR-EXAMPLE-002-not-the-canonical-title.md'),
+      rootRecord({ id: 'ADR-EXAMPLE-002', title: 'Second decision' })
+    )
+    const original =
+      '# Decisions\n\n' +
+      'Introductory prose stays untouched.\n\n' +
+      '1. [ADR-EXAMPLE-001](wrong.md) — First decision.\n' +
+      '2. [ADR-EXAMPLE-002](wrong-too.md) — Second decision.\n' +
+      '- [ADR-EXAMPLE-001](unordered-wrong.md) — a non-index reference.\n' +
+      'See [ADR-EXAMPLE-001](prose-wrong.md) for context.\n'
+    writeFileSync(join(directory, 'README.md'), original)
+
+    const session = createDecisionRecordsSession({
+      mode: 'conform',
+      repository: root,
+      userHome: tmpdir(),
+      configuration: {}
+    })
+    const context = session.subjects[0]?.context() as DecisionRecordsRubricContext
+
+    conform('INDEX-4', context)
+    conform('INDEX-4', context)
+
+    expect(session.proposal().writes).toEqual([
+      {
+        path: 'docs/decisions/README.md',
+        content:
+          '# Decisions\n\n' +
+          'Introductory prose stays untouched.\n\n' +
+          '1. [ADR-EXAMPLE-001](ADR-EXAMPLE-001-first-decision.md) — First decision.\n' +
+          '2. [ADR-EXAMPLE-002](wrong-too.md) — Second decision.\n' +
+          '- [ADR-EXAMPLE-001](unordered-wrong.md) — a non-index reference.\n' +
+          'See [ADR-EXAMPLE-001](prose-wrong.md) for context.\n'
+      }
+    ])
+  })
 })

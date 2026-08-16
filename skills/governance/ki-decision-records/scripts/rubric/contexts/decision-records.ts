@@ -52,6 +52,8 @@ const PREFIX_TO_TYPE: Record<string, { decisionType: string; decisionTypeUrl: st
 const ID = /^(SDR|PDR|ADR|DDR|XDR|ODR|GDR|RDR|KDR)-([A-Z][A-Z0-9]*(?:-[A-Z][A-Z0-9]*)*)-(XXX|\d{3,})$/
 const INDEX_ENTRY =
   /^\s*(\d+)\.\s+\[((?:SDR|PDR|ADR|DDR|XDR|ODR|GDR|RDR|KDR)-[A-Z][A-Z0-9-]+-(?:XXX|\d{3,}))\]\(([^)]+)\)/
+const INDEX_ENTRY_TARGET =
+  /^(\s*\d+\.\s+\[((?:SDR|PDR|ADR|DDR|XDR|ODR|GDR|RDR|KDR)-[A-Z][A-Z0-9-]+-(?:XXX|\d{3,}))\]\()([^)]+)(\).*)$/
 const DECISION_LINK = /\[((?:SDR|PDR|ADR|DDR|XDR|ODR|GDR|RDR|KDR)-[A-Z][A-Z0-9-]+-(?:XXX|\d{3,}))\]\(([^)]+)\)/
 const HEADING = /^#\s+((?:SDR|PDR|ADR|DDR|XDR|ODR|GDR|RDR|KDR)-[A-Z][A-Z0-9-]+-(?:XXX|\d{3,})):\s+(.+)$/m
 
@@ -109,6 +111,7 @@ export type IndexRubricContext = {
   records: readonly DecisionRecord[]
   outOfOrderIds: readonly { id: string; previous: number }[]
   appendMissingEntries?: () => void
+  repairCanonicalLinks?: () => void
 }
 
 export type DecisionRecordsRubricContext = {
@@ -122,7 +125,8 @@ export type DecisionRecordsRubricContext = {
 }
 
 type IndexDraft = {
-  appendMissingEntries: (records: readonly DecisionRecord[], indexCounts: ReadonlyMap<string, number>) => void
+  appendMissingEntries: (records: readonly DecisionRecord[]) => void
+  repairCanonicalLinks: (records: readonly DecisionRecord[]) => void
   proposal: () => ConformWrite | undefined
 }
 
@@ -298,18 +302,39 @@ const revealOrderEvidence = (indexIds: readonly string[]): readonly { id: string
 
 const createIndexDraft = (repository: string, path: string, original: string): IndexDraft => {
   let working = original
+  const newline = original.includes('\r\n') ? '\r\n' : '\n'
   return {
-    appendMissingEntries: (records, indexCounts) => {
+    appendMissingEntries: (records) => {
+      const currentCounts = new Map<string, number>()
+      for (const line of working.split(newline)) {
+        const entry = line.match(INDEX_ENTRY)
+        if (entry) currentCounts.set(entry[2] as string, (currentCounts.get(entry[2] as string) ?? 0) + 1)
+      }
       const missing = records.filter(
-        (record) => record.automaticConformEligible && (indexCounts.get(record.id) ?? 0) === 0
+        (record) => record.automaticConformEligible && (currentCounts.get(record.id) ?? 0) === 0
       )
       if (missing.length === 0) return
-      const existingEntries = original.split('\n').filter((line) => INDEX_ENTRY.test(line)).length
+      const existingEntries = working.split(newline).filter((line) => INDEX_ENTRY.test(line)).length
       const additions = missing.map(
         (record, index) =>
           `${existingEntries + index + 1}. [${record.id}](${record.file}) — ${record.headingTitle ?? '(title unknown — see file)'}`
       )
-      working = `${working.replace(/\n*$/, '\n')}${additions.join('\n')}\n`
+      working = `${working.replace(/(?:\r?\n)*$/, newline)}${additions.join(newline)}${newline}`
+    },
+    repairCanonicalLinks: (records) => {
+      const canonicalFiles = new Map(
+        records.filter((record) => record.automaticConformEligible).map((record) => [record.id, record.file])
+      )
+      working = working
+        .split(newline)
+        .map((line) => {
+          const entry = line.match(INDEX_ENTRY_TARGET)
+          if (!entry) return line
+          const expected = canonicalFiles.get(entry[2] as string)
+          if (!expected || entry[3] === expected) return line
+          return `${entry[1]}${expected}${entry[4]}`
+        })
+        .join(newline)
     },
     proposal: () => (working === original ? undefined : { path: relative(repository, path), content: working })
   }
@@ -456,7 +481,10 @@ export const createDecisionRecordsSession = ({
       ...(indexDraft
         ? {
             appendMissingEntries: () => {
-              indexDraft.appendMissingEntries(records, indexCounts)
+              indexDraft.appendMissingEntries(records)
+            },
+            repairCanonicalLinks: () => {
+              indexDraft.repairCanonicalLinks(records)
             }
           }
         : {})

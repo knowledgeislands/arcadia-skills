@@ -109,10 +109,7 @@ const INDEX_4: RubricItem<IndexRubricContext> = {
   sources: [SOURCE],
   mechanical: {
     level: 'FAIL',
-    remediation: {
-      class: 'diagnostic',
-      guidance: 'Restore the ordered list form and point each record ID at its canonical filename.'
-    },
+    remediation: { class: 'automatic' },
     audit: {
       phase: 'DERIVED',
       run: (context) => {
@@ -140,6 +137,12 @@ const INDEX_4: RubricItem<IndexRubricContext> = {
           ],
           'Every Decision Record index link resolves to its named canonical record file.'
         )
+      }
+    },
+    conform: {
+      phase: 'DERIVED',
+      run: (context) => {
+        context.repairCanonicalLinks?.()
       }
     }
   }
