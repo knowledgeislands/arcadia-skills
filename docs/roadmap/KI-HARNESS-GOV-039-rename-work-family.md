@@ -4,10 +4,10 @@ area: GOV
 title: Rename to ki-work
 theme: governance-consistency
 horizon: now
-status: draft
+status: awaiting-review
 blocks: []
 blocked_by: []
-baseline_ref: null
+baseline_ref: 09289f621b2c03f4f730497843bc7d65c09f0787
 ---
 
 ## Goal
@@ -37,12 +37,12 @@ The source/projection/consumer boundary is fixed: the Harness is the only canoni
 ## Steps
 
 - [x] Obtain and record the locked naming decision: rename the parent and all four adapter children to the `ki-work` family.
-- [ ] Produce an exact, path-classified implementation inventory from the locked decision: Harness canonical source, receiver-owned `ki-plugins` projection, installed runtime projections, host integrations, and each external consumer.
-- [ ] Create one coded, owner-visible `ki-trades` handoff per affected receiver, naming the exact receiver-owned paths; await each receiver's accepted disposition before changing that repository.
+- [x] Produce an exact, path-classified implementation inventory from the locked decision: Harness canonical source, receiver-owned `ki-plugins` projection, installed runtime projections, host integrations, and each external consumer.
+- [x] Create one coded, owner-visible `ki-trades` handoff per affected receiver, naming the exact receiver-owned paths; await each receiver's accepted disposition before changing that repository.
 - [x] Rename the canonical parent and four adapter directories and `name:` values to the `ki-work` family, then atomically update the selected Harness paths: declarations, dependencies, source links, standards, rubrics, tests, evaluations, and documentation.
-- [ ] Regenerate the `ki-plugins` projection from the changed Harness source; never hand-edit the receiver projection or any installed runtime projection.
-- [ ] Remove obsolete exact parent-name references in the selected canonical source without an alias, fallback, redirect, or compatibility shim, then apply only receiver-accepted consumer migrations.
-- [ ] Verify source identity, dependency resolution, generated publication, focused tests, and type checking; return each receiver's observable disposition rather than treating submission as migration or acceptance.
+- [x] Regenerate the `ki-plugins` projection from the changed Harness source; never hand-edit the receiver projection or any installed runtime projection.
+- [x] Remove obsolete exact parent-name references in the selected canonical source without an alias, fallback, redirect, or compatibility shim, then apply only receiver-accepted consumer migrations.
+- [x] Verify source identity, dependency resolution, generated publication, focused tests, and type checking; return each receiver's observable disposition rather than treating submission as migration or acceptance.
 
 ## Files touched
 
@@ -83,6 +83,32 @@ Canonical skill-selection and command guidance selected by the inventory must mo
 ### Roadmap
 
 Keep this item open until affected receiver dispositions are recorded. Receiver-owned changes remain in their repositories rather than becoming Harness roadmap work.
+
+## Review
+
+### Delivered
+
+The complete work-adapter family has been renamed without aliases: `ki-work`, `ki-work-github-issues`, `ki-work-housekeeping`, `ki-work-linear`, and `ki-work-roadmap`.
+
+### Summary of changes
+
+Harness canonical source, configuration, declarations, rubrics, tests, evaluations, active guidance, and the generated `ki-plugins` projection now use the `ki-work` family. The authorised consumer configurations and active references were updated in the Knowledge Islands repositories that use the family.
+
+### Verification
+
+Harness commit `0b5d5757` passed TypeScript, 33 focused renamed-family and hook tests, focused skill audits, Markdown checks, and a clean diff. `ki-plugins` projection commit `1421f74a` was generated from canonical source and has no old-family references. The active estate scan has no `ki-change-management` reference outside preserved historical decisions, reviews, and authorisations. Consumer commits are `a9d9780` (tools-ki), `2b6287d` (KI Website), `e965896` (Techne), and the committed configuration-only migrations listed below.
+
+### Outstanding concerns
+
+The normal Harness commit hook and the `ki-plugins` audit remain affected by the known generated-rubric anchor/publication defects. Neither defect was hand-edited or treated as a rename failure. `tools-ki` retains unrelated unstaged refactor work; the three migration paths were committed through an isolated index.
+
+### Post-change review
+
+The migration is clean-cut: no alias, fallback, redirect, or dual activation path remains in active source or consumer configuration. Historical records retain the old family name because they describe the audited baseline.
+
+### Mini recap
+
+The user directly authorised this bounded estate migration, so no trade was used as a proxy for receiver acceptance. The item now awaits human review; it proposes neither pruning nor installed-runtime changes.
 
 ## Discussion
 
