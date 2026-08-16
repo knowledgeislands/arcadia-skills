@@ -43,10 +43,7 @@ const FM_3: RubricItem<RecordsRubricContext> = {
   sources: [SOURCE],
   mechanical: {
     level: 'FAIL',
-    remediation: {
-      class: 'diagnostic',
-      guidance: 'Remove generic `type` or `type_url`; use the decision-record-specific fields instead.'
-    },
+    remediation: { class: 'automatic' },
     audit: {
       phase: 'INSPECT',
       run: (context: RecordsRubricContext) =>
@@ -62,6 +59,10 @@ const FM_3: RubricItem<RecordsRubricContext> = {
             ),
           'No decision record uses generic type metadata.'
         )
+    },
+    conform: {
+      phase: 'NORMALISE',
+      run: (context: RecordsRubricContext) => context.conformFrontmatter?.()
     }
   }
 }
@@ -73,10 +74,7 @@ const FM_4: RubricItem<RecordsRubricContext> = {
   sources: [SOURCE],
   mechanical: {
     level: 'FAIL',
-    remediation: {
-      class: 'diagnostic',
-      guidance: 'Add canonical `decision_type` and `decision_type_url` metadata derived from the record prefix.'
-    },
+    remediation: { class: 'automatic' },
     audit: {
       phase: 'INSPECT',
       run: (context: RecordsRubricContext) =>
@@ -92,6 +90,10 @@ const FM_4: RubricItem<RecordsRubricContext> = {
             ),
           'Every decision record declares `decision_type` and `decision_type_url`.'
         )
+    },
+    conform: {
+      phase: 'NORMALISE',
+      run: (context: RecordsRubricContext) => context.conformFrontmatter?.()
     }
   }
 }

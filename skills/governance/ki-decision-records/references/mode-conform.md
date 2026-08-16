@@ -2,7 +2,7 @@
 
 **Precondition:** run [Mode AUDIT](mode-audit.md) first and retain its findings.
 
-1. Run `ki repo conform --skill ki-decision-records --repo <repo> --dry-run` to inspect safe catalogue proposals before publication. The current mechanical conform action appends missing index entries to one session-owned draft; the host alone validates and publishes the final write.
+1. Run `ki repo conform --skill ki-decision-records --repo <repo> --dry-run` to inspect safe catalogue proposals before publication. The mechanical actions use only parseable, regular, non-symlink canonical sources: they remove scalar generic `type`, promote a canonical `type_url` to `decision_type_url` when that field is absent, add missing canonical decision-type fields derived from the record prefix, and append missing entries for recognised canonical records. They preserve the record body and existing index order, markers, and prose. Any malformed, ambiguous, conflicting, non-canonical, or non-regular source remains a diagnostic for human review. The host alone validates and publishes the final write.
 2. **File renames** — if a filename or prefix does not match, confirm with the user before renaming because a rename changes the canonical ID.
 3. **Section repairs** — add missing section stubs; leave substantive content for the author.
 4. **Index repair** — accept or adjust the proposed missing entries, restore reveal-order ordering, and convert any leftover table to the ordered-list form.

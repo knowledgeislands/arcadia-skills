@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, test } from 'bun:test'
-import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs'
+import { mkdirSync, mkdtempSync, readFileSync, rmSync, symlinkSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import type { RubricFamily, RubricItem } from '../../shared/rubric.ts'
@@ -18,6 +18,12 @@ const audit = (code: string, context: DecisionRecordsRubricContext) => {
   const family = families.find((candidate) => candidate.items.some((candidate) => candidate.code === code))
   if (!family) throw new Error(`Missing rubric family for ${code}`)
   return item(code).mechanical?.audit.run(family.selectContext(context))
+}
+
+const conform = (code: string, context: DecisionRecordsRubricContext) => {
+  const family = families.find((candidate) => candidate.items.some((candidate) => candidate.code === code))
+  if (!family) throw new Error(`Missing rubric family for ${code}`)
+  item(code).mechanical?.conform?.run(family.selectContext(context))
 }
 
 afterEach(() => {
@@ -181,6 +187,106 @@ decision_type_url: https://knowledgeislands.info/specifications/decision-records
       status: 'VIOLATION',
       subject: 'supporting-note.md'
     })
+  })
+
+  test('conforms only canonical scalar legacy metadata and preserves the record body', () => {
+    const root = mkdtempSync(join(tmpdir(), 'ki-decision-records-conform-'))
+    temporaryRoots.push(root)
+    const directory = join(root, 'docs', 'decisions')
+    const file = 'ADR-EXAMPLE-001-decide-the-record-shape.md'
+    const body = `# ADR-EXAMPLE-001: Decide the record shape\n\n## Context\n\nThe record needs a stable shape.\n\n## Decision\n\nThe repository records the decision.\n\n## Consequences\n\nReaders can identify the decision.\n`
+    mkdirSync(directory, { recursive: true })
+    writeFileSync(join(root, '.ki-config.toml'), '[skills.ki-decision-records]\n')
+    writeFileSync(
+      join(directory, file),
+      `---\nid: ADR-EXAMPLE-001\ntitle: 'Decide the record shape'\ndate: 2026-07-21\nstatus: current\ntype: Architecture Decision Record\ntype_url: https://knowledgeislands.info/specifications/decision-records/adr\n---\n\n${body}`
+    )
+    writeFileSync(join(directory, 'README.md'), '# Decisions\n')
+
+    const session = createDecisionRecordsSession({
+      mode: 'conform',
+      repository: root,
+      userHome: tmpdir(),
+      configuration: {}
+    })
+    const context = session.subjects[1]?.context() as DecisionRecordsRubricContext
+    conform('FM-3', context)
+    conform('FM-4', context)
+    const write = session.proposal().writes.find((candidate) => candidate.path.endsWith(file))
+
+    if (!write) throw new Error('Expected a frontmatter conform proposal.')
+
+    expect(write.content).toContain('decision_type: architecture')
+    expect(write.content).toContain(
+      'decision_type_url: https://knowledgeislands.info/specifications/decision-records/adr'
+    )
+    expect(write.content).not.toContain('\ntype:')
+    expect(write.content).not.toContain('\ntype_url:')
+    expect(write.content).toEndWith(body)
+
+    conform('FM-3', context)
+    conform('FM-4', context)
+    expect(session.proposal().writes).toEqual([write])
+  })
+
+  test('is idempotent for canonical decision metadata', () => {
+    const root = mkdtempSync(join(tmpdir(), 'ki-decision-records-idempotent-'))
+    temporaryRoots.push(root)
+    const directory = join(root, 'docs', 'decisions')
+    mkdirSync(directory, { recursive: true })
+    writeFileSync(join(root, '.ki-config.toml'), '[skills.ki-decision-records]\n')
+    writeFileSync(join(directory, 'README.md'), '# Decisions\n')
+    writeFileSync(join(directory, 'ADR-EXAMPLE-001-decide-the-record-shape.md'), record({}))
+
+    const session = createDecisionRecordsSession({
+      mode: 'conform',
+      repository: root,
+      userHome: tmpdir(),
+      configuration: {}
+    })
+    const context = session.subjects[1]?.context() as DecisionRecordsRubricContext
+    conform('FM-3', context)
+    conform('FM-4', context)
+    expect(session.proposal().writes).toEqual([])
+  })
+
+  test('refuses malformed, conflicting, and symlinked frontmatter sources', () => {
+    const root = mkdtempSync(join(tmpdir(), 'ki-decision-records-refuse-'))
+    temporaryRoots.push(root)
+    const directory = join(root, 'docs', 'decisions')
+    mkdirSync(directory, { recursive: true })
+    writeFileSync(join(root, '.ki-config.toml'), '[skills.ki-decision-records]\n')
+    writeFileSync(join(directory, 'README.md'), '# Decisions\n')
+    const malformed = 'ADR-EXAMPLE-001-decide-the-record-shape.md'
+    const conflicting = 'ADR-EXAMPLE-002-conflicting-decision.md'
+    const linked = 'ADR-EXAMPLE-003-linked-decision.md'
+    writeFileSync(
+      join(directory, malformed),
+      record({
+        metadata: `id: ADR-EXAMPLE-001\ntitle: 'Decide the record shape'\ndate: 2026-07-21\nstatus: current\ntype: [unclosed`
+      })
+    )
+    writeFileSync(
+      join(directory, conflicting),
+      record({
+        metadata: `id: ADR-EXAMPLE-001\ntitle: 'Decide the record shape'\ndate: 2026-07-21\nstatus: current\ntype: Architecture Decision Record\ndecision_type: governance\ndecision_type_url: https://knowledgeislands.info/specifications/decision-records/adr`
+      })
+        .replaceAll('ADR-EXAMPLE-001', 'ADR-EXAMPLE-002')
+        .replaceAll('Decide the record shape', 'Conflicting decision')
+    )
+    symlinkSync(malformed, join(directory, linked))
+
+    const session = createDecisionRecordsSession({
+      mode: 'conform',
+      repository: root,
+      userHome: tmpdir(),
+      configuration: {}
+    })
+    const context = session.subjects[1]?.context() as DecisionRecordsRubricContext
+    conform('FM-3', context)
+    conform('FM-4', context)
+    expect(session.proposal().writes).toEqual([])
+    expect(readFileSync(join(directory, malformed), 'utf8')).toContain('type: [unclosed')
   })
 })
 

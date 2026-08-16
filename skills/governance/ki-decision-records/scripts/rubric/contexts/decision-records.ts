@@ -1,4 +1,4 @@
-import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs'
+import { existsSync, lstatSync, readdirSync, readFileSync, statSync } from 'node:fs'
 import { dirname, join, relative, resolve } from 'node:path'
 import type {
   ConformWrite,
@@ -77,6 +77,7 @@ export type DecisionRecord = {
   headingId?: string
   headingTitle?: string
   missingSections: readonly string[]
+  automaticConformEligible: boolean
 }
 
 export type FilenameRubricContext = {
@@ -88,6 +89,7 @@ export type FilenameRubricContext = {
 
 export type RecordsRubricContext = {
   records: readonly DecisionRecord[]
+  conformFrontmatter?: () => void
 }
 
 export type RootRubricContext = {
@@ -160,7 +162,11 @@ const isKb = (target: string): boolean => {
   }
 }
 
-const isDirectory = (path: string): boolean => existsSync(path) && statSync(path).isDirectory()
+const isDirectory = (path: string): boolean =>
+  existsSync(path) && !lstatSync(path).isSymbolicLink() && statSync(path).isDirectory()
+
+const isRegularFile = (path: string): boolean =>
+  existsSync(path) && !lstatSync(path).isSymbolicLink() && statSync(path).isFile()
 
 const resolveDirectory = (target: string, kbMode: boolean): string => {
   const absolute = resolve(target)
@@ -193,7 +199,9 @@ const frontmatterValue = (frontmatter: string | undefined, key: string): string 
 const readRecords = (directory: string, entries: readonly string[], indexFile: string): DecisionRecord[] => {
   const records: DecisionRecord[] = []
   for (const file of entries.filter((entry) => entry.endsWith('.md') && entry !== indexFile)) {
-    const content = readFileSync(join(directory, file), 'utf8')
+    const path = join(directory, file)
+    if (!isRegularFile(path)) continue
+    const content = readFileSync(path, 'utf8')
     const frontmatter = content.match(/^---\n([\s\S]*?)\n---/)?.[1]
     const body = content.replace(/^---\n[\s\S]*?\n---\n?/, '')
     const heading = body.match(HEADING)
@@ -228,7 +236,8 @@ const readRecords = (directory: string, entries: readonly string[], indexFile: s
       sharedRecord: frontmatterValue(frontmatter, 'shared_record') === 'true',
       headingId: id,
       headingTitle,
-      missingSections: ['## Context', '## Decision', '## Consequences'].filter((section) => !body.includes(section))
+      missingSections: ['## Context', '## Decision', '## Consequences'].filter((section) => !body.includes(section)),
+      automaticConformEligible: file === `${id}-${slugify(headingTitle)}.md`
     })
   }
   return records
@@ -236,7 +245,7 @@ const readRecords = (directory: string, entries: readonly string[], indexFile: s
 
 const unparseableRecordFiles = (directory: string, entries: readonly string[], indexFile: string): string[] =>
   entries
-    .filter((entry) => entry.endsWith('.md') && entry !== indexFile)
+    .filter((entry) => entry.endsWith('.md') && entry !== indexFile && isRegularFile(join(directory, entry)))
     .filter((file) => {
       const content = readFileSync(join(directory, file), 'utf8')
       const body = content.replace(/^---\n[\s\S]*?\n---\n?/, '')
@@ -291,7 +300,9 @@ const createIndexDraft = (repository: string, path: string, original: string): I
   let working = original
   return {
     appendMissingEntries: (records, indexCounts) => {
-      const missing = records.filter((record) => (indexCounts.get(record.id) ?? 0) === 0)
+      const missing = records.filter(
+        (record) => record.automaticConformEligible && (indexCounts.get(record.id) ?? 0) === 0
+      )
       if (missing.length === 0) return
       const existingEntries = original.split('\n').filter((line) => INDEX_ENTRY.test(line)).length
       const additions = missing.map(
@@ -302,6 +313,66 @@ const createIndexDraft = (repository: string, path: string, original: string): I
     },
     proposal: () => (working === original ? undefined : { path: relative(repository, path), content: working })
   }
+}
+
+type ScalarField = { line: number; value: string }
+
+const automaticFrontmatterRepair = (record: DecisionRecord): string | undefined => {
+  if (!record.automaticConformEligible || !record.frontmatter) return undefined
+  let parsed: Record<string, unknown>
+  try {
+    const value = Bun.YAML.parse(record.frontmatter)
+    if (!value || typeof value !== 'object' || Array.isArray(value)) return undefined
+    parsed = value as Record<string, unknown>
+  } catch {
+    return undefined
+  }
+
+  const lines = record.frontmatter.split(/\r?\n/)
+  const newline = record.frontmatter.includes('\r\n') ? '\r\n' : '\n'
+  const fields = new Map<string, ScalarField>()
+  for (const key of ['type', 'type_url', 'decision_type', 'decision_type_url']) {
+    const matches = lines.flatMap((line, index) => {
+      const match = line.match(new RegExp(`^${key}:[ \\t]+(.+)$`))
+      return match ? [{ line: index, value: match[1] as string }] : []
+    })
+    if (matches.length > 1 || (Object.hasOwn(parsed, key) && matches.length !== 1)) return undefined
+    if (matches.length === 1) {
+      if (typeof parsed[key] !== 'string') return undefined
+      fields.set(key, matches[0] as ScalarField)
+    }
+  }
+
+  const legacyTypeUrl = fields.get('type_url')
+  if (record.decisionType && record.decisionType !== record.expectedDecisionType) return undefined
+  if (record.decisionTypeUrl && record.decisionTypeUrl !== record.expectedDecisionTypeUrl) return undefined
+  if (legacyTypeUrl && parsed.type_url !== record.expectedDecisionTypeUrl) return undefined
+
+  const remove = new Set<number>()
+  const replace = new Map<number, string>()
+  const additions: string[] = []
+  const legacyType = fields.get('type')
+  if (legacyType) remove.add(legacyType.line)
+  if (legacyTypeUrl) {
+    if (record.decisionTypeUrl) remove.add(legacyTypeUrl.line)
+    else replace.set(legacyTypeUrl.line, lines[legacyTypeUrl.line]?.replace(/^type_url:/, 'decision_type_url:') ?? '')
+  } else if (!record.decisionTypeUrl) {
+    additions.push(`decision_type_url: ${record.expectedDecisionTypeUrl}`)
+  }
+  if (!record.decisionType) additions.push(`decision_type: ${record.expectedDecisionType}`)
+
+  if (remove.size === 0 && replace.size === 0 && additions.length === 0) return undefined
+  const repaired = [
+    ...lines.flatMap((line, index) => (remove.has(index) ? [] : [replace.get(index) ?? line])),
+    ...additions
+  ].join(newline)
+  return `${repaired}${record.frontmatter.endsWith(newline) ? newline : ''}`
+}
+
+const replaceFrontmatter = (content: string, frontmatter: string): string | undefined => {
+  const match = content.match(/^---(\r?\n)[\s\S]*?\r?\n---/)
+  if (!match) return undefined
+  return `---${match[1] as string}${frontmatter}${match[1] as string}---${content.slice(match[0].length)}`
 }
 
 export const createDecisionRecordsSession = ({
@@ -331,7 +402,10 @@ export const createDecisionRecordsSession = ({
   const records = readRecords(directory, entries, indexFile)
   const { duplicateIds, serialGaps } = serialEvidence(records)
   const indexDraft =
-    mode === 'conform' && indexExists ? createIndexDraft(repository, indexPath, indexContent) : undefined
+    mode === 'conform' && indexExists && isRegularFile(indexPath)
+      ? createIndexDraft(repository, indexPath, indexContent)
+      : undefined
+  const frontmatterWrites = new Map<string, ConformWrite>()
 
   const context: DecisionRecordsRubricContext = {
     rubric: { publication },
@@ -349,7 +423,25 @@ export const createDecisionRecordsSession = ({
       indexIds,
       records
     },
-    frontmatter: { records },
+    frontmatter: {
+      records,
+      ...(mode === 'conform'
+        ? {
+            conformFrontmatter: () => {
+              for (const record of records) {
+                const frontmatter = automaticFrontmatterRepair(record)
+                if (!frontmatter) continue
+                const content = replaceFrontmatter(record.content, frontmatter)
+                if (!content) continue
+                frontmatterWrites.set(record.file, {
+                  path: relative(repository, join(directory, record.file)),
+                  content
+                })
+              }
+            }
+          }
+        : {})
+    },
     typeFit: { records },
     body: { records },
     index: {
@@ -378,7 +470,7 @@ export const createDecisionRecordsSession = ({
     ],
     proposal: () => {
       const indexWrite = indexDraft?.proposal()
-      return { writes: indexWrite ? [indexWrite] : [] }
+      return { writes: [...frontmatterWrites.values(), ...(indexWrite ? [indexWrite] : [])] }
     }
   }
 }

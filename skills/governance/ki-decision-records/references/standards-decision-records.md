@@ -76,6 +76,7 @@ decision_type_url: https://knowledgeislands.info/specifications/decision-records
 - `decision_type` must exactly match the canonical value encoded by the filename prefix in the table above.
 - `decision_type_url` exactly matches the house reference URL in the table above.
 - Choose the prefix by what the decision is actually about. If the filename and metadata disagree, a human resolves whether the canonical ID or the metadata is wrong; CONFORM never chooses by overwriting either side.
+- CONFORM may make only source-preserving scalar metadata repairs on a parseable, regular, non-symlink record whose filename is already canonical: remove generic `type`; rename a canonical legacy `type_url` when `decision_type_url` is absent; and add missing canonical decision-type fields derived from the existing prefix. It refuses malformed, ambiguous, conflicting, or non-canonical sources.
 - `decision_depends_on` is an optional YAML list of full DR codes that this decision logically depends on (e.g. `["GDR-KI-ARCADIA-001"]`). Cross-scope (cross-repo) references are permitted. Body prose cites only backward — no forward references to higher-numbered DRs of the same type. Omit the field when there are no dependencies.
 - `shared_record: true` is an optional, narrow marker for a deliberately byte-identical record mirrored across approved repositories. The record keeps its canonical foreign ID. It is excluded from a receiving collection’s serial series only when that prefix+scope has no ordinary local records; otherwise it remains part of the local sequence. Use it in every copy, including the canonical source copy, so the record remains identical and reviewers can recognise the exception. It does not make ordinary local records shareable or relax any other metadata, body, index, or identity rule.
 
@@ -174,6 +175,8 @@ The index file — `Decisions.md` in a KB, `README.md` in a code repo (GitHub re
 ```
 
 Each item links the record by its ID and gives a short gloss of what it decides. Per-record dates and maintenance status live in each record's frontmatter, not in the index. There is no decision lifecycle marker — records are living and present-state.
+
+CONFORM may append only a missing entry for a recognised, regular, non-symlink record whose canonical filename is deterministically known. It preserves existing entry order, numbering markers, and unrelated index prose; stale links, duplicates, ordering, and link-target corrections remain human review.
 
 ## Writing guidance
 

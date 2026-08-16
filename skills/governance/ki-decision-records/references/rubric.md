@@ -58,9 +58,9 @@ Required universal decision metadata.
 - **FM-0 [M] — Decision-record frontmatter** — YAML frontmatter block is present on every decision record. (standards-decision-records.md)
   - _Remediation:_ diagnostic — Add canonical YAML frontmatter using the record body and filename as evidence.
 - **FM-3 [M] — No generic type metadata** — Generic `type` and `type_url` fields are absent from a decision record. (standards-decision-records.md)
-  - _Remediation:_ diagnostic — Remove generic `type` or `type_url`; use the decision-record-specific fields instead.
+  - _Remediation:_ automatic
 - **FM-4 [M] — Decision type metadata** — `decision_type` and `decision_type_url` fields are present. (standards-decision-records.md)
-  - _Remediation:_ diagnostic — Add canonical `decision_type` and `decision_type_url` metadata derived from the record prefix.
+  - _Remediation:_ automatic
 - **FM-5 [M] — Prefix and decision type alignment** — `decision_type` and `decision_type_url` exactly match the canonical values encoded by the filename prefix. This does not prove that the prefix is the right semantic classification. (standards-decision-records.md)
   - _Remediation:_ diagnostic — Align decision-type metadata with the canonical filename prefix after confirming the record classification.
 - **FM-6 [M] — Core decision metadata** — `id`, `title`, `date`, and `status` are present; ID and title compose the H1 and date uses YYYY-MM-DD. (standards-decision-records.md)
