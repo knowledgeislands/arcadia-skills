@@ -4,7 +4,7 @@ area: GOV
 title: Resolve Knowledge Base authority
 theme: governance-consistency
 horizon: next
-status: in-progress
+status: awaiting-review
 blocks: [KI-HARNESS-GOV-041, KI-HARNESS-GOV-043]
 blocked_by: []
 baseline_ref: 1219075b4d375be45c1b70d64a358b1b906dd343
@@ -16,41 +16,40 @@ Choose one ownership and metadata contract for Knowledge Bases, Decision Records
 
 ## Context
 
-`KI-HARNESS-REV-001` found three connected unresolved claims. `ki-repo-kb` calls `type` a universal sole classifier while Activities and other collections use exceptions. `ki-decision-records` independently describes a conflicting `type` and `type_url` shape. `ki-repo` exclusively owns `repo_type`, while `ki-repo-kb-principal` has structural entry points but no representation of principal role, authority, or cross-island relationship.
+`KI-HARNESS-REV-001` found three connected unresolved claims. `ki-repo-kb` called `type` a universal sole classifier while Activities and other collections used exceptions. `ki-decision-records` independently described a conflicting `type` and `type_url` shape. `ki-repo` exclusively owns `repo_type`, while principal-repository checks needed an explicit authority source without a competing configuration schema.
 
 The review correctly made local checks truthful without selecting a policy. A decision is now needed before migration or further checker changes can safely proceed.
 
 ## Boundary
 
-Make the authority and migration decision only. Do not rewrite existing Knowledge Base collections, introduce a second classifier, infer a principal role from prose, or change a receiving repository without a separately approved migration item.
+Set the authority contract and its local enforcement only. Do not rewrite existing Knowledge Base collections, introduce a second classifier, infer a principal role from prose, or change a receiving repository without a separately approved migration item.
 
 ## Current state
 
-The aggregate Knowledge Base audit excludes universal metadata, adapter, and canonical-role policy from a clean result. Existing repositories may use activity-specific fields, legacy Stream forms, or Decision Record metadata that cannot all be canonical simultaneously.
-
-The delivery is two independently readable governance decisions rather than one mixed schema change. `GDR-KI-HARNESS-007` owns universal Knowledge Base and Decision Record metadata authority; `GDR-KI-HARNESS-008` owns whether and how a principal repository declares its authority role. The current exclusive ownership of `[skills.ki-repo].repo_type` is the baseline, not an outcome silently reopened by this plan.
+`GDR-KI-HARNESS-007` now names one owner for each shared field and principal authority claim. The skill contracts, templates, rubrics, and mechanical Decision Record conformer implement that policy. Separate estate migration remains GOV-043; it is not part of this item.
 
 ## Steps
 
-- [ ] Inventory representative Arcadia and Techne principal records plus the current `ki-repo`, `ki-repo-kb*`, and `ki-decision-records` contracts at field level; classify `repo_type`, `type`, `type_url`, and `decision_type` by current owner and collision.
-- [ ] Write `GDR-KI-HARNESS-007` to choose one owner for universal Knowledge Base metadata, distinguish universal, collection-specific, and prohibited fields, and state how Decision Record metadata composes without a second classifier.
-- [ ] Write `GDR-KI-HARNESS-008` to choose among explicit configuration, a canonical authority record, both, or no portable representation for principal role and cross-island authority.
-- [ ] Update the Decision Records index in reveal order and verify that both records are self-contained, independently reconsiderable, and preserve `[skills.ki-repo].repo_type` unless the first decision explicitly changes it.
-- [ ] Record the exact clean-cut migration consequences and capture separate implementation work; do not alter repository schemas, collections, or receiving repositories in this item.
+- [x] Inventory representative Arcadia and Techne principal records plus the current `ki-repo`, `ki-repo-kb*`, and `ki-decision-records` contracts at field level; classify `repo_type`, `type`, `type_url`, and `decision_type` by current owner and collision.
+- [x] Write one consolidated `GDR-KI-HARNESS-007` to assign universal Knowledge Base, Decision Record, and principal-authority ownership without a second classifier or authority schema.
+- [x] Update the Decision Records index in reveal order and verify that the consolidated record is self-contained, independently reconsiderable, and preserves `[skills.ki-repo].repo_type`.
+- [x] Apply the decision to the local KB and Decision Record contracts, templates, rubrics, and safe scalar conformer.
+- [x] Record the exact migration consequence in GOV-043 without altering receiving repositories in this item.
 
 ## Files touched
 
-- `docs/decisions/GDR-KI-HARNESS-007-knowledge-base-metadata-authority.md`
-- `docs/decisions/GDR-KI-HARNESS-008-principal-repository-authority.md`
+- `docs/decisions/GDR-KI-HARNESS-007-document-metadata-and-principal-authority.md`
 - `docs/decisions/README.md`
+- `skills/repo-structure/ki-repo-kb/`
+- `skills/governance/ki-decision-records/`
 - This work item
-- A separate roadmap item only when an approved decision requires implementation
+- `docs/roadmap/KI-HARNESS-GOV-043-conform-decision-record-normalisation.md`
 
 ## Verify
 
 - One owner is named for every shared metadata field and role claim.
 - The selected schema has no contradictory required fields across `ki-repo`, `ki-repo-kb*`, and `ki-decision-records`.
-- Migration scope, compatibility stance, and representative fixtures are explicit before any implementation begins.
+- Migration scope, compatibility stance, and representative fixtures are explicit before any estate migration begins.
 - `ki repo audit --skill ki-decision-records --repo .`, `ki repo audit --skill ki-change-management-roadmap --repo .`, and `ki repo audit --skill ki-authoring --repo .` pass.
 
 ## Dependencies / blocks
@@ -61,7 +60,7 @@ The Decision Records, KB, and principal review records under `docs/reviews/KI-HA
 
 ### Decision Records
 
-This work delivers GDR-KI-HARNESS-007 and GDR-KI-HARNESS-008, recording the selected metadata and principal-authority migration policy.
+This work delivers GDR-KI-HARNESS-007, recording the selected metadata and principal-authority policy.
 
 ### Specifications
 
@@ -73,7 +72,33 @@ No contributor guide change is planned until a follow-on migration adopts the se
 
 ### Roadmap
 
-The decision unblocks GOV-041 and GOV-043 and requires separate implementation records for any collection migration.
+The decision unblocks GOV-041 and GOV-043. GOV-043 owns the separate estate migration and Decision Record normalisation work.
+
+## Review
+
+### Delivered
+
+The approved metadata-authority decision was delivered from immutable baseline `1219075b4d375be45c1b70d64a358b1b906dd343`. `fd1925db8eeb37adf298dc3bfc1ff4e3ab7b0b37` implements the policy, and `98e7b896ffd39dd9af0f317033a6514b7a87f89c` adds the safe Decision Record conformer. Estate migration is deliberately separated into GOV-043.
+
+### Summary of changes
+
+`GDR-KI-HARNESS-007` and the Decision Records index establish the consolidated decision. `ki-repo-kb` now uses `note_type` as the generic KB classifier, while `ki-decision-records` uses `decision_type` and `decision_type_url` and prohibits generic `type` and `type_url`. `ki-repo` retains `repo_type` ownership. Principal authority is a canonical governance Decision Record, not a portable configuration schema. The affected KB templates, standards, exemplars, rubric context and item tests, plus the Decision Record standard, rubric, context, frontmatter item, conform-mode guidance, and focused tests, were updated in the two cited commits.
+
+### Verification
+
+The implementation commits passed their focused KB and Decision Record tests, `bunx tsc --noEmit`, generated-rubric publication, and Decision Record and authoring audits. This review packet additionally requires a current roadmap audit and Markdown lint of this updated record.
+
+### Outstanding concerns
+
+No policy or local-enforcement concern remains. GOV-043 separately owns estate migration; its completion is not required for this decision to be reviewed.
+
+### Post-change review
+
+The delivered policy matches the approved boundary: each field and authority claim has one owner, no principal configuration schema was introduced, and no receiving repository was changed here. The scope extension to local enforcement is consistent with making the selected policy actionable; the separate migration boundary remains intact. The acceptance conditions are met and the item is ready for human review.
+
+### Mini recap
+
+GOV-040 resolves the KB/Decision Record/principal-authority collision and provides the safe local contract. Verification is recorded above; GOV-043 is the only follow-on for estate normalisation. No new durable learning is proposed beyond the governing GDR and updated skill standards.
 
 ## Discussion
 
