@@ -4,10 +4,10 @@ area: GOV
 title: Resolve Knowledge Base authority
 theme: governance-consistency
 horizon: next
-status: ready
+status: in-progress
 blocks: [KI-HARNESS-GOV-041, KI-HARNESS-GOV-043]
 blocked_by: []
-baseline_ref: null
+baseline_ref: 1219075b4d375be45c1b70d64a358b1b906dd343
 ---
 
 ## Goal
