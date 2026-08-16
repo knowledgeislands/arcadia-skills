@@ -4,10 +4,10 @@ area: GOV
 title: Record Agora contract ownership
 theme: governance-consistency
 horizon: next
-status: ready
+status: in-progress
 blocks: []
 blocked_by: []
-baseline_ref: null
+baseline_ref: b6cc3df4c96872371f54afd8246a2a567fa7fae1
 ---
 
 ## Goal
