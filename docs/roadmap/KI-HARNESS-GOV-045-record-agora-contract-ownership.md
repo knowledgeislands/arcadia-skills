@@ -4,7 +4,7 @@ area: GOV
 title: Record Agora contract ownership
 theme: governance-consistency
 horizon: next
-status: awaiting-review
+status: done
 blocks: []
 blocked_by: []
 baseline_ref: b6cc3df4c96872371f54afd8246a2a567fa7fae1
@@ -104,6 +104,10 @@ The evidence meets the goal and preserves the approved read-only boundary. The o
 ### Mini recap
 
 GOV-045 verified the nine reciprocal Agora declarations, distinguished them from the registry-derived estate, and retained the declaration, resolver, and projection ownership split. All specified gates passed with no concerns. No additional durable learning route is proposed because the existing decision, skill standard, and user-environment work item already own the reusable knowledge.
+
+## Done
+
+Accepted by the user on 2026-08-16. The completed work record is retained as the cross-repository contract evidence for downstream user-environment projection work.
 
 ## Discussion
 
