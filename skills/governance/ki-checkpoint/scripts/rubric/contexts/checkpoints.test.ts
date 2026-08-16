@@ -138,3 +138,14 @@ test('closed schema refuses an unexpected runtime field', () => {
   expect(mechanical(RECORD, 'RECORD-2').audit.run(RECORD.selectContext(value))[0]?.status).toBe('VIOLATION')
   expect(mechanical(BOUNDARY, 'BOUNDARY-1').audit.run(BOUNDARY.selectContext(value))[0]?.status).toBe('VIOLATION')
 })
+
+test('closed schema refuses a checkpoint-selected marker', () => {
+  const { repository, checkpointDirectory } = fixture()
+  writeFileSync(
+    join(checkpointDirectory, 'release-audit.md'),
+    record().replace('state: active', 'state: active\nselected: true')
+  )
+  const value = context(repository)
+
+  expect(mechanical(RECORD, 'RECORD-2').audit.run(RECORD.selectContext(value))[0]?.status).toBe('VIOLATION')
+})

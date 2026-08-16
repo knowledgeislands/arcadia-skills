@@ -21,7 +21,7 @@ This governance skill owns the portable checkpoint contract: one concise reposit
 - **Reconstruction, not continuity** — a checkpoint carries only enough state for a fresh agent to continue. It is never a transcript, vendor-session identifier, conversation locator, completion signal, roadmap, decision log, or memory system.
 - **Explicit write authority** — create or update only at the user's request or a documented repository-local trigger. Retire only on explicit user direction after durable facts have reached their canonical owners. When the selected thread or content is uncertain, do not write.
 
-`ki-recap` remains the user-facing judgment-led session summary. Runtime-specific discovery and Stop-hook adapters are optional consumers of this contract and cannot invent, select, update, or retire a record outside these rules.
+`ki-checkpoint` remains the portable reconstruction record; `ki-recap` is the user-facing judgment-led session summary. A runtime-specific Stop reminder cannot invoke recap or its transcript-grounding helper: it may only address an already-selected valid checkpoint under `ki-checkpoint`'s separate opt-in contract. It cannot invent, select, update, or retire a record, fabricate recap prose, or infer a summary from vendor-session material.
 
 ## Operating modes
 
