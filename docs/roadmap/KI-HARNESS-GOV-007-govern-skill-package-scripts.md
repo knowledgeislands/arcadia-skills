@@ -4,10 +4,10 @@ title: Govern skill package scripts
 area: GOV
 theme: governance-consistency
 horizon: now
-status: draft
+status: in-progress
 blocks: []
 blocked_by: []
-baseline_ref: null
+baseline_ref: 0b5d5757
 ---
 
 ## Goal
@@ -73,6 +73,12 @@ The core inventory already distinguishes a clear `ki:tools:*` claim in `tools-ki
 No rubric-catalogue metadata currently publishes script claims, the host does not aggregate them, and `ki-engineering` has no exact exclusion contract.
 
 The local declaration contract is approved, but the end-to-end plan is not dependency-ready. Catalogue discovery and aggregation belong to `tools-ki`, which has no accepted receiver-owned record for this change. A Website manifest change also cannot be bundled without a reciprocal work route. Before this record returns to Ready, split the Harness-owned static contract and script-family decisions from receiver-owned host and estate migrations, or narrow this item to one independently complete local outcome plus exact outbound submissions. The Harness can decide whether its Cloudflare skill supports `ki:site:upload` without waiting for Website access; only applying the resulting manifest change is receiver-owned.
+
+## Progress
+
+Commit `0e11c4a` establishes the Harness-local claim metadata and the three exact claims: `ki:deps:update`, `ki:harness:eval`, and `ki:binding:claude:build-plugin`. It also removes the two retired local script keys without aliases. Focused tests, TypeScript, Biome, Markdown checks, and command help pass.
+
+The remaining work is intentionally external: `tools-ki` must aggregate resolved claims and enforce duplicate/exclusion rules, and the Website must make its own decision about `ki:site:upload`. The current `tools-ki` checkout cannot load its rubric module, so generated engineering publication and host audit are not being misrepresented as complete.
 
 ## Steps
 
