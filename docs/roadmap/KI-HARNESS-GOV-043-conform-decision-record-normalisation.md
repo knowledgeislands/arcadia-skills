@@ -4,7 +4,7 @@ area: GOV
 title: Conform Decision Record normalisation
 theme: governance-consistency
 horizon: next
-status: in-progress
+status: awaiting-review
 blocks: []
 blocked_by: []
 baseline_ref: fd1925db8eeb37adf298dc3bfc1ff4e3ab7b0b37
@@ -26,15 +26,15 @@ Change only the exact derivable metadata scalars and a separately proven index o
 
 ## Current state
 
-`98e7b896ffd39dd9af0f317033a6514b7a87f89c` promotes `FM-3` and `FM-4` to one source-preserving frontmatter conform operation. It refuses malformed, conflicting, symbolic, and non-canonical sources and leaves `INDEX-4` diagnostic. The published Decision Records rubric is currently stale against the structured catalogue.
+`98e7b896ffd39dd9af0f317033a6514b7a87f89c` promotes `FM-3` and `FM-4` to one source-preserving frontmatter conform operation. `87b80d30f98b7ffac3e901485309b298154dcd12` promotes `INDEX-4` for recognised canonical index entries only. Both operations refuse malformed, conflicting, symbolic, ambiguous, and non-canonical sources.
 
 ## Steps
 
 - [x] Apply the approved GOV-040 metadata authority to `FM-3` and `FM-4` without introducing a second schema.
 - [x] Add one preserving record draft that coalesces the two exact scalar updates and refuses malformed or unsafe sources.
-- [ ] Add a preserving ordered-index normaliser for recognised IDs and canonical filenames while refusing ambiguous text.
+- [x] Add a preserving ordered-index normaliser for recognised IDs and canonical filenames while refusing ambiguous text.
 - [x] Promote only the criteria whose final desired state remains fully derivable and add negative, preservation, and repeat-idempotence fixtures.
-- [ ] Regenerate the Decision Records rubric and publish the resulting remediation-count change.
+- [x] Regenerate the Decision Records rubric and publish the resulting remediation-count change.
 
 ## Files touched
 
@@ -59,7 +59,7 @@ GOV-040 is accepted and no longer blocks this work. GOV-009 supplies the candida
 
 ### Decision Records
 
-This work normalises derivable Decision Record metadata after GOV-040 selects the canonical Knowledge metadata contract. Index-entry correction remains unimplemented.
+This work normalises derivable Decision Record metadata and recognised canonical index-link targets after GOV-040 selects the canonical Knowledge metadata contract.
 
 ### Specifications
 
@@ -71,33 +71,33 @@ No contributor guide change is planned; the canonical Decision Record standard r
 
 ### Roadmap
 
-The metadata conformer is delivered; the outstanding index operation and rubric publication remain in this item.
+The metadata and index conformers are delivered and this item is awaiting review.
 
 ## Review
 
 ### Delivered
 
-From baseline `fd1925db8eeb37adf298dc3bfc1ff4e3ab7b0b37`, `98e7b896ffd39dd9af0f317033a6514b7a87f89c` delivers the approved `FM-3` and `FM-4` metadata conformer. It is deliberately limited to records whose canonical filename and YAML scalar fields make the repair safe.
+From baseline `fd1925db8eeb37adf298dc3bfc1ff4e3ab7b0b37`, `98e7b896ffd39dd9af0f317033a6514b7a87f89c` delivers the approved `FM-3` and `FM-4` metadata conformer; `87b80d30f98b7ffac3e901485309b298154dcd12` adds the bounded `INDEX-4` repair. Both are deliberately limited to derivable, canonical sources.
 
 ### Summary of changes
 
-The Decision Records context now identifies regular, non-symlink, canonical files; parses the four relevant scalar fields; and produces one coalesced frontmatter proposal. `FM-3` and `FM-4` are automatic, while `INDEX-4` remains diagnostic. Focused fixtures cover legacy scalar conversion, preservation of the body, repeat idempotence, malformed YAML, conflicting metadata, and symlink refusal.
+The Decision Records context identifies regular, non-symlink, canonical files; parses the four relevant scalar fields; and produces one coalesced frontmatter proposal. `FM-3`, `FM-4`, and `INDEX-4` are automatic. The index repair changes only the target of a recognised ordered entry whose displayed ID resolves to a regular canonical record; it preserves order, unrelated lines, and prose. Focused fixtures cover legacy scalar conversion, body preservation, repeat idempotence, malformed YAML, conflicting metadata, symlink refusal, ambiguous index text, and href preservation.
 
 ### Verification
 
-Current verification passes: `bun test skills/governance/ki-decision-records/scripts/rubric/contexts/decision-records.test.ts` (15 passing tests) and `bunx tsc --noEmit`. `ki dev skill rubric ki-decision-records` and the focused Decision Records audit fail because `skills/governance/ki-decision-records/references/rubric.md` is stale against the structured catalogue. The repository authoring audit also reports pre-existing broken anchors in the change-management-roadmap generated rubric plus the same stale publication.
+Verification passes: focused Decision Records tests, `bunx tsc --noEmit`, `bunx biome check skills/governance/ki-decision-records`, `git diff --check`, and `ki repo audit --skill ki-decision-records --repo . --concise`. The generated rubric is source-synchronised. `rumdl` reports seven MD051 failures in that generated file because the host renderer writes mojibake em-dashes in headings while retaining normal ToC anchors; the generated publication must not be hand-edited. This is a host-renderer follow-up, not a Decision Records source defect.
 
 ### Outstanding concerns
 
-This item cannot move to awaiting review. The planned `INDEX-4` preserving index normaliser is not implemented, and the generated Decision Records rubric has not been republished. Both are explicit acceptance conditions. No evidence supports treating the published rubric or diagnostic `INDEX-4` state as complete.
+The safe local objective is complete. Review should confirm the narrow index predicate, byte-preservation evidence, and the host-renderer follow-up. It must not treat the generated-rubric lint defect as authority to hand-edit the publication or broaden the repair.
 
 ### Post-change review
 
-The delivered metadata repair honours GOV-040 and does not alter semantic classification, filenames, bodies, or arbitrary index text. It is appropriately fail-closed. Completing the item requires only the remaining bounded index operation, its negative and preservation coverage, and rubric regeneration; it must not broaden into estate-wide semantic rewriting.
+The delivered metadata and index repairs honour GOV-040 and do not alter semantic classification, filenames, bodies, arbitrary index text, order, or unrelated prose. They are appropriately fail-closed and do not broaden into estate-wide semantic rewriting.
 
 ### Mini recap
 
-GOV-040 has been removed as a dependency. The metadata conformer is implemented and tested, but this work remains in progress until the index operation and generated-rubric parity are complete. No acceptance, pruning, or external-repository change is proposed.
+GOV-040 has been removed as a dependency. The metadata and index conformers are implemented, tested, and publication-synchronised. This item awaits human review; no acceptance, pruning, or external-repository change is proposed.
 
 ## Discussion
 
