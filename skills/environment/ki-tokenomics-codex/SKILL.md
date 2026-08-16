@@ -16,6 +16,10 @@ argument-hint: 'audit | conform | educate | refresh | help'
 
 The audit reports paths and structural presence only. It parses the selected trusted project TOML only to verify its shape and never reports values, including environment variables, API keys, headers, or credential-bearing configuration. Effective model/profile, loaded instruction hierarchy, active MCP, trust, memory use, transcript, compaction, billing, and tool-schema metrics are unavailable.
 
+For dated source-local family evidence and the no-live-call evaluation protocol, read [the model-tier resolution standard](references/standards-model-tier-resolution.md).
+
+It maps work roles to portable purposes without selecting an effective model; repository bindings remain advisory until separately authorised evaluation establishes a default.
+
 CONFORM is report-only and emits no writes or commands.
 
 ## Composition
