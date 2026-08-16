@@ -26,6 +26,22 @@ Every preparation and submission declares whether the sender observes only recei
 
 The receiver chooses between bounded direct application and separately confirmed local work or knowledge retention. The sender releases only its outbound copy when its observation condition is satisfied; the receiver prunes only after observing eligible release. Neither preparation visibility, receipt, silence, nor elapsed time implies review or a decision.
 
+## Current policy
+
+Knowledge is a delivery handoff: it uses `observation: receipt`, and the sender may release its submitted projection once receipt is observable.
+
+Work uses either `observation: decision`, which waits for a terminal receiver disposition, or `observation: completion`, which waits for selected-adapter, owner-valid completion evidence.
+
+`retained` is the knowledge form of keeping the delivered material locally.
+
+`applied` is the work form of performing bounded work directly.
+
+`adopted` remains distinct: the receiver created a named local follow-on work record, but has not thereby completed it.
+
+The sender has mutable `preparing` and immutable `submitted` records; “waiting” is derived from an unsatisfied policy, not stored as a phase.
+
+Until a selected adapter supplies owner-valid completion evidence, completion fails closed: `applied`, `adopted`, path scans, and absent records do not prove it.
+
 ## Consequences
 
 Repositories gain a reviewable typed-trade protocol without cross-repository write authority or automatic transfer semantics. Preparations use Git history rather than a dialogue log; a receiver may retain a local observation cursor, but observation remains invisible to the sender. Altered sender bytes, peer-side decision writes, and premature release become detectable evidence rather than inferred acceptance.

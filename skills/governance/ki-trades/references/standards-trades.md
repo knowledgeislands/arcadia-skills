@@ -80,7 +80,7 @@ The sender authors this envelope and payload:
 ```markdown
 ---
 id: TRD-01234567
-title: 'Short submission title'
+title: "Short submission title"
 created_at: 2026-08-03T12:00:00Z
 sender: sender-owner/sender-repository
 receiver: receiver-owner/receiver-repository
@@ -105,7 +105,7 @@ The outcome proposed to the receiver.
 Authority, safety, dependency, and verification boundaries the receiver must retain when evaluating it.
 ```
 
-The eight sender fields and `phase` are required strings. `kind` is `work` or `knowledge`; `observation` is `unattended`, `receipt`, `decision`, or `completion`; `phase` is `preparing`, `submitted`, or `received`. `created_at` is a UTC `YYYY-MM-DDTHH:MM:SSZ` timestamp. `source_ref` is provenance only and transfers no lifecycle authority. The three payload sections are required and non-empty. The H1 is the first non-blank body line and exactly repeats `id` and `title`.
+The eight sender fields and `phase` are required strings. `kind` is `work` or `knowledge`; a knowledge trade requires `observation: receipt`, while work requires `observation: decision` or `observation: completion`; `phase` is `preparing`, `submitted`, or `received`. `created_at` is a UTC `YYYY-MM-DDTHH:MM:SSZ` timestamp. `source_ref` is provenance only and transfers no lifecycle authority. The three payload sections are required and non-empty. The H1 is the first non-blank body line and exactly repeats `id` and `title`.
 
 An inbound receiver copy sets `phase: received` and adds `decision_status: unconsidered` and, when the committed sender reference is available, `received_from_ref: <full-commit>`. It may also carry receiver-local `reviewed_at`, `rationale`, `applied_commit`, `adopted_as`, `retained_as`, or `superseded_by`. Receiver-local commit references are 40 lower-case hexadecimal characters. No other frontmatter key is valid.
 
@@ -124,7 +124,7 @@ The governance checker is read-only across repositories. Its only conformable wr
 Publication, delivery, and decision are independent axes:
 
 - `preparing` — mutable sender-local intent; no delivery fact exists.
-- `submitted · awaiting receipt` — immutable outbound exists without a matching inbound copy.
+- `submitted · waiting` — immutable outbound exists while its selected observation policy remains unsatisfied; before receipt, no matching inbound copy exists.
 - `submitted · received` — both copies exist; this means delivery only.
 - `released` — the receiver observes that an eligible outbound has gone.
 
@@ -140,22 +140,21 @@ The receiver alone moves its inbound decision status:
 - `declined` — not applied, adopted, or retained; `rationale` is required.
 - `superseded` — replaced by another local record or trade; `rationale` and `superseded_by` are required.
 
-`applied` and `adopted` are work-only; `retained` is knowledge-only. There is no generic trade `completed` status. Adopted local work owns its completion state; `applied` proves a completed direct update through its verified local commit.
+`applied` and `adopted` are work-only; `retained` is knowledge-only. `retained` is the knowledge form of the receiver keeping a trade locally; `applied` is the work form where the receiver performed the bounded work directly. `adopted` remains distinct: the receiver accepted the work as a named local follow-on record, but that record is not thereby complete. There is no generic trade `completed` status.
 
 ## Observation policies
 
 The sender chooses one policy without imposing an obligation on the receiver:
 
-- `unattended` — no response is requested; receipt alone permits release.
-- `receipt` — the sender waits only until receipt is observable.
-- `decision` — the sender waits for `applied`, `adopted`, `retained`, `declined`, or `superseded`.
-- `completion` — `applied` and `retained` satisfy completion directly, while `declined` and `superseded` resolve the observation without completion. For `adopted`, the selected adapter must provide owner-valid canonical completion evidence. That resolver is not available in this local checker, so adopted completion is unavailable and neither sender release nor receiver pruning is eligible.
+- Knowledge uses `receipt` — the sender waits only until receipt is observable.
+- Work uses `decision` — the sender waits for a terminal receiver disposition: `applied`, `adopted`, `declined`, or `superseded`.
+- Work uses `completion` — the sender waits for selected-adapter, owner-valid completion evidence for local work. This protocol has no such resolver, so it fails closed: `applied`, `adopted`, path scans, and absent records never satisfy completion. `declined` and `superseded` may resolve it because no delivery remains due.
 
 `parked` and `clarify` are non-terminal under every policy that waits beyond receipt. A policy grants no deadline, delivery guarantee, response guarantee, priority, or implementation commitment.
 
 ## Release and pruning
 
-The sender may release its outbound copy only when its declared observation policy is satisfied. `unattended` does not permit immediate deletion: receipt must first be observable. A release-eligible outbound remains valid until the sender explicitly removes it.
+The sender lifecycle has only mutable `preparing`, immutable `submitted`, and explicit release. “Waiting” is not a stored phase: a submitted record is waiting while its selected policy is unsatisfied. The sender may release its outbound copy only when that policy is satisfied; release removes the submitted sender projection. A release-eligible outbound remains valid until the sender explicitly removes it.
 
 The receiver may prune its inbound copy only after an eligible sender release is observable. Absence before policy satisfaction is premature release, not permission to prune. An inbound record retains enough sender-policy and receiver-decision evidence to distinguish those cases after release. Cleanup is explicit and previewed; neither side performs background deletion.
 

@@ -95,7 +95,7 @@ Preparation, submission, receipt, receiver decision, and local completion remain
 
 Absence is an observable release signal only after the sender-selected receipt, decision, or completion condition is satisfied.
 
-- **RELEASE-1 [M + J] — release and pruning follow observable lifecycle evidence** — Sender release follows the declared observation policy: unattended and receipt wait for receipt, and decision waits for a terminal receiver decision. Applied, retained, declined, and superseded completion observations resolve directly; adopted completion remains unavailable until the selected adapter supplies owner-valid canonical completion evidence. Receiver pruning becomes eligible only after such a release is observable. (standards-trades.md)
+- **RELEASE-1 [M + J] — release and pruning follow observable lifecycle evidence** — Knowledge uses receipt; work uses decision or completion. Decision waits for a terminal receiver disposition. Completion remains unavailable without selected-adapter owner-valid evidence: applied, adopted, path scans, and missing records do not satisfy it; declined and superseded may resolve it because no delivery remains due. Receiver pruning becomes eligible only after such a release is observable. (standards-trades.md)
   - _Remediation:_ guarded — Observe the sender-selected lifecycle evidence and make no release or pruning change until the responsible repository confirms it.
   - _Evidence scope:_ Every submitted trade whose sender release or receiver pruning eligibility is under review.
   - _Review prompt:_ Assess the observable receipt, terminal decision, and completion evidence against the sender-selected observation policy before any sender release or receiver pruning action.

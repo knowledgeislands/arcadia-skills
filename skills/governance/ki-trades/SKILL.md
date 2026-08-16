@@ -3,11 +3,11 @@ name: ki-trades
 ki-kind: governance
 ki-depends-on: []
 ki-shared-dependencies: [ki-skills:rubric]
-contributes: ['.ki-config.toml']
-owns: ['+/_TRADES/README.md', '-/_TRADES/README.md']
+contributes: [".ki-config.toml"]
+owns: ["+/_TRADES/README.md", "-/_TRADES/README.md"]
 description: >
   Governs typed, directional cross-repository trades between locally registered Knowledge Islands repositories: mutable committed preparations, work and knowledge routes, TRD eight-hexadecimal identities, immutable submitted sender projections, receipt, receiver-only decisions, sender observation policies, release, and pruning. Use when preparing or submitting work or knowledge to another repository, observing a preparation, receiving or reviewing an inbound trade, auditing routes or records, or resolving direct application, adoption, retention, parking, clarification, decline, or supersession. A route grants visibility only; ki-change-management-roadmap and the receiving repository retain priority and acceptance authority.
-argument-hint: 'audit <repo> | conform <repo> | educate <repo> | help | refresh'
+argument-hint: "audit <repo> | conform <repo> | educate <repo> | help | refresh"
 ---
 
 # Knowledge Islands cross-repository trades
@@ -21,7 +21,7 @@ This governance skill defines safe **trade preparation and submission**, not tra
 3. **Trade phases and identity** — every preparation and submission uses one `TRD-<eight lower-case hexadecimal characters>` identity and declares `kind: work | knowledge`. Every copy declares its own `phase` — `preparing`, `submitted`, or `received`. A committed `phase: preparing` record is mutable and silently observable at the sender's outbound path; submission rewrites the phase to `submitted` on that same path and freezes it.
 4. **Authority and byte boundaries** — the sender writes only preparations and outbound submissions. The receiver creates and updates only its inbound copy. The complete raw sender projection remains byte-stable; only closed receiver-local receipt, decision, rationale, and linkage fields may differ.
 5. **Independent lifecycle axes** — submission, receipt, receiver decision, and sender observation policy are separate facts. Receipt creates an inbound `unconsidered` copy but implies no review or acceptance. The receiver alone moves through `in_progress`, `parked`, `clarify`, `applied`, `adopted`, `retained`, `declined`, or `superseded`.
-6. **Observation-led release** — `unattended` and `receipt` permit sender release after receipt, and `decision` waits for a terminal receiver decision. Completion observation for adopted local work is unavailable until the selected adapter supplies owner-valid canonical completion evidence; both sides retain the record rather than scanning paths or inferring completion. The receiver may prune only after an eligible sender release is observable.
+6. **Observation-led release** — knowledge uses `receipt`; work uses `decision` or `completion`. A sender is waiting while its submitted record has not satisfied its selected policy; it releases only by removing that outbound projection. `decision` waits for a terminal receiver decision. `completion` fails closed until the selected adapter supplies owner-valid canonical completion evidence: `applied`, `adopted`, path scans, and missing records never prove completion. `declined` and `superseded` may release because no delivery remains due. The receiver may prune only after an eligible sender release is observable.
 7. **Owned scaffold** — when the skill is declared, it owns the two `_TRADES` directories and their README files. `ki-repo` continues to own the generic `+` and `-` directories and README files whether or not this capability is declared.
 
 ## Operating modes
