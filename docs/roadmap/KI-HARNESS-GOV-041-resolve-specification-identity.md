@@ -4,7 +4,7 @@ area: GOV
 title: Resolve Specification identity
 theme: governance-consistency
 horizon: now
-status: awaiting-review
+status: done
 blocks: []
 blocked_by: []
 baseline_ref: 2b1f25597e90b23cfaf199320e59fae9fa5ebb97
@@ -131,6 +131,10 @@ GOV-041 is ready for human acceptance. Acceptance may close it without a follow-
 - **Verify:** Coordinator reruns the named audits and compares the post-change inventory with this baseline.
 - **Return:** Changed paths, test outcomes, rubric parity, any host handoff needed, and unresolved conflict.
 - **Checkpoint:** Return before any external capability, migration, staging, or commit.
+
+## Done
+
+Accepted by the repository owner on 2026-08-17. The completed record is retained as the governing implementation and review evidence.
 
 ## Discussion
 
