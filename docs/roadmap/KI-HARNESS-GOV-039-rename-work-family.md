@@ -4,7 +4,7 @@ area: GOV
 title: Rename to ki-work
 theme: governance-consistency
 horizon: now
-status: awaiting-review
+status: done
 blocks: []
 blocked_by: []
 baseline_ref: 09289f621b2c03f4f730497843bc7d65c09f0787
@@ -109,6 +109,10 @@ The migration is clean-cut: no alias, fallback, redirect, or dual activation pat
 ### Mini recap
 
 The user directly authorised this bounded estate migration, so no trade was used as a proxy for receiver acceptance. The item now awaits human review; it proposes neither pruning nor installed-runtime changes.
+
+## Done
+
+Accepted on 2026-08-17. The `ki-work*` family migration is retained as the current canonical identity; historical records retain the names they audited.
 
 ## Discussion
 

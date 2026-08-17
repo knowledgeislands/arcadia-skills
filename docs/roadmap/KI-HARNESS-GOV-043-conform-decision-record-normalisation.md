@@ -4,7 +4,7 @@ area: GOV
 title: Conform Decision Record normalisation
 theme: governance-consistency
 horizon: next
-status: awaiting-review
+status: done
 blocks: []
 blocked_by: []
 baseline_ref: fd1925db8eeb37adf298dc3bfc1ff4e3ab7b0b37
@@ -98,6 +98,10 @@ The delivered metadata and index repairs honour GOV-040 and do not alter semanti
 ### Mini recap
 
 GOV-040 has been removed as a dependency. The metadata and index conformers are implemented, tested, and publication-synchronised. This item awaits human review; no acceptance, pruning, or external-repository change is proposed.
+
+## Done
+
+Accepted on 2026-08-17. The bounded metadata and canonical index-link conformers are retained; malformed, ambiguous, and semantic repairs remain fail-closed.
 
 ## Discussion
 
