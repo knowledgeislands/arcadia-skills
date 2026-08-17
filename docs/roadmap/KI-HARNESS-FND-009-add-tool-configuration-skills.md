@@ -4,7 +4,7 @@ title: Add tool configuration skills
 area: FND
 theme: foundation-tooling
 horizon: now
-status: awaiting-review
+status: done
 blocks: []
 blocked_by: []
 baseline_ref: 3c0e7aaa7c5df63f7842de2d3d37cb0a45c96ef8
@@ -149,6 +149,10 @@ The original proposal was useful discovery work but not a justified capability r
 ### Mini recap
 
 FND-009 awaits review of the evidence-backed no-skill conclusion. No external repository, command, user configuration, or editor installation changed.
+
+## Done
+
+Accepted on 2026-08-17. No editor-configuration skills are warranted from the reviewed evidence; any later proposal requires a separately approved portable settings contract.
 
 ## Discussion
 
