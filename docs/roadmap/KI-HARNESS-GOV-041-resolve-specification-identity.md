@@ -4,10 +4,10 @@ area: GOV
 title: Resolve Specification identity
 theme: governance-consistency
 horizon: now
-status: ready
+status: awaiting-review
 blocks: []
 blocked_by: []
-baseline_ref: null
+baseline_ref: 2b1f25597e90b23cfaf199320e59fae9fa5ebb97
 ---
 
 ## Goal
@@ -36,11 +36,11 @@ The owning ADR records the policy, but `SKILL.md`, standard and exemplars still 
 
 ## Steps
 
-- [ ] Align `ki-specs` guidance, standard, NEW procedure, and exemplars with prefix-scoped serials and declaration-led applicability.
-- [ ] Add an explicit applicability input to the rubric context; return not-applicable for undeclared repositories and fail closed for declared missing, malformed, symlinked, or unsafe corpus evidence.
-- [ ] Extend the checker to validate prefix ownership, per-prefix sequential serials, corpus-local complete-ID uniqueness, and independent sequences in a multi-prefix file.
-- [ ] Add fixtures for declared valid, declared absent, missing index, malformed and symlinked evidence, undeclared absent/present directories, duplicate IDs, duplicate serials within a prefix, and equal serials across different prefixes.
-- [ ] Re-run the three declared corpora and record confirmation that no identifier or index migration is needed; route any host-only selection capability as a coded tools-ki handoff instead of duplicating it here.
+- [x] Align `ki-specs` guidance, standard, NEW procedure, and exemplars with prefix-scoped serials and declaration-led applicability.
+- [x] Add an explicit applicability input to the rubric context; return not-applicable for undeclared repositories and fail closed for declared missing, malformed, symlinked, or unsafe corpus evidence.
+- [x] Extend the checker to validate prefix ownership, per-prefix sequential serials, corpus-local complete-ID uniqueness, and independent sequences in a multi-prefix file.
+- [x] Add fixtures for declared valid, declared absent, missing index, malformed and symlinked evidence, undeclared absent/present directories, duplicate IDs, duplicate serials within a prefix, and equal serials across different prefixes.
+- [x] Re-run the three declared corpora and record confirmation that no identifier or index migration is needed; route any host-only selection capability as a coded tools-ki handoff instead of duplicating it here.
 
 ## Files touched
 
@@ -81,6 +81,32 @@ No human guide change is expected unless the completed contract changes contribu
 ### Roadmap
 
 This record supplies the implementation boundary; any host capability discovered during the work becomes a separately coded tools-ki handoff.
+
+## Review
+
+### Delivered
+
+Aligned `ki-specs` with the approved per-prefix identity and declaration-led applicability contract. The checker now reports undeclared corpora as N/A and refuses invalid declared evidence.
+
+### Summary of changes
+
+Updated the skill, standard, NEW procedure, exemplars, rubric context and criteria, fixtures, and generated rubric publication. No Decision Record beyond the already amended ADR, external repository, or identifier/index migration was required.
+
+### Verification
+
+Focused Specs tests passed (14 tests, 57 assertions); TypeScript, Markdown linting, rubric publication parity, the focused `ki-specs` audit, and diff checks passed. The estate inventory remains 134 requirements with no identifier or index changes.
+
+### Outstanding concerns
+
+None. A host-resolved selection capability was not needed for the source-local declaration-led contract.
+
+### Post-change review
+
+The contract now distinguishes corpus-local identity from any future cross-repository locator. A future external reference must carry repository or corpus context rather than treating short IDs as estate-global.
+
+### Mini recap
+
+GOV-041 is ready for human acceptance. Acceptance may close it without a follow-on migration item.
 
 ## Delegation
 
