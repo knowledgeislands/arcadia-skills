@@ -3,9 +3,8 @@ id: KI-HARNESS-RTP-003
 title: Route harness state
 area: RTP
 theme: runtime-portability
-horizon: future
+horizon: parked
 status: draft
-candidate: true
 blocks: []
 blocked_by: []
 baseline_ref: null
@@ -17,7 +16,7 @@ Put each kind of harness state in the durable home that matches how it must be s
 
 ## Context
 
-Produce a finite routing table or decision record assigning each state class to repository tracking, knowledge-base content, synchronized personal configuration, or intentionally disposable machine-local storage.
+The candidate was intended to produce a finite routing table or decision record assigning each state class to repository tracking, knowledge-base content, synchronized personal configuration, or intentionally disposable machine-local storage. No concrete state-loss, duplication, exposure, or ownership failure currently justifies that broad review.
 
 ## Boundary
 
@@ -40,3 +39,7 @@ For each class, assess whether it must survive machine replacement, be shared wi
 ### Evidence for promotion
 
 Promotion needs a finite first inventory, an identified contradictory duplicate or misplaced state class, and a decision on whether the outcome is a routing table or a Decision Record. Do not start a broad migration merely because multiple copies exist.
+
+### Return trigger
+
+Reconsider only when machine migration loses state that should have survived, one state class has contradictory canonical copies, sensitive state is found in an inappropriate home, or recurring manual recovery demonstrates that the current routing is inadequate.

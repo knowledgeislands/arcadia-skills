@@ -1,11 +1,10 @@
 ---
 id: KI-HARNESS-FND-015
-title: Explore knowledge acquisition
+title: Add Harness pulse review
 area: FND
 theme: foundation-tooling
-horizon: future
+horizon: soon
 status: draft
-candidate: true
 blocks: []
 blocked_by: []
 baseline_ref: null
@@ -13,60 +12,48 @@ baseline_ref: null
 
 ## Goal
 
-Explore whether Knowledge Islands needs a governed way to preserve selected source material for later knowledge extraction without treating acquisition itself as extraction.
+Add an on-demand `ki-pulse` process that keeps the Harness aware of relevant public developments and turns worthwhile signals into evidence-backed improvement candidates.
 
 ## Context
 
-An early developer guide described a manual pilot for capturing one user-selected ChatGPT conversation or project into a KEP-shaped evidence set. That work moved ahead of the more basic acquisition, extraction, authority, privacy, and destination contracts. The useful safety and evidence-shape thinking is retained here as a candidate rather than presented as a supported contributor procedure or agent capability.
+The Harness already refreshes each governance skill against its tracked normative sources, but it has no bounded way to look across broader public developments and ask whether a new tool, technique, standard, or recurring pattern warrants a Harness change. The earlier acquisition candidate mixed that discovery need with preservation of private source material. This item retains only the public discovery and review outcome.
 
 ## Boundary
 
-This candidate does not establish KAF, KEP, or KBEP as approved formats; create a `ki acquire` command or skill; authorise access to conversations or private assets; automate a browser or authenticated session; perform knowledge extraction; or write into a Knowledge Base.
+The process is scoped to the selected `ki-agentic-harness` repository and stops elsewhere. It does not acquire private material, preserve conversations, scrape authenticated sessions, create a general discovery index, automatically change the Harness, or replace an owning skill's REFRESH authority. A signal is evidence for review, not proof that the Harness should adopt it.
+
+## Shaping
+
+### Intended approach
+
+Create `ki-pulse` as a process skill invoked explicitly when the user asks to check what is changing around the Harness. It reviews a bounded, declared set of current public signals, records the source, observation date, reason for relevance, affected Harness capability, and uncertainty, then compares each viable signal with current repository evidence.
+
+Route a normative-source change to the owning skill's REFRESH mode. Route a distinct finite improvement proposal through `ki-next`. Report interesting but unactionable signals without creating work, and discard irrelevant popularity noise.
+
+### Known dependencies
+
+The process needs current web or provider access to its declared public sources and a clean way to identify the selected Harness repository. `ki-skills` governs the new process skill's quality; `ki-next` retains roadmap selection authority; each governance skill retains authority over its own source refresh.
+
+### Decisions still needed
+
+Choose the first deliberately small signal set and the maximum evidence retained in the run result. Decide whether repeated observations remain session output until they justify work or whether the Harness needs a concise repository-owned pulse record.
+
+### Promotion conditions
+
+Promote when the initial signal set, source-selection boundary, result shape, repository applicability check, and hand-off rules to REFRESH and `ki-next` are concrete enough to verify without turning the process into open-ended browsing.
 
 ## Discussion
 
-### Safety observations
+### Candidate signals
 
-- Acquire only material the user is entitled to access and explicitly selects.
-- Keep private source material outside Git working trees and never commit conversations, credentials, session data, tokens, or private assets.
-- Prefer user-provided exports, downloads, or manually supplied content over browser automation, undocumented APIs, existing profiles, or copied authentication material.
-- Preserve unavailable records and known omissions rather than presenting a partial capture as complete.
-
-### Candidate evidence shape
-
-The earlier pilot separated unchanged originals, readable records, binary assets, source-native relationships, checksums, and a manifest candidate. That separation may be useful if this idea is revisited:
-
-```text
-<private-output>/
-├── kep.toml
-├── README.md
-├── source/
-│   ├── originals/
-│   └── records/
-├── assets/
-├── relationships/
-│   └── native.jsonl
-└── checksums/
-    └── sha256sums.txt
-```
-
-Relationships at the acquisition stage would remain source-native—such as project-to-conversation, message-to-attachment, ordering, and explicit links—rather than inferred decisions, concepts, or reusable knowledge.
-
-### Public discovery candidates
-
-Track public discovery signals separately from acquisition of private or selected material. A signal creates a review candidate with source URL, observed date, query or list context, and reason for relevance; it never automatically promotes content into a Knowledge Base.
+A pulse may inspect release notes and primary documentation for relevant agent runtimes, standards, developer tools, and repositories; repeated appearances in selected public discovery surfaces may supply a lead. Every lead must be checked against a primary source before it can support a Harness proposal.
 
 | Signal | Suggested observation | Boundary |
 | --- | --- | --- |
-| Most-starred GitHub repositories | Periodic query snapshots in selected topics/languages. | Star totals are popularity evidence, not quality or fit. |
-| GitHub Trending | Repeated appearances across a defined time window. | A single appearance is not a durable recommendation. |
-| [sindresorhus/awesome](https://github.com/sindresorhus/awesome) | Index changes and selected linked lists. | The index is a curated seed, not wholesale ingestion authority. |
+| Relevant release or standard | Changed supported behaviour with a primary source. | A release is not automatically applicable to the Harness. |
+| Repeated public discovery signal | Repeated appearances in a declared topic or tool area. | Popularity is discovery evidence, not quality or fit. |
+| Curated public index | A newly relevant category or linked project. | A curated list is a seed, not wholesale ingestion authority. |
 
-Any later discovery design must set cadence, filters, source-retention limits, review ownership, and the hand-off from a candidate to deliberate knowledge acquisition.
+### Review outcome
 
-### Questions before promotion
-
-- Is acquisition a reusable agent capability, a host tool, or an external data-ingress concern?
-- Which authority and privacy model governs source selection, storage, retention, and deletion?
-- What is the minimum portable evidence contract, if any, before extraction begins?
-- Which later process owns extraction, reconciliation, provenance, and Knowledge Base ingress?
+The process ends with cited observations and one disposition per signal: route to an owning REFRESH, propose finite roadmap work, retain as a named monitoring trigger, or discard. It never implements its own recommendation.
