@@ -52,6 +52,18 @@ The earlier pilot separated unchanged originals, readable records, binary assets
 
 Relationships at the acquisition stage would remain source-native—such as project-to-conversation, message-to-attachment, ordering, and explicit links—rather than inferred decisions, concepts, or reusable knowledge.
 
+### Public discovery candidates
+
+Track public discovery signals separately from acquisition of private or selected material. A signal creates a review candidate with source URL, observed date, query or list context, and reason for relevance; it never automatically promotes content into a Knowledge Base.
+
+| Signal | Suggested observation | Boundary |
+| --- | --- | --- |
+| Most-starred GitHub repositories | Periodic query snapshots in selected topics/languages. | Star totals are popularity evidence, not quality or fit. |
+| GitHub Trending | Repeated appearances across a defined time window. | A single appearance is not a durable recommendation. |
+| [sindresorhus/awesome](https://github.com/sindresorhus/awesome) | Index changes and selected linked lists. | The index is a curated seed, not wholesale ingestion authority. |
+
+Any later discovery design must set cadence, filters, source-retention limits, review ownership, and the hand-off from a candidate to deliberate knowledge acquisition.
+
 ### Questions before promotion
 
 - Is acquisition a reusable agent capability, a host tool, or an external data-ingress concern?
