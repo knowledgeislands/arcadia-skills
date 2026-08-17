@@ -4,7 +4,7 @@ area: GOV
 title: Resolve Specification identity
 theme: governance-consistency
 horizon: now
-status: draft
+status: ready
 blocks: []
 blocked_by: []
 baseline_ref: null
@@ -12,75 +12,100 @@ baseline_ref: null
 
 ## Goal
 
-Choose one unambiguous Specification identifier and applicability contract, then align its standard, checker, host selection, and fixtures.
+Make `ki-specs` use one unambiguous, declaration-led identity contract and make its checker prove that contract.
 
 ## Context
 
-`KI-HARNESS-REV-001` found that `ki-specs` says serials are per prefix while its standard permits multiple prefixes per file and describes sequencing differently. The checker enforces global uniqueness, which matches neither reading. A separate conflict exists between the Decision Record’s not-applicable rule for a target without `docs/specs` and the native context’s missing-index failure.
+The review found a contradiction: `ki-specs` permits multiple prefixes in one file, while parts of its guidance describe serials as file-scoped and its checker proves only complete-ID uniqueness.
 
-The current implementation preserves trustworthy structural checks while leaving both policy choices visible. It must not manufacture an answer from incidental directory shape.
+`ADR-KI-HARNESS-SKILLS-008` now owns the settled policy: a requirement ID is append-only and sequential within its registered prefix; one file may host independent sequences for several prefixes; complete IDs are unique within the governed corpus.
+
+Applicability is declaration-led. An incidental `docs/specs/` directory in a repository that does not declare `ki-specs` is not governed. Once declared, a missing, malformed, or unsafe corpus fails closed.
+
+The 15-repository inventory found three declared corpora and no incidental ones: Harness (5 prefixes, 57 requirements), tools-ki (12, 63), and tools-mgit (1, 14). Every prefix maps to one file, serials are contiguous from `001`, and no IDs collide within a corpus. The policy therefore requires no identifier or index migration. Six short identifiers overlap between Harness and tools-ki, with no inbound references, confirming that identity is corpus-local rather than estate-global.
 
 ## Boundary
 
-Decide the policy and its migration only. Do not renumber existing Specifications, turn undeclared directories into activation, or weaken malformed-document failures before the intended scope is approved.
+This item changes the portable `ki-specs` contract, checker, fixtures, and its owning ADR only.
+
+It does not create a new Decision Record, renumber existing requirements, activate undeclared repositories, inspect or modify external repositories, or implement host-owned declared-skill selection. If the checker needs host selection evidence unavailable to a source-local audit, it must report that state truthfully and route the capability to tools-ki.
 
 ## Current state
 
-Serial scope and applicability are explicitly unresolved in the review record. The checker already fails closed for malformed local evidence and duplicate prefix ownership, but cannot establish the intended serial sequence or activation boundary without a governing choice.
-
-The work is fully shapeable as two independently reconsiderable Specification-contract questions, but it cannot become Ready until the corpus inventory supplies the migration evidence and the owning decision is amended. `ADR-KI-HARNESS-SKILLS-008` already owns the purpose and core contract of `ki-specs`; it must carry any chosen serial-identity and applicability policy.
-
-## Decision gate
-
-Recommended policy: identifiers are append-only and sequential within each registered prefix, including independent sequences for prefixes sharing one file. Applicability is declaration-led: an undeclared incidental `docs/specs/` directory is not applicable; once `ki-specs` is declared, missing or malformed corpus evidence fails closed.
-
-Before implementation, record the estate inventory of declarations, corpus state, prefix/file ownership, serials, multi-prefix files, and inbound identifier references. Current evidence indicates this policy needs no identifier renumbering, but the inventory is the migration proof.
+The owning ADR records the policy, but `SKILL.md`, standard and exemplars still contain file-scoped wording. The checker lacks a declared-versus-undeclared applicability state and does not test per-prefix serial continuity or multiple prefixes in one file.
 
 ## Steps
 
-- [ ] Inventory the retained Specification corpus by file, prefix, serial, multi-prefix ownership, repository declaration, and incidental-directory state; record the migration count for each alternative.
-- [ ] Amend `ADR-KI-HARNESS-SKILLS-008` to choose global, per-prefix, or per-file serial identity, define multi-prefix-file participation, and choose whether an undeclared incidental `docs/specs/` directory is not applicable or a repository conformance failure while preserving malformed declared evidence as a failure.
-- [ ] Update the Decision Records index and define one clean-cut migration for identifiers, indexes, host selection, and fixtures with no dual semantics or compatibility fallback.
-- [ ] Capture separate implementation work for the checker and estate only after both decisions are approved.
+- [ ] Align `ki-specs` guidance, standard, NEW procedure, and exemplars with prefix-scoped serials and declaration-led applicability.
+- [ ] Add an explicit applicability input to the rubric context; return not-applicable for undeclared repositories and fail closed for declared missing, malformed, symlinked, or unsafe corpus evidence.
+- [ ] Extend the checker to validate prefix ownership, per-prefix sequential serials, corpus-local complete-ID uniqueness, and independent sequences in a multi-prefix file.
+- [ ] Add fixtures for declared valid, declared absent, missing index, malformed and symlinked evidence, undeclared absent/present directories, duplicate IDs, duplicate serials within a prefix, and equal serials across different prefixes.
+- [ ] Re-run the three declared corpora and record confirmation that no identifier or index migration is needed; route any host-only selection capability as a coded tools-ki handoff instead of duplicating it here.
 
 ## Files touched
 
 - `docs/decisions/ADR-KI-HARNESS-SKILLS-008-a-specifications-skill-for-the-what.md`
-- `docs/decisions/README.md`
-- This work item
-- A separate roadmap item only when the approved decisions require implementation
+- `skills/governance/ki-specs/SKILL.md`
+- `skills/governance/ki-specs/references/standards-specs.md`
+- `skills/governance/ki-specs/references/mode-new.md`
+- `skills/governance/ki-specs/references/exemplars.md`
+- `skills/governance/ki-specs/scripts/rubric/`
+- `skills/governance/ki-specs/references/rubric.md`
 
 ## Verify
 
-- The skill, standard, host selection, checker, and fixtures state the same serial scope and applicability rule.
-- Existing identifiers have an explicit continuity or migration path.
-- Undeclared, malformed, and declared Specifications have distinct expected outcomes covered by fixtures.
-- `ki repo audit --skill ki-decision-records --repo .`, `ki repo audit --skill ki-work-roadmap --repo .`, and `ki repo audit --skill ki-authoring --repo .` pass.
+- Focused `ki-specs` rubric tests prove every applicability and serial fixture above.
+- `bunx tsc --noEmit` passes.
+- `ki dev skill rubric ki-specs` reproduces the published rubric.
+- `ki repo audit --skill ki-specs --repo .`, `ki repo audit --skill ki-decision-records --repo .`, and `ki repo audit --skill ki-work-roadmap --repo .` pass.
+- The post-change inventory reports the same 134 existing requirement IDs and no index edits.
 
 ## Dependencies / blocks
 
-Depends on the `ki-specs` review record. It becomes Ready only after the corpus inventory is recorded and the owning Specifications decision is amended with the two pending policy choices. It blocks dependent identity and applicability implementation; it does not reopen the completed review.
+The policy is settled in the amended ADR and the estate inventory is complete. The implementation may proceed locally. A host-resolved selection capability, if genuinely needed, is a separate tools-ki concern and must not block source-local contract alignment.
 
 ## Documentation impact
 
 ### Decision Records
 
-The resulting specification-identity authority amends the existing Specifications decision record; GOV-040 has resolved the shared Knowledge metadata baseline.
+`ADR-KI-HARNESS-SKILLS-008` is amended in place as the existing owner; no new Decision Record is needed.
 
 ### Specifications
 
-This work defines the identity and authority boundary for Specifications; it does not silently rewrite existing contracts.
+No behaviour-level product Specification changes; this work governs the format of Specifications.
 
 ### Guides
 
-No guide change is planned until the decision identifies the contributor-facing workflow.
+No human guide change is expected unless the completed contract changes contributor-facing instructions.
 
 ### Roadmap
 
-The GOV-040 prerequisite is resolved; any migration or checker change becomes explicit follow-on work after the two pending decisions and corpus inventory.
+This record supplies the implementation boundary; any host capability discovered during the work becomes a separately coded tools-ki handoff.
+
+## Delegation
+
+### Locked decisions
+
+- Requirement serials are append-only and sequential per registered prefix.
+- Applicability is declaration-led; undeclared incidental directories are not governed, while declared invalid evidence fails closed.
+- No existing ID is renumbered and no external repository is modified.
+
+### Escalate
+
+- A required capability cannot be expressed through source-local declaration evidence.
+- Any corpus requires ID or index migration contrary to the inventory.
+- A source conflicts with the amended ADR.
+
+### Worker: specs-rubric
+
+- **Deliverable:** Aligned `ki-specs` source, fixtures, regenerated rubric, and concise verification evidence.
+- **Scope:** Only `skills/governance/ki-specs/`.
+- **Authority:** Edit the named skill root and run its local tests; no external repository, runtime host, or Git publication writes.
+- **Isolation:** Exclusive skill-root lane; use a worker-local Git index for any proposed commit.
+- **Verify:** Coordinator reruns the named audits and compares the post-change inventory with this baseline.
+- **Return:** Changed paths, test outcomes, rubric parity, any host handoff needed, and unresolved conflict.
+- **Checkpoint:** Return before any external capability, migration, staging, or commit.
 
 ## Discussion
 
-### Why a decision comes first
-
-The alternatives have different user-visible identity and activation consequences. A narrow code fix would choose policy accidentally, so it is intentionally deferred until the governing contract is explicit.
+The implementation must preserve the difference between a corpus-local requirement identity and an estate-wide locator. Any future cross-repository reference needs repository or corpus context; it must not silently redefine requirement identifiers as estate-global.
