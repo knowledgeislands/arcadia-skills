@@ -3,7 +3,7 @@ id: KI-HARNESS-GOV-041
 area: GOV
 title: Resolve Specification identity
 theme: governance-consistency
-horizon: next
+horizon: now
 status: draft
 blocks: []
 blocked_by: []
@@ -29,6 +29,12 @@ Decide the policy and its migration only. Do not renumber existing Specification
 Serial scope and applicability are explicitly unresolved in the review record. The checker already fails closed for malformed local evidence and duplicate prefix ownership, but cannot establish the intended serial sequence or activation boundary without a governing choice.
 
 The work is fully shapeable as two independently reconsiderable governance decisions, but it cannot become Ready until the corpus inventory supplies the migration evidence and both decisions are approved. `GDR-KI-HARNESS-008` will own Specification serial identity and `GDR-KI-HARNESS-009` will own capability applicability.
+
+## Decision gate
+
+Recommended policy: identifiers are append-only and sequential within each registered prefix, including independent sequences for prefixes sharing one file. Applicability is declaration-led: an undeclared incidental `docs/specs/` directory is not applicable; once `ki-specs` is declared, missing or malformed corpus evidence fails closed.
+
+Before implementation, record the estate inventory of declarations, corpus state, prefix/file ownership, serials, multi-prefix files, and inbound identifier references. Current evidence indicates this policy needs no identifier renumbering, but the inventory is the migration proof.
 
 ## Steps
 

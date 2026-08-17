@@ -3,7 +3,7 @@ id: KI-HARNESS-FND-009
 title: Add tool configuration skills
 area: FND
 theme: foundation-tooling
-horizon: next
+horizon: now
 status: draft
 blocks: []
 blocked_by: []
@@ -60,6 +60,12 @@ Promote when the names, key-level versus whole-file ownership, conditional `ki-e
 The reference files are only `.vscode/settings.json` and `.zed/settings.json`, and they are not a coherent policy: VS Code selects Biome for JavaScript, TypeScript, and JSON, while Zed selects Prettier globally. Current primary editor documentation confirms project/workspace settings and the file-hygiene keys, but Zed's Biome support requires a community extension and its `.editorconfig` support already owns line endings. The plan must therefore choose whether these skills provide only non-duplicative editor behaviour or conditionally compose with `ki-engineering`; it cannot copy the two reference files wholesale.
 
 The evidence establishes the source boundary but leaves three implementation decisions unresolved: exact initial keys, whole-file versus key-level ownership, and the formatter/extension policy. Until they are selected together, neither a skill name nor a verification fixture is reviewable enough for Ready.
+
+## Decision gate
+
+Recommended disposition: do not create editor-configuration skills now. The available VS Code and Zed settings are either user preference, duplicated `.editorconfig` policy, or require an extension/formatter selection outside a reusable skill's authority. This is a justified boundary, not missing implementation.
+
+An alternative implementation requires explicit approval of one real portable setting set, named-key ownership only, a no-extension-installation boundary, and one tool at a time. Whole-file ownership and formatter integration remain out of scope.
 
 ## Steps
 
