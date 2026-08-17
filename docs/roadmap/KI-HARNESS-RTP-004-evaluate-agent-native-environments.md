@@ -16,7 +16,9 @@ Decide how to run durable agent terminals on a personal server and reach them co
 
 ## Context
 
-Zed is already the effective local client and its remote-session experience is valuable. The remaining question is how the remote terminals and agent processes should run on the server: whether Zed's supported remote workflow is sufficient, whether Herdr adds useful session orchestration, and whether Mosh improves connection continuity. Pi is not part of the current evaluation.
+Zed is already the effective local client and its remote-session experience is valuable. Its current remote-development contract runs terminals, tasks, language servers, and source on a headless server reached through SSH; its daemon reconnects after a dropped connection and locally persisted unsaved changes can be restored. The remaining gap is not editor reconnection but durable ownership and visibility of long-running agent terminals.
+
+Herdr directly targets that gap: it runs as a background server that owns terminals, supports detach and reattach over SSH, reports agent-pane state, and exposes CLI and socket APIs. Mosh improves a standalone interactive terminal across roaming and intermittent connectivity, but Zed's remote-development transport is SSH and already reconnects its daemon. Mosh is therefore an alternative terminal access path, not an additional Zed transport. Pi is not part of the current evaluation.
 
 ## Boundary
 
@@ -26,19 +28,19 @@ Do not replace the working Zed setup, expose an unauthenticated remote service, 
 
 ### Intended approach
 
-Describe the target workflow first: start or resume a long-lived agent terminal on the server, survive a client disconnect where the chosen layer supports it, reconnect from Zed, and retain a clear repository and session identity. Establish the simplest supported Zed-only baseline, then compare Herdr and Mosh only for gaps the baseline demonstrates.
+Describe the target workflow first: start or resume a long-lived agent terminal on the server, survive a client disconnect, reconnect from Zed, and retain clear repository, agent, and session identity. Establish the supported Zed-only baseline, then test Herdr specifically for terminal and process persistence plus blocked or idle visibility. Evaluate Mosh only if a separate non-Zed terminal workflow is required.
 
 ### Known dependencies
 
-The review needs primary documentation for Zed remote development, Herdr, and Mosh, plus a bounded hands-on proof against the intended server. Authentication, network exposure, repository access, terminal ownership, and recovery behaviour must be explicit before adoption.
+Primary documentation establishes the architectural split: Zed owns the editor-side SSH remote daemon and reconnect behaviour; Herdr can own persistent terminals and agent status on the server; Mosh can own a separate roaming terminal connection. A bounded hands-on proof against the intended server remains necessary. Authentication, network exposure, repository access, terminal ownership, and recovery behaviour must be explicit before adoption.
 
 ### Decisions still needed
 
-Identify the server operating environment and access path, the required disconnect and reconnection behaviour, and whether the desired durable unit is a terminal, an agent process, or a named higher-level session. Decide what Herdr or Mosh would replace or complement rather than layering both by default.
+Identify the server operating system, repository root, SSH access path, and whether Herdr should run as a user service or only within an interactive login. Define the required disconnect duration, restart behaviour, agent-state visibility, and recovery test. The desired durable unit is a Herdr-owned terminal containing an agent process; Zed remains the editor and connection entry point. Mosh remains out of the first proof unless an independent terminal client is required.
 
 ### Promotion conditions
 
-Promote when the server target, named session workflow, security boundary, baseline proof, and acceptance criteria for any additional layer are concrete enough to plan.
+Promote when the server target and access path are named, the Zed-only baseline is observed, and the Herdr proof has pass or fail criteria for detach and reattach, dropped SSH, server-side process survival, blocked or idle state, repository identity, and restart recovery.
 
 ## Discussion
 
@@ -52,7 +54,7 @@ Assess each candidate against server-hosted repository work, agent supervision, 
 
 ### Evidence and comparison
 
-Use primary documentation and a small hands-on proof only when a candidate exposes a plausible integration boundary. Compare local-first operation, filesystem and Git access, authentication and data egress, extension or automation surface, remote-session model, and whether the capability is portable or runtime-vendor-specific. Do not score a product by feature count or infer an integration from adjacent capability.
+Use [Zed remote-development documentation](https://zed.dev/docs/remote-development), [Herdr's primary repository](https://github.com/herdrdev/herdr), and [Mosh documentation](https://mosh.org/) for the supported interface baseline. Compare local-first operation, filesystem and Git access, authentication and data egress, extension or automation surface, remote-session model, and whether the capability is portable or runtime-vendor-specific. Do not score a product by feature count or infer an integration from adjacent capability.
 
 ### Decision outputs
 

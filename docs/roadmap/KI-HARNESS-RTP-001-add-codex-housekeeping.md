@@ -12,47 +12,50 @@ baseline_ref: null
 
 ## Goal
 
-Add Codex housekeeping only when an official contract makes it safe and supportable.
+Add safe, repository-scoped Codex session housekeeping through the official Codex interfaces.
 
 ## Context
 
-Create `ki-work-housekeeping-codex` only after Codex exposes an official selected-repository identity together with supported retention, cleanup, and safe-conform boundaries.
+Create `ki-housekeeping-codex` as the Codex runtime counterpart to `ki-housekeeping-claude`. The portable `ki-work-housekeeping` skill continues to own recurring repository-maintenance templates; this item owns explicit cleanup of Codex runtime sessions and never creates scheduled work.
 
 ## Boundary
 
-Do not add an empty symmetric capability or infer ownership from undocumented caches.
+Do not infer ownership from undocumented caches, expose transcript content, silently delete sessions, or turn a Codex-specific operation into portable housekeeping policy. Retention configuration, archive-only tidying, memory cleanup, and other Codex state classes remain outside the first delivery.
 
 ## Current state
 
-The return condition was met on 2026-08-17. Codex CLI 0.147.0 provides the stable `codex delete` command for deleting a named or identified saved session, while the official app-server contract exposes canonical working-directory identity through `thread/list` and exact persisted-thread deletion through `thread/delete`.
+The return condition was met on 2026-08-17. The official Codex command reference describes stable `codex delete` support for one named or identified saved session. The official app-server contract exposes exact working-directory filtering through `thread/list` and permanent identity-based deletion through `thread/delete`; deletion also removes spawned descendants. App-server remains an experimental Codex surface, so the skill must isolate that binding behind one small script and fail closed when the installed protocol does not match the tested contract.
 
-Shape the capability around those supported surfaces. It must enumerate sessions whose canonical working directory matches the selected repository, present the exact candidates for review, and delete only confirmed thread identities. It must not infer repository ownership from cache layout, use forced bulk deletion as its normal conform path, or broaden deletion to sessions outside the selected repository.
+The first delivery is explicit cleanup, not automated retention. AUDIT enumerates active and archived sessions whose exact `cwd` matches the selected physical repository, returns identity and deletion-impact metadata without turns or items, and performs no mutation. CONFORM consumes a reviewed selection of exact thread IDs, re-lists immediately before deletion, refuses identity or descendant drift, and deletes only the unchanged selection. The stable CLI remains the documented manual fallback for one session; it is not a machine-readable inventory API.
 
 ## Steps
 
-- [ ] Inventory the stable Codex CLI and app-server operations needed for repository-scoped session listing, retention inspection, and deletion.
-- [ ] Define how the selected physical repository maps to canonical Codex working-directory identity, including worktrees, missing directories, and sessions with no working directory.
-- [ ] Define AUDIT output that presents each exact candidate, its thread identity, working directory, archive state, age evidence, and descendant-session effect without exposing transcript content.
-- [ ] Define CONFORM so deletion requires explicit reviewed selection, uses supported thread identities, fails closed on identity drift or ambiguity, and never treats forced bulk deletion as the normal path.
-- [ ] Add the Codex housekeeping skill, focused fixtures, generated catalogue publication, and contributor-facing invocation guidance.
+- [ ] Add the runtime-bound `ki-housekeeping-codex` process skill with explicit AUDIT, CONFORM, HELP, and no default destructive action.
+- [ ] Add one deterministic script that starts or connects to app-server, performs the required handshake, validates the supported method and result shape, and exposes only repository-scoped inventory and selected deletion operations.
+- [ ] Resolve the selected physical repository and pass its exact canonical path to both active and archived `thread/list` queries; treat worktrees as distinct working directories and exclude missing, null, parent, child, and symlink-alias matches.
+- [ ] Make AUDIT output a review artifact containing each thread ID, exact working directory, active or archived state, creation/update evidence available from the contract, and complete spawned-descendant IDs without turn or item content.
+- [ ] Make CONFORM accept only that reviewed artifact, re-read every selected root and descendant immediately before mutation, reject drift or ambiguity atomically, and call `thread/delete` once per unchanged selected root.
+- [ ] Add focused protocol fixtures, catalogue publication, skills-by-outcome guidance, and a source list that tracks the experimental app-server contract.
 
 ## Files touched
 
-- A new `ki-work-housekeeping-codex` skill root and focused tests
+- `skills/change-management/ki-housekeeping-codex/`
+- Focused protocol and safety fixtures under that skill root
 - Generated skill catalogue and rubric publication
-- The skills-by-outcome guide if the new invocation adds a distinct user outcome
+- `docs/guides/skills-by-outcome.md`
 - This work item
 
 ## Verify
 
-- Focused fixtures prove exact working-directory matching, worktree handling, descendant disclosure, ambiguous identity refusal, and selected deletion.
+- Focused fixtures prove app-server handshake and capability refusal, exact working-directory matching, separate worktree identity, active and archived inventory, descendant disclosure, stale-selection refusal, and selected deletion.
 - AUDIT performs no deletion and reveals no transcript content.
-- CONFORM refuses unreviewed, stale, missing, cross-repository, or ambiguous candidates.
+- CONFORM refuses unreviewed, stale, missing, cross-repository, protocol-incompatible, descendant-drifted, or ambiguous candidates without partially deleting the selection.
+- The installed Codex CLI's one-session deletion remains a documented manual fallback and is not invoked through forced bulk deletion.
 - `ki repo audit --skill ki-skills --repo .`, `bun run test`, and `bunx tsc --noEmit` pass.
 
 ## Dependencies / blocks
 
-The required official Codex identity and deletion surfaces are available. Planning must confirm whether retention inspection is fully supported or whether the first delivery should scope itself to reviewable deletion of repository-matched sessions. This item blocks no other roadmap work.
+The required official identity and deletion surfaces are documented, but the machine-readable inventory and deletion binding is experimental. The first delivery therefore depends on a version-negotiated app-server wrapper and a tracked source refresh; it does not depend on unsupported retention inspection. This item blocks no other roadmap work.
 
 ## Documentation impact
 
@@ -76,4 +79,4 @@ Keep any unsupported retention automation or additional Codex state classes as e
 
 ### Return condition
 
-Met on 2026-08-17 by the official working-directory-filtered thread inventory and supported session-deletion contracts. Planning must still define retention policy, review evidence, descendant-session handling, and the safe AUDIT / CONFORM boundary before the item can become Ready.
+Met on 2026-08-17 by the official working-directory-filtered thread inventory and supported session-deletion contracts. The plan now fixes the first delivery to explicit repository-scoped cleanup and records the app-server maturity risk; human review is still required before any Ready transition.

@@ -38,11 +38,13 @@ The adapter standards own provider identity, lifecycle mapping, transfer or move
 
 ### Decisions still needed
 
-Define the runtime-neutral operation contract exposed by an authenticated remote capability, including read evidence, stale-read detection, conflict reporting, mutation confirmation, and the durable reference returned to the process record. Decide the minimum operation set that proves both GitHub Issues and Linear without coupling the shared process skills to either provider.
+Define the runtime-neutral operation contract exposed by an authenticated remote capability: provider, native locator, record snapshot or version evidence, intended lifecycle mutation, approval evidence, post-write snapshot, and durable remote reference. The provider binding may use a connector, CLI, or API, but the process result cannot expose provider-specific fields to the shared lifecycle beyond the adapter's declared mapping.
+
+Use a staged proof rather than implementing every process at once. First prove adapter resolution and read-only inventory through `ki-next`; then prove one reversible readiness transition through `ki-plan`, including stale-read refusal and immediate post-write verification. Extend the same operation contract to delivery evidence and acceptance only after that slice proves the authority boundary.
 
 ### Promotion conditions
 
-Promote when the provider locator contract, operation result shape, capability-resolution rule, concurrency stop, and first end-to-end process slice are concrete enough to plan and verify.
+Promote when the Linear workspace locator, operation input and result shapes, capability-resolution rule, stale-read stop, and the `ki-next` → `ki-plan` pilot record and repository are selected. GitHub Issues and Linear need provider fixtures, but only one provider needs to be the first live pilot.
 
 ## Discussion
 
