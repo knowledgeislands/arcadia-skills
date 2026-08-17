@@ -4,10 +4,10 @@ title: Add tool configuration skills
 area: FND
 theme: foundation-tooling
 horizon: now
-status: draft
+status: awaiting-review
 blocks: []
 blocked_by: []
-baseline_ref: null
+baseline_ref: 3c0e7aaa7c5df63f7842de2d3d37cb0a45c96ef8
 ---
 
 ## Goal
@@ -67,13 +67,23 @@ Recommended disposition: do not create editor-configuration skills now. The avai
 
 An alternative implementation requires explicit approval of one real portable setting set, named-key ownership only, a no-extension-installation boundary, and one tool at a time. Whole-file ownership and formatter integration remain out of scope.
 
+## Discovery evidence
+
+| Surface | Finding | Disposition |
+| --- | --- | --- |
+| `.editorconfig` | Canonical line ending, whitespace, and final-newline policy. | Retained under `ki-authoring`; not duplicated. |
+| VS Code settings | Biome extension-dependent formatter/actions and a workflow toggle. | Excluded; no extension or workflow policy. |
+| Zed settings | Visual preferences, a Prettier conflict, and EditorConfig duplicates/conflicts. | Excluded; no portable project contract. |
+
+The `tools-ki` worktree was clean for the review. Primary source grounding confirms that project settings may be tracked, but neither editor source makes extension availability, formatter behaviour, or a user's save workflow mechanically portable. Zed's Biome support is community-maintained; `.editorconfig` remains the editor-neutral source for file hygiene.
+
 ## Steps
 
-- [ ] Inventory the tracked VS Code and Zed configuration in `tools-ki`, classifying each setting by ownership, portability, native-editor validation, and the source that supports retaining or excluding it.
-- [ ] Select and record the exact safe defaults, tracked files, skill names, and placement for each tool; decide whole-file versus key-level ownership, formatter/extension treatment, and `.editorconfig` exclusions together. Reject user preferences, machine paths, and repository-identity claims from the reusable contract.
-- [ ] Create the two optional tool-configuration skills, keeping common guidance minimal and each tool's defaults, file conventions, and validation in its own skill.
-- [ ] Add a representative repository fixture or equivalent file-level evidence that proves explicit activation is safe while an unrelated repository remains unaffected without either editor installed.
-- [ ] Audit the new skill roots, record every excluded setting and its owner, and create a `ki-trades` submission only if the selected contract identifies receiver-owned `tools-ki` command work.
+- [x] Inventory the tracked VS Code and Zed configuration in `tools-ki`, classifying each setting by ownership, portability, native-editor validation, and the source that supports retaining or excluding it.
+- [x] Select and record the exact safe defaults, tracked files, skill names, and placement for each tool; the inventory found no safe reusable defaults. Whole-file ownership, formatter/extension treatment, and `.editorconfig` duplication are therefore excluded rather than deferred.
+- [x] Determine that the two optional tool-configuration skills are not warranted from the available evidence; no skill roots are created.
+- [x] Determine that a representative activation fixture is not applicable because there is no retained editor-skill contract to activate.
+- [x] Record every excluded setting and owner; no `ki-trades` submission is needed because this conclusion requires no `tools-ki` command change.
 
 ## Files touched
 
@@ -113,6 +123,32 @@ If promoted, the selected project-local configuration needs concise contributor 
 ### Roadmap
 
 The locked tool-policy decision remains in this record. Any receiver-owned `tools-ki` command work is a separately coded trade and roadmap item, not a hidden dependency.
+
+## Review
+
+### Delivered
+
+Completed the evidence inventory and current-source grounding for the proposed VS Code and Zed skills. No editor skill was created because no portable, safely owned settings contract survived the review.
+
+### Summary of changes
+
+Recorded the exact tracked settings, their owner boundaries, and the resulting no-skill disposition in this item. `.editorconfig` remains the sole editor-neutral file-hygiene authority; formatter, extension, and visual-preference settings remain outside a reusable Harness skill.
+
+### Verification
+
+Reviewed the complete tracked editor-configuration set in `tools-ki`: `.editorconfig`, `.vscode/settings.json`, and `.zed/settings.json`. Refreshed primary documentation for [VS Code settings](https://code.visualstudio.com/docs/configure/settings), [Zed settings](https://zed.dev/docs/reference/all-settings), [Zed Biome](https://zed.dev/docs/languages/biome), and [EditorConfig](https://editorconfig.org/). The repository was clean during that review.
+
+### Outstanding concerns
+
+Creating `ki-vscode` or `ki-zed` later requires a new, independently approved portable key set. It must use named-key ownership, avoid extension installation/selection, and not duplicate `.editorconfig` or user preferences.
+
+### Post-change review
+
+The original proposal was useful discovery work but not a justified capability request. Treating incompatible or personal editor settings as shared governance would create false authority, so the no-skill boundary is the intended outcome.
+
+### Mini recap
+
+FND-009 awaits review of the evidence-backed no-skill conclusion. No external repository, command, user configuration, or editor installation changed.
 
 ## Discussion
 
