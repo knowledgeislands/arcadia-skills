@@ -28,7 +28,7 @@ Decide the policy and its migration only. Do not renumber existing Specification
 
 Serial scope and applicability are explicitly unresolved in the review record. The checker already fails closed for malformed local evidence and duplicate prefix ownership, but cannot establish the intended serial sequence or activation boundary without a governing choice.
 
-The work is fully shapeable as two independently reconsiderable governance decisions, but it cannot become Ready until the corpus inventory supplies the migration evidence and both decisions are approved. `GDR-KI-HARNESS-008` will own Specification serial identity and `GDR-KI-HARNESS-009` will own capability applicability.
+The work is fully shapeable as two independently reconsiderable Specification-contract questions, but it cannot become Ready until the corpus inventory supplies the migration evidence and the owning decision is amended. `ADR-KI-HARNESS-SKILLS-008` already owns the purpose and core contract of `ki-specs`; it must carry any chosen serial-identity and applicability policy.
 
 ## Decision gate
 
@@ -39,15 +39,13 @@ Before implementation, record the estate inventory of declarations, corpus state
 ## Steps
 
 - [ ] Inventory the retained Specification corpus by file, prefix, serial, multi-prefix ownership, repository declaration, and incidental-directory state; record the migration count for each alternative.
-- [ ] Write `GDR-KI-HARNESS-008` to choose global, per-prefix, or per-file serial identity and define exactly how multi-prefix files participate.
-- [ ] Write `GDR-KI-HARNESS-009` to choose whether an undeclared incidental `docs/specs/` directory is not applicable or a repository conformance failure, while preserving malformed declared evidence as a failure.
+- [ ] Amend `ADR-KI-HARNESS-SKILLS-008` to choose global, per-prefix, or per-file serial identity, define multi-prefix-file participation, and choose whether an undeclared incidental `docs/specs/` directory is not applicable or a repository conformance failure while preserving malformed declared evidence as a failure.
 - [ ] Update the Decision Records index and define one clean-cut migration for identifiers, indexes, host selection, and fixtures with no dual semantics or compatibility fallback.
 - [ ] Capture separate implementation work for the checker and estate only after both decisions are approved.
 
 ## Files touched
 
-- `docs/decisions/GDR-KI-HARNESS-008-specification-serial-identity.md`
-- `docs/decisions/GDR-KI-HARNESS-009-specification-capability-applicability.md`
+- `docs/decisions/ADR-KI-HARNESS-SKILLS-008-a-specifications-skill-for-the-what.md`
 - `docs/decisions/README.md`
 - This work item
 - A separate roadmap item only when the approved decisions require implementation
@@ -61,13 +59,13 @@ Before implementation, record the estate inventory of declarations, corpus state
 
 ## Dependencies / blocks
 
-Depends on the `ki-specs` review record. It becomes Ready only after the corpus inventory is recorded and the two pending decisions are approved. It blocks dependent identity and applicability implementation; it does not reopen the completed review.
+Depends on the `ki-specs` review record. It becomes Ready only after the corpus inventory is recorded and the owning Specifications decision is amended with the two pending policy choices. It blocks dependent identity and applicability implementation; it does not reopen the completed review.
 
 ## Documentation impact
 
 ### Decision Records
 
-The resulting specification-identity authority requires durable decision records; GOV-040 has resolved the shared Knowledge metadata baseline.
+The resulting specification-identity authority amends the existing Specifications decision record; GOV-040 has resolved the shared Knowledge metadata baseline.
 
 ### Specifications
 
