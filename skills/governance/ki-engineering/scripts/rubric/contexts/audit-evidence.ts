@@ -90,10 +90,22 @@ const mechanicalEngineeringCheckIds = new Set([
   'TOML-3'
 ])
 
+const engineeringTableHeader =
+  /^\[(?:skills\.ki-engineering|skills\."[^"]+:ki-engineering"|"[^"]+:ki-engineering")\]\s*(?:#.*)?$/m
+
+const engineeringTableBody = (configuration: string): string | undefined => {
+  const header = engineeringTableHeader.exec(configuration)
+  if (!header || header.index === undefined) return undefined
+  return configuration.slice(header.index + header[0].length).split(/^\[/m)[0] ?? ''
+}
+
 export const inspectEngineeringCheckRecords = (
   configuration: string
 ): readonly Pick<EngineeringEvidenceFinding, 'level' | 'message'>[] => {
-  const header = /^\[skills\.ki-engineering\.checks\]\s*$/m.exec(configuration)
+  const header =
+    /^\[(?:skills\.ki-engineering\.checks|skills\."[^"]+:ki-engineering"\.checks|"[^"]+:ki-engineering"\.checks)\]\s*$/m.exec(
+      configuration
+    )
   if (!header || header.index === undefined)
     return [{ level: 'NOT_APPLICABLE', message: 'no engineering check records declared' }]
   const body = configuration.slice(header.index + header[0].length).split(/^\[/m)[0] ?? ''
@@ -108,6 +120,103 @@ export const inspectEngineeringCheckRecords = (
       return { level: 'WARN', message: `engineering check record ${key} must be boolean, got ${JSON.stringify(value)}` }
     return { level: 'PASS', message: `engineering check record ${key} = ${value} (diagnostic only)` }
   })
+}
+
+type ScriptExclusionInspection = {
+  exclusions: ReadonlySet<string>
+  messages: readonly string[]
+}
+
+const configuredEngineeringTables = (configuration: string): readonly Record<string, unknown>[] => {
+  let parsed: Record<string, unknown>
+  try {
+    parsed = Bun.TOML.parse(configuration) as Record<string, unknown>
+  } catch {
+    return []
+  }
+  const skills = parsed.skills && typeof parsed.skills === 'object' ? (parsed.skills as Record<string, unknown>) : {}
+  const candidates = [
+    skills['ki-engineering'],
+    ...Object.entries(skills)
+      .filter(([key]) => key.endsWith(':ki-engineering'))
+      .map(([, value]) => value),
+    ...Object.entries(parsed)
+      .filter(([key]) => key.endsWith(':ki-engineering'))
+      .map(([, value]) => value)
+  ]
+  return candidates.filter(
+    (candidate): candidate is Record<string, unknown> => candidate !== null && typeof candidate === 'object'
+  )
+}
+
+export const inspectScriptExclusions = (
+  configuration: string,
+  scripts: Readonly<Record<string, string>>,
+  declared: ReadonlySet<string>
+): ScriptExclusionInspection => {
+  const tables = configuredEngineeringTables(configuration)
+  if (tables.length !== 1) return { exclusions: new Set(), messages: [] }
+  const configured = tables[0]?.script_exclusions
+  if (configured === undefined) return { exclusions: new Set(), messages: [] }
+  if (!Array.isArray(configured))
+    return { exclusions: new Set(), messages: ['script_exclusions must be an array of exact script names'] }
+
+  const exclusions = new Set<string>()
+  const messages: string[] = []
+  for (const entry of configured) {
+    if (typeof entry !== 'string' || entry.trim().length === 0) {
+      messages.push('script_exclusions entries must be non-empty strings')
+      continue
+    }
+    if (/[*?[\]{}]/.test(entry)) {
+      messages.push(`script exclusion ${JSON.stringify(entry)} must be exact, not a pattern`)
+      continue
+    }
+    if (exclusions.has(entry)) {
+      messages.push(`duplicate script exclusion: ${entry}`)
+      continue
+    }
+    exclusions.add(entry)
+    if (!Object.hasOwn(scripts, entry)) messages.push(`stale script exclusion names no existing script: ${entry}`)
+    const owner = scriptOwner(entry)
+    if (owner && declared.has(owner)) messages.push(`script exclusion overlaps declared owner ${owner}: ${entry}`)
+  }
+  return { exclusions, messages }
+}
+
+export const inspectGovernedScriptSurface = (
+  configuration: string,
+  scripts: Readonly<Record<string, string>>
+): { namingOffenders: readonly string[]; claimProblems: readonly string[] } => {
+  const declared = declaredSkillNames(configuration)
+  const inspected = inspectScriptExclusions(configuration, scripts, declared)
+  const retired = Object.keys(scripts).filter(
+    (key) =>
+      /^ki:lint:/.test(key) ||
+      (/^ki:deps:/.test(key) && key !== 'ki:deps:update') ||
+      key === 'ki:knip' ||
+      key === 'ki:verify' ||
+      /^ki:[a-z-]+:lint$/.test(key) ||
+      ['ki:audit', 'ki:conform', 'ki:educate', 'ki:help'].includes(key)
+  )
+  const bareIdioms = new Set(['build', 'prepare', 'test', 'test:coverage', 'test:watch', 'clean'])
+  const unsupported = Object.keys(scripts).filter(
+    (key) =>
+      !bareIdioms.has(key) &&
+      !inspected.exclusions.has(key) &&
+      (!scriptOwner(key) || !declared.has(scriptOwner(key) as string))
+  )
+  return {
+    namingOffenders: Object.keys(scripts).filter(
+      (key) => !bareIdioms.has(key) && !key.startsWith('ki:') && !inspected.exclusions.has(key)
+    ),
+    claimProblems: [
+      ...(retired.length ? [`retired script key(s): ${retired.join(', ')}`] : []),
+      ...(unsupported.length ? [`unsupported or undeclared-owner script key(s): ${unsupported.join(', ')}`] : []),
+      ...inspected.messages,
+      ...(!Object.hasOwn(scripts, 'ki:deps:update') ? ['missing required ki:deps:update'] : [])
+    ]
+  }
 }
 
 const scriptOwner = (key: string): string | undefined => {
@@ -489,25 +598,9 @@ export const collectAuditEvidence = async (
         STD,
         'package.json'
       )
-  const retired = Object.keys(scripts).filter(
-    (key) =>
-      /^ki:lint:/.test(key) ||
-      (/^ki:deps:/.test(key) && key !== 'ki:deps:update') ||
-      key === 'ki:knip' ||
-      key === 'ki:verify' ||
-      /^ki:[a-z-]+:lint$/.test(key) ||
-      ['ki:audit', 'ki:conform', 'ki:educate', 'ki:help'].includes(key)
-  )
-  const declared = declaredSkillNames(read('.ki-config.toml'))
-  const unsupported = Object.keys(scripts).filter(
-    (key) => key.startsWith('ki:') && (!scriptOwner(key) || !declared.has(scriptOwner(key) as string))
-  )
-  const missingDependencyUpdate = !Object.hasOwn(scripts, 'ki:deps:update')
-  const scriptProblems = [
-    ...(retired.length ? [`retired script key(s): ${retired.join(', ')}`] : []),
-    ...(unsupported.length ? [`unsupported or undeclared-owner script key(s): ${unsupported.join(', ')}`] : []),
-    ...(missingDependencyUpdate ? ['missing required ki:deps:update'] : [])
-  ]
+  const kiConfiguration = read('.ki-config.toml')
+  const scriptSurface = inspectGovernedScriptSurface(kiConfiguration, scripts)
+  const scriptProblems = scriptSurface.claimProblems
   scriptProblems.length
     ? add(
         'FAIL',
@@ -551,7 +644,7 @@ export const collectAuditEvidence = async (
   // is what keeps the script surface fully governed (every ki:* script is asserted by
   // some KI skill; the artifact/governance skills own their ki:* deltas).
   const BARE_IDIOMS = new Set<string>(['build', 'prepare', 'test', 'test:coverage', 'test:watch', 'clean'])
-  const offenders = Object.keys(scripts).filter((k) => !BARE_IDIOMS.has(k) && !k.startsWith('ki:'))
+  const offenders = scriptSurface.namingOffenders
   offenders.length
     ? add(
         'FAIL',
@@ -1349,10 +1442,10 @@ export const collectAuditEvidence = async (
   }
 
   // ── core: .ki-config.toml qualified ki-engineering table ────────
-  const ki = read('.ki-config.toml')
+  const ki = kiConfiguration
   const engineeringHeader = '[skills.ki-engineering]'
   if (!ki) add('WARN', 'TOML-1', '.ki-config.toml missing (ki-repo owns the contract)', STD, '.ki-config.toml')
-  else if (!/^\[skills\.ki-engineering\]/m.test(ki)) {
+  else if (!engineeringTableHeader.test(ki)) {
     add(
       'WARN',
       'TOML-1',
@@ -1362,11 +1455,11 @@ export const collectAuditEvidence = async (
     )
   } else {
     add('PASS', 'TOML-1', `${engineeringHeader} table present`, STD, '.ki-config.toml')
-    // validate-down: the table is a conformance marker only — it carries no keys. Repo
-    // shape (flat vs monorepo) is read from package.json `workspaces` (§0), a standard Bun
-    // convention, not a bespoke key here. Any key directly under the table is drift.
-    const body = ki.split(/^\[skills\.ki-engineering\]/m)[1]?.split(/^\[/m)[0] ?? ''
-    const KNOWN = new Set<string>() // no keys defined; only a [skills.ki-engineering.checks] sub-table is allowed
+    // validate-down: script_exclusions is the sole direct key. Repo shape (flat vs monorepo)
+    // is read from package.json `workspaces` (§0), a standard Bun convention, not a bespoke
+    // key here. Any other key directly under the table is drift.
+    const body = engineeringTableBody(ki) ?? ''
+    const KNOWN = new Set<string>(['script_exclusions'])
     for (const m of body.matchAll(/^\s*([A-Za-z0-9_-]+)\s*=/gm)) {
       KNOWN.has(m[1])
         ? add('PASS', 'TOML-2', `known key ${m[1]}`, STD, '.ki-config.toml')

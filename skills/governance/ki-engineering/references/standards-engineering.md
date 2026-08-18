@@ -255,7 +255,9 @@ A governed repo declares a `[skills.ki-engineering]` table. Presence marks "the 
 # below with a boolean when a local review needs an explicit exception note.
 ```
 
-The table carries **no top-level keys**. Its optional `[skills.ki-engineering.checks]` table accepts only exact mechanical rubric IDs as boolean values. The checker validates both the key set and value type, but a `false` value is an explicit local diagnostic record — it does **not** suppress a finding or turn a judgment criterion into a pass. A reviewer records the reason next to the entry and resolves it through the owning repository's change process.
+The table accepts one optional direct key: `script_exclusions`, an array of exact script names for user-owned external tooling (§2). Every entry MUST be a non-empty unique string, name an existing package script exactly, contain no pattern syntax, and remain outside every declared skill's script claims. A valid exclusion satisfies the complete-set check and permits that external script to remain outside the `ki:` naming law; malformed, duplicate, stale, patterned, or owner-overlapping entries fail the script contract rather than suppressing it.
+
+Its optional `[skills.ki-engineering.checks]` table accepts only exact mechanical rubric IDs as boolean values. The checker validates both the key set and value type, but a `false` value is an explicit local diagnostic record — it does **not** suppress a finding or turn a judgment criterion into a pass. A reviewer records the reason next to the entry and resolves it through the owning repository's change process.
 
 Repo shape (flat vs monorepo, §0) — which drives engineering's workspace-aware type-checking — is read from the standard Bun `workspaces` array in `package.json`, not from here. Keeping the shape signal in `package.json` means standard tooling (Bun, syncpack) sees it too, rather than hiding it behind a bespoke `.ki-config.toml` extension.
 

@@ -3,7 +3,7 @@ import { mkdtempSync, readdirSync, readFileSync, rmSync, symlinkSync, writeFileS
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import type { RubricEmitter, RubricFamily } from '../../shared/rubric.ts'
-import { inspectEngineeringCheckRecords } from '../contexts/audit-evidence.ts'
+import { inspectEngineeringCheckRecords, inspectGovernedScriptSurface } from '../contexts/audit-evidence.ts'
 import {
   createEngineeringSession,
   type EngineeringEvidenceInspector,
@@ -95,6 +95,55 @@ test('engineering check records accept only known mechanical boolean entries', (
     },
     { level: 'WARN', message: 'unknown engineering check record: UNKNOWN-1' }
   ])
+})
+
+test('exact external script exclusions satisfy the naming and claim boundaries', () => {
+  const scripts = { 'ki:deps:update': 'bun update --latest', 'vendor:generate': 'vendor generate' }
+  for (const configuration of [
+    '[skills.ki-engineering]\nscript_exclusions = ["vendor:generate"]\n',
+    '[skills."example/harness:ki-engineering"]\nscript_exclusions = ["vendor:generate"]\n'
+  ]) {
+    expect(inspectGovernedScriptSurface(configuration, scripts)).toEqual({ namingOffenders: [], claimProblems: [] })
+  }
+})
+
+test('script exclusions reject invalid, stale, duplicate, patterned, and owned entries', () => {
+  const scripts = {
+    'ki:deps:update': 'bun update --latest',
+    'ki:harness:eval': 'bun evals/harness.ts',
+    'vendor:generate': 'vendor generate'
+  }
+  const configuration = `[skills.ki-engineering]
+script_exclusions = ["", "vendor:*", "missing", "vendor:generate", "vendor:generate", "ki:harness:eval", 7]
+
+[skills.ki-repo-harness]
+`
+  expect(inspectGovernedScriptSurface(configuration, scripts)).toEqual({
+    namingOffenders: [],
+    claimProblems: [
+      'script_exclusions entries must be non-empty strings',
+      'script exclusion "vendor:*" must be exact, not a pattern',
+      'stale script exclusion names no existing script: missing',
+      'duplicate script exclusion: vendor:generate',
+      'script exclusion overlaps declared owner ki-repo-harness: ki:harness:eval',
+      'script_exclusions entries must be non-empty strings'
+    ]
+  })
+})
+
+test('script_exclusions must be an array and cannot hide an ordinary unexcluded script', () => {
+  expect(
+    inspectGovernedScriptSurface('[skills.ki-engineering]\nscript_exclusions = "vendor:generate"\n', {
+      'ki:deps:update': 'bun update --latest',
+      'vendor:generate': 'vendor generate'
+    })
+  ).toEqual({
+    namingOffenders: ['vendor:generate'],
+    claimProblems: [
+      'unsupported or undeclared-owner script key(s): vendor:generate',
+      'script_exclusions must be an array of exact script names'
+    ]
+  })
 })
 
 test('each family module exports one complete family', async () => {
