@@ -83,6 +83,28 @@ The process needs web or provider access for public sources and runtime-resolved
 
 The invocation-scoped scan brief resolves the former interest-representation blocker. No other roadmap item is blocked by this work.
 
+## Delegation
+
+### Locked decisions
+
+- Pulse is an on-demand process with an invocation-scoped scan brief, no standing configuration, and no Pulse-owned inbox, log, or backlog.
+- The worker owns only the new Pulse skill root and isolated evaluation scenario; the coordinator owns shared catalogue, guide, evaluation-harness registration, lifecycle, integration, and commits.
+
+### Escalate
+
+- Any need for standing configuration, a new durable destination, authenticated-source access, scheduled scanning, changes outside the named worker files, or a conflict with an existing skill owner.
+
+### Worker: pulse-core
+
+- **Deliverable:** A complete `ki-pulse` skill root and isolated evaluation scenario implementing the approved Capture, Scan, Triage, and Help contract.
+- **Inputs:** This work item, `ki-skills`, the Agent Skills and Knowledge Islands skill standards, representative change-management process skills, and the evaluation scenario conventions.
+- **Scope:** Write only `skills/change-management/ki-pulse/` and `evals/scenarios/ki-pulse.ts`; read other Harness files as needed. Do not edit shared publications, `evals/harness.ts`, roadmap records, configuration, or external systems.
+- **Authority:** Create and verify the named files with local read-only research where required. Perform no Git write, network write, message, deployment, push, release, or peer-repository action.
+- **Isolation:** Exclusive non-overlapping paths in the shared worktree; no Git staging or commit commands.
+- **Verify:** Coordinator reviews the full skill against `ki-skills`, runs focused tests or static checks for the new files, integrates shared publications, then runs the work item's complete gates.
+- **Return:** Concise file list, material design choices, focused verification results, and any unresolved ownership or behaviour question; no raw tool transcript.
+- **Checkpoint:** Return after the two named write surfaces are complete and focused checks pass, or immediately on an escalation condition.
+
 ## Documentation impact
 
 ### Decision Records

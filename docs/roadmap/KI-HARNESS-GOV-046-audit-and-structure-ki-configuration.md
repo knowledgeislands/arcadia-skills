@@ -62,6 +62,28 @@ Registered estate `.ki-config.toml` files are read-only evidence. No skill stand
 
 This item has no prerequisite and blocks no current work. It depends only on read access to the registered estate; inaccessible repositories remain explicit inventory gaps and do not authorise filesystem or remote writes. Estate repositories are evidence sources only, and changing them requires separately confirmed repository-local authority.
 
+## Delegation
+
+### Locked decisions
+
+- Estate means the repository registry selected by `ki repo --estate`, freshly resolved at execution time.
+- This delivery writes only this work item and produces a recommendation; it does not alter configuration, standards, checkers, scripts, tests, publications, or peer repositories.
+
+### Escalate
+
+- Any inaccessible repository that prevents representative coverage, ambiguous repository identity or kind, need for a peer write, semantic configuration change, new checker, standard change, or recommendation that would weaken one-file or owner-table boundaries.
+
+### Worker: configuration-audit
+
+- **Deliverable:** A complete estate inventory, representative analysis, alternatives, ownership classification, and evidence-backed recommendation recorded in this work item.
+- **Inputs:** This work item, the registered estate, the `ki-repo` configuration standard, the `ki-authoring` TOML conventions, and each accessible root `.ki-config.toml`.
+- **Scope:** Read registered repository roots and their `.ki-config.toml` files; write only this work item. Do not change configuration, standards, source, tests, generated files, registry state, or external systems.
+- **Authority:** Run read-only registry, filesystem, TOML parsing, and Git inspection commands; update the named work item only. Perform no Git write, network write, peer write, message, deployment, push, release, or destructive action.
+- **Isolation:** Read-only estate access plus exclusive write access to this roadmap file in the shared worktree; no Git staging or commit commands.
+- **Verify:** Coordinator reconciles the inventory with a fresh estate selection, samples every cited configuration class, reviews the recommendation against `ki-repo` and `ki-authoring`, and runs the work item's gates.
+- **Return:** Concise inventory totals, representative findings, recommendation, proposed follow-ups, exact file changed, and verification result; no raw diagnostic transcript.
+- **Checkpoint:** Return after the recommendation and required evidence are complete in the work item, or immediately on an escalation condition.
+
 ## Documentation impact
 
 ### Decision Records
