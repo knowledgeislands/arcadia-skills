@@ -3,7 +3,7 @@ id: KI-HARNESS-RTP-001
 title: Add Codex housekeeping
 area: RTP
 theme: runtime-portability
-horizon: next
+horizon: now
 status: draft
 blocks: []
 blocked_by: []

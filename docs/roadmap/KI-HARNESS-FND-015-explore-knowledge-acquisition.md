@@ -3,7 +3,7 @@ id: KI-HARNESS-FND-015
 title: Add portable Pulse
 area: FND
 theme: foundation-tooling
-horizon: soon
+horizon: now
 status: draft
 blocks: []
 blocked_by: []
