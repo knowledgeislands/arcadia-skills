@@ -4,7 +4,7 @@ title: Add portable Pulse
 area: FND
 theme: foundation-tooling
 horizon: now
-status: draft
+status: ready
 blocks: []
 blocked_by: []
 baseline_ref: null
@@ -22,11 +22,11 @@ The original candidate focused on keeping the Harness aware of broader developme
 
 Pulse does not become a Knowledge Base writer, cross-repository transport, work selector, general bookmark database, authenticated scraper, or recommendation implementer. It may inspect public content and user-supplied material the user is entitled to provide. It never claims to have read inaccessible content, preserves no credentials or session material, and does not treat popularity or personal interest as proof that a signal should become durable knowledge or work.
 
-## Shaping
+## Current state
 
-### Intended approach
+The delivery boundary is settled around a portable, on-demand `ki-pulse` process rather than a Harness-only background reader. It accepts explicit user signals, can perform bounded public discovery, and routes worthwhile results to the capability or repository that owns their durable destination. Pulse itself retains no standing log or second inbox.
 
-Create `ki-pulse` as a portable process skill with three related operations:
+The initial process has three related operations:
 
 - **Capture** accepts an explicitly submitted URL or source plus the user's optional reason for interest. An explicit capture request authorises creation of the minimal reading candidate through the selected destination owner; casually mentioning a link does not.
 - **Scan** reviews a bounded, declared set of public sources and discovery queries for potentially relevant signals.
@@ -43,19 +43,63 @@ Use four dispositions:
 
 Begin with user-submitted links, primary release notes and documentation for configured interests, primary changes to declared standards or tools, and public projects that recur across a deliberately named discovery query. Discovery surfaces may identify a lead, but only a primary source may support an actionable technical or governance claim.
 
-### Known dependencies
+The first delivery uses an invocation-scoped scan brief rather than standing configuration. A Scan request supplies one or more interests or discovery queries and may name bounded public sources; the brief exists only for that invocation and creates no config file or durable subscription. Repeated scans may reuse a user-supplied brief, but Pulse does not persist it. This keeps host-specific destination resolution separate from discovery input and leaves durable monitoring with an existing owning record.
+
+A scan inspects at most ten leads and returns at most five cited observations, prioritised by relevance to the explicit brief rather than popularity. Capture accepts one explicit URL or source and optional reason. Triage accepts the gathered signals from the current invocation; it does not reopen an unbounded history.
+
+## Steps
+
+- [ ] Define the invocation-scoped scan brief and common signal shape in the Pulse standard, including required interests or queries, optional bounded public sources, source metadata, access state, uncertainty, and proposed destination.
+- [ ] Add the `ki-pulse` process skill under change management with Capture, Scan, Triage, and Help operations, no standing configuration, and no default durable write.
+- [ ] Define the common signal record and the read or learn, watch, act, and discard dispositions, including access state and uncertainty.
+- [ ] Implement bounded public discovery and primary-source verification while preserving inaccessible user-submitted links as explicitly unread candidates.
+- [ ] Route durable outcomes through the selected destination owner: `ki-repo-kb`, `ki-trades`, an owning skill's REFRESH mode, `ki-next`, or an existing monitoring record.
+- [ ] Add focused evaluation fixtures for inaccessible capture, Knowledge Base reading, actionable hand-off, and discard behaviour.
+- [ ] Publish the skill in the generated catalogue and add task-oriented guidance without creating a Pulse-owned log or backlog.
+
+## Files touched
+
+- `skills/change-management/ki-pulse/SKILL.md`
+- `skills/change-management/ki-pulse/references/standards-pulse.md`
+- `evals/scenarios/ki-pulse.ts`
+- `evals/harness.ts`
+- `skills/README.md`
+- `docs/guides/skills-by-outcome.md`
+- `docs/roadmap/KI-HARNESS-FND-015-explore-knowledge-acquisition.md`
+
+## Verify
+
+- Capture preserves source metadata, user context, access state, and uncertainty without inventing inaccessible content.
+- Scan refuses an absent or empty brief, persists no interest or query configuration, and inspects only the interests, queries, and optional public sources supplied for that invocation.
+- Scan inspects no more than ten leads and returns no more than five cited observations from declared interests or queries.
+- Triage assigns exactly one disposition per signal and uses a primary source for actionable technical or governance claims where one exists.
+- Durable read, watch, and act outcomes reach only their declared owner; discard and unavailable-destination outcomes create no artifact.
+- The four selected evaluation fixtures cover an inaccessible submitted link, a Knowledge Base reading candidate, an actionable REFRESH or work hand-off, and a correctly discarded signal.
+- `ki repo audit --skill ki-skills --repo .`, `bun run test`, and `bunx tsc --noEmit` pass.
+
+## Dependencies / blocks
 
 The process needs web or provider access for public sources and runtime-resolved host bindings for any durable destination. `ki-skills` governs the process skill's quality; `ki-repo-kb` owns Knowledge Base placement and note writing; `ki-trades` owns cross-repository transport; `ki-next` retains work capture and selection authority; each governance skill retains authority over its own source refresh. None is a mandatory dependency merely to inspect or classify a signal: Pulse degrades to a cited transient result when the required destination capability is unavailable.
 
-### Decisions still needed
+The invocation-scoped scan brief resolves the former interest-representation blocker. No other roadmap item is blocked by this work.
 
-Choose the initial declared interest and discovery-query representation during planning. A scan should inspect at most ten leads and return at most five cited observations, prioritised by relevance to declared interests rather than popularity.
+## Documentation impact
 
-Do not create a standing Pulse log in the first delivery. Session output remains transient unless an explicit capture is accepted by a Knowledge Base destination, an observation routes to an owning REFRESH, a confirmed proposal enters work through `ki-next`, or an existing record receives a named monitoring trigger. This avoids a second inbox or backlog and makes the durable hand-off itself the evidence-retention decision.
+### Decision Records
 
-### Promotion conditions
+No new Decision Record is expected. Standing interest configuration remains outside the delivery; add a decision only if later work proposes a repository-wide destination-resolution or subscription contract.
 
-Promote when the interest/query representation and destination-resolution rule are concrete and four evaluation fixtures are selected: one inaccessible user-submitted link correctly captured as unread without invented content, one Knowledge Base reading candidate, one actionable REFRESH or work hand-off, and one interesting signal correctly discarded. The portable applicability and transient-output boundaries are settled.
+### Specifications
+
+No product Specification change is planned.
+
+### Guides
+
+Add task-oriented guidance for submitting a link, running a bounded scan, interpreting dispositions, and understanding when Pulse creates no durable artifact.
+
+### Roadmap
+
+Keep authenticated-source access, scheduled scanning, and any Pulse-owned reading store or monitoring log outside the first delivery.
 
 ## Discussion
 
