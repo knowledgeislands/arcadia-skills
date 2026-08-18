@@ -105,6 +105,8 @@ Knowledge Islands source-harness governance declarations.
   - _Review prompt:_ When skills/ is populated, does .ki-config.toml declare the ki-skills governance root?
   - _Outcomes:_ conforming; configuration revision; not applicable
   - _Conforming guidance:_ Add or correct the declaration only through the repository owner’s configuration decision; do not infer activation scope from shelf contents alone.
+- **CONFIG-4 [M] — Capability prefix declaration** — The ki-repo-harness table declares one valid capability prefix. (standards-compatible-harness.md#harness-declaration)
+  - _Remediation:_ diagnostic — Declare the owner-approved prefix in [skills.ki-repo-harness], then rerun the audit.
 
 ## SKILLS — Skill capability identity
 
@@ -114,12 +116,10 @@ Recursive physical skill discovery and identity integrity within the compatible 
 
 - **SKILLS-1 [M] — Skill directory and name alignment** — Each discovered physical skill root matches its SKILL.md name frontmatter. (standards-compatible-harness.md#skill-capability-identity)
   - _Remediation:_ diagnostic — Correct the affected skill directory or frontmatter identity, then rerun the audit.
-- **SKILLS-2 [M + J] — Unique skill names** — No two discovered skill roots share a frontmatter name, and combined installed surfaces remain unambiguous. (standards-compatible-harness.md#skill-capability-identity)
-  - _Remediation:_ guarded — Resolve the name collision through the owning capability authorities before changing a published or installed identity.
-  - _Evidence scope:_ The local skill inventory and every installed compatible harness surface in scope.
-  - _Review prompt:_ Does another installed harness make an otherwise unique local skill name ambiguous?
-  - _Outcomes:_ conforming; resolve collision; escalate to capability owner
-  - _Conforming guidance:_ Preserve the responsible capability owner’s authority over a published name; record the collision and escalate rather than renaming or removing another harness’s skill.
+- **SKILLS-2 [M] — Unique skill names** — No two discovered skill roots share a frontmatter name. (standards-compatible-harness.md#skill-capability-identity)
+  - _Remediation:_ diagnostic — Resolve the duplicate published name within the source Harness, then rerun the audit.
+- **SKILLS-3 [M] — Prefix-owned skill names** — Every published skill name begins with the Harness capability prefix. (standards-compatible-harness.md#skill-capability-identity)
+  - _Remediation:_ diagnostic — Align the published skill identity with the owner-approved Harness prefix.
 
 ## LONG — Longevity
 

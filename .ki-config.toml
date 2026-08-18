@@ -27,6 +27,7 @@ coverage-subagents-codex = false # source repository publishes the adapter witho
 [skills.ki-repo-project]
 
 [skills.ki-repo-harness]
+prefix = "ki"
 
 [skills.ki-skills]
 
