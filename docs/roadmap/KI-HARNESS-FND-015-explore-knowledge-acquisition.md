@@ -4,7 +4,7 @@ title: Add portable Pulse
 area: FND
 theme: foundation-tooling
 horizon: now
-status: awaiting-review
+status: done
 blocks: []
 blocked_by: []
 baseline_ref: 081922e8bf0651dfa44f8995df414c23a8b1ab29
@@ -148,6 +148,10 @@ The implementation satisfies the approved bounded acquisition and routing goal w
 ### Mini recap
 
 Delivered a portable, source-gated Pulse process with bounded discovery and explicit ownership hand-offs. Focused verification passed; two unrelated repository-wide failures were accepted as exceptions. No learning was automatically promoted and no external system was written.
+
+## Done
+
+Accepted by the user on 2026-08-18 against implementation commit `029ca173e1be0cd751a8cf66d6f77f26e8b01cf8` and review evidence commit `515d802179bf2a4f2078d033867b57b1a747f472`. The accepted verification exceptions remain recorded under Review; the retained record grants no authority for the excluded follow-up work.
 
 ## Discussion
 

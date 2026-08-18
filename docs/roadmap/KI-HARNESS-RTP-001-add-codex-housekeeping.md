@@ -4,7 +4,7 @@ title: Add Codex housekeeping
 area: RTP
 theme: runtime-portability
 horizon: now
-status: awaiting-review
+status: done
 blocks: []
 blocked_by: []
 baseline_ref: 081922e8bf0651dfa44f8995df414c23a8b1ab29
@@ -113,6 +113,10 @@ The implementation meets the approved safety boundary: exact physical-repository
 ### Mini recap
 
 Delivered opt-in Codex session inventory and reviewed deletion with strict stale-selection refusal and local fake-client coverage. No live session, peer repository, or external system was changed; unrelated repository-wide failures were accepted as exceptions.
+
+## Done
+
+Accepted by the user on 2026-08-18 against implementation commit `029ca173e1be0cd751a8cf66d6f77f26e8b01cf8` and review evidence commit `515d802179bf2a4f2078d033867b57b1a747f472`. Acceptance retains the opt-in experimental boundary and grants no authority for live deletion or mandatory rollout.
 
 ## Discussion
 

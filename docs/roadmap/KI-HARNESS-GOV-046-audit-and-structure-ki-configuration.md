@@ -4,7 +4,7 @@ title: Audit KI configuration structure
 area: GOV
 theme: governance-consistency
 horizon: now
-status: awaiting-review
+status: done
 blocks: []
 blocked_by: []
 baseline_ref: 081922e8bf0651dfa44f8995df414c23a8b1ab29
@@ -268,6 +268,10 @@ The evidence supports a deliberately small convention that improves navigation w
 ### Mini recap
 
 Audited the estate, quantified configuration growth and relationship density, and proposed optional neighborhoods with only two deterministic ordering checks. No peer files changed; unrelated repository-wide failures were accepted as exceptions.
+
+## Done
+
+Accepted by the user on 2026-08-18 against implementation commit `029ca173e1be0cd751a8cf66d6f77f26e8b01cf8` and review evidence commit `515d802179bf2a4f2078d033867b57b1a747f472`. The recommendation is accepted as audit evidence; its separately scoped follow-ups remain unselected.
 
 ## Discussion
 
