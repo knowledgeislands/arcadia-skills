@@ -4,7 +4,7 @@ title: Add portable Pulse
 area: FND
 theme: foundation-tooling
 horizon: now
-status: in-progress
+status: awaiting-review
 blocks: []
 blocked_by: []
 baseline_ref: 081922e8bf0651dfa44f8995df414c23a8b1ab29
@@ -122,6 +122,32 @@ Add task-oriented guidance for submitting a link, running a bounded scan, interp
 ### Roadmap
 
 Keep authenticated-source access, scheduled scanning, and any Pulse-owned reading store or monitoring log outside the first delivery.
+
+## Review
+
+### Delivered
+
+Implemented the approved invocation-scoped `ki-pulse` process from baseline `081922e8bf0651dfa44f8995df414c23a8b1ab29`, with resulting implementation evidence in `029ca173e1be0cd751a8cf66d6f77f26e8b01cf8`. The delivery remains on demand and creates no Pulse-owned configuration, inbox, subscription, backlog, or log.
+
+### Summary of changes
+
+Added the Pulse skill and standard, four evaluation scenarios, Harness evaluation registration, generated catalogue entry, and task-oriented guide coverage. Capture, Scan, and Triage share bounded signal metadata, require exactly one disposition, preserve inaccessible sources honestly, and route durable outcomes to an existing owner.
+
+### Verification
+
+Targeted Markdown, TypeScript, catalogue-generation, and `ki-skills` checks passed; the Pulse skill introduced no `ki-skills` FAIL. The full repository suite reached one unrelated aggregate-remediation review assertion after its implementation-owned counts were updated. The repository-wide authoring audit also reports six pre-existing generated-anchor defects. On 2026-08-18, the user explicitly accepted both unrelated failures as review exceptions.
+
+### Outstanding concerns
+
+Authenticated sources, scheduled scanning, and durable Pulse-owned storage remain excluded. The unrelated generated-rubric assertion and six generated Markdown anchors remain repository maintenance concerns and were not changed by this item.
+
+### Post-change review
+
+The implementation satisfies the approved bounded acquisition and routing goal without introducing another durable queue. Regression risk is limited to prompt-contract and catalogue integration changes; focused checks cover inaccessible capture, bounded scan, actionable hand-off, and discard. The item is ready for human acceptance review.
+
+### Mini recap
+
+Delivered a portable, source-gated Pulse process with bounded discovery and explicit ownership hand-offs. Focused verification passed; two unrelated repository-wide failures were accepted as exceptions. No learning was automatically promoted and no external system was written.
 
 ## Discussion
 

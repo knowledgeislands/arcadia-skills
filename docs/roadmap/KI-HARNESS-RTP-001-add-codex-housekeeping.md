@@ -4,7 +4,7 @@ title: Add Codex housekeeping
 area: RTP
 theme: runtime-portability
 horizon: now
-status: in-progress
+status: awaiting-review
 blocks: []
 blocked_by: []
 baseline_ref: 081922e8bf0651dfa44f8995df414c23a8b1ab29
@@ -87,6 +87,32 @@ Document the supported Codex surface, selected-repository matching rule, review 
 ### Roadmap
 
 Keep mandatory estate rollout, unsupported retention automation, and additional Codex state classes as explicit follow-up work rather than widening this delivery.
+
+## Review
+
+### Delivered
+
+Implemented opt-in repository-scoped Codex housekeeping from baseline `081922e8bf0651dfa44f8995df414c23a8b1ab29`, with resulting implementation evidence in `029ca173e1be0cd751a8cf66d6f77f26e8b01cf8`. Verification used fake protocol clients only; no live Codex session was deleted.
+
+### Summary of changes
+
+Added the `ki-housekeeping-codex` governance skill, official-source and operating-mode references, structured rubric and publication, and a version-bound app-server adapter. Inventory pages exact active and archived repository matches plus descendants without content; deletion requires an explicit reviewed artifact and confirmation, then refuses all selection, version, protocol, repository, root, archive-state, or descendant drift before the first delete.
+
+### Verification
+
+All eight focused adapter and rubric tests passed, TypeScript passed, the hosted `ki-housekeeping-codex` audit passed, and formatting checks passed. The full repository suite reports one unrelated aggregate-remediation review assertion, while the authoring audit reports six pre-existing generated-anchor defects. On 2026-08-18, the user explicitly accepted both unrelated failures as review exceptions.
+
+### Outstanding concerns
+
+The app-server binding remains experimental and opt in; it cannot provide multi-root atomic deletion, so partial execution is reported explicitly. Mandatory estate rollout, retention automation, unsupported state classes, and the unrelated repository maintenance failures remain outside this item.
+
+### Post-change review
+
+The implementation meets the approved safety boundary: exact physical-repository selection, content-free review artifacts, complete descendant disclosure, and fail-closed pre-delete revalidation. Stable CLI deletion remains a documented one-session manual fallback. Focused evidence supports acceptance review without exercising destructive live behavior.
+
+### Mini recap
+
+Delivered opt-in Codex session inventory and reviewed deletion with strict stale-selection refusal and local fake-client coverage. No live session, peer repository, or external system was changed; unrelated repository-wide failures were accepted as exceptions.
 
 ## Discussion
 

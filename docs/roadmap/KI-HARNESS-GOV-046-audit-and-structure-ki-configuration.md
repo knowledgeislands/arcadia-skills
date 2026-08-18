@@ -4,7 +4,7 @@ title: Audit KI configuration structure
 area: GOV
 theme: governance-consistency
 horizon: now
-status: in-progress
+status: awaiting-review
 blocks: []
 blocked_by: []
 baseline_ref: 081922e8bf0651dfa44f8995df414c23a8b1ab29
@@ -242,6 +242,32 @@ No guide changes in this delivery. Update guidance only through accepted follow-
 ### Roadmap
 
 This item is the durable audit record. Create separately scoped implementation or rollout work if the accepted recommendation calls for standard changes, new checks, semantic simplification, file splitting, or multi-repository conformance.
+
+## Review
+
+### Delivered
+
+Completed the approved read-only estate audit from baseline `081922e8bf0651dfa44f8995df414c23a8b1ab29`, with resulting evidence in `029ca173e1be0cd751a8cf66d6f77f26e8b01cf8`. No peer configuration was changed.
+
+### Summary of changes
+
+Recorded evidence from 27 readable, TOML-valid estate configurations and recommended five optional neighborhoods, optional semantic-inert headings where useful, foundation-first ordering, and contiguous root-plus-nested owner blocks. The audit rejects mandatory headings, configuration splitting, global alphabetic sorting, and cross-owner semantic simplification.
+
+### Verification
+
+The estate inventory covered 27 of 27 registered roots. Targeted rumdl, `git diff --check`, and the roadmap audit passed. The repository-wide authoring audit reports six pre-existing generated-anchor defects, and the full suite reports one unrelated aggregate-remediation review assertion; on 2026-08-18, the user explicitly accepted these unrelated failures as review exceptions.
+
+### Outstanding concerns
+
+The recommendation is audit evidence, not an adopted `ki-repo` contract. Four separately scoped follow-up proposals remain available for standards, deterministic checks, owner-specific simplification, and rollout. The unrelated repository maintenance failures remain unchanged.
+
+### Post-change review
+
+The evidence supports a deliberately small convention that improves navigation without turning judgment into brittle automation. The read-only boundary held, representative repository profiles were covered, and no configuration consumer was affected. The item is ready for human acceptance review.
+
+### Mini recap
+
+Audited the estate, quantified configuration growth and relationship density, and proposed optional neighborhoods with only two deterministic ordering checks. No peer files changed; unrelated repository-wide failures were accepted as exceptions.
 
 ## Discussion
 
