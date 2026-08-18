@@ -167,6 +167,50 @@ test('a zone alias through an intermediate symlink produces no unsafe proposal',
   expect(existsSync(join(outside, 'Resources', 'linked', 'Resources.md'))).toBe(false)
 })
 
+test('ZONE-1 accepts a readable zone symlink resolving to a directory', () => {
+  const repository = createBase()
+  const outside = mkdtempSync(join(tmpdir(), 'ki-repo-kb-resources-'))
+  temporaryDirectories.push(outside)
+  rmSync(join(repository, 'Resources'), { recursive: true })
+  symlinkSync(outside, join(repository, 'Resources'))
+
+  expect(
+    collectKbAuditEvidence(repository).filter(
+      (finding) => finding.code === 'ZONE-1' && finding.subject === 'Resources/'
+    )
+  ).toEqual([
+    {
+      level: 'PASS',
+      code: 'ZONE-1',
+      message: 'Required zone Resources is present.',
+      subject: 'Resources/'
+    }
+  ])
+})
+
+test('ZONE-1 rejects dangling and file-valued zone symlinks', () => {
+  for (const target of ['missing', 'file']) {
+    const repository = createBase()
+    const destination = join(repository, `${target}-target`)
+    if (target === 'file') writeFileSync(destination, 'not a directory\n')
+    rmSync(join(repository, 'Resources'), { recursive: true })
+    symlinkSync(destination, join(repository, 'Resources'))
+
+    expect(
+      collectKbAuditEvidence(repository).filter(
+        (finding) => finding.code === 'ZONE-1' && finding.subject === 'Resources/'
+      )
+    ).toEqual([
+      {
+        level: 'FAIL',
+        code: 'ZONE-1',
+        message: 'Required zone Resources is missing.',
+        subject: 'Resources/'
+      }
+    ])
+  }
+})
+
 test('governed note frontmatter requires note_type and rejects the generic type field', () => {
   const repository = createBase()
   const note = join(repository, 'Pillars', 'Note.md')

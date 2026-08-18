@@ -32,7 +32,7 @@ The tracked readable rubric is the exact publication of the structured catalogue
 
 Required zones, indexes, staging, and output placement.
 
-- **ZONE-1 [M] — required zone layout** — Calendar/, Pillars/, Resources/, Streams/, and Admin/ are present, resolving each through a declared zone alias. (standards-knowledge-base.md)
+- **ZONE-1 [M] — required zone layout** — Calendar/, Pillars/, Resources/, Streams/, and Admin/ resolve through any declared zone alias to readable directories, including directory symlinks. (standards-knowledge-base.md)
   - _Remediation:_ diagnostic — Correct the required zone layout or placement, then rerun the audit.
 - **ZONE-2 [M] — same-name zone indexes** — Each present zone has its same-name index note. (standards-knowledge-base.md)
   - _Remediation:_ automatic

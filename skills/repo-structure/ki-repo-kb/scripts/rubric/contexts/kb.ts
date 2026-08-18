@@ -1,4 +1,4 @@
-import { existsSync, lstatSync, readdirSync, readFileSync } from 'node:fs'
+import { accessSync, constants, existsSync, lstatSync, readdirSync, readFileSync, statSync } from 'node:fs'
 import { dirname, isAbsolute, join, relative, resolve } from 'node:path'
 import type {
   AuditOutcome,
@@ -31,6 +31,14 @@ export type KbEvidenceFinding = {
 
 const isDirectory = (path: string): boolean =>
   existsSync(path) && !lstatSync(path).isSymbolicLink() && lstatSync(path).isDirectory()
+const isReadableDirectory = (path: string): boolean => {
+  try {
+    accessSync(path, constants.R_OK)
+    return statSync(path).isDirectory()
+  } catch {
+    return false
+  }
+}
 const isFile = (path: string): boolean =>
   existsSync(path) && !lstatSync(path).isSymbolicLink() && lstatSync(path).isFile()
 const sample = (values: readonly string[], maximum = 10): string =>
@@ -178,7 +186,7 @@ export const collectKbAuditEvidence = (target: string): readonly KbEvidenceFindi
   }
   const configPath = join(root, CONFIG)
   const parsed = isFile(configPath) ? parseConfig(readFileSync(configPath, 'utf8')) : { value: null, malformed: false }
-  const hasCanonicalZone = ZONES.some((zone) => isDirectory(join(root, zone)))
+  const hasCanonicalZone = ZONES.some((zone) => isReadableDirectory(join(root, zone)))
   if (!parsed.value && !parsed.malformed && !hasCanonicalZone) {
     add(
       'NOT_APPLICABLE',
@@ -235,7 +243,7 @@ export const collectKbAuditEvidence = (target: string): readonly KbEvidenceFindi
   }
   for (const zone of ZONES) {
     const folder = zoneOf(zone)
-    if (!isDirectory(join(root, folder))) {
+    if (!isReadableDirectory(join(root, folder))) {
       add('FAIL', 'ZONE-1', `Required zone ${zone} is missing.`, `${folder}/`)
       continue
     }
