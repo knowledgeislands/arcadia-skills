@@ -260,6 +260,19 @@ const unavailableMemoryContext = (
   }
 }
 
+const absentMemoryContext = (
+  selection: Extract<MemorySelection, { state: 'selected' }>,
+  publication?: RubricContextOptions['publication']
+): HousekeepingRubricContext => {
+  const context = unavailableMemoryContext(selection, publication)
+  return {
+    ...context,
+    selection: {
+      selected: one({ status: 'PASS', message: selection.message, subject: selection.relativePath })
+    }
+  }
+}
+
 const projectContext = (
   userHome: string,
   repositoryName: string,
@@ -552,18 +565,20 @@ export const createHousekeepingSession = ({
   const drafts = new Map<string, MemoryDraft>()
   const selection = selectMemory(home, repositorySlug)
   const selectedMemory =
-    selection.state === 'selected' && physicalDescendant(claudeRoot, selection.directory)
-      ? {
-          ...projectContext(
-            home,
-            repositoryName,
-            selection.relativePath,
-            selection.directory,
-            mode === 'conform',
-            drafts
-          ),
-          rubric: { publication }
-        }
+    selection.state === 'selected'
+      ? physicalDescendant(claudeRoot, selection.directory)
+        ? {
+            ...projectContext(
+              home,
+              repositoryName,
+              selection.relativePath,
+              selection.directory,
+              mode === 'conform',
+              drafts
+            ),
+            rubric: { publication }
+          }
+        : absentMemoryContext(selection, publication)
       : null
   const memoryFamilies = ['SELECT', 'RUNTIME', 'IDX', 'FM', 'LINK', 'DOC']
 

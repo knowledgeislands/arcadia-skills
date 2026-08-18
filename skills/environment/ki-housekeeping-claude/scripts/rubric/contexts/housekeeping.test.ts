@@ -244,6 +244,15 @@ describe('ki-housekeeping-claude session', () => {
     expect(context.index.exists[0]?.status).toBe('PASS')
   })
 
+  test('treats an absent documented default directory as no native memories', () => {
+    const home = userHome()
+    settings(home)
+    const context = memoryContext(createHousekeepingSession(options(home, 'audit')))
+
+    expect(context.selection.selected[0]?.status).toBe('PASS')
+    expect(context.index.exists[0]?.status).toBe('NOT_APPLICABLE')
+  })
+
   test('resolves a contained native override for a worktree without inspecting the default path', () => {
     const home = userHome()
     const worktreeMemory = join(home, '.claude', 'worktrees', 'feature', 'memory')
