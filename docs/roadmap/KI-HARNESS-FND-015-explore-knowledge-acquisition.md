@@ -49,13 +49,13 @@ A scan inspects at most ten leads and returns at most five cited observations, p
 
 ## Steps
 
-- [ ] Define the invocation-scoped scan brief and common signal shape in the Pulse standard, including required interests or queries, optional bounded public sources, source metadata, access state, uncertainty, and proposed destination.
-- [ ] Add the `ki-pulse` process skill under change management with Capture, Scan, Triage, and Help operations, no standing configuration, and no default durable write.
-- [ ] Define the common signal record and the read or learn, watch, act, and discard dispositions, including access state and uncertainty.
-- [ ] Implement bounded public discovery and primary-source verification while preserving inaccessible user-submitted links as explicitly unread candidates.
-- [ ] Route durable outcomes through the selected destination owner: `ki-repo-kb`, `ki-trades`, an owning skill's REFRESH mode, `ki-next`, or an existing monitoring record.
-- [ ] Add focused evaluation fixtures for inaccessible capture, Knowledge Base reading, actionable hand-off, and discard behaviour.
-- [ ] Publish the skill in the generated catalogue and add task-oriented guidance without creating a Pulse-owned log or backlog.
+- [x] Define the invocation-scoped scan brief and common signal shape in the Pulse standard, including required interests or queries, optional bounded public sources, source metadata, access state, uncertainty, and proposed destination.
+- [x] Add the `ki-pulse` process skill under change management with Capture, Scan, Triage, and Help operations, no standing configuration, and no default durable write.
+- [x] Define the common signal record and the read or learn, watch, act, and discard dispositions, including access state and uncertainty.
+- [x] Implement bounded public discovery and primary-source verification while preserving inaccessible user-submitted links as explicitly unread candidates.
+- [x] Route durable outcomes through the selected destination owner: `ki-repo-kb`, `ki-trades`, an owning skill's REFRESH mode, `ki-next`, or an existing monitoring record.
+- [x] Add focused evaluation fixtures for inaccessible capture, Knowledge Base reading, actionable hand-off, and discard behaviour.
+- [x] Publish the skill in the generated catalogue and add task-oriented guidance without creating a Pulse-owned log or backlog.
 
 ## Files touched
 

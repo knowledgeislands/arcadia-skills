@@ -97,6 +97,8 @@ export = ["knowledge"]
 
 [skills.ki-housekeeping-claude]
 
+[skills.ki-housekeeping-codex]
+
 [skills.ki-work-housekeeping]
 
 [skills.ki-work]

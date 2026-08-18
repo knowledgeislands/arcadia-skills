@@ -53,6 +53,7 @@ import { scenarios as housekeepingScenarios } from './scenarios/ki-housekeeping-
 import { scenarios as bindingScenarios } from './scenarios/ki-binding.ts'
 import { scenarios as specsScenarios } from './scenarios/ki-specs.ts'
 import { scenarios as pluginsScenarios } from './scenarios/ki-repo-plugins.ts'
+import { scenarios as pulseScenarios } from './scenarios/ki-pulse.ts'
 
 export type Assertion = { name: string; re: RegExp }
 export type Scenario = { skill: string; id: string; prompt: string; assertions: Assertion[]; rubric: string }
@@ -81,7 +82,8 @@ const ALL: Scenario[] = [
   ...liveArtifactsScenarios,
   ...housekeepingScenarios,
   ...bindingScenarios,
-  ...pluginsScenarios
+  ...pluginsScenarios,
+  ...pulseScenarios
 ]
 
 const C = {

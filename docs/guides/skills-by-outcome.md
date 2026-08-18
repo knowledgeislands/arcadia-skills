@@ -72,8 +72,15 @@ Repository structures compose with the universal baseline; they do not replace i
 - **Set runtime-neutral context budgets or model-purpose guidance** — use `ki-tokenomics`.
 - **Inspect bounded runtime filesystem evidence** — use `ki-tokenomics-claude` or `ki-tokenomics-codex` after the portable policy. These adapters do not establish undocumented live-session state.
 - **Govern Claude-specific runtime housekeeping** — use `ki-housekeeping-claude`; use `ki-work-housekeeping` instead for portable recurring repository maintenance.
+- **Review and explicitly delete repository-scoped Codex sessions** — use `ki-housekeeping-codex`; it is opt-in while its app-server binding remains experimental, and it never provides automatic retention.
 
 Runtime binding and runtime evidence are separate from capability activation. A source file or clean source audit is not proof that a runtime loaded or executed it.
+
+## Capture and triage new signals
+
+- **Capture an interesting link or source** — use `ki-pulse` with an explicit destination; inaccessible material remains an unread candidate rather than an invented summary.
+- **Scan for relevant public developments** — use `ki-pulse` with an invocation-scoped brief; it inspects at most ten leads and returns at most five cited observations.
+- **Route a signal without creating another inbox** — use `ki-pulse` to assign one read / learn, watch, act, or discard disposition, then hand any durable result to its owning capability.
 
 ## Exchange work or knowledge across repositories
 

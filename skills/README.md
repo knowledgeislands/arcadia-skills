@@ -19,7 +19,7 @@ Use the [skills-by-outcome guide](../docs/guides/skills-by-outcome.md) when you 
 <!-- ki-repo-harness:capability-catalogue:start -->
 ## Generated capability catalogue
 
-This source harness publishes 53 skills: 45 governance skills and 8 process skills. The entries below are generated from canonical `SKILL.md` frontmatter; edit the source skill, then run `ki repo conform --skill ki-repo-harness` to republish this section.
+This source harness publishes 55 skills: 46 governance skills and 9 process skills. The entries below are generated from canonical `SKILL.md` frontmatter; edit the source skill, then run `ki repo conform --skill ki-repo-harness` to republish this section.
 
 ### Agentic Systems
 
@@ -94,6 +94,15 @@ Shapes selected Now or Next draft work through readiness in the selected local r
 
 - **Kind:** Process
 - **Arguments:** `plan <work>... | help`
+- **Dependencies:** None
+- **Runtime:** Portable
+
+#### `ki-pulse`
+
+Captures an explicitly submitted link, scans a bounded public-source brief, and triages current signals into read or learn, watch, act, or discard without keeping an inbox. Use for "capture this link", "scan these interests", "what changed in these public sources", or "triage these signals". It does not select backlog work, persist subscriptions, or implement recommendations.
+
+- **Kind:** Process
+- **Arguments:** `capture <url-or-source> [reason] | help | scan <interest-or-query> [sources] | triage [current-signals]`
 - **Dependencies:** None
 - **Runtime:** Portable
 
@@ -197,6 +206,15 @@ Governs accumulated Claude state from Desktop, Cowork, Claude Code (`~/.claude/`
 - **Arguments:** `audit | conform | help | educate | refresh`
 - **Dependencies:** None
 - **Runtime:** Runtime-bound: `claude-code`
+
+#### `ki-housekeeping-codex`
+
+Audits and explicitly deletes saved Codex sessions whose exact working directory matches one selected physical repository. Use for "audit Codex sessions", "clean up Codex sessions", "delete old Codex threads", or repository-scoped Codex housekeeping. It exposes no transcript content, performs no automatic retention, and never substitutes for portable repository maintenance owned by ki-work-housekeeping.
+
+- **Kind:** Governance
+- **Arguments:** `audit <repo> | conform <artifact> <thread-id>... | educate <repo> | help | refresh`
+- **Dependencies:** None
+- **Runtime:** Runtime-bound: `chatgpt-codex`
 
 #### `ki-tokenomics`
 
@@ -368,7 +386,7 @@ Codifies, audits, and conforms the chezmoi dotfiles-management standard. Use for
 
 #### `ki-repo-harness`
 
-Audit, conform, and design Knowledge Islands compatible harnesses — source repositories that co-locate skills, subagents, MCP servers, evals, and hooks while publishing a verified installed capability payload. Use when creating a harness, checking its five-part source layout, validating skill capability identities, reviewing its CLAUDE.md orientation, confirming its `.ki-config.toml` harness marker, or distinguishing source shelves from the directly installed payload. Triggers: "audit the harness", "scaffold a new harness", "does this repo follow the harness standard", "refresh the harness standard", "is this a compatible harness". Governs the container and publication boundary, not its contents: skill quality → `ki-skills`; agent quality → `ki-subagents`; repository roadmap → `ki-work-roadmap`; MCP code → `ki-repo-mcp`; engineering toolchain → `ki-engineering`; repository settings → `ki-repo`; CLI installation and activation → `tools-ki`.
+Audit, conform, and design Knowledge Islands compatible harnesses — source repositories that co-locate skills, subagents, MCP servers, evals, and hooks while publishing a verified installed capability payload. Use when creating a harness, checking its five-part source layout, validating its declared capability prefix and skill identities, reviewing its CLAUDE.md orientation, confirming its `.ki-config.toml` harness declaration, or distinguishing source shelves from the directly installed payload. Triggers: "audit the harness", "scaffold a new harness", "does this repo follow the harness standard", "refresh the harness standard", "is this a compatible harness". Governs the container and publication boundary, not its contents: skill quality → `ki-skills`; agent quality → `ki-subagents`; repository roadmap → `ki-work-roadmap`; MCP code → `ki-repo-mcp`; engineering toolchain → `ki-engineering`; repository settings → `ki-repo`; CLI installation and activation → `tools-ki`.
 
 - **Kind:** Governance
 - **Arguments:** `audit [path] | conform [path] | educate <name> | help | refresh`

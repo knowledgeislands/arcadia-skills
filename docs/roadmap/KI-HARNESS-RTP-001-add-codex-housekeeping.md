@@ -32,13 +32,13 @@ The first delivery is explicit cleanup, not automated retention. AUDIT enumerate
 
 ## Steps
 
-- [ ] Add the runtime-bound `ki-housekeeping-codex` governance skill under the environment group with explicit AUDIT, CONFORM, EDUCATE, REFRESH, and HELP modes and no default destructive action.
-- [ ] Add one deterministic app-server adapter that starts a local stdio server, performs initialization with `experimentalApi`, records the installed Codex version, validates every used method and result shape, and exposes only repository-scoped inventory and reviewed selected deletion operations.
-- [ ] Resolve the selected physical repository and pass its exact canonical path to both active and archived `thread/list` queries; treat worktrees as distinct working directories and exclude missing, null, parent, child, and symlink-alias matches.
-- [ ] Make AUDIT page active and archived root results separately, then page `ancestorThreadId` results for every candidate; output a review artifact containing the root ID, exact working directory, archive state, creation/update evidence, complete descendant IDs, installed version, and protocol fingerprint without preview, turns, items, or transcript content.
-- [ ] Make CONFORM accept only that reviewed artifact and an explicit selection of root IDs, re-list every root and descendant immediately before mutation, reject version, identity, working-directory, archive-state, or descendant drift before any delete, and call `thread/delete` once per unchanged selected root.
-- [ ] Add focused protocol and safety fixtures, `ki-skills` publication tests, catalogue publication, skills-by-outcome guidance, and a tracked official-source refresh contract.
-- [ ] Declare the new skill in the Harness configuration but keep Codex housekeeping optional in `ki-repo` runtime coverage until separate rollout evidence justifies making an experimental binding mandatory across the estate.
+- [x] Add the runtime-bound `ki-housekeeping-codex` governance skill under the environment group with explicit AUDIT, CONFORM, EDUCATE, REFRESH, and HELP modes and no default destructive action.
+- [x] Add one deterministic app-server adapter that starts a local stdio server, performs initialization with `experimentalApi`, records the installed Codex version, validates every used method and result shape, and exposes only repository-scoped inventory and reviewed selected deletion operations.
+- [x] Resolve the selected physical repository and pass its exact canonical path to both active and archived `thread/list` queries; treat worktrees as distinct working directories and exclude missing, null, parent, child, and symlink-alias matches.
+- [x] Make AUDIT page active and archived root results separately, then page `ancestorThreadId` results for every candidate; output a review artifact containing the root ID, exact working directory, archive state, creation/update evidence, complete descendant IDs, installed version, and protocol fingerprint without preview, turns, items, or transcript content.
+- [x] Make CONFORM accept only that reviewed artifact and an explicit selection of root IDs, re-list every root and descendant immediately before mutation, reject version, identity, working-directory, archive-state, or descendant drift before any delete, and call `thread/delete` once per unchanged selected root.
+- [x] Add focused protocol and safety fixtures, `ki-skills` publication tests, catalogue publication, skills-by-outcome guidance, and a tracked official-source refresh contract.
+- [x] Declare the new skill in the Harness configuration but keep Codex housekeeping optional in `ki-repo` runtime coverage until separate rollout evidence justifies making an experimental binding mandatory across the estate.
 
 ## Files touched
 
