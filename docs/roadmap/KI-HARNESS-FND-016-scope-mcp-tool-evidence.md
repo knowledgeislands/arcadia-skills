@@ -4,7 +4,7 @@ area: FND
 title: Scope MCP tool evidence
 theme: foundation-tooling
 horizon: now
-status: awaiting-review
+status: done
 blocks: []
 blocked_by: []
 baseline_ref: cfc93b5c8e5f4258836f423a8877f08b884e5a67
@@ -92,6 +92,10 @@ The result pairing remains strict for tool handlers. The new tests prevent regre
 ### Mini recap
 
 Five false-positive MCP warnings were removed at the shared evidence boundary; one genuine local warning remains.
+
+## Done
+
+Accepted on 2026-08-19 after the focused Harness verification and fleet MCP audits recorded above.
 
 ## Discussion
 
