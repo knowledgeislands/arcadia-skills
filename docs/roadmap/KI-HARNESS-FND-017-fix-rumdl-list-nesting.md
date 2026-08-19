@@ -4,7 +4,7 @@ area: FND
 title: Fix rumdl list nesting
 theme: foundation-tooling
 horizon: now
-status: draft
+status: ready
 blocks: []
 blocked_by: []
 baseline_ref: null
