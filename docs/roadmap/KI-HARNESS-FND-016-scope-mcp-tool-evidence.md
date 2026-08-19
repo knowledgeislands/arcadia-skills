@@ -4,10 +4,10 @@ area: FND
 title: Scope MCP tool evidence
 theme: foundation-tooling
 horizon: now
-status: ready
+status: awaiting-review
 blocks: []
 blocked_by: []
-baseline_ref: null
+baseline_ref: cfc93b5c8e5f4258836f423a8877f08b884e5a67
 ---
 
 ## Goal
@@ -28,10 +28,10 @@ The MCP context already identifies `src/tools/**` files, but `TOOL-1` derives re
 
 ## Steps
 
-- [ ] Derive `TOOL-1` result candidates from the existing tool-file collection.
-- [ ] Remove the obsolete all-source result-file context if it has no remaining consumer.
-- [ ] Retain the handler-without-schema regression and add helper- and `main/`-source regression cases.
-- [ ] Regenerate the rubric publication and run the focused Harness tests and fleet MCP audits.
+- [x] Derive `TOOL-1` result candidates from the existing tool-file collection.
+- [x] Remove the obsolete all-source result-file context if it has no remaining consumer.
+- [x] Retain the handler-without-schema regression and add helper- and `main/`-source regression cases.
+- [x] Regenerate the rubric publication and run the focused Harness tests and fleet MCP audits.
 
 ## Files touched
 
@@ -66,6 +66,32 @@ Update MCP contributor guidance only if it presently describes the broader, inco
 ### Roadmap
 
 Re-assess the six MCP ownership records after the corrected fleet audit; retain only genuine local work.
+
+## Review
+
+### Delivered
+
+`TOOL-1` now derives result-envelope evidence only from the existing `src/tools/**` collection. The obsolete all-source context is removed, and the focused regression suite proves that `utils/` and `main/` values do not trigger tool-handler schema warnings.
+
+### Summary of changes
+
+The correction aligns the checker with the MCP source-boundary contract without weakening handler-local `outputSchema` enforcement.
+
+### Verification
+
+Focused MCP rubric tests pass (7 tests); Biome and TypeScript pass; the published rubric was regenerated. Fleet re-audits pass cleanly for Git Audit, GSuite, KBFS, Notion Mirror, and M365. Claude Housekeeping now exposes only its genuine `src/tools/claude-desktop/index.ts` schema warning.
+
+### Outstanding concerns
+
+The Harness skill audit retains its unrelated overdue source-refresh warning. Claude Housekeeping still needs its local schema work; GSuite and M365 may later choose architecture cleanups for response shaping in `main/`.
+
+### Post-change review
+
+The result pairing remains strict for tool handlers. The new tests prevent regressions toward all-source scanning.
+
+### Mini recap
+
+Five false-positive MCP warnings were removed at the shared evidence boundary; one genuine local warning remains.
 
 ## Discussion
 

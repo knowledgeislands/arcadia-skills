@@ -59,7 +59,6 @@ export type McpTestingContext = {
 export type McpToolsContext = {
   readonly files: readonly SourceFile[]
   /** Every non-test source file, for checks whose subject can live outside `src/tools/`. */
-  readonly resultFiles: readonly SourceFile[]
 }
 
 export type McpPackageContext = {
@@ -244,11 +243,6 @@ export const createMcpSession = ({
       'vitest.config.cjs'
     ].find((file) => nodeKind(at(file)) === 'file') ?? null
   const toolFiles = sourceFiles.filter((file) => file.path.startsWith('src/tools/') && !file.path.endsWith('.test.ts'))
-  // Envelope helpers are not always reached from `src/tools/`: a server may build its result in
-  // `main/` or share a `jsonResult` in `utils/`, so scoping the structured-output scan to the tool
-  // layer reports a conformant surface for a repo that never declares an `outputSchema` at all.
-  const resultFiles = sourceFiles.filter((file) => !file.path.endsWith('.test.ts'))
-
   const context: McpRubricContext = {
     rubric: { publication },
     applicability: {
@@ -309,7 +303,7 @@ export const createMcpSession = ({
       vitestFile,
       source: vitestFile ? readFileSync(at(vitestFile), 'utf8') : null
     },
-    tools: { files: toolFiles, resultFiles },
+    tools: { files: toolFiles },
     package: {
       packageJson: originalPackage,
       malformed: packageEvidence.malformed,

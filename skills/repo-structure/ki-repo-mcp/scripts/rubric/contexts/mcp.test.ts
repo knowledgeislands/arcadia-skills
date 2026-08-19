@@ -171,6 +171,24 @@ test('result-envelope checks bind each helper use to its own source file', () =>
   })
 })
 
+test('result-envelope evidence ignores helper and main modules', () => {
+  const { repository } = fixture()
+  writeFileSync(join(repository, 'src', 'utils', 'results.ts'), 'const jsonResult = { structuredContent: {} }\n')
+  writeFileSync(join(repository, 'src', 'main', 'example.ts'), 'const structuredContent = {}\n')
+
+  const session = createMcpSession(options(repository, 'audit'))
+  const { context } = rootContext(session)
+  const item = TOOL.items.find((candidate) => candidate.code === 'TOOL-1')
+  const outcomes = item?.mechanical?.audit.run(TOOL.selectContext(context)) ?? []
+
+  expect(outcomes).not.toEqual(
+    expect.arrayContaining([
+      expect.objectContaining({ status: 'VIOLATION', subject: 'src/utils/results.ts' }),
+      expect.objectContaining({ status: 'VIOLATION', subject: 'src/main/example.ts' })
+    ])
+  )
+})
+
 test('smoke execution is reported without launching repository code', () => {
   const { repository } = fixture()
   const session = createMcpSession(options(repository, 'audit'))

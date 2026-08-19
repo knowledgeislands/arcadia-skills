@@ -51,9 +51,7 @@ const TOOL_1: RubricItem<McpToolsContext> = {
             subject: 'src/tools'
           })
         }
-        const resultFiles = context.resultFiles.filter((file) =>
-          /\b(?:structuredContent|jsonResult)\b/.test(file.content)
-        )
+        const resultFiles = context.files.filter((file) => /\b(?:structuredContent|jsonResult)\b/.test(file.content))
         for (const file of resultFiles)
           checks.push({
             status: /\boutputSchema\b/.test(file.content) ? 'PASS' : 'VIOLATION',
