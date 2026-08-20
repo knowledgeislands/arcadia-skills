@@ -4,7 +4,7 @@ area: FND
 title: Support compatible refresh owners
 theme: foundation-tooling
 horizon: now
-status: awaiting-review
+status: done
 blocks: []
 blocked_by: []
 baseline_ref: 9e53f049cf3bfa001b445f01e75140e0a0a3bddc
@@ -92,6 +92,10 @@ The check no longer assumes a single source Harness, but it still requires an ex
 ### Mini recap
 
 Implemented the compatible-Harness ownership contract, regenerated its public rubric, and cleared the HNR source-owner warning.
+
+## Done
+
+Accepted on 2026-08-20 after the focused compatibility contract, canonical Harness checks, and HNR audit confirmed that only the exact configured source owner is accepted.
 
 ## Discussion
 
