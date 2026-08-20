@@ -338,7 +338,7 @@ const KI_SHAPE_14: RubricItem<KiShapeRubricContext> = {
   code: 'KI-SHAPE-14',
   title: 'REFRESH states its ownership precondition',
   description:
-    "_REFRESH states its ownership precondition._ REFRESH's write target is normally the skill's own canonical files under `skills/<name>/` in `ki-agentic-harness` — a governance skill's `### Mode REFRESH` section (or, per REF-5, its `references/mode-refresh.md`) must name `ki-agentic-harness` as the only place it writes, and instruct the agent to stop and redirect when invoked from an installed copy (to the harness, or — for a pattern recurring across bases — to `ki-repo-kb`'s IMPROVE mode). The one committed repository-local source at `.agents/skills/ki-self/` instead names that local source and stops to promote reusable rules to their shared owner. Missing either half **WARNs**. Process skills (KI-SHAPE-3) are exempt; a skill with no REFRESH section at all is already caught by KI-SHAPE-12.",
+    "_REFRESH states its ownership precondition._ REFRESH's write target is normally the skill's own canonical files under `skills/<name>/` in `ki-agentic-harness` — or in a compatible source Harness that declares `ki-repo-harness` and its canonical repository identity. A governance skill's `### Mode REFRESH` section (or, per REF-5, its `references/mode-refresh.md`) must name that exact source owner as the only place it writes, and instruct the agent to stop and redirect when invoked from an installed copy (to the harness, or — for a pattern recurring across bases — to `ki-repo-kb`'s IMPROVE mode). The one committed repository-local source at `.agents/skills/ki-self/` instead names that local source and stops to promote reusable rules to their shared owner. Missing either half **WARNs**. Process skills (KI-SHAPE-3) are exempt; a skill with no REFRESH section at all is already caught by KI-SHAPE-12.",
   sources: ['ADR-KI-HARNESS-SKILLS-001', 'ADR-KI-HARNESS-SKILLS-006'],
   mechanical: {
     level: 'WARN',
@@ -352,9 +352,14 @@ const KI_SHAPE_14: RubricItem<KiShapeRubricContext> = {
       run: ({ skill }) => {
         if (!skill?.governanceSkill || !skill.refreshText)
           return [{ status: 'NOT_APPLICABLE', message: 'the target has no governance REFRESH procedure to inspect' }]
+        const owner = skill.sourceHarnessName ?? 'ki-agentic-harness'
+        const ownerPattern = new RegExp(
+          `(?:^|[^a-z0-9-])${owner.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(?=$|[^a-z0-9-])`,
+          'i'
+        )
         const namesOwner = skill.localGovernanceSource
           ? /\.agents\/skills\/ki-self/.test(skill.refreshText)
-          : /ki-agentic-harness/.test(skill.refreshText)
+          : ownerPattern.test(skill.refreshText)
         const stopsAndRedirects = skill.localGovernanceSource
           ? /\bstop(s)?\b[\s\S]{0,160}\bpromot\w*/i.test(skill.refreshText)
           : /\bstop(s)?\b[\s\S]{0,160}\b(redirect|names?|route)/i.test(skill.refreshText)
@@ -364,7 +369,7 @@ const KI_SHAPE_14: RubricItem<KiShapeRubricContext> = {
                 status: 'PASS',
                 message: skill.localGovernanceSource
                   ? 'REFRESH states the repository-local ownership precondition'
-                  : 'REFRESH states its harness-only precondition'
+                  : `REFRESH states its ${owner} ownership precondition`
               }
             ]
           : [
@@ -372,7 +377,7 @@ const KI_SHAPE_14: RubricItem<KiShapeRubricContext> = {
                 status: 'VIOLATION',
                 message: skill.localGovernanceSource
                   ? 'REFRESH section does not state the repository-local ownership precondition — it should name `.agents/skills/ki-self/` and instruct stopping to promote reusable rules to their shared owner'
-                  : 'REFRESH section does not state the harness-only precondition — it should name `ki-agentic-harness` as the only place it writes and instruct stopping/redirecting when invoked from an installed copy'
+                  : `REFRESH section does not state the ${owner} ownership precondition — it should name \`${owner}\` as the only place it writes and instruct stopping/redirecting when invoked from an installed copy`
               }
             ]
       }
