@@ -4,7 +4,7 @@ area: FND
 title: Fix rumdl structural guards
 theme: foundation-tooling
 horizon: now
-status: awaiting-review
+status: done
 blocks: []
 blocked_by: []
 baseline_ref: 8099a5ec038d567d669b27c9e640e6e46281cc58
@@ -94,6 +94,10 @@ The canonical template now matches its tracked source evidence and is proven aga
 ### Mini recap
 
 Restored the two safe rumdl guards, removed Kit Principal's authoring warning, and retained reproducible regression coverage. The unrelated Harness suite failure needs separate disposition.
+
+## Done
+
+Accepted on 2026-08-21 after the focused authoring verification passed and the previously unrelated remediation-inventory failure was resolved by `27285e8facca76fc0230085b2569a4eac46a48e6`.
 
 ## Discussion
 
