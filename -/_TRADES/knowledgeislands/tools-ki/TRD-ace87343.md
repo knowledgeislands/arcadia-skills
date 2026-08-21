@@ -7,7 +7,7 @@ receiver: knowledgeislands/tools-ki
 kind: work
 source_ref: "ki-agora CONFIG-1"
 observation: decision
-phase: preparing
+phase: submitted
 ---
 
 # TRD-ace87343: Honor declared Agora projection order
