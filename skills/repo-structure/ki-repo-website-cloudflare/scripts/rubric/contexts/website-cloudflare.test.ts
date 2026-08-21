@@ -80,6 +80,45 @@ describe('ki-repo-website-cloudflare session', () => {
     expect(readFileSync(join(repository, '.gitignore'), 'utf8')).toBe(before.gitignore)
   })
 
+  test('treats custom-domain routes as optional and validates them when declared', () => {
+    const withDomain = makeRoot()
+    writeCanonicalRepository(withDomain)
+    const withDomainContext = WCF.selectContext(
+      createWebsiteCloudflareSession(options(withDomain)).subjects[0].context()
+    )
+    const item = WCF.items.find((candidate) => candidate.code === 'WCF-10')
+
+    expect(item?.mechanical?.audit.run(withDomainContext)).toEqual([
+      {
+        status: 'PASS',
+        message: 'At least one route uses custom_domain.',
+        subject: 'site/wrangler.jsonc'
+      }
+    ])
+
+    const workersDevOnly = makeRoot()
+    writeCanonicalRepository(workersDevOnly)
+    const configPath = join(workersDevOnly, 'site', 'wrangler.jsonc')
+    writeFileSync(
+      configPath,
+      readFileSync(configPath, 'utf8').replace(
+        '  "routes": [{ "pattern": "example.com", "custom_domain": true }],\n',
+        ''
+      )
+    )
+    const workersDevContext = WCF.selectContext(
+      createWebsiteCloudflareSession(options(workersDevOnly)).subjects[0].context()
+    )
+
+    expect(item?.mechanical?.audit.run(workersDevContext)).toEqual([
+      {
+        status: 'NOT_APPLICABLE',
+        message: 'No custom-domain route is declared; workers.dev-only hosting is valid.',
+        subject: 'site/wrangler.jsonc'
+      }
+    ])
+  })
+
   test('keeps conform and all Wrangler or deployment operations report-only', () => {
     const repository = makeRoot()
     writeCanonicalRepository(repository)

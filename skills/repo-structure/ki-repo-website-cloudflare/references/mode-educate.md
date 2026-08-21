@@ -22,7 +22,7 @@ Scaffold Cloudflare Workers Static Assets hosting for a new Knowledge Islands si
 | What                                                    | Where                                       |
 | ------------------------------------------------------- | ------------------------------------------- |
 | Cloudflare account with Workers access                  | dash.cloudflare.com                         |
-| Domain added to Cloudflare (nameservers pointing to CF) | Cloudflare DNS dashboard for the zone       |
+| Optional custom domain added to Cloudflare              | Cloudflare DNS dashboard for the zone       |
 | `wrangler` CLI in `devDependencies`                     | `bun add -D wrangler`                       |
 | A built `dist/` produced by `ki-repo-website`                | run `bun run ki:site:build` once to confirm |
 
@@ -48,12 +48,6 @@ The config lives at the **site root** — the repo root for a flat layout, the `
   // The selected website implementation builds dist/ beside this file.
   // Path is relative to THIS file.
   "assets": { "directory": "./dist" },
-  // Custom domains — apex plus www (www → apex via a Cloudflare redirect rule, see §8).
-  // Omit routes for the initial deploy if the domain is not yet in Cloudflare; add them in §7.
-  "routes": [
-    { "pattern": "example.com", "custom_domain": true },
-    { "pattern": "www.example.com", "custom_domain": true }
-  ],
   // Persist Workers logs in the dashboard (Workers & Pages → <name> → Logs).
   "observability": { "enabled": true }
 }
@@ -152,7 +146,9 @@ Expected output includes `Published <name> (Uploaded …)` and a `*.workers.dev`
 
 ## 7. Wire the custom domain
 
-This happens in the **Cloudflare dashboard**, not via `wrangler`. The `routes` block in `wrangler.jsonc` with `custom_domain: true` tells Cloudflare to serve the Worker at that domain, but Cloudflare only honours it if the domain's DNS is already managed in the same account.
+Skip this section when the workers.dev URL is the intended public endpoint. A custom domain is optional and its absence is conformant.
+
+When a custom domain is wanted, configure it in the **Cloudflare dashboard** or through `wrangler.jsonc`. A `routes` block with `custom_domain: true` tells Cloudflare to serve the Worker at that domain, but Cloudflare only honours it if the domain's DNS is already managed in the same account.
 
 1. Go to **Workers & Pages → Overview → `<name>` → Settings → Domains & Routes → Add → Custom Domain**.
 2. Enter the apex domain (`example.com`) and select **Add Custom Domain**. Alternatively, declare `custom_domain: true` under `routes` and redeploy.
@@ -207,4 +203,4 @@ All items should be `PASS`. The two most common first-run findings:
 Also confirm end-to-end manually:
 
 1. `bun run ki:site:preview` — builds locally and serves through the real Worker runtime at `http://localhost:8787`. Check that the site loads and internal links work.
-2. `bun run ki:site:deploy` — deploys to production. Confirm the custom domain resolves and the `www` redirect returns 301.
+2. `bun run ki:site:deploy` — deploys to production. Confirm the workers.dev URL responds; when a custom domain is configured, also confirm it resolves and the `www` redirect returns 301.

@@ -43,13 +43,17 @@ export const scenarios: Scenario[] = [
     skill: 'ki-repo-website-cloudflare',
     id: 'host-config-keys',
     prompt:
-      'Beyond the `assets` block, what must our site `wrangler.jsonc` carry, and what gets gitignored for hosting?',
+      'Beyond the `assets` block, what must our site `wrangler.jsonc` carry, what gets gitignored for hosting, and is a custom domain mandatory?',
     assertions: [
       { name: 'name + compatibility_date', re: /compatibility_date/i },
       { name: 'observability enabled', re: /observability/i },
-      { name: 'gitignore dist and .wrangler', re: /\.wrangler/i }
+      { name: 'gitignore dist and .wrangler', re: /\.wrangler/i },
+      {
+        name: 'custom domain is optional',
+        re: /custom[- ]domain[^.\n]{0,30}(optional|not (?:mandatory|required))|workers\.dev/i
+      }
     ],
     rubric:
-      'House shape: the site `wrangler.jsonc` carries `name`, a `compatibility_date`, the `assets` block, custom-domain `routes` (`custom_domain: true`, apex + www), and `observability.enabled: true`. For hosting, **`dist/` and `.wrangler/` are gitignored**. A correct answer names `compatibility_date`, `observability` enabled, and `.wrangler/` (plus `dist/`) gitignored.'
+      'House shape: the site `wrangler.jsonc` carries `name`, a `compatibility_date`, the `assets` block, and `observability.enabled: true`. Custom-domain `routes` are optional; when present they use `custom_domain: true` for the intended hosts. For hosting, **`dist/` and `.wrangler/` are gitignored**. A correct answer names `compatibility_date`, `observability` enabled, and `.wrangler/` (plus `dist/`) gitignored without requiring a custom domain.'
   }
 ]

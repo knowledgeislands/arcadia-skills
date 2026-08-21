@@ -337,8 +337,8 @@ const WCF_9: RubricItem<WebsiteCloudflareContext> = {
 
 const WCF_10: RubricItem<WebsiteCloudflareContext> = {
   code: 'WCF-10',
-  title: 'custom-domain routes',
-  description: 'Routes use custom_domain where appropriate.',
+  title: 'optional custom-domain routes',
+  description: 'When a custom domain is declared, at least one route uses custom_domain.',
   sources: [`${SOURCE}#3-the-site-wranglerjsonc-shape`],
   mechanical: {
     level: 'WARN',
@@ -353,10 +353,10 @@ const WCF_10: RubricItem<WebsiteCloudflareContext> = {
         if (!site) return []
         return [
           {
-            status: site.hasCustomDomain ? 'PASS' : 'VIOLATION',
+            status: site.hasCustomDomain ? 'PASS' : 'NOT_APPLICABLE',
             message: site.hasCustomDomain
               ? 'At least one route uses custom_domain.'
-              : 'No custom_domain route was found; verify whether this site intentionally uses workers.dev.',
+              : 'No custom-domain route is declared; workers.dev-only hosting is valid.',
             subject: site.path
           }
         ]
@@ -364,7 +364,7 @@ const WCF_10: RubricItem<WebsiteCloudflareContext> = {
     }
   },
   judgment: judgment(
-    'Verify the custom-domain routes name the correct apex and www host, or document the intentional workers.dev-only exception.'
+    'When custom-domain routes are declared, verify they name the intended apex and any www host; workers.dev-only hosting needs no exception.'
   )
 }
 

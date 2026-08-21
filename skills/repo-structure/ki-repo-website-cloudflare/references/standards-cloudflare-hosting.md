@@ -43,11 +43,6 @@ The hosting layer and the build layer meet at exactly one place: the **`dist/` d
   // The selected website implementation builds dist/ beside this file.
   // Path is relative to THIS file.
   "assets": { "directory": "dist" },
-  // Custom domains — canonical apex plus www (www → apex via a Cloudflare redirect rule).
-  "routes": [
-    { "pattern": "example.com", "custom_domain": true },
-    { "pattern": "www.example.com", "custom_domain": true }
-  ],
   // Persist Workers logs in the dashboard (Workers & Pages → <name> → Logs).
   "observability": { "enabled": true }
 }
@@ -60,7 +55,7 @@ Required fields:
 - **`assets.directory`** — the `dist/` seam (§2).
 - **`observability.enabled: true`** — so `console.*` / request logs are queryable in the dashboard, not just live `wrangler tail`.
 
-Expected where the site has a domain:
+Optional when the site has a custom domain; omission is conformant and leaves the deployment on its workers.dev URL:
 
 - **`routes` with `custom_domain: true`** — the apex (and usually `www`, redirected to apex). Without a custom domain, the Worker URL is `<name>.<account-subdomain>.workers.dev`, not `<name>.pages.dev`. In the dashboard the operator path is **Workers & Pages → Overview → Worker → Settings → Domains & Routes → Add → Custom Domain**; “Workers & Pages” remains the correct navigation label.
 - **An active zone on the same account** — a custom domain requires the hostname to belong to a zone in the Cloudflare account that owns the Worker, because Cloudflare creates the proxied DNS record and issues the certificate itself rather than reading DNS you host elsewhere. The two zone setups that keep authoritative DNS with another provider — partial (CNAME) setup and subdomain setup — are both Enterprise-only, so where a domain is hosted outside Cloudflare the only non-Enterprise route to a custom domain is delegating the whole apex zone to Cloudflare nameservers. Deleting a custom domain does not remove its certificate; retire that separately under SSL/TLS → Edge Certificates.

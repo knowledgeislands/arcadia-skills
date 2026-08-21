@@ -44,10 +44,10 @@ Workers Static Assets hosting standard.
   - _Remediation:_ diagnostic — Correct the evidenced Cloudflare hosting issue through the responsible site owner; hosted conform does not infer deployment or security intent.
 - **WCF-9 [M] — observability** — observability.enabled is true. (standards-cloudflare-hosting.md#3-the-site-wranglerjsonc-shape)
   - _Remediation:_ diagnostic — Correct the evidenced Cloudflare hosting issue through the responsible site owner; hosted conform does not infer deployment or security intent.
-- **WCF-10 [M-heuristic + J] — custom-domain routes** — Routes use custom_domain where appropriate. (standards-cloudflare-hosting.md#3-the-site-wranglerjsonc-shape)
+- **WCF-10 [M-heuristic + J] — optional custom-domain routes** — When a custom domain is declared, at least one route uses custom_domain. (standards-cloudflare-hosting.md#3-the-site-wranglerjsonc-shape)
   - _Remediation:_ diagnostic — Correct the evidenced Cloudflare hosting issue through the responsible site owner; hosted conform does not infer deployment or security intent.
   - _Evidence scope:_ The Cloudflare Worker, static assets, deployment configuration, and evidence named by this criterion.
-  - _Review prompt:_ Verify the custom-domain routes name the correct apex and www host, or document the intentional workers.dev-only exception.
+  - _Review prompt:_ When custom-domain routes are declared, verify they name the intended apex and any www host; workers.dev-only hosting needs no exception.
   - _Outcomes:_ conforming; gap; exclusion
   - _Conforming guidance:_ Revise the hosting design through the responsible site owner, record a named gap, or record an explicit justified exclusion.
 - **WCF-13 [M + J] — deploy script** — A deploy script runs wrangler deploy. (standards-cloudflare-hosting.md#4-the-script-family)
