@@ -36,7 +36,8 @@ const inspect = (root: string) => ({
     { level: 'FAIL' as const, code: 'FILES-1', message: 'required files are absent' },
     { level: 'FAIL' as const, code: 'FILES-2', message: 'repository identity is absent' },
     { level: 'FAIL' as const, code: 'FILES-3', message: 'authoring marker is absent' },
-    { level: 'FAIL' as const, code: 'FILES-4', message: 'runtime skill ignore rules are absent' }
+    { level: 'FAIL' as const, code: 'FILES-4', message: 'runtime skill ignore rules are absent' },
+    { level: 'FAIL' as const, code: 'FILES-5', message: 'configuration header is absent' }
   ]
 })
 
@@ -92,11 +93,16 @@ describe('ki-repo session', () => {
     const proposal = session.proposal()
     expect(proposal.writes.map((write) => write.path)).toEqual(['.ki-config.toml', '.gitignore'])
     expect(proposal.writes[0]?.create).toBe(true)
+    expect(
+      proposal.writes[0]?.content.startsWith(
+        '# Knowledge Islands repository configuration.\n# Its presence declares conformance with the Knowledge Islands repository standard.\n\n'
+      )
+    ).toBe(true)
     expect(proposal.writes[0]?.content).toContain('[skills.ki-repo]')
     expect(proposal.writes[0]?.content).toContain('[skills.ki-authoring]')
   })
 
-  test('appends only a missing exact root marker and preserves the original bytes', async () => {
+  test('adds only the header and missing exact root markers while preserving original bytes', async () => {
     const root = repository()
     const original = '# retained\n[skills.ki-repo.checks]\nwiki = false\n'
     writeFileSync(join(root, '.ki-config.toml'), original)
@@ -105,7 +111,12 @@ describe('ki-repo session', () => {
 
     const config = session.proposal().writes.find((write) => write.path === '.ki-config.toml')
     expect(config?.create).toBeUndefined()
-    expect(config?.content.startsWith(original)).toBe(true)
+    expect(
+      config?.content.startsWith(
+        '# Knowledge Islands repository configuration.\n# Its presence declares conformance with the Knowledge Islands repository standard.\n\n'
+      )
+    ).toBe(true)
+    expect(config?.content).toContain(original)
     expect(config?.content).toContain('\n[skills.ki-repo]\n')
     expect(config?.content).toContain('\n[skills.ki-authoring]\n')
   })
@@ -155,6 +166,22 @@ describe('ki-repo session', () => {
     )
   })
 
+  test('audits the exact opening configuration conformance header', async () => {
+    const root = repository()
+    const configuration = '[skills.ki-repo]\nsupported_runtimes = ["chatgpt-codex"]\n'
+    writeFileSync(join(root, '.ki-config.toml'), configuration)
+
+    expect((await collectAuditFindings([root])).findings).toContainEqual(expect.objectContaining({ code: 'FILES-5' }))
+
+    writeFileSync(
+      join(root, '.ki-config.toml'),
+      `# Knowledge Islands repository configuration.\n# Its presence declares conformance with the Knowledge Islands repository standard.\n\n${configuration}`
+    )
+    expect((await collectAuditFindings([root])).findings).not.toContainEqual(
+      expect.objectContaining({ code: 'FILES-5' })
+    )
+  })
+
   // Emission is observational: a rubric that reported differently when watched would make
   // progress part of the contract under audit, and a finding that turned on whether a display
   // was attached could not be defended. The inspector is recorded rather than asserted on
@@ -198,6 +225,7 @@ describe('ki-repo session', () => {
     const context = filesContext(conform)
     expect(context.ensureRepoConfiguration).toBeUndefined()
     expect(context.ensureAuthoringConfiguration).toBeUndefined()
+    expect(context.ensureConfigurationHeader).toBeUndefined()
   })
 
   test('conforms only the generic inbound and outbound working-area scaffold', async () => {

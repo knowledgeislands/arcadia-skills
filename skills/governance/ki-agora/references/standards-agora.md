@@ -30,6 +30,10 @@ The root table admits only the optional `homes` and `memberships` tables. Their 
 [skills.ki-agora.homes.knowledge-islands]
 owner = "https://github.com/knowledgeislands/ki-agentic-harness"
 purpose = "Knowledge Islands maintained repositories"
+order = [
+  "https://github.com/knowledgeislands/ki-agentic-harness",
+  "https://github.com/knowledgeislands/tools-ki",
+]
 members = { "https://github.com/knowledgeislands/tools-ki" = "maintainer" }
 
 [skills.ki-agora.memberships.knowledge-islands]
@@ -37,14 +41,15 @@ home = "https://github.com/knowledgeislands/ki-agentic-harness"
 role = "maintainer"
 ```
 
-TOML does not require lexical ordering for tables or inline-table keys. Each configuration table is locally authored; a tool never adds a membership or changes another repository's declaration.
+`order` is an optional duplicate-free ordered prefix of canonical repository identities drawn from the owner and declared members. Resolved projections place those repositories first in the declared order and retain lexical local-key order for every unlisted participant. It controls only deterministic projection order, including display, roots, opening, and repository selection; it grants no membership, role, priority, or authority. TOML does not otherwise require lexical ordering for tables or inline-table keys. Each configuration table is locally authored; a tool never adds a membership or changes another repository's declaration.
 
 ## Home declarations
 
-Each `[skills.ki-agora.homes.<agora-id>]` table requires exactly:
+Each `[skills.ki-agora.homes.<agora-id>]` table requires `owner`, `purpose`, and `members`, and admits only the optional `order` field alongside them:
 
 - `owner` — the canonical HTTPS GitHub identity of the declaring repository. The `ki` resolver verifies this matches the registered repository that declares the Agora; each identifier is unique across registered owners.
 - `purpose` — a non-empty human explanation of the collection.
+- `order` — an optional ordered prefix of the resolved owner and member repository identities. Every entry is canonical, unique, and already named by `owner` or `members`; omitted participants follow in lexical local-key order.
 - `members` — a table or inline table keyed by canonical HTTPS GitHub repository identity, with a non-empty lower-case hyphenated role value.
 
 The owner repository does not list itself in `members`: it is automatically included in the resolved Agora projection as its owner, rather than claiming reciprocal consent from itself. A different repository may operate another Agora and also join this one.

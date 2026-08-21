@@ -58,7 +58,7 @@ const parseHomes = (value: unknown, local: string | undefined): AuditOutcome[] =
       outcomes.push(violation(`home ${identifier} must be a table`))
       continue
     }
-    for (const key of Object.keys(home).filter((key) => !['owner', 'purpose', 'members'].includes(key)))
+    for (const key of Object.keys(home).filter((key) => !['owner', 'purpose', 'order', 'members'].includes(key)))
       outcomes.push(violation(`home ${identifier} has unrecognised key ${key}`))
     if (typeof home.owner !== 'string' || !REPOSITORY.test(home.owner))
       outcomes.push(violation(`home ${identifier} owner must be a canonical HTTPS GitHub repository`))
@@ -80,6 +80,23 @@ const parseHomes = (value: unknown, local: string | undefined): AuditOutcome[] =
         outcomes.push(
           violation(`home ${identifier} member ${repository} role must be a lower-case hyphenated identifier`)
         )
+    }
+    if (home.order !== undefined) {
+      if (!Array.isArray(home.order)) outcomes.push(violation(`home ${identifier} order must be an array`))
+      else {
+        const participants = new Set([...(typeof home.owner === 'string' ? [home.owner] : []), ...Object.keys(members)])
+        const ordered = new Set<string>()
+        for (const repository of home.order) {
+          if (typeof repository !== 'string' || !REPOSITORY.test(repository)) {
+            outcomes.push(violation(`home ${identifier} order entries must be canonical HTTPS GitHub repositories`))
+            continue
+          }
+          if (ordered.has(repository)) outcomes.push(violation(`home ${identifier} order repeats ${repository}`))
+          else ordered.add(repository)
+          if (!participants.has(repository))
+            outcomes.push(violation(`home ${identifier} order repository ${repository} must name its owner or member`))
+        }
+      }
     }
   }
   return outcomes
@@ -123,7 +140,7 @@ const parseConfiguration = (configuration: Readonly<AgoraConfiguration>, root: s
     configuration: {
       outcomes: configurationOutcomes.length
         ? configurationOutcomes
-        : pass('Agora homes use canonical owner identity, purpose, and approved member shape.')
+        : pass('Agora homes use canonical owner identity, purpose, ordered projection, and approved member shape.')
     },
     memberships: {
       outcomes: membershipsOutcomes.length

@@ -73,6 +73,10 @@ const CHECK_DEFAULTS: Record<string, boolean> = {
   structure: true //            declares one primary repository structure
 }
 const KI_CONFIG = '.ki-config.toml'
+export const KI_CONFIGURATION_HEADER = `# Knowledge Islands repository configuration.
+# Its presence declares conformance with the Knowledge Islands repository standard.
+
+`
 
 // Required root files. Each entry is one or more acceptable paths (first found wins).
 const REQUIRED_FILES: [id: string, paths: string[]][] = [
@@ -271,7 +275,7 @@ const KI_AUTHORING_DEFAULT = `# The authoring standard (Markdown/TOML house styl
 # governed by it. Declared explicitly, not assumed; its presence is the compliance marker.
 [skills.${skillTable('ki-authoring')}]
 `
-const KI_DEFAULT = `${KI_REPO_DEFAULT}\n${KI_AUTHORING_DEFAULT}`
+const KI_DEFAULT = `${KI_CONFIGURATION_HEADER}${KI_REPO_DEFAULT}\n${KI_AUTHORING_DEFAULT}`
 
 // Parse the owned table with Bun's TOML parser so quoted table keys, comments,
 // and multiline strings cannot be mistaken for schema. Returns null when the
@@ -684,6 +688,9 @@ async function auditRepo(
   for (const [, paths] of REQUIRED_FILES) {
     if (!paths.some((p) => files.has(p))) fail('FILES-1', `no ${paths.join(' / ')}`, paths[0])
   }
+  // ── layer 1: legible configuration conformance marker ── FILES-5
+  if (files.has(KI_CONFIG) && kiText != null && !kiText.startsWith(KI_CONFIGURATION_HEADER))
+    fail('FILES-5', `${KI_CONFIG} must open with the Knowledge Islands conformance header`, KI_CONFIG)
   // ── layer 1: runtime skill ignore contract (gated on the ki-repo marker) ── FILES-4
   const runtimeDeclaration = kiText == null ? undefined : parseSupportedRuntimes(kiText)
   const runtimeRules =
@@ -1253,6 +1260,7 @@ const CONTENT_AREAS = new Set([
   'FILES-2',
   'FILES-3',
   'FILES-4',
+  'FILES-5',
   'KIND-1',
   'KIND-2',
   'GH-2',

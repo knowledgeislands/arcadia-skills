@@ -13,6 +13,7 @@ import type {
 import {
   collectAuditFindings,
   declaresRootTable,
+  KI_CONFIGURATION_HEADER,
   KNOWN_RUNTIMES,
   parseSupportedRuntimes,
   type RepoAuditCollection,
@@ -86,6 +87,7 @@ const GITHUB_CODES = new Set([
   'FILES-1',
   'FILES-2',
   'FILES-3',
+  'FILES-5',
   'GH-1',
   'GH-2',
   'GH-3',
@@ -115,10 +117,12 @@ export type FilesRubricContext = {
   files2: readonly RepoEvidenceFinding[]
   files3: readonly RepoEvidenceFinding[]
   files4: readonly RepoEvidenceFinding[]
+  files5: readonly RepoEvidenceFinding[]
   ensureGitignore?: () => void
   ensureRuntimeSkillIgnore?: () => void
   ensureRepoConfiguration?: () => void
   ensureAuthoringConfiguration?: () => void
+  ensureConfigurationHeader?: () => void
 }
 
 export type GhRubricContext = {
@@ -433,6 +437,7 @@ export const createRepoSession = async (
   const runtimeActivation = runtimeActivationEvidence(runtimeSkillNames, repositorySkills)
   let repoConfigurationRequested = false
   let authoringConfigurationRequested = false
+  let configurationHeaderRequested = false
   let gitignoreRequested = false
   let runtimeSkillIgnoreRequested = false
   let workingAreaScaffoldRequested = false
@@ -444,6 +449,7 @@ export const createRepoSession = async (
       files2: evidence('FILES-2'),
       files3: evidence('FILES-3'),
       files4: evidence('FILES-4'),
+      files5: evidence('FILES-5'),
       ...(mutable && !gitignoreExists
         ? {
             ensureGitignore: () => {
@@ -469,6 +475,9 @@ export const createRepoSession = async (
             },
             ensureAuthoringConfiguration: () => {
               authoringConfigurationRequested = true
+            },
+            ensureConfigurationHeader: () => {
+              configurationHeaderRequested = true
             }
           }
         : {})
@@ -557,7 +566,12 @@ export const createRepoSession = async (
             ? KI_AUTHORING_DEFAULT
             : ''
         ].filter(Boolean)
-        const content = appendBlocks(configSource, blocks)
+        const appended = appendBlocks(configSource, blocks)
+        const content =
+          (configurationHeaderRequested || (!configExists && appended.length > 0)) &&
+          !appended.startsWith(KI_CONFIGURATION_HEADER)
+            ? `${KI_CONFIGURATION_HEADER}${appended}`
+            : appended
         if (content !== configSource)
           writes.push({ path: '.ki-config.toml', content, ...(!configExists ? { create: true } : {}) })
       }

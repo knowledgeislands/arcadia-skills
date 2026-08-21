@@ -2,6 +2,7 @@ import type { RubricFamily, RubricItem } from '../../shared/rubric.ts'
 import { auditEvidence, type FilesRubricContext, type RepoRubricContext } from '../contexts/repository.ts'
 
 const SOURCE = 'standards-repository.md'
+const CONFIGURATION_SOURCE = 'standards-configuration.md'
 
 const FILES_1: RubricItem<FilesRubricContext> = {
   code: 'FILES-1',
@@ -60,6 +61,25 @@ const FILES_4: RubricItem<FilesRubricContext> = {
   }
 }
 
+const FILES_5: RubricItem<FilesRubricContext> = {
+  code: 'FILES-5',
+  title: 'Configuration conformance header',
+  description:
+    'The root .ki-config.toml opens with the exact lightweight declaration that identifies it as Knowledge Islands repository configuration and explains that its presence declares conformance.',
+  sources: [CONFIGURATION_SOURCE],
+  mechanical: {
+    level: 'FAIL',
+    remediation: { class: 'automatic' },
+    audit: { phase: 'INSPECT', run: (context) => auditEvidence(context.files5, 'FAIL') },
+    conform: {
+      phase: 'PRIMARY',
+      run: (context) => {
+        context.ensureConfigurationHeader?.()
+      }
+    }
+  }
+}
+
 const FILES_2: RubricItem<FilesRubricContext> = {
   code: 'FILES-2',
   title: 'Declared repository identity',
@@ -96,5 +116,5 @@ export const FILES: RubricFamily<RepoRubricContext, FilesRubricContext> = {
     'Required repository files and document quality, using a local checkout when available or GitHub default-branch evidence for remote-only runs.',
   standard: SOURCE,
   selectContext: (context) => context.files,
-  items: [FILES_1, FILES_2, FILES_3, FILES_4, FILES_J1]
+  items: [FILES_1, FILES_2, FILES_3, FILES_4, FILES_5, FILES_J1]
 }

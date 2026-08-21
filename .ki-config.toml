@@ -1,3 +1,6 @@
+# Knowledge Islands repository configuration.
+# Its presence declares conformance with the Knowledge Islands repository standard.
+
 [repo]
 harnesses = ["knowledgeislands/ki-agentic-harness"]
 
@@ -130,6 +133,13 @@ mcp_servers = 20 # User-scoped; revisit if the global MCP set is pruned.
 [skills.ki-agora.homes.ki-all]
 owner = "https://github.com/knowledgeislands/ki-agentic-harness"
 purpose = "Knowledge Islands ecosystem repositories"
+order = [
+  "https://github.com/krisb/dotfiles",
+  "https://github.com/knowledgeislands/ki-agentic-harness",
+  "https://github.com/knowledgeislands/tools-ki",
+  "https://github.com/knowledgeislands/tools-mgit",
+  "https://github.com/knowledgeislands/homebrew-tap",
+]
 
 [skills.ki-agora.homes.ki-all.members]
 "https://github.com/krisb/dotfiles" = "maintainer"

@@ -55,6 +55,8 @@ Required repository files and document quality, using a local checkout when avai
   - _Remediation:_ automatic
 - **FILES-4 [M] — Runtime skill ignore contract** — Generated skill links are ignored for each declared runtime, while a repository-local .agents/skills/ki-self source remains committed. (standards-repository.md)
   - _Remediation:_ automatic
+- **FILES-5 [M] — Configuration conformance header** — The root .ki-config.toml opens with the exact lightweight declaration that identifies it as Knowledge Islands repository configuration and explains that its presence declares conformance. (standards-configuration.md)
+  - _Remediation:_ automatic
 - **FILES-J1 [J] — Repository document content** — README and license content is accurate and current. (standards-repository.md)
   - _Evidence scope:_ The repository README and license.
   - _Review prompt:_ Read the README and license and assess whether they accurately describe and license this repository.

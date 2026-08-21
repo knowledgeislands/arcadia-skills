@@ -20,6 +20,15 @@ A repo declares its configuration in **one** `.ki-config.toml` at its root — n
 
 Its **presence is the marker of a Knowledge Islands–compliant repo**, and the **gate of the coverage cascade** (below): a repo that carries `.ki-config.toml` has opted into the house standards, and the standard-holding skills are what hold it to them, each reading its own table where it needs declared config. Onboarding a repo (adding the file) is the act of making it compliant; `ki-repo` requires it as a Layer-1 root file, is the skill that audits it, and — because it is the gate — is also the skill that checks the repo declares the other standards that govern it (_Coverage enforcement_, below).
 
+Every file opens with this exact lightweight declaration:
+
+```toml
+# Knowledge Islands repository configuration.
+# Its presence declares conformance with the Knowledge Islands repository standard.
+```
+
+The header makes the marker legible without requiring a reader to know the filename contract. A future specification may replace the second line with a stable reference, but repositories use this exact wording until that reference exists.
+
 ## Harnesses and the skills namespace
 
 A repository names the harnesses that provide its skills once, in `[repo]`, and declares each governing skill by its **bare name** under the `[skills]` namespace. A skill that needs declared config owns **exactly one** table there, named for the skill, and may nest sub-tables under it (e.g. `[skills.<name>.checks]`):
@@ -153,7 +162,7 @@ No marker table is decorative — each is read by code. Most are read by their *
 
 The **schema and conformer** inside a table belong to the skill that owns it: that skill documents the allowed keys and may emit or update its canonical fragment while preserving unrelated content. `ki-repo` owns the shared file-level contract and the two required foundation markers. No operation embeds another skill's TOML template or edits that skill's table directly. This retains one shared `.ki-config.toml`, one table per skill, read-only access across table boundaries, and validate-down/conform-down ownership.
 
-`ki-repo`'s own foundation action establishes the required markers. For a missing file it writes one canonical `[skills.ki-repo]` default block followed by one bare `[skills.ki-authoring]`. For a partial file it appends only whichever exact root marker is absent; `[skills.ki-repo.checks]` alone is not an exact `[skills.ki-repo]` marker. Existing content remains an exact byte-for-byte prefix — including values, comments, ordering, and existing newline bytes — repeat runs are idempotent, and dry-run writes nothing. CONFORM applies the local repair while live GitHub changes remain separately confirmed work.
+`ki-repo`'s own foundation action establishes the opening declaration and required markers. For a missing file it writes the exact header, one canonical `[skills.ki-repo]` default block, and one bare `[skills.ki-authoring]`. For a partial file it prepends only the missing header and appends only whichever exact root marker is absent; `[skills.ki-repo.checks]` alone is not an exact `[skills.ki-repo]` marker. Apart from that bounded prepend and append, existing content remains byte-for-byte unchanged — including values, comments, ordering, and existing newline bytes — repeat runs are idempotent, and dry-run writes nothing. CONFORM applies the local repair while live GitHub changes remain separately confirmed work.
 
 The native configuration and activation flow runs this owner leg without embedding a TOML template or writing another skill's table. It re-reads the result before resolving the declared operations from the verified installed collection; it does not vendor an executor. No-seed/no-config activation remains an empty-set operation, so this flow does not recreate an injected baseline.
 

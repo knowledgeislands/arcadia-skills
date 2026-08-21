@@ -21,7 +21,7 @@ This skill governs a repo's **configuration and Knowledge Islands compliance** �
 
 ## The standard at a glance
 
-1. **Files** — every repo carries `README.md`, `LICENSE`, `.gitignore`, and `.ki-config.toml` (its declared config). A local target reads its checkout first; an `--org` or other filesystem-free run reads the GitHub default branch. (`.editorconfig` is owned by `ki-authoring`, not this skill.)
+1. **Files** — every repo carries `README.md`, `LICENSE`, `.gitignore`, and `.ki-config.toml` (its declared config, opening with the standard conformance header). A local target reads its checkout first; an `--org` or other filesystem-free run reads the GitHub default branch. (`.editorconfig` is owned by `ki-authoring`, not this skill.)
 2. **GitHub** (repos on github.com): default branch `main`, declared SPDX licence and independent declared visibility, **squash-only merge + linear history**, auto-delete branch on merge, Issues **on**, Wiki & Projects **off**, and the configured description synced with GitHub and `package.json` where one exists; public repos also carry the standard topic set. **`main` is open by default** — branch protection is an _optional_ check a repo opts into (below).
 3. **Deeper GitHub**: Dependabot alerts + security updates **on** everywhere; secret scanning + push protection **on** for public repos; Actions `allowed-actions = all`.
 
@@ -47,7 +47,7 @@ When the command runs in a local KI installation, AUDIT also checks that the res
 
 Outward-facing: it changes live GitHub settings and may open PRs. Show the diff and confirm before mutating.
 
-`ki repo conform --repo <repo>` records the selected physical local KI root in the user's registry, then resolves the declared, verified installed collection and proposes the local `.gitignore` and required config root-marker repairs. A missing config receives the canonical `[skills.ki-repo]` defaults plus bare `[skills.ki-authoring]`; a partial config receives only its missing exact root marker; existing bytes remain an exact prefix; repeat runs are byte-identical; and `--dry-run` writes nothing. Missing, incompatible, undeclared, or untrusted skills fail before any repository write.
+`ki repo conform --repo <repo>` records the selected physical local KI root in the user's registry, then resolves the declared, verified installed collection and proposes the local `.gitignore` and required config foundation repairs. A missing config receives the exact opening header, canonical `[skills.ki-repo]` defaults, and bare `[skills.ki-authoring]`; a partial config receives only its missing header and exact root marker. Apart from those bounded additions, existing bytes remain unchanged; repeat runs are byte-identical; and `--dry-run` writes nothing. Missing, incompatible, undeclared, or untrusted skills fail before any repository write.
 
 1. Run **AUDIT** first, so you change against a known gap list.
 2. Run `ki repo conform --repo <repo>` for the bounded local mechanical layer. Live GitHub settings remain outside the session proposal: inspect the commands in [the repository standard](references/standards-repository.md#applying-it), show the exact diff, and obtain explicit confirmation before applying them.
@@ -61,7 +61,7 @@ For a bootstrapped local KI installation, `ki repo register` records selected ph
 Onboard a repo by adding the marker file (and the other root files) so it joins the standard. Local only — no live GitHub change; hand the live settings to **CONFORM**.
 
 1. Add any missing root files: `README.md` / `LICENSE` / `.gitignore` (`.editorconfig` is `ki-authoring`'s).
-2. Establish the declarative foundations only: a missing config gets one canonical `[skills.ki-repo]` default block plus one bare `[skills.ki-authoring]`; a partial file gets only whichever exact root marker is absent. A dotted sub-table such as `[skills.ki-repo.checks]` does not satisfy the root marker. Existing values, comments, order, and all other bytes are preserved; repeat runs are idempotent. Native activation resolves the declared skills from the verified installed collection rather than vendoring checkers or runners into the repository.
+2. Establish the declarative foundations only: a missing config gets the exact opening conformance header, one canonical `[skills.ki-repo]` default block, and one bare `[skills.ki-authoring]`; a partial file gets only its missing header and whichever exact root marker is absent. A dotted sub-table such as `[skills.ki-repo.checks]` does not satisfy the root marker. Existing values, comments, order, and all other bytes remain unchanged around those bounded additions; repeat runs are idempotent. Native activation resolves the declared skills from the verified installed collection rather than vendoring checkers or runners into the repository.
 3. Activation is deliberately separate from configuration: `ki repo skill add <skill>` and `ki skill add <skill>` create only managed runtime discovery links after ownership and containment checks. They do not change a declaration into an execution payload.
 4. Set `visibility` and any `[…checks]` overrides (see [the configuration standard](references/standards-configuration.md)), commit (a direct push to `main` is fine — it's open), then run **CONFORM** for the GitHub settings.
 
