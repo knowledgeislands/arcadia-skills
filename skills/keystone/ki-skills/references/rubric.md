@@ -102,9 +102,9 @@ The portable skill description contract.
   - _Review prompt:_ Does the description state both what this skill does and when it should be used?
   - _Outcomes:_ conforming; gap; exclusion
   - _Conforming guidance:_ Record the review as conforming, a named Gap with its next action, or an explicit justified exclusion.
-- **DESC-5 [J] — description is written in the third person** — Written in the **third person**, never first/second person. (BP, COMMUNITY)
+- **DESC-5 [J] — description uses an activation-oriented voice** — Uses direct imperative or third person, never first-person or second-person explanation. (AS, BP, COMMUNITY)
   - _Evidence scope:_ The target skill and the evidence named by this criterion.
-  - _Review prompt:_ Is the description consistently written in the third person?
+  - _Review prompt:_ Does the description use direct imperative or third person without first/second-person explanation?
   - _Outcomes:_ conforming; gap; exclusion
   - _Conforming guidance:_ Record the review as conforming, a named Gap with its next action, or an explicit justified exclusion.
 - **DESC-6 [J] — description includes concrete trigger phrases** — Includes concrete **trigger keywords/phrases** a user would say. (SPEC, BP, CC)
