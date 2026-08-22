@@ -4,10 +4,10 @@ title: Acquire AI sessions
 area: OPS
 theme: session-acquisition
 horizon: now
-status: ready
+status: in-progress
 blocks: []
 blocked_by: []
-baseline_ref: null
+baseline_ref: 7373e7c496caa223f5e2dce988ab41bb700f31ad
 ---
 
 ## Goal
