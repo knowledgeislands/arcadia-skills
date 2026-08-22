@@ -6,7 +6,7 @@ ki-runtime-binding: true
 ki-supported-runtimes: [claude-code]
 ki-shared-dependencies: [ki-skills:rubric]
 description: >
-  Governs accumulated Claude state from Desktop, Cowork, Claude Code (`~/.claude/`), and VSCode chat: sessions, artifacts, backups, plugins, project cache, and selected native auto-memory. It owns the standard and judgment; native Claude settings establish memory location, Headroom output is separate rendered evidence, and any paired server's source, registration, exposure, and executed audit remain distinct. Its bounded memory rubric covers selection evidence, `memory/*.md`, `MEMORY.md`, the four memory types, index agreement, and promote-then-delete reconciliation. Triggers: "audit Claude memory", "Claude memory hygiene", "clean up Claude storage", "obsolete Cowork sessions", "Claude housekeeping audit", "check ~/.claude". Not a Knowledge Islands base memory cascade (`ki-repo-kb`) or context cost (`ki-tokenomics`).
+  Governs accumulated Claude state from Desktop, Cowork, Claude Code (`~/.claude/`), and VSCode chat: sessions, artifacts, backups, plugins, project cache, and selected native auto-memory. It guides repository-scoped Claude Code session acquisition and later housekeeping: discover, list, faithful read, checkpoint, staging, harvest, and safe cleanup. Triggers: "acquire Claude Code sessions", "import Claude sessions", "audit Claude memory", "Claude memory hygiene", "clean up Claude storage", "obsolete Cowork sessions", "Claude housekeeping audit", "check ~/.claude". It is not a Knowledge Islands base memory cascade (`ki-repo-kb`) or context cost (`ki-tokenomics`).
 argument-hint: 'audit | conform | help | educate | refresh'
 ---
 
@@ -22,6 +22,12 @@ The **mechanical arm** is split by area:
 
 1. **Native memory** — governed locally when a readable native settings record establishes a selected contained directory. An absent or malformed settings record, disabled or unsupported override, or out-of-bounds override is reported unavailable; the rubric never silently falls back to its default path. Once selection is established, the index/file contract (every `memory/*.md` listed in `MEMORY.md`, every entry resolving to a file), frontmatter schema, four-type doctrine, and promote-then-delete reconciliation are checked by `ki repo audit --skill ki-housekeeping-claude`. It never enumerates, reports, or writes another repository's memory. Detail in [the auto-memory standard](references/standards-auto-memory.md).
 2. **Headroom output and every other area** — a `headroom:learn` block is rendered-file evidence only; it does not prove a Headroom database, version, installation, or executed learn action. The paired **`mcp-housekeeping-claude`** server is a separate tool source: a source checkout or inventory declaration does not prove registration, access exposure, or an executed audit. The skill applies judgment only to independently obtained server audit evidence; it never re-implements those tools.
+
+## AI session acquisition
+
+Use the provider-neutral lifecycle: **acquire → stage → harvest → durable knowledge → archive/delete source**. For one exact physical repository, `mcp-housekeeping-claude` exposes read-only `claude_code_sessions_discover`, `claude_code_sessions_list`, `claude_code_session_read`, and `claude_code_sessions_checkpoint` operations. `list` and `checkpoint` are content-minimised provenance; the repository/session form of `session_read` is the faithful source payload. Its legacy project/session form remains a bounded preview.
+
+The MCP does not write Knowledge Islands state. `ki space acquire claude import` will own inbound staging and incremental checkpoint persistence. Do not archive or delete a Claude session until acquisition, review, and harvesting have passed their later safety checkpoint.
 
 ## Operating modes
 

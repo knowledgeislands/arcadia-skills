@@ -6,15 +6,21 @@ ki-runtime-binding: true
 ki-supported-runtimes: [chatgpt-codex]
 ki-shared-dependencies: [ki-skills:rubric]
 description: >
-  Audits and explicitly deletes saved Codex sessions whose exact working directory matches one selected physical repository. Use for "audit Codex sessions", "clean up Codex sessions", "delete old Codex threads", or repository-scoped Codex housekeeping. It exposes no transcript content, performs no automatic retention, and never substitutes for portable repository maintenance owned by ki-work-housekeeping.
+  Governs repository-scoped Codex session acquisition and later housekeeping. Use for "acquire Codex sessions", "import Codex sessions", "audit Codex sessions", "clean up Codex sessions", or "delete old Codex threads". It guides discover, list, faithful read, checkpoint, staging, harvest, and safe later cleanup for one exact physical repository; it performs no automatic retention and never substitutes for portable repository maintenance owned by ki-work-housekeeping.
 argument-hint: 'audit <repo> | conform <artifact> <thread-id>... | educate <repo> | help | refresh'
 ---
 
-# Codex session housekeeping
+# Codex session acquisition and housekeeping
 
-Govern saved Codex-session cleanup through a review-before-delete workflow. Read the [Codex state standard](references/standards-codex-state.md) for the identity, artifact, and deletion contract.
+Govern saved Codex-session acquisition and later cleanup through a review-before-delete workflow. Read the [Codex state standard](references/standards-codex-state.md) for the identity, artifact, and deletion contract.
 
-The skill is opt-in while its machine-readable binding uses the experimental Codex app-server. It never reads turns or items, never applies automatic retention, and never infers repository ownership from a parent path or symlink alias. The `ki-work-housekeeping` skill continues to own recurring repository-maintenance work.
+The skill is opt-in while its machine-readable binding uses the experimental Codex app-server. It reads a complete provider payload only for an explicit acquisition operation, never applies automatic retention, and never infers repository ownership from a parent path or symlink alias. The `ki-work-housekeeping` skill continues to own recurring repository-maintenance work.
+
+## AI session acquisition
+
+Use the provider-neutral lifecycle: **acquire → stage → harvest → durable knowledge → archive/delete source**. For one exact physical repository, `mcp-housekeeping-codex` exposes read-only `codex_sessions_discover`, `codex_sessions_list`, `codex_session_read`, and `codex_sessions_checkpoint` operations. `list` and `checkpoint` are content-minimised provenance; `read` is the faithful source payload.
+
+The MCP does not write Knowledge Islands state. `ki space acquire codex import` will own inbound staging and incremental checkpoint persistence. Do not archive or delete a Codex session until acquisition, review, and harvesting have passed their later safety checkpoint.
 
 ## Operating modes
 
@@ -38,10 +44,10 @@ Read [the REFRESH procedure](references/mode-refresh.md). REFRESH writes only th
 
 ## Runtime adapter
 
-Run `bun scripts/app-server.ts --help` from this skill root for the public adapter contract. The adapter exposes only `inventory` and `delete`; private protocol logic remains inside the same source module so its safety fixtures exercise the public behaviour directly.
+Run `bun scripts/app-server.ts --help` from this skill root for the public adapter contract. The MCP adapter exposes discovery, list, faithful read, and checkpoint in addition to the review/delete CLI; private protocol logic remains inside the same source module so its safety fixtures exercise the public behaviour directly.
 
 ## Off-ramps
 
 - Recurring repository-owned maintenance work belongs to `ki-work-housekeeping`.
 - Codex instruction and configuration token evidence belongs to `ki-tokenomics-codex`.
-- Unsupported Codex cache, retention, and transcript management stay out of scope.
+- Unsupported Codex cache and automatic retention stay out of scope.

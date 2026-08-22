@@ -21,6 +21,14 @@ Knowledge Islands adopts a provider-neutral lifecycle: **acquire → stage → h
 
 `ki space acquire <provider> import` owns repository-context staging and checkpoint persistence. Provider MCPs are adapters only. Each provider exposes an additive, access-gated session surface with comparable semantics: `sessions_discover`, `sessions_list`, `session_read`, and `sessions_checkpoint`. Provider-specific names and storage details remain local. Archive and delete stay separate destructive operations and require a verified acquisition/harvest checkpoint; neither is part of initial import.
 
+The first shared adapter contract is deliberately small.
+
+- `sessions_discover` returns the provider, physical repository, session count, and supported operations.
+- `sessions_list` and `sessions_checkpoint` return schema `1`, the provider, physical repository, generation timestamp, adapter provenance, and content-minimised per-session metadata: source identity and locator, available timestamps, byte size when available, status, archive state, and descendants.
+- `session_read` returns schema `1`, the provider, physical repository, source identity and locator, content type, complete provider payload, and observed update timestamp.
+
+The contract records `null` when a provider cannot faithfully supply a field. It does not invent source metadata, write KI checkpoint state, classify knowledge, or mutate a source session. Provider tools may retain additive legacy previews and housekeeping operations while the repository-context acquisition command develops.
+
 `ki-housekeeping-claude` and `ki-housekeeping-codex` are the standards-and-judgment counterparts to their respective MCPs. They guide selection, review, durable promotion, and safe later cleanup; the MCPs supply source mechanics and do not decide what knowledge is worth retaining.
 
 ## Consequences
