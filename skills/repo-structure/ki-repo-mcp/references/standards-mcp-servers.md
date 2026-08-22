@@ -1,6 +1,6 @@
 # Workspace MCP Standard
 
-The canonical shape shared by every stdio MCP server in the `knowledgeislands/` workspace: `mcp-git-audit`, `mcp-ki-repo-kb-fs`, `mcp-gsuite`, `mcp-m365`, `mcp-claude-housekeeping`, `mcp-ki-repo-kb-notion-mirror`. This is the reference the `ki-repo-mcp` skill codifies and audits against. Where repos disagree, the majority shape is the standard; documented per-repo exceptions are noted inline.
+The canonical shape shared by every stdio MCP server in the `knowledgeislands/` workspace: `mcp-git-audit`, `mcp-ki-repo-kb-fs`, `mcp-gsuite`, `mcp-m365`, `mcp-housekeeping-claude`, `mcp-ki-repo-kb-notion-mirror`. This is the reference the `ki-repo-mcp` skill codifies and audits against. Where repos disagree, the majority shape is the standard; documented per-repo exceptions are noted inline.
 
 ## Applicability
 
@@ -70,7 +70,7 @@ Top-level `src/` folders are identical across all six repos: `config`, `main`, `
 | mcp-ki-repo-kb-fs            | `kb`                                      |
 | mcp-gsuite              | `gsuite`                                  |
 | mcp-m365                | `m365`                                    |
-| mcp-claude-housekeeping | `claude_code`, `claude_desktop`, `vscode` |
+| mcp-housekeeping-claude | `claude_code`, `claude_desktop`, `vscode` |
 | mcp-ki-repo-kb-notion-mirror | `notion_mirror`                           |
 
 - **Plural** resource for collection ops (`git_repos_scan`, `gsuite_email_messages_search`, `kb_notes_list`).

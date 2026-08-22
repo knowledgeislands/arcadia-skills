@@ -21,7 +21,7 @@ The **standard and judgment** over the state Claude accumulates on a machine, ac
 The **mechanical arm** is split by area:
 
 1. **Native memory** — governed locally when a readable native settings record establishes a selected contained directory. An absent or malformed settings record, disabled or unsupported override, or out-of-bounds override is reported unavailable; the rubric never silently falls back to its default path. Once selection is established, the index/file contract (every `memory/*.md` listed in `MEMORY.md`, every entry resolving to a file), frontmatter schema, four-type doctrine, and promote-then-delete reconciliation are checked by `ki repo audit --skill ki-housekeeping-claude`. It never enumerates, reports, or writes another repository's memory. Detail in [the auto-memory standard](references/standards-auto-memory.md).
-2. **Headroom output and every other area** — a `headroom:learn` block is rendered-file evidence only; it does not prove a Headroom database, version, installation, or executed learn action. The paired **`mcp-claude-housekeeping`** server is a separate tool source: a source checkout or inventory declaration does not prove registration, access exposure, or an executed audit. The skill applies judgment only to independently obtained server audit evidence; it never re-implements those tools.
+2. **Headroom output and every other area** — a `headroom:learn` block is rendered-file evidence only; it does not prove a Headroom database, version, installation, or executed learn action. The paired **`mcp-housekeeping-claude`** server is a separate tool source: a source checkout or inventory declaration does not prove registration, access exposure, or an executed audit. The skill applies judgment only to independently obtained server audit evidence; it never re-implements those tools.
 
 ## Operating modes
 
@@ -32,7 +32,7 @@ Carries the universal **AUDIT · CONFORM · EDUCATE · REFRESH**. Invoked as `he
 | AUDIT | Run `ki repo audit --skill ki-housekeeping-claude` for selected native-memory evidence and its bounded store. Report non-memory server state unavailable unless registration, access exposure, and an executed server audit are separately evidenced; then apply the judgment criteria in [rubric.md](references/rubric.md). Procedure in [mode-audit.md](references/mode-audit.md). |
 | CONFORM | Run `ki repo conform --skill ki-housekeeping-claude`; it proposes only safe transactional repairs in an already selected bounded memory directory. Any non-memory cleanup requires independently established server access and authority. Re-AUDIT until the local evidence is clean. Procedure in [mode-conform.md](references/mode-conform.md). |
 | EDUCATE | Run `ki repo educate --skill ki-housekeeping-claude` to declare the repository's bounded user-home evidence; add it with `ki skill add ki-housekeeping-claude` when it should also be installed for every supported Claude Code agent. User activation installs a skill only — it does not audit or conform it. |
-| REFRESH | Re-check the standard against its sources: Headroom's memory-feature behavior for the memory format, and the `mcp-claude-housekeeping` server's tool surface for the other areas, per [mode-refresh.md](references/mode-refresh.md). |
+| REFRESH | Re-check the standard against its sources: Headroom's memory-feature behavior for the memory format, and the `mcp-housekeeping-claude` server's tool surface for the other areas, per [mode-refresh.md](references/mode-refresh.md). |
 
 ## Notes
 
