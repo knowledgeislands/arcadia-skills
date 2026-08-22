@@ -1,32 +1,35 @@
 ---
 id: ADR-KI-HARNESS-SKILLS-007
-title: 'Runtime-explicit Claude housekeeping scope and the server pairing'
+title: 'Provider-neutral AI session acquisition and adapter pairing'
 date: 2026-07-09
 status: current
 decision_type_url: https://knowledgeislands.info/specifications/decision-records/adr
 decision_type: architecture
 ---
 
-# ADR-KI-HARNESS-SKILLS-007: Runtime-explicit Claude housekeeping scope and the server pairing
+# ADR-KI-HARNESS-SKILLS-007: Provider-neutral AI session acquisition and adapter pairing
 
 ## Context
 
-The former `ki-memory` skill governed one narrow thing: the Claude Code auto-memory file format. But memory is only one kind of state Claude accumulates on a machine — sessions, artifacts and outputs, backups, plugins, and project caches pile up across Claude Desktop / Cowork, Claude Code (`~/.claude/`), and VSCode chat sessions, none of it owned by any repo-structure skill. Separately, the `mcp-housekeeping-claude` MCP server already ships codified per-surface audits and access-gated cleanup tools over exactly that state, with memory as one of its areas. Two instruments were circling the same domain from opposite ends — a skill with a standard but a memory-only reach, and a server with tools but no opinion on when to use them.
+AI clients retain transient working state: sessions, local artifacts, caches, and optional memory. A useful session may contain durable knowledge, but the client history is not a Knowledge Islands knowledge base. The acquisition lifecycle must therefore preserve source material and provenance before any interpretation, harvesting, archival, or deletion. Claude Code and Codex currently expose different local storage and protocol mechanics, while ChatGPT and Granola remain priority future sources.
+
+The former `ki-memory` skill governed one narrow thing: the Claude Code auto-memory file format. It broadened into `ki-housekeeping-claude` alongside `mcp-housekeeping-claude`, but that pairing was initially limited to hygiene and cleanup. Codex now has an app-server identity that can discover, list, and read repository-scoped threads. The two providers need comparable operating surfaces without making MCP a second knowledge architecture.
 
 ## Decision
 
-`ki-memory` broadens into **`ki-housekeeping-claude`**: the runtime-explicit standard-and-judgment governor of the hygiene of accumulated Claude state, across all its areas, sitting in the Environment concern ([ADR-KI-HARNESS-SKILLS-006](ADR-KI-HARNESS-SKILLS-006-concern-first-skill-taxonomy-and-implication-graph.md)). It pairs with the `mcp-housekeeping-claude` server on one principle: **the skill is the standard and the judgment; the server is the tools.**
+Knowledge Islands adopts a provider-neutral lifecycle: **acquire → stage → harvest → durable knowledge → archive/delete source**. Acquisition is conservative and incremental: it captures the original material, source identity, timestamps, provenance, and a checkpoint before any knowledge judgement. A later process may move incorrectly routed material between spaces; acquisition optimises for not losing knowledge, not perfect first classification.
 
-- **Memory** stays governed locally in full for the selected repository only — a file convention the skill fully specifies and checks without scanning another repository's state.
-- **Every other area** is audited and cleaned through the server's codified audits and access-gated read/`destructive` tools; the skill reads the findings and decides, and never re-implements the tools.
-- **Codex housekeeping** is not invented for symmetry. It waits for an official selected-repository identity and supported retention, cleanup, and safe-conform contract.
+`ki space acquire <provider> import` owns repository-context staging and checkpoint persistence. Provider MCPs are adapters only. Each provider exposes an additive, access-gated session surface with comparable semantics: `sessions_discover`, `sessions_list`, `session_read`, and `sessions_checkpoint`. Provider-specific names and storage details remain local. Archive and delete stay separate destructive operations and require a verified acquisition/harvest checkpoint; neither is part of initial import.
+
+`ki-housekeeping-claude` and `ki-housekeeping-codex` are the standards-and-judgment counterparts to their respective MCPs. They guide selection, review, durable promotion, and safe later cleanup; the MCPs supply source mechanics and do not decide what knowledge is worth retaining.
 
 ## Consequences
 
-- Memory becomes one area of a coherent housekeeping domain rather than the whole skill.
-- The skill and server compose without overlap: the server ships tools with no policy; the skill holds the policy and only the memory checker. The server's own code quality remains `ki-repo-mcp`'s concern.
-- The skill now tracks two moving sources — Headroom's memory behavior and the server's tool surface — so its REFRESH re-anchors both.
-- Boundaries hold: a KB's own `Admin/MEMORY.md` cascade is `ki-repo-kb`'s concern, and the token cost of the context surface is `ki-tokenomics`.
+- Claude and Codex can be operated through the same acquisition vocabulary while retaining only verified provider capabilities.
+- The common surface is additive. Existing Claude housekeeping tools remain available while callers migrate to the acquisition path.
+- A provider adapter may report no readable sessions or an unavailable source; it must not synthesize transcript data or silently fall back to a different provider surface.
+- Memory remains one area of housekeeping, not a substitute for source acquisition. A KB's own `Admin/MEMORY.md` cascade remains `ki-repo-kb`'s concern, and context cost remains `ki-tokenomics`'s concern.
+- The server's code quality remains `ki-repo-mcp`'s concern. The skills and future `ki` acquisition command must evolve together as the provider contract grows.
 
 ## References
 
