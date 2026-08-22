@@ -28,9 +28,9 @@ This first delivery does not archive or delete source sessions, infer durable kn
 
 ## Steps
 
-- [ ] Define the shared session adapter result and checkpoint contract.
-- [ ] Add matching read-only session discovery surfaces to the Claude and Codex MCPs.
-- [ ] Align the Claude and Codex housekeeping skills with the acquisition lifecycle.
+- [x] Define the shared session adapter result and checkpoint contract.
+- [x] Add matching read-only session discovery surfaces to the Claude and Codex MCPs.
+- [x] Align the Claude and Codex housekeeping skills with the acquisition lifecycle.
 - [ ] Extend `tools-ki` with provider-context staging, beginning with the highest-value available source.
 - [ ] Verify provider adapters, skills, and KI working-area import together.
 
