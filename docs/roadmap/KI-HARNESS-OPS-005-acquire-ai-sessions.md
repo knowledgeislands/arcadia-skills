@@ -20,11 +20,13 @@ Claude and Codex currently hold accumulated local working state through differen
 
 ## Boundary
 
-This first delivery does not archive or delete source sessions, infer durable knowledge automatically, or make MCP a knowledge store. It preserves provider-specific tools and does not require perfect repository routing.
+This first delivery does not archive or delete source sessions, infer durable knowledge automatically, decrypt or reverse-engineer opaque provider stores, or make MCP a knowledge store. It preserves provider-specific tools and does not require perfect repository routing.
 
 ## Current state
 
-`mcp-housekeeping-claude` exposes Claude-specific audits and session previews. `mcp-housekeeping-codex` has a repository-scoped app-server inventory/delete prototype. `ki space acquire chatgpt import` now stages a validated, user-prepared local ChatGPT capture content-addressably at `+/_ACQUIRE/chatgpt/`; a direct ChatGPT data-export adapter remains to be built and verified against real export material.
+Arcadia owns the provider-neutral acquisition lifecycle. `mcp-housekeeping-claude` and `mcp-housekeeping-codex` expose comparable read-only session surfaces. `tools-ki` commit `5c49e8a` adds `ki space acquire chatgpt import` for a validated, user-prepared local capture, staged content-addressably at `+/_ACQUIRE/chatgpt/`.
+
+The installed ChatGPT application has been inventoried at `~/Library/Application Support/com.openai.chat`: 185 conversation records across 33 project roots. Its project-scoped `conversations-v3-*/<session>.data` records are opaque, so the direct adapter must preserve their bytes and metadata rather than assume a private plaintext format. No source material has been changed.
 
 ## Steps
 
@@ -32,25 +34,31 @@ This first delivery does not archive or delete source sessions, infer durable kn
 - [x] Add matching read-only session discovery surfaces to the Claude and Codex MCPs.
 - [x] Align the Claude and Codex housekeeping skills with the acquisition lifecycle.
 - [x] Extend `tools-ki` with provider-context staging for validated local ChatGPT captures.
-- [ ] Add a complete ChatGPT data-export adapter, including image and attachment fidelity verified against an actual export.
-- [ ] Verify provider adapters, skills, and KI working-area import together with available source material.
+- [x] Inventory the installed ChatGPT application's local session-store shape without reading or changing conversation contents.
+- [ ] Create and register `mcp-housekeeping-chatgpt` as the third provider MCP, with the same `discover`, `list`, `read`, and `checkpoint` semantics.
+- [ ] Implement read-only ChatGPT local-store discovery, including stable project/session identities, paths, byte counts, modification times, content hashes, and opaque-payload status.
+- [ ] Implement faithful byte-for-byte ChatGPT record acquisition into the `tools-ki` Harbour path, retaining provenance and explicit media/interpretation omissions.
+- [ ] Add isolated fixtures for direct ChatGPT-store discovery, checkpoint incrementality, unsafe-path rejection, and opaque-record preservation.
+- [ ] Verify each provider surface, skill, binding, registry entry, Agora membership, and repository-context working-area import together.
 
 ## Files touched
 
 - `docs/decisions/ADR-KI-HARNESS-SKILLS-007-provider-neutral-ai-session-acquisition-and-adapter-pairing.md`
 - `skills/environment/ki-housekeeping-claude/`
 - `skills/environment/ki-housekeeping-codex/`
-- sibling `mcp-housekeeping-claude`, `mcp-housekeeping-codex`, and `tools-ki` repositories
+- sibling `mcp-housekeeping-claude`, `mcp-housekeeping-codex`, `mcp-housekeeping-chatgpt`, and `tools-ki` repositories
 
 ## Verify
 
-- The two MCPs expose equivalent read-only session discovery, list, read, and checkpoint operations.
-- A provider capture retains source identity, timestamps, content, and checkpoint provenance before any harvesting action.
-- Repository audits and each affected repository's test suite pass.
+- The three provider MCPs expose equivalent read-only `discover`, `list`, `read`, and `checkpoint` operations.
+- Direct ChatGPT discovery returns only path-derived metadata and never reads credentials, changes the application store, or presents opaque bytes as decoded conversation text.
+- A ChatGPT acquisition retains original bytes, source identity, project/session paths, timestamps, hashes, and provenance before any harvesting action.
+- Fixture tests cover new, unchanged, changed, missing, symlinked, and malformed local-store entries; `tools-ki` verifies KEP checksums and repeatable Harbour checkpoints.
+- Each affected repository passes its test suite and focused `ki repo audit`; the existing `tools-ki` implementation passes 672 tests with 100% coverage.
 
 ## Dependencies / blocks
 
-Provider implementation depends on the available local Claude state and Codex app-server protocol. The raw ChatGPT export adapter requires a representative export, including generated-image and attachment cases, so it can faithfully preserve what the export actually contains and record omissions where bytes are unavailable. Granola and communication-source acquisition remain follow-on adapters.
+Provider implementation depends on the available local Claude state and Codex app-server protocol. The direct ChatGPT work requires a new provider-MCP checkout and must accept that the installed application's cache is opaque. It is not blocked on a manually requested export: raw cache records can be acquired faithfully, while any unavailable generated-image or attachment bytes remain explicit omissions. Granola and communication-source acquisition remain follow-on adapters.
 
 ## Documentation impact
 
@@ -64,13 +72,17 @@ No as-built KI acquisition specification exists until repository-context staging
 
 ### Guides
 
-Add an operational guide once an end-to-end provider acquisition command is usable.
+Add an operational guide once the direct ChatGPT acquisition command is usable, including its opaque-payload boundary and checkpoint interpretation.
 
 ### Roadmap
 
 This item holds the cross-repository delivery sequence and future provider work.
 
 ## Discussion
+
+### Direct installed-application acquisition
+
+Provider MCPs are the source-mechanics layer. The direct ChatGPT adapter will inspect the installed application's working directory with no credentials, network requests, cache mutation, or private-format decryption. Its `read` operation may return a faithful opaque record rather than claim a decoded conversation. `tools-ki` owns the subsequent repository-context capture and Harbour staging.
 
 ### Provider vocabulary
 
