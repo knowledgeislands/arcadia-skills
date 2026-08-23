@@ -157,11 +157,43 @@ const APP_10 = item(
         })))
 )
 
+/*
+ * A test include that names only the module extension collects a component test
+ * silently: nothing errors, and the suite reports every other test passing. The
+ * evidence is the config's own text, so this is heuristic - it reads a declared
+ * include rather than resolving what the runner would actually match.
+ */
+const APP_11 = item(
+  'APP-11',
+  'Test pattern reaches component files',
+  'A declared test include covers the component extension as well as the module one.',
+  'WARN',
+  (context) => {
+    const inactiveResult = inactive(context)
+    if (inactiveResult) return inactiveResult
+    const source = context.viteConfigSource
+    if (!source.includes('test:') || !source.includes('include'))
+      return [{ status: 'NOT_APPLICABLE', message: 'The site declares no test include.' }]
+
+    const names = (extension: string) => source.includes(`.test.${extension}`)
+    const missing = [names('ts') && !names('tsx') ? 'tsx' : null, names('js') && !names('jsx') ? 'jsx' : null].filter(
+      (extension): extension is string => extension !== null
+    )
+
+    return check(
+      missing.length === 0,
+      'The test include covers component files as well as modules.',
+      `The test include names no .test.${missing.join(' or .test.')} file, so a component test would be collected silently as nothing.`,
+      context.viteConfig ?? 'vite config'
+    )
+  }
+)
+
 export const APP: RubricFamily<WebsiteAppContext, WebsiteAppContext> = {
   code: 'APP',
   title: 'Interactive website',
   description: 'React/Vite client application implementation.',
   standard: SOURCE,
   selectContext: (context) => context,
-  items: [APP_1, APP_2, APP_3, APP_4, APP_5, APP_6, APP_7, APP_8, APP_9, APP_10]
+  items: [APP_1, APP_2, APP_3, APP_4, APP_5, APP_6, APP_7, APP_8, APP_9, APP_10, APP_11]
 }

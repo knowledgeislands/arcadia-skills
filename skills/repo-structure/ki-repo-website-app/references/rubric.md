@@ -46,3 +46,5 @@ React/Vite client application implementation.
   - _Remediation:_ diagnostic — Align the interactive app with the React/Vite implementation or select the content implementation instead.
 - **APP-10 [M] — App opt-in validation** — The app marker table is keyless. (standards-app-site.md)
   - _Remediation:_ diagnostic — Align the interactive app with the React/Vite implementation or select the content implementation instead.
+- **APP-11 [M] — Test pattern reaches component files** — A declared test include covers the component extension as well as the module one. (standards-app-site.md)
+  - _Remediation:_ diagnostic — Align the interactive app with the React/Vite implementation or select the content implementation instead.
