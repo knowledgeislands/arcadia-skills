@@ -36,7 +36,7 @@ This first delivery does not archive or delete source sessions, infer durable kn
 
 ## Files touched
 
-- `docs/decisions/ADR-KI-HARNESS-SKILLS-007-runtime-explicit-claude-housekeeping-scope-and-the-server-pairing.md`
+- `docs/decisions/ADR-KI-HARNESS-SKILLS-007-provider-neutral-ai-session-acquisition-and-adapter-pairing.md`
 - `skills/environment/ki-housekeeping-claude/`
 - `skills/environment/ki-housekeeping-codex/`
 - sibling `mcp-housekeeping-claude`, `mcp-housekeeping-codex`, and `tools-ki` repositories
@@ -55,7 +55,7 @@ Provider implementation depends on the available local Claude state and Codex ap
 
 ### Decision Records
 
-ADR-KI-HARNESS-SKILLS-007 records the provider-neutral lifecycle and the adapter boundary.
+Arcadia's `ADR-KI-ARCADIA-001` records the provider-neutral acquisition architecture. ADR-KI-HARNESS-SKILLS-007 records this item's provider-adapter boundary.
 
 ### Specifications
 
