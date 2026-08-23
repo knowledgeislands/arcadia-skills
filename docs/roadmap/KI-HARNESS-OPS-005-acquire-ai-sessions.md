@@ -2,7 +2,7 @@
 id: KI-HARNESS-OPS-005
 title: Acquire AI sessions
 area: OPS
-theme: session-acquisition
+theme: operations
 horizon: now
 status: in-progress
 blocks: []
@@ -24,15 +24,16 @@ This first delivery does not archive or delete source sessions, infer durable kn
 
 ## Current state
 
-`mcp-housekeeping-claude` exposes Claude-specific audits and session previews. `mcp-housekeeping-codex` has a repository-scoped app-server inventory/delete prototype. `ki acquire chatgpt import` accepts a user-prepared capture but does not yet provide repository-context provider staging.
+`mcp-housekeeping-claude` exposes Claude-specific audits and session previews. `mcp-housekeeping-codex` has a repository-scoped app-server inventory/delete prototype. `ki space acquire chatgpt import` now stages a validated, user-prepared local ChatGPT capture content-addressably at `+/_ACQUIRE/chatgpt/`; a direct ChatGPT data-export adapter remains to be built and verified against real export material.
 
 ## Steps
 
 - [x] Define the shared session adapter result and checkpoint contract.
 - [x] Add matching read-only session discovery surfaces to the Claude and Codex MCPs.
 - [x] Align the Claude and Codex housekeeping skills with the acquisition lifecycle.
-- [ ] Extend `tools-ki` with provider-context staging, beginning with the highest-value available source.
-- [ ] Verify provider adapters, skills, and KI working-area import together.
+- [x] Extend `tools-ki` with provider-context staging for validated local ChatGPT captures.
+- [ ] Add a complete ChatGPT data-export adapter, including image and attachment fidelity verified against an actual export.
+- [ ] Verify provider adapters, skills, and KI working-area import together with available source material.
 
 ## Files touched
 
@@ -49,7 +50,7 @@ This first delivery does not archive or delete source sessions, infer durable kn
 
 ## Dependencies / blocks
 
-Provider implementation depends on the available local Claude state and Codex app-server protocol. ChatGPT and Granola acquisition remain follow-on adapters rather than prerequisites for the first comparable surfaces.
+Provider implementation depends on the available local Claude state and Codex app-server protocol. The raw ChatGPT export adapter requires a representative export, including generated-image and attachment cases, so it can faithfully preserve what the export actually contains and record omissions where bytes are unavailable. Granola and communication-source acquisition remain follow-on adapters.
 
 ## Documentation impact
 
