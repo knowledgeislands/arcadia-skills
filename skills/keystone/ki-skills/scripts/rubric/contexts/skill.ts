@@ -251,6 +251,7 @@ const createKiShapeEvidence = (
   return {
     ...createKiShapeFrontmatterEvidence({ frontmatter, scriptNames, localGovernanceSource }),
     ...(localGovernanceSource ? {} : { sourceHarnessName: sourceHarnessName(skillDirectory) }),
+    rubricCatalogue: existsSync(join(scriptsDirectory, 'rubric', 'items', 'index.ts')),
     referencePaths,
     operatingModesSection: section,
     bodyModes: extractBodyModes(section),

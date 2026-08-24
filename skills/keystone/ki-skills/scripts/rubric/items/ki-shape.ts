@@ -386,9 +386,14 @@ const KI_SHAPE_14: RubricItem<KiShapeRubricContext> = {
 }
 
 const auditKiShape15 = ({ skill }: KiShapeRubricContext): RubricOutcomes<AuditOutcome> => {
-  if (!skill?.governanceSkill || skill.localGovernanceSource)
+  if (!skill?.governanceSkill)
     return [{ status: 'NOT_APPLICABLE', message: 'the target is not a direct governance capability' }]
   const violations: AuditOutcome[] = []
+  if (!skill.rubricCatalogue)
+    violations.push({
+      status: 'VIOLATION',
+      message: '`scripts/rubric/items/index.ts` catalogue is required for direct governance operations'
+    })
   for (const script of ['govern.ts', 'educate.ts', 'audit.ts', 'conform.ts'])
     if (skill.scriptNames.includes(script))
       violations.push({
@@ -405,7 +410,7 @@ const KI_SHAPE_15: RubricItem<KiShapeRubricContext> = {
   code: 'KI-SHAPE-15',
   title: 'governance skills expose no legacy runner entrypoints',
   description:
-    '_Direct governance operation shape._ A governance skill exposes its rubric catalogue from `scripts/rubric/items/index.ts`; `ki` resolves and hosts that catalogue from the verified installed harness. `scripts/govern.ts`, `scripts/educate.ts`, `scripts/audit.ts`, and `scripts/conform.ts` are retired, with no compatibility runner or fallback. REFRESH is harness-only. Process skills and the committed repository-local `.agents/skills/ki-self/` source are exempt.',
+    '_Direct governance operation shape._ A governance skill exposes its rubric catalogue from `scripts/rubric/items/index.ts`; `ki` resolves and hosts that catalogue from a verified installed Harness or the exact explicitly declared repository-local `.agents/skills/ki-self/` source. `scripts/govern.ts`, `scripts/educate.ts`, `scripts/audit.ts`, and `scripts/conform.ts` are retired, with no compatibility runner or fallback. Process skills are exempt.',
   sources: ['standards-knowledge-islands.md §2', 'ADR-KI-HARNESS-007'],
   mechanical: {
     level: 'FAIL',

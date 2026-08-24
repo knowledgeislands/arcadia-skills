@@ -30,6 +30,8 @@ The harness defines this payload and capability semantics only. `tools-ki` owns 
 
 Repository vendoring ends. Existing `.ki` runner and manifest state is a migration input only: it is never an execution fallback and is never removed without complete ownership proof. Current activation uses managed links from the verified installed payload; a copied projection or a version-selection model is future work, not part of this contract.
 
+The one repository-local exception is an explicitly declared `ki-self` at the canonical physical `.agents/skills/ki-self/` source. Its direct catalogue uses the same native rubric contract and repository-scoped transaction, but remains repository-owned, reports distinct provenance, and grants no authority to another local skill or caller-selected path.
+
 ## Consequences
 
 Repositories remain declarative through `.ki-config.toml`, but a clean clone requires the verified compatible harnesses that provide its declared capabilities before mechanical governance can run. CI must establish those harnesses explicitly and fail with recovery guidance when acquisition or integrity verification fails.

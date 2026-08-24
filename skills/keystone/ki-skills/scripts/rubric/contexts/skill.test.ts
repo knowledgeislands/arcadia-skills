@@ -129,6 +129,13 @@ const refreshOutcomes = (directory: string) => {
   return { skill: shape.skill, outcomes: item.mechanical.audit.run(shape) }
 }
 
+const directShapeOutcomes = (directory: string) => {
+  const shape = evidence(directory).shape
+  const item = KI_SHAPE.items.find(({ code }) => code === 'KI-SHAPE-15')
+  if (!item?.mechanical || !('audit' in item.mechanical)) throw new Error('KI-SHAPE-15 mechanical audit is unavailable')
+  return item.mechanical.audit.run(shape)
+}
+
 describe('repository-local ki-self source', () => {
   test('recognises only the canonical .agents/skills/ki-self shape', () => {
     const result = evidence(createSkill('.agents/skills/ki-self'))
@@ -137,6 +144,22 @@ describe('repository-local ki-self source', () => {
     expect(result.name.localGovernanceSource).toBe(true)
     expect(result.shape.skill?.localGovernanceSource).toBe(true)
     expect(result.shape.skill?.refreshText).toContain('.agents/skills/ki-self/')
+  })
+
+  test('requires the native direct catalogue without allowing legacy runners', () => {
+    const directory = createSkill('.agents/skills/ki-self')
+
+    expect(directShapeOutcomes(directory)).toContainEqual({
+      status: 'VIOLATION',
+      message: '`scripts/rubric/items/index.ts` catalogue is required for direct governance operations'
+    })
+
+    mkdirSync(join(directory, 'scripts/rubric/items'), { recursive: true })
+    writeFileSync(join(directory, 'scripts/rubric/items/index.ts'), 'export default {}\n')
+
+    expect(directShapeOutcomes(directory)).toEqual([
+      { status: 'PASS', message: 'governance skills expose no legacy runner entrypoints' }
+    ])
   })
 
   test.each([

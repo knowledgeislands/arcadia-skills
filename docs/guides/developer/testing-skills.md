@@ -24,6 +24,8 @@ When changing a rubric implementation, run its focused source tests as well. For
 bun test ./skills/keystone/ki-skills/scripts/rubric
 ```
 
+A repository-local `.agents/skills/ki-self/` source follows the same direct catalogue shape, but is not published as Harness content. Declare `[skills.ki-self]` in the target repository, keep the source physical and committed, and run `ki repo audit --skill ki-self --repo <repository>` or `ki repo conform --skill ki-self --repo <repository>`. The host reports `repository-local:ki-self` and refuses a linked, escaping, wrongly named, or catalogue-less source before import.
+
 Those Bun tests are maintainer fixtures for the implementation. They supplement the native repository audit; they are not a second public execution path.
 
 Before handing off a skill change, run the repository gates in order:

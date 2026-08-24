@@ -132,6 +132,7 @@ export type KiShapeSkillContext = {
   argumentHint: string | undefined
   hintVerbs: readonly string[]
   scriptNames: readonly string[]
+  rubricCatalogue: boolean
   referencePaths: readonly string[]
   operatingModesSection: string | null
   bodyModes: ReadonlySet<string>
@@ -206,6 +207,7 @@ const emptyKiShapeSkill: KiShapeSkillContext = {
   argumentHint: undefined,
   hintVerbs: [],
   scriptNames: [],
+  rubricCatalogue: false,
   referencePaths: [],
   operatingModesSection: null,
   bodyModes: new Set(),

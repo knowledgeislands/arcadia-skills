@@ -26,6 +26,8 @@ The three state surfaces remain separate and have explicit owners.
 - The legacy `.ki` runners, manifests, copied checkers, and copied payloads are migration inputs only. They have no role in native operation resolution and are removed only with complete ownership proof.
 - Activation and migration use ownership markers, containment and conflict checks, dry-run support, idempotence, and refusal for altered, unfamiliar, linked, or concurrently changed material.
 
+Repository-local `ki-self` execution is direct source consumption, not runtime activation. A repository explicitly declares `[skills.ki-self]`; the host may then load only the exact physical `.agents/skills/ki-self/scripts/rubric/items/index.ts` catalogue for that repository. Any Claude discovery link remains derived runtime projection, while audit and conform never copy, repair, or upgrade the canonical source as installed Harness content.
+
 ## Consequences
 
 - Ordinary sessions depend on verified installed harnesses and explicitly managed discovery links, not a harness checkout or copied payload.

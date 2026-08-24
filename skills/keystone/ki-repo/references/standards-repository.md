@@ -46,6 +46,8 @@ Every repo carries these at the root. A local audit reads the selected checkout'
 
 **Runtime skill ignore contract.** `.gitignore` follows the declared `supported_runtimes`: `claude-code` requires `.claude/skills/*`; `chatgpt-codex` requires `.agents/skills/*`. Every repository re-includes the reserved canonical `.agents/skills/ki-self/` source with `!.agents/skills/ki-self/` and `!.agents/skills/ki-self/**`, regardless of the declared runtime set, so it remains trackable whenever a repository elects to author it. These rules keep bootstrap-created links out of history without excluding the canonical local source.
 
+A repository that authors this source explicitly declares `[skills.ki-self]`. The native `ki` host may then resolve only the exact physical, contained `.agents/skills/ki-self/` source and its `scripts/rubric/items/index.ts` catalogue as `repository-local:ki-self`; every other repository skill remains an installed-Harness capability. The local provider is not activated, repaired, or upgraded as a managed runtime projection.
+
 ### `.ki/` — legacy migration state, not an executor
 
 Under ADR-KI-HARNESS-012, `.ki/` is not a governance working-artifacts area or an execution surface. The former vendored checker tree, aggregate runner, wrapper, and manifest are retired without a compatibility path; `ki repo` must never invoke `.ki/bin`, a manifest payload, or a nearby checkout. Existing `.ki` runner and manifest material is examined only by an explicit, fail-closed migration operation and is never removed without complete ownership proof.
