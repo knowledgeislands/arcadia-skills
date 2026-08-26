@@ -32,9 +32,9 @@ This work does not relax CLI publication safety, change the issue-ledger format,
 
 ## Steps
 
-- [ ] Declare explicit creation intent when the roadmap adapter proposes a missing issue ledger.
-- [ ] Update focused proposal coverage to require that intent.
-- [ ] Verify the Harness proposal and the CLI publication contract together.
+- [x] Declare explicit creation intent when the roadmap adapter proposes a missing issue ledger.
+- [x] Update focused proposal coverage to require that intent.
+- [x] Verify the Harness proposal and the CLI publication contract together.
 
 ## Files touched
 
@@ -70,6 +70,10 @@ No guide change is needed because the user-facing promise that CONFORM scaffolds
 This record reserves and delivers `KI-HARNESS-FND-019`; no follow-on roadmap work is anticipated.
 
 ## Discussion
+
+### Full-suite blocker
+
+The focused Harness test, TypeScript check, Biome check, and `tools-ki` conform-write suite pass. The repository-wide Harness suite remains red because the pre-existing remediation-inventory fixture expects 46 catalogues and 643 criteria while the current repository contains 47 catalogues and 646 criteria. FND-019 changes neither catalogues nor structured criteria, so that separate drift must be resolved before this item can move to `awaiting-review` under the required clean-gate policy.
 
 ### Safety boundary
 
