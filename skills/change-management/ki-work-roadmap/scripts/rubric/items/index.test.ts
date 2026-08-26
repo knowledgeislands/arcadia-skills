@@ -357,7 +357,9 @@ test('conform scaffolds a missing issue ledger from the highest retained issue',
     | RubricItem<typeof context.roadmaps>
     | undefined
   item?.mechanical?.conform?.run(context.roadmaps)
-  expect(session.proposal().writes).toEqual([{ path: `docs/roadmap/${ISSUE_LEDGER}`, content: issueLedger(1) }])
+  expect(session.proposal().writes).toEqual([
+    { path: `docs/roadmap/${ISSUE_LEDGER}`, content: issueLedger(1), create: true }
+  ])
 })
 
 test('the issue ledger prevents a retained issue from exceeding the allocated range', () => {
