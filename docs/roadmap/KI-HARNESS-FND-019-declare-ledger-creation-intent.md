@@ -4,10 +4,10 @@ area: FND
 title: Declare ledger creation
 theme: foundation-tooling
 horizon: now
-status: ready
+status: in-progress
 blocks: []
 blocked_by: []
-baseline_ref: null
+baseline_ref: 14a4163e38db7be396040e43873a1888b4de7788
 ---
 
 # Declare ledger creation intent
