@@ -166,6 +166,7 @@ order = [
 "https://github.com/knowledgeislands/mcp-ki-kb-fs" = "maintainer"
 "https://github.com/knowledgeislands/mcp-ki-kb-notion-mirror" = "maintainer"
 "https://github.com/knowledgeislands/mcp-m365" = "maintainer"
+"https://github.com/knowledgeislands/tools-gitlendar" = "maintainer"
 "https://github.com/knowledgeislands/tools-ki" = "maintainer"
 "https://github.com/knowledgeislands/tools-mgit" = "maintainer"
 
