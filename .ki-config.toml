@@ -111,6 +111,8 @@ export = ["knowledge"]
 
 [skills.ki-housekeeping-chatgpt]
 
+[skills.ki-housekeeping-granola]
+
 [skills.ki-work-housekeeping]
 
 [skills.ki-work]

@@ -19,7 +19,7 @@ Use the [skills-by-outcome guide](../docs/guides/skills-by-outcome.md) when you 
 <!-- ki-repo-harness:capability-catalogue:start -->
 ## Generated capability catalogue
 
-This source harness publishes 55 skills: 46 governance skills and 9 process skills. The entries below are generated from canonical `SKILL.md` frontmatter; edit the source skill, then run `ki repo conform --skill ki-repo-harness` to republish this section.
+This source harness publishes 57 skills: 48 governance skills and 9 process skills. The entries below are generated from canonical `SKILL.md` frontmatter; edit the source skill, then run `ki repo conform --skill ki-repo-harness` to republish this section.
 
 ### Agentic Systems
 
@@ -198,9 +198,18 @@ Codify, audit, and safely render the native Codex MCP binding: compare the `[mcp
 - **Dependencies:** `ki-binding`
 - **Runtime:** Runtime-bound: `chatgpt-codex`
 
+#### `ki-housekeeping-chatgpt`
+
+Governs safe acquisition of installed ChatGPT session material through opaque, read-only local-store evidence. Use for "acquire ChatGPT sessions", "import ChatGPT sessions", or "audit ChatGPT sessions". It guides discovery, listing, faithful source reads, checkpoints, staging, and later harvest without treating source-session deletion as part of acquisition.
+
+- **Kind:** Governance
+- **Arguments:** `audit <repo> | conform <repo> | educate <repo> | help | refresh`
+- **Dependencies:** None
+- **Runtime:** Runtime-bound: `chatgpt-codex`
+
 #### `ki-housekeeping-claude`
 
-Governs accumulated Claude state from Desktop, Cowork, Claude Code (`~/.claude/`), and VSCode chat: sessions, artifacts, backups, plugins, project cache, and selected native auto-memory. It owns the standard and judgment; native Claude settings establish memory location, Headroom output is separate rendered evidence, and any paired server's source, registration, exposure, and executed audit remain distinct. Its bounded memory rubric covers selection evidence, `memory/*.md`, `MEMORY.md`, the four memory types, index agreement, and promote-then-delete reconciliation. Triggers: "audit Claude memory", "Claude memory hygiene", "clean up Claude storage", "obsolete Cowork sessions", "Claude housekeeping audit", "check ~/.claude". Not a Knowledge Islands base memory cascade (`ki-repo-kb`) or context cost (`ki-tokenomics`).
+Governs accumulated Claude state from Desktop, Cowork, Claude Code (`~/.claude/`), and VSCode chat: sessions, artifacts, backups, plugins, project cache, and selected native auto-memory. It guides repository-scoped Claude Code session acquisition and later housekeeping: discover, list, faithful read, checkpoint, staging, harvest, and safe cleanup. Triggers: "acquire Claude Code sessions", "import Claude sessions", "audit Claude memory", "Claude memory hygiene", "clean up Claude storage", "obsolete Cowork sessions", "Claude housekeeping audit", "check ~/.claude". It is not a Knowledge Islands base memory cascade (`ki-repo-kb`) or context cost (`ki-tokenomics`).
 
 - **Kind:** Governance
 - **Arguments:** `audit | conform | help | educate | refresh`
@@ -209,12 +218,21 @@ Governs accumulated Claude state from Desktop, Cowork, Claude Code (`~/.claude/`
 
 #### `ki-housekeeping-codex`
 
-Audits and explicitly deletes saved Codex sessions whose exact working directory matches one selected physical repository. Use for "audit Codex sessions", "clean up Codex sessions", "delete old Codex threads", or repository-scoped Codex housekeeping. It exposes no transcript content, performs no automatic retention, and never substitutes for portable repository maintenance owned by ki-work-housekeeping.
+Governs repository-scoped Codex session acquisition and later housekeeping. Use for "acquire Codex sessions", "import Codex sessions", "audit Codex sessions", "clean up Codex sessions", or "delete old Codex threads". It guides discover, list, faithful read, checkpoint, staging, harvest, and safe later cleanup for one exact physical repository; it performs no automatic retention and never substitutes for portable repository maintenance owned by ki-work-housekeeping.
 
 - **Kind:** Governance
 - **Arguments:** `audit <repo> | conform <artifact> <thread-id>... | educate <repo> | help | refresh`
 - **Dependencies:** None
 - **Runtime:** Runtime-bound: `chatgpt-codex`
+
+#### `ki-housekeeping-granola`
+
+Governs read-only Granola meeting acquisition and later housekeeping. Use "acquire Granola meetings", "import Granola meetings", "audit Granola acquisition", or "reconcile Granola changes". It defines complete date-window discovery, folder and unfoldered routing evidence, faithful MCP reads, content checkpoints, amendment detection, and a separate human-approved retirement gate. CLI staging belongs to tools-ki; canonical acquisition lifecycle belongs to Arcadia.
+
+- **Kind:** Governance
+- **Arguments:** `audit <repo> | conform <repo> | educate <repo> | help | refresh`
+- **Dependencies:** None
+- **Runtime:** Portable
 
 #### `ki-tokenomics`
 
