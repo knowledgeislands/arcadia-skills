@@ -30,15 +30,17 @@ Any locally registered repository that declares and resolves the Granola skill m
 
 ## Current state
 
-Arcadia's lifecycle and the existing Claude, Codex, and ChatGPT provider skills establish a common `discover`, `list`, `read`, and `checkpoint` vocabulary with content-minimised discovery separated from faithful source reads. No reusable `ki-housekeeping-granola` skill, dedicated Granola source adapter, provider-neutral KEP capture interface, Granola KEP profile, federated acquisition-coverage report, or Granola acquisition ledger exists.
+Arcadia's lifecycle and the existing Claude, Codex, and ChatGPT provider skills establish a common `discover`, `list`, `read`, and `checkpoint` vocabulary with content-minimised discovery separated from faithful source reads. No reusable `ki-housekeeping-granola` skill, provider-neutral KEP capture interface, Granola KEP profile, federated acquisition-coverage report, or Granola acquisition ledger exists.
 
-The currently evidenced Granola surface is a remote, account-tier-dependent Claude integration. Local configuration records a previously connected `claude.ai Granola` integration, but no local Granola adapter checkout. This planning pass has not invoked that integration or established pagination, history, media, transcript, note-update, tag-read, archive, or deletion capabilities.
+`DOTFILES-UE-015` registered and authenticated Granola's official `https://mcp.granola.ai/mcp` endpoint through the chezmoi-managed mcporter binding. A live schema check on 2026-08-27 reports healthy HTTP transport and six read-only tools: account information, folder listing, meeting listing, meeting details, transcript retrieval, and natural-language notes query. The official endpoint is therefore the selected source adapter; do not create a local MCP wrapper without an evidenced normalization or checkpoint requirement.
+
+The accepted capability evidence proves custom historical date windows, folder-scoped listing, UUID lookup, generated summaries, participants, and non-empty raw transcripts. It also proves material gaps: no native pagination or completeness indicator, no folder identity on meeting results, no direct unfoldered classification, no creation or update timestamp, no source URL, no tags, no attachment or media surface, no content-version signal, and no deletion tombstone. Meeting details can be fetched in batches of ten; transcripts are fetched one meeting at a time.
 
 ## Steps
 
 - [ ] Author `ki-housekeeping-granola` with the provider-neutral lifecycle, read-only source boundary, fidelity requirements, explicit omissions, receiver-selection semantics, completeness reconciliation, checkpoint semantics, and separate retirement gate.
-- [ ] Define the Granola provider contract as `discover`, `list`, `read`, and `checkpoint`, including complete folder and unfoldered pagination, stable identity, canonical content hashes, raw source payloads, folder and tag evidence, participants, notes, transcript, media, and omissions.
-- [ ] Prove available Granola API or MCP capabilities through authoritative documentation and a separately approved read-only test, recording unsupported or account-tier-restricted fields without inventing fallbacks.
+- [ ] Define the Granola provider contract as `discover`, `list`, `read`, and `checkpoint`, including complete date-window enumeration across global, folder, and inferred-unfoldered populations, stable identity, canonical content hashes, returned source projections, folder evidence, participants, notes, transcript, and omissions.
+- [x] Prove available Granola API or MCP capabilities through authoritative documentation and a separately approved read-only test, recording unsupported or account-tier-restricted fields without inventing fallbacks.
 - [ ] Reconcile the public CLI as one `ki acquire granola import` operation that resolves the current or explicitly selected repository and stages verified KEPs in its Harbour; migrate the current `ki space acquire` implementation and update the governing `tools-ki` and Arcadia contracts before implementation.
 - [ ] Generalise the `tools-ki` KEP core from its ChatGPT-specific capture model into a provider-neutral package builder with a Granola profile and a per-meeting immutable package boundary.
 - [ ] Define receiver-local selectors for Granola folder identities plus a first-class unfoldered selector and warning policy; make every inclusion, exclusion, overlap, and unmatched result visible in the acquisition report.
@@ -48,8 +50,8 @@ The currently evidenced Granola surface is a remote, account-tier-dependent Clau
 - [ ] Preserve original provider payloads, generated notes, raw transcripts, participants, folders, tags, URLs, timestamps, asset references, available bytes, hashes, and explicit omissions without interpretation during staging.
 - [ ] Model source amendments explicitly: note, summary, folder, tag, participant, transcript, or media changes create a new immutable observation; scope exit never implies source deletion or removal of an earlier KEP.
 - [ ] Make interrupted imports resumable: publish each KEP atomically, never advance a ledger before verification, and repeat acquisition until it reports no unexplained new, changed, missing, failed, overlapping, or unmatched meetings.
-- [ ] Add fixtures for multi-page history, new, unchanged and changed meetings, multiple-folder membership, folder reassignment, unmatched folders, duplicate identities, unfoldered meetings, unsafe paths, unavailable transcript or media, interrupted writes, corrupted existing stages, and repeatable checkpoints.
-- [ ] Prepare receiver-owned work trades for `tools-ki` and `kit-principal`, a knowledge trade for Arcadia, and a provider-repository bootstrap proposal; submit none until each route and payload receives explicit approval.
+- [ ] Add fixtures for saturated and split date windows, new, unchanged and changed meetings, multiple-folder membership, folder reassignment, unmatched folders, duplicate identities, inferred-unfoldered meetings, unsafe paths, unavailable transcript or media, interrupted writes, corrupted existing stages, and repeatable checkpoints.
+- [ ] Prepare receiver-owned work trades for `tools-ki` and `kit-principal` and a knowledge trade for Arcadia; submit none until each route and payload receives explicit approval.
 - [ ] Define the future release-manifest contract and prove the retirement gates without adding a source-mutation tool to the acquisition provider.
 
 ## Files touched
@@ -63,7 +65,7 @@ Harness-owned expected files:
 
 Receiver-owned expected surfaces, changed only through accepted local work:
 
-- a separately approved `mcp-housekeeping-granola` repository or another explicitly selected read-only adapter home
+- the official remote Granola MCP remains external; a local adapter repository is not expected unless an evidenced normalization or checkpoint gap requires one
 - `tools-ki` acquisition commands, KEP core, specifications, manual, changelog, and CLI fixtures
 - Arcadia's ADR-KI-ARCADIA-001 command language, `KI-ARCADIA-MOD-006` lifecycle record, and future portable acquisition specification
 - `kit-principal` Harbour configuration, initial catch-all scope, acquisition and coverage ledgers, Granola triage activity, and reciprocal `ki-trades` declarations
@@ -86,7 +88,7 @@ bunx tsc --noEmit
 Receiver delivery must additionally prove:
 
 - `ki acquire granola import` stages into the current or explicitly selected eligible repository without requiring a `space` segment;
-- pagination consumes every page of unfiltered history and every live folder before reconciling the unique-meeting count;
+- caller-managed custom date windows enumerate global history and every live folder, split every saturated 100-result window, and fail closed when a minimum-granularity window remains saturated;
 - repository selectors include configured folders only, treat unfoldered as an explicit selector, and report unmatched, overlapping, and excluded meetings;
 - the union of configured receiver scopes reconciles with the complete discovery snapshot, with `kit-principal` initially covering the residual set;
 - an unchanged repeat produces no new package or ledger delta, while a changed meeting produces one new immutable KEP version linked to the same source identity;
@@ -99,9 +101,9 @@ Receiver delivery must additionally prove:
 
 ## Dependencies / blocks
 
-Harness-local skill-contract work can begin from the evidence already available. Live capability proof requires separately approved read-only Granola access and must stop if complete pagination, stable meeting identity, or changed-meeting detection cannot be established.
+Harness-local skill-contract work can begin from the accepted `DOTFILES-UE-015` capability evidence. The official MCP supplies stable UUID lookup but not complete pagination or changed-content signals; the Harness contract must make caller-managed date-window saturation checks and explicit content revalidation part of acquisition rather than claiming native support.
 
-`tools-ki` already has a declared route from Harness, but receiver priority and implementation remain with `tools-ki`. Arcadia currently accepts knowledge from Harness and owns `KI-ARCADIA-MOD-006`; its command language needs an approved correction. `kit-principal` does not yet declare `ki-trades`, so its route requires separate receiver consent and reciprocal configuration before a work trade can be received. Later receiving repositories require their own skill activation and work authority. A Granola adapter repository does not exist and must not be created until separately approved.
+`tools-ki` already has a declared route from Harness, but receiver priority and implementation remain with `tools-ki`. Arcadia currently accepts knowledge from Harness and owns `KI-ARCADIA-MOD-006`; its command language needs an approved correction. `kit-principal` does not yet declare `ki-trades`, so its route requires separate receiver consent and reciprocal configuration before a work trade can be received. Later receiving repositories require their own skill activation and work authority. The official remote MCP is the selected adapter; any local normalization wrapper requires separate evidence, work, and approval.
 
 The exact conflict policy for a meeting belonging to multiple mapped folders is not yet locked. Implementation must establish deterministic ownership or explicit duplication semantics before direct multi-repository ingress can ship.
 
@@ -122,8 +124,8 @@ The exact conflict policy for a meeting belonging to multiple mapped folders is 
 
 ### Escalate
 
-- Escalate before selecting or creating a Granola adapter repository, changing a sibling repository, submitting a trade, or activating a new trade route.
-- Escalate if authoritative read-only evidence cannot prove complete pagination, stable meeting identity, changed-meeting detection, or faithful source reads.
+- Escalate before creating a local Granola normalization wrapper, changing a sibling repository, submitting a trade, or activating a new trade route.
+- Escalate if caller-managed window splitting cannot prove complete identity enumeration or exhaustive content revalidation cannot detect changed meeting projections.
 - Escalate before credentials, live Granola access, network mutation, browser automation, source archive, deletion, or any write outside authorised Harness paths.
 - Escalate if replacing `ki space acquire` or changing current `ki acquire` semantics would break a supported workflow without an approved migration, or if Arcadia and `tools-ki` cannot converge on the single public grammar.
 - Escalate when selector scopes overlap, leave an unexplained coverage gap, or cannot deterministically handle multiple-folder membership.
@@ -216,9 +218,11 @@ Complete acquisition is a property of the union of receiver scopes, not of any s
 
 ### Complete incremental acquisition
 
-The adapter paginates every live folder and the complete unfiltered meeting population, unions results by stable meeting identity, identifies unfoldered meetings as identities absent from every folder result, and compares the resulting counts. Compatible folder memberships merge as routing evidence; conflicting source representations fail closed for review.
+The official MCP has no cursor, page, limit, total, or completeness field and has returned a saturated 100-meeting default result. Complete discovery must therefore partition the requested history into caller-managed custom ISO-date windows for the global population and every folder. Any window returning exactly 100 meetings is saturated and must be split until every leaf window is below the observed cap. A saturated minimum-granularity window fails closed because completeness cannot be proved.
 
-Checkpoint selection compares the stable identity, source update evidence, and a canonical content hash. New or changed meetings are read and packaged; unchanged meetings are skipped only when the existing KEP verifies. A missing identity or exit from a repository's configured scope is reported as a delta and never interpreted as source deletion. A successful repeat produces no unexplained delta. Interrupted runs leave verified immutable packages recoverable and never claim ledger completion for an unverified write.
+The acquisition union deduplicates UUIDs across date windows and folder queries. Because meeting results do not carry folder identity, each folder association is evidence from the query context. Unfoldered meetings are inferred only after complete reconciliation as global UUIDs absent from the union of every complete folder-scoped result. Compatible folder memberships merge as routing evidence; conflicting source representations fail closed for review.
+
+Identity discovery and content revalidation are separate checkpoints. The listing surface can find new UUIDs but exposes no update or version indicator, so it cannot prove an existing meeting unchanged. Detecting amendments requires re-reading meeting details and transcripts and comparing canonical hashes with the latest verified KEP. The implementation must declare when it performs that exhaustive revalidation; any pre-retirement repeat requires a complete content sweep. A missing identity or scope exit is reported as a delta and never interpreted as source deletion. Interrupted runs leave verified immutable packages recoverable and never claim ledger completion for an unverified write.
 
 ### Amendments and reconciliation
 
@@ -230,30 +234,36 @@ If source deletion is never enabled, this versioned reconciliation loop is the s
 
 ### Acquisition fidelity
 
-The adapter preserves stable identity, Granola URL, title, creation and update times, folder identity and name, tags, participants, generated notes or summary, raw transcript, attachment, audio, and recording references and bytes wherever the selected source can faithfully provide them. It records separate hashes for source payloads and available assets. Account-tier or API limitations become explicit omissions; summaries do not masquerade as transcripts, references do not masquerade as media bytes, and canonical renderings do not replace original provider payloads.
+The official adapter can preserve the Granola UUID, title, human-readable meeting date, participant and involvement evidence, generated summary, folder associations derived from query context, and raw transcript with generic speaker labels. The acquired original is the faithful MCP projection, not an undocumented claim to Granola's internal source record.
+
+Verified omissions currently include Granola URL, creation and update timestamps, direct folder membership, tags, transcript timestamps, attachments, audio, recording references and bytes, source version, and deletion tombstone. It records separate hashes for every returned projection. Account-tier or later schema limitations remain explicit omissions; summaries do not masquerade as transcripts, query-derived folder evidence does not masquerade as native membership, and unavailable references do not masquerade as media bytes.
 
 ### Repository responsibilities and trades
 
 - **Harness:** Owns `ki-housekeeping-granola`, the reusable four-operation contract, receiver-selection and reconciliation semantics, fidelity requirements, retirement-safety standards, fixtures, and outbound trade preparations.
-- **Granola adapter:** Owns authentication, pagination, rate-limit handling, source schemas, faithful reads, content-minimised checkpoints, and a no-mutation tool surface. Repository creation and ownership require separate approval.
-- **tools-ki:** Owns the single public CLI, repository resolution, provider-neutral KEP builder, Granola profile, atomic Harbour staging, local and provider-wide checkpoint/ledger mechanics, coverage reporting, and KEP verification. Delivery requires an approved work trade and receiver-controlled planning and acceptance.
+- **Granola adapter:** Granola's official remote MCP owns authentication, source schemas, read-only meeting projections, and its no-mutation tool surface. It does not provide KI checkpoints, completeness proof, or change detection.
+- **tools-ki:** Owns the single public CLI, repository resolution, provider-neutral KEP builder, Granola profile, caller-managed date-window enumeration, rate-limit handling, content revalidation, atomic Harbour staging, local and provider-wide checkpoint/ledger mechanics, coverage reporting, and KEP verification. Delivery requires an approved work trade and receiver-controlled planning and acceptance.
 - **Arcadia:** Remains the authority for the provider-neutral lifecycle, corrects the public command language, and decides when Granola evidence is sufficient to shape a portable acquisition specification. Delivery is a knowledge trade linked to `KI-ARCADIA-MOD-006`, not a Harness edit to Arcadia.
 - **kit-principal:** Owns its `+/_ACQUIRE/granola/`, initial catch-all and later Personal/unfoldered/residual selectors, local acquisition ledger, coverage coordination, and later triage and harvesting process. Delivery requires route activation and an approved work trade.
 - **Other receiving repositories:** Own their skill activation, folder selectors, Harbour packages, local ledger, and triage. They receive work only through their own approved roadmap and trade routes.
 
 Trades are not required when a meeting is acquired directly into the intended receiver. They remain appropriate when an acquisition was routed incorrectly, a changed meeting affects knowledge already promoted elsewhere, or harvested knowledge has wider applicability. Those trades should carry the bounded material and disposition evidence needed by the receiver rather than treating the original meeting corpus as one large transfer.
 
-### Unresolved Granola capabilities
+### Verified Granola capability envelope
 
-- Whether an available API or MCP supports cursor or page-token pagination over complete historical, unfiltered, and folder-scoped meetings.
-- Whether stable meeting URLs, creation and update timestamps, folder IDs and names, tags, participant identities, and source-version indicators are returned consistently.
-- Whether `get_meetings` exposes a raw provider payload suitable for faithful preservation or only a generated-summary projection.
-- Whether note, folder, tag, participant, transcript, and media amendments reliably change an update indicator or require full re-hashing.
-- Whether raw transcript access exists for the account tier; local legacy records conflict, and the current scheduled activity says it is unavailable.
-- Whether attachments, audio, and recordings are available as references, downloadable bytes, expiring URLs, or not exposed at all.
-- Whether pagination order is stable, rate limits and retry tokens are documented, and historical queries can be partitioned without omissions.
-- Whether meeting deletion or folder removal is represented by a tombstone, disappearance, or another auditable source event.
-- Whether Granola offers a supported recoverable export, archive operation, deletion API, or deletion-manifest facility. No such capability is assumed.
+- The official remote MCP is authenticated and healthy through mcporter and exposes six read-only tools with no mutation-capable operation.
+- `list_meetings` accepts global or folder-scoped custom ISO-date windows but exposes no pagination or completeness input or output; an observed default result saturated at 100 meetings.
+- `list_meeting_folders` returns folder IDs, titles, descriptions, and nested-inclusive note counts; meeting results do not carry their folder identity or hierarchy.
+- Meeting UUID lookup, generated summaries, participants, and transcripts work. Detail requests accept at most ten UUIDs; transcript requests accept one UUID.
+- Sampled projections expose no Granola URL, creation or update timestamp, tags, attachments, media, source version, or deletion tombstone. Transcript output has generic speakers and no timestamps.
+- The natural-language query tool is useful for exploration but is not a faithful acquisition primitive and supplied no source citation in the representative check.
+
+### Remaining implementation decisions
+
+- Choose deterministic single-receiver precedence or explicit intentional duplication when one meeting belongs to multiple mapped folders. The default recommendation is fail-closed human resolution rather than silent duplication.
+- Choose the normal amendment-revalidation policy. New-identity discovery can remain lightweight, but changed-note detection requires re-reading and hashing existing details and transcripts. The default recommendation is a bounded incremental run plus a scheduled exhaustive sweep, with an exhaustive sweep mandatory before any retirement manifest.
+- Establish the minimum date-window split and saturation failure rule needed to prove complete history when one ISO-date leaf still returns exactly 100 meetings.
+- Decide whether Granola offers a supported recoverable export, archive operation, deletion API, or deletion-manifest facility. No such capability is assumed and it does not block read-only acquisition.
 
 ### Legacy-use-case treatment
 
