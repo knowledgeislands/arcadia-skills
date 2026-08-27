@@ -4,10 +4,10 @@ title: Acquire Granola meetings
 area: OPS
 theme: operations
 horizon: next
-status: ready
+status: in-progress
 blocks: []
 blocked_by: []
-baseline_ref: null
+baseline_ref: 98e637e8c63581f3c0535fcf73974f45415eaa47
 ---
 
 ## Goal
@@ -115,7 +115,9 @@ The exact conflict policy for a meeting belonging to multiple mapped folders is 
 - Any eligible repository may acquire Granola meetings according to its declared selector; `kit-principal` is the initial catch-all and residual receiver, not the permanent exclusive destination.
 - Acquisition covers complete historical and future meetings across folder and unfoldered results; recent windows and one-folder importers are insufficient.
 - Unfoldered meetings are a first-class selection category and remain visible to human review even when a configured receiver includes them.
+- A meeting whose mapped folders imply different receivers fails closed for human selection; duplication requires an explicit intentional policy.
 - Acquisition is incremental, idempotent, content-addressed, changed-meeting-aware, and faithful before interpretation.
+- Initial and pre-retirement runs exhaustively re-read and hash content. Routine runs combine identity discovery with bounded recent revalidation and a scheduled exhaustive sweep whose cadence may be revised from operating evidence.
 - Folder, tag, and participant data is routing evidence, not canonical classification.
 - Correct direct ingress should avoid unnecessary large trades; later routing uses governed harvesting and `ki-trades`, never direct cross-repository filesystem moves.
 - The acquisition provider and MCP surface are read-only with respect to Granola.
@@ -258,12 +260,15 @@ Trades are not required when a meeting is acquired directly into the intended re
 - Sampled projections expose no Granola URL, creation or update timestamp, tags, attachments, media, source version, or deletion tombstone. Transcript output has generic speakers and no timestamps.
 - The natural-language query tool is useful for exploration but is not a faithful acquisition primitive and supplied no source citation in the representative check.
 
-### Remaining implementation decisions
+### Implementation policy
 
-- Choose deterministic single-receiver precedence or explicit intentional duplication when one meeting belongs to multiple mapped folders. The default recommendation is fail-closed human resolution rather than silent duplication.
-- Choose the normal amendment-revalidation policy. New-identity discovery can remain lightweight, but changed-note detection requires re-reading and hashing existing details and transcripts. The default recommendation is a bounded incremental run plus a scheduled exhaustive sweep, with an exhaustive sweep mandatory before any retirement manifest.
-- Establish the minimum date-window split and saturation failure rule needed to prove complete history when one ISO-date leaf still returns exactly 100 meetings.
-- Decide whether Granola offers a supported recoverable export, archive operation, deletion API, or deletion-manifest facility. No such capability is assumed and it does not block read-only acquisition.
+- When mapped folders imply different receivers, acquisition fails closed for human selection. It acquires into multiple repositories only when an explicit intentional-duplication policy names that outcome.
+- Initial acquisition and its verification repeat exhaustively read and hash every available meeting projection. Routine acquisition performs complete identity discovery, bounded recent content revalidation, and a scheduled exhaustive sweep. The first cadence is operational policy rather than a permanent architectural decision and should be revised from measured runtime, rate-limit, and amendment evidence.
+- Any custom date window returning exactly 100 meetings is saturated and splits recursively. A saturated single-day window fails closed because the official schema cannot narrow below ISO-date granularity or prove completeness.
+
+### Remaining provider question
+
+Granola's supported recoverable export, archive, deletion API, and deletion-manifest capabilities remain unverified. No such capability is assumed, and this does not block read-only acquisition.
 
 ### Legacy-use-case treatment
 
