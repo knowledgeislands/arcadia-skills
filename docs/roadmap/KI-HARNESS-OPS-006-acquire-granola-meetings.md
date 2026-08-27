@@ -51,8 +51,10 @@ The accepted capability evidence proves custom historical date windows, folder-s
 - [ ] Model source amendments explicitly: note, summary, folder, tag, participant, transcript, or media changes create a new immutable observation; scope exit never implies source deletion or removal of an earlier KEP.
 - [ ] Make interrupted imports resumable: publish each KEP atomically, never advance a ledger before verification, and repeat acquisition until it reports no unexplained new, changed, missing, failed, overlapping, or unmatched meetings.
 - [ ] Add fixtures for saturated and split date windows, new, unchanged and changed meetings, multiple-folder membership, folder reassignment, unmatched folders, duplicate identities, inferred-unfoldered meetings, unsafe paths, unavailable transcript or media, interrupted writes, corrupted existing stages, and repeatable checkpoints.
-- [ ] Prepare receiver-owned work trades for `tools-ki` and `kit-principal` and a knowledge trade for Arcadia; submit none until each route and payload receives explicit approval.
+- [ ] Prepare receiver-owned work trades for `tools-ki`, `kit-legal`, and `kit-principal` and a knowledge trade for Arcadia; submit none until each route and payload receives explicit approval.
 - [ ] Define the future release-manifest contract and prove the retirement gates without adding a source-mutation tool to the acquisition provider.
+- [ ] Replace the published skill's initial `kit-principal` catch-all wording with a receiver-neutral contract: folder selectors choose the best-served repository, while unfoldered, unmatched, and conflicting meetings remain explicit reconciliation outcomes.
+- [ ] Deliver the first direct-ingress mappings through receiver-owned work: Granola `Legal` folder to `kit-legal` and Granola `Personal` folder to `kit-principal`, using stable folder IDs as selectors and folder names as review evidence.
 
 ## Files touched
 
@@ -70,6 +72,7 @@ Receiver-owned expected surfaces, changed only through accepted local work:
 - Arcadia's ADR-KI-ARCADIA-001 command language, `KI-ARCADIA-MOD-006` lifecycle record, and future portable acquisition specification
 - `kit-principal` Harbour configuration, initial catch-all scope, acquisition and coverage ledgers, Granola triage activity, and reciprocal `ki-trades` declarations
 - later receiving repositories' Granola skill declarations, folder selectors, local ledgers, and triage records
+- `kit-legal` Harbour configuration, stable `Legal` folder selector, local acquisition ledger, Granola triage activity, and reciprocal `ki-trades` declarations
 
 ## Verify
 
@@ -186,6 +189,14 @@ Add an operator guide only after end-to-end acquisition is verified. It must exp
 Keep this work distinct from KI-HARNESS-OPS-005 because a communication source introduces multi-repository receiver selection, source-folder reconciliation, and ongoing mutable-record concerns. Receiver repositories retain their own prioritisation, planning, implementation, review, and acceptance records through approved trades.
 
 ## Discussion
+
+### Direct-ingress decision
+
+The latest receiver decision supersedes every earlier reference in this record to `kit-principal` as an initial or residual catch-all. Granola folder evidence should route meetings directly to the repository best served by the material. The first governed mappings are `Legal` to `kit-legal` and `Personal` to `kit-principal`; stable folder IDs are the selectors, while names remain human-readable review evidence.
+
+Unfoldered, unmatched, excluded, and multi-folder-conflict identities stay visible in the provider-wide reconciliation report. They are not silently assigned to either repository. A later operating decision may add an explicit receiver or prompt policy after experience with the first mappings; conflicting receiver mappings continue to fail closed for human selection, and duplication remains explicit only.
+
+The committed Harness unit `0726b5cc` therefore needs one follow-up correction to remove its initial catch-all wording before receiver delivery. Receiver work must include separate governed deliveries for `kit-legal` and `kit-principal`, alongside the existing `tools-ki` and Arcadia responsibilities.
 
 ### Proposed state flow
 
