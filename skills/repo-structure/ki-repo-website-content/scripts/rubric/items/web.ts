@@ -498,8 +498,8 @@ const WEB_33 = mechanical(
     if (stop) return stop
     const text = context.read('.gitignore')
     const correct = context.siteRoot ? /^\s*\/?site\/dist\/?\s*$/m.test(text) : /^\s*\/?dist\/?\s*$/m.test(text)
-    const misplaced = context.siteRoot && /^\s*\/dist\/?\s*$/m.test(text)
-    if (correct)
+    const globalDist = /^\s*dist\/?\s*$/m.test(text)
+    if (correct || globalDist)
       return [
         {
           status: 'PASS',
@@ -510,15 +510,11 @@ const WEB_33 = mechanical(
     return [
       {
         status: 'VIOLATION',
-        ...(misplaced ? { level: 'FAIL' as const } : {}),
-        message: misplaced
-          ? 'gitignore has root /dist but the site workspace emits site/dist/'
-          : `${context.siteRoot ? 'site/dist/' : 'dist/'} is not gitignored`,
+        message: `${context.siteRoot ? 'site/dist/' : 'dist/'} is not gitignored`,
         subject: '.gitignore'
       }
     ]
-  },
-  { conform: (context) => context.addDistIgnore?.() }
+  }
 )
 
 const WEB_34 = judgment(

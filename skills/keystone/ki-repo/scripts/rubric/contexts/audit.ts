@@ -45,6 +45,7 @@ import { existsSync, lstatSync, readdirSync, readFileSync, readlinkSync, realpat
 import { isAbsolute, join, resolve } from 'node:path'
 import { promisify } from 'node:util'
 import type { RubricEmitter } from '../../shared/rubric.ts'
+import { inspectGitignore, managedGitignoreBlocks } from './gitignore.ts'
 
 // ── the standard (keep in sync with references/standards-repository.md) ──────
 const DEFAULT_BRANCH = 'main'
@@ -441,6 +442,7 @@ type ContentEvidence = {
 
 function localContentEvidence(dir: string): ContentEvidence {
   const tree = localTreePaths(dir)
+  if (existsSync(join(dir, '.ki'))) tree.add('.ki')
   const files = localRootPaths(tree)
   const kiText = files.has(KI_CONFIG) ? localRaw(dir, KI_CONFIG) : null
   return {
@@ -704,6 +706,33 @@ async function auditRepo(
       'FILES-4',
       `.gitignore must declare the generated skill rules for supported_runtimes: ${runtimeRules.join(', ')}`,
       '.gitignore'
+    )
+  // ── layer 1: compositional ignore contract and unmanaged inventory ── FILES-6/7
+  if (files.has(KI_CONFIG) && kiText != null && runtimeRules) {
+    const repositoryConfiguration = parseRepositoryConfiguration(kiText)
+    if (!repositoryConfiguration.issue && gitignore != null) {
+      const inspection = inspectGitignore(
+        gitignore,
+        managedGitignoreBlocks(repositoryConfiguration.rootTables, runtimeRules)
+      )
+      if (inspection.malformed)
+        fail('FILES-6', `.gitignore managed markers are malformed: ${inspection.malformed}`, '.gitignore')
+      else if (!inspection.conforming)
+        fail('FILES-6', '.gitignore managed blocks or terminal unmanaged section are not reconciled', '.gitignore')
+      if (!inspection.malformed && inspection.unmanagedRules.length)
+        note(
+          'FILES-7',
+          `.gitignore has ${inspection.unmanagedRules.length} unmanaged rule(s): ${inspection.unmanagedRules.join(', ')}`,
+          '.gitignore'
+        )
+    }
+  }
+  // ── layer 1: retired local output tree ── FILES-8
+  if (files.has('.ki'))
+    fail(
+      'FILES-8',
+      'retired .ki output exists; only proven untracked .ki/audits and .ki/conform content may be removed automatically',
+      '.ki'
     )
   // ── layer 1: declared authoring baseline (gated on the ki-repo marker) ── FILES-3
   // A confirmed ki-repo declares the baseline authoring standard explicitly.
@@ -1261,6 +1290,9 @@ const CONTENT_AREAS = new Set([
   'FILES-3',
   'FILES-4',
   'FILES-5',
+  'FILES-6',
+  'FILES-7',
+  'FILES-8',
   'KIND-1',
   'KIND-2',
   'GH-2',

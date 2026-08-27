@@ -133,7 +133,7 @@ The static-site stack, workspace layout, generated output, and sustainable opera
 - **WEB-32 [M] — Site cleanup script** — `ki:site:clean` is present. (standards-eleventy-site.md)
   - _Remediation:_ diagnostic — Inspect the affected website surface and apply the standard through a reviewable, site-owned change.
 - **WEB-33 [M] — Dist ignore** — Generated site output is gitignored at the correct workspace path. (standards-eleventy-site.md)
-  - _Remediation:_ automatic
+  - _Remediation:_ diagnostic — Inspect the affected website surface and apply the standard through a reviewable, site-owned change.
 - **WEB-34 [J] — Portable generated links** — Built HTML contains portable relative internal links. (standards-eleventy-site.md)
   - _Evidence scope:_ Built HTML contains portable relative internal links.
   - _Review prompt:_ Does the built HTML actually contain portable relative internal links?

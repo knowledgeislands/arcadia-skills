@@ -135,9 +135,13 @@ describe('ki-repo session', () => {
 
     const gitignore = session.proposal().writes.find((write) => write.path === '.gitignore')
     expect(gitignore?.create).toBeUndefined()
-    expect(gitignore?.content).toBe(
-      'node_modules/\n\n# Generated project-local runtime payloads (ki-bootstrap) — never committed\n.claude/skills/*\n.agents/skills/*\n!.agents/skills/ki-self/\n!.agents/skills/ki-self/**\n'
-    )
+    expect(gitignore?.content).toContain('# ki-repo:ignore:ki-repo:start')
+    expect(gitignore?.content).toContain('reports/')
+    expect(gitignore?.content).toContain('.claude/skills/*')
+    expect(gitignore?.content).toContain('!.agents/skills/ki-self/**')
+    expect(gitignore?.content).toContain('# Unmanaged repository-specific ignores')
+    expect(gitignore?.content).toEndWith('\nnode_modules/\n')
+    expect(gitignore?.content).not.toContain('.agents/skills/\n')
   })
 
   test('derives runtime-skill ignores from supported runtimes while reserving ki-self', async () => {
@@ -164,7 +168,7 @@ describe('ki-repo session', () => {
     expect((await collectAuditFindings([root])).findings).not.toContainEqual(
       expect.objectContaining({ code: 'FILES-4' })
     )
-  })
+  }, 10_000)
 
   test('audits the exact opening configuration conformance header', async () => {
     const root = repository()

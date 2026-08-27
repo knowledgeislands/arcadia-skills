@@ -238,7 +238,7 @@ Runner-neutral tests and the conditional Vitest coverage profile.
   - _Remediation:_ diagnostic — Align the test runner or Vitest coverage configuration with the declared test capability, then rerun the audit.
 - **TEST-3 [M] — Vitest test-source exclusion** — Under the Vitest profile, coverage excludes `src/**/*.test.ts`. (standards-engineering.md)
   - _Remediation:_ diagnostic — Align the test runner or Vitest coverage configuration with the declared test capability, then rerun the audit.
-- **TEST-4 [M] — Vitest monorepo scoping** — Under the Vitest profile, workspace repos scope include, exclude, and reportsDirectory to the workspace rather than a flat root. (standards-engineering.md)
+- **TEST-4 [M] — Vitest report output and workspace scoping** — Under the Vitest profile, coverage writes to reports/coverage and monorepos keep reports and test globs inside the owning workspace. (standards-engineering.md)
   - _Remediation:_ diagnostic — Align the test runner or Vitest coverage configuration with the declared test capability, then rerun the audit.
 - **TEST-5 [M] — Vitest coverage command passes** — Under the Vitest profile, `bun run test:coverage` exits clean when the companion script exists. (standards-engineering.md)
   - _Remediation:_ diagnostic — Align the test runner or Vitest coverage configuration with the declared test capability, then rerun the audit.
@@ -278,7 +278,7 @@ Environment templates, development-mode confinement, and portable paths.
   - _Remediation:_ diagnostic — Add an appropriately redacted environment example template for the declared capability, then rerun the audit.
 - **ENV-2 [M] — Development NODE_ENV confinement** — `NODE_ENV=development` appears only in dev or inspect scripts, never start, build, or test. (standards-engineering.md)
   - _Remediation:_ diagnostic — Confine `NODE_ENV=development` to development or inspection scripts, then rerun the audit.
-- **ENV-3 [J] — Real environment files are protected** — Real non-example `.env.*` files are gitignored and the loader has the Node parity call. (standards-engineering.md)
+- **ENV-3 [J] — Real environment files are protected** — Real non-example `.env.*` files are protected by the root `.gitignore` and the loader has the Node parity call. (standards-engineering.md)
   - _Evidence scope:_ Real environment files and every loader that reads them.
   - _Review prompt:_ Are real environment files ignored and is the loader Node-parity-safe?
   - _Outcomes:_ conforming; gap; exclusion

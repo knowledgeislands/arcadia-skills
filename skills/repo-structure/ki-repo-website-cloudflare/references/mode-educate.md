@@ -7,7 +7,7 @@ Scaffold Cloudflare Workers Static Assets hosting for a new Knowledge Islands si
 - [1. Before you start — prerequisites](#1-before-you-start--prerequisites)
 - [2. Create the site `wrangler.jsonc`](#2-create-the-site-wranglerjsonc)
 - [3. Add the script family to `package.json`](#3-add-the-script-family-to-packagejson)
-- [4. Update `.gitignore`](#4-update-gitignore)
+- [4. Reconcile `.gitignore`](#4-reconcile-gitignore)
 - [5. Mark the repo with `.ki-config.toml`](#5-mark-the-repo-with-ki-configtoml)
 - [6. First deploy — workers.dev subdomain](#6-first-deploy--workersdev-subdomain)
 - [7. Wire the custom domain](#7-wire-the-custom-domain)
@@ -92,23 +92,17 @@ For a **flat** layout (no `site/` subfolder, `wrangler.jsonc` at repo root):
 
 ---
 
-## 4. Update `.gitignore`
+## 4. Reconcile `.gitignore`
 
-For a flat layout, add these entries to the repository `.gitignore`:
+Declare `ki-repo-website-cloudflare`, then let `ki-repo` compose these unanchored rules into the root `.gitignore`:
 
 ```gitignore
 dist/
 .wrangler/
+.dev.vars
 ```
 
-`dist/` is regenerated on every build; committing it causes conflicts and bloats history. `.wrangler/` holds wrangler's local cache and upload state.
-
-For the canonical `site/` workspace, use the workspace-relative entries instead:
-
-```gitignore
-site/dist/
-site/.wrangler/
-```
+The unanchored rules cover flat and workspace layouts. `ki-repo-website` owns `dist/`; this skill contributes `.wrangler/` and `.dev.vars`. Do not write a competing workspace-specific block from this skill.
 
 ---
 

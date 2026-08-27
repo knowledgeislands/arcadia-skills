@@ -65,11 +65,12 @@ The records are living, compact, and independent. The order below is a **curated
 36. [ADR-KI-HARNESS-SKILLS-013](ADR-KI-HARNESS-SKILLS-013-readable-identifier-presentation.md) — title-first human presentation with stable machine identifiers.
 37. [ODR-KI-HARNESS-001](ODR-KI-HARNESS-001-scoped-lifecycle-operations.md) — separate repository and user lifecycle operations.
 38. [ADR-KI-HARNESS-012](ADR-KI-HARNESS-012-compatible-harness-publication-and-governed-rubric-boundary.md) — compatible harness publication and the governed-rubric boundary.
-39. [GDR-KI-HARNESS-003](GDR-KI-HARNESS-003-portable-git-governance-ownership.md) — portable Git governance ownership.
-40. [GDR-KI-HARNESS-004](GDR-KI-HARNESS-004-four-doc-repository-documentation-ownership.md) — four-doc repository documentation ownership.
-41. [GDR-KI-HARNESS-005](GDR-KI-HARNESS-005-cross-repository-trade-routes.md) — locally declared, receiver-controlled cross-repository trade submissions.
-42. [GDR-KI-HARNESS-006](GDR-KI-HARNESS-006-reciprocal-agora-membership.md) — portable consent for named repository collections and explicit local target selection.
-43. [GDR-KI-HARNESS-007](GDR-KI-HARNESS-007-document-metadata-and-principal-authority.md) — ownership of document metadata and principal authority.
+39. [ADR-KI-HARNESS-013](ADR-KI-HARNESS-013-compositional-ignore-management-and-generated-report-namespace.md) — skill-attributed ignore composition, terminal unmanaged inventory, and the `reports/` namespace.
+40. [GDR-KI-HARNESS-003](GDR-KI-HARNESS-003-portable-git-governance-ownership.md) — portable Git governance ownership.
+41. [GDR-KI-HARNESS-004](GDR-KI-HARNESS-004-four-doc-repository-documentation-ownership.md) — four-doc repository documentation ownership.
+42. [GDR-KI-HARNESS-005](GDR-KI-HARNESS-005-cross-repository-trade-routes.md) — locally declared, receiver-controlled cross-repository trade submissions.
+43. [GDR-KI-HARNESS-006](GDR-KI-HARNESS-006-reciprocal-agora-membership.md) — portable consent for named repository collections and explicit local target selection.
+44. [GDR-KI-HARNESS-007](GDR-KI-HARNESS-007-document-metadata-and-principal-authority.md) — ownership of document metadata and principal authority.
 
 ## Template
 

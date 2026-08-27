@@ -61,16 +61,12 @@ test('audit is read-only, stable, and exposes no conform capabilities', () => {
   expect(existsSync(join(repository, '.gitignore'))).toBe(false)
 })
 
-test('ignore repair is item-owned and declaration selection is never inferred', () => {
+test('ignore repair is delegated to the ki-repo composer', () => {
   const repository = fixture()
   const session = createWebsiteSession(options(repository, 'conform'))
-  const { context } = rootContext(session)
-
-  item('WEB-33').conform?.run(context)
-  item('WEB-33').conform?.run(context)
-
   const proposal = session.proposal()
-  expect(proposal.writes).toEqual([{ path: '.gitignore', content: 'site/dist\n', create: true }])
+  expect(item('WEB-33').conform).toBeUndefined()
+  expect(proposal.writes).toEqual([])
   expect(session.proposal()).toEqual(proposal)
   expect(existsSync(join(repository, '.ki-config.toml'))).toBe(true)
   expect(existsSync(join(repository, '.gitignore'))).toBe(false)
@@ -81,11 +77,8 @@ test('existing physical files are preserved around bounded repairs', () => {
   writeFileSync(join(repository, '.ki-config.toml'), '[skills.ki-repo]\n')
   writeFileSync(join(repository, '.gitignore'), '# generated\n/dist/\n')
   const session = createWebsiteSession(options(repository, 'conform'))
-  const { context } = rootContext(session)
-
-  item('WEB-33').conform?.run(context)
-
-  expect(session.proposal().writes).toEqual([{ path: '.gitignore', content: '# generated\n/site/dist/\n' }])
+  expect(item('WEB-33').conform).toBeUndefined()
+  expect(session.proposal().writes).toEqual([])
   expect(readFileSync(join(repository, '.ki-config.toml'), 'utf8')).toBe('[skills.ki-repo]\n')
   expect(readFileSync(join(repository, '.gitignore'), 'utf8')).toBe('# generated\n/dist/\n')
 })

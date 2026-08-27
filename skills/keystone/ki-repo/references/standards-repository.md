@@ -25,7 +25,7 @@ Every repo carries these at the root. A local audit reads the selected checkout'
 | --- | --- |
 | `README.md` | The repo's entry point. |
 | `LICENSE` | The declared license's text (default MIT); proprietary copyright text if `license` is `UNLICENSED`. |
-| `.gitignore` | Keeps build/dep noise out of history and excludes generated runtime skill links. |
+| `.gitignore` | Composes declared skill-owned ignores, retains visible repository-specific rules, and excludes generated output. |
 | `.editorconfig` | Shared editor defaults across the workspace toolchain. |
 | `CLAUDE.md` | Agent instructions — the always-loaded anchor for any repo-specific gate or convention (skills rubric SHAPE-7). |
 | `.ki-config.toml` | Opens with the standard conformance header and declares expected config under `[skills.ki-repo]`. † |
@@ -46,11 +46,24 @@ Every repo carries these at the root. A local audit reads the selected checkout'
 
 **Runtime skill ignore contract.** `.gitignore` follows the declared `supported_runtimes`: `claude-code` requires `.claude/skills/*`; `chatgpt-codex` requires `.agents/skills/*`. Every repository re-includes the reserved canonical `.agents/skills/ki-self/` source with `!.agents/skills/ki-self/` and `!.agents/skills/ki-self/**`, regardless of the declared runtime set, so it remains trackable whenever a repository elects to author it. These rules keep bootstrap-created links out of history without excluding the canonical local source.
 
+**Compositional ignore contract.** `ki-repo` is the sole writer of the root `.gitignore`. It derives a dependency-stable sequence of marker-bounded blocks from the repository's declared skills, while each contributing skill owns only the rules and explanatory comment in its named block. This central composition is one atomic file proposal: contributing skills do not race to write overlapping versions of `.gitignore`.
+
+The `ki-repo` block reserves `reports/` at any depth for disposable generated reports and includes common OS/editor temporary files, local Claude settings, log files, and the runtime-skill rules above. It deliberately leaves `.vscode/` and a generic `logs` directory unmanaged because repositories may commit shared editor configuration or durable operational logs. `ki-engineering` contributes dependencies, compiled output where no website skill owns it, TypeScript caches, package-manager logs, and real environment files. `ki-repo-website` contributes its generated `dist/` seam. `ki-repo-website-cloudflare` contributes `.wrangler/` and `.dev.vars`. A skill with no portable generated or local-only artifact contributes no block merely to appear in the file.
+
+Every composed file ends with these exact lines:
+
+```gitignore
+# Unmanaged repository-specific ignores
+# These rules are preserved but are not currently reconciled by a KI skill.
+```
+
+Existing non-managed rules are retained below that header and reported as informational inventory rather than silently promoted, reordered into a skill block, or deleted. REFRESH reviews recurring fleet patterns and assigns a rule to a skill only when the producing capability and portability boundary are clear. Malformed managed markers fail closed: CONFORM does not rewrite the file until the marker structure is repaired.
+
 A repository that authors this source explicitly declares `[skills.ki-self]`. The native `ki` host may then resolve only the exact physical, contained `.agents/skills/ki-self/` source and its `scripts/rubric/items/index.ts` catalogue as `repository-local:ki-self`; every other repository skill remains an installed-Harness capability. The local provider is not activated, repaired, or upgraded as a managed runtime projection.
 
 ### `.ki/` — legacy migration state, not an executor
 
-Under ADR-KI-HARNESS-012, `.ki/` is not a governance working-artifacts area or an execution surface. The former vendored checker tree, aggregate runner, wrapper, and manifest are retired without a compatibility path; `ki repo` must never invoke `.ki/bin`, a manifest payload, or a nearby checkout. Existing `.ki` runner and manifest material is examined only by an explicit, fail-closed migration operation and is never removed without complete ownership proof.
+Under ADR-KI-HARNESS-012, `.ki/` is not a governance working-artifacts area or an execution surface. The former vendored checker tree, aggregate runner, wrapper, and manifest are retired without a compatibility path; `ki repo` must never invoke `.ki/bin`, a manifest payload, or a nearby checkout. `.ki` is deliberately not ignored, and any physical return is a failure even when a stale ignore rule would otherwise hide it. CONFORM may remove only an untracked physical `.ki` tree whose complete contents are regular files and directories below `.ki/audits/` or `.ki/conform/`; tracked paths, links, special files, or any other child fail closed without removing recognised content.
 
 No document may represent a legacy `.ki/bin` runner as the current self-check contract or as a fallback. Repository activation belongs to the native `ki` host. A rubric may request an exact capability set, but only the host may resolve verified sources, preflight every declaration and managed discovery link, publish a bounded dry-run or apply plan, and re-audit the result. The rubric receives no direct filesystem or subprocess activation capability.
 
@@ -262,7 +275,7 @@ The native command resolves declared operations and checks every applicable laye
 
 ### What is read locally and what is read from GitHub
 
-Evidence comes from two distinct sources, and every finding identifies which one supplied it. A local checkout is primary for Layer 1 file presence, `.ki-config.toml`, tree-based coverage, and `package.json`; it includes tracked, staged, and unignored working-tree content. A local unpushed change therefore appears in a local audit. If a caller explicitly selects a local target and it cannot be read, the audit fails that local evidence collection rather than falling back to GitHub.
+Evidence comes from two distinct sources, and every finding identifies which one supplied it. A local checkout is primary for Layer 1 file presence, `.ki-config.toml`, tree-based coverage, and `package.json`; it includes tracked, staged, and unignored working-tree content, plus an explicit physical check for the forbidden `.ki` tree. A local unpushed change therefore appears in a local audit. If a caller explicitly selects a local target and it cannot be read, the audit fails that local evidence collection rather than falling back to GitHub.
 
 An organisation or other filesystem-free remote run reads that same file and configuration evidence from the repository's GitHub default branch. This lets a scheduled or sandboxed judgmental run assess a repository without granting it filesystem access. It sees published state, not a developer's checkout.
 

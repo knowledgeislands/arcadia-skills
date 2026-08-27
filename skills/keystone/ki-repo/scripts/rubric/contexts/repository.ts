@@ -1,7 +1,9 @@
 import { existsSync, lstatSync, readFileSync } from 'node:fs'
 import { join, resolve } from 'node:path'
+import { fileURLToPath } from 'node:url'
 import type {
   AuditOutcome,
+  ConformCommand,
   ConformWrite,
   RepositorySkillActivation,
   RubricContextOptions,
@@ -15,12 +17,14 @@ import {
   declaresRootTable,
   KI_CONFIGURATION_HEADER,
   KNOWN_RUNTIMES,
+  parseRepositoryConfiguration,
   parseSupportedRuntimes,
   type RepoAuditCollection,
   type RepoEvidenceFinding,
   requiredRuntimeSkills,
   runtimeSkillIgnoreRules
 } from './audit.ts'
+import { inspectGitignore, managedGitignoreBlocks } from './gitignore.ts'
 
 const KI_REPO_TABLE = 'ki-repo'
 const KI_AUTHORING_TABLE = 'ki-authoring'
@@ -43,40 +47,6 @@ const KI_AUTHORING_DEFAULT = `# The authoring standard (Markdown/TOML house styl
 [skills.${KI_AUTHORING_TABLE}]
 `
 
-const RUNTIME_SKILL_GITIGNORE = (
-  rules: readonly string[]
-): string => `# Generated project-local runtime payloads (ki-bootstrap) — never committed
-${rules.join('\n')}
-`
-const GITIGNORE_DEFAULT = (rules: readonly string[]): string => `node_modules/
-.DS_Store
-
-${RUNTIME_SKILL_GITIGNORE(rules)}`
-const ALL_RUNTIME_SKILL_RULES = new Set([
-  '.claude/skills/',
-  '.claude/skills/*',
-  '.agents/skills/',
-  '.agents/skills/*',
-  '!.agents/skills/ki-self/',
-  '!.agents/skills/ki-self/**'
-])
-
-const hasRuntimeSkillIgnoreRules = (content: string, expected: readonly string[]): boolean => {
-  const lines = content.split(/\r?\n/).map((line) => line.trim())
-  const actual = lines.filter((line) => ALL_RUNTIME_SKILL_RULES.has(line))
-  return actual.length === expected.length && actual.every((line, index) => line === expected[index])
-}
-
-const conformRuntimeSkillIgnore = (content: string, rules: readonly string[]): string => {
-  if (hasRuntimeSkillIgnoreRules(content, rules)) return content
-  const lines = content.split(/\r?\n/)
-  const retained = lines
-    .filter((line) => !ALL_RUNTIME_SKILL_RULES.has(line.trim()))
-    .join('\n')
-    .replace(/\n*$/, '')
-  return `${retained}\n\n${RUNTIME_SKILL_GITIGNORE(rules)}`
-}
-
 const runtimeRules = (config: string): string[] | undefined => {
   const parsed = parseSupportedRuntimes(config)
   if (parsed.issue || parsed.runtimes.some((runtime) => !KNOWN_RUNTIMES.includes(runtime))) return undefined
@@ -87,7 +57,11 @@ const GITHUB_CODES = new Set([
   'FILES-1',
   'FILES-2',
   'FILES-3',
+  'FILES-4',
   'FILES-5',
+  'FILES-6',
+  'FILES-7',
+  'FILES-8',
   'GH-1',
   'GH-2',
   'GH-3',
@@ -118,8 +92,11 @@ export type FilesRubricContext = {
   files3: readonly RepoEvidenceFinding[]
   files4: readonly RepoEvidenceFinding[]
   files5: readonly RepoEvidenceFinding[]
-  ensureGitignore?: () => void
-  ensureRuntimeSkillIgnore?: () => void
+  files6: readonly RepoEvidenceFinding[]
+  files7: readonly RepoEvidenceFinding[]
+  files8: readonly RepoEvidenceFinding[]
+  ensureManagedGitignore?: () => void
+  removeLegacyKiOutput?: () => void
   ensureRepoConfiguration?: () => void
   ensureAuthoringConfiguration?: () => void
   ensureConfigurationHeader?: () => void
@@ -427,6 +404,14 @@ export const createRepoSession = async (
       ? readFileSync(gitignorePath, 'utf8')
       : undefined
   const declaredRuntimeRules = configSource === undefined ? undefined : runtimeRules(configSource || KI_REPO_DEFAULT)
+  const parsedRepositoryConfiguration =
+    configSource === undefined ? undefined : parseRepositoryConfiguration(configSource || KI_REPO_DEFAULT)
+  const gitignoreBlocks =
+    declaredRuntimeRules && parsedRepositoryConfiguration && !parsedRepositoryConfiguration.issue
+      ? managedGitignoreBlocks(parsedRepositoryConfiguration.rootTables, declaredRuntimeRules)
+      : undefined
+  const gitignoreInspection =
+    gitignoreSource === undefined || !gitignoreBlocks ? undefined : inspectGitignore(gitignoreSource, gitignoreBlocks)
   const parsedRuntimeConfiguration = configSource === undefined ? undefined : parseSupportedRuntimes(configSource)
   const runtimeSkillNames =
     parsedRuntimeConfiguration &&
@@ -438,8 +423,8 @@ export const createRepoSession = async (
   let repoConfigurationRequested = false
   let authoringConfigurationRequested = false
   let configurationHeaderRequested = false
-  let gitignoreRequested = false
-  let runtimeSkillIgnoreRequested = false
+  let managedGitignoreRequested = false
+  let legacyKiCleanupRequested = false
   let workingAreaScaffoldRequested = false
 
   const context: RepoRubricContext = {
@@ -450,21 +435,20 @@ export const createRepoSession = async (
       files3: evidence('FILES-3'),
       files4: evidence('FILES-4'),
       files5: evidence('FILES-5'),
-      ...(mutable && !gitignoreExists
+      files6: evidence('FILES-6'),
+      files7: evidence('FILES-7'),
+      files8: evidence('FILES-8'),
+      ...(mutable && gitignoreInspection && !gitignoreInspection.malformed && !gitignoreInspection.conforming
         ? {
-            ensureGitignore: () => {
-              gitignoreRequested = true
+            ensureManagedGitignore: () => {
+              managedGitignoreRequested = true
             }
           }
         : {}),
-      ...(mutable &&
-      gitignoreExists &&
-      gitignoreSource !== undefined &&
-      declaredRuntimeRules &&
-      !hasRuntimeSkillIgnoreRules(gitignoreSource, declaredRuntimeRules)
+      ...(mutable && existsSync(join(target, '.ki'))
         ? {
-            ensureRuntimeSkillIgnore: () => {
-              runtimeSkillIgnoreRequested = true
+            removeLegacyKiOutput: () => {
+              legacyKiCleanupRequested = true
             }
           }
         : {}),
@@ -559,6 +543,7 @@ export const createRepoSession = async (
     ],
     proposal: () => {
       const writes: ConformWrite[] = []
+      const commands: ConformCommand[] = []
       if (configSource !== undefined) {
         const blocks = [
           repoConfigurationRequested && !declaresRootTable(configSource, KI_REPO_TABLE) ? KI_REPO_DEFAULT : '',
@@ -575,11 +560,19 @@ export const createRepoSession = async (
         if (content !== configSource)
           writes.push({ path: '.ki-config.toml', content, ...(!configExists ? { create: true } : {}) })
       }
-      if (gitignoreRequested && declaredRuntimeRules)
-        writes.push({ path: '.gitignore', content: GITIGNORE_DEFAULT(declaredRuntimeRules), create: true })
-      if (runtimeSkillIgnoreRequested && gitignoreSource !== undefined && declaredRuntimeRules) {
-        const content = conformRuntimeSkillIgnore(gitignoreSource, declaredRuntimeRules)
-        if (content !== gitignoreSource) writes.push({ path: '.gitignore', content })
+      if (managedGitignoreRequested && gitignoreInspection && gitignoreSource !== undefined) {
+        if (gitignoreInspection.content !== gitignoreSource)
+          writes.push({
+            path: '.gitignore',
+            content: gitignoreInspection.content,
+            ...(!gitignoreExists ? { create: true } : {})
+          })
+      }
+      if (legacyKiCleanupRequested) {
+        commands.push({
+          program: 'node',
+          arguments: [fileURLToPath(new URL('../../remove-legacy-ki.mjs', import.meta.url)), target]
+        })
       }
       if (workingAreaScaffoldRequested) {
         for (const readme of WORKING_AREA_READMES) {
@@ -588,7 +581,7 @@ export const createRepoSession = async (
           writes.push({ path: readme.path, content: readme.content, ...(!pathState(path) ? { create: true } : {}) })
         }
       }
-      return { writes }
+      return { writes, ...(commands.length ? { commands } : {}) }
     }
   }
 }

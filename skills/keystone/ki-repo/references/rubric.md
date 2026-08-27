@@ -57,6 +57,12 @@ Required repository files and document quality, using a local checkout when avai
   - _Remediation:_ automatic
 - **FILES-5 [M] — Configuration conformance header** — The root .ki-config.toml opens with the exact lightweight declaration that identifies it as Knowledge Islands repository configuration and explains that its presence declares conformance. (standards-configuration.md)
   - _Remediation:_ automatic
+- **FILES-6 [M] — Compositional ignore contract** — Root .gitignore contains dependency-stable, marker-bounded blocks owned by declared skills and a terminal unmanaged section. (standards-repository.md)
+  - _Remediation:_ automatic
+- **FILES-7 [M] — Unmanaged ignore inventory** — Repository-specific ignore rules remain visible below the terminal unmanaged header for later fleet reconciliation. (standards-repository.md)
+  - _Remediation:_ diagnostic — Review recurring unmanaged rules across the fleet and assign only genuinely portable rules to a skill.
+- **FILES-8 [M] — Legacy .ki output absent** — The retired .ki output tree is absent; audit exposes any return and conform removes only proven untracked audits/conform output. (standards-repository.md)
+  - _Remediation:_ automatic
 - **FILES-J1 [J] — Repository document content** — README and license content is accurate and current. (standards-repository.md)
   - _Evidence scope:_ The repository README and license.
   - _Review prompt:_ Read the README and license and assess whether they accurately describe and license this repository.

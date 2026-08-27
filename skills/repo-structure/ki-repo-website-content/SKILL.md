@@ -4,7 +4,7 @@ ki-kind: governance
 ki-shared-dependencies: [ki-skills:rubric]
 ki-depends-on: [ki-repo-website]
 owns: [eleventy.config.ts, eleventy.config.js, eleventy.config.mjs, eleventy.config.cjs]
-contributes: ['.ki-config.toml', '.gitignore', package.json]
+contributes: ['.ki-config.toml', package.json]
 requires: [ROADMAP.md]
 description: >-
   Governs the Knowledge Islands content-led website implementation: Eleventy 3 generates a collection of pages from Markdown and structured data, with Nunjucks, Tailwind 4 semantic tokens, and portable `dist/` output. Use for documentation, publication, and marketing sites whose primary artifact is a page collection. Do not use for a single interactive SPA; select `ki-repo-website-app` instead because Eleventy does not bundle React application JavaScript and combining them creates two build systems. Depends on the neutral `ki-repo-website` seam; Cloudflare hosting remains independent.
@@ -103,5 +103,5 @@ Reciprocal off-ramps — each names this skill back for the site-build layer:
 
 ## Notes
 
-- Hosted conform is intentionally narrow: only contained, physical `.ki-config.toml` and `.gitignore` files are eligible for proposals, and missing safe files may be proposed for creation. Application scaffolding, builds, deployment, and external commands remain explicit.
+- Hosted conform is intentionally narrow: only the contained, physical `.ki-config.toml` contribution is eligible for this skill's proposals. `ki-repo` centrally composes the root `.gitignore`; application scaffolding, builds, deployment, and external commands remain explicit.
 - [The exemplars](references/exemplars.md) remain separate because they carry complete reusable `eleventy.config.ts`, Tailwind token, package-script, and layout shapes that would make the normative standard unwieldy. They illustrate the contract but do not define it.

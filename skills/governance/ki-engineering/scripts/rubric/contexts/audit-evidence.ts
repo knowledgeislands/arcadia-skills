@@ -244,6 +244,16 @@ const declaredSkillNames = (configuration: string): ReadonlySet<string> =>
 /** Inspect the repository once and return the complete engineering evidence set. */
 const run = promisify(execFile)
 
+export const usesCanonicalCoverageReportsDirectory = (
+  workspaces: readonly string[],
+  reportsDirectory: string | undefined
+): boolean =>
+  workspaces.length
+    ? workspaces.some((workspace) =>
+        [`${workspace}/reports/coverage`, `./${workspace}/reports/coverage`].includes(reportsDirectory ?? '')
+      )
+    : ['reports/coverage', './reports/coverage'].includes(reportsDirectory ?? '')
+
 export const collectAuditEvidence = async (
   repo: string,
   emit?: RubricEmitter
@@ -1308,15 +1318,28 @@ export const collectAuditEvidence = async (
       // monorepo shape (§0): per-workspace artifacts and test globs are scoped to the owning
       // workspace dir, never the repo root. Check the vitest reportsDirectory and include globs
       // sit under a declared workspace (mirrors the per-workspace tsc check above).
+      if (!workspaces.length) {
+        const reportsDirectory = vc.match(/reportsDirectory\s*:\s*['"]([^'"]+)['"]/)?.[1]
+        const canonical = usesCanonicalCoverageReportsDirectory(workspaces, reportsDirectory)
+        add(
+          canonical ? 'PASS' : 'FAIL',
+          'TEST-4',
+          canonical
+            ? `coverage reportsDirectory "${reportsDirectory}" uses the canonical reports/coverage namespace`
+            : `set Vitest coverage reportsDirectory to "reports/coverage" — ${reportsDirectory ? `got "${reportsDirectory}"` : 'none set (defaults to coverage/)'}`,
+          STD,
+          vitestFile
+        )
+      }
       if (workspaces.length) {
         const underWs = (p: string) => workspaces.some((w) => p === w || p.startsWith(`${w}/`))
         const rd = vc.match(/reportsDirectory\s*:\s*['"]([^'"]+)['"]/)?.[1]
         add(
-          rd && underWs(rd) ? 'PASS' : 'WARN',
+          usesCanonicalCoverageReportsDirectory(workspaces, rd) ? 'PASS' : 'FAIL',
           'TEST-4',
-          rd && underWs(rd)
-            ? `monorepo: coverage reportsDirectory "${rd}" is under a workspace`
-            : `monorepo (§0): set the vitest coverage reportsDirectory under the owning workspace (e.g. "site/coverage"), not the repo root — ${rd ? `got "${rd}"` : 'none set (defaults to root coverage/)'}`,
+          usesCanonicalCoverageReportsDirectory(workspaces, rd)
+            ? `coverage reportsDirectory "${rd}" uses the canonical workspace reports/coverage namespace`
+            : `set Vitest coverage reportsDirectory to <workspace>/reports/coverage — ${rd ? `got "${rd}"` : 'none set (defaults to coverage/)'}`,
           STD,
           vitestFile
         )
@@ -1326,7 +1349,7 @@ export const collectAuditEvidence = async (
         const escaped = globs.filter((g) => !underWs(g))
         if (escaped.length)
           add(
-            'WARN',
+            'FAIL',
             'TEST-4',
             `monorepo (§0): vitest include glob(s) not under a workspace dir: ${escaped.join(', ')} — scope tests/coverage to the owning workspace (e.g. site/scripts/**/*.test.ts)`,
             STD,
