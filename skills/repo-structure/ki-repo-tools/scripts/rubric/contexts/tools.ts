@@ -120,18 +120,18 @@ const normaliseManualSpacing = (source: string): string => {
     result.push(line)
     if (!/^\.(?:SH|SS)(?:\s|$)/.test(line)) continue
 
-    if (lines[index + 1] === '\\&') {
-      result.push('\\&')
-      index += 1
-    } else {
-      result.push('\\&')
-    }
+    let followingIndex = index + 1
+    if (lines[followingIndex] === '\\&') followingIndex += 1
+    result.push('\\&')
 
-    if (lines[index + 1] === '.PP') {
-      result.push('.PP')
-      index += 1
+    const following = lines[followingIndex]
+    if (following === '.PP') {
+      const paragraphContent = lines[followingIndex + 1]
+      if (paragraphContent !== undefined && !paragraphContent.startsWith('.')) result.push('.PP')
+      index = followingIndex
     } else {
-      result.push('.PP')
+      if (following !== undefined && !following.startsWith('.')) result.push('.PP')
+      index = followingIndex - 1
     }
   }
 

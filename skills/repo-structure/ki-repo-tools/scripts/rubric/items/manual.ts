@@ -108,7 +108,19 @@ const manualSpacingViolations = (source: string): readonly number[] => {
 
   for (let index = 0; index < lines.length; index += 1) {
     if (!/^\.(?:SH|SS)(?:\s|$)/.test(lines[index] ?? '')) continue
-    if (lines[index + 1] !== '\\&' || lines[index + 2] !== '.PP') violations.push(index + 1)
+    if (lines[index + 1] !== '\\&') {
+      violations.push(index + 1)
+      continue
+    }
+
+    const following = lines[index + 2]
+    const paragraphContent = lines[index + 3]
+    if (
+      following === undefined ||
+      (following === '.PP' && (paragraphContent === undefined || paragraphContent.startsWith('.'))) ||
+      (following !== '.PP' && !following.startsWith('.'))
+    )
+      violations.push(index + 1)
   }
 
   return violations
@@ -118,7 +130,7 @@ const MAN_STYLE = {
   code: 'MAN-STYLE',
   title: 'Manual source and layout',
   description:
-    'A physical manual uses portable roff macros, documents each configuration format canonically in FILES, uses a literal \\& after each .SH / .SS followed by .PP before prose or a structural macro, and receives a rendered-spacing inspection after mandoc lint.',
+    'A physical manual uses portable roff macros, documents each configuration format canonically in FILES, uses a literal \\& after each .SH / .SS, uses .PP only before prose, and receives a rendered-spacing inspection after mandoc lint.',
   sources: [STANDARD],
   mechanical: {
     level: 'FAIL',
@@ -144,12 +156,12 @@ const MAN_STYLE = {
         return violations.length === 0
           ? one({
               status: 'PASS',
-              message: `${context.manualPath} separates every .SH and .SS heading with \\& and .PP.`,
+              message: `${context.manualPath} separates every .SH and .SS heading with \\& and uses .PP before prose.`,
               subject: context.manualPath
             })
           : one({
               status: 'VIOLATION',
-              message: `${context.manualPath} headings on lines ${violations.join(', ')} must be followed by \\& and .PP.`,
+              message: `${context.manualPath} headings on lines ${violations.join(', ')} need \\& separation and a non-empty .PP only before prose.`,
               subject: context.manualPath
             })
       }
@@ -164,7 +176,7 @@ const MAN_STYLE = {
   judgment: {
     scope: 'The physical manual source, its roff macros, FILES section, and rendered spacing inspection.',
     prompt:
-      'A physical manual uses portable roff macros, documents each configuration format canonically in FILES, uses a literal \\& after each .SH / .SS followed by .PP before prose or a structural macro, and receives a rendered-spacing inspection after mandoc lint.',
+      'A physical manual uses portable roff macros, documents each configuration format canonically in FILES, uses a literal \\& after each .SH / .SS, uses .PP only before prose, and receives a rendered-spacing inspection after mandoc lint.',
     outcomes: ['conforming', 'manual layout revision required', 'rendered inspection required'],
     guidance:
       'Correct the roff source and FILES documentation, then inspect rendered spacing in addition to passing mandoc lint.'
