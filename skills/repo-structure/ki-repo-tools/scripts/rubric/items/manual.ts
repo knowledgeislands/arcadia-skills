@@ -102,12 +102,65 @@ const MAN_GUIDANCE = {
   }
 } satisfies RubricItem<ManualToolsContext>
 
+const manualSpacingViolations = (source: string): readonly number[] => {
+  const lines = source.split(/\r?\n/)
+  const violations: number[] = []
+
+  for (let index = 0; index < lines.length; index += 1) {
+    if (!/^\.(?:SH|SS)(?:\s|$)/.test(lines[index] ?? '')) continue
+    if (lines[index + 1] !== '\\&' || lines[index + 2] !== '.PP') violations.push(index + 1)
+  }
+
+  return violations
+}
+
 const MAN_STYLE = {
   code: 'MAN-STYLE',
   title: 'Manual source and layout',
   description:
     'A physical manual uses portable roff macros, documents each configuration format canonically in FILES, uses a literal \\& after each .SH / .SS followed by .PP before prose or a structural macro, and receives a rendered-spacing inspection after mandoc lint.',
   sources: [STANDARD],
+  mechanical: {
+    level: 'FAIL',
+    remediation: { class: 'automatic' },
+    audit: {
+      phase: 'INSPECT',
+      run: (context) => {
+        if (!context.applicable)
+          return one({
+            status: 'NOT_APPLICABLE',
+            message: 'ki-repo-tools is not applicable: repository declaration is absent.'
+          })
+        if (context.manual === 'missing')
+          return one({ status: 'NOT_APPLICABLE', message: `No ${context.manualPath} source page is present.` })
+        if (context.manual === 'unsafe' || context.manualSource === null)
+          return one({
+            status: 'VIOLATION',
+            message: `${context.manualPath} is not a readable physical regular file.`,
+            subject: context.manualPath
+          })
+
+        const violations = manualSpacingViolations(context.manualSource)
+        return violations.length === 0
+          ? one({
+              status: 'PASS',
+              message: `${context.manualPath} separates every .SH and .SS heading with \\& and .PP.`,
+              subject: context.manualPath
+            })
+          : one({
+              status: 'VIOLATION',
+              message: `${context.manualPath} headings on lines ${violations.join(', ')} must be followed by \\& and .PP.`,
+              subject: context.manualPath
+            })
+      }
+    },
+    conform: {
+      phase: 'PRIMARY',
+      run: (context) => {
+        context.requestManualSpacing?.()
+      }
+    }
+  },
   judgment: {
     scope: 'The physical manual source, its roff macros, FILES section, and rendered spacing inspection.',
     prompt:

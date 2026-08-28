@@ -168,7 +168,8 @@ Man-page linting requirements.
   - _Review prompt:_ A physical manual documents the supported release and local-development installation paths, including manual installation or linking, and identifies the canonical completion action without assigning shell-startup mutation to the tool installer.
   - _Outcomes:_ conforming; guidance revision required; ownership decision required
   - _Conforming guidance:_ Update the manual’s supported installation and completion guidance while retaining the shell-startup ownership boundary.
-- **MAN-STYLE [J] — Manual source and layout** — A physical manual uses portable roff macros, documents each configuration format canonically in FILES, uses a literal \& after each .SH / .SS followed by .PP before prose or a structural macro, and receives a rendered-spacing inspection after mandoc lint. (standards-tool-repositories.md)
+- **MAN-STYLE [M + J] — Manual source and layout** — A physical manual uses portable roff macros, documents each configuration format canonically in FILES, uses a literal \& after each .SH / .SS followed by .PP before prose or a structural macro, and receives a rendered-spacing inspection after mandoc lint. (standards-tool-repositories.md)
+  - _Remediation:_ automatic
   - _Evidence scope:_ The physical manual source, its roff macros, FILES section, and rendered spacing inspection.
   - _Review prompt:_ A physical manual uses portable roff macros, documents each configuration format canonically in FILES, uses a literal \& after each .SH / .SS followed by .PP before prose or a structural macro, and receives a rendered-spacing inspection after mandoc lint.
   - _Outcomes:_ conforming; manual layout revision required; rendered inspection required

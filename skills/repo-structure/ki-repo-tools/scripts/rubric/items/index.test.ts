@@ -72,6 +72,7 @@ test('the catalogue preserves every ordered ki-repo-tools criterion', () => {
     'SHELL-TEST': 'WARN',
     'LANG-DEFER': 'WARN',
     'MAN-LINT': 'WARN',
+    'MAN-STYLE': 'FAIL',
     'CONFIG-1': 'WARN'
   })
   expect(items.filter((item) => item.judgment)).toHaveLength(18)

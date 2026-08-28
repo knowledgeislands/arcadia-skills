@@ -65,11 +65,13 @@ export type ManualToolsContext = {
   readonly applicable: boolean
   readonly manual: FileState
   readonly manualPath: string
+  readonly manualSource: string | null
   readonly packageJson: FileState
   readonly manualCommand: string | null
   readonly workflows: DirectoryState
   readonly workflowText: string
   readonly unsafeWorkflowEntries: readonly string[]
+  readonly requestManualSpacing?: () => void
 }
 
 export type ToolsConfigContext = {
@@ -107,6 +109,33 @@ const readableText = (path: string): string | null => {
   } catch {
     return null
   }
+}
+
+const normaliseManualSpacing = (source: string): string => {
+  const lines = source.split('\n')
+  const result: string[] = []
+
+  for (let index = 0; index < lines.length; index += 1) {
+    const line = lines[index] ?? ''
+    result.push(line)
+    if (!/^\.(?:SH|SS)(?:\s|$)/.test(line)) continue
+
+    if (lines[index + 1] === '\\&') {
+      result.push('\\&')
+      index += 1
+    } else {
+      result.push('\\&')
+    }
+
+    if (lines[index + 1] === '.PP') {
+      result.push('.PP')
+      index += 1
+    } else {
+      result.push('.PP')
+    }
+  }
+
+  return result.join('\n')
 }
 
 const entries = (directory: string): readonly Dirent[] | null => {
@@ -272,7 +301,9 @@ export const createToolsSession = ({
 
   const manualDirectoryKind = rootState === 'physical' ? nodeKind(join(root, 'man')) : 'missing'
   const manualKind = manualDirectoryKind === 'directory' ? nodeKind(join(root, manualPath)) : manualDirectoryKind
-  const manual: FileState = manualKind === 'missing' ? 'missing' : manualKind === 'file' ? 'physical' : 'unsafe'
+  const manualSource = manualKind === 'file' ? readableText(join(root, manualPath)) : null
+  const manual: FileState =
+    manualKind === 'missing' ? 'missing' : manualKind === 'file' && manualSource !== null ? 'physical' : 'unsafe'
 
   const configPath = join(root, '.ki-config.toml')
   const configEvidence =
@@ -283,6 +314,7 @@ export const createToolsSession = ({
 
   const requestedExecutables = new Set<string>()
   let markerRequested = false
+  let manualSpacingRequested = false
   const originalConfig = configEvidence.content
   const context: ToolsRubricContext = {
     rubric: { publication },
@@ -335,11 +367,19 @@ export const createToolsSession = ({
       applicable,
       manual,
       manualPath,
+      manualSource,
       packageJson,
       manualCommand,
       workflows: inspectedWorkflows.state,
       workflowText,
-      unsafeWorkflowEntries
+      unsafeWorkflowEntries,
+      ...(mode === 'conform' && manual === 'physical'
+        ? {
+            requestManualSpacing: () => {
+              manualSpacingRequested = true
+            }
+          }
+        : {})
     },
     config: {
       rootState,
@@ -368,10 +408,19 @@ export const createToolsSession = ({
       const commands = [...requestedExecutables]
         .sort()
         .map((path): ConformCommand => ({ program: 'chmod', arguments: ['+x', path] }))
-      const writes: ConformWrite[] =
-        markerRequested && originalConfig !== null
-          ? [{ path: '.ki-config.toml', content: `${originalConfig.replace(/\n*$/, '\n')}\n[skills.${TOOLS_TABLE}]\n` }]
-          : []
+      const writes: ConformWrite[] = [
+        ...(markerRequested && originalConfig !== null
+          ? [
+              {
+                path: '.ki-config.toml',
+                content: `${originalConfig.replace(/\n*$/, '\n')}\n[skills.${TOOLS_TABLE}]\n`
+              }
+            ]
+          : []),
+        ...(manualSpacingRequested && manualSource !== null
+          ? [{ path: manualPath, content: normaliseManualSpacing(manualSource) }]
+          : [])
+      ]
       return { writes, ...(commands.length > 0 ? { commands } : {}) }
     }
   }
