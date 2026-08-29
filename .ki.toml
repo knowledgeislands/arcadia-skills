@@ -160,6 +160,7 @@ order = [
 "https://github.com/knowledgeislands/ki-specifications" = "maintainer"
 "https://github.com/knowledgeislands/ki-techne-principal" = "maintainer"
 "https://github.com/knowledgeislands/ki-website" = "maintainer"
+"https://github.com/knowledgeislands/mcp-acquire-whatsapp" = "maintainer"
 "https://github.com/knowledgeislands/mcp-housekeeping-claude" = "maintainer"
 "https://github.com/knowledgeislands/mcp-housekeeping-codex" = "maintainer"
 "https://github.com/knowledgeislands/mcp-housekeeping-chatgpt" = "maintainer"
@@ -190,6 +191,7 @@ owner = "https://github.com/knowledgeislands/ki-agentic-harness"
 purpose = "Knowledge Islands MCP repositories"
 
 [skills.ki-agora.homes.ki-mcps.members]
+"https://github.com/knowledgeislands/mcp-acquire-whatsapp" = "maintainer"
 "https://github.com/knowledgeislands/mcp-housekeeping-claude" = "maintainer"
 "https://github.com/knowledgeislands/mcp-housekeeping-codex" = "maintainer"
 "https://github.com/knowledgeislands/mcp-housekeeping-chatgpt" = "maintainer"
