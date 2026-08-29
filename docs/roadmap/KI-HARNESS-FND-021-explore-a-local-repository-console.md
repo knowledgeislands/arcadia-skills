@@ -36,12 +36,12 @@ This exploration does not replace `ki-repo-kb-live-artifacts`, make the console 
 
 ## Steps
 
-- [ ] Inventory authoritative inputs and existing generators for a Project repository and a Knowledge Base.
-- [ ] Compare `kit-legal`, Git Almanac, IBC 2026, KB Live Artifacts, and current website capability boundaries.
-- [ ] Sketch the minimum common console and repository-specific panel model without choosing a frontend stack.
-- [ ] Identify the portable capability owner, executable owner, opt-in declaration, and one-command local run experience.
-- [ ] Define how projections expose provenance and staleness without becoming another source of truth.
-- [ ] Name a bounded prototype and objective promotion evidence, or record why implementation should wait.
+- [x] Inventory authoritative inputs and existing generators for a Project repository and a Knowledge Base.
+- [x] Compare `kit-legal`, Git Almanac, IBC 2026, KB Live Artifacts, and current website capability boundaries.
+- [x] Sketch the minimum common console and repository-specific panel model without choosing a frontend stack.
+- [x] Identify the portable capability owner, executable owner, opt-in declaration, and one-command local run experience.
+- [x] Define how projections expose provenance and staleness without becoming another source of truth.
+- [x] Name a bounded prototype and objective promotion evidence, or record why implementation should wait.
 
 ## Files touched
 
@@ -57,6 +57,29 @@ This exploration does not replace `ki-repo-kb-live-artifacts`, make the console 
 ## Dependencies / blocks
 
 No dependency blocks the exploration. Any implementation follow-up that changes the public `ki` interface must be owned and prioritised in `tools-ki`.
+
+## Outcome
+
+Retain the repository console as a shaped concept, but do not create a capability or implementation record yet. The evidence establishes a useful boundary, not a sufficiently common product.
+
+The three mature surfaces solve different problems:
+
+- `kit-legal` projects one repository-specific operational schema into a Live Artifact and deliberately keeps canonical status in Markdown frontmatter.
+- Git Almanac emits a self-contained report pack with a manifest, structured datasets, generated views, source repository identity, selected Git ref, and generation time.
+- IBC 2026 is a purpose-built continuous dashboard over repository-specific contracts and panels.
+
+A portable console would therefore need a very small shell: repository identity, source provenance, generation or refresh status, and links to capability-provided projections. Roadmap, trade, health, and report panels would remain independent typed projections; the shell must not scrape prose, reinterpret status, or write derived state back to source records. Repository-specific vocabulary and panels would remain extensions rather than mandatory universal views.
+
+If implementation becomes justified, the candidate ownership split is:
+
+- `tools-ki` owns the public executable and local loopback server because it already resolves repository identity, capabilities, roadmap JSON, trade state, and projection health;
+- the Harness owns portable projection semantics only after executable evidence proves a reusable contract;
+- a repository opts in explicitly rather than acquiring a console from its primary kind; and
+- the candidate one-command experience is `ki repo console --repo .`, bound to loopback and read-only by default.
+
+These are design constraints, not an adopted command or configuration contract. Promote implementation only when at least two repositories need the same combined projections, a named prototype has structured inputs for those views, and the browser surface answers an operational question that existing CLI output or a repository-local artifact does not. None of the inspected repositories currently meets that test: `kit-legal` and Git Almanac already have effective local projections, while IBC 2026 is intentionally product-specific.
+
+No receiver-owned implementation item is created from this exploration. That avoids assigning `tools-ki` a speculative public surface before a concrete consumer exists.
 
 ## Documentation impact
 
@@ -74,7 +97,7 @@ No guide changes are expected until an executable prototype exists.
 
 ### Roadmap
 
-Retain the evidence and conclusion in this record. Create a receiver-owned implementation record only if the exploration establishes a bounded viable slice.
+Retain the evidence and conclusion in this record. A future concrete consumer may create a receiver-owned `tools-ki` record against the promotion test above.
 
 ## Discussion
 

@@ -36,11 +36,11 @@ Toolchain uniformity is not an outcome by itself. A convergence proposal must so
 
 ## Steps
 
-- [ ] Measure the current estate split and identify any repository that needs the other implementation's capability.
-- [ ] Ground Eleventy, Vite, and Astro characteristics in current primary documentation.
-- [ ] Evaluate Astro against the harder continuous-application case rather than only the content-site case.
-- [ ] Confirm the existing lifecycle and assets-only hosting seams remain sufficient with the split.
-- [ ] Record a retain, converge, or prototype decision with explicit reconsideration triggers.
+- [x] Measure the current estate split and identify any repository that needs the other implementation's capability.
+- [x] Ground Eleventy, Vite, and Astro characteristics in current primary documentation.
+- [x] Evaluate Astro against the harder continuous-application case rather than only the content-site case.
+- [x] Confirm the existing lifecycle and assets-only hosting seams remain sufficient with the split.
+- [x] Record a retain, converge, or prototype decision with explicit reconsideration triggers.
 
 ## Files touched
 
@@ -56,6 +56,23 @@ Toolchain uniformity is not an outcome by itself. A convergence proposal must so
 ## Dependencies / blocks
 
 No dependency blocks the evaluation. Any later migration would require a separate public-contract decision and receiver-repository work.
+
+## Outcome
+
+Retain the purpose-selected Eleventy and Vite implementations. Do not prototype or adopt Astro from current evidence.
+
+The measured estate contains four `ki-repo-website-content` repositories on Eleventy 3.1 and one `ki-repo-website-app` repository on Vite 7. None declares both implementations, uses Astro, or records a need for the other implementation's capability. The shared `ki:site:*` lifecycle and `dist/` contract already isolate deployment consumers from the generator choice.
+
+Current primary documentation supports the purpose split:
+
+- [Eleventy](https://www.11ty.dev/) remains framework-independent and produces zero client-side JavaScript by default, matching content repositories.
+- [Vite](https://vite.dev/guide/) provides a development server and production bundle for modern applications, and its [static deployment guide](https://vite.dev/guide/static-deploy.html) retains `dist/` as the default output.
+- Astro provides typed [content collections](https://docs.astro.build/en/guides/content-collections/) and an [islands architecture](https://docs.astro.build/en/concepts/islands/) that emits HTML by default and hydrates selected components. Its own explanation distinguishes islands from a continuous single-page application, while allowing an SPA to be embedded.
+- Astro's [Cloudflare adapter guidance](https://docs.astro.build/en/guides/integrations-guide/cloudflare/) says a static Astro site does not need the runtime adapter, so an assets-only build is possible. That removes one objection to a future prototype but does not supply a reason to migrate.
+
+Astro is strongest in the unrepresented middle case: a content-led site that needs selected interactive regions. The current continuous React dashboard would gain another framework layer without evidence that islands simplify its shared state or control surface, while four content sites would pay migration cost despite already meeting the zero-JavaScript outcome with the simpler generator.
+
+Reconsider only when a consuming repository needs both content collections and substantial interaction, the split creates a measured maintenance failure beyond the common lifecycle seam, or a bounded Astro prototype proves a continuous application and assets-only deployment materially simpler than the current Vite implementation. Toolchain uniformity alone is not a trigger.
 
 ## Documentation impact
 
@@ -73,7 +90,7 @@ No guide change is expected unless the selected operating model changes.
 
 ### Roadmap
 
-Retain the evidence and decision in this record. Create follow-up work only for a bounded prototype or approved migration.
+Retain the evidence and decision in this record. No follow-up work is justified until a reconsideration trigger occurs.
 
 ## Discussion
 
