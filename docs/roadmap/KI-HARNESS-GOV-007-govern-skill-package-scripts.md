@@ -4,10 +4,10 @@ title: Govern skill package scripts
 area: GOV
 theme: governance-consistency
 horizon: next
-status: ready
+status: in-progress
 blocks: []
 blocked_by: []
-baseline_ref: null
+baseline_ref: 42f680fa0fc51e15b95c14ca22ec3e674e4d34ad
 ---
 
 ## Goal
