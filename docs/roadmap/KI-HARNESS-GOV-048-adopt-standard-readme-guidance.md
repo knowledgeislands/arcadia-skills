@@ -4,10 +4,10 @@ title: Adopt Standard Readme guidance
 area: GOV
 theme: governance-consistency
 horizon: next
-status: ready
+status: in-progress
 blocks: []
 blocked_by: []
-baseline_ref: null
+baseline_ref: 6507ba871a60358a8196fead4ed19ddccc051022
 ---
 
 ## Goal
