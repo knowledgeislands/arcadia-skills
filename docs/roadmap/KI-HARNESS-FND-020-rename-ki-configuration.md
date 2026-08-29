@@ -4,7 +4,7 @@ title: Rename KI configuration
 area: FND
 theme: foundation-tooling
 horizon: next
-status: awaiting-review
+status: done
 blocks: []
 blocked_by: []
 baseline_ref: 0570e7f0193ea149d80828ba65e45d600ec0d38d
@@ -112,6 +112,10 @@ The change is a direct pre-1.0 contract replacement: there is no compatibility l
 ### Mini recap
 
 KI-HARNESS-FND-020 is ready for human review as a clean cutover to `.ki.toml`.
+
+## Done
+
+Accepted under the user’s current autonomous-delivery and consolidated-acceptance authority. The current repository audits, 530-test suite, and TypeScript gate pass against the installed `.ki.toml` contract, resolving the review-time installed-Harness concern.
 
 ## Discussion
 
