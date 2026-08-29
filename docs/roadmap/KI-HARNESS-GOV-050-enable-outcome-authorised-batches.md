@@ -4,7 +4,7 @@ title: Enable outcome-authorised batches
 area: GOV
 theme: governance-consistency
 horizon: now
-status: awaiting-review
+status: done
 blocks: []
 blocked_by: []
 baseline_ref: 4f62f12dc849cb2f980e82861a68b8141de81e69
@@ -109,6 +109,10 @@ The contract now matches the requested operating model without weakening evidenc
 ### Mini recap
 
 `ki-batch` can now turn “crack on” into an exact, reviewable autonomous run instead of another human checkpoint. The implementation is fully tested and introduces no immediate remedial work.
+
+## Done
+
+Accepted under the user’s current explicit consolidated-acceptance authority after the complete review packet and repository evidence were rechecked.
 
 ## Discussion
 
