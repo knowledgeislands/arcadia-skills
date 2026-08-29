@@ -40,3 +40,14 @@ Each admitted item reaches `awaiting-review`, passes its own review recheck, and
 ## Run ledger
 
 <!-- ki-batch-run: KI-HARNESS-BATCH-005-RUN-001 834c2d83357900c9dcf8828569c92dabf7cb35108297aedbb89cfaa58a912078 -->
+
+| Item | Admitted state and baseline | Final state | Delivery evidence | Verification evidence |
+| --- | --- | --- | --- | --- |
+| `KI-HARNESS-FND-021` | `ready`; `7a17aca9` | `done` | `6ced3fa0`; accepted `9f7cd8ef` | Local-source comparison, roadmap, authoring, 531-test, TypeScript, Biome, and skill gates pass. |
+| `KI-HARNESS-GOV-008` | `ready`; `7a17aca9` | `done` | `6ced3fa0`; accepted `9f7cd8ef` | Five-repository inventory, primary-source review, roadmap, authoring, 531-test, TypeScript, Biome, and skill gates pass. |
+
+## Batch recap
+
+Both admitted records reached `done` through their own verified review packets and the exact consolidated-acceptance scope. The repository console retains a bounded projection model and promotion test without creating a speculative public interface. Website capabilities retain their purpose-selected Eleventy and Vite implementations until a concrete mixed-capability need justifies reconsideration.
+
+No framework was adopted, no public contract changed, and no destructive action, sibling-repository write, push, release, prune, failed verification, or remedial record occurred.
