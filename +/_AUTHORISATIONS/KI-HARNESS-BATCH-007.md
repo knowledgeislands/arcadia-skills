@@ -38,3 +38,15 @@ The admitted record must independently reach `awaiting-review`, pass its review-
 ## Run ledger
 
 <!-- ki-batch-run: KI-HARNESS-BATCH-007-RUN-001 cd83f481ecc6fbfcdf46b117650682dc73d9270356de78011e44582916b8acc0 -->
+
+### `KI-HARNESS-GOV-007`
+
+- **Admitted state and baseline:** `ready`; Harness baseline `42f680fa0fc51e15b95c14ca22ec3e674e4d34ad`.
+- **Result:** `done`; started by `a11efced`, delivered for review by `74c9ce8e`, accepted by `c2c7a6ca` at `2026-08-29T23:43:10Z`.
+- **Delivery evidence:** Exact host claims replace prefix inference in `ki-engineering`; exact exclusions reject stale, duplicate, patterned, and claimed keys; retained tools and Website script surfaces publish claims; `WCF-25` owns the optional exact upload command and remote-effect authority boundary.
+- **Verification:** Focused tests, 533-test Harness suite, TypeScript, generated rubric publication, Harness/tools/Website engineering audits, `ki-skills`, `ki-authoring`, and roadmap audits pass. No Wrangler command was executed.
+- **Stops and remedials:** No mandatory stop triggered. Further estate migrations remain separate roadmap work rather than compatibility exceptions or unfinished scope here.
+
+## Batch recap
+
+The single selected record reached `done` within its exact outcome authority. The run made no sibling-repository write, credentialed remote mutation, push, release, prune, or estate migration. Package-script ownership is now proven end to end across catalogue declaration, host aggregation, and consuming audit, with future repository adoption left to ordinary prioritised work.
