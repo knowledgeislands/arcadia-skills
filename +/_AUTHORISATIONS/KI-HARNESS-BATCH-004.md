@@ -59,3 +59,12 @@ Stop the affected item for any frontmatter mandatory stop. Continue only the oth
 ## Run ledger
 
 <!-- ki-batch-run: KI-HARNESS-BATCH-004-RUN-001 3e87bd5665093b2c0e810bab4720bb3cdb5b151756ad8816b06398a9d08e737b -->
+
+| Item | Start | Result | Evidence | Verification |
+| --- | --- | --- | --- | --- |
+| KI-HARNESS-GOV-048 | `ready`; `6507ba87` | `done` | `74787850`; accepted `d44ade89` | Authoring, skill, roadmap, 531-test, and TypeScript gates pass. |
+| KI-HARNESS-GOV-049 | `ready`; `5f4263ae` | `done` | `6507ba87`; accepted `d44ade89` | Focused six-test, skill, roadmap, 531-test, and TypeScript gates pass. |
+
+## Batch recap
+
+Both admitted records reached `done` through their own verified review packets and the exact consolidated-acceptance scope. GOV-047 remained excluded because standing-intake policy choices are not covered by the outcome authority. Independently completed FND-019 and FND-020 were accepted before this run. No destructive action, peer write, push, release, prune, failed verification, or remedial record occurred.
