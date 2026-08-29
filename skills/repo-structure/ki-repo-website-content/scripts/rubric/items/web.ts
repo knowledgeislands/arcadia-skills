@@ -197,7 +197,8 @@ const WEB_6 = mechanical(
             subject: context.cfgName
           }
         ]
-  }
+  },
+  { overrideLevels: ['WARN'] }
 )
 
 const WEB_7 = mechanical(

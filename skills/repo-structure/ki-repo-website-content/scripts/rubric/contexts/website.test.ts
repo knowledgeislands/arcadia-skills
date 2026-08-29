@@ -61,6 +61,27 @@ test('audit is read-only, stable, and exposes no conform capabilities', () => {
   expect(existsSync(join(repository, '.gitignore'))).toBe(false)
 })
 
+test('a flat Eleventy configuration emits its declared warning level', () => {
+  const repository = temporaryDirectory('ki-repo-website-content-flat-')
+  writeFileSync(join(repository, 'eleventy.config.ts'), 'export default function () {}\n')
+  writeFileSync(join(repository, 'package.json'), '{"scripts":{},"dependencies":{}}\n')
+  writeFileSync(join(repository, '.ki.toml'), '[skills.ki-repo-website-content]\n')
+
+  const session = createWebsiteSession(options(repository, 'audit'))
+  const { context } = rootContext(session)
+  const web6 = item('WEB-6')
+
+  expect(web6.overrideLevels).toEqual(['WARN'])
+  const [outcome] = web6.audit.run(context)
+  expect(outcome).toMatchObject({
+    status: 'VIOLATION',
+    level: 'WARN',
+    subject: 'eleventy.config.ts'
+  })
+  expect(outcome?.message).toBeTruthy()
+  expect(session.subjects.length).toBeGreaterThan(0)
+})
+
 test('ignore repair is delegated to the ki-repo composer', () => {
   const repository = fixture()
   const session = createWebsiteSession(options(repository, 'conform'))
