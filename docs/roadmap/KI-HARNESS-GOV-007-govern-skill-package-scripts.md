@@ -4,7 +4,7 @@ title: Govern skill package scripts
 area: GOV
 theme: governance-consistency
 horizon: next
-status: awaiting-review
+status: done
 blocks: []
 blocked_by: []
 baseline_ref: 42f680fa0fc51e15b95c14ca22ec3e674e4d34ad
@@ -151,6 +151,10 @@ The contract is viable and stable at the intended boundary: catalogues declare o
 ### Mini recap
 
 Package-script governance is now exact, duplicate-safe, and owner-driven across the host, Harness, tools, and Website proof repositories. Remaining estate adoption is ordinary follow-on migration rather than unfinished work in this record.
+
+## Done
+
+Accepted at `2026-08-29T23:43:10Z` through closure authority bound to `KI-HARNESS-BATCH-007`. Delivery commit `74c9ce8e33839c085d0a4aa93e385a4075cfaf66` contains the complete six-part review packet and intended Harness boundary. The 533-test suite, TypeScript, focused tests, generated publication, cross-repository engineering audits, roadmap audit, and authoring audit were clean before closure. No Wrangler command, sibling write, push, release, or estate migration occurred.
 
 ## Discussion
 
