@@ -4,10 +4,10 @@ title: Enable outcome-authorised batches
 area: GOV
 theme: governance-consistency
 horizon: now
-status: ready
+status: in-progress
 blocks: []
 blocked_by: []
-baseline_ref: null
+baseline_ref: 4f62f12dc849cb2f980e82861a68b8141de81e69
 ---
 
 ## Goal
