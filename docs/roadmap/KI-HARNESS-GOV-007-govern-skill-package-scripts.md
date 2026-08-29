@@ -72,7 +72,7 @@ The core inventory already distinguishes a clear `ki:tools:*` claim in `tools-ki
 
 No rubric-catalogue metadata currently publishes script claims, the host does not aggregate them, and `ki-engineering` has no exact exclusion contract.
 
-The local declaration contract is approved, but the end-to-end plan is not dependency-ready. Catalogue discovery and aggregation belong to `tools-ki`, which has no accepted receiver-owned record for this change. A Website manifest change also cannot be bundled without a reciprocal work route. Before this record returns to Ready, split the Harness-owned static contract and script-family decisions from receiver-owned host and estate migrations, or narrow this item to one independently complete local outcome plus exact outbound submissions. The Harness can decide whether its Cloudflare skill supports `ki:site:upload` without waiting for Website access; only applying the resulting manifest change is receiver-owned.
+The local declaration contract is approved, but the end-to-end plan is not dependency-ready. The user-authorized direct receiver-roadmap route has now captured `KI-TOOL-CLI-057` in `tools-ki` for catalogue discovery and claim aggregation, and `KI-WEB-SITE-003` in KI Website for the `ki:site:upload` ownership decision. The Harness-local contract is already delivered; this parent item now waits on those receiver-owned outcomes before it can consolidate the complete rule and evidence.
 
 ## Progress
 
@@ -108,7 +108,7 @@ The remaining work is intentionally external: `tools-ki` must aggregate resolved
 
 ## Dependencies / blocks
 
-The static metadata shape, host aggregation boundary, exact exclusions, and clean-cut migration rule are approved. Host aggregation remains an unsatisfied `tools-ki` dependency, and the Website currently has no reciprocal work route. The local `ki:site:upload` standard decision is independently executable because the Harness owns `ki-repo-website-cloudflare`; changing the Website manifest remains a separate receiver acceptance boundary. An unclaimed key, duplicate claim, or unavailable receiver is a stop rather than permission to implement across repositories.
+The static metadata shape, host aggregation boundary, exact exclusions, and clean-cut migration rule are approved. Host aggregation remains an unsatisfied delivery dependency tracked by Ready item `KI-TOOL-CLI-057`; the Website disposition is tracked by Ready item `KI-WEB-SITE-003`. This item remains Waiting For until both receiver-owned outcomes are available for consolidation. An unclaimed key or duplicate claim remains a stop rather than permission to weaken the contract.
 
 ## Documentation impact
 

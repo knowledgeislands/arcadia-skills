@@ -50,13 +50,13 @@ Promote when the v2 migration delta has been proven in a named stdio pilot, the 
 
 The `ki-repo-mcp` source list is already anchored to the released 2026-07-28 specification and TypeScript SDK v2 availability, while all six sibling servers still declare SDK 1.x and implement the older profile.
 
-This item waits for two external facts: a reciprocal Harness-to-`mcp-git-audit` work route and that repository owner's acceptance of a bounded v2 pilot. The current declarations do not provide that work route, so no receiver-owned pilot record can yet be submitted or inferred from SDK availability alone.
+The user-authorized direct receiver-roadmap route has now captured `MCP-GIT-TOOL-005` in `mcp-git-audit` as a Ready bounded v2 pilot. A reciprocal trade route is therefore no longer a capture dependency for this work.
 
 `mcp-git-audit` is the proposed named stdio pilot because its scope is local and its migration can be evaluated before a fleet-wide standard change.
 
 ## Steps
 
-- [ ] Ask the `mcp-git-audit` owner to accept a bounded v2 migration pilot with its own local work item and verification boundary.
+- [x] Capture a bounded v2 migration pilot in `mcp-git-audit` with its own local work item and verification boundary (`MCP-GIT-TOOL-005`).
 - [ ] Compare the pilot's SDK-v2 migration delta, result-envelope change, `server/discover` surface, and stdio entry point against its current v1 implementation.
 - [ ] Select and document one rollout profile: retain the older profile until every sibling migrates, or introduce explicit protocol-era applicability that keeps unmigrated servers conformant.
 - [ ] Re-anchor the portable `ki-repo-mcp` standard, sources, and rubric only after the pilot proves the selected profile can be checked without false fleet failures.
@@ -77,7 +77,7 @@ This item waits for two external facts: a reciprocal Harness-to-`mcp-git-audit` 
 
 ## Dependencies / blocks
 
-Return this item to Next only after a reciprocal work route exists and `mcp-git-audit` has accepted a receiver-owned pilot. It cannot become Ready until the pilot evidence exists and the owner selects the fleet rollout profile.
+This item remains Waiting For until `MCP-GIT-TOOL-005` supplies pilot evidence and the owner selects the fleet rollout profile. The receiver-roadmap capture itself is complete; no trade route or additional acceptance gate blocks the pilot from starting.
 
 ## Discussion
 
