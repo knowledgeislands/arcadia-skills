@@ -3,8 +3,8 @@ id: KI-HARNESS-GOV-007
 title: Govern skill package scripts
 area: GOV
 theme: governance-consistency
-horizon: waiting-for
-status: draft
+horizon: next
+status: ready
 blocks: []
 blocked_by: []
 baseline_ref: null
@@ -68,22 +68,20 @@ The catalogue metadata shape, host aggregation contract, exact exclusion semanti
 
 ## Current state
 
-The core inventory already distinguishes a clear `ki:tools:*` claim in `tools-ki` and `ki:site:*` claims in `ki-repo-website`, while the harness has `ki:deps:update`, `ki:binding:build-plugin`, and the ambiguous `ki:eval` key. Static skill declarations replace the retired owner-family map.
+All delivery prerequisites are now available. Harness commit `0e11c4a` publishes the shared `packageScripts` metadata shape and three local claims. `tools-ki` commit `e58ff49`, accepted by `KI-TOOL-CLI-057` at `cba86e1`, validates and aggregates deterministic canonical claims from every declared resolved skill and passes them through the repository rubric-session boundary. KI Website accepted `KI-WEB-SITE-003` at `6f7f074`, retaining `ki:site:upload` as the intentional Workers Builds preview-upload hook with an explicit credentialed remote-effect authority boundary.
 
-No rubric-catalogue metadata currently publishes script claims, the host does not aggregate them, and `ki-engineering` has no exact exclusion contract.
-
-The local declaration contract is approved, but the end-to-end plan is not dependency-ready. The user-authorized direct receiver-roadmap route captured `KI-TOOL-CLI-057` in `tools-ki` for catalogue discovery and claim aggregation. KI Website has now delivered `KI-WEB-SITE-003` at commit `6f7f074`: retain `ki:site:upload` as the intentional Workers Builds preview-upload hook and require explicit credentialed remote-effect authority. The Harness-local contract is already delivered; this parent item now waits only on the `tools-ki` receiver outcome before it can consolidate the complete rule and evidence.
+The remaining work is Harness-local consolidation: make `ki-engineering` consume the host inventory, remove its temporary hard-coded owner-family map, claim the accepted Website upload operation in `ki-repo-website-cloudflare`, complete exact exclusion and command-alignment fixtures, and verify the clean-cut local migration. No external dependency blocks implementation.
 
 ## Progress
 
 Commit `0e11c4a` establishes the Harness-local claim metadata and the three exact claims: `ki:deps:update`, `ki:harness:eval`, and `ki:binding:claude:build-plugin`. It also removes the two retired local script keys without aliases. Focused tests, TypeScript, Biome, Markdown checks, and command help pass.
 
-The remaining dependency is intentionally external: `tools-ki` must aggregate resolved claims and enforce duplicate/exclusion rules. Website's accepted outcome supplies the exact retained command, purpose, safe manifest-only verification, and prohibition on audit-time Wrangler execution; adding that claim to `ki-repo-website-cloudflare` remains Harness implementation work after host aggregation is available. The current `tools-ki` checkout cannot load its rubric module, so generated engineering publication and host audit are not being misrepresented as complete.
+`tools-ki` delivered the final receiver dependency with 696 tests at 100% coverage; both its built and installed CLIs pass the engineering audit. Website's accepted outcome supplies the exact retained command, purpose, safe manifest-only verification, and prohibition on audit-time Wrangler execution. The parent is now dependency-ready for one Harness implementation batch.
 
 ## Steps
 
-- [ ] Add exact `packageScripts` metadata to the shared rubric-catalogue contract, with validation that a skill claims each key at most once and retains the owner-specific rule and judgment alongside its claim.
-- [ ] Make the host aggregate static claims from resolved skills and expose one read-only inventory to `ki-engineering`; reject duplicate claims as cross-skill contract errors.
+- [x] Add exact `packageScripts` metadata to the shared rubric-catalogue contract, with validation that a skill claims each key at most once and retains the owner-specific rule and judgment alongside its claim.
+- [x] Make the host aggregate static claims from resolved skills and expose one read-only inventory to `ki-engineering`; reject duplicate claims as cross-skill contract errors.
 - [ ] Add a mechanical `ki-engineering` criterion that validates every package script as an engineering claim, one aggregated skill claim, or an exact `script_exclusions` entry; reject stale, duplicate, patterned, and overlapping exclusions.
 - [ ] Replace the hard-coded owner-family map with rubric claims; rename the harness evaluation command to `ki:harness:eval`, rename the builder to `ki:binding:claude:build-plugin`, and remove `ki:eval` and `ki:binding:build-plugin` without aliases.
 - [ ] Add claims and skill-owned semantic checks for each accepted core repository; explicitly decide whether `ki-repo-website-cloudflare` claims `ki:site:upload` with a remote-effect safety boundary or rejects it for receiver-owned removal, and route every other unclaimed non-external key to its owning skill or remove it rather than grandfathering it.
@@ -108,7 +106,7 @@ The remaining dependency is intentionally external: `tools-ki` must aggregate re
 
 ## Dependencies / blocks
 
-The static metadata shape, host aggregation boundary, exact exclusions, and clean-cut migration rule are approved. Website disposition `KI-WEB-SITE-003` is delivered and accepted. Host aggregation remains the sole unsatisfied delivery dependency, tracked by Ready item `KI-TOOL-CLI-057`; this item remains Waiting For until that receiver-owned outcome is available for consolidation. An unclaimed key or duplicate claim remains a stop rather than permission to weaken the contract.
+The static metadata shape, host aggregation boundary, exact exclusions, and clean-cut migration rule are approved. Website disposition `KI-WEB-SITE-003` and host aggregation `KI-TOOL-CLI-057` are delivered and accepted. No dependency remains; an unclaimed key or duplicate claim remains a stop rather than permission to weaken the contract.
 
 ## Documentation impact
 
@@ -126,7 +124,7 @@ Owner-specific script invocations and CI references will be updated with the dec
 
 ### Roadmap
 
-Receiver-owned Website script ownership is accepted at `KI-WEB-SITE-003`; `tools-ki` aggregation remains separately tracked until its authority accepts `KI-TOOL-CLI-057`.
+Receiver-owned Website script ownership is accepted at `KI-WEB-SITE-003`, and `tools-ki` aggregation is accepted at `KI-TOOL-CLI-057`. This Harness record now owns the remaining consuming-rule implementation and verification.
 
 ## Discussion
 
