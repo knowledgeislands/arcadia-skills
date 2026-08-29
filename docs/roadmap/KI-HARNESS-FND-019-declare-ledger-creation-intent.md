@@ -4,7 +4,7 @@ area: FND
 title: Declare ledger creation
 theme: foundation-tooling
 horizon: now
-status: awaiting-review
+status: done
 blocks: []
 blocked_by: []
 baseline_ref: 14a4163e38db7be396040e43873a1888b4de7788
@@ -94,6 +94,10 @@ The implementation is narrow, backward-compatible for existing ledgers, and clos
 ### Mini recap
 
 Missing roadmap ledgers can now be created through the same explicit safety contract already enforced by `tools-ki`.
+
+## Done
+
+Accepted under the user’s current autonomous-delivery and consolidated-acceptance authority after current full-suite and adapter evidence resolved the former review blocker.
 
 ## Discussion
 
