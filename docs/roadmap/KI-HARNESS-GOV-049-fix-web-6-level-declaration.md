@@ -4,7 +4,7 @@ title: Fix WEB-6 level declaration
 area: GOV
 theme: governance-consistency
 horizon: next
-status: awaiting-review
+status: done
 blocks: []
 blocked_by: []
 baseline_ref: 5f4263aeae7d66064f745273084375ee018bad3f
@@ -100,6 +100,10 @@ The repair is narrowly scoped, regression-covered, and preserves existing websit
 ### Mini recap
 
 WEB-6 can now report its intended flat-layout warning without aborting the repository-wide audit.
+
+## Done
+
+Accepted through KI-HARNESS-BATCH-004 under its current outcome authority and exact consolidated-acceptance scope after the review packet and current repository evidence passed.
 
 ## Discussion
 

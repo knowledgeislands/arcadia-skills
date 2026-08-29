@@ -4,7 +4,7 @@ title: Adopt Standard Readme guidance
 area: GOV
 theme: governance-consistency
 horizon: next
-status: awaiting-review
+status: done
 blocks: []
 blocked_by: []
 baseline_ref: 6507ba871a60358a8196fead4ed19ddccc051022
@@ -100,6 +100,10 @@ The guidance improves README orientation without creating a competing repository
 ### Mini recap
 
 `ki-authoring` now gives README authors a clear local convention while retaining Standard Readme as evidence rather than authority.
+
+## Done
+
+Accepted through KI-HARNESS-BATCH-004 under its current outcome authority and exact consolidated-acceptance scope after the review packet and current repository evidence passed.
 
 ## Discussion
 
