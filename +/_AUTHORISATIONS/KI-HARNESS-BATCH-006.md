@@ -66,3 +66,23 @@ Each admitted record must independently reach `awaiting-review`, pass its exact 
 ## Run ledger
 
 <!-- ki-batch-run: KI-HARNESS-BATCH-006-RUN-001 61f4e6483506c15a63588630b54ec3841daa115a3d375b58f2a1eb7678bee624 -->
+
+### `KI-HARNESS-FND-011`
+
+- **Admitted state and baseline:** `ready`; Harness baseline `f8434d81229dffda0f602710905fb09dc895b74d`.
+- **Result:** `done`; started by `dd4f65f9`, delivered for review by `fff435c9`, accepted by `cc34b71d`.
+- **Delivery evidence:** Rumdl `v0.2.62` controls classified; unpublished scratch commit `cf86a6af` prepares the remaining bracket-continuation fix. MD013 needs no patch because upstream already owns the Obsidian behavior.
+- **Verification:** Rust `1.96.0` release build, exact-byte controls, lazy-setext and Obsidian MD013 tests, new focused regression, affected 1,836-test filter, Rust formatting, roadmap and authoring audits pass.
+- **Decisions and stops:** Pull-request publication remains an excluded external action. No delegation, public-contract change, estate configuration change, sibling write, push, release, or failed gate occurred.
+
+### `KI-HARNESS-RTP-009`
+
+- **Admitted state and baseline:** `ready`; Harness baseline `fff435c90e7271a5d10af727f36128c4e810bc05`.
+- **Result:** `done`; started by `8211af97`, delivered for review by `49a60a84`, accepted by `cc34b71d`.
+- **Delivery evidence:** Exact AHP, AHPX, and VS Code revisions recorded; stable and unstable channels mapped; explicit disposition is continue monitoring without a prototype.
+- **Verification:** Official versioning and implementation catalogue plus primary repositories reviewed. The negative live-proof result is explicit: VS Code remains the sole catalogued server and no two-harness evidence exists. Roadmap and authoring audits pass.
+- **Decisions and stops:** No prototype, adoption record, Decision Record, runtime action, or inferred interoperability claim was created. No delegation or failed gate occurred.
+
+## Batch recap
+
+Both admitted records reached `done` through their own review packets and the batch's exact consolidated-acceptance scope. Rumdl revalidation leaves one tested unpublished external action; AHP remains a credible monitoring target but lacks the host diversity needed for a useful Knowledge Islands prototype. The run made no public-contract change, destructive action, sibling-repository write, push, release, or prune. A later normal selection cycle may capture upstream publication as an explicitly authorised external-action record; it is not smuggled into this completed run.
