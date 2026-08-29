@@ -4,7 +4,7 @@ title: Claim MCP package scripts
 area: GOV
 theme: governance-consistency
 horizon: next
-status: in-progress
+status: awaiting-review
 blocks: []
 blocked_by: []
 baseline_ref: 8ff3b56cfe4882fd4696233107816f719456a455
@@ -28,10 +28,10 @@ The exact claims are absent from the `ki-repo-mcp` catalogue. The receiver audit
 
 ## Steps
 
-- [ ] Add the five exact identities to the `ki-repo-mcp` catalogue.
-- [ ] Extend only the local shared catalogue type needed to publish those claims.
-- [ ] Add a focused catalogue assertion and verify the `mcp-git-audit` engineering audit consumes the claims.
-- [ ] Return the passing receiver evidence to `MCP-GIT-TOOL-005` without editing that repository in this record.
+- [x] Add the five exact identities to the `ki-repo-mcp` catalogue.
+- [x] Extend only the local shared catalogue type needed to publish those claims.
+- [x] Add a focused catalogue assertion and verify the `mcp-git-audit` engineering audit consumes the claims.
+- [x] Return the passing receiver evidence to `MCP-GIT-TOOL-005` without editing that repository in this record.
 
 ## Files touched
 
@@ -70,6 +70,32 @@ No guide change; the owning MCP standard already defines these commands.
 ### Roadmap
 
 This record owns the Harness-side remedial blocking `MCP-GIT-TOOL-005`. The receiver retains implementation and acceptance authority.
+
+## Review
+
+### Delivered
+
+Against immutable Harness baseline `8ff3b56cfe4882fd4696233107816f719456a455`, published the five exact package-script identities already governed by `ki-repo-mcp`.
+
+### Summary of changes
+
+The MCP catalogue now claims client generation, three server lifecycle commands, and the smoke test. Its local shared type accepts the metadata and its catalogue test pins the exact ordered identities.
+
+### Verification
+
+The focused MCP catalogue suite passes with 3 tests and 78 expectations; TypeScript passes. A read-only engineering audit of the stopped `mcp-git-audit` SDK-v2 worktree no longer reports any unclaimed scripts, leaving only that repository's local coverage-directory remedial.
+
+### Outstanding concerns
+
+No Harness concern remains. The receiver-local coverage path is explicitly outside this record and remains visible in `MCP-GIT-TOOL-005`.
+
+### Post-change review
+
+The fix remains at the accepted ownership boundary: the owning skill declares exact identities, the host aggregates them, and the receiver consumes them without exclusions or namespace inference.
+
+### Mini recap
+
+The MCP script-claim blocker is removed and the receiver pilot can resume for its final local gate.
 
 ## Discussion
 

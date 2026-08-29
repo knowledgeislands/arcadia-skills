@@ -20,6 +20,13 @@ const expectedItems = [
 test('the catalogue exposes every ordered MCP family and criterion', () => {
   expect(definition.contract).toBe(1)
   expect(definition.name).toBe('ki-repo-mcp')
+  expect(definition.packageScripts).toEqual([
+    'ki:generate:client',
+    'ki:server:mcp:dev',
+    'ki:server:mcp:inspect',
+    'ki:server:mcp:start',
+    'ki:test:smoke'
+  ])
   expect(definition.createSession).toBeFunction()
   expect(definition.families.map((family) => family.code)).toEqual(expectedFamilies)
   expect(definition.families.flatMap((family) => family.items.map((item) => item.code))).toEqual(expectedItems)
