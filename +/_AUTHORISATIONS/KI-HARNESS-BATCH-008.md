@@ -33,3 +33,13 @@ Deliver `KI-HARNESS-GOV-051` through exact owner catalogue metadata and read-onl
 ## Run ledger
 
 <!-- ki-batch-run: KI-HARNESS-BATCH-008-RUN-001 569ecb69568978acfdea73d2bfbf4b2d85f124a4a35a3b9a0035474c6e4fc7c6 -->
+
+### `KI-HARNESS-GOV-051`
+
+- **Result:** `done`; started by `8a6f6be1`, delivered by `81668ed8`, accepted by `481eb544` at `2026-08-29T23:58:04Z`.
+- **Evidence:** Five exact `ki-repo-mcp` claims, focused catalogue tests, TypeScript, owner audits, and read-only receiver proof pass. The receiver now reports only its local coverage-directory remedial.
+- **Boundary:** No receiver write, protocol-policy change, push, release, or prune occurred.
+
+## Batch recap
+
+The exact Harness-owned blocker is delivered and accepted. `MCP-GIT-TOOL-005` may resume under its own authority for the remaining receiver-local gate.
