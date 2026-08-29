@@ -4,7 +4,7 @@ title: Claim MCP package scripts
 area: GOV
 theme: governance-consistency
 horizon: next
-status: awaiting-review
+status: done
 blocks: []
 blocked_by: []
 baseline_ref: 8ff3b56cfe4882fd4696233107816f719456a455
@@ -96,6 +96,10 @@ The fix remains at the accepted ownership boundary: the owning skill declares ex
 ### Mini recap
 
 The MCP script-claim blocker is removed and the receiver pilot can resume for its final local gate.
+
+## Done
+
+Accepted at `2026-08-29T23:58:04Z` through closure authority bound to `KI-HARNESS-BATCH-008`. Delivery commit `81668ed8` contains the complete review packet and exact owner-side metadata. Focused tests, TypeScript, receiver proof, skill audit, roadmap audit, and authoring audit were clean before closure. No receiver repository write, push, release, or broader MCP policy change occurred.
 
 ## Discussion
 
