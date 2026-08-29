@@ -4,7 +4,7 @@ title: Monitor Agent Host Protocol
 area: RTP
 theme: runtime-portability
 horizon: next
-status: in-progress
+status: awaiting-review
 blocks: []
 blocked_by: []
 baseline_ref: fff435c90e7271a5d10af727f36128c4e810bc05
@@ -30,17 +30,25 @@ This item does not replace `KI-HARNESS-RTP-004`, which evaluates durable remote 
 
 The 2026-08-29 primary-source review satisfies the stability return trigger. AHP now documents protocol-version-1 messages and marks Root, Session, Chat, Terminal, Telemetry, and Resource Watch as stable. Changesets and the MCP channel remain release candidates; Annotations remain in active development; Automation remains early development.
 
-The official implementation catalogue publishes client libraries for Rust, TypeScript, Kotlin, Swift, and Go. It also lists AHPX, an independently maintained CLI built on the official TypeScript client, with multi-session management, fleet health, session persistence, event forwarding, and remote connection profiles. VS Code remains the only catalogued host implementation, so independent client activity is real while independent-host interoperability and a two-harness cockpit remain unproven.
+The official implementation catalogue now publishes clients for Rust, TypeScript, Kotlin, Swift, Go, and .NET. It also lists AHPX, an independently maintained CLI built on the official TypeScript client, with multi-session management, fleet health, session persistence, event forwarding, and remote connection profiles. VS Code remains the only catalogued server implementation, so independent client activity is real while independent-host interoperability and a two-harness cockpit remain unproven.
+
+## Evaluation result
+
+The explicit disposition is **continue monitoring; do not prototype yet**. Stable Root, Session, Chat, Terminal, Telemetry, and Resource Watch channels cover the basic session inventory, interaction, terminal, and observation model Knowledge Islands would need. Changesets and MCP remain release candidates, while Annotations and Automation remain too unstable to treat AHP as a complete command-centre contract.
+
+AHPX is the strongest cockpit-like signal: it can maintain several server profiles, manage concurrent sessions, query agents and server health, persist transcripts, forward events, browse server content, carry tokens, and apply permission modes. Those capabilities still exercise the official client against server endpoints supplied elsewhere. The official catalogue names only the VS Code reference server, and its public route is source code rather than a supported standalone host launch contract. No primary-source evidence demonstrates an independent server or one cockpit controlling two distinct agent harness implementations.
+
+The reviewed revisions are AHP `adf77a58fd493f24dae10ee0c87fcc47a3c947c4`, AHPX `a178119ec56ec467cef7c0794a9991315dc8974c`, and VS Code `3aa54039a0bec1bd4f9b428cdb202b4271bf22ef`. Absence of a supported host entry point prevents an honest live proof; building an undocumented VS Code development surface would test source adjacency rather than an adoptable boundary.
 
 ## Steps
 
-- [ ] Record the exact AHP specification, official client, VS Code host, and AHPX revisions used for evaluation.
-- [ ] Map stable and unstable channels against the Knowledge Islands session-aggregation need, keeping terminal persistence and agent-backend protocols outside the AHP ownership boundary.
-- [ ] Verify what AHPX can observe and control through the documented VS Code host surface, including repository, agent, session, reconnection, authentication, and permission identity.
-- [ ] Attempt a bounded reproducible client-host proof only where a public supported host entry point exists; otherwise record that absence as evidence against prototyping rather than infer interoperability.
-- [ ] Search primary repositories for an independently maintained host or cockpit controlling at least two agent harnesses and distinguish maintained products from protocol demonstrations.
-- [ ] Conclude with one explicit disposition: continue monitoring, prepare an optional prototype, adopt a named implementation, or reject AHP for the identified need.
-- [ ] If a prototype is justified, create a separately bounded implementation record with trust, isolation, verification, and removal criteria; do not implement it here.
+- [x] Record the exact AHP specification, official client, VS Code host, and AHPX revisions used for evaluation.
+- [x] Map stable and unstable channels against the Knowledge Islands session-aggregation need, keeping terminal persistence and agent-backend protocols outside the AHP ownership boundary.
+- [x] Verify what AHPX can observe and control through its documented client surface, including server profiles, agents, sessions, reconnection, authentication, permissions, persistence, and event forwarding.
+- [x] Record the absence of a public supported standalone host entry point as evidence against a live proof rather than infer interoperability from VS Code source.
+- [x] Search the primary implementation catalogue and repositories for an independently maintained server or a cockpit controlling at least two agent harnesses; none is evidenced.
+- [x] Conclude with the explicit disposition to continue monitoring without a prototype.
+- [x] Record that no implementation item is justified until an independent-server, two-harness, or concrete unmet-local-need trigger appears.
 
 ## Files touched
 
@@ -76,6 +84,32 @@ No guide change is expected unless a supported prototype is selected.
 ### Roadmap
 
 Any implementation outcome becomes a separate record. This item stops at an evidence-backed disposition.
+
+## Review
+
+### Delivered
+
+Against immutable baseline `fff435c90e7271a5d10af727f36128c4e810bc05`, completed the evidence-backed AHP maturity evaluation and recorded the explicit disposition to continue monitoring without a prototype. No implementation, dependency, Decision Record, external configuration, or runtime state changed.
+
+### Summary of changes
+
+The record now maps channel stability to the Knowledge Islands session-aggregation need, captures exact AHP, AHPX, and VS Code revisions, and distinguishes AHPX's genuine multi-server client capabilities from absent independent-server interoperability. It names the lack of a supported standalone host entry point as a negative prototype result rather than filling that gap with an undocumented development build.
+
+### Verification
+
+Reviewed the official AHP versioning and implementation catalogue, the AHP repository at `adf77a58fd493f24dae10ee0c87fcc47a3c947c4`, AHPX at `a178119ec56ec467cef7c0794a9991315dc8974c`, and VS Code at `3aa54039a0bec1bd4f9b428cdb202b4271bf22ef`. The official catalogue names VS Code as the sole server, while AHPX documents server profiles, multi-session operation, fleet health, persistence, event forwarding, tokens, permissions, and remote tunnels. No live interoperability claim is made.
+
+### Outstanding concerns
+
+AHP still lacks primary-source evidence for an independent server, a supported standalone host launch boundary, and one cockpit controlling two distinct agent harnesses. Changesets and MCP remain release candidates; Annotations and Automation remain less stable. These are explicit monitoring triggers, not local delivery failures.
+
+### Post-change review
+
+The evaluation answers the adoption question proportionately: AHP is credible enough to monitor and AHPX is a meaningful cockpit signal, but a prototype would presently validate only one vendor's reference server. Continued monitoring is reversible, carries no portable architecture commitment, and is ready for consolidated acceptance.
+
+### Mini recap
+
+The stable AHP core fits the conceptual need, and AHPX demonstrates useful client-side command-centre behavior. Host diversity and cross-harness proof remain missing, so no prototype or adoption record is warranted yet. The existing independent-server, two-harness, and concrete-local-need triggers remain the durable return route.
 
 ## Discussion
 
