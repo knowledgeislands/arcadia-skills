@@ -4,10 +4,10 @@ title: Fix WEB-6 level declaration
 area: GOV
 theme: governance-consistency
 horizon: next
-status: ready
+status: in-progress
 blocks: []
 blocked_by: []
-baseline_ref: null
+baseline_ref: 5f4263aeae7d66064f745273084375ee018bad3f
 transferred_from: TRD-8b69fe1b
 ---
 
