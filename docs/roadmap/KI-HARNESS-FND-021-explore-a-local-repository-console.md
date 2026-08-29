@@ -4,10 +4,10 @@ title: Explore local repository console
 area: FND
 theme: foundation-tooling
 horizon: next
-status: ready
+status: in-progress
 blocks: []
 blocked_by: []
-baseline_ref: null
+baseline_ref: 7a17aca903e44ea15a68f91820e028bc7149dbaa
 ---
 
 ## Goal
