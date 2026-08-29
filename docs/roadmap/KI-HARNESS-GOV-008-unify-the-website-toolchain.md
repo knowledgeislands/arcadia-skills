@@ -4,7 +4,7 @@ title: Evaluate website toolchain unification
 area: GOV
 theme: governance-consistency
 horizon: next
-status: in-progress
+status: awaiting-review
 blocks: []
 blocked_by: []
 baseline_ref: 7a17aca903e44ea15a68f91820e028bc7149dbaa
@@ -91,6 +91,32 @@ No guide change is expected unless the selected operating model changes.
 ### Roadmap
 
 Retain the evidence and decision in this record. No follow-up work is justified until a reconsideration trigger occurs.
+
+## Review
+
+### Delivered
+
+Delivered the website-toolchain evaluation from baseline `7a17aca903e44ea15a68f91820e028bc7149dbaa` in implementation commit `6ced3fa0`.
+
+### Summary of changes
+
+Measured the five declared website repositories, grounded the Eleventy, Vite, Astro, and Cloudflare characteristics in current primary documentation, evaluated the continuous-application case, and recorded a retain decision with explicit reconsideration triggers.
+
+### Verification
+
+All five `.ki.toml` declarations and package manifests were inspected directly. Primary documentation was rechecked. `ki repo audit --skill ki-work-roadmap --repo .` and `ki repo audit --skill ki-authoring --repo .` pass. The batch-wide 531-test suite, TypeScript, Biome, and `ki-skills` audit also pass.
+
+### Outstanding concerns
+
+Astro remains a credible option for a future content-led site with selected interactivity. No current repository presents that need, so absence of a prototype is proportionate rather than unfinished migration work.
+
+### Post-change review
+
+Retaining the split preserves the simpler generator for content, the direct application toolchain for the continuous dashboard, and the settled lifecycle and deployment seams. The conclusion is evidence-backed and stable for consolidated acceptance.
+
+### Mini recap
+
+Website capabilities retain Eleventy and Vite by purpose; Astro is reconsidered only against a concrete mixed-capability need.
 
 ## Discussion
 

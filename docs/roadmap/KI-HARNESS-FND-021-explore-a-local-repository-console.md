@@ -4,7 +4,7 @@ title: Explore local repository console
 area: FND
 theme: foundation-tooling
 horizon: next
-status: in-progress
+status: awaiting-review
 blocks: []
 blocked_by: []
 baseline_ref: 7a17aca903e44ea15a68f91820e028bc7149dbaa
@@ -98,6 +98,32 @@ No guide changes are expected until an executable prototype exists.
 ### Roadmap
 
 Retain the evidence and conclusion in this record. A future concrete consumer may create a receiver-owned `tools-ki` record against the promotion test above.
+
+## Review
+
+### Delivered
+
+Delivered the repository-console exploration from baseline `7a17aca903e44ea15a68f91820e028bc7149dbaa` in implementation commit `6ced3fa0`.
+
+### Summary of changes
+
+Compared the canonical `kit-legal` Command Centre, Git Almanac report pack, IBC 2026 dashboard, KB Live Artifacts contract, website boundaries, and `tools-ki` repository projections. Defined a read-only projection shell, provenance requirements, candidate ownership split, and objective promotion test without adopting a command, configuration table, framework, or capability.
+
+### Verification
+
+Local source files and manifests were inspected directly. `ki repo audit --skill ki-work-roadmap --repo .` and `ki repo audit --skill ki-authoring --repo .` pass. The batch-wide 531-test suite, TypeScript, Biome, and `ki-skills` audit also pass.
+
+### Outstanding concerns
+
+No implementation is justified until two repositories need the same combined projections and a named prototype answers a question existing surfaces do not. This is a deliberate promotion condition, not incomplete work in the exploration.
+
+### Post-change review
+
+The result preserves canonical repository state and executable ownership, avoids a lowest-common-denominator dashboard, and leaves a checkable path to implementation when real demand appears. It is stable for consolidated acceptance.
+
+### Mini recap
+
+The repository console now has a bounded portable shape and a demand-based promotion test, without creating speculative public tooling.
 
 ## Discussion
 
