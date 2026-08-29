@@ -4,7 +4,7 @@ title: Report rumdl parser defects
 area: FND
 theme: foundation-tooling
 horizon: next
-status: in-progress
+status: awaiting-review
 blocks: []
 blocked_by: []
 baseline_ref: f8434d81229dffda0f602710905fb09dc895b74d
@@ -42,7 +42,7 @@ Rumdl `0.2.62` was released on 2026-08-27, superseding the release state used fo
 
 rumdl 0.2.54 resolved the practical MD005 and MD075 cases and added Obsidian-flavour handling for the MD056 wikilink case. Direct reproductions recorded by `ki-authoring` now preserve the MD005 and MD075 fixtures; the standard-flavour house configuration enables MD056 for detection but marks it unfixable so CONFORM cannot truncate a row. Those released outcomes replace the local candidate branches as current evidence.
 
-The soft-wrapped ATX/setext corruption and MD013 pipe-reflow gap remain open watch-items. No pull request or released fix is recorded for either. This item therefore still waits for routine estate use, a relevant upstream release, or enough operational evidence that recovering one of those rules is worth the upstream-maintenance cost. Its return begins with fresh fixture-level validation.
+The `0.2.62` pass resolves this watch set to one unpublished patch and no house-configuration change. MD005 and MD075 preserve their exact neutral controls; MD056 remains diagnostic-only under Standard and clean under Obsidian; the lazy-setext root cause now has comprehensive upstream regression coverage. The `##]` continuation still triggered MD018, MD022, and MD026 together, so an unpublished minimal patch now retains MD018 while preventing structural heading rules from acting on that bracket continuation. MD013 already reflows aliased wikilink prose under Obsidian and deliberately preserves Standard-flavour pipe semantics, so no patch is justified there.
 
 Six defects, each with a reproduction verified during the migration:
 
@@ -67,19 +67,19 @@ Six defects, each with a reproduction verified during the migration:
 
 The `MD018` heuristic itself is not a defect and is not challenged. markdownlint flags `##].` too, and rumdl aims for parity with it. The difference is that markdownlint reports one finding and stops, whereas rumdl admits the candidate into its document model so four rules fire and their combined fixes corrupt the paragraph. The report is about the amplification, not the heuristic.
 
-The current local evidence is rumdl 0.2.54. The upstream project uses conventional commits with a `fix(rules)` scope, generates its changelog from commit messages with git-cliff, and runs its tests through `cargo-nextest`. `CONTRIBUTING.md` asks contributors not to hand-edit `CHANGELOG.md`.
+The released baseline is tag `v0.2.62` at `96c8520425eaf1b6d362e4a98754adf6ee604acb`. The unpublished scratch commit is `cf86a6af` in `/tmp/ki-rumdl-b6KsIo/rumdl`; publishing it as a branch or pull request is the exact remaining external action and was not authorised in this batch.
 
 ## Steps
 
-- [ ] Re-run every recorded neutral reproduction under rumdl `0.2.62`, using the resolved MD005, MD075, and MD056 cases as regression controls before changing a rule or branch.
-- [ ] Classify the soft-wrapped ATX and setext misparses and the MD013 pipe-reflow gap as fixed, changed, or still reproducible without using estate-derived fixture text.
+- [x] Re-run every recorded neutral reproduction under rumdl `0.2.62`, using the resolved MD005, MD075, and MD056 cases as regression controls before changing a rule or branch.
+- [x] Classify the soft-wrapped ATX and setext misparses and the MD013 pipe-reflow gap as fixed, changed, or still reproducible without using estate-derived fixture text.
 - [x] Install the Rust toolchain the project pins and confirm the test suite passes before any change.
 - [x] Re-validate released rumdl 0.2.54 against the exact MD005, MD075, and MD056 cases and record the safe house configuration in `ki-authoring`.
-- [ ] Retire the three superseded local candidate branches after confirming that none carries an independent unreleased fix.
-- [ ] Fix the ATX and setext misparses, which are one root cause and may be one pull request.
-- [ ] Fix the `MD013` reflow gap, the last of the pipe-context defects.
-- [ ] Open one pull request per remaining fix, each carrying its reproduction, and record the references under Discussion.
-- [ ] Once a remaining fix is released, re-test the rule against its recorded reproduction and recover its coverage through `ki-authoring` REFRESH.
+- [x] Confirm that no superseded candidate branch remains in the Harness and that the released MD005, MD075, MD056, and setext work carries no independent local fix.
+- [x] Confirm the setext root cause is fixed upstream and prepare the remaining bracket-continuation fix as unpublished scratch commit `cf86a6af`.
+- [x] Confirm `MD013` already reflows aliased wikilink prose under Obsidian and that Standard-flavour preservation is deliberate rather than an unfixed reflow defect.
+- [x] Record pull-request publication as the exact excluded external action; no issue, branch, or pull request was created.
+- [x] Retain release-triggered coverage recovery under `ki-authoring` REFRESH rather than holding this local revalidation record open.
 
 ## Files touched
 
@@ -116,6 +116,32 @@ No guide change is expected. Update the authoring source evidence and owned conf
 ### Roadmap
 
 Retain this record through review. Any prepared but unpublished upstream contribution must name its exact external action rather than remain implicit.
+
+## Review
+
+### Delivered
+
+Against immutable Harness baseline `f8434d81229dffda0f602710905fb09dc895b74d`, revalidated the recorded neutral cases on released rumdl `v0.2.62`, classified every remaining watch item, and prepared one minimal unpublished upstream commit. No estate configuration, sibling repository, upstream branch, issue, pull request, or release changed.
+
+### Summary of changes
+
+The record now distinguishes released fixes, deliberate flavour behavior, and the one remaining reproducible amplification. The disposable upstream checkout at `/tmp/ki-rumdl-b6KsIo/rumdl` contains commit `cf86a6af`, which adds a neutral bracket-continuation regression and prevents MD022 and MD026 from acting while retaining the MD018 diagnostic. No MD013 patch remains because upstream `0.2.62` already reflows the case under Obsidian and deliberately preserves Standard pipe semantics.
+
+### Verification
+
+Built tag `v0.2.62` (`96c8520425eaf1b6d362e4a98754adf6ee604acb`) with Rust `1.96.0`. Exact neutral MD005 and MD075 controls remained byte-identical; Standard MD056 reported without mutation and Obsidian MD056 remained clean. Upstream lazy-setext and Obsidian MD013 tests passed. The prepared bracket-continuation test passed, as did the affected 1,836-test MD013, MD018, MD022, MD026, and heading filter. `cargo fmt --all -- --check` passed in the scratch checkout.
+
+### Outstanding concerns
+
+The prepared commit is intentionally unpublished and exists only in the named disposable checkout. Publishing a durable branch or pull request requires separate external authority. A later released fix must still pass `ki-authoring` REFRESH before any house rule or flavour configuration changes.
+
+### Post-change review
+
+The local revalidation goal and privacy boundary are met. The sole code change is narrow, independently tested, and isolated outside the estate; the absence of an MD013 patch avoids contradicting upstream's existing flavour contract. The record is ready for consolidated acceptance as a completed local preparation outcome.
+
+### Mini recap
+
+Rumdl `0.2.62` removes the setext uncertainty and confirms the pipe behavior is flavour-specific. One reproducible bracket-continuation amplification remains with a tested unpublished fix. No new durable Knowledge Islands guidance is promoted until upstream publication and release evidence exist.
 
 ## Discussion
 
