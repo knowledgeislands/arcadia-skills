@@ -305,7 +305,7 @@ export const createToolsSession = ({
   const manual: FileState =
     manualKind === 'missing' ? 'missing' : manualKind === 'file' && manualSource !== null ? 'physical' : 'unsafe'
 
-  const configPath = join(root, '.ki-config.toml')
+  const configPath = join(root, '.ki.toml')
   const configEvidence =
     rootState === 'physical'
       ? inspectConfig(configPath, nodeKind(configPath))
@@ -412,7 +412,7 @@ export const createToolsSession = ({
         ...(markerRequested && originalConfig !== null
           ? [
               {
-                path: '.ki-config.toml',
+                path: '.ki.toml',
                 content: `${originalConfig.replace(/\n*$/, '\n')}\n[skills.${TOOLS_TABLE}]\n`
               }
             ]

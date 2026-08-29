@@ -2,7 +2,7 @@
 
 **Precondition:** Run [Mode AUDIT](mode-audit.md) first so the change starts from a known gap list.
 
-_On-demand procedure for `ki-repo-website-content`'s CONFORM mode. The host publishes only bounded `.ki-config.toml` proposals; `ki-repo` centrally composes `.gitignore`, while source scaffolding, builds, deployments, and other external work remain explicit._
+_On-demand procedure for `ki-repo-website-content`'s CONFORM mode. The host publishes only bounded `.ki.toml` proposals; `ki-repo` centrally composes `.gitignore`, while source scaffolding, builds, deployments, and other external work remain explicit._
 
 1. **Apply the safe hosted repair.** Run `ki repo conform --repo <repo> --skill ki-repo-website-content`. `ki-repo` owns adding the keyless `[skills.ki-repo-website-content]` declaration and composes the declared `ki-repo-website` `dist/` block once for the complete repository operation. Malformed or symlinked configuration and unsafe paths remain report-only.
 2. **Repair source and configuration gaps deliberately.** Use [the standard](standards-eleventy-site.md) and [the exemplars](exemplars.md) for Eleventy configuration, the Tailwind token pair, layouts, partials, content model, and script family. The hosted conform transaction does not scaffold or rewrite application code.

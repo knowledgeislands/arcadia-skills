@@ -36,13 +36,13 @@ _Verify:_ no `skills/*/scripts/**/*.ts` relative import resolves outside its own
 
 Each `SKILL.md` MUST declare a `ki-depends-on:` frontmatter list, and the resulting graph MUST be acyclic with every edge resolving to an existing skill, per [ADR-KI-HARNESS-SKILLS-006](../decisions/ADR-KI-HARNESS-SKILLS-006-concern-first-skill-taxonomy-and-implication-graph.md).
 
-A dependency identifies a prerequisite governance capability that selection of a skill also selects. The host MUST execute every dependency before its dependent; the order of names within `ki-depends-on` has no meaning, and the host MUST use a stable order between otherwise independent capabilities. Coverage selection is separate. A target that declares a skill MUST explicitly declare each of its dependencies in `.ki-config.toml`.
+A dependency identifies a prerequisite governance capability that selection of a skill also selects. The host MUST execute every dependency before its dependent; the order of names within `ki-depends-on` has no meaning, and the host MUST use a stable order between otherwise independent capabilities. Coverage selection is separate. A target that declares a skill MUST explicitly declare each of its dependencies in `.ki.toml`.
 
 _Verify:_ `bun run ki:skills:graph:check` passes — it validates that every edge resolves and the graph is acyclic.
 
 ### GOV-006 — Exactly one primary repo structure per repo
 
-A Knowledge Islands repo MUST declare at most one primary-structure table (`[skills.ki-repo-project]` or `[skills.ki-repo-kb]`) in its `.ki-config.toml`; declaring both is a governance error. Other `ki-repo-*` tables are composable repository specialisations, per [ADR-KI-HARNESS-SKILLS-006](../decisions/ADR-KI-HARNESS-SKILLS-006-concern-first-skill-taxonomy-and-implication-graph.md).
+A Knowledge Islands repo MUST declare at most one primary-structure table (`[skills.ki-repo-project]` or `[skills.ki-repo-kb]`) in its `.ki.toml`; declaring both is a governance error. Other `ki-repo-*` tables are composable repository specialisations, per [ADR-KI-HARNESS-SKILLS-006](../decisions/ADR-KI-HARNESS-SKILLS-006-concern-first-skill-taxonomy-and-implication-graph.md).
 
 _Verify:_ `ki-repo`'s rubric emits a FAIL (`repo-structure`) when both primary tables are declared; composable specialisations are excluded from the count.
 

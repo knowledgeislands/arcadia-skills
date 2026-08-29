@@ -52,7 +52,7 @@ const sourceHarnessName = (directory: string): string | undefined => {
 
   let root = source
   while (dirname(root) !== root) {
-    const configuration = join(root, '.ki-config.toml')
+    const configuration = join(root, '.ki.toml')
     if (existsSync(configuration)) {
       const skillPath = relative(root, source)
       if (skillPath !== 'skills' && !skillPath.startsWith(`skills${sep}`)) return undefined

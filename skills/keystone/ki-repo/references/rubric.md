@@ -55,7 +55,7 @@ Required repository files and document quality, using a local checkout when avai
   - _Remediation:_ automatic
 - **FILES-4 [M] — Runtime skill ignore contract** — Generated skill links are ignored for each declared runtime, while a repository-local .agents/skills/ki-self source remains committed. (standards-repository.md)
   - _Remediation:_ automatic
-- **FILES-5 [M] — Configuration conformance header** — The root .ki-config.toml opens with the exact lightweight declaration that identifies it as Knowledge Islands repository configuration and explains that its presence declares conformance. (standards-configuration.md)
+- **FILES-5 [M] — Configuration conformance header** — The root .ki.toml opens with the exact lightweight declaration that identifies it as Knowledge Islands repository configuration and explains that its presence declares conformance. (standards-configuration.md)
   - _Remediation:_ automatic
 - **FILES-6 [M] — Compositional ignore contract** — Root .gitignore contains dependency-stable, marker-bounded blocks owned by declared skills and a terminal unmanaged section. (standards-repository.md)
   - _Remediation:_ automatic
@@ -115,7 +115,7 @@ Issues, Wiki, and Projects settings.
 
 Declared and live repository visibility.
 
-- **VIS-1 [M] — Declared visibility** — Live GitHub visibility matches the valid visibility declared in .ki-config.toml. (standards-repository.md)
+- **VIS-1 [M] — Declared visibility** — Live GitHub visibility matches the valid visibility declared in .ki.toml. (standards-repository.md)
   - _Remediation:_ diagnostic — Align the declared and live repository visibility, then rerun the audit.
 
 ## TOPICS — Topics

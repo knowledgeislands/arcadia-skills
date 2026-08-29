@@ -11,7 +11,7 @@ audit_staged_skills() {
   focus="$(mktemp -d)" || return 1
   trap 'rm -rf "$snapshot" "$focus"' EXIT HUP INT TERM
   git checkout-index --all --prefix="$snapshot/" || return 1
-  cp "$snapshot/.ki-config.toml" "$focus/.ki-config.toml" || return 1
+  cp "$snapshot/.ki.toml" "$focus/.ki.toml" || return 1
   for path in AGENTS.md CLAUDE.md README.md package.json docs; do
     if [ -e "$snapshot/$path" ]; then cp -R "$snapshot/$path" "$focus/$path" || return 1; fi
   done
@@ -30,7 +30,7 @@ audit_staged_skills() {
   if [ -d "$snapshot/.agents/skills/ki-self" ]; then
     mkdir -p "$focus/.agents/skills" || return 1
     cp -R "$snapshot/.agents/skills/ki-self" "$focus/.agents/skills/ki-self" || return 1
-    cp "$snapshot/.ki-config.toml" "$focus/.agents/.ki-config.toml" || return 1
+  cp "$snapshot/.ki.toml" "$focus/.agents/.ki.toml" || return 1
   fi
 
   ki repo audit --repo "$focus" --skill ki-skills || return 1

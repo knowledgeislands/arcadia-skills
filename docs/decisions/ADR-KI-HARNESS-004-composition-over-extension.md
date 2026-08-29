@@ -15,7 +15,7 @@ Knowledge Islands needed a way to let skills relate to each other without coupli
 
 ## Decision
 
-Dependent skills relate through **composition**: selecting a skill necessarily selects and runs each prerequisite governance capability before adding its own delta. The composing skill declares every prerequisite in `ki-depends-on:` and names the relationship in AUDIT. The edges define a prerequisite partial order; their array order has no meaning. A standard that applies independently because repository shape detects it is coverage-detected and audited alongside, not composition. Off-ramps and shared-module packaging are also separate relationships. What a base or repo needs differently from the standard is **declared, not forked** — data in the repo's `.ki-config.toml` table, prose in its `CLAUDE.md` — never a `<base>-*` skill that takes the shared modes. There is no inheritance, cross-skill source import, or base-coupled extension.
+Dependent skills relate through **composition**: selecting a skill necessarily selects and runs each prerequisite governance capability before adding its own delta. The composing skill declares every prerequisite in `ki-depends-on:` and names the relationship in AUDIT. The edges define a prerequisite partial order; their array order has no meaning. A standard that applies independently because repository shape detects it is coverage-detected and audited alongside, not composition. Off-ramps and shared-module packaging are also separate relationships. What a base or repo needs differently from the standard is **declared, not forked** — data in the repo's `.ki.toml` table, prose in its `CLAUDE.md` — never a `<base>-*` skill that takes the shared modes. There is no inheritance, cross-skill source import, or base-coupled extension.
 
 ## Consequences
 
@@ -23,5 +23,5 @@ Dependent skills relate through **composition**: selecting a skill necessarily s
 - A dependent changes only when its prerequisite contract changes, not merely because the prerequisite implementation changes.
 - Composition is explicit and auditable: frontmatter supplies the executable edges and AUDIT explains them.
 - The host chooses a stable order among independent capabilities; authors express any required ordering with another dependency edge, never list position.
-- Per-repo variance is visible in `.ki-config.toml` and `CLAUDE.md`, not hidden in a derived skill's override.
+- Per-repo variance is visible in `.ki.toml` and `CLAUDE.md`, not hidden in a derived skill's override.
 - The skills rubric enforces this rule mechanically.

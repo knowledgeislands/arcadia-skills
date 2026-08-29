@@ -23,12 +23,12 @@ Knowledge Islands repos are **public by default** (installable from source), and
 
 ## Consequences
 
-- The checker does not encode "public ⇒ MIT" — license policy is data in each repo's `.ki-config.toml`, not a constant in `audit-repo.ts`.
+- The checker does not encode "public ⇒ MIT" — license policy is data in each repo's `.ki.toml`, not a constant in `audit-repo.ts`.
 - The **mechanism** is built harness-only in this program; the **actual visibility flips** across the sibling fleet are guide-driven and roll out per repo.
-- The harness itself is now reconciled — it declares `license = "MIT"` in `.ki-config.toml`, ships a matching MIT `LICENSE` file and `package.json`, and is public — so a live `ki:repo:audit` of the harness agrees on all three.
+- The harness itself is now reconciled — it declares `license = "MIT"` in `.ki.toml`, ships a matching MIT `LICENSE` file and `package.json`, and is public — so a live `ki:repo:audit` of the harness agrees on all three.
 - A repo that wants a non-default license states it once in `["knowledgeislands/ki-agentic-harness:ki-repo"]` `license`; the three artifacts are then checked against it uniformly.
 
 ## References
 
 - [ADR-KI-HARNESS-002](ADR-KI-HARNESS-002-the-ki-naming-model-and-harness-as-source-vs-plugin-as-projection.md) — harness-as-source vs plugin-as-projection, which this makes installable.
-- [ADR-KI-HARNESS-005](ADR-KI-HARNESS-005-validate-down-ki-config-toml-contract.md) — the `.ki-config.toml` contract the `license` field extends.
+- [ADR-KI-HARNESS-005](ADR-KI-HARNESS-005-validate-down-ki-toml-contract.md) — the `.ki.toml` contract the `license` field extends.

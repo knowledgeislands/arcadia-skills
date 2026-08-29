@@ -60,7 +60,7 @@ const sourceSkill = (owner: string, options: { declaresHarness?: boolean; refres
   const root = mkdtempSync(join(tmpdir(), 'ki-skills-source-harness-'))
   temporaryDirectories.push(root)
   writeFileSync(
-    join(root, '.ki-config.toml'),
+    join(root, '.ki.toml'),
     [
       '[skills.ki-repo]',
       `repository = "https://github.com/example/${owner}"`,
@@ -190,7 +190,7 @@ describe('compatible Harness refresh ownership', () => {
   test('rejects an unconfigured, malformed, or wrongly named compatible source owner', () => {
     const undeclared = refreshOutcomes(sourceSkill('hnr-agentic-harness', { declaresHarness: false }))
     const malformedDirectory = sourceSkill('hnr-agentic-harness')
-    writeFileSync(join(malformedDirectory, '..', '..', '.ki-config.toml'), '[skills.ki-repo\n')
+    writeFileSync(join(malformedDirectory, '..', '..', '.ki.toml'), '[skills.ki-repo\n')
     const malformed = refreshOutcomes(malformedDirectory)
     const wrongName = refreshOutcomes(sourceSkill('hnr-agentic-harness', { refreshOwner: 'other-agentic-harness' }))
 

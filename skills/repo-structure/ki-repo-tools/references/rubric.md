@@ -45,9 +45,9 @@ Layout, executable, distribution, versioning, and judgment criteria.
   - _Review prompt:_ The tool follows the XDG Base Directory specification for config, state, and cache.
   - _Outcomes:_ conforming; gap; exclusion
   - _Conforming guidance:_ Revise the tool repository through its responsible maintainer, record a named gap, or record an explicit justified exclusion.
-- **TOOL-SCHEMA [J] — Persisted manifest schema** — Each evolving persisted structural format declares and strictly validates its own integer schema, provides migration or clear rejection for incompatible forms, and does not add a ceremonial schema to stable leaf metadata. (standards-tool-repositories.md)
+- **TOOL-SCHEMA [J] — Persisted manifest schema** — Each evolving persisted structural format declares and strictly validates its own integer schema, accepts only implemented forms, and does not add a ceremonial schema to stable leaf metadata. (standards-tool-repositories.md)
   - _Evidence scope:_ The target command-line tool repository and the evidence named by this criterion.
-  - _Review prompt:_ Each evolving persisted structural format declares and strictly validates its own integer schema, provides migration or clear rejection for incompatible forms, and does not add a ceremonial schema to stable leaf metadata.
+  - _Review prompt:_ Each evolving persisted structural format declares and strictly validates its own integer schema, accepts only implemented forms, and does not add a ceremonial schema to stable leaf metadata.
   - _Outcomes:_ conforming; gap; exclusion
   - _Conforming guidance:_ Revise the tool repository through its responsible maintainer, record a named gap, or record an explicit justified exclusion.
 - **TOOL-INSTALL [M] — Installer executable** — `install.sh` is a physical executable file. (standards-tool-repositories.md)

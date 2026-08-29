@@ -1,6 +1,6 @@
 /**
  * Eval scenarios for the `ki-repo` skill — the repo standard and the
- * `.ki-config.toml` contract. Each probes a house-specific rule (the compliance
+ * `.ki.toml` contract. Each probes a house-specific rule (the compliance
  * marker, merge policy, the one-table-per-skill model) a baseline wouldn't know.
  */
 import type { Scenario } from '../harness.ts'
@@ -11,11 +11,11 @@ export const scenarios: Scenario[] = [
     id: 'repo-compliance-marker',
     prompt: 'What single file marks a git repository as Knowledge Islands–compliant, and what is its role?',
     assertions: [
-      { name: 'names .ki-config.toml', re: /\.ki-config\.toml/ },
+      { name: 'names .ki.toml', re: /\.ki\.toml/ },
       { name: 'presence = compliance marker', re: /(presence|marker|compliance|opt(ed|s)? in|declares)/i }
     ],
     rubric:
-      'House rule: a repo is Knowledge Islands–compliant by carrying a `.ki-config.toml` at its root — its PRESENCE is the compliance marker, and it is the shared, skill-sectioned config file. A correct answer names `.ki-config.toml` and explains its presence marks compliance.'
+      'House rule: a repo is Knowledge Islands–compliant by carrying a `.ki.toml` at its root — its PRESENCE is the compliance marker, and it is the shared, skill-sectioned config file. A correct answer names `.ki.toml` and explains its presence marks compliance.'
   },
   {
     skill: 'ki-repo',
@@ -35,7 +35,7 @@ export const scenarios: Scenario[] = [
     skill: 'ki-repo',
     id: 'repo-config-table-model',
     prompt:
-      'Several of our skills need per-repo settings. How is that stored in `.ki-config.toml`, and what may a skill read or validate in that file?',
+      'Several of our skills need per-repo settings. How is that stored in `.ki.toml`, and what may a skill read or validate in that file?',
     assertions: [
       {
         name: 'one table per skill, named for the skill',
@@ -53,7 +53,7 @@ export const scenarios: Scenario[] = [
       skill: 'ki-repo',
       id: 'repo-local-provenance',
       prompt:
-        'The local checkout has an unpushed `.ki-config.toml` change that differs from GitHub. What evidence should a KI repository audit use, and may it silently substitute the remote default branch?',
+        'The local checkout has an unpushed `.ki.toml` change that differs from GitHub. What evidence should a KI repository audit use, and may it silently substitute the remote default branch?',
       assertions: [
         { name: 'uses local checkout first', re: /local|checkout/i },
         { name: 'does not silently substitute remote evidence', re: /not.*substitut|never.*substitut|no.*fallback|do not.*remote/i },

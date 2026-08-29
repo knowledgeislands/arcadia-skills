@@ -18,7 +18,7 @@ All eight tracked upstream sources were re-fetched. GitHub's repository, ruleset
 
 The description selects well for repository-wide setup, audit, configuration, and GitHub settings while routing engineering, roadmap, and specialised structure concerns to their owners. The declared dependencies are truthful: authoring governs the files' presentation and Git governs working safety, while `ki-repo` owns repository semantics.
 
-The skill materially improves house-specific outcomes. Its high-value delta is the `.ki-config.toml` schema and ownership rule, local-versus-live provenance, explicit GitHub confirmation boundary, safe foundation repairs, runtime declarations, and the gated coverage cascade. These are not adequately replaced by generic GitHub or TOML guidance.
+The skill materially improves house-specific outcomes. Its high-value delta is the `.ki.toml` schema and ownership rule, local-versus-live provenance, explicit GitHub confirmation boundary, safe foundation repairs, runtime declarations, and the gated coverage cascade. These are not adequately replaced by generic GitHub or TOML guidance.
 
 ## Instruction economy and architecture
 

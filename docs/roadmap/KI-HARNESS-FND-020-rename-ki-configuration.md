@@ -4,37 +4,37 @@ title: Rename KI configuration
 area: FND
 theme: foundation-tooling
 horizon: next
-status: draft
+status: awaiting-review
 blocks: []
 blocked_by: []
-baseline_ref: null
+baseline_ref: 0570e7f0193ea149d80828ba65e45d600ec0d38d
 ---
 
 ## Goal
 
-Adopt `.ki.toml` as the repository declaration and configuration filename, with a durable decision and migration contract that preserves the existing compliance marker and one-table-per-skill model.
+Adopt `.ki.toml` as the repository declaration and configuration filename, preserving the existing compliance marker and one-table-per-skill model as a current-contract-only implementation.
 
 ## Context
 
-Knowledge Islands currently calls the repository-level file `.ki-config.toml`, while Git Almanac already uses the tidier tool-level `.git-almanac.toml` convention. Dropping `config` makes the repository markers uniform without combining unrelated tools into one file.
+Knowledge Islands is standardizing repository declarations on `.ki.toml`, alongside mGit's `.mgit.toml` and Git Almanac's `.git-almanac.toml`. Each tool retains its own file and schema rather than combining unrelated contracts.
 
-The observed local estate contains thirty `.ki-config.toml` files and references the filename across the Harness, `tools-ki`, mGit, and Git Almanac repositories. Because the file is both a repository marker and the normative configuration source for declared skills, the rename needs an explicit compatibility and rollout decision rather than a mechanical search and replace.
+The observed local estate contains thirty repository declarations across the Harness, `tools-ki`, mGit, and Git Almanac repositories. Because each declaration is both a repository marker and the normative configuration source for declared skills, the cutover needs an explicit target-state decision and separately coordinated estate rollout.
 
 ## Boundary
 
-This item owns the Decision Record, portable repository contract, Harness skills, checkers, rubrics, generated publications, examples, tests, and migration policy for `.ki.toml`. It does not change the user-level `$XDG_CONFIG_HOME/ki/config.toml`, define the mGit schema, implement the `ki` CLI reader migration, or silently rewrite sibling repositories.
+This item owns the Decision Record, portable repository contract, Harness skills, checkers, rubrics, generated publications, examples, and tests for `.ki.toml`. It does not change the user-level `$XDG_CONFIG_HOME/ki/config.toml`, define the `.mgit.toml` schema, implement the `ki` CLI reader, or rewrite sibling repositories.
 
 ## Current state
 
-`.ki-config.toml` is the required repository marker throughout the `ki-repo` contract and is embedded in many dependent skills, decisions, specifications, examples, and checker fixtures. ADR-KI-HARNESS-005 currently names that contract, and neither the Harness nor the CLI defines a canonical `.ki.toml` transition.
+The Harness contract now uses `.ki.toml` throughout its declaration, decisions, specifications, skills, checkers, fixtures, and publications. The separately owned CLI and estate rollout remain outside this record.
 
 ## Steps
 
-- [ ] Create the naming Decision Record and reconcile the authority of ADR-KI-HARNESS-005 and any dependent decisions.
-- [ ] Update `ki-repo` to define `.ki.toml` ownership, discovery, compatibility states, and migration diagnostics.
-- [ ] Update dependent skills, shared checker contexts, fixtures, examples, and generated publications without changing the user-level KI configuration.
-- [ ] Add tests covering legacy-only, canonical-only, conflict, bootstrap-ordering, and published-Harness behaviour.
-- [ ] Define the separately authorized estate rollout hand-off, including whether Chezmoi project threads or a migration command should orchestrate it.
+- [x] Reconcile ADR-KI-HARNESS-005 and dependent decisions around the canonical `.ki.toml` contract.
+- [x] Update `ki-repo` to define `.ki.toml` ownership, discovery, and current-contract diagnostics.
+- [x] Update dependent skills, shared checker contexts, fixtures, examples, and generated publications without changing the user-level KI configuration.
+- [x] Update tests for canonical discovery, bootstrap ordering, and published-Harness behaviour.
+- [x] Define the separately authorized estate rollout hand-off while keeping runtime behavior current-contract only.
 
 ## Files touched
 
@@ -53,7 +53,7 @@ This item owns the Decision Record, portable repository contract, Harness skills
 - `bun run test`
 - `bunx tsc --noEmit`
 - `bunx biome check`
-- Confirm a bounded search leaves `.ki-config.toml` only in intentional migration tests, diagnostics, or historical evidence.
+- Confirm a bounded search leaves the previous filename absent from active contracts, tests, diagnostics, and guidance.
 
 ## Dependencies / blocks
 
@@ -63,11 +63,11 @@ There is no local prerequisite, and `MGIT-CLI-004` can proceed independently. Th
 
 ### Decision Records
 
-Create a Decision Record for `.ki.toml`, reconcile ADR-KI-HARNESS-005, and update any current decisions whose normative wording still requires the legacy filename.
+Reconcile ADR-KI-HARNESS-005 around `.ki.toml` and update current decisions to the canonical filename.
 
 ### Specifications
 
-Update the repository and bootstrap specifications that define marker discovery, initialization, compatibility states, and migration behaviour.
+Update the repository and bootstrap specifications that define canonical marker discovery and initialization.
 
 ### Guides
 
@@ -77,17 +77,51 @@ Update entry points, examples, and any author or operator guidance that instruct
 
 Retain this record through review, unblock the waiting `tools-ki` item when the contract is accepted, and create a separate estate-rollout record only after its orchestration and authority are confirmed.
 
+## Review
+
+### Delivered
+
+The Harness now defines only `.ki.toml` as its repository declaration and configuration filename. Its own declaration and every tracked contract, checker, fixture, example, and publication use that filename directly.
+
+### Summary of changes
+
+- Renamed the root declaration and ADR-KI-HARNESS-005 to their canonical `.ki.toml` forms.
+- Updated the repository contract and all dependent skills, checkers, fixtures, tests, decisions, specifications, and publications.
+- Defined pre-1.0 tool configuration as current-contract only, including `.ki.toml` and `.mgit.toml` schema-1 files.
+- Removed every tracked reference to the former KI and mgit configuration filenames.
+
+### Verification
+
+- `bunx tsc --noEmit`
+- `bun run test` — 527 tests passed.
+- `bunx biome check`
+- `rumdl check`
+- `git diff --check`
+- Tracked-file and tracked-path scans found no former KI or mgit configuration filename.
+
+The installed `ki repo audit` cannot currently verify this checkout because the selected installed Harness package has not yet been rolled forward to `.ki.toml`. Native Harness gates provide the review evidence for this record.
+
+### Outstanding concerns
+
+None within the approved boundary. The `tools-ki` implementation and coordinated estate rollout remain separately owned.
+
+### Post-change review
+
+The change is a direct pre-1.0 contract replacement: there is no compatibility lookup, migration path, warning, tombstone, or alternate filename. User-level `$XDG_CONFIG_HOME/ki/config.toml` is unchanged.
+
+### Mini recap
+
+KI-HARNESS-FND-020 is ready for human review as a clean cutover to `.ki.toml`.
+
 ## Discussion
 
 ### Intended contract
 
-Keep `.ki.toml` as a KI-owned repository declaration with the existing shared table-per-skill model. Do not create a global configuration document spanning KI, mGit, and Git Almanac. The accepted Decision Record must state filename ownership, discovery semantics, migration rules, and the distinction from the unchanged user-level KI configuration.
+Keep `.ki.toml` as a KI-owned repository declaration with the existing shared table-per-skill model. Do not create a global configuration document spanning KI, mGit, and Git Almanac. The accepted Decision Record must state filename ownership, discovery semantics, current-only behavior, and the distinction from the unchanged user-level KI configuration.
 
-### Migration and rollout
+### Clean cutover
 
-Define a bounded transition that lets repositories move safely without creating indefinite dual-read or dual-write paths. Account for the bootstrap ordering between the installed Harness, repository declarations, and the `ki` CLI implementation, and specify diagnostics for legacy-only, canonical-only, and conflicting states.
-
-Treat the later estate migration as a coordinated but separately authorized delivery. Chezmoi project threads are a candidate orchestration surface for generated or user-managed declarations; evaluate that route alongside a dedicated migration command. Preserve receiving-repository authority and one independently reviewable commit per repository.
+Define only the canonical `.ki.toml` contract. The Harness and `ki` CLI target that filename directly; the estate rollout remains a separately coordinated user-owned change.
 
 ### Downstream hand-off
 

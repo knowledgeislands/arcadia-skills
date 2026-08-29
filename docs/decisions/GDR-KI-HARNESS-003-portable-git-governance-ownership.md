@@ -23,7 +23,7 @@ Knowledge Islands adopts `ki-git` as the sole owner of portable Git and commit p
 - The harness continues to publish the hook source under `hooks/`; its test remains beside that executable payload. `ki-git` defines what the guard may do, not how a runtime installs it.
 - `ki-repo-dotfiles-chezmoi` retains runtime-specific Claude Code settings registration. It does not own portable Git policy or install authority for `ki-git`.
 - `ki-repo` retains repository and GitHub configuration, including each repository's branch-protection choice.
-- `ki-git` begins as a guidance and standard surface only. It has no compatible native rubric, `.ki-config.toml` table, user-skill activation, or commit-message enforcement until that execution contract is deliberately designed.
+- `ki-git` begins as a guidance and standard surface only. It has no compatible native rubric, `.ki.toml` table, user-skill activation, or commit-message enforcement until that execution contract is deliberately designed.
 
 ## Consequences
 

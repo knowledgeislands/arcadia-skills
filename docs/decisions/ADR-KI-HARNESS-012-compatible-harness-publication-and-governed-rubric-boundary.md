@@ -34,7 +34,7 @@ The one repository-local exception is an explicitly declared `ki-self` at the ca
 
 ## Consequences
 
-Repositories remain declarative through `.ki-config.toml`, but a clean clone requires the verified compatible harnesses that provide its declared capabilities before mechanical governance can run. CI must establish those harnesses explicitly and fail with recovery guidance when acquisition or integrity verification fails.
+Repositories remain declarative through `.ki.toml`, but a clean clone requires the verified compatible harnesses that provide its declared capabilities before mechanical governance can run. CI must establish those harnesses explicitly and fail with recovery guidance when acquisition or integrity verification fails.
 
 Skills retain ownership of their standards, rubrics, evidence, and declared mechanical repairs, while `tools-ki` owns the generic checker, reporter, mode, ordering, and transaction runtime. The former bootstrap aggregate, generated `.ki/bin` wrappers, repository manifest, and package-script aliases to them are retired without a compatibility path. Existing user and repository ownership protections remain part of activation and migration rather than reasons to retain the executor.
 

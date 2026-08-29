@@ -11,7 +11,7 @@ decision_type: architecture
 
 ## Context
 
-The harness governed "which model to use" through `preferred_model` in the `["knowledgeislands/ki-agentic-harness:ki-tokenomics"]` table of a repo's `.ki-config.toml`, validated mechanically against a closed set `['opus', 'sonnet', 'haiku', 'fable']` in `ki-tokenomics`' `audit.ts`/`conform.ts`, documented across `standards.md` and rubric codes `CFG-4`/`RUN-2`. `ki-subagents`' `FM-2` mirrored the same closed alias list for an individual agent's `model:` frontmatter pin.
+The harness governed "which model to use" through `preferred_model` in the `["knowledgeislands/ki-agentic-harness:ki-tokenomics"]` table of a repo's `.ki.toml`, validated mechanically against a closed set `['opus', 'sonnet', 'haiku', 'fable']` in `ki-tokenomics`' `audit.ts`/`conform.ts`, documented across `standards.md` and rubric codes `CFG-4`/`RUN-2`. `ki-subagents`' `FM-2` mirrored the same closed alias list for an individual agent's `model:` frontmatter pin.
 
 Every one of those aliases is a **Claude Code-specific model family name**. That is backwards for a harness whose own [SDR-KI-HARNESS-002](SDR-KI-HARNESS-002-runtime-portable-contracts-and-executor-positioning.md) commits to runtime-portable contracts (Claude Code today; Hermes, Pi, Codex tomorrow) and whose best-tool-for-the-job tenet treats model independence as _capability_ independence — the cheapest sufficient tier for mechanical work, frontier reasoning only where judgment is load-bearing. A config key that can only ever hold `"opus"` states a vendor's product name, not a purpose.
 
@@ -37,7 +37,7 @@ This operationalises SDR-KI-HARNESS-002: the type is the portable contract the h
 
 ## Consequences
 
-- A repo's `.ki-config.toml` no longer hardcodes a Claude product name. A Codex-hosted environment declares the same types and binds them to GPT-5.6 tiers; a config listing both runtimes' models per type works unchanged in either.
+- A repo's `.ki.toml` no longer hardcodes a Claude product name. A Codex-hosted environment declares the same types and binds them to GPT-5.6 tiers; a config listing both runtimes' models per type works unchanged in either.
 - The checker gains one axis of validation (binding keys) while deliberately declining another (binding values) — consistent with the standard's existing rule that volatile model facts resolve at runtime, never in the checker.
 - Two skills stay in lockstep: `ki-tokenomics` owns the type taxonomy and the config contract; `ki-subagents`' `FM-2` cites it for the rationale behind a `model:` pin. A change to the type set is cross-skill.
 - At adoption, `docs/guides/prompting/` gained `haiku.md` (closing a pre-existing gap — Haiku was named across the skills but had no guide) and `gpt-5-6.md`, becoming the single home for the volatile type→model resolution. That complete public guide area has since moved to the KI Website without changing this ownership boundary.

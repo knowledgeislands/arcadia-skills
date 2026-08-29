@@ -592,8 +592,8 @@ const WEB_41 = mechanical(
     one(
       Boolean(context.kiWebsiteTable),
       '[skills.ki-repo-website-content] table present',
-      'no [skills.ki-repo-website-content] table in .ki-config.toml',
-      '.ki-config.toml'
+      'no [skills.ki-repo-website-content] table in .ki.toml',
+      '.ki.toml'
     )
 )
 
@@ -612,13 +612,13 @@ const WEB_42 = mechanical(
       ? keys.map((key) => ({
           status: 'VIOLATION' as const,
           message: `unknown key under [skills.ki-repo-website-content]: ${key}`,
-          subject: '.ki-config.toml'
+          subject: '.ki.toml'
         }))
       : [
           {
             status: 'PASS',
             message: '[skills.ki-repo-website-content] contains no unknown keys',
-            subject: '.ki-config.toml'
+            subject: '.ki.toml'
           }
         ]
   }

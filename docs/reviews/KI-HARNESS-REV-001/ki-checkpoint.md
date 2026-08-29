@@ -51,5 +51,5 @@ Runtime-adapter and Stop-hook reviews must prove no-write behaviour under uncert
 - `skills/governance/ki-checkpoint/scripts/rubric/contexts/checkpoints.ts`
 - `skills/governance/ki-checkpoint/scripts/rubric/items/index.ts`
 - `skills/keystone/ki-repo/scripts/rubric/contexts/audit.ts`
-- `.ki-config.toml`
+- `.ki.toml`
 - `docs/roadmap/KI-HARNESS-RTP-006-define-stop-checkpoint-hook.md`

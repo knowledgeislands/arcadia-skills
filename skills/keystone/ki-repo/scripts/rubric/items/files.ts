@@ -64,7 +64,7 @@ const FILES_5: RubricItem<FilesRubricContext> = {
   code: 'FILES-5',
   title: 'Configuration conformance header',
   description:
-    'The root .ki-config.toml opens with the exact lightweight declaration that identifies it as Knowledge Islands repository configuration and explains that its presence declares conformance.',
+    'The root .ki.toml opens with the exact lightweight declaration that identifies it as Knowledge Islands repository configuration and explains that its presence declares conformance.',
   sources: [CONFIGURATION_SOURCE],
   mechanical: {
     level: 'FAIL',

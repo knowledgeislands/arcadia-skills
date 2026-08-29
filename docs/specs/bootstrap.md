@@ -18,7 +18,7 @@ Replaced by BOOT-013 and BOOT-015. Repository-local checker copies are not an ex
 
 ### BOOT-003 — Explicit declared skill coverage
 
-A native repository operation MUST select exactly the compatible governance skills declared by `[ki-<skill>]` tables in the target's `.ki-config.toml`, require every explicit dependency to be declared, and fail before execution when a declaration is missing, incompatible, or ambiguous, per [ADR-KI-HARNESS-012](../decisions/ADR-KI-HARNESS-012-compatible-harness-publication-and-governed-rubric-boundary.md).
+A native repository operation MUST select exactly the compatible governance skills declared by `[ki-<skill>]` tables in the target's `.ki.toml`, require every explicit dependency to be declared, and fail before execution when a declaration is missing, incompatible, or ambiguous, per [ADR-KI-HARNESS-012](../decisions/ADR-KI-HARNESS-012-compatible-harness-publication-and-governed-rubric-boundary.md).
 
 _Verify:_ run `ki repo audit` against a fixture with one valid declared catalogue, then remove a required dependency declaration and confirm resolution fails before the catalogue executes.
 
@@ -48,9 +48,9 @@ Replaced by BOOT-011. First-time setup uses the installed CLI and verified harne
 
 ### BOOT-009 — Runtime publication follows repository scope
 
-`ki repo skill add <skill>` and `ki repo skill remove <skill>` MUST update only the selected repository's `.ki-config.toml` declaration and managed discovery links for its supported runtimes, without copying executable governance payloads or changing user activation.
+`ki repo skill add <skill>` and `ki repo skill remove <skill>` MUST update only the selected repository's `.ki.toml` declaration and managed discovery links for its supported runtimes, without copying executable governance payloads or changing user activation.
 
-_Verify:_ add and remove a declared skill in a two-runtime fixture, then inspect `.ki-config.toml` and both runtime discovery locations while confirming the user configuration is unchanged.
+_Verify:_ add and remove a declared skill in a two-runtime fixture, then inspect `.ki.toml` and both runtime discovery locations while confirming the user configuration is unchanged.
 
 ### BOOT-010 — ~~Generated-state CLEAN entrypoint~~ (deprecated)
 
@@ -68,7 +68,7 @@ _Verify:_ run `ki bootstrap` against isolated empty XDG and runtime homes, then 
 
 `ki bootstrap --refresh` MUST redetect supported runtimes and rebuild the recorded installed-harness and managed user-skill inventory from current state without declaring governance in a repository.
 
-_Verify:_ change the detectable runtime set in an isolated bootstrapped environment, run `ki bootstrap --refresh`, and confirm the user inventory and managed links reconcile while a repository `.ki-config.toml` remains unchanged.
+_Verify:_ change the detectable runtime set in an isolated bootstrapped environment, run `ki bootstrap --refresh`, and confirm the user inventory and managed links reconcile while a repository `.ki.toml` remains unchanged.
 
 ## Harness authority and activation scopes
 

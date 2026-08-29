@@ -39,7 +39,7 @@ The records are living, compact, and independent. The order below is a **curated
 10. [ADR-KI-HARNESS-004](ADR-KI-HARNESS-004-composition-over-extension.md) — composition over extension, the principle no skill may break.
 11. [ADR-KI-HARNESS-SKILLS-003](ADR-KI-HARNESS-SKILLS-003-dependency-order-for-multi-skill-composition.md) — the naming grammar, executable dependency order, and review priority.
 12. [ADR-KI-HARNESS-SKILLS-004](ADR-KI-HARNESS-SKILLS-004-skills-must-be-valid-standalone.md) — every skill must be valid standalone.
-13. [ADR-KI-HARNESS-005](ADR-KI-HARNESS-005-validate-down-ki-config-toml-contract.md) — the validate-down `.ki-config.toml` contract, the repo-to-skill binding every skill reads.
+13. [ADR-KI-HARNESS-005](ADR-KI-HARNESS-005-validate-down-ki-toml-contract.md) — the validate-down `.ki.toml` contract, the repo-to-skill binding every skill reads.
 14. [ADR-KI-HARNESS-006](ADR-KI-HARNESS-006-user-installation-repository-bootstrap-and-self-sufficiency.md) — user installation, repository bootstrap, and the self-sufficiency contract.
 15. [GDR-KI-HARNESS-002](GDR-KI-HARNESS-002-public-repos-and-a-declared-license-decoupled-from-visibility.md) — public repos and a declared license, decoupled from visibility.
 16. [ADR-KI-HARNESS-TOOLCHAIN-001](ADR-KI-HARNESS-TOOLCHAIN-001-bun-biome-and-knip-standard-toolchain.md) — the Bun / Biome / knip standard toolchain.

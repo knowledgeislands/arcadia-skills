@@ -22,7 +22,7 @@ export const scenarios: Scenario[] = [
       },
       {
         name: 'does not declare repository governance',
-        re: /(does not|doesn't|never)[^.\n]{0,50}(\.ki-config|repository|repo)/i
+        re: /(does not|doesn't|never)[^.\n]{0,50}(\.ki.toml|repository|repo)/i
       }
     ],
     rubric:
@@ -37,10 +37,10 @@ export const scenarios: Scenario[] = [
       { name: 'installation does not activate', re: /(does not|doesn't|not)[^.\n]{0,40}(activate|active)/i },
       { name: 'user activation command', re: /ki skill add/ },
       { name: 'repository activation command', re: /ki repo skill add/ },
-      { name: 'repository declaration', re: /\.ki-config\.toml/ }
+      { name: 'repository declaration', re: /\.ki\.toml/ }
     ],
     rubric:
-      "House contract: installing a compatible harness only makes its registered capabilities available. `ki skill add <skill>` creates managed user-runtime links and records the selected provider. `ki repo skill add <skill>` updates one repository's `.ki-config.toml` and its managed repository-runtime links. Neither scope implies the other."
+      "House contract: installing a compatible harness only makes its registered capabilities available. `ki skill add <skill>` creates managed user-runtime links and records the selected provider. `ki repo skill add <skill>` updates one repository's `.ki.toml` and its managed repository-runtime links. Neither scope implies the other."
   },
   {
     skill: 'ki-bootstrap',

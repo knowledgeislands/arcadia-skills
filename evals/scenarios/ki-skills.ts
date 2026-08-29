@@ -22,12 +22,12 @@ export const scenarios: Scenario[] = [
       },
       {
         name: 'declares the variation in configuration or standing guidance',
-        re: /(declare|configuration|\.ki-config\.toml|standing guidance|AGENTS\.md|CLAUDE\.md)/i
+        re: /(declare|configuration|\.ki\.toml|standing guidance|AGENTS\.md|CLAUDE\.md)/i
       },
       { name: 'generalises a behaviour that declaration cannot express', re: /generaliz|standard|refresh candidate/i }
     ],
     rubric:
-      'House standard (skill shape): a base variation is declared rather than forked — configuration data belongs in that repository’s `.ki-config.toml` table and standing prose in its AGENTS.md or runtime guidance. Do not copy a standard skill’s universal governance modes into a base-coupled extension. A genuinely base-specific behaviour that cannot be declared is a REFRESH candidate to generalise into the standard. Score the decision and routing, not generic advice about writing skills.'
+      'House standard (skill shape): a base variation is declared rather than forked — configuration data belongs in that repository’s `.ki.toml` table and standing prose in its AGENTS.md or runtime guidance. Do not copy a standard skill’s universal governance modes into a base-coupled extension. A genuinely base-specific behaviour that cannot be declared is a REFRESH candidate to generalise into the standard. Score the decision and routing, not generic advice about writing skills.'
   },
   {
     skill: 'ki-skills',

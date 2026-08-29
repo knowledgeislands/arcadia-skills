@@ -34,7 +34,7 @@ test('the staged skill audit includes unchanged siblings, providers, and the loc
   const setCapture = join(repository, 'set-audit-focus')
   const localCapture = join(repository, 'local-audit-focus')
 
-  write(repository, '.ki-config.toml', '["knowledgeislands/ki-agentic-harness:ki-skills"]\n')
+  write(repository, '.ki.toml', '["knowledgeislands/ki-agentic-harness:ki-skills"]\n')
   write(repository, 'README.md', '# Fixture\n')
   write(
     repository,
@@ -54,7 +54,7 @@ test('the staged skill audit includes unchanged siblings, providers, and the loc
 focus="$4"
 case "$focus" in
   */.agents)
-    test -f "$focus/.ki-config.toml" || exit 21
+    test -f "$focus/.ki.toml" || exit 21
     test -f "$focus/skills/ki-self/SKILL.md" || exit 22
     printf '%s\\n' "$focus" > "$KI_HOOK_LOCAL_CAPTURE"
     ;;

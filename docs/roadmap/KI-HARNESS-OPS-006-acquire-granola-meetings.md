@@ -61,7 +61,7 @@ The accepted capability evidence proves custom historical date windows, folder-s
 Harness-owned expected files:
 
 - `skills/environment/ki-housekeeping-granola/`
-- `.ki-config.toml` only when the new skill is approved and trade routes are ready to declare
+- `.ki.toml` only when the new skill is approved and trade routes are ready to declare
 - this roadmap record and approved outbound records under `-/_TRADES/`
 - ADR-KI-HARNESS-SKILLS-007 only if implementation proves that its adapter-pairing decision genuinely extends beyond AI sessions
 

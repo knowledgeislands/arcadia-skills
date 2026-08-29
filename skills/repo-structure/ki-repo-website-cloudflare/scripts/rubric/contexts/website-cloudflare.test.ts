@@ -27,7 +27,7 @@ const options = (repository: string, mode: 'audit' | 'conform' = 'audit'): Rubri
 
 const writeCanonicalRepository = (repository: string): void => {
   mkdirSync(join(repository, 'site'), { recursive: true })
-  writeFileSync(join(repository, '.ki-config.toml'), '[skills.ki-repo-website-cloudflare]\n')
+  writeFileSync(join(repository, '.ki.toml'), '[skills.ki-repo-website-cloudflare]\n')
   writeFileSync(
     join(repository, 'site', 'wrangler.jsonc'),
     `{
@@ -62,7 +62,7 @@ describe('ki-repo-website-cloudflare session', () => {
     const repository = makeRoot()
     writeCanonicalRepository(repository)
     const before = {
-      config: readFileSync(join(repository, '.ki-config.toml'), 'utf8'),
+      config: readFileSync(join(repository, '.ki.toml'), 'utf8'),
       wrangler: readFileSync(join(repository, 'site', 'wrangler.jsonc'), 'utf8'),
       package: readFileSync(join(repository, 'package.json'), 'utf8'),
       gitignore: readFileSync(join(repository, '.gitignore'), 'utf8')
@@ -74,7 +74,7 @@ describe('ki-repo-website-cloudflare session', () => {
     expect(first).toBe(second)
     expect(outcomes(first).filter((outcome) => outcome.status === 'VIOLATION')).toEqual([])
     expect(session.proposal()).toEqual({ writes: [] })
-    expect(readFileSync(join(repository, '.ki-config.toml'), 'utf8')).toBe(before.config)
+    expect(readFileSync(join(repository, '.ki.toml'), 'utf8')).toBe(before.config)
     expect(readFileSync(join(repository, 'site', 'wrangler.jsonc'), 'utf8')).toBe(before.wrangler)
     expect(readFileSync(join(repository, 'package.json'), 'utf8')).toBe(before.package)
     expect(readFileSync(join(repository, '.gitignore'), 'utf8')).toBe(before.gitignore)
@@ -143,7 +143,7 @@ describe('ki-repo-website-cloudflare session', () => {
     const repository = makeRoot()
     const outside = makeRoot()
     mkdirSync(join(repository, 'site'))
-    writeFileSync(join(repository, '.ki-config.toml'), '[skills.ki-repo-website-cloudflare]\n')
+    writeFileSync(join(repository, '.ki.toml'), '[skills.ki-repo-website-cloudflare]\n')
     const outsideConfig = join(outside, 'wrangler.jsonc')
     const content = '{"assets":{"directory":"dist"}}\n'
     writeFileSync(outsideConfig, content)
@@ -167,7 +167,7 @@ describe('ki-repo-website-cloudflare session', () => {
     ] as const) {
       const repository = makeRoot()
       mkdirSync(join(repository, 'site'), { recursive: true })
-      writeFileSync(join(repository, '.ki-config.toml'), '[skills.ki-repo-website-cloudflare]\n')
+      writeFileSync(join(repository, '.ki.toml'), '[skills.ki-repo-website-cloudflare]\n')
       writeFileSync(join(repository, 'site', 'wrangler.jsonc'), content)
       const context = WCF.selectContext(createWebsiteCloudflareSession(options(repository)).subjects[0].context())
       const code = name === 'assets-plus-main' ? 'WCF-23' : name === 'traversal' ? 'WCF-4' : 'WCF-1'
@@ -187,7 +187,7 @@ describe('ki-repo-website-cloudflare session', () => {
   test('reports the legacy Pages marker with its Workers Static Assets replacement', () => {
     const repository = makeRoot()
     mkdirSync(join(repository, 'site'), { recursive: true })
-    writeFileSync(join(repository, '.ki-config.toml'), '[skills.ki-repo-website-cloudflare]\n')
+    writeFileSync(join(repository, '.ki.toml'), '[skills.ki-repo-website-cloudflare]\n')
     writeFileSync(join(repository, 'site', 'wrangler.jsonc'), '{"pages_build_output_dir":"./dist"}\n')
     const context = WCF.selectContext(createWebsiteCloudflareSession(options(repository)).subjects[0].context())
     const result = WCF.items.find((item) => item.code === 'WCF-2')?.mechanical?.audit.run(context)
@@ -200,10 +200,7 @@ describe('ki-repo-website-cloudflare session', () => {
   test('requires Workers Static Assets SPA fallback for the app implementation', () => {
     const repository = makeRoot()
     mkdirSync(join(repository, 'site'), { recursive: true })
-    writeFileSync(
-      join(repository, '.ki-config.toml'),
-      '[skills.ki-repo-website-app]\n\n[skills.ki-repo-website-cloudflare]\n'
-    )
+    writeFileSync(join(repository, '.ki.toml'), '[skills.ki-repo-website-app]\n\n[skills.ki-repo-website-cloudflare]\n')
     writeFileSync(join(repository, 'site', 'wrangler.jsonc'), '{"assets":{"directory":"./dist"}}\n')
     const context = WCF.selectContext(createWebsiteCloudflareSession(options(repository)).subjects[0].context())
     const result = WCF.items.find((item) => item.code === 'WCF-24')?.mechanical?.audit.run(context)
@@ -215,7 +212,7 @@ describe('ki-repo-website-cloudflare session', () => {
   test('accepts parsed JSONC with comments but rejects a misleading comment-only assets declaration', () => {
     const repository = makeRoot()
     mkdirSync(join(repository, 'site'), { recursive: true })
-    writeFileSync(join(repository, '.ki-config.toml'), '[skills.ki-repo-website-cloudflare]\n')
+    writeFileSync(join(repository, '.ki.toml'), '[skills.ki-repo-website-cloudflare]\n')
     writeFileSync(join(repository, 'site', 'wrangler.jsonc'), '// "assets": {"directory":"dist"}\n{"name":"site"}\n')
     const context = WCF.selectContext(createWebsiteCloudflareSession(options(repository)).subjects[0].context())
     const result = WCF.items.find((item) => item.code === 'WCF-1')?.mechanical?.audit.run(context)

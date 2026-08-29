@@ -94,7 +94,7 @@ The remaining work is intentionally external: `tools-ki` must aggregate resolved
 - `skills/keystone/ki-skills/` shared rubric-catalogue contract and tests
 - `skills/governance/ki-engineering/` standard, rubric, catalogue, and tests
 - Relevant owning-skill rubrics, catalogues, and tests
-- `.ki-config.toml`, `package.json`, CI, and relevant documentation in the harness
+- `.ki.toml`, `package.json`, CI, and relevant documentation in the harness
 - Receiver-owned changes in `tools-ki` and `ki-website`, if their owners accept the resulting proposals
 
 ## Verify

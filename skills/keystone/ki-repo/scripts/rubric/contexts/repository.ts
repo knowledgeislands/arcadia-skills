@@ -377,7 +377,7 @@ const runtimeActivationEvidence = (
             level: 'FAIL',
             code: 'RUNTIMES-2',
             message: `${name} repository activation is ${status}: ${message}`,
-            subject: '.ki-config.toml'
+            subject: '.ki.toml'
           }
         ]
   )
@@ -393,7 +393,7 @@ export const createRepoSession = async (
   const evidence = findingsByCode((await inspect(target, emit)).findings)
   emit?.({ kind: 'stage', edge: 'end', label: 'repository evidence' })
   const mutable = mode === 'conform'
-  const configPath = join(target, '.ki-config.toml')
+  const configPath = join(target, '.ki.toml')
   const configExists = existsSync(configPath)
   const configSource = !configExists ? '' : isSafeRegularFile(configPath) ? readFileSync(configPath, 'utf8') : undefined
   const gitignorePath = join(target, '.gitignore')
@@ -558,7 +558,7 @@ export const createRepoSession = async (
             ? `${KI_CONFIGURATION_HEADER}${appended}`
             : appended
         if (content !== configSource)
-          writes.push({ path: '.ki-config.toml', content, ...(!configExists ? { create: true } : {}) })
+          writes.push({ path: '.ki.toml', content, ...(!configExists ? { create: true } : {}) })
       }
       if (managedGitignoreRequested && gitignoreInspection && gitignoreSource !== undefined) {
         if (gitignoreInspection.content !== gitignoreSource)

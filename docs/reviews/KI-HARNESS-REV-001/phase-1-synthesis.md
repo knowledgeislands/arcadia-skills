@@ -6,7 +6,7 @@ Phase 1 reviewed all six foundation skills against the immutable baseline. Every
 
 The existing order remains valid. No cycle, unknown dependency, or new hard dependency was found.
 
-- `ki-repo` remains the semantic owner of `.ki-config.toml`, including table identity and the one-table-per-skill contract. `ki-authoring` should own TOML presentation rather than duplicate that judgment.
+- `ki-repo` remains the semantic owner of `.ki.toml`, including table identity and the one-table-per-skill contract. `ki-authoring` should own TOML presentation rather than duplicate that judgment.
 - `ki-delegation` remains independent as a governance capability, but its defensible scope is the durable, portable packet delta. Ordinary runtime delegation and process execution guidance should not be restated as its unique value.
 - `ki-engineering` remains the shared toolchain owner, but its decision-record authority and hard-coded version evidence need reconciliation.
 - `ki-skills` remains the review-method owner and requires a final whole-set recheck after later phases expose additional rubric and evaluation patterns.

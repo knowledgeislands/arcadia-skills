@@ -35,36 +35,28 @@ const KI_CONFIG: RubricItem<McpApplicabilityContext> = {
             context.root
           )
         if (context.config === 'missing')
-          return outcome(
-            'VIOLATION',
-            'Shared configuration file is missing; ki-repo owns its creation.',
-            '.ki-config.toml'
-          )
+          return outcome('VIOLATION', 'Shared configuration file is missing; ki-repo owns its creation.', '.ki.toml')
         if (context.config === 'unsafe')
-          return outcome(
-            'VIOLATION',
-            '.ki-config.toml is not a regular file; marker repair remains report-only.',
-            '.ki-config.toml'
-          )
+          return outcome('VIOLATION', '.ki.toml is not a regular file; marker repair remains report-only.', '.ki.toml')
         if (context.config === 'malformed')
           return outcome(
             'VIOLATION',
-            '.ki-config.toml is malformed; repair it before adding [skills.ki-repo-mcp].',
-            '.ki-config.toml'
+            '.ki.toml is malformed; repair it before adding [skills.ki-repo-mcp].',
+            '.ki.toml'
           )
         if (context.config === 'absent')
           return outcome(
             'VIOLATION',
             'No [skills.ki-repo-mcp] table; add it to mark this repository as governed.',
-            '.ki-config.toml'
+            '.ki.toml'
           )
         return context.configKeys.length > 0
           ? outcome(
               'VIOLATION',
               `Unknown keys under [skills.ki-repo-mcp]: ${context.configKeys.join(', ')} (validate-down).`,
-              '.ki-config.toml'
+              '.ki.toml'
             )
-          : outcome('PASS', '[skills.ki-repo-mcp] table is present.', '.ki-config.toml')
+          : outcome('PASS', '[skills.ki-repo-mcp] table is present.', '.ki.toml')
       }
     }
   }
