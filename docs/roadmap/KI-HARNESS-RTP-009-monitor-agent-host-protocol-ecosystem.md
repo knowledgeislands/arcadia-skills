@@ -4,10 +4,10 @@ title: Monitor Agent Host Protocol
 area: RTP
 theme: runtime-portability
 horizon: next
-status: ready
+status: in-progress
 blocks: []
 blocked_by: []
-baseline_ref: null
+baseline_ref: fff435c90e7271a5d10af727f36128c4e810bc05
 ---
 
 ## Goal
