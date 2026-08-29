@@ -5,7 +5,7 @@ ki-depends-on: []
 ki-shared-dependencies: [ki-skills:rubric]
 owns: ['.editorconfig', '.rumdl.toml']
 description: >
-  Defines Knowledge Islands Markdown, TOML, and knowledge-placement conventions. Use to format or audit Markdown or TOML, decide where a durable learning belongs, or refresh house style. Use `ki-skills` for a SKILL.md, `ki-repo` for a configuration contract, and `ki-engineering` for the toolchain.
+  Defines Knowledge Islands Markdown, TOML, README composition, and knowledge-placement conventions. Use to format or audit Markdown or TOML, shape a repository README, decide where a durable learning belongs, or refresh house style. Use `ki-skills` for a SKILL.md, `ki-repo` for repository requirements or a configuration contract, and `ki-engineering` for the toolchain.
 argument-hint: 'audit <path> | conform <path> | educate <target> | help | refresh'
 ---
 
@@ -63,6 +63,7 @@ Each set is a self-contained reference, loaded on demand. Read the one relevant 
 - **[Authoring enforcement](references/standards-authoring.md)** — wholly owned configuration, the Markdown formatter/linter gate, and the safe hosted conform boundary.
 - **[Markdown authoring](references/standards-markdown.md)** — wide tables → footnotes (with the marker series), link style, and what to leave to the linter. The footnote-marker series, in order, is `†` `‡` `§` `¶` `‖` (then doubled: `††` `‡‡` `§§` `¶¶` `‖‖`), reset per table — omitting `*`, which collides with markdown emphasis; where one table needs two footnote categories, a visually distinct second series `※` `❡` `¤` `¥` separates them. (Stated here so it is reachable without opening the reference; the worked example, gotchas, and rationale stay in the reference.)
 - **[TOML formatting](references/standards-toml.md)** — value quoting, short arrays, and comments; `ki-repo` owns key and table semantics.
+- **[README composition](references/standards-readme.md)** — purpose-first entry points, proportional navigation and examples, discoverable user routes, and explicit library-template exclusions.
 - **[Knowledge promotion](references/standards-knowledge-promotion.md)** — runtime-neutral placement, evidence, and reconciliation for durable learnings; it routes knowledge deliberately without mining transcripts or creating guide areas automatically.
 - **[Worked exemplars](references/exemplars.md)** — annotated illustrations of the conventions in practice: the footnote-marker series and table spill, relative-link style, and a well-formed `.ki.toml` table. Reach for these when a rule's application is a judgment call.
 
