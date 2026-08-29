@@ -4,7 +4,7 @@ title: Enable outcome-authorised batches
 area: GOV
 theme: governance-consistency
 horizon: now
-status: in-progress
+status: awaiting-review
 blocks: []
 blocked_by: []
 baseline_ref: 4f62f12dc849cb2f980e82861a68b8141de81e69
@@ -32,12 +32,12 @@ Outcome authority never permits destructive or irreversible work, push or releas
 
 ## Steps
 
-- [ ] Define explicit outcome authority and the evidence that distinguishes it from blanket or inferred permission.
-- [ ] Let the orchestrator select and prepare eligible local records under that authority without a second pre-run approval gate.
-- [ ] Require the created batch contract to record the selected set, boundaries, checks, stops, run evidence, and exact consolidated-acceptance scope.
-- [ ] Permit named consolidated acceptance when outcome authority explicitly asks for autonomous delivery, while retaining records and capturing remedial work separately.
-- [ ] Update fixtures and exemplars for exact-item and outcome-authorized modes, including refusal and partial-progress cases.
-- [ ] Audit the changed skill and run its focused tests plus repository gates.
+- [x] Define explicit outcome authority and the evidence that distinguishes it from blanket or inferred permission.
+- [x] Let the orchestrator select and prepare eligible local records under that authority without a second pre-run approval gate.
+- [x] Require the created batch contract to record the selected set, boundaries, checks, stops, run evidence, and exact consolidated-acceptance scope.
+- [x] Permit named consolidated acceptance when outcome authority explicitly asks for autonomous delivery, while retaining records and capturing remedial work separately.
+- [x] Update fixtures and exemplars for exact-item and outcome-authorized modes, including refusal and partial-progress cases.
+- [x] Audit the changed skill and run its focused tests plus repository gates.
 
 ## Files touched
 
@@ -83,6 +83,32 @@ The skill procedure and exemplars are the user-facing operating guidance. Add no
 ### Roadmap
 
 Retain this record through consolidated acceptance. Any limitation discovered after viable delivery becomes a scoped remedial record rather than blocking the batch contract by default.
+
+## Review
+
+### Delivered
+
+Delivered the approved outcome-authority mode from immutable baseline `4f62f12dc849cb2f980e82861a68b8141de81e69` through implementation commit `7bd8316d938ec4b70aa20130af01a7d6f60918c7`. Exact-item reviewed authority remains compatible; autonomous outcome authority now creates its own evidence-bound contract and may name complete consolidated acceptance.
+
+### Summary of changes
+
+Added `authority_mode`, current `authority_evidence`, `done` completion with exact closure coverage, pure validation in both controlled helpers, refusal fixtures, direct procedure routing, and separate reviewed/outcome exemplars. Split the new detail into house-compliant references so the skill audit remains clean.
+
+### Verification
+
+`bun test skills/change-management/ki-batch/scripts/authorisation.test.ts skills/change-management/ki-batch/scripts/batch-cycle.test.ts` passed 12 tests. `bun run test` passed 530 tests; `bunx tsc --noEmit`, `ki repo audit --skill ki-skills --repo .`, `ki repo audit --skill ki-work-roadmap --repo .`, and `ki repo audit --skill ki-authoring --repo .` passed.
+
+### Outstanding concerns
+
+None within the approved boundary. Outcome authority intentionally remains local-adapter only and cannot push, release, prune, or cross repository boundaries.
+
+### Post-change review
+
+The contract now matches the requested operating model without weakening evidence, lifecycle, verification, or safety boundaries. Backward-compatible reviewed-item records default to `reviewed-items`; outcome mode fails closed without current human evidence and complete closure scope for a `done` target. The change is ready for consolidated acceptance.
+
+### Mini recap
+
+`ki-batch` can now turn “crack on” into an exact, reviewable autonomous run instead of another human checkpoint. The implementation is fully tested and introduces no immediate remedial work.
 
 ## Discussion
 
