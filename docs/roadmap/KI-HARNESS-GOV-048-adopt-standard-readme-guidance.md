@@ -4,7 +4,7 @@ title: Adopt Standard Readme guidance
 area: GOV
 theme: governance-consistency
 horizon: next
-status: draft
+status: ready
 blocks: []
 blocked_by: []
 baseline_ref: null

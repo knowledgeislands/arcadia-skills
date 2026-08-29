@@ -4,7 +4,7 @@ title: Fix WEB-6 level declaration
 area: GOV
 theme: governance-consistency
 horizon: next
-status: draft
+status: ready
 blocks: []
 blocked_by: []
 baseline_ref: null
