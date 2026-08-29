@@ -4,7 +4,7 @@ title: Adopt Standard Readme guidance
 area: GOV
 theme: governance-consistency
 horizon: next
-status: in-progress
+status: awaiting-review
 blocks: []
 blocked_by: []
 baseline_ref: 6507ba871a60358a8196fead4ed19ddccc051022
@@ -30,11 +30,11 @@ This item adds an advisory source category and a judgment-layer `standards-readm
 
 ## Steps
 
-- [ ] Add an Advisory category to the `ki-authoring` source list and record Standard Readme's scope, review date, and non-normative role.
-- [ ] Create `references/standards-readme.md` with the transferable principles, applicability tests, explicit exclusions, and ownership off-ramps.
-- [ ] Route the new convention set from `SKILL.md` and update its description so README authoring is discoverable at skill-selection time.
-- [ ] Reconcile the rubric and exemplars only where a stable KI judgment criterion or worked example materially improves the convention.
-- [ ] Verify the new guidance remains compatible with existing `ki-repo` and repository-kind ownership rather than duplicating their contracts.
+- [x] Add an Advisory category to the `ki-authoring` source list and record Standard Readme's scope, review date, and non-normative role.
+- [x] Create `references/standards-readme.md` with the transferable principles, applicability tests, explicit exclusions, and ownership off-ramps.
+- [x] Route the new convention set from `SKILL.md` and update its description so README authoring is discoverable at skill-selection time.
+- [x] Reconcile the rubric and exemplars only where a stable KI judgment criterion or worked example materially improves the convention.
+- [x] Verify the new guidance remains compatible with existing `ki-repo` and repository-kind ownership rather than duplicating their contracts.
 
 ## Files touched
 
@@ -74,6 +74,32 @@ The new convention set is the canonical guidance. Update another guide only if i
 ### Roadmap
 
 Retain this record through review. No follow-on roadmap item is currently required.
+
+## Review
+
+### Delivered
+
+Delivered scoped README composition guidance from baseline `6507ba871a60358a8196fead4ed19ddccc051022` in implementation commit `74787850482e80e72de091b6498d3dd08c5c5dde`.
+
+### Summary of changes
+
+Added Standard Readme under an explicit Advisory source category, created a purpose-first and proportional `standards-readme.md` convention set, routed README requests from the skill description, and preserved `ki-repo` plus repository-kind ownership. No rubric or exemplar change was justified because the guidance is judgment-layer and the new standard already provides the necessary applicability tests.
+
+### Verification
+
+`ki repo audit --skill ki-authoring --repo .`, `ki repo audit --skill ki-skills --repo .`, and `ki repo audit --skill ki-work-roadmap --repo .` pass. The batch-wide `bun run test` gate passes 531 tests and `bunx tsc --noEmit` passes.
+
+### Outstanding concerns
+
+None. The external source remains advisory and library-specific prescriptions are explicitly excluded from universal KI policy.
+
+### Post-change review
+
+The guidance improves README orientation without creating a competing repository contract or fixed template. It is stable, proportionate, and ready for consolidated acceptance.
+
+### Mini recap
+
+`ki-authoring` now gives README authors a clear local convention while retaining Standard Readme as evidence rather than authority.
 
 ## Discussion
 

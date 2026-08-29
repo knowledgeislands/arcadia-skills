@@ -4,7 +4,7 @@ title: Fix WEB-6 level declaration
 area: GOV
 theme: governance-consistency
 horizon: next
-status: in-progress
+status: awaiting-review
 blocks: []
 blocked_by: []
 baseline_ref: 5f4263aeae7d66064f745273084375ee018bad3f
@@ -31,10 +31,10 @@ Preserve the existing policy: a missing Eleventy configuration remains a failure
 
 ## Steps
 
-- [ ] Add `WARN` as an explicit WEB-6 override level without weakening its default failure level.
-- [ ] Add a physical flat-configuration fixture proving the item emits a declared warning and the aggregate audit continues.
-- [ ] Regenerate or verify the published rubric if the catalogue metadata changes its generated surface.
-- [ ] Re-run the originating flat Eleventy configuration scenario or an equivalent isolated fixture.
+- [x] Add `WARN` as an explicit WEB-6 override level without weakening its default failure level.
+- [x] Add a physical flat-configuration fixture proving the item emits a declared warning and the aggregate audit continues.
+- [x] Regenerate or verify the published rubric if the catalogue metadata changes its generated surface.
+- [x] Re-run the originating flat Eleventy configuration scenario or an equivalent isolated fixture.
 
 ## Files touched
 
@@ -74,6 +74,32 @@ No guide change is expected because this is an audit-host compatibility repair r
 ### Roadmap
 
 Retain this record through review. No follow-on item is currently required.
+
+## Review
+
+### Delivered
+
+Delivered the WEB-6 level declaration repair from baseline `5f4263aeae7d66064f745273084375ee018bad3f` in implementation commit `6507ba871a60358a8196fead4ed19ddccc051022`.
+
+### Summary of changes
+
+Declared `WARN` as WEB-6’s allowed override while retaining `FAIL` as the default, and added a physical root-level Eleventy fixture that proves the emitted warning belongs to the catalogue contract. The generated readable rubric remained byte-stable because the human-facing criterion text was already correct.
+
+### Verification
+
+The focused website-context suite passes six tests, including the new flat configuration path. The batch-wide `bun run test` gate passes 531 tests; `bunx tsc --noEmit`, `ki repo audit --skill ki-skills --repo .`, `ki repo audit --skill ki-work-roadmap --repo .`, and `ki repo audit --skill ki-authoring --repo .` pass.
+
+### Outstanding concerns
+
+None. Missing configuration remains a failure, flat physical configuration remains a warning, and the host’s undeclared-level guard remains strict.
+
+### Post-change review
+
+The repair is narrowly scoped, regression-covered, and preserves existing website policy. It is ready for consolidated acceptance.
+
+### Mini recap
+
+WEB-6 can now report its intended flat-layout warning without aborting the repository-wide audit.
 
 ## Discussion
 
