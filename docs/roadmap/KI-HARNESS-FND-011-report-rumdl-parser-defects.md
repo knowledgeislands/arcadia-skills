@@ -3,8 +3,8 @@ id: KI-HARNESS-FND-011
 title: Report rumdl parser defects
 area: FND
 theme: foundation-tooling
-horizon: waiting-for
-status: draft
+horizon: next
+status: ready
 blocks: []
 blocked_by: []
 baseline_ref: null
@@ -12,7 +12,7 @@ baseline_ref: null
 
 ## Goal
 
-Keep verified rumdl defects ready for an upstream contribution when routine estate use shows that a fix is worth submitting, so disabled rules can be recovered without treating a migration-stage fork as an obligation to open pull requests.
+Revalidate the remaining rumdl defects against the current release, recover any safe rule coverage, and prepare minimal upstream fixes only for failures that still reproduce.
 
 ## Context
 
@@ -37,6 +37,8 @@ Contributions follow the upstream project's conventions and stay minimal. The ai
 Reproductions must carry no content from this estate. Test fixtures use neutral public-domain prose rather than reduced copies of the documents where each defect was found.
 
 ## Current state
+
+Rumdl `0.2.62` was released on 2026-08-27, superseding the release state used for the completed `0.2.54` reproduction pass and satisfying this item's relevant-upstream-release return trigger. The evidence below remains the last completed fixture result, not the current upstream version. Revalidation must compare exact output bytes rather than trust a changelog or a clean exit.
 
 rumdl 0.2.54 resolved the practical MD005 and MD075 cases and added Obsidian-flavour handling for the MD056 wikilink case. Direct reproductions recorded by `ki-authoring` now preserve the MD005 and MD075 fixtures; the standard-flavour house configuration enables MD056 for detection but marks it unfixable so CONFORM cannot truncate a row. Those released outcomes replace the local candidate branches as current evidence.
 
@@ -69,6 +71,8 @@ The current local evidence is rumdl 0.2.54. The upstream project uses convention
 
 ## Steps
 
+- [ ] Re-run every recorded neutral reproduction under rumdl `0.2.62`, using the resolved MD005, MD075, and MD056 cases as regression controls before changing a rule or branch.
+- [ ] Classify the soft-wrapped ATX and setext misparses and the MD013 pipe-reflow gap as fixed, changed, or still reproducible without using estate-derived fixture text.
 - [x] Install the Rust toolchain the project pins and confirm the test suite passes before any change.
 - [x] Re-validate released rumdl 0.2.54 against the exact MD005, MD075, and MD056 cases and record the safe house configuration in `ki-authoring`.
 - [ ] Retire the three superseded local candidate branches after confirming that none carries an independent unreleased fix.
@@ -93,7 +97,25 @@ A fix is only proven by re-running the original reproduction, not by the rule re
 
 ## Dependencies / blocks
 
-This item waits for routine estate use of rumdl to create a reason to resume: a recurrent defect, a relevant upstream release, or sufficient operational evidence that a specific rule should be recovered. It blocks nothing. The estate remains stable with the affected rules disabled, so an upstream contribution is coverage recovery rather than delivery-critical work.
+No local dependency blocks revalidation: rumdl `0.2.62` is released and the neutral reproductions are already recorded. External branch publication and pull requests remain a separate authority boundary and do not prevent a verified local preparation outcome.
+
+## Documentation impact
+
+### Decision Records
+
+No Decision Record is required; this is source revalidation under the existing `ki-authoring` refresh contract.
+
+### Specifications
+
+No behaviour-level specification changes are expected.
+
+### Guides
+
+No guide change is expected. Update the authoring source evidence and owned configuration only where a released fix safely restores coverage.
+
+### Roadmap
+
+Retain this record through review. Any prepared but unpublished upstream contribution must name its exact external action rather than remain implicit.
 
 ## Discussion
 
