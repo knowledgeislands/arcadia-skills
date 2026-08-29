@@ -4,7 +4,7 @@ title: Monitor Agent Host Protocol
 area: RTP
 theme: runtime-portability
 horizon: next
-status: awaiting-review
+status: done
 blocks: []
 blocked_by: []
 baseline_ref: fff435c90e7271a5d10af727f36128c4e810bc05
@@ -110,6 +110,10 @@ The evaluation answers the adoption question proportionately: AHP is credible en
 ### Mini recap
 
 The stable AHP core fits the conceptual need, and AHPX demonstrates useful client-side command-centre behavior. Host diversity and cross-harness proof remain missing, so no prototype or adoption record is warranted yet. The existing independent-server, two-harness, and concrete-local-need triggers remain the durable return route.
+
+## Done
+
+Accepted at `2026-08-29T22:54:03Z` through the closure authority bound to `KI-HARNESS-BATCH-006`. The current six-part review packet, primary-source revision evidence, negative live-proof result, roadmap audit, and authoring audit were rechecked before closure. Continued monitoring remains a trigger-based future activity rather than an open delivery obligation.
 
 ## Discussion
 

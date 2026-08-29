@@ -4,7 +4,7 @@ title: Report rumdl parser defects
 area: FND
 theme: foundation-tooling
 horizon: next
-status: awaiting-review
+status: done
 blocks: []
 blocked_by: []
 baseline_ref: f8434d81229dffda0f602710905fb09dc895b74d
@@ -142,6 +142,10 @@ The local revalidation goal and privacy boundary are met. The sole code change i
 ### Mini recap
 
 Rumdl `0.2.62` removes the setext uncertainty and confirms the pipe behavior is flavour-specific. One reproducible bracket-continuation amplification remains with a tested unpublished fix. No new durable Knowledge Islands guidance is promoted until upstream publication and release evidence exist.
+
+## Done
+
+Accepted at `2026-08-29T22:54:03Z` through the closure authority bound to `KI-HARNESS-BATCH-006`. The current six-part review packet, exact reproduction evidence, scratch-patch verification, roadmap audit, and authoring audit were rechecked before closure. The unpublished external action remains explicitly outside the accepted local outcome.
 
 ## Discussion
 
