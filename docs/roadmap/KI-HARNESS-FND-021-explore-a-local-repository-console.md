@@ -4,7 +4,7 @@ title: Explore local repository console
 area: FND
 theme: foundation-tooling
 horizon: next
-status: awaiting-review
+status: done
 blocks: []
 blocked_by: []
 baseline_ref: 7a17aca903e44ea15a68f91820e028bc7149dbaa
@@ -124,6 +124,10 @@ The result preserves canonical repository state and executable ownership, avoids
 ### Mini recap
 
 The repository console now has a bounded portable shape and a demand-based promotion test, without creating speculative public tooling.
+
+## Done
+
+Accepted through `KI-HARNESS-BATCH-005` under its current outcome authority and exact consolidated-acceptance scope after the review packet and current repository evidence passed.
 
 ## Discussion
 

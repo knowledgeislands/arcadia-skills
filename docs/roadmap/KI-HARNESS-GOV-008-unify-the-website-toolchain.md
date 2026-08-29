@@ -4,7 +4,7 @@ title: Evaluate website toolchain unification
 area: GOV
 theme: governance-consistency
 horizon: next
-status: awaiting-review
+status: done
 blocks: []
 blocked_by: []
 baseline_ref: 7a17aca903e44ea15a68f91820e028bc7149dbaa
@@ -117,6 +117,10 @@ Retaining the split preserves the simpler generator for content, the direct appl
 ### Mini recap
 
 Website capabilities retain Eleventy and Vite by purpose; Astro is reconsidered only against a concrete mixed-capability need.
+
+## Done
+
+Accepted through `KI-HARNESS-BATCH-005` under its current outcome authority and exact consolidated-acceptance scope after the review packet and current repository evidence passed.
 
 ## Discussion
 
