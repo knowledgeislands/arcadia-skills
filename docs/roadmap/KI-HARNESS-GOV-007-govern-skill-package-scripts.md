@@ -4,7 +4,7 @@ title: Govern skill package scripts
 area: GOV
 theme: governance-consistency
 horizon: next
-status: in-progress
+status: awaiting-review
 blocks: []
 blocked_by: []
 baseline_ref: 42f680fa0fc51e15b95c14ca22ec3e674e4d34ad
@@ -82,10 +82,10 @@ Commit `0e11c4a` establishes the Harness-local claim metadata and the three exac
 
 - [x] Add exact `packageScripts` metadata to the shared rubric-catalogue contract, with validation that a skill claims each key at most once and retains the owner-specific rule and judgment alongside its claim.
 - [x] Make the host aggregate static claims from resolved skills and expose one read-only inventory to `ki-engineering`; reject duplicate claims as cross-skill contract errors.
-- [ ] Add a mechanical `ki-engineering` criterion that validates every package script as an engineering claim, one aggregated skill claim, or an exact `script_exclusions` entry; reject stale, duplicate, patterned, and overlapping exclusions.
-- [ ] Replace the hard-coded owner-family map with rubric claims; rename the harness evaluation command to `ki:harness:eval`, rename the builder to `ki:binding:claude:build-plugin`, and remove `ki:eval` and `ki:binding:build-plugin` without aliases.
-- [ ] Add claims and skill-owned semantic checks for each accepted core repository; explicitly decide whether `ki-repo-website-cloudflare` claims `ki:site:upload` with a remote-effect safety boundary or rejects it for receiver-owned removal, and route every other unclaimed non-external key to its owning skill or remove it rather than grandfathering it.
-- [ ] Update CI and documented invocations in the same cut, then add focused fixtures for aggregation, duplicate and absent claims, exact exclusions, misaligned skill-owned commands, and legacy-key removal.
+- [x] Add a mechanical `ki-engineering` criterion that validates every package script as an engineering claim, one aggregated skill claim, or an exact `script_exclusions` entry; reject stale, duplicate, patterned, and overlapping exclusions.
+- [x] Replace the hard-coded owner-family map with rubric claims; rename the harness evaluation command to `ki:harness:eval`, rename the builder to `ki:binding:claude:build-plugin`, and remove `ki:eval` and `ki:binding:build-plugin` without aliases.
+- [x] Add claims and skill-owned semantic checks for each accepted core repository; explicitly decide whether `ki-repo-website-cloudflare` claims `ki:site:upload` with a remote-effect safety boundary or rejects it for receiver-owned removal, and route every other unclaimed non-external key to its owning skill or remove it rather than grandfathering it.
+- [x] Update CI and documented invocations in the same cut, then add focused fixtures for aggregation, duplicate and absent claims, exact exclusions, misaligned skill-owned commands, and legacy-key removal.
 
 ## Files touched
 
@@ -125,6 +125,32 @@ Owner-specific script invocations and CI references will be updated with the dec
 ### Roadmap
 
 Receiver-owned Website script ownership is accepted at `KI-WEB-SITE-003`, and `tools-ki` aggregation is accepted at `KI-TOOL-CLI-057`. This Harness record now owns the remaining consuming-rule implementation and verification.
+
+## Review
+
+### Delivered
+
+Against immutable Harness baseline `42f680fa0fc51e15b95c14ca22ec3e674e4d34ad`, completed the Harness consuming half of the package-script ownership contract delivered by `KI-TOOL-CLI-057`. `ki-engineering` now evaluates the host-supplied exact claim inventory, and no longer infers ownership from prefixes or repository declarations.
+
+### Summary of changes
+
+The shared rubric context carries canonical script-and-skill claims into engineering evidence. Exact exclusions now reject stale, duplicate, patterned, and claimed entries using the canonical skill identity. `ki-repo-tools`, `ki-repo-website`, and `ki-repo-website-cloudflare` publish their retained script identities. Cloudflare criterion `WCF-25` accepts only `cd site && bunx wrangler versions upload`, treats absence as optional, and makes credentialed remote mutation operator-or-Workers-Builds-only while all audit, conform, build, test, and dry-evaluation paths remain manifest-only.
+
+### Verification
+
+Focused engineering, catalogue, and Cloudflare session tests pass, including arbitrary exact claims, unclaimed keys, exclusions, optional upload absence, exact upload acceptance, command mismatch, and non-execution during conform. The complete Harness suite passes with 533 tests and 2,560 expectations; TypeScript passes. Generated Cloudflare rubric publication is current. `ki-engineering` audits pass in Harness, `tools-ki`, and KI Website. Harness `ki-skills`, `ki-authoring`, and `ki-work-roadmap` audits pass.
+
+### Outstanding concerns
+
+This batch deliberately does not migrate further estate repositories. Any future script introduced without one resolved exact claim now fails visibly and should be assigned to its owning skill, explicitly excluded only when genuinely repository-owned external tooling, or removed. The Cloudflare upload remains a credentialed remote operation and was not executed.
+
+### Post-change review
+
+The contract is viable and stable at the intended boundary: catalogues declare ownership, the host validates and aggregates the complete resolved set, and `ki-engineering` consumes that inventory without scanning arbitrary skill files or maintaining a namespace allow-list. The accepted Website command now has both ownership and an explicit execution authority boundary.
+
+### Mini recap
+
+Package-script governance is now exact, duplicate-safe, and owner-driven across the host, Harness, tools, and Website proof repositories. Remaining estate adoption is ordinary follow-on migration rather than unfinished work in this record.
 
 ## Discussion
 

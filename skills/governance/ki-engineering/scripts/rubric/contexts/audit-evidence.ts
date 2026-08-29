@@ -26,7 +26,7 @@ import { execFile } from 'node:child_process'
 import { existsSync, readFileSync, statSync } from 'node:fs'
 import { join } from 'node:path'
 import { promisify } from 'node:util'
-import type { RubricEmitter } from '../../shared/rubric.ts'
+import type { PackageScriptClaim, RubricEmitter } from '../../shared/rubric.ts'
 
 // Unified severity ladder — shared by every KI checker (checker-contract).
 // area is the minted rubric code (references/rubric.md); ref is its
@@ -152,7 +152,7 @@ const configuredEngineeringTables = (configuration: string): readonly Record<str
 export const inspectScriptExclusions = (
   configuration: string,
   scripts: Readonly<Record<string, string>>,
-  declared: ReadonlySet<string>
+  claims: ReadonlyMap<string, PackageScriptClaim>
 ): ScriptExclusionInspection => {
   const tables = configuredEngineeringTables(configuration)
   if (tables.length !== 1) return { exclusions: new Set(), messages: [] }
@@ -178,18 +178,19 @@ export const inspectScriptExclusions = (
     }
     exclusions.add(entry)
     if (!Object.hasOwn(scripts, entry)) messages.push(`stale script exclusion names no existing script: ${entry}`)
-    const owner = scriptOwner(entry)
-    if (owner && declared.has(owner)) messages.push(`script exclusion overlaps declared owner ${owner}: ${entry}`)
+    const claim = claims.get(entry)
+    if (claim) messages.push(`script exclusion overlaps declared owner ${claim.skill}: ${entry}`)
   }
   return { exclusions, messages }
 }
 
 export const inspectGovernedScriptSurface = (
   configuration: string,
-  scripts: Readonly<Record<string, string>>
+  scripts: Readonly<Record<string, string>>,
+  packageScriptClaims: readonly PackageScriptClaim[]
 ): { namingOffenders: readonly string[]; claimProblems: readonly string[] } => {
-  const declared = declaredSkillNames(configuration)
-  const inspected = inspectScriptExclusions(configuration, scripts, declared)
+  const claims = new Map(packageScriptClaims.map((claim) => [claim.script, claim]))
+  const inspected = inspectScriptExclusions(configuration, scripts, claims)
   const retired = Object.keys(scripts).filter(
     (key) =>
       /^ki:lint:/.test(key) ||
@@ -201,10 +202,7 @@ export const inspectGovernedScriptSurface = (
   )
   const bareIdioms = new Set(['build', 'prepare', 'test', 'test:coverage', 'test:watch', 'clean'])
   const unsupported = Object.keys(scripts).filter(
-    (key) =>
-      !bareIdioms.has(key) &&
-      !inspected.exclusions.has(key) &&
-      (!scriptOwner(key) || !declared.has(scriptOwner(key) as string))
+    (key) => !bareIdioms.has(key) && !inspected.exclusions.has(key) && !claims.has(key)
   )
   return {
     namingOffenders: Object.keys(scripts).filter(
@@ -212,34 +210,12 @@ export const inspectGovernedScriptSurface = (
     ),
     claimProblems: [
       ...(retired.length ? [`retired script key(s): ${retired.join(', ')}`] : []),
-      ...(unsupported.length ? [`unsupported or undeclared-owner script key(s): ${unsupported.join(', ')}`] : []),
+      ...(unsupported.length ? [`unsupported or unclaimed script key(s): ${unsupported.join(', ')}`] : []),
       ...inspected.messages,
       ...(!Object.hasOwn(scripts, 'ki:deps:update') ? ['missing required ki:deps:update'] : [])
     ]
   }
 }
-
-const scriptOwner = (key: string): string | undefined => {
-  if (key === 'ki:deps:update') return 'ki-engineering'
-  if (key === 'ki:harness:eval') return 'ki-repo-harness'
-  if (key.startsWith('ki:binding:')) return 'ki-binding-claude'
-  if (['ki:site:deploy', 'ki:site:preview'].includes(key)) return 'ki-repo-website-cloudflare'
-  if (key.startsWith('ki:site:')) return 'ki-repo-website'
-  if (key.startsWith('ki:ingress:')) return 'ki-repo-website-cloudflare'
-  if (key === 'ki:generate:client' || key.startsWith('ki:server:') || key.startsWith('ki:test:')) return 'ki-repo-mcp'
-  if (key.startsWith('ki:tools:')) return 'ki-repo-tools'
-  if (key.startsWith('ki:self:')) return 'ki-self'
-  return undefined
-}
-
-// A declaration is a bare name under `[skills]`; the quoted form survives only for a skill drawn
-// from a harness outside the declared list, so both spellings are read here.
-const declaredSkillNames = (configuration: string): ReadonlySet<string> =>
-  new Set(
-    [...configuration.matchAll(/^\[skills\.(?:"[^"\n]+:(ki-[a-z0-9-]+)"|(ki-[a-z0-9-]+))\]/gm)].map(
-      (match) => (match[1] ?? match[2]) as string
-    )
-  )
 
 /** Inspect the repository once and return the complete engineering evidence set. */
 const run = promisify(execFile)
@@ -256,7 +232,8 @@ export const usesCanonicalCoverageReportsDirectory = (
 
 export const collectAuditEvidence = async (
   repo: string,
-  emit?: RubricEmitter
+  emit?: RubricEmitter,
+  packageScriptClaims: readonly PackageScriptClaim[] = []
 ): Promise<readonly EngineeringEvidenceFinding[]> => {
   const findings: Finding[] = []
   const add = (level: Level, area: string, msg: string, ref?: string, file?: string): void => {
@@ -609,7 +586,7 @@ export const collectAuditEvidence = async (
         'package.json'
       )
   const kiConfiguration = read('.ki.toml')
-  const scriptSurface = inspectGovernedScriptSurface(kiConfiguration, scripts)
+  const scriptSurface = inspectGovernedScriptSurface(kiConfiguration, scripts, packageScriptClaims)
   const scriptProblems = scriptSurface.claimProblems
   scriptProblems.length
     ? add(

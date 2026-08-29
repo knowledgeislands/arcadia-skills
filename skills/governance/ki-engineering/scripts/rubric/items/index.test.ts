@@ -15,6 +15,7 @@ import {
 import catalogue from './index.ts'
 
 const temporaryDirectories: string[] = []
+const engineeringClaim = [{ script: 'ki:deps:update', skill: 'example/harness:ki-engineering' }] as const
 const familyModules = readdirSync(import.meta.dir)
   .filter((file) => file.endsWith('.ts') && file !== 'index.ts' && !file.endsWith('.test.ts'))
   .sort()
@@ -103,7 +104,10 @@ test('exact external script exclusions satisfy the naming and claim boundaries',
     '[skills.ki-engineering]\nscript_exclusions = ["vendor:generate"]\n',
     '[skills."example/harness:ki-engineering"]\nscript_exclusions = ["vendor:generate"]\n'
   ]) {
-    expect(inspectGovernedScriptSurface(configuration, scripts)).toEqual({ namingOffenders: [], claimProblems: [] })
+    expect(inspectGovernedScriptSurface(configuration, scripts, engineeringClaim)).toEqual({
+      namingOffenders: [],
+      claimProblems: []
+    })
   }
 })
 
@@ -118,14 +122,19 @@ script_exclusions = ["", "vendor:*", "missing", "vendor:generate", "vendor:gener
 
 [skills.ki-repo-harness]
 `
-  expect(inspectGovernedScriptSurface(configuration, scripts)).toEqual({
+  expect(
+    inspectGovernedScriptSurface(configuration, scripts, [
+      ...engineeringClaim,
+      { script: 'ki:harness:eval', skill: 'example/harness:ki-repo-harness' }
+    ])
+  ).toEqual({
     namingOffenders: [],
     claimProblems: [
       'script_exclusions entries must be non-empty strings',
       'script exclusion "vendor:*" must be exact, not a pattern',
       'stale script exclusion names no existing script: missing',
       'duplicate script exclusion: vendor:generate',
-      'script exclusion overlaps declared owner ki-repo-harness: ki:harness:eval',
+      'script exclusion overlaps declared owner example/harness:ki-repo-harness: ki:harness:eval',
       'script_exclusions entries must be non-empty strings'
     ]
   })
@@ -133,17 +142,37 @@ script_exclusions = ["", "vendor:*", "missing", "vendor:generate", "vendor:gener
 
 test('script_exclusions must be an array and cannot hide an ordinary unexcluded script', () => {
   expect(
-    inspectGovernedScriptSurface('[skills.ki-engineering]\nscript_exclusions = "vendor:generate"\n', {
-      'ki:deps:update': 'bun update --latest',
-      'vendor:generate': 'vendor generate'
-    })
+    inspectGovernedScriptSurface(
+      '[skills.ki-engineering]\nscript_exclusions = "vendor:generate"\n',
+      {
+        'ki:deps:update': 'bun update --latest',
+        'vendor:generate': 'vendor generate'
+      },
+      engineeringClaim
+    )
   ).toEqual({
     namingOffenders: ['vendor:generate'],
     claimProblems: [
-      'unsupported or undeclared-owner script key(s): vendor:generate',
+      'unsupported or unclaimed script key(s): vendor:generate',
       'script_exclusions must be an array of exact script names'
     ]
   })
+})
+
+test('package script claims authorize exact identities without prefix inference', () => {
+  const scripts = {
+    'ki:deps:update': 'bun update --latest',
+    'ki:custom:run': 'bun run custom'
+  }
+  expect(
+    inspectGovernedScriptSurface('[skills.ki-engineering]\n', scripts, [
+      ...engineeringClaim,
+      { script: 'ki:custom:run', skill: 'example/harness:ki-custom' }
+    ])
+  ).toEqual({ namingOffenders: [], claimProblems: [] })
+  expect(inspectGovernedScriptSurface('[skills.ki-engineering]\n', scripts, engineeringClaim).claimProblems).toContain(
+    'unsupported or unclaimed script key(s): ki:custom:run'
+  )
 })
 
 test('each family module exports one complete family', async () => {
@@ -164,7 +193,7 @@ test('the session keeps stable focused context and coalesces package drafts', as
     '{"name":"example","scripts":{"ki:all":"ki repo audit","ki:engineering:check":"ki repo audit --skill ki-engineering","ki:authoring:fix":"ki repo conform --skill ki-authoring","ki:harness:eval":"bun evals/harness.ts"}}\n'
   )
   const session = await createEngineeringSession(
-    { mode: 'conform', repository, userHome: tmpdir(), configuration: {} },
+    { mode: 'conform', repository, userHome: tmpdir(), configuration: {}, packageScriptClaims: [] },
     () => [
       { level: 'FAIL', code: 'PKG-1', message: 'type missing', subject: 'package.json' },
       { level: 'FAIL', code: 'PKG-2', message: 'package manager missing', subject: 'package.json' }
@@ -199,7 +228,7 @@ test('SCR-2 proposes removal for any whole-repository or focused native governan
     '{"scripts":{"ki:all":"ki repo audit","ki:engineering:check":"ki repo audit --skill ki-engineering","ki:authoring:fix":"ki repo conform --skill ki-authoring","ki:harness:eval":"bun evals/harness.ts"}}\n'
   )
   const session = await createEngineeringSession(
-    { mode: 'conform', repository, userHome: tmpdir(), configuration: {} },
+    { mode: 'conform', repository, userHome: tmpdir(), configuration: {}, packageScriptClaims: [] },
     () => [{ level: 'FAIL', code: 'SCR-2', message: 'native governance wrappers present', subject: 'package.json' }]
   )
   const root = session.subjects[1]?.context() as EngineeringRubricContext
@@ -223,7 +252,7 @@ test('guarded remedies do not expose unsafe command conform actions', async () =
   temporaryDirectories.push(repository)
   writeFileSync(join(repository, 'package.json'), '{}\n')
   const session = await createEngineeringSession(
-    { mode: 'conform', repository, userHome: tmpdir(), configuration: {} },
+    { mode: 'conform', repository, userHome: tmpdir(), configuration: {}, packageScriptClaims: [] },
     () => [
       { level: 'FAIL', code: 'BIO-1', message: 'formatting drift' },
       { level: 'FAIL', code: 'KNIP-2', message: 'unused export' },
@@ -248,7 +277,7 @@ test('conform never replaces a symlinked contributed package file', async () => 
   writeFileSync(source, '{}\n')
   symlinkSync(source, join(repository, 'package.json'))
   const session = await createEngineeringSession(
-    { mode: 'conform', repository, userHome: tmpdir(), configuration: {} },
+    { mode: 'conform', repository, userHome: tmpdir(), configuration: {}, packageScriptClaims: [] },
     () => [{ level: 'FAIL', code: 'PKG-1', message: 'type missing' }]
   )
   const root = session.subjects[1]?.context() as EngineeringRubricContext
@@ -262,7 +291,7 @@ test('knip export coverage is audited without offering a repair', async () => {
   temporaryDirectories.push(repository)
   writeFileSync(join(repository, 'package.json'), '{}\n')
   const session = await createEngineeringSession(
-    { mode: 'conform', repository, userHome: tmpdir(), configuration: {} },
+    { mode: 'conform', repository, userHome: tmpdir(), configuration: {}, packageScriptClaims: [] },
     () => [{ level: 'FAIL', code: 'KNIP-3', message: 'export "./cli" is unreachable', subject: 'knip.json' }]
   )
   const root = session.subjects[1]?.context() as EngineeringRubricContext
@@ -301,7 +330,7 @@ test('a recording emitter changes no outcome and still observes the evidence sta
     ]
   }
 
-  const options = { mode: 'audit', repository, userHome: tmpdir(), configuration: {} } as const
+  const options = { mode: 'audit', repository, userHome: tmpdir(), configuration: {}, packageScriptClaims: [] } as const
   const silent = await createEngineeringSession(options, recording)
   const watched = await createEngineeringSession({ ...options, emit: (event) => void events.push(event) }, recording)
 

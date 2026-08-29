@@ -126,6 +126,7 @@ describe('ki-repo-website-cloudflare session', () => {
     const packagePath = join(repository, 'package.json')
     const packageJson = JSON.parse(readFileSync(packagePath, 'utf8')) as { scripts: Record<string, string> }
     packageJson.scripts['ki:site:deploy'] = `touch ${marker} && bunx wrangler deploy`
+    packageJson.scripts['ki:site:upload'] = `touch ${marker} && bunx wrangler versions upload`
     writeFileSync(packagePath, `${JSON.stringify(packageJson, null, 2)}\n`)
 
     const session = createWebsiteCloudflareSession(options(repository, 'conform'))
@@ -137,6 +138,33 @@ describe('ki-repo-website-cloudflare session', () => {
 
     expect(session.proposal()).toEqual({ writes: [] })
     expect(existsSync(marker)).toBe(false)
+  })
+
+  test('accepts only the exact optional version-upload operation', () => {
+    const repository = makeRoot()
+    writeCanonicalRepository(repository)
+    const item = WCF.items.find((candidate) => candidate.code === 'WCF-25')
+    const audit = (): readonly AuditOutcome[] => {
+      const context = WCF.selectContext(createWebsiteCloudflareSession(options(repository)).subjects[0].context())
+      return item?.mechanical?.audit.run(context) ?? []
+    }
+
+    expect(audit()[0]?.status).toBe('NOT_APPLICABLE')
+
+    const packagePath = join(repository, 'package.json')
+    const packageJson = JSON.parse(readFileSync(packagePath, 'utf8')) as {
+      scripts: Record<string, string>
+    }
+    packageJson.scripts['ki:site:upload'] = 'cd site && bunx wrangler versions upload'
+    writeFileSync(packagePath, `${JSON.stringify(packageJson, null, 2)}\n`)
+    expect(audit()[0]?.status).toBe('PASS')
+
+    packageJson.scripts['ki:site:upload'] = 'cd site && bunx wrangler deploy'
+    writeFileSync(packagePath, `${JSON.stringify(packageJson, null, 2)}\n`)
+    expect(audit()[0]).toMatchObject({
+      status: 'VIOLATION',
+      subject: 'package.json'
+    })
   })
 
   test('does not follow a symlinked Wrangler config', () => {

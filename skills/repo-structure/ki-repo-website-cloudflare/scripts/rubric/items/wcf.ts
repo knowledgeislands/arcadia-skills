@@ -438,6 +438,61 @@ const WCF_14: RubricItem<WebsiteCloudflareContext> = {
   )
 }
 
+const WCF_25: RubricItem<WebsiteCloudflareContext> = {
+  code: 'WCF-25',
+  title: 'version-upload authority',
+  description:
+    'An optional ki:site:upload script creates an undeployed Worker version only through explicit remote-effect authority.',
+  sources: [`${SOURCE}#4-the-script-family`],
+  mechanical: {
+    level: 'FAIL',
+    remediation: DIAGNOSTIC,
+    audit: {
+      phase: 'INSPECT',
+      run: (context) => {
+        const skip = skipped(context)
+        if (skip) return skip
+        if (context.package.state === 'unsafe' || context.package.state === 'malformed')
+          return [
+            {
+              status: 'VIOLATION',
+              message: 'package.json scripts could not be safely inspected.',
+              subject: 'package.json'
+            }
+          ]
+        const upload = context.package.scripts['ki:site:upload']
+        if (!upload)
+          return [
+            {
+              status: 'NOT_APPLICABLE',
+              message: 'No optional ki:site:upload operation is declared.',
+              subject: 'package.json'
+            }
+          ]
+        return upload === 'cd site && bunx wrangler versions upload'
+          ? [
+              {
+                status: 'PASS',
+                message:
+                  'ki:site:upload creates an undeployed Worker version; only an explicitly authorised operator or Workers Builds service may run this credentialed remote mutation.',
+                subject: 'package.json'
+              }
+            ]
+          : [
+              {
+                status: 'VIOLATION',
+                message: 'ki:site:upload must be exactly "cd site && bunx wrangler versions upload".',
+                subject: 'package.json'
+              }
+            ]
+      }
+    }
+  },
+  judgment: judgment(
+    'Confirm audits, conformance, local builds, tests, and dry evaluation inspect ki:site:upload without executing Wrangler; only an explicitly authorised operator or Workers Builds service may supply Cloudflare credentials and create the remote version.'
+  )
+}
+
 const WCF_19: RubricItem<WebsiteCloudflareContext> = {
   code: 'WCF-19',
   title: 'companion Worker boundary',
@@ -609,6 +664,7 @@ export const WCF: RubricFamily<WebsiteCloudflareRubricContext, WebsiteCloudflare
     WCF_10,
     WCF_13,
     WCF_14,
+    WCF_25,
     WCF_19,
     WCF_20,
     WCF_21,

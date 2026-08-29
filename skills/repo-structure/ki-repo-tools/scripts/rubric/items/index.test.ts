@@ -13,6 +13,7 @@ const familyModules = readdirSync(import.meta.dir)
 test('the catalogue preserves every ordered ki-repo-tools criterion', () => {
   expect(catalogue.contract).toBe(1)
   expect(catalogue.name).toBe('ki-repo-tools')
+  expect(catalogue.packageScripts).toEqual(['ki:tools:lint-man'])
   expect(catalogue.createSession).toBeFunction()
   expect(catalogue.families.map((family) => family.code)).toEqual([
     'RUBRIC',

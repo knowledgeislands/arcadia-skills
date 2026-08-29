@@ -111,7 +111,8 @@ export type EngineeringRubricContext = {
 
 export type EngineeringEvidenceInspector = (
   repository: string,
-  emit?: RubricEmitter
+  emit?: RubricEmitter,
+  packageScriptClaims?: RubricContextOptions['packageScriptClaims']
 ) => readonly EngineeringEvidenceFinding[] | Promise<readonly EngineeringEvidenceFinding[]>
 
 export const auditEvidence = (
@@ -297,14 +298,14 @@ const evidenceByCode = (
 }
 
 export const createEngineeringSession = async (
-  { mode, repository, publication, emit }: RubricContextOptions,
+  { mode, repository, publication, emit, packageScriptClaims }: RubricContextOptions,
   inspect: EngineeringEvidenceInspector = collectAuditEvidence
 ): Promise<RubricSession<EngineeringRubricContext>> => {
   const target = resolve(repository)
   const mutable = mode === 'conform'
   emit?.({ kind: 'stage', edge: 'start', label: 'engineering evidence' })
   const evidence = evidenceByCode([
-    ...(await inspect(target, emit)),
+    ...(await inspect(target, emit, packageScriptClaims)),
     ...(await inspectConsistencyReviewEvidence(target))
   ])
   emit?.({ kind: 'stage', edge: 'end', label: 'engineering evidence' })

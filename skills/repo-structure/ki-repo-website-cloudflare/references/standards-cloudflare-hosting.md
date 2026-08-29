@@ -70,6 +70,7 @@ The hosting scripts in `package.json`, namespaced with the `site:` prefix (the h
 
 - **`ki:site:deploy`** → `cd <site root> && bunx wrangler deploy`.
 - **`ki:site:preview`** → `bun run ki:site:build && cd <site root> && bunx wrangler dev` — build, then serve through the real Worker runtime locally.
+- **`ki:site:upload`** → `cd <site root> && bunx wrangler versions upload` — optionally create an undeployed Worker version and preview endpoint for Workers Builds. This is a credentialed remote mutation: only an explicitly authorised operator or Workers Builds service may run it. Audits, conformance, local builds, tests, and dry evaluation inspect the manifest without invoking Wrangler.
 - **`ki:site:clean`** → removes `dist/` and `.wrangler/`.
 
 `ki:site:build` / `ki:site:dev` (the build + dev-server scripts) belong to `ki-repo-website`, not here. `.wrangler/` is gitignored.
