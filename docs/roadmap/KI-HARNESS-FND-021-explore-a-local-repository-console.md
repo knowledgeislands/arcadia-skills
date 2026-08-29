@@ -3,9 +3,8 @@ id: KI-HARNESS-FND-021
 title: Explore local repository console
 area: FND
 theme: foundation-tooling
-horizon: future
-status: draft
-candidate: true
+horizon: next
+status: ready
 blocks: []
 blocked_by: []
 baseline_ref: null
@@ -13,50 +12,70 @@ baseline_ref: null
 
 ## Goal
 
-Shape an opt-in, locally served Knowledge Islands repository console that projects canonical repository state into coherent live views, beginning with a repository-specific Command Centre and roadmap.
+Determine whether an opt-in, locally served Knowledge Islands repository console has a useful portable shape, and name the ownership and evidence required before implementation.
 
 ## Context
 
-Knowledge Islands repositories increasingly expose useful operational state through roadmaps, live artifacts, reports, generated SVGs, trade channels, capability declarations, and CLI output. These remain individually useful but do not yet form one navigable local view of what a repository is, what is happening in it, and which operational surfaces are available.
+Knowledge Islands repositories expose useful operational state through roadmaps, live artifacts, generated reports, trade topology, capability declarations, and CLI output. These surfaces remain individually useful but do not yet form one navigable local view of what a repository is and what is happening in it.
 
-The `kit-legal` Command Centre supplies a concrete repository-specific concept. The Git Almanac demonstrates locally generated repository reporting, while the IBC 2026 portal demonstrates a richer project-local browser surface. The latter's editor is not proposed here; the relevant evidence is the coherent portal experience.
-
-The existing `ki-repo-kb-live-artifacts` capability governs Markdown and rendered HTML pairs inside a Knowledge Base, and `ki-repo-website-app` governs repositories whose primary artifact is an interactive website. This candidate is different: it explores an optional local projection layer that any supported KI repository could adopt without changing its primary repository kind.
+Three existing repositories provide different evidence. `kit-legal` has a canonical, repository-specific Command Centre backed by structured Markdown. Git Almanac produces an offline HTML report pack from structured Git projections. The IBC 2026 portal demonstrates a coherent interactive project dashboard whose source contract remains repository-local. The relevant question is not whether these interfaces can be copied, but whether a small portable console boundary can expose existing canonical state without becoming another source of truth.
 
 ## Boundary
 
-Do not establish a centralized service, require an always-running daemon, or make the console a new source of truth. The first slice is read-only and does not provide a repository editor or mutate roadmap, trade, configuration, or knowledge records.
+Do not establish a central service, require an always-running daemon, select a frontend framework, or implement a console in this item. The first viable slice must be local-only and read-only. It must not edit roadmaps, trades, configuration, or knowledge records.
 
-Do not select React, Vite, Astro, another web stack, static generation, or a local-server architecture before the projection and extension boundaries are understood. Do not decide prematurely whether execution belongs in `ki`, `tools-ki`, a new tool repository, or a reusable package. Harness may own a portable capability contract while another repository owns execution.
+This exploration does not replace `ki-repo-kb-live-artifacts`, make the console a repository kind, or weaken the `ki-repo-website` boundary. Repository-specific panels and vocabulary remain owned by their source capabilities.
 
-## Shaping
+## Current state
 
-### Conceptual surfaces
+- `kit-legal` derives operational views from canonical Command Centre item frontmatter and prohibits hand-maintained duplicate status tables.
+- Git Almanac publishes an offline manifest, JSON datasets, HTML views, and generated assets with explicit repository and Git-ref provenance.
+- IBC 2026 is a static-safe Vite application with repository-specific panels and versioned contract documents.
+- `tools-ki` already resolves repository identity, registered capabilities, roadmap JSON, trade state, and projection health, but it does not expose a local browser shell.
+- The Harness governs portable capability semantics; it does not own the public `ki` executable.
 
-- **Repository console** — the opt-in local browser capability and navigation shell.
-- **Command Centre** — the default landing surface, adapted to the repository's kind, purpose, and vocabulary.
-- **Pinned views** — optional repository capabilities such as roadmap, trade topology, generated trade-channel SVGs, live artifacts, reports, health, and capability discovery.
-- **Canonical projections** — read-only views derived from repository-owned records or existing tools, with provenance and refresh state visible.
+## Steps
 
-The console should reuse generators and structured outputs that already exist rather than duplicate their logic in presentation components. A coherent view may also reveal where a reusable generator, data contract, or capability boundary should be extracted from an existing tool.
+- [ ] Inventory authoritative inputs and existing generators for a Project repository and a Knowledge Base.
+- [ ] Compare `kit-legal`, Git Almanac, IBC 2026, KB Live Artifacts, and current website capability boundaries.
+- [ ] Sketch the minimum common console and repository-specific panel model without choosing a frontend stack.
+- [ ] Identify the portable capability owner, executable owner, opt-in declaration, and one-command local run experience.
+- [ ] Define how projections expose provenance and staleness without becoming another source of truth.
+- [ ] Name a bounded prototype and objective promotion evidence, or record why implementation should wait.
 
-### Decisions still needed
+## Files touched
 
-Decide whether one universal shell with repository-kind modules is preferable to independently composed portals sharing a small projection contract. Define how a repository opts in, discovers available views, starts the console, refreshes derived information, and keeps generated assets out of conflict with canonical authored material.
+- `docs/roadmap/KI-HARNESS-FND-021-explore-a-local-repository-console.md`
 
-Determine the minimum common Command Centre content across repository kinds and which naming and panels must remain repository-specific. Establish accessibility, offline operation, dependency installation, build-cache, and secret-handling expectations before choosing a runtime.
+## Verify
 
-### Promotion conditions
+- Recheck each cited local surface against its canonical repository files.
+- Confirm the conclusion preserves the Harness and `tools-ki` ownership boundary.
+- `ki repo audit --skill ki-work-roadmap --repo .`
+- `ki repo audit --skill ki-authoring --repo .`
 
-Before promotion from Future:
+## Dependencies / blocks
 
-- inventory the authoritative inputs and existing generators for at least a Project repository and a Knowledge Base;
-- compare `kit-legal`, Git Almanac, the IBC 2026 portal, KB Live Artifacts, and current website capability boundaries as concrete evidence;
-- sketch the default Command Centre and at least roadmap and trade-topology views without choosing a frontend stack;
-- identify the portable capability owner, executable owner, opt-in declaration, and one-command local run experience;
-- define how projections expose provenance and staleness without becoming another source of truth; and
-- name one bounded prototype repository and the evidence that would make the console useful rather than a decorative duplicate of CLI output.
+No dependency blocks the exploration. Any implementation follow-up that changes the public `ki` interface must be owned and prioritised in `tools-ki`.
+
+## Documentation impact
+
+### Decision Records
+
+No Decision Record is required for the exploration. A later public console contract may require one in its executable owner.
+
+### Specifications
+
+No behaviour-level specification changes are authorised in this item.
+
+### Guides
+
+No guide changes are expected until an executable prototype exists.
+
+### Roadmap
+
+Retain the evidence and conclusion in this record. Create a receiver-owned implementation record only if the exploration establishes a bounded viable slice.
 
 ## Discussion
 
-The working names are **repository console**, **local portal**, and **Command Centre**. Use **repository console** for the generic capability until evidence shows a better system name; allow the primary surface to use language natural to each repository.
+Use **repository console** as the generic working name. A repository may present its own surface as a Command Centre, dashboard, or report without making that vocabulary portable policy.
