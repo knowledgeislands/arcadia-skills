@@ -4,7 +4,7 @@ area: FND
 title: Declare ledger creation
 theme: foundation-tooling
 horizon: now
-status: in-progress
+status: awaiting-review
 blocks: []
 blocked_by: []
 baseline_ref: 14a4163e38db7be396040e43873a1888b4de7788
@@ -68,6 +68,32 @@ No guide change is needed because the user-facing promise that CONFORM scaffolds
 ### Roadmap
 
 This record reserves and delivers `KI-HARNESS-FND-019`; no follow-on roadmap work is anticipated.
+
+## Review
+
+### Delivered
+
+Delivered explicit issue-ledger creation intent from baseline `14a4163e38db7be396040e43873a1888b4de7788` in implementation commit `91c95e84`, with verification evidence recorded by `6f1c3efd`.
+
+### Summary of changes
+
+The roadmap proposal now emits `create: true` only for a missing canonical issue ledger, and focused coverage proves the exact safe-create proposal without relaxing malformed-ledger or ordinary-write behavior.
+
+### Verification
+
+The focused roadmap tests pass. The current repository-wide `bun run test` gate passes 530 tests, `bunx tsc --noEmit` passes, and the roadmap and authoring audits pass. The previously recorded remediation-inventory drift is no longer present.
+
+### Outstanding concerns
+
+None within this item. The CLI retains containment, target-absence, symlink, and atomic-create enforcement.
+
+### Post-change review
+
+The implementation is narrow, backward-compatible for existing ledgers, and closes the producer/host contract mismatch. It is ready for consolidated acceptance.
+
+### Mini recap
+
+Missing roadmap ledgers can now be created through the same explicit safety contract already enforced by `tools-ki`.
 
 ## Discussion
 
