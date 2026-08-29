@@ -4,10 +4,10 @@ title: Claim MCP package scripts
 area: GOV
 theme: governance-consistency
 horizon: next
-status: ready
+status: in-progress
 blocks: []
 blocked_by: []
-baseline_ref: null
+baseline_ref: 8ff3b56cfe4882fd4696233107816f719456a455
 ---
 
 ## Goal
