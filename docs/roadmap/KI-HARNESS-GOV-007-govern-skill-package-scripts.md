@@ -72,13 +72,13 @@ The core inventory already distinguishes a clear `ki:tools:*` claim in `tools-ki
 
 No rubric-catalogue metadata currently publishes script claims, the host does not aggregate them, and `ki-engineering` has no exact exclusion contract.
 
-The local declaration contract is approved, but the end-to-end plan is not dependency-ready. The user-authorized direct receiver-roadmap route has now captured `KI-TOOL-CLI-057` in `tools-ki` for catalogue discovery and claim aggregation, and `KI-WEB-SITE-003` in KI Website for the `ki:site:upload` ownership decision. The Harness-local contract is already delivered; this parent item now waits on those receiver-owned outcomes before it can consolidate the complete rule and evidence.
+The local declaration contract is approved, but the end-to-end plan is not dependency-ready. The user-authorized direct receiver-roadmap route captured `KI-TOOL-CLI-057` in `tools-ki` for catalogue discovery and claim aggregation. KI Website has now delivered `KI-WEB-SITE-003` at commit `6f7f074`: retain `ki:site:upload` as the intentional Workers Builds preview-upload hook and require explicit credentialed remote-effect authority. The Harness-local contract is already delivered; this parent item now waits only on the `tools-ki` receiver outcome before it can consolidate the complete rule and evidence.
 
 ## Progress
 
 Commit `0e11c4a` establishes the Harness-local claim metadata and the three exact claims: `ki:deps:update`, `ki:harness:eval`, and `ki:binding:claude:build-plugin`. It also removes the two retired local script keys without aliases. Focused tests, TypeScript, Biome, Markdown checks, and command help pass.
 
-The remaining work is intentionally external: `tools-ki` must aggregate resolved claims and enforce duplicate/exclusion rules, and the Website must make its own decision about `ki:site:upload`. The current `tools-ki` checkout cannot load its rubric module, so generated engineering publication and host audit are not being misrepresented as complete.
+The remaining dependency is intentionally external: `tools-ki` must aggregate resolved claims and enforce duplicate/exclusion rules. Website's accepted outcome supplies the exact retained command, purpose, safe manifest-only verification, and prohibition on audit-time Wrangler execution; adding that claim to `ki-repo-website-cloudflare` remains Harness implementation work after host aggregation is available. The current `tools-ki` checkout cannot load its rubric module, so generated engineering publication and host audit are not being misrepresented as complete.
 
 ## Steps
 
@@ -108,7 +108,7 @@ The remaining work is intentionally external: `tools-ki` must aggregate resolved
 
 ## Dependencies / blocks
 
-The static metadata shape, host aggregation boundary, exact exclusions, and clean-cut migration rule are approved. Host aggregation remains an unsatisfied delivery dependency tracked by Ready item `KI-TOOL-CLI-057`; the Website disposition is tracked by Ready item `KI-WEB-SITE-003`. This item remains Waiting For until both receiver-owned outcomes are available for consolidation. An unclaimed key or duplicate claim remains a stop rather than permission to weaken the contract.
+The static metadata shape, host aggregation boundary, exact exclusions, and clean-cut migration rule are approved. Website disposition `KI-WEB-SITE-003` is delivered and accepted. Host aggregation remains the sole unsatisfied delivery dependency, tracked by Ready item `KI-TOOL-CLI-057`; this item remains Waiting For until that receiver-owned outcome is available for consolidation. An unclaimed key or duplicate claim remains a stop rather than permission to weaken the contract.
 
 ## Documentation impact
 
@@ -126,7 +126,7 @@ Owner-specific script invocations and CI references will be updated with the dec
 
 ### Roadmap
 
-Receiver-owned `tools-ki` aggregation and Website script ownership remain separately tracked until their authorities accept them.
+Receiver-owned Website script ownership is accepted at `KI-WEB-SITE-003`; `tools-ki` aggregation remains separately tracked until its authority accepts `KI-TOOL-CLI-057`.
 
 ## Discussion
 
