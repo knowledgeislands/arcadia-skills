@@ -3,8 +3,8 @@ id: KI-HARNESS-GOV-006
 title: Reanchor MCP standard
 area: GOV
 theme: governance-consistency
-horizon: waiting-for
-status: draft
+horizon: next
+status: ready
 blocks: []
 blocked_by: []
 baseline_ref: null
@@ -38,7 +38,9 @@ Update the source list to record that SDK support is available while the deploye
 
 All six sibling repositories declare `@modelcontextprotocol/sdk` 1.x. The TypeScript v2 package family changes imports and stdio serving mechanics, so each repository needs its own bounded migration item once the standard and rollout profile are agreed.
 
-### Decision still needed
+### Selected rollout profile
+
+Use explicit protocol-era applicability while the fleet transitions. Servers remaining on the v1 SDK family continue to deliver the 2025-11-25 profile. A server migrated to the v2 package family must use the supported connection-pinned serving boundary and satisfy the 2026-07-28 `server/discover` and required `resultType` contracts. The standard must make the distinction mechanical without allowing a repository to claim the new profile while retaining the legacy SDK. A modern-only fleet requirement remains a later coordinated migration decision after every sibling has accepted its local item.
 
 Choose the rollout profile and the pilot repository. In particular, decide whether `server/discover` and required `resultType` become universal house requirements only after every sibling migrates, or whether the standard carries explicit protocol-era applicability while the fleet transitions.
 
@@ -53,6 +55,8 @@ The `ki-repo-mcp` source list is already anchored to the released 2026-07-28 spe
 The user-authorized direct receiver-roadmap route has now captured `MCP-GIT-TOOL-005` in `mcp-git-audit` as a Ready bounded v2 pilot. A reciprocal trade route is therefore no longer a capture dependency for this work.
 
 `mcp-git-audit` is the proposed named stdio pilot because its scope is local and its migration can be evaluated before a fleet-wide standard change.
+
+The pilot is accepted at receiver commit `0819f43`: released server/client `2.0.0`, `serveStdio`, modern discovery, complete result envelopes, deliberate legacy fallback, 161 tests at 100% coverage, and clean MCP and engineering audits. This proves the selected dual-era profile can be checked without making unmigrated siblings falsely non-conformant. No external dependency remains.
 
 ## Steps
 
@@ -77,7 +81,25 @@ The user-authorized direct receiver-roadmap route has now captured `MCP-GIT-TOOL
 
 ## Dependencies / blocks
 
-This item remains Waiting For until `MCP-GIT-TOOL-005` supplies pilot evidence and the owner selects the fleet rollout profile. The receiver-roadmap capture itself is complete; no trade route or additional acceptance gate blocks the pilot from starting.
+`MCP-GIT-TOOL-005` supplied accepted pilot evidence and the dual-era rollout profile is selected. No dependency remains. Receiver migrations remain separately prioritised work and do not block this Harness record becoming Ready.
+
+## Documentation impact
+
+### Decision Records
+
+The existing MCP governance decision remains sufficient; the selected rollout profile applies its evidence-backed migration boundary.
+
+### Specifications
+
+The `ki-repo-mcp` standard and rubric will gain explicit protocol-era applicability for the 2025-11-25 and 2026-07-28 profiles.
+
+### Guides
+
+Update operator guidance only where a migrated server's supported stdio package or compatibility boundary is observable.
+
+### Roadmap
+
+Create one receiver-owned migration record for each remaining sibling after the Harness contract is delivered. No receiver implementation belongs in this record.
 
 ## Discussion
 
