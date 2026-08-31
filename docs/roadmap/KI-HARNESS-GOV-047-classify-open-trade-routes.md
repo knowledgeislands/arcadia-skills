@@ -3,75 +3,138 @@ id: KI-HARNESS-GOV-047
 title: Classify open trade routes
 area: GOV
 theme: governance-consistency
-horizon: soon
+horizon: next
 status: draft
 blocks: []
 blocked_by: []
 baseline_ref: null
 ---
 
-# KI-HARNESS-GOV-047: Classify open trade routes
-
 ## Goal
 
-Let reciprocal trade routes classify knowledge subtypes and declare itemized or standing intake, so receiver-approved knowledge can enter receiver-owned roadmap or canonical knowledge directly without a per-item trade record, while preserving provenance and receiver control of priority, implementation, and acceptance.
+Let reciprocal trade routes classify knowledge subtypes and declare itemized or standing intake, so eligible receiver-approved knowledge can enter receiver-owned work or canonical knowledge directly while preserving provenance and receiver control.
 
 ## Context
 
-The current route and record model distinguishes only `work` and `knowledge`. Those top-level kinds correctly carry different lifecycle semantics, but they are too coarse when a repository wants to accept only selected material from another authority. Knowledge could distinguish an operating practice, configuration pattern, research finding, publication candidate, or shared-capability maintenance insight. Work may also need subtypes for classification, but remains separately governed local work.
-
-The current itemized protocol is appropriate when each exchange needs an explicit submission, receipt, and receiver disposition. It is disproportionate when the receiver has already consented to a precise recurring class of knowledge and the receiver-owned roadmap or canonical artifact can preserve the intake evidence directly.
-
-Shared capability consumers make the distinction concrete. Git Almanac, `tools-ki`, or mGit may discover a maintenance insight about a Harness-owned skill. Harness may pre-approve that exact knowledge subtype for standing intake, allowing the insight to be captured directly in an existing or new Harness roadmap item without manufacturing an intermediate trade lifecycle. The Harness record, not the standing route, then governs whether and when any skill update is implemented.
-
-A standalone source repository remains authoritative for its own subject while another repository selectively consumes suitable knowledge. The route expresses standing eligibility for a bounded subtype; it does not create global trust or a general cross-repository work mandate.
+The current route model distinguishes `work` from `knowledge`. Those top-level kinds have different lifecycle semantics but are too coarse when a repository wants to accept only a precise recurring class of knowledge from another authority. The itemized protocol remains appropriate whenever each exchange needs submission, receipt, and receiver disposition. It is disproportionate when both sides have already consented to a narrow recurring knowledge class and the receiver can retain provenance directly.
 
 ## Boundary
 
-Retain `work` and `knowledge` as the top-level lifecycle kinds unless evidence shows their lifecycle distinction is wrong. Introduce standing intake only for knowledge. A work subtype may improve route classification, but a task still enters the receiver's local roadmap through the existing itemized trade and adoption path.
+Retain `work` and `knowledge` as the top-level lifecycle kinds. Introduce standing intake only for knowledge. A route never grants peer write, review, priority, implementation, publication, acceptance, or completion authority. Work always enters through the itemized trade and receiver-local work lifecycle. Agora membership may provide relationship context but grants no routing or publication authority.
 
-Standing intake means the receiver has pre-approved direct capture of an eligible knowledge subtype into a named receiver-owned roadmap record or canonical artifact. It does not mean automatic transfer, peer writes, review, priority, implementation, publication, acceptance, or completion. An approved receiver-local roadmap item may separately authorize the resulting edit; the route alone does not.
+### Shaping
 
-Reciprocal route activation and receiver authority remain mandatory. Any standing grant must be bounded by partner, kind, and subtype; explicit and mechanically unambiguous; compatible with default-deny routes; and safe to revoke without invalidating knowledge or provenance already retained locally.
+#### Selected model
 
-Do not make every repository adopt one universal content taxonomy merely to participate. Agora membership may help identify an intentional repository relationship, but it grants no work-routing or intake authority and must not silently activate a standing route.
+Treat standing intake as an exact, two-sided knowledge subtype grant layered onto an active reciprocal route. The receiver owns the subtype vocabulary and imports it; the sender explicitly exports the same subtype. Preserve the current itemized lifecycle as the default fallback.
 
-## Shaping
+The proposed receiver declaration is:
 
-Treat standing intake as a receiver-declared policy for an exact knowledge subtype layered onto an active reciprocal route. Preserve the current itemized lifecycle as the default and fallback. Qualifying knowledge enters a receiver-owned roadmap record or canonical artifact with compact source and route provenance replacing the `TRD-*` envelope; any resulting work proceeds only through that receiver-local authority.
+```toml
+[skills.ki-trades.subtypes.knowledge]
+shared-capability-maintenance = "Maintenance evidence about receiver-owned shared capabilities."
 
-Shape the portable configuration, provenance, audit, discovery, compatibility, and revocation rules together before implementation. The current trade decision and standard, `ki-next` intake boundary, and Agora's non-routing membership boundary are known contract dependencies. Git Almanac, `tools-ki`, and mGit provide required examples but do not need to change before this contract can be shaped.
+[skills.ki-trades.routes."knowledgeislands/tools-git-almanac"]
+import = ["knowledge"]
 
-Promotion to Next requires decisions on route representation, subtype ownership, replacement provenance, existing-versus-new roadmap capture, and removal safety, plus default-deny examples concrete enough to verify mechanically.
+[skills.ki-trades.routes."knowledgeislands/tools-git-almanac".standing.import]
+knowledge = ["shared-capability-maintenance"]
+```
+
+The sender independently declares the ordinary reciprocal `knowledge` export and matching `standing.export.knowledge` subtype. Standing intake is eligible only when both canonical repositories are registered, the ordinary knowledge route is active, the receiver defines and imports the subtype, the sender exports it, and the receiver-local capture carries valid provenance. Anything absent, malformed, unknown, one-sided, or uncertain remains itemized.
+
+#### Provenance
+
+The proposed first portable form is a visible structured block in the receiver-owned Markdown artifact:
+
+```toml
+schema = "ki-trades/standing-intake/v1"
+id = "STI-1a2b3c4d"
+source = "https://github.com/knowledgeislands/tools-git-almanac"
+source_ref = "<40-hex-commit>:docs/path.md#anchor"
+receiver = "https://github.com/knowledgeislands/ki-agentic-harness"
+kind = "knowledge"
+subtype = "shared-capability-maintenance"
+captured_at = "2026-08-30T12:00:00Z"
+capture = "docs/roadmap/KI-HARNESS-GOV-047-classify-open-trade-routes.md#source-analysis"
+```
+
+Audit validates declared blocks rather than attempting to infer copied prose. New capture must match the currently active standing route. Committed capture is validated against its introduction commit and committed source reference; missing or rewritten historical evidence is reported as unverifiable rather than silently accepted. Revocation disables new direct capture immediately while preserving receiver-owned evidence introduced under the former grant.
+
+#### Capture rules
+
+- Augment an existing roadmap record only when the insight directly supports its existing goal and boundary without expanding approved implementation scope.
+- Create a new local draft when the insight introduces distinct work, a material decision, a dependency, or new scope.
+- Capture directly into canonical knowledge only when the knowledge itself is the outcome; a public contract or implementation change still requires receiver-local work.
+- Keep work on the explicit `TRD-*` disposition and local work lifecycle even when its topic resembles a standing knowledge subtype.
+- Keep Agora membership presentational only. It neither activates nor is required for standing intake.
+- Permit an optional subtype on itemized knowledge as classification only. Refuse work subtypes in the first version.
+
+#### Compatibility
+
+Existing `export` and `import` arrays retain their itemized semantics. Absence of `subtypes` or `standing` means itemized-only. Existing knowledge records without a subtype remain valid. An optional subtype on an itemized knowledge record never upgrades it to standing. Removing either standing declaration stops new direct capture without invalidating receiver-owned evidence captured while the route was active.
+
+#### Promotion conditions
+
+Mark Ready only after the proposed two-sided grant, receiver-owned vocabulary, inline `STI-*` evidence, Agora boundary, and optional itemized knowledge classification receive approval. The implementation contract must remain testable without inventing peer-write, priority, implementation, acceptance, or publication authority.
+
+## Current state
+
+The existing `ki-work`, roadmap, and `ki-trades` contracts are mechanically healthy, and no dependency blocks shaping. The item now has a concrete default-deny representation, provenance form, compatibility model, revocation rule, and capture policy. It belongs in Next, but remains Draft because the five material policy choices in its promotion condition are not yet approved.
+
+## Steps
+
+- [ ] Amend `GDR-KI-HARNESS-005` with the exact-subtype, two-sided standing-authority model.
+- [ ] Extend the `ki-trades` standard with subtype definitions, standing configuration, optional itemized knowledge classification, inline provenance, capture rules, compatibility, and revocation.
+- [ ] Extend the trade rubric context and generated criteria for subtype definitions, reciprocity, provenance, historical revocation, and default-deny failures.
+- [ ] Update `ki-next` guidance for receiver-local standing capture while preserving its selection and implementation authority boundaries.
+- [ ] Model all required private, public, matching, non-matching, work, and revocation examples in fixtures and migration guidance.
+- [ ] Capture actual route activation and `tools-ki` command support as separately owned follow-on work; do not mutate peer repositories from this item.
+
+## Files touched
+
+- `docs/decisions/GDR-KI-HARNESS-005-cross-repository-trade-routes.md`
+- `skills/governance/ki-trades/` standard, context, rubric items, tests, and generated rubric
+- `skills/change-management/ki-next/` standing-intake guidance and tests
+- This work item and migration guidance or fixtures carrying the required examples
+
+## Verify
+
+- Existing configurations with only `export` and `import` remain itemized-only and valid.
+- Unknown, absent, malformed, one-sided, revoked, and cross-kind subtype declarations fail closed to itemized handling.
+- Each `STI-*` block has a unique identity, committed source reference, valid introduction history, matching reciprocal route, and receiver-local capture.
+- Work never enters standing intake, and an itemized knowledge subtype never upgrades itself to standing.
+- Revocation stops new capture without invalidating historical receiver-owned evidence.
+- Agora membership changes discovery presentation only.
+- `ki repo audit --skill ki-trades --repo .`
+- `ki repo audit --skill ki-skills --repo .`
+- `bun run test`
+- `bunx tsc --noEmit`
+
+## Dependencies / blocks
+
+No external dependency blocks readiness. Human approval of the five policy choices remains the planning gate. Actual standing-route activation and peer tooling belong to receiver-owned follow-on work.
+
+## Documentation impact
+
+### Decision Records
+
+Amend `GDR-KI-HARNESS-005` because standing intake changes the approved route authority model.
+
+### Specifications
+
+No separate product specification is required unless `tools-ki` later exposes a user-facing standing-intake command.
+
+### Guides
+
+Add migration examples for itemized fallback, direct knowledge capture, and revocation.
+
+### Roadmap
+
+Route activation and provider tooling remain separate follow-on records owned by their receiving repositories.
 
 ## Discussion
 
-### Questions to resolve
+### Policy approval
 
-- Decide the route representation for kind, subtype, and `itemized` versus `standing` intake without ambiguous precedence or accidental cross-kind permission.
-- Decide whether subtype identifiers use a shared vocabulary, a receiver-qualified vocabulary, or a combination. Prefer receiver-owned meaning for a standing import unless evidence supports a genuinely shared term.
-- Define the receiver-local provenance that replaces a `TRD-*` envelope for standing intake, including source repository, source reference, declared subtype, active reciprocal route, and capture location.
-- Define when eligible knowledge may augment an existing roadmap item, when it needs a new item, and when it belongs directly in another canonical artifact.
-- Establish how route discovery explains why an insight is eligible before capture and how audit distinguishes standing intake from an undeclared cross-repository write.
-- Preserve compatibility for existing `export = ["work", "knowledge"]` and `import = [...]` declarations and existing records with no subtype or intake policy.
-- Define removal and revocation safety: closing a standing route stops new intake but does not erase or invalidate receiver-owned records created while it was active.
-- Decide whether Agora membership is merely presentational context or an optional prerequisite, without changing Agora's independent-authority boundary.
-
-### Required examples
-
-Before promotion to Next, model at least:
-
-- Harness standing import of a receiver-defined shared-capability maintenance subtype from Git Almanac, `tools-ki`, and mGit, with direct provenance-preserving capture into a Harness roadmap item and no per-insight trade record;
-- a non-matching insight from the same repository falling back to the itemized `TRD-*` lifecycle;
-- a work request that still requires explicit trade disposition and a separately governed local roadmap item even when its topic resembles a standing knowledge subtype;
-- a configuration repository exporting selected operating practices to a private principal;
-- the same source offering publication candidates to a public persona or website while withholding unrelated private knowledge;
-- revocation of a standing route while preserving previously captured receiver-local evidence.
-
-### Contract and implementation surfaces
-
-The shaped outcome must identify required changes to `GDR-KI-HARNESS-005`, the `ki-trades` standard, route configuration, itemized record schema, standing-intake provenance contract, `ki-next` intake handling, rubric, fixtures, migration guidance, and capability documentation. Harness owns the portable contract; any `tools-ki` parsing, discovery, or execution change remains separately bounded receiver-owned implementation work rather than being smuggled into this record.
-
-### Promotion conditions
-
-Promote to Next only when subtype ownership, itemized and standing intake semantics, replacement provenance, compatibility, revocation safety, and at least one default-deny representation are concrete enough to test without inventing peer-write, priority, implementation, or acceptance authority.
+Approval should address the five promotion choices together because reciprocity, subtype ownership, provenance, Agora independence, and itemized fallback form one default-deny authority model.

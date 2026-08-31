@@ -12,105 +12,90 @@ baseline_ref: null
 
 ## Goal
 
-Bring the MCP standard up to date with the current specification through a safe, evidence-backed rollout.
+Bring the MCP server standard up to the released 2026-07-28 specification through a safe, evidence-backed rollout.
 
 ## Context
 
-MCP specification revision 2026-07-28 was published on 2026-07-28 and the live specification index now names it as the latest release. The `ki-repo-mcp` standard is anchored to 2025-11-25, so sections 12 and 13 and the annotation semantics in section 4 describe a superseded revision.
+The current `ki-repo-mcp` standard remains anchored to the 2025-11-25 protocol profile even though its source list records the 2026-07-28 release and the TypeScript v2 package family. The modern profile adds required result discriminators and server discovery while moving several transport details into the supported SDK boundary.
 
-Two changes reach into house rules rather than the transport. Every result now carries a required `resultType`, which is the envelope shape the `jsonResult` and `errorResult` helpers produce in each server's `utils/`. A new `server/discover` RPC is a per-server MUST, advertising supported protocol versions, capabilities, and identity. The remainder is absorbed by the SDK: a stateless core with the initialize handshake removed, protocol sessions and `Mcp-Session-Id` removed, Multi Round-Trip Requests replacing server-initiated sampling and elicitation, tasks moved to an official extension, SSE resumability removed, an `extensions` capability field, and cacheable list results.
-
-The external SDK condition is now met. The TypeScript SDK published its v2 package family with 2026-07-28 support on 2026-07-27, including a migration path for v1 consumers. All six sibling `mcp-*` repositories still declare `@modelcontextprotocol/sdk` 1.x, so the decision is now whether and how to move the workspace to the v2 package family before the `ki-repo-mcp` standard makes the new protocol requirements universal.
+Five sibling servers still use `@modelcontextprotocol/sdk` 1.x. The accepted `MCP-GIT-TOOL-005` pilot moved `mcp-git-audit` to the v2 server and client package families, a per-connection `serveStdio` boundary, SDK-owned modern discovery, complete result envelopes, and deliberate legacy fallback. Its implementation commit `1016e15`, merge `ffd9ec8`, and acceptance `0819f43` prove a dual-era rollout without making unmigrated siblings falsely non-conformant.
 
 ## Boundary
 
-This item covers re-anchoring the `ki-repo-mcp` standard and its rubric to the released revision, and updating the source list. It does not implement the resulting conformance changes in the six `mcp-*` servers; those become separate work in each repository once the standard states the target. It does not adopt the specification's remote-transport features for servers that remain local stdio.
+This item reanchors the `ki-repo-mcp` standard, sources, and rubric. It does not implement the resulting migrations in the five remaining v1 sibling servers. Each receiving repository retains priority, implementation, and acceptance authority for its own migration.
 
-## Shaping
+### Shaping
 
-### Intended approach
+#### Selected rollout profile
 
-Compare the v1-to-v2 migration requirements against one representative stdio sibling before changing the portable standard. Decide whether the standard should require dual-era operation, target 2026-07-28 only for new or migrated servers, or retain a 2025-11-25 profile until every sibling accepts a local migration item.
+Derive the applicable profile from the runtime dependency rather than adding a claimable `.ki.toml` switch:
 
-Update the source list to record that SDK support is available while the deployed sibling fleet remains on v1. The standard must describe the selected delivery contract accurately; it must not claim that the SDK is unavailable or make every current sibling fail before it has a migration path.
+- `@modelcontextprotocol/sdk` major 1 selects the legacy 2025-11-25 profile.
+- `@modelcontextprotocol/server` major 2 selects the modern 2026-07-28 profile.
+- Mixed families, unknown majors, and a claimed modern implementation retaining only the legacy SDK are violations.
 
-### Known dependencies
+A modern server uses the supported per-connection server factory and `serveStdio` boundary. Its synchronous `jsonResult` and `errorResult` helpers return `resultType: "complete"`. Discovery, protocol stamping, and conservative cache defaults remain SDK-owned and are proven live by the repository smoke boundary; the rubric must not demand a local `server/discover` literal or handler.
 
-All six sibling repositories declare `@modelcontextprotocol/sdk` 1.x. The TypeScript v2 package family changes imports and stdio serving mechanics, so each repository needs its own bounded migration item once the standard and rollout profile are agreed.
-
-### Selected rollout profile
-
-Use explicit protocol-era applicability while the fleet transitions. Servers remaining on the v1 SDK family continue to deliver the 2025-11-25 profile. A server migrated to the v2 package family must use the supported connection-pinned serving boundary and satisfy the 2026-07-28 `server/discover` and required `resultType` contracts. The standard must make the distinction mechanical without allowing a repository to claim the new profile while retaining the legacy SDK. A modern-only fleet requirement remains a later coordinated migration decision after every sibling has accepted its local item.
-
-Choose the rollout profile and the pilot repository. In particular, decide whether `server/discover` and required `resultType` become universal house requirements only after every sibling migrates, or whether the standard carries explicit protocol-era applicability while the fleet transitions.
-
-### Promotion conditions
-
-Promote when the v2 migration delta has been proven in a named stdio pilot, the standard's protocol-era applicability is exact, each sibling's local follow-up is identified, and the rubric can verify the chosen profile without false failures.
+Legacy servers remain conformant without modern-only checks until their owning repositories accept and deliver migrations. A migrated v2 sibling retains deliberate legacy fallback during the transition, but fallback does not make it part of the legacy profile.
 
 ## Current state
 
-The `ki-repo-mcp` source list is already anchored to the released 2026-07-28 specification and TypeScript SDK v2 availability, while all six sibling servers still declare SDK 1.x and implement the older profile.
-
-The user-authorized direct receiver-roadmap route has now captured `MCP-GIT-TOOL-005` in `mcp-git-audit` as a Ready bounded v2 pilot. A reciprocal trade route is therefore no longer a capture dependency for this work.
-
-`mcp-git-audit` is the proposed named stdio pilot because its scope is local and its migration can be evaluated before a fleet-wide standard change.
-
-The pilot is accepted at receiver commit `0819f43`: released server/client `2.0.0`, `serveStdio`, modern discovery, complete result envelopes, deliberate legacy fallback, 161 tests at 100% coverage, and clean MCP and engineering audits. This proves the selected dual-era profile can be checked without making unmigrated siblings falsely non-conformant. No external dependency remains.
+The pilot comparison and rollout selection are complete. The remaining Harness work is the standard, source, rubric, and fixture implementation plus receiver-owned capture of five separate migration records. No external dependency remains.
 
 ## Steps
 
-- [x] Capture a bounded v2 migration pilot in `mcp-git-audit` with its own local work item and verification boundary (`MCP-GIT-TOOL-005`).
-- [ ] Compare the pilot's SDK-v2 migration delta, result-envelope change, `server/discover` surface, and stdio entry point against its current v1 implementation.
-- [ ] Select and document one rollout profile: retain the older profile until every sibling migrates, or introduce explicit protocol-era applicability that keeps unmigrated servers conformant.
-- [ ] Re-anchor the portable `ki-repo-mcp` standard, sources, and rubric only after the pilot proves the selected profile can be checked without false fleet failures.
-- [ ] Create one receiving migration item per affected sibling; no sibling implementation is included in this harness item.
+- [x] Capture a bounded v2 migration pilot in `mcp-git-audit` as `MCP-GIT-TOOL-005`.
+- [x] Compare the pilot's package, result-envelope, discovery, stdio, smoke, and legacy-fallback delta against the v1 implementation.
+- [x] Select explicit package-derived protocol-era applicability.
+- [ ] Reanchor the portable `ki-repo-mcp` standard and source list.
+- [ ] Add a dedicated protocol-profile rubric family covering valid v1, valid v2, missing modern result discriminators, legacy-only v2 claims, mixed dependency families, and unknown majors.
+- [ ] Republish the generated rubric and prove the profile against the accepted pilot and at least one legacy sibling.
+- [ ] Capture one receiver-owned migration record in each of the five remaining v1 sibling repositories without implementing those migrations here.
 
 ## Files touched
 
-- `skills/repo-structure/ki-repo-mcp/` standard, source, rubric, and catalogue files after pilot evidence
+- `skills/repo-structure/ki-repo-mcp/references/standards-mcp-servers.md`
+- `skills/repo-structure/ki-repo-mcp/references/sources.md`
+- `skills/repo-structure/ki-repo-mcp/scripts/rubric/` context, protocol-profile items, fixtures, and tests
+- `skills/repo-structure/ki-repo-mcp/references/rubric.md`
+- Generated catalogue publications affected by the rubric family
 - This work item
-- Receiving pilot and sibling migration items in their owning repositories
 
 ## Verify
 
-- The accepted pilot's focused SDK-v2, tool-result, discovery, and stdio tests
-- `ki repo audit --skill ki-repo-mcp --repo <pilot>`
-- Harness `ki-repo-mcp` rubric tests and `ki dev skill rubric ki-repo-mcp --write`
-- A fleet audit that demonstrates the selected protocol-era profile does not create false failures.
+- Focused context, protocol-profile item, fixture, and publication tests
+- `ki dev skill rubric ki-repo-mcp --write`
+- `ki repo audit --skill ki-repo-mcp --repo <mcp-git-audit-pilot>`
+- `ki repo audit --skill ki-repo-mcp --repo <legacy-v1-sibling>`
+- Fleet audit across all six sibling servers without false legacy-profile failures
+- `ki repo audit --skill ki-skills --repo .`
+- `bun run test`
+- `bunx tsc --noEmit`
 
 ## Dependencies / blocks
 
-`MCP-GIT-TOOL-005` supplied accepted pilot evidence and the dual-era rollout profile is selected. No dependency remains. Receiver migrations remain separately prioritised work and do not block this Harness record becoming Ready.
+`MCP-GIT-TOOL-005` supplied accepted pilot evidence and settled the dual-era rollout profile. No dependency remains. Receiver migrations remain separately prioritised work and do not block this Harness item.
 
 ## Documentation impact
 
 ### Decision Records
 
-The existing MCP governance decision remains sufficient; the selected rollout profile applies its evidence-backed migration boundary.
+The existing MCP governance decision remains sufficient; the selected profile applies its evidence-backed migration boundary.
 
 ### Specifications
 
-The `ki-repo-mcp` standard and rubric will gain explicit protocol-era applicability for the 2025-11-25 and 2026-07-28 profiles.
+No separate product specification is required.
 
 ### Guides
 
-Update operator guidance only where a migrated server's supported stdio package or compatibility boundary is observable.
+Update migration guidance only where the standard and fixtures leave a practical operator step not already evident.
 
 ### Roadmap
 
-Create one receiver-owned migration record for each remaining sibling after the Harness contract is delivered. No receiver implementation belongs in this record.
+Five receiver-owned migration records follow in the remaining v1 sibling repositories.
 
 ## Discussion
 
-### SDK availability changes the decision
+### Pilot evidence
 
-The earlier waiting condition was correct for the v1 package but is no longer correct for the SDK family. The remaining issue is a deliberate compatibility and rollout decision: adopting the new revision changes the package family and the stdio server entry point, so a standard-only update would make every existing sibling non-conformant without a verified migration route.
-
-### Where the evidence lives
-
-The `ki-repo-mcp` source list records the released protocol and the published v2 SDK evidence. This roadmap item owns the unfinished selection, standard re-anchor, and migration choreography; a source list remains evidence rather than a delivery queue.
-
-### Scope of the eventual repository work
-
-The `resultType` requirement touches a shared helper that each server implements separately, so the change is small per repository but uniform across six. `server/discover` is genuinely new surface. Whether both arrive together, and whether the standard should describe them as required only for servers negotiating the new revision, is the first decision when this unblocks.
+The accepted pilot is the evidence boundary for both the profile selection and the rubric fixtures. Fleet migrations must not be inferred from that acceptance.
