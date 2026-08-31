@@ -12,22 +12,22 @@ The spec is versioned by date. Track the **latest released** version and note th
 
 | Tag       | Source                                 | Governs | Last reviewed |
 | --------- | -------------------------------------- | ------- | ------------- |
-| SPEC      | [MCP spec — versioning / latest][spec] | ※       | 2026-07-29    |
-| CHANGELOG | [2026-07-28 changelog][changelog]      | †       | 2026-07-29    |
-| SDK       | [TypeScript SDK releases][sdk]         | ※       | 2026-07-30    |
-| TOOLS     | [Server → Tools][tools]                | ‡       | 2026-06-21    |
-| SEC       | [Security Best Practices][sec]         | §       | 2026-06-21    |
-| AUTH      | [Authorization][auth]                  | ¶       | 2026-06-21    |
+| SPEC      | [MCP spec — versioning / latest][spec] | ※       | 2026-08-31    |
+| CHANGELOG | [2026-07-28 changelog][changelog]      | †       | 2026-08-31    |
+| SDK       | [TypeScript SDK releases][sdk]         | ※       | 2026-08-31    |
+| TOOLS     | [Server → Tools][tools]                | ‡       | 2026-08-31    |
+| SEC       | [Security Best Practices][sec]         | §       | 2026-08-31    |
+| AUTH      | [Authorization][auth]                  | ¶       | 2026-08-31    |
 
 † What changed since 2025-11-25 (stateless core, `server/discover`, required `resultType`, Multi Round-Trip Requests, tasks moved to an extension, transport-session and SSE-resumability removals).
 
 ‡ Tool shape, `inputSchema`/`outputSchema`, `structuredContent`, annotations, `isError` vs protocol errors, tool-name charset/length, `icons`, `execution.taskSupport`.
 
-§ Confused deputy, token passthrough, SSRF, session hijacking, scope minimization, local-server compromise.
+§ Confused deputy, token passthrough, SSRF, session hijacking, scope minimization, local-server compromise. New (confirmed 2026-08-31): OAuth authorization URL validation (javascript:/shell-injection risks for clients); stdio transport proxy security (XSS + proxy escalation). Both are client-focused; §6 server invariants unchanged.
 
-¶ OAuth 2.1 framework, token audience, PKCE, dynamic client registration — relevant to the gmail / m365 auth-servers.
+¶ OAuth 2.1 framework, token audience, PKCE, dynamic client registration, Client ID Metadata Documents — relevant to the gmail / m365 auth-servers. DCR now retained for backwards compatibility only; Client ID Metadata Documents (`draft-ietf-oauth-client-id-metadata-document-00`) is the preferred mechanism.
 
-※ Which dated revision is current and whether a released SDK supports it. The six sibling repositories remain on the 1.x package and therefore still deliver 2025-11-25 while their v2 migration is planned.
+※ Which dated revision is current and whether a released SDK supports it. SDK v2 now ships three packages: `@modelcontextprotocol/client@2.0.0`, `@modelcontextprotocol/server@2.0.0`, `@modelcontextprotocol/core@2.0.0`; `sdk@1.30.0` is the v1 maintenance release. The six sibling repositories remain on the 1.x package and therefore still deliver 2025-11-25 while their v2 migration is planned.
 
 ## Community
 
@@ -57,24 +57,22 @@ The standard is defined as the **majority shape** across the six sibling repos u
 
 ## Last review
 
-REFRESH last ran **2026-07-29**. SDK availability was rechecked on **2026-07-30**. Latest released spec revision: **2026-07-28** (published 2026-07-28, confirmed live). The TypeScript SDK's released v2 package family supports that revision; the six sibling repositories remain on the 1.x package and therefore still deliver 2025-11-25 pending a governed migration decision.
+REFRESH last ran **2026-08-31**. Latest released spec revision: **2026-07-28** (confirmed still current; no new revision). SDK v2 packages are now split: `@modelcontextprotocol/client@2.0.0`, `@modelcontextprotocol/server@2.0.0`, `@modelcontextprotocol/core@2.0.0`; `@modelcontextprotocol/sdk@1.30.0` is the v1 maintenance release (Zod 3.25 compatibility, SSE keep-alive). The six sibling repositories remain on the 1.x package and therefore still deliver 2025-11-25 pending the governed migration decision.
 
-**The staged re-anchor fired.** The live spec index (SPEC) now names **2026-07-28** as `(latest)`, so the watch-item carried since 2026-07-04 is resolved and retired. The RC shipped on its target date.
+**TOOLS re-fetched.** Tool shape stable: `inputSchema`, `outputSchema`, `structuredContent`, annotations, `isError`, tool-name charset/length (1–128 chars, A-Z/a-z/0-9/_/-/.), `icons`, `execution.taskSupport` all match the current standard. No new fields.
 
-**Confirmed changed** — the 2026-07-28 changelog (CHANGELOG) lands the staged set and more: MCP becomes stateless (the `initialize` / `notifications/initialized` handshake removed, SEP-2575); protocol sessions and `Mcp-Session-Id` removed from Streamable HTTP (SEP-2567); a new `server/discover` RPC that servers **MUST** implement to advertise protocol versions, capabilities, and identity; **every result now carries a required `resultType`** (`"complete"`, or `"input_required"` for Multi Round-Trip interim results, SEP-2322), which replaces server-initiated `roots/list` / `sampling/createMessage` / `elicitation/create`; `ping`, `logging/setLevel`, and `notifications/roots/list_changed` removed; Tasks moved out of core into an official extension (SEP-2663); SSE resumability and message redelivery removed; an `extensions` field on client and server capabilities; and cacheable list/read results.
+**SEC re-fetched.** Two new sections confirmed: "OAuth Authorization URL Validation" (javascript:/shell-injection risks when clients open auth URLs) and "stdio Transport Security in Proxy Scenarios" (XSS + proxy escalation path). Both are client-focused concerns; the §6 server-side security invariants (token passthrough, SSRF, session hijacking, scope minimization, local-server compromise) are unchanged.
 
-**Why the standard does not re-anchor §12–13 to it yet** — the TypeScript SDK now ships v2 packages with 2026-07-28 support, including explicit migration guidance from `@modelcontextprotocol/sdk` v1.x. The six sibling repositories still declare `@modelcontextprotocol/sdk` 1.x and serve stdio through the legacy entry point. The new standard is therefore available but not yet selected: re-anchoring before a pilot proves the v2 migration would make the existing fleet fail without a delivery path. The active GOV-006 item owns that rollout decision; the source list records the evidence, not a false upstream block.
+**AUTH re-fetched.** Client ID Metadata Documents (`draft-ietf-oauth-client-id-metadata-document-00`) is now the preferred registration mechanism; DCR (RFC7591) is retained for backwards compatibility only. RFC 9207 `iss` parameter validation and DCR `application_type` are formally documented. Confirms the active watch-item for the auth repos.
 
-TOOLS/SEC/AUTH and the Community/In-house rows were not re-fetched this pass (fixed dated artifacts, verbatim-confirmed 2026-06-21); their `last reviewed` cells are unchanged. SPEC and CHANGELOG remain current from 2026-07-29; the SDK release surface was verified on 2026-07-30.
+Community and In-house rows not re-fetched this pass (fixed dated artifacts; private repos unavailable); their `last reviewed` cells are unchanged.
 
 **Open watch-items:**
 
-- **Re-anchor §12–13 + §4 to 2026-07-28 through a v2 migration pilot.** SDK support is available; select the rollout profile before making the new protocol requirements universal. The required `resultType` touches each repo's shared `jsonResult` / `errorResult` envelope helpers, and `server/discover` changes the stdio entry point. For the auth repos, assess RFC 9207 `iss` + DCR `application_type` under the selected profile.
+- **Re-anchor §12–13 + §4 to 2026-07-28 through a v2 migration pilot.** SDK v2 packages are now stable. The required `resultType` touches each repo's shared `jsonResult`/`errorResult` helpers; `server/discover` changes the stdio entry point. For auth repos, assess RFC 9207 `iss` + Client ID Metadata Documents preference under the selected rollout profile.
 - Rate-limiting is a spec MUST kept lower-priority for local stdio servers (revisit if one goes remote).
-- **Structured output is now partly adopted, unevenly.** `mcp-git-audit`, `mcp-gsuite`, `mcp-m365`, `mcp-ki-repo-kb-notion-mirror`, and `mcp-housekeeping-claude` declare `outputSchema`; **`mcp-ki-repo-kb-fs` declares none while its shared `jsonResult` emits `structuredContent` for every tool**, which is the WARN condition in §12. (Supersedes the retired "no repo yet declares `outputSchema`" item.)
-- Five proposed annotation SEPs (`unsafeOutputHint`, `secretHint`, `trustedHint`, trust/sensitivity, governance/UX) still Draft — gate's four-hint vocabulary stable, no action; watch for any landing in a released spec.
-
-(What past reviews changed in the standard / checklist / native rubric — structured output, the OAuth security invariants, tool-name charset bounds, output sanitization, the relaxed tool-name regex — is in git.)
+- **Structured output unevenly adopted.** `mcp-ki-repo-kb-fs` declares no `outputSchema` while its shared `jsonResult` emits `structuredContent` for every tool — the WARN condition in §12.
+- Five annotation SEPs (`unsafeOutputHint`, `secretHint`, `trustedHint`, trust/sensitivity, governance/UX) still Draft — gate vocabulary stable; watch for any landing in a released spec.
 
 [spec]: https://modelcontextprotocol.io/specification
 [changelog]: https://modelcontextprotocol.io/specification/2026-07-28/changelog
