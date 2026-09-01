@@ -40,7 +40,7 @@ Under that authorisation, resolve the selected adapter, re-ground the one reposi
 
 Every record retains its own `ready` → `in-progress` → `awaiting-review` lifecycle, baseline, verification, and review packet.
 
-Park ambiguity rather than resolving it by inference, then record a per-item ledger and concise `ki-recap`-shaped batch recap.
+Park ambiguity the authority does not cover rather than resolving it by inference, take the decisions a record's own plan asks for and record them in that record, then record a per-item ledger and concise `ki-recap`-shaped batch recap.
 
 `ki-accept` remains the only closure owner.
 
