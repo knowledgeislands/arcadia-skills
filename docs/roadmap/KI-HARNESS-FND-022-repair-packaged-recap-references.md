@@ -4,7 +4,7 @@ area: FND
 title: Repair packaged recap references
 theme: foundation-tooling
 horizon: next
-status: in-progress
+status: awaiting-review
 blocks: []
 blocked_by: []
 baseline_ref: b897954d640e00412cbad81e6da7376e2916ec61
@@ -83,6 +83,32 @@ No operator guide changes because publication and activation commands remain unc
 ### Roadmap
 
 No receiver-owned roadmap item is required unless a later regeneration exposes a separate `ki-plugins` publication defect.
+
+## Review
+
+### Delivered
+
+The recap-to-authoring relationship is portable from baseline `b897954d640e00412cbad81e6da7376e2916ec61`. `ki-recap` declares `ki-authoring` composition, both procedure references use the dependency by skill name, and plugin generation rejects any absent declared dependency before publication. No generated peer repository was changed or published.
+
+### Summary of changes
+
+Updated `ki-recap` and its session procedure, added dependency extraction and validation to the Claude plugin builder, and added focused present/missing dependency coverage plus generated projection assertions. The canonical source and active symlinked user projection now expose the same name-based route.
+
+### Verification
+
+The plugin-builder suite passed with 15 tests, including successful full projection and absent-dependency refusal. The active `~/.agents/skills/ki-recap` symlink resolves to the canonical Harness source with `ki-depends-on: [ki-authoring]` and no checkout-relative authoring link. The Harness full suite, TypeScript gate, and relevant repository audits passed.
+
+### Outstanding concerns
+
+None. Regenerating or publishing `ki-plugins` remains a receiver operation and was outside the approved boundary.
+
+### Post-change review
+
+The repair applies the existing cross-skill portability rule rather than copying normative prose or adding another path convention. The builder now makes the packaging dependency check general for every projected skill. The item is ready for acceptance.
+
+### Mini recap
+
+Formal name-based composition is the stable cross-projection seam; checkout-relative links are not. That learning already lives in the `ki-skills` portability standard and is now enforced at the projection boundary, so no additional learning route is proposed.
 
 ## Discussion
 

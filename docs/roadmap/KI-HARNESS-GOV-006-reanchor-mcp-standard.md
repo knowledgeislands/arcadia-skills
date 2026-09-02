@@ -4,7 +4,7 @@ title: Reanchor MCP standard
 area: GOV
 theme: governance-consistency
 horizon: next
-status: in-progress
+status: awaiting-review
 blocks: []
 blocked_by: []
 baseline_ref: 6bf45f2b30fdcde36f4f65ee8b698955a7aa2bbd
@@ -50,7 +50,7 @@ The pilot comparison and rollout selection are complete. The remaining Harness w
 - [x] Reanchor the portable `ki-repo-mcp` standard and source list.
 - [x] Add a dedicated protocol-profile rubric family covering valid v1, valid v2, missing modern result discriminators, legacy-only v2 claims, mixed dependency families, and unknown majors.
 - [x] Republish the generated rubric and prove the profile against the accepted pilot and at least one legacy sibling.
-- [ ] Capture one receiver-owned migration record in each of the five remaining v1 sibling repositories without implementing those migrations here.
+- [x] Capture one receiver-owned migration record in each of the five remaining v1 sibling repositories without implementing those migrations here.
 
 ## Files touched
 
@@ -94,8 +94,38 @@ Update migration guidance only where the standard and fixtures leave a practical
 
 Five receiver-owned migration records follow in the remaining v1 sibling repositories.
 
+## Review
+
+### Delivered
+
+The approved package-derived legacy and modern MCP profiles are implemented from baseline `6bf45f2b30fdcde36f4f65ee8b698955a7aa2bbd`. The Harness standard, source memory, executable rubric, fixtures, generated publication, read-only fleet proof, and five receiver-owned migration captures are complete. No sibling migration, release, publication, or push was performed.
+
+### Summary of changes
+
+Added the `PROTO-1` rubric family and focused MCP source evidence, reanchored sections 12–14 of the MCP standard and current sources, regenerated `references/rubric.md`, and updated the global remediation inventory. The receiver repositories independently committed `MCP-CH-FND-004`, `MCP-GSUITE-FND-003`, `MCP-M365-FND-002`, `MCP-KBFS-FND-002`, and `MCP-NOTION-TOOL-006` as Soon drafts.
+
+### Verification
+
+Focused protocol and publication suites passed with 16 tests. The modern `mcp-git-audit` pilot and all five legacy siblings passed the profile audit; `mcp-m365` retained one unrelated pre-existing `CFG-1` warning. The Harness full suite passed, `bunx tsc --noEmit` passed, and the `ki-work-roadmap`, `ki-authoring`, `ki-skills`, `ki-binding-claude`, and `ki-engineering` audits passed.
+
+### Outstanding concerns
+
+None within the approved profile-reanchor boundary. Each receiver migration remains deliberately unimplemented and separately prioritised. The existing `mcp-m365` configuration warning was not caused by this change and is not represented as profile failure.
+
+### Post-change review
+
+The dependency-derived applicability rule keeps the five v1 servers conformant while making modern requirements enforceable on the accepted v2 pilot. Fixtures cover valid v1, valid v2, missing discriminators, mixed families, unknown majors, and a legacy-only modern claim. The item is ready for acceptance.
+
+### Mini recap
+
+The rollout now has one enforceable portable profile contract and five receiver-owned migration queues. No additional learning route is proposed; the durable profile and migration boundary are already recorded in the owning standard, source list, rubric, and roadmap records.
+
 ## Discussion
 
 ### Pilot evidence
 
 The accepted pilot is the evidence boundary for both the profile selection and the rubric fixtures. Fleet migrations must not be inferred from that acceptance.
+
+### Receiver records
+
+Receiver-owned Soon drafts were committed independently as `MCP-CH-FND-004` (`0ba72a2`), `MCP-GSUITE-FND-003` (`e3336af`), `MCP-M365-FND-002` (`c763a52`), `MCP-KBFS-FND-002` (`620a213`), and `MCP-NOTION-TOOL-006` (`1b334ab`). Each receiver retains priority, implementation, acceptance, release, and publication authority.
