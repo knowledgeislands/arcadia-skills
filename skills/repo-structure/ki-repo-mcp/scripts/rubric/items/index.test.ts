@@ -1,7 +1,7 @@
 import { expect, test } from 'bun:test'
 import definition from './index.ts'
 
-const expectedFamilies = ['KI', 'LAY', 'DOC', 'CFG', 'UTIL', 'TEST', 'TOOL', 'PKG', 'SCR', 'CI', 'RUBRIC']
+const expectedFamilies = ['KI', 'LAY', 'DOC', 'CFG', 'UTIL', 'TEST', 'TOOL', 'PROTO', 'PKG', 'SCR', 'CI', 'RUBRIC']
 const expectedItems = [
   'KI-CONFIG',
   'LAY-1',
@@ -10,6 +10,7 @@ const expectedItems = [
   'UTIL-1',
   'TEST-1',
   'TOOL-1',
+  'PROTO-1',
   'PKG-1',
   'SCR-1',
   'CI-1',
@@ -69,6 +70,7 @@ test('the catalogue and family modules keep their public surfaces narrow', async
     'scripts',
     'testing',
     'tools',
+    'protocol',
     'utilities',
     'publication'
   ]) {

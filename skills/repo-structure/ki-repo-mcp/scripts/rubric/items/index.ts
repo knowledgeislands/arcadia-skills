@@ -6,6 +6,7 @@ import { CFG } from './configuration.ts'
 import { DOC } from './documentation.ts'
 import { LAY } from './layout.ts'
 import { PKG } from './package.ts'
+import { PROTO } from './protocol.ts'
 import { RUBRIC } from './publication.ts'
 import { SCR } from './scripts.ts'
 import { TEST } from './testing.ts'
@@ -24,5 +25,5 @@ export default {
     'ki:test:smoke'
   ],
   createSession: createMcpSession,
-  families: [KI, LAY, DOC, CFG, UTIL, TEST, TOOL, PKG, SCR, CI, RUBRIC]
+  families: [KI, LAY, DOC, CFG, UTIL, TEST, TOOL, PROTO, PKG, SCR, CI, RUBRIC]
 } satisfies SkillRubricDefinition<McpRubricContext>

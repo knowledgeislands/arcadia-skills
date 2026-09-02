@@ -47,9 +47,9 @@ The pilot comparison and rollout selection are complete. The remaining Harness w
 - [x] Capture a bounded v2 migration pilot in `mcp-git-audit` as `MCP-GIT-TOOL-005`.
 - [x] Compare the pilot's package, result-envelope, discovery, stdio, smoke, and legacy-fallback delta against the v1 implementation.
 - [x] Select explicit package-derived protocol-era applicability.
-- [ ] Reanchor the portable `ki-repo-mcp` standard and source list.
-- [ ] Add a dedicated protocol-profile rubric family covering valid v1, valid v2, missing modern result discriminators, legacy-only v2 claims, mixed dependency families, and unknown majors.
-- [ ] Republish the generated rubric and prove the profile against the accepted pilot and at least one legacy sibling.
+- [x] Reanchor the portable `ki-repo-mcp` standard and source list.
+- [x] Add a dedicated protocol-profile rubric family covering valid v1, valid v2, missing modern result discriminators, legacy-only v2 claims, mixed dependency families, and unknown majors.
+- [x] Republish the generated rubric and prove the profile against the accepted pilot and at least one legacy sibling.
 - [ ] Capture one receiver-owned migration record in each of the five remaining v1 sibling repositories without implementing those migrations here.
 
 ## Files touched
