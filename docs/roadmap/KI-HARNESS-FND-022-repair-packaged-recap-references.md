@@ -38,10 +38,10 @@ No peer-repository edit is required: the Harness owns both the canonical skill r
 
 ## Steps
 
-- [ ] Declare `ki-authoring` as a `ki-recap` dependency and replace both checkout-relative knowledge-promotion links with name-based loading instructions.
-- [ ] Validate every projected skill's declared composition dependencies against the complete generated skill set before publication.
-- [ ] Add focused builder coverage for a present dependency and a missing dependency that fails before publication.
-- [ ] Prove the canonical Harness, symlinked activation, and flattened generated projection all retain a reachable knowledge-promotion route.
+- [x] Declare `ki-authoring` as a `ki-recap` dependency and replace both checkout-relative knowledge-promotion links with name-based loading instructions.
+- [x] Validate every projected skill's declared composition dependencies against the complete generated skill set before publication.
+- [x] Add focused builder coverage for a present dependency and a missing dependency that fails before publication.
+- [x] Prove the canonical Harness, symlinked activation, and flattened generated projection all retain a reachable knowledge-promotion route.
 
 ## Files touched
 
