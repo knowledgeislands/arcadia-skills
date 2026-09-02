@@ -67,3 +67,22 @@ Each item must pass through its own `in-progress` and `awaiting-review` states w
 ## Run ledger
 
 <!-- ki-batch-run: KI-HARNESS-BATCH-009-RUN-001 7543d7b834932f72df9c3d0571e4b2ce62ee93ef2579a2ec318c55b979c00d01 -->
+
+### `KI-HARNESS-GOV-006` — done
+
+- Starting state: Ready at baseline `6bf45f2b30fdcde36f4f65ee8b698955a7aa2bbd`.
+- Result: Awaiting review at `d3ceb2068f0b3110747df8c90fa534ab3486eba5`, then accepted through `ki-accept` under this record's exact closure authority.
+- Verification: 16 focused protocol/publication tests; modern pilot and five legacy profile audits; full Harness test suite; TypeScript; `ki-work-roadmap`, `ki-authoring`, `ki-skills`, `ki-binding-claude`, and `ki-engineering` audits.
+- Decisions: applied the Ready record's package-derived dual-profile contract; retained SDK-owned discovery and receiver-owned migrations. No delegation was used.
+- Receiver evidence: `0ba72a2`, `e3336af`, `c763a52`, `620a213`, and `1b334ab` independently capture the five migrations.
+
+### `KI-HARNESS-FND-022` — done
+
+- Starting state: Ready at baseline `b897954d640e00412cbad81e6da7376e2916ec61`.
+- Result: Awaiting review at `d3ceb2068f0b3110747df8c90fa534ab3486eba5`, then accepted through `ki-accept` under this record's exact closure authority.
+- Verification: 15 focused plugin-builder tests; generated projection assertions; active symlink inspection; full Harness test suite; TypeScript; relevant repository audits.
+- Decisions: formalised the existing name-based cross-skill composition seam and made plugin dependency validation general. No delegation was used.
+
+### Batch recap
+
+Both admitted items reached stable verified outcomes and were accepted. No mandatory stop occurred, no push or release was performed, and no item was parked. The remaining roadmap records retain their named external, public-contract, or promotion boundaries. No new learning route is proposed because both durable lessons were applied directly to their owning standards and executable checks.

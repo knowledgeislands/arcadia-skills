@@ -4,7 +4,7 @@ area: FND
 title: Repair packaged recap references
 theme: foundation-tooling
 horizon: next
-status: awaiting-review
+status: done
 blocks: []
 blocked_by: []
 baseline_ref: b897954d640e00412cbad81e6da7376e2916ec61
@@ -109,6 +109,10 @@ The repair applies the existing cross-skill portability rule rather than copying
 ### Mini recap
 
 Formal name-based composition is the stable cross-projection seam; checkout-relative links are not. That learning already lives in the `ki-skills` portability standard and is now enforced at the projection boundary, so no additional learning route is proposed.
+
+## Done
+
+Accepted on 2026-09-02 under the approval-bound consolidated closure in `KI-HARNESS-BATCH-009`. The current review packet and evidence commit `d3ceb2068f0b3110747df8c90fa534ab3486eba5` were rechecked before closure.
 
 ## Discussion
 

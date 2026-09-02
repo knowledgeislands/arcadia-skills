@@ -4,7 +4,7 @@ title: Reanchor MCP standard
 area: GOV
 theme: governance-consistency
 horizon: next
-status: awaiting-review
+status: done
 blocks: []
 blocked_by: []
 baseline_ref: 6bf45f2b30fdcde36f4f65ee8b698955a7aa2bbd
@@ -119,6 +119,10 @@ The dependency-derived applicability rule keeps the five v1 servers conformant w
 ### Mini recap
 
 The rollout now has one enforceable portable profile contract and five receiver-owned migration queues. No additional learning route is proposed; the durable profile and migration boundary are already recorded in the owning standard, source list, rubric, and roadmap records.
+
+## Done
+
+Accepted on 2026-09-02 under the approval-bound consolidated closure in `KI-HARNESS-BATCH-009`. The current review packet and evidence commit `d3ceb2068f0b3110747df8c90fa534ab3486eba5` were rechecked before closure.
 
 ## Discussion
 
