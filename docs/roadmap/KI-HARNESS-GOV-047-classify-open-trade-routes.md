@@ -4,7 +4,7 @@ title: Classify open trade routes
 area: GOV
 theme: governance-consistency
 horizon: next
-status: draft
+status: ready
 blocks: []
 blocked_by: []
 baseline_ref: null
@@ -80,7 +80,7 @@ Mark Ready only after the proposed two-sided grant, receiver-owned vocabulary, i
 
 ## Current state
 
-The existing `ki-work`, roadmap, and `ki-trades` contracts are mechanically healthy, and no dependency blocks shaping. The item now has a concrete default-deny representation, provenance form, compatibility model, revocation rule, and capture policy. It belongs in Next, but remains Draft because the five material policy choices in its promotion condition are not yet approved.
+The existing `ki-work`, roadmap, and `ki-trades` contracts are mechanically healthy, and no dependency blocks delivery. The ready plan adopts the proposed two-sided grant, receiver-owned vocabulary, inline `STI-*` evidence, Agora independence, and itemized fallback as one default-deny policy bundle. The representation, provenance form, compatibility model, revocation rule, and capture policy are concrete enough to implement and verify.
 
 ## Steps
 
@@ -113,7 +113,7 @@ The existing `ki-work`, roadmap, and `ki-trades` contracts are mechanically heal
 
 ## Dependencies / blocks
 
-No external dependency blocks readiness. Human approval of the five policy choices remains the planning gate. Actual standing-route activation and peer tooling belong to receiver-owned follow-on work.
+No external dependency blocks delivery. The five policy choices are approved together as the default-deny authority model. Actual standing-route activation and peer tooling belong to receiver-owned follow-on work.
 
 ## Documentation impact
 
@@ -135,6 +135,6 @@ Route activation and provider tooling remain separate follow-on records owned by
 
 ## Discussion
 
-### Policy approval
+### Locked policy bundle
 
-Approval should address the five promotion choices together because reciprocity, subtype ownership, provenance, Agora independence, and itemized fallback form one default-deny authority model.
+Reciprocity, subtype ownership, provenance, Agora independence, and itemized fallback are one inseparable default-deny authority model. Implementation must not weaken one element independently; any material departure returns the record to planning or creates a new decision.
