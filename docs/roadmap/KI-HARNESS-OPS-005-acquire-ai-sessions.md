@@ -28,7 +28,7 @@ Arcadia owns the provider-neutral acquisition lifecycle. `mcp-housekeeping-claud
 
 The installed ChatGPT application has been inventoried at `~/Library/Application Support/com.openai.chat`: 185 conversation records across 33 project roots. Its project-scoped `conversations-v3-*/<session>.data` records are opaque, so the direct adapter must preserve their bytes and metadata rather than assume a private plaintext format. No source material has been changed.
 
-The 2026-09-02 resumption revalidated the clean `mcp-housekeeping-chatgpt` checkout: its opaque local-store adapter and three focused tests pass with TypeScript. The repository is registered and declares reciprocal `ki-all` and `ki-mcps` Agora memberships. Its engineering audit still reports missing shared toolchain/Knip/coverage configuration, so final cross-provider integration verification remains open and the engineering baseline is routed to a receiver-owned follow-on.
+The 2026-09-02 resumption revalidated the clean `mcp-housekeeping-chatgpt` checkout: its opaque local-store adapter and three focused tests pass with TypeScript. The repository is registered and declares reciprocal `ki-all` and `ki-mcps` Agora memberships. Its engineering audit still reports missing shared toolchain/Knip/coverage configuration, so final cross-provider integration verification remains open and the engineering baseline is routed to receiver-owned `MCP-HG-FND-001` in commit `6d02148`.
 
 ## Steps
 
