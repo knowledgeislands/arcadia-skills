@@ -42,6 +42,47 @@ Each partner appears exactly once: TOML's own prohibition on defining a key twic
 
 A sender-declared export authorises only sender-local preparation and submission. It remains a pending observation route while the receiver is absent from the local registry, does not participate, or has not declared the matching import. Receipt requires an active reciprocal route: exactly one registered root declares the receiver's canonical home, the sender exports that kind, and the receiver imports the same kind from the sender. Filesystem visibility, one-sided declaration, or reciprocity for another kind never activates receipt. Route removal must refuse while a local preparation, submitted outbound, or retained inbound record depends on that typed route.
 
+### Knowledge subtypes and standing intake
+
+Standing intake is an optional, exact, two-sided grant layered onto an active ordinary `knowledge` route. The receiver owns and describes the accepted subtype vocabulary; the sender independently exports the same subtype. Work has no subtype or standing path.
+
+```toml
+[skills.ki-trades.subtypes.knowledge]
+shared-capability-maintenance = "Maintenance evidence about receiver-owned shared capabilities."
+
+[skills.ki-trades.routes."owner/sender"]
+import = ["knowledge"]
+
+[skills.ki-trades.routes."owner/sender".standing.import]
+knowledge = ["shared-capability-maintenance"]
+```
+
+The sender declares the reciprocal ordinary export and `[skills.ki-trades.routes."owner/receiver".standing.export]` with the exact same subtype. Subtypes are lower-case hyphenated identifiers with non-empty receiver-owned descriptions. Arrays are duplicate-free and omitted rather than empty. An absent, malformed, unknown, one-sided, cross-kind, or non-reciprocal declaration remains itemized-only; it never degrades into partial standing authority.
+
+An itemized knowledge record may carry optional `subtype` classification. Existing records without it remain valid. The field is invalid on work, and its presence never upgrades an itemized trade into standing intake.
+
+### Standing intake provenance
+
+Direct capture is receiver-local and begins with the exact marker `<!-- ki-trades:standing-intake -->` immediately followed by a TOML block:
+
+```toml
+schema = "ki-trades/standing-intake/v1"
+id = "STI-1a2b3c4d"
+source = "https://github.com/owner/sender"
+source_ref = "0123456789abcdef0123456789abcdef01234567:docs/source.md#finding"
+receiver = "https://github.com/owner/receiver"
+kind = "knowledge"
+subtype = "shared-capability-maintenance"
+captured_at = "2026-08-30T12:00:00Z"
+capture = "docs/roadmap/RECEIVER-GOV-001.md#source-analysis"
+```
+
+The marker declares the following block as governed evidence; examples without the marker are inert. `STI-` identities use eight lower-case hexadecimal characters and are unique in the receiver. `source_ref` fixes a full commit, Markdown path, and anchor in the registered source repository. `capture` points into the containing receiver-owned Markdown artifact. Audit validates schema, closed fields, identities, source resolution, receiver, knowledge kind, subtype, timestamps, and capture location.
+
+New capture requires a currently active exact-subtype standing import. Removing either standing declaration immediately blocks new direct capture. Previously committed receiver-owned evidence remains historical; audit reports its introduction-time authority for review rather than invalidating retained knowledge solely because the route was revoked.
+
+Standing intake grants no peer write, review, priority, implementation, publication, acceptance, completion, or roadmap authority. It may augment an existing record only when the insight directly supports that record's established goal and boundary. A distinct insight, decision, dependency, or scope creates receiver-local draft work. Canonical knowledge may receive a direct capture only when knowledge itself is the outcome; any public contract or implementation change still enters receiver-local work. Agora membership is presentational relationship context only and neither activates nor is required for standing intake.
+
 ## Storage and identity
 
 The generic `+` and `-` working areas remain owned by `ki-repo`. A repository declaring `ki-trades` also carries:
