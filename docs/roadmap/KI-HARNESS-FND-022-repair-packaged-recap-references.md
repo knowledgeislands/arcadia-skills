@@ -3,8 +3,8 @@ id: KI-HARNESS-FND-022
 area: FND
 title: Repair packaged recap references
 theme: foundation-tooling
-horizon: soon
-status: draft
+horizon: next
+status: ready
 blocks: []
 blocked_by: []
 baseline_ref: null
@@ -29,6 +29,60 @@ Do not hand-edit generated plugin projections, duplicate the full knowledge-prom
 Select a source-level reference or dependency form that works from the canonical harness, symlinked user activation, and flattened plugin projection. Add projection-focused verification so generation fails when a required Markdown reference becomes unreachable. Confirm whether the repair belongs wholly in harness skill authoring or also requires an approved `ki-plugins` generator change.
 
 Promote to Next when the portable reference contract, affected projection boundary, and focused regression check are identified.
+
+## Current state
+
+The defect is isolated to two checkout-relative links from `ki-recap` into `ki-authoring`. Knowledge Islands already requires cross-skill relationships to use skill names rather than filesystem paths, and the generated plugin contains both skills. The portable repair is therefore to declare `ki-authoring` as a formal dependency, instruct the consumer to load its knowledge-promotion convention set by skill name, and make the plugin builder reject a projection whose declared dependency is absent.
+
+No peer-repository edit is required: the Harness owns both the canonical skill relationship and the plugin generator. Regenerating or publishing `ki-plugins` remains outside this item.
+
+## Steps
+
+- [ ] Declare `ki-authoring` as a `ki-recap` dependency and replace both checkout-relative knowledge-promotion links with name-based loading instructions.
+- [ ] Validate every projected skill's declared composition dependencies against the complete generated skill set before publication.
+- [ ] Add focused builder coverage for a present dependency and a missing dependency that fails before publication.
+- [ ] Prove the canonical Harness, symlinked activation, and flattened generated projection all retain a reachable knowledge-promotion route.
+
+## Files touched
+
+- `skills/change-management/ki-recap/SKILL.md`
+- `skills/change-management/ki-recap/references/standards-session-recap.md`
+- `skills/environment/ki-binding-claude/scripts/build-plugin.ts`
+- `skills/environment/ki-binding-claude/scripts/build-plugin.test.ts`
+- Generated capability publications affected by the dependency declaration
+- This work item
+
+## Verify
+
+- Focused `ki-binding-claude` plugin-builder tests
+- Generated plugin inspection for `ki-recap` and `ki-authoring`
+- Symlink-resolution inspection for the active user `ki-recap`
+- `ki repo audit --skill ki-skills --repo .`
+- `ki repo audit --skill ki-authoring --repo .`
+- `bun run test`
+- `bunx tsc --noEmit`
+
+## Dependencies / blocks
+
+No external dependency remains. The plugin generator already owns the flattened projection and both required skills are part of its governed source set.
+
+## Documentation impact
+
+### Decision Records
+
+No Decision Record is needed because this applies the existing name-based cross-skill portability contract.
+
+### Specifications
+
+No product behaviour specification changes; this is a packaging-integrity repair.
+
+### Guides
+
+No operator guide changes because publication and activation commands remain unchanged.
+
+### Roadmap
+
+No receiver-owned roadmap item is required unless a later regeneration exposes a separate `ki-plugins` publication defect.
 
 ## Discussion
 
