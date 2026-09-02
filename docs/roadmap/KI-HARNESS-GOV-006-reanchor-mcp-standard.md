@@ -4,10 +4,10 @@ title: Reanchor MCP standard
 area: GOV
 theme: governance-consistency
 horizon: next
-status: ready
+status: in-progress
 blocks: []
 blocked_by: []
-baseline_ref: null
+baseline_ref: 6bf45f2b30fdcde36f4f65ee8b698955a7aa2bbd
 ---
 
 ## Goal
