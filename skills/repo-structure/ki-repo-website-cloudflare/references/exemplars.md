@@ -21,7 +21,7 @@ These examples are kept separate because they combine several governed artifacts
 
 ### `wrangler.jsonc` — the conformant site Worker config
 
-The site Worker config lives at `site/wrangler.jsonc` in the monorepo layout (the `site/` workspace of `ki-repo-website`). Four fields are always present: `name` (kebab-case, matches the Worker name in the Cloudflare dashboard), `compatibility_date` (pinned `YYYY-MM-DD`), `assets.directory` pointing at the `dist/` seam, and `observability.enabled: true` so `console.*` / request logs are queryable in the dashboard. `routes` with `custom_domain: true` is expected for a site with a domain. The `assets.directory` value is **relative to the `wrangler.jsonc` file** — `"dist"` from `site/wrangler.jsonc` because the site build emits `site/dist/`.
+The site Worker config lives at `workspaces/site/wrangler.jsonc` in the monorepo layout (the `workspaces/site/` workspace of `ki-repo-website`). Four fields are always present: `name` (kebab-case, matches the Worker name in the Cloudflare dashboard), `compatibility_date` (pinned `YYYY-MM-DD`), `assets.directory` pointing at the `dist/` seam, and `observability.enabled: true` so `console.*` / request logs are queryable in the dashboard. `routes` with `custom_domain: true` is expected for a site with a domain. The `assets.directory` value is **relative to the `wrangler.jsonc` file** — `"dist"` from `workspaces/site/wrangler.jsonc` because the site build emits `workspaces/site/dist/`.
 
 ```jsonc
 {
@@ -55,7 +55,7 @@ The hosting scripts in the root `package.json` of the monorepo. They take the `s
   "scripts": {
     "ki:site:deploy": "cd site && bunx wrangler deploy",
     "ki:site:preview": "bun run ki:site:build && cd site && bunx wrangler dev",
-    "ki:site:clean": "rm -rf site/dist site/.wrangler"
+    "ki:site:clean": "rm -rf workspaces/site/dist workspaces/site/.wrangler"
   }
 }
 ```
@@ -84,7 +84,7 @@ Commit-SHA injection (`WORKERS_CI_COMMIT_SHA` surfaced into the page as a `<meta
 
 ### `_redirects` and `_headers` — static asset rules
 
-Place `_redirects` and `_headers` in `site/src/` (or wherever Eleventy's passthrough copies them to `dist/`) when you need redirect rules or custom response headers. Cloudflare Workers Static Assets reads these files from the `assets.directory` root.
+Place `_redirects` and `_headers` in `workspaces/site/src/` (or wherever Eleventy's passthrough copies them to `dist/`) when you need redirect rules or custom response headers. Cloudflare Workers Static Assets reads these files from the `assets.directory` root.
 
 A `_redirects` file for a common `www` → apex redirect (as a belt-and-suspenders fallback alongside the Cloudflare redirect rule):
 

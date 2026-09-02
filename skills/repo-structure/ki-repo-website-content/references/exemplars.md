@@ -20,7 +20,7 @@ Curated patterns worth reading when authoring or auditing a Knowledge Islands El
 
 ### `eleventy.config.ts` — the two required transforms and the Tailwind lifecycle hook
 
-The config exports a default function. Two transforms are always present: `explicit-index-links` rewrites absolute internal `href`/`src` attributes to relative paths (making `dist/` portable — this is standard invariant 2), and `external-link-icons` appends a Lucide icon to prose external links. The `eleventy.before` hook compiles Tailwind with `--minify` on a one-shot build; in serve/watch mode the CLI runs in parallel and `addWatchTarget` reloads the browser when it writes a new CSS file (standard invariant 4). The `dir` block emits to `./dist`, inside the `site/` workspace.
+The config exports a default function. Two transforms are always present: `explicit-index-links` rewrites absolute internal `href`/`src` attributes to relative paths (making `dist/` portable — this is standard invariant 2), and `external-link-icons` appends a Lucide icon to prose external links. The `eleventy.before` hook compiles Tailwind with `--minify` on a one-shot build; in serve/watch mode the CLI runs in parallel and `addWatchTarget` reloads the browser when it writes a new CSS file (standard invariant 4). The `dir` block emits to `./dist`, inside the `workspaces/site/` workspace.
 
 ```typescript
 import { execSync } from 'node:child_process'
@@ -137,7 +137,7 @@ No `tailwind.config.*` file anywhere — Tailwind 4 is configured entirely in CS
 
 ### `package.json` — the site script family
 
-Scripts for the `site/` workspace of a monorepo. All site scripts take the `site:` prefix. `ki:site:dev` uses `concurrently` to run the Tailwind `--watch` process (`ki:site:dev:css`) and the Eleventy dev server (`ki:site:dev:serve`) in parallel, named `css`,`11ty`. `ki:site:build` invokes the Eleventy CLI directly through Bun — the `eleventy.before` hook handles Tailwind minification inside the same process. `ki:site:deploy` and `ki:site:preview` are the hosting scripts (governed by `ki-repo-website-cloudflare`); they appear here because they live in the same root `package.json` in the monorepo shape.
+Scripts for the `workspaces/site/` workspace of a monorepo. All site scripts take the `site:` prefix. `ki:site:dev` uses `concurrently` to run the Tailwind `--watch` process (`ki:site:dev:css`) and the Eleventy dev server (`ki:site:dev:serve`) in parallel, named `css`,`11ty`. `ki:site:build` invokes the Eleventy CLI directly through Bun — the `eleventy.before` hook handles Tailwind minification inside the same process. `ki:site:deploy` and `ki:site:preview` are the hosting scripts (governed by `ki-repo-website-cloudflare`); they appear here because they live in the same root `package.json` in the monorepo shape.
 
 ```json
 {
@@ -146,7 +146,7 @@ Scripts for the `site/` workspace of a monorepo. All site scripts take the `site
     "ki:site:dev:css": "cd site && bunx tailwindcss -i src/assets/css/main.css -o ./dist/assets/css/main.css --watch",
     "ki:site:dev:serve": "cd site && bun ../node_modules/@11ty/eleventy/cmd.cjs --config=eleventy.config.ts --serve --port 3000",
     "ki:site:build": "cd site && bun ../node_modules/@11ty/eleventy/cmd.cjs --config=eleventy.config.ts",
-    "ki:site:clean": "rm -rf site/dist site/.wrangler",
+    "ki:site:clean": "rm -rf workspaces/site/dist workspaces/site/.wrangler",
     "ki:site:deploy": "cd site && bunx wrangler deploy",
     "ki:site:preview": "bun run ki:site:build && cd site && bunx wrangler dev"
   }

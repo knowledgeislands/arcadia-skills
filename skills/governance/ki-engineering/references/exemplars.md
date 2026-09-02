@@ -112,17 +112,17 @@ This runner-neutral profile does not opt into `test:coverage`, `test:watch`, or 
 In a `workspaces` repo (`"workspaces": ["site", "ingress"]`) the flat `src/**` globs and root `coverage/` become **workspace-relative** — artifacts sit under the workspace that owns them, never the repo root. The 100%-threshold rule is unchanged; only the paths move.
 
 ```ts
-// vitest.config.ts (monorepo — tests + coverage scoped to the site/ workspace)
+// vitest.config.ts (monorepo — tests + coverage scoped to the workspaces/site workspace)
 export default defineConfig({
   test: {
     globals: true,
     environment: 'node',
-    include: ['site/scripts/**/*.test.ts'], // under the workspace, not src/**
+    include: ['workspaces/site/scripts/**/*.test.ts'], // under the workspace, not src/**
     coverage: {
       provider: 'v8',
-      reportsDirectory: 'site/coverage', // gitignored as /site/coverage, not root /coverage
-      include: ['site/scripts/seed-model.ts', 'site/scripts/body-regen.ts'],
-      exclude: ['site/scripts/**/*.test.ts'],
+      reportsDirectory: 'workspaces/site/coverage', // gitignored as /workspaces/site/coverage, not root /coverage
+      include: ['workspaces/site/scripts/seed-model.ts', 'workspaces/site/scripts/body-regen.ts'],
+      exclude: ['workspaces/site/scripts/**/*.test.ts'],
       thresholds: { statements: 100, branches: 100, functions: 100, lines: 100 }
     }
   }

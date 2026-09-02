@@ -127,6 +127,35 @@ test('symlinked proposal targets are never traversed or replaced', () => {
   expect(readFileSync(ignore, 'utf8')).toBe('/dist/\n')
 })
 
+test('the canonical workspaces/site shape passes WEB-6 and scopes the dist ignore', () => {
+  const repository = temporaryDirectory('ki-repo-website-content-workspaces-')
+  mkdirSync(join(repository, 'workspaces', 'site'), { recursive: true })
+  writeFileSync(join(repository, 'workspaces', 'site', 'eleventy.config.ts'), 'export default function () {}\n')
+  writeFileSync(join(repository, 'package.json'), '{"scripts":{},"dependencies":{}}\n')
+  writeFileSync(join(repository, '.ki.toml'), '[skills.ki-repo-website-content]\n')
+  writeFileSync(join(repository, '.gitignore'), 'workspaces/site/dist\n')
+  const session = createWebsiteSession(options(repository, 'audit'))
+  const { context } = rootContext(session)
+
+  expect(context.siteRoot).toBe('workspaces/site')
+  expect(item('WEB-6').audit.run(context)[0]).toMatchObject({
+    status: 'PASS',
+    subject: join('workspaces/site', 'eleventy.config.ts')
+  })
+  expect(item('WEB-33').audit.run(context)[0]?.status).toBe('PASS')
+})
+
+test('a legacy top-level site/ workspace warns toward workspaces/site', () => {
+  const repository = fixture()
+  const session = createWebsiteSession(options(repository, 'audit'))
+  const { context } = rootContext(session)
+
+  expect(context.siteRoot).toBe('site')
+  const [outcome] = item('WEB-6').audit.run(context)
+  expect(outcome).toMatchObject({ status: 'VIOLATION', level: 'WARN' })
+  expect(outcome?.message).toContain('migrate to workspaces/site')
+})
+
 test('a symlinked Eleventy marker activates reporting without exposing its contents', () => {
   const repository = temporaryDirectory('ki-repo-website-content-root-')
   const outside = temporaryDirectory('ki-repo-website-content-config-')

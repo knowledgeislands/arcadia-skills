@@ -23,7 +23,7 @@
  * The native rubric host owns execution, reporting, and exit status.
  */
 import { execFile } from 'node:child_process'
-import { existsSync, readFileSync, statSync } from 'node:fs'
+import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs'
 import { join } from 'node:path'
 import { promisify } from 'node:util'
 import type { PackageScriptClaim, RubricEmitter } from '../../shared/rubric.ts'
@@ -543,10 +543,22 @@ export const collectAuditEvidence = async (
 
   // Repo shape — flat vs monorepo (§0). A flat repo is one root TS project (`tsc --noEmit`);
   // a monorepo declares its packages in the standard Bun `workspaces` array in package.json
-  // (e.g. ["site", "ingress"]), whose per-package tsconfigs can carry incompatible
+  // (canonically ["workspaces/*"]), whose per-package tsconfigs can carry incompatible
   // `types`/`lib`, so it is type-checked per package rather than once at the root.
+  // A trailing `/*` glob expands to the subdirectories that carry a package.json.
   const workspaces = Array.isArray(pkg.workspaces)
-    ? (pkg.workspaces as string[]).filter((w) => typeof w === 'string')
+    ? (pkg.workspaces as string[])
+        .filter((w) => typeof w === 'string')
+        .flatMap((entry) =>
+          entry.endsWith('/*')
+            ? isDir(entry.slice(0, -2))
+              ? readdirSync(at(entry.slice(0, -2)), { withFileTypes: true })
+                  .filter((child) => child.isDirectory() && has(entry.slice(0, -2), child.name, 'package.json'))
+                  .map((child) => `${entry.slice(0, -2)}/${child.name}`)
+                  .sort()
+              : []
+            : [entry]
+        )
     : []
 
   // ── core: the read-only toolchain, run directly (audit = lint WITHOUT fixing) ──

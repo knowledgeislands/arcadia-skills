@@ -38,7 +38,7 @@ This opens a browser OAuth flow and stores user-scoped credentials outside the r
 
 ## 2. Create the site `wrangler.jsonc`
 
-The config lives at the **site root** — the repo root for a flat layout, the `site/` subfolder when the repo also has companion Workers. Use the canonical shape from the standard and adapt three fields: `name`, `compatibility_date`, and the `assets.directory` path.
+The config lives at the **site root** — the repo root for a flat layout, the `workspaces/site/` subfolder when the repo also has companion Workers. Use the canonical shape from the standard and adapt three fields: `name`, `compatibility_date`, and the `assets.directory` path.
 
 ```jsonc
 {
@@ -56,7 +56,7 @@ The config lives at the **site root** — the repo root for a flat layout, the `
 `assets.directory` notes:
 
 - **`"./dist"`** — `wrangler.jsonc` is at the repo root (`dist/` is a sibling).
-- **`"dist"`** — `wrangler.jsonc` and the build output both live in the canonical `site/` workspace.
+- **`"dist"`** — `wrangler.jsonc` and the build output both live in the canonical `workspaces/site/` workspace.
 
 Set `compatibility_date` to today's date (`YYYY-MM-DD`). For a pure-assets Worker there is no runtime code, but the field is required.
 
@@ -64,19 +64,19 @@ Set `compatibility_date` to today's date (`YYYY-MM-DD`). For a pure-assets Worke
 
 ## 3. Add the script family to `package.json`
 
-Add these three scripts to the root `package.json`. Use the `site:` prefix for the `site/`-subfolder layout; drop it for a flat layout (rare):
+Add these three scripts to the root `package.json`. Use the `site:` prefix for the `workspaces/site/`-subfolder layout; drop it for a flat layout (rare):
 
 ```jsonc
 {
   "scripts": {
     "ki:site:deploy": "cd site && bunx wrangler deploy",
     "ki:site:preview": "bun run ki:site:build && cd site && bunx wrangler dev",
-    "ki:site:clean": "rm -rf site/dist site/.wrangler"
+    "ki:site:clean": "rm -rf workspaces/site/dist workspaces/site/.wrangler"
   }
 }
 ```
 
-For a **flat** layout (no `site/` subfolder, `wrangler.jsonc` at repo root):
+For a **flat** layout (no `workspaces/site/` subfolder, `wrangler.jsonc` at repo root):
 
 ```jsonc
 {

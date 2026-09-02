@@ -180,20 +180,40 @@ const WEB_5 = judgment(
 const WEB_6 = mechanical(
   'WEB-6',
   'Site workspace configuration',
-  'One Eleventy configuration lives under the `site/` workspace; a flat configuration is WARN.',
+  'One Eleventy configuration lives under the `workspaces/site` workspace; a legacy top-level `site/` or flat configuration is WARN.',
   'FAIL',
   (context) => {
     const stop = inactive(context)
     if (stop) return stop
     if (!context.cfgName)
-      return [{ status: 'VIOLATION', message: 'no physical eleventy.config.{ts,js,mjs,cjs} at repo root or site/' }]
-    return context.siteRoot
-      ? [{ status: 'PASS', message: `site/${context.cfgName} present`, subject: context.siteAt(context.cfgName) }]
+      return [
+        {
+          status: 'VIOLATION',
+          message: 'no physical eleventy.config.{ts,js,mjs,cjs} at repo root, site/, or workspaces/site/'
+        }
+      ]
+    if (context.siteRoot === 'workspaces/site')
+      return [
+        {
+          status: 'PASS',
+          message: `workspaces/site/${context.cfgName} present`,
+          subject: context.siteAt(context.cfgName)
+        }
+      ]
+    return context.siteRoot === 'site'
+      ? [
+          {
+            status: 'VIOLATION',
+            level: 'WARN',
+            message: `site/${context.cfgName} is the pre-workspaces layout; migrate to workspaces/site`,
+            subject: context.siteAt(context.cfgName)
+          }
+        ]
       : [
           {
             status: 'VIOLATION',
             level: 'WARN',
-            message: `${context.cfgName} is flat; the standard requires the site/ workspace`,
+            message: `${context.cfgName} is flat; the standard requires the workspaces/site workspace`,
             subject: context.cfgName
           }
         ]
@@ -212,8 +232,8 @@ const WEB_7 = mechanical(
 const WEB_8 = judgment(
   'WEB-8',
   'Workspace declaration',
-  'The root package manifest declares a workspace containing `site`.',
-  'Does the root workspace declaration include `site`?'
+  'The root package manifest declares a workspace covering `workspaces/site`.',
+  'Does the root workspace declaration (canonically `workspaces/*`) cover `workspaces/site`?'
 )
 
 const WEB_9 = mechanical(
@@ -498,23 +518,12 @@ const WEB_33 = mechanical(
     const stop = inactive(context)
     if (stop) return stop
     const text = context.read('.gitignore')
-    const correct = context.siteRoot ? /^\s*\/?site\/dist\/?\s*$/m.test(text) : /^\s*\/?dist\/?\s*$/m.test(text)
+    const distPath = context.siteRoot ? `${context.siteRoot}/dist` : 'dist'
+    const correct = new RegExp(String.raw`^\s*/?${distPath}/?\s*$`, 'm').test(text)
     const globalDist = /^\s*dist\/?\s*$/m.test(text)
     if (correct || globalDist)
-      return [
-        {
-          status: 'PASS',
-          message: `${context.siteRoot ? 'site/dist/' : 'dist/'} is correctly gitignored`,
-          subject: '.gitignore'
-        }
-      ]
-    return [
-      {
-        status: 'VIOLATION',
-        message: `${context.siteRoot ? 'site/dist/' : 'dist/'} is not gitignored`,
-        subject: '.gitignore'
-      }
-    ]
+      return [{ status: 'PASS', message: `${distPath}/ is correctly gitignored`, subject: '.gitignore' }]
+    return [{ status: 'VIOLATION', message: `${distPath}/ is not gitignored`, subject: '.gitignore' }]
   }
 )
 
@@ -535,8 +544,8 @@ const WEB_35 = judgment(
 const WEB_36 = judgment(
   'WEB-36',
   'Hosting seam handoff',
-  'The exact site/dist output is consumed by the separately selected Cloudflare projection without claiming deployment or runtime success.',
-  'Does the selected hosting projection consume site/dist, with parsed configuration and runtime/deployment evidence kept separate?'
+  'The exact workspaces/site/dist output is consumed by the separately selected Cloudflare projection without claiming deployment or runtime success.',
+  'Does the selected hosting projection consume workspaces/site/dist, with parsed configuration and runtime/deployment evidence kept separate?'
 )
 
 const WEB_37 = judgment(

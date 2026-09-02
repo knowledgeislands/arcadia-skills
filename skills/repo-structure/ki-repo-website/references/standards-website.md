@@ -11,7 +11,7 @@ The two implementations are mutually exclusive. Hosting is independent and compo
 
 ## 2. Build seam
 
-The selected implementation generates `dist/` at its site root. A canonical monorepo uses `site/dist/`; a flat repository uses `dist/`. Generated output is ignored by Git and recreated by the build.
+The selected implementation generates `dist/` at its site root. A canonical monorepo uses `workspaces/site/dist/`; a flat repository uses `dist/`. Generated output is ignored by Git and recreated by the build.
 
 The root `package.json` exposes:
 

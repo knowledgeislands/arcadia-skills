@@ -20,14 +20,14 @@ The site is **one Cloudflare Worker serving Static Assets**. The Worker has an `
 - **Workers Static Assets**, deployed with `wrangler deploy`. Cloudflare recommends Workers for new static sites and SPAs; Pages is not the house deployment target for new projects. A `wrangler pages deploy` command is a finding.
 - **`pages_build_output_dir` is the legacy Pages marker.** Its presence is a failure even when scripts use `wrangler deploy`. Replace it with `"assets": { "directory": "./dist" }`.
 - **One `wrangler.jsonc` per deployable.** The **site** Worker's config carries an `assets` block and no `main`. The absence of `main` is load-bearing: an assets-only Worker executes no server-side code, which is what allows a repository to state mechanically that its published deployment has no control plane.
-- The site root — and thus where its `wrangler.jsonc` lives — follows `ki-repo-website`'s layout: the site is the **`site/` workspace**, so `wrangler.jsonc` and the generated `dist/` both live under `site/` and `assets.directory` is `"dist"` (§3). This skill can serve any static `dist/`, so a one-off **flat** consumer (config at the repo root, `assets.directory: "./dist"`) is still valid hosting.
+- The site root — and thus where its `wrangler.jsonc` lives — follows `ki-repo-website`'s layout: the site is the **`workspaces/site/` workspace**, so `wrangler.jsonc` and the generated `dist/` both live under `workspaces/site/` and `assets.directory` is `"dist"` (§3). This skill can serve any static `dist/`, so a one-off **flat** consumer (config at the repo root, `assets.directory: "./dist"`) is still valid hosting.
 
 ## 2. The `dist/` seam
 
 The hosting layer and the build layer meet at exactly one place: the **`dist/` directory**.
 
 - The selected website implementation **emits** `dist/`. This skill **serves** it by pointing `assets.directory` at that exact build output.
-- **`assets.directory` is relative to the `wrangler.jsonc` file**: `"./dist"` when the config is at the repo root and `"dist"` in the canonical `site/` workspace. A different layout may use another relative path, but it must resolve to the build's actual `dist/` output.
+- **`assets.directory` is relative to the `wrangler.jsonc` file**: `"./dist"` when the config is at the repo root and `"dist"` in the canonical `workspaces/site/` workspace. A different layout may use another relative path, but it must resolve to the build's actual `dist/` output.
 - **The build runs before deploy.** `dist/` is gitignored and regenerated; deploy reads whatever the last build produced. A `ki:site:preview` script chains build → `wrangler dev` for a local check against the real Worker runtime.
 - Neither layer needs the other's internals — only the `dist/` path. That is what makes the split clean and the hosting skill reusable for any static `dist/`.
 

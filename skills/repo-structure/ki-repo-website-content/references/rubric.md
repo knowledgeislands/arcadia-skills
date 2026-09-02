@@ -42,13 +42,13 @@ The static-site stack, workspace layout, generated output, and sustainable opera
   - _Review prompt:_ Is Lucide the icon source and is it wired through the intended passthrough/client pattern?
   - _Outcomes:_ conforming; revision required; design decision required
   - _Conforming guidance:_ Revise the affected website surface to meet the standard, or record the owning design decision before accepting a deliberate exception.
-- **WEB-6 [M] — Site workspace configuration** — One Eleventy configuration lives under the `site/` workspace; a flat configuration is WARN. (standards-eleventy-site.md)
+- **WEB-6 [M] — Site workspace configuration** — One Eleventy configuration lives under the `workspaces/site` workspace; a legacy top-level `site/` or flat configuration is WARN. (standards-eleventy-site.md)
   - _Remediation:_ diagnostic — Inspect the affected website surface and apply the standard through a reviewable, site-owned change.
 - **WEB-7 [M] — Roadmap** — `ROADMAP.md` is present. (standards-eleventy-site.md)
   - _Remediation:_ diagnostic — Inspect the affected website surface and apply the standard through a reviewable, site-owned change.
-- **WEB-8 [J] — Workspace declaration** — The root package manifest declares a workspace containing `site`. (standards-eleventy-site.md)
-  - _Evidence scope:_ The root package manifest declares a workspace containing `site`.
-  - _Review prompt:_ Does the root workspace declaration include `site`?
+- **WEB-8 [J] — Workspace declaration** — The root package manifest declares a workspace covering `workspaces/site`. (standards-eleventy-site.md)
+  - _Evidence scope:_ The root package manifest declares a workspace covering `workspaces/site`.
+  - _Review prompt:_ Does the root workspace declaration (canonically `workspaces/*`) cover `workspaces/site`?
   - _Outcomes:_ conforming; revision required; design decision required
   - _Conforming guidance:_ Revise the affected website surface to meet the standard, or record the owning design decision before accepting a deliberate exception.
 - **WEB-9 [M] — Source layout** — `src/` has `_data/`, `_includes/layouts/`, `_includes/partials/`, and `assets/css/`. (standards-eleventy-site.md)
@@ -144,9 +144,9 @@ The static-site stack, workspace layout, generated output, and sustainable opera
   - _Review prompt:_ Is dist treated as fully generated build output and never hand-edited?
   - _Outcomes:_ conforming; revision required; design decision required
   - _Conforming guidance:_ Revise the affected website surface to meet the standard, or record the owning design decision before accepting a deliberate exception.
-- **WEB-36 [J] — Hosting seam handoff** — The exact site/dist output is consumed by the separately selected Cloudflare projection without claiming deployment or runtime success. (standards-eleventy-site.md)
-  - _Evidence scope:_ The exact site/dist output is consumed by the separately selected Cloudflare projection without claiming deployment or runtime success.
-  - _Review prompt:_ Does the selected hosting projection consume site/dist, with parsed configuration and runtime/deployment evidence kept separate?
+- **WEB-36 [J] — Hosting seam handoff** — The exact workspaces/site/dist output is consumed by the separately selected Cloudflare projection without claiming deployment or runtime success. (standards-eleventy-site.md)
+  - _Evidence scope:_ The exact workspaces/site/dist output is consumed by the separately selected Cloudflare projection without claiming deployment or runtime success.
+  - _Review prompt:_ Does the selected hosting projection consume workspaces/site/dist, with parsed configuration and runtime/deployment evidence kept separate?
   - _Outcomes:_ conforming; revision required; design decision required
   - _Conforming guidance:_ Revise the affected website surface to meet the standard, or record the owning design decision before accepting a deliberate exception.
 - **WEB-37 [J] — Volatile facts have one home** — Volatile versions and idioms have one canonical home. (standards-eleventy-site.md)

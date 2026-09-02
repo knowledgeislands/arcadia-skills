@@ -21,7 +21,7 @@ export type WebsiteContext = {
   target: string
   available: boolean
   applicable: boolean
-  siteRoot: '' | 'site'
+  siteRoot: '' | 'site' | 'workspaces/site'
   cfgName: string
   config: string
   packageOk: boolean
@@ -81,9 +81,10 @@ export const createWebsiteSession = ({
   const isDir = (...parts: string[]) => available && containedPhysical(root, at(...parts), 'directory')
 
   const flatCfg = CONFIG_NAMES.find((name) => containedPhysical(root, at(name), 'file'))
-  const siteCfg = CONFIG_NAMES.find((name) => containedPhysical(root, at('site', name), 'file'))
-  const siteRoot: '' | 'site' = flatCfg ? '' : siteCfg ? 'site' : ''
-  const cfgName = flatCfg ?? siteCfg ?? ''
+  const workspaceCfg = CONFIG_NAMES.find((name) => containedPhysical(root, at('workspaces', 'site', name), 'file'))
+  const legacyCfg = CONFIG_NAMES.find((name) => containedPhysical(root, at('site', name), 'file'))
+  const siteRoot: '' | 'site' | 'workspaces/site' = workspaceCfg ? 'workspaces/site' : legacyCfg ? 'site' : ''
+  const cfgName = workspaceCfg ?? legacyCfg ?? flatCfg ?? ''
   const siteAt = (...parts: string[]) => (siteRoot ? join(siteRoot, ...parts) : join(...parts))
 
   const configPath = at('.ki.toml')
@@ -141,14 +142,13 @@ export const createWebsiteSession = ({
     ignoreDraft === undefined
       ? undefined
       : (): void => {
-          const correct = siteRoot
-            ? /^\s*\/?site\/dist\/?\s*$/m.test(ignoreDraft.content)
-            : /^\s*\/?dist\/?\s*$/m.test(ignoreDraft.content)
+          const distPath = siteRoot ? `${siteRoot}/dist` : 'dist'
+          const correct = new RegExp(String.raw`^\s*/?${distPath}/?\s*$`, 'm').test(ignoreDraft.content)
           if (correct) return
           ignoreDraft.content =
             siteRoot && /^\s*\/dist\/?\s*$/m.test(ignoreDraft.content)
-              ? ignoreDraft.content.replace(/^(\s*)\/dist(\/?)(\s*)$/m, '$1/site/dist$2$3')
-              : `${ignoreDraft.content ? ignoreDraft.content.replace(/\n*$/, '\n') : ''}${siteRoot ? 'site/dist' : 'dist'}\n`
+              ? ignoreDraft.content.replace(/^(\s*)\/dist(\/?)(\s*)$/m, `$1/${distPath}$2$3`)
+              : `${ignoreDraft.content ? ignoreDraft.content.replace(/\n*$/, '\n') : ''}${distPath}\n`
         }
 
   const context: WebsiteContext = {

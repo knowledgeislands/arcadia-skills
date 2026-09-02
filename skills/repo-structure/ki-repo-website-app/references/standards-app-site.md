@@ -8,7 +8,7 @@ Use this implementation for a single interactive browser application such as a d
 
 The application uses React, React DOM, Vite, and the official React Vite plugin. `index.html` is the application entry and loads a `src/main.tsx` or `src/main.jsx` module. `vite build` emits `dist/`; Vite's default `build.outDir` is already `dist`.
 
-The root package scripts expose `ki:site:build` using `vite build` and `ki:site:dev` using `vite`. A `site/` workspace or flat root is valid, provided the command and output resolve within the same site root.
+The root package scripts expose `ki:site:build` using `vite build` and `ki:site:dev` using `vite`. A `workspaces/site` workspace, a legacy top-level `site/`, or a flat root is valid, provided the command and output resolve within the same site root.
 
 ## 3. Static publication
 
