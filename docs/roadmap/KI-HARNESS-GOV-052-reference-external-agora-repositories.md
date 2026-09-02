@@ -4,7 +4,7 @@ title: Reference external Agora repositories
 area: GOV
 theme: governance-consistency
 horizon: now
-status: in-progress
+status: awaiting-review
 blocks: []
 blocked_by: []
 baseline_ref: 02b22991a63068423c6c84279e5431667b81a5d8
@@ -66,11 +66,11 @@ The current `ki-agora` contract accepts only an owner and reciprocal members, an
 
 ## Steps
 
-- [ ] Amend `GDR-KI-HARNESS-006` to distinguish governance membership from owner-selected working-set references.
-- [ ] Extend the `ki-agora` standard with the exact `references` shape, identity grammar, ordering, classification, conflict, migration, and unresolved-reference semantics.
-- [ ] Extend the Agora audit context and rubric so unknown fields, malformed identities, duplicates, owner or member conflicts, and invalid order entries fail closed.
-- [ ] Add fixtures for an owner referencing plain Git, an unavailable association, duplicate local candidates, an attempted member conflict, deliberate promotion to membership, and removal without peer mutation.
-- [ ] Refresh the generated rubric and capability documentation, then create separately owned `tools-ki` roadmap work for local association, resolution, roots, audit, open, and editor projection.
+- [x] Amend `GDR-KI-HARNESS-006` to distinguish governance membership from owner-selected working-set references.
+- [x] Extend the `ki-agora` standard with the exact `references` shape, identity grammar, ordering, classification, conflict, migration, and unresolved-reference semantics.
+- [x] Extend the Agora audit context and rubric so unknown fields, malformed identities, duplicates, owner or member conflicts, and invalid order entries fail closed.
+- [x] Add fixtures for an owner referencing plain Git, an unavailable association, duplicate local candidates, an attempted member conflict, deliberate promotion to membership, and removal without peer mutation.
+- [x] Refresh the generated rubric and capability documentation, then create separately owned `tools-ki` roadmap work for local association, resolution, roots, audit, open, and editor projection.
 
 ## Files touched
 
@@ -115,6 +115,32 @@ Keep the portable declaration and migration examples in the Agora standard. User
 ### Roadmap
 
 Create a separately identified `tools-ki` roadmap item for the host-owned local association and projection work after the portable contract is accepted.
+
+## Review
+
+### Delivered
+
+Implemented owner-selected external Agora references from baseline `02b22991a63068423c6c84279e5431667b81a5d8` in commit `829f7efcc8b8a60c18dbe1c0d3b5cae480a40512`. The portable contract now distinguishes owner, reciprocal member, and non-member reference identities while preserving the existing consent model. Created ready host follow-on `KI-TOOL-CLI-063` in `tools-ki` commit `d245838`.
+
+### Summary of changes
+
+Amended `GDR-KI-HARNESS-006`, `ki-agora` guidance and standard, parser, generated rubric, and fixtures. Homes may declare duplicate-free canonical GitHub `references`; reference identities may appear in projection order but may not duplicate the owner or a member.
+
+### Verification
+
+Focused Biome, TypeScript, six Agora context tests, and three rubric catalogue tests passed. `ki repo audit --skill ki-agora --repo .` passed. The implementation commit also passed Markdown repair and the staged-snapshot `ki-skills` audit.
+
+### Outstanding concerns
+
+Machine-local association, typed unresolved diagnostics, roots, open, and editor projection are intentionally outside the portable harness contract and remain ready in receiver-owned `KI-TOOL-CLI-063`. The harness does not claim to resolve or mutate external repositories.
+
+### Post-change review
+
+References remain presentation-only and owner-selected. The implementation does not weaken reciprocal membership, infer consent, admit local paths, or grant work, trade, priority, publication, implementation, or acceptance authority.
+
+### Mini recap
+
+Portable classification and declaration belong in `ki-agora`; machine-local checkout association and target projection belong in `tools-ki`. No further harness learning route is required.
 
 ## Discussion
 
