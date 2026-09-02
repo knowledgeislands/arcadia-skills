@@ -4,10 +4,10 @@ title: Classify open trade routes
 area: GOV
 theme: governance-consistency
 horizon: now
-status: ready
+status: in-progress
 blocks: []
 blocked_by: []
-baseline_ref: null
+baseline_ref: 2b81c73ed896eaa9f73a1ce2eaadb697b39291fa
 ---
 
 ## Goal
