@@ -4,7 +4,7 @@ title: Classify open trade routes
 area: GOV
 theme: governance-consistency
 horizon: now
-status: in-progress
+status: awaiting-review
 blocks: []
 blocked_by: []
 baseline_ref: 2b81c73ed896eaa9f73a1ce2eaadb697b39291fa
@@ -84,12 +84,12 @@ The existing `ki-work`, roadmap, and `ki-trades` contracts are mechanically heal
 
 ## Steps
 
-- [ ] Amend `GDR-KI-HARNESS-005` with the exact-subtype, two-sided standing-authority model.
-- [ ] Extend the `ki-trades` standard with subtype definitions, standing configuration, optional itemized knowledge classification, inline provenance, capture rules, compatibility, and revocation.
-- [ ] Extend the trade rubric context and generated criteria for subtype definitions, reciprocity, provenance, historical revocation, and default-deny failures.
-- [ ] Update `ki-next` guidance for receiver-local standing capture while preserving its selection and implementation authority boundaries.
-- [ ] Model all required private, public, matching, non-matching, work, and revocation examples in fixtures and migration guidance.
-- [ ] Capture actual route activation and `tools-ki` command support as separately owned follow-on work; do not mutate peer repositories from this item.
+- [x] Amend `GDR-KI-HARNESS-005` with the exact-subtype, two-sided standing-authority model.
+- [x] Extend the `ki-trades` standard with subtype definitions, standing configuration, optional itemized knowledge classification, inline provenance, capture rules, compatibility, and revocation.
+- [x] Extend the trade rubric context and generated criteria for subtype definitions, reciprocity, provenance, historical revocation, and default-deny failures.
+- [x] Update `ki-next` guidance for receiver-local standing capture while preserving its selection and implementation authority boundaries.
+- [x] Model all required private, public, matching, non-matching, work, and revocation examples in fixtures and migration guidance.
+- [x] Capture actual route activation and `tools-ki` command support as separately owned follow-on work; do not mutate peer repositories from this item.
 
 ## Files touched
 
@@ -132,6 +132,32 @@ Add migration examples for itemized fallback, direct knowledge capture, and revo
 ### Roadmap
 
 Route activation and provider tooling remain separate follow-on records owned by their receiving repositories.
+
+## Review
+
+### Delivered
+
+Implemented the exact-subtype, two-sided standing knowledge-intake contract from baseline `2b81c73ed896eaa9f73a1ce2eaadb697b39291fa` in commit `cee9613de6328fc5a12c2ca6959da10f90f9053b`, with receiver-owned vocabulary, reciprocal activation, optional itemized classification, marked `STI-*` evidence, revocation-aware reporting, and preserved authority boundaries. Created receiver-owned CLI follow-on `KI-TOOL-CLI-062` in `tools-ki` commit `f378982`.
+
+### Summary of changes
+
+Amended `GDR-KI-HARNESS-005`, the `ki-trades` standard, generated rubric, checker context, and fixtures; added `STANDING-1`; and extended `ki-next` routing guidance. Existing configurations remain itemized-only when subtype and standing tables are absent.
+
+### Verification
+
+Focused Biome, TypeScript, and 31 `ki-trades` tests passed. `ki repo audit --skill ki-trades --repo .` passed. The hook-backed implementation commit also passed Markdown repair and staged-snapshot `ki-skills` audit.
+
+### Outstanding concerns
+
+Historical capture after route revocation is retained and reported for introduction-time review; the first checker slice does not automatically reconstruct both repositories' historical route configuration. This is visible `INFO` evidence rather than a silent pass. User-facing mutation and capture commands remain separately owned by ready `KI-TOOL-CLI-062`.
+
+### Post-change review
+
+The implementation keeps standing intake narrower than itemized trades: knowledge-only, exact and reciprocal, receiver-local, source-commit anchored, and default-deny. It introduces no peer write or lifecycle authority and leaves existing route and record contracts compatible.
+
+### Mini recap
+
+Durable policy belongs in `GDR-KI-HARNESS-005` and `standards-trades.md`; receiver workflow belongs in `ki-next`; CLI mutation belongs in `tools-ki`. No additional harness learning route is required.
 
 ## Discussion
 
