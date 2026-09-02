@@ -10,7 +10,15 @@ run_id: KI-HARNESS-BATCH-010-RUN-001
 timebox_ends_at: 2026-09-02T23:29:45Z
 item_ids: [KI-HARNESS-GOV-047, KI-HARNESS-GOV-052]
 completion_target: done
-mandatory_stops: [material-scope-expansion, destructive-or-irreversible-work, external-coordination, verification-failure, unapproved-public-contract-decision, push-or-release]
+mandatory_stops:
+  [
+    material-scope-expansion,
+    destructive-or-irreversible-work,
+    external-coordination,
+    verification-failure,
+    unapproved-public-contract-decision,
+    push-or-release,
+  ]
 closure_item_ids: [KI-HARNESS-GOV-047, KI-HARNESS-GOV-052]
 ---
 
@@ -60,3 +68,10 @@ Each item must pass independently through `in-progress` and `awaiting-review`, w
 ## Run ledger
 
 <!-- ki-batch-run: KI-HARNESS-BATCH-010-RUN-001 1cc7ace46cf081e877280b83c5aae170b78ddc1d04096b74d9264583ced5e710 -->
+
+## Run outcome
+
+- `KI-HARNESS-GOV-047` reached Done through implementation `cee9613d`, review `fe9308d6`, and acceptance `02b22991`; receiver-owned CLI follow-on is ready as `KI-TOOL-CLI-062` at `f378982`.
+- `KI-HARNESS-GOV-052` reached Done through implementation `829f7efc`, review `b589e8d3`, and acceptance `47a0b2a8`; receiver-owned host follow-on is ready as `KI-TOOL-CLI-063` at `d245838`.
+- Focused TypeScript, tests, generated-rubric publication, `ki-trades`, `ki-agora`, and roadmap audits passed for each item before closure.
+- `OPS-005` and `OPS-006` remained outside this batch because they entered it already in progress; they were re-grounded and advanced separately. `FND-014` and `RTP-004` remained outside because their named external execution prerequisites are still absent.

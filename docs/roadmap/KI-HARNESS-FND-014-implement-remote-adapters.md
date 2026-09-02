@@ -46,6 +46,8 @@ No locally inspected repository currently selects `github-issues` or `linear`. A
 
 The shared resolver, operation shape, Linear configuration delta, provider fixtures, and single-record fail-closed boundary are locally decidable. The item is selected for current attention because implementation design can proceed, but it remains Draft until the live pilot target and mutation authority are explicit.
 
+The 2026-09-02 estate recheck still found no repository selecting `github-issues` or `linear`. No pilot repository, draft Issue, lifecycle metadata mapping, or reversible mutation authority has been supplied, so the record remains Draft; the locally decidable shared-module and fixture work should be shaped only after that pilot boundary can make the first operational slice testable end to end.
+
 ## Steps
 
 - [ ] Define and test one `ki-work` shared module for selected-adapter resolution and remote operation evidence, then materialise it into all four process skills.

@@ -42,6 +42,8 @@ Readiness requires the server operating system, canonical repository root, SSH h
 
 The documented comparison and proof design are complete enough to execute once a target exists. The item is selected for current preparation, but remains Draft because no personal-server target or access path is declared locally. Installation, network exposure, and service-mode choices wait for that target.
 
+The 2026-09-02 host recheck found `herdr` installed at `/opt/homebrew/bin/herdr`, but SSH configuration still contains only `github.com`, and no Zed remote-server declaration names a personal server. Installation is therefore no longer a question, but the required server OS, repository root, access path, service mode, and exposure authority remain absent; hands-on proof still cannot begin safely.
+
 ## Steps
 
 - [x] Separate editor transport, durable terminal ownership, agent-state visibility, and roaming terminal transport.
