@@ -36,7 +36,7 @@ Use these references progressively:
 Three rules define the boundary:
 
 1. Use Workers Static Assets and `wrangler deploy`; Pages is not a deployment target for new projects.
-2. Treat `assets.directory` as the seam to the `dist/` emitted by `ki-repo-website`.
+2. Consume `[skills.ki-repo-website].site-root` (default `apps/site`) and treat its `dist/` as the build seam; the hosting table remains keyless.
 3. Keep the site assets-only: no `main` means no server-side Worker code executes, making a published “no control plane” claim mechanically verifiable.
 
 ## Composition

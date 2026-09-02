@@ -543,7 +543,7 @@ export const collectAuditEvidence = async (
 
   // Repo shape — flat vs monorepo (§0). A flat repo is one root TS project (`tsc --noEmit`);
   // a monorepo declares its packages in the standard Bun `workspaces` array in package.json
-  // (canonically ["workspaces/*"]), whose per-package tsconfigs can carry incompatible
+  // (typically ownership globs such as ["packages/*", "apps/*", "examples/*"]), whose per-package tsconfigs can carry incompatible
   // `types`/`lib`, so it is type-checked per package rather than once at the root.
   // A trailing `/*` glob expands to the subdirectories that carry a package.json.
   const workspaces = Array.isArray(pkg.workspaces)

@@ -420,15 +420,52 @@ const REPO_FIELDS =
 const WRANGLER = ['wrangler.jsonc', 'wrangler.json', 'wrangler.toml']
 const ELEVENTY = ['eleventy.config.ts', 'eleventy.config.js', 'eleventy.config.cjs', 'eleventy.config.mjs']
 const VITE = ['vite.config.ts', 'vite.config.js', 'vite.config.mjs', 'vite.config.mts']
-type Signals = { root: Set<string>; tree: Set<string>; pkg: Pkg | null }
+const DEFAULT_SITE_ROOT = 'apps/site'
+type WebsiteRoot = { path: string | null; declared: boolean }
+type Signals = {
+  root: Set<string>
+  tree: Set<string>
+  pkg: Pkg | null
+  siteRoot: WebsiteRoot
+  sitePkg: Pkg | null
+}
+
+const safeSiteRoot = (value: unknown): value is string =>
+  typeof value === 'string' &&
+  (value === '.' ||
+    (value.length > 0 &&
+      !isAbsolute(value) &&
+      !/^[A-Za-z]:[\\/]/.test(value) &&
+      !value.includes('\\') &&
+      value.split('/').every((part) => part.length > 0 && part !== '.' && part !== '..')))
+
+const websiteRoot = (text: string | null): WebsiteRoot => {
+  if (text === null) return { path: DEFAULT_SITE_ROOT, declared: false }
+  try {
+    const document = TOML.parse(text) as Record<string, unknown>
+    const value = declaredSkills(document)[skillTable('ki-repo-website')]
+    if (value === undefined) return { path: DEFAULT_SITE_ROOT, declared: false }
+    if (!value || typeof value !== 'object' || Array.isArray(value)) return { path: null, declared: true }
+    const raw = (value as Record<string, unknown>)['site-root']
+    if (raw === undefined) return { path: DEFAULT_SITE_ROOT, declared: true }
+    return { path: safeSiteRoot(raw) ? raw : null, declared: true }
+  } catch {
+    return { path: null, declared: false }
+  }
+}
+
+const atWebsiteRoot = (root: string, file: string): string => (root === '.' ? file : `${root}/${file}`)
 
 const hasNamedConfig = (signals: Signals, names: readonly string[]): boolean =>
   names.some((file) => signals.root.has(file)) ||
   [...signals.tree].some((path) => names.some((file) => path.endsWith(`/${file}`)))
 
 const hasContentWebsite = (signals: Signals): boolean => hasNamedConfig(signals, ELEVENTY)
+const hasAppAt = (signals: Signals, root: string, pkg: Pkg | null): boolean =>
+  VITE.some((file) => signals.tree.has(atWebsiteRoot(root, file))) && pkgHasDep(pkg, 'react') && pkgHasDep(pkg, 'vite')
 const hasAppWebsite = (signals: Signals): boolean =>
-  hasNamedConfig(signals, VITE) && pkgHasDep(signals.pkg, 'react') && pkgHasDep(signals.pkg, 'vite')
+  (signals.siteRoot.path !== null && hasAppAt(signals, signals.siteRoot.path, signals.sitePkg)) ||
+  (!signals.siteRoot.declared && hasAppAt(signals, '.', signals.pkg))
 type ContentSource = 'local checkout' | 'GitHub default branch'
 type ContentEvidence = {
   files: Set<string>
@@ -445,13 +482,24 @@ function localContentEvidence(dir: string): ContentEvidence {
   if (existsSync(join(dir, '.ki'))) tree.add('.ki')
   const files = localRootPaths(tree)
   const kiText = files.has(KI_CONFIG) ? localRaw(dir, KI_CONFIG) : null
+  const siteRoot = websiteRoot(kiText)
+  const sitePackagePath = siteRoot.path === null ? null : atWebsiteRoot(siteRoot.path, 'package.json')
+  const pkg = files.has('package.json') ? parsePkg(localRaw(dir, 'package.json')) : null
+  const sitePkg =
+    sitePackagePath === null
+      ? null
+      : sitePackagePath === 'package.json'
+        ? pkg
+        : tree.has(sitePackagePath)
+          ? parsePkg(localRaw(dir, sitePackagePath))
+          : null
   return {
     files,
     kiText,
     ki: kiText == null ? null : parseKiConfig(kiText),
     readme: files.has('README.md') ? localRaw(dir, 'README.md') : null,
     gitignore: files.has('.gitignore') ? localRaw(dir, '.gitignore') : null,
-    signals: { root: files, tree, pkg: files.has('package.json') ? parsePkg(localRaw(dir, 'package.json')) : null },
+    signals: { root: files, tree, pkg, siteRoot, sitePkg },
     source: 'local checkout'
   }
 }
@@ -459,6 +507,7 @@ function localContentEvidence(dir: string): ContentEvidence {
 async function remoteContentEvidence(nwo: string, branch: string): Promise<ContentEvidence> {
   const files = await rootPaths(nwo, branch)
   const kiText = files.has(KI_CONFIG) ? await ghRaw(nwo, KI_CONFIG) : null
+  const siteRoot = websiteRoot(kiText)
   // Independent round trips, so they overlap rather than queue: the content reads do not
   // depend on one another, and the tree call is the slowest of them.
   const [readme, gitignore, tree, pkg] = await Promise.all([
@@ -467,13 +516,22 @@ async function remoteContentEvidence(nwo: string, branch: string): Promise<Conte
     treePaths(nwo, branch),
     readRemotePkg(nwo, files)
   ])
+  const sitePackagePath = siteRoot.path === null ? null : atWebsiteRoot(siteRoot.path, 'package.json')
+  const sitePkg =
+    sitePackagePath === null
+      ? null
+      : sitePackagePath === 'package.json'
+        ? pkg
+        : tree.has(sitePackagePath)
+          ? parsePkg(await ghRaw(nwo, sitePackagePath))
+          : null
   return {
     files,
     kiText,
     ki: kiText == null ? null : parseKiConfig(kiText),
     readme,
     gitignore,
-    signals: { root: files, tree, pkg },
+    signals: { root: files, tree, pkg, siteRoot, sitePkg },
     source: 'GitHub default branch'
   }
 }

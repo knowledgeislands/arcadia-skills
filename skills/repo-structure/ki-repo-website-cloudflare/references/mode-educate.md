@@ -38,7 +38,7 @@ This opens a browser OAuth flow and stores user-scoped credentials outside the r
 
 ## 2. Create the site `wrangler.jsonc`
 
-The config lives at the **site root** — the repo root for a flat layout, the `workspaces/site/` subfolder when the repo also has companion Workers. Use the canonical shape from the standard and adapt three fields: `name`, `compatibility_date`, and the `assets.directory` path.
+The config lives at the **site root** selected by `[skills.ki-repo-website].site-root`, which defaults to `apps/site`. Use the canonical shape from the standard and adapt three fields: `name`, `compatibility_date`, and the `assets.directory` path.
 
 ```jsonc
 {
@@ -56,7 +56,7 @@ The config lives at the **site root** — the repo root for a flat layout, the `
 `assets.directory` notes:
 
 - **`"./dist"`** — `wrangler.jsonc` is at the repo root (`dist/` is a sibling).
-- **`"dist"`** — `wrangler.jsonc` and the build output both live in the canonical `workspaces/site/` workspace.
+- **`"dist"`** — `wrangler.jsonc` and the build output both live in the canonical `apps/site/` application workspace.
 
 Set `compatibility_date` to today's date (`YYYY-MM-DD`). For a pure-assets Worker there is no runtime code, but the field is required.
 
@@ -64,31 +64,32 @@ Set `compatibility_date` to today's date (`YYYY-MM-DD`). For a pure-assets Worke
 
 ## 3. Add the script family to `package.json`
 
-Add these three scripts to the root `package.json`. Use the `site:` prefix for the `workspaces/site/`-subfolder layout; drop it for a flat layout (rare):
+Add the local operations to `<site-root>/package.json`. Each command runs from the selected site workspace:
 
 ```jsonc
 {
   "scripts": {
-    "ki:site:deploy": "cd site && bunx wrangler deploy",
-    "ki:site:preview": "bun run ki:site:build && cd site && bunx wrangler dev",
-    "ki:site:clean": "rm -rf workspaces/site/dist workspaces/site/.wrangler"
+    "deploy": "bunx wrangler deploy",
+    "preview": "bun run build && bunx wrangler dev",
+    "upload": "bunx wrangler versions upload",
+    "clean": "rm -rf dist .wrangler"
   }
 }
 ```
 
-For a **flat** layout (no `workspaces/site/` subfolder, `wrangler.jsonc` at repo root):
+Expose the stable public aliases from the root `package.json`:
 
 ```jsonc
 {
   "scripts": {
-    "ki:site:deploy": "bunx wrangler deploy",
-    "ki:site:preview": "bun run ki:site:build && bunx wrangler dev",
-    "ki:site:clean": "rm -rf dist .wrangler"
+    "ki:site:deploy": "bun run --cwd apps/site deploy",
+    "ki:site:preview": "bun run --cwd apps/site preview",
+    "ki:site:upload": "bun run --cwd apps/site upload"
   }
 }
 ```
 
-`ki:site:build` and `ki:site:dev` are owned by `ki-repo-website` — do not redefine them here.
+Replace `apps/site` with the selected site root. For `site-root = "."`, use `bun run deploy`, `bun run preview`, and `bun run upload`. The local build/dev operations and public `ki:site:build` / `ki:site:dev` aliases are owned by `ki-repo-website` — do not redefine them here.
 
 ---
 
@@ -108,13 +109,14 @@ The unanchored rules cover flat and workspace layouts. `ki-repo-website` owns `d
 
 ## 5. Mark the repo with `.ki.toml`
 
-Add the `[skills.ki-repo-website-cloudflare]` table so the mechanical checker can find the repo:
+Keep the selected site root on the website-core table and make the hosting table keyless:
 
 ```toml
+[skills.ki-repo-website]
+# Optional because apps/site is the default.
+site-root = "apps/site"
+
 [skills.ki-repo-website-cloudflare]
-# site-root is the path (relative to the repo root) where wrangler.jsonc lives.
-# "site" for the subfolder layout; "." for flat.
-site-root = "site"
 ```
 
 If `.ki.toml` does not yet exist, create it at the repo root. Other skills may already have their own tables in it — just append.

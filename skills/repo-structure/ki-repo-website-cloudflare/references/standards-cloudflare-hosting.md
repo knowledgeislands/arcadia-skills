@@ -20,14 +20,14 @@ The site is **one Cloudflare Worker serving Static Assets**. The Worker has an `
 - **Workers Static Assets**, deployed with `wrangler deploy`. Cloudflare recommends Workers for new static sites and SPAs; Pages is not the house deployment target for new projects. A `wrangler pages deploy` command is a finding.
 - **`pages_build_output_dir` is the legacy Pages marker.** Its presence is a failure even when scripts use `wrangler deploy`. Replace it with `"assets": { "directory": "./dist" }`.
 - **One `wrangler.jsonc` per deployable.** The **site** Worker's config carries an `assets` block and no `main`. The absence of `main` is load-bearing: an assets-only Worker executes no server-side code, which is what allows a repository to state mechanically that its published deployment has no control plane.
-- The site root — and thus where its `wrangler.jsonc` lives — follows `ki-repo-website`'s layout: the site is the **`workspaces/site/` workspace**, so `wrangler.jsonc` and the generated `dist/` both live under `workspaces/site/` and `assets.directory` is `"dist"` (§3). This skill can serve any static `dist/`, so a one-off **flat** consumer (config at the repo root, `assets.directory: "./dist"`) is still valid hosting.
+- The site root — and thus where its `wrangler.jsonc` lives — is owned by `[skills.ki-repo-website].site-root`, which defaults to **`apps/site`**. The Cloudflare table is a keyless hosting opt-in: it consumes the core location rather than accepting a second site-root declaration. An explicit flat consumer (`site-root = "."`, with config at the repo root) remains valid.
 
 ## 2. The `dist/` seam
 
 The hosting layer and the build layer meet at exactly one place: the **`dist/` directory**.
 
 - The selected website implementation **emits** `dist/`. This skill **serves** it by pointing `assets.directory` at that exact build output.
-- **`assets.directory` is relative to the `wrangler.jsonc` file**: `"./dist"` when the config is at the repo root and `"dist"` in the canonical `workspaces/site/` workspace. A different layout may use another relative path, but it must resolve to the build's actual `dist/` output.
+- **`assets.directory` is relative to the `wrangler.jsonc` file**: `"./dist"` when the config is at the repo root and `"dist"` in the canonical `apps/site/` application workspace. A different core-selected layout may use another relative path, but it must resolve to the build's actual `dist/` output.
 - **The build runs before deploy.** `dist/` is gitignored and regenerated; deploy reads whatever the last build produced. A `ki:site:preview` script chains build → `wrangler dev` for a local check against the real Worker runtime.
 - Neither layer needs the other's internals — only the `dist/` path. That is what makes the split clean and the hosting skill reusable for any static `dist/`.
 
@@ -66,14 +66,16 @@ For `[skills.ki-repo-website-app]`, `assets.not_found_handling` is not optional:
 
 ## 4. The script family
 
-The hosting scripts in `package.json`, namespaced with the `site:` prefix (the house monorepo layout, §1; a one-off flat consumer leaves them unprefixed):
+The selected site's `<site-root>/package.json` owns local operations:
 
-- **`ki:site:deploy`** → `cd <site root> && bunx wrangler deploy`.
-- **`ki:site:preview`** → `bun run ki:site:build && cd <site root> && bunx wrangler dev` — build, then serve through the real Worker runtime locally.
-- **`ki:site:upload`** → `cd <site root> && bunx wrangler versions upload` — optionally create an undeployed Worker version and preview endpoint for Workers Builds. This is a credentialed remote mutation: only an explicitly authorised operator or Workers Builds service may run it. Audits, conformance, local builds, tests, and dry evaluation inspect the manifest without invoking Wrangler.
-- **`ki:site:clean`** → removes `dist/` and `.wrangler/`.
+- **`deploy`** → `bunx wrangler deploy`.
+- **`preview`** → build, then `bunx wrangler dev` through the real Worker runtime.
+- **`upload`** → `bunx wrangler versions upload` — optionally create an undeployed Worker version and preview endpoint for Workers Builds. This is a credentialed remote mutation: only an explicitly authorised operator or Workers Builds service may run it. Audits, conformance, local builds, tests, and dry evaluation inspect the manifest without invoking Wrangler.
+- **`clean`** → removes `dist/` and `.wrangler/`; the website core owns the build-output part of that lifecycle.
 
-`ki:site:build` / `ki:site:dev` (the build + dev-server scripts) belong to `ki-repo-website`, not here. `.wrangler/` is gitignored.
+The repository root owns the public aliases. For the default root these are `"ki:site:deploy": "bun run --cwd apps/site deploy"`, `"ki:site:preview": "bun run --cwd apps/site preview"`, and the optional upload equivalent. An explicitly flat site uses `bun run <operation>` instead. This keeps public orchestration stable without duplicating `ki:site:*` names inside the application package.
+
+The root `ki:site:build` / `ki:site:dev` aliases and local build/dev operations belong to `ki-repo-website`, not here. `.wrangler/` is gitignored.
 
 ## 5. CI/CD
 

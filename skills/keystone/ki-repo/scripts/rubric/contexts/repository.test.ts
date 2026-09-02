@@ -575,9 +575,10 @@ describe('local repository evidence', () => {
 
   test('separates website coverage and enforces one purpose-specific implementation', async () => {
     const root = repository()
-    writeFileSync(join(root, 'vite.config.ts'), 'export default {}\n')
+    mkdirSync(join(root, 'apps', 'site'), { recursive: true })
+    writeFileSync(join(root, 'apps', 'site', 'vite.config.ts'), 'export default {}\n')
     writeFileSync(
-      join(root, 'package.json'),
+      join(root, 'apps', 'site', 'package.json'),
       JSON.stringify({ dependencies: { react: '^19.0.0' }, devDependencies: { vite: '^7.0.0' } })
     )
     writeFileSync(join(root, '.ki.toml'), '[skills.ki-repo]\n')
@@ -594,6 +595,21 @@ describe('local repository evidence', () => {
     expect(structure).toContainEqual(
       expect.objectContaining({ level: 'FAIL', message: expect.stringContaining('choose content or app') })
     )
+  })
+
+  test('uses the website core site root to discover a nested app manifest', async () => {
+    const root = repository()
+    mkdirSync(join(root, 'web'), { recursive: true })
+    writeFileSync(join(root, 'web', 'vite.config.ts'), 'export default {}\n')
+    writeFileSync(
+      join(root, 'web', 'package.json'),
+      JSON.stringify({ dependencies: { react: '^19.0.0' }, devDependencies: { vite: '^7.0.0' } })
+    )
+    writeFileSync(join(root, '.ki.toml'), '[skills.ki-repo]\n\n[skills.ki-repo-website]\nsite-root = "web"\n')
+
+    const coverage = (await collectAuditFindings([root])).findings.filter((finding) => finding.code === 'COV-1')
+    expect(coverage).toContainEqual(expect.objectContaining({ message: expect.stringContaining('ki-website-app') }))
+    expect(coverage).not.toContainEqual(expect.objectContaining({ message: expect.stringContaining('ki-website (') }))
   })
 
   test('requires the portable parent and Claude adapter for Markdown subagent projections', async () => {
