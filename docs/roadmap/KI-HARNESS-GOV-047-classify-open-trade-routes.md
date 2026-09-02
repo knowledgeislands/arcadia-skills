@@ -4,7 +4,7 @@ title: Classify open trade routes
 area: GOV
 theme: governance-consistency
 horizon: now
-status: awaiting-review
+status: done
 blocks: []
 blocked_by: []
 baseline_ref: 2b81c73ed896eaa9f73a1ce2eaadb697b39291fa
@@ -158,6 +158,10 @@ The implementation keeps standing intake narrower than itemized trades: knowledg
 ### Mini recap
 
 Durable policy belongs in `GDR-KI-HARNESS-005` and `standards-trades.md`; receiver workflow belongs in `ki-next`; CLI mutation belongs in `tools-ki`. No additional harness learning route is required.
+
+## Done
+
+Accepted on 2026-09-02 under outcome-authority consolidated closure in `KI-HARNESS-BATCH-010`. The review packet and implementation evidence in commit `fe9308d670dd8b04066ab0c6bfb3891ba652a54f` were rechecked before closure.
 
 ## Discussion
 
