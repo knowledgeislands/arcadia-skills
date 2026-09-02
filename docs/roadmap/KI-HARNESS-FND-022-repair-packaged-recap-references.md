@@ -4,10 +4,10 @@ area: FND
 title: Repair packaged recap references
 theme: foundation-tooling
 horizon: next
-status: ready
+status: in-progress
 blocks: []
 blocked_by: []
-baseline_ref: null
+baseline_ref: b897954d640e00412cbad81e6da7376e2916ec61
 ---
 
 ## Goal
