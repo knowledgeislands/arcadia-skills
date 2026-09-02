@@ -4,7 +4,7 @@ title: Reference external Agora repositories
 area: GOV
 theme: governance-consistency
 horizon: now
-status: awaiting-review
+status: done
 blocks: []
 blocked_by: []
 baseline_ref: 02b22991a63068423c6c84279e5431667b81a5d8
@@ -141,6 +141,10 @@ References remain presentation-only and owner-selected. The implementation does 
 ### Mini recap
 
 Portable classification and declaration belong in `ki-agora`; machine-local checkout association and target projection belong in `tools-ki`. No further harness learning route is required.
+
+## Done
+
+Accepted on 2026-09-02 under outcome-authority consolidated closure in `KI-HARNESS-BATCH-010`. The review packet and implementation evidence in commit `b589e8d3a6fce342fb8e60d1a14a1f6fd215c983` were rechecked before closure.
 
 ## Discussion
 
