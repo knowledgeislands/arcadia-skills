@@ -4,10 +4,10 @@ title: Reference external Agora repositories
 area: GOV
 theme: governance-consistency
 horizon: now
-status: ready
+status: in-progress
 blocks: []
 blocked_by: []
-baseline_ref: null
+baseline_ref: 02b22991a63068423c6c84279e5431667b81a5d8
 ---
 
 ## Goal
