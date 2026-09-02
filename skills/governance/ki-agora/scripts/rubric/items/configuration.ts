@@ -7,7 +7,7 @@ const CONFIG_1: RubricItem<OutcomeContext> = {
   code: 'CONFIG-1',
   title: 'Agora homes are canonical',
   description:
-    'A declared Agora home uses a stable identifier, explicitly names the canonical identity of its declaring owner repository, and records only its non-empty purpose, optional duplicate-free ordered projection prefix, and canonical HTTPS GitHub member repositories with lower-case hyphenated roles. Ordered identities must name the owner or a declared member and affect projection order only. Unknown fields fail closed. The owner is an automatic projection participant, not a reciprocal member, and local declaration shape is not reciprocal-consent evidence.',
+    'A declared Agora home uses a stable identifier, explicitly names the canonical identity of its declaring owner repository, and records only its non-empty purpose, optional duplicate-free ordered projection prefix, optional duplicate-free canonical HTTPS GitHub references, and canonical member repositories with lower-case hyphenated roles. Owner, member, and reference identities are mutually exclusive; ordered identities name one of those classes and affect projection order only. References are owner-selected non-members requiring no reciprocal declaration. Unknown fields fail closed, and local declaration shape is not reciprocal-consent evidence.',
   sources: [SOURCE],
   mechanical: {
     level: 'FAIL',

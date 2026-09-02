@@ -27,7 +27,7 @@ The tracked readable rubric is the exact publication of the structured catalogue
 
 Owner identity, purpose, ordered projection, and approved member roles are explicit and portable.
 
-- **CONFIG-1 [M] — Agora homes are canonical** — A declared Agora home uses a stable identifier, explicitly names the canonical identity of its declaring owner repository, and records only its non-empty purpose, optional duplicate-free ordered projection prefix, and canonical HTTPS GitHub member repositories with lower-case hyphenated roles. Ordered identities must name the owner or a declared member and affect projection order only. Unknown fields fail closed. The owner is an automatic projection participant, not a reciprocal member, and local declaration shape is not reciprocal-consent evidence. (standards-agora.md)
+- **CONFIG-1 [M] — Agora homes are canonical** — A declared Agora home uses a stable identifier, explicitly names the canonical identity of its declaring owner repository, and records only its non-empty purpose, optional duplicate-free ordered projection prefix, optional duplicate-free canonical HTTPS GitHub references, and canonical member repositories with lower-case hyphenated roles. Owner, member, and reference identities are mutually exclusive; ordered identities name one of those classes and affect projection order only. References are owner-selected non-members requiring no reciprocal declaration. Unknown fields fail closed, and local declaration shape is not reciprocal-consent evidence. (standards-agora.md)
   - _Remediation:_ diagnostic — Correct the local ki-agora home declaration, then rerun the audit.
 
 ## MEMBERSHIP — Member declaration

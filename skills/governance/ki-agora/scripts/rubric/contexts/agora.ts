@@ -58,7 +58,9 @@ const parseHomes = (value: unknown, local: string | undefined): AuditOutcome[] =
       outcomes.push(violation(`home ${identifier} must be a table`))
       continue
     }
-    for (const key of Object.keys(home).filter((key) => !['owner', 'purpose', 'order', 'members'].includes(key)))
+    for (const key of Object.keys(home).filter(
+      (key) => !['owner', 'purpose', 'order', 'references', 'members'].includes(key)
+    ))
       outcomes.push(violation(`home ${identifier} has unrecognised key ${key}`))
     if (typeof home.owner !== 'string' || !REPOSITORY.test(home.owner))
       outcomes.push(violation(`home ${identifier} owner must be a canonical HTTPS GitHub repository`))
@@ -81,10 +83,32 @@ const parseHomes = (value: unknown, local: string | undefined): AuditOutcome[] =
           violation(`home ${identifier} member ${repository} role must be a lower-case hyphenated identifier`)
         )
     }
+    const references = home.references
+    const referenced = new Set<string>()
+    if (references !== undefined && !Array.isArray(references))
+      outcomes.push(violation(`home ${identifier} references must be an array`))
+    else
+      for (const repository of references ?? []) {
+        if (typeof repository !== 'string' || !REPOSITORY.test(repository)) {
+          outcomes.push(violation(`home ${identifier} references entries must be canonical HTTPS GitHub repositories`))
+          continue
+        }
+        if (referenced.has(repository)) outcomes.push(violation(`home ${identifier} references repeats ${repository}`))
+        else referenced.add(repository)
+        if (repository === local) outcomes.push(violation(`home ${identifier} must not reference its own repository`))
+        if (repository in members)
+          outcomes.push(
+            violation(`home ${identifier} repository ${repository} must not be both a member and reference`)
+          )
+      }
     if (home.order !== undefined) {
       if (!Array.isArray(home.order)) outcomes.push(violation(`home ${identifier} order must be an array`))
       else {
-        const participants = new Set([...(typeof home.owner === 'string' ? [home.owner] : []), ...Object.keys(members)])
+        const participants = new Set([
+          ...(typeof home.owner === 'string' ? [home.owner] : []),
+          ...Object.keys(members),
+          ...referenced
+        ])
         const ordered = new Set<string>()
         for (const repository of home.order) {
           if (typeof repository !== 'string' || !REPOSITORY.test(repository)) {
@@ -94,7 +118,9 @@ const parseHomes = (value: unknown, local: string | undefined): AuditOutcome[] =
           if (ordered.has(repository)) outcomes.push(violation(`home ${identifier} order repeats ${repository}`))
           else ordered.add(repository)
           if (!participants.has(repository))
-            outcomes.push(violation(`home ${identifier} order repository ${repository} must name its owner or member`))
+            outcomes.push(
+              violation(`home ${identifier} order repository ${repository} must name its owner, member, or reference`)
+            )
         }
       }
     }
