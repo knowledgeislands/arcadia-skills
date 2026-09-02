@@ -3,7 +3,7 @@ id: KI-HARNESS-RTP-004
 title: Evaluate remote agent sessions
 area: RTP
 theme: runtime-portability
-horizon: soon
+horizon: now
 status: draft
 blocks: []
 blocked_by: []
@@ -36,13 +36,13 @@ The local Zed settings contain no named SSH connection, and the local SSH config
 
 ### Promotion conditions
 
-Promote to Next when the server operating system, canonical repository root, SSH host or access path, and intended Herdr service mode are named. Mark Ready when the Zed-only baseline and exact Herdr pass or fail criteria are recorded for detach and reattach, dropped SSH, server-side process survival, blocked or idle state, repository identity, simultaneous observation and control, and restart recovery.
+Readiness requires the server operating system, canonical repository root, SSH host or access path, and intended Herdr service mode to be named. The Zed-only baseline and exact Herdr pass or fail criteria must cover detach and reattach, dropped SSH, server-side process survival, blocked or idle state, repository identity, simultaneous observation and control, and restart recovery.
 
-### Current state
+## Current state
 
-The documented comparison and proof design are complete enough to execute. The item remains Soon because no personal-server target or access path is declared locally. Installation, network exposure, and service-mode choices wait for that target.
+The documented comparison and proof design are complete enough to execute once a target exists. The item is selected for current preparation, but remains Draft because no personal-server target or access path is declared locally. Installation, network exposure, and service-mode choices wait for that target.
 
-### Steps
+## Steps
 
 - [x] Separate editor transport, durable terminal ownership, agent-state visibility, and roaming terminal transport.
 - [x] Refresh the supported-interface comparison from current Zed, Herdr, and Mosh primary documentation.
@@ -54,13 +54,13 @@ The documented comparison and proof design are complete enough to execute. The i
 - [ ] Record authentication, network exposure, repository permissions, data-egress boundary, recovery instructions, and an adopt, monitor, or reject decision.
 - [ ] Evaluate Mosh only if the proof leaves an independent roaming-terminal gap.
 
-### Files touched
+## Files touched
 
 - This evaluation record
 - A focused guide or decision record only if the hands-on proof supports adoption
 - No installation or service configuration before the target and exposure boundary are approved
 
-### Verify
+## Verify
 
 - The named server is reachable through the declared SSH path without adding an unauthenticated listener.
 - Zed reconnect evidence distinguishes editor recovery from terminal-process ownership.
@@ -68,9 +68,27 @@ The documented comparison and proof design are complete enough to execute. The i
 - Restart evidence distinguishes layout restoration, arbitrary child-process survival, and native agent-session restoration.
 - Any Mosh conclusion records the separate UDP and server requirements rather than implying Zed integration.
 
-### Dependencies / blocks
+## Dependencies / blocks
 
-Promotion remains blocked on a named personal-server target and access path. None is declared in the locally inspectable Zed or SSH configuration.
+Readiness remains blocked on a named personal-server target and access path. None is declared in the locally inspectable Zed or SSH configuration.
+
+## Documentation impact
+
+### Decision Records
+
+Create or amend a decision record only if the hands-on proof supports adopting a durable remote-session component.
+
+### Specifications
+
+No behaviour-level Harness specification changes are planned because this item evaluates an operating environment rather than a Harness capability.
+
+### Guides
+
+Add focused setup and recovery guidance only after a supported server, authentication, exposure, and service boundary has passed the proof.
+
+### Roadmap
+
+Capture any adopted implementation or unsupported capability gap as separately bounded follow-on work; an evaluation conclusion alone creates no delivery authority.
 
 ## Discussion
 

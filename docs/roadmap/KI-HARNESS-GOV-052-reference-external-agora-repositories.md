@@ -3,7 +3,7 @@ id: KI-HARNESS-GOV-052
 title: Reference external Agora repositories
 area: GOV
 theme: governance-consistency
-horizon: next
+horizon: now
 status: ready
 blocks: []
 blocked_by: []

@@ -3,7 +3,7 @@ id: KI-HARNESS-FND-014
 area: FND
 title: Implement remote adapter execution
 theme: foundation-tooling
-horizon: next
+horizon: now
 status: draft
 blocks: []
 blocked_by: []
@@ -44,7 +44,7 @@ Mark Ready when the Linear workspace locator, operation shapes, capability-resol
 
 No locally inspected repository currently selects `github-issues` or `linear`. An authenticated GitHub CLI and administrator access to an Issues-enabled repository establish capability evidence, but they do not authorise changing that repository's selected roadmap adapter or creating a pilot Issue. No equivalent local Linear capability or workspace locator is currently available.
 
-The shared resolver, operation shape, Linear configuration delta, provider fixtures, and single-record fail-closed boundary are locally decidable. The item belongs in Next because implementation design can proceed, but it remains Draft until the live pilot target and mutation authority are explicit.
+The shared resolver, operation shape, Linear configuration delta, provider fixtures, and single-record fail-closed boundary are locally decidable. The item is selected for current attention because implementation design can proceed, but it remains Draft until the live pilot target and mutation authority are explicit.
 
 ## Steps
 

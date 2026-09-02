@@ -3,7 +3,7 @@ id: KI-HARNESS-GOV-047
 title: Classify open trade routes
 area: GOV
 theme: governance-consistency
-horizon: next
+horizon: now
 status: ready
 blocks: []
 blocked_by: []

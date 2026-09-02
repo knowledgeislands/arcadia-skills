@@ -3,7 +3,7 @@ id: KI-HARNESS-OPS-006
 title: Acquire Granola meetings
 area: OPS
 theme: operations
-horizon: next
+horizon: now
 status: in-progress
 blocks: []
 blocked_by: []
