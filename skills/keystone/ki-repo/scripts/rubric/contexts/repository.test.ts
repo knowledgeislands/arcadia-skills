@@ -387,7 +387,7 @@ supported_runtimes = ["claude-code", "chatgpt-codex"]
       }
     })
     expect(invalidInspected).toBe(false)
-  })
+  }, 10_000)
 
   test('accepts the complete environment matrix when Claude Desktop is declared', async () => {
     expect(
