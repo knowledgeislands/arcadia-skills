@@ -28,6 +28,8 @@ Arcadia owns the provider-neutral acquisition lifecycle. `mcp-housekeeping-claud
 
 The installed ChatGPT application has been inventoried at `~/Library/Application Support/com.openai.chat`: 185 conversation records across 33 project roots. Its project-scoped `conversations-v3-*/<session>.data` records are opaque, so the direct adapter must preserve their bytes and metadata rather than assume a private plaintext format. No source material has been changed.
 
+The 2026-09-02 resumption revalidated the clean `mcp-housekeeping-chatgpt` checkout: its opaque local-store adapter and three focused tests pass with TypeScript. The repository is registered and declares reciprocal `ki-all` and `ki-mcps` Agora memberships. Its engineering audit still reports missing shared toolchain/Knip/coverage configuration, so final cross-provider integration verification remains open and the engineering baseline is routed to a receiver-owned follow-on.
+
 ## Steps
 
 - [x] Define the shared session adapter result and checkpoint contract.
@@ -35,10 +37,10 @@ The installed ChatGPT application has been inventoried at `~/Library/Application
 - [x] Align the Claude and Codex housekeeping skills with the acquisition lifecycle.
 - [x] Extend `tools-ki` with provider-context staging for validated local ChatGPT captures.
 - [x] Inventory the installed ChatGPT application's local session-store shape without reading or changing conversation contents.
-- [ ] Create and register `mcp-housekeeping-chatgpt` as the third provider MCP, with the same `discover`, `list`, `read`, and `checkpoint` semantics.
-- [ ] Implement read-only ChatGPT local-store discovery, including stable project/session identities, paths, byte counts, modification times, content hashes, and opaque-payload status.
-- [ ] Implement faithful byte-for-byte ChatGPT record acquisition into the `tools-ki` Harbour path, retaining provenance and explicit media/interpretation omissions.
-- [ ] Add isolated fixtures for direct ChatGPT-store discovery, checkpoint incrementality, unsafe-path rejection, and opaque-record preservation.
+- [x] Create and register `mcp-housekeeping-chatgpt` as the third provider MCP, with the same `discover`, `list`, `read`, and `checkpoint` semantics.
+- [x] Implement read-only ChatGPT local-store discovery, including stable project/session identities, paths, byte counts, modification times, content hashes, and opaque-payload status.
+- [x] Implement faithful byte-for-byte ChatGPT record acquisition into the `tools-ki` Harbour path, retaining provenance and explicit media/interpretation omissions.
+- [x] Add isolated fixtures for direct ChatGPT-store discovery, checkpoint incrementality, unsafe-path rejection, and opaque-record preservation.
 - [ ] Verify each provider surface, skill, binding, registry entry, Agora membership, and repository-context working-area import together.
 
 ## Files touched

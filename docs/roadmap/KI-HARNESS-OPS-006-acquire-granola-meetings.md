@@ -38,8 +38,8 @@ The accepted capability evidence proves custom historical date windows, folder-s
 
 ## Steps
 
-- [ ] Author `ki-housekeeping-granola` with the provider-neutral lifecycle, read-only source boundary, fidelity requirements, explicit omissions, receiver-selection semantics, completeness reconciliation, checkpoint semantics, and separate retirement gate.
-- [ ] Define the Granola provider contract as `discover`, `list`, `read`, and `checkpoint`, including complete date-window enumeration across global, folder, and inferred-unfoldered populations, stable identity, canonical content hashes, returned source projections, folder evidence, participants, notes, transcript, and omissions.
+- [x] Author `ki-housekeeping-granola` with the provider-neutral lifecycle, read-only source boundary, fidelity requirements, explicit omissions, receiver-selection semantics, completeness reconciliation, checkpoint semantics, and separate retirement gate.
+- [x] Define the Granola provider contract as `discover`, `list`, `read`, and `checkpoint`, including complete date-window enumeration across global, folder, and inferred-unfoldered populations, stable identity, canonical content hashes, returned source projections, folder evidence, participants, notes, transcript, and omissions.
 - [x] Prove available Granola API or MCP capabilities through authoritative documentation and a separately approved read-only test, recording unsupported or account-tier-restricted fields without inventing fallbacks.
 - [ ] Reconcile the public CLI as one `ki acquire granola import` operation that resolves the current or explicitly selected repository and stages verified KEPs in its Harbour; migrate the current `ki space acquire` implementation and update the governing `tools-ki` and Arcadia contracts before implementation.
 - [ ] Generalise the `tools-ki` KEP core from its ChatGPT-specific capture model into a provider-neutral package builder with a Granola profile and a per-meeting immutable package boundary.
@@ -51,9 +51,9 @@ The accepted capability evidence proves custom historical date windows, folder-s
 - [ ] Model source amendments explicitly: note, summary, folder, tag, participant, transcript, or media changes create a new immutable observation; scope exit never implies source deletion or removal of an earlier KEP.
 - [ ] Make interrupted imports resumable: publish each KEP atomically, never advance a ledger before verification, and repeat acquisition until it reports no unexplained new, changed, missing, failed, overlapping, or unmatched meetings.
 - [ ] Add fixtures for saturated and split date windows, new, unchanged and changed meetings, multiple-folder membership, folder reassignment, unmatched folders, duplicate identities, inferred-unfoldered meetings, unsafe paths, unavailable transcript or media, interrupted writes, corrupted existing stages, and repeatable checkpoints.
-- [ ] Prepare receiver-owned work trades for `tools-ki`, `kit-legal`, and `kit-principal` and a knowledge trade for Arcadia; submit none until each route and payload receives explicit approval.
-- [ ] Define the future release-manifest contract and prove the retirement gates without adding a source-mutation tool to the acquisition provider.
-- [ ] Replace the published skill's initial `kit-principal` catch-all wording with a receiver-neutral contract: folder selectors choose the best-served repository, while unfoldered, unmatched, and conflicting meetings remain explicit reconciliation outcomes.
+- [ ] Create receiver-owned roadmap items directly in `tools-ki`, `kit-legal`, and `kit-principal`, and update Arcadia's existing acquisition record; do not retain or submit trades for this rollout.
+- [x] Define the future release-manifest contract and prove the retirement gates without adding a source-mutation tool to the acquisition provider.
+- [x] Replace the published skill's initial `kit-principal` catch-all wording with a receiver-neutral contract: folder selectors choose the best-served repository, while unfoldered, unmatched, and conflicting meetings remain explicit reconciliation outcomes.
 - [ ] Deliver the first direct-ingress mappings through receiver-owned work: Granola `Legal` folder to `kit-legal` and Granola `Personal` folder to `kit-principal`, using stable folder IDs as selectors and folder names as review evidence.
 
 ## Files touched

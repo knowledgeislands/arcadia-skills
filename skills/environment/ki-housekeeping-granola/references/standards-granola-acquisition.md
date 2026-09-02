@@ -80,7 +80,7 @@ Window boundaries SHOULD overlap by one ISO date until inclusive and exclusive p
 
 The global UUID set is the coverage authority. The union of complete folder-scoped UUID sets supplies folder-routing evidence. A UUID in the global set but absent from every complete folder set is inferred unfoldered. This inference is valid only when the global and every folder enumeration share the same complete history interval and schema evidence.
 
-Each eligible receiver declares the folder IDs it accepts and an explicit unfoldered policy. Folder names are presentation evidence, not stable selector identity. `kit-principal` initially receives the catch-all or residual scope; later mappings may route meetings directly to another repository.
+Each eligible receiver declares folder IDs and whether it accepts an explicit unfoldered or residual policy. Folder names are presentation evidence, not stable selector identity. Folder selectors choose the repository best served by the meeting; no named repository is a permanent or implicit catch-all. Unfoldered, unmatched, or conflicting meetings remain explicit reconciliation outcomes unless an eligible receiver has deliberately declared the applicable residual selector.
 
 When one meeting's mapped folders imply different receivers, acquisition MUST stop that meeting for human selection. It MUST NOT select by lexical order, first response, folder name, or repository priority. Multiple-repository acquisition is permitted only under an explicit intentional-duplication policy. Every unmatched, overlapping, excluded, and inferred-unfoldered identity remains visible in the acquisition report.
 
