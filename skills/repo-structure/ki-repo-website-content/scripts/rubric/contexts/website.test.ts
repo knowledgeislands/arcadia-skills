@@ -30,10 +30,7 @@ const fixture = (): string => {
   mkdirSync(join(repository, 'apps', 'site'), { recursive: true })
   writeFileSync(join(repository, 'apps', 'site', 'eleventy.config.ts'), 'export default function () {}\n')
   writeFileSync(join(repository, 'apps', 'site', 'package.json'), '{"scripts":{},"dependencies":{}}\n')
-  writeFileSync(
-    join(repository, '.ki.toml'),
-    '[skills.ki-repo-website]\nsite-root = "apps/site"\n\n[skills.ki-repo-website-content]\n'
-  )
+  writeFileSync(join(repository, '.ki.toml'), '[skills.ki-repo-website]\n\n[skills.ki-repo-website-content]\n')
   return repository
 }
 

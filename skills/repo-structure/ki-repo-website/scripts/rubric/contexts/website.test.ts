@@ -19,8 +19,8 @@ const root = (): string => {
   return path
 }
 
-const options = (repository: string): RubricContextOptions => ({
-  mode: 'audit',
+const options = (repository: string, mode: 'audit' | 'conform' = 'audit'): RubricContextOptions => ({
+  mode,
   repository,
   userHome: repository,
   configuration: {}
@@ -52,6 +52,9 @@ describe('website core context', () => {
       .flatMap((item) => item.mechanical?.audit.run(context) ?? [])
       .filter((outcome) => outcome.status === 'VIOLATION')
     expect(violations).toEqual([])
+    expect(context.siteRoot).toBe('apps/site')
+    expect(context.siteRootConfigured).toBe(false)
+    expect(createWebsiteCoreSession(options(repository, 'conform')).proposal().writes).toEqual([])
   })
 
   test('accepts an explicit flat site root', () => {

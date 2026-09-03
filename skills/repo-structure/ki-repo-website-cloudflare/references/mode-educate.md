@@ -110,12 +110,12 @@ The unanchored rules cover flat and workspace layouts. `ki-repo-website` owns `d
 
 ## 5. Mark the repo with `.ki.toml`
 
+Keep the implicit `apps/site` default out of configuration. Add `site-root` to `[skills.ki-repo-website]` only for an override.
+
 Keep the selected site root on the website-core table and make the hosting table keyless:
 
 ```toml
 [skills.ki-repo-website]
-# Optional because apps/site is the default.
-site-root = "apps/site"
 
 [skills.ki-repo-website-cloudflare]
 ```

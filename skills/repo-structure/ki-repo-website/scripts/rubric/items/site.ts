@@ -35,7 +35,7 @@ const SITE_1 = item('SITE-1', 'Website opt-in', 'The neutral website table is pr
 const SITE_2 = item(
   'SITE-2',
   'Website configuration',
-  'The website table contains only a safe site-root path.',
+  'The website table relies on the implicit apps/site default or contains only a safe site-root override.',
   'WARN',
   (context) => {
     const stopped = skip(context)
