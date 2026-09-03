@@ -754,14 +754,15 @@ export const collectAuditEvidence = async (
   // while the window is open, FAIL once the next unadopted release is two weeks old.
   try {
     const out = (await run('/bin/sh', ['-c', 'bun outdated'], { cwd: repo, encoding: 'utf8' })).stdout.trim()
-    const pkgRows = out.split('\n').filter((l) => l.includes('│') && !l.includes('Package') && !l.includes('Current'))
+    // bun draws the table with U+2502 on a TTY but plain ASCII pipes when piped.
+    const pkgRows = out.split('\n').filter((l) => /[│|]/.test(l) && !l.includes('Package') && !l.includes('Current'))
     const outdated: OutdatedPackage[] = pkgRows.flatMap((row) => {
       const cells = row
-        .split('│')
+        .split(/[│|]/)
         .map((cell) => cell.trim())
         .filter(Boolean)
       const name = cells[0]?.replace(/\s*\((?:dev|peer|optional)\)$/, '')
-      return name && cells[1] ? [{ name, current: cells[1] }] : []
+      return name && cells[1] && /^\d/.test(cells[1]) ? [{ name, current: cells[1] }] : []
     })
     if (outdated.length === 0) {
       add('PASS', 'DEPS-1', 'all packages up to date (bun outdated)', STD)
