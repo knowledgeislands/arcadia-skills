@@ -52,7 +52,6 @@ const DEFAULT_BRANCH = 'main'
 // The declared license defaults to MIT when `[skills.ki-repo] license` is unset. Decoupled
 // from visibility (a private repo may be MIT; a public repo may be proprietary).
 const DEFAULT_LICENSE = 'MIT'
-const TOPICS = ['mcp', 'model-context-protocol', 'claude', 'typescript', 'bun']
 const REQUIRED_CHECK = 'build'
 const ALLOWED_ACTIONS = 'all'
 // Reference-doc pointer carried on every mechanical finding.
@@ -173,6 +172,12 @@ async function rootPaths(nwo: string, branch: string): Promise<Set<string>> {
 
 const topicNames = (t: unknown): string[] =>
   Array.isArray(t) ? t.map((x) => (typeof x === 'string' ? x : (x?.name ?? x?.topic?.name))).filter(Boolean) : []
+
+// GitHub normalises a topic to lowercase-hyphenated form; package.json "keywords" are
+// compared through the same normalisation so the two lists can agree byte-for-byte.
+const normaliseTopic = (k: string): string => k.trim().toLowerCase().replace(/\s+/g, '-')
+const pkgKeywords = (pkg: Pkg | null): string[] =>
+  Array.isArray(pkg?.keywords) ? pkg.keywords.filter((k): k is string => typeof k === 'string').map(normaliseTopic) : []
 
 // The repo's parsed package.json (or null if absent / unparseable), read once from
 // the selected local checkout or GitHub default branch and reused for the
@@ -1035,10 +1040,24 @@ async function auditRepo(
   if (enforced('wiki') && r.hasWikiEnabled) fail('TOGGLE-1', 'Wiki is enabled (want off)')
   if (enforced('projects') && r.hasProjectsEnabled) fail('TOGGLE-1', 'Projects are enabled (want off)')
 
-  // TOPICS-1
+  // TOPICS-1: topics are per-repo discovery metadata, not a fixed org set. A public
+  // repo carries a non-empty topic set; where package.json declares "keywords" the two
+  // lists must agree modulo GitHub's normalisation (keywords are the in-repo source of
+  // truth and also reach any published npm package).
   if (r.visibility === 'PUBLIC' && enforced('topics')) {
-    const missing = TOPICS.filter((t) => !new Set(topicNames(r.repositoryTopics)).has(t))
-    if (missing.length) fail('TOPICS-1', `missing topics: ${missing.join(', ')}`)
+    const topics = new Set(topicNames(r.repositoryTopics).map(normaliseTopic))
+    const keywords = new Set(pkgKeywords(signals.pkg))
+    if (topics.size === 0)
+      fail('TOPICS-1', 'no topics — set discovery topics (sync package.json "keywords" where present)')
+    else if (keywords.size) {
+      const missing = [...keywords].filter((k) => !topics.has(k))
+      const extra = [...topics].filter((t) => !keywords.has(t))
+      if (missing.length || extra.length)
+        fail(
+          'TOPICS-1',
+          `topics and package.json "keywords" differ — missing on GitHub: ${missing.join(', ') || '—'}; not in keywords: ${extra.join(', ') || '—'}`
+        )
+    }
   }
 
   // BP-1: branch-protection — default OFF — `main` is open unless this repo sets it true.
@@ -1390,7 +1409,7 @@ const auditLocalContent = async (nwo: string, content: ContentEvidence): Promise
     hasIssuesEnabled: true,
     hasProjectsEnabled: false,
     hasWikiEnabled: false,
-    repositoryTopics: TOPICS,
+    repositoryTopics: pkgKeywords(content.signals.pkg),
     licenseInfo: { key: license },
     description
   }

@@ -122,10 +122,15 @@ Declared and live repository visibility.
 
 → [standard](standards-repository.md)
 
-Public repository topic conventions.
+Public repository discovery-topic conventions.
 
-- **TOPICS-1 [M] — Public repository topics** — A public repository carries the standard topic set unless explicitly overridden. (standards-repository.md)
-  - _Remediation:_ diagnostic — Set the required public topics or record an explicit override, then rerun the audit.
+- **TOPICS-1 [M] — Public repository topics** — A public repository carries a non-empty topic set, and where `package.json` declares "keywords" the topics agree with them modulo GitHub normalisation, unless explicitly overridden. (standards-repository.md)
+  - _Remediation:_ diagnostic — Set the repository's discovery topics — syncing `package.json` "keywords" where present — or record an explicit override, then rerun the audit.
+- **TOPICS-2 [J] — Topic fit** — The topic set accurately describes the repository, and each common estate topic that applies is present. (standards-repository.md)
+  - _Evidence scope:_ The public topic set (and any `package.json` "keywords") against the repository purpose and the common estate topics.
+  - _Review prompt:_ Judge whether the topics describe what this repository actually is, and whether any common estate topic applies but is missing.
+  - _Outcomes:_ conforming; gap; exclusion
+  - _Conforming guidance:_ Adjust the topics and keywords, record a named gap, or record why a common topic does not apply.
 
 ## BP — Branch protection
 

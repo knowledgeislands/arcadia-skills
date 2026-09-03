@@ -119,11 +119,7 @@ For every repo on github.com:
 | Projects | Off | Unused. |
 | Discussions | Off | Unused. |
 
-Public repos (`mcp-*`) additionally:
-
-| Setting | Value                                                          |
-| ------- | -------------------------------------------------------------- |
-| Topics  | `mcp`, `model-context-protocol`, `claude`, `typescript`, `bun` |
+Public repos additionally carry **topics** — per-repo discovery metadata, not a fixed org set. Topics are effectively the repository's keywords: the same terms belong in `package.json` `"keywords"`, where they also reach any published npm package. Mechanically (`TOPICS-1`), a public repo's topic set must be non-empty, and where `package.json` declares `"keywords"` the two lists must agree modulo GitHub's normalisation (lowercase, spaces to hyphens) — keywords are the in-repo source of truth. Which topics to choose is judgment (`TOPICS-2`): pick terms that describe what the repository actually is, and consider whether each **common estate topic** applies — currently `typescript`, `bun`, `claude`, and, for MCP servers, `mcp` and `model-context-protocol`. A common topic that doesn't apply is simply omitted, never a failure; REFRESH's estate scan harvests newly common topics and keywords into this consider list.
 
 **`main` is open by default** — no branch protection, so direct pushes are allowed and no PR, status check, or linear-history rule gates it. Squash-only merge (above) keeps history tidy for PRs that do happen, but nothing forces work through a PR. A repo that _wants_ a protected `main` overrides the `branch-protection` check on (see [Per-repo overrides](#per-repo-overrides)) — protection is then `main`: require a PR (0 approvals), the `build` status check, linear history, no force-push, no deletion, admins **not** enforced.
 
@@ -190,10 +186,12 @@ The rubric carries the **org default** for every check. Most are bedrock — fil
 | `wiki`              | on          | Wiki disabled.                                      |
 | `projects`          | on          | Projects disabled.                                  |
 | `issues`            | on          | Issues enabled.                                     |
-| `topics`            | on          | _(public)_ carries the standard topic set.          |
+| `topics`            | on          | _(public)_ non-empty topics, synced with keywords †. |
 | `secret-scanning`   | on          | _(public)_ secret scanning enabled.                 |
 | `push-protection`   | on          | _(public)_ secret-scanning push protection enabled. |
 | `structure`         | on          | Declares at least one repo-structure table §.       |
+
+† `topics` requires a non-empty topic set that agrees with `package.json` `"keywords"` (modulo GitHub normalisation) where keywords exist — see the topics rule above.
 
 ‡ When enforced, `branch-protection` requires: a PR (0 approvals), the `build` status check, linear history; no force-push/deletion; admins not enforced.
 
@@ -237,11 +235,10 @@ for r in $all; do
     --delete-branch-on-merge=true --enable-wiki=false --enable-projects=false
 done
 
-# Layer 2 — descriptions (per repo) and topics (public)
+# Layer 2 — descriptions and topics (both per repo; topics public-only).
+# Topics mirror the repo's package.json "keywords" — set both from the same list.
 gh repo edit knowledgeislands/<name> --description "…"
-for r in $public; do
-  gh repo edit "knowledgeislands/$r" --add-topic mcp --add-topic model-context-protocol --add-topic claude --add-topic typescript --add-topic bun
-done
+gh repo edit "knowledgeislands/<name>" --add-topic <keyword-1> --add-topic <keyword-2> …
 
 # Layer 2 — branch protection is overridable, default OFF. Default: `main` open — strip any leftover protection:
 for r in $all; do gh api -X DELETE "repos/knowledgeislands/$r/branches/main/protection" 2>/dev/null || true; done
