@@ -184,6 +184,100 @@ export const inspectScriptExclusions = (
   return { exclusions, messages }
 }
 
+// ── DEPS-1: leading-edge dependency freshness ─────────────────────────────────
+// The adoption clock is set by the NEXT version after the installed one — the
+// first release the repo has not adopted — so a fast-shipping upstream cannot
+// reset it by publishing again.
+export const DEPENDENCY_ADOPTION_WINDOW_DAYS = 14
+
+export type OutdatedPackage = { name: string; current: string }
+
+export type DependencyHoldInspection = {
+  holds: ReadonlyMap<string, string>
+  messages: readonly string[]
+}
+
+export const inspectDependencyHolds = (
+  configuration: string,
+  outdated: readonly string[]
+): DependencyHoldInspection => {
+  const tables = configuredEngineeringTables(configuration)
+  if (tables.length !== 1) return { holds: new Map(), messages: [] }
+  const configured = tables[0]?.dependency_holds
+  if (configured === undefined) return { holds: new Map(), messages: [] }
+  if (!Array.isArray(configured))
+    return { holds: new Map(), messages: ['dependency_holds must be an array of "<name> — <reason>" strings'] }
+
+  const holds = new Map<string, string>()
+  const messages: string[] = []
+  const available = new Set(outdated)
+  for (const entry of configured) {
+    if (typeof entry !== 'string' || entry.trim().length === 0) {
+      messages.push('dependency_holds entries must be non-empty strings')
+      continue
+    }
+    const separator = entry.indexOf(' — ')
+    const name = (separator === -1 ? entry : entry.slice(0, separator)).trim()
+    const reason = separator === -1 ? '' : entry.slice(separator + 3).trim()
+    if (!name || !reason) {
+      messages.push(`dependency hold ${JSON.stringify(entry)} must record a reason as "<name> — <reason>"`)
+      continue
+    }
+    if (holds.has(name)) {
+      messages.push(`duplicate dependency hold: ${name}`)
+      continue
+    }
+    holds.set(name, reason)
+    if (!available.has(name)) messages.push(`stale dependency hold names a package with no available update: ${name}`)
+  }
+  return { holds, messages }
+}
+
+// Release versions only (no prerelease): the window is opened by adoptable releases.
+const parseRelease = (raw: string): readonly [number, number, number] | undefined => {
+  const parts = /^(\d+)\.(\d+)\.(\d+)$/.exec(raw.trim())
+  return parts ? [Number(parts[1]), Number(parts[2]), Number(parts[3])] : undefined
+}
+
+const compareRelease = (a: readonly [number, number, number], b: readonly [number, number, number]): number =>
+  a[0] - b[0] || a[1] - b[1] || a[2] - b[2]
+
+/** The next release after `current` — the first one the repo has not adopted. */
+export const nextVersionAfter = (current: string, versions: readonly string[]): string | undefined => {
+  const installed = parseRelease(current)
+  if (!installed) return undefined
+  let next: { raw: string; release: readonly [number, number, number] } | undefined
+  for (const raw of versions) {
+    const release = parseRelease(raw)
+    if (!release || compareRelease(release, installed) <= 0) continue
+    if (!next || compareRelease(release, next.release) < 0) next = { raw, release }
+  }
+  return next?.raw
+}
+
+export type DependencyFreshness =
+  | { state: 'stale' | 'fresh'; name: string; current: string; next: string; ageDays: number }
+  | { state: 'held'; name: string; current: string; reason: string }
+  | { state: 'unknown'; name: string; current: string }
+
+export const gradeDependencyFreshness = (
+  outdated: readonly OutdatedPackage[],
+  publishTimes: ReadonlyMap<string, ReadonlyMap<string, string>>,
+  holds: ReadonlyMap<string, string>,
+  now: Date
+): readonly DependencyFreshness[] =>
+  outdated.map(({ name, current }) => {
+    const reason = holds.get(name)
+    if (reason !== undefined) return { state: 'held', name, current, reason }
+    const times = publishTimes.get(name)
+    const next = times ? nextVersionAfter(current, [...times.keys()]) : undefined
+    const published = next && times ? Date.parse(times.get(next) ?? '') : Number.NaN
+    if (!next || Number.isNaN(published)) return { state: 'unknown', name, current }
+    const ageDays = Math.floor((now.getTime() - published) / 86_400_000)
+    const state = ageDays >= DEPENDENCY_ADOPTION_WINDOW_DAYS ? 'stale' : 'fresh'
+    return { state, name, current, next, ageDays }
+  })
+
 export const inspectGovernedScriptSurface = (
   configuration: string,
   scripts: Readonly<Record<string, string>>,
@@ -655,19 +749,84 @@ export const collectAuditEvidence = async (
       )
     : add('PASS', 'SCR-1', 'all scripts are bare idioms or ki:-prefixed (naming law)', STD, 'package.json')
 
-  // ── advisory: dependency freshness (bun outdated) ────────────────────────────
+  // ── core: dependency freshness — leading edge (bun outdated + registry dates) ──
+  // A newer release opens the 14-day adoption window (engineering-standard §1): INFO
+  // while the window is open, FAIL once the next unadopted release is two weeks old.
   try {
     const out = (await run('/bin/sh', ['-c', 'bun outdated'], { cwd: repo, encoding: 'utf8' })).stdout.trim()
     const pkgRows = out.split('\n').filter((l) => l.includes('│') && !l.includes('Package') && !l.includes('Current'))
-    if (pkgRows.length === 0) {
+    const outdated: OutdatedPackage[] = pkgRows.flatMap((row) => {
+      const cells = row
+        .split('│')
+        .map((cell) => cell.trim())
+        .filter(Boolean)
+      const name = cells[0]?.replace(/\s*\((?:dev|peer|optional)\)$/, '')
+      return name && cells[1] ? [{ name, current: cells[1] }] : []
+    })
+    if (outdated.length === 0) {
       add('PASS', 'DEPS-1', 'all packages up to date (bun outdated)', STD)
     } else {
-      add(
-        'INFO',
-        'DEPS-1',
-        `${pkgRows.length} package${pkgRows.length === 1 ? '' : 's'} have updates available — run \`ki repo conform\`:\n  ${out}`,
-        STD
+      const { holds, messages } = inspectDependencyHolds(
+        kiConfiguration ?? '',
+        outdated.map((o) => o.name)
       )
+      for (const message of messages) add('WARN', 'DEPS-1', message, STD, '.ki.toml')
+      const publishTimes = new Map<string, ReadonlyMap<string, string>>()
+      await Promise.all(
+        outdated.map(async ({ name }) => {
+          try {
+            const encoded = name.startsWith('@') ? name.replace('/', '%2F') : name
+            const response = await fetch(`https://registry.npmjs.org/${encoded}`, {
+              signal: AbortSignal.timeout(10_000)
+            })
+            if (!response.ok) return
+            const body = (await response.json()) as { time?: Record<string, string> }
+            if (!body.time) return
+            publishTimes.set(
+              name,
+              new Map(Object.entries(body.time).filter(([key]) => key !== 'created' && key !== 'modified'))
+            )
+          } catch {
+            // registry unreachable for this package — graded as unknown below
+          }
+        })
+      )
+      const graded = gradeDependencyFreshness(outdated, publishTimes, holds, new Date())
+      const dated = (state: 'stale' | 'fresh') =>
+        graded.filter((g): g is Extract<DependencyFreshness, { state: 'stale' | 'fresh' }> => g.state === state)
+      const stale = dated('stale')
+      const fresh = dated('fresh')
+      const held = graded.filter((g): g is Extract<DependencyFreshness, { state: 'held' }> => g.state === 'held')
+      const unknown = graded.filter((g) => g.state === 'unknown')
+      if (stale.length)
+        add(
+          'FAIL',
+          'DEPS-1',
+          `beyond the ${DEPENDENCY_ADOPTION_WINDOW_DAYS}-day adoption window: ${stale
+            .map((g) => `${g.name} ${g.current} → ${g.next} (available ${g.ageDays} days)`)
+            .join(', ')} — adopt the update or record a dependency hold`,
+          STD
+        )
+      if (fresh.length)
+        add(
+          'INFO',
+          'DEPS-1',
+          `within the ${DEPENDENCY_ADOPTION_WINDOW_DAYS}-day adoption window: ${fresh
+            .map((g) => `${g.name} ${g.current} → ${g.next} (available ${g.ageDays} day${g.ageDays === 1 ? '' : 's'})`)
+            .join(', ')}`,
+          STD
+        )
+      if (held.length)
+        add('INFO', 'DEPS-1', `held deliberately: ${held.map((g) => `${g.name} — ${g.reason}`).join('; ')}`, STD)
+      if (unknown.length)
+        add(
+          'INFO',
+          'DEPS-1',
+          `update available but release age unknown (registry unreachable or unversioned): ${unknown
+            .map((g) => `${g.name} ${g.current}`)
+            .join(', ')} — run \`ki repo conform\``,
+          STD
+        )
     }
   } catch {
     add('NOT_APPLICABLE', 'DEPS-1', 'bun outdated unavailable — upgrade Bun to check dependency freshness', STD)
@@ -1468,11 +1627,11 @@ export const collectAuditEvidence = async (
     )
   } else {
     add('PASS', 'TOML-1', `${engineeringHeader} table present`, STD, '.ki.toml')
-    // validate-down: script_exclusions is the sole direct key. Repo shape (flat vs monorepo)
-    // is read from package.json `workspaces` (§0), a standard Bun convention, not a bespoke
-    // key here. Any other key directly under the table is drift.
+    // validate-down: script_exclusions and dependency_holds are the only direct keys.
+    // Repo shape (flat vs monorepo) is read from package.json `workspaces` (§0), a standard
+    // Bun convention, not a bespoke key here. Any other key directly under the table is drift.
     const body = engineeringTableBody(ki) ?? ''
-    const KNOWN = new Set<string>(['script_exclusions'])
+    const KNOWN = new Set<string>(['script_exclusions', 'dependency_holds'])
     for (const m of body.matchAll(/^\s*([A-Za-z0-9_-]+)\s*=/gm)) {
       KNOWN.has(m[1])
         ? add('PASS', 'TOML-2', `known key ${m[1]}`, STD, '.ki.toml')

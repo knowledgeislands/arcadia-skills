@@ -3,7 +3,13 @@ import { mkdtempSync, readdirSync, readFileSync, rmSync, symlinkSync, writeFileS
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import type { RubricEmitter, RubricFamily } from '../../shared/rubric.ts'
-import { inspectEngineeringCheckRecords, inspectGovernedScriptSurface } from '../contexts/audit-evidence.ts'
+import {
+  gradeDependencyFreshness,
+  inspectDependencyHolds,
+  inspectEngineeringCheckRecords,
+  inspectGovernedScriptSurface,
+  nextVersionAfter
+} from '../contexts/audit-evidence.ts'
 import {
   createEngineeringSession,
   type EngineeringEvidenceInspector,
@@ -352,5 +358,77 @@ test('a recording emitter changes no outcome and still observes the evidence sta
   expect(events).toEqual([
     { kind: 'stage', edge: 'start', label: 'engineering evidence' },
     { kind: 'stage', edge: 'end', label: 'engineering evidence' }
+  ])
+})
+
+// ── DEPS-1: leading-edge dependency freshness ─────────────────────────────────
+
+test('dependency holds parse "<name> — <reason>" entries and flag malformed, duplicate, and stale holds', () => {
+  const configuration = [
+    '[skills.ki-engineering]',
+    'dependency_holds = [',
+    '  "typescript — vendored packages still target TS 5",',
+    '  "typescript — repeated",',
+    '  "react",',
+    '  "left-pad — no update is actually available"',
+    ']'
+  ].join('\n')
+  const inspected = inspectDependencyHolds(configuration, ['typescript', 'react'])
+  expect(inspected.holds).toEqual(
+    new Map([
+      ['typescript', 'vendored packages still target TS 5'],
+      ['left-pad', 'no update is actually available']
+    ])
+  )
+  expect(inspected.messages).toEqual([
+    'duplicate dependency hold: typescript',
+    'dependency hold "react" must record a reason as "<name> — <reason>"',
+    'stale dependency hold names a package with no available update: left-pad'
+  ])
+})
+
+test('dependency holds are absent when the table declares none', () => {
+  expect(inspectDependencyHolds('[skills.ki-engineering]\n', ['typescript'])).toEqual({
+    holds: new Map(),
+    messages: []
+  })
+  expect(inspectDependencyHolds('[skills.ki-engineering]\ndependency_holds = "typescript"\n', []).messages).toEqual([
+    'dependency_holds must be an array of "<name> — <reason>" strings'
+  ])
+})
+
+test('the adoption clock is set by the next unadopted release, never the latest', () => {
+  expect(nextVersionAfter('5.9.3', ['5.9.3', '7.0.2', '6.0.0', '7.0.0-beta.1'])).toBe('6.0.0')
+  expect(nextVersionAfter('7.0.2', ['5.9.3', '7.0.2'])).toBeUndefined()
+  expect(nextVersionAfter('not-a-version', ['1.0.0'])).toBeUndefined()
+})
+
+test('freshness grades FAIL beyond the 14-day window, INFO within it, held and unknown as recorded', () => {
+  const now = new Date('2026-09-03T00:00:00Z')
+  const graded = gradeDependencyFreshness(
+    [
+      { name: 'stale-lib', current: '1.0.0' },
+      { name: 'fresh-lib', current: '1.0.0' },
+      { name: 'typescript', current: '5.9.3' },
+      { name: 'unknown-lib', current: '1.0.0' }
+    ],
+    new Map([
+      [
+        'stale-lib',
+        new Map([
+          ['1.1.0', '2026-08-01T00:00:00Z'],
+          ['1.2.0', '2026-09-02T00:00:00Z']
+        ])
+      ],
+      ['fresh-lib', new Map([['1.1.0', '2026-08-25T00:00:00Z']])]
+    ]),
+    new Map([['typescript', 'vendored packages still target TS 5']]),
+    now
+  )
+  expect(graded).toEqual([
+    { state: 'stale', name: 'stale-lib', current: '1.0.0', next: '1.1.0', ageDays: 33 },
+    { state: 'fresh', name: 'fresh-lib', current: '1.0.0', next: '1.1.0', ageDays: 9 },
+    { state: 'held', name: 'typescript', current: '5.9.3', reason: 'vendored packages still target TS 5' },
+    { state: 'unknown', name: 'unknown-lib', current: '1.0.0' }
   ])
 })

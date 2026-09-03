@@ -122,6 +122,12 @@ Where the repo has CI (`.github/workflows/ci.yml`), it is a single `build` job o
 
 A repository-footprint replacement prefers the correct clean end state over transitional operability. Replace the old contract directly, remove the superseded implementation in the same bounded change, and run the complete verification appropriate to the repository. Do not retain compatibility shims, dual paths, legacy aliases, or fallback runners merely to preserve an intermediate state. Git history is the recovery mechanism.
 
+### Dependency freshness — leading edge (core)
+
+KI repositories run at the leading edge: when a dependency publishes a newer release, the default is to adopt it, not to defer. A newer release opens a **14-day adoption window**, and the clock is set by the **next version after the one installed** — the first release the repository has not adopted — never by the latest, so a fast-shipping upstream cannot reset it by publishing again. Within the window an available update is informational; beyond it the repository is behind the standard and the audit fails. Updates are applied deliberately — reviewed through `ki repo conform`, or `ki:deps:update` for the blanket `bun update --latest` — and proven by the usual gates rather than assumed safe.
+
+A deliberate hold is recorded, never silent: `dependency_holds` under `[skills.ki-engineering]` (§9) lists each held package as `"<name> — <reason>"`. A held package reports as informational for as long as the hold stands, and a hold whose package has no available update is stale and flagged for removal. When the registry cannot be reached to date a release, freshness is reported as unknown rather than guessed.
+
 ## 2. The governed script surface (core)
 
 ### The `ki:` naming law (core)
@@ -257,7 +263,7 @@ A governed repo declares a `[skills.ki-engineering]` table. Presence marks "the 
 # below with a boolean when a local review needs an explicit exception note.
 ```
 
-The table accepts one optional direct key: `script_exclusions`, an array of exact script names for user-owned external tooling (§2). Every entry MUST be a non-empty unique string, name an existing package script exactly, contain no pattern syntax, and remain outside every declared skill's script claims. A valid exclusion satisfies the complete-set check and permits that external script to remain outside the `ki:` naming law; malformed, duplicate, stale, patterned, or owner-overlapping entries fail the script contract rather than suppressing it.
+The table accepts two optional direct keys. `script_exclusions` is an array of exact script names for user-owned external tooling (§2). Every entry MUST be a non-empty unique string, name an existing package script exactly, contain no pattern syntax, and remain outside every declared skill's script claims. A valid exclusion satisfies the complete-set check and permits that external script to remain outside the `ki:` naming law; malformed, duplicate, stale, patterned, or owner-overlapping entries fail the script contract rather than suppressing it. `dependency_holds` is an array of `"<name> — <reason>"` strings recording deliberate dependency holds (§1): every entry MUST be unique, name the held package exactly, and carry its reason after the ` — ` separator; a hold whose package has no available update is stale and flagged for removal.
 
 Its optional `[skills.ki-engineering.checks]` table accepts only exact mechanical rubric IDs as boolean values. The checker validates both the key set and value type, but a `false` value is an explicit local diagnostic record — it does **not** suppress a finding or turn a judgment criterion into a pass. A reviewer records the reason next to the entry and resolves it through the owning repository's change process.
 
