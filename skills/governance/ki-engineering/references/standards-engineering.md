@@ -100,7 +100,7 @@ Repos that publish a compiled library/server add `"main"`, `"files": ["dist"]`, 
 `package.json` is **closed**: every top-level key must appear in the manifest below, mapped to the skill whose standard drives it. The checker enforces this exhaustively — a top-level key not in the manifest is **drift** (a `FAIL`), so a new key can never slip in ungoverned. This is what makes "every element is specified" a property the toolchain holds, not a hope.
 
 - **Identity & metadata** → `ki-repo`: `name`, `version`, `description`, `author`, `license`, `private`, `repository`, `homepage`, `bugs`, `keywords`.
-- **Toolchain & structure** → `ki-engineering`: `type`, `packageManager`, `engines`, `scripts`, `devDependencies`, `dependencies`, `workspaces`, `lint-staged`.
+- **Toolchain & structure** → `ki-engineering`: `type`, `packageManager`, `engines`, `scripts`, `devDependencies`, `dependencies`, `workspaces`, `overrides`, `lint-staged`. `overrides` is for resolution pinning a repository genuinely needs (a vendored `file:` mapping, a transitive-dependency fix) — not a home for version policy that belongs in `dependencies`.
 - **Published-artifact surface** → the artifact skill (e.g. `ki-repo-mcp`): `main`, `bin`, `exports`, `files`.
 
 The manifest is the **engineering** standard's because engineering owns the closed set; the per-key _content_ rules live in the owning skill (repo's metadata checks, the artifact skill's `bin`/`exports` shape). Adding a genuinely new key means adding it here **and** assigning an owner — never just dropping it into a `package.json`.

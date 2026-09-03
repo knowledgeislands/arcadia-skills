@@ -352,6 +352,7 @@ export const collectAuditEvidence = async (
     'devDependencies',
     'dependencies',
     'workspaces',
+    'overrides',
     'lint-staged',
     // published-artifact surface → the artifact skill (e.g. ki-repo-mcp)
     'main',
