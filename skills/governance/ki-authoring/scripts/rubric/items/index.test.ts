@@ -44,6 +44,7 @@ test('the default export is the sole catalogue entrypoint and families are compl
     'OWN-1',
     'OWN-2',
     'TOML-values',
+    'TOML-structure',
     'TOML-comments',
     'SYNC-1'
   ])

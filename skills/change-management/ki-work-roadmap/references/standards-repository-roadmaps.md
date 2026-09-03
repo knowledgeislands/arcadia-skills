@@ -65,9 +65,9 @@ themes = ["foundation-tooling", "governance-consistency"]
 For fixed-area mode, the same table instead declares each durable area code and its human-readable theme:
 
 ```toml
-[skills.ki-work-roadmap.areas]
-FND = "foundation-tooling"
-GOV = "governance-consistency"
+[skills.ki-work-roadmap]
+areas.FND = "foundation-tooling"
+areas.GOV = "governance-consistency"
 ```
 
 The array or area-map values are the complete allowed theme vocabulary. Every item's `theme` must be declared; in fixed-area mode its `area` must be declared and map to that theme. A repository must not mix issuing modes. Keep horizons, lifecycle values, work-item location, and reporting behaviour universal rather than per-repository configuration.

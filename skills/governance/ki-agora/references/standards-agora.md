@@ -28,6 +28,9 @@ Declare the capability explicitly, even when no home or membership is yet config
 The root table admits only the optional `homes` and `memberships` tables. Their keys are stable lower-case hyphenated identifiers matching `[a-z][a-z0-9-]*[a-z0-9]`; an identifier is stable rather than a rendered title. Target selection is an explicit local `ki agora open --target` choice, not portable group policy. Unknown root, home, and membership fields are configuration errors and do not provide evidence of membership, consent, or target authorization.
 
 ```toml
+[skills.ki-agora]
+memberships.knowledge-islands = { home = "https://github.com/knowledgeislands/ki-agentic-harness", role = "maintainer" }
+
 [skills.ki-agora.homes.knowledge-islands]
 owner = "https://github.com/knowledgeislands/ki-agentic-harness"
 purpose = "Knowledge Islands maintained repositories"
@@ -38,10 +41,6 @@ order = [
 ]
 references = ["https://github.com/example/plain-git-repository"]
 members = { "https://github.com/knowledgeislands/tools-ki" = "maintainer" }
-
-[skills.ki-agora.memberships.knowledge-islands]
-home = "https://github.com/knowledgeislands/ki-agentic-harness"
-role = "maintainer"
 ```
 
 `order` is an optional duplicate-free ordered prefix of canonical repository identities drawn from the owner, declared members, and references. Resolved projections place those repositories first in the declared order and retain lexical local-key order for every unlisted participant. It controls only deterministic projection order, including display, roots, opening, and repository selection; it grants no membership, role, priority, or authority. TOML does not otherwise require lexical ordering for tables or inline-table keys. Each configuration table is locally authored; a tool never adds a membership or changes another repository's declaration.

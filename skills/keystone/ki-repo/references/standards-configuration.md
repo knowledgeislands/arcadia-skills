@@ -5,6 +5,7 @@ The cross-cutting contract for the shared **`.ki.toml`** file every Knowledge Is
 ## Contents
 
 - [The shared file & the compliance marker](#the-shared-file--the-compliance-marker)
+- [Presentation neighbourhoods](#presentation-neighbourhoods)
 - [Harnesses and the skills namespace](#harnesses-and-the-skills-namespace)
 - [Marker vs config tables](#marker-vs-config-tables)
 - [Validate your own table](#validate-your-own-table)
@@ -29,6 +30,20 @@ Every file opens with this exact lightweight declaration:
 
 The header makes the marker legible without requiring a reader to know the filename contract. A future specification may replace the second line with a stable reference, but repositories use this exact wording until that reference exists.
 
+## Presentation neighbourhoods
+
+A substantial `.ki.toml` **SHOULD** group its applicable declarations into a small, stable sequence of semantic neighbourhoods:
+
+- **Foundation** — `[repo]`, `[skills.ki-repo]`, `[skills.ki-authoring]`, and their immediate configuration.
+- **Repository shape** — the primary repository kind and its structural adapters.
+- **Governance and runtime** — general governance capabilities, bindings, runtime-specific adapters, and their owner configuration.
+- **Change management** — the work selector, selected adapter, housekeeping, and related delivery capabilities.
+- **Relationships** — Agora and trade declarations, normally toward the end because their keyed collections can dominate longer files.
+
+Use only the neighbourhoods the repository needs. Foundation stays first: `[repo]` remains the first table, `[skills.ki-repo]` the first skill root, and `[skills.ki-authoring]` follows the repository contract it presents. After that, owner affinity takes precedence over a global alphabetic sort. Within a neighbourhood, keep a skill's explicit root and all of its subordinate configuration contiguous, with the root before any child table or dotted child assignment. Otherwise retain a stable local order; alphabetic order is useful only where it does not separate an owner from its adapters or configuration.
+
+Neighbourhood comments are navigational and carry no consumer-visible semantics. The exact conformance header and its following blank line remain the first bytes of the file; decorative rules and section banners follow them. `ki-authoring` owns their TOML presentation, including the strong preference for compact dotted child keys when a complete entry remains readable on one line and the nested-table escape for complex records.
+
 ## Harnesses and the skills namespace
 
 A repository names the harnesses that provide its skills once, in `[repo]`, and declares each governing skill by its **bare name** under the `[skills]` namespace. A skill that needs declared config owns **exactly one** table there, named for the skill, and may nest sub-tables under it (e.g. `[skills.<name>.checks]`):
@@ -45,8 +60,7 @@ visibility = "public"
 license = "MIT"          # SPDX id; default MIT when unset. "UNLICENSED" for proprietary.
 supported_runtimes = ["claude-code", "chatgpt-codex"] # required agent-runtime support surface
 
-[skills.ki-repo.checks]
-branch-protection = true
+checks.branch-protection = true
 ```
 
 `[skills]` is a namespace, not a skill: it makes "this key is a declaration" structural rather than a guess about how the key is spelled. A repository-level setting that belongs to no skill lives in `[repo]` and is never mistaken for one.

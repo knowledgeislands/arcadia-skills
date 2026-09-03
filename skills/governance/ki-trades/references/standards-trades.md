@@ -22,19 +22,12 @@ A repository participates only by declaring its own table, naming each partner o
 [skills.ki-trades]
 # Optional presentation-only map uplift; omitted means 0.
 map_bonus = 1
-
-[skills.ki-trades.routes."owner/receiver"]
-export = ["work"]
-
-[skills.ki-trades.routes."owner/sender"]
-import = ["knowledge"]
-
-[skills.ki-trades.routes."owner/peer"]
-export = ["work", "knowledge"]
-import = ["work"]
+routes."owner/receiver" = { export = ["work"] }
+routes."owner/sender" = { import = ["knowledge"] }
+routes."owner/peer" = { export = ["work", "knowledge"], import = ["work"] }
 ```
 
-The repository's canonical endpoint is `ki-repo.repository`, a required HTTPS GitHub URI. Each route has its own table, keyed by the partner's `owner/name` — the same form a trade record uses for its `sender` and `receiver` — carrying `export` and `import`, each a duplicate-free array drawn from the closed trade-kind set `work` and `knowledge`. A direction the partner does not trade is **absent**, never an empty array. Non-GitHub identities are currently unsupported: the registry, route keys, record paths, and projection cannot represent them consistently, so configuration must refuse them rather than claim portable HTTPS support.
+The repository's canonical endpoint is `ki-repo.repository`, a required HTTPS GitHub URI. Each route entry is keyed by the partner's `owner/name` — the same form a trade record uses for its `sender` and `receiver` — and carries `export` and `import`, each a duplicate-free array drawn from the closed trade-kind set `work` and `knowledge`. A direction the partner does not trade is **absent**, never an empty array. Non-GitHub identities are currently unsupported: the registry, route keys, record paths, and projection cannot represent them consistently, so configuration must refuse them rather than claim portable HTTPS support.
 
 Each partner appears exactly once: TOML's own prohibition on defining a key twice enforces that, so no hand-written uniqueness or lexical-ordering rule is needed. `[skills.ki-trades]` is declared explicitly rather than implied by its `routes` sub-table, because declaring a skill is separate from configuring it.
 
