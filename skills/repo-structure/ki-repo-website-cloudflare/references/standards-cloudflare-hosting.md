@@ -11,7 +11,8 @@ This skill owns the **deploy/serve delta for the site Worker**. The `dist/` it s
 - [3. The site `wrangler.jsonc` shape](#3-the-site-wranglerjsonc-shape)
 - [4. The script family](#4-the-script-family)
 - [5. CI/CD](#5-cicd)
-- [6. Boundaries — what is not in scope](#6-boundaries--what-is-not-in-scope)
+- [6. The Cloudflare guide — dashboard-owned settings](#6-the-cloudflare-guide--dashboard-owned-settings)
+- [7. Boundaries — what is not in scope](#7-boundaries--what-is-not-in-scope)
 
 ## 1. Model — Workers Static Assets, not Pages
 
@@ -84,7 +85,13 @@ The root `ki:site:build` / `ki:site:dev` aliases and local build/dev operations 
 - A repo **may** run a **GitHub Action for pre-deploy content work** (e.g. applying content, optimising images) that commits to `main` and lets Workers Builds deploy the result — but that Action is content tooling, not the hosting standard.
 - **Commit-SHA injection** (`WORKERS_CI_COMMIT_SHA` surfaced into the page, e.g. as a `<meta>`) is an optional nicety, not required.
 
-## 6. Boundaries — what is not in scope
+## 6. The Cloudflare guide — dashboard-owned settings
+
+Part of a deployment's contract lives in the Cloudflare dashboard, where no versioned file can express it: the Workers Builds build command, deploy command, and root directory; custom-domain and redirect choices; whether `workers.dev` serves. A hosted repository therefore carries **`docs/guides/cloudflare.md`** — the one guide for every Cloudflare aspect of that repository.
+
+The split rule: **`wrangler.jsonc` owns everything it can express; the guide records only what the dashboard owns**, as the exact values an operator enters — a build-command row, a redirect rule — so the dashboard can be reconstructed from the repository alone and a settings change is visible in review. The guide duplicates nothing the config already declares; it links to `wrangler.jsonc` for the versioned half. When a dashboard setting changes, the guide changes in the same breath — a guide that trails the dashboard is drift, exactly the kind this file exists to catch.
+
+## 7. Boundaries — what is not in scope
 
 This standard governs **only the site Worker** — the one that serves `dist/`. Out of scope, with their homes:
 

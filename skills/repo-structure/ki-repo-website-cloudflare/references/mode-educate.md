@@ -13,7 +13,8 @@ Scaffold Cloudflare Workers Static Assets hosting for a new Knowledge Islands si
 - [7. Wire the custom domain](#7-wire-the-custom-domain)
 - [8. Add the `www` redirect rule](#8-add-the-www-redirect-rule)
 - [9. Set up Cloudflare Workers Builds (CI/CD)](#9-set-up-cloudflare-workers-builds-cicd)
-- [10. Verify](#10-verify)
+- [10. Write the Cloudflare guide](#10-write-the-cloudflare-guide)
+- [11. Verify](#11-verify)
 
 ---
 
@@ -183,7 +184,13 @@ If the repo runs a GitHub Action that commits to `main` before deploy (e.g. a co
 
 ---
 
-## 10. Verify
+## 10. Write the Cloudflare guide
+
+Record every dashboard-owned setting from the steps above in **`docs/guides/cloudflare.md`** — the one guide for every Cloudflare aspect of this repository ([standard §6](standards-cloudflare-hosting.md#6-the-cloudflare-guide--dashboard-owned-settings)). Capture the exact values an operator enters: the Workers Builds build command, deploy command, and root directory (§9); the domain and redirect choices (§7–8); whether `workers.dev` serves (§6). Link to `wrangler.jsonc` for everything the config already declares rather than duplicating it. From now on, a dashboard change and its guide edit travel together.
+
+---
+
+## 11. Verify
 
 Run the mechanical checker to confirm the hosting config is conformant:
 

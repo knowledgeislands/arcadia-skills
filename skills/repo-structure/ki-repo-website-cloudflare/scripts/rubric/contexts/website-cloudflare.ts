@@ -6,6 +6,7 @@ const CONFIG_FILE = '.ki.toml'
 const CONFIG_SECTION = 'ki-repo-website-cloudflare'
 const WEBSITE_CONFIG_SECTION = 'ki-repo-website'
 const DEFAULT_SITE_ROOT = 'apps/site'
+export const GUIDE_PATH = 'docs/guides/cloudflare.md'
 const WRANGLER_FILES = ['wrangler.jsonc', 'wrangler.json', 'wrangler.toml'] as const
 const SKIPPED_DIRECTORIES = new Set(['.git', '.wrangler', 'dist', 'node_modules'])
 
@@ -54,6 +55,11 @@ export type WebsiteCloudflareContext = {
     readonly scripts: Readonly<Record<string, string>>
   }
   readonly gitignore: {
+    readonly state: TextState
+    readonly text: string
+  }
+  readonly guide: {
+    readonly path: typeof GUIDE_PATH
     readonly state: TextState
     readonly text: string
   }
@@ -312,7 +318,11 @@ export const createWebsiteCloudflareSession = ({
       path: 'package.json',
       ...(targetExists ? inspectPackage(join(target, 'package.json')) : { state: 'missing' as const, scripts: {} })
     },
-    gitignore: targetExists ? inspectText(join(target, '.gitignore')) : { state: 'missing' as const, text: '' }
+    gitignore: targetExists ? inspectText(join(target, '.gitignore')) : { state: 'missing' as const, text: '' },
+    guide: {
+      path: GUIDE_PATH,
+      ...(targetExists ? inspectText(join(target, GUIDE_PATH)) : { state: 'missing' as const, text: '' })
+    }
   }
   const context: WebsiteCloudflareRubricContext = { rubric: { publication }, hosting }
 

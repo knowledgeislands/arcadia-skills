@@ -27,7 +27,12 @@ const options = (repository: string, mode: 'audit' | 'conform' = 'audit'): Rubri
 
 const writeCanonicalRepository = (repository: string): void => {
   mkdirSync(join(repository, 'apps', 'site'), { recursive: true })
+  mkdirSync(join(repository, 'docs', 'guides'), { recursive: true })
   writeFileSync(join(repository, '.ki.toml'), '[skills.ki-repo-website]\n\n[skills.ki-repo-website-cloudflare]\n')
+  writeFileSync(
+    join(repository, 'docs', 'guides', 'cloudflare.md'),
+    '# Cloudflare\n\nBuild command: `bun run ki:site:build`.\n'
+  )
   writeFileSync(
     join(repository, 'apps', 'site', 'wrangler.jsonc'),
     `{
@@ -328,6 +333,28 @@ describe('ki-repo-website-cloudflare session', () => {
     const result = WCF.items.find((item) => item.code === 'WCF-1')?.mechanical?.audit.run(context)
 
     expect(result?.[0]?.status).toBe('VIOLATION')
+  })
+
+  test('the Cloudflare guide is required once hosting applies and satisfied by tracked content', () => {
+    const repository = makeRoot()
+    writeCanonicalRepository(repository)
+    const guideItem = WCF.items.find((item) => item.code === 'WCF-26')?.mechanical?.audit
+    const contextFor = () =>
+      WCF.selectContext(createWebsiteCloudflareSession(options(repository)).subjects[0].context())
+
+    expect(guideItem?.run(contextFor())?.[0]).toEqual({
+      status: 'PASS',
+      message: 'The Cloudflare guide is tracked, ready to carry the dashboard-owned settings.',
+      subject: 'docs/guides/cloudflare.md'
+    })
+
+    rmSync(join(repository, 'docs', 'guides', 'cloudflare.md'))
+    const missing = guideItem?.run(contextFor())
+    expect(missing?.[0]?.status).toBe('VIOLATION')
+    expect(missing?.[0]?.message).toContain('no reconstructable record')
+
+    writeFileSync(join(repository, 'docs', 'guides', 'cloudflare.md'), '\n')
+    expect(guideItem?.run(contextFor())?.[0]?.status).toBe('VIOLATION')
   })
 
   test('routes an unrelated repository through one not-applicable outcome', () => {

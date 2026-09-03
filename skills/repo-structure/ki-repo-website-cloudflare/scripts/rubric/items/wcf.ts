@@ -243,6 +243,47 @@ const WCF_24: RubricItem<WebsiteCloudflareContext> = {
   }
 }
 
+const WCF_26: RubricItem<WebsiteCloudflareContext> = {
+  code: 'WCF-26',
+  title: 'the Cloudflare guide',
+  description:
+    'A tracked guide at docs/guides/cloudflare.md records the dashboard-owned settings — Workers Builds commands, domains, redirects — that wrangler.jsonc cannot express.',
+  sources: [`${SOURCE}#6-the-cloudflare-guide--dashboard-owned-settings`],
+  mechanical: {
+    level: 'FAIL',
+    remediation: DIAGNOSTIC,
+    audit: {
+      phase: 'INSPECT',
+      run: (context) => {
+        const skip = skipped(context)
+        if (skip) return skip
+        const { guide } = context
+        return guide.state === 'present' && guide.text.trim().length > 0
+          ? [
+              {
+                status: 'PASS',
+                message: 'The Cloudflare guide is tracked, ready to carry the dashboard-owned settings.',
+                subject: guide.path
+              }
+            ]
+          : [
+              {
+                status: 'VIOLATION',
+                message:
+                  guide.state === 'missing'
+                    ? 'No docs/guides/cloudflare.md — the dashboard-owned settings (Workers Builds commands, domains, redirects) have no reconstructable record in the repository.'
+                    : 'docs/guides/cloudflare.md exists but is empty or unreadable; it must record the dashboard-owned settings.',
+                subject: guide.path
+              }
+            ]
+      }
+    }
+  },
+  judgment: judgment(
+    'Confirm the guide records the exact dashboard-owned values — Workers Builds build/deploy commands and root directory, domain and redirect choices, workers.dev — matching the live dashboard, and duplicates nothing wrangler.jsonc already declares.'
+  )
+}
+
 const WCF_6: RubricItem<WebsiteCloudflareContext> = {
   code: 'WCF-6',
   title: 'generated directories ignored',
@@ -574,7 +615,7 @@ const WCF_19: RubricItem<WebsiteCloudflareContext> = {
   code: 'WCF-19',
   title: 'companion Worker boundary',
   description: 'Companion Workers remain out of scope.',
-  sources: [`${SOURCE}#6-boundaries--what-is-not-in-scope`],
+  sources: [`${SOURCE}#7-boundaries--what-is-not-in-scope`],
   mechanical: {
     level: 'WARN',
     remediation: DIAGNOSTIC,
@@ -684,7 +725,7 @@ const WCF_22: RubricItem<WebsiteCloudflareContext> = {
   code: 'WCF-22',
   title: 'hosting delta',
   description: 'This remains the hosting delta only.',
-  sources: [`${SOURCE}#6-boundaries--what-is-not-in-scope`],
+  sources: [`${SOURCE}#7-boundaries--what-is-not-in-scope`],
   mechanical: {
     level: 'WARN',
     remediation: DIAGNOSTIC,
@@ -726,6 +767,7 @@ export const WCF: RubricFamily<WebsiteCloudflareRubricContext, WebsiteCloudflare
     WCF_13,
     WCF_14,
     WCF_25,
+    WCF_26,
     WCF_19,
     WCF_20,
     WCF_21,
