@@ -63,10 +63,10 @@ Closes one evidence-backed canonical local work record from awaiting-review to d
 
 #### `ki-batch`
 
-Prepares and runs an explicitly authorised, single-repository batch of independent work records: plan the named candidates up front, then execute one fresh-grounded, bounded cycle where the selected adapter supports it. A process skill: it does not select work, reshape plans, bypass lifecycle gates, infer closure, prune, push, release, or introduce a tracker. Remote execution fails closed pending KI-HARNESS-FND-014. Use when asked to "prepare a work batch", "run this approved batch", "run the agenda", "coordinate several ready work items", or "record a batch run". For selection use ki-next; plan shape use ki-plan; single-item delivery use ki-implement; closure use ki-accept.
+Prepares and runs a bounded, single-repository batch of independent work records under either reviewed exact-item authority or explicit human outcome authority such as "crack on with the roadmap". Outcome authority lets the orchestrator select, deliver, and consolidate acceptance without another pre-run gate while recording exact scope, evidence, stops, and remedial follow-ups. A process skill: it does not infer authority, bypass lifecycle or verification, prune, push, release, or introduce a tracker. Remote execution fails closed pending KI-HARNESS-FND-014. Use when asked to "prepare a work batch", "run this approved batch", "crack on autonomously", "coordinate several ready work items", or "record this batch run". For ordinary selection use ki-next; for plan shape use ki-plan; for single-item delivery use ki-implement; for closure use ki-accept.
 
 - **Kind:** Process
-- **Arguments:** `batch <work>... | run <batch-authorisation> | help`
+- **Arguments:** `batch <work>... | batch outcome <outcome> | run <batch-authorisation> | help`
 - **Dependencies:** None
 - **Runtime:** Portable
 
@@ -112,7 +112,7 @@ Recaps a live session: summarises changes, decisions, and files; surfaces only u
 
 - **Kind:** Process
 - **Arguments:** `recap [--runtime detect|claude|codex] [--transcript <session-file>] | help`
-- **Dependencies:** None
+- **Dependencies:** `ki-authoring`
 - **Runtime:** Portable
 
 #### `ki-work`
@@ -153,7 +153,7 @@ Defines the configuration and safety guidance for Linear as a Knowledge Islands 
 
 #### `ki-work-roadmap`
 
-Governs flat repository work items and their concise root orientation in project repositories. Use for "audit the roadmap", "audit plans", roadmap horizons, theme grouping, work-item identity, lifecycle detail, plan dependencies, or root-orientation drift. Project work items live directly under docs/roadmap; Knowledge Bases apply the same record model under Streams/Roadmap through ki-repo-kb-streams. Records gain detail in place as they move from draft through readiness, delivery, required review, and retained completion. Process skills apply the shared lifecycle; ki-decision-records owns durable decisions.
+Governs flat repository work items and their concise root orientation in project repositories. Use for "audit the roadmap", "audit plans", roadmap horizons, theme grouping, work-item identity, lifecycle detail, lifecycle and pruning commit boundaries, plan dependencies, or root-orientation drift. Project work items live directly under docs/roadmap; Knowledge Bases apply the same record model under Streams/Roadmap through ki-repo-kb-streams. Records gain detail in place as they move from draft through readiness, delivery, required review, and retained completion. Process skills apply the shared lifecycle; ki-decision-records owns durable decisions.
 
 - **Kind:** Governance
 - **Arguments:** `audit <repo> | conform <repo> | help | educate <repo> | refresh`
@@ -274,7 +274,7 @@ Governs portable reciprocal Agora membership between Knowledge Islands repositor
 
 #### `ki-authoring`
 
-Defines Knowledge Islands Markdown, TOML, and knowledge-placement conventions. Use to format or audit Markdown or TOML, decide where a durable learning belongs, or refresh house style. Use `ki-skills` for a SKILL.md, `ki-repo` for a configuration contract, and `ki-engineering` for the toolchain.
+Defines Knowledge Islands Markdown, TOML, README composition, and knowledge-placement conventions. Use to format or audit Markdown or TOML, shape a repository README, decide where a durable learning belongs, or refresh house style. Use `ki-skills` for a SKILL.md, `ki-repo` for repository requirements or a configuration contract, and `ki-engineering` for the toolchain.
 
 - **Kind:** Governance
 - **Arguments:** `audit <path> | conform <path> | educate <target> | help | refresh`
@@ -319,7 +319,7 @@ Use to audit or conform the shared Knowledge Islands TypeScript/Bun engineering 
 
 #### `ki-git`
 
-Governs portable Knowledge Islands Git working and commit conventions: Conventional Commit messages, selection between single-working-copy main, single-working-copy branch with PR, and worktrees with PRs, safe Git hygiene, and the stale-lock guard's semantics. Use when preparing or reviewing a commit, choosing a working and review approach, recovering a stale Git lock, or clarifying who owns hook payload versus runtime registration. Does not configure GitHub repository settings, install hooks, or write agent settings; use ki-repo for repository configuration and ki-repo-dotfiles-chezmoi for runtime bindings.
+Governs portable Knowledge Islands Git working and commit conventions: Conventional Commit messages, shared-working-tree touched-path tracking, selection between single-working-copy main, single-working-copy branch with PR, and worktrees with PRs, safe Git hygiene, and the stale-lock guard's semantics. Use when preparing or reviewing a commit, coordinating human or agent changes in one working tree, choosing a working and review approach, recovering a stale Git lock, or clarifying who owns hook payload versus runtime registration. Does not configure GitHub repository settings, install hooks, or write agent settings; use ki-repo for repository configuration and ki-repo-dotfiles-chezmoi for runtime bindings.
 
 - **Kind:** Governance
 - **Arguments:** `audit <repo> | conform <repo> | help | educate <repo> | refresh`
