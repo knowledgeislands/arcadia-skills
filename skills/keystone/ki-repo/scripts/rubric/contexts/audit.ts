@@ -211,7 +211,7 @@ const pkgHasDep = (pkg: Pkg | null, name: string): boolean =>
   Boolean(pkg?.dependencies?.[name] ?? pkg?.devDependencies?.[name])
 
 // The repo's full tree (recursive) as a set of paths, for the coverage signals that
-// look below the root (`site/wrangler.jsonc`, `skills/*/SKILL.md`, runtime subagent projections).
+// look below the root (`apps/site/wrangler.jsonc`, `skills/*/SKILL.md`, runtime subagent projections).
 // One API call; empty set on error or truncation. `rootPaths` stays the top-level
 // view the file-presence checks use.
 async function treePaths(nwo: string, branch: string): Promise<Set<string>> {
