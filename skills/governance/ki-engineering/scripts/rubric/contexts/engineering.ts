@@ -146,11 +146,11 @@ export const auditEvidence = (
 
 const requiredDev = ['@biomejs/biome', 'knip', 'rumdl', 'husky', 'lint-staged', 'syncpack', 'typescript']
 const versions: Record<string, string> = {
-  '@biomejs/biome': '^2.5.7',
-  knip: '^6.32.0',
-  rumdl: '^0.2.52',
+  '@biomejs/biome': '^2.5.12',
+  knip: '^6.34.0',
+  rumdl: '^0.2.64',
   husky: '^9.1.7',
-  'lint-staged': '^17.1.0',
+  'lint-staged': '^17.4.1',
   syncpack: '^15.3.3',
   typescript: '^7.0.2'
 }
@@ -159,7 +159,7 @@ const lintStaged = {
   '*.md': ['bunx rumdl check --fix']
 }
 const defaults = {
-  'mise.toml': `[tools]\nnode = "22"\nbun = "1.3.14"\n`,
+  'mise.toml': `[tools]\nnode = "22"\nbun = "1.4.1"\n`,
   'tsconfig.json': `{
   "compilerOptions": {
     "target": "es2024",
@@ -178,7 +178,7 @@ const defaults = {
 }
 `,
   'biome.json': `{
-  "$schema": "https://biomejs.dev/schemas/2.5.7/schema.json",
+  "$schema": "https://biomejs.dev/schemas/2.5.12/schema.json",
   "vcs": {
     "enabled": true,
     "clientKind": "git",
@@ -259,7 +259,7 @@ const packageContent = (source: string): string | undefined => {
   }
   const packageJson = structuredClone(value)
   packageJson.type = 'module'
-  packageJson.packageManager = 'bun@1.3.14'
+  packageJson.packageManager = 'bun@1.4.1'
   packageJson.engines = { ...((packageJson.engines as Record<string, string> | undefined) ?? {}), node: '>=22' }
   const devDependencies = { ...((packageJson.devDependencies as Record<string, string> | undefined) ?? {}) }
   for (const dependency of requiredDev) devDependencies[dependency] ??= versions[dependency] as string
