@@ -666,9 +666,9 @@ export const collectAuditEvidence = async (
     if (noTsconfig.length)
       add('FAIL', 'TSC-1', `workspaces names dir(s) without a tsconfig.json: ${noTsconfig.join(', ')}`, STD)
     for (const ws of workspaces.filter((p) => read(`${p}/tsconfig.json`)))
-      await runCheck('TSC-1', `tsc ${ws}`, `tsc --noEmit -p ${ws}/tsconfig.json`, STD)
+      await runCheck('TSC-1', `tsc ${ws}`, `bunx tsc --noEmit -p ${ws}/tsconfig.json`, STD)
   } else {
-    await runCheck('TSC-1', 'tsc --noEmit', 'tsc --noEmit', STD)
+    await runCheck('TSC-1', 'tsc --noEmit', 'bunx tsc --noEmit', STD)
   }
   await runCheck('SYNC-1', 'syncpack format (check)', 'bunx syncpack format --check', STD)
   await runCheck('KNIP-2', 'knip', 'bunx knip --no-config-hints', STD)
