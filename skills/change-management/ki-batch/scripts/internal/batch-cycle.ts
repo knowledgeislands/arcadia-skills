@@ -34,7 +34,11 @@ export type BatchCycleInput = {
   adapter: AdapterResolution
   repository: {
     path: string
-    clean: boolean
+    expectedHeadMatches: boolean
+    touchedPathsTracked: boolean
+    preExistingDirtyPaths: readonly string[]
+    contestedTouchedPaths: readonly string[]
+    existingStagedPaths: readonly string[]
     gatesPass: boolean
   }
   items: readonly BatchItem[]
@@ -76,7 +80,10 @@ export const evaluateBatchCycle = ({
     return stop('done completion target lacks closure authority for every item')
   if (new Set(items.map((item) => item.id)).size !== items.length)
     return stop('canonical item resolution repeats an item identifier')
-  if (!repository.clean) return stop('repository worktree is not clean')
+  if (!repository.expectedHeadMatches) return stop('repository HEAD moved after batch preflight')
+  if (!repository.touchedPathsTracked) return stop('batch lacks a thread-local touched-path set')
+  if (repository.contestedTouchedPaths.length > 0) return stop('batch scope contains a contested path')
+  if (repository.existingStagedPaths.length > 0) return stop('repository index contains another staged path')
   if (!repository.gatesPass) return stop('required read-only gate has failed')
 
   const byId = new Map(items.map((item) => [item.id, item]))

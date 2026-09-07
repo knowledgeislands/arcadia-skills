@@ -16,7 +16,15 @@ const input = (overrides: Partial<BatchCycleInput> = {}): BatchCycleInput => ({
     closureItemIds: []
   },
   adapter: { kind: 'local', adapter: 'roadmap' },
-  repository: { path: 'knowledgeislands/ki-agentic-harness', clean: true, gatesPass: true },
+  repository: {
+    path: 'knowledgeislands/ki-agentic-harness',
+    expectedHeadMatches: true,
+    touchedPathsTracked: true,
+    preExistingDirtyPaths: [],
+    contestedTouchedPaths: [],
+    existingStagedPaths: [],
+    gatesPass: true
+  },
   items: [
     {
       id: 'TEST-001',
@@ -51,11 +59,33 @@ test('stops without writes when adapter, authority, or repository preflight is i
     reason: 'batch run is not bound to the approved payload',
     writes: false
   })
-  expect(evaluateBatchCycle(input({ repository: { ...input().repository, clean: false } }))).toMatchObject({
+  expect(
+    evaluateBatchCycle(input({ repository: { ...input().repository, expectedHeadMatches: false } }))
+  ).toMatchObject({
     kind: 'stop',
-    reason: 'repository worktree is not clean',
+    reason: 'repository HEAD moved after batch preflight',
     writes: false
   })
+})
+
+test('coordinates with unrelated pre-existing dirt but stops for untracked, contested, or staged paths', () => {
+  expect(
+    evaluateBatchCycle(
+      input({ repository: { ...input().repository, preExistingDirtyPaths: ['apps/site/src/styles.css'] } })
+    )
+  ).toEqual({ kind: 'coordinate', itemIds: ['TEST-001'], writes: false })
+
+  expect(
+    evaluateBatchCycle(input({ repository: { ...input().repository, touchedPathsTracked: false } }))
+  ).toMatchObject({ kind: 'stop', reason: 'batch lacks a thread-local touched-path set', writes: false })
+
+  expect(
+    evaluateBatchCycle(input({ repository: { ...input().repository, contestedTouchedPaths: ['package.json'] } }))
+  ).toMatchObject({ kind: 'stop', reason: 'batch scope contains a contested path', writes: false })
+
+  expect(
+    evaluateBatchCycle(input({ repository: { ...input().repository, existingStagedPaths: ['another-actor.md'] } }))
+  ).toMatchObject({ kind: 'stop', reason: 'repository index contains another staged path', writes: false })
 })
 
 test('asks known questions before evaluating an item for delivery', () => {

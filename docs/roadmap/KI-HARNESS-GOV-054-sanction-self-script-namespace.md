@@ -47,6 +47,7 @@ The engineering standard accepts six bare lifecycle idioms or a capability-owned
 - [x] Add focused composition fixtures, refresh generated rubrics, and record current receiver evidence without mutating another repository.
 - [x] Publish the four existing MCP auth and recording operations as `ki-repo-mcp` capability-owned root scripts before removing receiver exclusions.
 - [x] Keep the batch approval hash stable when a receiver appends the Markdown-required blank-line separator before `## Run ledger`.
+- [x] Align batch preflight with `ki-git` so unrelated pre-existing unstaged paths do not block a disjoint touched-path delivery.
 
 ## Files touched
 
@@ -72,6 +73,8 @@ The engineering standard accepts six bare lifecycle idioms or a capability-owned
 - `skills/change-management/ki-batch/references/standards-batch.md`
 - `skills/change-management/ki-batch/scripts/internal/authorisation.ts`
 - `skills/change-management/ki-batch/scripts/authorisation.test.ts`
+- `skills/change-management/ki-batch/scripts/internal/batch-cycle.ts`
+- `skills/change-management/ki-batch/scripts/batch-cycle.test.ts`
 - This roadmap record
 
 ## Delegation
@@ -81,6 +84,7 @@ The engineering standard accepts six bare lifecycle idioms or a capability-owned
 - Receiver work remains receiver-owned, uses its selected local roadmap adapter and its own commit boundary, and stops at `awaiting-review`.
 - `mcp-gsuite` and `mcp-m365` remove only the four obsolete exclusions for capability-owned `ki:server:auth:dev`, `ki:server:auth:start`, `ki:test:record`, and `ki:test:replay`; their package script names and bodies do not change.
 - `5g-emerge-ibc-2026` removes only the four obsolete exclusions for its existing `self:` scripts; package scripts and Cloudflare commands do not change.
+- `infoschematics` renames the twelve unclaimed repository-owned `ki:` scripts to the exact `self:` names with the same suffixes, updates their live tracked references, and removes the now-empty exclusions; its pre-existing unstaged `apps/site/src/styles.css` is another actor's uncontested out-of-scope path and remains untouched and unstaged.
 - `kit-midnight.ninja` uses `self:tower:import`, `self:tower:pull`, and `self:tower:refresh`; declares `site-root = "site"`; keeps only the public `ki:site:*` root aliases; and moves private build and development fan-out to bare package-local scripts in `site/package.json`.
 - `kit-midnight.ninja` moves `@11ty/eleventy`, `@tailwindcss/cli`, `tailwindcss`, `concurrently`, `wrangler`, and `d3` into the selected site workspace with the scripts that consume them, updating the frozen Bun lockfile.
 - `kit-midnight.ninja` retains its pre-existing `WCF-26` failure for the missing `docs/guides/cloudflare.md` as an explicit out-of-scope baseline finding; this rollout must introduce no other Cloudflare finding.
@@ -90,6 +94,17 @@ The engineering standard accepts six bare lifecycle idioms or a capability-owned
 
 - Return to the coordinator on a new dirty or staged path, a reference outside the named scope, a required public command-name change, an external-platform change, an unavailable local adapter, or failed required verification.
 - Do not infer ownership for another unsupported `ki:` script or broaden a receiver item to unrelated audit findings.
+
+### Worker: infoschematics-receiver
+
+- **Deliverable:** One receiver-owned twelve-script namespace migration committed with `INFOSCHEMATICS-TOOL-022` at `awaiting-review` and `INFOSCHEMATICS-BATCH-003` run evidence, while preserving the other actor's stylesheet change.
+- **Inputs:** Harness commits `9869d4ac` and the shared-tree batch alignment commit carrying this packet; receiver baseline `0dacf9cc2be690520fd8332fc24c49b1a281a80c`; rename `ki:check`, `ki:dev`, `ki:examples:render`, `ki:packages:build`, `ki:packages:check-versions`, `ki:packages:clean`, `ki:packages:pack-smoke`, `ki:release:verify`, `ki:tokens:generate`, `ki:verify:depcruise`, `ki:verify:typecheck`, and `ki:verify:visual-tokens` to the same suffix under `self:`.
+- **Scope:** `.ki.toml`; `package.json`; `AGENTS.md`; `README.md`; `.github/workflows/ci.yml`; `.github/workflows/release-npm.yml`; `docs/guides/react-integration.md`; `docs/guides/releasing-packages.md`; `scripts/render-example.ts`; `scripts/generate-visual-tokens.ts`; `scripts/release/check-versions.ts`; `scripts/release/pack-smoke.ts`; `docs/roadmap/_ISSUES.md`; `docs/roadmap/INFOSCHEMATICS-TOOL-022-adopt-repository-owned-script-naming.md`; `docs/roadmap/INFOSCHEMATICS-TOOL-019-declutter-design-mode.md`; `docs/roadmap/INFOSCHEMATICS-SITE-003-dotted-grid-treatment.md`; `docs/roadmap/INFOSCHEMATICS-SITE-004-homepage-real-rendering.md`; and `+/_AUTHORISATIONS/INFOSCHEMATICS-BATCH-003.md` only.
+- **Authority:** Create and bind the receiver-local outcome authorisation, shape and deliver the named record, apply the locked renames and live-reference updates, verify, and commit; do not touch or stage `apps/site/src/styles.css`, change `ki:site:*`, contact external systems, close, prune, or push.
+- **Isolation:** Record the pre-existing stylesheet path and expected `HEAD`; retain a disjoint touched-path set; use explicit-path staging and a serialized shared-`HEAD` commit window; revalidate every scoped path if `HEAD` moves.
+- **Verify:** Focused `ki-engineering`, full repository and roadmap audits, `bun run self:check`, `bun run self:release:verify`, JSON/YAML/TOML parsing, stale-live-reference search, and `git diff --check`; coordinator checks every diff and that the stylesheet remains unstaged.
+- **Return:** Preparation and delivery commits, changed paths, exact gate outcomes, preserved dirty-path evidence, and unresolved concerns.
+- **Checkpoint:** Return after the item reaches `awaiting-review` and its commits are clean apart from the preserved stylesheet, or immediately at the first escalation condition.
 
 ### Worker: mcp-receivers
 

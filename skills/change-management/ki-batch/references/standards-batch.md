@@ -44,6 +44,8 @@ Resolve the approved regular local authorisation, the selected adapter, and ever
 
 Confirm that each item remains `ready`, is a canonical record for the resolved local adapter, has a bounded approved plan, its dependencies remain satisfied and correctly ordered, its one repository and file or system boundary still match, its required checks are available, its delegation is authorised, and no mandatory stop has already occurred.
 
+Apply `ki-git` shared-working-tree hygiene at this preflight: record expected `HEAD`, the pre-existing dirty paths, the thread-local touched-path set, any contested touched path, and existing staged paths. Unrelated pre-existing unstaged paths do not block an otherwise independent batch. A moved `HEAD`, untracked touched-path set, contested touched path, or another actor's staged path is a no-write stop until revalidated or coordinated.
+
 Reject an invalid item plainly rather than quietly omitting it.
 
 Stop the whole batch when its dependency order, authority, or completion target is no longer honest.
@@ -84,9 +86,9 @@ Pruning is never implied by batch completion.
 
 ## Controlled dry-run model
 
-`scripts/internal/authorisation.ts` exposes a pure approval-payload calculation and a regular-file resolver. `scripts/internal/batch-cycle.ts` exposes a pure `evaluateBatchCycle()` helper. Their focused fixture tests prove that changed approval payloads, mismatched run records, duplicate IDs, unresolved or remote adapters, non-canonical or out-of-scope records, missing plans/checks, unauthorised delegation, stops, reversed dependencies, a dirty tree, a failed gate, an unready item, an unsatisfied dependency, and an early decision produce a named no-write outcome.
+`scripts/internal/authorisation.ts` exposes a pure approval-payload calculation and a regular-file resolver. `scripts/internal/batch-cycle.ts` exposes a pure `evaluateBatchCycle()` helper. Their focused fixture tests prove that changed approval payloads, mismatched run records, duplicate IDs, unresolved or remote adapters, non-canonical or out-of-scope records, missing plans/checks, unauthorised delegation, stops, reversed dependencies, moved `HEAD`, absent touched-path tracking, contested or staged paths, a failed gate, an unready item, an unsatisfied dependency, and an early decision produce a named no-write outcome. They also prove unrelated pre-existing unstaged paths remain compatible with bounded delivery.
 
-The model may report `coordinate` only for a clean, authority-bound, same-repository set of named canonical Ready items through a locally executable selected adapter. It verifies current evidence for outcome authority and complete closure scope for a `done` target. It does not invoke any skill, run a command, write a file, or mutate an item.
+The model may report `coordinate` only for an authority-bound, same-repository set of named canonical Ready items through a locally executable selected adapter whose touched paths are tracked and uncontested. It verifies current evidence for outcome authority and complete closure scope for a `done` target. It does not invoke any skill, run a command, write a file, or mutate an item.
 
 ## Mandatory stops
 
