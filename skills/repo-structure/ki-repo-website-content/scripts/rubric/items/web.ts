@@ -219,11 +219,31 @@ const WEB_7 = mechanical(
   (context) => inactive(context) ?? one(context.has('ROADMAP.md'), 'ROADMAP.md present', 'no ROADMAP.md', 'ROADMAP.md')
 )
 
-const WEB_8 = judgment(
+const WEB_8 = mechanical(
   'WEB-8',
   'Workspace declaration',
   'The root package manifest declares a workspace covering the selected site root.',
-  'Does the root workspace declaration cover `[skills.ki-repo-website].site-root` (conventionally `apps/site` via `apps/*`)?'
+  'FAIL',
+  (context) => {
+    const stop = inactive(context)
+    if (stop) return stop
+    if (!context.rootPackageOk)
+      return [{ status: 'VIOLATION', message: 'root package.json unavailable or malformed', subject: 'package.json' }]
+    if (context.siteRoot === '.')
+      return [
+        {
+          status: 'VIOLATION',
+          message: 'content website must use a selected application workspace rather than the repository root',
+          subject: '.ki.toml'
+        }
+      ]
+    return one(
+      context.workspaceCoversSiteRoot,
+      `root workspace declaration covers ${context.siteRoot}`,
+      `root workspace declaration does not cover ${context.siteRoot}`,
+      'package.json'
+    )
+  }
 )
 
 const WEB_9 = mechanical(
@@ -245,8 +265,8 @@ const WEB_9 = mechanical(
 const WEB_10 = judgment(
   'WEB-10',
   'Local script ownership',
-  'The selected site package uses ordinary local script names while the repository root owns public `ki:site:*` aliases.',
-  'Does the selected site package avoid duplicating the root-owned public `ki:site:*` aliases?'
+  'The selected site workspace uses the content skill local script names without root `script_exclusions`, while the repository root owns public `ki:site:*` aliases.',
+  'Does the selected site package keep the exact local script contract while the root exposes only the public `ki:site:*` seam?'
 )
 
 const WEB_11 = judgment(

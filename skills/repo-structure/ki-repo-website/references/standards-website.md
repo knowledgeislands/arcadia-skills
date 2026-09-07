@@ -27,6 +27,8 @@ The repository root `package.json` exposes public aliases that delegate to the s
 - `ki:site:dev` — delegate to the selected package's `dev` script.
 - `ki:site:clean` — delegate to the selected package's `clean` script and remove generated output.
 
+Those three aliases are the complete root capability-owned lifecycle seam. Implementation-private fan-out names remain inside the selected package and are not additional root `ki:site:*` claims.
+
 The implementation skill verifies the selected package's ordinary command semantics. A hosting adapter consumes the selected root's `dist/` and must not infer the generator.
 
 ## 4. Ownership

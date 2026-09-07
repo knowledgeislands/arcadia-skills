@@ -41,6 +41,10 @@ The engineering standard accepts six bare lifecycle idioms or a capability-owned
 - [x] Extend focused fixtures for accepted `self:` names, malformed or empty `self:` names, redundant exclusions, retained bare idioms, and externally constrained bare exceptions.
 - [x] Refresh the generated engineering rubric and examples, then inventory registered repositories for rollout candidates without mutating another repository.
 - [ ] Record repository-specific rename, cross-reference, and external-platform follow-ups through each repository's own accepted work route.
+- [x] Resolve the content-website collision by deciding whether its bare local development names are exclusions, root capability names, or workspace-local artifact contract.
+- [x] Amend the live toolchain decision and both owning standards with the selected root-versus-workspace boundary.
+- [x] Make the content site's required workspace shape mechanically checkable and remove any implementation-private root script claims.
+- [x] Add focused composition fixtures, refresh generated rubrics, and record current receiver evidence without mutating another repository.
 
 ## Files touched
 
@@ -51,11 +55,21 @@ The engineering standard accepts six bare lifecycle idioms or a capability-owned
 - `skills/governance/ki-engineering/references/rubric.md`
 - `skills/governance/ki-engineering/scripts/rubric/contexts/audit-evidence.ts`
 - `skills/governance/ki-engineering/scripts/rubric/items/index.test.ts`
+- `skills/repo-structure/ki-repo-website/references/standards-website.md`
+- `skills/repo-structure/ki-repo-website/scripts/rubric/items/index.ts`
+- `skills/repo-structure/ki-repo-website/scripts/rubric/items/index.test.ts`
+- `skills/repo-structure/ki-repo-website-content/SKILL.md`
+- `skills/repo-structure/ki-repo-website-content/references/standards-eleventy-site.md`
+- `skills/repo-structure/ki-repo-website-content/references/rubric.md`
+- `skills/repo-structure/ki-repo-website-content/scripts/rubric/contexts/website.ts`
+- `skills/repo-structure/ki-repo-website-content/scripts/rubric/contexts/website.test.ts`
+- `skills/repo-structure/ki-repo-website-content/scripts/rubric/items/web.ts`
+- `skills/keystone/ki-skills/scripts/internal/remediation-inventory.test.ts`
 - This roadmap record
 
 ## Verify
 
-Run `bun test skills/governance/ki-engineering/scripts/rubric/items/index.test.ts`, `bunx tsc --noEmit`, `ki dev skill rubric ki-engineering --write`, `ki repo audit --skill ki-engineering --repo .`, and `ki repo audit --skill ki-skills --repo .`. Confirm the estate inventory is read-only and names an owner-controlled route for every proposed external rename.
+Run the focused engineering and website rubric tests, `bunx tsc --noEmit`, and `bun run test`; verify the generated engineering, website-core, and website-content rubrics. Run focused harness audits for `ki-engineering`, `ki-decision-records`, `ki-skills`, `ki-work-roadmap`, and `ki-authoring`; exercise the two website skills through conforming receiver repositories that declare them. Confirm the estate inventory is read-only and names an owner-controlled route for every proposed external rename.
 
 ## Dependencies / blocks
 
@@ -95,15 +109,20 @@ The harness can publish the portable rule and report migration candidates, but i
 
 ### Estate rollout inventory
 
-The read-only registered-repository inventory found six receivers with exclusions affected by this clarification:
+The read-only registered-repository inventory found five remaining receivers with exclusions affected by the `self:` clarification:
 
 - `5g-emerge-ibc-2026` already uses four `self:` names and only needs their now-redundant exclusions removed.
-- `5g-emerge-testbed-website` has eleven repository-owned bare names to migrate to `self:` with their callers.
 - `infoschematics` has twelve excluded `ki:` names requiring owner classification: claim genuine capability operations or rename repository operations to `self:`.
 - `kit-midnight.ninja` has three excluded `ki:` names requiring the same classification.
 - `mcp-gsuite` and `mcp-m365` each have four excluded `ki:` names requiring the same classification.
 
-No declared work-export route currently connects this harness to those receiver repositories (`mcp-gsuite` has a knowledge-only route). Repository-specific work records therefore remain pending receiver-owned capture or an explicitly established work route; no sibling working tree was modified.
+The harness owns the portable contract only. No work-export route currently connects the harness to the receiver repositories (`mcp-gsuite` has a knowledge-only route). Repository-specific work records remain pending receiver-owned capture through an explicitly established work route; no sibling working tree was modified.
+
+### Website composition evidence
+
+`5g-emerge-testbed-website` now uses the `apps/site` workspace, has no `script_exclusions`, and passes both focused engineering and website-content audits for script ownership and workspace shape. `ki-website` provides a second conforming non-default workspace example at `site/`. The reported exclusion collision described the earlier flat layout rather than the current repository.
+
+`kit-midnight.ninja` remains receiver-owned drift: it exposes implementation-private `ki:site:dev:css` and `ki:site:dev:serve` at the root and has no selected `apps/site/package.json`. Removing those unsupported root claims makes the existing mismatch explicit; this harness item does not rewrite the receiver.
 
 ### Earlier framing, resolved above
 

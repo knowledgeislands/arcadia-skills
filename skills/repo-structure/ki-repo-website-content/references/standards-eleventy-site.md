@@ -30,11 +30,11 @@ The standard applies only when a repository declares a keyless `[skills.ki-repo-
 
 ## 2. Repo layout — the selected site application
 
-Every house 11ty/Cloudflare site repo is a **monorepo** in the `ki-engineering` sense (§0 there): the root `package.json` declares a `workspaces` array, and the site is its own application workspace. The conventional site root is **`apps/site/`**, covered by `"workspaces": ["apps/*"]` from day one. A repository may explicitly select another safe repository-relative root through `[skills.ki-repo-website].site-root`; `site-root = "."` is the flat-layout override. Adding a companion deployable later (a bot or ingress Worker — **out of this skill's scope**, see [SKILL.md](../SKILL.md) boundaries) is then a pure addition rather than a migration of reusable packages.
+Every house 11ty/Cloudflare site repo is a **monorepo** in the `ki-engineering` sense (§0 there): the root `package.json` declares a `workspaces` array, and the site is its own application workspace. The conventional site root is **`apps/site/`**, covered by `"workspaces": ["apps/*"]` from day one. A repository may explicitly select another safe repository-relative workspace through `[skills.ki-repo-website].site-root`; the website core can represent `site-root = "."`, but that flat-layout override does not conform when this content implementation is selected. Adding a companion deployable later (a bot or ingress Worker — **out of this skill's scope**, see [SKILL.md](../SKILL.md) boundaries) is then a pure addition rather than a migration of reusable packages.
 
 - The site lives at `<site-root>/` (conventionally `apps/site/`) with its own `eleventy.config.ts`, `src/`, `package.json`, and `tsconfig.json`.
 - The build emits **`./dist`** inside the selected site root (`<site-root>/dist/`; conventionally `apps/site/dist/`). Each application workspace owns its output directory, with no cross-workspace output coupling. A hosting adapter consumes that exact path.
-- The selected site package owns ordinary local scripts: `build`, `dev`, `dev:css`, `dev:serve`, and `clean`. The repository root owns the public `ki:site:*` lifecycle aliases through `ki-repo-website`; the content package does not duplicate them.
+- The selected site package owns the exact package-local scripts `build`, `dev`, `dev:css`, `dev:serve`, and `clean`. They are the content implementation contract, outside `ki-engineering`'s root public script surface, and require no `script_exclusions`. The repository root owns only the public `ki:site:build`, `ki:site:dev`, and `ki:site:clean` lifecycle aliases through `ki-repo-website`; the content package does not duplicate them.
 
 The site root is the directory selected by the website core and containing `eleventy.config.ts`. The `workspaces` declaration is governed by `ki-engineering`; this skill verifies its content-specific consequences.
 
@@ -100,13 +100,13 @@ The config is `export default function (eleventyConfig) { … return { dir, … 
 
 ## 8. Dev-workflow delta
 
-The selected site package owns the content-specific local scripts; the root-owned public lifecycle aliases belong to `ki-repo-website`:
+The selected site workspace owns the content-specific local scripts; these exact bare names are a package-local capability contract rather than root script exclusions. The root-owned public lifecycle aliases belong to `ki-repo-website`:
 
 - **`dev`** — `concurrently` runs Tailwind `--watch` through `dev:css` and Eleventy `--serve --port 3000` through `dev:serve`, named `css`,`11ty`.
 - **`build`** — invokes `bun …/@11ty/eleventy/cmd.cjs --config=eleventy.config.ts`; the `eleventy.before` hook compiles Tailwind with `--minify`.
 - **`clean`** — removes `dist/` and `.wrangler/` where present.
 
-TypeScript checking runs inside the registered `ki-engineering` rubric; do not add parallel `types` or `verify` scripts. These ordinary scripts execute within the selected site package. Root `ki:site:build`, `ki:site:dev`, and `ki:site:clean` aliases delegate to them; that public seam belongs to `ki-repo-website`.
+TypeScript checking runs inside the registered `ki-engineering` rubric; do not add parallel `types` or `verify` scripts. These exact local scripts execute within the selected site package and do not appear in root `script_exclusions`. Root `ki:site:build`, `ki:site:dev`, and `ki:site:clean` aliases delegate to them; that public seam belongs to `ki-repo-website`.
 
 ## 9. The `dist/` contract
 

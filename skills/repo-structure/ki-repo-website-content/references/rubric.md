@@ -46,16 +46,13 @@ The static-site stack, workspace layout, generated output, and sustainable opera
   - _Remediation:_ diagnostic — Inspect the affected website surface and apply the standard through a reviewable, site-owned change.
 - **WEB-7 [M] — Roadmap** — `ROADMAP.md` is present. (standards-eleventy-site.md)
   - _Remediation:_ diagnostic — Inspect the affected website surface and apply the standard through a reviewable, site-owned change.
-- **WEB-8 [J] — Workspace declaration** — The root package manifest declares a workspace covering the selected site root. (standards-eleventy-site.md)
-  - _Evidence scope:_ The root package manifest declares a workspace covering the selected site root.
-  - _Review prompt:_ Does the root workspace declaration cover `[skills.ki-repo-website].site-root` (conventionally `apps/site` via `apps/*`)?
-  - _Outcomes:_ conforming; revision required; design decision required
-  - _Conforming guidance:_ Revise the affected website surface to meet the standard, or record the owning design decision before accepting a deliberate exception.
+- **WEB-8 [M] — Workspace declaration** — The root package manifest declares a workspace covering the selected site root. (standards-eleventy-site.md)
+  - _Remediation:_ diagnostic — Inspect the affected website surface and apply the standard through a reviewable, site-owned change.
 - **WEB-9 [M] — Source layout** — `src/` has `_data/`, `_includes/layouts/`, `_includes/partials/`, and `assets/css/`. (standards-eleventy-site.md)
   - _Remediation:_ diagnostic — Inspect the affected website surface and apply the standard through a reviewable, site-owned change.
-- **WEB-10 [J] — Local script ownership** — The selected site package uses ordinary local script names while the repository root owns public `ki:site:*` aliases. (standards-eleventy-site.md)
-  - _Evidence scope:_ The selected site package uses ordinary local script names while the repository root owns public `ki:site:*` aliases.
-  - _Review prompt:_ Does the selected site package avoid duplicating the root-owned public `ki:site:*` aliases?
+- **WEB-10 [J] — Local script ownership** — The selected site workspace uses the content skill local script names without root `script_exclusions`, while the repository root owns public `ki:site:*` aliases. (standards-eleventy-site.md)
+  - _Evidence scope:_ The selected site workspace uses the content skill local script names without root `script_exclusions`, while the repository root owns public `ki:site:*` aliases.
+  - _Review prompt:_ Does the selected site package keep the exact local script contract while the root exposes only the public `ki:site:*` seam?
   - _Outcomes:_ conforming; revision required; design decision required
   - _Conforming guidance:_ Revise the affected website surface to meet the standard, or record the owning design decision before accepting a deliberate exception.
 - **WEB-11 [J] — Typed structure data** — Navigation and ordering live in a typed `_data/*.ts` source. (standards-eleventy-site.md)

@@ -132,6 +132,8 @@ A deliberate hold is recorded, never silent: `dependency_holds` under `[skills.k
 
 ### Script ownership namespaces (core)
 
+This section governs the repository root `package.json`: the public repository command surface where capability claims compose. A selected application workspace keeps package-local implementation scripts under its owning artifact skill. Exact artifact-owned local names need no root `script_exclusions`; other repository-specific workspace scripts should still use `self:` so ownership remains visible.
+
 Every entry in `scripts` has one of three ownership shapes: one of the six universal bare lifecycle idioms — `build`, `prepare`, `test`, `test:coverage`, `test:watch`, and `clean`; a capability-owned `ki:` name; or a repository-owned `self:` name. A `self:` key MUST include a non-empty suffix and needs neither a capability claim nor a `script_exclusions` entry. Every `ki:` key is supported only when exactly one resolved capability publishes that exact key in its rubric catalogue's `packageScripts` metadata; the owning rubric mandates the command's required shape. `ki-engineering` claims `ki:deps:update`. The host aggregates claims from resolved skills only: namespace readability never implies a claim, and duplicate, absent, patterned, aliased, or repository-configured claims fail. An externally constrained bare non-idiom MAY instead use one exact, non-overlapping `script_exclusions` entry under `[skills.ki-engineering]`. The six bare names remain exempt because every Node toolchain, CI runner, and contributor recognises those package-lifecycle verbs.
 
 ### Native governance commands
@@ -254,6 +256,8 @@ When a script computes a filesystem path for its own or another tool's config, d
 This does not license inventing a path a tool doesn't already use — mcporter's `~/.mcporter/mcporter.json`, for instance, is that tool's own fixed convention, not one this standard overrides; the rule applies only where the repo itself is choosing the config/data/cache/state location.
 
 ## 9. `.ki.toml` — `[skills.ki-engineering]` (core)
+
+`script_exclusions` applies only to externally constrained bare names in the repository root manifest. It does not enumerate artifact-owned scripts inside a selected workspace package.
 
 A governed repo declares a `[skills.ki-engineering]` table. Presence marks "the engineering standard applies here" (the selector for the common layer). Following the `.ki.toml` table-per-skill contract (owned by `ki-repo`), the table is minimal — capabilities are auto-detected from markers (above), so no profile field is needed. A repo that deliberately diverges declares it explicitly:
 

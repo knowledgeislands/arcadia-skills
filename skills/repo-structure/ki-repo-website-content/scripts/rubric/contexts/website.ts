@@ -24,6 +24,8 @@ export type WebsiteContext = {
   available: boolean
   applicable: boolean
   siteRoot: string
+  rootPackageOk: boolean
+  workspaceCoversSiteRoot: boolean
   packagePath: string
   cfgName: string
   config: string
@@ -59,6 +61,14 @@ const safeSiteRoot = (value: unknown): value is string =>
       !/^[A-Za-z]:[\\/]/.test(value) &&
       !value.includes('\\') &&
       value.split('/').every((part) => part.length > 0 && part !== '.' && part !== '..')))
+
+const workspaceEntryCovers = (entry: string, siteRoot: string): boolean => {
+  if (entry === siteRoot) return true
+  if (!entry.endsWith('/*')) return false
+  const prefix = entry.slice(0, -2)
+  const remainder = siteRoot.slice(prefix.length + 1)
+  return siteRoot.startsWith(`${prefix}/`) && remainder.length > 0 && !remainder.includes('/')
+}
 
 const physicalDirectory = (path: string): boolean => {
   if (!existsSync(path)) return false
@@ -106,6 +116,21 @@ export const createWebsiteSession = ({
   const siteAt = (...parts: string[]) => (siteRoot ? join(siteRoot, ...parts) : join(...parts))
   const cfgName = CONFIG_NAMES.find((name) => containedPhysical(root, at(siteAt(name)), 'file')) ?? ''
   const applicable = available && kiWebsiteTable !== null
+
+  const rootPackageSource = read('package.json')
+  let rootPackageOk = true
+  let rootPackageDocument: Record<string, unknown> = {}
+  try {
+    if (!rootPackageSource) throw new Error('package.json unavailable')
+    rootPackageDocument = JSON.parse(rootPackageSource) as Record<string, unknown>
+  } catch {
+    rootPackageOk = false
+  }
+  const rootWorkspaces = Array.isArray(rootPackageDocument.workspaces)
+    ? rootPackageDocument.workspaces.filter((entry): entry is string => typeof entry === 'string')
+    : []
+  const workspaceCoversSiteRoot =
+    siteRoot !== '.' && rootWorkspaces.some((entry) => workspaceEntryCovers(entry, siteRoot))
 
   const packagePath = siteAt('package.json')
   const packageSource = read(packagePath)
@@ -171,6 +196,8 @@ export const createWebsiteSession = ({
     available,
     applicable,
     siteRoot,
+    rootPackageOk,
+    workspaceCoversSiteRoot,
     packagePath,
     cfgName,
     config: cfgName ? read(siteAt(cfgName)) : '',

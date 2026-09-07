@@ -30,6 +30,7 @@ const fixture = (): string => {
   mkdirSync(join(repository, 'apps', 'site'), { recursive: true })
   writeFileSync(join(repository, 'apps', 'site', 'eleventy.config.ts'), 'export default function () {}\n')
   writeFileSync(join(repository, 'apps', 'site', 'package.json'), '{"scripts":{},"dependencies":{}}\n')
+  writeFileSync(join(repository, 'package.json'), '{"workspaces":["apps/*"]}\n')
   writeFileSync(join(repository, '.ki.toml'), '[skills.ki-repo-website]\n\n[skills.ki-repo-website-content]\n')
   return repository
 }
@@ -40,7 +41,7 @@ const rootContext = (session: ReturnType<typeof createWebsiteSession>) => {
   return { subject, context: subject.context() }
 }
 
-const item = (code: 'WEB-1' | 'WEB-6' | 'WEB-30' | 'WEB-31' | 'WEB-32' | 'WEB-33' | 'WEB-41' | 'WEB-42') => {
+const item = (code: 'WEB-1' | 'WEB-6' | 'WEB-8' | 'WEB-30' | 'WEB-31' | 'WEB-32' | 'WEB-33' | 'WEB-41' | 'WEB-42') => {
   const candidate = WEB.items.find((entry) => entry.code === code)
   if (!candidate?.mechanical) throw new Error(`${code} mechanical item is missing`)
   return candidate.mechanical
@@ -61,7 +62,7 @@ test('audit is read-only, stable, and exposes no conform capabilities', () => {
   expect(existsSync(join(repository, '.gitignore'))).toBe(false)
 })
 
-test('an explicit flat site root is supported', () => {
+test('a flat content site is located but fails the workspace contract', () => {
   const repository = temporaryDirectory('ki-repo-website-content-flat-')
   writeFileSync(join(repository, 'eleventy.config.ts'), 'export default function () {}\n')
   writeFileSync(join(repository, 'package.json'), '{"scripts":{},"dependencies":{}}\n')
@@ -80,6 +81,7 @@ test('an explicit flat site root is supported', () => {
     subject: 'eleventy.config.ts'
   })
   expect(outcome?.message).toBeTruthy()
+  expect(item('WEB-8').audit.run(context)[0]?.status).toBe('VIOLATION')
   expect(session.subjects.length).toBeGreaterThan(0)
 })
 
@@ -133,6 +135,7 @@ test('the conventional apps/site shape passes WEB-6 and scopes the dist ignore',
   mkdirSync(join(repository, 'apps', 'site'), { recursive: true })
   writeFileSync(join(repository, 'apps', 'site', 'eleventy.config.ts'), 'export default function () {}\n')
   writeFileSync(join(repository, 'apps', 'site', 'package.json'), '{"scripts":{},"dependencies":{}}\n')
+  writeFileSync(join(repository, 'package.json'), '{"workspaces":["apps/*"]}\n')
   writeFileSync(
     join(repository, '.ki.toml'),
     '[skills.ki-repo-website]\nsite-root = "apps/site"\n\n[skills.ki-repo-website-content]\n'
@@ -146,6 +149,7 @@ test('the conventional apps/site shape passes WEB-6 and scopes the dist ignore',
     status: 'PASS',
     subject: join('apps/site', 'eleventy.config.ts')
   })
+  expect(item('WEB-8').audit.run(context)[0]?.status).toBe('PASS')
   expect(item('WEB-33').audit.run(context)[0]?.status).toBe('PASS')
   expect(item('WEB-42').audit.run(context)[0]?.status).toBe('PASS')
 })
@@ -155,12 +159,22 @@ test('a keyless website core table selects the conventional apps/site default', 
   mkdirSync(join(repository, 'apps', 'site'), { recursive: true })
   writeFileSync(join(repository, 'apps', 'site', 'eleventy.config.ts'), 'export default function () {}\n')
   writeFileSync(join(repository, 'apps', 'site', 'package.json'), '{"scripts":{},"dependencies":{}}\n')
+  writeFileSync(join(repository, 'package.json'), '{"workspaces":["apps/*"]}\n')
   writeFileSync(join(repository, '.ki.toml'), '[skills.ki-repo-website]\n\n[skills.ki-repo-website-content]\n')
 
   const { context } = rootContext(createWebsiteSession(options(repository, 'audit')))
 
   expect(context.siteRoot).toBe('apps/site')
   expect(item('WEB-6').audit.run(context)[0]?.status).toBe('PASS')
+})
+
+test('a root workspace declaration must cover the selected site root', () => {
+  const repository = fixture()
+  writeFileSync(join(repository, 'package.json'), '{"workspaces":["packages/*"]}\n')
+
+  const { context } = rootContext(createWebsiteSession(options(repository, 'audit')))
+
+  expect(item('WEB-8').audit.run(context)[0]?.status).toBe('VIOLATION')
 })
 
 test('dependencies are inspected in the selected site package', () => {
