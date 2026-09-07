@@ -45,6 +45,7 @@ The engineering standard accepts six bare lifecycle idioms or a capability-owned
 - [x] Amend the live toolchain decision and both owning standards with the selected root-versus-workspace boundary.
 - [x] Make the content site's required workspace shape mechanically checkable and remove any implementation-private root script claims.
 - [x] Add focused composition fixtures, refresh generated rubrics, and record current receiver evidence without mutating another repository.
+- [x] Publish the four existing MCP auth and recording operations as `ki-repo-mcp` capability-owned root scripts before removing receiver exclusions.
 
 ## Files touched
 
@@ -65,6 +66,8 @@ The engineering standard accepts six bare lifecycle idioms or a capability-owned
 - `skills/repo-structure/ki-repo-website-content/scripts/rubric/contexts/website.test.ts`
 - `skills/repo-structure/ki-repo-website-content/scripts/rubric/items/web.ts`
 - `skills/keystone/ki-skills/scripts/internal/remediation-inventory.test.ts`
+- `skills/repo-structure/ki-repo-mcp/scripts/rubric/items/index.ts`
+- `skills/repo-structure/ki-repo-mcp/scripts/rubric/items/index.test.ts`
 - This roadmap record
 
 ## Verify
