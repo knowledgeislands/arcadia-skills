@@ -78,6 +78,7 @@ The engineering standard accepts six bare lifecycle idioms or a capability-owned
 - `mcp-gsuite` and `mcp-m365` remove only the four obsolete exclusions for capability-owned `ki:server:auth:dev`, `ki:server:auth:start`, `ki:test:record`, and `ki:test:replay`; their package script names and bodies do not change.
 - `5g-emerge-ibc-2026` removes only the four obsolete exclusions for its existing `self:` scripts; package scripts and Cloudflare commands do not change.
 - `kit-midnight.ninja` uses `self:tower:import`, `self:tower:pull`, and `self:tower:refresh`; declares `site-root = "site"`; keeps only the public `ki:site:*` root aliases; and moves private build and development fan-out to bare package-local scripts in `site/package.json`.
+- `kit-midnight.ninja` retains its pre-existing `WCF-26` failure for the missing `docs/guides/cloudflare.md` as an explicit out-of-scope baseline finding; this rollout must introduce no other Cloudflare finding.
 - No worker pushes, deploys, starts auth servers, records live integrations, runs Tower data ingestion, modifies external platform settings, closes a work item, or prunes a record.
 
 ### Escalate
@@ -114,7 +115,7 @@ The engineering standard accepts six bare lifecycle idioms or a capability-owned
 - **Scope:** `.ki.toml`; root and `site/package.json`; `docs/roadmap/_ISSUES.md`; `docs/roadmap/MIDNIGHT-TOWER-007-adopt-self-owned-tower-scripts.md`; `docs/roadmap/MIDNIGHT-SITE-001-align-site-workspace-scripts.md`; `docs/roadmap/MIDNIGHT-TOWER-002-dissonance-build-configs.md`; `docs/roadmap/MIDNIGHT-TOWER-003-progression-from-runs.md`; `+/_AUTHORISATIONS/MIDNIGHT-BATCH-001.md`; `site/src/_data/tower.ts`; `site/src/experiments/tower/CLAUDE.md`; `site/src/experiments/tower/notes/Data Pipeline.md`; `site/src/experiments/tower/pipeline/import.ts`; and `site/src/experiments/tower/index.njk` only.
 - **Authority:** Create and bind one receiver-local outcome authorisation, shape and deliver the two ordered records, apply the locked script naming and workspace split, update live local references, verify, and commit; no deployment, Tower execution, source-store write, dashboard change, or other external effect.
 - **Isolation:** Sole writer in the receiver checkout while active; retain a touched-path set; explicit-path staging and one serialized commit window per coherent receiver change.
-- **Verify:** Focused `ki-engineering`, website core/content/Cloudflare audits, `bun run ki:site:build`, full repository and roadmap audits, stale-reference search, and `git diff --check`; coordinator reviews every diff and commit.
+- **Verify:** Focused `ki-engineering` and website core/content audits pass; focused Cloudflare audit introduces no finding beyond retained baseline `WCF-26`; `bun run ki:site:build`, full repository and roadmap audits, stale-reference search, and `git diff --check` provide recorded evidence; coordinator reviews every diff and commit.
 - **Return:** Commits by item, changed paths, audit/build outcomes, retained warnings, and any external dashboard uncertainty.
 - **Checkpoint:** Return after both items reach `awaiting-review` and their commits are clean, or immediately at the first escalation condition.
 
