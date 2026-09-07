@@ -70,6 +70,54 @@ The engineering standard accepts six bare lifecycle idioms or a capability-owned
 - `skills/repo-structure/ki-repo-mcp/scripts/rubric/items/index.test.ts`
 - This roadmap record
 
+## Delegation
+
+### Locked decisions
+
+- Receiver work remains receiver-owned, uses its selected local roadmap adapter and its own commit boundary, and stops at `awaiting-review`.
+- `mcp-gsuite` and `mcp-m365` remove only the four obsolete exclusions for capability-owned `ki:server:auth:dev`, `ki:server:auth:start`, `ki:test:record`, and `ki:test:replay`; their package script names and bodies do not change.
+- `5g-emerge-ibc-2026` removes only the four obsolete exclusions for its existing `self:` scripts; package scripts and Cloudflare commands do not change.
+- `kit-midnight.ninja` uses `self:tower:import`, `self:tower:pull`, and `self:tower:refresh`; declares `site-root = "site"`; keeps only the public `ki:site:*` root aliases; and moves private build and development fan-out to bare package-local scripts in `site/package.json`.
+- No worker pushes, deploys, starts auth servers, records live integrations, runs Tower data ingestion, modifies external platform settings, closes a work item, or prunes a record.
+
+### Escalate
+
+- Return to the coordinator on a new dirty or staged path, a reference outside the named scope, a required public command-name change, an external-platform change, an unavailable local adapter, or failed required verification.
+- Do not infer ownership for another unsupported `ki:` script or broaden a receiver item to unrelated audit findings.
+
+### Worker: mcp-receivers
+
+- **Deliverable:** Two independently committed receiver changes removing obsolete MCP exclusions, each with its own ready-to-`awaiting-review` record and outcome-authority batch evidence.
+- **Inputs:** Harness commits `9869d4ac` and `de881b6d`; receiver baselines `18a99edd8651573e97b3a10a58676d930d8dd86c` and `67a63b98cd45cd329bf508e7c3ee3c4cd6713e1e`; `MCP-GSUITE-FND-005`, `MCP-M365-FND-004`, `MCP-GSUITE-BATCH-001`, and `MCP-M365-BATCH-001`.
+- **Scope:** In each named MCP repository, `.ki.toml`, `docs/roadmap/_ISSUES.md`, the named new roadmap record, and the named new file under `+/_AUTHORISATIONS/`; no other path.
+- **Authority:** Create and bind the two receiver-local outcome authorisations, shape and deliver the two named records, remove only `script_exclusions`, verify, and commit each repository separately; no external writes or pushes.
+- **Isolation:** Work in one receiver at a time; retain a touched-path set; use explicit-path staging and a serialized shared-`HEAD` commit window.
+- **Verify:** Coordinator checks each diff and commit; worker runs focused `ki-engineering`, focused `ki-repo-mcp`, TypeScript, tests, roadmap audit, and `git diff --check` as applicable.
+- **Return:** Per repository, commit, changed paths, exact audit outcomes, pre-existing warnings, and unresolved concerns.
+- **Checkpoint:** Return after both clean receiver trees have committed changes or immediately at the first escalation condition.
+
+### Worker: ibc2026-receiver
+
+- **Deliverable:** One receiver-owned exclusion cleanup committed with `IBC2026-DBD-022` at `awaiting-review` and `IBC2026-BATCH-001` run evidence.
+- **Inputs:** Harness commit `9869d4ac`; receiver baseline `7bc2b0f8fc904678dfffb628e9d68c6bd6f966f3`; the repository's `AGENTS.md` and `GDR-IBC2026-002` single-writer rules.
+- **Scope:** `.ki.toml`, `docs/roadmap/_ISSUES.md`, `docs/roadmap/IBC2026-DBD-022-remove-redundant-script-exclusions.md`, and `+/_AUTHORISATIONS/IBC2026-BATCH-001.md` only.
+- **Authority:** Create and bind the receiver-local outcome authorisation, shape and deliver the named record, remove only four redundant `self:` exclusions, verify, and commit; do not change package scripts, Cloudflare settings, or registry state.
+- **Isolation:** Sole writer in the receiver checkout while active; retain a touched-path set; explicit-path staging; coordinator makes no receiver write until return.
+- **Verify:** Focused `ki-engineering`, full repository audit, roadmap audit, TOML parse, and `git diff --check`; coordinator reviews the diff and commit.
+- **Return:** Commit, changed paths, exact audit outcomes, registry caveat, and unresolved concerns.
+- **Checkpoint:** Return after the clean receiver commit or immediately at the first escalation condition.
+
+### Worker: midnight-receiver
+
+- **Deliverable:** Receiver-owned Tower namespace and site-workspace alignment, independently reviewable as `MIDNIGHT-TOWER-007` and `MIDNIGHT-SITE-001`, committed with `MIDNIGHT-BATCH-001` run evidence.
+- **Inputs:** Harness commits `9869d4ac` and `de881b6d`; receiver baseline `ad47a749d880d5b1434c925cc05cd73e684f5d12`; the locked names and workspace split above.
+- **Scope:** `.ki.toml`; root and `site/package.json`; `docs/roadmap/_ISSUES.md`; `docs/roadmap/MIDNIGHT-TOWER-007-adopt-self-owned-tower-scripts.md`; `docs/roadmap/MIDNIGHT-SITE-001-align-site-workspace-scripts.md`; `docs/roadmap/MIDNIGHT-TOWER-002-ingest-tower-plist.md`; `docs/roadmap/MIDNIGHT-TOWER-003-refresh-tower-dashboard.md`; `+/_AUTHORISATIONS/MIDNIGHT-BATCH-001.md`; `site/src/_data/tower.ts`; `site/src/experiments/tower/CLAUDE.md`; `site/src/experiments/tower/notes/Data Pipeline.md`; `site/src/experiments/tower/pipeline/import.ts`; and `site/src/experiments/tower/index.njk` only.
+- **Authority:** Create and bind one receiver-local outcome authorisation, shape and deliver the two ordered records, apply the locked script naming and workspace split, update live local references, verify, and commit; no deployment, Tower execution, source-store write, dashboard change, or other external effect.
+- **Isolation:** Sole writer in the receiver checkout while active; retain a touched-path set; explicit-path staging and one serialized commit window per coherent receiver change.
+- **Verify:** Focused `ki-engineering`, website core/content/Cloudflare audits, `bun run ki:site:build`, full repository and roadmap audits, stale-reference search, and `git diff --check`; coordinator reviews every diff and commit.
+- **Return:** Commits by item, changed paths, audit/build outcomes, retained warnings, and any external dashboard uncertainty.
+- **Checkpoint:** Return after both items reach `awaiting-review` and their commits are clean, or immediately at the first escalation condition.
+
 ## Verify
 
 Run the focused engineering and website rubric tests, `bunx tsc --noEmit`, and `bun run test`; verify the generated engineering, website-core, and website-content rubrics. Run focused harness audits for `ki-engineering`, `ki-decision-records`, `ki-skills`, `ki-work-roadmap`, and `ki-authoring`; exercise the two website skills through conforming receiver repositories that declare them. Confirm the estate inventory is read-only and names an owner-controlled route for every proposed external rename.
