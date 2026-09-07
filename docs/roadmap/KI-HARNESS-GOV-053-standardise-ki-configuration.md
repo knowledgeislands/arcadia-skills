@@ -3,7 +3,7 @@ id: KI-HARNESS-GOV-053
 area: GOV
 title: Standardise KI configuration
 theme: governance-consistency
-horizon: soon
+horizon: next
 status: draft
 blocks: []
 blocked_by: []
@@ -30,7 +30,15 @@ This work may change presentation standards, examples, source-aware checks, and 
 
 Each repository retains review and acceptance authority for its own rollout commit. Complex or multiline nested configuration may remain in standard tables when compact dotted assignments would reduce readability.
 
-## Shaping
+This implementation changes only the harness contract and this repository's `.ki.toml`. It does not centralise another skill's schema or defaults in `ki-repo`, automatically rewrite TOML, infer semantic neighbourhood membership from skill names, or modify sibling repositories.
+
+## Current state
+
+The exact two-line `.ki.toml` conformance header is mechanically enforced by `ki-repo` `FILES-5`, but neighbourhood banners, owner-block continuity, and foundation-first ordering remain judgment-only under `ki-authoring`. The website core resolves omitted `site-root` to `apps/site`, yet `SITE-2` still accepts an explicit `site-root = "apps/site"` even though the standard tells configuration writers not to materialise that default.
+
+A read-only snapshot of 34 registered `.ki.toml` files found only three using neighbourhood banners and one explicitly materialising the website default. The rollout is therefore intentionally diagnostic first: publish actionable findings, conform this repository's own configuration, and leave every sibling repository under its own work and acceptance authority.
+
+### Earlier shaping
 
 The intended approach is to reconcile the `ki-repo`, `ki-authoring`, and owning-skill standards around one explicit root table per skill, contiguous owner configuration, and a documented choice between dotted assignments and nested tables. Preserve the earlier five optional neighbourhoods for navigational comments, with foundations first and owner affinity taking precedence over global alphabetic sorting. Decide whether stable ordering within each neighbourhood remains judgment guidance or gains a narrow deterministic check.
 
@@ -40,7 +48,63 @@ Before promotion to Next, inventory the current registered estate, classify equi
 
 Known dependencies are local and available: the current `.ki.toml` parser already resolves the compact dotted forms, and the `krisb/dotfiles` audits passed after the worked-example change. No other roadmap item blocks shaping.
 
+## Steps
+
+- [ ] Add a source-aware `ki-repo` configuration-presentation check that preserves TOML semantics and comments while diagnosing substantial files without recognised neighbourhood banners, non-canonical banner order, a non-foundation opening block, child tables before their explicit owner root, or owner blocks split across neighbourhoods.
+- [ ] Keep semantic-neighbourhood choice at the judgment boundary: the mechanical check validates exact recognised banners, ordering, and owner continuity without maintaining a brittle global map from every skill name to one neighbourhood.
+- [ ] Update `ki-repo-website` so an omitted `site-root` selects `apps/site`, an explicit non-default safe path remains valid, and explicit `site-root = "apps/site"` produces a redundant-default diagnostic.
+- [ ] Add focused fixtures for compact configurations, well-structured substantial configurations, malformed banner and owner-block cases, implicit website defaults, explicit overrides, and redundant explicit defaults.
+- [ ] Align this repository's `.ki.toml` with the bannered structure, prove parsed before-and-after equivalence, regenerate affected rubrics, and record the read-only estate inventory without modifying sibling repositories.
+
+## Files touched
+
+- `.ki.toml`
+- `skills/keystone/ki-repo/references/standards-configuration.md`
+- `skills/keystone/ki-repo/references/rubric.md`
+- `skills/keystone/ki-repo/scripts/rubric/contexts/`
+- `skills/keystone/ki-repo/scripts/rubric/items/files.ts`
+- `skills/repo-structure/ki-repo-website/SKILL.md`
+- `skills/repo-structure/ki-repo-website/references/standards-website.md`
+- `skills/repo-structure/ki-repo-website/references/rubric.md`
+- `skills/repo-structure/ki-repo-website/scripts/rubric/contexts/website.test.ts`
+- `skills/repo-structure/ki-repo-website/scripts/rubric/items/site.ts`
+- This roadmap record.
+
+## Verify
+
+Run the focused `ki-repo` and `ki-repo-website` tests, `bunx tsc --noEmit`, and `bun run test`. Regenerate the two affected rubrics, then run focused `ki-repo`, `ki-repo-website`, `ki-authoring`, `ki-skills`, and `ki-work-roadmap` audits. Parse `.ki.toml` before and after its presentation-only edit and compare the complete data model for equality.
+
+## Dependencies / blocks
+
+No local dependency blocks implementation. Cross-repository rollout is deliberately outside this item: the harness publishes diagnostics and inventory evidence, while each registered repository owns its configuration edit, review, acceptance, and commit.
+
+## Documentation impact
+
+### Decision Records
+
+No new decision record is planned. This is executable enforcement of the already-adopted validate-down, implicit-default, and configuration-presentation contracts.
+
+Update the `ki-repo` configuration standard and generated rubric for the source-aware structure diagnostic. Update the `ki-repo-website` standard, skill summary, and generated rubric so the implicit `apps/site` default and redundant explicit spelling agree with executable evidence.
+
+### Specifications
+
+No specification change is planned. The behaviour is a repository-governance audit contract rather than a product-facing system requirement.
+
+### Guides
+
+No guide change is planned. The rule concerns configuration contract and presentation rather than a task procedure.
+
+### Roadmap
+
+Retain fleet rollout as receiver-owned work. This item records read-only evidence and does not create or mutate another repository's roadmap record without an accepted route.
+
 ## Discussion
+
+### Mechanical threshold
+
+A compact configuration has at most two declared skill roots beyond the required `[skills.ki-repo]` and `[skills.ki-authoring]` foundation and may omit banners. A substantial configuration has three or more additional skill roots and must use at least the exact `Foundation` banner plus one other needed recognised neighbourhood banner. Recognised banners are unique and appear only in canonical order: Foundation, Repository shape, Governance runtime, Change management, Relationships. Each banner must introduce a non-empty declaration group.
+
+The source-aware check additionally fixes the mechanically knowable foundation: `[repo]` is the first table, `[skills.ki-repo]` is the first skill root, and `[skills.ki-authoring]` follows it. Every explicit skill root precedes its child tables, and no owner's block crosses a neighbourhood banner. Assigning a non-foundation skill to the most meaningful neighbourhood remains a `ki-authoring` judgment rather than a central hard-coded skill taxonomy.
 
 ### Compact owner blocks
 
