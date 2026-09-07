@@ -4,7 +4,7 @@ area: GOV
 title: Standardise KI configuration
 theme: governance-consistency
 horizon: next
-status: awaiting-review
+status: in-progress
 blocks: []
 blocked_by: []
 baseline_ref: 8079d53194b8ee3cd53663713b88242db73a50e2
@@ -55,6 +55,10 @@ Known dependencies are local and available: the current `.ki.toml` parser alread
 - [x] Update `ki-repo-website` so an omitted `site-root` selects `apps/site`, an explicit non-default safe path remains valid, and explicit `site-root = "apps/site"` produces a redundant-default diagnostic.
 - [x] Add focused fixtures for compact configurations, well-structured substantial configurations, malformed banner and owner-block cases, implicit website defaults, explicit overrides, and redundant explicit defaults.
 - [x] Align this repository's `.ki.toml` with the bannered structure, prove parsed before-and-after equivalence, regenerate affected rubrics, and record the read-only estate inventory without modifying sibling repositories.
+- [ ] Apply the established banner and owner-block presentation to the 29 registered receiver configurations reporting `FILES-9`, without changing their parsed TOML data.
+- [ ] Remove the explicit `site-root = "apps/site"` default from `infoschematics`, proving that the effective website root remains `apps/site`.
+- [ ] Verify and commit each receiver independently, skipping and reporting any contested `.ki.toml`, ambiguous neighbourhood assignment, malformed source, or repository-specific failed gate.
+- [ ] Re-scan all 34 registered configurations and record zero remaining presentation or redundant-default findings before returning to review.
 
 ## Files touched
 
@@ -102,6 +106,54 @@ No guide change is planned. The rule concerns configuration contract and present
 ### Roadmap
 
 Retain fleet rollout as receiver-owned work. This item records read-only evidence and does not create or mutate another repository's roadmap record without an accepted route.
+
+## Delegation
+
+### Locked decisions
+
+- Preserve each repository's parsed `.ki.toml` data exactly; the sole semantic-source removal is `infoschematics`'s explicit `site-root = "apps/site"`, whose omission selects the same default.
+- Keep the exact two-line conformance header as the first bytes, then use only the established banners in canonical order: Foundation, Repository shape, Governance runtime, Change management, Relationships.
+- Keep `[repo]`, `[skills.ki-repo]`, and `[skills.ki-authoring]` in Foundation; group remaining declarations by their established purpose and keep every skill root with its child tables.
+- Change only `.ki.toml` in receiver repositories, make one Conventional Commit per repository, and never push.
+
+### Escalate
+
+- Return without editing when `.ki.toml` is already dirty, staged, symlinked, malformed, or contains changes the worker cannot fully account for.
+- Return any ambiguous neighbourhood classification, parsed-data mismatch, new audit failure attributable to the edit, or need to touch a caller, workflow, platform, roadmap, or other file.
+- Do not repair unrelated repository drift or include another actor's staged paths.
+
+### Worker: hnr-equalremedy-infoschematics
+
+- **Deliverable:** Align the seven assigned repository configurations and commit each uncontested result.
+- **Inputs:** `5g-emerge-ibc-2026`, `hnr-agentic-harness`, `kit-hnr`, `dafacts-website`, `er-agentic-harness`, `er-research`, and `infoschematics`; canonical checker at the harness baseline; locked decisions above.
+- **Scope:** Only each assigned repository's root `.ki.toml`; no other file or external system.
+- **Authority:** Read local instructions and repository state, edit the scoped files, run read-only verification, and create one local commit per repository; do not push.
+- **Isolation:** Exclusive assigned repository set in the shared filesystem; maintain a per-repository touched-path set containing only `.ki.toml` and serialise each Git write window.
+- **Verify:** Compare parsed TOML before and after, confirm the presentation inspector reports no issue, run the applicable focused repository audit, and inspect the resulting commit and clean status.
+- **Return:** Repository-by-repository commit IDs, verification outcomes, and exact escalations or skips.
+- **Checkpoint:** Return after all seven repositories are committed or safely escalated.
+
+### Worker: knowledgeislands-core
+
+- **Deliverable:** Align the eight assigned repository configurations and commit each uncontested result.
+- **Inputs:** `homebrew-tap`, `ki-arcadia-principal`, `ki-plugins`, `ki-specifications`, `ki-techne-principal`, `ki-website`, `mcp-acquire-whatsapp`, and `mcp-git-audit`; canonical checker at the harness baseline; locked decisions above.
+- **Scope:** Only each assigned repository's root `.ki.toml`; no other file or external system.
+- **Authority:** Read local instructions and repository state, edit the scoped files, run read-only verification, and create one local commit per repository; do not push.
+- **Isolation:** Exclusive assigned repository set in the shared filesystem; maintain a per-repository touched-path set containing only `.ki.toml` and serialise each Git write window.
+- **Verify:** Compare parsed TOML before and after, confirm the presentation inspector reports no issue, run the applicable focused repository audit, and inspect the resulting commit and clean status.
+- **Return:** Repository-by-repository commit IDs, verification outcomes, and exact escalations or skips.
+- **Checkpoint:** Return after all eight repositories are committed or safely escalated.
+
+### Worker: knowledgeislands-mcp-tools
+
+- **Deliverable:** Align the eight assigned repository configurations and commit each uncontested result.
+- **Inputs:** `mcp-gsuite`, `mcp-housekeeping-chatgpt`, `mcp-housekeeping-claude`, `mcp-housekeeping-codex`, `mcp-ki-kb-fs`, `mcp-ki-kb-notion-mirror`, `mcp-m365`, and `tools-git-almanac`; canonical checker at the harness baseline; locked decisions above.
+- **Scope:** Only each assigned repository's root `.ki.toml`; no other file or external system.
+- **Authority:** Read local instructions and repository state, edit the scoped files, run read-only verification, and create one local commit per repository; do not push.
+- **Isolation:** Exclusive assigned repository set in the shared filesystem; maintain a per-repository touched-path set containing only `.ki.toml` and serialise each Git write window.
+- **Verify:** Compare parsed TOML before and after, confirm the presentation inspector reports no issue, run the applicable focused repository audit, and inspect the resulting commit and clean status.
+- **Return:** Repository-by-repository commit IDs, verification outcomes, and exact escalations or skips.
+- **Checkpoint:** Return after all eight repositories are committed or safely escalated.
 
 ## Review
 
