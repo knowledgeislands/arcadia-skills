@@ -4,7 +4,7 @@ area: GOV
 title: Standardise KI configuration
 theme: governance-consistency
 horizon: next
-status: in-progress
+status: awaiting-review
 blocks: []
 blocked_by: []
 baseline_ref: 8079d53194b8ee3cd53663713b88242db73a50e2
@@ -55,10 +55,10 @@ Known dependencies are local and available: the current `.ki.toml` parser alread
 - [x] Update `ki-repo-website` so an omitted `site-root` selects `apps/site`, an explicit non-default safe path remains valid, and explicit `site-root = "apps/site"` produces a redundant-default diagnostic.
 - [x] Add focused fixtures for compact configurations, well-structured substantial configurations, malformed banner and owner-block cases, implicit website defaults, explicit overrides, and redundant explicit defaults.
 - [x] Align this repository's `.ki.toml` with the bannered structure, prove parsed before-and-after equivalence, regenerate affected rubrics, and record the read-only estate inventory without modifying sibling repositories.
-- [ ] Apply the established banner and owner-block presentation to the 29 registered receiver configurations reporting `FILES-9`, without changing their parsed TOML data.
-- [ ] Remove the explicit `site-root = "apps/site"` default from `infoschematics`, proving that the effective website root remains `apps/site`.
-- [ ] Verify and commit each receiver independently, skipping and reporting any contested `.ki.toml`, ambiguous neighbourhood assignment, malformed source, or repository-specific failed gate.
-- [ ] Re-scan all 34 registered configurations and record zero remaining presentation or redundant-default findings before returning to review.
+- [x] Apply the established banner and owner-block presentation to the 29 registered receiver configurations reporting `FILES-9`, without changing their parsed TOML data.
+- [x] Remove the explicit `site-root = "apps/site"` default from `infoschematics`, proving that the effective website root remains `apps/site`.
+- [x] Verify and commit each receiver independently, skipping and reporting any contested `.ki.toml`, ambiguous neighbourhood assignment, malformed source, or repository-specific failed gate.
+- [x] Re-scan all 34 registered configurations and record zero remaining presentation or redundant-default findings before returning to review.
 
 ## Files touched
 
@@ -159,36 +159,69 @@ Retain fleet rollout as receiver-owned work. This item records read-only evidenc
 
 ### Delivered
 
-Delivered the approved `.ki.toml` enforcement boundary from immutable baseline `8079d53194b8ee3cd53663713b88242db73a50e2`. The implementation adds source-aware diagnostic evidence without reserialising configuration, enforces the existing implicit website default, and aligns only this repository's configuration presentation.
+Delivered the approved `.ki.toml` enforcement boundary and its explicitly authorised estate rollout from immutable baseline `8079d53194b8ee3cd53663713b88242db73a50e2`. The harness now diagnoses configuration-presentation and redundant website-default drift, while all 30 affected receiver configurations are aligned in separate local commits.
 
 ### Summary of changes
 
-- Added `FILES-9`, backed by a focused source scanner that ignores multiline-string lookalikes and diagnoses the established substantial-file threshold, exact banner form and order, foundation opening, explicit roots before child tables, and owners split across banners.
-- Kept semantic selection of non-foundation neighbourhoods in `ki-authoring` judgment while aligning the `ki-repo`, `ki-authoring`, and generated rubric wording.
+- Added `FILES-9`, backed by a source scanner that diagnoses the established substantial-file threshold, exact banner form and order, foundation opening, explicit roots before child tables, and owners split across banners.
+- Kept selection of non-foundation neighbourhoods within `ki-authoring` judgment while aligning `ki-repo`, `ki-authoring`, and generated rubric wording.
 - Changed website `SITE-2` to diagnose explicit `site-root = "apps/site"` while retaining omission and safe non-default overrides.
-- Reordered this repository's `.ki.toml` under all five established comment banners and kept every parsed value unchanged.
-- Updated the central remediation inventory for the additional diagnostic criterion. No sibling repository was modified.
+- Aligned the harness and 29 receiver configurations under their needed canonical neighbourhoods.
+- Removed the redundant explicit website default from `infoschematics`; omission still resolves to `apps/site`.
+
+#### Receiver commits
+
+- `5g-emerge-ibc-2026` — `7bc2b0f8fc904678dfffb628e9d68c6bd6f966f3`
+- `hnr-agentic-harness` — `c56b103f7103f1f457b79a5f58a4cc68a691b57a`
+- `kit-hnr` — `3782191dcb75319b04df955b588921387339d48c`
+- `dafacts-website` — `9cb4a1812351441506af53628c2ea5379453ad7c`
+- `er-agentic-harness` — `9949828e0f0c566d9cc543103ddc4fc2faef07ce`
+- `er-research` — `a5f846260650c8780a296f72dc52ef408ed7e91e`
+- `infoschematics` — `0dacf9cc2be690520fd8332fc24c49b1a281a80c`
+- `homebrew-tap` — `60928c8512acb40d15e2f0c8f0b20116ab3296b2`
+- `ki-arcadia-principal` — `d2ad8252fac40dfb5cf0908fe86b9dfdf7c10857`
+- `ki-plugins` — `4ccffdf5d07432ede0a6fdbb03cdafd3411595f7`
+- `ki-specifications` — `ade36679edaf11b879b800fb05b247b6763fcdcc`
+- `ki-techne-principal` — `2d91b7e6e72698c73f65f608f48112752215ee9a`
+- `ki-website` — `9f7bce8532ae37fb9c5e988b71159ce4eac0858f`
+- `mcp-acquire-whatsapp` — `377786574ecb9761668b75526f5685b5912360db`
+- `mcp-git-audit` — `7e6f9c0b94e38ba2f8068413f455d1f14a8403d1`
+- `mcp-gsuite` — `18a99edd8651573e97b3a10a58676d930d8dd86c`
+- `mcp-housekeeping-chatgpt` — `de5808d13a421d78a73f267f5668e490c569d60b`
+- `mcp-housekeeping-claude` — `bf3460d90da64a2c446a3906a0d85911e89223e1`
+- `mcp-housekeeping-codex` — `4dc5d76ebbc24422c44147ee59220900339f00b7`
+- `mcp-ki-kb-fs` — `6ca50e953198c7689032fd81e6ab396d97f88e2c`
+- `mcp-ki-kb-notion-mirror` — `8abe30aef919ae264115744b47bdd6ca4d7d8613`
+- `mcp-m365` — `67a63b98cd45cd329bf508e7c3ee3c4cd6713e1e`
+- `tools-git-almanac` — `fc37f96060354148868c5b2e0b9d6e104812afcf`
+- `tools-ki` — `8f12c0e27754a6a9c31523919971d436508173ba`
+- `tools-mgit` — `7d8aef0437330cbfdd64741233ee472a9702490a`
+- `kit-midnight.ninja` — `ad47a749d880d5b1434c925cc05cd73e684f5d12`
+- `kit-principal` — `c66e461dfe029165316144a645305758e5de3659`
+- `kit-techmedix` — `ce7b7f7981de051fcd392b12b22876de24f81c7a`
+- `vallearmonia-principal` — `71872dfdf59c0bd0be710e89e416d69a5c96b9f9`
+- `vallearmonia-website` — `8b396d961d4b74e539059e24fce6a20d5a0cf161`
 
 ### Verification
 
-- Focused `ki-repo` configuration-presentation, repository integration, and `ki-repo-website` context suites passed.
-- `bunx tsc --noEmit` and the complete `bun run test` suite passed.
-- Generated `ki-repo`, `ki-authoring`, and `ki-repo-website` rubrics were refreshed.
-- Focused `ki-repo`, `ki-authoring`, `ki-skills`, and `ki-engineering` audits passed.
-- A direct focused `ki-repo-website` repository audit is not applicable because this harness does not declare that skill; its source contract is covered by its focused tests and generated-rubric validation.
-- `Bun.TOML.parse` deep equality between baseline and the reordered `.ki.toml` passed, and the new presentation inspector reports no issue for the resulting source.
+- The focused configuration-presentation, repository-integration, and website-context suites passed; the complete Bun test suite and TypeScript gate passed for the harness implementation.
+- Each of the 30 receiver commits contains only `.ki.toml`; 29 preserve parsed TOML exactly, while `infoschematics` differs only by omission of the explicit value already supplied by the `apps/site` default.
+- Every committed receiver source reports zero presentation-inspector issues and passes `git diff --check`.
+- The `mcp-acquire-whatsapp` explicit-path commit preserved the other actor staged raw index projection byte-for-byte and excluded every unrelated path.
+- Focused receiver audits report no `FILES-9` or redundant-default finding. Existing failures and warnings in other repository areas remain out of scope.
+- A final independent scan found 34 registered configurations, zero presentation or redundant-default findings, and zero dirty `.ki.toml` paths.
 
 ### Outstanding concerns
 
-No implementation concern remains in the approved boundary. The read-only estate snapshot still identifies receiver repositories that will begin reporting presentation or redundant-default diagnostics; each receiver retains its own prioritisation, edit, review, and acceptance authority.
+No concern remains within the approved rollout. Existing unrelated repository audit findings and concurrent implementation changes were not repaired, staged, or included. The pre-existing `infoschematics` stylesheet change and the active `mcp-acquire-whatsapp` implementation set remain owned by their original actors. No repository was pushed.
 
 ### Post-change review
 
-The goal and boundary are met. The scanner checks only mechanically knowable source relationships, preserves comments and parsed data, ignores banner-like text inside multiline strings, and deliberately avoids a central skill-to-neighbourhood taxonomy. Regression risk is bounded by focused malformed-source fixtures, the complete suite, and the live audit of this repository.
+The goal boundary is met. Deterministic source relationships are enforced centrally, semantic neighbourhood fit remains human-reviewable, the implicit website default is effective across the estate, and every affected receiver has an isolated configuration-only commit.
 
 ### Mini recap
 
-Existing `.ki.toml` standards are now executable where deterministic, while semantic neighbourhood fit remains human-reviewable. The reusable learning is already placed in the owning `ki-repo` and `ki-authoring` standards; fleet application remains receiver-owned rather than an implicit cross-repository rollout.
+The shared `.ki.toml` standard is executable and deployed across all 34 registered configurations. The rollout also exercised the shared-working-tree Git contract: touched-path commits stayed isolated even where unrelated work was present.
 
 ## Discussion
 
