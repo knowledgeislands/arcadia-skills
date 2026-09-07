@@ -7,7 +7,7 @@ horizon: future
 status: draft
 candidate: true
 blocks: []
-blocked_by: []
+blocked_by: [KI-HARNESS-RTP-012]
 baseline_ref: null
 ---
 
@@ -16,6 +16,8 @@ baseline_ref: null
 Evaluate whether Fly.io offers a useful execution or hosting surface for Knowledge Islands workloads.
 
 ## Context
+
+Fly's [agent infrastructure overview](https://fly.io/ai-agents/) describes a persistent Machine for the trusted agent and separate Sprites for isolated execution. Evaluate those claims through the portable substrate contract rather than treating Fly.io as the contract itself.
 
 [Fly.io](https://fly.io/) now presents both general-purpose Machines and agent-focused Sprites, including durable filesystem, checkpoint, connector, private-networking, routing, and monitoring capabilities. These are provider claims to investigate rather than an adoption decision.
 
@@ -30,5 +32,7 @@ Do not create an account, provision infrastructure, incur spend, or introduce a 
 Determine which concrete KI workload, if any, Fly.io would improve over current local, personal-server, or existing cloud patterns. Examine isolation, state persistence and recovery, credential and egress controls, regional placement, deployment and automation surfaces, observability, pricing, operational burden, and portability away from provider-specific services.
 
 ### Promotion evidence
+
+Use `KI-HARNESS-RTP-012` to establish the portable comparison baseline before promoting this provider-specific proof.
 
 Before promoting beyond Future, name one bounded workload and its current constraint, the Fly.io product surface proposed for it, a comparison baseline, an acceptable cost and trust boundary, and a reversible proof with explicit pass, fail, and cleanup criteria.
