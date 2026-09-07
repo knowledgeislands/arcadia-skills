@@ -103,7 +103,7 @@ Frontmatter mechanics and note-authoring judgment.
   - _Remediation:_ diagnostic — Close the affected frontmatter fence, then rerun the audit.
 - **NOTE-1b [M] — snake_case frontmatter keys** — Top-level frontmatter keys use snake_case. (standards-frontmatter.md)
   - _Remediation:_ diagnostic — Rename affected top-level frontmatter keys to snake_case, then rerun the audit.
-- **NOTE-1c [M] — explicit note type metadata** — Every governed KB note frontmatter uses note_type and never the legacy generic type field. (standards-frontmatter.md)
+- **NOTE-1c [M] — explicit note type metadata** — Every KB-owned note frontmatter uses note_type and never the legacy generic type field; adapter and protocol records remain with their owning skills. (standards-frontmatter.md)
   - _Remediation:_ diagnostic — Replace the generic type field with note_type, preserving its value, then rerun the audit.
 - **NOTE-2 [J] — note naming convention** — Calendar notes are dated and other note names follow the base convention. (standards-knowledge-base.md)
   - _Evidence scope:_ Sampled notes and the base naming convention.
