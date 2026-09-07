@@ -4,7 +4,7 @@ area: GOV
 title: Sanction self script namespace
 theme: governance-consistency
 horizon: next
-status: in-progress
+status: awaiting-review
 blocks: []
 blocked_by: []
 baseline_ref: 673a184611d1fefba7d3a419fad9899a1d662d37
@@ -40,7 +40,7 @@ The engineering standard accepts six bare lifecycle idioms or a capability-owned
 - [x] Update script-name and exclusion validation so a well-formed `self:` name needs neither a capability claim nor an exclusion, while exclusions covering `self:` names are rejected as redundant.
 - [x] Extend focused fixtures for accepted `self:` names, malformed or empty `self:` names, redundant exclusions, retained bare idioms, and externally constrained bare exceptions.
 - [x] Refresh the generated engineering rubric and examples, then inventory registered repositories for rollout candidates without mutating another repository.
-- [ ] Record repository-specific rename, cross-reference, and external-platform follow-ups through each repository's own accepted work route.
+- [x] Record repository-specific rename, cross-reference, and external-platform follow-ups through each repository's own accepted work route.
 - [x] Resolve the content-website collision by deciding whether its bare local development names are exclusions, root capability names, or workspace-local artifact contract.
 - [x] Amend the live toolchain decision and both owning standards with the selected root-versus-workspace boundary.
 - [x] Make the content site's required workspace shape mechanically checkable and remove any implementation-private root script claims.
@@ -165,6 +165,40 @@ No guide change is planned. The naming rule belongs in the engineering standard 
 
 Keep repository-specific migrations outside this harness item unless the receiving repository explicitly authorises its own rollout; capture or trade those follow-ups in their owning repositories.
 
+## Review
+
+### Delivered
+
+Delivered the approved script-ownership contract and estate rollout from immutable harness baseline `673a184611d1fefba7d3a419fad9899a1d662d37`. The harness now distinguishes capability-owned `ki:`, repository-owned `self:`, and the closed bare lifecycle set; content websites keep implementation scripts inside a selected workspace; MCP auth and recording operations publish their existing claims; and all five identified receivers have committed owner-local records at `awaiting-review`.
+
+### Summary of changes
+
+- Amended the live toolchain ADR and engineering standard, checker, fixtures, and generated rubric for the `self:` namespace and root-versus-workspace boundary.
+- Kept website-content WEB-30/31 package-local names intact, made the workspace requirement mechanical, and reduced the root website seam to public aliases.
+- Published four missing MCP capability script claims before receiver exclusions were removed.
+- Fixed batch ledger hashing for Markdown-valid append-only evidence and aligned batch preflight with shared-tree touched-path Git hygiene.
+- Delegated and independently reviewed receiver commits for 5G IBC, Infoschematics, Midnight, MCP GSuite, and MCP M365 without pushing or absorbing unrelated work.
+
+### Verification
+
+- Harness focused engineering, decision-record, skill, roadmap, authoring, delegation, and Git audits pass.
+- Harness TypeScript and full `bun run test` pass, including focused website, MCP claim, batch ledger, and shared-tree fixtures.
+- `5g-emerge-ibc-2026`, `mcp-gsuite`, `mcp-m365`, and Infoschematics focused engineering and roadmap audits pass; their relevant full or capability audits reproduce the receiver evidence.
+- Midnight focused engineering, website-core, website-content, and roadmap audits and `bun run ki:site:build` pass; Cloudflare reports only retained baseline `WCF-26`.
+- Every receiver commit was reviewed against its recorded baseline and exact touched paths. Infoschematics preserves the other actor's unstaged stylesheet with unchanged diff hash `0b1b698ee54d92e2cedb44f945eb5712a33240b9499100086cfd1976d34a4c9c`.
+
+### Outstanding concerns
+
+Receiver work records remain at `awaiting-review` for owner acceptance. MCP M365 retains its pre-existing `CFG-1` warning; Midnight retains pre-existing `WCF-26` and undocumented dashboard-owned Cloudflare settings; Infoschematics retains another actor's unstaged stylesheet. None is introduced by or blocks review of this delivered boundary.
+
+### Post-change review
+
+The decision is coherent across engineering, website, MCP, batch, and Git contracts. Package-local website names no longer require misleading root exclusions, receiver-owned operations advertise ownership directly, and shared working trees remain safe through file-level touched-path tracking and explicit staging. Required gates pass within the approved boundaries, and this item is ready for human acceptance.
+
+### Mini recap
+
+The portable rule, its audits, the website decision, two process defects discovered during rollout, and all five receiver migrations are committed. Remaining work consists only of human acceptance of the retained `awaiting-review` records and unrelated pre-existing receiver findings; no additional durable learning route is required.
+
 ## Discussion
 
 ### Namespace model
@@ -190,11 +224,21 @@ The read-only registered-repository inventory found five remaining receivers wit
 
 The harness owns the portable contract only. No work-export route currently connects the harness to the receiver repositories (`mcp-gsuite` has a knowledge-only route). Repository-specific work records remain pending receiver-owned capture through an explicitly established work route; no sibling working tree was modified.
 
+### Delivered receiver evidence
+
+- `5g-emerge-ibc-2026` removed four redundant `self:` exclusions in `a90b2793`; `IBC2026-DBD-022` is `awaiting-review` and all 17 selected audits pass.
+- `mcp-gsuite` removed four obsolete MCP exclusions in `8aa3596f`; `MCP-GSUITE-FND-005` is `awaiting-review`, and engineering, MCP, roadmap, TypeScript, and 466 tests pass.
+- `mcp-m365` removed the same four MCP exclusions in `bb5a0196`; `MCP-M365-FND-004` is `awaiting-review`, with only its unchanged pre-existing `CFG-1` warning.
+- `kit-midnight.ninja` aligned the `site/` workspace in `8ec6ea9`, renamed the Tower operations in `8170da0`, and recorded both items `awaiting-review` in `7b77870`; all attributable gates and the site build pass, while pre-existing `WCF-26` remains explicit.
+- `infoschematics` migrated twelve repository-owned operations in `cb7755cc` and recorded `INFOSCHEMATICS-TOOL-022` `awaiting-review` in `17d3abe6`; all 15 selected audits and both repository verification commands pass. The other actor's unstaged `apps/site/src/styles.css` stayed unchanged and unstaged.
+
+No receiver was pushed, deployed, closed, or pruned. Each receiver retains its own human acceptance boundary.
+
 ### Website composition evidence
 
 `5g-emerge-testbed-website` now uses the `apps/site` workspace, has no `script_exclusions`, and passes both focused engineering and website-content audits for script ownership and workspace shape. `ki-website` provides a second conforming non-default workspace example at `site/`. The reported exclusion collision described the earlier flat layout rather than the current repository.
 
-`kit-midnight.ninja` remains receiver-owned drift: it exposes implementation-private `ki:site:dev:css` and `ki:site:dev:serve` at the root and has no selected `apps/site/package.json`. Removing those unsupported root claims makes the existing mismatch explicit; this harness item does not rewrite the receiver.
+`kit-midnight.ninja` now declares its existing `site/` workspace, keeps only public `ki:site:*` aliases at the root, and owns bare implementation scripts and dependencies in `site/package.json`. Its focused engineering, website-core, and website-content audits pass; the separate missing Cloudflare guide remains retained `WCF-26` work.
 
 ### Earlier framing, resolved above
 
