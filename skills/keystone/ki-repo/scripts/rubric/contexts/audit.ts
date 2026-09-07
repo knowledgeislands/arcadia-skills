@@ -45,6 +45,7 @@ import { existsSync, lstatSync, readdirSync, readFileSync, readlinkSync, realpat
 import { isAbsolute, join, resolve } from 'node:path'
 import { promisify } from 'node:util'
 import type { RubricEmitter } from '../../shared/rubric.ts'
+import { inspectConfigurationPresentation } from './configuration-presentation.ts'
 import { inspectGitignore, managedGitignoreBlocks } from './gitignore.ts'
 
 // ── the standard (keep in sync with references/standards-repository.md) ──────
@@ -756,6 +757,10 @@ async function auditRepo(
   // ── layer 1: legible configuration conformance marker ── FILES-5
   if (files.has(KI_CONFIG) && kiText != null && !kiText.startsWith(KI_CONFIGURATION_HEADER))
     fail('FILES-5', `${KI_CONFIG} must open with the Knowledge Islands conformance header`, KI_CONFIG)
+  if (files.has(KI_CONFIG) && kiText?.startsWith(KI_CONFIGURATION_HEADER)) {
+    for (const issue of inspectConfigurationPresentation(kiText).issues)
+      warn('FILES-9', `configuration presentation: ${issue}`, KI_CONFIG)
+  }
   // ── layer 1: runtime skill ignore contract (gated on the ki-repo marker) ── FILES-4
   const runtimeDeclaration = kiText == null ? undefined : parseSupportedRuntimes(kiText)
   const runtimeRules =
@@ -1370,6 +1375,7 @@ const CONTENT_AREAS = new Set([
   'FILES-6',
   'FILES-7',
   'FILES-8',
+  'FILES-9',
   'KIND-1',
   'KIND-2',
   'GH-2',

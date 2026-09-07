@@ -41,7 +41,8 @@ const SITE_2 = item(
     const stopped = skip(context)
     if (stopped) return stopped
     const unknown = context.configurationKeys.filter((key) => key !== 'site-root')
-    return unknown.length === 0 && context.siteRootValid
+    const redundantDefault = context.siteRootValid && context.siteRootConfigured && context.siteRoot === 'apps/site'
+    return unknown.length === 0 && context.siteRootValid && !redundantDefault
       ? [
           {
             status: 'PASS',
@@ -59,6 +60,15 @@ const SITE_2 = item(
                   subject: '.ki.toml'
                 }
               ]),
+          ...(redundantDefault
+            ? [
+                {
+                  status: 'VIOLATION' as const,
+                  message: 'site-root = "apps/site" restates the implicit default; remove the key.',
+                  subject: '.ki.toml'
+                }
+              ]
+            : []),
           ...unknown.map((key) => ({
             status: 'VIOLATION' as const,
             message: `Unknown key under [skills.ki-repo-website]: ${key}.`,

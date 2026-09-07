@@ -13,7 +13,7 @@ This file owns only **presentation** (how existing values and comments read). Th
 
 In `.ki.toml`, the exact conformance header, skill-root declarations, semantic neighbourhoods, and owner boundaries belong to the `ki-repo` contract. Presentation makes those boundaries legible without changing the parsed data.
 
-A substantial `.ki.toml` **SHOULD** render each neighbourhood it needs with a concise three-line comment banner. Omit empty neighbourhoods and omit banners in a compact file where they would add more ceremony than navigation. The exact two-line conformance header and its following blank line remain first; a decorative rule may follow them, but must not wrap or precede them.
+`ki-repo` defines the mechanically checked compact/substantial threshold and banner ordering in the shared configuration contract. A substantial `.ki.toml` MUST render the exact `Foundation` banner and each additional neighbourhood it needs with a concise three-line comment banner. Omit empty neighbourhoods and omit optional banners in a compact file where they would add more ceremony than navigation. The exact two-line conformance header and its following blank line remain first; decorative rules may follow them, but must not wrap or precede them.
 
 ```toml
 # Knowledge Islands repository configuration.

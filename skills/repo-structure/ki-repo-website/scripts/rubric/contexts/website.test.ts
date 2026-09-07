@@ -114,3 +114,16 @@ describe('website core context', () => {
     expect(context.sitePackageState).toBe('unsafe')
   })
 })
+
+test('diagnoses an explicitly materialised apps/site default', () => {
+  const repository = root()
+  writeFileSync(join(repository, '.ki.toml'), '[skills.ki-repo-website]\nsite-root = "apps/site"\n')
+  const context = createWebsiteCoreSession(options(repository)).subjects[0].context()
+
+  expect(
+    SITE.items
+      .flatMap((item) => item.mechanical?.audit.run(context) ?? [])
+      .filter((outcome) => outcome.status === 'VIOLATION')
+      .map((outcome) => outcome.message)
+  ).toContain('site-root = "apps/site" restates the implicit default; remove the key.')
+})

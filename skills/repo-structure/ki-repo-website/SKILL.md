@@ -51,7 +51,7 @@ Explain the purpose, composition choice, modes, and off-ramps, then stop without
 
 ## Boundaries
 
-Configuration writers leave `[skills.ki-repo-website]` keyless for the implicit `apps/site` default and add `site-root` only for an explicit override. Existing repositories that spell out `site-root = "apps/site"` remain compatible.
+Configuration writers leave `[skills.ki-repo-website]` keyless for the implicit `apps/site` default and add `site-root` only for an explicit override. Audit diagnoses `site-root = "apps/site"` as redundant configuration whose removal preserves the selected root.
 
 - Content collections, Eleventy, templates, and design tokens → `ki-repo-website-content`.
 - Interactive React/Vite application structure → `ki-repo-website-app`.

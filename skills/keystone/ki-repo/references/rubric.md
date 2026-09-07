@@ -63,6 +63,8 @@ Required repository files and document quality, using a local checkout when avai
   - _Remediation:_ diagnostic — Review recurring unmanaged rules across the fleet and assign only genuinely portable rules to a skill.
 - **FILES-8 [M] — Legacy .ki output absent** — The retired .ki output tree is absent; audit exposes any return and conform removes only proven untracked audits/conform output. (standards-repository.md)
   - _Remediation:_ automatic
+- **FILES-9 [M] — Configuration presentation structure** — Substantial .ki.toml files use exact ordered neighbourhood banners, open with the foundation block, and keep each explicit skill owner with its child tables. (standards-configuration.md)
+  - _Remediation:_ diagnostic — Reorder source without changing parsed TOML: retain the exact header first, add only needed recognised banners, and keep each owner block contiguous.
 - **FILES-J1 [J] — Repository document content** — README and license content is accurate and current. (standards-repository.md)
   - _Evidence scope:_ The repository README and license.
   - _Review prompt:_ Read the README and license and assess whether they accurately describe and license this repository.

@@ -7,7 +7,7 @@ import type { RubricContextOptions } from '../../shared/rubric.ts'
 import { FILES } from '../items/files.ts'
 import { RUNTIMES } from '../items/runtimes.ts'
 import { WORK } from '../items/working-areas.ts'
-import { collectAuditFindings, localTreePaths } from './audit.ts'
+import { collectAuditFindings, KI_CONFIGURATION_HEADER, localTreePaths } from './audit.ts'
 import { createRepoSession, type FilesRubricContext, type WorkingAreasRubricContext } from './repository.ts'
 
 const roots: string[] = []
@@ -187,6 +187,21 @@ describe('ki-repo session', () => {
   // progress part of the contract under audit, and a finding that turned on whether a display
   // was attached could not be defended. The inspector is recorded rather than asserted on
   // directly, because the emitter must also reach the evidence gathering, not just the session.
+  test('surfaces substantial configuration presentation drift through FILES-9', async () => {
+    const root = repository()
+    writeFileSync(
+      join(root, '.ki.toml'),
+      `${KI_CONFIGURATION_HEADER}[repo]\n\n[skills.ki-repo]\n\n[skills.ki-authoring]\n\n[skills.ki-engineering]\n\n[skills.ki-binding]\n\n[skills.ki-work]\n`
+    )
+
+    expect((await collectAuditFindings([root])).findings).toContainEqual(
+      expect.objectContaining({
+        code: 'FILES-9',
+        message: expect.stringContaining('substantial .ki.toml must use Foundation')
+      })
+    )
+  })
+
   test('a recording emitter changes no outcome and still observes the evidence stage', async () => {
     const root = repository()
     const events: unknown[] = []

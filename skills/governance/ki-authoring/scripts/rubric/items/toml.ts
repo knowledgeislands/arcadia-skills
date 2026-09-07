@@ -18,12 +18,12 @@ const TOML_STRUCTURE: RubricItem<TomlRubricContext> = {
   code: 'TOML-structure',
   title: 'TOML configuration remains compact and navigable',
   description:
-    'Substantial `.ki.toml` files use needed neighbourhood banners, while readable short subordinate maps use dotted keys under their explicit owner root.',
+    'Mechanically valid `.ki.toml` structure still uses semantically appropriate neighbourhood banners, while readable short subordinate maps use dotted keys under their explicit owner root.',
   sources: ['standards-toml.md#configuration-structure'],
   judgment: {
     scope: 'Every substantial `.ki.toml` and each short subordinate map in convention scope.',
     prompt:
-      'Assess whether configuration uses helpful neighbourhood banners, contiguous owner blocks, and dotted child keys where the complete entry remains readable.',
+      'Assess whether each declaration sits under a meaningful neighbourhood banner and whether dotted child keys keep the complete entry readable.',
     outcomes: ['conforming', 'restructure recommended', 'nested form justified'],
     guidance:
       'Use only needed neighbourhood banners and compact dotted child keys; retain a nested table when comments, length, or further structure make it clearer.'

@@ -32,7 +32,7 @@ The header makes the marker legible without requiring a reader to know the filen
 
 ## Presentation neighbourhoods
 
-A substantial `.ki.toml` **SHOULD** group its applicable declarations into a small, stable sequence of semantic neighbourhoods:
+A compact `.ki.toml` with at most two declared skill roots beyond the required `ki-repo` and `ki-authoring` foundation MAY omit neighbourhood banners. A substantial file with three or more additional skill roots MUST use the exact three-line `Foundation` banner and at least one other needed banner from this stable sequence:
 
 - **Foundation** — `[repo]`, `[skills.ki-repo]`, `[skills.ki-authoring]`, and their immediate configuration.
 - **Repository shape** — the primary repository kind and its structural adapters.
@@ -43,6 +43,8 @@ A substantial `.ki.toml` **SHOULD** group its applicable declarations into a sma
 Use only the neighbourhoods the repository needs. Foundation stays first: `[repo]` remains the first table, `[skills.ki-repo]` the first skill root, and `[skills.ki-authoring]` follows the repository contract it presents. After that, owner affinity takes precedence over a global alphabetic sort. Within a neighbourhood, keep a skill's explicit root and all of its subordinate configuration contiguous, with the root before any child table or dotted child assignment. Otherwise retain a stable local order; alphabetic order is useful only where it does not separate an owner from its adapters or configuration.
 
 Neighbourhood comments are navigational and carry no consumer-visible semantics. The exact conformance header and its following blank line remain the first bytes of the file; decorative rules and section banners follow them. `ki-authoring` owns their TOML presentation, including the strong preference for compact dotted child keys when a complete entry remains readable on one line and the nested-table escape for complex records.
+
+Each used banner MUST use the exact three-line comment form, appear at most once, introduce a non-empty declaration group, and follow the sequence above. An owner block MUST NOT cross a neighbourhood banner. `ki-repo` mechanically diagnoses these source-level rules without reserialising TOML or assigning every skill to a hard-coded neighbourhood. `ki-authoring` retains the judgment of whether a non-foundation declaration is placed under the most meaningful banner and whether optional banners improve a compact file.
 
 ## Harnesses and the skills namespace
 

@@ -4,10 +4,10 @@ area: GOV
 title: Standardise KI configuration
 theme: governance-consistency
 horizon: next
-status: draft
+status: awaiting-review
 blocks: []
 blocked_by: []
-baseline_ref: null
+baseline_ref: 8079d53194b8ee3cd53663713b88242db73a50e2
 ---
 
 ## Goal
@@ -50,19 +50,24 @@ Known dependencies are local and available: the current `.ki.toml` parser alread
 
 ## Steps
 
-- [ ] Add a source-aware `ki-repo` configuration-presentation check that preserves TOML semantics and comments while diagnosing substantial files without recognised neighbourhood banners, non-canonical banner order, a non-foundation opening block, child tables before their explicit owner root, or owner blocks split across neighbourhoods.
-- [ ] Keep semantic-neighbourhood choice at the judgment boundary: the mechanical check validates exact recognised banners, ordering, and owner continuity without maintaining a brittle global map from every skill name to one neighbourhood.
-- [ ] Update `ki-repo-website` so an omitted `site-root` selects `apps/site`, an explicit non-default safe path remains valid, and explicit `site-root = "apps/site"` produces a redundant-default diagnostic.
-- [ ] Add focused fixtures for compact configurations, well-structured substantial configurations, malformed banner and owner-block cases, implicit website defaults, explicit overrides, and redundant explicit defaults.
-- [ ] Align this repository's `.ki.toml` with the bannered structure, prove parsed before-and-after equivalence, regenerate affected rubrics, and record the read-only estate inventory without modifying sibling repositories.
+- [x] Add a source-aware `ki-repo` configuration-presentation check that preserves TOML semantics and comments while diagnosing substantial files without recognised neighbourhood banners, non-canonical banner order, a non-foundation opening block, child tables before their explicit owner root, or owner blocks split across neighbourhoods.
+- [x] Keep semantic-neighbourhood choice at the judgment boundary: the mechanical check validates exact recognised banners, ordering, and owner continuity without maintaining a brittle global map from every skill name to one neighbourhood.
+- [x] Update `ki-repo-website` so an omitted `site-root` selects `apps/site`, an explicit non-default safe path remains valid, and explicit `site-root = "apps/site"` produces a redundant-default diagnostic.
+- [x] Add focused fixtures for compact configurations, well-structured substantial configurations, malformed banner and owner-block cases, implicit website defaults, explicit overrides, and redundant explicit defaults.
+- [x] Align this repository's `.ki.toml` with the bannered structure, prove parsed before-and-after equivalence, regenerate affected rubrics, and record the read-only estate inventory without modifying sibling repositories.
 
 ## Files touched
 
 - `.ki.toml`
+- `skills/keystone/ki-repo/SKILL.md`
 - `skills/keystone/ki-repo/references/standards-configuration.md`
 - `skills/keystone/ki-repo/references/rubric.md`
 - `skills/keystone/ki-repo/scripts/rubric/contexts/`
 - `skills/keystone/ki-repo/scripts/rubric/items/files.ts`
+- `skills/governance/ki-authoring/references/standards-toml.md`
+- `skills/governance/ki-authoring/references/rubric.md`
+- `skills/governance/ki-authoring/scripts/rubric/items/toml.ts`
+- `skills/keystone/ki-skills/scripts/internal/remediation-inventory.test.ts`
 - `skills/repo-structure/ki-repo-website/SKILL.md`
 - `skills/repo-structure/ki-repo-website/references/standards-website.md`
 - `skills/repo-structure/ki-repo-website/references/rubric.md`
@@ -97,6 +102,41 @@ No guide change is planned. The rule concerns configuration contract and present
 ### Roadmap
 
 Retain fleet rollout as receiver-owned work. This item records read-only evidence and does not create or mutate another repository's roadmap record without an accepted route.
+
+## Review
+
+### Delivered
+
+Delivered the approved `.ki.toml` enforcement boundary from immutable baseline `8079d53194b8ee3cd53663713b88242db73a50e2`. The implementation adds source-aware diagnostic evidence without reserialising configuration, enforces the existing implicit website default, and aligns only this repository's configuration presentation.
+
+### Summary of changes
+
+- Added `FILES-9`, backed by a focused source scanner that ignores multiline-string lookalikes and diagnoses the established substantial-file threshold, exact banner form and order, foundation opening, explicit roots before child tables, and owners split across banners.
+- Kept semantic selection of non-foundation neighbourhoods in `ki-authoring` judgment while aligning the `ki-repo`, `ki-authoring`, and generated rubric wording.
+- Changed website `SITE-2` to diagnose explicit `site-root = "apps/site"` while retaining omission and safe non-default overrides.
+- Reordered this repository's `.ki.toml` under all five established comment banners and kept every parsed value unchanged.
+- Updated the central remediation inventory for the additional diagnostic criterion. No sibling repository was modified.
+
+### Verification
+
+- Focused `ki-repo` configuration-presentation, repository integration, and `ki-repo-website` context suites passed.
+- `bunx tsc --noEmit` and the complete `bun run test` suite passed.
+- Generated `ki-repo`, `ki-authoring`, and `ki-repo-website` rubrics were refreshed.
+- Focused `ki-repo`, `ki-authoring`, `ki-skills`, and `ki-engineering` audits passed.
+- A direct focused `ki-repo-website` repository audit is not applicable because this harness does not declare that skill; its source contract is covered by its focused tests and generated-rubric validation.
+- `Bun.TOML.parse` deep equality between baseline and the reordered `.ki.toml` passed, and the new presentation inspector reports no issue for the resulting source.
+
+### Outstanding concerns
+
+No implementation concern remains in the approved boundary. The read-only estate snapshot still identifies receiver repositories that will begin reporting presentation or redundant-default diagnostics; each receiver retains its own prioritisation, edit, review, and acceptance authority.
+
+### Post-change review
+
+The goal and boundary are met. The scanner checks only mechanically knowable source relationships, preserves comments and parsed data, ignores banner-like text inside multiline strings, and deliberately avoids a central skill-to-neighbourhood taxonomy. Regression risk is bounded by focused malformed-source fixtures, the complete suite, and the live audit of this repository.
+
+### Mini recap
+
+Existing `.ki.toml` standards are now executable where deterministic, while semantic neighbourhood fit remains human-reviewable. The reusable learning is already placed in the owning `ki-repo` and `ki-authoring` standards; fleet application remains receiver-owned rather than an implicit cross-repository rollout.
 
 ## Discussion
 

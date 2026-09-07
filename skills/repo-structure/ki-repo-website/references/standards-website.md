@@ -11,7 +11,7 @@ The two implementations are mutually exclusive. Hosting is independent and compo
 
 ## 2. Site root
 
-Configuration-producing modes MUST keep the `apps/site` default implicit: leave `[skills.ki-repo-website]` keyless and write `site-root` only for an override. An existing explicit `site-root = "apps/site"` remains compatible but is redundant.
+Configuration-producing modes MUST keep the `apps/site` default implicit: leave `[skills.ki-repo-website]` keyless and write `site-root` only for an override. Audit diagnoses an explicit `site-root = "apps/site"` as a redundant default and asks the owner to remove the key; omission preserves the same selected root.
 
 `[skills.ki-repo-website]` is the single owner of `site-root`. Omission selects `apps/site`, the canonical application workspace. An explicit `site-root = "."` selects the repository root; any other override is a canonical safe relative path without empty, current-directory, parent-directory, backslash, drive, or absolute components. Implementation and hosting tables remain keyless and consume this selection rather than restating it.
 

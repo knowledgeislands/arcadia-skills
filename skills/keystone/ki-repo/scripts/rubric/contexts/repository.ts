@@ -62,6 +62,7 @@ const GITHUB_CODES = new Set([
   'FILES-6',
   'FILES-7',
   'FILES-8',
+  'FILES-9',
   'GH-1',
   'GH-2',
   'GH-3',
@@ -95,6 +96,7 @@ export type FilesRubricContext = {
   files6: readonly RepoEvidenceFinding[]
   files7: readonly RepoEvidenceFinding[]
   files8: readonly RepoEvidenceFinding[]
+  files9: readonly RepoEvidenceFinding[]
   ensureManagedGitignore?: () => void
   removeLegacyKiOutput?: () => void
   ensureRepoConfiguration?: () => void
@@ -438,6 +440,7 @@ export const createRepoSession = async (
       files6: evidence('FILES-6'),
       files7: evidence('FILES-7'),
       files8: evidence('FILES-8'),
+      files9: evidence('FILES-9'),
       ...(mutable && gitignoreInspection && !gitignoreInspection.malformed && !gitignoreInspection.conforming
         ? {
             ensureManagedGitignore: () => {

@@ -1,6 +1,10 @@
 # Knowledge Islands repository configuration.
 # Its presence declares conformance with the Knowledge Islands repository standard.
 
+# -----------------------------------------------------------------------------
+# Foundation
+# -----------------------------------------------------------------------------
+
 [repo]
 harnesses = ["knowledgeislands/ki-agentic-harness"]
 
@@ -19,6 +23,19 @@ coverage-subagents-codex = false # source repository publishes the adapter witho
 
 [skills.ki-authoring]
 
+# -----------------------------------------------------------------------------
+# Repository shape
+# -----------------------------------------------------------------------------
+
+[skills.ki-repo-project]
+
+[skills.ki-repo-harness]
+prefix = "ki"
+
+# -----------------------------------------------------------------------------
+# Governance runtime
+# -----------------------------------------------------------------------------
+
 [skills.ki-engineering]
 
 [skills.ki-binding]
@@ -26,11 +43,6 @@ coverage-subagents-codex = false # source repository publishes the adapter witho
 [skills.ki-binding-claude]
 
 [skills.ki-binding-codex]
-
-[skills.ki-repo-project]
-
-[skills.ki-repo-harness]
-prefix = "ki"
 
 [skills.ki-skills]
 
@@ -48,9 +60,53 @@ prefix = "ki"
 
 [skills.ki-guides]
 
-[skills.ki-trades]
+# -----------------------------------------------------------------------------
+# Change management
+# -----------------------------------------------------------------------------
 
-[skills.ki-agora]
+[skills.ki-git]
+
+[skills.ki-housekeeping-claude]
+
+[skills.ki-housekeeping-codex]
+
+[skills.ki-housekeeping-chatgpt]
+
+[skills.ki-housekeeping-granola]
+
+[skills.ki-work-housekeeping]
+
+[skills.ki-work]
+adapter = "roadmap"
+
+[skills.ki-work-roadmap]
+
+[skills.ki-work-roadmap.areas]
+FND = "foundation-tooling"
+GOV = "governance-consistency"
+OPS = "operations"
+REV = "regular-reviews"
+RTP = "runtime-portability"
+
+[skills.ki-checkpoint]
+
+[skills.ki-tokenomics]
+headroom = "recommended"
+# Cross-skill governance benefits from the higher-reasoning project default.
+preferred_model_type = "reasoning"
+
+[skills.ki-tokenomics.budgets]
+mcp_servers = 20 # User-scoped; revisit if the global MCP set is pruned.
+
+[skills.ki-tokenomics-claude]
+
+[skills.ki-tokenomics-codex]
+
+# -----------------------------------------------------------------------------
+# Relationships
+# -----------------------------------------------------------------------------
+
+[skills.ki-trades]
 
 [skills.ki-trades.routes."knowledgeislands/ki-website"]
 export = ["knowledge"]
@@ -103,43 +159,7 @@ export = ["knowledge"]
 [skills.ki-trades.routes."knowledgeislands/mcp-m365"]
 export = ["knowledge"]
 
-[skills.ki-git]
-
-[skills.ki-housekeeping-claude]
-
-[skills.ki-housekeeping-codex]
-
-[skills.ki-housekeeping-chatgpt]
-
-[skills.ki-housekeeping-granola]
-
-[skills.ki-work-housekeeping]
-
-[skills.ki-work]
-adapter = "roadmap"
-
-[skills.ki-work-roadmap]
-
-[skills.ki-work-roadmap.areas]
-FND = "foundation-tooling"
-GOV = "governance-consistency"
-OPS = "operations"
-REV = "regular-reviews"
-RTP = "runtime-portability"
-
-[skills.ki-checkpoint]
-
-[skills.ki-tokenomics]
-headroom = "recommended"
-# Cross-skill governance benefits from the higher-reasoning project default.
-preferred_model_type = "reasoning"
-
-[skills.ki-tokenomics.budgets]
-mcp_servers = 20 # User-scoped; revisit if the global MCP set is pruned.
-
-[skills.ki-tokenomics-claude]
-
-[skills.ki-tokenomics-codex]
+[skills.ki-agora]
 
 [skills.ki-agora.homes.ki-all]
 owner = "https://github.com/knowledgeislands/ki-agentic-harness"

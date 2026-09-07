@@ -133,6 +133,23 @@ const FILES_8: RubricItem<FilesRubricContext> = {
   }
 }
 
+const FILES_9: RubricItem<FilesRubricContext> = {
+  code: 'FILES-9',
+  title: 'Configuration presentation structure',
+  description:
+    'Substantial .ki.toml files use exact ordered neighbourhood banners, open with the foundation block, and keep each explicit skill owner with its child tables.',
+  sources: [CONFIGURATION_SOURCE],
+  mechanical: {
+    level: 'WARN',
+    remediation: {
+      class: 'diagnostic',
+      guidance:
+        'Reorder source without changing parsed TOML: retain the exact header first, add only needed recognised banners, and keep each owner block contiguous.'
+    },
+    audit: { phase: 'INSPECT', run: (context) => auditEvidence(context.files9, 'WARN') }
+  }
+}
+
 const FILES_2: RubricItem<FilesRubricContext> = {
   code: 'FILES-2',
   title: 'Declared repository identity',
@@ -169,5 +186,5 @@ export const FILES: RubricFamily<RepoRubricContext, FilesRubricContext> = {
     'Required repository files and document quality, using a local checkout when available or GitHub default-branch evidence for remote-only runs.',
   standard: SOURCE,
   selectContext: (context) => context.files,
-  items: [FILES_1, FILES_2, FILES_3, FILES_4, FILES_5, FILES_6, FILES_7, FILES_8, FILES_J1]
+  items: [FILES_1, FILES_2, FILES_3, FILES_4, FILES_5, FILES_6, FILES_7, FILES_8, FILES_9, FILES_J1]
 }
