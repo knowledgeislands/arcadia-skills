@@ -4,7 +4,7 @@ area: GOV
 title: Standardise KI configuration
 theme: governance-consistency
 horizon: next
-status: awaiting-review
+status: done
 blocks: []
 blocked_by: []
 baseline_ref: 8079d53194b8ee3cd53663713b88242db73a50e2
@@ -222,6 +222,10 @@ The goal boundary is met. Deterministic source relationships are enforced centra
 ### Mini recap
 
 The shared `.ki.toml` standard is executable and deployed across all 34 registered configurations. The rollout also exercised the shared-working-tree Git contract: touched-path commits stayed isolated even where unrelated work was present.
+
+## Done
+
+Accepted by the user on 2026-09-08 after review of the delivered configuration standard, estate rollout evidence, verification, and recorded concerns.
 
 ## Discussion
 

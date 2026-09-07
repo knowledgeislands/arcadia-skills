@@ -4,7 +4,7 @@ area: GOV
 title: Sanction self script namespace
 theme: governance-consistency
 horizon: next
-status: awaiting-review
+status: done
 blocks: []
 blocked_by: []
 baseline_ref: 673a184611d1fefba7d3a419fad9899a1d662d37
@@ -198,6 +198,10 @@ The decision is coherent across engineering, website, MCP, batch, and Git contra
 ### Mini recap
 
 The portable rule, its audits, the website decision, two process defects discovered during rollout, and all five receiver migrations are committed. Remaining work consists only of human acceptance of the retained `awaiting-review` records and unrelated pre-existing receiver findings; no additional durable learning route is required.
+
+## Done
+
+Accepted by the user on 2026-09-08 after review of the script-ownership contract, receiver rollout evidence, verification, and recorded concerns.
 
 ## Discussion
 
