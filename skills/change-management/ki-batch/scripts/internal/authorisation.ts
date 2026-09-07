@@ -83,9 +83,14 @@ const strings = (value: unknown): readonly string[] | undefined =>
     ? (value as readonly string[])
     : undefined
 
+const RUN_LEDGER_HEADING = /^## Run ledger[ \t]*$/m
+
 const payloadBody = (body: string): string | undefined => {
-  const sections = body.split(/^## Run ledger\s*$/m)
-  return sections.length <= 2 ? sections[0] : undefined
+  const sections = body.split(RUN_LEDGER_HEADING)
+  if (sections.length > 2) return undefined
+  const protectedBody = sections[0]
+  if (sections.length === 1 || !protectedBody.endsWith('\n\n')) return protectedBody
+  return protectedBody.slice(0, -1)
 }
 
 const canonicalPayload = (fields: Record<string, unknown>, body: string): string | undefined => {
@@ -107,7 +112,7 @@ export const approvedPayloadSha256 = (contents: string): string | undefined => {
 }
 
 const runBinding = (body: string): BatchRunBinding | undefined | null => {
-  const sections = body.split(/^## Run ledger\s*$/m)
+  const sections = body.split(RUN_LEDGER_HEADING)
   if (sections.length === 1) return null
   if (sections.length !== 2) return undefined
   const marker = /^<!-- ki-batch-run: ([A-Z][A-Z0-9-]*-RUN-\d{3}) ([0-9a-f]{64}) -->$/m.exec(sections[1])

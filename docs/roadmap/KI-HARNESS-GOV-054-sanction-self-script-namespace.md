@@ -46,6 +46,7 @@ The engineering standard accepts six bare lifecycle idioms or a capability-owned
 - [x] Make the content site's required workspace shape mechanically checkable and remove any implementation-private root script claims.
 - [x] Add focused composition fixtures, refresh generated rubrics, and record current receiver evidence without mutating another repository.
 - [x] Publish the four existing MCP auth and recording operations as `ki-repo-mcp` capability-owned root scripts before removing receiver exclusions.
+- [x] Keep the batch approval hash stable when a receiver appends the Markdown-required blank-line separator before `## Run ledger`.
 
 ## Files touched
 
@@ -68,6 +69,9 @@ The engineering standard accepts six bare lifecycle idioms or a capability-owned
 - `skills/keystone/ki-skills/scripts/internal/remediation-inventory.test.ts`
 - `skills/repo-structure/ki-repo-mcp/scripts/rubric/items/index.ts`
 - `skills/repo-structure/ki-repo-mcp/scripts/rubric/items/index.test.ts`
+- `skills/change-management/ki-batch/references/standards-batch.md`
+- `skills/change-management/ki-batch/scripts/internal/authorisation.ts`
+- `skills/change-management/ki-batch/scripts/authorisation.test.ts`
 - This roadmap record
 
 ## Delegation

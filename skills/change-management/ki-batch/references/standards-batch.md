@@ -28,7 +28,7 @@ Prepare one regular Markdown authorisation beneath `+/_AUTHORISATIONS/`, named `
 - completion target; and
 - mandatory stops.
 
-The approved payload is every frontmatter value except `approved_payload_sha256` plus the authored body before `## Run ledger`, in its exact canonical form. Its SHA-256 binds the approval to the reviewed scope, plans, checks, decisions, and stops. After approval, append at most one `## Run ledger`, beginning with `<!-- ki-batch-run: <run-id> <approved-payload-sha256> -->`; it records the outcome but cannot amend authority. The pure helper exposes the exact payload calculation used by its fixtures.
+The approved payload is every frontmatter value except `approved_payload_sha256` plus the authored body before `## Run ledger`, in its exact canonical form. Its SHA-256 binds the approval to the reviewed scope, plans, checks, decisions, and stops. After approval, append at most one `## Run ledger`, beginning with `<!-- ki-batch-run: <run-id> <approved-payload-sha256> -->`; the one blank-line separator required before that later Markdown heading is append-only ledger syntax and is excluded from the protected payload. The ledger records the outcome but cannot amend authority. The pure helper exposes the exact payload calculation used by its fixtures.
 
 Present the complete authorisation for review and require explicit approval before implementation.
 

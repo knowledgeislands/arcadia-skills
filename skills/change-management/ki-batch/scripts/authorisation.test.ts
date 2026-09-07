@@ -59,13 +59,21 @@ test('binds a later append-only run ledger to the exact approved payload', () =>
   const approved = record()
   const hash = approvedPayloadSha256(approved) as string
   const resolved = resolveFixture(
-    `${approved}## Run ledger\n\n<!-- ki-batch-run: KI-HARNESS-BATCH-001-RUN-001 ${hash} -->\n\n| Item | Result |\n| --- | --- |\n`
+    `${approved}\n## Run ledger\n\n<!-- ki-batch-run: KI-HARNESS-BATCH-001-RUN-001 ${hash} -->\n\n| Item | Result |\n| --- | --- |\n`
   )
   expect(resolved).toMatchObject({
     kind: 'resolved',
     authorisation: { runBinding: { id: 'KI-HARNESS-BATCH-001-RUN-001', approvedPayloadSha256: hash } },
     writes: false
   })
+})
+
+test('retains compatibility with a ledger appended without the Markdown separator', () => {
+  const approved = record()
+  const hash = approvedPayloadSha256(approved) as string
+  expect(
+    resolveFixture(`${approved}## Run ledger\n\n<!-- ki-batch-run: KI-HARNESS-BATCH-001-RUN-001 ${hash} -->\n`)
+  ).toMatchObject({ kind: 'resolved' })
 })
 
 test('stops without writes for absent, malformed, foreign, expired, or unapproved authority', () => {
