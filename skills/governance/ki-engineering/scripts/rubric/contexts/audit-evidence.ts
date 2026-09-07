@@ -149,6 +149,10 @@ const configuredEngineeringTables = (configuration: string): readonly Record<str
   )
 }
 
+const BARE_SCRIPT_IDIOMS = new Set(['build', 'prepare', 'test', 'test:coverage', 'test:watch', 'clean'])
+
+const isSelfOwnedScript = (key: string): boolean => key.startsWith('self:') && key.length > 'self:'.length
+
 export const inspectScriptExclusions = (
   configuration: string,
   scripts: Readonly<Record<string, string>>,
@@ -180,6 +184,9 @@ export const inspectScriptExclusions = (
     if (!Object.hasOwn(scripts, entry)) messages.push(`stale script exclusion names no existing script: ${entry}`)
     const claim = claims.get(entry)
     if (claim) messages.push(`script exclusion overlaps declared owner ${claim.skill}: ${entry}`)
+    if (entry.startsWith('ki:') && !claim)
+      messages.push(`script exclusion overlaps capability-owned ki: namespace: ${entry}`)
+    if (entry.startsWith('self:')) messages.push(`script exclusion overlaps repository-owned self: namespace: ${entry}`)
   }
   return { exclusions, messages }
 }
@@ -294,13 +301,17 @@ export const inspectGovernedScriptSurface = (
       /^ki:[a-z-]+:lint$/.test(key) ||
       ['ki:audit', 'ki:conform', 'ki:educate', 'ki:help'].includes(key)
   )
-  const bareIdioms = new Set(['build', 'prepare', 'test', 'test:coverage', 'test:watch', 'clean'])
   const unsupported = Object.keys(scripts).filter(
-    (key) => !bareIdioms.has(key) && !inspected.exclusions.has(key) && !claims.has(key)
+    (key) =>
+      !BARE_SCRIPT_IDIOMS.has(key) && !isSelfOwnedScript(key) && !inspected.exclusions.has(key) && !claims.has(key)
   )
   return {
     namingOffenders: Object.keys(scripts).filter(
-      (key) => !bareIdioms.has(key) && !key.startsWith('ki:') && !inspected.exclusions.has(key)
+      (key) =>
+        !BARE_SCRIPT_IDIOMS.has(key) &&
+        !key.startsWith('ki:') &&
+        !isSelfOwnedScript(key) &&
+        !inspected.exclusions.has(key)
     ),
     claimProblems: [
       ...(retired.length ? [`retired script key(s): ${retired.join(', ')}`] : []),
@@ -732,22 +743,26 @@ export const collectAuditEvidence = async (
     ? add('PASS', 'SCR-5', 'prepare = "husky"', STD, 'package.json')
     : add('WARN', 'SCR-5', `prepare should be "husky", got ${JSON.stringify(scripts.prepare)}`, STD, 'package.json')
 
-  // ── core: the ki: naming law — every script is a bare idiom or ki:-prefixed ────
-  // engineering-standard §2: a script is valid iff it is one of the six universal
-  // lifecycle idioms OR carries the ki: prefix. A bare non-idiom name is drift — this
-  // is what keeps the script surface fully governed (every ki:* script is asserted by
-  // some KI skill; the artifact/governance skills own their ki:* deltas).
-  const BARE_IDIOMS = new Set<string>(['build', 'prepare', 'test', 'test:coverage', 'test:watch', 'clean'])
+  // ── core: script ownership — bare lifecycle, ki: capability, or self: repository ──
+  // engineering-standard §2: ki:* scripts are claimed by resolved capabilities,
+  // self:* scripts name repository ownership directly, and only the six universal
+  // lifecycle idioms remain bare. Other bare names require an exact external exclusion.
   const offenders = scriptSurface.namingOffenders
   offenders.length
     ? add(
         'FAIL',
         'SCR-1',
-        `ungoverned script name(s): ${offenders.join(', ')} — every script must be a bare lifecycle idiom (${[...BARE_IDIOMS].join(', ')}) or carry the ki: prefix (engineering-standard §2)`,
+        `ungoverned script name(s): ${offenders.join(', ')} — every script must be a bare lifecycle idiom (${[...BARE_SCRIPT_IDIOMS].join(', ')}), carry the ki: prefix, carry a non-empty self: prefix, or have an exact external exclusion (engineering-standard §2)`,
         STD,
         'package.json'
       )
-    : add('PASS', 'SCR-1', 'all scripts are bare idioms or ki:-prefixed (naming law)', STD, 'package.json')
+    : add(
+        'PASS',
+        'SCR-1',
+        'all scripts are bare lifecycle idioms, ki:-prefixed, self:-prefixed, or exactly excluded',
+        STD,
+        'package.json'
+      )
 
   // ── core: dependency freshness — leading edge (bun outdated + registry dates) ──
   // A newer release opens the 14-day adoption window (engineering-standard §1): INFO

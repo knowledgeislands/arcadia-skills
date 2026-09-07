@@ -4,10 +4,10 @@ area: GOV
 title: Sanction self script namespace
 theme: governance-consistency
 horizon: next
-status: draft
+status: in-progress
 blocks: []
 blocked_by: []
-baseline_ref: null
+baseline_ref: 673a184611d1fefba7d3a419fad9899a1d662d37
 ---
 
 ## Goal
@@ -36,10 +36,10 @@ The engineering standard accepts six bare lifecycle idioms or a capability-owned
 
 ## Steps
 
-- [ ] Amend the live toolchain decision and engineering standard to define `ki:` capability ownership, `self:` repository ownership, and the existing six bare lifecycle idioms.
-- [ ] Update script-name and exclusion validation so a well-formed `self:` name needs neither a capability claim nor an exclusion, while exclusions covering `self:` names are rejected as redundant.
-- [ ] Extend focused fixtures for accepted `self:` names, malformed or empty `self:` names, redundant exclusions, retained bare idioms, and externally constrained bare exceptions.
-- [ ] Refresh the generated engineering rubric and examples, then inventory registered repositories for rollout candidates without mutating another repository.
+- [x] Amend the live toolchain decision and engineering standard to define `ki:` capability ownership, `self:` repository ownership, and the existing six bare lifecycle idioms.
+- [x] Update script-name and exclusion validation so a well-formed `self:` name needs neither a capability claim nor an exclusion, while exclusions covering `self:` names are rejected as redundant.
+- [x] Extend focused fixtures for accepted `self:` names, malformed or empty `self:` names, redundant exclusions, retained bare idioms, and externally constrained bare exceptions.
+- [x] Refresh the generated engineering rubric and examples, then inventory registered repositories for rollout candidates without mutating another repository.
 - [ ] Record repository-specific rename, cross-reference, and external-platform follow-ups through each repository's own accepted work route.
 
 ## Files touched
@@ -92,6 +92,18 @@ Keep repository-specific migrations outside this harness item unless the receivi
 ### Rollout authority
 
 The harness can publish the portable rule and report migration candidates, but it does not silently rename scripts in another repository. Each receiver owns its package, documentation, CI, platform configuration, verification, review, and acceptance commit.
+
+### Estate rollout inventory
+
+The read-only registered-repository inventory found six receivers with exclusions affected by this clarification:
+
+- `5g-emerge-ibc-2026` already uses four `self:` names and only needs their now-redundant exclusions removed.
+- `5g-emerge-testbed-website` has eleven repository-owned bare names to migrate to `self:` with their callers.
+- `infoschematics` has twelve excluded `ki:` names requiring owner classification: claim genuine capability operations or rename repository operations to `self:`.
+- `kit-midnight.ninja` has three excluded `ki:` names requiring the same classification.
+- `mcp-gsuite` and `mcp-m365` each have four excluded `ki:` names requiring the same classification.
+
+No declared work-export route currently connects this harness to those receiver repositories (`mcp-gsuite` has a knowledge-only route). Repository-specific work records therefore remain pending receiver-owned capture or an explicitly established work route; no sibling working tree was modified.
 
 ### Earlier framing, resolved above
 

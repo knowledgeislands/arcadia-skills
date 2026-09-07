@@ -85,11 +85,11 @@ CI installs the declared toolchain and runs canonical repository gates.
 
 The direct CLI boundary, lifecycle idioms, and clean cutover discipline.
 
-- **SCR-1 [M] — KI script naming law** — Every script is a permitted bare lifecycle idiom or carries the `ki:` prefix; a bare non-idiom name is drift. (standards-engineering.md)
+- **SCR-1 [M] — KI script naming law** — Every script is a permitted bare lifecycle idiom, a capability-owned `ki:` name, a repository-owned `self:` name with a non-empty suffix, or an exactly excluded external bare name. (standards-engineering.md)
   - _Remediation:_ diagnostic — Revise the package scripts to meet the governed script surface, then rerun the audit.
 - **SCR-2 [M] — Repository maintenance stays CLI-owned** — Package scripts do not invoke `ki repo audit`, `ki repo conform`, or `ki repo educate`, whether for the whole repository or a focused skill; repositories invoke the installed CLI directly. (standards-engineering.md)
   - _Remediation:_ automatic
-- **SCR-3 [M] — Exact script claims cover the governed surface** — Every `ki:` script is claimed by exactly one resolved capability or is exactly excluded as user-owned external tooling; `ki:deps:update` is present; retired tool families and aggregate governance aliases are absent. (standards-engineering.md)
+- **SCR-3 [M] — Exact script claims cover the governed surface** — Every `ki:` script is claimed by exactly one resolved capability, every `self:` script names repository ownership directly, and exact exclusions cover only externally constrained bare names; `ki:deps:update` is present; retired tool families and aggregate governance aliases are absent. (standards-engineering.md)
   - _Remediation:_ automatic
 - **SCR-4 [M] — Per-skill wrapper aliases absent** — Package scripts contain no derived `ki:<skill>:<mode>` aliases and no command that invokes `.ki`, `govern.ts`, `educate.ts`, an adapter, or a vendored runtime. (standards-engineering.md)
   - _Remediation:_ automatic

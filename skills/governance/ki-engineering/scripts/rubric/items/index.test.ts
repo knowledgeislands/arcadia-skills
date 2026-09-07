@@ -117,6 +117,62 @@ test('exact external script exclusions satisfy the naming and claim boundaries',
   }
 })
 
+test('repository-owned self scripts and the closed bare lifecycle set need no exclusions', () => {
+  const scripts = {
+    build: 'build',
+    prepare: 'husky',
+    test: 'bun test',
+    'test:coverage': 'bun test --coverage',
+    'test:watch': 'bun test --watch',
+    clean: 'rm -rf node_modules',
+    'ki:deps:update': 'bun update --latest',
+    'self:cf:build': 'build for cloudflare',
+    'self:typecheck': 'tsc --noEmit'
+  }
+
+  expect(inspectGovernedScriptSurface('[skills.ki-engineering]\n', scripts, engineeringClaim)).toEqual({
+    namingOffenders: [],
+    claimProblems: []
+  })
+})
+
+test('self ownership requires a non-empty suffix and cannot be redundantly excluded', () => {
+  expect(
+    inspectGovernedScriptSurface(
+      '[skills.ki-engineering]\n',
+      { 'ki:deps:update': 'bun update --latest', 'self:': 'invalid' },
+      engineeringClaim
+    )
+  ).toEqual({
+    namingOffenders: ['self:'],
+    claimProblems: ['unsupported or unclaimed script key(s): self:']
+  })
+
+  expect(
+    inspectGovernedScriptSurface(
+      '[skills.ki-engineering]\nscript_exclusions = ["self:vendor:clone"]\n',
+      { 'ki:deps:update': 'bun update --latest', 'self:vendor:clone': 'vendor clone' },
+      engineeringClaim
+    )
+  ).toEqual({
+    namingOffenders: [],
+    claimProblems: ['script exclusion overlaps repository-owned self: namespace: self:vendor:clone']
+  })
+})
+
+test('unclaimed ki scripts cannot use exclusions as a capability claim', () => {
+  expect(
+    inspectGovernedScriptSurface(
+      '[skills.ki-engineering]\nscript_exclusions = ["ki:local:run"]\n',
+      { 'ki:deps:update': 'bun update --latest', 'ki:local:run': 'run local task' },
+      engineeringClaim
+    )
+  ).toEqual({
+    namingOffenders: [],
+    claimProblems: ['script exclusion overlaps capability-owned ki: namespace: ki:local:run']
+  })
+})
+
 test('script exclusions reject invalid, stale, duplicate, patterned, and owned entries', () => {
   const scripts = {
     'ki:deps:update': 'bun update --latest',

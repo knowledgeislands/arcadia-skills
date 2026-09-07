@@ -81,6 +81,8 @@ Used by every `mcp-*` repo. The universal invariants (`strict`, `nodenext`, `noE
 
 The governance surface is direct native `ki repo audit` / `ki repo conform` commands after CI or the user has acquired the verified active skill collection. Repositories do not expose `ki:audit`, `ki:conform`, or derived scoped package-script aliases to local runners. The registered `ki-engineering` rubric runs Biome, TypeScript, syncpack, and knip internally, while `ki-authoring` owns the Markdown tool pass. The critical trap is a non-`test` script calling `bun test`: it bypasses the governed package script and invokes Bun's own runner. Use `bun run test` outside the bare `test` entrypoint; that entrypoint may select a runner, whether `vitest run`, `bun test`, or another whole-suite command.
 
+Repository-local operations make their ownership visible with the `self:` prefix, for example `self:vendor:clone`, `self:typecheck`, or `self:cf:build`. They require no capability claim or `script_exclusions` entry. Keep an exact exclusion only when an external system fixes a bare script name that cannot be migrated.
+
 ```jsonc
 {
   "scripts": {
