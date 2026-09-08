@@ -200,7 +200,7 @@ test('dependencies are inspected in the selected site package', () => {
   })
 })
 
-test('the selected site package owns ordinary local lifecycle scripts', () => {
+test('the selected site package owns capability-scoped development scripts', () => {
   const repository = temporaryDirectory('ki-repo-website-content-scripts-')
   mkdirSync(join(repository, 'apps', 'site'), { recursive: true })
   writeFileSync(join(repository, 'apps', 'site', 'eleventy.config.ts'), 'export default function () {}\n')
@@ -209,9 +209,9 @@ test('the selected site package owns ordinary local lifecycle scripts', () => {
     JSON.stringify({
       scripts: {
         build: 'eleventy --config=eleventy.config.ts',
-        dev: 'concurrently "bun run dev:css" "bun run dev:serve"',
-        'dev:css': 'tailwindcss --watch',
-        'dev:serve': 'eleventy --serve',
+        'ki:site:dev': 'concurrently "bun run ki:site:dev:css" "bun run ki:site:dev:serve"',
+        'ki:site:dev:css': 'tailwindcss --watch',
+        'ki:site:dev:serve': 'eleventy --serve',
         clean: 'rm -rf dist'
       },
       dependencies: {}
@@ -266,7 +266,11 @@ test('root-owned public aliases do not substitute for site-local scripts', () =>
       .audit.run(context)
       .some((outcome) => outcome.status === 'VIOLATION')
   ).toBe(true)
-  expect(item('WEB-31').audit.run(context)[0]?.status).toBe('NOT_APPLICABLE')
+  expect(
+    item('WEB-31')
+      .audit.run(context)
+      .every((outcome) => outcome.status === 'PASS')
+  ).toBe(true)
   expect(item('WEB-32').audit.run(context)[0]?.status).toBe('VIOLATION')
 })
 
@@ -327,4 +331,65 @@ test('a symlinked Eleventy marker activates reporting without exposing its conte
   expect(context.cfgName).toBe('')
   expect(context.config).toBe('')
   expect(item('WEB-6').audit.run(context)[0]?.status).toBe('VIOLATION')
+})
+
+test('rejects the retired bare development family', () => {
+  const repository = temporaryDirectory('ki-repo-website-content-bare-dev-')
+  mkdirSync(join(repository, 'apps', 'site'), { recursive: true })
+  writeFileSync(join(repository, 'apps', 'site', 'eleventy.config.ts'), 'export default function () {}\n')
+  writeFileSync(
+    join(repository, 'apps', 'site', 'package.json'),
+    JSON.stringify({
+      scripts: {
+        build: 'eleventy --config=eleventy.config.ts',
+        dev: 'concurrently "bun run dev:css" "bun run dev:serve"',
+        'dev:css': 'tailwindcss --watch',
+        'dev:serve': 'eleventy --serve',
+        clean: 'rm -rf dist'
+      },
+      dependencies: {}
+    })
+  )
+  writeFileSync(
+    join(repository, '.ki.toml'),
+    '[skills.ki-repo-website]\nsite-root = "apps/site"\n\n[skills.ki-repo-website-content]\n'
+  )
+
+  const { context } = rootContext(createWebsiteSession(options(repository, 'audit')))
+  expect(
+    item('WEB-30')
+      .audit.run(context)
+      .some((outcome) => outcome.status === 'VIOLATION')
+  ).toBe(true)
+  expect(item('WEB-31').audit.run(context)[0]?.status).toBe('NOT_APPLICABLE')
+})
+
+test('rejects unreferenced development fan-out keys', () => {
+  const repository = temporaryDirectory('ki-repo-website-content-unreferenced-dev-')
+  mkdirSync(join(repository, 'apps', 'site'), { recursive: true })
+  writeFileSync(join(repository, 'apps', 'site', 'eleventy.config.ts'), 'export default function () {}\n')
+  writeFileSync(
+    join(repository, 'apps', 'site', 'package.json'),
+    JSON.stringify({
+      scripts: {
+        build: 'eleventy --config=eleventy.config.ts',
+        'ki:site:dev': 'concurrently "echo css" "echo server"',
+        'ki:site:dev:css': 'tailwindcss --watch',
+        'ki:site:dev:serve': 'eleventy --serve',
+        clean: 'rm -rf dist'
+      },
+      dependencies: {}
+    })
+  )
+  writeFileSync(
+    join(repository, '.ki.toml'),
+    '[skills.ki-repo-website]\nsite-root = "apps/site"\n\n[skills.ki-repo-website-content]\n'
+  )
+
+  const { context } = rootContext(createWebsiteSession(options(repository, 'audit')))
+  expect(
+    item('WEB-31')
+      .audit.run(context)
+      .every((outcome) => outcome.status === 'VIOLATION')
+  ).toBe(true)
 })

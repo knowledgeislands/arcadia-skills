@@ -34,7 +34,7 @@ Every house 11ty/Cloudflare site repo is a **monorepo** in the `ki-engineering` 
 
 - The site lives at `<site-root>/` (conventionally `apps/site/`) with its own `eleventy.config.ts`, `src/`, `package.json`, and `tsconfig.json`.
 - The build emits **`./dist`** inside the selected site root (`<site-root>/dist/`; conventionally `apps/site/dist/`). Each application workspace owns its output directory, with no cross-workspace output coupling. A hosting adapter consumes that exact path.
-- The selected site package owns the exact package-local scripts `build`, `dev`, `dev:css`, `dev:serve`, and `clean`. They are the content implementation contract, outside `ki-engineering`'s root public script surface, and require no `script_exclusions`. The repository root owns only the public `ki:site:build`, `ki:site:dev`, and `ki:site:clean` lifecycle aliases through `ki-repo-website`; the content package does not duplicate them.
+- The selected site package owns exact package-local lifecycle scripts `build` and `clean`, plus capability-owned `ki:site:dev`, `ki:site:dev:css`, and `ki:site:dev:serve`. These are the content implementation contract, outside `ki-engineering`'s root claim aggregation, and require no `script_exclusions`. The repository root owns only the public `ki:site:build`, `ki:site:dev`, and `ki:site:clean` lifecycle aliases through `ki-repo-website`; its development alias delegates the selected package's same `ki:site:dev` key.
 
 The site root is the directory selected by the website core and containing `eleventy.config.ts`. The `workspaces` declaration is governed by `ki-engineering`; this skill verifies its content-specific consequences.
 
@@ -102,11 +102,11 @@ The config is `export default function (eleventyConfig) { … return { dir, … 
 
 The selected site workspace owns the content-specific local scripts; these exact bare names are a package-local capability contract rather than root script exclusions. The root-owned public lifecycle aliases belong to `ki-repo-website`:
 
-- **`dev`** — `concurrently` runs Tailwind `--watch` through `dev:css` and Eleventy `--serve --port 3000` through `dev:serve`, named `css`,`11ty`.
+- **`ki:site:dev`** — `concurrently` runs Tailwind `--watch` through `ki:site:dev:css` and Eleventy `--serve --port 3000` through `ki:site:dev:serve`, named `css`,`11ty`.
 - **`build`** — invokes `bun …/@11ty/eleventy/cmd.cjs --config=eleventy.config.ts`; the `eleventy.before` hook compiles Tailwind with `--minify`.
 - **`clean`** — removes `dist/` and `.wrangler/` where present.
 
-TypeScript checking runs inside the registered `ki-engineering` rubric; do not add parallel `types` or `verify` scripts. These exact local scripts execute within the selected site package and do not appear in root `script_exclusions`. Root `ki:site:build`, `ki:site:dev`, and `ki:site:clean` aliases delegate to them; that public seam belongs to `ki-repo-website`.
+TypeScript checking runs inside the registered `ki-engineering` rubric; do not add parallel `types` or `verify` scripts. These exact local scripts execute within the selected site package and do not appear in root `script_exclusions`. Root `ki:site:build` and `ki:site:clean` delegate local lifecycle names, while root `ki:site:dev` delegates the package's same capability key; the public seam belongs to `ki-repo-website`.
 
 ## 9. The `dist/` contract
 

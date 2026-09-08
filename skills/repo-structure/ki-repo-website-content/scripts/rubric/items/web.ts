@@ -466,13 +466,13 @@ const WEB_29 = judgment(
 const WEB_30 = mechanical(
   'WEB-30',
   'Local build and development scripts',
-  'The selected site package has a local `build` script invoking Eleventy and a local `dev` script using `concurrently`.',
+  'The selected site package has a local `build` script invoking Eleventy and a local `ki:site:dev` script using `concurrently`.',
   'WARN',
   (context) => {
     const stop = inactive(context)
     if (stop) return stop
     const build = script(context, 'build')
-    const development = script(context, 'dev')
+    const development = script(context, 'ki:site:dev')
     return [
       build && /eleventy/.test(build)
         ? { status: 'PASS', message: 'build script invokes Eleventy', subject: context.packagePath }
@@ -493,18 +493,25 @@ const WEB_30 = mechanical(
 const WEB_31 = mechanical(
   'WEB-31',
   'Local development script fan-out',
-  'The local `dev` script fans out to local `dev:css` and `dev:serve` scripts.',
+  'The local `ki:site:dev` script fans out to local `ki:site:dev:css` and `ki:site:dev:serve` scripts.',
   'WARN',
   (context) => {
     const stop = inactive(context)
     if (stop) return stop
-    const development = script(context, 'dev')
+    const development = script(context, 'ki:site:dev')
     return development && /concurrently/.test(development)
-      ? ['dev:css', 'dev:serve'].map((part) => ({
-          status: script(context, part) ? ('PASS' as const) : ('VIOLATION' as const),
-          message: script(context, part) ? `${part} present` : `${part} missing`,
-          subject: context.packagePath
-        }))
+      ? ['ki:site:dev:css', 'ki:site:dev:serve'].map((part) => {
+          const present = Boolean(script(context, part))
+          const referenced = development.includes(part)
+          return {
+            status: present && referenced ? ('PASS' as const) : ('VIOLATION' as const),
+            message:
+              present && referenced
+                ? `${part} present and referenced`
+                : `${part} ${present ? 'is not referenced by ki:site:dev' : 'missing'}`,
+            subject: context.packagePath
+          }
+        })
       : [{ status: 'NOT_APPLICABLE', message: 'development script has no concurrently fan-out' }]
   }
 )

@@ -123,9 +123,9 @@ The static-site stack, workspace layout, generated output, and sustainable opera
   - _Review prompt:_ Where the site is public, does it ship and scope the required discovery and application assets?
   - _Outcomes:_ conforming; revision required; design decision required
   - _Conforming guidance:_ Revise the affected website surface to meet the standard, or record the owning design decision before accepting a deliberate exception.
-- **WEB-30 [M] — Local build and development scripts** — The selected site package has a local `build` script invoking Eleventy and a local `dev` script using `concurrently`. (standards-eleventy-site.md)
+- **WEB-30 [M] — Local build and development scripts** — The selected site package has a local `build` script invoking Eleventy and a local `ki:site:dev` script using `concurrently`. (standards-eleventy-site.md)
   - _Remediation:_ diagnostic — Inspect the affected website surface and apply the standard through a reviewable, site-owned change.
-- **WEB-31 [M] — Local development script fan-out** — The local `dev` script fans out to local `dev:css` and `dev:serve` scripts. (standards-eleventy-site.md)
+- **WEB-31 [M] — Local development script fan-out** — The local `ki:site:dev` script fans out to local `ki:site:dev:css` and `ki:site:dev:serve` scripts. (standards-eleventy-site.md)
   - _Remediation:_ diagnostic — Inspect the affected website surface and apply the standard through a reviewable, site-owned change.
 - **WEB-32 [M] — Local cleanup script** — A local `clean` script is present in the selected site package. (standards-eleventy-site.md)
   - _Remediation:_ diagnostic — Inspect the affected website surface and apply the standard through a reviewable, site-owned change.

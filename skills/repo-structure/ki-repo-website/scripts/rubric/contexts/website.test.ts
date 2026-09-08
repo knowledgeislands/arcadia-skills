@@ -36,14 +36,14 @@ describe('website core context', () => {
       JSON.stringify({
         scripts: {
           'ki:site:build': 'bun run --cwd apps/site build',
-          'ki:site:dev': 'bun run --cwd apps/site dev',
+          'ki:site:dev': 'bun run --cwd apps/site ki:site:dev',
           'ki:site:clean': 'bun run --cwd apps/site clean'
         }
       })
     )
     writeFileSync(
       join(repository, 'apps', 'site', 'package.json'),
-      JSON.stringify({ scripts: { build: 'build', dev: 'dev', clean: 'clean' } })
+      JSON.stringify({ scripts: { build: 'build', 'ki:site:dev': 'dev', clean: 'clean' } })
     )
     writeFileSync(join(repository, '.gitignore'), 'dist/\n')
 
@@ -126,4 +126,29 @@ test('diagnoses an explicitly materialised apps/site default', () => {
       .filter((outcome) => outcome.status === 'VIOLATION')
       .map((outcome) => outcome.message)
   ).toContain('site-root = "apps/site" restates the implicit default; remove the key.')
+})
+
+test('rejects a root development alias that targets a bare package key', () => {
+  const repository = root()
+  mkdirSync(join(repository, 'apps', 'site'), { recursive: true })
+  writeFileSync(join(repository, '.ki.toml'), '[skills.ki-repo-website]\n')
+  writeFileSync(
+    join(repository, 'package.json'),
+    JSON.stringify({
+      scripts: {
+        'ki:site:build': 'bun run --cwd apps/site build',
+        'ki:site:dev': 'bun run --cwd apps/site dev',
+        'ki:site:clean': 'bun run --cwd apps/site clean'
+      }
+    })
+  )
+  writeFileSync(
+    join(repository, 'apps', 'site', 'package.json'),
+    JSON.stringify({ scripts: { build: 'build', dev: 'dev', clean: 'clean' } })
+  )
+  writeFileSync(join(repository, '.gitignore'), 'dist/\n')
+
+  const context = createWebsiteCoreSession(options(repository)).subjects[0].context()
+  const outcomes = SITE.items.find((item) => item.code === 'SITE-5')?.mechanical?.audit.run(context) ?? []
+  expect(outcomes.some((outcome) => outcome.status === 'VIOLATION')).toBe(true)
 })

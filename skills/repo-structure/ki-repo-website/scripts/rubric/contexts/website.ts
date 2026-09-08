@@ -19,6 +19,7 @@ export type WebsiteCoreContext = {
   readonly packageState: 'missing' | 'unsafe' | 'malformed' | 'present'
   readonly sitePackageState: 'missing' | 'unsafe' | 'malformed' | 'present'
   readonly scripts: Readonly<Record<string, string>>
+  readonly siteScripts: Readonly<Record<string, string>>
   readonly gitignore: string | null
 }
 
@@ -153,6 +154,7 @@ export const createWebsiteCoreSession = ({
     distPath,
     ...packageEvidence,
     sitePackageState: sitePackageEvidence.packageState,
+    siteScripts: sitePackageEvidence.scripts,
     gitignore: available && safeFile(join(root, '.gitignore')) ? readFileSync(join(root, '.gitignore'), 'utf8') : null
   }
   return {

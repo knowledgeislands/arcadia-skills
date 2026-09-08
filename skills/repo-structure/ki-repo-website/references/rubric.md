@@ -34,7 +34,7 @@ Generator-neutral selection, lifecycle, and dist seam.
   - _Remediation:_ diagnostic — Align the shared website declaration and lifecycle seam, then rerun the audit.
 - **SITE-4 [M] — ki:site:build** — The root package exposes ki:site:build. (standards-website.md)
   - _Remediation:_ diagnostic — Align the shared website declaration and lifecycle seam, then rerun the audit.
-- **SITE-5 [M] — ki:site:dev** — The root package exposes ki:site:dev. (standards-website.md)
+- **SITE-5 [M] — ki:site:dev** — The root package exposes ki:site:dev and delegates to the selected package same key. (standards-website.md)
   - _Remediation:_ diagnostic — Align the shared website declaration and lifecycle seam, then rerun the audit.
 - **SITE-6 [M] — ki:site:clean** — The root package exposes ki:site:clean. (standards-website.md)
   - _Remediation:_ diagnostic — Align the shared website declaration and lifecycle seam, then rerun the audit.

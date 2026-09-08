@@ -113,6 +113,41 @@ const requiredScript = (code: string, key: string, purpose: string) =>
       : [{ status: 'VIOLATION', message: `${key} is absent.`, subject: 'package.json' }]
   })
 
+const developmentScript = item(
+  'SITE-5',
+  'ki:site:dev',
+  'The root package exposes ki:site:dev and delegates to the selected package same key.',
+  'WARN',
+  (context) => {
+    const stopped = skip(context)
+    if (stopped) return stopped
+    const invalid = skipInvalidRoot(context)
+    if (invalid) return invalid
+    const rootCommand = context.scripts['ki:site:dev']?.trim()
+    const localCommand = context.siteScripts['ki:site:dev']?.trim()
+    const delegates = context.sitePackagePath === 'package.json' || Boolean(rootCommand?.includes('ki:site:dev'))
+    return [
+      {
+        status: rootCommand ? 'PASS' : 'VIOLATION',
+        message: rootCommand ? 'ki:site:dev present for local development.' : 'ki:site:dev absent.',
+        subject: 'package.json'
+      },
+      {
+        status: localCommand ? 'PASS' : 'VIOLATION',
+        message: localCommand ? 'package-local ki:site:dev present.' : 'package-local ki:site:dev absent.',
+        subject: context.sitePackagePath
+      },
+      {
+        status: delegates ? 'PASS' : 'VIOLATION',
+        message: delegates
+          ? 'root ki:site:dev delegates the selected package capability key.'
+          : 'root ki:site:dev does not delegate package-local ki:site:dev.',
+        subject: 'package.json'
+      }
+    ]
+  }
+)
+
 const SITE_7 = item(
   'SITE-7',
   'Generated output ignored',
@@ -147,7 +182,7 @@ export const SITE: RubricFamily<WebsiteCoreContext, WebsiteCoreContext> = {
     SITE_2,
     SITE_3,
     requiredScript('SITE-4', 'ki:site:build', 'production output'),
-    requiredScript('SITE-5', 'ki:site:dev', 'local development'),
+    developmentScript,
     requiredScript('SITE-6', 'ki:site:clean', 'generated-output cleanup'),
     SITE_7
   ]

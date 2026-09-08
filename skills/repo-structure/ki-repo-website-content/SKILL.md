@@ -51,7 +51,7 @@ Four invariants define the standard — most findings are a breach of one:
 3. **TypeScript runner is declared, not proven.** Package scripts select Bun or modern Node for TypeScript; `tsx` is not used. `.ts` + `.json5` data extensions are registered in the config. `tsc` is type-check only (engineering's layer); actual execution belongs to explicit runtime evidence.
 4. **Tailwind compiles inside the Eleventy lifecycle.** An `eleventy.before` hook runs the Tailwind CLI in build mode; dev runs a parallel `--watch` and an `addWatchTarget` on the compiled CSS.
 
-The selected site must be an application workspace. Its exact local `build`, `dev`, `dev:css`, `dev:serve`, and `clean` names are owned by this content implementation and need no root `script_exclusions`; the repository root exposes only the public `ki:site:build`, `ki:site:dev`, and `ki:site:clean` seam.
+The selected site must be an application workspace. Its exact local `build` and `clean` lifecycle names plus capability-owned `ki:site:dev`, `ki:site:dev:css`, and `ki:site:dev:serve` family are owned by this content implementation and need no root `script_exclusions`; the repository root exposes only the public `ki:site:build`, `ki:site:dev`, and `ki:site:clean` seam.
 
 ## Layering — how a site repo gets fully audited
 

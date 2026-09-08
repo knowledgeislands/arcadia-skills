@@ -24,12 +24,12 @@ The selected implementation generates `dist/` at its site root: `apps/site/dist/
 The repository root `package.json` exposes public aliases that delegate to the selected site package:
 
 - `ki:site:build` — delegate to the selected package's `build` script and generate production `dist/`.
-- `ki:site:dev` — delegate to the selected package's `dev` script.
+- `ki:site:dev` — delegate to the selected package's same `ki:site:dev` key; an explicit flat site root implements development directly because root and selected package are the same manifest.
 - `ki:site:clean` — delegate to the selected package's `clean` script and remove generated output.
 
-Those three aliases are the complete root capability-owned lifecycle seam. Implementation-private fan-out names remain inside the selected package and are not additional root `ki:site:*` claims.
+Those three aliases are the complete root capability-owned lifecycle seam. The selected implementation skill validates package-local `ki:site:dev`; content-specific `ki:site:dev:css` and `ki:site:dev:serve` remain inside that package and are not additional root claims.
 
-The implementation skill verifies the selected package's ordinary command semantics. A hosting adapter consumes the selected root's `dist/` and must not infer the generator.
+The implementation skill verifies the selected package's command semantics. A hosting adapter consumes the selected root's `dist/` and must not infer the generator.
 
 ## 4. Ownership
 
