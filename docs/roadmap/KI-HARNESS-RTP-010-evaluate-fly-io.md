@@ -13,26 +13,26 @@ baseline_ref: null
 
 ## Goal
 
-Evaluate whether Fly.io offers a useful execution or hosting surface for Knowledge Islands workloads.
+If Techne identifies Fly.io as a useful proof candidate, determine whether it can satisfy the Harness portable execution contract for one bounded Knowledge Islands workload.
 
 ## Context
 
-Fly's [agent infrastructure overview](https://fly.io/ai-agents/) describes a persistent Machine for the trusted agent and separate Sprites for isolated execution. Evaluate those claims through the portable substrate contract rather than treating Fly.io as the contract itself.
+Techne proposal `TECHNE-GOV-005` owns the engineering model, provider landscape, comparison criteria, and any technology recommendation. This record is a downstream Harness adapter proof, not the canonical Fly.io evaluation.
 
-[Fly.io](https://fly.io/) now presents both general-purpose Machines and agent-focused Sprites, including durable filesystem, checkpoint, connector, private-networking, routing, and monitoring capabilities. These are provider claims to investigate rather than an adoption decision.
+If Techne selects Fly.io for proof, evaluate the provider claims recorded there through `KI-HARNESS-RTP-012` rather than treating Fly.io's API as the standard itself.
 
 ## Boundary
 
-Do not create an account, provision infrastructure, incur spend, or introduce a Fly.io dependency while this remains an investigation. Keep general service hosting, ephemeral agent execution, durable agent workspaces, and remote-development needs distinct.
+Do not select or recommend Fly.io, duplicate Techne's technology landscape, create an account, provision infrastructure, incur spend, or introduce a dependency while this remains an investigation. Keep a bounded Harness conformance proof distinct from general service hosting, durable agent workspaces, and remote-development needs.
 
 ## Discussion
 
 ### Evaluation questions
 
-Determine which concrete KI workload, if any, Fly.io would improve over current local, personal-server, or existing cloud patterns. Examine isolation, state persistence and recovery, credential and egress controls, regional placement, deployment and automation surfaces, observability, pricing, operational burden, and portability away from provider-specific services.
+After Techne names a concrete proof workload, test the portable contract's required isolation, state recovery, credential and egress controls, lifecycle operations, evidence return, and provider exit boundary. Feed provider-specific operational findings back to Techne rather than turning them into Harness policy.
 
 ### Promotion evidence
 
-Use `KI-HARNESS-RTP-012` to establish the portable comparison baseline before promoting this provider-specific proof.
+Require both an accepted Techne direction in `TECHNE-GOV-005` and the portable contract from `KI-HARNESS-RTP-012` before promoting this provider-specific proof.
 
-Before promoting beyond Future, name one bounded workload and its current constraint, the Fly.io product surface proposed for it, a comparison baseline, an acceptable cost and trust boundary, and a reversible proof with explicit pass, fail, and cleanup criteria.
+Before promoting beyond Future, name the bounded workload and its current constraint, the Fly.io surface proposed for it, an acceptable cost and trust boundary, and reversible proof with explicit pass, fail, and cleanup criteria.
