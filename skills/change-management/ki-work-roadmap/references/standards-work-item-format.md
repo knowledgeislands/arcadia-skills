@@ -51,6 +51,8 @@ baseline_ref: null
 
 `blocks` and `blocked_by` are arrays of item identifiers and use `[]` when empty.
 
+`blocked_by` states **build order**: this item cannot be executed because something it must build on does not exist yet. It is discharged when that thing exists, not when the record that produced it reaches a particular lifecycle state. An item is therefore not blocked merely because a related record is unreviewed, unaccepted, or unpruned; a blocker whose work has landed is cleared even while its own record is still open. Recording a lifecycle wait as `blocked_by` stalls executable work behind an approval queue and misreports the reason. Where the real constraint is sequencing preference rather than build order, say so in `## Dependencies / blocks` and leave the field empty.
+
 `waiting_on_trades` is an optional flat array of unique `TRD-<eight-hex>` identities. It is valid only when `horizon: waiting-for` and records observed cross-repository conditions rather than local work-item dependencies. Do not place trade identities in `blocks` or `blocked_by`.
 
 `baseline_ref` is `null` until execution begins, then the immutable full lowercase commit ID.
@@ -199,6 +201,8 @@ This is the required evidence and review packet for an explicit acceptance decis
 ### Done
 
 After explicit acceptance, insert terminal `## Done` immediately before `Discussion` and set `status: done`. Keep the reviewed record until an explicitly selected prune path or glob removes it.
+
+`## Done` is required, not optional decoration: the checker rejects a `done` record without it, so a record cannot reach the terminal state by changing `status` alone. It records who accepted the work and when, against the review packet above — `Accepted <date> by <name> on the review packet above.` — and nothing else. Evidence belongs in `## Review`, and anything learned during acceptance belongs in `Discussion`.
 
 Retain the accepted record until an explicitly selected prune path or glob.
 

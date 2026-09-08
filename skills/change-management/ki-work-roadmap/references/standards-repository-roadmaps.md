@@ -144,7 +144,7 @@ Its start transition records the immutable full `HEAD` commit in `baseline_ref`;
 
 `ki-recap` and `ki-next` may identify or recommend eligible pruning, but they never delete a work-item record.
 
-`blocks` and `blocked_by` use work-item identifiers, must be reverse-consistent and acyclic, and cannot permit execution while a blocker is not done.
+`blocks` and `blocked_by` use work-item identifiers, must be reverse-consistent and acyclic, and cannot permit execution while a blocker is not done. Because that check gates execution on the blocker's lifecycle, only genuine build order belongs in the field: declare it when the work cannot be built without something that does not exist yet, and withdraw it once that thing exists. A declaration standing on a related record's approval state, rather than on missing work, makes the audit fail for a reason that is not true and holds executable work behind a review queue.
 
 An optional flat `waiting_on_trades: [TRD-…]` field identifies the exact trade records whose observable progress forms a Waiting-for condition. It is valid only at `horizon: waiting-for`, contains unique canonical trade identities, and never replaces or extends `blocks` or `blocked_by`. The item body states the exact condition being observed: receipt, a terminal receiver decision, or completion of receiver-local work linked from an adopted trade.
 
