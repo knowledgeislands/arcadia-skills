@@ -20,11 +20,11 @@ Define a portable execution contract in which autonomous agents can run independ
 
 Same-filesystem worktrees are useful local isolation but need not be the portable coordination model. A deployed agent should own an independent filesystem and fresh repository clone while the selected change manager, Git remote, and review boundary coordinate work. Local installation, credentials, capability projection, recovery, and result integration therefore need explicit executable contracts.
 
-`TECHNE-GOV-005` is accountable for the isolated-agent-execution principle, layer taxonomy, technology landscape, and cross-repository coherence. This item consumes that model to define reusable sandbox capability semantics and conformance tests. `DOTFILES-UE-020` retains the residual implementation of Cheztoi as one personal bootstrap profile.
+`TECHNE-GOV-005` is accountable for the isolated-agent-execution principle, layer taxonomy, technology landscape, and cross-repository coherence. `TECHNE-OPS-002` owns the attached, persistent supervised, and unattended working modes and the remote-session evidence formerly held by `KI-HARNESS-RTP-004`. This item consumes those models to define reusable sandbox capability semantics and conformance tests. `DOTFILES-UE-020` retains the residual implementation of Cheztoi as one personal bootstrap profile.
 
 ## Boundary
 
-Do not redefine the Techne engineering model, become the authoritative provider-comparison record, select a provider, provision infrastructure, incur spend, move secrets into repository or dotfiles state, or imply that an agent runtime, orchestration cockpit, and execution sandbox are the same layer.
+Do not redefine the Techne engineering model or remote-agent working style, become the authoritative provider-comparison record, select a provider, provision infrastructure, incur spend, move secrets into repository or dotfiles state, or imply that an agent runtime, orchestration cockpit, and execution sandbox are the same layer.
 
 ## Shaping
 
@@ -48,16 +48,16 @@ Accept the portable agent subset defined by Techne: pinned KI CLI and harness, a
 
 The harness owns the profile capability schema and conformance tests; dotfiles owns the Cheztoi instance and source-to-artifact projection. A provider-neutral implementation may begin in `tools-ki`, while a dedicated tool or repository should wait until more than one adapter proves the abstraction.
 
-### Authority and security
+### Contract projection
 
-The persistent controller should own session identity, policy, credential brokerage, and result integration. A sandbox receives only scoped, short-lived credentials and bounded egress needed for its task. Where practical, model and repository credentials remain in the controller or a proxy rather than being written into the sandbox filesystem.
+Project the accepted Techne responsibility model into explicit contract inputs and observable conformance evidence. The contract should identify the controller, task environment, repository baseline, scoped authority, credential injection boundary, network policy, result destination, and cleanup responsibility without deciding the operating model locally.
 
-Classify sandbox state as ephemeral task data, reconstructible cache, or explicitly persistent data. Git commits, patches, canonical work records, manifests, and review evidence remain the recovery and hand-off boundary; provider snapshots remain disposable optimisations.
+Require adapters to report state classification, checkpoint and recovery behaviour, credential retention, and authoritative result artifacts. Git commits, patches, canonical work records, manifests, and review evidence remain the portable recovery and hand-off boundary; provider snapshots remain disposable optimisations.
 
 ### Coordination and conflict
 
-Define claim and lease evidence, immutable input baseline, optimistic concurrency, branch integration rules, heartbeat and last-update semantics, and abandonment recovery. Independent filesystems remove local path contention but do not remove competing Git or change-record writes.
+Expose the accepted Techne coordination model through identifiers and evidence needed by implementations: claim or lease reference, immutable input baseline, concurrency token, branch or result reference, heartbeat or last-update evidence, and abandonment outcome. The Harness should test that these values survive adapter boundaries rather than define the human working policy that gives them meaning.
 
 ### Evaluation route
 
-Implement the proving sequence and evaluation criteria governed by `TECHNE-GOV-005`, including provider proofs already represented by `KI-HARNESS-RTP-010`. Keep personal-server terminal continuity in `KI-HARNESS-RTP-004` separate from unattended agent execution.
+Implement the proving sequence and evaluation criteria governed by `TECHNE-GOV-005`, including provider proofs already represented by `KI-HARNESS-RTP-010`. Consume the remote working modes and personal-server continuity conclusions from `TECHNE-OPS-002`; do not recreate their Zed, Herdr, or Mosh evaluation in the Harness.
